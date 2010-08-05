@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-08-05 - Stephanie Hansmann-Menzemer
+ - New tuning of PatForward
 
 ! 2010-07-30 - Olivier Callot
  - New tuning of PatMatchTool to get similar performance as the TrackMatching

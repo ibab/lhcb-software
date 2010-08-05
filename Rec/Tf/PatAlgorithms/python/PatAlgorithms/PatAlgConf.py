@@ -20,10 +20,7 @@ class ForwardConf(object):
       PFTool.WithoutBField = True
       
     if TrackSys().earlyData():
-      PFTool.MinXPlanes = 4
-      PFTool.MinPlanes = 8
-      PFTool.MaxSpreadX = 1.5
-      PFTool.MaxSpreadY = 3.0
+      PFTool.SecondLoop = True
       PFTool.MaxChi2 = 40
       PFTool.MaxChi2Track = 40
       PFTool.MinHits = 12

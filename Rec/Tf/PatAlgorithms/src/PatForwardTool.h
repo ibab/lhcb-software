@@ -96,6 +96,7 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
       
 
     //== Parameters of the algorithm
+    bool   m_secondLoop;
     double m_zAfterVelo;
     double m_yCompatibleTol;
     double m_yCompatibleTolFinal;

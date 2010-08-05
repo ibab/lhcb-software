@@ -39,6 +39,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
 
+  declareProperty( "SecondLoop"            , m_secondLoop            = false );
   declareProperty( "ZAfterVelo"            , m_zAfterVelo            = 1640. * Gaudi::Units::mm );
   declareProperty( "YCompatibleTol"        , m_yCompatibleTol        =   10. * Gaudi::Units::mm );
   declareProperty( "YCompatibleTolFinal"   , m_yCompatibleTolFinal   =    1. * Gaudi::Units::mm );
@@ -110,6 +111,21 @@ void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output )
 
   std::vector<LHCb::Track*> outvec;
   tracksFromTrack(*tr,outvec).ignore();
+
+  if (outvec.size()==0 && m_secondLoop){
+      
+      int minXPlanes = m_minXPlanes;
+      int minPlanes = m_minPlanes;
+      
+      m_minXPlanes = minXPlanes-1;
+      m_minPlanes = minPlanes-1;
+      
+      tracksFromTrack(*tr,outvec).ignore();
+
+      m_minXPlanes = minXPlanes;
+      m_minPlanes = minPlanes;
+      
+  }
 
   for (unsigned int i=0; i<outvec.size(); i++)
     output->insert(outvec[i]);
