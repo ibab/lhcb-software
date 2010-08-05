@@ -1,8 +1,24 @@
-'''Collection of functions and callable classes to perform standard MicroDST cloning.
+'''Collection of MicroDSTElement implementations to perform standard MicroDST cloning.
+
+Each element is in charge of generating a consistently configured set of Configurables
+responsible for copying some data to a MicroDST partition. 
 
 '''
 
-from copy import copy
+__author__  = 'Juan Palacios juan.palacios@nikhef.nl'
+
+__all__ = ( 'CloneRecHeader',
+            'CloneODIN',
+            'CloneParticleTrees',
+            'ClonePVs',
+            'CloneMCInfo',
+            'CloneBTaggingInfo',
+            'ClonePVRelations',
+            'ReFitAndClonePVs',
+            'CloneL0DUReport',
+            'CloneHltDecReports',
+            'CloneBackCat'        )
+
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
                             MicroDSTElement)
@@ -58,6 +74,10 @@ class ClonePVs(MicroDSTElement) :
         return [cloner]
 
 class CloneMCInfo(MicroDSTElement) :
+    """
+    Generator returning list of P2MCRelatorAlg and CopyParticle2MCRelations.
+    Copies related MC particles and relations table to '/Event/<branch>/...'
+    """
     def __call__(self, sel) :
         """
         Copy related MC particles of candidates plus daughters
@@ -81,6 +101,10 @@ class CloneMCInfo(MicroDSTElement) :
         return [p2mcRelator, cloner]
 
 class CloneBTaggingInfo(MicroDSTElement) :
+    """
+    Generator returning consistently configured list of BTagging and CopyFlavourTags
+    Configurables.
+    """
     def __call__(self, sel) :
         from Configurables import BTagging
         from Configurables import CopyFlavourTag
@@ -97,6 +121,13 @@ class CloneBTaggingInfo(MicroDSTElement) :
 
 
 class ClonePVRelations(MicroDSTElement) :
+    """
+    Prepares a CopyParticle2PVRelations generator.
+    Constructor arguments:
+    location : name of the TES leaf where the Particle->PV relations are stored.
+    clonePVs : Clone the target primary vertices?
+    branch   : TES branch for output relations table, appended to '/Event'.
+    """
     def __init__(self, location, clonePVs=True, branch = '') :
         MicroDSTElement.__init__(self, branch)
         self.location = location
@@ -122,21 +153,26 @@ class ClonePVRelations(MicroDSTElement) :
 
 class ReFitAndClonePVs(MicroDSTElement) :
     '''
-    Re-fit PVs and find the best one for each particle in a selection.
+    Return a list with the Configurables necessary to re-fit PVs and find
+    the best one for each particle in a SelectionSequence.
     Store Particle->PV table and re-fitted PVs in MicroDST.
-    Runs a sequence of PVReFitterAlg, BestPVAlg and CopyParticle2PVRelations.
-    Relations tables go to ".../<selection name>/BestPV_P2PV"
+    Returns a sequence of PVReFitterAlg, BestPVAlg and CopyParticle2PVRelations.
+    Useage:
+    sel = ... # some SelectionSequence
+    p2pv = ReFitAndClonePVs(branch = "Test")
+    necessary_configurables = p2pv(sel)
+    Relations tables go to locations "<branch>/<location>/BestPV_<sel.name()>P2PV", where
+    <location> is each of the entries in sel.outputLocations().
     '''
 
     def __call__(self, sel) :
-        from Configurables import CopyParticle2PVRelations
-        from Configurables import PVReFitterAlg, BestPVAlg
-        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'))
-        refitPVs.ParticleInputLocations = self.dataLocations(sel, 'Particles')
-        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
-        bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
-        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
-        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
+        from Configurables import CopyParticle2PVRelations, PVReFitterAlg, BestPVAlg
+        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'),
+                                 ParticleInputLocations = self.dataLocations(sel, 'Particles') )
+        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'),
+                           P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV') )
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'),
+                                          InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV') )
         self.setOutputPrefix(cloner)
         return [refitPVs, bestPV, cloner]
         
@@ -155,6 +191,10 @@ class CloneHltDecReports(MicroDSTElement) :
         return [cloner]
 
 class CloneBackCat(MicroDSTElement) :
+    """
+    Generator for list of Particle2BackgroundCategoryRelationsAlg and CopyParticle2BackgroundCategory.
+    Used for 
+    """
     def __call__(self, sel) :
         from Configurables import Particle2BackgroundCategoryRelationsAlg
         from Configurables import CopyParticle2BackgroundCategory
