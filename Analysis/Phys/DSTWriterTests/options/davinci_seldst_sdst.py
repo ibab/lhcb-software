@@ -16,13 +16,16 @@ jpsi =  SelectionSequence('SeqJpsi',
 
 
 
-#multiSeq = MultiSelectionSequence('Cocktail', Sequences = [pions, muons, kaons, jpsi])
-multiSeqA = MultiSelectionSequence('CocktailA', Sequences = [muons, pions])
-multiSeqB = MultiSelectionSequence('CocktailB', Sequences = [kaons, jpsi])
+multiSeqA = MultiSelectionSequence('CocktailA', Sequences = [kaons, pions, muons])
+multiSeqB = MultiSelectionSequence('CocktailB', Sequences = [pions, muons, kaons])
+multiSeqC = MultiSelectionSequence('CocktailC', Sequences = [muons, pions, kaons])
 
-conf = SelDSTWriter("MicroDST0", OutputPrefix = 'SequenceName')
-conf.OutputFileSuffix = "TestRawEvent"
-conf.SelectionSequences = [multiSeqA, multiSeqB]
+conf = SelDSTWriter("MicroDST0")
+conf.OutputFileSuffix = "TestAll"
+conf.SelectionSequences = [multiSeqA, multiSeqB, multiSeqC]
+#conf.SelectionSequences = [pions]
+#conf.SelectionSequences = [kaons, pions, muons]
+#conf.SelectionSequences = [multiSeqA]
 conf.ExtraItems = ['/Event/DAQ/RawEvent#1']
 selDST0Seq = conf.sequence()
 
@@ -32,6 +35,7 @@ dv = DaVinci()
 dv.DataType = '2010'
 dv.InputType = 'SDST'
 dv.EvtMax = -1
-dv.UserAlgorithms = [multiSeqA.sequence(), multiSeqB.sequence(), selDST0Seq]
+#dv.UserAlgorithms = [multiSeqA.sequence(), multiSeqB.sequence(), selDST0Seq]
+dv.UserAlgorithms = [conf.sequence()]
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
 FileCatalog().Catalogs =['xmlcatalog_file:TestSDSTCatalog.xml']
