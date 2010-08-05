@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-08-05 - Vanya Belyaev
+
+ - remove obsolete factory 
+   add    proper   factory 
+
 ! 2010-08-01 - Vanya Belyaev
 
  - start the creation of new functors :

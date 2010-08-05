@@ -6,7 +6,14 @@
   <class name    = "Hlt::IInspector"       />
   <class name    = "std::vector<const IAlgorithm*>"     />
   <class name    = "std::vector<const Hlt::Selection*>" />
-  <class pattern = "LoKi::Interface<Hlt::I*"  />
+  <class name    = "LoKi::Interface<Hlt::IRegister>"    />
+  <class name    = "LoKi::Interface<Hlt::IData>"        />
+  <class name    = "LoKi::Interface<Hlt::IInspector>"   />
+  
+  <class name    = "LoKi::ITgrFunctorFactory"       />
+  <class name    = "LoKi::ITgrFunctorAntiFactory"   />
+  <class name    = "LoKi::Hybrid::TgrEngine"        />
+  
 
   <!-- Hlt::Candidate --> 
 

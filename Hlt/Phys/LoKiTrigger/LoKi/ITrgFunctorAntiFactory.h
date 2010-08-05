@@ -1,7 +1,9 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_ITRHYBRIDTOOL_H 
-#define LOKI_ITRHYBRIDTOOL_H 1
+#ifndef LOKI_ITRGANTIFACTORY_H 
+#define LOKI_ITRGANTIFACTORY_H 1
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -21,7 +23,7 @@
 namespace LoKi
 { 
   // ==========================================================================
-  /** @class ITrHybridTool LoKi/ITrHybridTool.h
+  /** @class ITrgFunctorAntiFactory LoKi/ITrgfunctorAntiFactory
    *
    *  Helper interface for implementation of C++/Python "Hybrid" solution
    *
@@ -35,62 +37,42 @@ namespace LoKi
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
+   *
+   *  $Revision$
+   *  Last Modification $Date$ 
+   *                 by $Author$ 
+   *
    */
-  class ITrHybridTool : public virtual IAlgTool 
+  class ITrgFunctorAntiFactory 
+    : public virtual extend_interfaces1<IAlgTool>
   {
   public:
     // ========================================================================
-    /// Return the unique interface ID
-    static const InterfaceID& interfaceID() ;
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// set the C++ predicate for LHCb::Track
-    virtual void set ( const LoKi::Types::TrCuts&    cut ) = 0 ;    
-    /// set the C++ predicate for LHCb::RecVertex 
-    virtual void set ( const LoKi::Types::RVCuts&    cut ) = 0 ;    
-    /// set the C++ predicate for Track-Track pair 
-    virtual void set ( const LoKi::Types::TTrCuts&   cut ) = 0 ;    
-    /// set the C++ predicate for Track-Vertex pair
-    virtual void set ( const LoKi::Types::TrVCuts&   cut ) = 0 ;    
-    /// set the C++ predicate for Vertex-Vertex pair
-    virtual void set ( const LoKi::Types::RVVCuts&   cut ) = 0 ;    
-    /// set the C++ function for LHCb::Track
-    virtual void set ( const LoKi::Types::TrFunc&    fun ) = 0 ;    
-    /// set the C++ function for LHCb::RecVertex 
-    virtual void set ( const LoKi::Types::RVFunc&    fun ) = 0 ;    
-    /// set the C++ function for Track-Track pair 
-    virtual void set ( const LoKi::Types::TTrFunc&   fun ) = 0 ;    
-    /// set the C++ function for Track-Vertex pair
-    virtual void set ( const LoKi::Types::TrVFunc&   fun ) = 0 ;    
-    /// set the C++ function for Vertex-Vertex pair
-    virtual void set ( const LoKi::Types::RVVFunc&   fun ) = 0 ;
+    /// set the C++ predicate for Hlt::Candidate
+    virtual void set ( const LoKi::Types::TC_Cuts&    cut ) = 0 ;    
+    /// set the C++ function for Hlt::Candidate
+    virtual void set ( const LoKi::Types::TC_Func&    fun ) = 0 ;    
     // ========================================================================
   public:
     // ========================================================================
     // the functional part
-    /// set the C++ "maps"     for Tracks 
-    virtual void set ( const LoKi::Types::TrMaps&     fun ) = 0 ;
-    /// set the C++ "pipes"    for Tracks 
-    virtual void set ( const LoKi::Types::TrPipes&    fun ) = 0 ;
-    /// set the C++ "funvals"  for Tracks 
-    virtual void set ( const LoKi::Types::TrFunVals&  fun ) = 0 ;
-    /// set the C++ "elements" for Tracks 
-    virtual void set ( const LoKi::Types::TrElements& fun ) = 0 ;
-    /// set the C++ "sources"  for Tracks 
-    virtual void set ( const LoKi::Types::TrSources&  fun ) = 0 ;
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// get the reference container of tracks   (needed from Trigger) 
-    virtual std::vector<LHCb::Track*>*     tracks   () const = 0 ;
-    /// get the reference container of vertices (needed for Trigger) 
-    virtual std::vector<LHCb::RecVertex*>* vertices () const = 0 ;
+    /// set the C++ "maps"     for Candidates 
+    virtual void set ( const LoKi::Types::TC_Maps&     fun ) = 0 ;
+    /// set the C++ "pipes"    for Candidates 
+    virtual void set ( const LoKi::Types::TC_Pipes&    fun ) = 0 ;
+    /// set the C++ "funvals"  for Candidates 
+    virtual void set ( const LoKi::Types::TC_FunVals&  fun ) = 0 ;
+    /// set the C++ "cutvals"  for Candidates 
+    virtual void set ( const LoKi::Types::TC_CutVals&  fun ) = 0 ;
+    /// set the C++ "elements" for Candidates 
+    virtual void set ( const LoKi::Types::TC_Elements& fun ) = 0 ;
+    /// set the C++ "sources"  for Candidates 
+    virtual void set ( const LoKi::Types::TC_Sources&  fun ) = 0 ;
     // ========================================================================
   protected:
     // ========================================================================
     /// destructor : virtual and protected 
-    virtual ~ITrHybridTool() ;
+    virtual ~ITrgFunctorAntiFactory() ;   // destructor : virtual and protected 
     // ========================================================================
   };
   // ==========================================================================

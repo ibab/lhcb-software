@@ -1,5 +1,7 @@
 // $Id$
 // ============================================================================
+// $URL$
+// ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL
@@ -12,11 +14,11 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/ITrHybridFactory.h"
+#include "LoKi/ITrgFunctorFactory.h"
 // ============================================================================
 /** @file 
  *
- *  Implementation file for class LoKi::ITrHybridFactory
+ *  Implementation file for class LoKi::ITrgFunctorFactory
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -28,21 +30,15 @@
  *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *
+ *  $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
-// ============================================================================
-namespace 
-{
-  const InterfaceID IID_ITrHybridFactory( "LoKi::ITrHybridFactory" , 2 , 0 ) ;
-}
-// ============================================================================
-// Return the unique interface ID
-// ============================================================================
-const InterfaceID& 
-LoKi::ITrHybridFactory::interfaceID() { return  IID_ITrHybridFactory ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::ITrHybridFactory::~ITrHybridFactory () {}; 
+LoKi::ITrgFunctorFactory::~ITrgFunctorFactory () {}; 
 // ============================================================================
 
 // ============================================================================

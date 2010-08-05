@@ -16,10 +16,6 @@
 #include "LoKi/Functions.h"
 #include "LoKi/BasicFunctors.h"
 // ============================================================================
-// LoKiTracks 
-// ============================================================================
-#include "LoKi/TrackTypes.h"
-// ============================================================================
 /** @file
  *  Definition of generic Hlt-Candidates functors&types  
  * 
@@ -34,7 +30,8 @@
  *  @date 2010-08-01
  *
  *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 namespace  LoKi
 {

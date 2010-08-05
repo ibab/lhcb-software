@@ -1,4 +1,6 @@
-// $Id$
+// $Id: ITrHybridTool.cpp 53199 2010-08-02 19:23:39Z ibelyaev $
+// ============================================================================
+// $URL$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,13 +8,13 @@
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
 // ============================================================================
-// LoKiHybrid 
+// LoKiTracks 
 // ============================================================================
-#include "LoKi/ITrHybridTool.h"
+#include "LoKi/ITrgFunctorAntiFactory.h"
 // ============================================================================
 /** @file 
  *
- *  Implementation file for class LoKi::ITrHybridTools
+ *  Implementation file for class LoKi::ITrgFunctorAntiFactory 
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -24,21 +26,15 @@
  *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *
+ *  $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
-// ============================================================================
-namespace 
-{
-  const InterfaceID IID_ITrHybridTool ( "LoKi::ITrHybridTool" , 2 , 0 ) ;
-}
-// ============================================================================
-// Return the unique interface ID
-// ============================================================================
-const InterfaceID& 
-LoKi::ITrHybridTool::interfaceID() { return  IID_ITrHybridTool ; }
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::ITrHybridTool::~ITrHybridTool() {}
+LoKi::ITrgFunctorAntiFactory::~ITrgFunctorAntiFactory () {}
 // ============================================================================
 
 // ============================================================================

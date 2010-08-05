@@ -116,53 +116,14 @@ namespace LoKi
       ( const std::string&   location , 
         LHCb::RecVertex::Vector& output   ) const ;
     private:
+      // ======================================================================
       // TES locations of Particles 
       std::vector<std::string>  m_path ; ///< TES locations of HepMC events 
       // data provder service 
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ; ///< data provder service 
       // 'on-flight' filter
       LoKi::TrackTypes::RVCut   m_cut ; ///< 'on-flight' filter
-    } ;
-    // ========================================================================
-    /** @class SourceDirect
-     * 
-     *  @see LoKi::Cuts::RVSOURCEDIRECT
-     *  simple "direct source for the vertices"
-     *  @author Vanya BELYAEV ibelyav@physics.syr.edu
-     *  @date 2006-12-07
-     */
-    class SourceDirect
-      : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source 
-    { 
-      typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Source _Source;
-    public:
-      /// constructor from the data:
-      SourceDirect ( const LHCb::RecVertex::Vector* data  ) ;
-      /// constructor from the tool
-      SourceDirect ( const LoKi::ITrHybridTool* tool  ) ;
-      /// copy constructor 
-      SourceDirect ( const SourceDirect&        right ) ;
-      /// MANDATORY: cirtual destructor 
-      virtual ~SourceDirect() {}
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual  SourceDirect* clone() const { return new SourceDirect(*this) ; }
-      /// MANDATORY: the only essential method:
-      virtual result_type operator() () const ;
-      /// OPTIONAL: the nice printout
-      virtual std::ostream& fillStream ( std::ostream& o ) const ;
-    public:
-      /// get the data:
-      const LHCb::RecVertex::Vector* data() const { return m_data ; }
-      /// set the data 
-      void setData ( const LHCb::RecVertex::Vector* value ) { m_data = value ; }
-      /// set the data 
-      void setData ( const LoKi::ITrHybridTool* value ) ;
-    private:
-      // default constructor is disabled 
-      SourceDirect() ; ///< default constructor is disabled
-    private:
-      // pointer to the container of tracks:
-      const LHCb::RecVertex::Vector* m_data ; ///< pointer to the container of tracks:
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::RecVertices

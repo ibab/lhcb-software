@@ -335,50 +335,51 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
       s->set( out[0] ) ; // add track to the stage
       Hlt::Candidate* candidate_ = const_cast<Hlt::Candidate*> ( candidate ) ;
       candidate_ -> addToStages ( s ) ;
-      output.push_back ( candidate_ ) ;  
+      output.push_back ( candidate_ ) ;                            // OUTPUT++
     }
     else 
     {
       //
-      Warning("Reconstruction causes split of candidate") ;
+      Warning ( "Reconstruction causes split of candidate" ) ;
       //
-      // the first one is continuation 
-      Hlt::Stage* s = new Hlt::Stage() ;
-      stages->push_back ( s ) ;
-      Hlt::Stage::Lock lock ( s , alg() ) ;
-      s->set( out[0] ) ; // add track to the stage
-      Hlt::Candidate* cand1 = const_cast<Hlt::Candidate*> ( candidate ) ;
-      cand1 -> addToStages ( s ) ;
-      output.push_back ( cand1 ) ;
-      //
-      // start new candidates 
-      for ( unsigned i = 1 ; i < out.size() ; ++i ) 
+      /// start new candidates 
+      for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ;
+            out.end() != iout ; ++iout ) 
       {
-        Hlt::Stage* s1 = new Hlt::Stage() ;
-        stages->push_back ( s1 ) ;
-        Hlt::Stage::Lock lock1 ( s1, alg() ) ;
-        s->set( stage ) ; // add stage into stage 
-        //
+        const LHCb::Track* track = *iout ;
+        if ( 0 == track ) { continue ; }
+        // 
+        // start new Candidate: 
         Hlt::Candidate* cand = new Hlt::Candidate() ;
         candidates ->push_back ( cand ) ;
+        output.push_back       ( cand ) ;                          // OUTPUT++
         //
-        cand -> addToStages ( s1 ) ;
+        // the initiator of new candidate is the stage of the initial candidate:
+        Hlt::Stage* s1 = new Hlt::Stage() ;
+        stages -> push_back ( s1 ) ;
+        cand   -> addToStages ( s1 ) ;
         //
+        Hlt::Stage::Lock lock1 ( s1, alg() ) ;
+        s1 -> set ( stage ) ; // add stage into stage as initiator 
+        
+        //
+        // the actual stage: new candidate is the track
         Hlt::Stage* s2 = new Hlt::Stage() ;
-        stages->push_back ( s2 ) ;
+        stages -> push_back ( s2 ) ;
+        cand   -> addToStages ( s2 ) ;
+        // 
         Hlt::Stage::Lock lock2 ( s2, alg() ) ;
-        s->set( out[i] ) ; // add track into stage
+        s2 -> set ( track ) ; // add track into stage
         //
-        cand -> addToStages ( s2 ) ;
-        //
-        output.push_back ( cand  ) ;
-      } //                                 end of the loop ove rnew candidates 
+      } //                                  end of the loop over new candidates 
+      // ======================================================================
     }
     // ========================================================================
   } //                                        end of the loop over input tracks 
+  // ==========================================================================
   //
   return StatusCode::SUCCESS ;
-}
+} 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -22,6 +22,10 @@
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"
 // ============================================================================
+#include "LoKi/ITrgFunctorFactory.h"
+#include "LoKi/ITrgFunctorAntiFactory.h"
+#include "LoKi/TrgEngine.h"
+// ============================================================================
 /** @file
  *  Reflex dictionary for LoKiTrigger package 
  * 

@@ -1,4 +1,4 @@
-// $Id$
+// $Id:$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,7 +17,6 @@
 #include "LoKi/Services.h"
 #include "LoKi/select.h"
 #include "LoKi/apply.h"
-#include "LoKi/ITrHybridTool.h"
 // ============================================================================
 /** @file 
  *  Implementation file for various sources
@@ -190,54 +189,6 @@ std::ostream&
 LoKi::RecVertices::SourceTES::fillStream ( std::ostream& o ) const 
 { return o << "RVSOURCE(" 
            << Gaudi::Utils::toString( m_path ) << "," << m_cut << ")" ; }
-// ============================================================================
-
-
-// ============================================================================
-// constructor from the data:
-// ============================================================================
-LoKi::RecVertices::SourceDirect::SourceDirect 
-( const LHCb::RecVertex::Vector* data  )
-  : LoKi::RecVertices::SourceDirect::_Source ()
-  , m_data ( data ) 
-{}
-// ============================================================================
-// constructor from tool 
-// ============================================================================
-LoKi::RecVertices::SourceDirect::SourceDirect 
-( const LoKi::ITrHybridTool* tool  )
-  : LoKi::RecVertices::SourceDirect::_Source ()
-  , m_data ( 0  ) 
-{
-  if ( 0 != tool ) { m_data = tool -> vertices () ; }  
-}
-// ============================================================================
-// copy constructor 
-// ============================================================================
-LoKi::RecVertices::SourceDirect::SourceDirect 
-( const LoKi::RecVertices::SourceDirect& right ) 
-  : LoKi::AuxFunBase                    ( right ) 
-  , LoKi::RecVertices::SourceDirect::_Source ( right )
-  , m_data ( right.m_data ) 
-{}
-// ============================================================================
-// MANDATORY: the only essential method:
-// ============================================================================
-LoKi::RecVertices::SourceDirect::result_type 
-LoKi::RecVertices::SourceDirect::operator() () const 
-{
-  Assert ( 0 != m_data , "Invalid pointer to std::vector<LHCb::RecVertex*>" ) ;
-  return result_type ( m_data->begin() , m_data->end() ) ;
-}
-// ============================================================================
-std::ostream& 
-LoKi::RecVertices::SourceDirect::fillStream ( std::ostream& o ) const 
-{ return o << "RVSOURCEDIRECT" ; }
-// ============================================================================
-// set the data 
-// ============================================================================
-void LoKi::RecVertices::SourceDirect::setData ( const LoKi::ITrHybridTool* value ) 
-{ if ( 0 != value ) { m_data = value -> vertices () ; } }
 // ============================================================================
 
 
