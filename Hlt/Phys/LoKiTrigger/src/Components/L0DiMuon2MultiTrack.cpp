@@ -1,11 +1,12 @@
 // $Id$
 // ============================================================================
+// $URL$
+// ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <vector>
-// ============================================================================
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -31,7 +32,7 @@
 #include "LoKi/HltBase.h"
 #include "LoKi/HltL0.h"
 // ============================================================================
-// Local 
+// Local
 // ============================================================================
 #include "IsMuonTile.h"
 // ============================================================================
@@ -41,17 +42,24 @@ namespace Hlt
   /** @class L0Muon2Track
    *  Simple class which converts L0Muon candidates into "tracks" using 
    *  the special tool by Johannes albrecht 
+   *
    *  @see IMuonSeedTrack
+   *
    *  The actual lines are stolen from 
    *     Gerhard Raven & Jose Angel Hernando  Morata
+   *
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2000-03-19
+   *  
+   *  $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
-  class L0Muon2Track : public Hlt::Base 
+  class L0DiMuon2MultiTrack : public Hlt::Base 
   {
     // ========================================================================
     /// the friend factory for instantiation
-    friend class AlgFactory<Hlt::L0Muon2Track> ;
+    friend class AlgFactory<Hlt::L0DiMuon2MultiTrack> ;
     // ========================================================================
   public:
     // ========================================================================
@@ -98,7 +106,7 @@ namespace Hlt
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
      */
-    L0Muon2Track
+    L0DiMuon2MultiTrack
     ( const std::string& name ,                  //     algorithm instance name 
       ISvcLocator*       pSvc )                  //  pointer to Service Locator 
       : Hlt::Base ( name , pSvc ) 
@@ -142,20 +150,16 @@ namespace Hlt
     }
     
     /// virtual and protected destructor 
-    virtual ~L0Muon2Track() {}
+    virtual ~L0DiMuon2MultiTrack() {}
     // ========================================================================
   private:
     // ========================================================================
     /// the default constructor is disabled 
-    L0Muon2Track () ;                    // the default constructor is disabled 
+    L0DiMuon2MultiTrack () ;             // the default constructor is disabled 
     /// the copy constructor is disabled 
-    L0Muon2Track ( const L0Muon2Track& ) ;  // the copy constructor is disabled 
+    L0DiMuon2MultiTrack ( const L0DiMuon2MultiTrack& ) ; // no copy constructor
     /// the assignement operator is disabled 
-    L0Muon2Track& operator=( const L0Muon2Track& ) ; // assignement is disabled
-    // ========================================================================
-  protected:
-    // ========================================================================
-    bool checkClone ( const LHCb::L0MuonCandidate&  muon) const ;
+    L0DiMuon2MultiTrack& operator=( const L0DiMuon2MultiTrack& ) ;
     // ========================================================================
   private:
     // ========================================================================
@@ -185,7 +189,7 @@ namespace Hlt
 // ============================================================================
 // execute the algorithm 
 // ============================================================================
-StatusCode Hlt::L0Muon2Track::execute  () 
+StatusCode Hlt::L0DiMuon2MultiTrack::execute  () 
 { 
   typedef  Hlt::TSelection<Hlt::Candidate> Input ;
   
@@ -200,8 +204,11 @@ StatusCode Hlt::L0Muon2Track::execute  ()
   LHCb::Track::Container* muons = new LHCb::Track::Container() ;
   put ( muons , "Hlt/Track/Tracks_" + m_selection -> id ().str() );
   
-  /// constaiener of stages 
-  Hlt::Stage::Container* stages = hltStages() ;
+  /// container of stages 
+  Hlt::Stage::Container*      stages = hltStages() ;
+  
+  /// container of multitarcks
+  Hlt::MultiTrack::Container* mtracks = hltMultiTracks () ;
   
   using namespace LoKi::L0 ;
   
@@ -242,23 +249,45 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       const Hlt::Stage* stage     = candidate->currentStage() ;
       if ( 0 == stage     ) { continue ; }
       //  
-      const LHCb::L0MuonCandidate* l0muon = stage->get<LHCb::L0MuonCandidate>() ;
+      const Hlt::L0DiMuonCandidate* l0dimuon = stage->get<Hlt::L0DiMuonCandidate>() ;
       //
-      debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
+      if ( 0 == l0dimuon ) { continue ; }
+      //
+      const LHCb::L0MuonCandidate* l0muon1 = l0dimuon->first  () ;
+      const LHCb::L0MuonCandidate* l0muon2 = l0dimuon->second () ;
+      //
+      debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< endmsg;
+      debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< endmsg;
       // check the cut:
-      if ( !cut ( l0muon )        ) { continue ; }                     // CONTINUE 
-      debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< " accept " << endmsg;
+      if ( !cut ( l0muon1 )        ) { continue ; }                     // CONTINUE 
+      if ( !cut ( l0muon2 )        ) { continue ; }                     // CONTINUE 
+      //
+      debug() << "l0pt1 " << l0muon1->pt() << " l0encodedPt " << l0muon1->encodedPt()<< " accept " << endmsg;
+      debug() << "l0pt2 " << l0muon2->pt() << " l0encodedPt " << l0muon2->encodedPt()<< " accept " << endmsg;
+      //
       // clone ?
-      if ( checkClone ( *l0muon ) ) 
-      { 
-        debug() << "is clone " << endmsg;
-        continue ; 
-      }                     // CONTINUE 
+      // if ( checkClone ( *l0muon1 ) ) 
+      // { 
+      //  debug() << "is clone " << endmsg;
+      //  continue ; 
+      // }                     // CONTINUE 
       // create the track 
-      std::auto_ptr<LHCb::Track> track( new LHCb::Track()  ) ;
-      StatusCode sc = m_maker->makeTrack( *l0muon , *track ) ;
-      if ( sc.isFailure() ) 
-      { Error ( "Error from IMuonSeedTool" , sc ) ; continue ;  } // CONTINUE 
+      std::auto_ptr<LHCb::Track> track1( new LHCb::Track()  ) ;
+      StatusCode sc1 = m_maker->makeTrack( *l0muon1 , *track1 ) ;
+      if ( sc1.isFailure() ) 
+      { Error ( "Error from IMuonSeedTool" , sc1 ) ; continue ; } // CONTINUE
+      //
+      // create the track 
+      std::auto_ptr<LHCb::Track> track2( new LHCb::Track()  ) ;
+      StatusCode sc2 = m_maker->makeTrack( *l0muon2 , *track2 ) ;
+      if ( sc2.isFailure() ) 
+      { Error ( "Error from IMuonSeedTool" , sc2 ) ; continue ; } // CONTINUE 
+      //
+      // keep them! 
+      Hlt::MultiTrack* mtrack = new Hlt::MultiTrack () ;
+      mtracks     -> push_back ( mtrack ) ;
+      mtrack      -> addToTracks ( track1.get() ) ;
+      mtrack      -> addToTracks ( track2.get() ) ;
       //
       // keep it: create new stage 
       Hlt::Stage* newstage = new Hlt::Stage() ;
@@ -266,8 +295,10 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       candidate   -> addToStages ( newstage ) ;
       //
       Hlt::Stage::Lock lock    ( newstage , this  ) ;
-      newstage    -> set       ( track.get ()     ) ;      
-      muons       -> insert    ( track.release () ) ; // release 
+      newstage    -> set       ( mtrack           ) ;      
+      //
+      muons       -> insert    ( track1.release () ) ; // release 
+      muons       -> insert    ( track2.release () ) ; // release 
       //
       m_selection -> push_back ( candidate ) ; 
     }
@@ -289,35 +320,9 @@ StatusCode Hlt::L0Muon2Track::execute  ()
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-bool Hlt::L0Muon2Track::checkClone ( const LHCb::L0MuonCandidate&  muon) const
-{
-  
-  const LHCb::MuonTileID tileM1 = muon.muonTileIDs(0).front() ;
-  const LHCb::MuonTileID tileM2 = muon.muonTileIDs(1).front() ;
-  
-  typedef std::vector< LHCb::LHCbID > LHCbIDs ;
-  
-  for ( Hlt::TSelection<Hlt::Candidate>::const_iterator icand = 
-          m_selection->begin() ; m_selection->end() != icand ; ++icand ) 
-  {
-    // 
-    const Hlt::Candidate* cand  = *icand ;
-    if ( 0 == cand  ) { continue ; }
-    //
-    const Hlt::Stage*     stage = cand->currentStage () ;
-    if ( 0 == stage ) { continue ; }
-    //
-    const LHCb::Track* track = stage->get<LHCb::Track>() ;
-    if ( 0 == track ) { continue ; }
-    //
-    if ( isMuonClone ( track , tileM1 , tileM2 ) ) { return true ; }
-  }
-  return false ;
-}
-// ============================================================================
 // the algorithm factory
 // ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(Hlt,L0Muon2Track)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Hlt,L0DiMuon2MultiTrack)
 // ============================================================================
 // The END 
 // ============================================================================

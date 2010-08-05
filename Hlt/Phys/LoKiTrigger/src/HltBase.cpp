@@ -141,6 +141,28 @@ Hlt::Stage::Container*     Hlt::Base::hltStages
     Hlt::Stage::Container>  ( s , location ) ; 
 }      
 // ============================================================================
+// get or create the TES-container of Hlt-DiMuons
+// ============================================================================
+Hlt::L0DiMuonCandidate::Container*     Hlt::Base::hltDiMuons 
+( const std::string& location ) const 
+{
+  IDataProviderSvc* s = evtSvc() ;
+  return 
+    getOrCreate< Hlt::L0DiMuonCandidate::Container, 
+    Hlt::L0DiMuonCandidate::Container>  ( s , location ) ; 
+}      
+// ============================================================================
+// get or create the TES-container of Hlt-MultiTracks
+// ============================================================================
+Hlt::MultiTrack::Container*     Hlt::Base::hltMultiTracks 
+( const std::string& location ) const 
+{
+  IDataProviderSvc* s = evtSvc() ;
+  return 
+    getOrCreate< Hlt::MultiTrack::Container, 
+    Hlt::MultiTrack::Container>  ( s , location ) ; 
+}      
+// ============================================================================
 // The END 
 // ============================================================================
 

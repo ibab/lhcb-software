@@ -95,11 +95,17 @@ namespace Hlt
   protected:
     // ========================================================================
     /// get or create the TES-container of Hlt-Candidates 
-    Hlt::Candidate::Container* hltCandidates 
+    Hlt::Candidate::Container*         hltCandidates 
     ( const std::string& location = Hlt::CandidateLocation::Default ) const ;
     /// get or create the TES-container of Hlt-Stages 
-    Hlt::Stage::Container*     hltStages  
+    Hlt::Stage::Container*             hltStages  
     ( const std::string& location = Hlt::StageLocation::Default     ) const ;
+    /// get or create the TES-container of Hlt-dimuons  
+    Hlt::L0DiMuonCandidate::Container* hltDiMuons
+    ( const std::string& location = Hlt::L0DiMuonCandidateLocation::Default ) const ;
+    /// get or create the TES-container of Hlt-multitracks  
+    Hlt::MultiTrack::Container*        hltMultiTracks
+    ( const std::string& location = Hlt::MultiTrackLocation::Default        ) const ;
     // ========================================================================
   protected:
     // ========================================================================

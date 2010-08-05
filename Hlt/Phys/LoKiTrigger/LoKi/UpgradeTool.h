@@ -75,6 +75,33 @@ namespace LoKi
       ( const Hlt::Candidate::ConstVector& input  , 
         Hlt::Candidate::ConstVector&       output ) const ;
       // ======================================================================      
+    private:
+      // ======================================================================      
+      /** upgrade the candidate          
+       *  @param itrack  input track/seeds 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode _i_upgrade_track 
+      ( const Hlt::Candidate*              input      , 
+        Hlt::Candidate::ConstVector&       output     , 
+        Hlt::Candidate::Container&         candidates ,
+        Hlt::Stage::Container&             stages     , 
+        LHCb::Track::Container*            otracks    ) const ;
+      // ======================================================================      
+      /** upgrade the candidate          
+       *  @param itrack  input track/seeds 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode _i_upgrade_multi_track 
+      ( const Hlt::Candidate*              input        , 
+        Hlt::Candidate::ConstVector&       output       , 
+        Hlt::Candidate::Container&         candidates   ,
+        Hlt::Stage::Container&             stages       , 
+        Hlt::MultiTrack::Container&        multi_tarcks ,
+        LHCb::Track::Container*            otracks      ) const ;
+      // ======================================================================      
     public:
       // ======================================================================
       /// ITracksFromTrack tool name 
