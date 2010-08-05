@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.47 2010-08-04 16:43:18 jpalac Exp $
+!$Id: release.notes,v 1.48 2010-08-05 10:16:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-08-05 - Juan Palacios
+ - python/DSTWriters/dstwriters.py
+  . "default" output stream configurations are now functions returning 
+    a new instance each time.
+ - python/DSTWriters/__dev__/*DSTWriter.py
+  . Use new functions to get default output stream configurations.
 
 ! 2010-08-04 - Juan Palacios
  - python/DSTWriters/microdstelements.py
