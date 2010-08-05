@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# $Id: StrippingPromptCharm.py,v 1.1 2010-08-03 11:54:25 ibelyaev Exp $
+# =============================================================================
+# $Id: StrippingPromptCharm.py,v 1.2 2010-08-05 16:30:24 ibelyaev Exp $
 # =============================================================================
 # $URL
 # =============================================================================
@@ -14,11 +15,11 @@
 #
 #  The cuts more or less corresponds to D*+ selection by Alexandr Kozlinzkiy
 #
-#  @todo fix a problem with CHILD 
 #  @todo fix a problem with DECTREE
 # 
-# $Revision: 1.1 $
-# Last modification $Date: 2010-08-03 11:54:25 $ by $Author: ibelyaev $
+# $Revision: 1.2 $
+# Last modification $Date: 2010-08-05 16:30:24 $
+#                by $Author: ibelyaev $
 # =============================================================================
 """
 
@@ -45,29 +46,30 @@ The performance with 100k events from Reco04-Stripping07-SDSTs.py:
  | Total         |  1.66 +- 0.04   |   320/DaVinciMain = 3.2 ms/event |
  +---------------+-----------------+----------------------------------+
    
-$Revision: 1.1 $
-Last modification $Date: 2010-08-03 11:54:25 $ by $Author: ibelyaev $
+$Revision: 1.2 $
+Last modification $Date: 2010-08-05 16:30:24 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 # =============================================================================
 __all__ = (
     #
-    "Selections"                       , ## the selection
+    "Selections"                       , ## the selections
     #
     'D02HHForPromptCharm_PreSelection' ,
     'D02HHForPromptCharm_Selection'    ,
     'DstarForPromptCharm_Selection'    ,
     'DForPromptCharm_Selection'        ,
-    'LambdaCForPromptChamrSelection'   ,
+    'LambdaCForPromptCharm_Selection'  ,
     #
-    "Lines"                      ,  ## the stripping lines
+    "Lines"                            , ## the stripping lines
     #
-    'D02HHForPromptCharm_Line'   ,
-    'DstarForPromptCharm_Line'   ,
-    'DForPromptCharm_Line'       , 
+    'D02HHForPromptCharm_Line'         ,
+    'DstarForPromptCharm_Line'         ,
+    'DForPromptCharm_Line'             , 
     'LambdaCForPromptCharm_Line'
     )
 # =============================================================================
@@ -272,28 +274,32 @@ Selections = [
 
 from StrippingConf.StrippingLine import StrippingLine
 
-from Configurables               import LoKi__VoidFilter as Filter 
-fltr = Filter (
-    "PVMultiplicityFilter" ,
-    Preambulo = [ "from LoKiCore.functions import in_range" ] ,
-    Code = " in_range ( 0.5 , CONTAINS('Rec/Vertex/Primary') , 3.5 ) " 
-    )
+## require 1,2, or 3 primary vertex 
+PrimaryVertices = (1,3) 
 
 D02HHForPromptCharm_Line   = StrippingLine (
-    "D02HHForPromptCharm" ,
-    algos = [ fltr , D02HHForPromptCharm_Selection   ] )
+    "D02HHForPromptCharm"     ,
+    CheckPV = PrimaryVertices , 
+    algos   = [ D02HHForPromptCharm_Selection   ]
+    )
 
 DstarForPromptCharm_Line   = StrippingLine (
-    "DstarForPromptCharm" ,
-    algos = [ fltr , DstarForPromptCharm_Selection   ] )
+    "DstarForPromptCharm"     ,
+    CheckPV = PrimaryVertices , 
+    algos   = [ DstarForPromptCharm_Selection   ]
+    )
 
 DForPromptCharm_Line       = StrippingLine (
-    "DForPromptCharm" ,
-    algos = [ fltr , DForPromptCharm_Selection       ] )
+    "DForPromptCharm"         ,
+    CheckPV = PrimaryVertices , 
+    algos   = [ DForPromptCharm_Selection       ]
+    )
 
 LambdaCForPromptCharm_Line = StrippingLine (
     "LambdaCForPromptCharm" ,
-    algos = [ fltr , LambdaCForPromptCharm_Selection ] )
+    CheckPV = PrimaryVertices , 
+    algos   = [ LambdaCForPromptCharm_Selection ]
+    )
 
 Lines  = [
     D02HHForPromptCharm_Line   ,
@@ -309,7 +315,7 @@ if '__main__' == __name__ :
     print __doc__
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
-    print ' The output location: '
+    print ' The output locations : '
     for l in Lines :
         print ' \t ', l.outputLocation  () 
     print 80*'*'
