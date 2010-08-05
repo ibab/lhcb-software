@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-05 - Nicola Mangiafave
+ - Added to StreamDimuon 3 new lines:
+ - Bu2KJpsiPiPiLooseLine = loose line for B+ -> K+ X(3872)(->J/psi(mumu)rho(pipi)) 
+   and  B+ -> K+ Psi(2S)(->J/psi(mumu)pi+pi-). 
+ - Bu2KX3872Line = tight line for B+ -> K+ X(3872)(->J/psi(mumu)rho(pi+pi-)). 
+ - Bu2KPsi2SLine = tight line for B+ -> K+ Psi(2S)(->J/psi(mumu)pi+pi-). 
+
 ! 2010-08-05 - Alexandr Kozlinskiy
  - updated DstarPromptWithD02HHNoPt: added PID cuts on kaon and pion from D0.
 

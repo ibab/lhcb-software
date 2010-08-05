@@ -43,6 +43,8 @@ from StrippingSelections.StrippingDKPiMu import StrippingDKPiMuConf
 
 from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
 
+from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
+
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
@@ -99,6 +101,10 @@ stream.appendLines( [
                         ## Add b-Baryon Y.Amhis 29-07-10
                         , StrippingLambdab2JpsiLambdaConf().line_LL()
                         , StrippingLambdab2JpsiLambdaConf().line_DD()
+
+                        , StrippingBu2KJpsiPiPiConf().loose_line()
+                        , StrippingBu2KJpsiPiPiConf().X3872_line()
+                        , StrippingBu2KJpsiPiPiConf().Psi2S_line()
                         
                         ] )
 ###
