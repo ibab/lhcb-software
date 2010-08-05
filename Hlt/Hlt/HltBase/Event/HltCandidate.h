@@ -1,4 +1,4 @@
-// $Id: HltCandidate.h,v 1.5 2010-08-02 18:15:37 ibelyaev Exp $ 
+// $Id: HltCandidate.h,v 1.6 2010-08-05 10:58:36 ibelyaev Exp $ 
 // ============================================================================
 #ifndef HltEvent_Candidate_H
 #define HltEvent_Candidate_H 1
@@ -135,7 +135,7 @@ namespace Hlt
     /// Clear  Reference to the stages
     void clearStages() { m_stages.clear() ; }
     /// Has stage ?
-    bool hasStages ( const Hlt::Stage* stage ) const ;
+    bool hasStage ( const Hlt::Stage* stage ) const ;
     // ========================================================================
   public: // standard 
     // ========================================================================  

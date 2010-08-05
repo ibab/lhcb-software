@@ -4,6 +4,11 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-08-05 - Vanya Belyaev
+
+ - MultiTrack
+   more polishing 
+
 ! 2010-08-02 - Vanya Belyaev
 
  - Hlt::Stage & Htl::Candidate 

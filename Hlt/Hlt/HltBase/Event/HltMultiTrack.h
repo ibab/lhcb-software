@@ -1,21 +1,12 @@
-
-//   **************************************************************************
-//   *                                                                        *
-//   *                      ! ! ! A T T E N T I O N ! ! !                     *
-//   *                                                                        *
-//   *  This file was created automatically by GaudiObjDesc, please do not    *
-//   *  delete it or edit it by hand.                                         *
-//   *                                                                        *
-//   *  If you want to change this file, first change the corresponding       *
-//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
-//   *  are using it from inside a Gaudi-package).                            *
-//   *                                                                        *
-//   **************************************************************************
-
+// $Id: HltMultiTrack.h,v 1.2 2010-08-05 10:58:36 ibelyaev Exp $
+// ============================================================================ 
 #ifndef HltEvent_MultiTrack_H
 #define HltEvent_MultiTrack_H 1
-
+// ============================================================================ 
+// $URL$ 
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Event/Track.h"
 #include "GaudiKernel/NamedRange.h"
 #include "GaudiKernel/ContainedObject.h"
@@ -30,23 +21,18 @@
 #include "GaudiKernel/SmartRef.h"
 #include <vector>
 #include <ostream>
-
+// ============================================================================
 // Forward declarations
-
+// ============================================================================
 namespace Hlt
 {
-
-  // Forward declarations
-  
-  // Class ID definition
-  static const CLID CLID_MultiTrack = 7564;
-  
+  // ==========================================================================
   // Namespace for locations in TDS
-  namespace MultiTrackLocation {
+  namespace MultiTrackLocation 
+  {
     static const std::string& Default = "Hlt/MultiTracks";
   }
-  
-
+  // ==========================================================================
   /** @class MultiTrack MultiTrack.h
    *
    * Representation of di-track for Hlt 
@@ -55,62 +41,56 @@ namespace Hlt
    * created Mon Jun 14 15:57:48 2010
    * 
    */
-
   class MultiTrack: public ContainedObject
   {
-  public:
-
+    // ========================================================================
+  public: // related types 
+    // ========================================================================
     /// typedef for std::vector of MultiTrack
-    typedef std::vector<MultiTrack*> Vector;
-    typedef std::vector<const MultiTrack*> ConstVector;
-  
-  /// typedef for ObjectVector of MultiTrack
-  typedef ObjectVector<MultiTrack> Container;
-  
+    typedef std::vector<MultiTrack*>       Vector      ;
+    typedef std::vector<const MultiTrack*> ConstVector ;
+    /// typedef for ObjectVector of MultiTrack
+    typedef ObjectVector<MultiTrack> Container;
     /// The container type for shared di-tracks (without ownership)
-    typedef SharedObjectsContainer<Hlt::MultiTrack> Selection;
+    typedef SharedObjectsContainer<Hlt::MultiTrack> Selection ;
     /// For uniform access to containers in TES (KeyedContainer,SharedContainer) 
-    typedef Gaudi::NamedRange_<ConstVector> Range;
-  
+    typedef Gaudi::NamedRange_<ConstVector>         Range     ;    
+    /// references to tracks 
+    typedef SmartRefVector<LHCb::Track> Tracks ;
+    // ========================================================================
+  public: // constrcuted & desctructor 
+    // ========================================================================
     /// Default Constructor
-    MultiTrack() {}
-  
+    MultiTrack() {}    
     /// Default Destructor
-    virtual ~MultiTrack() {}
-  
+    virtual ~MultiTrack() ;
+    // ========================================================================
     // Retrieve pointer to class definition structure
-    virtual const CLID& clID() const;
-    static const CLID& classID();
-  
+    virtual const CLID& clID    () const ;
+    static  const CLID& classID () ;    
     /// Fill the ASCII output stream
-   virtual std::ostream& fillStream(std::ostream& s) const;
-  
-    /// Retrieve (const)  Reference to the first track
-    const LHCb::Track* first() const;
-  
-    /// Retrieve  Reference to the first track
-    LHCb::Track* first();
-  
-    /// Update  Reference to the first track
-    void setFirst(const SmartRef<LHCb::Track>& value);
-  
-    /// Update (pointer)  Reference to the first track
-    void setFirst(const LHCb::Track* value);
-  
-    /// Retrieve (const)  Reference to the second track
-    const LHCb::Track* second() const;
-  
-    /// Retrieve  Reference to the second track
-    LHCb::Track* second();
-  
-    /// Update  Reference to the second track
-    void setSecond(const SmartRef<LHCb::Track>& value);
-  
-    /// Update (pointer)  Reference to the second track
-    void setSecond(const LHCb::Track* value);
-  
-  
-  #ifndef GOD_NOALLOC
+    virtual std::ostream& fillStream(std::ostream& s) const;
+    // ========================================================================
+  public: // constrcuted & desctructor 
+    // ========================================================================
+    /// get the tracks 
+    inline       Tracks& tracks ()       { return m_tracks ; }
+    /// get the tracks 
+    inline const Tracks& tracks () const { return m_tracks ; }
+    /// Update  References to tarcks 
+    void setTracks        ( const Tracks&      tracks ) ; 
+    /// Add to (pointer) reference to the stages
+    void addToTracks      ( const LHCb::Track* track  ) ; 
+    /// Remove from  reference to the tarcks
+    void removeFromTracks ( const LHCb::Track* track  ) ;
+    /// Clear  Reference to the tarcks 
+    void clearTracks() { m_tracks.clear() ; }
+    /// Has track ?
+    bool hasTrack         ( const LHCb::Track* track ) const ;
+    // ========================================================================
+  public:
+    // ========================================================================
+#ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )
     {
@@ -118,7 +98,7 @@ namespace Hlt
                boost::singleton_pool<MultiTrack, sizeof(MultiTrack)>::malloc() :
                ::operator new(size) );
     }
-  
+    
     /// placement operator new
     /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
     /// it is not needed in libstdc++ >= 3.4
@@ -126,102 +106,42 @@ namespace Hlt
     {
       return ::operator new (size,pObj);
     }
-  
+    
     /// operator delete
     static void operator delete ( void* p )
     {
       boost::singleton_pool<MultiTrack, sizeof(MultiTrack)>::is_from(p) ?
-      boost::singleton_pool<MultiTrack, sizeof(MultiTrack)>::free(p) :
-      ::operator delete(p);
+        boost::singleton_pool<MultiTrack, sizeof(MultiTrack)>::free(p) :
+        ::operator delete(p);
     }
-  
+    
     /// placement operator delete
     /// not sure if really needed, but it does not harm
     static void operator delete ( void* p, void* pObj )
     {
       ::operator delete (p, pObj);
     }
-  #endif
+#endif
+    // ========================================================================
   protected:
-
+    // ========================================================================
+    // ========================================================================
   private:
-
-    SmartRef<LHCb::Track> m_first;  ///< Reference to the first track
-    SmartRef<LHCb::Track> m_second; ///< Reference to the second track
-  
+    // ========================================================================
+    /// the tracks:
+    SmartRefVector<LHCb::Track> m_tracks ;  //tracks 
+    // ========================================================================
   }; // class MultiTrack
-
+  // ==========================================================================
   /// Definition of vector container type for MultiTrack
   typedef ObjectVector<MultiTrack> MultiTracks;
-  
+  /// outptu operator 
   inline std::ostream& operator<< (std::ostream& str, const MultiTrack& obj)
-  {
-    return obj.fillStream(str);
-  }
-  
-} // namespace LHCb;
-
-// -----------------------------------------------------------------------------
-// end of class
-// -----------------------------------------------------------------------------
-
-// Including forward declarations
-
-inline const CLID& Hlt::MultiTrack::clID() const
-{
-  return Hlt::MultiTrack::classID();
-}
-
-inline const CLID& Hlt::MultiTrack::classID()
-{
-  return CLID_MultiTrack;
-}
-
-inline std::ostream& Hlt::MultiTrack::fillStream(std::ostream& s) const
-{
-  return s;
-}
-
-
-inline const LHCb::Track* Hlt::MultiTrack::first() const
-{
-  return m_first;
-}
-
-inline LHCb::Track* Hlt::MultiTrack::first()
-{
-  return m_first;
-}
-
-inline void Hlt::MultiTrack::setFirst(const SmartRef<LHCb::Track>& value)
-{
-  m_first = value;
-}
-
-inline void Hlt::MultiTrack::setFirst(const LHCb::Track* value)
-{
-  m_first = value;
-}
-
-inline const LHCb::Track* Hlt::MultiTrack::second() const
-{
-  return m_second;
-}
-
-inline LHCb::Track* Hlt::MultiTrack::second()
-{
-  return m_second;
-}
-
-inline void Hlt::MultiTrack::setSecond(const SmartRef<LHCb::Track>& value)
-{
-  m_second = value;
-}
-
-inline void Hlt::MultiTrack::setSecond(const LHCb::Track* value)
-{
-  m_second = value;
-}
-
-
+  { return obj.fillStream(str); }
+  // ==========================================================================
+} //                                                      end of namespace LHCb
+// ============================================================================
+// The END 
+// ============================================================================
 #endif ///HltEvent_MultiTrack_H
+// ============================================================================

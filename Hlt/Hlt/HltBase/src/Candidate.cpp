@@ -1,4 +1,4 @@
-// $Id: Candidate.cpp,v 1.2 2010-08-02 18:15:38 ibelyaev Exp $
+// $Id: Candidate.cpp,v 1.3 2010-08-05 10:58:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -62,7 +62,7 @@ void Hlt::Candidate::addToStages ( const Hlt::Stage* value )
 // ===========================================================================
 // Has stage ? 
 // ===========================================================================
-bool Hlt::Candidate::hasStages ( const Hlt::Stage* stage ) const
+bool Hlt::Candidate::hasStage ( const Hlt::Stage* stage ) const
 {
   return 
     0 != stage && 
