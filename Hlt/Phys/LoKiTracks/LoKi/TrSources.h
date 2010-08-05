@@ -1,4 +1,4 @@
-// $Id: TrSources.h,v 1.2 2009-07-13 19:02:49 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TRSOURCES_H 
 #define LOKI_TRSOURCES_H 1

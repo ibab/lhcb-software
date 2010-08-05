@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.21 2010-06-06 08:33:35 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKITRACKSDICT_H 
 #define LOKI_LOKITRACKSDICT_H 1
@@ -13,6 +13,10 @@
 #include "LoKi/TrSources.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/LoKiTracks.h"
+// ============================================================================
+#include "LoKi/ITrackFunctorFactory.h"
+#include "LoKi/ITrackFunctorAntiFactory.h"
+#include "LoKi/TrackEngine.h"
 // ============================================================================
 namespace LoKi
 {
@@ -203,14 +207,13 @@ namespace
   // ==========================================================================
   struct _Instantiations 
   {
+    // ========================================================================
     // the basic functions 
-    LoKi::Dicts::Funcs<const LHCb::Track*>                    m_f1  ;
-    //
-    LoKi::Dicts::VFuncs<const LHCb::Track*>                   m_v1  ;
+    LoKi::Dicts::Funcs     <const LHCb::Track*>               m_f1   ;
+    LoKi::Dicts::VFuncs    <const LHCb::Track*>               m_v1   ;
     // operators 
-    LoKi::Dicts::FuncOps<const LHCb::Track*>                  m_o1  ;
-    // operators 
-    LoKi::Dicts::CutsOps<const LHCb::Track*>                  m_co1  ;
+    LoKi::Dicts::FuncOps   <const LHCb::Track*>               m_o1   ;
+    LoKi::Dicts::CutsOps   <const LHCb::Track*>               m_co1  ;
     // functionals 
     LoKi::Dicts::MapsOps   <const LHCb::Track*>               m_fo1  ;
     LoKi::Dicts::PipeOps   <const LHCb::Track*>               m_fo3  ;
@@ -219,13 +222,13 @@ namespace
     LoKi::Dicts::SourceOps <const LHCb::Track*>               m_fo9  ;
     LoKi::Dicts::CutValOps <const LHCb::Track*>               m_fo11 ;
     // infor 
-    LoKi::Dicts::InfoOps   <const LHCb::Track*>               m_i1 ;
+    LoKi::Dicts::InfoOps   <const LHCb::Track*>               m_i1   ;
     // calls 
-    LoKi::Dicts::FunCalls<LHCb::Track>                        m_cf1 ;
-    LoKi::Dicts::CutCalls<LHCb::Track>                        m_cc1 ;
+    LoKi::Dicts::FunCalls<LHCb::Track>                        m_cf1  ;
+    LoKi::Dicts::CutCalls<LHCb::Track>                        m_cc1  ;
     /// trivia:
-    LoKi::Functors::Empty <const LHCb::Track*>      m_e1 ;
-    LoKi::Functors::Size  <const LHCb::Track*>      m_s1 ;
+    LoKi::Functors::Empty <const LHCb::Track*>                m_e1   ;
+    LoKi::Functors::Size  <const LHCb::Track*>                m_s1   ;
     /// fictive constructor 
     _Instantiations () ;
     // ========================================================================

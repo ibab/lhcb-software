@@ -1,10 +1,13 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.21 2010-04-06 20:24:49 ibelyaev Exp $ 
+     * $Id$ 
      * ========================================================================
      * @file
-     * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
+     *
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiTracks package
+     *
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
+     *
      * ========================================================================
 -->
 
@@ -35,15 +38,20 @@
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
-
+  
   <function pattern = "LoKi::Dicts::TrInfo::info*" />
   
-  <enum name= "LHCb::Track::Flags"     />
   
-  <class pattern   = "LoKi::ITrHybrid**" />
-  <class pattern   = "LoKi::Hybrid::*"   />
+  <class name = "LoKi::ITrackFunctorFactory"     />
+  <class name = "LoKi::ITrackFunctorAntiFactory" />
+  <class name = "LoKi::Hybrid::TrackEngine"      />
+  
 
   <class pattern   = "LoKi::Hlt1::*" />
   
+  <!-- 
+       <class pattern   = "LoKi::Hybrid::*"   />
+  --> 
+
   
 </lcgdict>
