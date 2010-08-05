@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.14 2010-05-27 15:02:30 jpalac Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.15 2010-08-05 07:31:50 jpalac Exp $
 // Include files 
 
 #include <boost/lambda/lambda.hpp>
@@ -91,17 +91,25 @@ StatusCode TutorialAlgorithm::execute() {
 StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::Range& daughters){
 
   LHCb::Particle::ConstVector DaPlus, DaMinus;
-  size_t sc = DaVinci::filter(daughters,
-                              bind(&LHCb::Particle::charge,_1)<0,
-                              DaMinus);
-  if (sc>0) {
-    sc = DaVinci::filter(daughters,
-                         bind(&LHCb::Particle::charge,_1)>0,
-                         DaPlus);
+  size_t _sc = DaVinci::filter(daughters,
+                               bind(&LHCb::Particle::charge,_1)<0,
+                               DaMinus);
+  verbose() << "Filtered " << _sc << " negative particles" << endmsg;
+  if (_sc>0) {
+    _sc = DaVinci::filter(daughters,
+                          bind(&LHCb::Particle::charge,_1)>0,
+                          DaPlus);
+    verbose() << "Filtered " << _sc << " positive particles" << endmsg;
   } else {
-    warning() << "Filtered no particles" << endmsg ;
-    return StatusCode::FAILURE;
+    return Warning("Filtered no negative particles", StatusCode::SUCCESS,1) ;
   }
+
+  if (_sc <=0) {
+    return Warning("Filtered no positive particles", StatusCode::SUCCESS,1);
+  }
+  
+
+  StatusCode sc = StatusCode::SUCCESS;
 
   for ( LHCb::Particle::ConstVector::const_iterator imp =  DaPlus.begin() ;
         imp != DaPlus.end() ; ++imp ){
@@ -117,13 +125,16 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::Range& daughters)
       LHCb::Vertex DaDaVertex;
       LHCb::Particle Mother(m_motherID);
       
-      StatusCode scFit = vertexFitter()->fit(DaDaVertex, *(*imp), *(*imm), Mother);
+      StatusCode scFit = vertexFitter()->fit(*(*imp), *(*imm), DaDaVertex, Mother);
       if (!scFit) {
-        Warning("Fit error",StatusCode::SUCCESS,1).ignore();
+        Warning("Fit error",StatusCode::SUCCESS).ignore();
         continue;
       }
-      if (msgLevel(MSG::DEBUG)) debug() << "Vertex fit at " << DaDaVertex.position()/cm
-              << " with chi2 " << DaDaVertex.chi2() << endmsg;
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << "Vertex fit at " << DaDaVertex.position()/cm
+                << " with chi2 " << DaDaVertex.chi2() << endmsg;
+      }
+      
       plot(DaDaVertex.chi2(),"Chi2", "TwoP Chi^2",0.,200.);
       if ( DaDaVertex.chi2() > m_motherChi2 ) continue ; // chi2 cut
       // happy -> keep
