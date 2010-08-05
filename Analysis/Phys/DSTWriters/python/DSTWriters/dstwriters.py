@@ -1,10 +1,10 @@
 ''' '''
-#$Id: dstwriters.py,v 1.7 2010-08-03 16:51:01 jpalac Exp $
+#$Id: dstwriters.py,v 1.8 2010-08-05 10:16:12 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
@@ -13,14 +13,17 @@ from streamconf import OutputStreamConf
 
 from copy import copy
         
-baseDSTWriterConf = OutputStreamConf(streamType = InputCopyStream)
+def baseDSTWriterConf():
+    return OutputStreamConf(streamType = InputCopyStream)
 
-microDSTWriterConf = OutputStreamConf(streamType = OutputStream,
-                                      fileExtension = '.mdst',
-                                      extraItems = ['/Event/DAQ/ODIN#1',
-                                                    '/Event/Rec/Header#1'])
+def microDSTWriterConf() :
+    return OutputStreamConf(streamType = OutputStream,
+                            fileExtension = '.mdst',
+                            extraItems = ['/Event/DAQ/ODIN#1',
+                                          '/Event/Rec/Header#1'])
 
-selDSTWriterConf = OutputStreamConf(streamType = InputCopyStream)
+def selDSTWriterConf() :
+    return OutputStreamConf(streamType = InputCopyStream)
 
 class DSTWriterSelectionSequence(object) :
     '''
