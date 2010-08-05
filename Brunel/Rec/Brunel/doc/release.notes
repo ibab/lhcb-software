@@ -13,6 +13,8 @@ Purpose: LHCb reconstruction program
 - bug #71012, new fit mechanism for tracks breaks Calo photon reconstruction
   . Two packages are reverted to older versions: Tr/TrackFitter v2r49, Tr/TrackTools v3r33
 
+- The test references have been updated
+
 </PRE><H1><A NAME=v37r6>2010-07-26 Brunel v37r6</A></H1><PRE>
 - Dummy release to pick up the latest Rec, v10r3
 
