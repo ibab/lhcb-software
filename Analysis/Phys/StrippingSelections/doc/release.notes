@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-05 - Alexandr Kozlinskiy
+ - updated DstarPromptWithD02HHNoPt: added PID cuts on kaon and pion from D0.
+
 ! 2010-08-03 - Vanya Belyaev
 
  - StrippingPromptCharm.py

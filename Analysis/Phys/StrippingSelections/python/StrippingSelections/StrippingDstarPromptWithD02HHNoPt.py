@@ -3,7 +3,7 @@
 __author__ = 'Alexandr Kozlinskiy'
 __email__ = 'akozlins@cern.ch'
 __date__ = '22/05/2010'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 """
 
@@ -13,6 +13,7 @@ This stripping line selects prompt D* in decay modes
 Cuts:
   * Particles input: StdNoPIDsPions, StdNoPIDsKaons
   * Track-Chi2/NDOF of the D0 daughters < 10
+  * Kaon from D0: PIDK - PIDpi > 0; pion from D0: PIDpi - PIDK > 0
   * IP-Chi2 of the D0 daughters > 9
   * D0 mass window 75 MeV
   * Chi2 of the D0 vertex < 9
@@ -33,11 +34,13 @@ from Configurables import CombineParticles
 D0Combine = CombineParticles( "CombD02HHForDstarPromptNoPt" )
 D0Combine.DecayDescriptors = [ "D0 -> pi+ pi-", "D0 -> K- pi+", "D0 -> K+ pi-", "D0 -> K+ K-" ]
 D0Combine.DaughtersCuts = {
-  "pi+" : "(TRCHI2DOF < 10) & (BPVIPCHI2() > 9)",
-  "K+" : "(TRCHI2DOF < 10) & (BPVIPCHI2() > 9)"
+  "pi+" : "(TRCHI2DOF < 10) & (PIDpi  - PIDK > 0) & (BPVIPCHI2() > 9)",
+  "K+" : "(TRCHI2DOF < 10) & (PIDK  - PIDpi > 0) & (BPVIPCHI2() > 9)"
+#  "pi+" : "(TRCHI2DOF < 10) & (BPVIPCHI2() > 9)",
+#  "K+" : "(TRCHI2DOF < 10) & (BPVIPCHI2() > 9)"
 }
 D0Combine.CombinationCut = "(ADAMASS('D0') < 80 * MeV)"
-D0Combine.MotherCut = "(VFASPF(VCHI2) < 9) & (DMASS('D0') < 75 * MeV) & (BPVLTFITCHI2() < 36) & (BPVLTIME() > 0.3 * ps)"
+D0Combine.MotherCut = "(VFASPF(VCHI2) < 9) & (ADMASS('D0') < 75 * MeV) & (BPVLTFITCHI2() < 36) & (BPVLTIME() > 0.3 * ps)"
 
 # D* combine
 DstarCombine = CombineParticles( "CombDstarPromptWithD02HHNoPt" )
@@ -58,7 +61,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from Configurables import LoKi__VoidFilter
 lineDstarPromptWithD02HHNoPt = StrippingLine("DstarPromptWithD02HHNoPt",
                                              algos = [
-                                               LoKi__VoidFilter("NPVFilter", Code = "CONTAINS('Rec/Vertex/Primary') < 3.5"),
+#                                               LoKi__VoidFilter("NPVFilter", Code = "CONTAINS('Rec/Vertex/Primary') < 3.5"),
                                                DstarSelection ],
                                              prescale = 1)
 
