@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.6 2010-08-05 10:14:53 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.7 2010-08-05 16:15:15 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -34,7 +34,7 @@ class BaseDSTWriter(ConfigurableUser) :
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         , "WriteFSR"           : """ Flags whether to write out an FSR """
         , "StreamConf"         : """ Output stream configuration """
-        , "MicroDSTElements"   : """ List of callables setting up each element to be copied to MicroDST partition."""
+        , "MicroDSTElements"   : """ List of callables setting up each element to be added to each SelectionSequence and copied to MicroDST partition."""
         }
 
     def buildClonerList(self, selSeq) :
