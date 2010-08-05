@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.98 2010-07-05 12:28:21 jhe Exp $
+!$Id: release.notes,v 1.99 2010-08-05 07:33:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,13 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-05 - Juan Palacios
+ - solutions/DaVinci3/TutorialAlgorithm.cpp
+  . Continue processing events when daughters are not found.
+  . Correct order of arguments to vertex fitter.
+ - cmt/requirements
+  . Increase to v8r6p1.
 
 ! 2010-07-05 - Jibo He
  - solutions/DaVinci2/TutorialAlgorithm.cpp
