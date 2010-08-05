@@ -19,6 +19,8 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/ITransportSvc.h"
 
+#include "Kernel/IProtoParticleFilter.h"
+
 /** @class RecVertices2Particles RecVertices2Particles.h
  *  @brief Turn a given container of RecVertex if they fulfill some criteria
  *  @author Neal Gauvin
@@ -53,7 +55,6 @@ private:
   unsigned int GetNbVeloTracks();
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
-			   const LHCb::Particle::ConstVector &, 
 			   LHCb::Particle::ConstVector & );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
@@ -123,6 +124,13 @@ private:
   bool   m_SaveTuple;        ///< Save candidate infos in a tuple
   bool   m_UseMap;           ///< Use a map to store Particle Track relation
   bool   m_MapCalled;         ///< has the map been already called in event ?
+  /***************************************************************//**
+   * When trying to associate tracks participating to the reconstructed
+   * vertex with a Particle, use Particles from the TES.
+   * The alternative is to find the associated protoparticle and make 
+   * a Particle with best PID. 
+   ******************************************************************/
+  bool   m_UsePartFromTES;
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation;
   std::string m_Fitter;      ///< method for fitting the RecVertex
@@ -153,6 +161,41 @@ private:
       return first->position().z() < second->position().z();
     }
   };
+
+  //-------------------------------------------------------------------
+  //This part defines the members used in the MakeParticle function
+  /// Create Particle from ProtoParticle with best PID
+  const LHCb::Particle * MakeParticle( const LHCb::ProtoParticle * );
+  /// Map type that takes a particle type to a ProtoParticle filter
+  typedef std::pair< const LHCb::ParticleProperty *, 
+                     const IProtoParticleFilter* > ProtoPair;
+  typedef std::vector < ProtoPair > ProtoMap;
+  ProtoMap m_protoMap;
+  
+  class DLLPIDPair {
+    
+  private:
+    std::string pid;
+    double dll;
+    
+    DLLPIDPair() {};
+    
+  public:
+    DLLPIDPair( std::string name, double val) :
+      pid(name),
+      dll(val) {};
+    
+    ~DLLPIDPair() {};
+    std::string & GetPid(){ return pid; }
+    const double & GetDll() const { return dll; }
+    
+    static bool cmp( const DLLPIDPair& one, const DLLPIDPair& two )  {
+      return one.GetDll() > two.GetDll();
+    }
+  };
+  
+  typedef std::vector < DLLPIDPair > DLLPIDVector;   ///< DLL, PID pairs
+  //-------------------------------------------------------------------
   
   //Use for study and debugging purpose
   void PrintTrackandParticles();

@@ -346,7 +346,7 @@ StatusCode DisplVertices::execute(){
   //------------------Set the beam line------------------
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particle::Range>( m_BLLoc ) ){
-      const Particle::Range & BL = get<Particle::Range>( m_BLLoc );      
+      const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
       m_BeamLine->setMomentum( tmp->momentum() );
@@ -363,8 +363,8 @@ StatusCode DisplVertices::execute(){
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   }
 
-  //------------------The Code---------------------------  
-  const Particle::ConstVector & preys = desktop()->particles();
+  //------------------The Code---------------------------
+  const Particle::ConstVector preys = desktop()->particles();
   if( msgLevel( MSG::DEBUG ) )
     debug() << "There are " << preys.size() <<" particles in TES !" << endmsg;
   if( preys.size() < m_NbCands ){
@@ -867,7 +867,7 @@ void DisplVertices::StudyPV(){
 
   //Get all reconstructed 3D vertices
   //RecVertices* DV = get<RecVertices>( "Rec/Vertices/RV" );
-  const Particle::ConstVector & DV = desktop()->particles();
+  const Particle::ConstVector DV = desktop()->particles();
   unsigned int size = DV.size() ;
   debug()<< "Number of Displaced Vertices " << size << endmsg;
   plot( size,"NbofDisplVtx", 0,12 );
@@ -1027,7 +1027,7 @@ void DisplVertices::StudyEoverNbTrk(){
   int nbdown = 0;
 
   //Get tracks
-  const Track::Range & gettracks = get<Track::Range>( TrackLocation::Default );
+  const Track::Range gettracks = get<Track::Range>( TrackLocation::Default );
   debug() << "There are " << gettracks.size() << " tracks" << endmsg ;
   Track::ConstVector tracks(gettracks.begin(), gettracks.end());
 
@@ -1957,7 +1957,7 @@ void  DisplVertices::GetMCStable( const MCVertex* V ){
 //*********Study of data linked daughters*******
 //Loop on stable daughter particles
   MCTrackInfo info = MCTrackInfo( evtSvc(), msgSvc() );
-  const Particle::ConstVector & preys = desktop()->particles();
+  const Particle::ConstVector preys = desktop()->particles();
 
   //Create direct linking
   Particle::ConstVector::const_iterator pend = preys.end();
@@ -2362,7 +2362,7 @@ void DisplVertices::SaveGenPartinTuple( const HepMC::GenEvent* evt ){
 unsigned int DisplVertices::GetNbVeloTracks(){
 
   unsigned int nbv = 0;
-  const Track::Range & Trks = get<Track::Range>( TrackLocation::Default );
+  const Track::Range Trks = get<Track::Range>( TrackLocation::Default );
   for(Track::Range::const_iterator itr = Trks.begin(); 
         Trks.end() != itr; ++itr) {
       if( (*itr)->hasVelo() ) ++nbv;
@@ -2384,7 +2384,7 @@ StatusCode  DisplVertices::SaveGEC( Tuple & tuple,
   double sumSVxyDist = 0.;
 
   //Get forward tracks
-  const Track::Range & inputTracks = get<Track::Range>(TrackLocation::Default);
+  const Track::Range inputTracks = get<Track::Range>(TrackLocation::Default);
   //Get the PV
   const RecVertex::Range & primVertices = this->primaryVertices();
 
@@ -3429,7 +3429,7 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   }      
 
   //Was a prey reconstructed ? Look in the preselection container !
-  const Particle::ConstVector & cands = desktop()->particles();
+  const Particle::ConstVector cands = desktop()->particles();
   bool cand = false;
   if( cands.size() > 0 ) cand = true;
   tuple->column( "Reco", cand );

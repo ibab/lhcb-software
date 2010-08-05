@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-08-05 - Neal Gauvin
+ - New option UsePartFromTES in RecVertices2Particles. DisplVertices consequently adapted.
+
 ! 2010-08-02 - Neal Gauvin
  - Code improvements for speed.
  - Add new features for tupling.
