@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@nikhef.nl"
 __date__    = "2007-07-17"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$" 
 # =============================================================================
 __all__     = ()
 # =============================================================================

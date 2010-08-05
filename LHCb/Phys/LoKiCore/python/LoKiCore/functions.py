@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.26 2010-06-05 20:13:30 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file functions.py LoKiCore/function.py
 #  The set of basic functions for from LoKiCore library
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author_   = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.26 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 from LoKiCore.decorators import LoKi
 

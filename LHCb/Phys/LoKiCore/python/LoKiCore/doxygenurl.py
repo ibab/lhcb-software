@@ -36,7 +36,7 @@ and the minor helper function
   
 """
 # =============================================================================
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision$ "
 __author__  = " Vanya BELYAEV ibelyaev@physics.syr.edu "
 __date__    = " 2007-07-22"
 __all__     = (

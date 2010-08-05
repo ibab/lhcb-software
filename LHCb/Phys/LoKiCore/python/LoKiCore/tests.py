@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.4 2010-05-30 17:06:43 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file   LoKiCore/tests.py
 #
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
 __date__     = "2007-05-29"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $ "
+__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision$ "
 # =============================================================================
 ## The most trivial test function
 def test() :

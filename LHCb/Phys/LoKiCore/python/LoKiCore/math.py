@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: math.py,v 1.4 2010-05-30 17:06:43 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiCore/math.py
 #  helper file for redefine the standard mathematical functions
@@ -32,7 +32,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author_   = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "2007-01-17"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 import math
 

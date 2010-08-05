@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.32 2010-06-05 20:13:30 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiCore library
@@ -29,7 +29,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.32 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 import PyCintex

@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.20 2010-04-06 20:06:40 ibelyaev Exp $ 
+     * $Id$ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.20 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision$ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
