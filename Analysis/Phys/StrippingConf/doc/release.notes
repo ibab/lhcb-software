@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.79 2010-07-11 15:18:50 jpalac Exp $
+!$Id: release.notes,v 1.80 2010-08-05 14:24:53 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-08-05 - Anton Poluektov 
+ - python/StrippingConf/StrippingLine.py
+   checkPV argument of StrippingLine can now be: 
+     * Boolean: if True, at least 1 PV is required (as before). By default checkPV=True
+     * Integer: Minimum number of PVs
+     * tuple of 2 elements: Minimum and maximum number of PVs
 
 !========================== StrippingConf v3r6 2010-07-11 =================
 

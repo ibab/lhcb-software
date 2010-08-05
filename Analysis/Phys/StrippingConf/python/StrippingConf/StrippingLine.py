@@ -414,11 +414,26 @@ class StrippingLine(object):
         line = self.subname()
         
         # if needed, check Primary Vertex before running all algos
-        if checkPV :
-            from Configurables import CheckPV
-    	    check = CheckPV("checkPV");
+        
+        from Configurables import CheckPV
+        if checkPV == True:
+    	    check = CheckPV("checkPVmin1");
     	    check.MinPVs = 1;
     	    self._members.insert(0, check);
+    	elif isinstance(checkPV, int) : 
+    	    check = CheckPV("checkPVmin%d" % checkPV)
+    	    check.MinPVs = checkPV
+    	    self._members.insert(0, check);
+    	elif isinstance(checkPV, tuple) : 
+    	    if len(checkPV) == 2 : 
+    		check = CheckPV("checkPVmin%dmax%d" % checkPV)
+    		check.MinPVs = checkPV[0]
+    		check.MaxPVs = checkPV[1]
+    		self._members.insert(0, check);
+    	    else :
+    		raise TypeError, "Wrong checkPV tuple length %d, should be 2" % len(checkPV)
+    	elif checkPV != False : 
+    	    raise TypeError, "Wrong checkPV argument type '%s'" % type(checkPV).__name__
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
