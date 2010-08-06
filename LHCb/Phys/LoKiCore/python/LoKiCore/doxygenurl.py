@@ -80,7 +80,8 @@ __all__     = (
 ## URL-s patterns
 # =============================================================================
 _ROOTURL    = 'http://root.cern.ch/root/html/%s.html'
-_GAUDIURL   = 'http://cern.ch/proj-gaudi/releases/GAUDI/%s/doc/html/%s'
+##_GAUDIURL   = 'http://cern.ch/proj-gaudi/releases/GAUDI/%s/doc/html/%s'
+_GAUDIURL   = 'http://cern.ch/proj-gaudi/releases/%s/doxygen/%s'
 _LHCBURL    = 'http://cern.ch/LHCb-release-area/DOC/%s/releases/%s/doxygen/'
 
 ## the default list of projects (if not specified)
@@ -138,21 +139,24 @@ def _projVersion ( project = None ) :
 
     ##  "/PROJECT/PROJECT_" or "\PROJECT\PROJECT_"    
     PROJECT     = project.upper()
-    PROJECTROOT = PROJECT + 'ROOT'
-    if not os.environ.has_key( PROJECTROOT ) : return (None,None)   ## RETURN
-    
-    root   = os.environ[ PROJECTROOT ]
-    target = os.sep + PROJECT + os.sep + PROJECT + "_"
-    l      = root.rfind ( target )
-    if 0 > l :                                return  (None,None)   ## RETURN 
 
-    l = l + 2 *len(PROJECT) + 3 
-    root = root[l:]
+    target      = os.sep + PROJECT + os.sep + PROJECT + "_"
+    
+    found = ''
+    for key in os.environ :
+        root = os.environ[key] 
+        l      = root.rfind ( target )
+        if 0 <= l :
+            l = l + 2 *len(PROJECT) + 3 
+            found = root[l:]
+            break 
+        
+    if not found : return None 
     
     ## "PROJECT_vers1:"
-    vers1 = root.split ( os.pathsep ) [0]
+    vers1 = found.split ( os.pathsep ) [0]
     ## "PROJECT_vers1/"
-    vers2 = root.split ( os.sep     ) [0]
+    vers2 = found.split ( os.sep     ) [0]
     ## 
     return min(vers1,vers2)
 
@@ -196,7 +200,7 @@ def _namspDoxName ( klassname ) :
 # =============================================================================
 ## Helper method to loop over projects and find the proper pages
 # =============================================================================
-def _getURL ( klass , dox , projects , latest = False ) :
+def _getURL ( klass , dox , projects , latest = True ) :
     """
     Helper method to loop over projects and find the proper pages
     """
@@ -206,14 +210,15 @@ def _getURL ( klass , dox , projects , latest = False ) :
     for project in projects :
         project = project.upper()
         if   'ROOT'  == project :
-            url = _ROOTURL % klass 
+            url = _ROOTURL % klass
+            print project , url 
             if httpExists( url ) : return url                   ## RETURN 
         else :
             version = _projVersion ( project )
-            if not version :
-                if not latest : continue                         ## CONTINUE 
-                ## try to use the latest version 
+            
+            if not version and latest :
                 version = 'latest'
+                
             if 'GAUDI' == project :
                 dox = dox.replace('classi','class')
                 url = _GAUDIURL %(version,dox)
@@ -275,12 +280,21 @@ def getURL ( o , projects = None , latest = False ) :
 
     ## loop over all projects
     url = _getURL ( klass , dox , projects , latest  )
+
+    print klass
+    print dox 
+    print projects
+    print latest 
+    print url 
+    
+    
     if not url :  ## is it namespace ?
         from PyCintex import gbl
         if type(o) is gbl.PyRootType and not type(o.__init__) is gbl.MethodProxy :
             ## it is namespace !!!
             dox = _namspDoxName ( klass )
             url = _getURL ( klass , dox , projects , latest )
+            
     return url
 
 # =============================================================================
