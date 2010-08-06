@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.2 2010-08-05 16:30:24 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.3 2010-08-06 09:42:56 ibelyaev Exp $
 # =============================================================================
 # $URL
 # =============================================================================
@@ -17,8 +17,8 @@
 #
 #  @todo fix a problem with DECTREE
 # 
-# $Revision: 1.2 $
-# Last modification $Date: 2010-08-05 16:30:24 $
+# $Revision: 1.3 $
+# Last modification $Date: 2010-08-06 09:42:56 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -46,14 +46,14 @@ The performance with 100k events from Reco04-Stripping07-SDSTs.py:
  | Total         |  1.66 +- 0.04   |   320/DaVinciMain = 3.2 ms/event |
  +---------------+-----------------+----------------------------------+
    
-$Revision: 1.2 $
-Last modification $Date: 2010-08-05 16:30:24 $
+$Revision: 1.3 $
+Last modification $Date: 2010-08-06 09:42:56 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 # =============================================================================
 __all__ = (
     #
@@ -279,25 +279,25 @@ PrimaryVertices = (1,3)
 
 D02HHForPromptCharm_Line   = StrippingLine (
     "D02HHForPromptCharm"     ,
-    CheckPV = PrimaryVertices , 
+    checkPV = PrimaryVertices , 
     algos   = [ D02HHForPromptCharm_Selection   ]
     )
 
 DstarForPromptCharm_Line   = StrippingLine (
     "DstarForPromptCharm"     ,
-    CheckPV = PrimaryVertices , 
+    checkPV = PrimaryVertices , 
     algos   = [ DstarForPromptCharm_Selection   ]
     )
 
 DForPromptCharm_Line       = StrippingLine (
     "DForPromptCharm"         ,
-    CheckPV = PrimaryVertices , 
+    checkPV = PrimaryVertices , 
     algos   = [ DForPromptCharm_Selection       ]
     )
 
 LambdaCForPromptCharm_Line = StrippingLine (
     "LambdaCForPromptCharm" ,
-    CheckPV = PrimaryVertices , 
+    checkPV = PrimaryVertices , 
     algos   = [ LambdaCForPromptCharm_Selection ]
     )
 
