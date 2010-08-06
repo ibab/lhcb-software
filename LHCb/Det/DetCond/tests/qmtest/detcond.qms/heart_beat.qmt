@@ -27,8 +27,33 @@ alg.Conditions = ["/dd/Conditions/Online/HeartBeatTest/Condition1","/dd/Conditio
 alg.LoadDuringInitialize = True
 ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 4)
 #MessageSvc(OutputLevel = 1)
+
+from Configurables import UpdateManagerSvc
+#UpdateManagerSvc(DotDumpFile = "ums.dot")
+
+alg.ConditionsDependencies = ["/dd/Conditions/Online/HeartBeatTest/Condition1 -> /dd/Conditions/Online/HeartBeatTest/Condition2  "]
+UpdateManagerSvc().OutputLevel = DEBUG
+MessageSvc().setDebug += ["UpdateManagerSvc::Item"]
 </text></argument>
 <argument name="validator"><text>
+outputlines = [ l.rstrip() for l in stdout.splitlines() ]
+
+## Check for bug #66497 (Velo motion system updated several times during initialization)
+# 'marker1' must appear only once before 'maker2'
+marker1 = "Condition2 from data provider"
+marker2 = "Conditions loaded at initialize"
+count = 0
+for l in outputlines:
+    if marker2 in l:
+        break
+    if marker1 in l:
+        count += 1
+if count != 1:
+    causes.append("bug #66497")
+    result["GaudiTest.marker.value"] = result.Quote(marker1)
+    result["GaudiTest.marker.count"] = result.Quote(str(count))
+    result["GaudiTest.marker.count_expected"] = result.Quote("1")
+
 ## Check that we find the expected lines in the right order
 expected = [
     'DetCondTest::Te...   INFO Conditions loaded at initialize',
@@ -64,7 +89,6 @@ expected = [
     ]
 
 regexp = r"^---|^Validity|^\(int\) Data|.*Requested Conditions|.*Conditions loaded at initialize|HBTEST.*ERROR"
-outputlines = [ l.rstrip() for l in stdout.splitlines() ]
 
 # grep
 import re

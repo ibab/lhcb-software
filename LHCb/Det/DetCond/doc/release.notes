@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-08-06 - Marco Clemencic
+ - Improved DetCondTest::TestConditionAlg to allow testing artificial
+   dependencies between conditions.
+ - Modified test detcond.heart_beat to expose #66497 (velo motor positions
+   updated several times).
+
 !===================== Det/DetCond v12r13 2010-05-21 =========================
 ! 2010-05-18 - Marco Clemencic
  - Fixed few Windows warnings.
@@ -14,14 +20,14 @@
 
 !===================== Det/DetCond v12r12 2010-04-09 =========================
 ! 2010-03-27 - Illya Shapoval
- - CondDB configurable is tuned to override all default and user tags settings 
-   by the latest tags for defined DataType if the 'UseLatestTags' property is 
-   set (before an exception was thrown if found multiple definitions). 
+ - CondDB configurable is tuned to override all default and user tags settings
+   by the latest tags for defined DataType if the 'UseLatestTags' property is
+   set (before an exception was thrown if found multiple definitions).
 
 ! 2010-03-26 - Illya Shapoval
  - Added new CondDB().UseLatestTags = [DataType,OnlyGlobalTags=False] property.
-   Previous  CondDB().useLatestTags(DataType,OnlyGlobalTags=False) method is 
-   preserved. Now it is possible to set the latest tags also for the simulation 
+   Previous  CondDB().useLatestTags(DataType,OnlyGlobalTags=False) method is
+   preserved. Now it is possible to set the latest tags also for the simulation
    case.
 
 !===================== Det/DetCond v12r11 2010-03-17 =========================
@@ -42,8 +48,8 @@
 !===================== Det/DetCond v12r10 2010-02-12 =========================
 ! 2010-02-12 - Illya Shapoval
  - Minor change to the CondDB.useLatestTags(DataType) function. Added the
-   mode for it to find and set only the latest global tag for a 
-   particular DataType, dropping the latest local tags on top of it. 
+   mode for it to find and set only the latest global tag for a
+   particular DataType, dropping the latest local tags on top of it.
    New syntax: CondDB.useLatestTags(DataType,OnlyGlobalTags = False).
 
 ! 2010-02-05 - Marco Clemencic
@@ -139,7 +145,7 @@
 
 !===================== Det/DetCond v12r4 2008-11-17 ==========================
 ! 2008-11-17 - Marco Cattaneo
- - Fix to requirements avoid warnings when making configurables database 
+ - Fix to requirements avoid warnings when making configurables database
  - Add LoadDDDB algorithm, moved from DetDescChecks to avoid tests dependency
    on DetDescChecks package
  - Add missing dependencies for QMTest
@@ -154,13 +160,13 @@
  - Added the ConfigurableUser CondDB for the high level configuration of the
    conditions database. The old configuration function (addCondDBLayer etc.) are
    still available for backward compatibility, but implemented using the new
-   configurable which allows to specify local tags too. 
+   configurable which allows to specify local tags too.
 
 ! 2008-10-31 - Marco Cattaneo
  - Fix for gcc 4.3
 
                            NEEDS: LCGCMT > 55a
-                           
+
 ! 2008-10-10 - Marco Clemencic
  - Modified the requirements file following the changes in the CORAL interface
    package (see bug #41579).
@@ -175,9 +181,9 @@
  - Changed the name of the configurables for online partition from ONLINE-YYYYMM
    to ONLINE_YYYYMM.
 
-! 2008-07-28 - Marco Cattaneo 
+! 2008-07-28 - Marco Cattaneo
  - Fix windows compilation
- 
+
 ! 2008-07-23 - Marco Clemencic
  - Changed the type of CondDBDispatcherSvc.Alternatives from list of strings
    to map<string,string>.
@@ -207,7 +213,7 @@
    - it allows to use different partitions for different IOVs
    - added a simple test for it (using a test algorithm added to the package:
      DetCondTest::TestConditionAlg).
- 
+
 ! 2008-06-26 - Marco Clemencic
  - Improved direct mapping between the COOL hierarchy and the transient store
    one:
@@ -239,7 +245,7 @@
    The implementation still lacks few features:
      - does not work if the cache is not enabled
      - it is implemented only at the CondDBAccessSvc (it should work at the
-       CondDBDispatcherSvc and CondDBLayeringSvc level too) 
+       CondDBDispatcherSvc and CondDBLayeringSvc level too)
 
 !===================== Det/DetCond v11r10 2008-04-24 =========================
 ! 2008-04-24 - Marco Clemencic
@@ -249,7 +255,7 @@
    variables DIRACSITE and LHCBPRODSITE or the hard-coded default "CERN.ch". The
    value of local site can be any substring (case insensitive) to be matched in
    the "host" field of the CORAL LFC entries. The fall-back servers are used in
-   random order.   
+   random order.
 
 ! 2008-04-22 - Marco Clemencic
  - Fixed a problem in CondDBAccessSvc related to the usage of local tags.
@@ -262,7 +268,7 @@
 ! 2008-03-03 - Marco Clemencic
  - Added the function "useCondDBLogger" to DetCond.Configuration.
  - Modified DetCond.Configuration to expose the configurables provided by the
-   package when imported. 
+   package when imported.
 
 ! 2008-02-29 - Marco Clemencic
  - Added the Python module DetCond.Configuration to provide useful functions
@@ -300,7 +306,7 @@
  - Allow to use tags that are not global in CondDBAccessSvc.
  - Added a service (COOLConfSvc/ICOOLConfSvc) dedicated to the instantiation and
    configuration of COOL/CORAL. The options to configure COOL and CORAL have
-   been moved from CondDBAccessSvc to the new service. 
+   been moved from CondDBAccessSvc to the new service.
 
 ! 2007-12-20 - Marco Cattaneo
  - Replace homemade linkopts with new Boost_linkopts_filesystem_mt
@@ -309,12 +315,12 @@
 !===================== Det/DetCond v11r7 2007-12-03 ==========================
 ! 2007-11-29 - Marco Clemencic
  - Added two options to CondDBAccessSvc to control the retrial period and
-   retrial time-out of CORAL. 
+   retrial time-out of CORAL.
 
 !===================== Det/DetCond v11r6 2007-09-04 ==========================
 ! 2007-08-01 - Marco Clemencic
  - Fixed a bug connected to "lazy connection" feature. I was using an instance
-   of a cool object to call a static member function. 
+   of a cool object to call a static member function.
 
 ! 2007-07-31 - Marco Clemencic
  - Fixed a bug with the "lazy connection" feature. The thread to disconnect from
@@ -361,7 +367,7 @@
 ! 2007-04-20 - Marco Clemencic
  - Added ICondDBAccessSvc::connectionString() to be able to find the
    connection string that was used without looking in the options.
- - Use a static std::auto_ptr instead of a basic pointer and a counter of 
+ - Use a static std::auto_ptr instead of a basic pointer and a counter of
    instances (for CondDBAccessSvc::s_XMLstorageSpec).
  - Added class CondDBSQLiteCopyAccSvc to copy an SQLite file and connect to
    the copy.
@@ -394,7 +400,7 @@
    the connection string and the tag used).
  - Activated by default the disconnect on time-out feature (with time out set
    to 10 min.)
- 
+
 ! 2007-02-19 - Marco Clemencic
  - Minor change in RelyConverter.cpp (removed a useless line)
 
@@ -405,7 +411,7 @@
 !================ Det/DetCond v10r0 2007-01-31 =============================
 ! 2007-01-31 - Marco Cattaneo
  - Fix and retag requirements to link on Windows.
-  
+
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
  - fixes for new plugins (P.Mato)
@@ -531,7 +537,7 @@
 
 ================= Det/DetCond v7r8 2006-01-20 ================================
 ! 2006-01-20 - Marco Cattaneo
- - Add use CORAL to requirements. N.B.: this is temporary, should be done 
+ - Add use CORAL to requirements. N.B.: this is temporary, should be done
    directly in COOL interface package
 
 ! 2005-12-08 - Marco Clemencic
@@ -666,7 +672,7 @@ Include the MySQL implementation for both RH73 and WIN32
   > multiple "use..." in the requirements
   > if the "use..." statement is removed, some code is #ifndef'd away
     (as the base packages propagate to DetCond the relevant cppflags)
-  > to make the code more readable, implementation-specific init() and 
+  > to make the code more readable, implementation-specific init() and
     i_buildCondDBInfo() have been introduced (#ifdef'd in only if necessary!)
   > I assume RH61 is always Objy only
 - Implementation is read at runtime from the job options
@@ -679,7 +685,7 @@ Requirements v4r2, private tag h20021203
 Upgrade to CondDBOracle v4r16, Gaudi v11r2 and DetDesc v11r2.
 Upgrade to RedHat73 on lxplus7.
 - no major change to DetCond code
-  > disable WIN32 compilation warning 4786 in ConditionsDBGate.cpp 
+  > disable WIN32 compilation warning 4786 in ConditionsDBGate.cpp
   > print out ORA_NLS33 and NLS_LANG to keep track of their values
 - dependency on Det/CondDBOracle changed from v4r15 to v4r16 (RH7,WIN)
 - dependency on Gaudi changed to v13r* (tested with v13r2)
@@ -747,22 +753,22 @@ Requirements v2r1, private tag h20020301.
 
 ==============================================================================
 !20020110 - Flr
- requirements - apply packageShr instead of ld_library_path pattern because 
+ requirements - apply packageShr instead of ld_library_path pattern because
                 it is a component library.
                 do not apply package_Lshlibflags, there is no linker library.
- 
+
 !20011220 - Andrea Valassi
 Simplify dependencies on the Gaudi framework.
 
 ==============================================================================
 !20011216 - Andrea Valassi
 Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
-- Update cannot be delegated to XmlCnvSvc until major changes in DetDes 
-  > code creating and interpreting DOM trees in each Xml converter should be 
-    executed also in updateObj(): to avoid duplicating code, a solution is 
+- Update cannot be delegated to XmlCnvSvc until major changes in DetDes
+  > code creating and interpreting DOM trees in each Xml converter should be
+    executed also in updateObj(): to avoid duplicating code, a solution is
     to move it from createObj() to updateObj() or better updateObjRefs(),
     which should be called internally from createObj()
-  > my (temporary?) solution is to create a new object using the address, and 
+  > my (temporary?) solution is to create a new object using the address, and
     deep copy part of it into the old one by a Condition::update(Condition&)
     method to deep copy only those properties of a DataObject that refer
     to a Condition (eg validity and parameters); the registry, address,
@@ -782,7 +788,7 @@ Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
   > par[1] is now the name of the element (e.g. the name of an XML element)
   > the string storage type is not in the CONDDB address
     (it is now assumed that it is always read from the folder description)
-  > ipar{0,1] are not used anymore 
+  > ipar{0,1] are not used anymore
 - Registry entry (can be 0) is used in creating and updating Conditions
   > for instance: this is needed for catalog conversion
   > it is set in the secondary temporary address (e.g. an XML catalog address)
@@ -795,7 +801,7 @@ Requirements v2r0, private tag h20011216.
 
 ==============================================================================
 !20011130 - Andrea Valassi
-Modified version of DetDataSvc in GaudiSvc committed to CVS 
+Modified version of DetDataSvc in GaudiSvc committed to CVS
 - Contains main features of ConditionDataSvc and ConditionsDBDataSvc
 - Remove ConditionDataSvc and ConditionsDBDataSvc from this package
 
@@ -820,7 +826,7 @@ A few more changes before including my detector data service in GaudiSvc
   > remove IConditionAddress
   > ConditionsDBCnvSvc now reads the event time from the DetDataSvc
   > ConditionDataSvc::updateObject now just checks validity before delegating
-- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
+- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel
   > needed to retrieve the event time within the ConditionsDBCnvSvc
   > the setEventTime method is temporary (eventually: use the IncidentService)
 - Store ConditionsDBAddress private data as GenericAddress private data

@@ -3,7 +3,7 @@
 // Include files
 #include "GaudiKernel/Map.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
 #include <vector>
@@ -11,14 +11,14 @@
 namespace DetCondTest {
 
 /** @class TestConditionAlg TestConditionAlg.h component/TestConditionAlg.h
- *  
+ *
  *  Simple algorithm that prints the requested conditions at every event.
- * 
+ *
  *  @author Marco CLEMENCIC
  *  @date   2008-06-27
  */
 class TestConditionAlg : public GaudiAlgorithm {
-public: 
+public:
   /// Standard constructor
   TestConditionAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -39,10 +39,12 @@ private:
   /// Flag to decide if the conditions have to be loaded also during the
   /// initialize step.
   bool m_loadAtInit;
-  
+
+  /// Container of the conditions to print
+  std::vector<std::string> m_conditionDeps;
+
   /// Container of the conditions to print
   GaudiUtils::Map<std::string,Condition*> m_conditions;
-  
 };
 
 //-----------------------------------------------------------------------------
@@ -61,13 +63,25 @@ TestConditionAlg::TestConditionAlg( const std::string& name,
   declareProperty("Conditions", m_condPaths,
       "list of paths to conditions in the detector transient store");
   declareProperty("LoadDuringInitialize", m_loadAtInit = false,
-      "load the requested conditions already duting the initialization");
+      "load the requested conditions already during the initialization");
+  declareProperty("ConditionsDependencies", m_conditionDeps,
+      "declare dependencies between objects as a list of strings 'A -> B') "
+      "to indicate that the condition A depends on B.");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-TestConditionAlg::~TestConditionAlg() {} 
+TestConditionAlg::~TestConditionAlg() {}
 
+namespace {
+	void printDepsError(MsgStream& stream,
+		      	        size_t lineNo, const std::string& msg,
+		      	        const std::string& line) {
+		stream << "Syntax error in item " << lineNo
+               << " of ConditionsDependencies: " << msg << endmsg;
+		stream << "  '" << line << "'" << endmsg;
+	}
+}
 //=============================================================================
 // Initialization
 //=============================================================================
@@ -76,12 +90,38 @@ StatusCode TestConditionAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  
-  std::vector<std::string>::iterator path;
+
+  std::vector<std::string>::const_iterator path;
   for (path = m_condPaths.begin(); path != m_condPaths.end(); ++path){
     registerCondition<TestConditionAlg>(*path,m_conditions[*path],NULL);
   }
-  
+
+  std::vector<std::string>::const_iterator deps;
+  for (deps = m_conditionDeps.begin(); deps != m_conditionDeps.end(); ++deps) {
+	std::string::size_type pos = deps->find("->");
+	if (pos == std::string::npos) {
+		printDepsError(error(), deps - m_conditionDeps.begin(), "missing '->'", *deps);
+		return StatusCode::FAILURE;
+	}
+	std::string::size_type p0, p1;
+	p0 = deps->find_first_not_of(" \n\r\t");
+	p1 = deps->find_last_not_of(" \n\r\t", pos - 1) + 1;
+	std::string first(*deps, p0, p1 - p0);
+	if (first.empty()) {
+		printDepsError(error(), deps - m_conditionDeps.begin(), "missing first argument", *deps);
+		return StatusCode::FAILURE;
+	}
+	p0 = deps->find_first_not_of(" \n\r\t", pos + 2);
+	p1 = deps->find_last_not_of(" \n\r\t") + 1;
+	std::string second(*deps, p0, p1 - p0);
+	if (second.empty()) {
+		printDepsError(error(), deps - m_conditionDeps.begin(), "missing second argument", *deps);
+		return StatusCode::FAILURE;
+	}
+	info() << "Declaring dependency of '" << first << "' on '" << second << "'" << endmsg;
+	updMgrSvc()->registerCondition(getDet<Condition>(first), second);
+  }
+
   if (m_loadAtInit) {
     StatusCode sc = updMgrSvc()->update(this);
     info() << "Conditions loaded at initialize" << endmsg;
@@ -114,21 +154,21 @@ StatusCode TestConditionAlg::finalize() {
   updMgrSvc()->unregister(this);
   m_conditions.clear();
   m_condPaths.clear();
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
 //  Print the conditions
 //=============================================================================
-void TestConditionAlg::i_dump() 
+void TestConditionAlg::i_dump()
 {
   info() << "Requested Conditions:\n";
   GaudiUtils::Map<std::string,Condition*>::iterator it;
   for (it = m_conditions.begin(); it != m_conditions.end(); ++it) {
     info() << "--- " << it->first << "\n" << *(it->second) << "\n";
   }
-  info() << endmsg;  
+  info() << endmsg;
 }
 
 //=============================================================================
