@@ -7,7 +7,7 @@
 ! 2010-08-06 - Marco Clemencic
  - Improved DetCondTest::TestConditionAlg to allow testing artificial
    dependencies between conditions.
- - Modified test detcond.heart_beat to expose #66497 (velo motor positions
+ - Modified test detcond.heart_beat to expose bug #66497 (velo motor positions
    updated several times).
 
 !===================== Det/DetCond v12r13 2010-05-21 =========================
