@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.117 2010-07-30 15:31:21 raaij Exp $"
+__version__ = "$Id: Configuration.py,v 1.118 2010-08-06 15:15:52 ibelyaev Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -436,10 +436,18 @@ class DaVinci(LHCbConfigurableUser) :
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
         if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
-            ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
-            tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
-            NTupleSvc().Output += [ tuple ]
-            NTupleSvc().OutputLevel = 1 
+
+            ntSvc = NTupleSvc()
+            ApplicationMgr().ExtSvc +=  [ ntSvc ]
+            for _line in ntSvc.Output :
+                if 0 <= _line.find ('FILE1') :
+                    log.warning ('Replace NTuple-LUN FILE1: ' + _line ) 
+                    ntSvc.Output.remove ( i )
+                    
+            tupleStr = "FILE1 DATAFILE='%s' TYP='ROOT' OPT='NEW'" % tupleFile
+            NTupleSvc().Output      += [ tupleStr ]
+            # NTupleSvc().OutputLevel  = 1
+            
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             if ( self.getProp("WriteFSR") ):
                 self.etcfsr(self.getProp("ETCFile"))

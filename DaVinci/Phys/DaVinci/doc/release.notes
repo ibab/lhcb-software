@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.437 2010-07-30 15:31:21 raaij Exp $
+! $Id: release.notes,v 1.438 2010-08-06 15:15:51 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-06 - Vanya Belyaev
+
+ - python/DaVinci/Configuration.py
+
+   small fix for N-tuple file assignement to reduce the ambiguity:
+      in case FILE1 is already specified it will be removed with 
+      the warning message 
 
 ! 2010-07-30 - Roel Aaij
  - python/DaVinci/Configuration.py
