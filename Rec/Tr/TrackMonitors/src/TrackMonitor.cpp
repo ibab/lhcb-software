@@ -88,7 +88,7 @@ StatusCode TrackMonitor::execute()
   
   // # number of tracks
   plot(tracks.size(),1, "# tracks", 0., 500., 50);
-  plot(tracks.size(),"TrackMultiplicityFine", "# tracks", -0.5, 50.5, 51);
+  plot(tracks.size(),"TrackMultiplicityFine", "# tracks", 0.0, 2000., 200);
   
   // histograms per track
   BOOST_FOREACH( const LHCb::Track* track, tracks) {
@@ -105,7 +105,7 @@ StatusCode TrackMonitor::execute()
       it != m_multiplicityMap.end(); ++it) {
     counter("#"+it->first) += it->second;
     plot( it->second, it->first + "/multiplicity", 
-          it->first + " multiplicity", -0.5,50.5,51) ;
+          it->first + " multiplicity", -1.,201.,101) ;
   } // iterS
   
   return StatusCode::SUCCESS;
