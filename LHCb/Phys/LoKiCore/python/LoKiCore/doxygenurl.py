@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id$ 
+# =============================================================================
+# $URL$ 
+# =============================================================================
 ## @file LoKiCore/doxygenurl.py
 #
 # Simple module to provide access to Doxygen documentation for the various
@@ -15,9 +19,22 @@
 # and the minor helper function
 #
 #  - httpExists ( url )
+#
+#
+#   This file is part of LoKi project: 
+#    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 # 
+#   By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-07-22
+#
+#  $Revision$
+#  Last modification $Date$
+#                 by $Author$
+#
 # =============================================================================
 """
 Simple module to provide access to Doxygen documentation for the various
@@ -34,9 +51,22 @@ and the minor helper function
 
   - httpExists ( url )
   
+  
+  This file is part of LoKi project: 
+  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+  
+  By usage of this code one clearly states the disagreement 
+  with the campain of Dr.O.Callot et al.: 
+  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+  
+$Revision$
+Last modification $Date$
+               by $Author$
+  
 """
 # =============================================================================
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = " SVN $Revision$ "
 __author__  = " Vanya BELYAEV ibelyaev@physics.syr.edu "
 __date__    = " 2007-07-22"
 __all__     = (
@@ -103,18 +133,18 @@ def _projVersion ( project = None ) :
         for p in _PROJECTS :
             version = _projVersion ( p )
             if version : return (p,version)    ## RETURN 
-        return None
+        return (None,None)
 
 
     ##  "/PROJECT/PROJECT_" or "\PROJECT\PROJECT_"    
     PROJECT     = project.upper()
     PROJECTROOT = PROJECT + 'ROOT'
-    if not os.environ.has_key( PROJECTROOT ) : return None   ## RETURN
+    if not os.environ.has_key( PROJECTROOT ) : return (None,None)   ## RETURN
     
     root   = os.environ[ PROJECTROOT ]
     target = os.sep + PROJECT + os.sep + PROJECT + "_"
     l      = root.rfind ( target )
-    if 0 > l :                                return None    ## RETURN 
+    if 0 > l :                                return  (None,None)   ## RETURN 
 
     l = l + 2 *len(PROJECT) + 3 
     root = root[l:]

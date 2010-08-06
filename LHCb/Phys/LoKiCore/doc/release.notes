@@ -13,7 +13,12 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
+!
 ! -----------------------------------------------------------------------------
+
+! 2010-08-06 - Vanya Belyaev
+ - fix errors in documentation 
+   
 
 ! 2010-08-05 - Vanya Belyaev
  - one more fix for const-pipes & sources 

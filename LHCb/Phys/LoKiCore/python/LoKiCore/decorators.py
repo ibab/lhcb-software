@@ -2,7 +2,10 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
+# $URL$ 
+# =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
+#
 #  The set of basic decorator for objects from LoKiCore library
 #
 #        This file is a part of LoKi project - 
@@ -13,7 +16,15 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#   By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The set of basic decorators for objects from LoKiCore library
@@ -26,10 +37,16 @@ Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
 
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.:
+ ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+
 """
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+# =============================================================================
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = "SVN $Revision$ "
 # =============================================================================
 
 import PyCintex
@@ -146,7 +163,16 @@ def getInherited2 ( name , base ) :
     import sys
     # get the whole content of the module:
     _mod = {}
-    if sys.modules.has_key ( name ) : _mod = sys.modules[name].__dict__
+    
+    if not sys.modules.has_key ( name ) :
+        try :
+            _module = __import__ ( name )
+        except ImportError :
+            pass
+        
+    if sys.modules.has_key ( name ) :
+        _mod = sys.modules[name].__dict__
+        
     # loop over the module members:
     instances = {}
     types     = {}
@@ -188,8 +214,9 @@ def getSignature ( functor ) :
     return None
 
 # =============================================================================
-def buildDoc ( instances ,
-               ftypes    ) :
+def buildDoc ( instances      ,
+               ftypes         ,
+               verbose = True ) :
     
     from LoKiCore.doxygenurl import getURL, searchURL , lbglimpse 
 
@@ -199,7 +226,7 @@ def buildDoc ( instances ,
 
         _type = instances[key]
 
-        print '1: KEY/TYPE' , key, _type 
+        if vebose : print ' symbol/instance : KEY/TYPE' , key, _type 
         line  = { 'Symbol'     :  key   ,
                   'Instance'   :  True  ,
                   'Type'       :  _type ,
@@ -215,8 +242,7 @@ def buildDoc ( instances ,
         
         _type = ftypes [key]
         
-        print '2: KEY/TYPE' , key, _type 
-        
+        if vebose : print ' symbol/type     : KEY/TYPE' , key, _type 
         line  = { 'Symbol'     :  key   ,
                   'Instance'   :  False ,
                   'Type'       :  _type ,
