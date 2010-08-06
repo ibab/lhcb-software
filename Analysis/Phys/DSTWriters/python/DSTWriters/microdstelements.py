@@ -18,7 +18,7 @@ __all__ = ( 'CloneRecHeader',
             'CloneL0DUReport',
             'CloneHltDecReports',
             'CloneBackCat',
-            'CloneHltReportRawBanks')
+            'CloneRawBanks')
 
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
@@ -188,24 +188,34 @@ class CloneL0DUReport(MicroDSTElement) :
         return [cloner]
     
 class CloneHltDecReports(MicroDSTElement) :
-        """
+    """
     Configurables necessary to copy HltDecReports from standard location.
     """
     def __call__(self, sel) :
         from Configurables import CopyHltDecReports
-        cloner = CopyHltDecReports(self.personaliseName(sel,'CopyHltDecReports'))
+        cloner = CopyHltDecReports(self.personaliseName(sel,
+                                                        'CopyHltDecReports'))
         self.setOutputPrefix(cloner)
         return [cloner]
 
-class CloneHltReportRawBanks(MicroDSTElement) :
+
+class CloneRawBanks(MicroDSTElement) :
     """
-    Configurables to copy HltDecReports and HltSelReports raw banks
+    Configurables to copy selected raw banks
     to '<branch>/DAW/RawEvent'.
+    Arguments:
+
+    banks: list of raw banks to copy (strings)
+    branch: TES branch of output.
+    
     """
+    def __init__(self, branch = '', banks = []) :
+        MicroDSTElement.__init__(self, branch)
+        self.banks = list(banks)
     def __call__(self, sel) :
         from Configurables import RawEventSelectiveCopy
         rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
-        rawBankCopy.RawBanksToCopy += [ "HltDecReports" , "HltSelReports" ] 
+        rawBankCopy.RawBanksToCopy = self.banks 
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent" 
         return [rawBankCopy]
 
