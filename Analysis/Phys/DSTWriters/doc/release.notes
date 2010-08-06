@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.49 2010-08-05 16:17:41 jpalac Exp $
+!$Id: release.notes,v 1.50 2010-08-06 15:26:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-08-06 - Juan Palacios
+ - python/DSTWriters/microdstelements.py
+  . Add CloneRawBanks MicroDSTElement. Constructor takes list with string
+    of RawBanks to copy.
 
 ! 2010-08-05 - Juan Palacios
  - python/DSTWriters/__dev__/MicroDSTWriter.py
