@@ -23,7 +23,7 @@ if __name__ == '__main__' :
     decReportsLocation = '/Event/Strip/Phys/DecReports'
     filename = ''
 
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "locaiton="])
+    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
 
     for o, a in opts:
         if o in ("-i", "--input"):

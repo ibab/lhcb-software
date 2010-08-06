@@ -4,6 +4,12 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2010-08-06 - Juan Palacios
+ - scripts/check_decreports.py
+  . Typo in user specified location command line argument.
+ - cmt/requirements
+  . Increase to v1r5.
+
 ! ========================== DstwriterTests v1r4p1 2010-07-27 ================
 
 ! 2010-07-27 - Juan Palacios
