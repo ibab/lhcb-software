@@ -5,12 +5,13 @@
 package           STTools
 
 
-version           v4r3
+version           v4r4
 
 
 branches          cmt doc src options python
 include_path      none
 
+use TrackEvent  v* Event 
 use STKernel    v* ST
 use DigiEvent   v* Event
 use STDet       v* Det

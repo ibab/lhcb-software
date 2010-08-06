@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-08-06 M Needham 
+ - Add STSelectChannelIDOnTrack tool [selects channels that are on tracks] 
+
 !=========================== STTools v4r3 2010-07-20 ==========================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
