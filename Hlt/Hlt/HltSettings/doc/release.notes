@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-07 - Roel Aaij
+ - Added an empty ThresholdSettings by the name of NoLines_Aug10
+
 ! 2010-07-23 - Chris Thomas
  - added one-stage track fit lines to B2DX
 
