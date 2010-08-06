@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2010-08-06 M Needham
+ - Add STClusterContainerCopy algorithm
+
 !======================= STAlgorithms v4r2 2010-07-20 ========================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).

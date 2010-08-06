@@ -9,7 +9,7 @@
 
 /** @class STClusterKiller STClusterKiller.h
  *
- *  Class for killing clusters and random
+ *  Class for killing clusters 
  *
  *  @author M.Needham
  *  @date   06/10/2007

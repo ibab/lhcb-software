@@ -65,10 +65,10 @@ StatusCode WriteSTStatusConditions::initialize()
 
 StatusCode WriteSTStatusConditions::finalize()
 {
-  info() << "Writing alignment conditions to file" << endreq;
+  info() << "Writing status conditions to file" << endreq;
   // Print out the full tree
-  info() << "Trying for top element " << tracker()->name() << endreq;
-
+  info() << "Trying for top element " << tracker()->name() << endmsg;
+   
   // get the sectors 
   const DeSTDetector::Sectors& sectors = tracker()->sectors();
 
@@ -97,6 +97,8 @@ StatusCode WriteSTStatusConditions::finalize()
   
   // write the footer
   outputFile << footer() << std::endl;
+
+  info() << "After update Active fraction is: " << tracker()->fractionActive()          << endmsg;   
 
   return ST::AlgBase::finalize();
 }
