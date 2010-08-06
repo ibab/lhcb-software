@@ -179,7 +179,7 @@ struct Item {
   }
 
   /// Main method. Used to update the object and all the used ones.
-  StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL);
+  StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL, bool inInit = false);
 
   /// Tells if this item represents the given pointer.
   inline bool match(void *p) const {return p == ptr;}

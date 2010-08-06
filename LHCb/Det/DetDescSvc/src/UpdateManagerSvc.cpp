@@ -36,7 +36,8 @@ DECLARE_SERVICE_FACTORY( UpdateManagerSvc );
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc), m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
+  base_class(name,svcloc),
+  m_dataProvider(NULL), m_detDataSvc(NULL), m_incidentSvc(NULL), m_evtProc(NULL),
   m_head_since(1),m_head_until(0)
 {
 #ifndef WIN32
@@ -46,7 +47,7 @@ UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc)
   declareProperty("DataProviderSvc",    m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",         m_detDataSvcName);
   declareProperty("ConditionsOverride", m_conditionsOveridesDesc);
-  declareProperty("DiaDumpFile",        m_diaDumpFile = "");
+  declareProperty("DotDumpFile",        m_dotDumpFile = "");
 }
 //=============================================================================
 // Destructor
@@ -59,27 +60,11 @@ UpdateManagerSvc::~UpdateManagerSvc() {
 }
 
 //=============================================================================
-// IInterface implementation
-//=============================================================================
-StatusCode UpdateManagerSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IUpdateManagerSvc::interfaceID().versionMatch(riid) ) {
-    *ppvUnknown = (IUpdateManagerSvc*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  } else if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
-    *ppvUnknown = (IIncidentListener*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
-
-//=============================================================================
 // IService implementation
 //=============================================================================
 StatusCode UpdateManagerSvc::initialize(){
   // base class initialization
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (!sc.isSuccess()) return sc;
   // local initialization
   MsgStream log(msgSvc(),name());
@@ -183,13 +168,19 @@ StatusCode UpdateManagerSvc::initialize(){
   return StatusCode::SUCCESS;
 }
 
+StatusCode UpdateManagerSvc::stop(){
+  MsgStream log(msgSvc(),name());
+  log << MSG::DEBUG << "--- stop ---" << endmsg;
+
+  if ( m_outputLevel <= MSG::DEBUG || ! m_dotDumpFile.empty() ) dump();
+
+  return base_class::stop();
+}
+
 StatusCode UpdateManagerSvc::finalize(){
   // local finalization
-
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "--- finalize ---" << endmsg;
-
-  if ( m_outputLevel <= MSG::DEBUG || ! m_diaDumpFile.empty() ) dump();
 
   // release the interfaces used
   if (m_dataProvider != NULL) m_dataProvider->release();
@@ -203,7 +194,7 @@ StatusCode UpdateManagerSvc::finalize(){
 
   // delete unused overridden conditions (the others are deleted together with the T.S.)
   if ( ! m_conditionsOverides.empty() ) {
-    log << MSG::WARNING << "Few overrided conditions were not used:" << endmsg;
+    log << MSG::WARNING << "Overridden conditions not used:" << endmsg;
     for (GaudiUtils::Map<std::string,Condition*>::iterator c = m_conditionsOverides.begin();
          c != m_conditionsOverides.end(); ++c ) {
       log << MSG::WARNING << c->first << endmsg;
@@ -212,7 +203,7 @@ StatusCode UpdateManagerSvc::finalize(){
   }
 
   // base class finalization
-  return Service::finalize();
+  return base_class::finalize();
 }
 //=============================================================================
 // IUpdateManagerSvc implementation
@@ -388,6 +379,8 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 #endif
   Item::ItemList::iterator it;
 
+  // We are in the initialization phase if we are not yet "STARTED"
+  const bool inInit = FSMState() <= Gaudi::StateMachine::INITIALIZED;
   // The head list may change while updating, I'll loop until it's stable (or a problem occurs)
   bool head_has_changed = false;
   do {
@@ -403,9 +396,9 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
     for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
       if ( m_outputLevel <= MSG::DEBUG ) {
         MsgStream item_log(msgSvc(),name()+"::Item");
-        sc = (*it)->update(dataProvider(),evtTime,&item_log);
+        sc = (*it)->update(dataProvider(), evtTime, &item_log, inInit);
       } else {
-        sc = (*it)->update(dataProvider(),evtTime);
+        sc = (*it)->update(dataProvider(), evtTime, NULL, inInit);
       }
       if (sc.isSuccess()) {
         if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
@@ -447,11 +440,13 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
       Item *item = findItem(instance);
       if (item) {
         StatusCode sc;
+        // We are in the initialization phase if we are not yet "STARTED"
+        const bool inInit = FSMState() <= Gaudi::StateMachine::INITIALIZED;
         if ( m_outputLevel <= MSG::DEBUG ) {
           MsgStream item_log(msgSvc(),name()+"::Item");
-          sc = item->update(dataProvider(),detDataSvc()->eventTime(),&item_log);
+          sc = item->update(dataProvider(), detDataSvc()->eventTime(), &item_log, inInit);
         } else {
-          sc = item->update(dataProvider(),detDataSvc()->eventTime());
+          sc = item->update(dataProvider(), detDataSvc()->eventTime(), NULL, inInit);
         }
         if (sc.isSuccess()) {
           if ( m_head_since < item->since )  m_head_since = item->since;
@@ -620,18 +615,15 @@ void UpdateManagerSvc::dump(){
 
   MsgStream log(msgSvc(),name());
 
-  std::auto_ptr<std::ofstream> dia_file;
-  int dia_lines_ctr = 0;
-  if ( ! m_diaDumpFile.empty() ){
-    dia_file.reset(new std::ofstream(m_diaDumpFile.c_str()));
+  std::auto_ptr<std::ofstream> dot_file;
+
+  if ( ! m_dotDumpFile.empty() ){
+    dot_file.reset(new std::ofstream(m_dotDumpFile.c_str()));
   }
 
-  if (dia_file.get() != NULL) {
-    // DIA header
-    (*dia_file)
-      << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-      << "<dia:diagram xmlns:dia=\"http://www.lysator.liu.se/~alla/dia/\">"
-      << "<dia:layer name=\"Background\" visible=\"true\">";
+  if (dot_file.get() != NULL) {
+    // dot header
+    (*dot_file) << "digraph " << name() << " {\n";
   }
 
   log << MSG::DEBUG << "--- Dump" << endmsg;
@@ -648,30 +640,33 @@ void UpdateManagerSvc::dump(){
     }
     log << endmsg;
 
-    if (dia_file.get() != NULL) {
-      // DIA Object for registered item (first part)
-      (*dia_file)
-        << "<dia:object type=\"Flowchart - Box\" version=\"0\""
-        << " id=\"i" << std::hex << *i << "\">"
-        << "<dia:attribute name=\"text\"><dia:composite type=\"text\">"
-        << "<dia:attribute name=\"string\"><dia:string>#"
-        << "(" << std::dec << cnt-1 << ") " << std::hex << *i << "\n"
-        << "(" << (*i)->ptr << ")";
+    if (dot_file.get() != NULL) {
+      // graph node for registered item (first part, label)
+      (*dot_file) << "item_" << std::hex << *i
+    		  << "[label=\""
+    		  << "(" << std::dec << cnt-1 << ") "
+    		  << std::hex << *i << "\\n"
+    		  << "(" << (*i)->ptr << ")";
     }
 
     log << MSG::DEBUG << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
     if ( !(*i)->path.empty() ) {
       log << MSG::DEBUG << "       path = " << (*i)->path << endmsg;
-      if (dia_file.get() != NULL) {
-        // If we have the path, we can put it in the DIA Object
-        (*dia_file) << "\n" << (*i)->path;
+      if (dot_file.get() != NULL) {
+        // If we have the path, we can put it in the graph label
+        (*dot_file) << "\\n" << (*i)->path;
       }
-    }
+    }/* else {
+      INamedInterface *ni = dynamic_cast<INamedInterface>((*i)->ptr);
+      if (ni) {
+    	// It's a component with name, we can put it in the graph label
+    	(*dot_file) << "\\n" << ni->name();
+      }
+    } */
 
-    if (dia_file.get() != NULL) {
-      // DIA Object for registered item (closure)
-      (*dia_file) << "#</dia:string></dia:attribute></dia:composite>"
-                  << "</dia:attribute></dia:object>";
+    if (dot_file.get() != NULL) {
+      // graph node for registered item (end)
+      (*dot_file) << "\"];\n";
     }
 
     log << MSG::DEBUG << "        IOV = " << (*i)->since << " - " << (*i)->until << endmsg;
@@ -681,17 +676,10 @@ void UpdateManagerSvc::dump(){
         log << MSG::DEBUG << std::hex << "                  ";
         for (Item::ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
           log << " " << *itemIt;
-          if (dia_file.get() != NULL) {
-            // Add an arrow to the diagram connecting the user Item to the
+          if (dot_file.get() != NULL) {
+            // Add an arrow to the graph connecting the user Item to the
             // used Item
-            (*dia_file)
-              << "<dia:object type=\"Standard - Line\" version=\"0\" id=\"l" << std::dec << dia_lines_ctr++ << "\">"
-              << "<dia:attribute name=\"end_arrow\"><dia:enum val=\"22\"/>"
-              << "</dia:attribute>"
-              << "<dia:connections>"
-              << "<dia:connection handle=\"0\" to=\"i" << std::hex << *i << "\" connection=\"13\"/>"
-              << "<dia:connection handle=\"1\" to=\"i" << std::hex << *itemIt << "\" connection=\"2\"/>"
-              << "</dia:connections></dia:object>";
+            (*dot_file) << "item_" << std::hex << *i << " -> " << "item_" << std::hex << *itemIt << ";\n";
           }
         }
         log << std::dec << endmsg;
@@ -699,10 +687,10 @@ void UpdateManagerSvc::dump(){
     }
   }
 
-  if (dia_file.get() != NULL) {
+  if (dot_file.get() != NULL) {
     // DIA header
-    (*dia_file) << "</dia:layer></dia:diagram>\n";
-    log << MSG::ALWAYS << "DIA file '" << m_diaDumpFile << "' written" << endmsg;
+    (*dot_file) << "}\n";
+    log << MSG::ALWAYS << "DOT file '" << m_dotDumpFile << "' written" << endmsg;
   }
 
   log << MSG::DEBUG << "Found " << head_cnt << " head items: ";
@@ -816,7 +804,7 @@ void UpdateManagerSvc::handle(const Incident &inc) {
       log << MSG::FATAL << "***** The update failed. I schedule a stop of the run *****" << endmsg;
       m_evtProc->stopRun();
       // The exception is ignored by the IncidentSvc
-      // throw UpdateManagerException("Failed to preform the update","*UpdateManagerSvc*",sc);
+      // throw UpdateManagerException("Failed to perform the update","*UpdateManagerSvc*",sc);
     }
   }
 }

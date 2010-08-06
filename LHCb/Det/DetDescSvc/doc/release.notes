@@ -1,17 +1,28 @@
-! $Id: release.notes,v 1.70 2009-11-27 12:28:08 cattanem Exp $ 
+! $Id: release.notes,v 1.70 2009-11-27 12:28:08 cattanem Exp $
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2010-08-06 - Marco Clemencic
+ - Fixes and improvements in UpdateManagerSvc
+   - removed 'queryInterface', adapted to the new interfaces system of Gaudi v21
+   - replaced the 'dia' debug output with the 'dot' (graphviz) one, and moved
+     the call to the 'dump' method to the 'stop' transition
+   - fixed bug #66497 (velo motor positions updated several times)
+     the problem was that the heart-beat condition induces a modified validity
+     that triggered repeated updates; now these updates are not called if the
+     application is in the initialization phase
+   - minor aesthetic fixes
+
 !========================= DetDescSvc v2r4 2009-11-27 =========================
 ! 2009-11-16 - Marco Cattaneo
  - remove obsolete file DetDescSvc_dll.cpp
 
 ! 2009-11-15 - Vanya Belyaev
- - remove "use" of GSL 
- - cmt/requirements: version increment to v2r4 
+ - remove "use" of GSL
+ - cmt/requirements: version increment to v2r4
 
 !========================= DetDescSvc v2r3p1 2009-05-06 =======================
 ! 2009-04-17 - Marco Cattaneo
@@ -47,7 +58,7 @@
 ! 2009-01-16 - Marco Clemencic
  - Fixed a memory leak occurring when registering without condition but passing
    the pointer to be filled (happens in GeometryInfoPlus after some recent
-   changes). 
+   changes).
 
 ! 2009-01-15 - Olivier Callot
  - Fix the case of modification of the pointer in UpdateManagerSvc.
@@ -99,19 +110,19 @@
 
    src/TransportSvc.h, src/TransportSvc.cpp
     1) implement new interface DetDesc::IGeometryErrorSvc
-    2) add new properties 
-       "Recover"  (boolean) -> to activate/deactivate the recovery of the 
+    2) add new properties
+       "Recover"  (boolean) -> to activate/deactivate the recovery of the
                           errors          (default  is true)
-       "Protocol" (boolean) - to activate/deactivate the protocol of the  
+       "Protocol" (boolean) - to activate/deactivate the protocol of the
                           geometry errors (default is "true")
 
    cmt/requirements
-     version increment to v1r16 
+     version increment to v1r16
 
 !========================= DetDescSvc v1r15 2007-12-07 ========================
 ! 2007-12-07 - Marco Clemencic
  - Minor improvement in UpdateManagerSvc debug output: print demangled name of
-   registered classes. 
+   registered classes.
 
 !========================= DetDescSvc v1r14 2007-10-04 ========================
 ! 2007-10-01 - Marco Clemencic
@@ -128,7 +139,7 @@
  - cmt/requirements
    . Increase version to v1r13
  - src/TransportSvcGoodLocalGI.h, TransportSvcIntersections.h
-   . Adapt to new IGeometryInfo interface: IGeometryInfo::matrix() is now 
+   . Adapt to new IGeometryInfo interface: IGeometryInfo::matrix() is now
      IGeometryInfo::toLocalMatrix.
 
 ! 2007-08-02 - Marco Clemencic
@@ -136,7 +147,7 @@
    http://live.gnome.org/Dia). The format is very preliminary (e.g. the boxes
    are all collapsed in one point), but it can be useful.
  - Fixed a couple of flows for the "purge" feature. The reload was not working
-   correctly. 
+   correctly.
 
 ! 2007-07-31 - Marco Clemencic
  - Added to the UpdateManagerSvc the possibility to "purge" the dependencies,
@@ -242,7 +253,7 @@
  - Add UpdateMgrSvc, EventClockSvc (moved from DetDesc)
 
 !========================= DetDescSvc v1r0 2005-12-07 =========================
-! 2005-12-07 - M. Needham 
+! 2005-12-07 - M. Needham
  - This is a new package for the LHCb detector description services.
  - Moved transportSvc from DetDesc
    - Removed calls to MsgStream in event loop

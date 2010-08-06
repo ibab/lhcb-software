@@ -38,23 +38,21 @@ class Condition;
  *  @author Marco Clemencic
  *  @date   2005-03-30
  */
-class UpdateManagerSvc: public virtual Service,
-                        public virtual IUpdateManagerSvc,
-                        public virtual IIncidentListener {
+class UpdateManagerSvc: public virtual extends2<Service,
+                        						IUpdateManagerSvc,
+                        						IIncidentListener> {
 public:
   /// Standard constructor
   UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc);
 
   virtual ~UpdateManagerSvc( ); ///< Destructor
 
-  /** Query interfaces (\see{IInterface})
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-
   /// Initialize Service
   virtual StatusCode initialize();
+
+  /// Stop Service.
+  /// Dump the status of the network of dependencies.
+  virtual StatusCode stop();
 
   /// Finalize Service
   virtual StatusCode finalize();
@@ -105,7 +103,7 @@ protected:
   /// Register a condition for an object
   virtual void i_registerCondition(void *obj, BaseObjectMemberFunction *mf);
 
-  /// Used to force an update of the given instance (ex. when the object is created during an event).
+  /// Used to force an update of the given instance (e.g. when the object is created during an event).
   virtual StatusCode i_update(void *instance);
 
   /// Used to remove an object from the dependency network.
@@ -174,7 +172,7 @@ private:
 
   /// List used to keep track of all the registered items.
   Item::ItemList    m_all_items;
-  /// List used to record all teh objects without parents. (for fast access)
+  /// List used to record all the objects without parents. (for fast access)
   Item::ItemList    m_head_items;
   /// Lower bound of intersection of head IOVs.
   Gaudi::Time       m_head_since;
@@ -188,9 +186,9 @@ private:
   /// Map containing the list of parsed condition definitions
   GaudiUtils::Map<std::string,Condition*> m_conditionsOverides;
 
-  /// Name of the DIA file into which write the dump (http://live.gnome.org/Dia)
-  /// (property DiaDumpFile).
-  std::string m_diaDumpFile;
+  /// Name of the dot (graphviz) file into which write the dump (http://www.graphviz.org)
+  /// (property DotDumpFile).
+  std::string m_dotDumpFile;
 
 #ifndef WIN32
   /// mutex lock used to avoid dependencies corruptions in a multi-thread environment.

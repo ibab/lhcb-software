@@ -1,5 +1,5 @@
 // $Id: UpdateManagerSvc_Item.cpp,v 1.5 2009-02-16 14:22:56 cattanem Exp $
-// Include files 
+// Include files
 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
@@ -34,7 +34,7 @@ UpdateManagerSvc::Item::~Item() {
 //=============================================================================
 // Main method. Used to update the object and all the used ones.
 //=============================================================================
-StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log){
+StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log, bool inInit){
   if (log){
     (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
     if (!path.empty()) (*log) << " " << path;
@@ -107,14 +107,14 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         // I do not need to delete the overriding object because now it belongs to the T.S.
       }
     }
-    
+
     // Set also internal pointers
     sc = setPointers(pObj);
     if ( !sc.isSuccess() ) {
       if (log) (*log) << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
       return sc;
     }
-    
+
     // try to get the path to CondDB folder
     IOpaqueAddress *pAddr = pObj->registry()->address();
     if (pAddr != NULL) {
@@ -125,10 +125,19 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     }
   } else {
     if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
-      if (log) (*log) << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
-      sc = vdo->update(); // only if I didn't load it
+      if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
+    	             // IOV because of the HeartBeat, so it is actually OK and doesn't need to be updated.
+        if (log) (*log) << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
+        sc = vdo->update(); // only if I didn't load it
+        if ( !sc.isSuccess() ) {
+          if (log) (*log) << MSG::ERROR << "Update from data provider failed!" << endmsg;
+          return sc;
+        }
+      }
+      // Set also internal pointers (needed here too, because it is needed in a very special case... a test)
+      sc = setPointers(vdo);
       if ( !sc.isSuccess() ) {
-        if (log) (*log) << MSG::ERROR << "Update from data provider failed!" << endmsg;
+        if (log) (*log) << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
         return sc;
       }
     }
@@ -146,7 +155,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
       if (log) (*log) << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
       mfIt->resetIOV();
       for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
-        sc = (*itemIt)->update(dp,when,log);
+        sc = (*itemIt)->update(dp, when, log, inInit);
         if (!sc.isSuccess()) return sc;
         // child item updated, update mf's IOV
         if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
@@ -172,7 +181,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     if (!path.empty()) (*log) << " " << path;
     (*log) << endmsg;
   }
-  sc = StatusCode::SUCCESS;  
+  sc = StatusCode::SUCCESS;
   return sc;
 }
 //=============================================================================
@@ -194,11 +203,11 @@ BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunc
     if (mfIt->since < child->since) mfIt->since = child->since;
     if (mfIt->until > child->until) mfIt->until = child->until;
 
-    // add the new child to the list of childs if not already included
+    // add the new child to the list of children if not already included
     if (std::find(children.begin(),children.end(),child) == children.end()){
       children.push_back(child);
     }
-    
+
     // intersect the item validity with the one of the member function
     if (since < mfIt->since) since = mfIt->since;
     if (until > mfIt->until) until = mfIt->until;
@@ -207,7 +216,7 @@ BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunc
   // return the real pointer since thisMF can be deleted
   return mfIt->mf;
 }
-  
+
 //=============================================================================
 // Clean up the tree
 //=============================================================================
@@ -220,7 +229,7 @@ void UpdateManagerSvc::Item::purge(MsgStream *log) {
   } else {
     if (log) (*log) << MSG::DEBUG << "Purging object at " << ptr << endmsg;
   }
-  
+
   // I'm not sure I need this
   // invalidate();
   // or just this
