@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-08-07 - Stephanie Hansmann-Menzemer
+ - reverted changes from W.H. from 2010-07-23 as they screw up the 
+   calorimeter track linking
 
 !======================== TrackTools v3r34p1 2010-08-03 =======================
 

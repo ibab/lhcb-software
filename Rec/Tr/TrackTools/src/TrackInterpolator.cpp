@@ -160,9 +160,18 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
     return StatusCode::SUCCESS ;
   }
 
-  // Get the filtered states
-  State stateDown = nodePrev->filteredStateForward();
-  State stateUp   = nodeNext->filteredStateBackward();
+  // Get the predicted states and filter if necessary
+  State stateDown = nodePrev->predictedStateForward();
+  if( nodePrev->type() == LHCb::Node::HitOnTrack ) {
+    sc = filter( *nodePrev, stateDown ) ;
+    if( sc.isFailure() ) return sc ;
+  }
+
+  State stateUp   = nodeNext->predictedStateBackward();
+  if( nodeNext->type() == LHCb::Node::HitOnTrack ) {
+    sc = filter( *nodeNext, stateUp ) ;
+    if( sc.isFailure() ) return sc ;
+  }
   
   // extrapolate the upstream and downstream states
   sc = m_extrapolator -> propagate( stateDown, z );  
@@ -217,3 +226,42 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
 
   return StatusCode::SUCCESS;
 };
+
+
+//=============================================================================
+// Filter step (needed as the result of filter step is not stored in the Node)
+//=============================================================================
+StatusCode TrackInterpolator::filter(const FitNode& node, State& state) 
+{
+  const Measurement& meas = node.measurement();
+
+  // check z position
+  if ( std::abs(meas.z() - state.z()) > 1e-6) {
+    debug() << "State at z=" << state.z() 
+            << ", Measurement at z=" << meas.z() << endmsg;
+    return Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 0 );
+  }
+  
+  // get the state vector and cov
+  TrackVector&    X = state.stateVector();
+  TrackSymMatrix& C = state.covariance();
+
+  // Get the projected residual
+  const TrackProjectionMatrix& H = node.projectionMatrix();
+  double res = node.projectionTerm() - Vector1(H*X)(0) ;
+  double errorMeas2 = node.errMeasure2();
+  double errorRes2 = errorMeas2 + Similarity( H, C )(0,0) ;
+
+  // calculate gain matrix K
+  SMatrix<double,5,1> K = (C * Transpose(H)) / errorRes2;
+
+  // update the state vector
+  X += K.Col(0) * res ;
+
+  // update the covariance matrix
+  static const TrackSymMatrix unit = TrackSymMatrix( SMatrixIdentity());
+  C = Symmetrize( Similarity( unit - ( K*H ), C ) 
+                  +(errorMeas2*K)*Transpose(K) );
+
+  return StatusCode::SUCCESS;
+}
