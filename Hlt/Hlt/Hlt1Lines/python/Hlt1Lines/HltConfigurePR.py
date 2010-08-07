@@ -5,7 +5,10 @@ from HltLine.HltLine import Hlt1Tool   as Tool
 #TODO: pick up from HltTracking
 EarlyDataTracking = False
 
-def ConfiguredPR( tool ):
+def ConfiguredPR( tool, minPT = 80., minP = 1000.):
+    # Add the option to define a minimum PT/P 
+    # for the tracking to consider
+    # Only relevant for the forward upgrade
     if tool is "Forward" :
         if EarlyDataTracking: 
             return Tool( PatForwardTool
@@ -17,7 +20,7 @@ def ConfiguredPR( tool ):
                          , MaxChi2Track = 40
                          , MinHits = 12
                          , MinOTHits = 14 )
-        else : return Tool( PatForwardTool)
+        else : return Tool( PatForwardTool,MinPt = minPT, MinMomentum = minP )
         
     elif tool is "PatSeeding":
         if EarlyDataTracking:
