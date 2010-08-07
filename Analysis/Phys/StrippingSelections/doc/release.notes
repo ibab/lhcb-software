@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-07 - Vanya Belyaev
+
+ - tiny fix, use updated DECTREE functor and new semantics of BPVLTIME() functor
+
+
 ! 2010-08-06 - Vanya Belyaev
  - tiny fix 
 

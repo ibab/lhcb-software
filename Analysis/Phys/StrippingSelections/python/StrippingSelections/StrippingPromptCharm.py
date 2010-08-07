@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.3 2010-08-06 09:42:56 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.4 2010-08-07 16:52:28 ibelyaev Exp $
 # =============================================================================
 # $URL
 # =============================================================================
 ## @file
 # 
-#  The attempt for coherent stripping of all stable charm hadrons
+#  The attempt for coherent stripping of all stable charm hadrons : 
 #
 #    - D0        -> K pi , K K
 #    - D*+       -> ( D0 -> K pi , K K , pi pi, pi K ) pi+
@@ -15,10 +15,8 @@
 #
 #  The cuts more or less corresponds to D*+ selection by Alexandr Kozlinzkiy
 #
-#  @todo fix a problem with DECTREE
-# 
-# $Revision: 1.3 $
-# Last modification $Date: 2010-08-06 09:42:56 $
+# $Revision: 1.4 $
+# Last modification $Date: 2010-08-07 16:52:28 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -46,14 +44,14 @@ The performance with 100k events from Reco04-Stripping07-SDSTs.py:
  | Total         |  1.66 +- 0.04   |   320/DaVinciMain = 3.2 ms/event |
  +---------------+-----------------+----------------------------------+
    
-$Revision: 1.3 $
-Last modification $Date: 2010-08-06 09:42:56 $
+$Revision: 1.4 $
+Last modification $Date: 2010-08-07 16:52:28 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 # =============================================================================
 __all__ = (
     #
@@ -89,21 +87,20 @@ _slowpioncuts   = " TRCHI2DOF<10 "
 
 _preambulo      = [
     ## the D0 decay channels
-    ## "DECTREE = LoKi.Particles.DecTree         " ,
-    ##"pipi   = DECTREE('[D0]cc -> pi- pi+   ') " ,
-    ##"kk     = DECTREE('[D0]cc -> K-  K+    ') " ,
-    ##"kpi    = DECTREE('[D0    -> K-  pi+]CC') " ,
+    "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
+    "kk     = DECTREE ('[D0]cc -> K-  K+    ') " ,
+    "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
     ## temporary, till DECTREE fix 
-    "pipi     =   2 == NINTREE ( 'pi+' == ABSID ) " ,
-    "kk       =   2 == NINTREE ( 'K+'  == ABSID ) " ,
-    "kpi      = ( 1 == NINTREE ( 'K+'  == ABSID ) ) & ( 1 == NINTREE ( 'pi+' == ABSID ) ) " ,
+    ## "pipi     =   2 == NINTREE ( 'pi+' == ABSID ) " ,
+    ## "kk       =   2 == NINTREE ( 'K+'  == ABSID ) " ,
+    ## "kpi      = ( 1 == NINTREE ( 'K+'  == ABSID ) ) & ( 1 == NINTREE ( 'pi+' == ABSID ) ) " ,
     ## number of kaons in final state (as CombinationCuts)
     "ak2      = 2 == ANUM( 'K+' == ABSID ) "        ,
     ## shortcut for chi2 of vertex fit 
     'chi2vx = VFASPF(VCHI2) '                   , 
     ## shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME() * c_light "            
+    "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetiemFit)<9 
     ]
 
 ## prepare D0 for D0 and D*+ 
@@ -123,9 +120,9 @@ _D0PreCombine = CombineParticles (
     'pi+' :  _pioncuts 
     } ,
     ## combination cut
-    CombinationCut = " ADAMASS('D0') < 80 * MeV " ,
+    CombinationCut = " ADAMASS('D0') < 80 * MeV " , ## wide mass-cut for combination 
     ## mother cut
-    MotherCut      = "( chi2vx < 9 ) & ( ADMASS('D0') < 75 * MeV) & (BPVLTFITCHI2() < 9 ) & ( ctau > 90 * micrometer ) "
+    MotherCut      = "( chi2vx < 9 ) & ( ADMASS('D0') < 75 * MeV) & ( ctau > 90 * micrometer ) "
     )
 
 ## make (pre)selection
@@ -153,7 +150,7 @@ _D0Filter = FilterDesktop (
 ## make selection 
 D02HHForPromptCharm_Selection = Selection (
     'SelD02HHForPromptCharm'                ,
-    Algorithm          = _D0Filter           ,
+    Algorithm          = _D0Filter          ,
     RequiredSelections = [ D02HHForPromptCharm_PreSelection ]
     )
 
@@ -173,7 +170,7 @@ _DstarCombine = CombineParticles(
     ##
     DaughtersCuts = {
     'pi+' :  _slowpioncuts ,
-    'D0'  : " switch ( pipi , in_range( -30 * MeV , DMASS('D0') , 50 * MeV ) , ALL ) "
+    'D0'  : " switch ( pipi , in_range ( -30 * MeV , DMASS('D0') , 50 * MeV ) , ALL ) "
     } ,
     ##
     CombinationCut = "AM - AM1 < 160 * MeV"  ,
@@ -206,11 +203,13 @@ _DCombine = CombineParticles(
     " [D+ -> K-  pi+ pi+ ]cc" 
     ] ,
     ##
-    Preambulo      = _preambulo  + [  "aphi  = AM12             < 1040 * MeV " ,
-                                      "admD  = ADAMASS('D+'  )  <   70 * MeV " ,
-                                      "admDs = ADAMASS('D_s+')  <   70 * MeV " ,
-                                      "dmD   = ADMASS ('D+'  )  <   60 * MeV " ,
-                                      "dmDs  = ADMASS ('D_s+')  <   60 * MeV " ] ,
+    Preambulo      = _preambulo  + [
+    "aphi  = AM12              < 1040 * MeV " , ## phi-mass window 
+    "admD  = ADAMASS ('D+'  )  <   70 * MeV " , ## D+  mass window for combination cut 
+    "admDs = ADAMASS ('D_s+')  <   70 * MeV " , ## Ds+ mass window for combiantion cut 
+    "dmD   = ADMASS  ('D+'  )  <   60 * MeV " , ## D+  mass window 
+    "dmDs  = ADMASS  ('D_s+')  <   60 * MeV "   ## Ds+ mass window
+    ] ,
     ##
     DaughtersCuts = {
     'K-'  :  _kaoncuts ,
@@ -218,7 +217,7 @@ _DCombine = CombineParticles(
     } ,
     ##                                 phi                         
     CombinationCut = " switch ( ak2 , aphi & ( admD | admDs ) , admD )" , 
-    MotherCut      = "( chi2vx  < 25 ) & ( dmD | dmDs ) & (BPVLTFITCHI2() < 9 ) & ( ctau > 90 * micrometer )"
+    MotherCut      = "( chi2vx  < 25 ) & ( dmD | dmDs ) & ( ctau > 90 * micrometer )"
     )
 
 ## convert it to selection
@@ -248,7 +247,7 @@ _LambdaC_Combine = CombineParticles(
     } ,
     ##
     CombinationCut = " ADAMASS('Lambda_c+') < 80 * MeV  " , 
-    MotherCut      = "( chi2vx  < 25 ) & ( ADMASS('Lambda_c+') < 75 * MeV ) & (BPVLTFITCHI2() < 9 ) & ( ctau > 60 * micrometer )"
+    MotherCut      = "( chi2vx  < 25 ) & ( ADMASS('Lambda_c+') < 75 * MeV ) & ( ctau > 60 * micrometer )"
     )
 
 ## convert it to selection
