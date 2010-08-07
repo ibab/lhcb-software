@@ -3,6 +3,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2010-08-07 - Marco Clemencic
+ - Updated reference file of the test velodet.veloaligncond.updates.
+
 ! 2010-08-03 - David Hutchcroft
  - Fixed the too large dead region between inner/outer phi regions
  - Prevented more debug/verbose messages begin created if not needed
