@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -99,7 +99,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
             L0Channel = self.getProp("L0Channel")
             # get the L0 candidates (all or L0)
-            l0 = bindMembers(prefix, [ convertL0Candidates(L0Channel)] )
+            # also, implement the global event cuts 
+            from Hlt1Lines.Hlt1GECs import Hlt1_IT_GEC, Hlt1_OT_GEC, Hlt1_Velo_GEC
+            l0 = bindMembers(prefix, [ Hlt1_OT_GEC("<"),Hlt1_Velo_GEC("<"),Hlt1_IT_GEC("<"),convertL0Candidates(L0Channel)] )
             return l0
 
         def confirmationtrackmatch(type=""):
@@ -203,7 +205,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VU', 'Forward'
                            , RecoName = 'Forward'
                            , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                                             ,tools = [ConfiguredPR( "Forward", self.getProp('HadCompanion_PTCut') )] )]
                            )
                 , Member ( 'VF', 'DiHadronPT1', 
                            FilterDescriptor = [ 'VertexMaxPT,>,%s'%self.getProp("HadMain_PTCut")],
@@ -280,7 +282,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                 'MonForward',
                                 RecoName = 'Forward',
                                 tools = [ Tool( HltTrackUpgradeTool,
-                                                tools = [ConfiguredPR( "Forward" )]
+                                                tools = [ConfiguredPR( "Forward", self.getProp('HadCompanion_PTCut') )]
                                               )
                                         ]
                               )
