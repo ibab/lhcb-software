@@ -2,6 +2,8 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+! 2010-08-07 - Stephanie Hansmann-Menzemer
+ - revert changes from WH as they screw up track calo matching
 
 !=========================== TrackFitter v2r50 2010-07-20 ===================
 ! 2010-07-23 - Wouter Hulsbergen
