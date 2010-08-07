@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-07 - Vanya Belyaev
+
+ - resurrect DECTREE symbol 
+
 ! 2010-08-03 - Vanya Belyaev
 
  - add more functionality into "LifeTime"-functors 

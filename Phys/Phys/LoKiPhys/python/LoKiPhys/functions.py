@@ -660,13 +660,14 @@ DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
 
 
 # =============================================================================
-##
+## nodes & trees 
 # =============================================================================
 
 ## @see LoKi::Cuts::DECNODE 
 DECNODE = LoKi.Particles.DecNode 
-### @see LoKi::Cuts::DECTREE
-#DECTREE = LoKi.Particles.DecTree
+## @see LoKi::Cuts::DECTREE
+DECTREE = LoKi.Particles.DecTree
+
 ## 
 ## charged lepton:
 import PartProp.Nodes 
