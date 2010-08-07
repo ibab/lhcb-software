@@ -99,7 +99,7 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
                                                                                  DoSeeding              = False,
                                                                                  DoCloneKilling         = False,
                                                                                  RichHypos              = ["pion","proton"],
-                                                                                 RichTrackCuts          = { "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }   
+                                                                                 RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [1.8,100], "Likelihood" : [-999999,999999] }  } 
                                                                         )
 #
 def setDataTypeForTracking(trackingInstance, dataType):

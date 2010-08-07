@@ -88,7 +88,7 @@ HltCALOIDSuffix				= "CALO"
 #
 HltRichDefaultHypos			= ["pion","kaon"]
 HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"] 
-HltRichDefaultTrackCuts     = { "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [0.8,100], "Likelihood" : [-999999,999999] }
+HltRichDefaultTrackCuts     = {"Forward" :{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [0.8,100], "Likelihood" : [-999999,999999] }}
 # And the subdirectories. These are necessary so that different algorithms
 # using e.g. different options for the RICH reco (radiators, hypotheses) 
 # don't clash with each other 
