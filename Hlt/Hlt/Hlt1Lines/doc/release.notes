@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.190 2010-08-01 23:01:11 gligorov Exp $
+! $Id: release.notes,v 1.191 2010-08-07 04:20:59 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-07 - V. Gligorov
+ - Hlt1GECs : add a GEC filter for the number of OT hits.
+ - Hlt1CommissioningLines : add OT GEC passthrough. 
+ - Hlt1HadronLines : use the new GEC cuts.
+ - Hlt1HadronLines : apply the companion PT cut at the reconstruction stage.
+ - HltConfigurePR : allow the forward reconstruction to be configured with a
+                    cutoff on the track PT. 
 
 ! 2010-08-02 - V. Gligorov
  - Hlt1GECs : a module which will contain the definitions of the GEC
