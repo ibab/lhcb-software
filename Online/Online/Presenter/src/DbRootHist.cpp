@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.176 2010-08-03 14:59:30 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.177 2010-08-08 15:37:20 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -69,6 +69,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
                        boost::recursive_mutex * rootMutex)
   : HistogramIdentifier(dimServiceName),
     m_rootHistogram(NULL),
+    m_identifier(identifier),
     m_hostingPad(NULL),
     m_drawPattern(NULL),
     m_gauchocommentDimInfo(NULL),
@@ -86,7 +87,6 @@ DbRootHist::DbRootHist(const std::string & identifier,
     m_fastHitmapPlot(false),
     m_instance(instance),
     m_waitTime(20),
-    m_identifier(identifier),
     m_session(histogramDB),
     m_onlineHistogram(NULL),
     m_isEmptyHisto(false),

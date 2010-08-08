@@ -1,4 +1,4 @@
-// $Id: CreateTrendingHistogramDialog.cpp,v 1.1 2010-08-08 15:12:33 robbep Exp $
+// $Id: CreateTrendingHistogramDialog.cpp,v 1.2 2010-08-08 15:37:20 robbep Exp $
 
 #include <iostream>
 
@@ -232,8 +232,8 @@ void CreateTrendingHistogramDialog::CloseWindow() {
 //===========================================================================
 void CreateTrendingHistogramDialog::OpenFileDialog() {
   TGFileInfo fileInfo ;
-  TGFileDialog * fd = new TGFileDialog( m_rootFrame , this , kFDOpen , 
-					&fileInfo ) ;
+  new TGFileDialog( m_rootFrame , this , kFDOpen , 
+		    &fileInfo ) ;
   m_fileEntry -> SetText( fileInfo.fFilename ) ;
 
   boost::filesystem::path filePath( fileInfo.fFilename ) ;
