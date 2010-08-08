@@ -4,6 +4,20 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-08 - Patrick Robbe
+ - src/TrendingHistogram.h,.cpp: add new class to contain trending
+   histograms (interfaced to TrendingTool)
+ - src/CreateTrendingHistogramDialog.h,.cpp: new GUI class to create
+   trending histograms in the HistDB 
+
+! 2010-08-03 - Patrick Robbe
+ - cmt/requirements: use Trending package, needs also to use CLHEP in order
+   to be able to load the Gaudi ToolSvc from the presenter.
+ - src/DbRootHist.cpp: set log scale also if histo is empty but the minimum 
+   and the maximum of the histogram have been set to values different from 0
+ - src/presenter.cpp: change "startup-histograms" flag from -D to -H to prevent
+   clash with already existing option
+
 ! 2010-07-31 G. Graziani
  - modifications to HistogramIdentifier to properly handle DIM services from EFF and MF
  - implement support for reference display options
@@ -11,6 +25,7 @@
  - fix labels in trend history mode
  - fix thread safety issue with virtual histograms using reference (i.e. DivideByReference)
 
+!============ Presenter v1r7 2010-08-03 =============
 ! 2010-06-29 - Patrick Robbe
  - src/DbRootHist.cpp: remove stat box by default
 
@@ -41,7 +56,7 @@
 !============ Presenter v1r5 2010-06-01 =============
 ! 2010-06-01 - Patrick Robbe
  - src/PresenterMainFrame.cpp: fix the delete histogram button
- - src.DbRootHist.h: add a function to access the name of the root
+ - src/DbRootHist.h: add a function to access the name of the root
    histogram as string directly
 
 ! 2010-05-26 - Patrick Robbe

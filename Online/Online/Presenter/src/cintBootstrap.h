@@ -9,5 +9,6 @@
 #include "DatabasePagePathDialog.h"
 #include "ElogDialog.h"
 #include "HistoPropDialog.h"
+#include "CreateTrendingHistogramDialog.h"
 
 #endif /*CINTBOOTSTRAP_H_*/

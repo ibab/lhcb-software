@@ -70,6 +70,7 @@ class KnownProblemList ;
 class OnlineHistPage ;
 class RunDB ;
 class IntervalPickerData ;
+class TrendingHistogram ;
 
 class PresenterMainFrame : public TGMainFrame {
 public:
@@ -101,6 +102,7 @@ public:
       CLEAR_HISTOS_COMMAND,
       EDIT_HISTO_COMMAND,
       EDIT_PAGE_PROPERTIES_COMMAND,
+      EDIT_ADD_TRENDINGHISTO_COMMAND ,
       FULL_BENCHMARK_COMMAND,
       INSPECT_HISTO_COMMAND,
       HISTOGRAM_DESCRIPTION_COMMAND,
@@ -179,7 +181,7 @@ public:
   void about();
   void buildGUI();
   void dataDropped(TGListTreeItem* item, TDNDData* data);
-  void CloseWindow();
+  virtual void CloseWindow();
 
   void setPresenterMode(const pres::PresenterMode & presenterMode);
   void setPresenterModeVariable(const pres::PresenterMode & presenterMode)
@@ -323,6 +325,8 @@ public:
   void enablePageLoading();
 
   void deleteSelectedHistoFromCanvas();
+  void addTrendingHisto() ;
+
   DbRootHist* selectedDbRootHistogram();
 
   void clickedHistoSvcTreeItem(TGListTreeItem* node,
@@ -397,7 +401,7 @@ public:
   std::string rw_pastDuration;
   
   /// Load a web page 
-  void loadWebPage( ) ;
+  void loadWebPage( Int_t item ) ;
 
 private:
   UInt_t            m_initWidth;
@@ -488,6 +492,7 @@ private:
   TGHotString*  m_editSaveSelectedHistogramAsReferenceText;
   TGHotString*  m_editAutoLayoutText;
   TGHotString*  m_editPagePropertiesText;
+  TGHotString*  m_editAddTrendingHistoText ;
   TGHotString*  m_editRemoveHistoText;
 
   TGPopupMenu*  m_viewMenu;
@@ -675,6 +680,9 @@ private:
   TGPopupMenu * m_histomenu ;
 
   IntervalPickerData * m_intervalPickerData ;
+
+  /// Internal variable to store trending histo
+  TrendingHistogram * m_trendingHisto ;
 
   /// Display page name in status bar and load comments
   void displayStatusAndComments( const std::string & pageName , 

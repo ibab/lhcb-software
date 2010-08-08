@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.77 2010-08-03 15:01:04 robbep Exp $
+// $Id: presenter.cpp,v 1.78 2010-08-08 15:13:33 robbep Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -26,6 +26,15 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
+// Gaudi 
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "Reflex/PluginService.h"
+
+// Trending
+#include "Trending/ITrendingTool.h"
+
 // Online
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OMAlib/OMAlib.h"
@@ -37,13 +46,18 @@ using namespace pres;
 using namespace boost::program_options;
 using namespace boost::filesystem;
 
-// global variables ("mutex)
+// global variables (mutex)
 namespace PresenterMutex {
   boost::mutex           listMutex ;
   boost::mutex           archiveMutex ;
   boost::recursive_mutex oraMutex ;
   boost::recursive_mutex dimMutex ;
   boost::recursive_mutex rootMutex ;
+};
+
+// global variables (Gaudi tools)
+namespace PresenterGaudi {
+  ITrendingTool * trendingTool ;
 };
 
 
@@ -77,8 +91,18 @@ void setSystemEnvironment(const char* environmentVariable, const char* value) {
 
 #ifdef STANDALONE
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+  // load trending tool
+  ISvcLocator * iface = Gaudi::svcLocator() ;
+  IService * isvc ;
+  iface -> getService( "ToolSvc" , isvc ) ;
+  const IInterface * a3( isvc ) ;
+  const std::string & name( "TrendingTool" ) ;
+  IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name , 
+								      name , a3 ) ;
+  PresenterGaudi::trendingTool = dynamic_cast< ITrendingTool * >( intf ) ;
+
+  // ROOT startup
   TApplication presenterApp("Presenter", NULL, NULL);
   gROOT->Reset("a");
   gSystem->ResetSignal(kSigBus, true);
@@ -244,7 +268,7 @@ int main(int argc, char* argv[])
     if (startupSettings.count("window-height")) {
       windowHeight = startupSettings["window-height"].as<int>();
     }
-
+      
     PresenterMainFrame presenterMainFrame("LHCb Online Presenter",
                                           savesetPath,
                                           referencePath,
@@ -377,7 +401,7 @@ int main(int argc, char* argv[])
         std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;
         exit(EXIT_FAILURE);
       }
-      presenterApp.Run();
+      presenterApp.Run( kTRUE );
     } else {
       if (startupSettings.count("key-file")) {
         std::ifstream keyFile(startupSettings["key-file"].as<std::string>().c_str(), std::ios::in);
@@ -401,12 +425,13 @@ int main(int argc, char* argv[])
         presenterMainFrame.setStartupHistograms(startupHistograms);
       }
       presenterMainFrame.startPageRefresh();
-      presenterApp.Run();
+      presenterApp.Run( kTRUE );
     }
-    exit(EXIT_SUCCESS);
   } catch(std::exception& e) {
     std::cout << e.what() << std::endl;
-    exit(EXIT_FAILURE);
   }
+  // Release trending tool
+  delete PresenterGaudi::trendingTool ;
+  exit(EXIT_SUCCESS);
 }
 #endif

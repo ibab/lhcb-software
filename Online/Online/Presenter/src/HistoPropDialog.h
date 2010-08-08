@@ -1,4 +1,4 @@
-// $Id: HistoPropDialog.h,v 1.11 2010-05-16 18:09:40 robbep Exp $
+// $Id: HistoPropDialog.h,v 1.12 2010-08-08 15:13:33 robbep Exp $
 #ifndef HISTOPROPDIALOG_H_
 #define HISTOPROPDIALOG_H_
 
@@ -28,7 +28,7 @@ class HistoPropDialog : public TGTransientFrame
 {
   public:
     HistoPropDialog(PresenterMainFrame* gui, int width,
-    int height, pres::MsgLevel v);
+		    int height, pres::MsgLevel v);
     virtual ~HistoPropDialog();
 
     void ok();

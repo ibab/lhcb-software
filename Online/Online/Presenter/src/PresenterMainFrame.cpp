@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.325 2010-06-11 13:02:03 ggiacomo Exp $
+// $Id: PresenterMainFrame.cpp,v 1.326 2010-08-08 15:13:33 robbep Exp $
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -62,6 +62,7 @@
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
 #include <TBenchmark.h> 
+#include <TGraph.h>
 #ifdef WIN32
 #pragma warning( pop )
 #endif
@@ -97,6 +98,8 @@
 #include "RunDB.h"
 #include "PageDescriptionTextView.h"
 #include "AlarmDisplay.h"
+#include "CreateTrendingHistogramDialog.h"
+#include "TrendingHistogram.h"
 
 using namespace pres;
 using namespace std;
@@ -173,7 +176,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_deadTasksOnPage(0),
   m_currentTCK(""),
   m_runDb( 0 ) ,
-  m_intervalPickerData(NULL) 
+  m_intervalPickerData(NULL) ,
+  m_trendingHisto( 0 ) 
 {
   m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
@@ -297,7 +301,9 @@ PresenterMainFrame::~PresenterMainFrame() {
   if (gPresenter == this) { gPresenter = 0; }
 }
 
-
+//=========================================================================
+// Clean the histogram DB
+//=========================================================================
 void PresenterMainFrame::cleanHistogramDB() {
   if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
   if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
@@ -332,6 +338,7 @@ void PresenterMainFrame::buildGUI() {
     m_editPickReferenceHistogramText = new TGHotString("Set &Reference Histogram...");
     m_editSaveSelectedHistogramAsReferenceText = new TGHotString("&Save as Reference Histogram");
     m_editPagePropertiesText = new TGHotString("&Page Properties...");
+    m_editAddTrendingHistoText = new TGHotString("&Create New Trending Histogram...");
 
     m_viewText = new TGHotString("&View");
     m_viewStartRefreshText = new TGHotString("Start page &refresh");
@@ -418,6 +425,8 @@ void PresenterMainFrame::buildGUI() {
                          SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->AddEntry(m_editPagePropertiesText,
                          EDIT_PAGE_PROPERTIES_COMMAND);
+    m_editMenu -> AddEntry( m_editAddTrendingHistoText , 
+			    EDIT_ADD_TRENDINGHISTO_COMMAND ) ;
     m_editMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
                         this, "handleCommand(Command)");
     m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
@@ -1317,7 +1326,7 @@ void PresenterMainFrame::CloseWindow() {
   // delete RunDB interface object
   if ( m_runDb ) delete m_runDb ;
 
-  gApplication->Terminate();
+  gApplication->Terminate( 0 );
 }
 
 void PresenterMainFrame::dockAllFrames() {
@@ -1402,6 +1411,9 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case REMOVE_HISTO_FROM_CANVAS_COMMAND:
     deleteSelectedHistoFromCanvas();
     break;
+  case EDIT_ADD_TRENDINGHISTO_COMMAND:
+    addTrendingHisto() ;
+    break ;
   case UNDOCK_PAGE_COMMAND:
     m_pageDock->UndockContainer();
     break;
@@ -4746,6 +4758,9 @@ bool PresenterMainFrame::threadSafePage() {
   return out;
 }
 
+//===============================================================================================
+// Refresh pages in refresh mode
+//===============================================================================================
 void PresenterMainFrame::refreshPage() {
   bool parallelRefresh = threadSafePage();
 
@@ -4932,7 +4947,8 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 
   case kButton1Double:
     if ( 0 != selected ) { 
-      TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
+      TPad * thePad = 
+	dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
       if ( 0 != thePad ) {
 	TIter next( thePad -> GetListOfPrimitives() ) ;
 	TObject * obj ; TH1 * theHisto( 0 ) ; 
@@ -4946,7 +4962,8 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 	if ( 0 != theHisto ) {
 	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
 	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
-	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); ++eventInfo_dbHistosOnPageIt) {
+	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); 
+	       ++eventInfo_dbHistosOnPageIt) {
 	    if (0 == ( *eventInfo_dbHistosOnPageIt ) -> getName().compare( theHisto -> GetName() ) ) {
 	      if ( NULL != (*eventInfo_dbHistosOnPageIt)->onlineHistogram() &&
 		   false == (*eventInfo_dbHistosOnPageIt)->onlineHistogram() -> 
@@ -4980,10 +4997,13 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
       if ( 0 != thePad ) {
 	TIter next( thePad -> GetListOfPrimitives() ) ;
-	TObject * obj ; TH1 * theHisto( 0 ) ; 
+	TObject * obj ; TH1 * theHisto( 0 ) ; TGraph * theGraph( 0 ) ;
 	while ( ( obj = next( ) ) ) {
 	  if ( obj -> InheritsFrom( TH1::Class() ) ) {
 	    theHisto = dynamic_cast< TH1* >( obj ) ;
+	    break ;
+	  } else if ( obj -> InheritsFrom( TGraph::Class() ) ) {
+	    theGraph = dynamic_cast< TGraph * >( obj ) ;
 	    break ;
 	  }
 	}
@@ -5003,17 +5023,80 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
 	      m_weblink = (*eventInfo_dbHistosOnPageIt)->onlineHistogram()->doc() ;
 	      if ( ! m_weblink.empty() ) {
 		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> DeleteEntry( 3 ) ;
+		m_histomenu -> DeleteEntry( 4 ) ;
+		m_histomenu -> DeleteEntry( 5 ) ;
+		m_histomenu -> DeleteEntry( 6 ) ;
+		m_histomenu -> DeleteEntry( 7 ) ;
+		m_histomenu -> DeleteEntry( 8 ) ;
+		m_histomenu -> DeleteEntry( 9 ) ;
 		m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
 		m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
 					"PresenterMainFrame" , this, 
-					"loadWebPage()" );
+					"loadWebPage(Int_t)" );
 	      } else {
 		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> DeleteEntry( 3 ) ;
+		m_histomenu -> DeleteEntry( 4 ) ;
+		m_histomenu -> DeleteEntry( 5 ) ;
+		m_histomenu -> DeleteEntry( 6 ) ;
+		m_histomenu -> DeleteEntry( 7 ) ;
+		m_histomenu -> DeleteEntry( 8 ) ;
+		m_histomenu -> DeleteEntry( 9 ) ;
 		m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
 	      }
 	      break;
 	    }
 	  }
+	} else if ( 0 != theGraph ) {
+	  std::vector<DbRootHist*>::iterator eventInfo_dbHistosOnPageIt;
+	  for (eventInfo_dbHistosOnPageIt = dbHistosOnPage.begin();
+	       eventInfo_dbHistosOnPageIt != dbHistosOnPage.end(); 
+	       ++eventInfo_dbHistosOnPageIt) {
+	    if (0 == ( *eventInfo_dbHistosOnPageIt ) -> getName().compare( theGraph -> GetName() ) ) {
+	      m_trendingHisto = dynamic_cast< TrendingHistogram * >( (*eventInfo_dbHistosOnPageIt) ) ;
+	      // Display a pop-up menu 
+	      m_histomenu -> DeleteEntry( 1 ) ;
+	      m_histomenu -> AddEntry( theGraph -> GetName() , 1 , 0 , 0 , 
+				       m_histomenu -> GetEntry( 10 ) ) ;
+	      
+	      m_histomenu -> PlaceMenu( px , py , true , true ) ;
+	      
+	      m_weblink = (*eventInfo_dbHistosOnPageIt)->onlineHistogram()->doc() ;
+	      if ( ! m_weblink.empty() ) {
+		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> DeleteEntry( 3 ) ;
+		m_histomenu -> DeleteEntry( 4 ) ;
+		m_histomenu -> DeleteEntry( 5 ) ;
+		m_histomenu -> DeleteEntry( 6 ) ;
+		m_histomenu -> DeleteEntry( 7 ) ;
+		m_histomenu -> DeleteEntry( 8 ) ;
+		m_histomenu -> DeleteEntry( 9 ) ;		
+		m_histomenu -> AddEntry( "Click for documentation" , 2 ) ;
+	      } else {
+		m_histomenu -> DeleteEntry( 2 ) ;
+		m_histomenu -> DeleteEntry( 3 ) ;
+		m_histomenu -> DeleteEntry( 4 ) ;
+		m_histomenu -> DeleteEntry( 5 ) ;
+		m_histomenu -> DeleteEntry( 6 ) ;
+		m_histomenu -> DeleteEntry( 7 ) ;
+		m_histomenu -> DeleteEntry( 8 ) ;
+		m_histomenu -> DeleteEntry( 9 ) ;		
+		m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
+	      }
+	      m_histomenu -> AddEntry( "Last 5 minutes" , 3 ) ;
+	      m_histomenu -> AddEntry( "Last 30 minutes" , 4 ) ;
+	      m_histomenu -> AddEntry( "Last 2 hours" , 5 ) ;
+	      m_histomenu -> AddEntry( "Last day" , 6 ) ;
+	      m_histomenu -> AddEntry( "Last week" , 7 ) ;
+	      m_histomenu -> AddEntry( "Last year" , 8 ) ;
+	      m_histomenu -> AddEntry( "Last 10 years" , 9 ) ;
+	      m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+				      "PresenterMainFrame" , this, 
+				      "loadWebPage(Int_t)" );
+	      break;
+	    }
+	  }	  
 	}
       }
     }
@@ -5149,36 +5232,76 @@ void PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
 //===========================================================================
 // Open a web browser (firefox) at the given link
 //===========================================================================
-void PresenterMainFrame::loadWebPage( ) {
-  if ( m_weblink.empty() ) return ;
+void PresenterMainFrame::loadWebPage( Int_t item ) {
+  TrendingHistogram * theHisto = m_trendingHisto ;
+  m_trendingHisto = 0 ;
+  if ( 1 == item ) return ;
+  if ( 2 == item ) { 
+    if ( m_weblink.empty() ) return ;
 #ifndef WIN32
-  // check if an instance of firefox is already running
-  bool running = false ;
-  FILE * fp ;
-  fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
-  if ( fp == NULL ) 
-    std::cerr << "Could not launch firefox" << std::endl ;
-  else {
-    char line[256] ;
-    while ( fgets( line , sizeof(line) , fp ) ) { 
-      running = true ;
+    // check if an instance of firefox is already running
+    bool running = false ;
+    FILE * fp ;
+    fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
+    if ( fp == NULL ) 
+      std::cerr << "Could not launch firefox" << std::endl ;
+    else {
+      char line[256] ;
+      while ( fgets( line , sizeof(line) , fp ) ) { 
+	running = true ;
+      }
     }
+    pclose( fp ) ;
+    
+    if ( ! running ) {
+      if ( 0 == fork() ) {
+	execlp( "firefox" , "firefox" , m_weblink.c_str() , NULL ) ;
+      }
+    } else
+      if ( 0 == fork() ) {
+	std::string foxargs( m_weblink ) ;
+	foxargs = "openURL(" + foxargs + ")" ;
+	execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()  
+		, NULL ) ;
+      }
+  } else { 
+    switch ( item ) {
+    case 3:
+      theHisto -> setMode( TrendingHistogram::Last5Minutes ) ;
+      break ;
+    case 4:
+      theHisto -> setMode( TrendingHistogram::Last30Minutes ) ;
+      break ;
+    case 5:
+      theHisto -> setMode( TrendingHistogram::Last2Hours ) ;
+      break ;
+    case 6:
+      theHisto -> setMode( TrendingHistogram::LastDay ) ;
+      break ;
+    case 7:
+      theHisto -> setMode( TrendingHistogram::LastWeek ) ;
+      break ;
+    case 8:
+      theHisto -> setMode( TrendingHistogram::LastYear ) ;
+      break ;
+    case 9:
+      theHisto -> setMode( TrendingHistogram::Last10Years ) ;
+      break ;
+    default: 
+      break ;
+    }
+    theHisto -> refresh() ;
+    if (! gROOT->IsInterrupted()) editorCanvas->Update();
   }
-  pclose( fp ) ;
-		
-  if ( ! running ) {
-    if ( 0 == fork() ) {
-      execlp( "firefox" , "firefox" , m_weblink.c_str() , NULL ) ;
-    }
-  } else
-    if ( 0 == fork() ) {
-      std::string foxargs( m_weblink ) ;
-      foxargs = "openURL(" + foxargs + ")" ;
-      execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()  
-	      , NULL ) ;
-    }
 #endif
 }
 
+//============================================================================
+// Display a dialog box to add a trending histo to the database
+//============================================================================
+void PresenterMainFrame::addTrendingHisto() {
+  new CreateTrendingHistogramDialog( gClient->GetRoot() , GetMainFrame() ,
+				     m_histogramDB ) ;
+}
 
 

@@ -69,10 +69,10 @@ class DbRootHist : public HistogramIdentifier
   virtual ~DbRootHist();
     
   /// Initialize histogram
-  void initHistogram();
+  virtual void initHistogram();
   
   /// Once we have our ROOT histos, this will be called to get new values
-  void fillHistogram();
+  virtual void fillHistogram();
   
   /// Enable editting of histo
   void enableEdit();
@@ -111,10 +111,10 @@ class DbRootHist : public HistogramIdentifier
   std::vector<float> *anaParameters() { return &m_parameters ; }
   
   /// Draw histogram
-  void draw( TCanvas * editorCanvas , double xlow , double ylow , 
-	     double xup , double yup , bool fastHitMapDraw , 
-	     TPad* overlayOnPad = NULL ) ;
-
+  virtual void draw( TCanvas * editorCanvas , double xlow , double ylow , 
+		     double xup , double yup , bool fastHitMapDraw , 
+		     TPad* overlayOnPad = NULL ) ;
+  
   /// true if histogram is drawn on top of another one  
   bool isOverlap() {return m_isOverlap ; }
 
@@ -151,7 +151,7 @@ class DbRootHist : public HistogramIdentifier
   bool saveTH1ToDB(TPad* pad = NULL);
 
   /// normalize reference (if existing and requested) to current plot
-  void normalizeReference();
+  virtual void normalizeReference();
     
   /// reference histogram 
   void referenceHistogram( ReferenceVisibility visibility ) ;
@@ -204,11 +204,18 @@ class DbRootHist : public HistogramIdentifier
   /// produce virtual histogram on the fly
   TH1* makeVirtualHistogram(std::vector<TH1*> &sources);
 
+ protected:
+  TH1 * m_rootHistogram ; ///< pointer to the underlying ROOT histogram
+  TString   m_histoRootName ; ///< generated ROOT histo name for identification
+  TString   m_histoRootTitle ; ///< generated ROOT histo title from DIM gauchocomment
+  std::string m_identifier ; ///< histogram identifier
+  TPad * m_hostingPad ; ///< pointer to the histogram Pad  
+
+  /// updates pad margins from  Histogram DB
+  void setPadMarginsFromDB(TPad* &pad);
 
 
  private:
-  TH1  * m_rootHistogram ; ///< pointer to the underlying ROOT histogram
-  TPad * m_hostingPad ; ///< pointer to the histogram Pad  
   TPad * m_drawPattern ; ///< pointer to pattern's pad
   DimInfo *  m_gauchocommentDimInfo ; ///< pointer to Gaucho comment DIM info
   TH1  * m_offsetHistogram ; ///< pointer to offset histogram
@@ -223,15 +230,12 @@ class DbRootHist : public HistogramIdentifier
   std::vector< std::string > m_sourcenames ; ///< names of the sources
   std::vector< float > m_parameters ; ///< list of parameters
   int  m_refreshTime ; ///< refresh time for DIM 
-  TString   m_histoRootName ; ///< generated ROOT histo name for identification
-  TString   m_histoRootTitle ; ///< generated ROOT histo title from DIM gauchocomment
   bool m_cleared ; ///< flag for clear
   bool m_fastHitmapPlot ; ///< flag for fast hitmap plotting
   int m_instance ; ///< instance number
   int m_waitTime ; ///< wait time
   int m_serviceSize ; ///< size of service
 
-  std::string m_identifier ; ///< histogram identifier
   OnlineHistDB* m_session ; ///< link to hist db session
   OnlineHistogram* m_onlineHistogram ; ///< link to underlying online histogram
   bool m_isEmptyHisto ; ///< flag for empty histo
@@ -283,9 +287,6 @@ class DbRootHist : public HistogramIdentifier
    */
   bool connectToDB(OnlineHistDB* session, std::string page = "_NONE_",
 		   int instance = 1);
-
-  /// updates pad margins from  Histogram DB
-  void setPadMarginsFromDB(TPad* &pad);
 
   /// Apply default drawing options before getting them from the DB
   void applyDefaultDrawOptions( ) ;

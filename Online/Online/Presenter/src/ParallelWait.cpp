@@ -1,4 +1,4 @@
-// $Id: ParallelWait.cpp,v 1.24 2010-06-03 21:27:40 robbep Exp $
+// $Id: ParallelWait.cpp,v 1.25 2010-08-08 15:13:33 robbep Exp $
 // STL
 #include <vector>
 
@@ -18,6 +18,7 @@
 #include "PresenterMainFrame.h"
 #include "Archive.h"
 #include "ParallelWait.h"
+#include "TrendingHistogram.h"
 
 using namespace pres;
 using namespace std;
@@ -45,6 +46,7 @@ DbRootHist* Presenter::getPageHistogram(PresenterMainFrame * presenter,
 					pres::MsgLevel verbosity,
 					DimBrowser* dimBrowser) {
   std::vector<std::string*> tasksNotRunning;
+
   DbRootHist* dbRootHist = new DbRootHist(identifier,
                                           currentPartition,
                                           refreshTime, instance,
@@ -80,37 +82,70 @@ void Presenter::getHistogramsFromLists(PresenterMainFrame * presenter,
 				       std::vector<std::string*> & tasksNotRunning) {
 
   DbRootHist* dbRootHist;
-  if( (History == presenter->presenterMode()) ||
-      (EditorOffline == presenter->presenterMode())) { // no need for DIM
-    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
-				std::string(""),
-				2, onlineHistosOnPage->instance,
-				presenter->histogramDB(),
-				presenter->analysisLib(),
-				onlineHistosOnPage->histo,
-				presenter->verbosity(),
-				NULL,
-				&PresenterMutex::oraMutex,
-				&PresenterMutex::dimMutex,
-				tasksNotRunning,
-				&PresenterMutex::rootMutex);
+  
+  if( ( History       == presenter->presenterMode() ) ||
+      ( EditorOffline == presenter->presenterMode() ) ) { // no need for DIM
+    if ( onlineHistosOnPage -> histo -> type() == OnlineHistDBEnv::TRE ) {
+      dbRootHist = new TrendingHistogram(onlineHistosOnPage->histo->identifier(),
+					 std::string(""),
+					 2, onlineHistosOnPage->instance,
+					 presenter->histogramDB(),
+					 presenter->analysisLib(),
+					 onlineHistosOnPage->histo,
+					 presenter->verbosity(),
+					 NULL,
+					 &PresenterMutex::oraMutex,
+					 &PresenterMutex::dimMutex,
+					 tasksNotRunning,
+					 &PresenterMutex::rootMutex,
+					 0 , 0 , TrendingHistogram::History );
+    } else { 
+      dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
+				  std::string(""),
+				  2, onlineHistosOnPage->instance,
+				  presenter->histogramDB(),
+				  presenter->analysisLib(),
+				  onlineHistosOnPage->histo,
+				  presenter->verbosity(),
+				  NULL,
+				  &PresenterMutex::oraMutex,
+				  &PresenterMutex::dimMutex,
+				  tasksNotRunning,
+				  &PresenterMutex::rootMutex);
+    }
   } else if( (Online == presenter->presenterMode()) ||
 	     (EditorOnline == presenter->presenterMode())) {
     DimBrowser* dimBrowser = NULL;    
     dimBrowser = presenter -> dimBrowser( ) ;
 
-    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
-				presenter->currentPartition(),
-				2, onlineHistosOnPage->instance,
-				presenter->histogramDB(),
-				presenter->analysisLib(),
-				onlineHistosOnPage->histo,
-				presenter->verbosity(),
-				dimBrowser,
-				&PresenterMutex::oraMutex,
-				&PresenterMutex::dimMutex,
-				tasksNotRunning,
-				&PresenterMutex::rootMutex);
+    if ( onlineHistosOnPage -> histo -> type() == OnlineHistDBEnv::TRE ) {
+      dbRootHist = new TrendingHistogram( onlineHistosOnPage->histo->identifier(),
+					  presenter->currentPartition(),
+					  2, onlineHistosOnPage->instance,
+					  presenter->histogramDB(),
+					  presenter->analysisLib(),
+					  onlineHistosOnPage->histo,
+					  presenter->verbosity(),
+					  dimBrowser,
+					  &PresenterMutex::oraMutex,
+					  &PresenterMutex::dimMutex,
+					  tasksNotRunning,
+					  &PresenterMutex::rootMutex , 
+					  0 , 0 , TrendingHistogram::Last2Hours );
+    } else {
+      dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
+				  presenter->currentPartition(),
+				  2, onlineHistosOnPage->instance,
+				  presenter->histogramDB(),
+				  presenter->analysisLib(),
+				  onlineHistosOnPage->histo,
+				  presenter->verbosity(),
+				  dimBrowser,
+				  &PresenterMutex::oraMutex,
+				  &PresenterMutex::dimMutex,
+				  tasksNotRunning,
+				  &PresenterMutex::rootMutex);
+    }
   }
   
   if (0 != presenter) {
