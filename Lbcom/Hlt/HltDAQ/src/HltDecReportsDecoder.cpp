@@ -1,4 +1,4 @@
-                                          // $Id: HltDecReportsDecoder.cpp,v 1.4 2010-04-08 08:12:02 jpalac Exp $
+                                          // $Id: HltDecReportsDecoder.cpp,v 1.5 2010-08-08 18:16:28 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -75,9 +75,6 @@ HltDecReportsDecoder::HltDecReportsDecoder( const std::string& name,
   declareProperty("InputRawEventLocation",
                   m_inputRawEventLocation);  
 
-  m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
 }
 //=============================================================================
@@ -94,6 +91,10 @@ StatusCode HltDecReportsDecoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+
+  m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-08-08 - Tomasz Skwarnicki
+ - fix the bug in HltDecReportsDecoder for non-standard RawEvent location
+
 !========================== HltDAQ v2r0p2 2010-06-21 ===========================
 ! 2010-06-14 - Tomasz Skwarnicki
  - cosmetic change in HltVertexReportsDecoder to avoid windows compiler warnings
