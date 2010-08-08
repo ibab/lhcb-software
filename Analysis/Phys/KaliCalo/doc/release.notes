@@ -1,11 +1,28 @@
-! $Id: release.notes,v 1.56 2010-05-24 21:34:51 jpalac Exp $ 
+! $Id: release.notes,v 1.57 2010-08-08 18:04:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.56 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.57 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-08-08 - Vanya Belyaev
+
+ - change the default upper edge for pi-hitsogram fits 
+
+ - add the optional possibility to apply pi0-veto for the first pass 
+
+ - add possibiilty to add even-filters for the first pass 
+
+ - add the example  of the first pass: 
+
+     KaliPi0_1.py 
+
+ - cmt/requirements 
+
+    version increment to v4r3 
+ 
 
 !========================== KaliCalo v4r2p2 2010-05-24 ========================
 

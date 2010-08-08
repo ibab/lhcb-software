@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.20 2010-05-09 16:12:35 apuignav Exp $
+# $Id: Configuration.py,v 1.21 2010-08-08 18:04:38 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.20 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -96,7 +96,7 @@ __all__  = (
 # =============================================================================
 from Gaudi.Configuration       import *
 from LHCbKernel.Configuration  import *
-from GaudiKernel.SystemOfUnits import MeV 
+from GaudiKernel.SystemOfUnits import GeV,MeV 
 import logging
 
 _log = logging.getLogger('KaliCalo')
@@ -178,6 +178,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         , 'Histograms'          : False ## Create monitoring histograms
         , 'RecoAll'             : False ## Global Recontruction ?
+        ## for first pass only
+        , 'Pi0VetoDeltaMass'    : -1    ## mass-window for pi0-veto 
+        , 'Pi0VetoChi2'         : -1    ## chi2        for pi0-veto
+        , 'Filter'              : ""    ## void filter to be used 
         ## mis/re-calibration
         , 'KaliDB'              : {}    ## the map of { 'dbase' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'}
         , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
@@ -213,6 +217,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         , 'Histograms'          : """ Activate monitoring histograms creation """
         , 'RecoAll'             : """ Global Reconstruction? """
+        ## the first pass only 
+        , 'Pi0VetoDeltaMass'    : """ Mass-window for pi0-veto """
+        , 'Pi0VetoChi2'         : """ Chi2        for pi0-veto """ 
+        , 'Filter'              : """ Void-filter to be used   """ 
         ## mis/re-calibration        
         , 'KaliDB'              : """ The map of { 'name' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'} """
         , 'Coefficients'        : """ The map of (mis)calibration coefficients """
@@ -406,15 +414,29 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             Mirror         = self.getProp ( 'Mirror'      ) , 
             HistoProduce   = self.getProp ( 'Histograms'  )
             )
+        
         if self.getProp ('Mirror' ) :
             _log.warning ("KaliPi0: Albert's trick is   activated") 
         else :
-            _log.warning ("KaliPi0: Albert's trick is deactivated") 
+            _log.warning ("KaliPi0: Albert's trick is deactivated")
+            
         if self.getProp ( 'Histograms' ) :
             _log.warning ( "KaliPi0: Monitoring histograms are   activated") 
         else :
-            _log.warning ( "KaliPi0: Monitoring histograms are deactivated") 
+            _log.warning ( "KaliPi0: Monitoring histograms are deactivated")
             
+        if self.getProp ( 'FirstPass' ) :
+            
+            if 0 <= self.getProp ('Pi0VetoDeltaMass') :
+                _dm   = self.getProp ( 'Pi0VetoDeltaMass' ) 
+                _log.warning ("KaliPi0: Pi0Veto is activated DM   =%s" % _dm   ) 
+                kali.Pi0VetoDeltaMass = _dm
+                
+            if 0 <= self.getProp ('Pi0VetoChi2') :
+                _chi2 = self.getProp ( 'Pi0VeloChi2' ) 
+                _log.warning ("KaliPi0: Pi0Veto is activated CHI2 =%s" % _chi2 ) 
+                kali.Pi0VetoChi2      = _chi2
+                
         kali.InputPrimaryVertices = 'None'  ## NB: it saves a lot of CPU time!
         _log.warning("KaliPi0: Primary Vertices are disabled for Kali") 
         
@@ -582,7 +604,20 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         # unpacking is enabled only for first pass on DST 
         unPack = self.getProp (  'FirstPass' )
-        
+
+        if self.getProp('FirstPass' ) :
+            _fltr = self.getProp('Filter')
+            if _fltr :
+                from Configurables import LoKi__VoidFilter as Filter
+                fltr = Filter ( 'KaliFilter' ,
+                                Code = _fltr )
+                fltr.Preambulo += [
+                    "from LoKiTracks.decorators  import *" , 
+                    "from LoKiCore.functions     import *"
+                    ]
+                algs = [ fltr ] + algs
+
+                
         dv = DaVinci (
             UserAlgorithms = algs                          ,
             DataType       = self.getProp ( 'DataType'   ) ,
@@ -626,12 +661,16 @@ def firstPass ( **args ) :
     """
     
     kali = KaliPi0Conf (
-        FirstPass  =  True ,
-        UseTracks  = args.pop ( 'UseTracks'  , True  ) ,
-        UseSpd     = args.pop ( 'UseSpd'     , True  ) ,
-        UsePrs     = args.pop ( 'UsePrs'     , False ) ,
-        Mirror     = args.pop ( 'Mirror'     , True  ) , 
-        Histograms = args.pop ( 'Histograms' , True  ) ,
+        FirstPass        = True ,
+        UseTracks        = args.pop ( 'UseTracks'        , True     ) ,
+        UseSpd           = args.pop ( 'UseSpd'           , True     ) ,
+        UsePrs           = args.pop ( 'UsePrs'           , False    ) ,
+        Mirror           = args.pop ( 'Mirror'           , True     ) , 
+        Histograms       = args.pop ( 'Histograms'       , True     ) ,
+        ##
+        Pi0VetoDeltaMass = args.pop ( 'Pi0VetoDeltaMass' , 15 * MeV ) ,
+        Pi0VetoChi2      = args.pop ( 'Pi0VetoChi2'      ,  -1      ) ,
+        ##
         **args
         )
     
@@ -671,7 +710,10 @@ def  action ( ) :
     dvInitSeq.Members = []
         
     _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
-    
+
+    dvMainSeq = getConfigurable('DaVinciMainSequence')
+    dvMainSeq.IgnoreFilterPassed = False
+
 ##     gammaRec = getConfigurable('SinglePhotonRec')
 ##     for component in ( gammaRec             ,
 ##                        gammaRec.ECorrection ,

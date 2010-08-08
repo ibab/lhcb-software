@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.16 2010-05-02 11:52:39 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.17 2010-08-08 18:04:38 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -167,7 +167,7 @@ pi0Func.SetParameter ( 4 ,   0 )
 pi0Func.SetParameter ( 5 ,   0 )
 
 _low    =  50.000
-_high   = 210.000
+_high   = 240.000
 _mass0  = 135.000
 _sigma0 =  13.001
 _slope0 =   0.001 
@@ -304,13 +304,19 @@ def s2b ( histo , r = 2.5 ) :
     """
     get ``signal-to-background'' ratio in +-2.5 sigma interga
     """
+    ## AIDA ??
+    if hasattr ( histo , 'toROOT' ) : return s2b ( histo.toROOT() , r )
+    #
     par = getPi0Params ( histo )
+    #
     m = par[1].value()
     s = par[2].value()
-    r = abs ( r ) 
+    r = abs ( r )
+    #
     iL     = histo.FindBin ( m - r * s )
     iR     = histo.FindBin ( m + r * s )
-    return par[0]/(par[3]*(iR-iL))
+    #
+    return par[0]/(par[3]*(iR-iL+1))
     
 ## ============================================================================
 ## pre-fit background histogram 
