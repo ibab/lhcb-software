@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.4 2010-08-07 16:52:28 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.5 2010-08-08 17:30:18 ibelyaev Exp $
 # =============================================================================
-# $URL
+# $URL$
 # =============================================================================
 ## @file
 # 
@@ -15,8 +15,8 @@
 #
 #  The cuts more or less corresponds to D*+ selection by Alexandr Kozlinzkiy
 #
-# $Revision: 1.4 $
-# Last modification $Date: 2010-08-07 16:52:28 $
+# $Revision: 1.5 $
+# Last modification $Date: 2010-08-08 17:30:18 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -44,14 +44,14 @@ The performance with 100k events from Reco04-Stripping07-SDSTs.py:
  | Total         |  1.66 +- 0.04   |   320/DaVinciMain = 3.2 ms/event |
  +---------------+-----------------+----------------------------------+
    
-$Revision: 1.4 $
-Last modification $Date: 2010-08-07 16:52:28 $
+$Revision: 1.5 $
+Last modification $Date: 2010-08-08 17:30:18 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 # =============================================================================
 __all__ = (
     #
