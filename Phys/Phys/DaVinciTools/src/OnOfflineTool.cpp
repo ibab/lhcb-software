@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.28 2010-07-22 11:17:22 jonrob Exp $
+// $Id: OnOfflineTool.cpp,v 1.29 2010-08-09 06:26:39 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -103,7 +103,7 @@ StatusCode OnOfflineTool::initialize()
       debug() << "Running in HLT context: Online = true" << endmsg ;
     m_online = true ;
   }
-  else if ( context() != "" || context() != "Offline" )
+  else if ( context() != "" && context() != "Offline" )
   {
     Warning( "Unexpected context '" + context() + 
              "'. Assuming offline mode, please check !" ).ignore();

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.566 2010-08-04 14:53:07 jpalac Exp $
+! $Id: release.notes,v 1.567 2010-08-09 06:26:39 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-08-09 - Patrick Koppenburg
+ - OnOffineTool:: fix useless warning. Bug #71200
 
 ! 2010-08-04 - Juan Palacios
  - BestPVAlg
