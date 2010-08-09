@@ -58,9 +58,7 @@ class Exclusive_Leptonic :
                     
         d.update( { Hlt2Dst2D2XXLinesConf : { 
             ## Cut values
-            'PiMaxIP'            : 1.0        # mm
-            , 'D0MaxIP'            : 0.1       # mm
-            , 'D0MinPT'            : 1600.      # MeV
+            'D0MinPT'            : 1600.      # MeV
             , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi' : 0.1
                                , 'Hlt2Dst2PiD02KPi'        :  0.05
                                , 'Hlt2Dst2PiD02KPiD0SB'    :  0.05

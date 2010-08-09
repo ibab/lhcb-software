@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-09 - Francesco Dettori
+ - Restored original IP cuts for Hlt2Dst2D2XXLines in Exclusive_Leptonics.py
+   as agreed with J. Albrecht
+
 ! 2010-08-07 - Roel Aaij
  - Added an empty ThresholdSettings by the name of NoLines_Aug10
 
