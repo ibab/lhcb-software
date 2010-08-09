@@ -26,8 +26,9 @@ histoNum   = range(1, 49)
 createHistAlg.PageNames   = []
 
 # define the documentation string for each page
-#   PageDoc is a list of strings with the same ordering as PageNames
-#   depending on the size of the list, the follwing actions will be taken:
+#   PageDoc is a list of std::vector<std::string> with the same ordering
+#   as PageNames.  A new line is added after each element in the vector.
+#   Depending on the size of the list, the follwing actions will be taken:
 #   - if the list is empty, no documentation will be added. 
 #   - if the list has one entry for each page, these will 
 #     be used.
