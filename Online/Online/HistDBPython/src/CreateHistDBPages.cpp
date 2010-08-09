@@ -1,4 +1,4 @@
-// $Id: CreateHistDBPages.cpp,v 1.2 2009-04-06 10:36:13 nchiapol Exp $
+// $Id: CreateHistDBPages.cpp,v 1.3 2010-08-09 15:29:03 mtobin Exp $
 
 #include "CreateHistDBPages.h"
 
@@ -154,10 +154,16 @@ StatusCode CreateHistDBPages::createPage(OnlineHistDB *HistDB, int pageNr)
   if ( ! m_pageDoc.empty() ) {
     std::string *thisDoc;
     if ( m_pageDoc.size() == m_pageNames.size() ) {
-      thisDoc = &(m_pageDoc[pageNr]);
+      std::string pageComment = "";
+      std::vector<std::string>::iterator iDoc=m_pageDoc[pageNr].begin();
+      for(; iDoc != m_pageDoc[pageNr].end(); ++iDoc) {
+	pageComment += (*iDoc) + "\n";
+      }
+      thisDoc = &pageComment;
+      debug() << "Page number " << pageNr << ":\n" << *thisDoc << endmsg;
     } else {
       debug() << "Using first description." << endmsg;
-      thisDoc = &(m_pageDoc[0]);
+      thisDoc = &(m_pageDoc[0][0]);
     }
     ok &= page->setDoc(*thisDoc);
   }

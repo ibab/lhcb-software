@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.5 2009-12-09 10:48:09 mtobin Exp $
+! $Id: release.notes,v 1.6 2010-08-09 15:29:03 mtobin Exp $
 ! Package     : HistDBPython
 ! Responsible : Nicola Chiapolini
 !
+
+! 09/08/2010 Mark Tobin
+ - Modified CreateHistDBPages to allow more than one line in the page documentation.  
+ - PageDoc job option was changed to pass a vector of strings and add 
+   new line after each element in the vector.
+
 ! 8/12/2009 
  - Removed dependency on LHCb from requirements file.
 
@@ -10,7 +16,7 @@
                   pages recursively
  - new feature:   CreateHistDBPages allows adding a page description 
  - new feature:   SetHistDisplayOptions allows to set custom labels 
- - new algortihm: AddNewHistToDB 
+ - new algorithm: AddNewHistToDB 
 
 ! 20090325 HistDBPython v1r0
  - First Version of HistDPPython uploaded. 

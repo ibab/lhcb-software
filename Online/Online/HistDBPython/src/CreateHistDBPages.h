@@ -1,4 +1,4 @@
-// $Id: CreateHistDBPages.h,v 1.3 2009-04-06 10:36:13 nchiapol Exp $
+// $Id: CreateHistDBPages.h,v 1.4 2010-08-09 15:29:03 mtobin Exp $
 
 #ifndef HISTDBPYTHON_CREATEHISTDBPAGES_H
 #define HISTDBPYTHON_CREATEHISTDBPAGES_H 1
@@ -104,7 +104,7 @@ private:
   
   // @option PageDoc
   // A short descriptions of the page content, max. 100 characters.
-  std::vector<std::string> m_pageDoc;
+  std::vector<std::vector<std::string> > m_pageDoc;
    
   // @option PageLayout
   // Vector of groups of 4 values; each group defines the positions of a histograms on the page
