@@ -216,7 +216,8 @@ class CloneRawBanks(MicroDSTElement) :
         from Configurables import RawEventSelectiveCopy
         rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
         rawBankCopy.RawBanksToCopy = self.banks 
-        rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent" 
+        rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
+        rawBankCopy.OutputLevel=4
         return [rawBankCopy]
 
 class CloneBackCat(MicroDSTElement) :

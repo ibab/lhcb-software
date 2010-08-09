@@ -1,10 +1,10 @@
 ''' '''
-#$Id: dstwriters.py,v 1.8 2010-08-05 10:16:12 jpalac Exp $
+#$Id: dstwriters.py,v 1.9 2010-08-09 15:39:50 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.8 $'
+__version__ = '$Revision: 1.9 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
@@ -35,13 +35,13 @@ class DSTWriterSelectionSequence(object) :
     '''
     def __init__(self,
                  selSequence,
-                 outputStreamConfiguration = baseDSTWriterConf,
+                 outputStreamConfiguration = baseDSTWriterConf(),
                  writeFSR = True,
                  extras = None ) :
 
         outputStreamConfiguration.name=selSequence.name()
         self.stream = outputStream(outputStreamConfiguration)
-        self.stream.OutputLevel=1
+        self.stream.OutputLevel=4
         self.fsrStream = fsrStream(outputStreamConfiguration)
         self.algos = [selSequence.sequence()]
         if writeFSR :
