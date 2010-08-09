@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-09 - Steve Blusk
+
+ - Modified StrippingB2D3H: make D mesons with StdLooseKaons, and add some prescale/postscales if needed.
+ - If prescales needed, there is an ordered list of preferred ways to do this in StrippingB2D3HConf()
+   
 ! 2010-08-08 - Vanya Belyaev
 
  - small fix in SrippingPromptCharm

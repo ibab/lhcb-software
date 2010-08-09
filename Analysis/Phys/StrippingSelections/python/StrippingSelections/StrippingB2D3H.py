@@ -8,8 +8,8 @@ StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
    - StrippngB2D3HConf
    - makeD0Meson
-   - makeDmeson
-   - makeDStarmeson
+   - makeDMeson
+   - makeDStarMeson
    - makeA12PiPiPi
    - makeK12KPiPi
    - makePions
@@ -21,7 +21,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Steven Blusk']
 __date__ = '26/07/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 
 __all__ = ('StrippingB2D3HConf',
@@ -67,12 +67,30 @@ class StrippingB2D3HConf( object ):
     selPiPiPi              : selected PiPiPi bachelor
     selKPiPi               : selected KPiPi bachelor
     selDch                 : selected D+ -->K-Pi+Pi+, K+K-Pi+, Pi+Pi-Pi+ and Ds+ -->K+K-Pi+, K+Pi-Pi+, Pi+Pi-Pi+ 
-    selD0                  : selected D0 --> KK, KPi, KPi(DCS) and PiPi
+    selD0                  : selected D0 --> KK, KPi, and PiPi
+    selDStar               : selected D*+, with D0 --> KK, KPi, KPiPi
     B2D0PiPiPi             : Selected B+ -->D0+PiPiPi
     B2D0KPiPi              : Selected B+ -->D0+KPiPi
     B2DPiPiPi              : Selected B0/Bs -->D+PiPiPi, Ds+PiPiPi
     B2DKPiPi               : Selected B0/Bs -->Ds+KPiPi, Ds+KPiPi
     lines                  : List of lines [B2D0PiPiPi, B2D0KPiPi, B2DPiPiPi, B2DKPiPi]
+
+    A number of prescale & postscale factors are included for maximum flexibility [# prescale/postscales]
+    -----------------------------------------------------------------------------
+    B2D0hhhAll_Prescale, Postscale = Prescale/postscale for B+ -->D0 hhh, hhh=PiPiPi or KPiPi, full mass region. [4]
+    B2DhhhAll_Prescale, Postscale = Prescale/postscale for B 0/Bs-->D+/Ds hhh, hhh=PiPiPi or KPiPi, full mass region. [8]
+    B2DStarhhhAll_Prescale, Postscale = Prescale/postscale for B0 -->D*+ hhh, hhh=PiPiPi or KPiPi, full mass region. [4]
+    B2D0hhhASignal Prescale, Postscale = Prescale/postscale for B+ -->D0 hhh, hhh=PiPiPi or KPiPi, signal box region. [4]
+    B2DhhhSignal_Prescale, Postscale = Prescale/postscale for B 0/Bs-->D+/Ds hhh, hhh=PiPiPi or KPiPi, signal box region. [8]
+    B2DStarhhhSignal_Prescale, Postscale = Prescale/postscale for B0 -->D*+ hhh, hhh=PiPiPi or KPiPi, signal region. [4]
+
+    --> Ordered preference for reducing timing/retentions
+    [1] If needed one should prescale the "B2DxxxxAll" prescale/postscale factors, say to 0.2 or 0.1 (needed for SideBand subtraction, background studies, etc)
+    [2] Reduce MaxTracks, keep value at least at 100 Long tracks (S/B will degrade at high #Long tracks)
+    [3] Reduce DMassWindow to 30 MeV (this will selecton only B-->D+ (hhh) in the D signal region (don't reduce D0MassWindow or DsMassWindow)
+    [4] hhh/D/B Vertex separation chisquare can be increased if absolutely necessary to 49.
+    [5] Set DDocaMax to 0.3 mm
+    [6] Set BMinPT to 2 GeV
 
     Exports as class data member:
     StrippingB2D3HConf.__configuration_keys__ : List of required configuration parameters.
@@ -98,21 +116,53 @@ class StrippingB2D3HConf( object ):
                               "Bach3HZVtxSep",       
                               "DMinPT",            
                               "DVtxChisq",        
-                              "DMassWindow",         
+                              "DMassWindow",
+                              "D0MassWindow",
+                              "DsMassWindow",
+                              "tightDMassWindow",
+                              "DDocaMax",         
                               "DIP2PV",              
                               "DIPChisq2PV",         
                               "DVtxSepChisq",         
                               "DDiraPV",              
                               "DZVtxSep",             
+                              "DStarMassWindow",
+                              "DStarMinPT",            
                               "BMinPT",               
                               "BVtxChisq",            
                               "BMassWindow",   
+                              "tightBMassWindow",
                               "BIP2PV",        
                               "BIPChisq2PV",    
                               "BVtxSepChisq",    
                               "BDiraPV",         
                               "BZVtxSep",
-                              "BDZVtxSep"        
+                              "BDZVtxSep",
+                              "MaxTracks",
+                              "B2D0PiPiPiAll_Prescale",
+                              "B2D0PiPiPiAll_Postscale",
+                              "B2DPiPiPiAll_Prescale",
+                              "B2DPiPiPiAll_Postscale",
+                              "B2DStarPiPiPiAll_Prescale",
+                              "B2DStarPiPiPiAll_Postscale",
+                              "B2D0PiPiPiSignal_Prescale",
+                              "B2D0PiPiPiSignal_Postscale",
+                              "B2DPiPiPiSignal_Prescale",
+                              "B2DPiPiPiSignal_Postscale",
+                              "B2DStarPiPiPiSignal_Prescale",
+                              "B2DStarPiPiPiSignal_Postscale",
+                              "B2D0KPiPiAll_Prescale",
+                              "B2D0KPiPiAll_Postscale",
+                              "B2DKPiPiAll_Prescale",
+                              "B2DKPiPiAll_Postscale",
+                              "B2DStarKPiPiAll_Prescale",
+                              "B2DStarKPiPiAll_Postscale",
+                              "B2D0KPiPiSignal_Prescale",
+                              "B2D0KPiPiSignal_Postscale",
+                              "B2DKPiPiSignal_Prescale",
+                              "B2DKPiPiSignal_Postscale",
+                              "B2DStarKPiPiSignal_Prescale",
+                              "B2DStarKPiPiSignal_Postscale"
                               )
 
 
@@ -122,6 +172,9 @@ class StrippingB2D3HConf( object ):
 
         checkConfig(StrippingB2D3HConf.__configuration_keys__, config)
 
+
+        self.EventFilter = MyEventFilter('B2D3H'+name,
+                                         MaxTracks = config['MaxTracks'])
         # First filter pions
         self.selPions = makePions( 'PionsForB2D3H'+name,
                                     PionMinP = config['PionMinP'],
@@ -131,12 +184,12 @@ class StrippingB2D3HConf( object ):
                                     TrkChisq = config['TrkChisq'])
         # First filter kaons
         self.selKaons = makeKaons( 'KaonsForB2D3H'+name,
-                                    KaonMinP = config['KaonMinP'],
-                                    KaonMaxP = config['KaonMaxP'],
-                                    KaonMinPT = config['KaonMinPT'],
-                                    KaonMinIPChisq = config['KaonMinIPChisq'],
-                                    TrkChisq = config['TrkChisq'])
-
+                                   KaonMinP = config['KaonMinP'],
+                                   KaonMaxP = config['KaonMaxP'],
+                                   KaonMinPT = config['KaonMinPT'],
+                                   KaonMinIPChisq = config['KaonMinIPChisq'],
+                                   TrkChisq = config['TrkChisq'])
+        
         # Now make the PiPiPi bachelor
         self.selPiPiPi = makePiPiPi( 'PiPiPiForB2D3H'+name,
                                      pionSel = self.selPions,
@@ -166,32 +219,42 @@ class StrippingB2D3HConf( object ):
                                    )
 
         # Filter D+
-        self.selDch = makeDMeson( 'DchForB2D3H'+name,
-                                   DMassWindow = config['DMassWindow'],
-                                   DMinPT = config['DMinPT'],
-                                   DIP2PV = config['DIP2PV'],
-                                   DIPChisq2PV = config['DIPChisq2PV'],
-                                   DVtxChisq = config['DVtxChisq'],
-                                   DVtxSepChisq = config['DVtxSepChisq'],
-                                   DDiraPV = config['DDiraPV'],
-                                   DZVtxSep = config['DZVtxSep']
-                                   )
+        self.selDch = makeDMeson( 'ForB2D3H'+name,
+                                  pionSel = self.selPions,
+                                  kaonSel = self.selKaons,
+                                  DMassWindow = config['DMassWindow'],
+                                  DsMassWindow = config['DsMassWindow'],
+                                  DDocaMax = config['DDocaMax'],
+                                  DMinPT = config['DMinPT'],
+                                  DIP2PV = config['DIP2PV'],
+                                  DIPChisq2PV = config['DIPChisq2PV'],
+                                  DVtxChisq = config['DVtxChisq'],
+                                  DVtxSepChisq = config['DVtxSepChisq'],
+                                  DDiraPV = config['DDiraPV'],
+                                  DZVtxSep = config['DZVtxSep']
+                                  )
         # Filter D0
-        self.selD0 = makeD0Meson( 'D0ForB2D3H'+name,
-                                 DMassWindow = config['DMassWindow'],
-                                 DMinPT = config['DMinPT'],
-                                 DIP2PV = config['DIP2PV'],
-                                 DIPChisq2PV = config['DIPChisq2PV'],
-                                 DVtxChisq = config['DVtxChisq'],
-                                 DVtxSepChisq = config['DVtxSepChisq'],
-                                 DDiraPV = config['DDiraPV'],
-                                 DZVtxSep = config['DZVtxSep']
-                                 )
+        self.selD0 = makeD0Meson( 'ForB2D03H'+name,
+                                  pionSel = self.selPions,
+                                  kaonSel = self.selKaons,
+                                  DMassWindow = config['D0MassWindow'],
+                                  DDocaMax = config['DDocaMax'],
+                                  DMinPT = config['DMinPT'],
+                                  DIP2PV = config['DIP2PV'],
+                                  DIPChisq2PV = config['DIPChisq2PV'],
+                                  DVtxChisq = config['DVtxChisq'],
+                                  DVtxSepChisq = config['DVtxSepChisq'],
+                                  DDiraPV = config['DDiraPV'],
+                                  DZVtxSep = config['DZVtxSep']
+                                  )
 
-        # Filter D0
-        self.selDStar = makeDStarMeson( 'DStarForB2D3H'+name,
-                                        DMassWindow = config['DMassWindow'],
-                                        DMinPT = config['DMinPT'],
+        # Filter Dstar
+        self.selDStar = makeDStarMeson( 'ForB2DStar3H'+name,
+                                        dSel = self.selD0,
+                                        pionSel = self.selPions,
+                                        DStarMassWindow = config['DStarMassWindow'],
+                                        DDocaMax = config['DDocaMax'],
+                                        DStarMinPT = config['DStarMinPT'],
                                         DIP2PV = config['DIP2PV'],
                                         DIPChisq2PV = config['DIPChisq2PV'],
                                         DVtxChisq = config['DVtxChisq'],
@@ -214,9 +277,10 @@ class StrippingB2D3HConf( object ):
                                     BDiraPV = config['BDiraPV'],
                                     BZVtxSep = config['BZVtxSep'],
                                     BDZVtxSep = config['BDZVtxSep'],
-                                    decayDesc = "[B+ -> D~0 a_1(1260)+]cc",
+                                    decayDesc = "[B+ -> D~0 a_1(1260)+]cc", 
                                     parentB = "B+"
                                   )
+
         
         # Make B- --> D~0 (KPiPi)+
         name2 = 'B2D0KPiPi' + name
@@ -236,6 +300,7 @@ class StrippingB2D3HConf( object ):
                                    parentB = "B+"
                                   )
 
+
         # Make B- --> D- (pipipi)+
         name3 = 'B2DPiPiPi' + name
         self.B2DPiPiPi = makeB2D3H(name3,
@@ -252,6 +317,7 @@ class StrippingB2D3HConf( object ):
                                    BDZVtxSep = config['BDZVtxSep'],
                                    decayDesc = "[B0 -> D- a_1(1260)+]cc",
                                    parentB = "B0")
+
 
         # Make B0 --> D- (Kpipi)+
         name4 = 'B2DKPiPi' + name
@@ -270,7 +336,6 @@ class StrippingB2D3HConf( object ):
                                   decayDesc = "[B0 -> D- K_1(1270)+]cc",
                                   parentB = "B0")
 
-
         # Make B- --> D*- (pipipi)+
         name5 = 'B2DStarPiPiPi' + name
         self.B2DStarPiPiPi = makeB2D3H(name5,
@@ -287,6 +352,8 @@ class StrippingB2D3HConf( object ):
                                    BDZVtxSep = config['BDZVtxSep'],
                                    decayDesc = "[B0 -> D*(2010)- a_1(1260)+]cc",
                                    parentB = "B0")
+
+
 
         # Make B0 --> D*- (Kpipi)+
         name6 = 'B2DStarKPiPi' + name
@@ -305,40 +372,170 @@ class StrippingB2D3HConf( object ):
                                   decayDesc = "[B0 -> D*(2010)- K_1(1270)+]cc",
                                   parentB = "B0")
 
+        # Now, create signal lines, with tight windows around the D mass, and a narrower B mass window.
+
+        # Filter off B+ -->D0(PiPiPi) & D0 KPiPi
+        self.SignalB2D0PiPiPi = filterB2D3H('B2D0PiPiPi',
+                                            bSel = self.B2D0PiPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B+',
+                                            parentD = 'D0'
+                                            )
+        self.SignalB2D0KPiPi = filterB2D3H('B2D0KPiPi',
+                                            bSel = self.B2D0KPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B+',
+                                            parentD = 'D0'
+                                            )
+        #Filter Off the B0-->D+(PiPiPi) (includes Bs -->D_s(PiPiPi))
+        self.SignalB2DPiPiPi = filterB2D3H('B2DPiPiPi',
+                                            bSel = self.B2DPiPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B0',
+                                            parentD = 'D+'
+                                            )
+        #Filter Off the B0-->D+(KPiPi) (includes Bs-->Ds(KPiPi))
+        self.SignalB2DKPiPi = filterB2D3H('B2DKPiPi',
+                                            bSel = self.B2DKPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B0',
+                                            parentD = 'D+'
+                                            )
+        #Filter Off the B0-->D*+ (PiPiPi), D*+ -->D0pi+ 
+        self.SignalB2DStarPiPiPi = filterB2D3H('B2DStarPiPiPi',
+                                            bSel = self.B2DStarPiPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B0',
+                                            parentD = 'D0'
+                                            )
+        #Filter Off the B0-->D*+ (KPiPi), D*+ -->D0pi+ 
+        self.SignalB2DStarKPiPi = filterB2D3H('B2DStarKPiPi',
+                                            bSel = self.B2DStarKPiPi,
+                                            tightDMassWindow = config['tightDMassWindow'],
+                                            tightBMassWindow = config['tightBMassWindow'],
+                                            parentB = 'B0',
+                                            parentD = 'D0'
+                                            )
 
 
-        self.StrippingB2D0PiPiPiLine = StrippingLine('B2D0PiPiPiLine'+name,
-                                                     algos = [ self.B2D0PiPiPi]
+        # Now create stripping lines...
+        
+        # These are for the full mass region with sidebands.
+        # These lines should be prescaled forst, if necessary.
+        self.StrippingAllB2D0PiPiPiLine = StrippingLine('AllB2D0PiPiPiLine'+name,
+                                                     prescale = config['B2D0PiPiPiAll_Prescale'],
+                                                     postscale = config['B2D0PiPiPiAll_Postscale'],
+                                                     algos = [ self.EventFilter, self.B2D0PiPiPi]
                                                      )
 
-        self.StrippingB2D0KPiPiLine = StrippingLine('B2D0KPiPiLine'+name,
-                                                     algos = [ self.B2D0KPiPi]
+        self.StrippingAllB2D0KPiPiLine = StrippingLine('AllB2D0KPiPiLine'+name,
+                                                     prescale = config['B2D0KPiPiAll_Prescale'],
+                                                     postscale = config['B2D0KPiPiAll_Postscale'],
+                                                     algos = [ self.EventFilter, self.B2D0KPiPi]
                                                      )
 
-        self.StrippingB2DPiPiPiLine = StrippingLine('B2DPiPiPiLine'+name,
-                                                      algos = [ self.B2DPiPiPi]
-                                                      )
+        self.StrippingAllB2DPiPiPiLine = StrippingLine('AllB2DPiPiPiLine'+name,
+                                                    prescale = config['B2DPiPiPiAll_Prescale'],
+                                                    postscale = config['B2DPiPiPiAll_Postscale'],
+                                                    algos = [ self.EventFilter, self.B2DPiPiPi]
+                                                    )
 
-        self.StrippingB2DKPiPiLine = StrippingLine('B2DKPiPiLine'+name,
-                                                   algos = [ self.B2DKPiPi]
+        self.StrippingAllB2DKPiPiLine = StrippingLine('AllB2DKPiPiLine'+name,
+                                                   prescale = config['B2DKPiPiAll_Prescale'],
+                                                   postscale = config['B2DKPiPiAll_Postscale'],
+                                                   algos = [ self.EventFilter, self.B2DKPiPi]
                                                    )
         
-        self.StrippingB2DStarPiPiPiLine = StrippingLine('B2DStarPiPiPiLine'+name,
-                                                        algos = [ self.B2DStarPiPiPi]
+        self.StrippingAllB2DStarPiPiPiLine = StrippingLine('AllB2DStarPiPiPiLine'+name,
+                                                        prescale = config['B2DStarPiPiPiAll_Prescale'],
+                                                        postscale = config['B2DStarPiPiPiAll_Postscale'],
+                                                        algos = [ self.EventFilter, self.B2DStarPiPiPi]
                                                         )
 
-        self.StrippingB2DStarKPiPiLine = StrippingLine('B2DStarKPiPiLine'+name,
-                                                     algos = [ self.B2DStarKPiPi]
+        self.StrippingAllB2DStarKPiPiLine = StrippingLine('AllB2DStarKPiPiLine'+name,
+                                                       prescale = config['B2DStarKPiPiAll_Prescale'],
+                                                       postscale = config['B2DStarKPiPiAll_Postscale'],
+                                                       algos = [ self.EventFilter, self.B2DStarKPiPi]
+                                                       )
+
+
+        # These are for the signal mass region with sidebands.
+        # These lines should not be prescaled unless absolutely necessary
+        self.StrippingSignalB2D0PiPiPiLine = StrippingLine('SignalB2D0PiPiPiLine'+name,
+                                                     prescale = config['B2D0PiPiPiSignal_Prescale'],
+                                                     postscale = config['B2D0PiPiPiSignal_Postscale'],
+                                                     algos = [  self.EventFilter, self.SignalB2D0PiPiPi]
                                                      )
+
+        self.StrippingSignalB2D0KPiPiLine = StrippingLine('SignalB2D0KPiPiLine'+name,
+                                                     prescale = config['B2D0KPiPiSignal_Prescale'],
+                                                     postscale = config['B2D0KPiPiSignal_Postscale'],
+                                                     algos = [  self.EventFilter, self.SignalB2D0KPiPi]
+                                                     )
+
+        self.StrippingSignalB2DPiPiPiLine = StrippingLine('SignalB2DPiPiPiLine'+name,
+                                                    prescale = config['B2DPiPiPiSignal_Prescale'],
+                                                    postscale = config['B2DPiPiPiSignal_Postscale'],
+                                                    algos = [  self.EventFilter, self.SignalB2DPiPiPi]
+                                                    )
+
+        self.StrippingSignalB2DKPiPiLine = StrippingLine('SignalB2DKPiPiLine'+name,
+                                                   prescale = config['B2DKPiPiSignal_Prescale'],
+                                                   postscale = config['B2DKPiPiSignal_Postscale'],
+                                                   algos = [  self.EventFilter, self.SignalB2DKPiPi]
+                                                   )
         
-        self.lines = [self.StrippingB2D0PiPiPiLine,
-                      self.StrippingB2D0KPiPiLine,
-                      self.StrippingB2DPiPiPiLine,
-                      self.StrippingB2DKPiPiLine,
-                      self.StrippingB2DStarPiPiPiLine,
-                      self.StrippingB2DStarKPiPiLine
-                      ]
-                      
+        self.StrippingSignalB2DStarPiPiPiLine = StrippingLine('SignalB2DStarPiPiPiLine'+name,
+                                                        prescale = config['B2DStarPiPiPiSignal_Prescale'],
+                                                        postscale = config['B2DStarPiPiPiSignal_Postscale'],
+                                                        algos = [  self.EventFilter, self.SignalB2DStarPiPiPi]
+                                                        )
+
+        self.StrippingSignalB2DStarKPiPiLine = StrippingLine('SignalB2DStarKPiPiLine'+name,
+                                                       prescale = config['B2DStarKPiPiSignal_Prescale'],
+                                                       postscale = config['B2DStarKPiPiSignal_Postscale'],
+                                                       algos = [  self.EventFilter, self.SignalB2DStarKPiPi]
+                                                       )
+
+        self.lines = [ self.StrippingAllB2D0PiPiPiLine,
+                       self.StrippingAllB2D0KPiPiLine,
+                       self.StrippingAllB2DPiPiPiLine,
+                       self.StrippingAllB2DKPiPiLine,
+                       self.StrippingAllB2DStarPiPiPiLine,
+                       self.StrippingAllB2DStarKPiPiLine,
+                       self.StrippingSignalB2D0PiPiPiLine,
+                       self.StrippingSignalB2D0KPiPiLine,
+                       self.StrippingSignalB2DPiPiPiLine,
+                       self.StrippingSignalB2DKPiPiLine,
+                       self.StrippingSignalB2DStarPiPiPiLine,
+                       self.StrippingSignalB2DStarKPiPiLine            
+                       ]
+
+
+def MyEventFilter(name, MaxTracks):
+    """
+    Create and return EventFilter object by Filtering on Ntracks
+    #
+    Arguments:
+    name                  : name of the Selection.
+    PionMinP              : Pion minimum momentum
+    """
+    from Configurables import LoKi__VoidFilter as VoidFilter
+    from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+    modules = CoreFactory('CoreFactory').Modules
+    for i in ['LoKiTrigger.decorators']:
+      if i not in modules : modules.append(i)
+
+
+    _eventFilter = VoidFilter("EventfilterFor"+name)
+    _eventFilter.Code =  "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %(MaxTracks)s )" %locals()
+
+    return _eventFilter
 
 def makePions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq):
 
@@ -417,8 +614,8 @@ def makePiPiPi( name,
 
     _a1Alg = CombineParticles(name)
     _a1Alg.DecayDescriptor = "[a_1(1260)+ -> pi+ pi- pi+]cc" 
-    _a1Alg.CombinationCut = "(ADAMASS('a_1(1260)-') < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s *MeV)" \
-                           " & (AMAXDOCA('') < %(Bach3HDocaMax)s *mm) " %locals()
+    _a1Alg.CombinationCut = "( (ADAMASS('a_1(1260)-') < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s *MeV)" \
+                           " & (ACUTDOCA( %(Bach3HDocaMax)s *mm, '')) ) " %locals()
     _a1Alg.MotherCut = "( (PT > %(Bach3HMinPT)s *MeV) & (VFASPF(VCHI2/VDOF)< %(Bach3HVtxChisq)s )" \
                        " & (BPVVDCHI2 > %(Bach3HVtxSepChisq)s ) & (MIPCHI2DV(PRIMARY) > %(Bach3HIPChisq2PV)s )" \
                        " & (BPVDIRA > %(Bach3HDiraPV)s ) & (BPVVDZ> %(Bach3HZVtxSep)s *mm) " \
@@ -462,10 +659,11 @@ def makeKPiPi( name,
     Bach3HZVtxSep         : Minimum vertex separation from PC
     """
 
+    
     _k1Alg = CombineParticles(name)
     _k1Alg.DecayDescriptor = "[K_1(1270)+ -> K+ pi- pi+]cc" 
-    _k1Alg.CombinationCut = "(ADAMASS('K_1(1270)-') < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s  *MeV)" \
-                           " & (AMAXDOCA('') < %(Bach3HDocaMax)s *mm) " %locals()
+    _k1Alg.CombinationCut = "( (ADAMASS('K_1(1270)-') < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s  *MeV)" \
+                           " & (ACUTDOCA( %(Bach3HDocaMax)s *mm, '')) ) " %locals()
     _k1Alg.MotherCut = "( (PT > %(Bach3HMinPT)s *MeV) & (VFASPF(VCHI2/VDOF)< %(Bach3HVtxChisq)s )  " \
                        " & (BPVVDCHI2 > %(Bach3HVtxSepChisq)s ) & (MIPCHI2DV(PRIMARY) > %(Bach3HIPChisq2PV)s )" \
                        " & (BPVDIRA > %(Bach3HDiraPV)s ) & (BPVVDZ> %(Bach3HZVtxSep)s *mm) " \
@@ -480,7 +678,10 @@ def makeKPiPi( name,
 
 
 def makeD0Meson(name,
+                pionSel,
+                kaonSel,
                 DMassWindow, 
+                DDocaMax,   
                 DMinPT, 
                 DIP2PV, 
                 DIPChisq2PV, 
@@ -496,7 +697,10 @@ def makeD0Meson(name,
     #
     Arguments:
     name             : name of the Selection.
+    pionSel          : pion Selection object
+    kaonSel          : kaon Selection object
     DMassWindow      : D/Ds Mass Window
+    DDocaMax         : Maximum value for Doca
     DMinPT           : Minimum pT of Candidate
     DIP2PV           : Minimum IP to PV 
     DIPChisq2PV      : Minimum IP Chisq to PC
@@ -506,36 +710,53 @@ def makeD0Meson(name,
     DZVtxSep         : Minimum vertex separation from PC
     """
 
-    _d02pipi = DataOnDemand(Location = "Phys/StdLooseD02PiPi")
-    _d02kk = DataOnDemand(Location = "Phys/StdLooseD02KK")
-    _d02kpi = DataOnDemand(Location = "Phys/StdLooseD02KPi")
-    _d02kpiDCS = DataOnDemand(Location = "Phys/StdLooseD02KPiDCS")
 
-    name2 = "_filterFor" + name
-    _d0Filter = FilterDesktop(name2)
-    _d0Filter.Code = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) &  (ADMASS('D0') < %(DMassWindow)s *MeV) " \
+    _dMassWindow = "(ADAMASS('D0') < %(DMassWindow)s *MeV ) " %locals()
+
+    _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
                     " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
                     "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
                     "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
+    
+    # D0 -->Pi- Pi+
+    _d2pipi = CombineParticles("PiPi"+name)
+    _d2pipi.DecayDescriptors = [ "D0 -> pi- pi+" ]
+    _d2pipi.CombinationCut = "(" + _dMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
+                              " & ACUTDOCA( %(DDocaMax)s *mm, '' ) )" %locals()
+    _d2pipi.MotherCut = _dFilterCode %locals()    
+    D2PiPiSelection = Selection("D2PiPiSel"+name, Algorithm = _d2pipi, RequiredSelections = [pionSel]) 
 
+    # D0 -->K- Pi+ 
+    _d2kpi = _d2pipi.clone("KPi"+name, DecayDescriptors = [ "[D0 -> K- pi+]cc" ] )
+    D2KPiSelection = Selection("D2KPiSel"+name, Algorithm = _d2kpi, RequiredSelections = [ pionSel, kaonSel ] )
 
-    selName = "MergedD0Sel" + name
-    _d0 = MergedSelection(selName, RequiredSelections = [_d02kpi, _d02kpiDCS, _d02kk, _d02pipi])    
-    selName = "FilterD0Sel" + name
+    # D0 -->K- K+
+    _d2kk = _d2pipi.clone("KK"+name, DecayDescriptors = [ "D0 -> K- K+" ] )
+    D2KKSelection = Selection("D2KKSel"+name, Algorithm = _d2kk, RequiredSelections = [ kaonSel ] )
 
-    return Selection(selName, Algorithm = _d0Filter, RequiredSelections = [ _d0 ])
+    # D0 -->K- Pi+ 
+    _d2kpiDCS = _d2pipi.clone("KPiDCS"+name, DecayDescriptors = [ "[D0 -> K+ pi-]cc" ] )
+    D2KPiDCSSelection = Selection("D2KPiDCSSel"+name, Algorithm = _d2kpiDCS, RequiredSelections = [ pionSel, kaonSel ] )
 
+    selName = "MergedSel" + name
+    _d0m = MergedSelection(selName, RequiredSelections = [D2PiPiSelection, D2KPiSelection, D2KKSelection, D2KPiDCSSelection] )    
+
+    return _d0m
+    
 
 def makeDStarMeson(name,
-                DMassWindow, 
-                DMinPT, 
-                DIP2PV, 
-                DIPChisq2PV, 
-                DVtxChisq, 
-                DVtxSepChisq, 
-                DDiraPV, 
-                DZVtxSep
-                ):
+                   dSel,
+                   pionSel,
+                   DStarMassWindow, 
+                   DDocaMax,   
+                   DStarMinPT, 
+                   DIP2PV, 
+                   DIPChisq2PV, 
+                   DVtxChisq, 
+                   DVtxSepChisq, 
+                   DDiraPV, 
+                   DZVtxSep
+                   ):
     """
     Create and return D0 Selection object.
     Select the follwing charged D decays:
@@ -543,8 +764,11 @@ def makeDStarMeson(name,
     #
     Arguments:
     name             : name of the Selection.
-    DMassWindow      : Mass Window (not currently used)
-    DMinPT           : Minimum pT of Candidate
+    dSel             : D0 selection object
+    pionSel          : pion Selection object
+    DStarMassWindow  : Mass Window 
+    DDocaMax         : Maximum value for Doca
+    DStarMinPT       : Minimum pT of Candidate
     DIP2PV           : Minimum IP to PV 
     DIPChisq2PV      : Minimum IP Chisq to PC
     DVtxChisq        : Maximum Vertex Chisquare
@@ -553,27 +777,31 @@ def makeDStarMeson(name,
     DZVtxSep         : Minimum vertex separation from PC
     """
 
-    _dstar2kpi = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi")
-    _dstar2pipi = DataOnDemand(Location = "Phys/StdLooseDstarWithD02PiPi")
-    _dstar2kk = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KK")
-    _dstar2kpidcs = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPiDCS")
+
     
-    name2 = "_filterFor" + name
-    _dstarFilter = FilterDesktop(name2)
-    _dstarFilter.Code = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
-                    " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                    "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
-                    "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
+    _dMassWindow = "(ADAMASS('D*(2010)+') < %(DStarMassWindow)s *MeV ) " %locals()
+    _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DStarMinPT)s *MeV) " \
+                   " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
+                   "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
+                   "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
 
-    selName = "MergedDStarSel" + name
-    _dstar = MergedSelection(selName, RequiredSelections = [_dstar2kpi, _dstar2kpidcs, _dstar2kk, _dstar2pipi])    
 
-    selName = "FilterDStarSel" + name
-    return Selection(selName, Algorithm = _dstarFilter, RequiredSelections = [ _dstar] )
+    _dstar = CombineParticles ( name )
+    _dstar.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc" 
+    _dstar.CombinationCut = "(" + _dMassWindow + " & (APT > %(DStarMinPT)s  *MeV)" \
+                              " & ACUTDOCA( %(DDocaMax)s *mm, '' ) )" %locals()
+    _dstar.MotherCut = _dFilterCode %locals()    
+    DStarSelection = Selection("Sel"+name, Algorithm = _dstar, RequiredSelections = [pionSel, dSel]) 
+
+    return DStarSelection
 
 
 def makeDMeson(name,
-               DMassWindow, 
+               pionSel,
+               kaonSel,
+               DMassWindow,
+               DsMassWindow, 
+               DDocaMax,   
                DMinPT, 
                DIP2PV, 
                DIPChisq2PV, 
@@ -591,7 +819,10 @@ def makeDMeson(name,
     #
     Arguments:
     name             : name of the Selection.
+    pionSel          : pion Selection object
+    kaonSel          : kaon Selection object
     DMassWindow      : D/Ds Mass Window
+    DDocaMax         : Maximum value for Doca               
     DMinPT           : Minimum pT of Candidate
     DIP2PV           : Minimum IP to PV 
     DIPChisq2PV      : Minimum IP Chisq to PC
@@ -601,48 +832,49 @@ def makeDMeson(name,
     DZVtxSep         : Minimum vertex separation from PC
     """
 
+    _dMassWindow = "(ADAMASS('D+') < %(DMassWindow)s *MeV ) " %locals()
+    _dsMassWindow = "(ADAMASS('D_s+') < %(DsMassWindow)s *MeV ) "  %locals()
+    _danddsMassWindow = "( (ADAMASS('D+') < %(DMassWindow)s *MeV) | (ADAMASS('D_s+') < %(DsMassWindow)s *MeV) )"  %locals()
 
-    _d2kpipi = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
-    _d2kkpi = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
-    _d2pipipi = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi")
-    _d2kpipiOppSignPi = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi")
-
-    name2 = "_DFilterFor" + name
-    _dFilter = FilterDesktop(name2)
-    _dFilter.Code = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) & (ADMASS('D-') < %(DMassWindow)s *MeV ) " \
+    _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
                     " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
                     "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
                     "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
-    name2 = "_DsFilterFor" + name
-    _dsFilter = FilterDesktop(name2)
-    _dsFilter.Code = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) & (ADMASS('D_s+') < %(DMassWindow)s *MeV ) " \
-                    " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                    "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
-                    "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
-    name2 = "_DandDsFilterFor" + name
-    _danddsFilter = FilterDesktop(name2)
-    _danddsFilter.Code = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
-                         " & ((ADMASS('D+') < %(DMassWindow)s *MeV) | (ADMASS('D_s+') < %(DMassWindow)s *MeV))" \
-                         " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                         "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s )"   \
-                         "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
+    
+    # D+ -->K- Pi+ Pi+
+    name2 = "KPiPi"+name
+    _d2kpipi = CombineParticles(name2)
+    _d2kpipi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
+    _d2kpipi.CombinationCut = "(" + _dMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
+                              " & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
+    _d2kpipi.MotherCut = _dFilterCode %locals()    
+    D2KPiPiSelection = Selection("D2KPiPiSel"+name, Algorithm = _d2kpipi, RequiredSelections = [pionSel, kaonSel]) 
 
 
+    # D+ -->K- K+ Pi+ OR D_s+ -->K- K+ Pi+   
+    _d2kkpi = _d2kpipi.clone("KKPi"+name, DecayDescriptors = [ "[D+ -> K- K+ pi+]cc" ])
+    _d2kkpi.CombinationCut = "(" + _danddsMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
+                              " & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
+    D2KKPiSelection = Selection("D2KKPiSel"+name, Algorithm = _d2kkpi, RequiredSelections = [pionSel, kaonSel])
+    
 
-    selName = 'FilterKPiPiSel_'+name
-    _selKPiPi =  Selection(selName, Algorithm = _dFilter, RequiredSelections = [_d2kpipi] )
-    selName = 'FilterKKPiSel_'+name
-    _selKKPi =  Selection(selName, Algorithm = _danddsFilter, RequiredSelections = [_d2kkpi] )
-    selName = 'FilterPiPiPiSel_'+name
-    _selPiPiPi =  Selection(selName, Algorithm = _danddsFilter, RequiredSelections = [_d2pipipi] )
-    selName = 'FilterKPiPiOppSignSel_'+name
-    _selKPiPiOppSign =  Selection(selName, Algorithm = _dsFilter, RequiredSelections = [_d2kpipiOppSignPi])
+    # D+ -->Pi- Pi+ Pi+ OR D_s+ -->Pi- Pi+ Pi+       
+    _d2pipipi = _d2kkpi.clone("PiPiPi"+name, DecayDescriptors = [ "[D+ -> pi- pi+ pi+]cc" ])
+    _d2pipipi.CombinationCut = "(" + _danddsMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
+                              " & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
+    D2PiPiPiSelection = Selection("D2PiPiPiSel"+name, Algorithm = _d2pipipi, RequiredSelections = [pionSel])
+
+    # D_s+ -->K+ Pi- Pi+   
+    _d2kpipiOppSignPi = _d2kpipi.clone("KKPiOppSignPi"+name, DecayDescriptors = [ "[D+ -> K+ pi- pi+]cc" ])
+    _d2kpipiOppSignPi.CombinationCut = "(" + _dsMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
+                                       " & ACUTDOCA( %(DDocaMax)s *mm, '' ) )" %locals()
+
+    D2KPiPiOppSignPiSelection = Selection("D2KPiPiOppSignPiSel"+name, Algorithm = _d2kpipiOppSignPi, RequiredSelections = [pionSel, kaonSel])
 
 
     selName = 'MergedSel'+name
-    _d = MergedSelection(selName, RequiredSelections = [_selKPiPi, _selKKPi, _selPiPiPi, _selKPiPiOppSign] )
-    return _d
-
+    _dm = MergedSelection(selName, RequiredSelections = [ D2KPiPiSelection, D2KKPiSelection, D2PiPiPiSelection, D2KPiPiOppSignPiSelection])
+    return _dm
 
 def makeB2D3H( name,
                dSel,
@@ -689,17 +921,44 @@ def makeB2D3H( name,
     _b2d3h.CombinationCut = combCut  % locals()
     _b2d3h.Preambulo = [ "Z  = VFASPF(VZ)"   ,  
                         "DZ = CHILD(Z,1)-Z" ]
-    _b2d3h.MotherCut = "( " \
-                       " (VFASPF(VCHI2/VDOF)< %(BVtxChisq)s ) & (PT > %(BMinPT)s *MeV) " \
+    _b2d3h.MotherCut = "( (VFASPF(VCHI2/VDOF)< %(BVtxChisq)s ) & (PT > %(BMinPT)s *MeV) " \
                        " & (DZ > %(BDZVtxSep)s *mm) " \
                        " & (BPVVDZ> %(BZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY)< %(BIPChisq2PV)s )" \
                        " & (BPVVDCHI2 > %(BVtxSepChisq)s ) & (BPVDIRA > %(BDiraPV)s )"   \
-                       " & (MIPDV(PRIMARY)< %(BIP2PV)s *mm) " \
-                       ")" % locals()
+                       " & (MIPDV(PRIMARY)< %(BIP2PV)s *mm) )" % locals()
 
     selName = 'Sel'+name
     return Selection(name, Algorithm  = _b2d3h, RequiredSelections = [dSel, hhhSel])
 
+
+def filterB2D3H( name,
+                 bSel,
+                 tightDMassWindow,
+                 tightBMassWindow,
+                 parentB,
+                 parentD):
+    
+    """
+    Filter the B-->D+3H Selection object for events in a tight signal region
+    Arguments:
+    name             : name of the Selection.
+    bSel             : B Selection object
+    tightDMassWindow : Tight D Mass Window
+    parentB          : parent B (use either B0 or B+)
+    """
+    _dMassCut = "(CHILDCUT( (ADMASS('D0') <%(tightDMassWindow)s *MeV ), 1 ))" %locals()
+    _bMassCut = "( ADMASS('" + parentB + "') < %(tightBMassWindow)s *MeV )"  %locals()
+
+    if parentD == 'D+' or parentD == 'D-':
+        _dMassCut1 = "(CHILDCUT( (ABSID=='D+') & (ADMASS('D+')   < %(tightDMassWindow)s *MeV ), 1 ))" %locals()
+        _dMassCut2 = "(CHILDCUT( (ABSID=='D+') & (ADMASS('D_s+') < %(tightDMassWindow)s *MeV ), 1 ))" %locals()
+        _dMassCut = "(" + _dMassCut1 + " | " + _dMassCut2 + ")"
+        _bMassCut = "( (ADMASS('B0') < %(tightBMassWindow)s *MeV) | (ADMASS('B_s0') < %(tightBMassWindow)s *MeV) )"  %locals()
+
+    _bFilter = FilterDesktop('SignalFilter'+name)
+    _bFilter.Code = "(" + _dMassCut + " & " + _bMassCut + ")" 
+
+    return Selection ('SignalSel'+name, Algorithm = _bFilter, RequiredSelections = [bSel])    
 
 
 def StrippingB2D3HLoose(name='Loose') :
@@ -715,7 +974,7 @@ def StrippingB2D3HLoose(name='Loose') :
         "KaonMinIPChisq"       : 7.0,
         "TrkChisq"             : 10.,
         "Bach3HMassWindow"     : 400,
-        "Bach3HDocaMax"        : 0.3,
+        "Bach3HDocaMax"        : 0.5,
         "Bach3HVtxChisq"       : 10.0,
         "Bach3HMinPT"          : 900.0, 
         "Bach3HIP2PV"          : 0.07,
@@ -726,20 +985,52 @@ def StrippingB2D3HLoose(name='Loose') :
         "DMinPT"               : 1000,
         "DVtxChisq"            : 10.0,
         "DMassWindow"          : 100,
+        "D0MassWindow"         : 100,
+        "DsMassWindow"         : 100,
+        "tightDMassWindow"     : 50,
+        "DDocaMax"             : 0.5,
         "DIP2PV"               : 0.07,
         "DIPChisq2PV"          : 6.25,
         "DVtxSepChisq"         : 16.0,
         "DDiraPV"              : 0.99,
         "DZVtxSep"             : 2.0,
+        "DStarMassWindow"      : 50,
+        "DStarMinPT"           : 1250,
         "BMinPT"               : 0.0, 
         "BVtxChisq"            : 10.0,
         "BMassWindow"          : 350, 
+        "tightBMassWindow"     : 200,
         "BIP2PV"               : 0.15,
         "BIPChisq2PV"          : 49.0,
         "BVtxSepChisq"         : 16.0,
         "BDiraPV"              : 0.9995,
         "BZVtxSep"             : 1.5,
-        "BDZVtxSep"            : -1.0  
+        "BDZVtxSep"            : -1.0,  
+        "B2D0PiPiPiAll_Prescale"        : 1.0,
+        "B2D0PiPiPiAll_Postscale"       : 1.0,
+        "B2DPiPiPiAll_Prescale"         : 1.0,
+        "B2DPiPiPiAll_Postscale"        : 1.0,
+        "B2DStarPiPiPiAll_Prescale"     : 1.0,
+        "B2DStarPiPiPiAll_Postscale"    : 1.0,
+        "B2D0PiPiPiSignal_Prescale"     : 1.0,
+        "B2D0PiPiPiSignal_Postscale"    : 1.0,
+        "B2DPiPiPiSignal_Prescale"      : 1.0,
+        "B2DPiPiPiSignal_Postscale"     : 1.0,
+        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
+        "B2DStarPiPiPiSignal_Postscale" : 1.0,
+        "B2D0KPiPiAll_Prescale"         : 1.0,
+        "B2D0KPiPiAll_Postscale"        : 1.0,
+        "B2DKPiPiAll_Prescale"          : 1.0,
+        "B2DKPiPiAll_Postscale"         : 1.0,
+        "B2DStarKPiPiAll_Prescale"      : 1.0,
+        "B2DStarKPiPiAll_Postscale"     : 1.0,
+        "B2D0KPiPiSignal_Prescale"      : 1.0,
+        "B2D0KPiPiSignal_Postscale"     : 1.0,
+        "B2DKPiPiSignal_Prescale"       : 1.0,
+        "B2DKPiPiSignal_Postscale"      : 1.0,
+        "B2DStarKPiPiSignal_Prescale"   : 1.0,
+        "B2DStarKPiPiSignal_Postscale"  : 1.0,
+        "MaxTracks"                     : 150
         }
 
 
@@ -770,21 +1061,53 @@ def StrippingB2D3HNominal(name="Def") :
         "Bach3HZVtxSep"        : 1.5,
         "DMinPT"               : 1000,
         "DVtxChisq"            : 10.0,
-        "DMassWindow"          : 70,
+        "DMassWindow"          : 100,
+        "D0MassWindow"         : 100,
+        "DsMassWindow"         : 100,
+        "tightDMassWindow"     : 40,
+        "DDocaMax"             : 0.4,
         "DIP2PV"               : 0.070,
         "DIPChisq2PV"          : 9.0,
         "DVtxSepChisq"         : 25.0,
         "DDiraPV"              : 0.992,
         "DZVtxSep"             : 2.0,
+        "DStarMassWindow"      : 40,
+        "DStarMinPT"           : 1250,
         "BMinPT"               : 0.0, 
         "BVtxChisq"            : 10.0,
-        "BMassWindow"          : 200, 
+        "BMassWindow"          : 250, 
+        "tightBMassWindow"     : 150,
         "BIP2PV"               : 0.10,
         "BIPChisq2PV"          : 36.0,
         "BVtxSepChisq"         : 25.0,
         "BDiraPV"              : 0.9999,
         "BZVtxSep"             : 2.0,  
-        "BDZVtxSep"            : -1.0  
+        "BDZVtxSep"            : -1.0,  
+        "B2D0PiPiPiAll_Prescale"        : 1.0,
+        "B2D0PiPiPiAll_Postscale"       : 1.0,
+        "B2DPiPiPiAll_Prescale"         : 1.0,
+        "B2DPiPiPiAll_Postscale"        : 1.0,
+        "B2DStarPiPiPiAll_Prescale"     : 1.0,
+        "B2DStarPiPiPiAll_Postscale"    : 1.0,
+        "B2D0PiPiPiSignal_Prescale"     : 1.0,
+        "B2D0PiPiPiSignal_Postscale"    : 1.0,
+        "B2DPiPiPiSignal_Prescale"      : 1.0,
+        "B2DPiPiPiSignal_Postscale"     : 1.0,
+        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
+        "B2DStarPiPiPiSignal_Postscale" : 1.0,
+        "B2D0KPiPiAll_Prescale"         : 1.0,
+        "B2D0KPiPiAll_Postscale"        : 1.0,
+        "B2DKPiPiAll_Prescale"          : 1.0,
+        "B2DKPiPiAll_Postscale"         : 1.0,
+        "B2DStarKPiPiAll_Prescale"      : 1.0,
+        "B2DStarKPiPiAll_Postscale"     : 1.0,
+        "B2D0KPiPiSignal_Prescale"      : 1.0,
+        "B2D0KPiPiSignal_Postscale"     : 1.0,
+        "B2DKPiPiSignal_Prescale"       : 1.0,
+        "B2DKPiPiSignal_Postscale"      : 1.0,
+        "B2DStarKPiPiSignal_Prescale"   : 1.0,
+        "B2DStarKPiPiSignal_Postscale"  : 1.0,
+        "MaxTracks"                     : 150
         }
 
     
