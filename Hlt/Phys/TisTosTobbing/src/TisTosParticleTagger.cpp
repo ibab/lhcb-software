@@ -1,4 +1,4 @@
-// $Id: TisTosParticleTagger.cpp,v 1.1 2010-07-23 20:51:48 tskwarni Exp $
+// $Id: TisTosParticleTagger.cpp,v 1.2 2010-08-09 14:17:47 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -198,9 +198,10 @@ StatusCode TisTosParticleTagger::initialize() {
     }          
     debug() << endmsg;
     if( m_passOnAll ){
-      debug() << " always setFilterPassed(true) " << endmsg;
+      debug() << " always setFilterPassed(true); pass all input particles to output " << endmsg;
     } else {
       debug() << " setFilterPassed(true) only if at least one condition satisfied by at least one particle " << endmsg;
+      debug() << " Pass to output only particles which satisfied at least one condition. " << endmsg;
     }
     if( m_checkDecReport ) debug() << " We will check for presence of HltDecReports at " + m_decReportLoc << endmsg;
     if( m_checkSelReport ) debug() << " We will check for presence of HltSelReports at " + m_selReportLoc << endmsg;    
@@ -235,6 +236,8 @@ StatusCode TisTosParticleTagger::execute() {
       return StatusCode::SUCCESS;
     }
   }
+
+  std::vector<LHCb::Particle> outparts;
 
  
   bool passed(m_passOnAll);
@@ -310,16 +313,18 @@ StatusCode TisTosParticleTagger::execute() {
       }
     }
     if( accept  ){
-      //Particle toSave(*candi);      
-      //info() << " Saved " << desktop()->keep ( candi )  << endmsg;      
+      outparts.push_back(*candi);
       passed = true;      
     }     
   }
+
+  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); i != outparts.end(); i++ )desktop()->keep( &(*i) );
+
    
   setFilterPassed(passed);  // Mandatory. Set to true if event is accepted. 
 
-  //StatusCode sc =  desktop()->saveDesktop() ;
-  //if (!sc) { return sc ; }
+  StatusCode sc =  desktop()->saveDesktop() ;
+  if (!sc) { return sc ; }
 
   return StatusCode::SUCCESS;
 }
