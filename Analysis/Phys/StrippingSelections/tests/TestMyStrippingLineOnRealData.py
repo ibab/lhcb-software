@@ -23,4 +23,4 @@ DaVinci().EvtMax = 10
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
-importOptions("$STRIPPINGSELECTIONSROOT/tests/Reco04-Stripping07-SDSTs.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco04-Stripping07-SDSTs.py")
