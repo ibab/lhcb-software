@@ -7,7 +7,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 ! 2010-08-10 - Greig Cowan
  - Added new Reco05-Stripping08 data sample and restructured tests directory.
+   The sample comes from run 77222 which is from fill 1266 with TCK 0x0019001F
+   (Hlt in rejection mode). The mu for this fill was 1.1 -> 0.98.
  - Reco04-Stripping07 data has new POOL XML catalog.
+ - Tightened up cuts for Bd2DstarMuNuLoose line. Retention on Reco05-Stripping08 is 0.3%.
+   Timing is ~7ms/event but this involves building D0 and Dstar CommonParticles which are used
+   elsewhere. I have added the line back into the semileptonic stream definition.
 
 ! 2010-08-09 - Steve Blusk
 
