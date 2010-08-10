@@ -95,6 +95,16 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
 StatusCode
 ANNDispatchSvc::initialize(  )
 {
+
+  StatusCode sc = Service::initialize();
+
+  if (sc.isFailure()) {
+    fatal() << "Service::initialize() failed!!!"<< endmsg;
+    return sc;
+  }
+
+  verbose() << "==> Initialize" << endmsg;
+
   if (!service("EventDataSvc", m_evtSvc).isSuccess()) { 
     fatal() << "ANNDispatchSvc failed to get the EventDataSvc." << endmsg;
     return StatusCode::FAILURE;
@@ -121,7 +131,7 @@ ANNDispatchSvc::initialize(  )
   m_incidentSvc->addListener(this,IncidentType::BeginEvent,int(0),rethrow,oneShot);
   // incidentSvc->addListener(this,IncidentType::BeginRun,priority,rethrow,oneShot);
   m_uptodate = false;
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode
@@ -154,7 +164,6 @@ void ANNDispatchSvc::faultHandler() const {
     
   //Decode the raw event to get the TCK from the raw Hlt DecReports
   unsigned int tck = 0;
-  //  SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, m_rawEventLocation); 
   SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, m_inputRawEventLocation); 
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
   for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
