@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.h,v 1.4 2009-07-30 10:03:01 jpalac Exp $
+// $Id: ProtoParticleCloner.h,v 1.5 2010-08-10 14:58:48 jpalac Exp $
 #ifndef MICRODST_PROTOPARTICLEPARTICLECLONER_H 
 #define MICRODST_PROTOPARTICLECLONER_H 1
 
@@ -9,6 +9,7 @@
 #include <MicroDST/Functors.hpp>
 #include "Event/MuonPID.h"
 #include "Event/RichPID.h"
+#include "Event/CaloHypo.h"
 class ICloneTrack;
 
 /** @class ProtoParticleCloner ProtoParticleCloner.h src/ProtoParticleCloner.h
@@ -47,6 +48,7 @@ private:
   typedef MicroDST::BasicItemCloner<LHCb::ProtoParticle> BasicProtoParticleCloner;
   typedef MicroDST::BasicCopy<LHCb::MuonPID> MuonPIDCloner;
   typedef MicroDST::BasicCopy<LHCb::RichPID> RichPIDCloner;
+  typedef MicroDST::BasicItemCloner<LHCb::CaloHypo> CaloHypoCloner;
 
   ICloneTrack* m_trackCloner;
 
