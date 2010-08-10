@@ -121,18 +121,30 @@ def diff( originalDB, modifiedDB, diffDB,
                                 orig_local_tag = ''
                             else:
                                 orig_local_tag = orig_folder.resolveTag(originalTAG)
-                            orig_obj = orig_folder.findObject( max(obj.since(), since),
-                                                               obj.channelId(),
-                                                               orig_local_tag )
-                            # if the objects are different, prepare to add the new
-                            # object
-                            if orig_obj.payload() != obj.payload():
+                            
+                            # Get the list of current objects to be covered by new one 
+                            orig_objects = list(orig_folder.browseObjects( obj.since(),
+                                                                           obj.until(),
+                                                                           channels,
+                                                                           orig_local_tag ))
+                            # Remove superfluous object to avoid half-closed 
+                            # time interval effect while getting objects by IOV 
+                            if obj.until() == orig_objects[-1].since():
+                                del orig_objects[-1]
+                            
+                            # Skip adding new object on top of current set of
+                            # objects if and only if this set is composed of one
+                            # object with its payload equal to the new payload.
+                            if False in map(lambda x: bool(x.payload() == obj.payload()),
+                                            orig_objects):
+                                new_data.append(obj)
+                            elif len(orig_objects) != 1:
                                 new_data.append(obj)
                         except:
                             # the original object cannot be found, add the new one
                             new_data.append(obj)
                 else:
-                    # is a new folder: whe have to copy everything
+                    # is a new folder: we have to copy everything
                     for obj in object_iterator:
                         new_data.append(obj)
             

@@ -5,6 +5,14 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-08-10 - Illya Shapoval
+ - The bug is fixed (see Savannah bug #53126) in CondDBUI.PyCoolDiff which 
+   prevented insertion of new object if its payload at its IOV-'since' value is 
+   equal to the current actual payload. The harmfull side effect of this was 
+   that all other IOVs with different payloads which had had to be covered by 
+   the new IOV remained actual. Now diffing machinery ignores new objects only 
+   if new IOV covers only *one* old IOV which has the *same* as new payload.
+
                             NEEDS LCGCMT >= 58d (Gaudi v21r10)
 ! 2010-07-20 - Marco Clemencic
  - Use pygraphics + Qt instead of pyqt (new schema in LCGCMT).
