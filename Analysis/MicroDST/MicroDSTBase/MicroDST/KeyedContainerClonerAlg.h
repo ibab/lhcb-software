@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.6 2009-08-17 19:13:43 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.7 2010-08-10 17:22:24 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -87,8 +87,7 @@ public:
                 << " into " << outputLocation << endmsg;
 
       const typename T::Container* cont = 
-        copyKeyedContainer<typename T::Container, CLONER>(inputLocation,
-                                                          m_cloner      );
+        copyKeyedContainer<CLONER>(inputLocation, m_cloner      );
 
       if (0==cont) {
         Warning("Unable clone or get container from "+ inputLocation,
