@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.18 2010-08-08 18:04:38 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.19 2010-08-10 09:44:32 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -434,10 +434,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
     const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
 
-    /// apply cut on 3x3 SPD
+    // apply cut on 3x3 SPD
     if ( spdCut < spd1e3x3 ) { continue ; }
     if ( spdCut < spd2e3x3 ) { continue ; }
-
+    
+    // pi0-veto ?
+    bool veto = true ;
+    if ( 0 < m_veto_dm || 0 < m_veto_chi2 ) 
+    { veto = pi0Veto ( g1 , g2 , all   , m_veto_dm , m_veto_chi2 ) ; }
+    if ( !veto ) { continue ; }                                           // CONTINUE
+    
     if ( good && m12 < 250 * MeV )
     {
       if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
@@ -445,21 +451,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       if ( 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
       if ( 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
     }
-
+    
     // finally save good photons:
     photons.insert  ( g1 ) ;
     photons.insert  ( g2 ) ;
-
+    
     if  ( !make_tuples ) { continue ; }
-
+    
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;
-    
-    bool veto = true ;
-    if ( 0 < m_veto_dm || 0 < m_veto_chi2 ) 
-    { veto = pi0Veto ( g1 , g2 , all   , m_veto_dm , m_veto_chi2 ) ; }
-    if ( !veto ) { continue ; }                                           // CONTINUE
-    
+
     // fill N-tuples
     if  ( good )
     {

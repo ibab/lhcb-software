@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0_1.py,v 1.1 2010-08-08 18:04:38 ibelyaev Exp $ 
+# $Id: KaliPi0_1.py,v 1.2 2010-08-10 09:44:32 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -32,7 +32,7 @@ Or even:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2010-08-07 "
-__version__ = " $Revision: 1.1 $"
+__version__ = " $Revision: 1.2 $"
 # =============================================================================
 ## the basic import
 from   Gaudi.Configuration       import *
@@ -87,7 +87,7 @@ if '__main__' == __name__ :
     castor   =  'castor:/castor/cern.ch/grid'
     evtSel.open ( [ castor + f for f in files ] )
     
-    gaudi.run( 50000 ) 
+    gaudi.run( 500000 ) 
     
     from   KaliCalo.Pi0HistoFit import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 
