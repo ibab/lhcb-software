@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseDplus.py,v 1.6 2010-08-10 20:55:00 gligorov Exp $ 
+# $Id: StdLooseDplus.py,v 1.7 2010-08-10 21:35:02 gligorov Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseDplus.py
 #  configuration file for 'Standard Loose Dplus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Dplus'
 """
 __author__  = "Vladimir Gligorov"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 __all__ = (
     'StdLooseDplus2KPiPi' ,
@@ -66,17 +66,17 @@ locations = updateDoD ( StdLooseDplus2KPiPiOppSignPi )
 
 StdLooseDplus2hhh = CombineParticles ( 'StdLooseDplus2hhh') 
 StdLooseDplus2hhh.InputLocations = [ "StdNoPIDsPions" ]
-StdLooseDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
-StdLooseDplus2KPiPi.DaughtersCuts = {"pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))" }
-StdLooseDplus2KPiPi.CombinationCut = """
+StdLooseDplus2hhh.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
+StdLooseDplus2hhh.DaughtersCuts = {"pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))" }
+StdLooseDplus2hhh.CombinationCut = """
                                     ((in_range(1769*MeV, mpipipi    , 2069 * MeV) | 
                                      (in_range(1769*MeV, mKpipi     , 2069 * MeV) | 
                                      (in_range(1769*MeV, mKKpi      , 2069 * MeV) | 
                                      (in_range(1769*MeV, mKpipiDCS  , 2069 * MeV)
                                     ) & (APT>1.*GeV)
                                     """
-StdLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 )"
-StdLooseDplus2KPiPi.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+' , 'pi+' ) " ,
+StdLooseDplus2hhh.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 )"
+StdLooseDplus2hhh.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+' , 'pi+' ) " ,
                                     "mKpipi  = AWM ('K-'   , 'pi+', 'pi+' ) " , 
                                     "mKKpi   = AWM ('K-'   , 'K+' , 'pi+'  ) " , 
                                     "mKpipiDCS  = AWM ( 'pi-' , 'K+' , 'pi+'  )" ]
