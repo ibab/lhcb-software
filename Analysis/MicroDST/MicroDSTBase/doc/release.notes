@@ -1,10 +1,15 @@
-!$Id: release.notes,v 1.52 2010-08-02 16:39:27 jpalac Exp $
+!$Id: release.notes,v 1.53 2010-08-10 17:14:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-08-10
+ - cmt/requirements
+  . Increase to v2r0.
+ - Big simplifications in templated methods and functors.
 
 ! 2010-08-02 - Juan Palacios
  - MicroDST/Functions.h, src/Lib/Functions.cpp
