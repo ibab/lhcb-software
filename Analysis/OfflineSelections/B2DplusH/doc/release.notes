@@ -1,9 +1,0 @@
-!-----------------------------------------------------------------------------
-! Package     : OfflineSelections/B2DplusH 
-! Responsible : Vladimir Gligorov
-! Purpose     : DC06 optimized B->D+h- selections from LHCb-2009-003 
-!-----------------------------------------------------------------------------
-
-! 2010-08-10 - Vladimir Gligorov
- - First commit of the code to allow running the B->DplusH selection. 
-
