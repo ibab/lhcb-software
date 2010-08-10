@@ -28,7 +28,9 @@ use DAQEvent            v*    Event
 use LoKiHlt             v*    Phys
 
 #### for CORAL access
-use           DetCond             v*      Det
+use DetCond             v*      Det
+#### for getting the StartOfRun condition
+use DetDesc             v*    Det
 
 ### for access to the config.tar file with configurations
 use HltTCK              v1r*    TCK         -no_auto_imports

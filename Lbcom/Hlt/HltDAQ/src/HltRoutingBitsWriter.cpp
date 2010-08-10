@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.13 2010-05-21 16:41:29 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.14 2010-08-10 14:05:37 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -6,6 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IIncidentSvc.h"
+
 #include "Event/RawEvent.h" 
 #include "Event/HltDecReports.h" 
 #include "Event/L0DUReport.h" 
@@ -103,8 +105,9 @@ void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete)
 HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_runpars(0)
+  , m_updMgrSvc(0)
   , m_startOfRun(0)
-  , m_runNumber(0)
   , m_binWidth(1) // in minutes!!! 
   , m_timeSpan(125) // in minutes!!!
   , m_bits_updated(false)
@@ -118,6 +121,7 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
   declareProperty("TrendTimeSpan",m_timeSpan = 125 );
   declareProperty("TrendBinWidth",m_binWidth = 1 );
+  declareProperty("GetStartOfRunFromCondDB",m_useCondDB = false);
 
 }
 //=============================================================================
@@ -165,8 +169,44 @@ void HltRoutingBitsWriter::updatePreambulo ( Property& /* p */ )
 StatusCode HltRoutingBitsWriter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if (m_useCondDB) {
+      m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc");
+      if( !sc.isSuccess()) {
+          error()<< "Could not update UpdateManagerSvc" << endmsg;
+          return sc;
+      }
+      m_updMgrSvc->registerCondition( this, "Conditions/Online/LHCb/RunParameters",
+                                           &HltRoutingBitsWriter::i_updateConditions,m_runpars );
+      sc = m_updMgrSvc->update(this);
+      if( !sc.isSuccess()) return sc;
+  } else {
+      // reset m_startOfRun to zero at start of run....
+      IIncidentSvc *s = svc<IIncidentSvc>( "IncidentSvc");
+      s->addListener(this,IncidentType::BeginRun, 0,false,false);
+      s->addListener(this,"RunChange", 0,false,false);
+  }
   return decode();
 }
+
+void HltRoutingBitsWriter::handle(const Incident&) {
+    m_startOfRun = 0;
+}
+
+StatusCode
+HltRoutingBitsWriter::i_updateConditions()
+{
+    if (m_runpars==0) { 
+        error() << "Could not obtain Condition for run parameters from conditions DB" << endmsg;
+        return StatusCode::FAILURE;
+    }
+    if (!m_runpars->exists("RunStartTime")) {
+        error() << "Condition does not contain RunStartTime " << endmsg;
+        return StatusCode::FAILURE;
+    }
+    m_startOfRun = m_runpars->param<int>("RunStartTime")*1e6; //from seconds -> microseconds since 1/1/1970
+    return StatusCode::SUCCESS;
+}
+
 
 //=============================================================================
 // Main execution
@@ -182,14 +222,15 @@ StatusCode HltRoutingBitsWriter::execute() {
   unsigned int& w = bits[0]; // ODIN + L0DU
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
-  if (m_runNumber != odin->runNumber()) {
-        m_startOfRun = odin->gpsTime(); // note: this may imply that different nodes use slightly different startOfRun times...
-                                        //       but that should be a negligible effect -- exept if a task dies, and rejoins later...
-        m_runNumber  = odin->runNumber();
-  }
+  
+  if (m_startOfRun == 0 ) m_startOfRun = odin->gpsTime(); // just in case we did not have the conditions DB start-of-run time...
 
   // go from microseconds to minutes...
-  double t = double(odin->gpsTime() - m_startOfRun)/60e6; 
+  double t = odin->gpsTime()>=m_startOfRun ? double(odin->gpsTime() - m_startOfRun) : -double(m_startOfRun - odin->gpsTime()) ;
+  t /= 60e6;
+
+  // always() << " minutes since start of run: " << t << " gpstime: " << odin->gpsTime() << " startOfRun: " << m_startOfRun << endmsg;
+
   double weight = double(1)/(m_binWidth*60); // m_binWidth is in minutes, need rate in Hz
 
   for (unsigned i=0;i<8;++i) {

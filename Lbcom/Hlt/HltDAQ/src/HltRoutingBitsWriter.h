@@ -1,10 +1,13 @@
-// $Id: HltRoutingBitsWriter.h,v 1.4 2010-05-19 09:47:54 graven Exp $
+// $Id: HltRoutingBitsWriter.h,v 1.5 2010-08-10 14:05:37 graven Exp $
 #ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H 
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "DetDesc/Condition.h"
 #include "boost/array.hpp"
 
 #include "LoKi/OdinTypes.h"
@@ -17,7 +20,7 @@
  *  @author Gerhard Raven
  *  @date   2008-07-29
  */
-class HltRoutingBitsWriter : public GaudiHistoAlg {
+class HltRoutingBitsWriter : public GaudiHistoAlg, IIncidentListener {
 public: 
   /// Standard constructor
   HltRoutingBitsWriter( const std::string& name, ISvcLocator* pSvcLocator );
@@ -50,13 +53,18 @@ private:
   boost::array<l0_eval_t, 24> m_l0_evaluators;
   boost::array<hlt_eval_t,64> m_hlt_evaluators;
   void zeroEvaluators(bool skipDelete=false);
+
+  Condition *m_runpars;
+  IUpdateManagerSvc *m_updMgrSvc;
+  
+  StatusCode i_updateConditions();
+  void handle(const Incident&);
  
   std::string m_odin_location;
   std::string m_l0_location;
   std::string m_hlt_location;
 
   unsigned long long m_startOfRun;
-  unsigned m_runNumber;
   double m_binWidth; // in _minutes_!
   double m_timeSpan; // in _minutes_!
 
@@ -70,5 +78,8 @@ private:
   std::string m_preambulo ;                           // the preambulo itself
   bool m_preambulo_updated;
   void updatePreambulo ( Property& );
+
+
+  bool m_useCondDB;
 };
 #endif // HLTROUTINGBITSWRITER_H

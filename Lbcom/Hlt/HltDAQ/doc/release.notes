@@ -4,6 +4,15 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-08-10 - Gerhard Raven
+ - src/HltRoutingBitsWriter
+   . add property to look up the time of start-of-run from the conditions DB
+     when making trend plots as a function of time since start-of-run.
+   . for now, default is to NOT query the conditions DB, to keep the 'old'
+     behaviour
+ - cmt/requirements
+   . add dependency on DetDesc needed to access conditions DB
+
 ! 2010-08-10 - Juan Palacios
  - src/ANNDispatchSvc.cpp
   . Fix bug that did not allow setting of properties.
