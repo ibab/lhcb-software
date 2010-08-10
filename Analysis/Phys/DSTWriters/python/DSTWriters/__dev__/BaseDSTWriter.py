@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.7 2010-08-05 16:15:15 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.8 2010-08-10 10:13:31 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -11,7 +11,7 @@ from Configurables import GaudiSequencer
 
 from DSTWriters.dstwriters import DSTWriterSelectionSequence, baseDSTWriterConf
 from DSTWriters.dstwriterutils import MicroDSTElementList
-
+from DSTWriters.streamconf import OutputStreamConf
 from copy import copy
 
 class BaseDSTWriter(ConfigurableUser) :
@@ -30,7 +30,7 @@ class BaseDSTWriter(ConfigurableUser) :
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
-        , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
+        , "SelectionSequences" : """ List of SelectionSequences defining the selections"""
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         , "WriteFSR"           : """ Flags whether to write out an FSR """
         , "StreamConf"         : """ Output stream configuration """
@@ -55,12 +55,13 @@ class BaseDSTWriter(ConfigurableUser) :
         each input SelectionSequence and adds it to the main sequence.
         """
         log.info("Configuring BaseDSTWriter")
-        sc = copy(self.getProp('StreamConf'))
-        sc.filePrefix = self.getProp('OutputFileSuffix')
+        sc = self.getProp('StreamConf').clone('StreamConf'+ '_' + self.name())
+        prefix = self.getProp('OutputFileSuffix')
+        if prefix != '' :
+            sc.filePrefix = self.getProp('OutputFileSuffix') + '.'
         sc.extraItems = self.getProp('ExtraItems')
         for sel in self.getProp('SelectionSequences') :
-            _sc = copy(sc)
             seq = DSTWriterSelectionSequence(selSequence = sel,
-                                             outputStreamConfiguration = _sc,
+                                             outputStreamConfiguration = sc.params(),
                                              extras = self.buildClonerList(sel))
             self.sequence().Members += [ seq.sequence() ]
