@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.6 2009-04-17 20:47:43 jpalac Exp $
+// $Id: Functors.hpp,v 1.7 2010-08-10 17:14:52 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -39,30 +39,32 @@ namespace MicroDST {
    * @author Juan Palacios juancho@nikhef.nl
    * @date 16-10-2007
    */
-  template <class T, class itemCloner>
+  template <class itemCloner>
   struct CloneKeyedContainerItem
   {
-    CloneKeyedContainerItem(typename T::Container*& to) 
+    typedef typename itemCloner::_type _type;
+
+    CloneKeyedContainerItem(typename _type::Container*& to) 
       : m_to(to) { }
     
-    T* operator() ( const T* item )
+    _type* operator() ( const _type* item )
     {
       return clone(item);
     }
 
-    T* clone( const T* item ) 
+    _type* clone( const _type* item ) 
     {
       if (0==item) return 0;
       if ( !m_to->object( item->key() ) ) {
-        T* clonedItem = itemCloner::clone(item);
-        if (0!=clonedItem) m_to->insert( clonedItem, item->key()) ;
-        return clonedItem;
+	_type* clonedItem = itemCloner::clone(item);
+	if (0!=clonedItem) m_to->insert( clonedItem, item->key()) ;
+	return clonedItem;
       }
       return m_to->object( item->key() );
     }
 
-    typename T::Container* m_to;
-    
+    typename itemCloner::_type::Container* m_to;
+
   };
 
 
@@ -75,12 +77,19 @@ namespace MicroDST {
    * @author Juan Palacios juancho@nikhef.nl
    * @date 16-10-2007
    */
+
+  template <class T>
+  struct Dummy {
+    typedef T* return_type;
+  };
+
   template <class T>
   struct BasicItemCloner 
   {
-    T* operator () (const T* item)    { return clone(item);   }
-    static T* copy(const T* item) { return clone(item); }
-    static T* clone(const T* item) { return item ? item->clone() : 0; }
+    typedef T _type;
+    _type* operator () (const _type* item)    { return clone(item);   }
+    static _type* copy(const _type* item) { return clone(item); }
+    static _type* clone(const _type* item) { return item ? item->clone() : 0; }
   };
 
   /**
@@ -95,57 +104,12 @@ namespace MicroDST {
   template <class T>
   struct BasicCopy 
   {
-    T* operator () (const T* item)    { return copy(item);   }
-    static T* copy(const T* item) { return item ? new T(*item) : 0; }
-    static T* clone(const T* item) { return copy(item); }
+    typedef T _type;
+    _type* operator () (const _type* item)    { return copy(item);   }
+    static _type* copy(const _type* item) { 
+      return item ? new _type(*item) : 0; }
+    static _type* clone(const _type* item) { return copy(item); }
   };
-
-//   template <class TABLE, class ENTRY_CLONER>
-//   struct RelationTableCloner
-//   {
- 
-//     RelationTableCloner(const FromCloner& fromCloner,
-//                         const ToCloner& toCloner)
-//       :
-//       m_entryCloner(fromCloner, toCloner)
-//     {
-//     }
-    
-//     typename TABLE* operator(const typename TABLE* table) 
-//     {
-//       typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
-//       typedef typename boost::remove_pointer<typename TABLE::To>::type _To;
-//       typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
- 
-//      TABLE* cloneTable = new TABLE();
-
-//       typename TABLE::Range relations = table->relations();
-
-//       const EntryCloner<TABLE, typename Relations::Traits<TABLE>::Entry> entryCloner(this);
-
-//       for (typename TABLE::Range::const_iterator iRel = relations.begin();
-//            iRel != relations.end();
-//            ++iRel ) {
-//         const typename TABLE::From from = iRel->from();
-//         if (from) {
-//           typename TABLE::Range range = table->relations(from);
-//           for (typename TABLE::Range::const_iterator iRange = range.begin();
-//                iRange != range.end();
-//                ++iRange) {
-//             entryCloner(*iRange, cloneTable);
-//           } // loop on related Tos
-//         } // if From* found
-//       } // loop on all relations
-  
-//       return cloneTable;
-
-//     }
-//   private:
-//     ToCloner m_toCloner;
-//     FromCloner m_fromCloner;
-//   };
-
-
   //===========================================================================
 
 
