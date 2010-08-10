@@ -3,8 +3,14 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.37 2010-05-24 20:26:03 jpalac Exp $
+! $Id: release.notes,v 1.38 2010-08-10 14:59:45 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2010-08-10 - Juan Palacios
+ - ProtoParticleCloner
+  . Add some shallow cloning of CaloHypos.
+ - cmt/requirements
+  . Increase to v1r7.
 
 !======================= MicroDSTTools v1r6p1 2010-11-24 =====================
 
