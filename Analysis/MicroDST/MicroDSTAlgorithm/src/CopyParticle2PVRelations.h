@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVRelations.h,v 1.3 2009-07-29 21:35:25 jpalac Exp $
+// $Id: CopyParticle2PVRelations.h,v 1.4 2010-08-11 13:50:57 jpalac Exp $
 #ifndef COPYPARTICLE2PVRELATIONS_H 
 #define COPYPARTICLE2PVRELATIONS_H 1
 
@@ -53,15 +53,15 @@
 //=============================================================================
 template <> struct BindType2Cloner<Particle2Vertex::Table> 
 {
-  typedef LHCb::RecVertex toType;
-  typedef ICloneVertexBase toCloner;
+  typedef LHCb::RecVertex ToType;
+  typedef ICloneVertexBase ToCloner;
 };
 //=============================================================================
 template<> struct Defaults<Particle2Vertex::Table>
 {
   const static std::string clonerType;
 };
-const std::string Defaults<Particle2Vertex::Table>::clonerType = "RecVertexCloner";
+const std::string Defaults<Particle2Vertex::Table>::clonerType = "VertexBaseFromRecVertexCloner";
 //=============================================================================
 template<> struct Location<Particle2Vertex::Table>
 {
