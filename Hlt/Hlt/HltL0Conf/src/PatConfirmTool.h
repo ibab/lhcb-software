@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.8 2008-08-29 14:33:15 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.9 2010-08-11 12:18:15 graven Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 

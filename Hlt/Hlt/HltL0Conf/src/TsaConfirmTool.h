@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.10 2008-07-29 07:40:35 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.11 2010-08-11 12:15:50 graven Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 

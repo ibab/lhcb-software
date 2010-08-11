@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.h,v 1.7 2010-01-06 07:47:59 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.8 2010-08-11 12:14:29 graven Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
