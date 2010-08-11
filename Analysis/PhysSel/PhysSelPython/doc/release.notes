@@ -1,9 +1,20 @@
-!$Id: release.notes,v 1.68 2010-06-24 16:08:55 jpalac Exp $
+!$Id: release.notes,v 1.69 2010-08-11 08:42:14 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-08-11 - Vanya Belyaev
+
+ - python/PhysSelPython/Wrappers.py
+
+    Update EventSelection for possible 'RequiredSelection' attribute 
+    E.g. useful for counting of 'good' candidates in some  selections
+
+ - cmt/requiremenets 
+
+    version incremen to v5r6 
 
 !==================== PhysSel/PhysSelPython v5r5 2010-06-24 ================
 

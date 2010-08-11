@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.49 2010-06-23 16:14:43 jpalac Exp $
+#$Id: Wrappers.py,v 1.50 2010-08-11 08:42:14 ibelyaev Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -100,16 +100,24 @@ class EventSelection(object) :
     help(SelectionSequence)
     selSeq = SelectionSequence('MyEvtSelSeq', TopSelection = evtSel)
     """
-    def __init__(self, algorithm) :
+    def __init__(self, algorithm ,
+                 RequiredSelection = None  ) :
         self._alg = algorithm
-        self.requiredSelections = list()
+        self.requiredSelection  = RequiredSelection 
+        if self.requiredSelection :
+            self.requiredSelections = [ RequiredSelection ]
+        else   : self.requiredSelections = []
+    
     def name(self) :
-        return algorithm.name()
+        return self._alg.name()
     def algorithm(self) :
         return self._alg
     def outputLocation(self) :
+        if self.requiredSelection :
+            return self.requiredSelection.outputLocation()
         return ''
 
+    
 class MergedSelection(object) :
     """
     Selection wrapper class for merging output of various Selections.
