@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.438 2010-08-06 15:15:51 ibelyaev Exp $
+! $Id: release.notes,v 1.439 2010-08-11 15:52:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,17 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-11 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Add property EventPreFilters. Takes a list of algorithms. If any of these fails the event is skipped.
+    Example:
+
+    # Process only events containing a primary vertex. 
+    from Configurables import LoKi__VoidFilter as VoidFilter
+    checkPV = VoidFilter('checkPV', Code = "CONTAINS('Rec/Vertex/Primary')>0")
+    dv = DaVinci()
+    dv.EventPreFilters = [checkPV]
 
 ! 2010-08-06 - Vanya Belyaev
 
