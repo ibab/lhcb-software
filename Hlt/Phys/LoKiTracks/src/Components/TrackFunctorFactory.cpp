@@ -325,9 +325,6 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
   m_modules.push_back ( "LoKiCore.math"          ) ;
   m_modules.push_back ( "LoKiCore.functions"     ) ;
   //
-  m_lines.push_back ( "print dir()" ) ;
-  m_lines.push_back ( "print TrNONE, type(TrNONE) " ) ;
-  ///
   declareProperty 
     ( "Modules" , 
       m_modules , 
