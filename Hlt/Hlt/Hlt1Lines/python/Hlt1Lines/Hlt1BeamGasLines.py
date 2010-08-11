@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -79,7 +79,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                         )           
  
         from HltLine.HltLine import Hlt1Line as Line
-        from HltTracking.HltReco import DecodeVELO
+        from HltLine.HltDecodeRaw import DecodeVELO
         channel = self.getProp('L0Channel' + whichBeam)
         ##  Only create an Hlt1 line if the corresponding L0 channel exists...
         from Hlt1Lines.HltL0Candidates import L0Channels
