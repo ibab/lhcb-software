@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.92 2010-03-08 11:32:54 jpalac Exp $
+! $Id: release.notes,v 1.93 2010-08-11 13:53:19 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2010-08-11 - Juan Palacios
+ - BindType2Cloner changes.
+ - CopyParticle2PVRelations uses new VertexBaseFromRecVertexCloner.
+ - CopyPrimaryVertices uses new RecVertexCloner.
+ - Increase to v4r0.
 
 !========================== MicroDSTAlgorithm v3r10 2010-03-08 ================
 
