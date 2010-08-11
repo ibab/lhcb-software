@@ -3,8 +3,21 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.38 2010-08-10 14:59:45 jpalac Exp $
+! $Id: release.notes,v 1.39 2010-08-11 12:54:17 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2010-08-11 - Juan Palacios
+ - cmt/requirements
+  . Increase to v2r0.
+ - RecVertexCloner
+  . Inherit from IRecVertexCloner interface change: only methods for cloning RecVertex.
+ - Add class VertexBaseFromRecVertexCloner
+  . For cloning a VertexBase* which is really a RecVertex* and returning a VertexBase*!
+    Needed for Particle->PV relations, where the relations point to VertexBase*.
+ - src/*Cloner.cpp
+  . Adapt cloneKeyedContainerItem<T, Cloner>(...) -> cloneKeyedContainerItem<Cloner>(...)
+ - src/RecVertexClonerFunctors.h
+  . Export cloned type as Type.
 
 ! 2010-08-10 - Juan Palacios
  - ProtoParticleCloner
