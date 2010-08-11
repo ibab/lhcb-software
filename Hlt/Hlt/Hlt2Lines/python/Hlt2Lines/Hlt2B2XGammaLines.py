@@ -76,7 +76,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                        , DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
                                        , CombinationCut =  "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('PhiVCHI2'))+")"
-                                       , InputLocations  = [ BiKalmanFittedKaons ]
+                                       , ParticleCombiners = {'' : 'TrgVertexFitter'}
+                                        , InputLocations  = [ BiKalmanFittedKaons ]
                                        )
         
         
@@ -87,6 +88,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                                            "pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
+                                       , ParticleCombiners = {'' : 'TrgVertexFitter'} 
                                        , InputLocations  = [ BiKalmanFittedKaons, BiKalmanFittedPions ]
                                        )
 
@@ -103,6 +105,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                                           "phi(1020)": "(ADMASS('phi(1020)')<"+str(self.getProp('PhiMassWinT'))+"*MeV)"}
                                       , CombinationCut =  "(ADAMASS('B_s0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
                                       , MotherCut = "( (BPVDIRA > " + str(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+"))"
+                                      , ParticleCombiners = {'' : 'TrgVertexFitter'}
                                       , InputLocations  = [ Hlt2Phi4PhiGamma, Photons ]
                                       )
         
@@ -119,6 +122,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                                          "K*(892)0" : "(ADMASS('K*(892)0')<"+str(self.getProp('KstMassWinT'))+"*MeV) " }
                                      , CombinationCut =  "(ADAMASS('B0')<"+str(self.getProp('B0MassWin'))+"*MeV)"
                                      , MotherCut = "( (BPVDIRA > " + str(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+"))"
+                                     , ParticleCombiners = {'' : 'TrgVertexFitter'}
                                      , InputLocations  = [ Hlt2Kst4KstGamma, Photons ]
                                      )
         

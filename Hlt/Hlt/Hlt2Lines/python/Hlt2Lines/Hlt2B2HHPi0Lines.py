@@ -49,6 +49,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
                                  } 
             , CombinationCut = "AALL" % self.getProps()
             , MotherCut      = "(VFASPF(VPCHI2)>%(BMinVtxProb)s) & (BPVVDCHI2>%(BMinVVDChi2)s)" % self.getProps()
+            , ParticleCombiners = {'' : 'TrgVertexFitter'}
             , InputLocations = [ BiKalmanFittedPions ] )
 
        ###########################################################################
@@ -61,6 +62,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             } 
             , CombinationCut = "(AM>%(BMinM)s *MeV) & (AM<%(BMaxM)s *MeV)" % self.getProps()
             , MotherCut      = "(PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2)s) & (BPVDIRA>%(BMinDIRA)s)" % self.getProps()
+            , ParticleCombiners = {'' : 'TrgVertexFitter'}
             , InputLocations = [ Hlt2Rho4HHPi0, MergedPi0s ])
         
         
