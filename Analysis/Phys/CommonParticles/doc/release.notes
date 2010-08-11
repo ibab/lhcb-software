@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.186 2010-08-10 20:56:04 gligorov Exp $
+ )!$Id: release.notes,v 1.187 2010-08-11 12:43:05 ukerzel Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,10 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-11 - Ulrich Kerzel
+- Add StdNoPIDsElectrons for Upstream, Downstream and VELO tracks
+  (one new class of particles for each)
 
 ! 2010-08-10 - V. Gligorov
  - Add a generic D+->hhh to StdLooseDplus, using the WM functors to prevent multiple
