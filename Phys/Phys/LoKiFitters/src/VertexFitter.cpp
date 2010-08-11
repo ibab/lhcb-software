@@ -69,9 +69,9 @@ StatusCode LoKi::VertexFitter::_load
   for ( ; ds.end() != c && sc.isSuccess() ; ++c , ++e ) 
   { sc = _load ( *c , *e ) ; } ;
   if ( sc.isFailure () ) 
-  { return Error ( "_load(): the error from _load:" , sc          , 1 ) ; } // RETURN 
+  { return _Warning ( "_load(): the error from _load:" , sc          ) ; } // RETURN 
   if ( m_entries.empty() ) 
-  { return Error ( "_load(): no valid data found"   , InvalidData , 1 ) ; } // RETURN 
+  { return _Warning ( "_load(): no valid data found"   , InvalidData ) ; } // RETURN 
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -82,7 +82,7 @@ StatusCode LoKi::VertexFitter::_load
   LoKi::VertexFitter::Entry& entry    ) const 
 {
   if ( 0 == particle ) 
-  { return Error ( "_load(): invalid particle" , InvalidParticle , 1 ) ; } // RETURN 
+  { return _Warning ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
   //
   switch ( particleType ( particle ) ) 
   {
@@ -164,7 +164,7 @@ StatusCode LoKi::VertexFitter::_iterate
         //
         done = true ;
       }
-      else { Warning ( "Error from twobody Kalman step" , sc , 1 ).ignore() ; }      
+      else { _Warning ( "Error from twobody Kalman step" , sc ) ; }      
     }
     // B) general case (of failure of two-body specialiation) 
     if  ( !done ) 
@@ -176,7 +176,7 @@ StatusCode LoKi::VertexFitter::_iterate
         // skip on Failure
         if ( sc.isFailure() ) 
         {  
-          Warning ( "Error from Kalman-step, skip" , sc , 1 ).ignore() ;
+          _Warning ( "Error from Kalman-step, skip" , sc ) ;
           continue ;                                                // CONTINUE 
         }
         // update the parameters 
@@ -287,14 +287,14 @@ StatusCode LoKi::VertexFitter::fit
   // load the data 
   StatusCode sc = _load ( daughters ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "fit(): failure from _load() ", sc , 1 ) ; }      // RETURN 
+  { return _Error ( "fit(): failure from _load() ", sc ) ; }      // RETURN 
   sc = _seed ( &vertex ) ; 
   if ( sc.isFailure() ) 
-  { Warning  ( "fit(): failure from _seed()"     , sc , 1 ).ignore() ; }
+  { _Warning  ( "fit(): failure from _seed()"     , sc ) ; }
   // make "m_nIterMax" iterations 
   sc = _iterate ( m_nIterMaxI , m_seed ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "fit(): failure from _iterate()"  , sc , 10 ) ; } // RETURN 
+  { return _Error ( "fit(): failure from _iterate()"  , sc ) ; } // RETURN 
   
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
@@ -314,11 +314,11 @@ StatusCode LoKi::VertexFitter::fit
   // keep for future tracing
   m_vertex = &vertex ;
   if ( m_seedZmin > vertex.position().Z() ) 
-  { Warning ( "fit(): Vertex is outside of 'Zmin' fiducial volume " ) ; }
+  { _Warning ( "fit(): Vertex is outside of 'Zmin' fiducial volume " ) ; }
   if ( m_seedZmax < vertex.position().Z() ) 
-  { Warning ( "fit(): Vertex is outside of 'Zmax' fiducial volume " ) ; }
+  { _Warning ( "fit(): Vertex is outside of 'Zmax' fiducial volume " ) ; }
   if ( m_seedRho  < vertex.position().Rho() ) 
-  { Warning ( "fit(): Vertex is outside of 'Rho'  fiducial volume " ) ; }
+  { _Warning ( "fit(): Vertex is outside of 'Rho'  fiducial volume " ) ; }
   //
   return sc ;
 } 
@@ -338,7 +338,7 @@ StatusCode LoKi::VertexFitter::fit
   
   // make a vertex fit 
   StatusCode sc = fit ( vertex , daughters ) ;
-  if ( sc.isFailure() ) { return Error ( "fit(): failure from fit", sc , 1 ) ; }
+  if ( sc.isFailure() ) { return _Error ( "fit(): failure from fit", sc ) ; }
   // links:
   
   particle.clearDaughters() ;
@@ -399,7 +399,7 @@ StatusCode LoKi::VertexFitter::add
   LHCb::Vertex&          vertex   ) const
 {
   if ( 0 == particle ) 
-  { return Error ( "add: Particle* point to NULL!" , InvalidParticle , 1 ) ;}
+  { return _Error ( "add: Particle* point to NULL!" , InvalidParticle ) ; }
   //
   if ( &vertex != m_vertex ) 
   {
@@ -413,21 +413,21 @@ StatusCode LoKi::VertexFitter::add
     { return Error ( "add: error from 'fit'", sc , 1 ) ; }
   }
   StatusCode sc = _add ( particle , vertex.position().Z() ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _add" , sc , 1 ).ignore() ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _add" , sc ) ; }
   //
   Entry& entry    =   m_entries.back()   ;
   const Entry& e0 = *(m_entries.end()-2) ;
   // make one Kalman step using the previos parameters as estimate
   sc = LoKi::KalmanFilter::step  ( entry , e0.m_x , e0.m_ci , e0.m_chi2) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _step" , sc , 1 ).ignore() ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _step" , sc ) ; }
   // smooth it!
   sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _smooth" , sc , 1 ).ignore() ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _smooth" , sc ) ; }
   // make few more full iterations 
   m_seedci = entry.m_ci ;
   Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
   sc = _iterate ( m_nIterMaxII , entry.m_x ) ;
-  if ( sc.isFailure() ) { Warning ("add(): failure from _iterate" , sc , 1 ).ignore() ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _iterate" , sc ) ; }
   //
   const Gaudi::Vector3&      x     = entry.m_x         ;
   const Gaudi::SymMatrix3x3& c     = entry.m_c         ;
@@ -442,11 +442,11 @@ StatusCode LoKi::VertexFitter::add
   m_vertex = &vertex ;
   // check for positions
   if ( m_seedZmin > vertex.position().Z() ) 
-  { Warning ( "fit():Vertex is outside of 'Zmin' fiducial volume " , sc , 1 ).ignore() ; }
+  { _Warning ( "fit():Vertex is outside of 'Zmin' fiducial volume " , sc ) ; }
   if ( m_seedZmax < vertex.position().Z() ) 
-  { Warning ( "fit():Vertex is outside of 'Zmax' fiducial volume " , sc , 1 ).ignore() ; }
+  { _Warning ( "fit():Vertex is outside of 'Zmax' fiducial volume " , sc ) ; }
   if ( m_seedRho  < vertex.position().Rho() ) 
-  { Warning ( "fit():Vertex is outside of 'Rho'  fiducial volume " , sc , 1 ).ignore() ; }
+  { _Warning ( "fit():Vertex is outside of 'Rho'  fiducial volume " , sc ) ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -457,11 +457,11 @@ StatusCode LoKi::VertexFitter::remove
 ( const LHCb::Particle*  particle , 
   LHCb::Vertex&          vertex   ) const
 {
-  return Warning ( "remove(): not implemented (yet)!" , NotImplemented , 1 ) ; // ATTENTION!!!
+  return Error ( "remove(): not implemented (yet)!" , NotImplemented ) ; // ATTENTION!!!
   //
   const StatusCode OK = StatusCode::SUCCESS ;
   if ( 0 == particle ) 
-  { return Warning ( "remove: nothing to remove" , OK , 1 ) ; }        // RETURN 
+  { return _Warning ( "remove: nothing to remove" , OK ) ; }        // RETURN 
   if ( &vertex != m_vertex ) 
   {
     // first need to fit it !
@@ -471,7 +471,7 @@ StatusCode LoKi::VertexFitter::remove
                   vertex.outgoingParticles().begin() , 
                   vertex.outgoingParticles().end  () ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "remove: error from 'fit'", sc , 1 ) ;  }           // RETURN 
+    { return _Error ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
   }
   // remove the particle from the vertex 
   vertex.removeFromOutgoingParticles ( particle ) ;
@@ -511,27 +511,29 @@ LoKi::VertexFitter::VertexFitter
   const IInterface*  parent ) 
   : base_class ( type , name , parent )
   /// maximal number of iteration for vertex fit  
-  , m_nIterMaxI          ( 10 ) // maximal number of iteration for vertex fit  
+  , m_nIterMaxI           ( 10 ) // maximal number of iteration for vertex fit  
   /// maximal number of iteration for "add" 
-  , m_nIterMaxII         (  5 ) // maximal number of iteration for "add" 
+  , m_nIterMaxII          (  5 ) // maximal number of iteration for "add" 
   /// maximal number of iteration for "remove"    
-  , m_nIterMaxIII        (  5 ) // maximal number of iteration for "remove"    
-  , m_DistanceMax        ( 1.0 * Gaudi::Units::micrometer ) 
-  , m_DistanceChi2       ( 1.0 * Gaudi::Units::perCent    ) 
-  , m_transporterName    ( "ParticleTransporter:PUBLIC")  
-  , m_transporter        ( 0 )
-  , m_seedZmin           ( -1.5 * Gaudi::Units::meter      ) 
-  , m_seedZmax           (  3.0 * Gaudi::Units::meter      ) 
-  , m_seedRho            ( 50.0 * Gaudi::Units::centimeter )
+  , m_nIterMaxIII         (  5 ) // maximal number of iteration for "remove"    
+  , m_DistanceMax         ( 1.0 * Gaudi::Units::micrometer ) 
+  , m_DistanceChi2        ( 1.0 * Gaudi::Units::perCent    ) 
+  , m_transporterName     ( "ParticleTransporter:PUBLIC")  
+  , m_transporter         ( 0 )
+  , m_seedZmin            ( -1.5 * Gaudi::Units::meter      ) 
+  , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
+  , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
   /// Use the sepcial branch for two-body decays 
   , m_use_twobody_branch  ( false   ) // Use the sepcial branch for two-body decays?
   /// The transport tolerance  
   , m_transport_tolerance (  10 * Gaudi::Units::micrometer ) 
+  /// number of prints 
+  , m_prints              ( 0       )
   //
-  , m_ppSvc              ( 0       ) 
-  , m_longLived          (         ) 
-  , m_shortLived         (         ) 
-  , m_gammaLike          ( "gamma" )
+  , m_ppSvc               ( 0       ) 
+  , m_longLived           (         ) 
+  , m_shortLived          (         ) 
+  , m_gammaLike           ( "gamma" )
     //
 {
   // ==========================================================================
@@ -563,11 +565,28 @@ LoKi::VertexFitter::VertexFitter
     ( "TransportTolerance"  , 
       m_transport_tolerance , 
       "The tolerance for particle transport" ) ;
-  // ==========================================================================
-  declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
-  declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
-  declareProperty ( "SeedRho"          , m_seedRho     ) ;
-  declareProperty ( "Transporter"      , m_transporterName );
+  // ========================================================================== 
+  declareProperty 
+    ( "MaxPrints"        , 
+      m_prints           , 
+      "Maximal number of prints "        ) ;
+  // ===========================================================================
+  declareProperty 
+    ( "SeedZmin"         , 
+      m_seedZmin         ,
+      "Allowed Z-min   for seed-vertex "       ) ;
+  declareProperty 
+    ( "SeedZmax"         ,
+      m_seedZmax         , 
+      "Allowed Z-max   for seed-vertex "       ) ;
+  declareProperty 
+    ( "SeedRho"          , 
+      m_seedRho          ,
+      "Allowed Rho-max for seed-vertex "       ) ;
+  declareProperty 
+    ( "Transporter"      , 
+      m_transporterName  , 
+      "The typename of tranporter to bee used" ) ;
 } 
 // ============================================================================
 // desctructor 
@@ -587,13 +606,19 @@ StatusCode LoKi::VertexFitter::initialize()
   // validate  
   sc = m_longLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Long-Lived particles"  , sc , 1 ) ; }
+  { return Error ( "Unable to validate Long-Lived particles"  , sc ) ; }
   sc = m_shortLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc , 1 ) ; }
+  { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
   sc = m_gammaLike.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc , 1 ) ; }
+  { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
+  //
+  if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
+  {
+    m_prints = 10 ;
+    warning () << "Redefine 'KeepSilence' property to " << m_prints ;
+  }
   //
   return StatusCode::SUCCESS ;
 }

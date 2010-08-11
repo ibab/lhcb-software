@@ -427,7 +427,7 @@ namespace LoKi
       StatusCode sc = vFit->fit ( vertex->outgoingParticles().begin() , 
                                   vertex->outgoingParticles().end  () , 
                                   *vertex , particle                  ) ; 
-      if ( sc.isFailure() ) { return Error("reFit(): error from fit()" , sc )  ; }
+      if ( sc.isFailure() ) { return _Error("reFit(): error from fit()" , sc )  ; }
       //
       // in the case of success update the extra-info:
       if ( particle.hasInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit ) ) 
@@ -485,7 +485,7 @@ namespace LoKi
       { 
         StatusCode sc = _transport ( *entry , newZ ) ; 
         if ( sc.isFailure() ) 
-        { Warning ("_transport(): the error from transport(), ignore", sc , 1 ).ignore() ; }
+        { _Warning ( "_transport(): the error from transport(), ignore", sc ) ; }
       }
       return StatusCode::SUCCESS ;
     }
@@ -493,6 +493,42 @@ namespace LoKi
     StatusCode _iterate ( const size_t nMax , const Gaudi::Vector3& x ) const ;
     /// make a seed 
     StatusCode _seed ( const LHCb::Vertex* vertex  ) const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    inline StatusCode _Warning
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if ( errorsPrint() ) { return Warning ( msg , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      {
+        warning () << "LoKi::VertexFitter/Warning : '"
+                   << msg  << "'  Code =" << code << endmsg ;
+      }
+      //
+      return code ;
+    }
+    // ========================================================================
+    inline StatusCode _Error 
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if ( errorsPrint() ) { return Error   ( msg , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      {
+        error   () << "LoKi::VertexFitter/Error   : '"
+                   << msg  << "'  Code =" << code << endmsg ;
+      }
+      //
+      return code ;
+    }
     // ========================================================================
   protected:
     // ========================================================================
@@ -531,6 +567,8 @@ namespace LoKi
     bool m_use_twobody_branch    ; // use the special branch for two-body decays 
     /// transport tolerance 
     double m_transport_tolerance ; // the transport tolerance 
+    /// # of prints 
+    unsigned int m_prints ;                                      // # of prints 
     // ========================================================================
   private:
     // ========================================================================

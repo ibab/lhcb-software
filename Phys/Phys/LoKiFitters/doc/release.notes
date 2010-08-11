@@ -5,6 +5,18 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-11 - Vanya Belyaev
+
+
+ - VertexFitter
+        
+     add new (integer) property 'MaxPrints' to reduce the verbosity 
+
+ - cmt/requirements 
+
+     version increment to v2r7 
+
+
 !========================== LoKiFitters v2r6 2010-07-12 =====================
 
 ! 2010-07-11 - Vanya Belyaev
