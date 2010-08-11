@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.118 2010-08-06 15:15:52 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.119 2010-08-11 15:52:00 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -26,67 +26,68 @@ class DaVinci(LHCbConfigurableUser) :
     
     __slots__ = {
         # Application Configuration : sent to LHCbApp and Gaudi
-         "EvtMax"             :  -1             # Number of events to analyse
-       , "SkipEvents"         :   0             # Number of events to skip at beginning for file
-       , "PrintFreq"          : 100             # The frequency at which to print event numbers
-       , "DataType"           : ''              # Data type, can be ['DC06','2008','2009', 'MC09', '2010'] Forwarded to PhysConf. MUST be set.
-       , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
-       , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
-       , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
-         # Input
-       , "Input"              : []              # Input data. Can also be passed as a second option file.
-         # Output
-       , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
-       , "TupleFile"          : ""              # Name of output Tuple file
-       , "ETCFile"            : ""              # Name of output ETC file
-       , "WriteFSR"           : True            # Flags whether to write out an FSR
-         # Monitoring
-       , "MoniSequence"       : []              # Add your monitors here
-         # DaVinci Options
-       , "MainOptions"        : ""              # Main option file to execute
-       , "UserAlgorithms"     : []              # User algorithms to run.
-       , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-       , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
-       , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
-       , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
-         # Trigger running
-       , "L0"                 : False           # Run L0.
-       , "Hlt"                : False           # Run Hlt
-       , "ReplaceL0BanksWithEmulated" : False   # Re-run L0 
-       , "HltUserAlgorithms"  : [ ]             # put here user algorithms to add
-       , "Hlt2Requires"       : 'L0+Hlt1'       # Say what Hlt2 requires
-       , "HltThresholdSettings" : ''            # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
-       , "OverruleL0TCK"      : ''              # Overrule the TCK defined in the threshold setting to allow the use of the one in the data
+        "EvtMax"             :  -1             # Number of events to analyse
+        , "SkipEvents"         :   0             # Number of events to skip at beginning for file
+        , "PrintFreq"          : 100             # The frequency at which to print event numbers
+        , "DataType"           : ''              # Data type, can be ['DC06','2008','2009', 'MC09', '2010'] Forwarded to PhysConf. MUST be set.
+        , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
+        , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
+        , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
+        # Input
+        , "Input"              : []              # Input data. Can also be passed as a second option file.
+        # Output
+        , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
+        , "TupleFile"          : ""              # Name of output Tuple file
+        , "ETCFile"            : ""              # Name of output ETC file
+        , "WriteFSR"           : True            # Flags whether to write out an FSR
+        # Monitoring
+        , "MoniSequence"       : []              # Add your monitors here
+        # DaVinci Options
+        , "MainOptions"        : ""              # Main option file to execute
+        , "UserAlgorithms"     : []              # User algorithms to run.
+        , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+        , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
+        , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
+        , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
+        # Trigger running
+        , "L0"                 : False           # Run L0.
+        , "Hlt"                : False           # Run Hlt
+        , "ReplaceL0BanksWithEmulated" : False   # Re-run L0 
+        , "HltUserAlgorithms"  : [ ]             # put here user algorithms to add
+        , "Hlt2Requires"       : 'L0+Hlt1'       # Say what Hlt2 requires
+        , "HltThresholdSettings" : ''            # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
+        , "OverruleL0TCK"        : ''              # Overrule the TCK defined in the threshold setting to allow the use of the one in the data
+        , "EventPreFilters"       : []
        }
 
     _propertyDocDct = {  
-         "EvtMax"             : """ Number of events to analyse """
-       , "SkipEvents"         : """ Number of events to skip at beginning for file """
-       , "PrintFreq"          : """ The frequency at which to print event numbers """
-       , "DataType"           : """ Data type, can be ['DC06','2008', '2009', 'MC09', '2010'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
-#       , "PackType"           : """ Type of packing for the DST: ['NONE','TES','MDF'] """
-       , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
-       , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
-       , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       , "Input"              : """ Input data. Can also be passed as a second option file. """
-       , "HistogramFile"      : """ Write name of output Histogram file """
-       , "TupleFile"          : """ Write name of output Tuple file """
-       , "ETCFile"            : """ Write name of output ETC file."""
-       , 'WriteFSR'           : """ Flags whether to write out an FSR """
-       , "MainOptions"        : """ Main option file to execute """
-       , "UserAlgorithms"     : """ User algorithms to run. """
-       , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
-       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
-       , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
-       , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
-       , "L0"                 : """ Re-Run L0 """
-       , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
-       , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
-       , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1' (equivalent to 'Hlt1').
-                                    'L0' will run Hlt1 in pass-all mode.
-                                    """
-       , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
+        "EvtMax"             : """ Number of events to analyse """
+        , "SkipEvents"         : """ Number of events to skip at beginning for file """
+        , "PrintFreq"          : """ The frequency at which to print event numbers """
+        , "DataType"           : """ Data type, can be ['DC06','2008', '2009', 'MC09', '2010'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
+        , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
+        , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
+        , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+        , "Input"              : """ Input data. Can also be passed as a second option file. """
+        , "HistogramFile"      : """ Write name of output Histogram file """
+        , "TupleFile"          : """ Write name of output Tuple file """
+        , "ETCFile"            : """ Write name of output ETC file."""
+        , 'WriteFSR'           : """ Flags whether to write out an FSR """
+        , "MainOptions"        : """ Main option file to execute """
+        , "UserAlgorithms"     : """ User algorithms to run. """
+        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
+        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
+        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
+        , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
+        , "L0"                 : """ Re-Run L0 """
+        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
+        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
+        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1' (equivalent to 'Hlt1').
+        'L0' will run Hlt1 in pass-all mode.
+        """
+        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
         , "OverruleL0TCK"      : """Overrule the TCK defined in the threshold setting to allow the use of the one in the data"""
+        , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         }
 
     __used_configurables__ = [
@@ -166,6 +167,10 @@ class DaVinci(LHCbConfigurableUser) :
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
+
+    def eventPreFilterSeq(self) :
+        return GaudiSequencer('DaVinciPreFilterSeq',
+                              Members = self.getProp('EventPreFilters'))
 ################################################################################
 # Event Initialisation sequence
 #
@@ -175,8 +180,10 @@ class DaVinci(LHCbConfigurableUser) :
         """
         from Configurables import (GaudiSequencer, DaVinciInit, PhysConf, AnalysisConf, MemoryTool)
         init = GaudiSequencer("DaVinciInitSeq")
+        
         log.info("Resetting ApplicationMgr")
-        ApplicationMgr().TopAlg = [ init ]  # Note the = here
+        GaudiSequencer('DaVinciSequences').Members = [init] # Note the = here
+#        ApplicationMgr().TopAlg = [ init ]  
 #        init.Members += [ LbAppInit("DaVinciAppInit") ]
         di = DaVinciInit()
         di.addTool(MemoryTool)
@@ -276,7 +283,8 @@ class DaVinci(LHCbConfigurableUser) :
             log.warning("Running Hlt. If there are already banks written by Hlt in the data, they will be removed.") 
             bk = bankKiller('KillHltBanks', BankTypes = [ "HltRoutingBits", "HltSelReports", "HltVertexReports", "HltDecReports", "HltLumiSummary" ])
             hltDVSeq.Members = [ physFilter, bk, hltSeq ]
-            ApplicationMgr().TopAlg += [ hltDVSeq ]  
+            GaudiSequencer('DaVinciSequences').Members += [ hltDVSeq ]
+#            ApplicationMgr().TopAlg += [ hltDVSeq ]  
             log.info("Will run Hlt")
             log.info( HltConf() )
             
@@ -307,7 +315,8 @@ class DaVinci(LHCbConfigurableUser) :
         # done with all warnings. Now do the logic.
         if ( self.getProp("L0") ):
             l0seq = GaudiSequencer("seqL0")
-            ApplicationMgr().TopAlg += [ l0seq ]
+            GaudiSequencer('DaVinciSequences').Members +=  [ l0seq ]
+#            ApplicationMgr().TopAlg += [ l0seq ]
             L0Conf().setProp( "L0Sequencer", l0seq )
             L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") )
             L0Conf().setProp( "DataType", self.getProp("DataType"))
@@ -529,7 +538,8 @@ class DaVinci(LHCbConfigurableUser) :
         Main Sequence
         """
         self.mainSeq.IgnoreFilterPassed = True
-        ApplicationMgr().TopAlg += [ self.mainSeq ]
+        GaudiSequencer('DaVinciSequences').Members += [ self.mainSeq ]
+#        ApplicationMgr().TopAlg += [ self.mainSeq ]
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
@@ -559,7 +569,8 @@ class DaVinci(LHCbConfigurableUser) :
         """
         self.moniSeq.IgnoreFilterPassed = True 
         self.moniSeq.Members = self.KnownMonitors
-        ApplicationMgr().TopAlg += [ self.moniSeq ]
+        GaudiSequencer('DaVinciSequences').Members += [ self.moniSeq ]
+#        ApplicationMgr().TopAlg += [ self.moniSeq ]
         log.info("Creating Moni Algorithms")
         self.appendToMoniSequence( self.getProp("MoniSequence") )
 
@@ -573,6 +584,9 @@ class DaVinci(LHCbConfigurableUser) :
         log.info("Append to Moni Sequence has been called")
         for alg in algs:
             self.moniSeq.Members += [ alg ]
+
+    def sequence(self) :
+        return GaudiSequencer('DaVinciSequence')
                     
 ################################################################################
 # Apply configuration
@@ -585,6 +599,9 @@ class DaVinci(LHCbConfigurableUser) :
         log.info( self )
 
         self.checkOptions()
+        self.sequence().Members = [self.eventPreFilterSeq(),
+                                   GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)]
+        ApplicationMgr().TopAlg = [self.sequence()]
         self.configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
         inputType = self.configureInput()
@@ -602,7 +619,7 @@ class DaVinci(LHCbConfigurableUser) :
             self.fsr()
         self.rootFiles()
         
-        # main sequence
+        # Add main sequence to TopAlg
         self.mainSequence()
         # monitoring
         self.moniSequence()
