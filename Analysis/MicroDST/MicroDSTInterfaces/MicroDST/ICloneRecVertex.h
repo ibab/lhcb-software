@@ -1,4 +1,4 @@
-// $Id: ICloneRecVertex.h,v 1.5 2009-07-29 21:29:01 jpalac Exp $
+// $Id: ICloneRecVertex.h,v 1.6 2010-08-11 12:45:22 jpalac Exp $
 #ifndef MICRODST_ICLONERECVERTEX_H 
 #define MICRODST_ICLONERECVERTEX_H 1
 
@@ -8,7 +8,6 @@
 // Forward declarations
 namespace LHCb 
 {
-  class VertexBase;
   class RecVertex;
 }
 
@@ -18,11 +17,10 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class GAUDI_API ICloneRecVertex : virtual public MicroDST::ICloner<LHCb::RecVertex>,
-                                  virtual public MicroDST::ICloner<LHCb::VertexBase> {
+class GAUDI_API ICloneRecVertex : virtual public MicroDST::ICloner<LHCb::RecVertex> {
 public: 
 
-  DeclareInterfaceID(ICloneRecVertex, 2, 0 );
+  DeclareInterfaceID(ICloneRecVertex, 3, 0 );
 
 };
 #endif // MICRODST_ICLONERECVERTEX_H
