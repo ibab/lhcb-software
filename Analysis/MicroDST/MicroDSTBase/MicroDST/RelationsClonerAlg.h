@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.21 2010-06-01 08:52:27 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.22 2010-08-11 13:37:52 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -35,7 +35,7 @@ namespace MicroDST
 
     typedef Defaults<TABLE> DEFAULTS;
     typedef Location<TABLE> LOCATION;
-    typedef typename BindType2Cloner<TABLE>::toCloner CLONER;
+    typedef typename BindType2Cloner<TABLE>::ToCloner CLONER;
     typedef MicroDST::TableCloner<TABLE> TableCloner;
 
   public:
@@ -171,7 +171,7 @@ namespace MicroDST
 
   private:
 
-    typedef typename BindType2Cloner<TABLE>::toType TO_TYPE;
+    typedef typename BindType2Cloner<TABLE>::ToType TO_TYPE;
     typedef typename boost::remove_pointer<typename TABLE::From>::type _From;
 
 

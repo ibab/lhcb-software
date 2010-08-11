@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.6 2010-08-11 12:40:24 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.7 2010-08-11 13:37:52 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -23,7 +23,7 @@ namespace MicroDST
   class ObjectClonerAlg : public MicroDSTAlgorithm {
   private:
     typedef Location<T> LOCATION;
-    typedef typename BindType2Cloner<T>::cloner CLONER;
+    typedef typename BindType2Cloner<T>::Cloner CLONER;
   public: 
     /// Standard constructor
     ObjectClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )

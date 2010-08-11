@@ -1,4 +1,4 @@
-// $Id: BindType2ClonerDef.h,v 1.2 2008-09-01 16:59:12 jpalac Exp $
+// $Id: BindType2ClonerDef.h,v 1.3 2010-08-11 13:37:52 jpalac Exp $
 #ifndef MICRODST_BINDTYPE2CLONERDEF_H 
 #define MICRODST_BINDTYPE2CLONERDEF_H 1
 
@@ -12,8 +12,8 @@
  */
 template <typename T> struct BindType2Cloner 
 {
-  typedef T type;
-  typedef MicroDST::BasicCopy<T> cloner;
+  typedef T Type;
+  typedef MicroDST::BasicCopy<T> Cloner;
 };
 
 #endif // MICRODST_BINDTYPE2CLONERDEF_H

@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.7 2010-08-10 17:22:24 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.8 2010-08-11 13:37:52 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -25,7 +25,7 @@ class KeyedContainerClonerAlg : public MicroDSTAlgorithm {
 private:
   typedef Defaults<T> DEFAULTS;
   typedef Location<T> LOCATION;
-  typedef typename BindType2Cloner<T>::cloner CLONER;
+  typedef typename BindType2Cloner<T>::Cloner CLONER;
 public:
 
   /// Standard constructor
