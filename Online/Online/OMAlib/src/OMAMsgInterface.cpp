@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.36 2010-06-28 11:26:40 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.37 2010-08-11 16:29:51 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -305,6 +305,7 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
     sendLine("    in analysis " +  message.ananame() , OMAMessage::INFO ); 
   if(!message.hIdentifier().empty())
     sendLine("   on histogram " + message.hIdentifier(),  OMAMessage::INFO);
+  sendLine(   "      from saveset " + message.saveSet(), OMAMessage::INFO);
   sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
   sendLine("===================================================================", OMAMessage::INFO );
   return true;
