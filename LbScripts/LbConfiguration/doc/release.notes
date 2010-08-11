@@ -33,6 +33,9 @@
 
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+! 2010-08-11 - Patrick Koppenburg
+ - Added VeloSQLDDB to Packages
+
 	* cmt/requirements: release of version v5r3
 
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
