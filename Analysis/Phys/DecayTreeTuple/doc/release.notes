@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-11 - Jibo He
+ - TupleToolRecoStats.h
+   Use boost::bind instead of boost::lambda::bind to get neater compilaton. 
+
+! 2010-08-11 - Jibo He
  - TupleToolRecoStats
    . Add protection from empty track container so that it works also 
      for SDST, as reported by Stefano Perazzini in the mailing list. 

@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.h,v 1.4 2010-07-28 16:44:41 pkoppenb Exp $
+// $Id: TupleToolRecoStats.h,v 1.5 2010-08-11 14:42:35 jhe Exp $
 #ifndef TUPLETOOLRECOSTATS_H 
 #define TUPLETOOLRECOSTATS_H 1
 
@@ -15,8 +15,7 @@
 #include "LoKi/select.h"
 #include <algorithm>
 //for velo count 
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
+#include "boost/bind.hpp"
  
 /** @class TupleToolRecoStats TupleToolRecoStats.h
  *  
@@ -44,25 +43,29 @@ public:
   virtual StatusCode fill( Tuples::Tuple& );///< Fill tuple
 
 protected:
-// velo count
-inline bool inCloneContainer(const std::vector<LHCb::Track*>& keepCont, const std::vector<LHCb::LHCbID>& vids) {
-  bool keep = true;
-  std::vector<LHCb::Track*>::const_iterator iter = keepCont.begin();
-  for (;iter != keepCont.end(); ++iter ){
-    const std::vector<LHCb::LHCbID>& vids2 = (*iter)->lhcbIDs(); 
-    std::vector<LHCb::LHCbID> veloHits2; veloHits2.reserve(vids.size());
-    LoKi::select(vids2.begin(), vids2.end(), std::back_inserter(veloHits2), 
-                 boost::lambda::bind(&LHCb::LHCbID::isVelo,boost::lambda::_1));
-    if (std::equal(vids.begin(), vids.end(), veloHits2.begin())){
-      keep = false;
-      break;
-    }
-  }
-  return keep;
-}
-  
-  inline unsigned nVelo(const LHCb::Tracks* tracks) {
+
+  // velo count from Matthew David Needham
+  inline bool inCloneContainer(const std::vector<LHCb::Track*>& keepCont, 
+                      const std::vector<LHCb::LHCbID>& vids) {
+
     
+    bool keep = true;
+    std::vector<LHCb::Track*>::const_iterator iter = keepCont.begin();
+    for (;iter != keepCont.end(); ++iter ){
+      const std::vector<LHCb::LHCbID>& vids2 = (*iter)->lhcbIDs(); 
+      std::vector<LHCb::LHCbID> veloHits2; veloHits2.reserve(vids.size());
+      LoKi::select(vids2.begin(), vids2.end(), std::back_inserter(veloHits2),boost::bind(&LHCb::LHCbID::isVelo,_1));
+      if (std::equal(vids.begin(), vids.end(), veloHits2.begin())){
+        keep = false;
+        break;
+      }
+    }
+    return keep;
+  }
+  
+
+  inline unsigned nVelo(const LHCb::Tracks* tracks) {
+
     std::vector<LHCb::Track*> tmpCont;
     LHCb::Tracks::const_iterator iterT = tracks->begin();
     for(; iterT != tracks->end() ;++iterT) {
@@ -76,8 +79,7 @@ inline bool inCloneContainer(const std::vector<LHCb::Track*>& keepCont, const st
     for (;iterT2 != tmpCont.end(); ++iterT2 ){
       const std::vector<LHCb::LHCbID>& vids = (*iterT2)->lhcbIDs();
       std::vector<LHCb::LHCbID> veloHits; veloHits.reserve(vids.size());
-      LoKi::select(vids.begin(), vids.end(), std::back_inserter(veloHits), 
-                   boost::lambda::bind(&LHCb::LHCbID::isVelo,boost::lambda::_1));
+      LoKi::select(vids.begin(), vids.end(), std::back_inserter(veloHits), boost::bind(&LHCb::LHCbID::isVelo,_1));
       
       if (inCloneContainer(keepCont,veloHits) == false){
         // nothing
