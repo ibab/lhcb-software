@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-08-11 - Jibo He
+ - TupleToolRecoStats
+   . Add protection from empty track container so that it works also 
+     for SDST, as reported by Stefano Perazzini in the mailing list. 
+
 ! 2010-07-28 - Patrick Koppenburg
  - TupleToolRecoStats: add quantitites we use to discard huge events.
    Code by Fatima Soomro and Jibo He.

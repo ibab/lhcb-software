@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.cpp,v 1.3 2010-07-28 16:44:41 pkoppenb Exp $
+// $Id: TupleToolRecoStats.cpp,v 1.4 2010-08-11 12:59:48 jhe Exp $
 // Include files 
 
 // from Gaudi
@@ -84,17 +84,24 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
     }
     int nSpd = m_l0BankDecoder->data("Spd(Mult)");
     test &= tup->column(prefix+"spdMult", nSpd);
+
     
     const LHCb::Track::Container* tracks =  get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
+
     unsigned int nBack = 0;
-    LHCb::Tracks::const_iterator iterT = tracks->begin();
-    for(; iterT != tracks->end() ;++iterT) {
-      if ((*iterT)->checkFlag( LHCb::Track::Backward) == true) ++nBack;
-    }
-    test &= tup->column(prefix+"backwardTracks", nBack);
-    
     int veloTracks = 0;
-    veloTracks = nVelo(tracks);
+
+    // Protection from empty track container 
+    if( tracks!=0 && tracks->size()>0 ) {
+      LHCb::Tracks::const_iterator iterT = tracks->begin();
+      for(; iterT != tracks->end() ;++iterT) {
+        if ((*iterT)->checkFlag( LHCb::Track::Backward) == true) ++nBack;
+      }
+      
+      veloTracks = nVelo(tracks);
+    }
+    
+    test &= tup->column(prefix+"backwardTracks", nBack);
     test &= tup->column(prefix+"veloTracks", veloTracks);
   }
   
