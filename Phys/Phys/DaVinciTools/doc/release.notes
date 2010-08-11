@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.567 2010-08-09 06:26:39 pkoppenb Exp $
+! $Id: release.notes,v 1.568 2010-08-11 11:58:35 gligorov Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-08-11 - V. Gligorov
+ - OnOffineTool:: Switch default vertex fitter for HLT2 from TrgVertexFitter to
+   LoKi::FastVertexFitter. Task #16646.
 
 ! 2010-08-09 - Patrick Koppenburg
  - OnOffineTool:: fix useless warning. Bug #71200
