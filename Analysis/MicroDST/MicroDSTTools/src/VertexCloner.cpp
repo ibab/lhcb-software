@@ -1,4 +1,4 @@
-// $Id: VertexCloner.cpp,v 1.4 2009-07-30 10:03:01 jpalac Exp $
+// $Id: VertexCloner.cpp,v 1.5 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ LHCb::Vertex* VertexCloner::clone(const LHCb::Vertex* vertex)
   if (0==vertex) return 0;
   
   LHCb::Vertex* vertexClone = 
-    cloneKeyedContainerItem<LHCb::Vertex, BasicVertexCloner>(vertex);
+    cloneKeyedContainerItem<BasicVertexCloner>(vertex);
   
   vertexClone->clearOutgoingParticles();
 

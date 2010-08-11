@@ -1,4 +1,4 @@
-// $Id: FlavourTagCloner.cpp,v 1.3 2009-07-30 10:03:01 jpalac Exp $
+// $Id: FlavourTagCloner.cpp,v 1.4 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ LHCb::FlavourTag* FlavourTagCloner::clone( const LHCb::FlavourTag* tag )
 {
 
   LHCb::FlavourTag* tmp = 
-    cloneKeyedContainerItem<LHCb::FlavourTag, BasicFTCopy>(tag);
+    cloneKeyedContainerItem<BasicFTCopy>(tag);
 
   tmp->setTaggedB( getStoredClone<LHCb::Particle>( tag->taggedB() ) );
 

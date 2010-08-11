@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.9 2010-05-07 14:59:47 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.10 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
   if (0==particle) return 0;
 
   LHCb::Particle* particleClone = 
-    cloneKeyedContainerItem<LHCb::Particle, BasicParticleCloner>(particle);
+    cloneKeyedContainerItem<BasicParticleCloner>(particle);
 
   if ( 0 == particleClone ) return 0;
 

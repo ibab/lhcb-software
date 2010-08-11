@@ -1,4 +1,4 @@
-// $Id: MCVertexCloner.cpp,v 1.5 2009-07-30 10:03:01 jpalac Exp $
+// $Id: MCVertexCloner.cpp,v 1.6 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ LHCb::MCVertex* MCVertexCloner::clone(const LHCb::MCVertex* vertex)
 
 
   LHCb::MCVertex* clone = 
-    cloneKeyedContainerItem<LHCb::MCVertex, BasicCloner>(vertex);
+    cloneKeyedContainerItem<BasicCloner>(vertex);
 
   clone->setMother((*m_particleCloner)(vertex->mother()));
 

@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.8 2009-07-30 10:03:01 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.9 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
   debug() << "clone() called for\n " << *mcp << endmsg;
 
   LHCb::MCParticle* clone = 
-    cloneKeyedContainerItem<LHCb::MCParticle, BasicMCPCloner>(mcp);
+    cloneKeyedContainerItem<BasicMCPCloner>(mcp);
 
   const LHCb::MCVertex* originVertex = mcp->originVertex();
 
@@ -72,7 +72,7 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
     if (!originVertexClone) {
       debug() << "Found origin vertex\n " << *originVertex << endmsg;
       originVertexClone = 
-        cloneKeyedContainerItem<LHCb::MCVertex, BasicVtxCloner>(originVertex);
+        cloneKeyedContainerItem<BasicVtxCloner>(originVertex);
       debug() << "Cloned originVertex" << endmsg;
       originVertexClone->clearProducts();
       originVertexClone->addToProducts(clone);

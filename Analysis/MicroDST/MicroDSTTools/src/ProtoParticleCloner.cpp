@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.7 2010-08-10 14:58:48 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.8 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,7 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
   if (0==protoParticle) return 0;
 
   LHCb::ProtoParticle* protoParticleClone = 
-    cloneKeyedContainerItem<LHCb::ProtoParticle, BasicProtoParticleCloner>(protoParticle);
+    cloneKeyedContainerItem<BasicProtoParticleCloner>(protoParticle);
 
   if (0==protoParticleClone) return 0;
 
@@ -75,10 +75,10 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track() ) );
 
   LHCb::RichPID* clonedRichPID =  
-    cloneKeyedContainerItem<LHCb::RichPID, RichPIDCloner>(protoParticle->richPID());
+    cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
 
   LHCb::MuonPID* clonedMuonPID =  
-    cloneKeyedContainerItem<LHCb::MuonPID, MuonPIDCloner>(protoParticle->muonPID());
+    cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
 
   if (clonedRichPID) clonedRichPID->setTrack(protoParticleClone->track());
   
@@ -93,7 +93,7 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
     SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = caloHypos.end();
     for ( ; iCalo != caloEnd; ++iCalo) {
-      LHCb::CaloHypo* hypoClone = cloneKeyedContainerItem<LHCb::CaloHypo, CaloHypoCloner>(*iCalo);
+      LHCb::CaloHypo* hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
       if (hypoClone) protoParticleClone->addToCalo(hypoClone);
     }
   }

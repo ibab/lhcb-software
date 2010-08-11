@@ -1,4 +1,4 @@
-// $Id: TrackCloner.cpp,v 1.3 2009-07-30 10:03:01 jpalac Exp $
+// $Id: TrackCloner.cpp,v 1.4 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ LHCb::Track* TrackCloner::operator() (const LHCb::Track* track)
 LHCb::Track* TrackCloner::clone(const LHCb::Track* track)
 {
   LHCb::Track* trackClone = 
-    cloneKeyedContainerItem<LHCb::Track, BasicTrackCloner>(track);
+    cloneKeyedContainerItem<BasicTrackCloner>(track);
 
   return trackClone;
   

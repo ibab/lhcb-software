@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.cpp,v 1.5 2009-07-30 10:03:01 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.cpp,v 1.6 2010-08-11 12:52:52 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,7 @@ LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
 {
   
   LHCb::RecVertex* vertexClone = 
-    cloneKeyedContainerItem<LHCb::RecVertex, MicroDST::BasicRecVertexCloner>(vertex);
+    cloneKeyedContainerItem<MicroDST::BasicRecVertexCloner>(vertex);
 
   const SmartRefVector< LHCb::Track >& tracks = vertex->tracks();
 
