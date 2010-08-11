@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-11 - Vanya Belyaev
+
+ - add StrippingTriMuons.py 
+      and include it into StreamDimuon.py
+
 ! 2010-08-10 - Greig Cowan
  - Added new Reco05-Stripping08 data sample and restructured tests directory.
    The sample comes from run 77222 which is from fill 1266 with TCK 0x0019001F

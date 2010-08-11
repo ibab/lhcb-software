@@ -45,6 +45,7 @@ from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2Jps
 
 from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
 
+
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
@@ -107,6 +108,12 @@ stream.appendLines( [
                         , StrippingBu2KJpsiPiPiConf().Psi2S_line()
                         
                         ] )
+
+### 
+# add three muon-lines: Vanya Belyaev 2010-08-11
+from StrippingSelections.StrippingTriMuons import Lines as ThreeMuonLines 
+stream.appendLines ( ThreeMuonLines ) 
+
 ###
 # Stripping lines for Bs2MuMu
 # attempt to write them in recommended format 
