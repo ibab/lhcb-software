@@ -526,11 +526,11 @@ LoKi::VertexFitter::VertexFitter
   /// Use the sepcial branch for two-body decays 
   , m_use_twobody_branch  ( false   ) // Use the sepcial branch for two-body decays?
   /// The transport tolerance  
-  , m_transport_tolerance (  10 * Gaudi::Units::micrometer ) 
+  , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
   /// number of prints 
-  , m_prints              ( 0       )
-  //
-  , m_ppSvc               ( 0       ) 
+  , m_prints              ( 10 )
+//
+  , m_ppSvc               (  0      ) 
   , m_longLived           (         ) 
   , m_shortLived          (         ) 
   , m_gammaLike           ( "gamma" )
