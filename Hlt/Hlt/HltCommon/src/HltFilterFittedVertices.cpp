@@ -1,4 +1,4 @@
-// $Id: HltFilterFittedVertices.cpp,v 1.1 2010-05-19 04:05:36 gligorov Exp $
+// $Id: HltFilterFittedVertices.cpp,v 1.2 2010-08-11 11:47:22 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ StatusCode HltFilterFittedVertices::initialize() {
   m_selections.retrieveSelections();
   m_selections.registerSelection();
 
-  m_vertexFitter = tool<IVertexFit>("OfflineVertexFitter",this);
+  m_vertexFitter = tool<IVertexFit>("LoKi::FastVertexFitter",this);
   m_dist         = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   m_p2s          = tool<IParticle2State>("Particle2State",this);
 

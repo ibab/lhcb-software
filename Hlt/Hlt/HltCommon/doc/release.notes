@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-10 - V. Gligorov
+ - HltFilterFittedVertices now uses LoKi::FastVertexFitter and not
+   the OfflineVertexFitter.
+
 ! 2010-08-05 - Vanya Belyaev
 
  - fix pipe & filter 
