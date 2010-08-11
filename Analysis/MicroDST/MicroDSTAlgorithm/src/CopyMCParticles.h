@@ -1,4 +1,4 @@
-// $Id: CopyMCParticles.h,v 1.8 2009-04-30 16:04:06 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.9 2010-08-11 13:52:27 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
@@ -44,8 +44,8 @@
  */
 template <> struct BindType2Cloner<LHCb::MCParticle> 
 {
-  typedef LHCb::MCParticle type;
-  typedef ICloneMCParticle cloner;
+  typedef LHCb::MCParticle Type;
+  typedef ICloneMCParticle Cloner;
 };
 //=============================================================================
 template<> struct Defaults<LHCb::MCParticle>

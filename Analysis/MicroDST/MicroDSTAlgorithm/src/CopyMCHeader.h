@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.9 2009-04-30 15:43:48 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.10 2010-08-11 13:52:27 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -40,6 +40,9 @@
 
 struct MCHeaderCopy 
 {
+
+  typedef LHCb::MCHeader Type;
+
   LHCb::MCHeader* operator() (const LHCb::MCHeader* mcHeader) 
   { 
     return copy(mcHeader); 
@@ -67,8 +70,8 @@ struct MCHeaderCopy
 //=============================================================================
 template <> struct BindType2Cloner<LHCb::MCHeader> 
 {
-  typedef LHCb::MCHeader type;
-  typedef MCHeaderCopy cloner;
+  typedef LHCb::MCHeader Type;
+  typedef MCHeaderCopy Cloner;
 };
 //=============================================================================
 template <> struct Location<LHCb::MCHeader> 

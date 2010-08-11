@@ -1,4 +1,4 @@
-// $Id: CopyParticle2MCRelations.h,v 1.6 2009-04-30 16:04:06 jpalac Exp $
+// $Id: CopyParticle2MCRelations.h,v 1.7 2010-08-11 13:52:27 jpalac Exp $
 #ifndef COPYPARTICLE2MCRELATIONS_H 
 #define COPYPARTICLE2MCRELATIONS_H 1
 
@@ -55,8 +55,8 @@
 //=============================================================================
 template <> struct BindType2Cloner<Particle2MCParticle::Table> 
 {
-  typedef LHCb::MCParticle toType;
-  typedef ICloneMCParticle toCloner;
+  typedef LHCb::MCParticle ToType;
+  typedef ICloneMCParticle ToCloner;
 };
 //=============================================================================
 template<> struct Defaults<Particle2MCParticle::Table>

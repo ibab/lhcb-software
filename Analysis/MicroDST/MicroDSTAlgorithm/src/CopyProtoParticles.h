@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.12 2009-04-30 15:43:48 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.13 2010-08-11 13:52:27 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -50,8 +50,8 @@
  */
 template <> struct BindType2Cloner<LHCb::ProtoParticle> 
 {
-  typedef LHCb::ProtoParticle type;
-  typedef ICloneProtoParticle cloner;
+  typedef LHCb::ProtoParticle Type;
+  typedef ICloneProtoParticle Cloner;
 };
 //=============================================================================
 template<> struct Defaults<LHCb::ProtoParticle>

@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVWeightedRelations.h,v 1.1 2009-09-02 15:30:48 jpalac Exp $
+// $Id: CopyParticle2PVWeightedRelations.h,v 1.2 2010-08-11 13:52:27 jpalac Exp $
 #ifndef COPYPARTICLE2PVWEIGHTEDRELATIONS_H 
 #define COPYPARTICLE2PVWEIGHTEDRELATIONS_H 1
 
@@ -53,8 +53,8 @@
 //=============================================================================
 template <> struct BindType2Cloner<Particle2Vertex::WTable> 
 {
-  typedef LHCb::RecVertex toType;
-  typedef ICloneVertexBase toCloner;
+  typedef LHCb::RecVertex ToType;
+  typedef ICloneVertexBase ToCloner;
 };
 //=============================================================================
 template<> struct Defaults<Particle2Vertex::WTable>
