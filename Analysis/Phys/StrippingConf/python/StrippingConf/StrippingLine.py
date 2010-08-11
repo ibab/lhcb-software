@@ -153,6 +153,10 @@ class bindMembers (object) :
         sel = alg.clone(line)
         self._handleSelectionType( line, sel )
 
+    def _handle_EventSelection(self, line, alg) :
+        sel = alg
+        self._handleSelectionType( line, sel )
+
     def _handle_MergedSelection(self, line, alg) :
         sel = alg.clone(line)
         self._members += [sel.algorithm()]
@@ -164,6 +168,7 @@ class bindMembers (object) :
         from PhysSelPython.Wrappers import MergedSelection
         sel = MergedSelection(line, RequiredSelections = [alg])
         self._handleSelectionType( line, sel )
+
 
     def _handle_SelSequence(self, line, alg) :
         gaudiSeq = alg.sequence()
