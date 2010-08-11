@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerFunctors.h,v 1.2 2008-02-15 13:05:57 jpalac Exp $
+// $Id: RecVertexClonerFunctors.h,v 1.3 2010-08-11 12:50:50 jpalac Exp $
 #ifndef RECVERTEXCLONERFUNCTORS_H 
 #define RECVERTEXCLONERFUNCTORS_H 1
 
@@ -27,6 +27,7 @@ namespace MicroDST {
    */
   struct RecVertexClonerShallowTracks
   {
+    typedef LHCb::RecVertex Type;
   public:
     static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
     {
