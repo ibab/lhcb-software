@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.9 2010-08-10 17:14:52 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.10 2010-08-11 12:40:24 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -64,16 +64,16 @@ public:
    * @author Ulrich Kerzel
    */
   template <class CopyFunctor>
-  inline const typename CopyFunctor::_type* copyAndStoreObject( const std::string& from,
-								const std::string& to   );
+  inline const typename CopyFunctor::Type* copyAndStoreObject( const std::string& from,
+                                                               const std::string& to   );
   
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class ContainedItemCloner >
-  inline const typename ContainedItemCloner::_type* copyKeyedContainer( const std::string& from,
-									const std::string& to    );
+  inline const typename ContainedItemCloner::Type::Container* copyKeyedContainer( const std::string& from,
+                                                                                  const std::string& to    );
 
 
   /**
@@ -81,24 +81,24 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class Cloner >
-    inline const typename Cloner::_type* copyKeyedContainer( const typename Cloner::_type* from, 
-							     typename Cloner::_type* to    ) ;
+  inline const typename Cloner::Type::Container* copyKeyedContainer( const typename Cloner::Type::Container* from, 
+                                                                     typename Cloner::Type::Container* to    ) ;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class Cloner >
-  inline const typename Cloner::_type* copyKeyedContainer( const std::string& from, 
-							   Cloner* cloner    ) ;
+  inline const typename Cloner::Type::Container* copyKeyedContainer( const std::string& from, 
+                                                                     Cloner* cloner    ) ;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class Cloner >
-  inline const typename Cloner::_type::Container* copyContainer( const std::string& from, 
-								 Cloner* cloner    ) ;
+  inline const typename Cloner::Type::Container* copyContainer( const std::string& from, 
+                                                                Cloner* cloner    ) ;
 
 
   /**
@@ -106,7 +106,7 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class Cloner>
-  inline typename Cloner::_type* cloneKeyedContainerItem( const typename Cloner::_type* item );
+  inline typename Cloner::Type* cloneKeyedContainerItem( const typename Cloner::Type* item );
 
   /**
    *

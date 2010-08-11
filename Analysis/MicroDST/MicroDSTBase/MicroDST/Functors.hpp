@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.7 2010-08-10 17:14:52 jpalac Exp $
+// $Id: Functors.hpp,v 1.8 2010-08-11 12:40:23 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -13,6 +13,7 @@
  *  Policy: Cloner must export a clone(const T*) method that returns
  *          a T*. If the input T* is null, Cloner must return a null
  *          pointer.
+ *          A cloner must export member type T as ::Type.
  *
  *  @author Juan PALACIOS
  *  @date   2007-10-24
@@ -42,28 +43,28 @@ namespace MicroDST {
   template <class itemCloner>
   struct CloneKeyedContainerItem
   {
-    typedef typename itemCloner::_type _type;
+    typedef typename itemCloner::Type Type;
 
-    CloneKeyedContainerItem(typename _type::Container*& to) 
+    CloneKeyedContainerItem(typename Type::Container*& to) 
       : m_to(to) { }
     
-    _type* operator() ( const _type* item )
+    Type* operator() ( const Type* item )
     {
       return clone(item);
     }
 
-    _type* clone( const _type* item ) 
+    Type* clone( const Type* item ) 
     {
       if (0==item) return 0;
       if ( !m_to->object( item->key() ) ) {
-	_type* clonedItem = itemCloner::clone(item);
+	Type* clonedItem = itemCloner::clone(item);
 	if (0!=clonedItem) m_to->insert( clonedItem, item->key()) ;
 	return clonedItem;
       }
       return m_to->object( item->key() );
     }
 
-    typename itemCloner::_type::Container* m_to;
+    typename itemCloner::Type::Container* m_to;
 
   };
 
@@ -79,17 +80,12 @@ namespace MicroDST {
    */
 
   template <class T>
-  struct Dummy {
-    typedef T* return_type;
-  };
-
-  template <class T>
   struct BasicItemCloner 
   {
-    typedef T _type;
-    _type* operator () (const _type* item)    { return clone(item);   }
-    static _type* copy(const _type* item) { return clone(item); }
-    static _type* clone(const _type* item) { return item ? item->clone() : 0; }
+    typedef T Type;
+    Type* operator () (const Type* item)    { return clone(item);   }
+    static Type* copy(const Type* item) { return clone(item); }
+    static Type* clone(const Type* item) { return item ? item->clone() : 0; }
   };
 
   /**
@@ -104,11 +100,10 @@ namespace MicroDST {
   template <class T>
   struct BasicCopy 
   {
-    typedef T _type;
-    _type* operator () (const _type* item)    { return copy(item);   }
-    static _type* copy(const _type* item) { 
-      return item ? new _type(*item) : 0; }
-    static _type* clone(const _type* item) { return copy(item); }
+    typedef T Type;
+    Type* operator () (const Type* item)    { return copy(item);   }
+    static Type* copy(const Type* item) { return item ? new Type(*item) : 0; }
+    static Type* clone(const Type* item) { return copy(item); }
   };
   //===========================================================================
 

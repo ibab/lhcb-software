@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.5 2010-05-26 09:56:56 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.6 2010-08-11 12:40:24 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -66,8 +66,8 @@ namespace MicroDST
                   << " into " << outputLocation << endmsg;
 
         const T* cont = 
-          copyAndStoreObject<T, CLONER>(inputLocation,
-                                        outputLocation      );
+          copyAndStoreObject<CLONER>(inputLocation,
+				     outputLocation      );
 
         if (0==cont) {
           Warning("Unable clone or get object from "+ inputLocation,
