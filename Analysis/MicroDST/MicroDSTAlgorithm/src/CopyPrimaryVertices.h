@@ -1,11 +1,11 @@
-// $Id: CopyPrimaryVertices.h,v 1.13 2010-03-05 19:00:08 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.14 2010-08-11 13:51:23 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
 // Include files
 // from MicroDST
 #include "MicroDST/ContainerClonerAlg.h"
-#include <MicroDST/ICloneVertexBase.h>
+#include <MicroDST/ICloneRecVertex.h>
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
 #include <Event/RecVertex.h>
@@ -43,7 +43,7 @@
 template <> struct BindType2Cloner<LHCb::RecVertex> 
 {
   typedef LHCb::RecVertex type;
-  typedef ICloneVertexBase cloner;
+  typedef ICloneRecVertex Cloner;
 };
 //=============================================================================
 template<> struct Defaults<LHCb::RecVertex>
