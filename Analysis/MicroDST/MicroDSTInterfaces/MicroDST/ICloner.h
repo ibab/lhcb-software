@@ -1,4 +1,4 @@
-// $Id: ICloner.h,v 1.1 2009-07-29 21:28:16 jpalac Exp $
+// $Id: ICloner.h,v 1.2 2010-08-11 12:45:09 jpalac Exp $
 #ifndef MICRODST_ICLONER_H 
 #define MICRODST_ICLONER_H 1
 
@@ -21,6 +21,8 @@ namespace MicroDST
 template <class T>
 class ICloner : virtual public IAlgTool {
 public: 
+
+  typedef T Type;
   
   virtual T* operator() (const T* source) = 0;
   
