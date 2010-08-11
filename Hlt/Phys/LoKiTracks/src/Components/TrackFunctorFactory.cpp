@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // $URL$
 // ============================================================================
@@ -57,9 +57,12 @@ namespace LoKi
      *  @date   2004-06-29
      */
     class TrackFunctorFactory 
-      : public extends2< LoKi::Hybrid::Base             ,
-                         LoKi::ITrackFunctorFactory     ,
-                         LoKi::ITrackFunctorAntiFactory >
+    // : public virtual extends2< LoKi::Hybrid::Base             ,
+    // LoKi::ITrackFunctorFactory     ,
+    // LoKi::ITrackFunctorAntiFactory >
+      : public virtual LoKi::Hybrid::Base         
+      , public virtual LoKi::ITrackFunctorFactory 
+      , public virtual LoKi::ITrackFunctorAntiFactory 
     {
       // ======================================================================
       // friend factory for instantiation
@@ -227,10 +230,10 @@ namespace LoKi
       /// helper method to save many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
-      ( const std::string& pycode  , 
-        TYPE1*&            local   , 
-        TYPE2&             output  , 
-        const std::string& context ) ;
+      ( const std::string&                                            pycode  , 
+        LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+        typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  , 
+        const std::string&                                            context ) ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -261,14 +264,14 @@ namespace LoKi
 // ============================================================================
 template <class TYPE1,class TYPE2>
 inline StatusCode LoKi::Hybrid::TrackFunctorFactory::_get 
-( const std::string&    pycode  , 
-  TYPE1*&               local   , 
-  TYPE2&                output  , 
-  const std::string&    context ) 
+( const std::string&                                            pycode  , 
+  LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+  typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  , 
+  const std::string&                                            context ) 
 {
   // ==========================================================================
   // consistency check:
-  const TYPE1* tmp = &output ;
+  const LoKi::Functor<TYPE1,TYPE2>* tmp = &output ;
   StatusCode sc = ( 0 != tmp ) ? StatusCode::SUCCESS : StatusCode::FAILURE ;
   // prepare the actual python code 
   std::string code = 
@@ -296,7 +299,8 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : base_class ( type , name , parent )
+// : base_class ( type , name , parent )
+  : LoKi::Hybrid::Base( type , name , parent )
 //
   , m_trcuts      ( 0 )
 //
@@ -314,10 +318,15 @@ LoKi::Hybrid::TrackFunctorFactory::TrackFunctorFactory
   , m_lines     () 
 ///
 {
+  declareInterface<LoKi::ITrackFunctorFactory>     (this) ;
+  declareInterface<LoKi::ITrackFunctorAntiFactory> (this) ;  
   //
   m_modules.push_back ( "LoKiTracks.decorators"  ) ;
   m_modules.push_back ( "LoKiCore.math"          ) ;
   m_modules.push_back ( "LoKiCore.functions"     ) ;
+  //
+  m_lines.push_back ( "print dir()" ) ;
+  m_lines.push_back ( "print TrNONE, type(TrNONE) " ) ;
   ///
   declareProperty 
     ( "Modules" , 
@@ -363,7 +372,7 @@ StatusCode LoKi::Hybrid::TrackFunctorFactory::finalize  ()
   if ( 0 != m_trMaps     ) { delete m_trMaps     ; m_trMaps     = 0  ; }
   if ( 0 != m_trPipes    ) { delete m_trPipes    ; m_trPipes    = 0  ; }
   if ( 0 != m_trFunVals  ) { delete m_trFunVals  ; m_trFunVals  = 0  ; }
-  if ( 0 != m_trCutVals  ) { delete m_trCutVals  ; m_trFunVals  = 0  ; }
+  if ( 0 != m_trCutVals  ) { delete m_trCutVals  ; m_trCutVals  = 0  ; }
   if ( 0 != m_trElements ) { delete m_trElements ; m_trElements = 0  ; }
   if ( 0 != m_trSources  ) { delete m_trSources  ; m_trSources  = 0  ; }
   //  

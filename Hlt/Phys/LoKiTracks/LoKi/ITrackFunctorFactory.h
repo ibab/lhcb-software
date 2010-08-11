@@ -42,8 +42,13 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
    *  @date   2007-06-10
    */
-  class ITrackFunctorFactory : public virtual extend_interfaces1<IAlgTool>
+  class ITrackFunctorFactory : public virtual IAlgTool
   {
+  public:
+    // ========================================================================
+    /// InterfaceID
+    DeclareInterfaceID ( ITrackFunctorFactory , 1 , 0 ) ;
+    // ========================================================================
   public:
     // ========================================================================
     /** "Factory": get the the object form python code 

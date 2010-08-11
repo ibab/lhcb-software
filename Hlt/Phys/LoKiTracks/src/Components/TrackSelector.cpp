@@ -40,7 +40,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-26
      */
-    class TrackSelector : public extends1<GaudiTool,ITrackSelector>
+    class TrackSelector 
+    // : public extends1<GaudiTool,ITrackSelector>
+      : public virtual GaudiTool
+      , public virtual ITrackSelector
     {
       // ======================================================================
       /// the friend factory for istantiation
@@ -100,13 +103,15 @@ LoKi::Hybrid::TrackSelector::TrackSelector
 ( const std::string& type, 
   const std::string& name,
   const IInterface* parent)
-  : base_class  ( type , name , parent )
+// : base_class  ( type , name , parent )
+  : GaudiTool   ( type , name , parent )
   , m_cut       ( LoKi::BasicFunctors<const LHCb::Track*>::BooleanConstant ( false ) ) 
   , m_code      ( "TrNONE" )
   , m_factory   ( "LoKi::Hybrid::TrackFunctorFactory/TrackFunctorFactory:PUBLIC") 
   , m_preambulo () 
   , m_update_required ( true ) 
 {
+  declareInterface<ITrackSelector> ( this ) ;
   // 
   declareProperty 
     ( "Code"    , 
@@ -131,7 +136,7 @@ LoKi::Hybrid::TrackSelector::TrackSelector
 // ============================================================================
 StatusCode LoKi::Hybrid::TrackSelector::decode () const  
 {
-  // 
+  //
   m_update_required = true  ;
   // (1) get the factory:
   LoKi::ITrackFunctorFactory* factory = 
@@ -198,7 +203,9 @@ bool LoKi::Hybrid::TrackSelector::accept ( const LHCb::Track& aTrack ) const
 // get the preambulo 
 // ============================================================================
 std::string LoKi::Hybrid::TrackSelector::preambulo() const 
-{ return boost::algorithm::join( m_preambulo , "\n" ) ; } ;
+{ return boost::algorithm::join( m_preambulo , "\n" ) ; }
+
+
 // ============================================================================
 /// Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,TrackSelector)

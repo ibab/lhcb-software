@@ -5,6 +5,10 @@
 ! Purpose     : tarcj-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-11 - Vanya Belyaev
+
+ - fix the problems with  "new" treatment of interfaces
+
 ! 2010-08-05 - Vanya Belyaev
  - add factory 
 

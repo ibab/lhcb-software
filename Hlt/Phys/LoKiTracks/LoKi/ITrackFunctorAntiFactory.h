@@ -43,9 +43,13 @@ namespace LoKi
    *                 by $Author$ 
    *
    */
-  class ITrackFunctorAntiFactory 
-    : public virtual extend_interfaces1<IAlgTool>
+  class ITrackFunctorAntiFactory : public virtual IAlgTool 
   {
+  public:
+    // ========================================================================
+    /// InterfaceID
+    DeclareInterfaceID ( ITrackFunctorAntiFactory , 1 , 0 ) ;
+    // ========================================================================
   public:
     // ========================================================================
     /// set the C++ predicate for LHCb::Track
