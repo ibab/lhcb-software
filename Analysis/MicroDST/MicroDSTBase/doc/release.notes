@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.54 2010-08-11 12:36:10 jpalac Exp $
+!$Id: release.notes,v 1.55 2010-08-11 13:37:34 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -8,7 +8,8 @@
 
 ! 2010-08-11 - Juan Palacios
  - Cloner types are now Cloner::Type.
-   Some bug fixes.
+ - BindType2Cloner structs now have upper case names.
+ -  Some bug fixes.
 
 ! 2010-08-10
  - cmt/requirements
