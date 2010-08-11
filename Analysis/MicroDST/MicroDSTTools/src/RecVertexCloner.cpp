@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.cpp,v 1.7 2009-07-30 10:03:01 jpalac Exp $
+// $Id: RecVertexCloner.cpp,v 1.8 2010-08-11 12:51:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -39,12 +39,6 @@ StatusCode RecVertexCloner::initialize()
 
 }
 //=============================================================================
-LHCb::VertexBase* RecVertexCloner::operator() (const LHCb::VertexBase* vertex)
-{
-  const LHCb::RecVertex* recVertex = dynamic_cast<const LHCb::RecVertex*>(vertex);
-  return (0 != recVertex) ? this->clone(recVertex) : 0;
-}
-//=============================================================================
 LHCb::RecVertex* RecVertexCloner::operator() (const LHCb::RecVertex* vertex)
 {
   return this->clone(vertex);
@@ -54,7 +48,7 @@ LHCb::RecVertex* RecVertexCloner::clone(const LHCb::RecVertex* vertex)
 {
   
   LHCb::RecVertex* vertexClone = 
-    cloneKeyedContainerItem<LHCb::RecVertex, PVCloner>(vertex);
+    cloneKeyedContainerItem<PVCloner>(vertex);
 
   return vertexClone;
   
