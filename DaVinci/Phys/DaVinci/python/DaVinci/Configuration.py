@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.120 2010-08-12 06:47:02 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.121 2010-08-12 08:13:18 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -196,8 +196,7 @@ class DaVinci(LHCbConfigurableUser) :
             log.info("Creating Lumi Algorithms")
             tupleFile = self.getProp('TupleFile')
             if tupleFile == '' :
-#                log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
-                self.setProp('TupleFile', 'lumi.root')
+                log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
             lumi = self.lumi()
             init.Members += lumi
         # Phys
