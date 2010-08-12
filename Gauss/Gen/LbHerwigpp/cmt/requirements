@@ -44,4 +44,4 @@ set HERWIGPPREPO $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version
 
 # load library path
 #============================================================================
-path_append LD_LIBRARY_PATH /home/philten/Gauss/lcg/external/MCGenerators/thepeg/$(thepeg_native_version)/slc4_amd64_gcc34/lib/ThePEG
+path_append LD_LIBRARY_PATH /afs/cern.ch/sw/lcg/external/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
