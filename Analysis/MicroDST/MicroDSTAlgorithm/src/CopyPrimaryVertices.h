@@ -1,10 +1,10 @@
-// $Id: CopyPrimaryVertices.h,v 1.14 2010-08-11 13:51:23 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.15 2010-08-12 14:45:41 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
 // Include files
 // from MicroDST
-#include "MicroDST/ContainerClonerAlg.h"
+#include "MicroDST/KeyedContainerClonerAlg.h"
 #include <MicroDST/ICloneRecVertex.h>
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
@@ -58,6 +58,6 @@ template<> struct Location<LHCb::RecVertex>
 };
 const std::string Location<LHCb::RecVertex>::Default = LHCb::RecVertexLocation::Primary;
 //=============================================================================
-typedef MicroDST::ContainerClonerAlg<LHCb::RecVertex> CopyPrimaryVertices;
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex> CopyPrimaryVertices;
 DECLARE_NAMED_ALGORITHM_FACTORY( CopyPrimaryVertices, CopyPrimaryVertices )
 #endif // COPYPRIMARYVERTICES_H
