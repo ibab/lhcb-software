@@ -5,6 +5,7 @@
 // from Gaudi
 //#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiKernel/IChronoStatSvc.h"
 
 /** @class StrippingReport StrippingReport.h
  *  
@@ -23,6 +24,7 @@ class ReportStat {
     std::string name;      /// Selection name
     int decisions;         /// Number of selected events 
     int candidates;        /// Number of candidates
+    double avgtime;
 }; 
 
 
@@ -55,6 +57,7 @@ private:
   std::vector < ReportStat > m_stat;
   
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
+  IChronoStatSvc* m_chronoSvc; 
   
   int m_event;                   ///< Event count
   

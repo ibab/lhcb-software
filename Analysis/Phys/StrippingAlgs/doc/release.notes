@@ -5,6 +5,15 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-08-12 - Anton Poluektov 
+ - StrippingReport can show timing information (time/event taken by stripping 
+   lines in ms). To enable this, ChronoAuditor has to be turned on, e.g.
+
+      from Configurables import AuditorSvc, ChronoAuditor
+      AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
+
+   in the job script.
+
 !======================== StrippngAlgs v1r3 2010-07-08 ========================
 
 ! 2010-06-27 - Anton Poluektov 

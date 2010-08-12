@@ -7,6 +7,8 @@
 
 #include "Event/HltDecReports.h"
 #include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/ChronoEntity.h"
 
 // local
 #include "StrippingReport.h"
@@ -54,6 +56,8 @@ StatusCode StrippingReport::initialize() {
   
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
   
+  m_chronoSvc = svc<IChronoStatSvc> ( "ChronoStatSvc" );
+  
   std::vector<std::string>::iterator i;
 
   for (i = m_selections.begin(); i != m_selections.end(); i++) {
@@ -78,9 +82,9 @@ void StrippingReport::report(bool onlyPositive) {
 
   char str[128];
 
-  sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s", "Decision name", "Rate", "Accepted", "Mult.");
+  sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s %7.7s", "Decision name", "Rate", "Accepted", "Mult.","<T>,ms");
 
-  info() << "-------------------------------------------------------------------------------------" << endmsg;
+  info() << "--------------------------------------------------------------------------------------------" << endmsg;
   info() << str << endmsg;
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
@@ -93,18 +97,24 @@ void StrippingReport::report(bool onlyPositive) {
       double mult = 0;
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
-        sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f", strippedName.data(), rate, i->decisions, mult);
+        if (i->avgtime > 0) 
+          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %7.3f", strippedName.data(), rate, i->decisions, mult, i->avgtime);
+        else 
+          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f", strippedName.data(), rate, i->decisions, mult);
         info() << str << endmsg;
       }
     } else if (i->decisions > 0 || !onlyPositive) {
       // Not a Selection::Line
-      sprintf(str,"%-51.51s: %8.6f %10.1d", strippedName.data(), rate, i->decisions);
-      info() << "-------------------------------------------------------------------------------------" << endmsg;
+      if (i->avgtime > 0) 
+        sprintf(str,"%-51.51s: %8.6f %10.1d         %7.3f", strippedName.data(), rate, i->decisions, i->avgtime);
+      else 
+        sprintf(str,"%-51.51s: %8.6f %10.1d         ", strippedName.data(), rate, i->decisions);
+      info() << "--------------------------------------------------------------------------------------------" << endmsg;
       info() << str << endmsg;
     }
       
   }
-  info() << "-------------------------------------------------------------------------------------" << endmsg;
+  info() << "--------------------------------------------------------------------------------------------" << endmsg;
 
 }
 
@@ -133,6 +143,8 @@ StatusCode StrippingReport::execute() {
     int passed = 0;
     int cand = 0;
     
+    i->avgtime = -1;
+    
     IAlgorithm* myIAlg(0);
 
     StatusCode result = m_algMgr->getAlgorithm( i->name, myIAlg );
@@ -145,6 +157,13 @@ StatusCode StrippingReport::execute() {
           // Not a Selection::Line
           cand = -1;
         }
+        
+        if (m_chronoSvc) {
+    	  const ChronoEntity* chrono = m_chronoSvc->chrono(i->name + ":execute");
+    	  if (chrono) {
+    	    i->avgtime = chrono->uMeanTime()/1.e3;
+          } 
+        } 
     }
     
     i->candidates += cand;
