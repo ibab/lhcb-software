@@ -191,10 +191,14 @@ class CloneHltDecReports(MicroDSTElement) :
     """
     Configurables necessary to copy HltDecReports from standard location.
     """
+    def __init__(self, branch = '', locations = ['Hlt/DecReports']) :
+        MicroDSTElement.__init__(self, branch)
+        self.locations = list(locations)
     def __call__(self, sel) :
         from Configurables import CopyHltDecReports
         cloner = CopyHltDecReports(self.personaliseName(sel,
                                                         'CopyHltDecReports'))
+        cloner.InputLocations = self.locations
         self.setOutputPrefix(cloner)
         return [cloner]
 
