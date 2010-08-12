@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.440 2010-08-12 06:47:13 jpalac Exp $
+! $Id: release.notes,v 1.441 2010-08-12 08:13:07 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,8 @@
 
 ! 2010-08-12 - Juan Palacios
  - python/DaVinci/Configuration.py
+  . Switch off default lumi.root. Now if Lumi is set and TupleFile isn't, the LumiAlgs
+    are configured to not write out an ntuple. REQUIRES Rec/LumiAlgs v3r7p1!
   . Use 'LHCb::RawDataCnvSvc' for InputType == 'ETC'.
 
 ! 2010-08-11 - Juan Palacios
