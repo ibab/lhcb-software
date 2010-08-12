@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-12 - Jibo He
+ - Exclusive_Leptonic.py
+   + Added Bc->JpsiX lines, tiny extra time and rate 
+
 ! 2010-08-09 - Francesco Dettori
  - Restored original IP cuts for Hlt2Dst2D2XXLines in Exclusive_Leptonics.py
    as agreed with J. Albrecht

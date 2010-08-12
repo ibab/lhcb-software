@@ -38,9 +38,14 @@ class Exclusive_Leptonic :
             'Hlt2CharmD02MuMu',
             'Hlt2CharmD02PiPiForD02MuMu',
             'Hlt2CharmD02KPiForD02MuMu',
-            'Hlt2CharmD02KKForD02MuMu'
-
-
+            'Hlt2CharmD02KKForD02MuMu',
+            
+            # Bc2JpsiX
+            'Hlt2TFBc2JpsiH', 
+            'Hlt2TFBc2JpsiHDetached', 
+            'Hlt2TFBc2JpsiHPrescaled', 
+            'Hlt2TFBc2JpsiMuX', 
+            'Hlt2TFBc2JpsiMuXSignal'
              ]
         
         return lines
