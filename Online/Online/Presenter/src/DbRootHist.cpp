@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.178 2010-08-12 15:43:00 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.179 2010-08-12 17:19:48 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -284,14 +284,13 @@ void DbRootHist::enableClear() {
 //=============================================================================
 // Initialize histogram 
 //=============================================================================
-void DbRootHist::initHistogram() {
+void DbRootHist::initHistogram() {  
   if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = NULL;}
   if (m_rootHistogram) { delete m_rootHistogram; m_rootHistogram = NULL; }
   if (m_reference) { delete  m_reference; m_reference = NULL; }
 
   // If not AnaLib hist:
   if (!m_isAnaHist && (m_retryInit > 0) && m_dimBrowser) {
-    
     // sed partition   
     if (m_onlineHistogram && m_session && (m_retryInit > 1)) {
       if (pres::TCKinfo != m_effServiceType) {
@@ -558,9 +557,9 @@ void DbRootHist::initHistogram() {
       }
     }
   } else if (m_isAnaHist && m_anaSources.size() > 0) { // analib hist
-    if (m_verbosity >= pres::Debug) {
+    if (m_verbosity >= pres::Debug) 
       std::cout << "initializing virtual histogram " << m_identifier << std::endl;
-    }
+    
     boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
     boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
     if (oraLock && rootLock) {
@@ -604,9 +603,9 @@ void DbRootHist::initHistogram() {
  
   if (false == m_isEmptyHisto) {
     fillHistogram();
-    if (m_verbosity >= pres::Verbose && m_isEmptyHisto) {
-      std::cout << "Histogram " << m_identifier << " empty after Fill" << std::endl;
-    }
+    if (m_verbosity >= pres::Verbose && m_isEmptyHisto) 
+      std::cout << "Histogram " << m_identifier << " empty after Fill" 
+		<< std::endl;
   } else {
     if ( m_onlineHistogram && 0 == m_retryInit ) {
       std::cout << "DIM histo '" << m_onlineHistogram->dimServiceName() << "' = '" 
@@ -909,7 +908,11 @@ bool DbRootHist::setRootHistogram( TH1* newRootHistogram ) {
   if ( newRootHistogram ) {
     m_rootHistogram = newRootHistogram ;
     applyDefaultDrawOptions( ) ;
-    if ( m_onlineHistogram ) { setTH1FromDB() ; }
+    if ( m_onlineHistogram ) { 
+      setTH1FromDB() ; 
+      // Set correct names and titles
+      m_rootHistogram -> SetName( m_onlineHistogram -> hname().c_str() ) ;
+    }
     out = true;
   }
   return out;

@@ -9,6 +9,8 @@
    in order to avoid circular dependencies with PresenterMainFrame
  - src/PresenterMainFrame.h/.cpp: use the PresenterInformation class
  - src/ParallelWait, DbRootHist, Archive: use the PresenterInformation class
+ - src/DbRootHist.cpp: fix problem that the selected histogram is not the one
+   displayed when clicking on inspect button (savannah bug #71152)
 
 ! 2010-08-08 - Patrick Robbe
  - src/TrendingHistogram.h,.cpp: add new class to contain trending

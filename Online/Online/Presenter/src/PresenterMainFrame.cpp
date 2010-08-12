@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.327 2010-08-12 15:43:00 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.328 2010-08-12 17:19:48 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -2758,34 +2758,36 @@ void PresenterMainFrame::editHistogramProperties() {
   if (referenceOverlay) { enableReferenceOverlay(); }
 }
 
+//==============================================================================
+// Inspect histogram
+//==============================================================================
 void PresenterMainFrame::inspectHistogram() {
+  DbRootHist* selectedDbHisto = selectedDbRootHistogram();
+  if ( 0 == selectedDbHisto ) return ;
+  
   bool referenceOverlay(false);
-  if (m_referencesOverlayed) {
-    disableReferenceOverlay();
-    referenceOverlay = true;
+  if ( m_referencesOverlayed ) {
+    disableReferenceOverlay() ;
+    referenceOverlay = true ;
   }
 
-  DbRootHist* selectedDbHisto = selectedDbRootHistogram();
-  if (0 != selectedDbHisto) {
-    if (0 != selectedDbHisto) {
-      TH1* selectedHisto = selectedDbHisto->getRootHistogram();
-      if (0 != selectedHisto) {
-        TCanvas* zoomCanvas =  new TCanvas();
-        if (zoomCanvas) {
-          zoomCanvas->cd();
-          //    zoomCanvas->SetTitle(selectedHisto->GetTitle());
-          selectedDbHisto->getRootHistogram()->DrawCopy();
-          zoomCanvas->ToggleEventStatus();
-          zoomCanvas->ToggleAutoExec();
-          zoomCanvas->ToggleToolBar();
-          zoomCanvas->ToggleEditor();
-        }
-      }
-    }
-  }
+  TH1* selectedHisto = selectedDbHisto->getRootHistogram();
+  if (0 == selectedHisto) return ;
+
+  TCanvas* zoomCanvas =  new TCanvas();
+  zoomCanvas->cd();
+  selectedDbHisto->getRootHistogram()->DrawCopy();
+  zoomCanvas->ToggleEventStatus();
+  zoomCanvas->ToggleAutoExec();
+  zoomCanvas->ToggleToolBar();
+  zoomCanvas->ToggleEditor();
+
   if (referenceOverlay) { enableReferenceOverlay(); }
 }
 
+//================================================================================
+// Histogram description button
+//================================================================================
 void PresenterMainFrame::histogramDescription() {
   if (isConnectedToHistogramDB()) {
 
@@ -4671,13 +4673,12 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
   DbRootHist* dbRootHist = 0;
 
   bool referenceOverlay(false);
-  if (m_referencesOverlayed) {
-    disableReferenceOverlay();
+  if ( m_referencesOverlayed ) {
+    disableReferenceOverlay() ;
     referenceOverlay = true;
   }
 
-  TPad * thePad = 
-    dynamic_cast< TPad * >( editorCanvas -> Pad( ) ) ;
+  TPad * thePad = dynamic_cast< TPad * >( editorCanvas -> Pad( ) ) ;
   if ( 0 != thePad ) {
     TIter nextPadElem( thePad -> GetListOfPrimitives() ) ;
     TObject * histoCandidate ( 0 ) ;
@@ -4694,7 +4695,8 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
       for ( selected_dbHistosOnPageIt = dbHistosOnPage.begin() ;
 	    selected_dbHistosOnPageIt != dbHistosOnPage.end()  ;
 	    ++selected_dbHistosOnPageIt) {
-	if ( 0 == std::string( (*selected_dbHistosOnPageIt) -> getName() ).compare( theHisto -> GetName() ) ) {
+	if ( 0 == std::string( (*selected_dbHistosOnPageIt) -> 
+			       getName() ).compare( theHisto -> GetName() ) ) {
 	  dbRootHist = *selected_dbHistosOnPageIt;
 	  break;
 	}
@@ -4702,7 +4704,8 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram() {
     }
   }
   
-  if ( 0 == dbRootHist && ( pres::Batch != m_presenterInfo.presenterMode() ) ) {
+  if ( ( 0 == dbRootHist ) && 
+       ( pres::Batch != m_presenterInfo.presenterMode() ) ) {
     new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
 		 "Please select a histogram with the middle mouse button",
 		 kMBIconStop, kMBOk, &m_msgBoxReturnCode);

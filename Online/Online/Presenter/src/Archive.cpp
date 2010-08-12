@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.85 2010-08-12 15:42:03 robbep Exp $
+// $Id: Archive.cpp,v 1.86 2010-08-12 17:19:48 robbep Exp $
 // This Class
 #include "Archive.h"
 
@@ -109,19 +109,19 @@ void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
                             const std::string & pastDuration) {
   bool singleSaveset=false;
-  if (m_verbosity >= Verbose) {
+  if (m_verbosity >= Verbose) 
     std::cout << "Histogram to seek: " << histogram->identifier()
               << " timePoint " << timePoint
               << " pastDuration " << pastDuration << std::endl;
-  }
+  
   if ( ! (histogram->isAnaHist()) ) {
     // fill HistogramIdentifier from history mode
     std::string fakeDimName = s_H1D + "/" + histogram->identifier();
     histogram->setIdentifiersFromDim(fakeDimName);
-    if (m_verbosity >= Debug) {
+    if (m_verbosity >= Debug) 
       std::cout <<"  Task="<<histogram->taskName()<<" RootName="<<histogram->rootName()
                 << " full HName="<<histogram->histogramFullName()<<std::endl;
-    }
+    
     histogram->beRegularHisto();
     std::vector<path> foundRootFiles;
     std::vector<path> goodRootFiles;
@@ -134,11 +134,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
       singleSaveset = true;
       path filePath(pastDuration);
       if (s_rootFileExtension == extension(filePath) ) {
-        if (exists(filePath)){
-          foundRootFiles.push_back(filePath);
-        } else if (exists(m_savesetPath/filePath)){
+        if (exists(filePath)) foundRootFiles.push_back(filePath);
+        else if (exists(m_savesetPath/filePath))
           foundRootFiles.push_back(m_savesetPath/filePath);
-        } 
       }
     } else {
       
