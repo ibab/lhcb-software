@@ -71,8 +71,13 @@
   </exclusion>
   
   
-
+  <!-- LHCb::Track-remnants  --> 
   
+  <class name = "LoKi::Hlt1::TrSelection" /> 
+  <class name = "LoKi::Hlt1::TrRegister"  /> 
+  <class name = "LoKi::Hlt1::TrTESInput"  /> 
+  
+
   <!-- 
 
   <class name    = "LoKi::Hlt1::Tool"                />

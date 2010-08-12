@@ -62,7 +62,6 @@ def _decorate ( name = _name  ) :
     vC = 'std::vector<const Hlt::Candidate*>'
     vD = 'std::vector<double>'
     #
-    
     ## "function" : Hlt::Candidate -> double 
     
     _decorated  = _LoKiCore.getAndDecorateFunctions (  
@@ -139,6 +138,26 @@ def _decorate ( name = _name  ) :
         LoKi.Functor         ( 'void' , vC )   , ## the base
         LoKi.Dicts.SourceOps ( tC     , tC )   ) ## call-traits
 
+    # =========================================================================
+    ## LHCb::Track remnants ATTENTION !!! 
+    # =========================================================================
+    
+    tT = 'const LHCb::Track*'
+    vT = 'std::vector<const LHCb::Track*>'
+
+    # "pipe" : vector<T> -> vector<T>    
+    _decorated |= _LoKiCore.getAndDecoratePipes (
+        name                                   , ## module name  
+        LoKi.Functor       ( vT , vT )         , ## the base
+        LoKi.Dicts.PipeOps ( tT , tT )         ) ## call-traits
+    
+    # 'source' : void -> vector<T>    
+    _decorated |= _LoKiCore.getAndDecorateSources  (  
+        name                                   , ## module name  
+        LoKi.Functor         ( 'void' , vT )   , ## the base
+        LoKi.Dicts.SourceOps ( tT     , tT )   ) ## call-traits
+
+    
     ## 
     return _decorated                            ## RETURN
 
@@ -156,7 +175,8 @@ if __name__ == '__main__' :
     print ' Author    : %s '        %   __author__    
     print ' Version   : %s '        %   __version__
     print ' Date      : %s '        %   __date__
-    print ' Decorated : %s symbols' %   len ( _decorated ) 
+    print ' Decorated : %s symbols' %   len ( _decorated )
+    for t in decorated  : print t 
     print '*'*120
     
 # =============================================================================

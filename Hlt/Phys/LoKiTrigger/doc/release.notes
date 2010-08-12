@@ -5,6 +5,36 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-08-12 - Vanya Belyaev
+ - Hlt::Unit
+    - add the default preambulo (LoKiTracks+LoKiTrigger+function) 
+
+ - resurrect the symbols for Track-selecitons:
+
+      "sources" : 
+             - TrSELECTION - get      track-selection by name for Hlt::IData 
+             - TrINPUT     - get'TES'-track-selection by name from Hlt::IData 
+
+      "sink" ( well, it is actually pipe) 
+
+             - TrREGISTER 
+
+ Thus, in cas eI[ve put not too many errors, now
+
+    Hlt::Unit with Code = 
+
+         " TrSELECTION( 'input' ) >> ( ... )  >> TrREGISTER ('otput') >> ~TrEMPTY "
+
+    is equivalent to HltTrackPipe and HltTrackFilter, e.g.
+
+         " TrSELECTION( 'input' ) >> select ( TrPT > 1*GeV ) >> TrREGISTER ('otput') >> ~TrEMPTY "
+
+    or (simpler) 
+     
+         " TrSELECTION( 'input' ) >> ( TrPT > 1*GeV ) >> TrREGISTER ('otput') >> ~TrEMPTY "
+
+
+
 ! 2010-08-05 - Vanya Belyaev
 
  - remove obsolete factory 

@@ -55,6 +55,13 @@ LoKi::HltUnit::HltUnit
   sc = setProperty
     ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
+  // update the preambulo :
+  std::vector<std::string> _newpreambulo ;
+  _newpreambulo.push_back ( "from LoKiTracks.decorators  import *" ) ;
+  _newpreambulo.push_back ( "from LoKiTrigger.decorators import *" ) ;
+  _newpreambulo.push_back ( "from LoKiCore.functions     import *" ) ;
+  sc = setProperty ( "Preambulo" , _newpreambulo ) ;
+  Assert ( sc.isSuccess () , "Unable (re)set property 'Preambulo'" , sc ) ;
   // ==========================================================================
 }
 // ============================================================================
@@ -173,7 +180,7 @@ StatusCode LoKi::HltUnit::defineCode ()
   return StatusCode::SUCCESS ;  
 }
 // ============================================================================
-/* define the stream 
+/*  define the stream 
  *  @see LoKi::FilterAlg
  *  @see LoKi::ICoreFactory 
  */
