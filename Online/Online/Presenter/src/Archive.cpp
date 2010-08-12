@@ -1,9 +1,12 @@
-// $Id: Archive.cpp,v 1.84 2010-08-02 09:42:35 ggiacomo Exp $
+// $Id: Archive.cpp,v 1.85 2010-08-12 15:42:03 robbep Exp $
+// This Class
+#include "Archive.h"
+
+// STL
 #include <iostream>
 #include <sstream>
 #include <algorithm>
 
-#include "Archive.h"
 #include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 
@@ -46,28 +49,31 @@ namespace ArchiveSpace {
   const int maxRunInterval = 1000;
 };
 
-
-Archive::Archive(PresenterMainFrame* gui,
-                 const std::string & savesetPath,
-                 const std::string & referencePath) :
-  m_mainFrame(gui),
+//============================================================================
+// Constructor 
+//============================================================================
+Archive::Archive( PresenterInformation * presInfo,
+                  const std::string & savesetPath,
+                  const std::string & referencePath) :
+  m_presenterInfo( presInfo ),
   m_savesetPath(path(savesetPath)),
   m_referencePath(path(referencePath)),
   m_verbosity(Silent),
   m_analysisLib(NULL),
-  m_msgBoxReturnCode(0)
-{
+  m_msgBoxReturnCode(0) {
   if (m_verbosity >= Verbose) {
     std::cout << "m_referencePath " << m_referencePath
               << "m_savesetPath " << m_savesetPath << std::endl;
   }
 }
-Archive::~Archive()
-{
-}
 
-void Archive::setSavesetPath(const std::string & savesetPath)
-{
+
+//============================================================================
+// Destructor
+//============================================================================
+Archive::~Archive() { ; }
+
+void Archive::setSavesetPath(const std::string & savesetPath) {
   m_savesetPath = path(savesetPath);
   if (m_verbosity >= Verbose) {
     std::cout << "Archive m_savesetPath " << m_savesetPath << std::endl;
@@ -95,10 +101,13 @@ void Archive::refreshDirectory(const DirectoryType & directoryType,
       break;
   }
 }
+
+//===================================================================================
+// Fill Histogram 
+//===================================================================================
 void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
-                            const std::string & pastDuration)
-{
+                            const std::string & pastDuration) {
   bool singleSaveset=false;
   if (m_verbosity >= Verbose) {
     std::cout << "Histogram to seek: " << histogram->identifier()
@@ -117,12 +126,10 @@ void Archive::fillHistogram(DbRootHist* histogram,
     std::vector<path> foundRootFiles;
     std::vector<path> goodRootFiles;
 
-    if(m_mainFrame->global_historyByRun) {
-      // timePoint and duration are run numbers
-      foundRootFiles = findSavesetsByRun(histogram->taskName(),
-                                         timePoint,
-                                         pastDuration);
-    }
+    if ( m_presenterInfo -> globalHistoryByRun() )
+      foundRootFiles = findSavesetsByRun( histogram -> taskName(),
+                                          timePoint ,
+                                          pastDuration ) ;
     else if (s_startupFile == timePoint) {
       singleSaveset = true;
       path filePath(pastDuration);
@@ -140,16 +147,15 @@ void Archive::fillHistogram(DbRootHist* histogram,
                                     pastDuration);
     } 
     if (!foundRootFiles.empty()) {
-      if(m_mainFrame->global_historyByRun) {
+      if ( m_presenterInfo -> globalHistoryByRun() )
         sort (foundRootFiles.begin(), foundRootFiles.end());
-      }
-      else {
+      else 
         sort (foundRootFiles.begin(), foundRootFiles.end(), ArchiveSpace::datecomp);
-      }
-      if (m_verbosity >= Verbose) {
+     
+      if (m_verbosity >= Verbose) 
         std::cout << "Merging " << foundRootFiles.size() <<
-                     " file(s)" << std::endl;
-      }
+	  " file(s)" << std::endl;
+      
       std::vector<path>::const_iterator foundRootFilesIt;
       foundRootFilesIt = foundRootFiles.begin();
       
@@ -182,11 +188,11 @@ void Archive::fillHistogram(DbRootHist* histogram,
         ++foundRootFilesIt;
       }
       if ( histogram -> hasRootHistogram() ) { // at least one source is available
-        if (false == m_mainFrame->isHistoryTrendPlotMode() || 
-            histogram->getRootHistogram()->GetDimension()>1 ||
-            singleSaveset) {
+        if ( ( false == m_presenterInfo -> isHistoryTrendPlotMode() ) || 
+             ( histogram->getRootHistogram()->GetDimension()>1 ) || 
+	     ( singleSaveset ) ) 
           histogram->getRootHistogram()->Merge(list);
-        } else {
+        else {
           // do a trend plot of mean and rms
           std::string histogramTitle("History plot for ");
           histogramTitle += histogram -> getTitle();
@@ -203,9 +209,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
           histogram -> setRootHistogram( newh ) ;
         }
       }
-      else {
-        histogram->beEmptyHisto();
-      }
+      else histogram->beEmptyHisto();
 
       TH1* histo;
       TIter next(list);
@@ -242,9 +246,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
       else {
         histogram->beEmptyHisto(); 
       }    
-      if (m_mainFrame->isHistoryTrendPlotMode()) {
+      if ( m_presenterInfo -> isHistoryTrendPlotMode() ) 
         histogram->setHistoryTrendPlotMode(true);
-      }
     }
     if ( ! histogram->hasRootHistogram() ) histogram->beEmptyHisto();
   }
@@ -257,9 +260,9 @@ std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
                                                   const std::string & taskName)
 {
   std::vector<path> foundRootFiles;
-  std::string partition(m_mainFrame->currentPartition());
-  for (day_iterator dateIterator(datePeriod.begin());
-       dateIterator <= datePeriod.end(); ++dateIterator) {
+  std::string partition( m_presenterInfo -> currentPartition() ) ;
+  for ( day_iterator dateIterator(datePeriod.begin());
+	dateIterator <= datePeriod.end(); ++dateIterator) {
     if (m_verbosity >= Verbose) {
       std::cout << "Date: " << to_simple_string(*dateIterator) << std::endl;
     }
@@ -554,7 +557,7 @@ std::vector<path> Archive::findSavesetsByRun(const std::string & taskname,
   std::istringstream iendRun(string_endRun);
   std::istringstream irunDuration(string_runDuration);
   int startRun,endRun;
-  std::string partition(m_mainFrame->currentPartition());
+  std::string partition(m_presenterInfo->currentPartition());
 
   iendRun >> endRun;
   irunDuration >> startRun; startRun=endRun-startRun;
@@ -663,7 +666,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
                 << refFile.str() << std::endl;
     }
 }
-//void deleteReferenceHistogram(TH1* reference, int revision){}
+
 void Archive::closeRootFiles()
 {
 //  std::vector<path>::const_iterator foundRootFilesIt;
@@ -685,7 +688,7 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
   }
   int bin=0,lastbin=-100;
   int maxnbinUnlabeled = n/4;
-  if(m_mainFrame->global_historyByRun) {
+  if ( m_presenterInfo->globalHistoryByRun( ) ) {
     int lastrun=0,run;
     for (std::vector<path>::const_iterator rootFilesIt = rootFiles.begin(); rootFilesIt != rootFiles.end(); rootFilesIt++ ) {
       bin++;

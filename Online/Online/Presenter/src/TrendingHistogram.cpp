@@ -1,4 +1,6 @@
-// $Id: TrendingHistogram.cpp,v 1.1 2010-08-08 15:12:33 robbep Exp $
+// $Id: TrendingHistogram.cpp,v 1.2 2010-08-12 15:43:00 robbep Exp $
+// This class
+#include "TrendingHistogram.h" 
 
 // STL
 #include <iostream>
@@ -24,9 +26,6 @@
 #include <boost/filesystem.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/date_time/posix_time/posix_time_types.hpp"
-
-// This class
-#include "TrendingHistogram.h" 
 
 // global variable
 namespace PresenterGaudi { 
@@ -175,7 +174,7 @@ void TrendingHistogram::fillHistogram( ) {
     int theTime ;
     float theValue ;
    
-    std::vector< double_t > vtime , vvalue ;
+    std::vector< double > vtime , vvalue ;
 
     if ( 0 != m_timeArray ) delete [] m_timeArray ;
     if ( 0 != m_valueArray ) delete [] m_valueArray ;
@@ -204,10 +203,10 @@ void TrendingHistogram::fillHistogram( ) {
     }
 
     m_size = vtime.size() ;
-    m_timeArray = new double_t[ m_size ] ;
+    m_timeArray = new double[ m_size ] ;
     std::copy( vtime.begin() , vtime.end() , m_timeArray ) ;
     
-    m_valueArray = new double_t[ m_size ] ;
+    m_valueArray = new double[ m_size ] ;
     std::copy( vvalue.begin() , vvalue.end() , m_valueArray ) ;
 
     if ( 0 != m_timeGraph ) delete m_timeGraph ;

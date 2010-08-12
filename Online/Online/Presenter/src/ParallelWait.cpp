@@ -1,6 +1,18 @@
-// $Id: ParallelWait.cpp,v 1.25 2010-08-08 15:13:33 robbep Exp $
+// $Id: ParallelWait.cpp,v 1.26 2010-08-12 15:43:00 robbep Exp $
+#include "ParallelWait.h"
+
 // STL
 #include <vector>
+
+// ROOT include
+#ifdef WIN32
+#pragma warning( push )
+#pragma warning( disable : 4800 )
+#endif
+#include <TGStatusBar.h>
+#ifdef WIN32
+#pragma warning( pop )
+#endif
 
 // Boost
 #include <boost/thread/thread.hpp>
@@ -15,14 +27,9 @@
 // Local
 #include "DbRootHist.h"
 #include "presenter.h"
-#include "PresenterMainFrame.h"
+#include "PresenterInformation.h"
 #include "Archive.h"
-#include "ParallelWait.h"
 #include "TrendingHistogram.h"
-
-using namespace pres;
-using namespace std;
-using namespace boost;
 
 namespace PresenterMutex {
   extern boost::mutex           listMutex;
@@ -35,7 +42,7 @@ namespace PresenterMutex {
 //======================================================================
 // call function for threads
 //======================================================================
-DbRootHist* Presenter::getPageHistogram(PresenterMainFrame * presenter, 
+DbRootHist* Presenter::getPageHistogram(PresenterInformation * presInfo, 
 					const std::string & identifier,
 					const std::string & currentPartition,
 					int refreshTime,
@@ -57,18 +64,17 @@ DbRootHist* Presenter::getPageHistogram(PresenterMainFrame * presenter,
                                           &PresenterMutex::dimMutex,
                                           tasksNotRunning,
                                           &PresenterMutex::rootMutex);
-  if (0 != presenter) {
-    dbRootHist->setPresenter(presenter);
-    dbRootHist->initHistogram();
-    if (histogramDB) { dbRootHist->setTH1FromDB();}
-  }
+  
+  dbRootHist->setPresenterInfo( presInfo );
+  dbRootHist->initHistogram();
+  if ( histogramDB ) dbRootHist->setTH1FromDB() ; 
 
   std::vector<std::string*>::const_iterator tasksNotRunningIt;
   for (tasksNotRunningIt = tasksNotRunning.begin();
        tasksNotRunningIt != tasksNotRunning.end();
-       ++tasksNotRunningIt) {
+       ++tasksNotRunningIt) 
     delete *tasksNotRunningIt;
-  }
+ 
   tasksNotRunning.clear();                                  
   return dbRootHist;
 }
@@ -76,24 +82,27 @@ DbRootHist* Presenter::getPageHistogram(PresenterMainFrame * presenter,
 //=================================================================================
 // get histograms from list
 //=================================================================================
-void Presenter::getHistogramsFromLists(PresenterMainFrame * presenter,
+void Presenter::getHistogramsFromLists(PresenterInformation * presInfo,
+				       DimBrowser * dimBrowser ,
+				       OnlineHistDB * histogramDB ,
+				       OMAlib * analysisLib , 
+				       std::pair< const pres::MsgLevel , bool > vPair ,
+				       Archive * archive ,
 				       OnlineHistoOnPage* onlineHistosOnPage,
 				       std::vector<DbRootHist*> * dbHistosOnPage,
 				       std::vector<std::string*> & tasksNotRunning) {
 
   DbRootHist* dbRootHist;
   
-  if( ( History       == presenter->presenterMode() ) ||
-      ( EditorOffline == presenter->presenterMode() ) ) { // no need for DIM
+  if( ( pres::History       == presInfo ->presenterMode() ) ||
+      ( pres::EditorOffline == presInfo ->presenterMode() ) ) { // no need for DIM
     if ( onlineHistosOnPage -> histo -> type() == OnlineHistDBEnv::TRE ) {
       dbRootHist = new TrendingHistogram(onlineHistosOnPage->histo->identifier(),
 					 std::string(""),
 					 2, onlineHistosOnPage->instance,
-					 presenter->histogramDB(),
-					 presenter->analysisLib(),
-					 onlineHistosOnPage->histo,
-					 presenter->verbosity(),
-					 NULL,
+					 histogramDB , analysisLib ,
+					 onlineHistosOnPage->histo ,
+					 vPair.first , NULL,
 					 &PresenterMutex::oraMutex,
 					 &PresenterMutex::dimMutex,
 					 tasksNotRunning,
@@ -103,30 +112,24 @@ void Presenter::getHistogramsFromLists(PresenterMainFrame * presenter,
       dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
 				  std::string(""),
 				  2, onlineHistosOnPage->instance,
-				  presenter->histogramDB(),
-				  presenter->analysisLib(),
+				  histogramDB , analysisLib ,
 				  onlineHistosOnPage->histo,
-				  presenter->verbosity(),
-				  NULL,
+				  vPair.first , NULL ,
 				  &PresenterMutex::oraMutex,
 				  &PresenterMutex::dimMutex,
 				  tasksNotRunning,
 				  &PresenterMutex::rootMutex);
     }
-  } else if( (Online == presenter->presenterMode()) ||
-	     (EditorOnline == presenter->presenterMode())) {
-    DimBrowser* dimBrowser = NULL;    
-    dimBrowser = presenter -> dimBrowser( ) ;
+  } else if( ( pres::Online == presInfo -> presenterMode()) ||
+	     ( pres::EditorOnline == presInfo -> presenterMode())) {
 
     if ( onlineHistosOnPage -> histo -> type() == OnlineHistDBEnv::TRE ) {
       dbRootHist = new TrendingHistogram( onlineHistosOnPage->histo->identifier(),
-					  presenter->currentPartition(),
+					  presInfo -> currentPartition(),
 					  2, onlineHistosOnPage->instance,
-					  presenter->histogramDB(),
-					  presenter->analysisLib(),
+					  histogramDB , analysisLib ,
 					  onlineHistosOnPage->histo,
-					  presenter->verbosity(),
-					  dimBrowser,
+					  vPair.first , dimBrowser ,
 					  &PresenterMutex::oraMutex,
 					  &PresenterMutex::dimMutex,
 					  tasksNotRunning,
@@ -134,13 +137,11 @@ void Presenter::getHistogramsFromLists(PresenterMainFrame * presenter,
 					  0 , 0 , TrendingHistogram::Last2Hours );
     } else {
       dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
-				  presenter->currentPartition(),
+				  presInfo ->currentPartition(),
 				  2, onlineHistosOnPage->instance,
-				  presenter->histogramDB(),
-				  presenter->analysisLib(),
+				  histogramDB , analysisLib ,
 				  onlineHistosOnPage->histo,
-				  presenter->verbosity(),
-				  dimBrowser,
+				  vPair.first , dimBrowser,
 				  &PresenterMutex::oraMutex,
 				  &PresenterMutex::dimMutex,
 				  tasksNotRunning,
@@ -148,26 +149,26 @@ void Presenter::getHistogramsFromLists(PresenterMainFrame * presenter,
     }
   }
   
-  if (0 != presenter) {
-    dbRootHist->setPresenter(presenter);
-    dbRootHist->initHistogram();
-    dbRootHist->setTH1FromDB();
+  if (0 != presInfo ) {
+    dbRootHist->setPresenterInfo( presInfo );
+    dbRootHist->initHistogram() ;
+    dbRootHist->setTH1FromDB()  ;
   }
-  if (0 != presenter->archive() &&
-      ( (History == presenter->presenterMode()) ||
-	(EditorOffline == presenter->presenterMode() &&
-	 presenter->canWriteToHistogramDB())) ) {
+  if ( ( 0 != archive ) &&
+       ( ( pres::History == presInfo -> presenterMode()) ||
+	 ( pres::EditorOffline == presInfo -> presenterMode() &&
+	   vPair.second ) ) ) {
     boost::mutex::scoped_lock archiveLock( PresenterMutex::archiveMutex );
-    presenter->archive()->fillHistogram(dbRootHist,
-    					presenter->rw_timePoint,
-    					presenter->rw_pastDuration);
+    archive -> fillHistogram( dbRootHist,
+			      presInfo->rwTimePoint(),
+			      presInfo->rwPastDuration() ) ;
   }
   
   boost::mutex::scoped_lock listLock( PresenterMutex::listMutex );
   // move all overlap histos at the end of the list
-  if ( dbRootHist -> onlineHistogram() -> onpage() -> isOverlap() ) {
+  if ( dbRootHist -> onlineHistogram() -> onpage() -> isOverlap() )
     dbHistosOnPage->push_back(dbRootHist);
-  } else 
+  else 
     dbHistosOnPage -> insert( dbHistosOnPage -> begin() , dbRootHist ) ;
 }
 
@@ -181,12 +182,15 @@ void Presenter::refreshHisto(DbRootHist* dbHistoOnPage) {
   }
 }
 
-ParallelWait::ParallelWait(PresenterMainFrame* presenter):
-  m_presenterApp(presenter)
-{
-}
-ParallelWait::~ParallelWait()
-{
+//=============================================================================
+// Constructor 
+//=============================================================================
+ParallelWait::ParallelWait( ) { } ;
+
+//=============================================================================
+// Destructor 
+//=============================================================================
+ParallelWait::~ParallelWait() {
   std::vector<std::string*>::const_iterator m_tasksNotRunningIt;
   for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
        m_tasksNotRunningIt != m_tasksNotRunning.end();
@@ -200,14 +204,25 @@ ParallelWait::~ParallelWait()
 // load histograms
 //========================================================================================
 void ParallelWait::loadHistograms(const std::vector< OnlineHistoOnPage * > * onlineHistosOnPage,
-                                  std::vector< DbRootHist * > * dbHistosOnPage ) {
+                                  std::vector< DbRootHist * > * dbHistosOnPage , 
+				  PresenterInformation * presenterInfo , 
+				  DimBrowser * dimBrowser , 
+				  OnlineHistDB * histogramDB , 
+				  OMAlib * analysisLib , 
+				  const pres::MsgLevel verbosity , bool canWrite , 
+				  Archive * archive ) {
   m_onlineHistosOnPageIt = onlineHistosOnPage->begin();
   boost::thread_group thrds;
 
   for ( m_onlineHistosOnPageIt = onlineHistosOnPage -> begin() ; 
 	onlineHistosOnPage -> end() != m_onlineHistosOnPageIt ; ++m_onlineHistosOnPageIt ) {
     thrds.create_thread( boost::bind( &Presenter::getHistogramsFromLists ,
-    				      m_presenterApp ,
+    				      presenterInfo ,
+				      dimBrowser , 
+				      histogramDB ,
+				      analysisLib , 
+				      std::make_pair( verbosity , canWrite ) ,
+				      archive ,
     				      *m_onlineHistosOnPageIt ,
     				      dbHistosOnPage ,
     				      m_tasksNotRunning ) ) ;
@@ -219,8 +234,9 @@ void ParallelWait::loadHistograms(const std::vector< OnlineHistoOnPage * > * onl
 //=========================================================================================
 // refresh histograms
 //=========================================================================================
-void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
-{
+void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage,
+				     PresenterInformation * presInfo ,
+				     TGStatusBar * statusBar ) {
   std::vector<std::string*>::const_iterator m_tasksNotRunningIt;
   for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
        m_tasksNotRunningIt != m_tasksNotRunning.end();
@@ -233,23 +249,22 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
   boost::thread_group thrds;
   
   std::vector<DbRootHist*>::iterator refresh_dbHistosOnPageIt ;
-
+  
   for ( refresh_dbHistosOnPageIt = dbHistosOnPage->begin() ; 
 	dbHistosOnPage->end() != refresh_dbHistosOnPageIt ; 
 	++refresh_dbHistosOnPageIt ) {
     if ( (pres::TCKinfo == (*refresh_dbHistosOnPageIt)->effServiceType()) &&
-         (Batch != m_presenterApp->presenterMode()) ) {
-      m_presenterApp -> setTCK( (*refresh_dbHistosOnPageIt) -> getTitle() ) ;
+         (pres::Batch != presInfo -> presenterMode() ) ) {
+      presInfo -> setTCK( (*refresh_dbHistosOnPageIt) -> getTitle() ) ;
       std::string message("Current TCK: ");
       message = message + (*refresh_dbHistosOnPageIt) -> getTitle();
-      m_presenterApp->setStatusBarText(message.c_str(), 2);
+      statusBar -> SetText( message.c_str() , 2 ) ;
     }
     thrds.create_thread(boost::bind(&Presenter::refreshHisto,
                                     *refresh_dbHistosOnPageIt));
   }
   
   thrds.join_all();  
-
 }
 
 

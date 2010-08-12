@@ -24,11 +24,11 @@ class DimInfoMonObject;
 class MonRateRace;
 class TPave;
 class DimBrowser;
-class PresenterMainFrame;
 class OMAFitFunction;
 class OnlineHistDB ;
 class OnlineHistogram ;
 class OMAlib ;
+class PresenterInformation ;
 
 namespace boost {
   class recursive_mutex ;
@@ -163,9 +163,9 @@ class DbRootHist : public HistogramIdentifier
   /// set histo in history trend mode
   void setHistoryTrendPlotMode(bool mode) { m_historyTrendPlotMode = mode; }
   
-  /// set main presenter frame where to display histos
-  void setPresenter(PresenterMainFrame* presenter) { 
-    m_presenterApp = presenter;}
+  /// set main presenter info object
+  void setPresenterInfo( PresenterInformation * presenterInfo )
+  { m_presenterInfo = presenterInfo ; } ;
     
   /// returns eff service type
   pres::EffServiceType effServiceType() { return m_effServiceType; }
@@ -264,7 +264,7 @@ class DbRootHist : public HistogramIdentifier
   std::vector< std::string* > * m_tasksNotRunning ; ///< list of tasks not running
   boost::recursive_mutex * m_rootMutex ; ///< pointer to global root mutex
 
-  PresenterMainFrame* m_presenterApp ; ///< link to presenter main frame
+  PresenterInformation * m_presenterInfo ; ///< link to presenter info object
   pres::EffServiceType m_effServiceType ; ///< eff service type   
   
   /// clean analysis sources

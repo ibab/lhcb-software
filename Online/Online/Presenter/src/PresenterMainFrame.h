@@ -12,14 +12,11 @@
 #pragma warning( pop )
 #endif
 
-#include <iostream>
 #include <vector>
 #include <map>
 
-
-#include "LoginDialog.h"
+#include "PresenterInformation.h"
 #include "presenter.h"
-
 
 class ParallelWait;
 class TObject;
@@ -59,7 +56,6 @@ class OMAlib;
 class AlarmDisplay;
 class Archive;
 class IntervalPicker;
-class TDatime;
 class TGLabel ;
 
 class stringstream;
@@ -183,29 +179,37 @@ public:
   void dataDropped(TGListTreeItem* item, TDNDData* data);
   virtual void CloseWindow();
 
+  /// Set the presenter Mode
   void setPresenterMode(const pres::PresenterMode & presenterMode);
-  void setPresenterModeVariable(const pres::PresenterMode & presenterMode)
-  { m_presenterMode = presenterMode;}
-  const pres::PresenterMode & presenterMode() { return m_presenterMode; }
-  void setDisplayModeVariable(const pres::DisplayMode & displayMode) { m_displayMode = displayMode;}
+
+  void setDisplayModeVariable(const pres::DisplayMode & displayMode) { 
+    m_displayMode = displayMode;}
+
   const pres::DisplayMode & displayMode() {return m_displayMode; }
   void setDatabaseMode(const pres::DatabaseMode & databaseMode);
-  //    void setResumeRefreshAfterLoading(bool refreshAfterLoading);
-  void setHistoryMode(bool mode) { m_historyMode = mode; }
+
   pres::DatabaseMode databaseMode() { return m_databaseMode; }
 
-  /// Get name of current partition
-  std::string currentPartition() { return m_currentPartition; }
-  void setVerbosity(const pres::MsgLevel & verbosity);
-  void setLogbookConfig(const std::string & logBookConfig);
-  void setPbdbConfig(const std::string & pbdbConfig);
+  void setVerbosity(const pres::MsgLevel & verbosity); ///< Set verbosity level 
+
+  /// Set logbook configuration
+  void setLogbookConfig(const std::string & logBookConfig) { 
+    m_logBookConfig = logBookConfig ; } ;
+
+  /// Set the problem database configuration
+  void setPbdbConfig(const std::string & pbdbConfig) { m_pbdbConfig = pbdbConfig ; } ;
 
   /// Set name of run database web host
   void setRundbConfig(const std::string & rundbConfig) { 
     m_rundbConfig = rundbConfig ; } ;
 
+  /// Presenter verbosity
   pres::MsgLevel verbosity() const { return m_verbosity; }
+
+  /// Link to archive object
   Archive* archive() const { return m_archive; }
+
+  /// Link to interval picker object
   IntervalPicker* intervalPicker() const { return m_intervalPicker; }
 
   void setReferencePath(const std::string & referencePath);
@@ -214,14 +218,6 @@ public:
   void setSavesetFileName(const std::string & svsFilename) { m_savesetFileName = svsFilename;}
   void setImagePath(const std::string & imagePath);
   void setDumpFormat(const std::string & dumpFormat);
-
-  /// Set current partition name
-  void setPartition(const std::string & partition) { 
-    m_currentPartition = partition ; }
-
-  std::string currentTCK() { return m_currentTCK; }
-  void setTCK(std::string TCK) { m_currentTCK = TCK; }
-
 
   void setKnownDatabases(const std::string & databasesCfg,
                          const std::string & dbCredentials);
@@ -239,9 +235,16 @@ public:
   bool connectToHistogramDB(const std::string & dbPassword,
                             const std::string & dbUsername,
                             const std::string & dbName);
-  OMAlib* analysisLib();
+
+  /// Pointer to analysis lib
+  OMAlib* analysisLib() const { return m_analysisLib ; } ;
+
+  /// Pointer to histogram db
   OnlineHistDB* histogramDB();
-  DimBrowser* dimBrowser();
+
+  /// Pointer to dim browser
+  DimBrowser* dimBrowser() const { return m_dimBrowser ; } ;
+
   void logoutFromHistogramDB();
   void startPageRefresh();
   void stopPageRefresh();
@@ -262,7 +265,9 @@ public:
                                   TGListTreeItem* node,
                                   std::vector<std::string>* localDatabaseIDS,
                                   std::vector<std::string>* histogramTypes);
-  std::string histogramDBName();
+
+  /// Return the histogram database name
+  std::string histogramDBName() const { return m_dbName ; } ;
 
   void setTreeNodeType(TGListTreeItem* node, const std::string & type);
   const char* getStatusBarText(int slice=0);
@@ -319,10 +324,14 @@ public:
   void enablePageRefresh();
   void disablePageRefresh();
 
-  void enablePageUndocking();
-  void disablePageUndocking();
+  /// Enable page undocking
+  void enablePageUndocking()  ;
+ 
+  /// Disable page undocking
+  void disablePageUndocking()  ;
 
-  void enablePageLoading();
+  /// Enable page loading
+  void enablePageLoading()  ;
 
   void deleteSelectedHistoFromCanvas();
   void addTrendingHisto() ;
@@ -343,13 +352,12 @@ public:
                             EMouseButton btn,
                             int x, int y);
 
-  //    TGPopupMenu* histoSvcTreeContextMenu() const { return m_histoSvcTreeContextMenu; }
 
   void addHistoToHistoDB();
   void addDimHistosToPage();
   void addDbHistoToPage(pres::ServicePlotMode overlapMode);
   void addHistoToPage(const std::string& histogramUrl, pres::ServicePlotMode overlapMode);
-  //    void setHistogramDimSource(bool tree);
+
   void dimCollapseAllChildren();
 
   void setHistogramPropertiesInDB();
@@ -358,9 +366,9 @@ public:
   void deleteSelectedHistoFromDB();
   std::string selectedPageFromDbTree();
   void loadAllPages();
-  void loadSelectedPageFromDB(const std::string & pageName = "",
-                              const std::string & timePoint = "",
-                              const std::string & pastDuration = "" );
+  void loadSelectedPageFromDB(const std::string & pageName ,
+                              const std::string & timePoint ,
+                              const std::string & pastDuration );
   PageDescriptionTextView*  pageDescriptionView() { return m_pageDescriptionView;}
   void moveSelectedInDB();
   void deleteSelectedPageFromDB();
@@ -370,6 +378,7 @@ public:
   void toggleReferenceOverlay();
   void enableAlarmDisplay(bool mode);
   void toggleShowAlarmList();
+
   /// Show panel with list of known problems
   void toggleShowKnownProblemList() ;
   void toggleFastHitMapDraw();
@@ -382,26 +391,32 @@ public:
 
   bool isConnectedToHistogramDB();
   bool canWriteToHistogramDB();
-  bool isHistoryTrendPlotMode() { return m_historyTrendPlots; }
+
   bool referencesOverlayed() { return m_referencesOverlayed;}
 
   TCanvas* editorCanvas;
   TRootEmbeddedCanvas* editorEmbCanvas;
 
-  TDatime* currentTime;
-  std::string global_timePoint;
-  std::string global_pastDuration;
-  std::string global_stepSize;
-  bool global_historyByRun;
-
   std::vector<DbRootHist*>  dbHistosOnPage;
-  //    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
-
-  std::string rw_timePoint;
-  std::string rw_pastDuration;
   
   /// Load a web page 
   void loadWebPage( Int_t item ) ;
+
+  /// set partition
+  void setPartition( const std::string & partition ) { 
+    m_presenterInfo.setPartition( partition ) ; } ; 
+  
+  /// get presenter mode
+  const pres::PresenterMode & presenterMode( ) const {
+    return m_presenterInfo.presenterMode() ; } ;
+
+  /// get current partition
+  std::string currentPartition( ) const {
+    return m_presenterInfo.currentPartition( ) ; } ;
+
+  /// set the presenter mode
+  void setPresenterModeVariable( const pres::PresenterMode & mode ) {
+    m_presenterInfo.setPresenterMode( mode ) ; };
 
 private:
   UInt_t            m_initWidth;
@@ -410,8 +425,7 @@ private:
   std::string       m_logBookConfig;
   std::string       m_pbdbConfig;
   std::string       m_rundbConfig ;
-  bool              m_historyMode;
-  bool          m_resumePageRefreshAfterLoading;
+  bool              m_resumePageRefreshAfterLoading;
   bool              m_loadingPage;
   std::string       m_currentPartition;
   std::string       m_currentPageName;
@@ -423,14 +437,13 @@ private:
   DimBrowser*       m_dimBrowser;
   Archive*          m_archive;
   IntervalPicker*   m_intervalPicker;
-  pres::PresenterMode m_presenterMode;
   pres::PresenterMode m_prevPresenterMode;
   pres::DatabaseMode  m_databaseMode;
   pres::DisplayMode m_displayMode;
   TTimer*           m_pageRefreshTimer;
   TTimer*           m_clockTimer;
   bool              m_clearedHistos;
-  bool              m_historyTrendPlots;
+  bool              m_historyTrendPlots ;
   bool              m_referencesOverlayed;
   bool              m_fastHitMapDraw;
   bool              m_refreshingPage;
@@ -554,8 +567,6 @@ private:
   TGComboBox*       m_historyIntervalComboBox;
   TGComboBox*       m_partitionSelectorComboBox;
 
-  //  TGButton*         m_quitButton;
-  //  TGPicturePool*    m_picturePool;
   const TGPicture*  m_openedFolderIcon;
   const TGPicture*  m_closedFolderIcon;
   const TGPicture*  m_databaseSourceIcon;
@@ -616,7 +627,6 @@ private:
 
   TBenchmark* m_benchmark;
   int m_deadTasksOnPage;
-  std::string m_currentTCK;
 
   RunDB * m_runDb ; ///< Interface to run database
   
@@ -658,7 +668,6 @@ private:
   KnownProblemList *   m_globalKnownProblemList ;
 
   std::vector<std::string>      m_knownHistogramServices;
-  //    std::vector<std::string>::const_iterator m_knownDimServicesIt;
 
   std::vector<std::string>      m_candidateDimServices;
   std::vector<std::string>::const_iterator m_candidateDimServicesIt;
@@ -684,6 +693,9 @@ private:
   /// Internal variable to store trending histo
   TrendingHistogram * m_trendingHisto ;
 
+  /// Presenter Information to transfer to other objects
+  PresenterInformation m_presenterInfo ;
+
   /// Display page name in status bar and load comments
   void displayStatusAndComments( const std::string & pageName , 
 				 OnlineHistPage * page ) ;
@@ -699,6 +711,10 @@ private:
 
   /// Delete recursively the children of this node
   void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);
+
+
+  /// is in batch mode
+  bool isBatch( ) const { return ( pres::Batch == presenterMode() ) ; } ;
 
   ClassDef(PresenterMainFrame, 0) // main editor window
     };

@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.2 2010-06-17 10:44:19 ggiacomo Exp $
+// $Id: AlarmDisplay.cpp,v 1.3 2010-08-12 15:42:03 robbep Exp $
 
 #include <vector>
 #include <iostream>
@@ -20,7 +20,7 @@ using namespace pres;
 //-----------------------------------------------------------------------------
 
 void AlarmDisplay::listAlarmsFromHistogramDB() {
-  if (m_enabled && m_mainFrame->isConnectedToHistogramDB() && 0 != m_listView) {
+  if ( m_enabled && m_mainFrame->isConnectedToHistogramDB() && 0 != m_listView) {
 
     m_listView->UnmapWindow();
 

@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-12 - Patrick Robbe
+ - src/PresenterInformation.h/.cpp: add new class to hold presenter information
+   in order to avoid circular dependencies with PresenterMainFrame
+ - src/PresenterMainFrame.h/.cpp: use the PresenterInformation class
+ - src/ParallelWait, DbRootHist, Archive: use the PresenterInformation class
+
 ! 2010-08-08 - Patrick Robbe
  - src/TrendingHistogram.h,.cpp: add new class to contain trending
    histograms (interfaced to TrendingTool)

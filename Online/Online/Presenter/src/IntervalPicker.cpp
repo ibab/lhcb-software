@@ -1,4 +1,4 @@
-// $Id: IntervalPicker.cpp,v 1.13 2010-05-16 18:08:40 robbep Exp $
+// $Id: IntervalPicker.cpp,v 1.14 2010-08-12 15:43:00 robbep Exp $
 #include "IntervalPicker.h"
 
 // ROOT
@@ -22,20 +22,21 @@
 #include "Archive.h"
 #include "RunDB.h"
 
-using namespace pres;
-using namespace std;
-
 ClassImp(IntervalPicker)
   
 //===========================================================================
 // Constructor
 //===========================================================================
-IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame , RunDB * runDb ,
+IntervalPicker::IntervalPicker(PresenterInformation * presInfo , 
+			       const TGWindow * main , 
+			       Archive * archive , 
+			       pres::MsgLevel verbosity , 
+			       RunDB * runDb ,
 			       IntervalPickerData * intData ) :
-  TGTransientFrame( gClient->GetRoot() , mainFrame ) ,
-  m_mainFrame( mainFrame ) ,
-  m_archive( mainFrame -> archive( ) ) ,
-  m_verbosity( mainFrame -> verbosity( ) ),
+  TGTransientFrame( gClient->GetRoot() , main ) ,
+  m_presInfo( presInfo ) ,
+  m_archive( archive ) ,
+  m_verbosity( verbosity ),
   m_runDb( runDb ) , m_intData( intData )
 { 
   SetCleanup(kDeepCleanup);
@@ -45,13 +46,13 @@ IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame , RunDB * runDb ,
   build();
   nowButton();
 
-  if (m_mainFrame->currentTime) {
-    m_startDateNumberEntry->SetDate(m_mainFrame->currentTime->GetYear(),
-                                    m_mainFrame->currentTime->GetMonth(),
-                                    m_mainFrame->currentTime->GetDay());
-    m_startTimeNumberEntry->SetTime(m_mainFrame->currentTime->GetHour(),
-                                    m_mainFrame->currentTime->GetMinute(),
-                                    m_mainFrame->currentTime->GetSecond());
+  if ( m_presInfo -> currentTime() ) {
+    m_startDateNumberEntry->SetDate(m_presInfo->currentTime()->GetYear(),
+                                    m_presInfo->currentTime()->GetMonth(),
+                                    m_presInfo->currentTime()->GetDay());
+    m_startTimeNumberEntry->SetTime(m_presInfo->currentTime()->GetHour(),
+                                    m_presInfo->currentTime()->GetMinute(),
+                                    m_presInfo->currentTime()->GetSecond());
   }                                
 
   lastMinutesRadioButtonToggled(true);
@@ -757,14 +758,14 @@ void IntervalPicker::runFillIntervalRadioButtonToggled(bool on)
 //===========================================================================
 void IntervalPicker::nowButton()
 {
-  if (m_mainFrame->currentTime) {
-    m_mainFrame->currentTime->Set();
-    m_endDateNumberEntry->SetDate(m_mainFrame->currentTime->GetYear(),
-                                  m_mainFrame->currentTime->GetMonth(),
-                                  m_mainFrame->currentTime->GetDay());
-    m_endTimeNumberEntry->SetTime(m_mainFrame->currentTime->GetHour(),
-                                  m_mainFrame->currentTime->GetMinute(),
-                                  m_mainFrame->currentTime->GetSecond());
+  if (m_presInfo->currentTime()) {
+    m_presInfo->currentTime()->Set();
+    m_endDateNumberEntry->SetDate(m_presInfo->currentTime()->GetYear(),
+                                  m_presInfo->currentTime()->GetMonth(),
+                                  m_presInfo->currentTime()->GetDay());
+    m_endTimeNumberEntry->SetTime(m_presInfo->currentTime()->GetHour(),
+                                  m_presInfo->currentTime()->GetMinute(),
+                                  m_presInfo->currentTime()->GetSecond());
   }
 }
 
@@ -773,22 +774,22 @@ void IntervalPicker::nowButton()
 //===========================================================================
 void IntervalPicker::ok() {  
   if (0 == m_mainTab->GetCurrent()) {
-    m_mainFrame->setHistoryMode(s_timeInterval);
-    m_mainFrame->global_historyByRun = false;
+    m_presInfo -> setHistoryMode( pres::s_timeInterval );
+    m_presInfo -> setGlobalHistoryByRun( false ) ;
     Int_t year, month, day, hour, min, sec;
     
     if (m_lastMinutesRadioButton->IsDown()) {
-      if (m_mainFrame->currentTime) {
-        m_mainFrame->currentTime->Set();
-        year = m_mainFrame->currentTime->GetYear();
-        month = m_mainFrame->currentTime->GetMonth();
-        day = m_mainFrame->currentTime->GetDay(); 
-        hour = m_mainFrame->currentTime->GetHour();
-        min = m_mainFrame->currentTime->GetMinute();
-        sec = m_mainFrame->currentTime->GetSecond();
+      if (m_presInfo->currentTime() ) {
+        m_presInfo->currentTime() ->Set();
+        year = m_presInfo->currentTime()->GetYear();
+        month = m_presInfo->currentTime()->GetMonth();
+        day = m_presInfo->currentTime()->GetDay(); 
+        hour = m_presInfo->currentTime()->GetHour();
+        min = m_presInfo->currentTime()->GetMinute();
+        sec = m_presInfo->currentTime()->GetSecond();
         
-        m_mainFrame->global_timePoint =m_mainFrame->archive()->createIsoTimeString(year, month, day,
-                                                          hour, min, sec);
+        m_presInfo-> setGlobalTimePoint( m_archive -> createIsoTimeString(year, month, day,
+									  hour, min, sec) ) ;
       }
 
       m_minutesEntry->GetTime(hour, min, sec);
@@ -796,44 +797,41 @@ void IntervalPicker::ok() {
       pastDurationStringStream << std::setfill('0') << std::setw(2) << hour << ":" <<
                           std::setfill('0') << std::setw(2) << min << ":" <<
                           std::setfill('0') << std::setw(2) << sec;          
-      m_mainFrame->global_pastDuration = pastDurationStringStream.str();
-
+      m_presInfo -> setGlobalPastDuration( pastDurationStringStream.str() ) ;
+      
     } else if (m_timeIntervalRadioButton->IsDown()) {
       m_startDateNumberEntry->GetDate(year, month, day);
       m_startTimeNumberEntry->GetTime(hour, min, sec);
-      std::string startTimeIsoString = m_mainFrame->archive()->createIsoTimeString(year, month, day,
-                                                          hour, min, sec);
+      std::string startTimeIsoString = m_archive -> createIsoTimeString(year, month, day,
+									hour, min, sec);
       m_endDateNumberEntry->GetDate(year, month, day);
       m_endTimeNumberEntry->GetTime(hour, min, sec);          
-      std::string  endTimeIsoString = m_mainFrame->archive()->createIsoTimeString(year, month, day,
-                                                          hour, min, sec);
-
-      m_mainFrame->global_timePoint = endTimeIsoString;
-      m_mainFrame->global_pastDuration = m_mainFrame->archive()->timeDiff(startTimeIsoString,
-                                                             endTimeIsoString);
+      std::string  endTimeIsoString = m_archive->createIsoTimeString(year, month, day,
+								     hour, min, sec);
+      
+      m_presInfo->setGlobalTimePoint( endTimeIsoString ) ;
+      m_presInfo->setGlobalPastDuration( m_archive ->timeDiff(startTimeIsoString,
+							      endTimeIsoString) ) ;
 
     }
     m_stepTimeNumberEntry->GetTime(hour, min, sec);    
     std::stringstream stepTimeStringStream;
     stepTimeStringStream << std::setfill('0') << std::setw(2) << hour << ":" <<
-                            std::setfill('0') << std::setw(2) << min << ":" <<
-                            std::setfill('0') << std::setw(2) << sec;          
-    m_mainFrame->global_stepSize = stepTimeStringStream.str();
-    
-    m_mainFrame->loadSelectedPageFromDB(m_mainFrame->global_timePoint,
-                                        m_mainFrame->global_pastDuration);
+      std::setfill('0') << std::setw(2) << min << ":" <<
+      std::setfill('0') << std::setw(2) << sec;          
+    m_presInfo -> setGlobalStepSize( stepTimeStringStream.str() ) ;
   } else if (1 == m_mainTab->GetCurrent()) {
     if (m_runFillIntervalRadioButton->IsDown()) {
-      m_mainFrame -> global_historyByRun = true ;
+      m_presInfo -> setGlobalHistoryByRun( true ) ;
       if ( IntervalPickerData::SingleRun != m_intData -> getMode() ) {
 	m_intData -> setEndRun( m_runFillIntervalToNumberEntry->GetIntNumber() ) ;
 	std::stringstream endRun;
 	endRun << m_intData -> endRun() ;
-	m_mainFrame->global_timePoint = endRun.str();
+	m_presInfo -> setGlobalTimePoint( endRun.str() ) ;
 	m_intData -> setStartRun( m_runFillIntervalFromNumberEntry->GetIntNumber() ) ;
 	std::stringstream runDuration;
 	runDuration << (m_intData->endRun() - m_intData -> startRun() );
-	m_mainFrame -> global_pastDuration = runDuration.str() ;
+	m_presInfo -> setGlobalPastDuration( runDuration.str() ) ;
       } else {
 	// Single run selection
 	int testEndRun = m_runFillIntervalFromNumberEntry->GetIntNumber();
@@ -843,11 +841,11 @@ void IntervalPicker::ok() {
 	  m_intData -> setEndRun( testEndRun ) ;
 	  std::stringstream endRun;
 	  endRun << m_intData -> endRun() ;
-	  m_mainFrame->global_timePoint = endRun.str();
+	  m_presInfo->setGlobalTimePoint( endRun.str() ) ;
 	  m_intData -> setStartRun( m_runFillIntervalFromNumberEntry->GetIntNumber() ) ;
 	  std::stringstream runDuration;
 	  runDuration << (m_intData -> endRun() - m_intData -> startRun() ) ;
-	  m_mainFrame -> global_pastDuration = runDuration.str() ;
+	  m_presInfo -> setGlobalPastDuration( runDuration.str() ) ;
 	} else {
 	  new TGMsgBox( fClient -> GetRoot() , this , "Bad run selection" , 
 			"You selected a non-existing run" , kMBIconExclamation ) ;

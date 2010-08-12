@@ -1,4 +1,4 @@
-// $Id: IntervalPicker.h,v 1.10 2010-05-16 18:09:40 robbep Exp $
+// $Id: IntervalPicker.h,v 1.11 2010-08-12 15:43:00 robbep Exp $
 #ifndef INTERVALPICKER_H_
 #define INTERVALPICKER_H_
 
@@ -13,7 +13,7 @@
 
 #include "presenter.h"
 
-class PresenterMainFrame;
+class PresenterInformation;
 class Archive;
 class TGVerticalFrame;
 class TGTextButton;
@@ -112,8 +112,12 @@ class IntervalPicker : public TGTransientFrame
 {
 public:
   /// Constructor
-  IntervalPicker(PresenterMainFrame* gui , RunDB * runDb , 
-		 IntervalPickerData * intData ) ;
+  IntervalPicker( PresenterInformation * presInfo , 
+		  const TGWindow * main ,
+		  Archive * archive , 
+		  pres::MsgLevel verbosity ,
+		  RunDB * runDb , 
+		  IntervalPickerData * intData ) ;
 
   /// Destructor
   virtual ~IntervalPicker();
@@ -137,9 +141,9 @@ public:
   void SelectMode( ) ;
 
 private:
-  PresenterMainFrame* m_mainFrame;
-  Archive*  m_archive;
-  pres::MsgLevel  m_verbosity;
+  PresenterInformation * m_presInfo; ///< presenter information
+  Archive*             m_archive;   ///< archive object
+  pres::MsgLevel       m_verbosity; ///< verbosity from presenter
   
   TGVerticalFrame*    m_mainVerticalFrame;
   TGTextButton*       m_okButton;

@@ -1,3 +1,4 @@
+// $Id: Archive.h,v 1.28 2010-08-12 15:43:00 robbep Exp $
 #ifndef ARCHIVE_H_
 #define ARCHIVE_H_
 
@@ -10,23 +11,28 @@ class OnlineHistDB;
 class OMAlib;
 class OnlineHistogram;
 class TH1;
-class PresenterMainFrame;
+class PresenterInformation;
 
-class Archive
-{
-public:
+class Archive {
+ public:
   enum DirectoryType
-  {
-    Savesets,
-    References
-  };
-  Archive(PresenterMainFrame* gui,
-          const std::string & savesetPath,
-          const std::string & referencePath);
-  virtual ~Archive();
-  std::vector<boost::filesystem::path> listAvailableRootFiles(const boost::filesystem::path & dirPath,
-                                                              const boost::gregorian::date_period & datePeriod,
-                                                              const std::string & taskName);
+    {
+      Savesets,
+      References
+    };
+
+  /// Constructor 
+  Archive( PresenterInformation * presenterInfo ,
+           const std::string & savesetPath ,
+           const std::string & referencePath ) ;
+
+
+  virtual ~Archive() ; ///< Destructor
+
+  std::vector<boost::filesystem::path> 
+    listAvailableRootFiles(const boost::filesystem::path & dirPath,
+			   const boost::gregorian::date_period & datePeriod,
+			   const std::string & taskName);
   std::vector<std::string> listPartitions();
   void setSavesetPath(const std::string & savesetPath);  
   std::string savesetPath() { return m_savesetPath.file_string(); }    
@@ -42,7 +48,6 @@ public:
   void fillHistogram(DbRootHist* histogram,
                      const std::string & timePoint,
                      const std::string & pastDuration);
-//  TH1* referenceHistogram(const std::string & referenceDbEntry);
   void saveAsReferenceHistogram(DbRootHist* histogram);
   std::string createIsoTimeString(int& year, int& month, int& day,
                                   int& hour, int& min, int& sec);
@@ -55,17 +60,19 @@ public:
                                    const std::string & deltaTimeString);                      
   std::string taskNameFromFile(const std::string & fileName);
 
-//  void deleteReferenceHistogram(TH1* reference); 
 private:
-  PresenterMainFrame* m_mainFrame;
+  PresenterInformation * m_presenterInfo ; ///< Presenter information
+
   boost::filesystem::path findFile(const boost::filesystem::path & dirPath,
                                    const std::string & fileName);
-  std::vector<boost::filesystem::path> findSavesets(const std::string & taskname,
-                                                    const std::string & endTimeIsoString,
-                                                    const std::string & durationTimeString);
-  std::vector<boost::filesystem::path> findSavesetsByRun(const std::string & taskname,
-                                                         const std::string & endTimeIsoString,
-                                                         const std::string & durationTimeString);
+  std::vector<boost::filesystem::path> 
+    findSavesets(const std::string & taskname,
+		 const std::string & endTimeIsoString,
+		 const std::string & durationTimeString);
+  std::vector<boost::filesystem::path> 
+    findSavesetsByRun(const std::string & taskname,
+		      const std::string & endTimeIsoString,
+		      const std::string & durationTimeString);
   void setHistoryLabels(TH1* h, 
                         std::vector<boost::filesystem::path>& foundRootFiles);
 

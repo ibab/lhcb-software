@@ -1,4 +1,4 @@
-// $Id: TrendingHistogram.h,v 1.1 2010-08-08 15:12:33 robbep Exp $
+// $Id: TrendingHistogram.h,v 1.2 2010-08-12 15:43:00 robbep Exp $
 #ifndef PRESENTER_TRENDINGHISTOGRAM_H_
 #define PRESENTER_TRENDINGHISTOGRAM_H_
 
@@ -88,8 +88,8 @@ class TrendingHistogram : public DbRootHist
   std::string m_tagName ;       ///< Name of the tag
   TGraph * m_timeGraph ;        ///< Graph object to draw histogram
 
-  double_t * m_timeArray  ; ///< internal array of time
-  double_t * m_valueArray ; ///< internal array of values
+  double   * m_timeArray  ; ///< internal array of time
+  double   * m_valueArray ; ///< internal array of values
   int        m_size       ; ///< size of the above arrays
 
   int m_startTime             ; ///< time of the beginning of the interval
