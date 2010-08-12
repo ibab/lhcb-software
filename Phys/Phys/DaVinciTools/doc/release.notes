@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.568 2010-08-11 11:58:35 gligorov Exp $
+! $Id: release.notes,v 1.569 2010-08-12 15:24:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-08-12 - Juan Palacios
+ - PhysDekstop: 
+  . Remove Info method
+  . Move empty input P->PV locations message from WARNING to INFO level.
 
 ! 2010-08-11 - V. Gligorov
  - OnOffineTool:: Switch default vertex fitter for HLT2 from TrgVertexFitter to
