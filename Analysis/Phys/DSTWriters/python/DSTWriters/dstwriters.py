@@ -1,10 +1,10 @@
 ''' '''
-#$Id: dstwriters.py,v 1.11 2010-08-12 11:02:49 jpalac Exp $
+#$Id: dstwriters.py,v 1.12 2010-08-12 11:15:53 jpalac Exp $
 
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.11 $'
+__version__ = '$Revision: 1.12 $'
 
 
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
@@ -66,7 +66,7 @@ def outputStream(conf) :
     Create an output stream object based in a stream configuration input.
     '''
 
-    stream = conf.streamType(conf.name+'.OStream',
+    stream = conf.streamType(conf.name+'_OStream',
                              Output = _poolFileName(conf.filePrefix + conf.name + conf.extension))
     stream.OptItemList += conf.extraItems
     return stream
