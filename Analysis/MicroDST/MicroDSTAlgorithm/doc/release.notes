@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.93 2010-08-11 13:53:19 jpalac Exp $
+! $Id: release.notes,v 1.94 2010-08-12 14:45:16 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2010-08-12 - Juan Palacios
+ - CopyParticles and CopyPrimaryVertices are KeyedContainerClonerAlgs,
+   instead of ContainerClonerAlgs. The latter is deprecated.
 
 ! 2010-08-11 - Juan Palacios
  - BindType2Cloner changes.
