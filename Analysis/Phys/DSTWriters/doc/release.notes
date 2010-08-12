@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.51 2010-08-10 10:18:53 jpalac Exp $
+!$Id: release.notes,v 1.52 2010-08-12 11:02:58 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-08-12 - Juan Palacios
+ - python/DSTWriters/BaseDSTWriter.py
+ - python/DSTWriters/dstwriters.py
+  . OutputStreams now called <sequence name>.OStream and have OutputLeve
+    set to INFO.
 
 ! 2010-08-10 - Juan Palacios
  - python/DSTWriters/streamconf.py
