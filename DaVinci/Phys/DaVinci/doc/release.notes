@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.439 2010-08-11 15:52:10 jpalac Exp $
+! $Id: release.notes,v 1.440 2010-08-12 06:47:13 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-12 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Use 'LHCb::RawDataCnvSvc' for InputType == 'ETC'.
 
 ! 2010-08-11 - Juan Palacios
  - python/DaVinci/Configuration.py

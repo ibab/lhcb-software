@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.119 2010-08-11 15:52:00 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.120 2010-08-12 06:47:02 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -196,6 +196,7 @@ class DaVinci(LHCbConfigurableUser) :
             log.info("Creating Lumi Algorithms")
             tupleFile = self.getProp('TupleFile')
             if tupleFile == '' :
+#                log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
                 self.setProp('TupleFile', 'lumi.root')
             lumi = self.lumi()
             init.Members += lumi
@@ -388,11 +389,11 @@ class DaVinci(LHCbConfigurableUser) :
         if ( len(input) > 0) :
             EventSelector().Input = input
         inputType = self.getProp( "InputType" ).upper()
-        if inputType == "MDF":
+        if inputType == "MDF" :
             log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
             importOptions("$STDOPTS/DecodeRawEvent.py")
-        if inputType == 'SDST':
+        if inputType == 'SDST' or inputType == 'ETC' :
             log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
             EventPersistencySvc().CnvServices.append('LHCb::RawDataCnvSvc')
 
