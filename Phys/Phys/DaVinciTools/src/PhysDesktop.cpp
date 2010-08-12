@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.113 2010-06-18 09:36:35 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.114 2010-08-12 15:22:09 jpalac Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -603,7 +603,8 @@ StatusCode PhysDesktop::getParticles(){
     if ( ! exist<LHCb::Particle::Range>( location ) ) 
     { 
       Info ( "Non-existing location "+(*iloc) + 
-             ( rootInTES().empty() ?  "" : (" under " + rootInTES() ) ) ) ;
+             ( rootInTES().empty() ?  "" : (" under " + rootInTES() ) ),
+             StatusCode::SUCCESS, 0).ignore() ;
       continue ;
     }
     LHCb::Particle::Range parts = get<LHCb::Particle::Range>( location );
@@ -677,7 +678,8 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
     else 
     {
       Info ( "No P->PV table at " + (*iloc)  + 
-             ( rootInTES().empty() ? "" :  (" under "+rootInTES() ) ) ) ;
+             ( rootInTES().empty() ? "" :  (" under "+rootInTES() ) ),
+             StatusCode::SUCCESS, 0).ignore() ;
     }
     
   }
@@ -781,8 +783,8 @@ StatusCode
 PhysDesktop::setP2PVInputLocations ( const std::vector<std::string>& location) {
 
   if (location.empty()) {
-    return Warning("Attempting to set empty P->PV locations", 
-                   StatusCode::SUCCESS, 1);
+    return Info("No input P->PV locations", 
+                StatusCode::SUCCESS, 0);
   }
   m_p2PVInputLocations = location;
 

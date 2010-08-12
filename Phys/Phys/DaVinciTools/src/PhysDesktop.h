@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.54 2010-06-18 09:36:35 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.55 2010-08-12 15:22:09 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -271,14 +271,6 @@ private: // data
   Particle2Vertex::Map m_p2PVMap;
 
   DVAlgorithm* m_dva;
-
-  /// shortcut instead of printing warnings
-  void inline Info(const std::string& mess, const StatusCode sc = StatusCode::SUCCESS, 
-                   const MSG::Level level = MSG::DEBUG ) const {
-    Print(mess, sc, level).ignore();
-    counter(mess)++;
-    return ;
-  }
 
 };
 
