@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.53 2010-08-12 11:15:53 jpalac Exp $
+!$Id: release.notes,v 1.54 2010-08-12 12:34:45 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-12 - Juan Palacios
+ - python/DSTWriters/microdstelements.py
+  . CloneHltDecReports accepts list of DecReport locations in constructor.
  - python/DSTWriters/BaseDSTWriter.py
  - python/DSTWriters/dstwriters.py
   . OutputStreams now called <sequence name>_OStream and have OutputLevel
