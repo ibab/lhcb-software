@@ -1,0 +1,47 @@
+#============================================================================
+# Created    : 2010-03-25
+# Maintainer : Philip Ilten
+#============================================================================
+package       LbHerwigpp
+version       v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches      LbHerwigpp doc cmt src
+
+# Its own include (not exported to project)
+#============================================================================
+include_dirs  $(LBHERWIGPPROOT)
+
+# For some reason the ThePEG include path is not set correctly
+#============================================================================
+include_dirs $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/include
+
+# Set native versions of new required software
+#============================================================================
+macro herwig++_native_version "2.4.2"
+macro thepeg_native_version   "1.6.1"
+
+# Used packages.
+#============================================================================
+use           Generators       v*    Gen
+use           thepeg           v*    LCG_GeneratorsInterfaces
+
+# Component library building rule
+#============================================================================
+library       LbHerwigpp           component/*.cpp
+library	      LbHerwigppRandom     Lib/*.cpp
+
+# define component and linker library link options
+#============================================================================
+apply_pattern component_library library=LbHerwigpp 
+ 
+# define environment variables for herwig++ and thepeg modules and repository
+#============================================================================
+set HERWIGPPMODULES $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version)/$(CMTCONFIG)/lib/Herwig++
+set THEPEGMODULES $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
+set HERWIGPPREPO $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version)/$(CMTCONFIG)/share/Herwig++/
+
+# load library path
+#============================================================================
+path_append LD_LIBRARY_PATH /home/philten/Gauss/lcg/external/MCGenerators/thepeg/$(thepeg_native_version)/slc4_amd64_gcc34/lib/ThePEG
