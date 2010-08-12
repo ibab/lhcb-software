@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.19 2010-08-04 12:59:29 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.20 2010-08-12 11:59:21 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -128,18 +128,19 @@ StatusCode PVReFitterAlg::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   if (!exist<LHCb::RecVertex::Range>(m_PVInputLocation) ) {
-    return Error("No LHCb::RecVertex::Range found at " +
-                 m_PVInputLocation,
-                 StatusCode::SUCCESS);
+    return Warning("No LHCb::RecVertex::Range found at " +
+                   m_PVInputLocation,
+                   StatusCode::SUCCESS, 0);
   }
 
   const LHCb::RecVertex::Range vertices = 
     get<LHCb::RecVertex::Range>(m_PVInputLocation);
 
   if (vertices.empty()) {
-    return Error("No LHCb::RecVertices in LHCb::Particle::Range "+
-                 m_PVInputLocation,
-                 StatusCode::SUCCESS);
+    return Warning("No LHCb::RecVertices in LHCb::Particle::Range "+
+                   m_PVInputLocation,
+                   StatusCode::SUCCESS, 
+                   0);
   }
 
   std::vector<std::string>::const_iterator iLoc = m_particleInputLocations.begin();
@@ -161,18 +162,22 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
 {
 
   if (!exist<LHCb::Particle::Range>(particleLocation) ) {
-    Error("No LHCb::Particle::Range found at " + 
-          particleLocation,
-          StatusCode::SUCCESS).ignore();
+    Warning("No LHCb::Particle::Range found at " + 
+            particleLocation,
+            StatusCode::SUCCESS, 
+            0).ignore();
+    return;
   }
 
   const LHCb::Particle::Range particles = 
     get<LHCb::Particle::Range>(particleLocation);
 
   if (particles.empty()) {
-    Error("No LHCb::Particles in LHCb::Particle::Range " +
-          particleLocation,
-          StatusCode::SUCCESS).ignore();
+    Warning("No LHCb::Particles in LHCb::Particle::Range " +
+            particleLocation,
+            StatusCode::SUCCESS, 
+            0).ignore();
+    return;
   }
 
   std::string outputLocation = particleLocation;
@@ -238,7 +243,8 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
   } else {
     Error("No re-fitted vertices at "+
           m_vertexOutputLocation,
-          StatusCode::SUCCESS).ignore();
+          StatusCode::SUCCESS,
+          0).ignore();
   }
 
 
@@ -249,7 +255,8 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
   } else {
     Error("No LHCb::Particle->LHCb::RecVertex table found at "+
           m_particle2VertexRelationsOutputLocation,
-          StatusCode::SUCCESS).ignore();
+          StatusCode::SUCCESS,
+          0).ignore();
   }
 
 }
