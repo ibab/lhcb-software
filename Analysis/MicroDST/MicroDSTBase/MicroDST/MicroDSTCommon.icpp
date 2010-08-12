@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.18 2010-08-11 12:40:24 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.19 2010-08-12 14:47:51 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -58,101 +58,52 @@ const typename CopyFunctor::Type* MicroDSTCommon<PBASE>::copyAndStoreObject( con
 template <class PBASE>
 template <class Cloner >
 const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
-                                                                                   const std::string& to    ) 
-{
-  this->verbose() << "now store container for location " << from << endmsg;
-  typedef typename Cloner::Type::Container _type;
-  if (!exist<_type>(from)) {
-    this->Warning("Container location "+ from+"does not exist",
-                  StatusCode::FAILURE, 0).ignore();
-    return 0;    
-  } else {
-    const _type* data = this->get<_type>( from );
-    if (!data) {
-      return 0;
-    }
-    _type* clones = getOutputContainer<_type>(to);
-
-    this->verbose() << "copyKeyedContainer " << data->size() 
-                    << " elements from " << from 
-                    << " into " << to << ", size " << clones->size()
-                    << endmsg;
-    return  copyKeyedContainer<Cloner>(data, clones); 
-  } // if !exist
-}
-//=============================================================================
-template <class PBASE>
-template <class Cloner >
-const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
                                                                                    Cloner* cloner    ) 
 {
-  this->verbose() << "now store container for location " << from << endmsg;
+
   typedef typename Cloner::Type _type;
   typedef typename _type::Container _container;
   const _container* data = this->getInputContainer<_container>( from );
   if (!data) {
     this->Warning("copyKeyedContainer found no data at "+from, 
                   StatusCode::FAILURE, 0).ignore();
-    
     return 0;
   }
 
-  for (typename _container::const_iterator i = data->begin(); i != data->end(); ++i) {
-    cloner->operator()(*i);
-  }
-
-  _container* clones = getOutputContainer<_container>( outputTESLocation(from) );
-
-  if (0!=clones) {
-    this->verbose() << "copyKeyedContainer copied  " << data->size() 
-                    << " elements from " << from 
-                    << " into " << outputTESLocation(from)
-                    <<", size " << clones->size() << endmsg;
-  } else {
-    this->Warning("CopyKeyedContainer failed to clone "+ from,
-                  StatusCode::FAILURE, 0).ignore();
-  }
-
-
-  return  clones; 
+  return this->copyKeyedContainer<Cloner>( data, cloner );
 
 }
 //=============================================================================
 template <class PBASE>
 template <class Cloner >
-const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyContainer( const std::string& from,
-                                                                              Cloner* cloner    ) 
+const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Container* from,
+                                                                                   Cloner* cloner    )
 {
-  this->verbose() << "now store container for location " << from << endmsg;
+
   typedef typename Cloner::Type _type;
-  if ( (!exist<typename _type::Container>(from)) && 
-       (!exist<typename _type::Selection>(from))    )   {
-    this->Warning("copyContainer found no data at "+from, 
-                  StatusCode::FAILURE, 0).ignore();
-    return 0;
-  }
+  typedef typename _type::Container _container;
+  const std::string location =  MicroDST::objectLocation(from);
+  this->verbose() << "now copy container for location " << location << endmsg;
   
-  typename _type::Range data = PBASE:: template get<typename _type::Range>(from);
-
-  if (data.empty()) {
-    this->Warning("copyContainer found no data at "+from, 
-                  StatusCode::FAILURE, 0).ignore();
+  if (!from) {
+    this->Warning("copyKeyedContainer found no data at "+ location, 
+                  StatusCode::FAILURE, 0).ignore();    
     return 0;
   }
 
-  for (typename _type::Range::const_iterator i = data.begin(); i != data.end(); ++i) {
+  for (typename _container::const_iterator i = from->begin(); i != from->end(); ++i) {
     cloner->operator()(*i);
   }
 
-  typename _type::Container* clones = getOutputContainer<typename _type::Container>( outputTESLocation(from) );
+  _container* clones = getOutputContainer<_container>( outputTESLocation(location) );
 
   if (0!=clones) {
-    this->verbose() << "copyContainer copied  " << data.size() 
-                    << " elements from " << from 
-                    << " into " << outputTESLocation(from)
+    this->verbose() << "copyKeyedContainer copied  " << from->size() 
+                    << " elements from " << location
+                    << " into " << outputTESLocation(location)
                     <<", size " << clones->size() << endmsg;
   } else {
-    this->Warning("copyContainer failed to clone "+ from,
+    this->Warning("CopyKeyedContainer failed to clone "+ location,
                   StatusCode::FAILURE, 0).ignore();
   }
 
@@ -166,13 +117,27 @@ template <class itemCloner>
 typename itemCloner::Type* MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type* item )
 {
   if (0==item) return 0;
+
   const std::string cloneLocation = 
     outputTESLocation( MicroDST::objectLocation( item->parent()) );
+
   typename itemCloner::Type::Container* clones = getOutputContainer<typename itemCloner::Type::Container>(cloneLocation);
+
   if (0==clones) return 0;
+
   this->verbose() << "cloneKeyedContainerItem to location " << cloneLocation << endmsg;
-  MicroDST::CloneKeyedContainerItem<itemCloner> cloner(clones);
-  return cloner(item);
+
+  if ( !clones->object( item->key() ) ) {
+
+    typename itemCloner::Type* clonedItem = itemCloner::clone(item);
+    if (0!=clonedItem) clones->insert( clonedItem, item->key()) ;
+    return clonedItem;
+
+  }
+
+  return clones->object( item->key() );
+  //  MicroDST::CloneKeyedContainerItem<itemCloner> cloner(clones);
+  //  return cloner(item);
   
 }
 //=============================================================================
@@ -230,23 +195,6 @@ const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location )
     return this->get<T>( location );
   }
   
-}
-//=============================================================================
-template <class PBASE>
-template <class Cloner >
-const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Container* from, 
-                                                                                   typename Cloner::Type::Container* to    ) 
-{
-  if (!from || !from ) return 0;
-  this->verbose() << "copyKeyedContainer output container size " << to->size() 
-                  << endmsg;
-  std::for_each(from->begin(), from->end(), 
-                Cloner(to) );
-
-  this->verbose() << "copyKeyedContainer copied # elements into output container: " 
-                  << to->size() << endmsg;
-
-  return to;
 }
 //=============================================================================
 // Destructor

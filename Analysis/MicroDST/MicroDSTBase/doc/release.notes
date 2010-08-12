@@ -1,10 +1,14 @@
-!$Id: release.notes,v 1.55 2010-08-11 13:37:34 jpalac Exp $
+!$Id: release.notes,v 1.56 2010-08-12 14:47:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-08-12 - Juan Palacios
+ - Removed MicroDST::ContainerClonerAlg
+ - Removed obsolete or confusing unused functions.
 
 ! 2010-08-11 - Juan Palacios
  - Cloner types are now Cloner::Type.

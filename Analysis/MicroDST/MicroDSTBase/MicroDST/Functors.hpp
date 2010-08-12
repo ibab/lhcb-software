@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.8 2010-08-11 12:40:23 jpalac Exp $
+// $Id: Functors.hpp,v 1.9 2010-08-12 14:47:50 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -19,54 +19,6 @@
  *  @date   2007-10-24
  */
 namespace MicroDST {
-
-  /**
-   *
-   * Clone an item into a container of type T. 
-   * The functor checks if an item with the same key already exists and only
-   * clones and inserts the clone into the container if this is not the case.
-   *
-   * Requirements:
-   *
-   * Contained type T:
-   * Must export container type as T::Container. 
-   * T::Container must have a method 
-   * insert(T::value_type, type of T::value_type::key() )
-   * Must have a method T* object( type of T::key() )
-   *
-   * Type T must have method T::key()
-   *
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   * @date 16-10-2007
-   */
-  template <class itemCloner>
-  struct CloneKeyedContainerItem
-  {
-    typedef typename itemCloner::Type Type;
-
-    CloneKeyedContainerItem(typename Type::Container*& to) 
-      : m_to(to) { }
-    
-    Type* operator() ( const Type* item )
-    {
-      return clone(item);
-    }
-
-    Type* clone( const Type* item ) 
-    {
-      if (0==item) return 0;
-      if ( !m_to->object( item->key() ) ) {
-	Type* clonedItem = itemCloner::clone(item);
-	if (0!=clonedItem) m_to->insert( clonedItem, item->key()) ;
-	return clonedItem;
-      }
-      return m_to->object( item->key() );
-    }
-
-    typename itemCloner::Type::Container* m_to;
-
-  };
 
 
   /**

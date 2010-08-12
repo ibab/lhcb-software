@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.10 2010-08-11 12:40:24 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.11 2010-08-12 14:47:51 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -66,23 +66,7 @@ public:
   template <class CopyFunctor>
   inline const typename CopyFunctor::Type* copyAndStoreObject( const std::string& from,
                                                                const std::string& to   );
-  
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class ContainedItemCloner >
-  inline const typename ContainedItemCloner::Type::Container* copyKeyedContainer( const std::string& from,
-                                                                                  const std::string& to    );
 
-
-  /**
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   */
-  template <class Cloner >
-  inline const typename Cloner::Type::Container* copyKeyedContainer( const typename Cloner::Type::Container* from, 
-                                                                     typename Cloner::Type::Container* to    ) ;
 
   /**
    *
@@ -97,9 +81,8 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class Cloner >
-  inline const typename Cloner::Type::Container* copyContainer( const std::string& from, 
-                                                                Cloner* cloner    ) ;
-
+  inline const typename Cloner::Type::Container* copyKeyedContainer( const typename Cloner::Type::Container* from, 
+                                                                     Cloner* cloner    ) ;
 
   /**
    *
