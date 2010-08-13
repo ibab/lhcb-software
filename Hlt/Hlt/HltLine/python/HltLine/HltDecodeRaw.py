@@ -13,11 +13,10 @@ def _convert(map, name) :
         (t,n) = a
     elif len(a) == 1 :
         (t,n) = (a[0],a[0])
-    exec 'from Configurables import %s' % t
-    exec 'c = %s("%s")'%(t,n)
-    return bindMembers( None, [ c ]).ignoreOutputSelection()
+    cls = getattr( __import__('Configurables'),t )
+    return bindMembers( None, [ cls(n) ]).ignoreOutputSelection()
 
-# bind _map to _convert
+# bind __convert to _convert
 __convert = lambda x : _convert( DataOnDemandSvc().AlgMap,x) 
 
 # __convert = lambda x : bindMembers( None, [] ).ignoreOutputSelection()
@@ -32,8 +31,8 @@ DecodeVELO   = __convert( 'Raw/Velo/LiteClusters' )
 DecodeTT     = __convert( 'Raw/TT/LiteClusters' )
 DecodeIT     = __convert( 'Raw/IT/LiteClusters' )
 DecodeOT     = __convert( 'Raw/OT/Times' )
-#decodeMUON  = __convert( 'Raw/Muon/Coords' )
-#decodeRICH  = __convert( 'Raw/Rich/Digits' )
+#decodeMUON  = __convert( 'Raw/Muon/Coords' )  # How can we access the MUON data if this is commented out??? (and Dod is not running!)
+#decodeRICH  = __convert( 'Raw/Rich/Digits' )  # How can we access the RICH data if this is commented out??? (and Dod is not running!)
 DecodeECAL   = __convert( 'Raw/Ecal/Digits' )
 DecodeSPD    = __convert( 'Raw/Spd/Digits' )
 DecodePRS    = __convert( 'Raw/Prs/Digits' )
