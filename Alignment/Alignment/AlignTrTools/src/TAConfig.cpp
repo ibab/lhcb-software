@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.43 2010-06-17 14:57:08 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.44 2010-08-13 19:18:25 wouter Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -32,6 +32,7 @@
 #include "Event/Track.h"
 #include "Event/OTTime.h"
 
+#include "STDet/DeITStation.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeITLayer.h"
 #include "STDet/DeTTLayer.h"
