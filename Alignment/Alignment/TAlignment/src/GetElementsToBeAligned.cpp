@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.30 2010-04-04 15:27:52 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.31 2010-08-13 21:03:50 wouter Exp $
 // Include files
 
 //from STL
@@ -102,7 +102,7 @@ StatusCode GetElementsToBeAligned::initialize() {
   }
 
   info() << "===================== GetElementsToAlign =====================" << endmsg;
-  info() << "   Using the following regular expressions: " << endmsg;
+  debug() << "   Using the following regular expressions: " << endmsg;
 
   size_t index(0) ;
   typedef std::vector<AlignmentElement*> NonConstElements ;
@@ -149,9 +149,10 @@ StatusCode GetElementsToBeAligned::initialize() {
     RegExs regexs ;
     
     // Print the list of regular expressions that are going to be used.
-    info() << "       ";
-    for (Tokenizer::iterator j = elemtokenizer.begin(), jEnd = elemtokenizer.end(); j != jEnd; ++j) info() << "\"" << (*j) << "\"" << " ";
-    info() << endmsg;
+    debug() << "       ";
+    for (Tokenizer::iterator j = elemtokenizer.begin(), jEnd = elemtokenizer.end(); j != jEnd; ++j) 
+      debug() << "\"" << (*j) << "\"" << " ";
+    debug() << endmsg;
     
     // Create list of regular expressions
     for (Tokenizer::iterator j = elemtokenizer.begin(), jEnd = elemtokenizer.end(); j != jEnd; ++j) {
