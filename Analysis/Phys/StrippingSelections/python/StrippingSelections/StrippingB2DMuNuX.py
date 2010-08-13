@@ -1,7 +1,7 @@
-# $Id: StrippingB2DMuNuX.py,v 1.1 2010-07-23 14:26:52 lzhang Exp $
+# $Id: StrippingB2DMuNuX.py,v 1.2 2010-08-13 20:13:13 lzhang Exp $
 __author__ = ['Liming Zhang']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 """
 B->DMuNuX inclusive selections
 """
@@ -13,17 +13,18 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
         "KPiMINIPCHI2"   : 9.0    # adimensiional
         ,"MINIPCHI2"     : 4.0    # adimensiional
         ,"TRCHI2"        : 10.0   # adimensiional
-        ,"KaonPIDK"      : 1e-10  # adimensiional
+        ,"KaonPIDK"      : 4.0    # adimensiional
         ,"MuonIPCHI2"    : 4.00   # adimensiional
         ,"MuonPT"        : 800.0   # MeV
         ,"KPiPT"         : 300.0  # MeV
-        ,"PT"            : 250.0  # MeV
+        ,"PT"            : 300.0  # MeV
         ,"DsDIRA"        : 0.9    # adimensiional
         ,"DsFDCHI2"      : 64.0   # adimensiional
         ,"DsMassWin"     : 100.0  # MeV
         ,"DsAMassWin"    : 120.0  # MeV
         ,"DsIP"          : 7.4    #mm
-        ,"DsVCHI2DOF"    : 10.0  
+        ,"DsVCHI2DOF"    : 10.0  # adimensiional
+        ,"DDocaMax"      : 0.5    #mm
         }
 
     def _D02KPiFilter( self ):
@@ -35,9 +36,9 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
                                   "& (MIPCHI2DV(PRIMARY)> %(KPiMINIPCHI2)s)" % self.getProps(),
                                   "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(KPiPT)s *MeV) & (P>2.0*GeV) "\
                                   "& (MIPCHI2DV(PRIMARY)> %(KPiMINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps() }
-        _d02kpi.CombinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV)" % self.getProps()
-        _d02kpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1200.*MeV) & (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()        
+        _d02kpi.CombinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _d02kpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()        
         return _d02kpi
 
     def _Dp2KPiPiFilter( self ):
@@ -49,9 +50,9 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % self.getProps(),
                                     "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps() }
-        _dp2kpipi.CombinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV)" % self.getProps()
-        _dp2kpipi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) & (ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
+        _dp2kpipi.CombinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _dp2kpipi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
         return _dp2kpipi
     
     def _Ds2KKPiFilter( self ):
@@ -63,10 +64,10 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % self.getProps(),
                                     "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps() }
-        _ds2kkpi.CombinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)" % self.getProps()
-        _ds2kkpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) & (DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
+        _ds2kkpi.CombinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _ds2kkpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                              "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                             "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
+                             "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
         return _ds2kkpi
         
     
@@ -81,9 +82,9 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps(),
                                     "p+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>%(KaonPIDK)s)" % self.getProps()}
-        _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV)" % self.getProps()
-        _lambdac.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) & (ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
+        _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _lambdac.MotherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
         return _lambdac
      
 
@@ -102,7 +103,7 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
         _B.CombinationCut = "(AM<6.2*GeV)" % self.getProps()
         _B.MotherCut = "  (MM<6.0*GeV) & (MM>2.0*GeV) & (VFASPF(VCHI2/VDOF)<10.0) & (BPVDIRA>0.998)  " \
                         "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > -1.0*mm ) "  % self.getProps()
-        _B.ReFitPVs = True
+#        _B.ReFitPVs = True
         return _B
     
     def _b2DpMuX( self ):

@@ -5,6 +5,16 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-13 - Liming Zhang
+ - StrippingB2DMuNuX.py: updated by adding DOCA, tightening PID 
+      and removing ReFitPVs. CPU times gained by factor 3
+ - StrippingD0ForBXX.py: updated and prescaled by 1/20 and resume 
+      D0->K3pi line
+ - StrippingDForBSemi.py: new lines added to reconstruct D+, Ds 
+      and /\c for B0->DMuNuX study. Prescaled by 1/10. CPU time 
+      0.2-0.3 ms/event for each line, retention rate 0.05%-0.3% 
+ - for details see http://indico.cern.ch/getFile.py/access?contribId=5&sessionId=1&resId=1&materialId=slides&confId=103204
+
 ! 2010-13-10 - Francesco Dettori 
   - Modified StrippingDstarD02xx.py to require correspondent HLT2 for each line
   - Tightened cuts for StrippingLambdac.py

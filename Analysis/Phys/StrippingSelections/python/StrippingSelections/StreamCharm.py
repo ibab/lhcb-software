@@ -35,6 +35,7 @@ from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KS
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
+from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
 
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingLambdac      import StrippingLambdacConf
@@ -111,8 +112,11 @@ stream.appendLines( [
         , StrippingD2hhNoPIDXsec.line
         , StrippingD2Kh.DKhPreselLine
         , StrippingD2KhLoose.DKhPreselLooseLine
-        ,StrippingD0forBXXConf().D02KPiforBXXLine()
-#        ,StrippingD0forBXXConf().D02K3PiforBXXLine()
+        , StrippingD0forBXXConf().D02KPiforBXXLine()
+        , StrippingD0forBXXConf().D02K3PiforBXXLine()
+        , StrippingDforBSemiConf().DpforBSemiLine()
+        , StrippingDforBSemiConf().DsforBSemiLine()
+        , StrippingDforBSemiConf().LcforBSemiLine()
         , StrippingBd2KstarMuMuConf().line_for_DKpipipi()
         , StrippingDstarPromptWithD02HHNoPt.lineDstarPromptWithD02HHNoPt
 #        , StrippingDstarD02KKpipiRobust.line1
