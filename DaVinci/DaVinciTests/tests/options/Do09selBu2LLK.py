@@ -64,4 +64,4 @@ Sel09Bu2LLK.Code = hardkaon+" & ("+hardelectron+" | "+hardmuon+" ) & "+harddilep
 Sel09Bu2LLKFilterSequence.Members += [ Sel09Bu2LLK ]
 
 ##########################################################################
-ApplicationMgr().TopAlg += [ Sel09Bu2LLKFilterSequence ]
+#ApplicationMgr().TopAlg += [ Sel09Bu2LLKFilterSequence ]

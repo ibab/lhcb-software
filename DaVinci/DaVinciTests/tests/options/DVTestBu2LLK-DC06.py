@@ -31,8 +31,10 @@ TestCorrelations.Algorithms = [ "StdLooseElectrons",
 ###
 # Selection
 ###
+importOptions( "$DAVINCITESTSROOT/tests/options/Do09selBu2LLK.py")
 from Configurables import DaVinci
-DaVinci().MainOptions = "$DAVINCITESTSROOT/tests/options/Do09selBu2LLK.py"
+Sel09Bu2LLKFilterSequence = GaudiSequencer("Sel09Bu2LLKFilterSequence")
+DaVinci().UserAlgorithms += [Sel09Bu2LLKFilterSequence]
 DaVinci().MoniSequence = [ TestCorrelations ]
 
 ##-- GAUDI data cards generated on 11/19/07 2:55 PM
