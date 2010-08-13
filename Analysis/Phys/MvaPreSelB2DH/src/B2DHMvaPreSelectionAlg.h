@@ -27,14 +27,15 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  const LHCb::Particle* performB2DHSelection ( );
-  //  const LHCb::Particle* performB2DHSelection (const LHCb::Particles * partsBs);
-  const  LHCb::RecVertex* getBestRefittedPVForBs(const LHCb::Particle* b);
-  const  LHCb::RecVertex* AcquirePVForBsFromStdPV ( const LHCb::Particle* b );
-  const  LHCb::RecVertex* getBestRefittedPVForBsFromSortedRelations(const LHCb::Particle* b);
+
+  const LHCb::Particle* performB2DHSelection (const LHCb::Particles * partsBs);
+
+  const  LHCb::RecVertex* getBestRefittedPVForBs(const LHCb::Particle* b,LHCb::RecVertex::Container* aStdPVs);
+  const  LHCb::RecVertex* AcquirePVForBsFromStdPV ( const LHCb::Particle* b,LHCb::RecVertex::Container* aStdPVs );
+  const  LHCb::RecVertex* getBestRefittedPVForBsFromSortedRelations(const LHCb::Particle* b,LHCb::RecVertex::Container* aStdPVs);
   void BumpMvaStrEvCounters();
   
-  void  resetEventSelectionParams();
+  void  resetEventSelectionParams(int aNumCandSize);
   void resetSelectionCounters();
   void PrintEvSelCounters();
   bool getL0Decision ();
@@ -53,7 +54,10 @@ private:
   
   bool m_activateHistograms;
   bool m_activateL0Selection;
-
+  bool m_activatedPVRefit;
+  bool m_searchBestCandInEv;
+  
+  
 
   std::vector<double> m_fProb;
   std::vector<double> m_fIps;
@@ -95,7 +99,8 @@ private:
   int m_numNotSelectedEvCounter;
 
   bool m_ActivateStrippingSelection;
-  
+
+    
    
 };
 #endif // B2DHMVAPRESELECTIONALG_H

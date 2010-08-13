@@ -30,6 +30,8 @@ B2DHMvaPreSelectionAlg::B2DHMvaPreSelectionAlg( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator ),
     m_activateHistograms(false),
     m_activateL0Selection(false) ,
+    m_activatedPVRefit(true),
+    m_searchBestCandInEv(false),
     m_fProb(std::vector<double> (0)),
     m_fIps  (std::vector<double> (0)),
     m_fCandIndex(std::vector<int> (0)),
@@ -42,6 +44,8 @@ B2DHMvaPreSelectionAlg::B2DHMvaPreSelectionAlg( const std::string& name,
 {
   declareProperty("ActivateHistograms",m_activateHistograms);
   declareProperty("ActivateL0Selection", m_activateL0Selection);
+  declareProperty("SearchBestCandidateInEvent",m_searchBestCandInEv);
+  declareProperty("ActivatePrimaryVertexRefit",m_activatedPVRefit);
   declareProperty("CurrentB2DHDecayChannelNumber", m_curDecayChannel );
   declareProperty("ActivateStrippingSelection",  m_ActivateStrippingSelection);
   
@@ -92,52 +96,53 @@ StatusCode B2DHMvaPreSelectionAlg::execute() {
 
    m_numTotEvCounter++;
    bool selCurEv=false;
-   resetEventSelectionParams();
    
    const LHCb::Particles * partsBs;
    try {
- 
-     
-     for (std::vector<std::string>::const_iterator iLoc= inputLocations().begin() ; iLoc != inputLocations().end(); ++iLoc ) {     
+
+
+      for (std::vector<std::string>::const_iterator iLoc= inputLocations().begin() ; iLoc != inputLocations().end(); ++iLoc ) {     
        if(! selCurEv ) {
          
-         // partsBs =get<LHCb::Particles>( (*iLoc) + "/Particles" );
+         partsBs =get<LHCb::Particles>( (*iLoc) + "/Particles" );
 
-          partsBs =get<LHCb::Particles>(m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel));
-         //info()<<" Current Bs Location partsBs "<<m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel)<<" "
-         //      <<partsBs<<endmsg;
+         // partsBs =get<LHCb::Particles>(m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel));
+
+          if(partsBs) {
+            int aSize= (int) partsBs->size();
+            resetEventSelectionParams(aSize);
           
-         // info()<<" Current Bs Location partsBs and size  "<<(*iLoc) + "/Particles" <<"   "<<(int) partsBs->size()<<  endmsg;
+           //info()<<" Current Bs Location partsBs NumCand "<<m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel)<<" "
+           //      <<partsBs<< "   "<< aSize<< endmsg;
           
-        if(partsBs) {
-          if ( (int) partsBs->size() > 0 ) {
+           // info()<<" Current Bs Location partsBs and size  "<<(*iLoc) + "/Particles" <<"   "<<(int) partsBs->size()<<  endmsg;
+
+          if ( aSize > 0 ) {
              m_numEvWithBs++;
-            //info()<<" Channel number Number of Bs candidates in this event in this channel = "
-            // <<iLoc-  inputLocations().begin()<< "   "<< (int) partsBs->size() <<endmsg;
 
-            //const LHCb::Particle* aSelectedBparticle = performB2DHSelection (partsBs ) ;      
-            const LHCb::Particle* aSelectedBparticle = performB2DHSelection ( ) ;      
-            if(aSelectedBparticle ) selCurEv=true;
+              const LHCb::Particle* aSelectedBparticle = performB2DHSelection ( partsBs ) ;
+              if(aSelectedBparticle) selCurEv=true;
+            
         
           }else {
             debug()<<" No Bs candidates in this channel in this event although the Bs Location exists"<<endmsg;
           }       
          
        } // end test on partsBs
-      }// end test on current evet already selected or no. If already selected no further selection tested from other locations.
-       
+      }// end test on current event already selected or no. If already selected no further selection tested from other locations.
+
     } // end loop over the input locations.
      
     if(  selCurEv ) {  // event is selected.
             m_numSelectedEvCounter++;
-            setFilterPassed(true);  
-            debug()<<" This event is selected by FisherD+cuts  "<<endmsg;
+             setFilterPassed(true);  
+             // info()<<" This event is selected by FisherD+cuts  "<<endmsg;
 
     }else {
 
             m_numNotSelectedEvCounter++;
-            setFilterPassed(false);  
-            debug()<<" This event not Selected by FisherD+cuts "<<endmsg;
+             setFilterPassed(false);  
+             //info()<<" This event not Selected by FisherD+cuts "<<endmsg;
     }
 
 
@@ -147,12 +152,13 @@ StatusCode B2DHMvaPreSelectionAlg::execute() {
      partsBs=0;
      setFilterPassed(false);  // Mandatory. Set to true if event is accepted. 
 
-     info()<<" No Preselected Bs in this event , possibly no BsLocation present "<<endmsg; 
+      info()<<" No Preselected Bs in this event , possibly no BsLocation present "<<endmsg; 
    }
 
    //    info()<< "End of the current event in B2DHMvaPreSelectionAlg  "<<endmsg;
    
    //  setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
+
   return StatusCode::SUCCESS;
 
 }
@@ -170,43 +176,46 @@ StatusCode B2DHMvaPreSelectionAlg::finalize() {
 }
 //=============================================================================
 
-//const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( const LHCb::Particles * partsBs ) {
-const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( ) {
+const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( const LHCb::Particles * partsBs ) {
 
-      bool aL0Selected =true;
-      if(m_activateL0Selection ) aL0Selected = m_B2DHPreselMvaUtilityTool->getL0Decision ();
+ try {
+
+   bool aL0Selected =true;
+   if(m_activateL0Selection ) aL0Selected = m_B2DHPreselMvaUtilityTool->getL0Decision ();
      
-  // the following assumes that partsBs already exists with non-zero Bs candidates as verified when this method is called.
+   // the following assumes that partsBs already exists with non-zero Bs candidates as verified when this method is called.
+   LHCb::RecVertex::Container* StdPVs = get<LHCb::RecVertices>(m_B2DHPreselMvaUtilityTool -> 
+                                                          getcurrentStdPVLocation() );
 
-            const LHCb::Particles *  partsBs =
-          get<LHCb::Particles>(m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel));
-       
+   LHCb::Particles::const_iterator iParticleBsBegin = partsBs->begin();
+   LHCb::Particles::const_iterator iParticleBsEnd   = partsBs->end();
+   LHCb::Particles::const_iterator iParticleBs=iParticleBsBegin;
+ 
+   int curIndex=0;
+   bool selAccomplished=false;
+   while( (iParticleBs != iParticleBsEnd) && (!selAccomplished) ) {
 
-       LHCb::Particles::const_iterator iParticleBs;
-       LHCb::Particles::const_iterator iParticleBsBegin = partsBs->begin();
-       LHCb::Particles::const_iterator iParticleBsEnd   = partsBs->end();
-       
-       int curIndex=0;
+      // for (iParticleBs = iParticleBsBegin; iParticleBs != iParticleBsEnd; iParticleBs++) { // loop over Bs candidates
+      curIndex = iParticleBs - iParticleBsBegin;
+      LHCb::Particle* aB = (*iParticleBs);
 
+         if(aB) {
+           
+            m_BCandinEv++;
+            const  LHCb::RecVertex* aPV = 
+                (m_activatedPVRefit) ? getBestRefittedPVForBs (aB,StdPVs) : AcquirePVForBsFromStdPV(aB,StdPVs)  ;
+         
+            if(aPV ) {
 
-
-       // info()<< "Now in performB2DHSelection for NumBs Cand "<< (int) partsBs->size()<<endmsg;
-       
-       for (iParticleBs = iParticleBsBegin; iParticleBs != iParticleBsEnd; iParticleBs++) { // loop over Bs candidates
-         curIndex = iParticleBs - iParticleBsBegin;
-         LHCb::Particle* aB = (*iParticleBs);
-         //info()<<" Current Bs candidate num "<<curIndex<<endmsg;
-         m_BCandinEv++;
-         const  LHCb::RecVertex* aPV = getBestRefittedPVForBs (aB);
-         if(aPV ) {
+            
            m_B2DHMvaPreSelectionParamTool ->  acquireSelectionParams(aB,aPV);
            m_B2DHMvaPreSelectionCutsTool-> setAllCutFlags();
-           
+
            m_PVSelCandInEv++;
-           m_fIps[curIndex]=m_B2DHMvaPreSelectionParamTool->ipsBs();
-           m_fProb[curIndex]=m_B2DHMvaPreSelectionParamTool->getfisherDProbValue();
+           m_fIps.push_back( m_B2DHMvaPreSelectionParamTool->ipsBs());
+           m_fProb.push_back( m_B2DHMvaPreSelectionParamTool->getfisherDProbValue());
            m_fCandNoSel.push_back(curIndex);
-           
+
            if( m_B2DHMvaPreSelectionCutsTool ->  ApplyPreTrainSel()) {
              m_PreLimSelCandInEv++;
              m_fCandPrelimSel.push_back(curIndex);
@@ -229,10 +238,12 @@ const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( ) {
                         
                         if( (m_ActivateStrippingSelection) || ( aL0Selected ) ) {
                           //info()<<" L0 Selected "<<endmsg;
+
+
                            m_AllSelCandWithL0InEv++;      
                            m_numCandInEvent++;
                            m_fCandIndex.push_back(curIndex);
-                           
+                           if(! m_searchBestCandInEv ) selAccomplished=true;
                            
 
                        }// end L0 sel
@@ -250,14 +261,21 @@ const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( ) {
               
            }// end of presel application
            
-           
+
          }else {  // end check on PV
            warning () <<" No primary vertex in this event for the current preselected B candidate"<<endmsg;
          }
          
-         
-       } // end loop over Bs candidates.
+         }// end check on current B candiate existence
 
+         
+         iParticleBs++;
+         
+
+       } // end while loop over Bs candidates.
+
+
+         
        BumpMvaStrEvCounters();
        
 
@@ -276,8 +294,10 @@ const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( ) {
          
        }
        
-       
+
+              
         const   LHCb::Particle* aBparticle = bSelected ? bestB : 0;
+       
        // now for histogramming
        if( m_activateHistograms) {
 
@@ -290,10 +310,12 @@ const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( ) {
          
          
        }
-              
-
 
        return aBparticle;
+
+ }catch (...) {
+         return 0;
+ }
        
 }
 void B2DHMvaPreSelectionAlg::BumpMvaStrEvCounters() {
@@ -308,13 +330,14 @@ void B2DHMvaPreSelectionAlg::BumpMvaStrEvCounters() {
  
 }
 
-const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBsFromSortedRelations(const LHCb::Particle* b) {
+const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBsFromSortedRelations(const LHCb::Particle* b,
+                                                                      LHCb::RecVertex::Container* aStdPVs ) {
    const Particle2Vertex::WTable* table = get<Particle2Vertex::WTable>(m_B2DHPreselMvaUtilityTool ->
                                  getparticle2RefittedSortedPVRelationsLoc(m_curDecayChannel ) );
    const  Particle2Vertex::WTable::Range range =  table->relations( b );
   const LHCb::RecVertex* abestPV =  range.empty() ? 0 : dynamic_cast<const LHCb::RecVertex*>( range.back().to() );
  
-   const LHCb::RecVertex* abestPVR=   ( abestPV !=0 ) ? abestPV : AcquirePVForBsFromStdPV( b );  
+   const LHCb::RecVertex* abestPVR=   ( abestPV !=0 ) ? abestPV : AcquirePVForBsFromStdPV( b,aStdPVs );  
   // if no refitted PV present, it goes to the standard non-refitted PV and finds the best PV available.
    return abestPVR;  
 }
@@ -322,7 +345,8 @@ const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBsFromSorted
 
 //==============================================================================================
 
-const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBs(const LHCb::Particle* b) {   
+const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBs(const LHCb::Particle* b,
+                                                          LHCb::RecVertex::Container* aStdPVs ) {   
 
   // const Particle2Vertex::Table* table = 
   //      get<Particle2Vertex::Table>("Phys/PVReFitterAlgBs2DsK/Particle2VertexRelations"  );
@@ -330,7 +354,9 @@ const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBs(const LHC
     const Particle2Vertex::Table* table = 
         get<Particle2Vertex::Table>(m_B2DHPreselMvaUtilityTool-> getparticle2RefittedPVRelationsLoc (m_curDecayChannel ) );
 
-    const  Particle2Vertex::Table::Range range =  table->relations( b );
+    const  Particle2Vertex::Table::Range range = table->relations( b );
+
+    
     
     LHCb::RecVertex* aPV = 0;
       int indexSave=-1;
@@ -364,7 +390,7 @@ const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBs(const LHC
     //  }
     // end test print
   
-  const LHCb::RecVertex* abestPVR=   ( aPV !=0 ) ? aPV : AcquirePVForBsFromStdPV( b );  
+  const LHCb::RecVertex* abestPVR=   ( aPV !=0 ) ? aPV : AcquirePVForBsFromStdPV( b,aStdPVs  );  
   // if no refitted PV present, it goes to the standard non-refitted PV and finds the best PV available.
 
   return abestPVR;  
@@ -373,16 +399,29 @@ const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::getBestRefittedPVForBs(const LHC
 
 //================================================================================================
 
-const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::AcquirePVForBsFromStdPV ( const LHCb::Particle* b ) 
+const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::AcquirePVForBsFromStdPV ( const LHCb::Particle* b,
+                                                               LHCb::RecVertex::Container* aStdPVs ) 
 {
-  
-  LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>(m_B2DHPreselMvaUtilityTool -> 
-                                                          getcurrentStdPVLocation() );
 
-  if(PVs) {
+  // info()<<" current Pv location "<<m_B2DHPreselMvaUtilityTool ->getcurrentStdPVLocation()<<endmsg;
+  
+  try {
+    
+    //  LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>(m_B2DHPreselMvaUtilityTool -> 
+    //                                                      getcurrentStdPVLocation() );
+
+    LHCb::RecVertex::Container* PVs =   aStdPVs;
+
+  int numPvs= (PVs) ? ( (int) PVs->size())  : 0;
+  
+
+
+  if(numPvs > 0 ) {
     double ipsMinQ=10000.0;  
     int ipvSaveQ=0;
-    for(LHCb::RecVertex::Container::iterator ive = PVs->begin(); ive != PVs->end(); ive++) { // loop over Std PV
+    if( numPvs > 1 ) {
+      
+      for(LHCb::RecVertex::Container::iterator ive = PVs->begin(); ive != PVs->end(); ive++) { // loop over Std PV
                double fomq=-100.0;
                double fomSq= -100.0;
                double chisqq=-100.0;
@@ -390,26 +429,38 @@ const  LHCb::RecVertex* B2DHMvaPreSelectionAlg::AcquirePVForBsFromStdPV ( const 
                if(chisqq >0 ) fomSq=sqrt(chisqq);
                if( fomSq < ipsMinQ ){
                        ipsMinQ=fomSq;
-                       ipvSaveQ=   ive-  PVs->begin();
+                       ipvSaveQ=   ive -  PVs->begin();
                }
                
-    }// end loop over vertices.
-  
+      }// end loop over vertices.
+    }// end check on numPV
+    
     LHCb::RecVertex::Container::iterator ivea = ( PVs->begin() )  + ipvSaveQ;
     const LHCb::RecVertex* aPVF = (*ivea);
+
     return aPVF;
 
 
   } else {
+
+    
     LHCb::RecVertex * apv =0;
     return apv  ;
   }
+  }catch (...){
+
+    LHCb::RecVertex * apv =0;
+    return apv  ;
+      
+  }
+  
+  
   
 }
 
 //=====================================================================================
 
-void B2DHMvaPreSelectionAlg::resetEventSelectionParams() {
+void B2DHMvaPreSelectionAlg::resetEventSelectionParams( int aNumCandSize ) {
 
   m_BCandinEv=0;
   m_PVSelCandInEv=0;
@@ -422,24 +473,18 @@ void B2DHMvaPreSelectionAlg::resetEventSelectionParams() {
   
 
 
-     m_curbestCandIndexInEvent=-10;  // default set to unphyical value .
+         m_curbestCandIndexInEvent=-10;  // default set to unphyical value .
 
-       if( m_activateHistograms) {
-         const LHCb::Particles * partsBs = 
-            get<LHCb::Particles>(m_B2DHPreselMvaUtilityTool  -> getcurrentBsLocation(m_curDecayChannel));
-         int aSize= (int) partsBs->size();
-         m_fProb.resize(aSize); m_fProb.assign(aSize,-1.0);  // for monitor histogramming
-         m_fIps.resize(aSize);  m_fIps.assign(aSize,-10.0);   // for monitor histogramming
-         m_fCandIndex.clear(); m_fCandIndex.reserve(aSize);
+         m_fProb.clear(); m_fProb.reserve(aNumCandSize); // for monitor histo
+         m_fIps.clear();  m_fIps.reserve(aNumCandSize); // for monitor histo
+         
+         m_fCandIndex.clear(); m_fCandIndex.reserve(aNumCandSize);
 
-         m_fCandNoSel.clear(); m_fCandNoSel.reserve(aSize);
-         m_fCandPrelimSel.clear(); m_fCandPrelimSel.reserve(aSize);
-         m_fCandFisherSel.clear(); m_fCandFisherSel.reserve(aSize);
-         m_fCandAuxSel.clear(); m_fCandAuxSel.reserve(aSize);
-         m_fCandAuxMassSel.clear(); m_fCandAuxMassSel.reserve(aSize);
-         
-         
-       }
+         m_fCandNoSel.clear(); m_fCandNoSel.reserve(aNumCandSize);
+         m_fCandPrelimSel.clear(); m_fCandPrelimSel.reserve(aNumCandSize);
+         m_fCandFisherSel.clear(); m_fCandFisherSel.reserve(aNumCandSize);
+         m_fCandAuxSel.clear(); m_fCandAuxSel.reserve(aNumCandSize);
+         m_fCandAuxMassSel.clear(); m_fCandAuxMassSel.reserve(aNumCandSize);
 
   
   
