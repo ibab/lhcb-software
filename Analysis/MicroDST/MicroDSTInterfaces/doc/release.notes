@@ -4,8 +4,11 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.18 2010-08-12 15:55:55 jpalac Exp $
+! $Id: release.notes,v 1.19 2010-08-13 11:24:23 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2010-08-13 - Juan Palacios
+ - Add ICloneCaloDigit, ICloneCaloCluster.
 
 ! 2010-08-12 - Juan Palacios
  - Add ICloneCaloHypo, ICloneMuonPID.
