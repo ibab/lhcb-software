@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+! 2010-08-13 - Gerhard Raven
+ - more const correctness
 
 !========================== HltMuon v3r6p1 2010-07-08 ===================
 ! 2010-06-10 - V. Gligorov

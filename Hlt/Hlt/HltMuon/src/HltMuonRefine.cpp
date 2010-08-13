@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.12 2010-06-10 13:58:18 gligorov Exp $
+// $Id: HltMuonRefine.cpp,v 1.13 2010-08-13 12:28:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -120,10 +120,10 @@ StatusCode HltMuonRefine::execute() {
   std::vector<L0MuonCandidate*>::const_iterator itL0Mu;
 
   
-  for ( Tracks::const_iterator pItr = m_selections.input<1>()->begin(); 
+  for ( Hlt::TSelection<LHCb::Track>::const_iterator pItr = m_selections.input<1>()->begin(); 
         m_selections.input<1>()->end() != pItr; 
         pItr++ ) { 
-    Track* thisTrack = (*pItr);
+    const Track* thisTrack = (*pItr);
     if(thisTrack->checkFlag( Track::Invalid ))continue;   
     //if(thisTrack->checkFlag( Track::Backward ))continue;
 
@@ -168,7 +168,7 @@ StatusCode HltMuonRefine::execute() {
       
       
       if(whoselected<0){
-        (*pItr)->setFlag(Track::PIDSelected,false); 
+        const_cast<LHCb::Track*>(*pItr)->setFlag(Track::PIDSelected,false); 
         nRemoved += 1;
         continue;
       }
@@ -208,13 +208,13 @@ StatusCode HltMuonRefine::execute() {
         setFilterPassed(true);
         
                debug()<<" muon flag "<<whoselected<<" "<<thisTrack->p()<<endreq;       
-        (*pItr)->setFlag(Track::PIDSelected,true);
+        const_cast<LHCb::Track*>(*pItr)->setFlag(Track::PIDSelected,true);
         m_selections.output()->push_back(thisTrack);
         
       }else{
         debug()<<"remove track "<<whoselected<<" "
                <<slX<<" "<<slY<<" "<<X<<" "<<XMuon<<endreq;
-        (*pItr)->setFlag(Track::PIDSelected,false);
+        const_cast<LHCb::Track*>(*pItr)->setFlag(Track::PIDSelected,false);
         
         //debug()<<(*pItr)->checkFlag( Track::PIDSelected)<<endreq;;
         nRemoved += 1;
