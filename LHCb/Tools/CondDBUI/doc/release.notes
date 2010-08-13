@@ -5,7 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-! 2010-08-10 - Illya Shapoval
+! 2010-08-13 - Illya Shapoval
  - The bug is fixed (see Savannah bug #53126) in CondDBUI.PyCoolDiff which 
    prevented insertion of new object if its payload at its IOV-'since' value is 
    equal to the current actual payload. The harmfull side effect of this was 

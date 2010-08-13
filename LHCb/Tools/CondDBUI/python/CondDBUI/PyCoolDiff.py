@@ -135,10 +135,8 @@ def diff( originalDB, modifiedDB, diffDB,
                             # Skip adding new object on top of current set of
                             # objects if and only if this set is composed of one
                             # object with its payload equal to the new payload.
-                            if False in map(lambda x: bool(x.payload() == obj.payload()),
-                                            orig_objects):
-                                new_data.append(obj)
-                            elif len(orig_objects) != 1:
+                            if not (len(orig_objects) == 1 and 
+                                    orig_objects[0].payload() == obj.payload()):
                                 new_data.append(obj)
                         except:
                             # the original object cannot be found, add the new one
