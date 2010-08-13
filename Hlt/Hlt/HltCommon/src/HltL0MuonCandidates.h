@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.h,v 1.4 2009-12-23 16:14:31 graven Exp $
+// $Id: HltL0MuonCandidates.h,v 1.5 2010-08-13 12:04:02 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
@@ -37,7 +37,7 @@ private:
   AIDA::IHistogram1D* m_pt;
   AIDA::IHistogram1D* m_ptMax;
 
-  bool checkClone(LHCb::L0MuonCandidate* muon);
+  bool checkClone(const LHCb::L0MuonCandidate* muon);
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

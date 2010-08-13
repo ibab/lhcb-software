@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.16 2010-05-20 08:39:14 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.17 2010-08-13 12:04:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -122,7 +122,7 @@ StatusCode HltL0MuonCandidates::execute() {
 
 
   double ptMax = -1.;
-  BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selection.input<1>()) {
+  BOOST_FOREACH(const L0MuonCandidate* l0muon, *m_selection.input<1>()) {
     bool pass = ( cuts.empty() || ( (l0muon->encodedPt()&0x7F) > cuts[0] ) ); // encodedPt is signed 
     if (!pass)  continue;
 
@@ -165,7 +165,7 @@ namespace {
 }
 
 //=============================================================================
-bool HltL0MuonCandidates::checkClone(L0MuonCandidate* muon)
+bool HltL0MuonCandidates::checkClone(const L0MuonCandidate* muon)
 {
   MuonTileID tileM1 = muon->muonTileIDs(0).front();
   MuonTileID tileM2 = muon->muonTileIDs(1).front();

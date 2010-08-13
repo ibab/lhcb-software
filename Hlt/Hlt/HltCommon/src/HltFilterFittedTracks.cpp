@@ -1,4 +1,4 @@
-// $Id: HltFilterFittedTracks.cpp,v 1.4 2010-06-06 19:18:21 graven Exp $
+// $Id: HltFilterFittedTracks.cpp,v 1.5 2010-08-13 12:04:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,7 @@ StatusCode HltFilterFittedTracks::execute() {
   //Lets see what we just did, for debug
   if (msgLevel(MSG::DEBUG)) {
         verbose() << "Printing out the vertices" << endmsg;
-        BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>()) {
+        BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>()) {
                 verbose() << iT << endmsg;
         }
   }
@@ -79,7 +79,7 @@ StatusCode HltFilterFittedTracks::execute() {
   double topip   = 0.;
 
   //Do the filtering
-  BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>()) {
+  BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>()) {
     //Make the protos
     LHCb::ProtoParticle protoP1; protoP1.setTrack(iT);
     //Make the particle
@@ -94,7 +94,7 @@ StatusCode HltFilterFittedTracks::execute() {
     //If more than one PV, we will require that the minimum value is greater than the cut
     double bestchi2 = 100000.;
     double bestip   = 100000.;
-    BOOST_FOREACH( LHCb::RecVertex* iV, *m_selections.input<2>()) {
+    BOOST_FOREACH(const LHCb::RecVertex* iV, *m_selections.input<2>()) {
       double ip = 0; double chi2 = 0;
       sc = m_dist->distance( &daughter1, iV, ip, chi2 ); 
       //double ips =  HltUtils::impactParameterSignificance(*iV,*iT) ;
@@ -126,7 +126,7 @@ StatusCode HltFilterFittedTracks::execute() {
   if (msgLevel(MSG::DEBUG)) {
         debug() << "About to print out a mountain of crap" << endmsg;
         debug() << "Printing out the output tracks" << endmsg;
-        BOOST_FOREACH( LHCb::Track *iT, *m_selections.output() ) {
+        BOOST_FOREACH(const LHCb::Track *iT, *m_selections.output() ) {
                 debug() << iT << endmsg;
         }
   }

@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.8 2009-05-29 21:36:32 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.9 2010-08-13 12:04:03 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/foreach.hpp"
@@ -66,7 +66,7 @@ StatusCode HltVertexToTracks::initialize() {
 StatusCode HltVertexToTracks::execute() {
   debug() << "==> Execute" << endmsg;
 
-  BOOST_FOREACH( LHCb::RecVertex* vertex, *m_selections.input<1>()) {
+  BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>()) {
     SmartRefVector< LHCb::Track >  trks = vertex->tracks();
     if(trks.size()!=2) return StatusCode::FAILURE;
     extend(*m_selections.output(),trks[0]);

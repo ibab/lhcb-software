@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-13 - Gerhard Raven
+ - const correctness fixes
+ - remove 2D (i.e. RZVelo based) IP & calo matching functors
+
 ! 2010-08-10 - V. Gligorov
  - HltFilterFittedVertices now uses LoKi::FastVertexFitter and not
    the OfflineVertexFitter.

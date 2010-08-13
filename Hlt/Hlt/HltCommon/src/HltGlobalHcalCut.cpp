@@ -1,4 +1,4 @@
-// $Id: HltGlobalHcalCut.cpp,v 1.1 2010-04-16 01:17:13 gligorov Exp $
+// $Id: HltGlobalHcalCut.cpp,v 1.2 2010-08-13 12:04:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode HltGlobalHcalCut::execute() {
   //Print out the input, just for debug
   if (msgLevel(MSG::DEBUG)) {
 
-        BOOST_FOREACH( LHCb::L0CaloCandidate* iC, *m_selections.input<1>()) {
+        BOOST_FOREACH( const LHCb::L0CaloCandidate* iC, *m_selections.input<1>()) {
                 debug() << iC << endmsg;
         }
 
@@ -69,7 +69,7 @@ StatusCode HltGlobalHcalCut::execute() {
 
   //Print out the output, just for debug
   if (msgLevel(MSG::DEBUG)) {
-        BOOST_FOREACH( LHCb::L0CaloCandidate *iC, *m_selections.output() ) {
+        BOOST_FOREACH( const LHCb::L0CaloCandidate *iC, *m_selections.output() ) {
                 debug() << iC << endmsg;
         }
   }
@@ -89,7 +89,7 @@ StatusCode HltGlobalHcalCut::filter_Clusters(){
 //Remove duplicate clusters created at boundary of HCAL boards
 
   //Loop over the clusters 
-  BOOST_FOREACH( LHCb::L0CaloCandidate* iC, *m_selections.input<1>()) {
+  BOOST_FOREACH(const LHCb::L0CaloCandidate* iC, *m_selections.input<1>()) {
     //code to remove duplicates goes here
     //You put all clusters which you want to save into the output like this
     m_selections.output()->push_back(iC);

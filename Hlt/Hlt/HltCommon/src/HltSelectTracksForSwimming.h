@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.h,v 1.4 2010-01-08 12:40:31 gligorov Exp $
+// $Id: HltSelectTracksForSwimming.h,v 1.5 2010-08-13 12:04:02 graven Exp $
 #ifndef HLTSELECTTRACKSFORSWIMMING_H 
 #define HLTSELECTTRACKSFORSWIMMING_H 1
 
@@ -30,7 +30,7 @@ public:
 protected:
 
   StatusCode filter_Tracks();
-  bool tracksMatchInVelo(LHCb::Track*,std::vector<unsigned int>);
+  bool tracksMatchInVelo(const LHCb::Track*,std::vector<unsigned int>);
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
   std::vector<unsigned int>  m_offlineTrackIDs;

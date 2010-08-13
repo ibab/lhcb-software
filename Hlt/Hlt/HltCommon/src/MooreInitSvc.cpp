@@ -1,4 +1,4 @@
-// $Id: MooreInitSvc.cpp,v 1.2 2010-05-26 20:38:02 graven Exp $
+// $Id: MooreInitSvc.cpp,v 1.3 2010-08-13 12:04:03 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : MooreInitSvc
 //
-// 2005-12-15 : Marco Cattaneo
+// 2010-??-?? : Gerhard Raven
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory

@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.37 2010-06-06 15:57:10 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.38 2010-08-13 12:04:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,6 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");
   declare<Hlt::NumberOfCSideVeloHits>("NumberOfCSideVeloHits");
 
-  declare<Hlt::rIP,zen::abs_min,const Hlt::VertexSelection>("rIP");
   declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("IPS");
   declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("FitIPS");
   declare<Hlt::IP,zen::abs_min,const Hlt::VertexSelection>("IP");
@@ -60,7 +59,6 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::FitMuChi2>("FitMuChi2");
   declare<Hlt::FitCleanedChi2OverNdf>("FitCleanedChi2OverNdf");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Calo2DChi2","HltRZVeloTCaloMatch");
   declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Calo3DChi2","HltVeloTCaloMatch");
   declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("RZVeloTMatch","HltMatchTVeloTracks");
 
@@ -69,7 +67,6 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
   declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf");
-  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Ecal2DChi2","HltRZVeloEcalMatch");
   declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
 
   declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
@@ -98,6 +95,7 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexZPosition>("VertexZPosition");
   declare<Hlt::VertexTransversePosition>("VertexTransversePosition");
 
+  //declare<Hlt::DS,zen::abs_min,const Hlt::VertexSelection>("VertexDistanceSignificance");
   declare<Hlt::D,zen::abs_min,const Hlt::VertexSelection>("VertexDistance");
   declare<Hlt::D,zen::abs_min,const Hlt::VertexSelection>("FitVertexDistance");
   declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("VertexDz");

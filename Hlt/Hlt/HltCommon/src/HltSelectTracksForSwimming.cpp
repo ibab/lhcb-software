@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.7 2010-01-08 12:40:31 gligorov Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.8 2010-08-13 12:04:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
         verbose() << "About to print out a  mountain of crap" << endmsg;
 
         verbose() << "Printing out the trigger tracks" << endmsg;
-        BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>()) {
+        BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>()) {
                 verbose() << iT << endmsg;
         }
 
@@ -73,7 +73,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   if (msgLevel(MSG::DEBUG)) {
         debug() << "About to print out a mountain of crap" << endmsg;
         debug() << "Printing out the output tracks" << endmsg;
-        BOOST_FOREACH( LHCb::Track *iT, *m_selections.output() ) {
+        BOOST_FOREACH(const LHCb::Track *iT, *m_selections.output() ) {
                 debug() << iT << endmsg;
         }
   }
@@ -92,7 +92,7 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks(){
 
   debug() << "Beginning to match tracks for swimming" << endmsg;
 
-  BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>() ) {
+  BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>() ) {
         verbose() << "Outputing the current trigger track" << endmsg;
         verbose() << iT << endmsg;
         bool trackmatchfound = false;
@@ -117,7 +117,7 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks(){
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-bool HltSelectTracksForSwimming::tracksMatchInVelo(LHCb::Track* t1, std::vector<unsigned int> ids2){
+bool HltSelectTracksForSwimming::tracksMatchInVelo(const LHCb::Track* t1, std::vector<unsigned int> ids2){
 //Match the trigger and offline tracks on VELO hits only
 //The offline track is passed as a vector of LHCbIDs
 
