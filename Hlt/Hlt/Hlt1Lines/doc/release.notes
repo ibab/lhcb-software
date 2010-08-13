@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.191 2010-08-07 04:20:59 gligorov Exp $
+! $Id: release.notes,v 1.192 2010-08-13 17:05:45 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-13 - Johannes Albrecht
+ - speed up muon alleys
 
 ! 2010-08-07 - V. Gligorov
  - Hlt1GECs : add a GEC filter for the number of OT hits.
