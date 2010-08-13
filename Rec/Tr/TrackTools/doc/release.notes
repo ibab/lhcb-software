@@ -3,6 +3,10 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2010-08-13 - Wouter Hulsbergen
+ - restore TrackInterpolator to r52948
+
 ! 2010-08-07 - Stephanie Hansmann-Menzemer
  - reverted changes from W.H. from 2010-07-23 as they screw up the 
    calorimeter track linking
