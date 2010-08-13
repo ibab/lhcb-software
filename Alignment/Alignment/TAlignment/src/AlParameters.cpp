@@ -44,7 +44,6 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
   }
 }
 
-
 AlParameters::AlParameters(const TransformParameters& parameters, const TransformCovariance& covariance) 
   : m_mask(NumPars), m_parameters(6), m_covariance(6), m_weightmatrix(6)
 {
@@ -75,6 +74,13 @@ AlParameters::AlParameters(const ROOT::Math::Transform3D& transform, DofMask mas
   TransformParameters parameters = transformParameters( transform ) ;
   for( unsigned int i = 0u; i < dim(); ++i) 
     m_parameters[i] = parameters[mask.parIndex(i)] ;
+}
+
+void
+AlParameters::setParameters( const TransformParameters& parameters )
+{
+  for( unsigned int i = 0u; i < dim(); ++i)
+    m_parameters[i] = parameters[m_mask.parIndex(i)] ;
 }
 
 std::string AlParameters::parName(int parindex)

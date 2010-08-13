@@ -64,6 +64,7 @@ public:
   // returns a vector with the sqrt of the diagonal elements of the cov matrix
   TransformParameters transformErrors() const ;
   static double signedSqrt(double root) ;
+  void setParameters( const TransformParameters& parameters ) ;
 private:
   DofMask     m_mask;
   Vector      m_parameters ;
