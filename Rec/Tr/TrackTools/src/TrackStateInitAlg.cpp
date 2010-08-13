@@ -43,7 +43,11 @@ StatusCode TrackStateInitAlg::execute()
        tracks->end() != it; ++it) {
     LHCb::Track* track = *it;
     StatusCode sc = m_trackTool->fit(*track, clearStates);
-    if( sc.isFailure() ) Warning("TrackStateInitTool fit failed",sc,0).ignore();
+    if( sc.isFailure() ) {
+      // Warn any downstream code that this track is bad
+      track->setFitStatus( LHCb::Track::FitFailed ) ;
+      Warning("TrackStateInitTool fit failed",sc,0).ignore();
+    }
   }
   return StatusCode::SUCCESS ;
 }
