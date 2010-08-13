@@ -1,7 +1,7 @@
 #
 __author__ = ['Francesco Dettori', 'Walter Bonivento']
 __date__ = '2010/04/23'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
   Stripping for D*(2010)+ -> pi+ (D0->xx) selection:
@@ -43,7 +43,9 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
                   ,'D0MaxIPCHI2'        : 10.       # adimensional
                   ,'DstMassWin'         : 110.       # MeV
                   ,'DstD0DMWin'         : 10.        # MeV
+##                  ,'RequireHlt'         : 1          # bool
                   }
+
 
     
     def getProps(self) :
@@ -118,7 +120,16 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", "D02"+combname ]
         seq_box =  bindMembers("seq_"+combname+"_box", algos = [ xxComb, dstar_box])
         pres = "Prescale"+combname+"Box"
-        line_box = StrippingLine("Dst2PiD02"+combname+"Box", algos = [ seq_box ], prescale = self.getProps()[ pres ])
+        # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
+        Xplus  = xplus[0].upper() + xplus[1:]    
+        Xminus = xminus[0].upper() + xminus[1:]
+        #RequireHlt = 1
+
+        hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
+        
+        line_box = StrippingLine("Dst2PiD02"+combname+"Box",
+                                 HLT = "HLT_PASS_RE('"+hltname+"')",
+                                 algos = [ seq_box ], prescale = self.getProps()[ pres ])
         return line_box
     
     

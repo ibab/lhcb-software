@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-13-10 - Francesco Dettori 
+  - Modified StrippingDstarD02xx.py to require correspondent HLT2 for each line
+  - Tightened cuts for StrippingLambdac.py
+
 ! 2010-08-13 - Marco Gersabeck 
  - Added StrippingD2hh to replace existing D0->hh lines, changed StrippingD2hhNoPIDXsec (relaxed cuts, added prescale)
 

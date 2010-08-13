@@ -1,7 +1,7 @@
 
-__author__ = ['Francesca Dordei']
+__author__ = ['Francesca Dordei', 'Francesco Dettori']
 __date__ = '2010/07/15'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
   Stripping for [Lambda_c+ -> p+ K- pi+]cc selection
@@ -15,19 +15,25 @@ class StrippingLambdacConf(LHCbConfigurableUser):
     Definition of [Lambda_c+ -> p+ K- pi+]cc stripping
     """
     __slots__ = { 'PrescaleLambdac'      : 1.
-                  ,'LMassWin'            : 50.        # MeV
-                  ,'LDIRA'               : 0.9997     #adimensional
+                  ,'LMassWin'            : 90.        # MeV
+                  ,'LDIRA'               : 0.9999     #adimensional
                   ,'LENDVERTEX'          : 20         #adimensional
                   ,'pPID'                : 10         #adimensional
-                  ,'piPID'               : 10         #adimensional
+                  ,'piPID'               : 0         #adimensional
                   ,'KPID'                : 10         #adimensional
-                  ,'LTAU'                :0.0012      # ns
-                  ,'LFD'                 :8           #adimensional
+                  ,'LTAUMAX'             : 0.0012     # ns
+                  ,'LTAUMIN'             : 0.         # ns
+                  ,'LFD'                 : 8.           #adimensional
+                  ,'MinDauPt'            : 400        # MeV
+                  ,'MaxDauPt'            : 1200        # MeV
+                  ,'MinDauP'             : 3200        # MeV
+                  ,'MinDauIPChi2'        : 0.5        # adimensional
                   ,'MinPiPt'             : 0          # MeV
                   ,'MinKPt'              : 0          # MeV
-                  ,'MinPPt'              : 500        # MeV
+                  ,'MinPPt'              : 0          # MeV
+                  , 'TrackChi2DOF'       : 10         # adimensional
                   , 'MinLambdaPt'        : 0          # MeV
-                  , 'doca'               : 0.25       # mm
+                  , 'doca'               : 0.1       # mm
                   }
     
     def getProps(self) :
@@ -48,11 +54,11 @@ class StrippingLambdacConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import bindMembers
         from StrippingConf.StrippingLine import StrippingLine
 
-        lambdacomb_combcut       =  "(ADAMASS('Lambda_c+')< %(LMassWin)s *MeV) & (ADOCAMAX('') < %(doca)s)"
-        lambdacomb_lambdacut =  "(BPVDIRA> %(LDIRA)s) & (VFASPF(VCHI2/VDOF)< %(LENDVERTEX)s) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC')<%(LTAU)s) & (BPVVDCHI2 > %(LFD)s) & (PT > %(MinLambdaPt)s)"
-        lambdacomb_pcut = "((PIDp-PIDpi)> %(pPID)s) & (PT > %(MinPPt)s * MeV)"
-	lambdacomb_Kcut = "((PIDK-PIDpi)> %(KPID)s) & (PT > %(MinKPt)s * MeV)"
-	lambdacomb_picut = "((PIDK-PIDpi)< %(piPID)s) & (PT > %(MinPiPt)s * MeV)"
+        lambdacomb_combcut       =  "(ADAMASS('Lambda_c+')< %(LMassWin)s *MeV) & (ADOCAMAX('') < %(doca)s) & (AMAXCHILD(PT)>%(MaxDauPt)s)"
+        lambdacomb_lambdacut =  "(BPVDIRA> %(LDIRA)s) & (VFASPF(VCHI2/VDOF)< %(LENDVERTEX)s) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC')<%(LTAUMAX)s) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(LTAUMIN)s) & (BPVVDCHI2 > %(LFD)s) & (PT > %(MinLambdaPt)s)"
+        lambdacomb_pcut = "((PIDp-PIDpi)> %(pPID)s) & (PT > %(MinDauPt)s * MeV) & (P > %(MinDauP)s * MeV) & (TRCHI2DOF<%(TrackChi2DOF)s) & (BPVIPCHI2()>%(MinDauIPChi2)s)"
+	lambdacomb_Kcut = "((PIDK-PIDpi)> %(KPID)s) & (PT > %(MinDauPt)s * MeV) & (P > %(MinDauP)s * MeV) & (TRCHI2DOF<%(TrackChi2DOF)s) & (BPVIPCHI2()>%(MinDauIPChi2)s)"
+	lambdacomb_picut = "((PIDK-PIDpi)< %(piPID)s) & (PT > %(MinDauPt)s * MeV) & (P > %(MinDauP)s * MeV) & (TRCHI2DOF<%(TrackChi2DOF)s)& (BPVIPCHI2()>%(MinDauIPChi2)s)"
         
         lambdac_comb = CombineParticles( "LambdacComb" )
         lambdac_comb.DecayDescriptor = "[Lambda_c+ -> p+ K- pi+]cc"
