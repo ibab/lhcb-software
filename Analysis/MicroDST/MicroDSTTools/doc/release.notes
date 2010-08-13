@@ -3,8 +3,15 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.39 2010-08-11 12:54:17 jpalac Exp $
+! $Id: release.notes,v 1.40 2010-08-13 13:24:06 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2010-08-13 - Juan Palacios
+ - Added CaloHypoCloner, MuonPIDCloner.
+ - src/TrackCloner.h
+  . Typo in #ifndef!
+ - ProtoParticleCloner
+  . Use new CaloHypoCloner, MuonPIDCloner.
 
 ! 2010-08-11 - Juan Palacios
  - cmt/requirements
