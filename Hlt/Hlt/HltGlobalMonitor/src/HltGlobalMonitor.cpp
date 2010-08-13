@@ -1,5 +1,5 @@
 
-// $Id: HltGlobalMonitor.cpp,v 1.74 2010-07-02 06:59:40 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.75 2010-08-13 12:31:51 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -339,7 +339,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDec
         if (j!=m_hlt2Line2AlleyBin.end()) {
             assert(j->second.first<nAcc2Alley.size());
             ++nAcc2Alley[ j->second.first ];
-            if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
+            fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
         }
     } else {
         warning() << "got unexpected decision name " << i->first << endmsg;
@@ -350,8 +350,6 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDec
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
     *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
     fill(m_hlt1Alley,i,(nAcc1Alley[i]>0));
-    //TODO: add trend plot corresponding to m_hlt1Alley -- pick up ODIN GPS time of the event for this!
-    // odin->
     if(nAcc1Alley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup1.size();++j){
       fill(m_hlt1AlleysCorrelations,i,j,(nAcc1Alley[j]>0));
@@ -360,7 +358,6 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN* /*odin*/, const LHCb::HltDec
   for (unsigned i=0; i<m_DecToGroup2.size();++i) {
     *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
     fill(m_hlt2Alley,i,(nAcc2Alley[i]>0));
-    //TODO: add trend plot corresponding to m_hlt2Alley
     if(nAcc2Alley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup2.size();++j){
       fill(m_hlt2AlleysCorrelations,i,j,(nAcc2Alley[j]>0));
