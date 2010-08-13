@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.9 2010-08-13 13:23:56 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.10 2010-08-13 15:16:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -84,6 +84,25 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
   if ( m_trackCloner!=0 )
     protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track() ) );
 
+  if (m_muonPIDCloner!=0) {
+    protoParticleClone->setMuonPID( (*m_muonPIDCloner)(protoParticle->muonPID()) );
+  }
+  
+  if (m_caloHypoCloner!=0) {
+    SmartRefVector<LHCb::CaloHypo> caloHypos = protoParticle->calo();
+    if (!caloHypos.empty()) {
+      //protoParticleClone->clearCalo();
+      SmartRefVector<LHCb::CaloHypo> clonedHypos;
+      SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
+      SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = caloHypos.end();
+      for ( ; iCalo != caloEnd; ++iCalo) {
+        clonedHypos.push_back((*m_caloHypoCloner)(*iCalo));
+        //protoParticleClone->addToCalo( (*m_caloHypoCloner)(*iCalo));
+      }
+      protoParticleClone->setCalo(clonedHypos);
+    }
+  }
+
   LHCb::RichPID* clonedRichPID =  
     cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
   if (clonedRichPID) {
@@ -91,22 +110,6 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     protoParticleClone->setRichPID(clonedRichPID);  
   }
 
-  if (m_muonPIDCloner!=0) {
-    protoParticleClone->setMuonPID( (*m_muonPIDCloner)(protoParticle->muonPID()) );
-  }
-  
-
-  if (m_caloHypoCloner!=0) {
-    SmartRefVector<LHCb::CaloHypo> caloHypos = protoParticle->calo();
-    if (!caloHypos.empty()) {
-      protoParticleClone->clearCalo();
-      SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
-      SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = caloHypos.end();
-      for ( ; iCalo != caloEnd; ++iCalo) {
-        protoParticleClone->addToCalo( (*m_caloHypoCloner)(*iCalo));
-      }
-    }
-  }
 
   return protoParticleClone;
   

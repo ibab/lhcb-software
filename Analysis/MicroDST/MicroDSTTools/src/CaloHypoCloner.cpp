@@ -1,4 +1,4 @@
-// $Id: CaloHypoCloner.cpp,v 1.2 2010-08-13 14:38:09 jpalac Exp $
+// $Id: CaloHypoCloner.cpp,v 1.3 2010-08-13 15:16:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,32 +65,42 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
 
   SmartRefVector<LHCb::CaloHypo> hypos = hypo->hypos();
   if (!hypos.empty()) {
-    clone->clearHypos();
+    //clone->clearHypos();
+    SmartRefVector<LHCb::CaloHypo> clonedHypos;
     SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = hypos.begin();
     SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = hypos.end();
     for ( ; iCalo != caloEnd; ++iCalo) {
-      clone->addToHypos( (*this)(*iCalo));
+      clonedHypos.push_back((*this)(*iCalo));
+      //clone->addToHypos( (*this)(*iCalo));
     }
+    clone->setHypos(clonedHypos);
   }
   
   SmartRefVector<LHCb::CaloDigit> digits = hypo->digits();
   if (!digits.empty()) {
-    clone->clearDigits();
+    //    clone->clearDigits();
+    SmartRefVector<LHCb::CaloDigit> clonedDigits;
     SmartRefVector<LHCb::CaloDigit>::const_iterator iCalo = digits.begin();
     SmartRefVector<LHCb::CaloDigit>::const_iterator caloEnd = digits.end();
     for ( ; iCalo != caloEnd; ++iCalo) {
-      clone->addToDigits( cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo) );
+      clonedDigits.push_back(cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo) );
+      //clone->addToDigits( cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo) );
     }
+    clone->setDigits(clonedDigits);
+    
   }
   
   SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
   if (!clusters.empty()) {
-    clone->clearClusters();
+    //clone->clearClusters();
+    SmartRefVector<LHCb::CaloCluster> clonedClusters;
     SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
     SmartRefVector<LHCb::CaloCluster>::const_iterator caloEnd = clusters.end();
     for ( ; iCalo != caloEnd; ++iCalo) {
-      clone->addToClusters( (*m_caloClusterCloner)(*iCalo) );
+      clonedClusters.push_back((*m_caloClusterCloner)(*iCalo) );
+      //clone->addToClusters( (*m_caloClusterCloner)(*iCalo) );
     }
+    clone->setClusters(clonedClusters);
   }
 
   return clone;
