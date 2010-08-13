@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.8 2010-08-13 12:04:02 graven Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.9 2010-08-13 13:25:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -92,7 +92,7 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks(){
 
   debug() << "Beginning to match tracks for swimming" << endmsg;
 
-  BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>() ) {
+  BOOST_FOREACH(Hlt::TSelection<LHCb::Track>::candidate_type* iT, *m_selections.input<1>() ) {
         verbose() << "Outputing the current trigger track" << endmsg;
         verbose() << iT << endmsg;
         bool trackmatchfound = false;

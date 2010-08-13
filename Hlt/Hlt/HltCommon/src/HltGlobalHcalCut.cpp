@@ -1,4 +1,4 @@
-// $Id: HltGlobalHcalCut.cpp,v 1.2 2010-08-13 12:04:02 graven Exp $
+// $Id: HltGlobalHcalCut.cpp,v 1.3 2010-08-13 13:25:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode HltGlobalHcalCut::filter_Clusters(){
 //Remove duplicate clusters created at boundary of HCAL boards
 
   //Loop over the clusters 
-  BOOST_FOREACH(const LHCb::L0CaloCandidate* iC, *m_selections.input<1>()) {
+  BOOST_FOREACH(Hlt::TSelection<LHCb::L0CaloCandidate>::candidate_type* iC, *m_selections.input<1>()) {
     //code to remove duplicates goes here
     //You put all clusters which you want to save into the output like this
     m_selections.output()->push_back(iC);

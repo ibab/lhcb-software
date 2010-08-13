@@ -1,4 +1,4 @@
-// $Id: HltFilterFittedTracks.cpp,v 1.5 2010-08-13 12:04:02 graven Exp $
+// $Id: HltFilterFittedTracks.cpp,v 1.6 2010-08-13 13:25:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -79,7 +79,7 @@ StatusCode HltFilterFittedTracks::execute() {
   double topip   = 0.;
 
   //Do the filtering
-  BOOST_FOREACH(const LHCb::Track* iT, *m_selections.input<1>()) {
+  BOOST_FOREACH(Hlt::TSelection<LHCb::Track>::candidate_type* iT, *m_selections.input<1>()) {
     //Make the protos
     LHCb::ProtoParticle protoP1; protoP1.setTrack(iT);
     //Make the particle
