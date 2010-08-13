@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-13 - Neal Gauvin
+ - The DisplVertices lines don't depend anymore on BestPIDParticleMaker. Gain in CPU time by a factor 2.
+   Physics remains unchanged.
+
 ! 2010-08-11 - Vanya Belyaev
 
  - add StrippingTriMuons.py 
