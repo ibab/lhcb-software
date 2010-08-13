@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.14 2010-04-30 12:01:18 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.15 2010-08-13 13:14:58 graven Exp $
 // Include files 
 
 #include <cmath>
@@ -10,7 +10,6 @@
 //Event
 #include "Event/StateParameters.h"
 
-#include "LineHypothesis.h"
 #include "HltBase/ParabolaHypothesis.h"
 #include "HltBase/FwdHypothesis.h"
 
