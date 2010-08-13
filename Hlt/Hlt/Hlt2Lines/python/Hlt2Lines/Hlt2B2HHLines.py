@@ -35,9 +35,10 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         # Define the Hlt2 Line
         #
+        from HltTracking.HltPVs import PV3D
         line = Hlt2Line('B2HH'
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedPions, Hlt2B2HH ]
+                        , algos = [ PV3D(), BiKalmanFittedPions, Hlt2B2HH ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHDecision" : 50080 } )

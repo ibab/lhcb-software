@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-08-13 - Gerhard Raven
+ - fix to the commit of the 27th: require PV3D in B2hh
+
 ! 2010-08-11 - V. Gligorov
  - Explicitly tell the XGamma and HHPi0 lines to use the TrgVertexFitter as the new
    default (LoKi::FastVertexFitter) cannot be used for channels decaying to photons
@@ -18,7 +21,7 @@
  - Hlt2DisplVertices lines : stop saving candidates in TES. 
    Not needed anymore for the line tell it has fired.
 
-! 2010-07-27
+! 2010-07-27 - Stefano Perazzini
  - Changed InputLocation for Hlt2B2HHLine from GoodPions to BiKalmanFittedPions
 
 ! 2010-07-23 - Chris Thomas
