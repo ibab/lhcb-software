@@ -2,6 +2,9 @@
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
+ulimit -d 2097152
+ulimit -m 2097152
+ulimit -v 2097152
 #
 start_task()
 {
