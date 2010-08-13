@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.23 2010-04-21 11:45:50 wouter Exp $
+// $Id: AlignmentElement.h,v 1.24 2010-08-13 21:03:14 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -257,6 +257,7 @@ private:
   Gaudi::Matrix6x6    m_jacobian ;        ///< Jacobian for going from global to alignment frame
   bool                m_useLocalFrame;    ///< Use local frame as alignmentframe
   ElementContainer    m_elementsInTree;   ///< Return all elements that are served by this alignment element
+  AlParameters        m_lastDeltaDelta ;  ///< Last applied correction. We only keep it for its cov matrix.
 };
 
 

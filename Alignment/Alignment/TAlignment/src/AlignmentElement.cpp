@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.31 2010-04-21 11:45:50 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.32 2010-08-13 21:03:14 wouter Exp $
 // Include files
 
 // from STD
@@ -75,7 +75,8 @@ AlignmentElement::AlignmentElement(const DetectorElement* element,
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
-    m_useLocalFrame(useLocalFrame)
+    m_useLocalFrame(useLocalFrame),
+    m_lastDeltaDelta( m_dofMask )
 {
   //m_name = description() ;
   std::vector<const DetectorElement*> elements(1u,element) ;
@@ -92,7 +93,8 @@ AlignmentElement::AlignmentElement(const std::string& aname,
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
-    m_useLocalFrame(useLocalFrame)
+    m_useLocalFrame(useLocalFrame),
+    m_lastDeltaDelta( m_dofMask )
 {
   size_t pos = aname.find_first_of("(.*") ;
   m_basename = pos == std::string::npos ? aname : aname.substr(0,pos) ;
@@ -265,11 +267,13 @@ AlParameters AlignmentElement::currentActiveTotalDelta() const
 }
 
 AlParameters AlignmentElement::currentDelta() const {
-  return currentDelta( alignmentFrame() ) ;
+  AlParameters d = currentDelta( alignmentFrame() ) ;
+  return AlParameters( d.transformParameters(), m_lastDeltaDelta.transformCovariance() ) ;
 }
 
 AlParameters AlignmentElement::currentLocalDelta() const {
-  return currentLocalDelta( alignmentFrame() ) ;
+  AlParameters d = currentLocalDelta( alignmentFrame() ) ;
+  return AlParameters( d.transformParameters(), m_lastDeltaDelta.transformCovariance() ) ;
 }
 
 
@@ -323,7 +327,10 @@ AlParameters AlignmentElement::currentLocalDelta(const Gaudi::Transform3D& frame
 
 AlParameters AlignmentElement::currentActiveDelta() const 
 {
-  return AlParameters(currentDelta().transformParameters(),m_dofMask ) ;
+  // this one has correct covariance _and_ weight matrix.
+  AlParameters rc = m_lastDeltaDelta ;
+  rc.setParameters( currentDelta().transformParameters() ) ; 
+  return rc ;
 }
 
 bool AlignmentElement::operator==(const DetectorElement* rhs) const {
@@ -349,6 +356,7 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
   }
   // Update the transform of the alignment frame
   initAlignmentFrame() ;
+  m_lastDeltaDelta = parameters ;
   return sc;
 }
 
