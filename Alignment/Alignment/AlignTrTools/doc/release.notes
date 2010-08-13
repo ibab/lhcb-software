@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2010-08-13 - Wouter Hulsbergen
+ - Add missing include to TAConfig
+
 ! 2010-06-17 - Johan Blouw
  - More Lagrangian constraints for TAConfig class...
 
