@@ -61,6 +61,7 @@ namespace Al
     const Gaudi::Vector6* findXmlUncertainty(const std::string& name) const ;
   private:
     std::vector< std::string > m_constraintNames ;
+    std::vector< std::string > m_xmlFiles ;
     std::vector< std::string > m_xmlUncertainties ;
     typedef std::map<std::string, XmlSurveyData> XmlData ;
     XmlData m_xmldata ;
@@ -84,6 +85,7 @@ namespace Al
     // interfaces
     declareInterface<IAlignChisqConstraintTool>(this);
     declareProperty("Constraints", m_constraintNames) ;
+    declareProperty("XmlFiles", m_xmlFiles) ;
     declareProperty("XmlUncertainties", m_xmlUncertainties) ;
   }
   
@@ -93,11 +95,12 @@ namespace Al
     StatusCode sc = GaudiTool::initialize() ;
     for( std::vector<std::string>::const_iterator ifile = m_constraintNames.begin() ;
          ifile != m_constraintNames.end() && sc.isSuccess() ; ++ifile ) 
-      if ( ifile->find(".xml") != std::string::npos ) 
-        sc = parseXmlFile( *ifile ) ;
-      else 
-        sc = parseElement( *ifile ) ;
-
+      sc = parseElement( *ifile ) ;
+    
+    for( std::vector<std::string>::const_iterator ifile = m_xmlFiles.begin() ;
+         ifile != m_xmlFiles.end() && sc.isSuccess() ; ++ifile ) 
+      sc = parseXmlFile( *ifile ) ;
+    
     for( std::vector<std::string>::const_iterator ipattern = m_xmlUncertainties.begin() ;
          ipattern != m_xmlUncertainties.end() && sc.isSuccess(); ++ipattern ) {
       sc = parseXmlUncertainties(*ipattern) ;
@@ -577,4 +580,5 @@ namespace Al
     }
     return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
   }
+
 }
