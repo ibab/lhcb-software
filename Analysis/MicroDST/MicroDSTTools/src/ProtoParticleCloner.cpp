@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.8 2010-08-11 12:52:52 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.9 2010-08-13 13:23:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 
 // from MicroDST
 #include <MicroDST/ICloneTrack.h>
+#include <MicroDST/ICloneCaloHypo.h>
+#include <MicroDST/ICloneMuonPID.h>
 
 // local
 #include "ProtoParticleCloner.h"
@@ -35,10 +37,16 @@ ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
   : 
   base_class ( type, name , parent ),
   m_trackCloner(0),
-  m_trackClonerName("TrackCloner")
+  m_caloHypoCloner(0),
+  m_muonPIDCloner(0),
+  m_trackClonerName("TrackCloner"),
+  m_caloHypoClonerName("CaloHypoCloner"),
+  m_muonPIDClonerName("MuonPIDCloner")
 {
 
   declareProperty("ICloneTrack", m_trackClonerName);
+  declareProperty("ICloneCaloHypo", m_caloHypoClonerName);
+  declareProperty("ICloneMuonPID", m_muonPIDClonerName);
 
 }
 //=============================================================================
@@ -52,6 +60,8 @@ StatusCode ProtoParticleCloner::initialize()
   if (! sc.isSuccess() ) return sc;
   
   m_trackCloner = tool<ICloneTrack>(m_trackClonerName, this->parent() );
+  m_caloHypoCloner = tool<ICloneCaloHypo>(m_caloHypoClonerName, this->parent() );
+  m_muonPIDCloner = tool<ICloneMuonPID>(m_muonPIDClonerName, this->parent() );
 
   return StatusCode::SUCCESS;
 }
@@ -76,30 +86,27 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
 
   LHCb::RichPID* clonedRichPID =  
     cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
-
-  LHCb::MuonPID* clonedMuonPID =  
-    cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
-
-  if (clonedRichPID) clonedRichPID->setTrack(protoParticleClone->track());
-  
-  if (clonedMuonPID) {
-    clonedMuonPID->setMuonTrack(protoParticleClone->track());
-    clonedMuonPID->setIDTrack(SmartRef<LHCb::Track>(protoParticle->muonPID()->idTrack() ) );
+  if (clonedRichPID) {
+    clonedRichPID->setTrack(protoParticleClone->track());
+    protoParticleClone->setRichPID(clonedRichPID);  
   }
 
-  SmartRefVector<LHCb::CaloHypo> caloHypos = protoParticle->calo();
-  if (!caloHypos.empty()) {
-    protoParticleClone->clearCalo();
-    SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
-    SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = caloHypos.end();
-    for ( ; iCalo != caloEnd; ++iCalo) {
-      LHCb::CaloHypo* hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
-      if (hypoClone) protoParticleClone->addToCalo(hypoClone);
+  if (m_muonPIDCloner!=0) {
+    protoParticleClone->setMuonPID( (*m_muonPIDCloner)(protoParticle->muonPID()) );
+  }
+  
+
+  if (m_caloHypoCloner!=0) {
+    SmartRefVector<LHCb::CaloHypo> caloHypos = protoParticle->calo();
+    if (!caloHypos.empty()) {
+      protoParticleClone->clearCalo();
+      SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
+      SmartRefVector<LHCb::CaloHypo>::const_iterator caloEnd = caloHypos.end();
+      for ( ; iCalo != caloEnd; ++iCalo) {
+        protoParticleClone->addToCalo( (*m_caloHypoCloner)(*iCalo));
+      }
     }
   }
-
-  protoParticleClone->setRichPID(clonedRichPID);  
-  protoParticleClone->setMuonPID(clonedMuonPID);
 
   return protoParticleClone;
   
