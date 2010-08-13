@@ -17,9 +17,9 @@ def InitialiseOptions():
                       " and y for the alignement constant from the second DB."
                       "Mathmatical funtions can be accessed from the math module like math.sqrt(x) [default: %default]",
                       default="x-y")
-    parser.add_option("-f","--XmlFilesToProcess",dest="files",
-                      help="Pattern to match the files to process [default: %default]",
-                      default="/Conditions/*/Alignment/*.xml")
+#    parser.add_option("-f","--XmlFilesToProcess",dest="files",
+#                      help="Pattern to match the files to process [default: %default]",
+#                      default="/Conditions/*/Alignment/*.xml")
     parser.add_option("-c","--CoordinatesToChange",dest="coords",
                       help="Pattern to match the files to process [default: %default]",
                       default="RxRyRzTxTyTz")
@@ -35,7 +35,7 @@ def InitialiseOptions():
     Name = options.RegExName
     Params = options.coords
     Functor = eval("lambda x,y:"+options.functor.replace("math","__import__('math')"))
-    Name = options.files
+#    Name = options.files
     return args
 def main():
     
