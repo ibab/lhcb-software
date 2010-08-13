@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.63 2010-05-03 14:17:24 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.64 2010-08-13 21:06:52 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -294,6 +294,8 @@ StatusCode AlignAlgorithm::execute() {
 	    removeVertexTracks( *clone, selectedtracks ) ;
 	  }
 	  delete clone ;
+	} else {
+	  info() << "Could not rebuild psi vertex from input track list." << endreq ;
 	}
       }
     }
@@ -566,15 +568,12 @@ namespace {
   
   struct TrackClonePredicate
   {
-    std::set<LHCb::LHCbID,CompareLHCbIds> ids ;
-    TrackClonePredicate( const LHCb::Track* lhs ) { ids.insert(lhs->lhcbIDs().begin(),lhs->lhcbIDs().end()) ; }
+    const LHCb::Track* lhs ;
+    TrackClonePredicate( const LHCb::Track* tr ) : lhs(tr) {}
     bool operator()(const LHCb::Track* rhs) const {
-      // the requirement is that all LHCbIDs of rhs appear in lhs
-      bool foundall(true) ;
-      for( std::vector<LHCb::LHCbID>::const_iterator id=rhs->lhcbIDs().begin() ;
-	   foundall && id != rhs->lhcbIDs().end(); ++id) 
-	foundall = ids.find( *id ) != ids.end() ;
-      return foundall ;
+      // the requirement is that all LHCbIDs of rhs appear in lhs or vice versa
+      size_t ncommon = lhs->nCommonLhcbIDs( *rhs ) ;
+      return ncommon == lhs->lhcbIDs().size() || ncommon == rhs->lhcbIDs().size() ;
     }
   } ;
   
@@ -611,13 +610,13 @@ void AlignAlgorithm::selectVertexTracks( const LHCb::RecVertex& vertex,
   // loop over the list of vertices, collect tracks in the vertex
   tracksinvertex.reserve( tracks.size() ) ;
   for( SmartRefVector<LHCb::Track>::const_iterator itrack = vertex.tracks().begin() ;
-       itrack !=  vertex.tracks().end(); ++itrack) {
-    
-    // we'll use the track in the provided list, not the track in the vertex
-    TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
-    if( jtrack != tracks.end() && m_vertextrackselector->accept( **jtrack ) ) 
-      tracksinvertex.push_back( *jtrack ) ;
-  }
+       itrack !=  vertex.tracks().end(); ++itrack) 
+    if( *itrack) {
+      // we'll use the track in the provided list, not the track in the vertex
+      TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
+      if( jtrack != tracks.end() && m_vertextrackselector->accept( **jtrack ) ) 
+	tracksinvertex.push_back( *jtrack ) ;
+    }
 }
 
 void AlignAlgorithm::removeVertexTracks( const LHCb::RecVertex& vertex,
