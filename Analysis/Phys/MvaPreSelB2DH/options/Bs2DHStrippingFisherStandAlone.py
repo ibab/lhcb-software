@@ -48,6 +48,14 @@ from Configurables import CondDB
 # Trigger
 from HltConf.Configuration import *
 
+#some steering options
+#Number of events to process
+NumEvents=10000
+#NumEvents=10000
+
+#NumEvents=-1
+
+
 
 
 
@@ -58,7 +66,6 @@ activateBs2DsK=False
 activateBd2DdPi=False
 
 activatePVRefit=False
-usePVRefitResult=True
 
 ########################
 ###################################################
@@ -66,6 +73,7 @@ usePVRefitResult=True
 
 #############################################################
 #some definitions
+dv=DaVinci()
 MasterLocation="Phys/"
 BsLocalLocationA="PreSelCombBs2DsK"
 BsLocalLocationB="PreSelCombBs2DsPi"
@@ -74,12 +82,23 @@ mainOutputLocationA=MasterLocation+BsLocalLocationA
 mainOutputLocationB=MasterLocation+BsLocalLocationB
 mainOutputLocationC=MasterLocation+BsLocalLocationC
 
+#########################
+# apply all the required options
+#
+dv.EvtMax=NumEvents
+dv.DataType="2010"
+#dv.InputType='DST'
+dv.InputType='SDST'
+dv.Simulation=False
+dv.PrintFreq=100
+dv.RedoMCLinks=False
+dv.L0=True
+
 ########################################
 
 
 importOptions("$MVAPRESELB2DHROOT/options/Bs2DHLoosePreSelection.py")
 SeqMvASelection  = GaudiSequencer("SeqSelBs2DsH")
-DaVinci().UserAlgorithms = [SeqMvASelection]
 
 SeqMvASelection.Members += [veloNZSKiller() ]
 
@@ -102,10 +121,10 @@ B2DHPreselMvaUtilityTool.Bs2DsPiReconDir=BsLocalLocationB+"/"
 # Channel number label for Bs2DsPi=1. It is used for all B2DH channels.
 
 
-Bs2DH_B2DHMvaPreSelectionAlg.ActivateHistograms=False
+Bs2DH_B2DHMvaPreSelectionAlg.ActivateHistograms=True
 Bs2DH_B2DHMvaPreSelectionAlg.ActivateL0Selection=True
-Bs2DH_B2DHMvaPreSelectionAlg.ActivatePrimaryVertexRefit=usePVRefitResult
-Bs2DH_B2DHMvaPreSelectionAlg.CurrentB2DHDecayChannelNumber=1
+Bs2DH_B2DHMvaPreSelectionAlg.ActivatePrimaryVertexRefit=activatePVRefit
+Bs2DH_B2DHMvaPreSelectionAlg.CurrentB2DHDecayChannelNumber=1;
 
 Bs2DH_B2DHMvaPreSelectionAlg.addTool(Bs2DH_B2DHMvaPreSelectionParamTool)
 Bs2DH_B2DHMvaPreSelectionAlg.addTool(Bs2DH_B2DHPreselMvaFisherDMonitorHistoTool)
@@ -121,12 +140,17 @@ PVReFitterB = PVReFitterAlg(PVReFitterAlgInstanceNameB)
 PVReFitterB.ParticleInputLocation = mainOutputLocationB+"/Particles"
 PVReFitterB.OutputLevel=3
 B2DHPreselMvaUtilityTool.Bs2DsPiPVRefitAlgName= PVReFitterAlgInstanceNameB+"/"
-B2DHPreselMvaUtilityTool.RefittedPVRelationLoc=PVRefitterRelationLocationName 
+B2DHPreselMvaUtilityTool.RefittedPVRelationLoc=PVRefitterRelationLocationName
 if(activatePVRefit):
     SeqMvASelection.Members += [PVReFitterB]
 
+
 Bs2DH_B2DHMvaPreSelectionAlg.addTool(B2DHPreselMvaUtilityTool)
 SeqMvASelection.Members += [Bs2DH_B2DHMvaPreSelectionAlg]
+
+
+
+
 
 
 ########################################
@@ -134,3 +158,23 @@ SeqMvASelection.Members += [Bs2DH_B2DHMvaPreSelectionAlg]
 
 
  
+#ApplicationMgr().HistogramPersistency = "ROOT"
+#HistogramPersistencySvc().OutputFile = "/afs/cern.ch/user/s/seaso/scratch0/DavinciData/histoMva/BsDH_RealData_test.root";
+
+dv.UserAlgorithms = [SeqMvASelection]
+#dv.HistogramFile = "/afs/cern.ch/user/s/seaso/scratch0/DavinciData/histoMva/BsDsH_RealData_Strippingtest_AllDMode.root"
+dv.HistogramFile="BsDsH_RealData_Stripping_Fisher.root"
+
+#HistogramPersistencySvc().OutputFile = "Stripping_RealData_test_Bs2dsPi.root";
+
+#importOptions ("$MVAPRESELB2DHROOT/dataFiles/realdata/LHCb_Collision10_429155_RealData+RecoStripping-04_90000000__BHADRONDST_MagDown_Test_PFN.py" )
+DaVinci().Input   = [
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002181_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002182_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002183_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002199_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002294_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002308_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002347_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"
+]
+FileCatalog().Catalogs= ["xmlcatalog_file:pool_xml_catalog.xml"]
