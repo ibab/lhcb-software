@@ -208,6 +208,7 @@ namespace Al
 	vertex.addTrack( i->inputstate ) ;
 
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
+      double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
       
       if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainDiMuonMass ) {
 	assert( nacceptedtracks == 2 ) ;
@@ -224,13 +225,15 @@ namespace Al
 		<< std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
 	
       }
-      
+      // this is the chisquare including an eventual mass constraint
       double vchi2 = vertex.chi2() ; // cache it, because I know it is slow
+ 
       debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << vertex.nDoF() << endreq ;
       debug() << "Vertex position orig/new="
 	      << vertexestimate << "/" << vertex.position() << endreq ;
       
-      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && vchi2 / vertex.nDoF() < m_chiSquarePerDofCut) {
+      // note that when we cut on the vertex chisqur2 we exclude the mass constraint
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && vchi2orig / vertex.nDoF() < m_chiSquarePerDofCut) {
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
@@ -362,7 +365,7 @@ namespace Al
 	} 
       } else {
 	warning() << "rejected vertex with chisqu/dof: "
-		  << vchi2 / vertex.nDoF() << endreq ;
+		  << vchi2 / vertex.nDoF() << " isdimuon= " << constrainDiMuonMass << endreq ;
       } 
     } else {
 	warning() << "not enough tracks for vertex anymore" << endreq ;
