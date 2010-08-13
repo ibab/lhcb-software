@@ -1,4 +1,4 @@
-// $Id: CaloHypoCloner.cpp,v 1.1 2010-08-13 13:21:08 jpalac Exp $
+// $Id: CaloHypoCloner.cpp,v 1.2 2010-08-13 14:38:09 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,8 @@
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 
+// MicroDST
+#include "MicroDST/ICloneCaloCluster.h"
 // local
 #include "CaloHypoCloner.h"
 
@@ -29,7 +31,9 @@ CaloHypoCloner::CaloHypoCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : 
-  base_class ( type, name , parent )
+  base_class ( type, name , parent ),
+  m_caloClusterCloner(0),
+  m_caloClusterClonerName("CaloClusterCloner")
 {
 }
 //=============================================================================
@@ -41,6 +45,8 @@ StatusCode CaloHypoCloner::initialize()
   StatusCode sc = base_class::initialize();
   
   if (! sc.isSuccess() ) return sc;
+
+  m_caloClusterCloner = tool<ICloneCaloCluster>(m_caloClusterClonerName, this->parent() );
   
   return StatusCode::SUCCESS;
 }
@@ -83,8 +89,7 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
     SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
     SmartRefVector<LHCb::CaloCluster>::const_iterator caloEnd = clusters.end();
     for ( ; iCalo != caloEnd; ++iCalo) {
-      // Need to change this since cluster cloning operation in non-trivial!
-      clone->addToClusters( cloneKeyedContainerItem<BasicCaloClusterCloner>(*iCalo) );
+      clone->addToClusters( (*m_caloClusterCloner)(*iCalo) );
     }
   }
 
