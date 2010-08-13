@@ -11,12 +11,13 @@ import GaudiKernel.ProcessJobOptions
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
+from SurveyConstraints import SurveyConstraints
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
     
-    __used_configurables__ = [ AlignTrTools ]
-
+    __used_configurables__ = [ AlignTrTools ]    
+    __queried_configurables__ = [ SurveyConstraints ]
     __version__= "$Id: Configuration.py"
     __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
@@ -34,7 +35,6 @@ class TAlignment( LHCbConfigurableUser ):
         , "ApplyMS"                      : True                        # Multiple Scattering
         , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
         , "DoF"                          : []                          # list of constraints
-        , "SurveyConstraints"            : []                          # Specifies 'chisquare' constraints
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
         , "MinNumberOfHits"              : 100                         # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
@@ -48,6 +48,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "ITTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
         , "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
         , "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon"
+        , "EcalTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Ecal"
         , "Precision"                    : 16                          # Set precision for conditions
         , "skipBigCluster"               : True                        # if cluster found with >= 2 hits, whole track is rejected
         , "OutputLevel"                  : INFO                        # Output level
@@ -99,16 +100,16 @@ class TAlignment( LHCbConfigurableUser ):
             return self.getDefaultProperties()[name]
 
     def fitSeq( self, outputLevel = INFO ) :
-        if not allConfigurables.get( "TrackFitSeq" ) :
+        if not allConfigurables.get( "AlignTrackFitSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Fit Sequencer not defined! Defining!"
 
-            fitSequencer = GaudiSequencer( "TrackFitSeq" )
+            fitSequencer = GaudiSequencer( "AlignTrackFitSeq" )
             fitSequencer.MeasureTime = True
 
             return fitSequencer
         else :
             if outputLevel == VERBOSE: print "VERBOSE: Fit Sequencer already defined!" 
-            return allConfigurables.get( "TrackFitSeq" )
+            return allConfigurables.get( "AlignTrackFitSeq" )
 
 
     def filterSeq( self, outputLevel = INFO ) :
@@ -174,6 +175,8 @@ class TAlignment( LHCbConfigurableUser ):
         if 'Muon' in listOfCondToWrite:
             #writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [] ) )
             writeSequencer.Members.append ( self.writeAlg( 'Muon','Global', [0,1,2] ) )
+        if 'Ecal' in listOfCondToWrite:
+            writeSequencer.Members.append ( self.writeAlg( 'Ecal','alignment', [] ) )
         return writeSequencer
 
     def alignmentSeq( self, outputLevel = INFO ) :
@@ -206,7 +209,9 @@ class TAlignment( LHCbConfigurableUser ):
             updatetool.LogFile                    = self.getProp( "LogFile"            )
             updatetool.addTool(gslSVDsolver)
             updatetool.MatrixSolverTool           = self.getProp( "SolvTool" )
-            updatetool.SurveyConstraintTool.Constraints          = self.getProp( "SurveyConstraints" )
+            # for now we do it like this
+            SurveyConstraints().configureTool( updatetool.SurveyConstraintTool )
+            
             updatetool.LagrangeConstraintTool.Constraints        = self.getProp( "Constraints" )
             updatetool.LagrangeConstraintTool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
             
