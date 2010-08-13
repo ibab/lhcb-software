@@ -3,8 +3,7 @@ __author__  = "Nicola Chiapolini, Albert Bursche"
 __version__ = "1.0"
 
 from ROOT import *
-from GaudiPython.Bindings import gbl 
-
+from libInspect import *
 
 class DynamicGraph(TGraph):
   """Wraper around TGraph 
@@ -60,10 +59,10 @@ class Plot(object):
         self.setAxes(labels)
 
   def getLabels(self):
-      try:
-	labels = self.functor(GeometryNames())
-      except:
-	labels = ["X","Y"]
+      #try:
+      labels = self.functor(GeometryNames())
+      #except:
+#	labels = ["X","Y"]
       return labels
 
   def setAxes(self, labels = ""):         
@@ -121,108 +120,6 @@ class ArrowPlot(Plot):
 	x = "X"
 	y = "Y"
       return [x, y]
-
-
-class GeometryNames:
-  """Class containing the axis labels corresponding to 
-     the variables in ElementGeometry"""
-     
-  X  = "X/mm" 
-  nX = X
-  Y  = "Y/mm"
-  nY = Y
-  Z  = "Z/mm"
-  nZ = Z
-  TX = "Tx/mm"
-  TY = "Ty/mm"
-  TZ = "Tz/mm"
-  DX = "#Delta_{x}/mm"
-  DY = "#Delta_{y}/mm"
-  DZ = "#Delta_{z}/mm"
-    
-  def phi(self):
-      return "#phi"
-    
-  def eta(self):
-      return "#eta"
-    
-  def theta(self):
-      return "#theta"
-    
-  def rho(self):  
-      return "#rho/mm"
-  def r(self):
-      return "r/mm"
-
-
-class ElementGeometry:
-  """Geometry info needed for Alignment"""
-  
-  def __init__(self, detElement):
-      geo = detElement.geometry()
-
-      try: 
-	self.name = geo.alignmentCondition().name()
-      except:
-	self.name = detElement.name()
-	return
-	  
-      self.ownCenter = gbl.Gaudi.XYZPoint()
-      
-      self.n_globalCenter = geo.toGlobalMatrixNominal() * self.ownCenter
-      self.globalCenter   = geo.toGlobalMatrix() * self.ownCenter
-
-      self.n_parentCenter = geo.ownToLocalMatrixNominal().Inverse() * \
-	self.ownCenter
-      self.parentCenter   = geo.ownToNominalMatrix().Inverse() * \
-	self.n_parentCenter
-
-      self.X = self.globalCenter.x()
-      self.Y = self.globalCenter.y()
-      self.Z = self.globalCenter.z()
-      
-      self.nX = self.n_globalCenter.x()
-      self.nY = self.n_globalCenter.y()
-      self.nZ = self.n_globalCenter.z()
-
-      self.TX = self.globalCenter.x() - self.n_globalCenter.x() 
-      self.TY = self.globalCenter.y() - self.n_globalCenter.y()
-      self.TZ = self.globalCenter.z() - self.n_globalCenter.z()
-      
-      self.DX = self.parentCenter.x() - self.n_parentCenter.x() 
-      self.DY = self.parentCenter.y() - self.n_parentCenter.y()
-      self.DZ = self.parentCenter.z() - self.n_parentCenter.z()
-
-  def phi(self):
-      """
-      polar angle
-      """
-      if (self.X!=0):
-	  return math.atan(self.Y/self.X)
-      else:
-	  return 0.0
-
-  def rho(self):
-      """
-      distance from z axis
-      """
-      return math.sqrt(self.X**2+self.Y**2)
-
-  def theta(self):
-      if self.Z!=0:
-	  return math.atan(self.rho()/self.Z)
-
-  def eta(self):
-      """
-      pseudorapidity 
-      """
-      return -math.log(math.tan(self.theta()/2))
-
-  def r(self):
-      """
-      distance to origin        
-      """
-      return math.sqrt(self.X**2+self.Y**2+self.Z**2)
 
 
 class PlotFunctions:
