@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.13 2010-08-13 12:28:32 graven Exp $
+// $Id: HltMuonRefine.cpp,v 1.14 2010-08-13 13:02:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,7 @@ StatusCode HltMuonRefine::execute() {
   for ( Hlt::TSelection<LHCb::Track>::const_iterator pItr = m_selections.input<1>()->begin(); 
         m_selections.input<1>()->end() != pItr; 
         pItr++ ) { 
-    const Track* thisTrack = (*pItr);
+    Hlt::TSelection<LHCb::Track>::candidate_type* thisTrack = (*pItr);
     if(thisTrack->checkFlag( Track::Invalid ))continue;   
     //if(thisTrack->checkFlag( Track::Backward ))continue;
 
