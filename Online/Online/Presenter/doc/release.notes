@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v2r0 2010-08-13 =============
+! 2010-08-13 - Patrick Robbe
+ - src/TrendingHistogram.cpp: make it working for history mode also
+
 ! 2010-08-12 - Patrick Robbe
  - src/PresenterInformation.h/.cpp: add new class to hold presenter information
    in order to avoid circular dependencies with PresenterMainFrame

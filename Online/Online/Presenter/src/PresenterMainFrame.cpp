@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.328 2010-08-12 17:19:48 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.329 2010-08-13 16:51:51 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1534,9 +1534,8 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_previousIntervalButton->SetState(kButtonDisabled);
     m_nextIntervalButton->SetState(kButtonDisabled);
     m_currentPageName = selectedPageFromDbTree();
-    if (!m_currentPageName.empty() && (false == m_loadingPage)) {
+    if (!m_currentPageName.empty() && ( ! m_loadingPage ) ) 
       loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
-    }
   }
     break;
   case M_File_Picker: {
@@ -4195,7 +4194,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
     if ( ( 0 != m_archive ) &&
 	 ( ( pres::History == m_presenterInfo.presenterMode()) || 
-	   (pres::EditorOffline == m_presenterInfo.presenterMode()))) {
+	   ( pres::EditorOffline == m_presenterInfo.presenterMode()))) {
       if ( "last 8 hours" == history_entry ) {
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("08:00:00") ) ;

@@ -210,9 +210,10 @@ class DbRootHist : public HistogramIdentifier
   TString   m_histoRootTitle ; ///< generated ROOT histo title from DIM gauchocomment
   std::string m_identifier ; ///< histogram identifier
   TPad * m_hostingPad ; ///< pointer to the histogram Pad  
+  PresenterInformation * m_presenterInfo ; ///< link to presenter info object
 
   /// updates pad margins from  Histogram DB
-  void setPadMarginsFromDB(TPad* &pad);
+  void setPadMarginsFromDB(TPad * pad) ;
 
 
  private:
@@ -264,7 +265,6 @@ class DbRootHist : public HistogramIdentifier
   std::vector< std::string* > * m_tasksNotRunning ; ///< list of tasks not running
   boost::recursive_mutex * m_rootMutex ; ///< pointer to global root mutex
 
-  PresenterInformation * m_presenterInfo ; ///< link to presenter info object
   pres::EffServiceType m_effServiceType ; ///< eff service type   
   
   /// clean analysis sources

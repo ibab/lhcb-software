@@ -1,4 +1,4 @@
-// $Id: TrendingHistogram.cpp,v 1.2 2010-08-12 15:43:00 robbep Exp $
+// $Id: TrendingHistogram.cpp,v 1.3 2010-08-13 16:51:51 robbep Exp $
 // This class
 #include "TrendingHistogram.h" 
 
@@ -26,6 +26,9 @@
 #include <boost/filesystem.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/date_time/posix_time/posix_time_types.hpp"
+
+// Local 
+#include "PresenterInformation.h"
 
 // global variable
 namespace PresenterGaudi { 
@@ -101,8 +104,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::minutes( 5 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case Last30Minutes:
@@ -110,8 +112,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::minutes( 30 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case Last2Hours:
@@ -119,8 +120,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::hours( 2 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case LastDay:
@@ -128,8 +128,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::hours( 24 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case LastWeek:
@@ -137,8 +136,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::hours( 7*24 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case LastYear:
@@ -146,8 +144,7 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::hours( 24*365 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
     case Last10Years:
@@ -155,10 +152,27 @@ void TrendingHistogram::fillHistogram( ) {
       temp = 
 	boost::posix_time::to_tm( now - 
 				  boost::posix_time::time_duration( boost::posix_time::hours( 24*365*10 ) ) ) ;
-      m_startTime = 
-	std::mktime( &temp ) ;
+      m_startTime = std::mktime( &temp ) ;
       m_endTime = std::time( 0 ) ;
       break ;
+    case History:
+     if ( pres::s_Now == m_presenterInfo -> rwTimePoint() ) {
+	now = boost::posix_time::second_clock::local_time() ; 
+	temp = boost::posix_time::to_tm( now ) ;
+	m_endTime = std::mktime( &temp ) ;
+	temp = boost::posix_time::to_tm( now -
+					 boost::posix_time::duration_from_string( m_presenterInfo -> 
+										  rwPastDuration() ) ) ;
+	m_startTime = std::mktime( &temp ) ;
+      } else {
+	now = boost::posix_time::from_iso_string( m_presenterInfo -> rwTimePoint() ) ;
+	temp = boost::posix_time::to_tm( now ) ;
+	m_startTime = std::mktime( &temp ) ;
+	temp = boost::posix_time::to_tm( now + 
+					 boost::posix_time::duration_from_string( m_presenterInfo -> 
+										  rwPastDuration() ) ) ;
+	m_endTime = std::mktime( &temp ) ;
+      }
     default:
       break ;
     }
@@ -178,7 +192,7 @@ void TrendingHistogram::fillHistogram( ) {
 
     if ( 0 != m_timeArray ) delete [] m_timeArray ;
     if ( 0 != m_valueArray ) delete [] m_valueArray ;
-    
+        
     // Read the values in the selected time interval and fill a vector    
     while ( PresenterGaudi::trendingTool -> nextValue( theTime , theValue ) ) {
       vtime.push_back( theTime - s_timeOffset ) ;
