@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.23 2010-08-13 10:09:17 jblouw Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.24 2010-08-13 10:17:42 jblouw Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os, sys
@@ -77,7 +77,7 @@ def patchBrunel(true_online_version):
   brunel.CondDBtag = "head-20100509"
 
   brunel.DDDBtag   = "head-20100518"
-  brubel.CondDBtag = "head-20100730"
+  brunel.CondDBtag = "head-20100730"
 
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
