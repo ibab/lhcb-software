@@ -28,7 +28,7 @@
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IBackgroundCategory.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
-#include "Kernel/IFilterCriterion.h"
+//#include "Kernel/IFilterCriterion.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h" 
 #include "MCInterfaces/IVisPrimVertTool.h"
@@ -53,7 +53,9 @@
 #include "Event/GenHeader.h"
 #include "Event/CaloDigit.h"
 
-#include "DecayTreeFitter/VtxFitParams.h"
+#include "Event/MuonPID.h"
+
+//#include "DecayTreeFitter/VtxFitParams.h"
 
 using namespace Gaudi::Units;
 
@@ -413,48 +415,54 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
   double ctErrFixed = std::numeric_limits<double>::quiet_NaN();
   double fD = std::numeric_limits<double>::quiet_NaN();
   double fDErr = std::numeric_limits<double>::quiet_NaN();
+
   //extract all params
-  LHCb::VtxFitParams params = treefitter->fitParams( *node );
+  const Gaudi::Math::ParticleParams* params = treefitter->fitParams( node );
+  const Gaudi::Math::LorentzVectorWithError& mom = params->momentum();
   //extract mass
-  mass = params.p4().mass();
-  massErr = params.p4Err().MErr();
+  mass = mom.mass().value();
+  massErr = mom.mass().error();
   //extract lifetime (without mass constraint)
-  LHCb::VtxDoubleErr tau;
-  tau = params.properDecayTime();
-  ct = tau.value();
-  ctErr = sqrt(tau.covariance());
+  ct = params->ctau().value();
+  ctErr = params->ctau().error();
+
   //extract lifetime (with mass constraint)
-  LHCb::VtxDoubleErr tauFixed;
   if (node->isBasicParticle() || fabs(massErr) < 1.0e-3)//do we already have a mass constraint?
-    tauFixed = params.properDecayTime();
+    {
+      ctFixed = ct;
+      ctErrFixed = ctErr;
+    }
   else//set a mass constraint
   {
     const LHCb::IParticlePropertySvc* ppsvc = ppSvc();
     const LHCb::ParticleID& pid = node->particleID();
     const LHCb::ParticleProperty* pp = ppsvc->find(pid);
-    tauFixed = params.properDecayTime(pp->mass());
-  }
-  ctFixed = tauFixed.value();//this has been determined with a mass constraint
-  ctErrFixed = sqrt(tauFixed.covariance());
-  //extract flight distance
-  LHCb::VtxDoubleErr len = params.decayLengthErr();
-  fD = len.value();
-  fDErr = sqrt(len.covariance());
+    double mass = pp->mass();
+    double chi2 = -1000.0;
+    Gaudi::Math::ParticleParams params_fixed = Gaudi::Math::FitMass::fit(*params, mass, chi2);
+    ctFixed = params_fixed.ctau().value();
+    ctErrFixed = params_fixed.ctau().error();
+  }  
+  fD = params->decayLength().value();
+  fDErr = params->decayLength().error();
+
   //extract chi2
   short ndof = treefitter->nDof();
   double chi2 = treefitter->chiSquare();
+
   //extract covariance matrix  
   Gaudi::SymMatrix7x7 cov;
-  cov.Place_at(params.posCovMatrix(),0,0);
-  cov.Place_at(params.momCovMatrix(),3,3);
+  cov.Place_at(params->posCovMatrix(),0,0);
+  cov.Place_at(params->momCovMatrix(),3,3);
   for(int imom =0; imom<4; ++imom)
     for(int ipos=0 ; ipos<3; ++ipos)
-      cov(imom+3,ipos) = params.momPosCovMatrix()(imom,ipos);
+      cov(imom+3,ipos) = params->momPosCov()(imom,ipos);
+
   //write ZooTreefitInfo info block
-  ZooP * zp = GetSaved(node); //this gives me the corresponding ZooP
+  ZooP * zp = GetSaved(node);
   if (zp != 0)
     zp->AddInfo<ZooTreefitInfo>(*objman(),
-                                ZooTreefitInfo(params.position(), params.p4(), cov, 
+                                ZooTreefitInfo(params->position(), params->momentum(), cov, 
                                                mass, massErr,
                                                fD, fDErr, 
                                                ct, ctErr, 
@@ -931,6 +939,20 @@ void ZooWriter::writePackedStates(ZooTrackInfo* trinfo, const LHCb::Particle* p)
 void ZooWriter::fillHitPattern(ZooTrackInfo* ztri, const LHCb::Particle* p)
 {
     const LHCb::Track* tr = refittedTrack(p->proto()->track());
+
+    LHCb::HitPattern muon_hitpattern;
+    LHCb::MuonPIDs* muonpids = get<LHCb::MuonPIDs>( LHCb::MuonPIDLocation::Default );
+    for (LHCb::MuonPIDs::const_iterator iter = muonpids->begin(); iter != muonpids->end(); ++iter ) 
+      {
+	LHCb::MuonPID* theID = *iter;
+	const LHCb::Track* longtrack = theID->idTrack();
+	const LHCb::Track* muontrack = theID->muonTrack();
+	if (longtrack && muontrack && longtrack->key() == tr->key())
+	  {
+	    muon_hitpattern = LHCb::HitPattern(muontrack->lhcbIDs());
+	  }
+      }
+
     if (m_writeHitPattern && 0 == ztri->hitPattern()) {
 	const LHCb::HitPattern hitPat(tr->lhcbIDs());
 	ztri->setHitPattern(
@@ -944,7 +966,8 @@ void ZooWriter::fillHitPattern(ZooTrackInfo* ztri, const LHCb::Particle* p)
 			(hitPat.itTopBottom()).to_ulong(),
 			(hitPat.itAC()).to_ulong(),
 			(hitPat.tt()).to_ulong(),
-			(hitPat.muon()).to_ulong())));
+			(!tr->checkType(LHCb::Track::Muon)) ? (muon_hitpattern.muon()).to_ulong() : (hitPat.muon()).to_ulong()
+			)));
     }
     if (m_writeExpectedHitPattern && 0 == ztri->expectedHitPattern()) {
 	LHCb::HitPattern hitPat;
@@ -1016,7 +1039,43 @@ void ZooWriter::writeTrackInfo(ZooP* zp, const LHCb::Particle* p)
     // and the same track
     const LHCb::Track *tr = refittedTrack(p->proto()->track());
     ZooTrackInfo*& ztri = 
-	    objman()->getOrCreateMappingFor<ZooTrackInfo>(tr);
+      objman()->getOrCreateMappingFor<ZooTrackInfo>(tr);
+    
+    //new code to add nmuon hits
+    int nMuonHits = 0;
+    LHCb::MuonPIDs* muonpids = get<LHCb::MuonPIDs>( LHCb::MuonPIDLocation::Default );
+    for (LHCb::MuonPIDs::const_iterator iter = muonpids->begin(); iter != muonpids->end(); ++iter ) 
+      {
+	LHCb::MuonPID* theID = *iter;
+	const LHCb::Track* longtrack = theID->idTrack();
+	const LHCb::Track* muontrack = theID->muonTrack();
+	if (longtrack && muontrack && longtrack->key() == tr->key())
+	  {
+	    //some code for testing...
+	    // 	  int nVelo = 0, nTT = 0, nIT = 0, nOT = 0, nMuon = 0;
+	    // 	  int nMuonStation[5] = {0, 0, 0, 0, 0};
+	    // 	  BOOST_FOREACH(LHCb::LHCbID id, muontrack->lhcbIDs()) {
+	    // 	    if (id.isVelo()) ++nVelo;
+	    // 	    if (id.isTT()) ++nTT;
+	    // 	    if (id.isIT()) ++nIT;
+	    // 	    if (id.isOT()) ++nOT;
+	    // 	    if (id.isMuon()) 
+	    // 	      {
+	    // 		++nMuon;
+	    // 		nMuonStation[id.muonID().station()]++;//apparently counts stations from 0
+	    // 	      }
+	    // 	  }
+	    // 	  cout << "Found muon track " << muontrack->key() << " associated to track " << tr->key() << " with " << nMuon << " hits in the muon stations" << endl;
+	    // 	  cout << "Other hits of the muontrack are " << nVelo << " " << nTT << " " << nIT << " " << nOT << endl;
+	    // 	  cout << "Hit Pattern is " << nMuonStation[0] << " " << nMuonStation[1] << " " << nMuonStation[2] << " " << nMuonStation[3] << " " << nMuonStation[4] << endl;
+	    // 	  cout << "Compare momentum of tr " << sqrt(tr->momentum().Mag2()) << " MeV with momentum of longtrack " << sqrt(longtrack->momentum().Mag2()) 
+	    // 	       << " MeV and momentum of muontrack " << sqrt(muontrack->momentum().Mag2()) << " MeV" << endl;    
+	    BOOST_FOREACH(LHCb::LHCbID id, muontrack->lhcbIDs()) 
+	      if (id.isMuon()) 
+		++nMuonHits;	  
+	  }
+      }
+    
     if (!ztri) {
 	int nVelo = 0, nTT = 0, nIT = 0, nOT = 0, nMuon = 0;
 	BOOST_FOREACH(LHCb::LHCbID id, tr->lhcbIDs()) {
@@ -1026,6 +1085,9 @@ void ZooWriter::writeTrackInfo(ZooP* zp, const LHCb::Particle* p)
 	    if (id.isOT()) ++nOT;
 	    if (id.isMuon()) ++nMuon;
 	}
+	if (!tr->checkType(LHCb::Track::Muon))
+	  nMuon = nMuonHits;
+
 	ztri = zp->AddInfo<ZooTrackInfo>(*objman(), 
 		ZooTrackInfo(tr->chi2(), 
 		    tr->nDoF(), 
@@ -1060,7 +1122,7 @@ void ZooWriter::writeTrackInfo(ZooP* zp, const LHCb::Particle* p)
     if ((m_writeHitPattern && 0 == ztri->hitPattern()) ||
 	    (m_writeExpectedHitPattern && 0 == ztri->expectedHitPattern()) ||
 	    (m_writeCollectedHitPattern && 0 == ztri->collectedHitPattern())) {
-	fillHitPattern(ztri, p);
+      fillHitPattern(ztri, p);
     }
   
     if (!m_extraInfoList.empty() && 0 == ztri->extraInfo())

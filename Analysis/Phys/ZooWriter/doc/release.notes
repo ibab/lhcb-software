@@ -3,6 +3,13 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2010-08-13 - Georg Alexander Krocker
+ - Included Patch from Christoph that fixed compilation issue with DaVinci =>
+   v25r6. Results in incompatibility with older Versions.
+ - Included Patch from Christoph that fixed writing out of muon hits and
+   hitpattern.
+
+!============================ Zoo v11r1 2010-08-13 ===========================
 ! 2010-07-02 - Georg Alexander Krocker
  - Fixed bug in the naming of HLT1 lines
 
