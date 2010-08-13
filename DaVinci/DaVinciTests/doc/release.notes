@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-08-13 - Juan Palacios
+ - tests/options/DVTestBu2LLK-DC06.py, tests/options/Do09selBu2LLK.py
+  . Fixed. Selection GaudiSequencer was being places straight into ApplicationMgr().TopAlg.
+    This doesn't work with new DV structure. In fact, it never should have been done that way.
+    Test still failing due to efficiency discrepancies.
+ - cmt/requirements
+  . Increase tto v1r2.
 !============================== DaVinciTests v1r1p1 2010-08-03 ===============
 
 ! 2010-08-03 - Juan Palacios
