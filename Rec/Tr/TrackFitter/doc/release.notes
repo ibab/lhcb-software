@@ -5,7 +5,8 @@
 
 ! 2010-08-13 - Wouter Hulsbergen
  - restore TrackKalmanFilter with bug fixed
-
+ - ignore tracks with bad initialization in TrackEventFitter
+ - split counters by track type in TrackEventFitter
 
 ! 2010-08-07 - Stephanie Hansmann-Menzemer
  - revert changes from WH as they screw up track calo matching
