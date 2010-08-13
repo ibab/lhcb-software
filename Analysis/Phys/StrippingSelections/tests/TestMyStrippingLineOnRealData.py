@@ -18,6 +18,15 @@ dvinit = GaudiSequencer("DaVinciInitSeq")
 dvinit.Members.insert(0, redoPV() )
 dvinit.Members.insert(0, veloNZSKiller() )
 
+# Configure StrippingReport - an algorithm that shows selection statistics
+# ChronoAuditor is use by StrippingReport to show the timing. 
+
+from Configurables import AuditorSvc, ChronoAuditor
+AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
+
+from Configurables import StrippingReport
+sr = StrippingReport(Selections = sc.selections());
+
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
 
@@ -25,6 +34,7 @@ DaVinci().PrintFreq = 100
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
+DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco04-Stripping07-SDSTs.py")
