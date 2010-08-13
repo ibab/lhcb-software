@@ -7,7 +7,7 @@
 
 __author__ = ['Marco Gersabeck']
 __date__ = '26/04/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('name', 'D0', 'sequence')
 
@@ -18,7 +18,7 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 name = "D2hhNoPIDXsec"
 
-_D0DauCuts = { "K+": "ISLONG & (PT>700) & (TRCHI2DOF<9) & (MIPCHI2DV(PRIMARY)>9)" }
+_D0DauCuts = { "K+": "ISLONG & (PT>250) & (TRCHI2DOF<9) & (MIPCHI2DV(PRIMARY)>9)" }
 _D0CombCut = "(ADAMASS(1940*MeV)<250*MeV)"
 _D0Cuts = "(ADMASS(1940*MeV)<125*MeV) & (BPVVDCHI2>9) & (BPVIPCHI2()<100) & (BPVDIRA>0.9999)"
 
@@ -42,6 +42,6 @@ sequence = SelectionSequence("Seq"+name, TopSelection = D0)
 # Create StrippingLine with this selection #
 ############################################
 line = StrippingLine(name+"Line"
-                          , prescale = 1.
+                          , prescale = 0.001
                           , algos = [ sequence ]
                           )

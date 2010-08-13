@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-13 - Marco Gersabeck 
+ - Added StrippingD2hh to replace existing D0->hh lines, changed StrippingD2hhNoPIDXsec (relaxed cuts, added prescale)
+
 ! 2010-08-13 - Anton Poluektov 
  - Added StrippingReport to TestMyStrippingLineOnRealData.py
    Shows accept rate, time/event for benchmarking. 
