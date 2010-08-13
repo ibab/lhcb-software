@@ -45,6 +45,6 @@ private:
 
   /// Switch in case input and output container are the same or different
   bool m_makeNewContainer;
-
+  bool m_skipFailedFitAtInput ;
 };
 #endif // TRACKFITTER_TRACKEVENTFITTER_H

@@ -41,6 +41,7 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
   declareProperty( "TracksOutContainer", 
                    m_tracksOutContainer = ""                  );
   declareProperty( "Fitter", m_tracksFitter) ;
+  declareProperty( "SkipFailedFitAtInput", m_skipFailedFitAtInput = true ) ;
 }
 
 //=============================================================================
@@ -100,6 +101,7 @@ StatusCode TrackEventFitter::execute() {
   // Loop over the tracks and fit them
   // ---------------------------------
   unsigned int nFitFail = 0;
+  unsigned int nBadInput = 0;
   Tracks::const_iterator iTrack = tracksCont -> begin();
   for ( ; iTrack != tracksCont->end(); ++iTrack ) {
 
@@ -127,32 +129,45 @@ StatusCode TrackEventFitter::execute() {
 	}
       }
     }
-
-    double qopBefore = track.firstState().qOverP() ;
-    StatusCode sc = m_tracksFitter -> fit( track );
-
-    if ( sc.isSuccess() ) {
-      // Add the track to the new Tracks container
-      // -----------------------------------------
-      if ( m_makeNewContainer ) tracksNewCont -> add( &track );
-      if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << "Fitted successfully track # " << track.key() << endmsg;
-      }
-      // Update counters
-      if( track.nDoF()>0) {
-	double chisqprob = track.probChi2() ;
-	counter("chisqprobSum") += chisqprob ;
-	counter("badChisq") += bool(chisqprob<0.01) ;
-	counter("flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
-      }
-      counter("numOutliers") += track.nMeasurementsRemoved() ;
-    }
-    else {
+    
+    if( track.nStates()==0 ||
+	track.checkFlag( Track::Invalid ) ||
+	(m_skipFailedFitAtInput && track.fitStatus() == LHCb::Track::FitFailed ) ) {
       track.setFlag( Track::Invalid, true );
-      ++nFitFail;
-      if ( msgLevel( MSG::DEBUG ) )
-        debug() << "Unable to fit the track # " << track.key() << endmsg;
-      if( m_makeNewContainer ) delete &track ;
+      // don't put failures on the output container. this is how they want it in HLT.
+      if ( m_makeNewContainer ) delete &track ;
+      ++nBadInput ;
+    } else {
+      
+      double qopBefore = track.firstState().qOverP() ;
+      StatusCode sc = m_tracksFitter -> fit( track );
+
+      if ( sc.isSuccess() ) {
+	// Add the track to the new Tracks container
+	// -----------------------------------------
+	if ( m_makeNewContainer ) tracksNewCont -> add( &track );
+	if ( msgLevel( MSG::DEBUG ) ) {
+	  debug() << "Fitted successfully track # " << track.key() << endmsg;
+	}
+	// Update counters
+	std::string prefix = Gaudi::Utils::toString(track.type()) ;
+	if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward" ;
+	prefix += '.' ;
+	if( track.nDoF()>0) {
+	  double chisqprob = track.probChi2() ;
+	  counter(prefix + "chisqprobSum") += chisqprob ;
+	  counter(prefix + "badChisq") += bool(chisqprob<0.01) ;
+	}
+	counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
+	counter(prefix + "numOutliers") += track.nMeasurementsRemoved() ;
+      }
+      else {
+	track.setFlag( Track::Invalid, true );
+	++nFitFail;
+	if ( msgLevel( MSG::DEBUG ) )
+	  debug() << "Unable to fit the track # " << track.key() << endmsg;
+	if( m_makeNewContainer ) delete &track ;
+      }
     }
   } // loop over input Tracks
 
@@ -160,14 +175,15 @@ StatusCode TrackEventFitter::execute() {
   // ---------------
   unsigned int nTracks = tracksCont -> size();
   counter("nTracks") += nTracks;
-  counter("nFitted") += ( nTracks - nFitFail );
+  counter("nFitted") += ( nTracks - nFitFail - nBadInput);
+  counter("nBadInput") += nBadInput ;
 
   if ( msgLevel( MSG::DEBUG ) ) {
     if ( nFitFail == 0 )
       debug() << "All " << nTracks << " tracks fitted succesfully." << endmsg;
     else
-      debug() << "Fitted successfully " << (nTracks-nFitFail)
-              << " out of " << nTracks << endmsg;
+      debug() << "Fitted successfully " << (nTracks-nFitFail-nBadInput)
+              << " out of " << nTracks-nBadInput << endmsg;
   }
 
   // Store the Tracks in the TES
