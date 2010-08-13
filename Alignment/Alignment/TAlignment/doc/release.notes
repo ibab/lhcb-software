@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-08-13 - Wouter Hulsbergen
+ - fix the way tracks from (psi) vertices are identified in input list
+ - make SurveyConstraints a LHCbConfigurableUser
+
 ! 2010-06-04 - Stefania Vecchi
  - added some code to run the Muon Alignment:
    src/MakeMuonTracks.cpp(h) make a Muon stand alone track 
