@@ -48,9 +48,6 @@ public:
 
 private:
 
-  /// filter this node
-  StatusCode filter( const LHCb::FitNode& node, LHCb::State& state );
-
   /// extrapolator
   ToolHandle<ITrackExtrapolator> m_extrapolator;
 };
