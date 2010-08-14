@@ -4,6 +4,8 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================== HltDAQ v2r1 2010-08-15 =============================
+
 ! 2010-08-10 - Gerhard Raven
  - src/HltRoutingBitsWriter
    . add property to look up the time of start-of-run from the conditions DB
