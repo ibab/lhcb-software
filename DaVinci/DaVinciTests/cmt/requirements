@@ -3,7 +3,6 @@ version v1r2
 
 branches doc cmt tests
 use GaudiConf v* -no_auto_imports
-#use DaVinci v25r5 Phys
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
