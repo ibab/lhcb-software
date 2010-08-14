@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-13 - Steve Blusk
+
+ - Relax cut on number of tracks from 150 to 200
+ - Tighten some other cuts, PTmin, TrackChisq
+ - Average CPU/line less than 1 ms/event for Reco05-Stripping08
+ - Retention at 0.002 level on Reco05-Stripping08
+
 ! 2010-08-13 - Liming Zhang
  - StrippingB2DMuNuX.py: updated by adding DOCA, tightening PID 
       and removing ReFitPVs. CPU times gained by factor 3

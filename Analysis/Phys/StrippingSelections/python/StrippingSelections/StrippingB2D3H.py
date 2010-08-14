@@ -21,7 +21,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Steven Blusk']
 __date__ = '26/07/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 
 __all__ = ('StrippingB2D3HConf',
@@ -553,8 +553,8 @@ def makePions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq):
 
     _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions")
     _pionFilter = FilterDesktop("_filterFor"+name)
-    _pionFilter.Code = "(P > %(PionMinP)s *MeV) & (P < %(PionMaxP)s *MeV) & (PT> %(PionMinPT)s *MeV)" \
-                       "& (MIPCHI2DV(PRIMARY)> %(PionMinIPChisq)s ) & (TRCHI2DOF < %(TrkChisq)s ) " %locals()
+    _pionFilter.Code = "( (P > %(PionMinP)s *MeV) & (P < %(PionMaxP)s *MeV) & (PT> %(PionMinPT)s *MeV) & (TRCHI2DOF < %(TrkChisq)s ) " \
+                       "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(PionMinIPChisq)s )  ) " %locals()
     return Selection (name,
                       Algorithm = _pionFilter,
                       RequiredSelections = [_stdLoosePions])
@@ -575,8 +575,8 @@ def makeKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq):
 
     _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
     _kaonFilter = FilterDesktop("_filterFor"+name)
-    _kaonFilter.Code = "(P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV)" \
-                       "& (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s ) & (TRCHI2DOF < %(TrkChisq)s ) " %locals()
+    _kaonFilter.Code = "( (P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV) & (TRCHI2DOF < %(TrkChisq)s ) " \
+                       "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s )  ) " %locals()
     return Selection (name,
                       Algorithm = _kaonFilter,
                       RequiredSelections = [_stdLooseKaons])
@@ -966,29 +966,29 @@ def StrippingB2D3HLoose(name='Loose') :
     config_params =  {
         "PionMinP"             : 2000.,
         "PionMaxP"             : 200000.,
-        "PionMinPT"            : 250.,
+        "PionMinPT"            : 280.,
         "KaonMinP"             : 2000.,
         "KaonMaxP"             : 100000.,
-        "KaonMinPT"            : 250.,
-        "PionMinIPChisq"       : 7.0,
-        "KaonMinIPChisq"       : 7.0,
-        "TrkChisq"             : 10.,
+        "KaonMinPT"            : 280.,
+        "PionMinIPChisq"       : 8.0,
+        "KaonMinIPChisq"       : 8.0,
+        "TrkChisq"             : 7.0,
         "Bach3HMassWindow"     : 400,
-        "Bach3HDocaMax"        : 0.5,
+        "Bach3HDocaMax"        : 0.35,
         "Bach3HVtxChisq"       : 10.0,
-        "Bach3HMinPT"          : 900.0, 
+        "Bach3HMinPT"          : 1000.0, 
         "Bach3HIP2PV"          : 0.07,
         "Bach3HIPChisq2PV"     : 6.25,
-        "Bach3HVtxSepChisq"    : 16.0,
+        "Bach3HVtxSepChisq"    : 25.0,
         "Bach3HDiraPV"         : 0.98,
-        "Bach3HZVtxSep"        : 1.5,
-        "DMinPT"               : 1000,
+        "Bach3HZVtxSep"        : 2.0,
+        "DMinPT"               : 1100,
         "DVtxChisq"            : 10.0,
         "DMassWindow"          : 100,
         "D0MassWindow"         : 100,
         "DsMassWindow"         : 100,
         "tightDMassWindow"     : 50,
-        "DDocaMax"             : 0.5,
+        "DDocaMax"             : 0.35,
         "DIP2PV"               : 0.07,
         "DIPChisq2PV"          : 6.25,
         "DVtxSepChisq"         : 16.0,
@@ -1030,7 +1030,7 @@ def StrippingB2D3HLoose(name='Loose') :
         "B2DKPiPiSignal_Postscale"      : 1.0,
         "B2DStarKPiPiSignal_Prescale"   : 1.0,
         "B2DStarKPiPiSignal_Postscale"  : 1.0,
-        "MaxTracks"                     : 150
+        "MaxTracks"                     : 200
         }
 
 
@@ -1043,29 +1043,29 @@ def StrippingB2D3HNominal(name="Def") :
     config_params =  {
         "PionMinP"             : 2000.,
         "PionMaxP"             : 200000.,
-        "PionMinPT"            : 250.,
+        "PionMinPT"            : 295.,
         "KaonMinP"             : 2000.,
         "KaonMaxP"             : 100000.,
-        "KaonMinPT"            : 250.,
+        "KaonMinPT"            : 295.,
         "PionMinIPChisq"       : 9.0,
         "KaonMinIPChisq"       : 9.0,
-        "TrkChisq"             : 10.,
+        "TrkChisq"             : 6.0,
         "Bach3HMassWindow"     : 400,
         "Bach3HDocaMax"        : 0.3,
         "Bach3HVtxChisq"       : 10.0,
         "Bach3HMinPT"          : 1000.0, 
         "Bach3HIP2PV"          : 0.075,
         "Bach3HIPChisq2PV"     : 9.0,
-        "Bach3HVtxSepChisq"    : 25.0,
+        "Bach3HVtxSepChisq"    : 36.0,
         "Bach3HDiraPV"         : 0.985,
-        "Bach3HZVtxSep"        : 1.5,
-        "DMinPT"               : 1000,
+        "Bach3HZVtxSep"        : 2.0,
+        "DMinPT"               : 1200,
         "DVtxChisq"            : 10.0,
         "DMassWindow"          : 100,
         "D0MassWindow"         : 100,
         "DsMassWindow"         : 100,
         "tightDMassWindow"     : 40,
-        "DDocaMax"             : 0.4,
+        "DDocaMax"             : 0.3,
         "DIP2PV"               : 0.070,
         "DIPChisq2PV"          : 9.0,
         "DVtxSepChisq"         : 25.0,
@@ -1107,7 +1107,7 @@ def StrippingB2D3HNominal(name="Def") :
         "B2DKPiPiSignal_Postscale"      : 1.0,
         "B2DStarKPiPiSignal_Prescale"   : 1.0,
         "B2DStarKPiPiSignal_Postscale"  : 1.0,
-        "MaxTracks"                     : 150
+        "MaxTracks"                     : 200
         }
 
     
