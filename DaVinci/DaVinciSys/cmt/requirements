@@ -4,8 +4,8 @@ version v25r8
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r7   Phys
-use  DaVinciTests               v1r1
+use  DaVinci                 	v25r8   Phys
+use  DaVinciTests               v1r2
 
 # Patches
 use  HltDAQ                     v2r0p3   Hlt

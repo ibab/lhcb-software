@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v25r8>2010-08-16 DaVinci v25r8. Version for Stripping line development and MicroDST production tests.</A></H1><PRE>
+
+  * Based on LHCb v31r4 software stack.
+  * Many, many MicroDST enhancements.
+
 </PRE><H1><A NAME=v25r7>2010-07-28 DaVinci v25r7. Version for Stripping line development and Reco05-Stripping08 production.</A></H1><PRE>
 
   * Based on LHCb v31r4 software stack.
