@@ -13,8 +13,8 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingB2Charged2Body
-from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import B02D0Kstar_D02KPiPi0Conf
-from StrippingSelections.StrippingB02D0Kstar_D02K3Pi import B02D0Kstar_D02K3PiConf
+#from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import B02D0Kstar_D02KPiPi0Conf
+#from StrippingSelections.StrippingB02D0Kstar_D02K3Pi import B02D0Kstar_D02K3PiConf
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections.StrippingBu2D0K_D02KSPiPi import StrippingBu2D0K_D02KSPiPiConf
 from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import StrippingBu2D0h_D02KShh_NoPIDConf
@@ -52,8 +52,8 @@ stream.appendLines( [
                         StrippingB2hhLTUnbiasedConf().StripB2hhLTUnbiasedLoose()
 		    ] )
 
-stream.appendLines( B2DXLines() ) # B2DX lines with default cuts
-stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
-stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
+stream.appendLines( B2DXLines().lines ) # B2DX lines with default cuts
+#stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
+#stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
 
 stream.appendLines( StrippingB2D3HLoose('Loose').lines ) # B2D3H Lines

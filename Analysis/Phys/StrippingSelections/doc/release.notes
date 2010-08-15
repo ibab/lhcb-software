@@ -5,6 +5,16 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-15 - Anton Poluektov 
+ - Modified StrippingB2DX: 
+    * Changes in the code structure
+    * Added LambdaB->LambdaC pi/K by Rudolf Oldeman
+    * Modified D->KPiPi0 and D->hhhh selections (use cuts by Aurelien Martens)
+    * Removed Ds mass window for neutral D combinations
+    * Prescaling instead of postscaling
+    * Get rid of 'signal' lines: instead, can duplicate lines with tighter cuts. 
+      Should be faster than filtering and postscaling. 
+
 ! 2010-08-13 - Marco Gersabeck 
  - Included StrippingD2hh to StreamCharm and removed StrippingD2hhNoPID, StrippingD2Kh, StrippingD2KhLoose
 
