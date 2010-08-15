@@ -17,10 +17,7 @@ from StrippingSelections import StrippingD5h
 from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstar_D2KPiPi0
-from StrippingSelections import StrippingD2hhNoPID
 from StrippingSelections import StrippingD2hhNoPIDXsec
-from StrippingSelections import StrippingD2Kh
-from StrippingSelections import StrippingD2KhLoose
 from StrippingSelections import StrippingDstarPromptWithD02HHNoPt
 from StrippingSelections import StrippingDstarD02KKpipiRobust
 from StrippingSelections import StrippingDstarD02KKpipiRegular
@@ -43,6 +40,8 @@ from StrippingSelections.StrippingLambdac      import StrippingLambdacConf
 from StrippingSelections.StrippingDs2piPhiNoPt import StrippingDs2piPhiConf
 
 from StrippingSelections.StrippingD02K3Pi import StrippingD02K3PiForXSectionConf 
+
+from StrippingSelections.StrippingD2hh import StrippingD2hhConf
 
 stream = StrippingStream("Charm")
 
@@ -108,10 +107,7 @@ stream.appendLines( [
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
         , StrippingDstarVeryLooseWithD02HHConf().line()
-        , StrippingD2hhNoPID.line
         , StrippingD2hhNoPIDXsec.line
-        , StrippingD2Kh.DKhPreselLine
-        , StrippingD2KhLoose.DKhPreselLooseLine
         , StrippingD0forBXXConf().D02KPiforBXXLine()
         , StrippingD0forBXXConf().D02K3PiforBXXLine()
         , StrippingDforBSemiConf().DpforBSemiLine()
@@ -143,3 +139,5 @@ from StrippingSelections.StrippingPromptCharm import Lines as PromptCharmLines
 
 stream.appendLines ( PromptCharmLines ) 
 
+from StrippingSelections.StrippingD2hh import StrippingD2hhConf
+stream.appendLines( StrippingD2hhConf().lines() )

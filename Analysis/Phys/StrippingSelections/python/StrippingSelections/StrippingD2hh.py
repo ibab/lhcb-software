@@ -1,7 +1,7 @@
 
 __author__ = ['Marco Gersabeck','Harry Cliff']
 __date__ = '13/08/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Prompt D0->KK/Kpi stripping selection for measuring yCP.
@@ -13,7 +13,7 @@ from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-class StrippingD02hhConf(LHCbConfigurableUser):
+class StrippingD2hhConf(LHCbConfigurableUser):
     __slots__ = { 
                   'DaugPt'               : 500.*MeV
                   , 'DaugP'              : 2000.*MeV
@@ -64,34 +64,31 @@ class StrippingD02hhConf(LHCbConfigurableUser):
         return lineList
 
     def lineD02hhNoPID( self ):
-        if None == StrippingD02hhConf._NoPIDLine:
+        if None == StrippingD2hhConf._NoPIDLine:
             from StrippingConf.StrippingLine import StrippingLine
-	    #D02hhNoPIDSel = self.D02hhNoPID()
 	    D02hhNoPIDSel = self.D02hhNoPIDCombPart()
 	    D02hhNoPIDSeq = SelectionSequence("SeqD02hhNoPID", TopSelection = D02hhNoPIDSel)
-	    StrippingD02hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine', prescale = 1, algos = [D02hhNoPIDSeq])
+	    StrippingD2hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine', prescale = 1, algos = [D02hhNoPIDSeq])
 
-	return StrippingD02hhConf._NoPIDLine
+	return StrippingD2hhConf._NoPIDLine
      	
     def lineD02hhPID( self ):
-        if None == StrippingD02hhConf._PIDLine:
+        if None == StrippingD2hhConf._PIDLine:
             from StrippingConf.StrippingLine import StrippingLine
-	    #D02hhPIDSel = self.D02hhPID()
 	    D02hhPIDSel = self.D02hhPIDCombPart()
 	    D02hhPIDSeq = SelectionSequence("SeqD02hhPID", TopSelection = D02hhPIDSel)
-	    StrippingD02hhConf._PIDLine = StrippingLine('D02hhPIDLine', prescale = 1, algos = [D02hhPIDSeq])
+	    StrippingD2hhConf._PIDLine = StrippingLine('D02hhPIDLine', prescale = 1, algos = [D02hhPIDSeq])
 
-	return StrippingD02hhConf._PIDLine
+	return StrippingD2hhConf._PIDLine
      	
     def lineD02hhControl( self ):
-        if None == StrippingD02hhConf._ControlLine:
+        if None == StrippingD2hhConf._ControlLine:
             from StrippingConf.StrippingLine import StrippingLine
-	    #D02hhControlSel = self.D02hhControl()
 	    D02hhControlSel = self.D02hhControlCombPart()
 	    D02hhControlSeq = SelectionSequence("SeqD02hhControl", TopSelection = D02hhControlSel)
-	    StrippingD02hhConf._ControlLine = StrippingLine('D02hhControlLine', prescale = 0.01, algos = [D02hhControlSeq])
+	    StrippingD2hhConf._ControlLine = StrippingLine('D02hhControlLine', prescale = 0.01, algos = [D02hhControlSeq])
 
-	return StrippingD02hhConf._ControlLine
+	return StrippingD2hhConf._ControlLine
      	
     def D02hhNoPIDCombPart( self ):
         from Configurables import CombineParticles
@@ -113,7 +110,7 @@ class StrippingD02hhConf(LHCbConfigurableUser):
                  "& (BPVIPCHI2()<%(D0IPChi2NoPID)s)" % self.getProps()
 
         comb = CombineParticles( 'CombineD02hhNoPID' )
-        comb.DecayDescriptor = '[D0 -> K- K+]cc'
+        comb.DecayDescriptor = 'D0 -> K- K+'
         comb.DaughtersCuts = { 'K+' : daugCuts }
         comb.CombinationCut = combCuts
         comb.MotherCut = d0Cuts
@@ -145,7 +142,7 @@ class StrippingD02hhConf(LHCbConfigurableUser):
                  "& (BPVIPCHI2()<%(D0IPChi2PID)s)" % self.getProps()
 
         comb = CombineParticles( 'CombineD02hhPID' )
-        comb.DecayDescriptor = '[D0 -> K- K+]cc'
+        comb.DecayDescriptor = 'D0 -> K- K+'
         comb.DaughtersCuts = { 'K+' : daugCuts }
         comb.CombinationCut = combCuts
         comb.MotherCut = d0Cuts
@@ -176,7 +173,7 @@ class StrippingD02hhConf(LHCbConfigurableUser):
                  "& (BPVIPCHI2()<%(D0IPChi2NoPID)s)" % self.getProps()
 
         comb = CombineParticles( 'CombineD02hhNoPID' )
-        comb.DecayDescriptor = '[D0 -> K- K+]cc'
+        comb.DecayDescriptor = 'D0 -> K- K+'
         comb.DaughtersCuts = { 'K+' : daugCuts }
         comb.CombinationCut = combCuts
         comb.MotherCut = d0Cuts
