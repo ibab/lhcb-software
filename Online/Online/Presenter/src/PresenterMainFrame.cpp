@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.329 2010-08-13 16:51:51 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.330 2010-08-15 09:35:55 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -682,7 +682,9 @@ void PresenterMainFrame::buildGUI() {
                                   this, "toggleHistoryPlots()");
     m_historyPlotsButton->SetState(kButtonDisabled);
 
-    m_historyIntervalComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
+    m_historyIntervalComboBox = new TGComboBox(m_toolBar, -1,
+					       kHorizontalFrame | kSunkenFrame | kDoubleBorder | 
+					       kOwnBackground);
     m_toolBar->AddFrame(new TGLabel(m_toolBar,"History using: ") ,
                         new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
     m_toolBar->AddFrame(m_historyIntervalComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));
@@ -885,21 +887,7 @@ void PresenterMainFrame::buildGUI() {
                                                      kLHintsExpandX |
                                                      kLHintsExpandY,
                                                      0, 0, 0, 0));
-    // Alarm sort box
-    // m_alarmDBFilterComboBox = new TGComboBox(databaseAlarmGroupFrame, -1,
-//                                              kHorizontalFrame | kDoubleBorder |
-//                                              kSunkenFrame | kOwnBackground);
-//     m_alarmDBFilterComboBox->AddEntry("Severity",
-//                                       HistogramsWithAnalysis); //#3 //Alarm, Warning, Info
-//     m_alarmDBFilterComboBox->AddEntry("Analysis Task", Tasks); // #1
-//     m_alarmDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
-//     m_alarmDBFilterComboBox->Resize(149, 22);
-//     m_alarmDBFilterComboBox->Select(Tasks);
-//     databaseAlarmGroupFrame->AddFrame(m_alarmDBFilterComboBox,
-//                                       new TGLayoutHints(kLHintsLeft |
-//                                                         kLHintsTop |
-//                                                         kLHintsExpandX,
-//                                                         0, 0, 0, 0));
+
     // canvas widget
     m_alarmDBCanvas = new TGCanvas(databaseAlarmGroupFrame, 124, 460);
 
@@ -910,11 +898,12 @@ void PresenterMainFrame::buildGUI() {
     m_alarmHistogramTreeList = new TGListTree(m_alarmDBCanvas,
                                               kHorizontalFrame);
     m_alarmHistogramTreeList->AddRoot("Alarms");
-    (m_alarmHistogramTreeList->GetFirstItem())->SetPictures(m_iconAnalysisAlarm, m_iconAnalysisAlarm);
+    (m_alarmHistogramTreeList->GetFirstItem())->SetPictures(m_iconAnalysisAlarm, 
+							    m_iconAnalysisAlarm);
     m_alarmHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
-    m_alarmHistogramTreeList->Connect(
-                                      "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-                                      this, "clickedAlarmTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+    m_alarmHistogramTreeList->
+      Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+	       this, "clickedAlarmTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
     m_alarmDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_alarmDBContextMenu->AddEntry("Refresh", M_RefreshAlarmDBListTree_COMMAND);
@@ -1069,8 +1058,9 @@ void PresenterMainFrame::buildGUI() {
     (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
                                                       m_dimOnline16);
     m_histoSvcListTree->SetCheckMode(TGListTree::kRecursive);
-    m_histoSvcListTree->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-                                 this, "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+    m_histoSvcListTree->
+      Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+	       this, "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
     fViewPort664->AddFrame(m_histoSvcListTree);
     m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout(
@@ -1161,13 +1151,16 @@ void PresenterMainFrame::buildGUI() {
                                                  kHorizontalFrame);
     m_databaseHistogramTreeList->AddRoot("Histograms");
     m_databaseHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
-    m_databaseHistogramTreeList->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-                                          this, "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+    m_databaseHistogramTreeList->
+      Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+	       this, "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
     m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page", M_AddDBHistoToPage_COMMAND);
-    m_histoDBContextMenu->AddEntry("Add checked to Page in overlap", M_AddDBHistoToPageAsOne_COMMAND);
-    m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)", M_SetHistoPropertiesInDB_COMMAND);
+    m_histoDBContextMenu->AddEntry("Add checked to Page in overlap", 
+				   M_AddDBHistoToPageAsOne_COMMAND);
+    m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)", 
+				   M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->AddEntry("Delete checked histogram(s)", M_DeleteDBHisto_COMMAND);
     m_histoDBContextMenu->AddSeparator();
     m_histoDBContextMenu->AddEntry("Collsapse all children", M_DBHistoCollapseAllChildren_COMMAND);
@@ -4172,7 +4165,8 @@ void PresenterMainFrame::loadNextPage() {
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
                                                 const std::string & pastDuration ) {
-  if (isConnectedToHistogramDB() && (false == m_loadingPage)) {
+  if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
+    openHistogramTreeAt( pageName ) ;
     m_loadingPage = true;
     gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     if (m_refreshingPage) {
@@ -4189,8 +4183,9 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     m_presenterInfo.setRwTimePoint( timePoint ) ;
     m_presenterInfo.setRwPastDuration( pastDuration ) ;
 
-    std::string history_entry( dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->GetSelectedEntry())
-                               ->GetText()->GetString() );
+    std::string history_entry( dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->
+							    GetSelectedEntry())->GetText()->
+			       GetString() );
 
     if ( ( 0 != m_archive ) &&
 	 ( ( pres::History == m_presenterInfo.presenterMode()) || 
@@ -4240,7 +4235,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     try {
       removeHistogramsFromPage();
       m_onlineHistosOnPage.clear();
-      OnlineHistPage* page = m_histogramDB->getPage(pageName);
+      OnlineHistPage* page = m_histogramDB -> getPage( pageName ) ;
       if (m_verbosity >= pres::Verbose) 
 	std::cout << "Loading page: "  << m_currentPageName << std::endl;
 
@@ -4251,7 +4246,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 	displayStatusAndComments( pageName , page ) ;
 
 	// now load histograms
-        page -> getHistogramList(&m_onlineHistosOnPage);
+        page -> getHistogramList( &m_onlineHistosOnPage ) ;
         ParallelWait parallelWait ;
         parallelWait.loadHistograms( &m_onlineHistosOnPage , &dbHistosOnPage ,
 				     &m_presenterInfo , dimBrowser() , 
@@ -4304,7 +4299,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
             // histogram must be overdrawn on previous hist: look for the corresponding TPad
             if(((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->isOverlap()) {
-              OnlineHistoOnPage *mother = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->getOverlap();
+              OnlineHistoOnPage 
+		*mother = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->getOverlap();
               std::vector<DbRootHist*>::iterator prevh;
               DbRootHist* dbRootHist = NULL;
               for (prevh=dbHistosOnPage.begin() ; (*prevh) != dbRootHist ; prevh++) {
@@ -4339,7 +4335,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              drawOpt_dbHistosOnPageIt != dbHistosOnPage.end();
              ++drawOpt_dbHistosOnPageIt) {
           if ( pres::TCKinfo != (*drawOpt_dbHistosOnPageIt)->effServiceType() ) {
-            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->getHostingPad());
+            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)
+							      ->getHostingPad());
 
           }
           if ( ( pres::s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&

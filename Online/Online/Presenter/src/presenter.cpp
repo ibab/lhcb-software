@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.79 2010-08-12 15:43:00 robbep Exp $
+// $Id: presenter.cpp,v 1.80 2010-08-15 09:35:55 robbep Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -117,6 +117,8 @@ int main(int argc, char* argv[]) {
 
   std::string referencePath(histdir+OnlineHistDBEnv_constants::StdRefRoot);
   std::string savesetPath(histdir+OnlineHistDBEnv_constants::StdSavesetsRoot);
+  std::string savesetFile( "" ) ;
+  std::string startupPage( "" ) ;
 
   const char* referencePathEnv = getenv(s_referencePath.c_str());
   if (NULL != referencePathEnv) {
@@ -152,9 +154,11 @@ int main(int argc, char* argv[]) {
       ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
       ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
+      ("saveset-file,f", value<std::string>()->default_value("") , "saveset file to open" )
       ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
       ("databases,d", value<std::string>()->default_value(s_histdb),"known databases")
-      ("database-credentials,k", value<std::string>()->default_value(s_histReaderPair),"database credentials")
+      ("database-credentials,k", value<std::string>()->default_value(s_histReaderPair),
+       "database credentials")
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
       ("problem-settings,x", value<std::string>(), "Problem Database configuration")
       ("rundb-settings,r", value<std::string>() , "Run Database configuration" )
@@ -163,9 +167,12 @@ int main(int argc, char* argv[]) {
       ("hide-problem-list", value<bool>(), "hide problem list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
-      ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), "image dump directory")
-      ("partition,P", value<std::string>()->default_value( pres::s_lhcbPartitionName.Data()), "partition name")
+      ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), 
+       "image dump directory")
+      ("partition,P", value<std::string>()->default_value( pres::s_lhcbPartitionName.Data()), 
+       "partition name")
       ("dump-format,F", value<std::string>()->default_value("png"), "dump format")
+      ("startup-page,p" , value<std::string>()->default_value(""), "page to display at startup" )
       ;
 
     // program argument -> histo list
@@ -211,30 +218,37 @@ int main(int argc, char* argv[]) {
       std::cout << "LHCb Presenter version: " << s_presenterVersion << std::endl
                 << "Histogram Database version: " << OnlineHistDBEnv_constants::version << std::endl
                 << "Analysis Library version: " << OMAconstants::version << std::endl
-                << "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema << std::endl;
+                << "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema 
+		<< std::endl;
       exit(EXIT_SUCCESS);
     }
 
-    if (startupSettings.count("saveset-path")) {
+    if (startupSettings.count("saveset-path"))
       savesetPath = startupSettings["saveset-path"].as<std::string>();
-    }
     if (!exists(path(savesetPath))) {
       std::cout << "error: saveset-path doesn't exist" << std::endl;
       exit(EXIT_FAILURE);
     }
 
-    if (startupSettings.count("reference-path")) {
-      referencePath = startupSettings["reference-path"].as<std::string>();
+    if (startupSettings.count( "startup-page" ) ) 
+      startupPage = startupSettings["startup-page"].as<std::string>(); 
+
+    if (startupSettings.count( "saveset-file" ) ) {
+      savesetFile = startupSettings["saveset-file"].as< std::string >() ;
+      if ( ( "" != savesetFile ) && ( ! exists( path( savesetFile ) ) ) ) 
+	std::cout << "Error: saveset-file doesn't exist" << std::endl ;
     }
+
+    if (startupSettings.count("reference-path"))
+      referencePath = startupSettings["reference-path"].as<std::string>();
     if (!exists(path(referencePath))) {
       std::cout << "error: reference-path doesn't exist" << std::endl;
       exit(EXIT_FAILURE);
     }
 
-    if (startupSettings.count("tnsnames-path")) {
+    if (startupSettings.count("tnsnames-path")) 
       setSystemEnvironment(s_tnsAdminEnv.c_str(),
                            startupSettings["tnsnames-path"].as<std::string>().c_str());
-    }
 
     const char* dimDnsNodeEnv = getenv(s_dimDnsNodeEnv.c_str());
     if (startupSettings.count("dim-dns-node")) {
@@ -310,9 +324,8 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setPresenterMode( pres::Online ) ;
     }
 
-    if (startupSettings.count("partition")) {
+    if (startupSettings.count("partition")) 
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
-    }
 
     if (startupSettings.count("login") &&
         ("batch" != startupSettings["mode"].as<std::string>())) {
@@ -347,8 +360,20 @@ int main(int argc, char* argv[]) {
     if (startupSettings.count("startup-histograms")) 
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
 
+    if ( savesetFile != "" ) {
+      presenterMainFrame.setSavesetFileName( savesetFile ) ;
+      presenterMainFrame.refreshHistogramSvcList( pres::s_withTree ) ;
+    } 
+
+    if ( ! startupPage.empty() ) {
+      presenterMainFrame.setCurrentPageName( startupPage ) ;
+      presenterMainFrame.loadSelectedPageFromDB( startupPage , pres::s_startupFile, 
+						 savesetFile ) ;
+    }
+    
+
     if (startupSettings.count("image-path")) {
-      if (!exists(path(savesetPath))) {
+      if (!exists(path( startupSettings["image-path"].as<std::string>() ))) {
         std::cout << "error: image-path doesn't exist" << std::endl;
         exit(EXIT_FAILURE);
       } else 
@@ -367,7 +392,7 @@ int main(int argc, char* argv[]) {
         presenterMainFrame.setDumpFormat(startupSettings["dump-format"].as<std::string>());
       }
     }
-
+    
     if (( pres::Batch != presenterMainFrame.presenterMode( ) ) ) {
       if (gROOT->IsBatch()) {
         std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;

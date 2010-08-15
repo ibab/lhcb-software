@@ -214,8 +214,13 @@ public:
 
   void setReferencePath(const std::string & referencePath);
   void setSavesetPath(const std::string & savesetPath);
+
+  /// return the saveset file name
   std::string& savesetFileName() {return m_savesetFileName;}
+
+  /// set the saveset file name
   void setSavesetFileName(const std::string & svsFilename) { m_savesetFileName = svsFilename;}
+
   void setImagePath(const std::string & imagePath);
   void setDumpFormat(const std::string & dumpFormat);
 
@@ -417,6 +422,10 @@ public:
   /// set the presenter mode
   void setPresenterModeVariable( const pres::PresenterMode & mode ) {
     m_presenterInfo.setPresenterMode( mode ) ; };
+
+  /// set the current page name
+  void setCurrentPageName( const std::string & pageName ) { 
+    m_currentPageName = pageName ; } ;
 
 private:
   UInt_t            m_initWidth;

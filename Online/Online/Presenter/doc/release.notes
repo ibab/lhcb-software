@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-13 - Patrick Robbe
+ - src/presenter.cpp: add command line option ("saveset-file") to allow opening
+   a file in the presenter at startup, and command line "startup-page" to allow
+   opening a given page in the presenter at startup.
+
 !============ Presenter v2r0 2010-08-13 =============
 ! 2010-08-13 - Patrick Robbe
  - src/TrendingHistogram.cpp: make it working for history mode also
