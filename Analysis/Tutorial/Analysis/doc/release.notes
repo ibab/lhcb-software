@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.99 2010-08-05 07:33:19 jpalac Exp $
+!$Id: release.notes,v 1.100 2010-08-16 13:42:16 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -9,6 +9,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v8r6p1 2010-08-16 =================
 ! 2010-08-05 - Juan Palacios
  - solutions/DaVinci3/TutorialAlgorithm.cpp
   . Continue processing events when daughters are not found.
