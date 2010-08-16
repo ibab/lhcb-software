@@ -1,3 +1,7 @@
+2010-08-11 - Patrick Koppenburg <Patrick.Koppenburg@cern.ch>
+
+    * Added VeloSQLDDB to Packages
+
 2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added the LCGmd5FileName method.
@@ -32,9 +36,6 @@
 	"runtime projects"
 
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
-
-! 2010-08-11 - Patrick Koppenburg
- - Added VeloSQLDDB to Packages
 
 	* cmt/requirements: release of version v5r3
 
