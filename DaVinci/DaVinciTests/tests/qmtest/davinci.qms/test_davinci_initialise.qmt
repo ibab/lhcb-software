@@ -7,26 +7,37 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-TimingAuditor.TIMER                                            INFO   PhysInitSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    ProtoParticlePreProcessing |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     TESCheckProtoParticles    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     CheckPID                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      CheckMuonSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       CheckMuonPIDs           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonPIDVersionCheck     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       TESCheckRawEvent        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonRec                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonIDSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO        MuonIDAlg              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      CheckRichSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       CheckRichPIDs           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     ProtoParticleCombDLLs     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      ChargedProtoPAddMuon     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      ChargedProtoPAddRich     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      ChargedProtoPCombDLL     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   AnalysisInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO  DaVinciMainSequence          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO  MonitoringSequence           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO  DaVinciSequence              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   DaVinciPreFilterSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   DaVinciSequences            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    DaVinciInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     DaVinciInit               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     LumiSeq                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      EventAccount             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     IntegratorSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      IntegrateBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     PhysInitSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      ProtoParticlePreProcessin|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO       TESCheckProtoParticles  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO       CheckPID                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO        CheckMuonSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         CheckMuonPIDs         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         MuonPIDVersionCheck   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         TESCheckRawEvent      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         MuonRec               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         MuonIDSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO          MuonIDAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO        CheckRichSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO         CheckRichPIDs         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO       ProtoParticleCombDLLs   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO        ChargedProtoPAddMuon   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO        ChargedProtoPAddRich   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO        ChargedProtoPCombDLL   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     AnalysisInitSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    DaVinciMainSequence        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    MonitoringSequence         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 """, stdout, result, causes, signature_offset = 0, id='rest')
 countErrorLines({"FATAL":0})
