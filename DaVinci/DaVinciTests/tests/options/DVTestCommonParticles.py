@@ -19,6 +19,7 @@ from CommonParticles.Utils import particles  # particles() method returns DoD di
 List = []
 Locations = []
 for a,b in particles().iteritems():
+    print "DVTestCommonParticles adding location", a
     List.append(b)                      # ist of algorithms
     Locations.append(a.split('/')[1])   # whatever comes after Phys/
 
