@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.330 2010-08-15 09:35:55 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.331 2010-08-16 16:53:57 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -13,55 +13,38 @@
 #pragma warning( disable : 4800 )
 #endif
 #include <TApplication.h>
-#include <TError.h>
 #include <TDirectory.h>
 #include <TFile.h>
 #include <TCanvas.h>
-#include <TColor.h>
-#include <TGIcon.h>
 #include <TGResourcePool.h>
 #include <TG3DLine.h>
 #include <TGButton.h>
 #include <TGComboBox.h>
 #include <TGDockableFrame.h>
-#include <TGDoubleSlider.h>
-#include <TGFrame.h>
 #include <TGLabel.h>
 #include <TGListTree.h>
-#include <TGListView.h>
 #include <TGMenu.h>
 #include <TGMsgBox.h>
 #include <TGInputDialog.h>
 #include <TGPicture.h>
-#include <TGNumberEntry.h>
 #include <TGSplitter.h>
 #include <TGStatusBar.h>
-#include <TGTab.h>
 #include <TGTextEdit.h>
 #include <TGToolBar.h>
-#include <TDatime.h>
-#include <TH1F.h>
 #include <TH2F.h>
-#include <TH1D.h>
-#include <TH2D.h>
 #include <TProfile.h>
-#include <TImage.h>
-#include <TMath.h>
+#include <TError.h>
 #include <TObjArray.h>
 #include <TObject.h>
-#include <TBox.h>
-#include <TLine.h>
-#include <TText.h>
 #include <TKey.h>
 #include <TPad.h>
-#include <TPRegexp.h>
 #include <TRootEmbeddedCanvas.h>
 #include <TString.h>
 #include <TObjString.h>
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TROOT.h>
-#include <TThread.h>
+//#include <TThread.h>
 #include <TTimer.h>
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
@@ -140,7 +123,6 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_pageRefreshTimer(NULL),
   m_clockTimer(NULL),
   m_clearedHistos(false),
-  m_historyTrendPlots(false),
   m_referencesOverlayed(false),
   m_fastHitMapDraw(false),
   m_refreshingPage(false),
@@ -2855,7 +2837,7 @@ void PresenterMainFrame::reconfigureGUI() {
   }
 
   if ( pres::Online == presenterMode()) {
-    if (m_historyTrendPlots) { toggleHistoryPlots(); }
+    if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots() ; 
 
     m_toolMenu->CheckEntry(ONLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
@@ -2931,7 +2913,7 @@ void PresenterMainFrame::reconfigureGUI() {
     stopPageRefresh();
     unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
-    if (m_historyTrendPlots) { toggleHistoryPlots(); }
+    if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots(); 
     // enable play/stop/reset!
     m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
@@ -2969,7 +2951,7 @@ void PresenterMainFrame::reconfigureGUI() {
     stopPageRefresh();
     unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
-    if (m_historyTrendPlots) { toggleHistoryPlots(); }
+    if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots() ; 
     // enable play/stop/reset!
     m_toolMenu->CheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
@@ -3815,13 +3797,13 @@ std::string PresenterMainFrame::convDimToHistoID(const std::string & dimSvcName)
 // Toggle history plot
 //===========================================================================================
 void PresenterMainFrame::toggleHistoryPlots() {
-  if (m_historyTrendPlots) {
+  if ( m_presenterInfo.isHistoryTrendPlotMode() ) {
     m_historyPlotsButton->SetState(kButtonUp);
     m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
-    m_historyTrendPlots = false;
+    m_presenterInfo.setHistoryTrendPlotMode( false ) ;
   } else {
     m_historyPlotsButton->SetState(kButtonDown);
-    m_historyTrendPlots = true;
+    m_presenterInfo.setHistoryTrendPlotMode( true ) ;
     m_viewMenu->CheckEntry(HISTORY_PLOTS_COMMAND);
   }
 }

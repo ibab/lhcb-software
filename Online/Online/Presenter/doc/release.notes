@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-16 - Patrick Robbe
+ - src/Archive.cpp: fix use of PresenterInformation class for history trend
+   plots
+
 ! 2010-08-13 - Patrick Robbe
  - src/presenter.cpp: add command line option ("saveset-file") to allow opening
    a file in the presenter at startup, and command line "startup-page" to allow

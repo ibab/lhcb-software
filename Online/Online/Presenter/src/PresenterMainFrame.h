@@ -452,7 +452,6 @@ private:
   TTimer*           m_pageRefreshTimer;
   TTimer*           m_clockTimer;
   bool              m_clearedHistos;
-  bool              m_historyTrendPlots ;
   bool              m_referencesOverlayed;
   bool              m_fastHitMapDraw;
   bool              m_refreshingPage;

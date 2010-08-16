@@ -1,4 +1,4 @@
-// $Id: PresenterInformation.h,v 1.1 2010-08-12 15:43:25 robbep Exp $
+// $Id: PresenterInformation.h,v 1.2 2010-08-16 16:53:57 robbep Exp $
 #ifndef PRESENTER_PRESENTERINFORMATION_H_
 #define PRESENTER_PRESENTERINFORMATION_H_
 
@@ -55,6 +55,9 @@ class PresenterInformation
 
   /// History trend plot mode
   bool isHistoryTrendPlotMode( ) const { return m_historyTrendPlots ; } ;
+
+  /// Set history trend plot mode
+  void setHistoryTrendPlotMode( bool mode ) { m_historyTrendPlots = mode ; } ;
 
   /// Current partition
   std::string currentPartition( ) const { return m_currentPartition ; } ;
