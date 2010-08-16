@@ -22,16 +22,20 @@ if __name__ == '__main__' :
 
     decReportsLocation = '/Event/Strip/Phys/DecReports'
     filename = ''
-
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+    output = 'decreports.txt'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
             filename = a
         elif o in ('-l', '--location') :
             decReportsLocation = a
+        elif o in ('-o', '--output') :
+            output = a
 
     assert(filename != '')
+    
+    outputFile = open(output, 'w')
 
     lhcbApp = LHCbApp(DDDBtag = 'default',
                       CondDBtag = 'default')
@@ -70,5 +74,9 @@ if __name__ == '__main__' :
     print 'Found', nDecReports, 'DecReports in', nEvents, 'events'
     print '======================================================================================'
     for decs in decReportSummary.iteritems() :
-        print decs[0], ":", decs[1]
+        message = decs[0] + " : " + decs[1]
+        print message
+        outputFile.write(message+'\n')
     print '======================================================================================'
+    print 'Wrote summary to', output
+    outputFile.close()

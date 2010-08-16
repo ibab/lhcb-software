@@ -2,7 +2,7 @@
 '''
 Check some TES locations in a DST and print a summary of the number of events selected by each line.
 Useage:
-./check_dst_contents.py --input <some file name> --location <location of trunk - defailt "/Event">
+./check_dst_contents.py --input <some file name> --location <location of trunk - defailt "/Event"> --output <output file name>
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -23,15 +23,20 @@ if __name__ == '__main__' :
 
     filename = ''
     locationRoot = '/Event'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+    output = 'dst_contents.txt'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
             filename = a
-        if o in ("-l", "--location") :
+        elif o in ("-l", "--location") :
             locationRoot = a
-            
+        elif o in ('-o', '--output') :
+            output = a
+
     assert(filename != '')
+
+    outputFile = open(output, 'w')
 
     lhcbApp = LHCbApp(DDDBtag = 'default',
                       CondDBtag = 'default')
@@ -76,6 +81,8 @@ if __name__ == '__main__' :
     for loc in nObjects.keys() :
         if nObjects[loc] > 0 :
             message = loc.ljust(length) + str('Events: '+ str(nSelEvents[loc])+'. Objects: '+ str(nObjects[loc])).rjust(10)
+            outputFile.write(message+'\n')
             print message
     print '----------------------------------------------------------------------------------'
-
+    print 'Wrote summary to', output
+    outputFile.close()

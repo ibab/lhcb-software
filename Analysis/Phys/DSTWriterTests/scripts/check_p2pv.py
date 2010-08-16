@@ -2,7 +2,7 @@
 '''
 Check some TES locations with Particles in a DST and print a summary of the number of related PVs and their location. Uses stored Particle->PV relations tables..
 Useage:
-./check_p2pv.py --input <some file name> --location <location of trunk - default "/Event">
+./check_p2pv.py --input <some file name> --location <location of trunk - default "/Event"> --output <output file name>
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -30,15 +30,20 @@ if __name__ == '__main__' :
 
     filename = ''
     location = '/Event'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
+    output = 'p2pv.txt'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
             filename = a
-        if o in ("-l", "--location") :
+        elif o in ("-l", "--location") :
             location = a
+        elif o in ('-o', '--output') :
+            output = a
             
     assert(filename != '')
+
+    outputFile = open(output, 'w')
 
     lhcbApp = LHCbApp(DDDBtag = 'default',
                       CondDBtag = 'default')
@@ -88,11 +93,25 @@ if __name__ == '__main__' :
                         else :
                             print 'Particle->PV relations empty'
     print '==================================================================='
-    print 'Analysed', nEvents, 'in location', location
+    message = 'Analysed ' + nEvents + ' in location ' + location
+    outputFile.write(message+'\n')
+    print message
     for particleloc, value in p2pvSummaries.iteritems() :
         if value.p2pvmap :
-            print '-----------------------------------------------------------------'
-            print particleloc, ':', value.entries, 'particles'
+            separator = '-----------------------------------------------------------------'
+            outputFile.write(separator+'\n')
+            print separator
+            
+            message = particleloc + ' : ' +str(value.entries) + ' particles'
+            outputFile.write(message+'\n')
+            print message
+
             for loc, entries in value.p2pvmap.iteritems():
-                print '\t\t', loc, ':', entries , 'related PVs'
-    print '-----------------------------------------------------------------'
+                message = '\t\t ' + loc + ' : ' +str( entries ) + ' related PVs'
+                outputFile.write(message+'\n')
+                print message
+
+    outputFile.write(separator+'\n')
+    print separator
+    print 'Wrote summary to', output
+    outputFile.close()

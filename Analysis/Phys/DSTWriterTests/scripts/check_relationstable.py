@@ -2,7 +2,7 @@
 '''
 Check standard TES locations with Particle->PV relations in a DST and print a summary of the number relations for each From, To TES location pair. Uses stored Particle->PV relations tables.
 Useage:
-./check_p2pvtable.py --input <some file name> --location <location of trunk - default "/Event"> --table-name <Name of relations table. Default: Particle2VertexRelations>
+./check_p2pvtable.py --input <some file name> --location <location of trunk - default "/Event"> --table-name <Name of relations table. Default: Particle2VertexRelations> --output <output file name>
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -24,9 +24,11 @@ if __name__ == '__main__' :
     filename = ''
     location = '/Event'
     tablename = 'Particle2VertexRelations'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i:t", ["input=",
+    output = 'relations.txt'
+    opts, args = getopt.getopt(sys.argv[1:], "l:i:t:o", ["input=",
                                                        "location=",
-                                                       "table-name="])
+                                                       "table-name=",
+                                                       "output="])
 
     for o, a in opts:
         if o in ("-i", "--input"):
@@ -35,6 +37,8 @@ if __name__ == '__main__' :
             location = a
         if o in ("-t", "--table-name") :
             tablename = a
+        elif o in ('-o', '--output') :
+            output = a
             
     assert(filename != '')
 
@@ -82,8 +86,20 @@ if __name__ == '__main__' :
                     print 'Particle->PV relations', leaf, 'empty'
 
     print '==================================================================='
-    print 'Analysed', nEvents, 'events in location', location
+    message = 'Analysed ' + nEvents + ' events in location ' + location
+    outputFile.write(message+'\n')
+    print message
     for key, value in p2pvSummaries.iteritems() :
-        print '-----------------------------------------------------------------'
-        print key, ':', value, 'entries'
-    print '-----------------------------------------------------------------'
+        separator = '-----------------------------------------------------------------'
+        outputFile.write(separator+'\n')
+        print separator
+        message = str( key ) + ' : ' + str( value ) + ' entries'
+        outputFile.write(message+'\n')
+        print message
+        outputFile.write(separator+'\n')
+        print separator
+
+    outputFile.write(separator+'\n')
+    print separator
+    print 'Wrote summary to', output
+    outputFile.close()
