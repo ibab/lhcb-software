@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.5 2010-06-11 13:00:10 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.6 2010-08-16 14:54:37 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -31,7 +31,7 @@ void OMACheckDeadBins::exec(TH1 &Histo,
                             unsigned int anaID,
                             TH1* Ref) {
   bool useRef=(bool) intParam(m_parDefValues[0]);
-  double expValue=0.;
+  double expValue=0.,triggeringExpValue=0.;
   int normalize = intParam(m_parDefValues[1]);
   double k2counts=1.;
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
@@ -85,6 +85,7 @@ void OMACheckDeadBins::exec(TH1 &Histo,
             ebins << Form("%.1f",Histo.GetBinCenter(ihx));
           }
           nempty++;
+          triggeringExpValue = expValue;
           if (Histo.GetNbinsY()>1) ebins << ","<<ihy;
           if (level == OMAMessage::INFO) level=OMAMessage::WARNING;
           if ( zeroProb < (1-alarm_thresholds[0]) ) level=OMAMessage::ALARM;
@@ -98,7 +99,7 @@ void OMACheckDeadBins::exec(TH1 &Histo,
       message <<"bins at values"<<ebins.str()<<" are empty";
     }
     else {
-      message <<"bin at value"<<ebins.str()<<" is empty, expecting "<<expValue;
+      message <<"bin at value"<<ebins.str()<<" is empty, expecting "<<triggeringExpValue;
     }
     raiseMessage(anaID, level, message.str(), hname);
   }
