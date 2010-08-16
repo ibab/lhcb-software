@@ -37,10 +37,43 @@ namespace VeloPixDet {
    *
    *  @see DeVeloPixSquareType
    */
-  static std::vector< std::pair<double,double> >& deVeloPixSquareTypeStaticPixels()
+  //double& m_PixelsSize;
+  static double& deVeloPixSquareTypeStaticPixelSize()
   {
-    static std::vector< std::pair<double,double> > s_xyPixels;
-    return s_xyPixels;
+    static double s_PixelSize;
+    return s_PixelSize;
+  }
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloPixSquareType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloPixSquareType
+   */
+  //int& m_NpixX ;
+  static int& deVeloPixSquareTypeStaticNpixX()
+  {
+    static int s_NpixX;
+    return s_NpixX;
+  }
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloPixSquareType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloPixSquareType
+   */
+  //double& m_ChipWidth ;
+  static double& deVeloPixSquareTypeStaticChipWidth()
+  {
+    static double s_ChipWidth;
+    return s_ChipWidth;
   }
 
   /** This function simply provides access to a local static
@@ -53,10 +86,28 @@ namespace VeloPixDet {
    *
    *  @see DeVeloPixSquareType
    */
-  static std::vector< std::pair<double,double> >& deVeloPixSquareTypeStaticPixelsSize()
+  // std::vector< bool >& m_ChipHorizontal;
+  static std::vector< bool >& deVeloPixSquareTypeStaticChipHorizontal()
   {
-    static std::vector< std::pair<double,double> > s_xyPixelsSize;
-    return s_xyPixelsSize;
+    static std::vector< bool > s_ChipHorizontal;
+    return s_ChipHorizontal;
+  }
+  // 64 size at maximum
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloPixSquareType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloPixSquareType
+   */
+  //std::vector< double >& m_ChipFirstPixelSize;  
+  static std::vector< double >& deVeloPixSquareTypeStaticChipFirstPixelSize()
+  {
+    static std::vector< double > s_ChipFirstPixelSize;
+    return s_ChipFirstPixelSize;
   }
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
@@ -67,41 +118,44 @@ namespace VeloPixDet {
    *  funtions.
    *
    *  @see DeVeloPixSquareType
-   */  
+   */
+  //std::vector< double >& m_ChipLastPixelSize;  
+  static std::vector< double >& deVeloPixSquareTypeStaticChipLastPixelSize()
+  {
+    static std::vector< double > s_ChipLastPixelSize;
+    return s_ChipLastPixelSize;
+  }
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloPixSquareType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloPixSquareType
+   */
+  //std::vector< int >& m_ChipsInLadder;
+  static std::vector< int >& deVeloPixSquareTypeStaticChipsInLadder()
+  {
+    static std::vector< int > s_ChipsInLadder;
+    return s_ChipsInLadder;
+  }
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloPixSquareType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloPixSquareType
+   */
+  //std::vector< std::pair<double,double> >& m_xyChips;
   static std::vector< std::pair<double,double> >& deVeloPixSquareTypeStaticChips()
   {
     static std::vector< std::pair<double,double> > s_xyChips;
     return s_xyChips;
-  }
-  /** This function simply provides access to a local static
-   *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
-   *  The purpose of this function is to work around
-   *  a Microsoft(tm) specific extension in VC++ that makes
-   *  awkward to have static data mebers accessed by inline
-   *  funtions.
-   *
-   *  @see DeVeloPixSquareType
-   */
-  static std::vector< bool >& deVeloPixSquareTypeStaticChipSameOrientation()
-  {
-    static std::vector< bool > s_xyChipSameOrientation;
-    return s_xyChipSameOrientation;
-  }
-  /** This function simply provides access to a local static
-   *  data which is used to initialize references in each instance
-   *  of DeVeloPixSquareType.
-   *  The purpose of this function is to work around
-   *  a Microsoft(tm) specific extension in VC++ that makes
-   *  awkward to have static data mebers accessed by inline
-   *  funtions.
-   *
-   *  @see DeVeloPixSquareType
-   */
-  static std::vector< int >& deVeloPixSquareTypeStaticChipsLadder()
-  {
-    static std::vector< int > s_xyChipsLadder;
-    return s_xyChipsLadder;
   }
 }
 // used to control initialization
@@ -121,13 +175,14 @@ DeVeloPixSquareType::DeVeloPixSquareType(const std::string& name) :
   DeVeloPixSensor(name),
   m_ladders(),
   m_otherSideSensor(0),
-  m_xyPixels(VeloPixDet::deVeloPixSquareTypeStaticPixels()),
-  m_PixelsSize(VeloPixDet::deVeloPixSquareTypeStaticPixelsSize()), 
+  m_PixelSize(VeloPixDet::deVeloPixSquareTypeStaticPixelSize()), 
+  m_NpixX(VeloPixDet::deVeloPixSquareTypeStaticNpixX()), 
+  m_ChipWidth(VeloPixDet::deVeloPixSquareTypeStaticChipWidth()), 
   m_xyChips(VeloPixDet::deVeloPixSquareTypeStaticChips()),
-  m_ChipSameOrientation(VeloPixDet::deVeloPixSquareTypeStaticChipSameOrientation()),
-  m_ChipsInLadder(VeloPixDet::deVeloPixSquareTypeStaticChipsLadder()),
-  //m_globalXY(m_numberOfPixels,std::pair<double,double> (0.,0.)),
-  //m_halfboxXY(m_numberOfPixels,std::pair<double,double> (0.,0.)),
+  m_ChipFirstPixelSize(VeloPixDet::deVeloPixSquareTypeStaticChipFirstPixelSize()), 
+  m_ChipLastPixelSize(VeloPixDet::deVeloPixSquareTypeStaticChipLastPixelSize()), 
+  m_ChipsInLadder(VeloPixDet::deVeloPixSquareTypeStaticChipsInLadder()),
+  m_ChipHorizontal(VeloPixDet::deVeloPixSquareTypeStaticChipHorizontal()),
   m_msgStream(NULL)
 {
 }
@@ -161,8 +216,7 @@ StatusCode DeVeloPixSquareType::initialize()
     msgSvc()->setOutputLevel("DeVeloPixSquareType", outputLevel);
   }
   delete pmgr;
-  msg() << MSG::INFO<<"USE THE CORRECT"<<endreq;
-  
+
   sc = DeVeloPixSensor::initialize();
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR << "Failed to initialise DeVeloPixSensor" << endreq;
@@ -179,7 +233,7 @@ StatusCode DeVeloPixSquareType::initialize()
     s << nl+1;
     //bottom left corner of the active part of ladder nl
     Gaudi::XYZPoint point(param<double>("XRef"+s.str()),param<double>("YRef"+s.str()),param<double>("ZRef"+s.str()));
-    PixelLadder tmp_ladder(point,param<int>("NChip"+s.str()));
+    PixelLadder tmp_ladder(point,param<int>("NChip"+s.str()),(bool)param<int>("Ladder"+s.str()+"_IsHorizontal"));
     std::vector<int> tmp_interPixPos (tmp_ladder.nChip());
     numOfChips+=tmp_ladder.nChip();
     for ( int nchip = 0 ; nchip < tmp_ladder.nChip() ; nchip++)
@@ -194,9 +248,13 @@ StatusCode DeVeloPixSquareType::initialize()
   /// resize the vector to match the real number of pixels
   //m_globalXY.resize(numOfChips*nPixCol()*nPixRow());
   //m_halfboxXY.resize(numOfChips*nPixCol()*nPixRow());
-  
+
   /// Calculate the pixels position and size
-  calcPixelsParam();
+  sc = calcPixelsParam();
+  if(!sc.isSuccess()) {
+    msg() << MSG::ERROR << "Failed to store the pixel position in static" << endreq;
+    return sc;
+  }
 
   // get some bits and mask field for some bit manipulation...
   // fill a channelID 
@@ -211,9 +269,9 @@ StatusCode DeVeloPixSquareType::initialize()
   m_PixelBit = m_PixelHPBit+m_PixelLPBit;
   
   m_ChipMask = (refid.chip()  << m_PixelBit ) | zeroMask;
-  m_PixelLPMask = refid.pixel_lp() | zeroMask ;
-  m_PixelHPMask = (refid.pixel_hp()<< m_PixelLPBit  | zeroMask);
-  m_PixelMask = (refid.pixel_hp()<< m_PixelLPBit  | zeroMask)| m_PixelLPMask;
+  m_PixelHPMask = refid.pixel_hp() | zeroMask ;
+  m_PixelLPMask = (refid.pixel_lp()<< m_PixelHPBit  | zeroMask);
+  m_PixelMask =  m_PixelLPMask | m_PixelLPMask;
     
   // geometry conditions, update global position in cache
   /*updMgrSvc()->
@@ -225,6 +283,7 @@ StatusCode DeVeloPixSquareType::initialize()
     return sc;
   }*/
 
+  
   return StatusCode::SUCCESS; 
 }
 
@@ -257,28 +316,41 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
                                                LHCb::VeloPixChannelID& channel,
                                                std::pair <double, double>& fraction) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  //MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  //msg()<<MSG::INFO<<"Global: "<<point<<endreq;
+  
   Gaudi::XYZPoint localPoint = globalToLocal(point);
+  //msg()<<MSG::INFO<<"Local: "<<localPoint<<endreq;
 
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
-  if(!sc.isSuccess())return sc;  
+  
+  //msg()<<MSG::INFO<<"In active area?: "<<sc<<endreq;
+  if(!sc.isSuccess())return sc;
   unsigned int sensor=sensorNumber();
+  
+  
+  //msg()<<MSG::INFO<<"Sensor: "<<sensor<<endreq;
   // Create the associated VeloPixChannelID
   channel.setSensor(sensor);
   // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(localPoint);
+  //msg()<<MSG::INFO<<"Ladder: "<<ladderIndex<<endreq;
   // Get the chip number in which the point is
   int chipIndex = WhichChip(localPoint,ladderIndex);
+  //msg()<<MSG::INFO<<"Chip: "<<chipIndex<<endreq;
   // Compute the proper chip number for VeloPixChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
     prop_chipIndex += m_ladders[ilad].nChip();
   }
   // Set the chip number in the VeloPixChannelID
+  //msg()<<MSG::INFO<<"ChipFull: "<<prop_chipIndex<<endreq;
   channel.setChip(prop_chipIndex);  
   // Get the pixel position in which the point is
   std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
+  
+  //msg()<<MSG::INFO<<"Pixel: "<<pixelPos.first<<" "<<pixelPos.second<<" frac: "<<fraction.first<<" "<<fraction.second<<endreq;
   if( pixelPos.first < 0. || pixelPos.second < 0. ){
     return StatusCode::FAILURE;
   }
@@ -448,12 +520,32 @@ int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 {
   for ( int index = 0 ; index <(int) m_ladders.size() ; index++){
     const Gaudi::XYZPoint pointRef = m_ladders[index].ReferencePoint();
-    // that might be wrong if nChip>2... to be checked
-    if (                                                     
-        (point.x()-pointRef.x() > 0. && point.x()-pointRef.x()<(m_ladders[index].nChip()*(chipLength()+interChipDist())-interChipDist())) 
-        && (point.y()-pointRef.y() > 0. && point.y()-pointRef.y()<chipWidth())
-        && (fabs(point.z()-pointRef.z())<6*siliconThickness()/10)
-        ){
+    // msg() << MSG::INFO<<"Ladder number: "<< index<<endmsg;
+    // msg() << MSG::INFO<<"XY : "<<point.x()<<" ; "<<pointRef.y()<<" DeltaX: "<<point.x()-pointRef.x()<<"DeltaY: "<<point.y()-pointRef.y()<<" z:"<<(fabs(point.z()-pointRef.z())<6*siliconThickness()/10)<<endmsg;
+    if ( 
+        ( 
+         m_ladders[index].isHorizontal() && (
+                                             (pointRef.x()-point.x() > 0. 
+                                              && pointRef.x()-point.x()
+                                              <(m_ladders[index].nChip()*(chipLength()+interChipDist())-interChipDist()))
+                                             &&
+                                             (point.y()-pointRef.y() > 0. && point.y()-pointRef.y()<chipWidth())
+                                             &&
+                                             (fabs(point.z()-pointRef.z())<6*siliconThickness()/10)
+                                             )
+         ) || (
+               ! m_ladders[index].isHorizontal() && (
+                                                     (point.y()-pointRef.y() > 0. 
+                                                      && point.y()-pointRef.y()
+                                                      <(m_ladders[index].nChip()*(chipLength()+interChipDist())-interChipDist()))
+                                                     &&
+                                                     (pointRef.x()-point.x() > 0. && pointRef.x()-point.x() <chipWidth())
+                                                     &&
+                                                     (fabs(point.z()-pointRef.z())<6*siliconThickness()/10)
+                                                     )
+               ) 
+        )
+    {
       return index;
     }
   }
@@ -480,12 +572,27 @@ int DeVeloPixSquareType::WhichLadder(int chipNum) const
 //==============================================================================
 int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const
 {  
+  // Get the ladder reference point (ie x,y,z of the bottom left corner)
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
-  Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()+interChipDist()/2,point.y()-refPoint.y(),point.z()-refPoint.z());
-  int ChipNum = (int)(LocalPoint.x()/(chipLength()+interChipDist()));
   
+  //Local position in the ladder contains +interChipDist()/2 because we assume the 
+  // pixel at the reference point is a normal one... if PosInterChip1_Laddn!=1 then this might change...
+  double extraDist = interChipDist()/2;
+  if ( m_ladders[ladderIndex].edgeOrientation(0)!=1){
+    msg() << MSG::ERROR << "In the calculation of the pixel position, the case where first chip have an external readout edge is not forseen..." << endreq;
+    return -1;
+  }
+  // compute the local position of the point with respect to the reference point, along the chip alignment direction.
+  double LocalPosition = -100.;
+  if (m_ladders[ladderIndex].isHorizontal()) {
+    LocalPosition = refPoint.x()-point.x()+extraDist;
+  }
+  else{
+    LocalPosition = point.y()-refPoint.y()+extraDist;
+  }
+  // get the chip number
+  int ChipNum = (int)(LocalPosition/(chipLength()+interChipDist()));
   return ChipNum;
-
 }
 
 //==============================================================================
@@ -493,11 +600,28 @@ int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex
 //==============================================================================
 std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<double,double>& fraction) const
 {
-  double alongAxisOffset = 0.;
-  if( chipIndex>0)  alongAxisOffset = chipIndex*(chipLength()+interChipDist()/2)+(chipIndex-1)*interChipDist()/2;
-
+  //step 1 local coordinates
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
-  Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-alongAxisOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
+  Gaudi::XYZPoint Point(point.x(),point.y(),point.z());
+  
+  //step 2 ladders coordinates
+  Gaudi::XYZPoint LocalPoint_Ladd(refPoint.x()-Point.x(),Point.y()-refPoint.y(),Point.z()-refPoint.z());
+
+  
+  //step 3 horizontal ladder coordinates
+  if (! m_ladders[ladderIndex].isHorizontal()) {
+    double refx = LocalPoint_Ladd.y();
+    double refy = chipWidth() - LocalPoint_Ladd.x();
+    LocalPoint_Ladd.SetX(refx);
+    LocalPoint_Ladd.SetY(refy);
+  }
+
+  // step 4 go to the chip coordinates
+  double alongAxisOffset = 0.;
+  if( chipIndex>0) alongAxisOffset = chipIndex*(chipLength()+interChipDist()/2)+(chipIndex-1)*interChipDist()/2;
+
+  // Local Point is the point in the chip refernetial (ie, x<chipLenght and y<chipWidth)
+  Gaudi::XYZPoint LocalPoint(LocalPoint_Ladd.x()-alongAxisOffset,LocalPoint_Ladd.y(),LocalPoint_Ladd.z());
 
   int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipIndex);
   std::pair< int , int > thePixel;
@@ -508,7 +632,7 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   if ( positionEdgePix== 1 || positionEdgePix== 0 )interchipPixSizeRIGHT = interchipPixSize();
   if ( positionEdgePix== -1 || positionEdgePix== 0 )interchipPixSizeLEFT = interchipPixSize();
 
-  
+  // BECAREFULL x is now not anymore X but the local ladder x ie. the dimension along which the chips are aligned
   // correct for the extra length of the left pixel
   double newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
   // set the results for most of the case
@@ -530,6 +654,13 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   }
   thePixel.second=(int)(LocalPoint.y()/hpSize());  
   fraction.second=LocalPoint.y()/hpSize()-thePixel.second;  
+  // fraction should be given in global X,Y
+  if (! m_ladders[ladderIndex].isHorizontal()) {
+    double fracX = 1-fraction.second;
+    double fracY = fraction.first;
+    fraction.first = fracX;
+    fraction.second = fracY;
+  }
   return thePixel;
 }
 
@@ -551,76 +682,74 @@ bool DeVeloPixSquareType::isLong( LHCb::VeloPixChannelID channel ) const
 //==============================================================================
 /// The function that fill the members in intialisation                  
 //==============================================================================
-void DeVeloPixSquareType::calcPixelsParam()
+StatusCode DeVeloPixSquareType::calcPixelsParam()
 {
-  // we only have to do this once, strip radii pitches and phi
-  // limits are stored in statics, i.e. are technically the same
+  // we only have to do this once, x and y position of pixel in chips 
+  // are stored in statics, i.e. are technically the same
   // for all instances of DeVeloRType
   if (m_staticDataInvalid) {
-    m_xyPixels.clear();
-    m_PixelsSize.clear();
+    m_ChipFirstPixelSize.clear();
     m_xyChips.clear();
     m_ChipsInLadder.clear();
-    int firstChipEdgePosition = m_ladders[0].edgeOrientation(0);
+    m_ChipHorizontal.clear();
+    m_ChipLastPixelSize.clear();
     int ladderNum = ladderNumber();
     int ntotPixel = 0;
     // Filling a big table with all the pixel position in one sensor is not possible (more than 20M per table)
     // so we cut the data into :
-    //  - x,y position of pixels in first chip (vector of std::pair<double,double>)
-    //  - x,y pixels size in first chip (vector of std::pair<double,double>)
-    //  - x,y position of each chip (vector of std::pair<double,double>)
-    //  - pixel positions orientation wrt. pixel position orientation in first chip (vector of bool)
-    //  - ladder of each chip (since it contains the Z relative position wrt. the sensor z=0)
+    //  - m_PixelSize | standard pixel size
+    //  - m_NpixX     | number of chips along the x axis
+    //  - m_ChipWidth | chip width needed to transform x to y
+    //  - m_xyChips | bottom left X,Y position of 1st pixel in chip (size NChip*std::pair<double,double>)
+    //  - m_xyPixels | x,y position of each pixel in chip assuming all pix similar (size NPixX*NPixY*std::pair<double,double>) (maybe not needed)
+    //  - m_ChipFirstPixelSize | x size of first pixel (vector of double) size NChip*double
+    //  - m_ChipLastPixelSize | x size of last pixel (vector of double) size NChip*double
+    //  - m_ChipsInLadder  | ladder of each chip (since it contains the Z relative position wrt. the sensor z=0) size  NChip*int
+    //  - m_ChipHorizontal | chip orientation (for the moment Horizontal or vertial --> vector of bool) size  NChip*bool
+    // Note that X,Y are in the sensor coordinates while  x,y are in the ladder coordinate
+    m_PixelSize = lpSize();
+    m_NpixX = nPixCol();
+    m_ChipWidth = chipWidth();
+
     for(int ilad = 0 ; ilad < ladderNum ; ilad ++){
       int chipNum = m_ladders[ilad].nChip();
       ntotPixel += chipNum*nPixCol()*nPixRow();
       for(int ichip = 0 ; ichip < chipNum ; ichip ++){
         m_ChipsInLadder.push_back(ilad);
+        bool isHorizontal = m_ladders[ilad].isHorizontal();
+        m_ChipHorizontal.push_back(isHorizontal);
+        
         //Get the position of the chip by setting the position of the ladder reference point...
         std::pair<double,double> xyChip(m_ladders[ilad].ReferencePoint().x(),m_ladders[ilad].ReferencePoint().y());
+
         // ... and adding the bottom left position of the chip in the ladder
         if (ichip < 2){
           // If there is no more than 2 chips in the ladder
-          xyChip.first=xyChip.first+(ichip)*(chipLength()+interChipDist()/2);
+          if ( isHorizontal ) xyChip.first=xyChip.first-((ichip)*(chipLength()+interChipDist()/2));
+           else xyChip.second=xyChip.second+(ichip)*(chipLength()+interChipDist()/2);
         }   
         else{ 
           //The else is not used for TIMEPIX minplane so it have to
           //be checked for other geometry (when more than 2 chip by ladder)
-          xyChip.first=xyChip.first+(ichip-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2);
+          if ( isHorizontal ) xyChip.first=xyChip.first-((ichip-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2));
+          else xyChip.second=xyChip.second+(ichip-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2);
         }  
         m_xyChips.push_back(xyChip);
-        // Now store the rotation to apply to the pixel coordinates:
-        // if the chip edgeOrientation is 0 they we do the assumption that all the chips are similar: m_ChipSameOrientation is set to True
-        // The first chip pixel positions are stored. 
-        // If the edge orientation is opposite then m_ChipSameOrientation is set to False
-        // If the edge orientation is the same then m_ChipSameOrientation is set to True
-        int positionEdgePix =  (m_ladders[ilad]).edgeOrientation(ichip);
-        bool sameOr;
-        if ( positionEdgePix == firstChipEdgePosition )sameOr= true;
-        else sameOr=false;
-        if ( positionEdgePix == firstChipEdgePosition ) m_ChipSameOrientation.push_back(true);
-        else m_ChipSameOrientation.push_back(false);
-      }
-    }
-    //Now let's fill the informations on the pixels for first chip of first ladder
-    for(unsigned int iX = 0 ; iX < (unsigned int)nPixCol() ; iX ++){
-      for(unsigned int iY = 0 ; iY < (unsigned int)nPixRow() ; iY ++){
-        std::pair<double,double> size (-1.,-1.);
-        size.first = lpSize();
-        size.second = hpSize();
-        // case where the edge pixel is on the right and the channel correspond to a edge pixel
-        if( ( ( firstChipEdgePosition== 1 || firstChipEdgePosition== 0 ) && iX == (unsigned int)(nPixCol()-1))
-            || ( ( firstChipEdgePosition== -1 || firstChipEdgePosition== 0) && iX == 0 )){
-          size.first = interchipPixSize();
+        
+
+        if (m_ladders[ilad].edgeOrientation(ichip)== 0 || m_ladders[ilad].edgeOrientation(ichip)== -1){
+          m_ChipFirstPixelSize.push_back(interchipPixSize());
         }
-        std::pair<double,double> coord (0.,0.);
-        double xoffset(0.);
-        if (iX>0 && ( firstChipEdgePosition == 0 || firstChipEdgePosition == -1 ) ) xoffset = interchipPixSize()- lpSize();
-        // Set the pixel position in the chip
-        coord.first=(iX)*lpSize()+size.first/2+xoffset;
-        coord.second=(iY)*hpSize()+size.second/2;
-        m_xyPixels.push_back(coord);
-        m_PixelsSize.push_back(size);
+        if (m_ladders[ilad].edgeOrientation(ichip)== 1 ){
+          m_ChipFirstPixelSize.push_back(lpSize());
+        }
+
+        if ( m_ladders[ilad].edgeOrientation(ichip)== -1){
+          m_ChipLastPixelSize.push_back(lpSize());
+        }
+        if (m_ladders[ilad].edgeOrientation(ichip)== 0 || m_ladders[ilad].edgeOrientation(ichip)== 1 ){
+          m_ChipLastPixelSize.push_back(interchipPixSize());
+        }
       }
     }
     m_staticDataInvalid = false;  // these are valid now for all instances
@@ -630,11 +759,15 @@ void DeVeloPixSquareType::calcPixelsParam()
   //}
   
   if(m_debug) {
-    msg() << MSG::DEBUG << "Position of first pixel is " << m_xyPixels[0]
-          << " last pixel " << m_xyPixels[m_xyPixels.size()-1] << endmsg;
-    msg() << MSG::DEBUG << "Size of first pixel is " << m_PixelsSize[0] << " last pixel "
-          << m_PixelsSize[m_PixelsSize.size()-1] << endmsg;
+    msg() << MSG::DEBUG << "Position of first chip is " << m_xyChips[0]
+          << " last chip is " << m_xyChips[m_xyChips.size()-1] << endmsg;
   }
+  //for ( int i = 0 ; i < m_xyChips.size() ; i++ ){
+  //   msg() << MSG::INFO << "XY of chip num "<< i <<" : " << m_xyChips[i].first <<" "<< m_xyChips[i].second << endreq;
+  //  msg() << MSG::INFO << "First size "<< m_ChipFirstPixelSize[i] <<" last size: " << m_ChipLastPixelSize[i] << endreq;
+  // }
+  
+  return StatusCode::SUCCESS;
 }
 
 
@@ -661,3 +794,5 @@ StatusCode DeVeloPixSquareType::updatePixelSquareCache()
   // that's the place where, if we find a good way to store the global and halfbox info it shoulmd be done
   return StatusCode::SUCCESS;
 }
+
+

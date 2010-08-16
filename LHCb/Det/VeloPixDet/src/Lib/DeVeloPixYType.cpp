@@ -84,14 +84,14 @@ StatusCode DeVeloPixYType::initialize()
   m_debug   = (msgSvc()->outputLevel("DeVeloPixYType") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVeloPixYType") == MSG::VERBOSE) ;
 
-  for (int nl = 0 ; nl < ladderNumber() ; nl ++)
+  /*  for (int nl = 0 ; nl < ladderNumber() ; nl ++)
   {
     std::stringstream s;
     s << nl+1;
     Gaudi::XYZPoint point(param<double>("XRef"+s.str()),param<double>("YRef"+s.str()),param<double>("ZRef"+s.str()));
     PixelLadder tmp_ladder(point,param<int>("NChip"+s.str()));
     m_ladders.push_back(tmp_ladder);
-  }
+    }*/
   return StatusCode::SUCCESS;
 }
 //==============================================================================

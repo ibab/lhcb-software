@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2010-08-15 - Victor Coco
+ - Deep modification in DeVeloPixSquareType in the way pixel position are
+   encoded when passing from MINIPLANE layout to STRAWMAN layout. 
+
 !========================== VeloPixDet v1r5 2010-04-26 =======================
 ! 2010-04-13 - Victor Coco
  - bug fix in DeVeloPixSquareType ( reverse fraction in x position

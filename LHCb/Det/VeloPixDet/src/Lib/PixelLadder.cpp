@@ -15,10 +15,11 @@
 // Standard constructor, initializes variables
 //=============================================================================
 
-PixelLadder::PixelLadder(Gaudi::XYZPoint pRef ,int n)
+PixelLadder::PixelLadder(Gaudi::XYZPoint pRef ,int n , bool isHoriz )
 {
    m_pRef = pRef;
    m_NChip = n;
+   m_horizontalChip = isHoriz;
    for (int i = 0 ; i < n ; i++){
      m_edgesOrientation.push_back(0);
    }
@@ -39,6 +40,13 @@ void PixelLadder::setReferencePoint( Gaudi::XYZPoint p)
 void PixelLadder::setNChip( int n )
 {
   m_NChip = n;
+}
+
+//========================== Set the orientation of the ladder 
+//horizontal means the chips are aligned along the x axis, vertical means the chips are along the y axis
+void PixelLadder::setIsHorizontal( bool isHoriz  )
+{
+  m_horizontalChip = isHoriz;
 }
 
 //========================== Set the positions of the readout edge
