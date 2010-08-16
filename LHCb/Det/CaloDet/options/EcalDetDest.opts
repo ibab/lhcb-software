@@ -3,6 +3,7 @@ MessageSvc.setDebug   +={"EcalSubDet"};
 MessageSvc.setDebug   +={"EcalDet.BuildCells"};
 MessageSvc.setDebug   +={"EcalDet.BuildCards"};
 MessageSvc.setDebug   +={"EcalDet.BuildMonitoring"};
+MessageSvc.setDebug   +={"EcalDet.LedReference"};
 MessageSvc.setDebug   +={"EcalDet.Quality"};
 MessageSvc.setDebug   +={"EcalDet.Calibration"};
 MessageSvc.setDebug   +={"EcalDet.Geometry"};

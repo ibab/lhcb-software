@@ -33,6 +33,7 @@
  *
  *  @author Olivier Callot Olivier.Callot@cern.ch
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+ *  @maintainer Olivier Deschamps odescham@in2p3.fr
  */
 // ============================================================================
 /*  constructor
@@ -44,7 +45,9 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_caloIndex         ( -1         )
   ,  m_initialized       ( false      )
   ,  m_subCalos          () 
-  ,  m_pinArea           ( -1         ){ 
+  ,  m_maxEtInCenter     ()
+  ,  m_maxEtSlope        ()
+  ,  m_pinArea           ( -1         ){
 }
 // ============================================================================
 // Destructor
@@ -140,11 +143,19 @@ StatusCode DeCalorimeter::initialize()
   
   // condition : 'Gain' (MUST EXIST)
   if( !loadCondition( m_gain, "Gain",mandatory  ) )return StatusCode::FAILURE;
-  updMgrSvc()->registerCondition(this, m_gain.path(), &DeCalorimeter::updGain);
-  
+  updMgrSvc()->registerCondition(this, m_gain.path(), &DeCalorimeter::updGain);  
+
   // condition : 'Calibration' (FACULTATIF)
   if( loadCondition( m_calib, "Calibration" ) )
     updMgrSvc()->registerCondition(this, m_calib.path(), &DeCalorimeter::updCalib);
+
+  // condition : 'Calibration' (FACULTATIF)
+  if( loadCondition( m_numericGains, "NumericGains" ) )
+    updMgrSvc()->registerCondition(this, m_numericGains.path(), &DeCalorimeter::updNumGains);
+
+  // condition : 'LEDReference' (FACULTATIF)
+  if( loadCondition( m_LEDReference, "LEDReference" ) )
+    updMgrSvc()->registerCondition(this, m_LEDReference.path(), &DeCalorimeter::updLEDReference);
 
   // condition : 'Quality' (FACULTATIF)
   if( loadCondition( m_quality, "Quality" ) )
@@ -316,10 +327,6 @@ StatusCode DeCalorimeter::buildCells( ) {
 
           m_cells[id].setCenterSize( pointGlobal , cellSize[Area] ) ;
           m_cells[id].setValid( true );
-
-          //double gain = ( maxEtInCenter(Area) / m_cells[id].sine() ) + maxEtSlope(Area);
-          //gain        = gain / (double) adcMax() ;
-          //m_cells[id].setGain( gain ) ;
           ++nbCells;
           
         }  // loop over columns
@@ -974,6 +981,8 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   return StatusCode::SUCCESS;
 };
 
+
+// absolute calibration -------------- //
 StatusCode DeCalorimeter::getCalibration( )  {
   // init
   MsgStream msg( msgSvc(), m_caloDet + ".Calibration" );
@@ -989,24 +998,26 @@ StatusCode DeCalorimeter::getCalibration( )  {
   }
   int size = m_calib->paramAsInt( "size" );
   std::vector<double> data = m_calib->paramAsDoubleVect( "data" );
-
+  if( !data.empty() && size > 2)msg << MSG::WARNING << "Reference data are not longer supported within 'Calibration' condition "<<
+    "- use dedicated 'LEDReference' condition instead" << endmsg;
   int count = 0;
   for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
     int ll = size*kk;
     double cell   = data[ll];
     double dg     = data[ll+1];
-    double ledDataRef = (size>2) ? data[ll+2] : 0.;
-    double ledMoniRef = (size>3) ? data[ll+3] : 1.;
+    //double ledDataRef = (size>2) ? data[ll+2] : 0.;
+    //double ledMoniRef = (size>3) ? data[ll+3] : 1.;
 
     LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
     id.setCalo( CaloCellCode::CaloNumFromName( name() ));
     //get cell
     if( m_cells[id].valid() ){
       m_cells[id].setCalibration( dg );
-      m_cells[id].setLedDataRef( ledDataRef, ledMoniRef );
+      // m_cells[id].setLedDataRef( ledDataRef, ledMoniRef );
       msg << MSG::VERBOSE << "Added calibration for channel " << id 
           << " : dG = " << dg 
-          << " Reference (<PMT> , <PMT/PIN>) datafrom LED signal = (" << ledDataRef << "," << ledMoniRef << ")"<<endmsg;
+        // << " Reference (<PMT> , <PMT/PIN>) datafrom LED signal = (" << ledDataRef << "," << ledMoniRef << ")"
+          <<endmsg;
       count++;
     }else{
       msg << MSG::WARNING << "Trying to add calibration on non-valid channel : " << id << endmsg;
@@ -1016,7 +1027,48 @@ StatusCode DeCalorimeter::getCalibration( )  {
   return StatusCode::SUCCESS;
 }
 
+// LED reference data for relative calibration ------------------ //
+StatusCode DeCalorimeter::getLEDReference( )  {
+  // init
+  MsgStream msg( msgSvc(), m_caloDet + ".LEDReference" );
+  
+  // check conditions
+  if ( !hasCondition("LEDReference") )return StatusCode::SUCCESS; // not mandatory
 
+  
+  // check array
+  if ( !m_LEDReference->exists( "data" ) ) {
+    msg << MSG::DEBUG << "No 'data' in 'LEDReference' condition" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  int size = m_LEDReference->paramAsInt( "size" );
+  std::vector<double> data = m_LEDReference->paramAsDoubleVect( "data" );
+
+  int count = 0;
+  for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
+    int ll = size*kk;
+    double cell   = data[ll];
+    double ledDataRef = data[ll+1];
+    double ledMoniRef = ( size>2) ? data[ll+2] : 1.;
+
+    LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+    id.setCalo( CaloCellCode::CaloNumFromName( name() ));
+    //get cell
+    if( m_cells[id].valid() ){
+      m_cells[id].setLedDataRef( ledDataRef, ledMoniRef );
+      msg << MSG::VERBOSE << "Added LED reference for channel " << id 
+          << " Reference (<PMT> , <PMT/PIN>) datafrom LED signal = (" << ledDataRef << "," << ledMoniRef << ")"<<endmsg;
+      count++;
+    }else{
+      msg << MSG::WARNING << "Trying to add reference on non-valid channel : " << id << endmsg;
+    }
+  }
+  msg << MSG::DEBUG << "LED reference added for " << count << " channel(s) " << endmsg;
+  return StatusCode::SUCCESS;
+}
+
+
+// Quality and current LED signal for relative calibration ------------------ //
 StatusCode DeCalorimeter::getQuality( )  {
   // init
   MsgStream msg( msgSvc(), m_caloDet + ".Quality" );
@@ -1069,7 +1121,7 @@ StatusCode DeCalorimeter::getL0Calibration( )  {
   MsgStream msg( msgSvc(), m_caloDet + ".L0calibration" );
   
   // check conditions
-  if ( !hasCondition("L0Calibration") )return StatusCode::SUCCESS; // l0calibration not mandatory (assume deltaGain = 1.)
+  if ( !hasCondition("L0Calibration") )return StatusCode::SUCCESS; // l0calibration not mandatory (assume dg = 1.)
 
   
   // check array
@@ -1098,6 +1150,45 @@ StatusCode DeCalorimeter::getL0Calibration( )  {
     }
   }
   msg << MSG::DEBUG << "L0calibration constant added for " << count << " channel " << endmsg;
+  return StatusCode::SUCCESS;
+}
+
+
+
+StatusCode DeCalorimeter::getNumericGains( )  {
+  // init
+  MsgStream msg( msgSvc(), m_caloDet + ".NumericGains" );
+  
+  // check conditions
+  if ( !hasCondition("NumericGains") )return StatusCode::SUCCESS; // numericGains not mandatory (assume deltaGain = 1.)
+
+  
+  // check array
+  if ( !m_numericGains->exists( "data" ) || !m_numericGains->exists( "size") ) {
+    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume cte = 0" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  int size = m_numericGains->paramAsInt( "size" );
+  std::vector<int> data = m_numericGains->paramAsIntVect( "data" );
+
+  int count = 0;
+  for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
+    int ll = size*kk;
+    int cell   = data[ll];
+    int ng     = data[ll+1];
+
+    LHCb::CaloCellID id = LHCb::CaloCellID( cell );
+    //get cell
+    if( m_cells[id].valid() ){
+      m_cells[id].setNumericGain( ng );
+      msg << MSG::VERBOSE << "Added NumericGain for channel " << id 
+          << " :   " << ng << endmsg;
+      count++;
+    }else{
+      msg << MSG::WARNING << "Trying to NumericGain on non-valid channel : " << id << endmsg;
+    }
+  }
+  msg << MSG::DEBUG << "NumericGain added for " << count << " channel " << endmsg;
   return StatusCode::SUCCESS;
 }
   
@@ -1229,38 +1320,75 @@ bool DeCalorimeter::loadCondition( SmartRef<Condition>& cond, std::string name ,
 // Update cache
 StatusCode DeCalorimeter::updGain(){
   MsgStream msg( msgSvc(), m_caloDet );
-  msg << MSG::DEBUG << "Updating condition 'Gain" << endmsg;
+  msg << MSG::DEBUG << "Updating condition 'Gain'" << endmsg;
 
   if( !hasCondition("Gain") )return StatusCode::FAILURE; // the gain condition must exist
 
-  // Gain parameters
-  if( !m_gain->exists("EtInCenter") || !m_gain->exists("EtSlope"))return StatusCode::FAILURE;
-
-  std::vector<double> etSlope    = m_gain->paramAsDoubleVect( "EtSlope"      );
-  std::vector<double> etInCenter = m_gain->paramAsDoubleVect( "EtInCenter"      );
-
-
-  if( etInCenter.size() != etSlope.size() ){
-    msg << MSG::ERROR << "The gain parameters per region are not consistent" << endmsg;
+  // check
+  if( (!m_gain->exists("data") || !m_gain->exists("size") ) 
+      && (!m_gain->exists("EtInCenter") || !m_gain->exists("EtSlope")) ){
+    msg << MSG::ERROR << "No valid nominal gain setting is defined within 'Gain' condition" << endmsg;
     return StatusCode::FAILURE;
   }
-  m_maxEtInCenter = etInCenter  ;
-  m_maxEtSlope    = etSlope     ;
-  if( (m_maxEtInCenter.size() != m_nArea && m_maxEtInCenter.size() !=1 ) ||
-      (m_maxEtSlope.size() != m_nArea && m_maxEtSlope.size() != 1) ){
-    msg << MSG::ERROR << " Found " << m_maxEtInCenter.size() << " gain parameters " << endmsg;
-    msg << MSG::ERROR << " There should be " << m_nArea << " parameters (or a single one for all regions)"  << endmsg;
-    return StatusCode::FAILURE;
+  
+
+  bool nominal = false;
+  int count = 0;
+  // Nominal Gain parameters
+  if( m_gain->exists("data") && m_gain->exists("size")){ 
+    msg << MSG::INFO << "Apply DB nominal gains" << endmsg;
+    nominal=true;
+    int size = m_gain->paramAsInt( "size" );
+    std::vector<double> data = m_gain->paramAsDoubleVect( "data" );
+    count = 0;
+    for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
+      int ll = size*kk;
+      double cell   = data[ll];
+      double gain   = data[ll+1];
+      LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+      id.setCalo( CaloCellCode::CaloNumFromName( name() ));
+      if( m_cells[id].valid() ){
+        m_cells[id].setNominalGain( gain );
+        count++;
+      } 
+    }
+  }  
+
+  // Theoretical gain parameters
+  if( m_gain->exists("EtInCenter") && m_gain->exists("EtSlope")){
+    std::vector<double> etSlope    = m_gain->paramAsDoubleVect( "EtSlope"      );
+    std::vector<double> etInCenter = m_gain->paramAsDoubleVect( "EtInCenter"      );
+
+    if( etInCenter.size() != etSlope.size() ){
+      msg << MSG::ERROR << "The gain parameters per region are not consistent" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    m_maxEtInCenter = etInCenter  ;
+    m_maxEtSlope    = etSlope     ;
+    if( (m_maxEtInCenter.size() != m_nArea && m_maxEtInCenter.size() !=1 ) ||
+        (m_maxEtSlope.size() != m_nArea && m_maxEtSlope.size() != 1) ){
+      msg << MSG::ERROR << " Found " << m_maxEtInCenter.size() << " gain parameters " << endmsg;
+      msg << MSG::ERROR << " There should be " << m_nArea << " parameters (or a single one for all regions)"  << endmsg;
+      return StatusCode::FAILURE;
+    }
+  // ** update gain/channel with theoretical value (if needed)
+    if (!nominal){      
+      msg << MSG::INFO << "Apply theoretical nominal gain as EtInCenter+sin(Theta)*EtSlope" << endmsg;
+      count=0;
+      for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;m_cells.end() != pCell ; ++pCell ) {
+        LHCb::CaloCellID id       = pCell->cellID();
+        unsigned int Area   = id.area ( ) ;    
+        double gain = ( maxEtInCenter(Area) / pCell->sine() ) + maxEtSlope(Area);
+        gain        = gain / (double) adcMax() ;
+        pCell->setNominalGain( gain ) ;
+        count++;
+      }
+    }
   }
-  // ** update gain/channel
-  for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;m_cells.end() != pCell ; ++pCell ) {
-    LHCb::CaloCellID id       = pCell->cellID();
-    unsigned int Area   = id.area ( ) ;    
-    double gain = ( maxEtInCenter(Area) / pCell->sine() ) + maxEtSlope(Area);
-    gain        = gain / (double) adcMax() ;
-    pCell->setNominalGain( gain ) ;
-  }
-      
+  
+  msg << MSG::DEBUG << "Nominal gain constant added for " << count << " channel(s) " << endmsg;
+
   // Pedestal shift
   m_pedShift      = m_gain->exists( "PedShift"     ) ? m_gain->paramAsDouble( "PedShift"      ) : 0. ;
   m_pinPedShift   = m_gain->exists( "PinPedShift"  ) ? m_gain->paramAsDouble( "PinPedShift"   ) : 0. ;
@@ -1349,6 +1477,14 @@ StatusCode DeCalorimeter::updCalib(){
   return sc;
 }
 
+StatusCode DeCalorimeter::updLEDReference(){
+  MsgStream msg( msgSvc(), m_caloDet );
+  msg << MSG::DEBUG << "Updating condition 'LEDReference'" << endmsg;
+  if( !hasCondition("LEDReference") )return StatusCode::SUCCESS; // the LEDReference condition is NOT mandatory
+  StatusCode sc = getLEDReference();
+  return sc;
+}
+
 StatusCode DeCalorimeter::updQuality(){
   MsgStream msg( msgSvc(), m_caloDet );
   msg << MSG::DEBUG << "Updating condition 'Quality'" << endmsg;
@@ -1363,5 +1499,13 @@ StatusCode DeCalorimeter::updL0Calib(){
   msg << MSG::DEBUG << "Updating condition 'L0Calibration'" << endmsg;
   if( !hasCondition("L0Calibration") )return StatusCode::SUCCESS; // the L0Calibration condition is NOT mandatory
   StatusCode sc = getL0Calibration();
+  return sc;
+}
+
+StatusCode DeCalorimeter::updNumGains(){
+  MsgStream msg( msgSvc(), m_caloDet );
+  msg << MSG::DEBUG << "Updating condition 'NumericGain'" << endmsg;
+  if( !hasCondition("NumericGains") )return StatusCode::SUCCESS; // the L0Calibration condition is NOT mandatory
+  StatusCode sc = getNumericGains();
   return sc;
 }

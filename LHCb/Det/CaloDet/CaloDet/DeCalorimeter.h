@@ -259,7 +259,9 @@ protected:
   StatusCode     buildMonitoring();
   StatusCode     getCalibration ();
   StatusCode     getL0Calibration();
+  StatusCode     getLEDReference   ();
   StatusCode     getQuality     ();
+  StatusCode     getNumericGains();
 
 private:
   DeCalorimeter( const DeCalorimeter& ) ;
@@ -325,10 +327,12 @@ private:
   SmartRef<Condition> m_l0calib;
   SmartRef<Condition> m_gain;
   SmartRef<Condition> m_quality;
+  SmartRef<Condition> m_LEDReference;
   SmartRef<Condition> m_reco;
   SmartRef<Condition> m_hardware;
   SmartRef<Condition> m_readout;
   SmartRef<Condition> m_monitor;
+  SmartRef<Condition> m_numericGains;
   bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
 
   // cache
@@ -337,10 +341,12 @@ private:
   StatusCode updGain();
   StatusCode updCalib();
   StatusCode updL0Calib();
+  StatusCode updLEDReference();
   StatusCode updQuality();
   StatusCode updReadout();
   StatusCode updMonitor();
   StatusCode updReco();
+  StatusCode updNumGains();
 } ;
 
 // ===========================================================================

@@ -39,13 +39,13 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
     , m_quality       ( CaloCellQuality::OK )
     , m_calibration   (  1.0    )
     , m_l0constant    (    0    )
-    , m_shift         (  0.0    )
     , m_ledDataRef    (  0.0    )
     , m_ledMoniRef    (  1.0    )
     , m_ledData       (  0.0    )
     , m_ledMoni       (  1.0    )
     , m_ledDataRMS    (  0.0    )
     , m_ledMoniRMS    (  0.0    )
+    , m_nGain         (  0      )
 {
   m_pins.clear();
   m_leds.clear();

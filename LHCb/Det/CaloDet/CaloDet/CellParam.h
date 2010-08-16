@@ -81,6 +81,7 @@ public:
   double                ledDataShift  () const { return ( ledDataRef() > 0 ) ? ledData()/ledDataRef() : 1; }
   double                gainShift     () const { return ( ledMoniRef() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
   double                gain          () const { return nominalGain() * calibration() * gainShift() ;}  
+  int                   numericGain   () const { return m_nGain         ; }  // for Prs only
     
 
   const std::vector<LHCb::CaloCellID>& pins() const  { return m_pins ;}
@@ -133,6 +134,7 @@ public:
   }
   void setCalibration  (double calib)          { m_calibration = calib;           }
   void setL0Constant   (int    cte)            { m_l0constant  = cte;             }
+  void setNumericGain  (int    ng)             {  m_nGain = ng        ; }  // for Prs only
 
   
   bool operator==( const CellParam& c2 ) const { 
@@ -159,13 +161,13 @@ private:
   int    m_quality;
   double m_calibration;
   int    m_l0constant;
-  double m_shift;
   double m_ledDataRef;
   double m_ledMoniRef;
   double m_ledData;
   double m_ledMoni;
   double m_ledDataRMS;
   double m_ledMoniRMS;
+  int    m_nGain; // numeric gains (for Prs only)
 };
 
 // ============================================================================

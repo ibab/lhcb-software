@@ -4,6 +4,16 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+
+! 2010-08-16 - Olivier Deschamps
+ - new condition : LEDReference (no longer in Calibration.xml)
+ - extend Gain.xml with nominal gain setting per channel (if not defined, use the theoretical values)
+
+
+! 2010-07-16 - Olivier Deschamps
+ - add (Prs) numericGain condition access & update
+
+
 !======================== CaloDet v10r5 2010-03-19 ============================
 ! 2010-03-18 - Vanya Belyaev
  - minor fix in signature 
