@@ -4,7 +4,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.20 2009-06-25 11:32:21 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.h,v 1.21 2010-08-16 16:40:38 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -22,7 +22,6 @@
 #include "Event/ProtoParticle.h"
 
 // Interfaces
-#include "Kernel/IBremAdder.h"
 #include "Kernel/IProtoParticleFilter.h"
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
@@ -84,14 +83,10 @@ protected:
   std::string m_piProtoFilter; ///< The tool type to use for pion selection
   std::string m_kaProtoFilter; ///< The tool type to use for kaon selection
   std::string m_prProtoFilter; ///< The tool type to use for proton selection
-  // Activate the BremStrahlung correction for electrons
-  bool m_addBremPhoton;
 
   /// The protoFilter to be used
   IProtoParticleFilter* m_protoTool;
 
-  /// Track selector tool
-  IBremAdder* m_brem;
   
   /// Particle property
   const LHCb::ParticleProperty* m_partProp ;

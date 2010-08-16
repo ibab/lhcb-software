@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.cpp,v 1.7 2010-06-01 09:52:04 pkoppenb Exp $
+// $Id: ParticleMakerBase.cpp,v 1.8 2010-08-16 16:40:38 odescham Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -25,18 +25,23 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
   , m_apid   (   ) 
   , m_pp     ( 0 ) 
   , m_app    ( 0 )
+  , m_brem    ( NULL )
 {
   declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ; 
   declareProperty ( "Particle" , m_pid = "UNDEFINED" , "Particle to create : pion, kaon, muon..."   ) ;
+  declareProperty( "AddBremPhotonTo",  m_addBremPhoton, "particleIDs to be Brem-corrected (default : electrons only)");
+  m_addBremPhoton.push_back( "e+" );
 }
 //=========================================================================
 //  
-//=========================================================================
+//========================================================================
 StatusCode ParticleMakerBase::initialize ( ) {
   StatusCode sc = DVAlgorithm::initialize();
   if (!sc) return sc;
 
   if ( getDecayDescriptor() == "" ) setDecayDescriptor(m_pid) ;
+  // BremStrahlung correction
+  m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
   return sc;
 }
@@ -49,7 +54,7 @@ ParticleMakerBase::~ParticleMakerBase() {};
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ParticleMakerBase::execute() 
+StatusCode ParticleMakerBase::execute()  
 {
   LHCb::Particle::Vector newParts ;
   
@@ -57,8 +62,11 @@ StatusCode ParticleMakerBase::execute()
   if (!sc) return sc;
 
   LHCb::Particle::ConstVector constParts ; /// @todo this is a hack due to CaloParticle...
-  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; i!= newParts.end() ; ++i) constParts.push_back(*i);
-  
+  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; i!= newParts.end() ; ++i) {
+    constParts.push_back(*i);
+    addBrem( *i );
+  }
+
   sc = desktop()->saveTrees(constParts);
   if ( sc.isFailure() ){ return Error( "Not able to save desktop" );}
 

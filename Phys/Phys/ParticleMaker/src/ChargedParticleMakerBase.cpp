@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMakerBase.cpp,v 1.5 2010-08-03 07:23:59 pkoppenb Exp $
+// $Id: ChargedParticleMakerBase.cpp,v 1.6 2010-08-16 16:40:38 odescham Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -66,7 +66,7 @@ StatusCode ChargedParticleMakerBase::initialize ( ) {
   m_pid  = m_pp  -> particle () ;
   m_apid = m_app -> particle () ;
 
-  info() << " Particle/AntiParticle to be created\t " 
+  info() << " Particle/AntiParticle to be created : \t " 
          << "'"   << m_pid << "'/'" << m_apid << "'" << endmsg ;
 
   return sc;

@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.h,v 1.4 2009-08-14 11:35:30 pkoppenb Exp $
+// $Id: ParticleMakerBase.h,v 1.5 2010-08-16 16:40:38 odescham Exp $
 #ifndef PARTICLEMAKERBASE_H 
 #define PARTICLEMAKERBASE_H 1
 
@@ -10,6 +10,8 @@
 #include "Kernel/DVAlgorithm.h"
 // PartProp
 #include "Kernel/ParticleProperty.h" 
+// Brem adder
+#include "Kernel/IBremAdder.h"
 
 /** @class ParticleMakerBase ParticleMakerBase.h
  *
@@ -55,6 +57,25 @@ protected:
     return pp ;
   }
 
+  // BremStrahlung correction for electron
+  void addBrem(LHCb::Particle* particle){
+    bool ok = false;
+    for( std::vector<std::string>::iterator p = m_addBremPhoton.begin();m_addBremPhoton.end() != p ; ++p){
+      if( *p == m_pid){
+        ok=true;
+        break;
+      }
+    }
+    
+    if( !ok )return;
+    if (  !m_brem->addBrem( particle ) )return;
+    if (msgLevel(MSG::DEBUG)) debug() << " ------- BremStrahlung has been added to the particle " 
+                                      << particle << " (PID=" << m_pid << ")" << endmsg;
+    counter("Applying Brem-correction to " + Gaudi::Utils::toString(particle->particleID().pid()) )+=1;
+  }
+  
+
+
 protected:
 
   /// ID of the particle 
@@ -70,7 +91,12 @@ protected:
   /// Input Location of protoparticles
   std::string m_input ;
 
+  // list of PIDs for which BremStrahlung correction is activated
+  std::vector<std::string> m_addBremPhoton;
+
 private:
+  /// Track selector tool
+  IBremAdder* m_brem;
 
 };
 #endif // PARTICLEMAKERBASE

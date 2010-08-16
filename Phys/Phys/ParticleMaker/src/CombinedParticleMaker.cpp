@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.36 2010-08-03 07:23:59 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.37 2010-08-16 16:40:38 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -29,8 +29,7 @@ DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker );
 // Standard constructor, initializes variables
 //=============================================================================
 CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
-  : ChargedParticleMakerBase (  name , pSvcLocator ),
-    m_brem    ( NULL )
+  : ChargedParticleMakerBase (  name , pSvcLocator )
 {
 
   // ProtoParticle filters to use for each type
@@ -39,7 +38,6 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocat
   declareProperty( "PionFilter",     m_piProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "KaonFilter",     m_kaProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
-  declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
   declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
 
   // Test PID info consistency
@@ -58,8 +56,6 @@ StatusCode CombinedParticleMaker::initialize()
   const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize base class" );
   
-  // BremStrahlung added
-  m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
   // get tooltype
   std::string toolType = "";
@@ -197,7 +193,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
       } // ProtoParticle selected
 
   } // end loop on ProtoParticles
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -264,13 +260,8 @@ StatusCode CombinedParticleMaker::fillParticle
                                         << state->momentum() << endmsg ;
   StatusCode sc = p2s()->state2Particle( *state, *particle );
   if (msgLevel(MSG::VERBOSE)) verbose() 
-    << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
-  
-  // Add BremmStrahlung for electrons
-  if (sc.isSuccess() && "e+" == pprop->particle() && m_addBremPhoton ){
-    if( m_brem->addBrem( particle ) )
-      if (msgLevel(MSG::DEBUG)) debug() << " ------- BremStrahlung has been added to the particle" << endmsg;
-  }
+    << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;  
+
   return sc;
 }
 
