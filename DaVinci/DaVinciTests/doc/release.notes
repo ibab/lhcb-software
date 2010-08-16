@@ -4,7 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
-!============================== DaVinciTests v1r2 2010-08-15 =================
+! 2010-08-16 - Juan Palacios
+ - tests/qmtest/davinci.qms/test_davinci_initialise.qmt
+  . DaVinci sequence structure has changed after introduction of DaVinciPreFilterSeq.
+ - options/DVTestCommonParticles.py
+  . Print out locations to be tested.
 
 ! 2010-08-13 - Juan Palacios
  - tests/options/DVTestBu2LLK-DC06.py, tests/options/Do09selBu2LLK.py
