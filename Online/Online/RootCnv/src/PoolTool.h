@@ -1,4 +1,8 @@
+/*
+ *  gaudi namespace declaration
+ */
 namespace Gaudi {
+
 
   class PoolTool : virtual public RootDataConnection::Tool {
     std::vector<Gaudi::RootRef> m_poolLinks;

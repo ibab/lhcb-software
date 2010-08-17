@@ -1,11 +1,12 @@
-// $Id: RootDataConnection.cpp,v 1.8 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.9 2010-08-17 17:23:04 frankb Exp $
+#include "RootDataConnection.h"
+#include "RootUtils.h"
+
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
-#include "RootDataConnection.h"
-#include "Utils.h"
 
 #include "TROOT.h"
 #include "TFile.h"

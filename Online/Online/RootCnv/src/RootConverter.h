@@ -1,17 +1,19 @@
-// $Id: RootConverter.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootConverter.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
 //====================================================================
 //	RootConverter class definition
 //
 //	Author     : M.Frank
 //====================================================================
-#ifndef ROOTCNV_ROOTCONVERTER_H
-#define ROOTCNV_ROOTCONVERTER_H
+#ifndef GAUDIROOTCNV_ROOTCONVERTER_H
+#define GAUDIROOTCNV_ROOTCONVERTER_H
 
 // Framework include files
 #include "GaudiKernel/Converter.h"
 #include "RootCnvSvc.h"
 
-
+/*
+ * Gaudi namespace declaration
+ */
 namespace Gaudi {
 
   /** @class RootConverter RootConverter.h Root/RootConverter.h
@@ -95,4 +97,4 @@ namespace Gaudi {
   };
 }
 
-#endif    // ROOTCNV_ROOTCONVERTER_H
+#endif    // GAUDIROOTCNV_ROOTCONVERTER_H

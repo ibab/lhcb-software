@@ -1,17 +1,16 @@
-// $Id: RootAddress.h,v 1.4 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootAddress.h,v 1.5 2010-08-17 17:23:04 frankb Exp $
 //====================================================================
 //	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.4 2010-08-17 17:16:24 frankb Exp $
-#ifndef ROOTCNV_ROOTADDRESS_H
-#define ROOTCNV_ROOTADDRESS_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.5 2010-08-17 17:23:04 frankb Exp $
+#ifndef GAUDIROOTCNV_ROOTADDRESS_H
+#define GAUDIROOTCNV_ROOTADDRESS_H
 
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
-#include "RootDataConnection.h"
 #include "RootSelect.h"
 
 // Forward declaration
@@ -63,4 +62,4 @@ namespace Gaudi {
   };
 }
 
-#endif // ROOTCNV_ROOTADDRESS_H
+#endif // GAUDIROOTCNV_ROOTADDRESS_H

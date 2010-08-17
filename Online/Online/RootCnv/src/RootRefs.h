@@ -1,5 +1,5 @@
-#ifndef ROOTCNV_ROOTREFS_H
-#define ROOTCNV_ROOTREFS_H
+#ifndef GAUDIROOTCNV_ROOTREFS_H
+#define GAUDIROOTCNV_ROOTREFS_H
 
 // Framework include files
 #include "GaudiKernel/Kernel.h"
@@ -151,5 +151,5 @@ public:
   std::vector<std::string>& links()        {    return m_links;  }
 };
 
-#endif // ROOTCNV_ROOTREFS_H
+#endif // GAUDIROOTCNV_ROOTREFS_H
 

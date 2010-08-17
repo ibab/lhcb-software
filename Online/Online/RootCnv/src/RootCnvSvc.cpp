@@ -1,9 +1,9 @@
-// $Id: RootCnvSvc.cpp,v 1.4 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.5 2010-08-17 17:23:04 frankb Exp $
 //====================================================================
-//	RootCnvSvc implementation
+//  RootCnvSvc implementation
 //--------------------------------------------------------------------
 //
-//  Description: Implementation of the Serialization data storage
+//  Description: Implementation of the ROOT data storage
 //
 //  Author     : M.Frank
 //
@@ -31,7 +31,7 @@
 #include "RootDirectoryCnv.h"
 #include "RootNTupleCnv.h"
 #include "RootDataConnection.h"
-#include "Utils.h"
+#include "RootUtils.h"
 
 // ROOT include files
 #include "TROOT.h"

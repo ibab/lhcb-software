@@ -1,13 +1,13 @@
-// $Id: RootCnvSvc.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-#ifndef ROOTCNV_ROOTCNVSVC_H
-#define ROOTCNV_ROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
+#ifndef GAUDIROOTCNV_GAUDIROOTCNVSVC_H
+#define GAUDIROOTCNV_GAUDIROOTCNVSVC_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -222,4 +222,4 @@ namespace Gaudi {
   };
 }
 
-#endif  // ROOTCNV_ROOTCNVSVC_H
+#endif  // GAUDIROOTCNV_GAUDIROOTCNVSVC_H
