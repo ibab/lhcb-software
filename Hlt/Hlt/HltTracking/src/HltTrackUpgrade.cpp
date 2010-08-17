@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.17 2009-11-26 13:15:42 albrecht Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.18 2010-08-17 08:41:18 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -67,7 +67,7 @@ StatusCode HltTrackUpgrade::execute() {
 
   //@TODO: adapt interface to be more neutral: input a vector<Track*>::const_iterator begin,end, and a back_inserter
   //       don't rely on tool doing pt ordering...
-  std::vector<LHCb::Track*> in(m_selections.input<1>()->begin(),m_selections.input<1>()->end());
+  std::vector<const LHCb::Track*> in(m_selections.input<1>()->begin(),m_selections.input<1>()->end());
   assert(m_selections.output()->empty());
   std::vector<LHCb::Track*> out;
   StatusCode sc = m_tool->upgrade(in,out);
@@ -78,7 +78,7 @@ StatusCode HltTrackUpgrade::execute() {
   if( produceHistos() && out.size() > 0){
     std::vector<double> vals; 
     vals.reserve(out.size());
-    BOOST_FOREACH( LHCb::Track* cand, out) vals.push_back( getTrackQuality( *cand ) );
+    BOOST_FOREACH(const LHCb::Track* cand, out) vals.push_back( getTrackQuality( *cand ) );
     double val = *( std::min_element(vals.begin(),vals.end()) );
     BOOST_FOREACH(const double& x,vals  ) fill( m_qualityHisto,x,1. );
     fill( m_qualityHistoBest,val,1. );

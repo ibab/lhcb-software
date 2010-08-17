@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.139 2010-08-07 04:11:37 gligorov Exp $
+!$Id: release.notes,v 1.140 2010-08-17 08:41:18 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-08-17 - Gerhard Raven
+ - remove RZ based matching
+ - follow const correctness changes in HltBase
+
 ! 2010-08-07 - V. Gligorov
  - Adapt to new format of RICH configuration options.
 

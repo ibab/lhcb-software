@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.40 2010-03-01 20:28:50 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.41 2010-08-17 08:41:18 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -248,13 +248,13 @@ void HltTrackUpgradeTool::beginExecute() {
 }
 
 StatusCode HltTrackUpgradeTool::upgrade
-( const std::vector<Track*>& itracks ,
+( const std::vector<const Track*>& itracks ,
   std::vector<Track*>&       otracks ) 
 {
   beginExecute();
   
   std::vector<LHCb::Track*> tracks;
-  for (std::vector<Track*>::const_iterator it = itracks.begin();
+  for (std::vector<const Track*>::const_iterator it = itracks.begin();
        it != itracks.end(); ++it) {
     if ( iupgrade(**it,tracks).isFailure()) {
        Warning("Failed to upgrade track" ,StatusCode::SUCCESS, 10 ).ignore();
@@ -267,7 +267,7 @@ StatusCode HltTrackUpgradeTool::upgrade
   return StatusCode::SUCCESS;
 }
 
-StatusCode HltTrackUpgradeTool::upgrade(Track& itrack,
+StatusCode HltTrackUpgradeTool::upgrade(const Track& itrack,
                                         std::vector<Track*>& otracks) {
   beginExecute();
   iupgrade(itrack,otracks);
@@ -277,14 +277,14 @@ StatusCode HltTrackUpgradeTool::upgrade(Track& itrack,
 
 
 
-StatusCode HltTrackUpgradeTool::iupgrade(LHCb::Track& seed,
+StatusCode HltTrackUpgradeTool::iupgrade(const LHCb::Track& seed,
                                          std::vector<LHCb::Track*>& tracks) {
   StatusCode sc = StatusCode::SUCCESS;
   tracks.clear();
 
   if (isReco(seed)) { //Track has been involved in this reco?
     if (isOutput(seed)) { //has any ancestor involved in this reco?
-      tracks.push_back(&seed);
+      tracks.push_back(const_cast<LHCb::Track*>(&seed));
       verbose() << " seed is its upgraded track of type " << m_OtrackType << endreq;
     } else { //track must be a mother already upgraded for equal input and output types, find its descendants
       find(seed,tracks);
@@ -301,7 +301,7 @@ StatusCode HltTrackUpgradeTool::iupgrade(LHCb::Track& seed,
     recoDone(seed,tracks);
     verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
   } else if (seed.checkType( (LHCb::Track::Types) m_OtrackType)) { //(type == output but from other tool 
-    tracks.push_back(&seed);
+    tracks.push_back(const_cast<LHCb::Track*>(&seed));
     verbose() << " seed is of tool's output type " << m_OtrackType << "but from another tool. Accepted!" <<endreq;
   }
   return sc;
@@ -338,7 +338,7 @@ bool HltTrackUpgradeTool::isOutput(const Track& track) {
   return false;
 }
 
-void HltTrackUpgradeTool::recoDone(Track& seed, std::vector<Track*>& tracks) {
+void HltTrackUpgradeTool::recoDone(const Track& seed, std::vector<Track*>& tracks) {
   double key = (double) seed.key();
   // const GaudiUtils::VectorMap<int,double>& info = seed.extraInfo();
   for (std::vector<Track*>::iterator it = tracks.begin();
@@ -355,7 +355,7 @@ void HltTrackUpgradeTool::recoDone(Track& seed, std::vector<Track*>& tracks) {
       // track.setExtraInfo(seed.extraInfo()); Now merge!
     }
   }
-  seed.addInfo(m_recoID, (double) tracks.size());
+  const_cast<LHCb::Track&>(seed).addInfo(m_recoID, (double) tracks.size());
   debug() << " seed " << seed.key() << " n-descendants " 
           << seed.info(m_recoID,-1) << endreq;
   if (m_owner) {

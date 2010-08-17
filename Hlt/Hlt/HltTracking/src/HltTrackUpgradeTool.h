@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.19 2010-03-01 20:28:50 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.20 2010-08-17 08:41:18 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -47,15 +47,15 @@ public:
 
   // this method is save, it takes care of the memory
   StatusCode upgrade
-  ( const std::vector<LHCb::Track*>& itracks ,
+  ( const std::vector<const LHCb::Track*>& itracks ,
     std::vector<LHCb::Track*>&       otracks );
   
   // this method is save, it takes care of the memory
-  StatusCode upgrade(LHCb::Track& seed,
+  StatusCode upgrade(const LHCb::Track& seed,
                      std::vector<LHCb::Track*>& track);
 
   // this method is unsave, it does not take care of the memory
-  StatusCode iupgrade(LHCb::Track& seed,
+  StatusCode iupgrade(const LHCb::Track& seed,
                       std::vector<LHCb::Track*>& track);
   
   std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed)
@@ -82,7 +82,7 @@ private:
   
   size_t find(const LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
   
-  void recoDone(LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
+  void recoDone(const LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
 
   void addIDs(const LHCb::Track& seed, LHCb::Track& track);
 

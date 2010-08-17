@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.22 2010-03-27 22:04:50 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.23 2010-08-17 08:41:18 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -84,7 +84,7 @@ StatusCode HltVertexUpgrade::execute() {
 
   const Hlt::VertexSelection *input = m_selections.input<1>();
   for (Hlt::VertexSelection::const_iterator it=input->begin(); it!=input->end(); ++it) {
-    RecVertex* vseed = *it;
+    const RecVertex* vseed = *it;
     const SmartRefVector<Track>& otracks = vseed->tracks();
     const Track* seed1 =  *otracks.begin();     assert(otracks.begin()!=otracks.end());
     const Track* seed2 =  *(otracks.begin()+1); assert((otracks.begin()+1)!=otracks.end());

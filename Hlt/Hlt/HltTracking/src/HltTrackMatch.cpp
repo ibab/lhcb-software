@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.21 2010-05-28 07:34:47 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.22 2010-08-17 08:41:18 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -169,9 +169,9 @@ StatusCode HltTrackMatch::execute() {
   Tracks* otracks = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_TESOutput);
 
-  BOOST_FOREACH( LHCb::Track* track1, *m_selections.input<1>()) {
+  BOOST_FOREACH(const LHCb::Track* track1, *m_selections.input<1>()) {
     if (msgLevel(MSG::VERBOSE)) printInfo(" track [1] ",*track1);
-    BOOST_FOREACH( LHCb::Track* track2, *m_selections.input<2>()) {
+    BOOST_FOREACH(const LHCb::Track* track2, *m_selections.input<2>()) {
       if (msgLevel(MSG::VERBOSE)) printInfo(" track [2] ",*track2);
 
       Track otrack(track1->key());
