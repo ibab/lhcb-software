@@ -1,25 +1,26 @@
-// $Id: RootConverter.h,v 1.2 2010-01-11 17:13:39 frankb Exp $
+// $Id: RootConverter.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
 //====================================================================
-//	RootBaseCnv definition
+//	RootConverter class definition
 //
 //	Author     : M.Frank
 //====================================================================
-#ifndef RootCnv_RootConverter_H
-#define RootCnv_RootConverter_H
+#ifndef ROOTCNV_ROOTCONVERTER_H
+#define ROOTCNV_ROOTCONVERTER_H
 
 // Framework include files
 #include "GaudiKernel/Converter.h"
 #include "RootCnvSvc.h"
+
 
 namespace Gaudi {
 
   /** @class RootConverter RootConverter.h Root/RootConverter.h
    *
    * Description:
-   * Definition of the generic Db data converter.
+   * Definition of the ROOT data converter.
    * The generic data converter provides the infrastructure 
-   * of all data converters. The templated class takes two arguments:
-   * The Transient and the Persistent object type. 
+   * of all data converters. All actions are delegated to
+   * the corresponding conversion service.
    *
    * For a detailed description of the overridden function see the the
    * base class.
@@ -29,7 +30,8 @@ namespace Gaudi {
    */
   class RootConverter : public Converter   {
   protected:
-    /// Services needed for proper operation
+
+    /// Conversion service needed for proper operation to forward requests
     RootCnvSvc* m_dbMgr;
 
   public:
@@ -43,7 +45,7 @@ namespace Gaudi {
      */
     RootConverter(long typ, const CLID& clid, ISvcLocator* svc, RootCnvSvc* mgr)
       : Converter(typ, clid, svc), m_dbMgr(mgr) {}
-
+      
       /// Standard Destructor
       virtual ~RootConverter() {}
 
@@ -57,14 +59,18 @@ namespace Gaudi {
        *
        * @return Status code indicating success or failure.
        */
-      virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj) {
-	return m_dbMgr->i__createObj(pAddr, refpObj);
-      }
+      virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj) 
+      {	return m_dbMgr->i__createObj(pAddr, refpObj);      }
 
-      /// Resolve the references of the created transient object.
-      virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj) {
-	return m_dbMgr->i__fillObjRefs(pAddr, pObj);
-      }
+      /** Resolve the references of the created transient object.
+       *
+       * @param    pAddr    [IN]   Pointer to object address.
+       * @param    pObj     [IN]   Pointer to data object
+       *
+       * @return Status code indicating success or failure.
+       */
+      virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj) 
+      {	return m_dbMgr->i__fillObjRefs(pAddr, pObj);       }
 
       /** Converter overrides: Convert the transient object to the 
        * requested representation.
@@ -74,16 +80,19 @@ namespace Gaudi {
        *
        * @return Status code indicating success or failure.
        */
-      virtual StatusCode createRep(DataObject* pObj, IOpaqueAddress*& refpAddr) {
-	return m_dbMgr->i__createRep(pObj, refpAddr);
-      }
+      virtual StatusCode createRep(DataObject* pObj, IOpaqueAddress*& refpAddr) 
+      {	return m_dbMgr->i__createRep(pObj, refpAddr);      }
 
-      /// Resolve the references of the created transient object.
-      virtual StatusCode fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj) {
-	return m_dbMgr->i__fillRepRefs(pAddr, pObj);
-      }
-
+      /** Resolve the references of the created transient object.
+       *
+       * @param    pAddr    [IN]   Pointer to object address.
+       * @param    pObj     [IN]   Pointer to data object
+       *
+       * @return Status code indicating success or failure.
+       */
+      virtual StatusCode fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj) 
+      {	return m_dbMgr->i__fillRepRefs(pAddr, pObj);       }
   };
 }
 
-#endif    // RootCnv_RootConverter_H
+#endif    // ROOTCNV_ROOTCONVERTER_H

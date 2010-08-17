@@ -1,4 +1,4 @@
-// $Id: RootDirectoryCnv.cpp,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootDirectoryCnv.cpp,v 1.2 2010-08-17 17:16:24 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDirectoryCnv
@@ -14,7 +14,6 @@
 #include "RootCnvSvc.h"
 #include "RootDirectoryCnv.h"
 #include "RootDataConnection.h"
-#include "RootCnv/RootNTupleDescriptor.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/MsgStream.h"

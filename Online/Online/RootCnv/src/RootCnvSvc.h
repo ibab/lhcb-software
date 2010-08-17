@@ -1,20 +1,21 @@
-// $Id: RootCnvSvc.h,v 1.2 2010-03-03 14:30:47 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-#ifndef GAUDIROOT_GAUDIROOTCNVSVC_H
-#define GAUDIROOT_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.2 2010-03-03 14:30:47 frankb Exp $
+#ifndef ROOTCNV_ROOTCNVSVC_H
+#define ROOTCNV_ROOTCNVSVC_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.3 2010-08-17 17:16:24 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ClassID.h"
 
-#include <map>
+// C++ include files
+#include <set>
 
 // Forward declarations
 class IDataManagerSvc;
@@ -30,6 +31,7 @@ namespace Gaudi {
   class IIODataManager;
   class IDataConnection;
   class RootDataConnection;
+  class RootConnectionSetup;
 
   /** @class RootCnvSvc RootCnvSvc.h src/RootCnvSvc.h
    *
@@ -43,7 +45,6 @@ namespace Gaudi {
    */
   class RootCnvSvc : public ConversionSvc  {
   protected:
-    typedef std::map<std::string,int> AccessList;
     typedef std::vector<DataObject*> Objects;
 
     /// Services needed for proper operation: Data Manager
@@ -56,28 +57,22 @@ namespace Gaudi {
     Gaudi::RootDataConnection*  m_current;
     /// Flag to enable incidents on FILE_OPEN
     bool                        m_incidentEnabled;
-    /// Collect read statistics and print it at on finalize
-    bool                        m_statistics;
     /// Share files ? If set to YES, files will not be closed on finalize
     std::string                 m_shareFiles;
     /// Property: ROOT section name
     std::string                 m_section;
     /// Property: Switch between reference type (in same tree (default) or not)
     int                         m_refTypes;
-    /// Property: ROOT TTree cache size
-    int                         m_cacheSize;
-    /// Property: ROOT TTree number of learn entries
-    int                         m_learnEntries;
-    /// Property: AutoFlush parameter for ROOT TTree (Number of events between auto flushes)
-    int                         m_autoFlush;
     /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
     std::string                 m_ioPerfStats;
-    /// Access list, used if statistics about accessed leaves is required.
-    AccessList                  m_accesses;
+    /// Set with bad files/tables
+    std::set<std::string>       m_badFiles;
     /// TClass pointer to reference class
     TClass*                     m_classRefs;
     /// TClass pointer to DataObject class
     TClass*                     m_classDO;
+    /// Setup structure (ref-counted) and passed to data connections
+    RootConnectionSetup*        m_setup;
 
     /// Helper: Get TClass for a given DataObject pointer
     TClass* getClass(DataObject* pObject);
@@ -88,7 +83,7 @@ namespace Gaudi {
     RootCnvSvc(const std::string& name, ISvcLocator* svc);
 
     /// Standard destructor
-    virtual ~RootCnvSvc() {}
+    virtual ~RootCnvSvc();
 
     /// Update state of the service
     virtual StatusCode updateServiceState(IOpaqueAddress* /* pAddress */) 
@@ -103,11 +98,17 @@ namespace Gaudi {
 
     /** Connect to data provider service. Re-connects to data manager service.
      *  @param      pDataSvc    New data provider object.
+     *
      *  @return     Status code indicating success or failure.
      */
     StatusCode setDataProvider(IDataProviderSvc* pDataSvc);
 
-    /// Connect the output file to the service with open mode.
+    /** Connect the output file to the service with open mode.
+     *  @param      dataset     String containig file name
+     *  @param      mode        String containig opening mode
+     *
+     *  @return     Status code indicating success or failure.
+     */
     StatusCode connectDatabase(const std::string& dataset, int mode, RootDataConnection** con);
 
   public:
@@ -127,11 +128,12 @@ namespace Gaudi {
 					const ICnvFactory* fac);
 
     /// ConversionSvc overload: Load the class (dictionary) for the converter 
-    virtual void loadConverter(DataObject*);
+    virtual void loadConverter(DataObject* pObj);
 
     /** Connect the output file to the service with open mode.
      *  @param      outputFile  String containig output file
      *  @param      openMode    String containig opening mode of the output file
+     *
      *  @return     Status code indicating success or failure.
      */
     virtual StatusCode connectOutput(const std::string& outputFile,
@@ -139,6 +141,7 @@ namespace Gaudi {
 
     /** Connect the output file to the service.
      *  @param      outputFile  String containig output file
+     *
      *  @return     Status code indicating success or failure.
      */
     virtual StatusCode connectOutput(const std::string& outputFile);
@@ -150,6 +153,7 @@ namespace Gaudi {
      *                          if false, discard pending buffers.
      *                          Note: The possibility to commit or rollback
      *                          depends on the database technology used!
+     *
      *  @return     Status code indicating success or failure.
      */
     virtual StatusCode commitOutput(const std::string& outputFile,
@@ -170,6 +174,7 @@ namespace Gaudi {
      * @param dbName         Database name
      * @param containerName  Object container name
      * @param refpAddress    Opaque address information to retrieve object
+     *
      * @return               StatusCode indicating SUCCESS or failure
      */
     virtual StatusCode createAddress( long                 svc_type,
@@ -178,19 +183,43 @@ namespace Gaudi {
 				      const unsigned long* ip,
 				      IOpaqueAddress*&     refpAddress);
   
-    /// Mark an object for write given an object reference
+    /** Convert the transient object to the requested persistent representation.
+     *
+     * @param    pObj     [IN]   Pointer to data object
+     * @param    refpAddr [OUT]  Location to store pointer to object address.
+     *
+     * @return Status code indicating success or failure.
+     */
     virtual StatusCode i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr);
 
-    /// Resolve the references of the converted object.
-    virtual StatusCode i__fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject);
 
-    /// Read existing object. Open transaction in read mode if not active
-    virtual StatusCode i__createObj(IOpaqueAddress* pA, DataObject*& refpObj);
+    /** Resolve the references of the converted object.
+     *
+     * @param    pAddr    [IN]   Pointer to object address.
+     * @param    pObj     [IN]   Pointer to data object
+     *
+     * @return Status code indicating success or failure.
+     */
+    virtual StatusCode i__fillRepRefs(IOpaqueAddress* pAddr,DataObject* pObj);
 
-    /// Resolve the references of the created transient object.
-    virtual StatusCode i__fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
+    /** Create transient object from persistent data
+     *
+     * @param    pAddr       [IN]   Pointer to object address.
+     * @param    refpObj     [OUT]  Location to pointer to store data object
+     *
+     * @return Status code indicating success or failure.
+     */
+    virtual StatusCode i__createObj(IOpaqueAddress* pAddr, DataObject*& refpObj);
 
+  /** Resolve the references of the created transient object.
+    *
+    * @param    pAddr    [IN]   Pointer to object address.
+    * @param    pObj     [IN]   Pointer to data object
+    *
+    * @return Status code indicating success or failure.
+    */
+    virtual StatusCode i__fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj);
   };
 }
 
-#endif  // GAUDIROOT_GAUDIROOTCNVSVC_H
+#endif  // ROOTCNV_ROOTCNVSVC_H

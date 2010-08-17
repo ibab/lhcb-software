@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.3 2010-03-03 14:30:47 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.4 2010-08-17 17:16:24 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -11,12 +11,11 @@
 
 #define ALLOW_ALL_TYPES
 // Include files
+#include "RootRefs.h"
 #include "RootAddress.h"
 #include "RootNTupleCnv.h"
 #include "RootDataConnection.h"
 #include "GaudiKernel/LinkManager.h"
-#include "RootCnv/RootNTupleDescriptor.h"
-#include "RootCnv/RootRefs.h"
 
 #include "GaudiKernel/xtoa.h"
 #include "GaudiKernel/NTuple.h"
@@ -145,10 +144,9 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
   RootDataConnection* con = 0;
   IRegistry* pRegistry = pAddr->registry();
   RootAddress* rpA = dynamic_cast<RootAddress*>(pAddr);
-  string path    = fileName(pRegistry);
-  string cntName = containerName(pRegistry);
-  string*         par = const_cast<string*>(pAddr->par());
-  //unsigned long* ipar = const_cast<unsigned long*>(pAddr->ipar());
+  string  path    = fileName(pRegistry);
+  string  cntName = containerName(pRegistry);
+  string* par     = const_cast<string*>(pAddr->par());
   status = m_dbMgr->connectDatabase(path,IDataConnection::READ,&con);
   if ( status.isSuccess() ) {
     string par_val, par_guid;
@@ -162,7 +160,6 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	if ( nb > 1 ) {
 	  if ( ptr->container == cntName )  {
 	    par_val  = ptr->description;
-	    // ipar[0]  = (unsigned long)con;
 	    break;
 	  }
 	}
@@ -278,11 +275,8 @@ StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
   if ( 0 != tupl && 0 != rpA )  {
     const string*   par = pAddr->par();
     unsigned long* ipar = const_cast<unsigned long*>(pAddr->ipar());
-    // RootDataConnection* con = (RootDataConnection*)ipar[0];
     RootDataConnection* con = rpA->connection;
     if ( con )   {
-      //string loc  = containerName(pObj->registry());
-      //TTree* tree = con->getSection(_tr(loc));
       TTree* tree = rpA->section;
       if ( tree ) {
 	if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
@@ -295,6 +289,10 @@ StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
 	    Cont::value_type j = it[k];
 	    switch( j->type() )  {
 	    case DataTypeInfo::OBJECT_ADDR:
+	      //cout << "Item:" << j->name() << " Buff:" << j->buffer();
+	      //if ( j->buffer() ) cout << " Value:" << *(void**)(j->buffer());
+	      //else cout << " No Value ";
+	      //cout << endl;
 	      paddr[k] = &addr[k];
 	      tree->SetBranchAddress(j->name().c_str(),&paddr[k]);
 	      break;
@@ -339,15 +337,17 @@ StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
 	      case DataTypeInfo::OBJECT_ADDR:
 		r = paddr[k];
 		pA = (*(GenericAddress**)j->buffer());
-		spar = (string*)pA->par();
-		ipar = (unsigned long*)pA->ipar();
-		spar[0] = con->getDb(r->dbase);
-		spar[1] = con->getCont(r->container);
-		spar[2] = con->getLink(r->link);		
-		ipar[0] = 0;
-		ipar[1] = r->entry;
-		pA->setClID(r->clid);
-		pA->setSvcType(r->svc);
+		if ( pA ) { // Fill only if item is connected!
+		  spar = (string*)pA->par();
+		  ipar = (unsigned long*)pA->ipar();
+		  spar[0] = con->getDb(r->dbase);
+		  spar[1] = con->getCont(r->container);
+		  spar[2] = con->getLink(r->link);		
+		  ipar[0] = 0;
+		  ipar[1] = r->entry;
+		  pA->setClID(r->clid);
+		  pA->setSvcType(r->svc);
+		}
 		break;
 	      default:
 		break;
@@ -640,11 +640,7 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
 	  case DataTypeInfo::OBJECT_ADDR:
 	    pA = (*(IOpaqueAddress**)j->buffer());
 	    paddr[k] = &addr[k];
-	    addr[k].dbase     = 0;
-	    addr[k].container = 0;
-	    addr[k].link      = 0;
-	    addr[k].clid      = 0;
-	    addr[k].entry     = 0;
+	    addr[k].reset();
 	    if ( pA )  {
 	      con->makeRef(pA->registry(),addr[k]);
 	      addr[k].entry = pA->ipar()[1];

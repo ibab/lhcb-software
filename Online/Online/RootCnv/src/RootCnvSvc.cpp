@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.3 2010-03-03 14:30:47 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.4 2010-08-17 17:16:24 frankb Exp $
 //====================================================================
 //	RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -23,7 +23,7 @@
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiUtils/IIODataManager.h"
-#include "RootCnv/RootRefs.h"
+#include "RootRefs.h"
 #include "RootCnvSvc.h"
 #include "RootAddress.h"
 #include "RootConverter.h"
@@ -31,6 +31,7 @@
 #include "RootDirectoryCnv.h"
 #include "RootNTupleCnv.h"
 #include "RootDataConnection.h"
+#include "Utils.h"
 
 // ROOT include files
 #include "TROOT.h"
@@ -46,30 +47,12 @@ DECLARE_SERVICE_FACTORY(RootCnvSvc);
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
-namespace GaudiRoot {
-  bool patchStreamers(MsgStream& log);
-  void popCurrentDataObject();
-  void pushCurrentDataObject(DataObject** pobjAddr);
-}
+namespace GaudiRoot {  bool patchStreamers(MsgStream& log);    }
 
-namespace {
-  /// Release an interface pointer
-  template<class T> inline void releasePtr(T*& p)  {
-    if ( 0 != p )    {
-      p->release();
-      p = 0;
-    }
-  }
-  struct DataObjectPush {
-    DataObject* m_ptr;
-    DataObjectPush(DataObject* p) : m_ptr(p) {
-      GaudiRoot::pushCurrentDataObject(&m_ptr);
-    }
-    ~DataObjectPush() {
-      GaudiRoot::popCurrentDataObject();
-    }
-  };
-  
+namespace { 
+  static map<string, TClass*> s_classesNames;
+  static map<CLID, TClass*>   s_classesClids;
+
   union ObjectTypes {
     ObjectTypes(DataObject* p) { Object = p; }
     DataObject*                                             Object;
@@ -78,28 +61,31 @@ namespace {
     KeyedContainer<KeyedObject<long>, Containers::Array>*   KeyArray;
     StatusCode update(int flag)  {
       IUpdateable* obj = dynamic_cast<IUpdateable*>(Object);
-      if ( obj ) {
-        return obj->update(flag);
-      }
+      if ( obj ) return obj->update(flag);
       return S_FAIL;
     }
   };
 }
 
-/// Standard constructor
+// Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   : ConversionSvc( nam, svc, ROOT_StorageType), 
-    m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0)
+    m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
 {
+  m_setup = new RootConnectionSetup();
   declareProperty("ShareFiles",       m_shareFiles       = "NO");
   declareProperty("EnableIncident",   m_incidentEnabled  = false);
   declareProperty("Section",          m_section = "E");
-  declareProperty("RefTypes",         m_refTypes = 1);
-  declareProperty("CacheSize",        m_cacheSize = 10000000);
-  declareProperty("AutoFlush",        m_autoFlush = 100);
-  declareProperty("LearnEntries",     m_learnEntries = 10);
   declareProperty("IOPerfStats",      m_ioPerfStats);
-  declareProperty("ReadStatistics",   m_statistics = false);
+
+  declareProperty("CacheSize",        m_setup->cacheSize = 10000000);
+  declareProperty("AutoFlush",        m_setup->autoFlush = 100);
+  declareProperty("LearnEntries",     m_setup->learnEntries = 10);
+}
+
+// Standard destructor
+RootCnvSvc::~RootCnvSvc() {
+  if (m_setup) m_setup->release();
 }
 
 // Small routine to issue exceptions
@@ -109,7 +95,7 @@ StatusCode RootCnvSvc::error(CSTR msg)  {
   return S_FAIL;
 }
 
-/// Initialize the Db data persistency service
+// Initialize the Db data persistency service
 StatusCode RootCnvSvc::initialize()  {
   IDataProviderSvc* pSvc = 0;
   StatusCode status = ConversionSvc::initialize();
@@ -123,37 +109,31 @@ StatusCode RootCnvSvc::initialize()  {
   if ( !(status=service("EventDataSvc",pSvc)).isSuccess() )
     return error("Failed to get data provider.");
   setDataProvider(pSvc);
-
+  m_setup->setMessageSvc(msgSvc());
   GaudiRoot::patchStreamers(log);
   DataObject data_obj;
   m_classDO = getClass(&data_obj);
-  string cname = System::typeinfoName(typeid(ObjectRefs));
+  string cname = System::typeinfoName(typeid(RootObjectRefs));
   m_classRefs = gROOT->GetClass(cname.c_str());
 
   if ( 0 == m_classDO )
     return error("Unable to load class description for DataObject");    
   if ( 0 == m_classRefs )
     return error("Unable to load class description for ObjectRefs");
-  //gDebug = 2;
-  m_accesses.clear();
-  m_accesses["LoadTree"] = 0;
   return S_OK;
 }
 
-/// Finalize the Db data persistency service
+// Finalize the Db data persistency service
 StatusCode RootCnvSvc::finalize()    {
   MsgStream log(msgSvc(), name());
-  if ( m_statistics ) {
-    log << MSG::ALWAYS << "====================== Access list content:" << m_accesses.size() << endmsg;
-    for(AccessList::const_iterator a=m_accesses.begin(); a!=m_accesses.end();++a) {
-      log << MSG::ALWAYS << left << setw(40) << (*a).first+":" << right << setw(8) << (*a).second << endmsg;
-    }
-  }
-  m_accesses.clear();
   if ( m_ioMgr )  {
     if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
+	if ( !m_ioPerfStats.empty() )   {
+	  RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
+	  if ( pc ) pc->saveStatistics(m_ioPerfStats);
+	}
         if ( m_ioMgr->disconnect(*i).isSuccess() )  {
           log << MSG::INFO << "Disconnected data IO:" << (*i)->fid();
 	  log << "[" << (*i)->pfn() << "]";
@@ -172,7 +152,7 @@ StatusCode RootCnvSvc::finalize()    {
   return ConversionSvc::finalize();
 }
 
-/// Create new Converter using factory
+// ConversionSvc overload: Create new Converter using factory
 IConverter* RootCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)   {
   if ( wanted == CLID_StatisticsFile )
     return new RootDatabaseCnv(typ,wanted,serviceLocator().get(),this);
@@ -186,8 +166,7 @@ IConverter* RootCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFa
     return new RootConverter(typ,wanted,serviceLocator().get(),this);
 }
 
-static map<string, TClass*> s_classesNames;
-static map<CLID, TClass*> s_classesClids;
+// ConversionSvc overload: Load the class (dictionary) for the converter 
 void RootCnvSvc::loadConverter(DataObject* pObject) {
   if (pObject) {
     MsgStream log(msgSvc(), name());
@@ -204,6 +183,7 @@ void RootCnvSvc::loadConverter(DataObject* pObject) {
   }
 }  
 
+// Helper: Get TClass for a given DataObject pointer
 TClass* RootCnvSvc::getClass(DataObject* pObject) {
   map<CLID, TClass*>::iterator i=s_classesClids.find(pObject->clID());
   if ( i != s_classesClids.end() ) return (*i).second;
@@ -216,6 +196,7 @@ TClass* RootCnvSvc::getClass(DataObject* pObject) {
   return 0;
 }
 
+// Connect to data provider service. Re-connects to data manager service.
 StatusCode RootCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
   MsgStream log(msgSvc(), name());
   IDataManagerSvc* tmp = m_dataMgr;
@@ -229,7 +210,7 @@ StatusCode RootCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
   return ConversionSvc::setDataProvider(pSvc);
 }
 
-/// Connect the output file to the service with open mode.
+// Connect the output file to the service with open mode.
 StatusCode RootCnvSvc::connectOutput(CSTR dsn, CSTR openMode)   {
   StatusCode sc = S_FAIL;
   int mode = 0;
@@ -250,7 +231,7 @@ StatusCode RootCnvSvc::connectOutput(CSTR dsn, CSTR openMode)   {
   return sc;
 }
 
-/// Connect the output file to the service with open mode.
+// Connect the output file to the service with open mode.
 StatusCode
 RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
   try {
@@ -258,7 +239,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     bool fire_incident = false;
     bool enable_stats = false;
     if ( !c )  {
-      auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_cacheSize,m_learnEntries));
+      auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
       StatusCode sc = (mode != IDataConnection::READ)
 	? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT_TREE")
 	: m_ioMgr->connectRead(false,connection.get());
@@ -275,7 +256,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
     if ( pc )  {
       if ( !pc->isConnected() ) pc->connectRead();
-      if ( enable_stats ) pc->enableStatistics(m_section,m_ioPerfStats);
+      if ( enable_stats ) pc->enableStatistics(m_section);
       *con = pc;
       pc->resetAge();
     }
@@ -308,13 +289,13 @@ StatusCode  RootCnvSvc::commitOutput(CSTR /* dsn */, bool /* doCommit */) {
   return S_OK;
 }
 
-/// Disconnect from an existing data stream.
+// Disconnect from an existing data stream.
 StatusCode RootCnvSvc::disconnect(CSTR dataset)  {
   IDataConnection* c = m_ioMgr->connection(dataset);
   return c ? m_ioMgr->disconnect(c) : S_FAIL;
 }
 
-/// IAddressCreator implementation: Address creation
+// IAddressCreator implementation: Address creation
 StatusCode RootCnvSvc::createAddress(long  typ,
 				     const CLID& clid,
 				     const string* par, 
@@ -325,88 +306,57 @@ StatusCode RootCnvSvc::createAddress(long  typ,
   return S_OK;
 }
 
-/// Mark an object for write given an object reference
+// Mark an object for write given an object reference
 StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
   refpAddr = 0;
   if ( pObj ) {
     CLID       clid = pObj->clID();
     IRegistry* pR   = pObj->registry();
-    string     p[2] = { m_current->fid(), pR->identifier()};
+    string     p[2] = {m_current->fid(), pR->identifier()};
     TClass*    cl   = (pObj->clID() == CLID_DataObject) ? m_classDO : getClass(pObj);
-    TBranch*   b    = m_current->getBranch(m_section, p[1], cl);
-    if ( b ) {
-      b->SetAddress(&pObj);
-      DataObjectPush push(pObj);
-      long evt = b->GetEntries();
-      if ( evt>0 && (evt%m_autoFlush)==0 ) {
-	if ( p[1]=="/Event" ) {
-	  if ( (evt%m_autoFlush)==0 ) {
-	    b->GetTree()->SetEntries(evt);
-	  }
-	  if ( evt == m_autoFlush ) {
-	    b->GetTree()->SetAutoFlush(m_autoFlush);
-	    b->GetTree()->SetEntries(evt);
-	    b->GetTree()->OptimizeBaskets(40000000,1.,"D");
-	  }
-	  else if ( (evt%m_autoFlush)==0 ) {
-	    b->GetTree()->FlushBaskets();
-	  }
-	}
-      }
-      int nb = b->Fill();
-      if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
-	unsigned long ip[2] = {0,b->GetEntries()-1};
-	return createAddress(repSvcType(),clid,p,ip,refpAddr);
-      }
-      return error("Failed to write object data for:"+p[1]);
+    pair<int,unsigned long> ret = m_current->saveObj(m_section,p[1],cl,pObj);
+    if ( ret.first > 1 || (pObj->clID() == CLID_DataObject && ret.first==1) ) {
+      unsigned long ip[2] = {0,ret.second};
+      return createAddress(repSvcType(),clid,p,ip,refpAddr);
     }
-    return error("Failed to access branch for:"+p[1]);
+    return error("Failed to write object data for:"+p[1]);
   }
   return error("markWrite> Current Database is invalid!");
 }
 
-/// Save object references to data file
-StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* pA, DataObject* pObj) {
-  if ( pA && pObj ) {
-    ObjectRefs refs;
-    ObjectRefs* prefs=&refs;
+// Save object references to data file
+StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj) {
+  if ( pObj ) {
+    typedef std::vector<IRegistry*> Leaves;
+    Leaves leaves;
+    RootObjectRefs refs;
     IRegistry* pR = pObj->registry();
-    TBranch* b = 0;
-    if ( m_refTypes == 1 )
-      b = m_current->getBranch(m_section,pR->identifier()+"#R",m_classRefs);
-    else
-      b = m_current->getBranch(m_section+"#R",pR->identifier(),m_classRefs);
-    if ( b ) {
-      typedef std::vector<IRegistry*> Leaves;
-      Leaves leaves;
-      StatusCode status = m_dataMgr->objectLeaves(pObj, leaves);
-      if ( status.isSuccess() )  {
-	RootRef ref;
-	LinkManager* pLinks = pObj->linkMgr();
-	for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
-	  if ( (*i)->address() ) {
-	    m_current->makeRef(*i,ref);
-	    ref.entry = (*i)->address()->ipar()[1];
-	    refs.refs.push_back(ref);
-	  }
+    StatusCode status = m_dataMgr->objectLeaves(pObj, leaves);
+    if ( status.isSuccess() )  {
+      RootRef ref;
+      LinkManager* pLinks = pObj->linkMgr();
+      for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
+	if ( (*i)->address() ) {
+	  m_current->makeRef(*i,ref);
+	  ref.entry = (*i)->address()->ipar()[1];
+	  refs.refs.push_back(ref);
 	}
-	for(int i = 0, n=pLinks->size(); i < n; ++i)  {
-	  LinkManager::Link* lnk = pLinks->link(i);
-	  int link_id = m_current->makePath(lnk->path());
-	  refs.links.push_back(link_id);
-	}
-	b->SetAddress(&prefs);
-	int nb = b->Fill();
-	if ( nb > 1 ) {
-	  return S_OK;
-	}
+      }
+      for(int i = 0, n=pLinks->size(); i < n; ++i)  {
+	LinkManager::Link* lnk = pLinks->link(i);
+	int link_id = m_current->makeLink(lnk->path());
+	refs.links.push_back(link_id);
+      }
+      pair<int,unsigned long> ret = m_current->save(m_section,pR->identifier()+"#R",m_classRefs,&refs);
+      if ( ret.first > 1 ) {
+	return S_OK;
       }
     }
   }
   return S_FAIL;
 }
 
-/// Read existing object. Open transaction in read mode if not active
+// Read existing object. Open transaction in read mode if not active
 StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
   refpObj = 0;
   if ( pA ) {
@@ -415,114 +365,80 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
     unsigned long* ipar = const_cast<unsigned long*>(pA->ipar());
     StatusCode sc = connectDatabase(par[0],IDataConnection::READ,&con);
     if ( sc.isSuccess() ) {
-      TBranch* b = con->getBranch(m_section,par[1]);
       ipar[0] = (unsigned long)con;
-      if ( b ) { // ROOT_CONTENT
-	TClass* cl = gROOT->GetClass(b->GetClassName(),kTRUE);
-	if ( cl ) {
-	  TTree* t = b->GetTree();
-	  DataObject* pObj = (DataObject*)cl->New();
-	  b->SetAddress(&pObj);
-	  DataObjectPush push(pObj);
-	  if ( Long64_t(ipar[1]) != t->GetReadEntry() ) {
-#if 0 
-	    cout << "Loading tree " << b->GetName() 
-		 << " entry:" << ipar[1] 
-		 << " " << b->GetReadEntry() 
-		 << " " << t->GetReadEntry() << endl;
-#endif
-	    if ( m_statistics ) ++m_accesses["LoadTree"];
-	    t->LoadTree(Long64_t(ipar[1]));
-	  }
-	  if ( m_statistics ) {
-	    AccessList::iterator i=m_accesses.find(par[1]);
-	    if ( i != m_accesses.end() ) {
-	      ++((*i).second);
-	    }
-	    else {
-	      m_accesses.insert(make_pair(par[1],0));
-	    }
-	  }
-	  //cout << "Loading " << par[1] << " " << par[0] << endl;
-	  int nb = b->GetEntry(ipar[1]);
-	  if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
-	    refpObj = pObj;
-	    return S_OK;
-	  }
-	  delete pObj;
-	}
+      DataObject* pObj = 0;
+      int nb = con->loadObj(m_section,par[1],ipar[1],pObj);
+      if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
+	refpObj = pObj;
+	return S_OK;
       }
-      error("Failed to open container "+par[1]);
+      delete pObj;
     }
+    string tag = par[0]+":"+par[1];
+    if ( m_badFiles.find(tag) == m_badFiles.end() ) {
+      m_badFiles.insert(tag);
+      return error("createObj> Cannot access the object:"+tag);
+    }
+    return S_FAIL;
   }
   return S_FAIL;
 }
 
-/// Resolve the references of the created transient object.
+// Resolve the references of the created transient object.
 StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
   if ( pA && pObj )  {
     const unsigned long* ipar = pA->ipar();
     RootDataConnection* con = (RootDataConnection*)ipar[0];
     if ( con ) {
+      RootObjectRefs refs;
       const string* par = pA->par();
-      IRegistry* pR = pA->registry();
-      TBranch* b = 0;
-      if ( m_refTypes == 1 )
-	b = con->getBranch(m_section,par[1]+"#R");
-      else
-	b = con->getBranch(m_section+"#R",par[1]);
-      if ( b ) {
-	ObjectRefs refs;
-	ObjectRefs* prefs = &refs;
-	b->SetAddress(&prefs);
-	int nb = b->GetEntry(ipar[1]);
-	if ( nb >= 1 ) {
-	  string npar[3];
-	  unsigned long nipar[2];
-	  IOpaqueAddress* nPA;
-	  LinkManager* mgr = pObj->linkMgr();
-	  for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
-	    mgr->addLink(con->getPath(*i),0);
-	    //cout << "Add link " << con->getPath(*i) << endl;
-	  }
-	  for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
-	    const RootRef& r = refs.refs[j];
-	    npar[0] = con->getDb(r.dbase);
-	    npar[1] = con->getCont(r.container);
-	    npar[2] = con->getLink(r.link);
-	    nipar[0] = 0;
-	    nipar[1] = r.entry;
-	    //cout << "Add leaf " << npar[1] << " " << npar[0] << endl;
-	    StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
+      int nb = con->loadRefs(m_section,par[1],ipar[1],refs);
+      if ( nb >= 1 ) {
+	string npar[3];
+	unsigned long nipar[2];
+	IOpaqueAddress* nPA;
+	LinkManager* mgr = pObj->linkMgr();
+	for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
+	  mgr->addLink(con->getLink(*i),0);
+	}
+	for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
+	  const RootRef& r = refs.refs[j];
+	  npar[0] = con->getDb(r.dbase);
+	  npar[1] = con->getCont(r.container);
+	  npar[2] = con->getLink(r.link);
+	  nipar[0] = 0;
+	  nipar[1] = r.entry;
+	  StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
+	  if ( sc.isSuccess() ) {
+	    //cout << "Register:" << pA->registry()->identifier() << " " << npar[2] << endl;
+	    sc = m_dataMgr->registerAddress(pA->registry(),npar[2],nPA);
 	    if ( sc.isSuccess() ) {
-	      sc = m_dataMgr->registerAddress(pR,npar[2],nPA);
-	      if ( sc.isSuccess() ) {
-		continue;
-	      }
+	      continue;
 	    }
-	    return S_FAIL;
 	  }
-	  ObjectTypes obj(pObj);
-	  const CLID id = (pObj->clID()&0xFFFF0000);
-	  switch(id) {
-	  case CLID_ObjectList:              /* ObjectList               */
-	    return S_OK;
-	  case CLID_ObjectVector:            /* ObjectVector             */
-	    return S_OK;
-	  case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
-	    obj.KeyMap->configureDirectAccess();
-	    return S_OK;
-	  case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
-	    obj.KeyHashMap->configureDirectAccess();
-	    return S_OK;
-	  case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
-	    obj.KeyArray->configureDirectAccess();
-	    return S_OK;
-	  case 0:                            /* Any other object         */
-	    return S_OK;
-	  default:
-	    return obj.update(0);
-	  }
+	  error("Failed to create address!!!!");
+	  return S_FAIL;
+	}
+	ObjectTypes obj(pObj);
+	const CLID id = (pObj->clID()&0xFFFF0000);
+	switch(id) {
+	case CLID_ObjectList:              /* ObjectList               */
+	  return S_OK;
+	case CLID_ObjectVector:            /* ObjectVector             */
+	  return S_OK;
+	case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
+	  obj.KeyMap->configureDirectAccess();
+	  return S_OK;
+	case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
+	  obj.KeyHashMap->configureDirectAccess();
+	  return S_OK;
+	case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
+	  obj.KeyArray->configureDirectAccess();
+	  return S_OK;
+	case 0:                            /* Any other object         */
+	  return S_OK;
+	default:
+	  return obj.update(0);
 	}
       }
     }

@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.cpp,v 1.1 2010-01-11 17:14:50 frankb Exp $
+// $Id: RootStatCnv.cpp,v 1.2 2010-08-17 17:16:24 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootStatCnv
@@ -8,9 +8,9 @@
 //------------------------------------------------------------------------------
 
 // Include files
+#include "RootRefs.h"
 #include "RootStatCnv.h"
 #include "RootDataConnection.h"
-#include "RootCnv/RootNTupleDescriptor.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"

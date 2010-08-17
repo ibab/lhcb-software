@@ -1,4 +1,4 @@
-// $Id: IOHandler.cpp,v 1.3 2010-03-03 14:30:47 frankb Exp $
+// $Id: IOHandler.cpp,v 1.4 2010-08-17 17:16:24 frankb Exp $
 //====================================================================
 //
 //  Package    : RootCnv
@@ -12,6 +12,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/System.h"
+#include "RootRefs.h"
 #include <stdexcept>
 #include <iostream>
 #include "TROOT.h"
@@ -169,6 +170,18 @@ namespace GaudiRoot {
     m_root->WriteBuffer(b, obj);
   }
 
+  template <> void IOHandler<pool::Token>::get(TBuffer &b, void* obj) {
+    UInt_t start, count;
+    pool::Token* t = (pool::Token*)obj;
+    b.ReadVersion(&start, &count, m_root);
+    b.ReadFastArray(&t->m_oid.first, 2);
+    b.CheckByteCount(start, count, m_root);
+  }
+  
+  template <> void IOHandler<pool::Token>::put(TBuffer &, void* ) {
+    throw std::runtime_error("Writing POOL files is not implemented!");
+  }
+
   template <class T> static bool makeStreamer(MsgStream& log)  {
     std::string cl_name = System::typeinfoName(typeid(T));
     TClass* c = gROOT->GetClass(cl_name.c_str());
@@ -190,11 +203,13 @@ namespace GaudiRoot {
       gROOT->ProcessLine("#include <vector>");
       gInterpreter->EnableAutoLoading();
       gInterpreter->AutoLoad("DataObject");
+      gInterpreter->AutoLoad("PoolDbLinkManager");
       gROOT->ProcessLine("Cintex::Cintex::Enable()");    
 
       bool b1 = makeStreamer<SmartRefBase>(s);
       bool b2 = makeStreamer<ContainedObject>(s);
-      return b1 && b2;
+      bool b3 = makeStreamer<pool::Token>(s);
+      return b1 && b2 && b3;
     }
     return true;
   }
