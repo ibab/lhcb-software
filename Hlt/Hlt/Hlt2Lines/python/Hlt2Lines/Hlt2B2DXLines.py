@@ -42,15 +42,6 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                                  , 'Hlt2B2D2hhhBachelorOSTFTUSBroadMW'         : 0.01
                                                  , 'Hlt2B2D2hhKstarOSTFTUSBroadMW'             : 0.01
                                                  , 'Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMW'   : 0.01                                                 
-                                                   #OSTF monitoring lines
-                                                 , 'Hlt2B2D2hhBachelorOSTFTUSSignalMonitor'           : 0.001
-                                                 , 'Hlt2B2D2hhhBachelorOSTFTUSSignalMonitor'          : 0.001
-                                                 , 'Hlt2B2D2hhKstarOSTFTUSSignalMonitor'              : 0.001
-                                                 , 'Hlt2B2D2hhhBachelorWithKsOSTFTUSSignalMonitor'    : 0.001                                                 
-                                                 , 'Hlt2B2D2hhBachelorOSTFTUSBroadMWMonitor'          : 0.001
-                                                 , 'Hlt2B2D2hhhBachelorOSTFTUSBroadMWMonitor'         : 0.001
-                                                 , 'Hlt2B2D2hhKstarOSTFTUSBroadMWMonitor'             : 0.001
-                                                 , 'Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMWMonitor'   : 0.001                                                 
                                                  }
                   }
 
@@ -375,28 +366,3 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarOSTFTUSBroadMWDecision" : 52160 } )
         line = Hlt2Line('B2D2hhhBachelorWithKsOSTFTUSBroadMW', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsOSTFTUSSeqBroadMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMWDecision" : 52170 } )
-
-        ###################################################################
-        # OSTF monitoring lines
-        ###################################################################
-        line = Hlt2Line('B2D2hhBachelorOSTFTUSSignalMonitor', prescale = self.prescale , algos = [ B2D2hhBachelorOSTFTUSSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorOSTFTUSSignalMonitorDecision" : 52180 } )
-        line = Hlt2Line('B2D2hhhBachelorOSTFTUSSignalMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorOSTFTUSSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorOSTFTUSSignalMonitorDecision" : 52190 } )
-        line = Hlt2Line('B2D2hhKstarOSTFTUSSignalMonitor', prescale = self.prescale , algos = [ B2D2hhKstarPhiOSTFTUSSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarOSTFTUSSignalMonitorDecision" : 52200 } )
-        line = Hlt2Line('B2D2hhhBachelorWithKsOSTFTUSSignalMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsOSTFTUSSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsOSTFTUSSignalMonitorDecision" : 52210 } )
-
-        ###################################################################
-        # OSTF monitoring lines, broad mass window
-        ###################################################################        
-        line = Hlt2Line('B2D2hhBachelorOSTFTUSBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhBachelorOSTFTUSSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorOSTFTUSBroadMWMonitorDecision" : 52220 } )
-        line = Hlt2Line('B2D2hhhBachelorOSTFTUSBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorOSTFTUSSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorOSTFTUSBroadMWMonitorDecision" : 52230 } )
-        line = Hlt2Line('B2D2hhKstarOSTFTUSBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhKstarPhiOSTFTUSSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarOSTFTUSBroadMWMonitorDecision" : 52240 } )
-        line = Hlt2Line('B2D2hhhBachelorWithKsOSTFTUSBroadMWMonitor', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsOSTFTUSSeqBroadMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMWMonitorDecision" : 52250 } )
-
