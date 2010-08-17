@@ -1,3 +1,7 @@
+2010-08-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/doxygen: added message in case of failure of the call to SetupProject.
+
 2010-08-11 - Patrick Koppenburg <Patrick.Koppenburg@cern.ch>
 
     * Added VeloSQLDDB to Packages

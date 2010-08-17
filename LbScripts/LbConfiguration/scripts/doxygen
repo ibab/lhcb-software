@@ -21,4 +21,8 @@ done
 args=( "$@" )
 shift $#
 . SetupProject.sh --silent LCGCMT $LCGCMT_VERSION doxygen $DOXYGEN_VERSION
+if [ "$SetupProjectStatus" != 0 ] ; then
+    echo "ERROR: Cannot prepare the environment to use doxygen."
+    exit 1
+fi
 doxygen "${args[@]}"
