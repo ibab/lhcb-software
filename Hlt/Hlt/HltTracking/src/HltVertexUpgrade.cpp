@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.23 2010-08-17 08:41:18 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.24 2010-08-17 11:00:35 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -95,13 +95,13 @@ StatusCode HltVertexUpgrade::execute() {
     }
     std::vector<LHCb::Track*> tracks1, tracks2;
     debug() << " calling update for track1" << endmsg;
-    sc = m_tool->upgrade(const_cast<Track&>(*seed1),tracks1);
+    sc = m_tool->upgrade(*seed1,tracks1);
     if (sc.isFailure()) {
         always() << "Failed to update track!" << endmsg;
         return sc;
     }
     debug() << " calling update for track2" << endmsg;
-    sc = m_tool->upgrade(const_cast<Track&>(*seed2),tracks2);
+    sc = m_tool->upgrade(*seed2,tracks2);
     if (sc.isFailure()) { 
         always() << "Failed to update track!" << endmsg;
         return sc;
