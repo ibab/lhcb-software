@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.8 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecChecker.cpp,v 1.9 2010-08-17 11:02:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -89,7 +89,7 @@ void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
     int q = MCHlt::iquark(mother);
     if (q != 1) continue;
     ++nbs;
-    if (m_selections.output()) m_selections.output()->push_back( const_cast<Track*>( *it ));
+    if (m_selections.output()) m_selections.output()->push_back( *it );
   }
   
   fill( histo1D(std::string("Track Bs")), nbs, 1.);
