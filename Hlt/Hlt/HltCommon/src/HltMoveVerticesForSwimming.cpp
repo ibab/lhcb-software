@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.10 2010-08-17 08:47:19 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.11 2010-08-17 11:26:35 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -155,7 +155,7 @@ double HltMoveVerticesForSwimming::move_PVs(){
   debug() << "With Y coordinate " << bestVertex->position().Y() << endmsg;
   debug() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
 
-  m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
+  m_selections.output()->push_back( bestVertex );
 
   //Make our dummy particle for the lifetime fit
   LHCb::ParticleID* 	Pid	= new LHCb::ParticleID(m_bPID);

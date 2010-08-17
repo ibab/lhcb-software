@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.11 2009-03-23 16:14:41 gligorov Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.12 2010-08-17 11:26:35 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -84,7 +84,7 @@ void HltTrackFromParticle::loadParticle(const Particle& par) {
   verbose() << " loading " << par.pt() << endreq;
   if (par.isBasicParticle()) {
     const Track* track = par.proto()->track();
-    if (track) m_selections.output()->push_back( const_cast<Track*>(track));
+    if (track) m_selections.output()->push_back( track );
     verbose() << " loading particle " << par.pt() 
               << " as track " << track->pt() << endreq;
   } else {
