@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-08-17 - Gerhard Raven
+ - Hlt::TSelection now contains const T*
+ - make ITrackUpgrade const correct
+
 ! 2010-08-05 - Vanya Belyaev
 
  - MultiTrack

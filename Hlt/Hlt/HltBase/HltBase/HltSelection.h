@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.17 2010-03-27 21:59:41 graven Exp $
+// $Id: HltSelection.h,v 1.18 2010-08-17 08:49:18 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -6,8 +6,7 @@
 #include <boost/utility.hpp>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ClassID.h"
 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -19,7 +18,7 @@ namespace Hlt
 
   template <typename T> class TSelection;
 
-  class Selection : public ContainedObject, public DataObject, private boost::noncopyable {
+  class Selection :  private boost::noncopyable {
   public:
     Selection(const Gaudi::StringKey& id) : m_id(id), m_decision(false), m_processed(false), m_error(false) {}
     virtual ~Selection() {}
@@ -39,7 +38,7 @@ namespace Hlt
     bool processed() const {return m_processed;}
     bool error() const {return m_error;} //TODO: is bool really what we want??? do we want more???
 
-    virtual CLID classID() const {return DataObject::clID();}
+    virtual CLID classID() const {return CLID_NULL;}
     virtual void clean() {m_decision = false; m_processed = false; m_error = false;}    
 
     template <typename T>
@@ -71,8 +70,8 @@ namespace Hlt
   template <typename T>
   class TSelection : public Selection {
   public:
-    typedef T                                     candidate_type;
-    typedef std::vector<T*>                       container_type;
+    typedef const T                               candidate_type;
+    typedef std::vector<candidate_type*>          container_type;
 
     TSelection(const Gaudi::StringKey& id) : Selection(id) {}
     virtual ~TSelection() ;
@@ -96,7 +95,7 @@ namespace Hlt
     const_iterator end() const { return m_candidates.end(); }
     iterator begin() { return m_candidates.begin(); }
     iterator end()   { return m_candidates.end(); }
-    void push_back(T* t) { m_candidates.push_back(t); }
+    void push_back(candidate_type* t) { m_candidates.push_back(t); }
     template <typename ITER> void insert(iterator i, ITER begin, ITER end) { m_candidates.insert(i,begin,end); }
     template <typename ITER> ITER erase(ITER begin, ITER end)  { return m_candidates.erase(begin,end); }
     // ========================================================================
@@ -115,5 +114,10 @@ namespace Hlt
   typedef TSelection<LHCb::RecVertex>   VertexSelection;
   typedef TSelection<LHCb::Particle>  ParticleSelection;
 
+  template <typename R,typename T>
+  void operator>>(const R& range ,TSelection<T>& sel) { sel.insert(sel.end(), range.begin(), range.end() ) ; }
+
+  template <typename T>
+  void operator>>(typename TSelection<T>::candidate_type* c ,TSelection<T>& sel) { sel.push_back(c); }
 }
 #endif

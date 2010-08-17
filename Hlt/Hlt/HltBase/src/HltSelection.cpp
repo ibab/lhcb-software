@@ -28,13 +28,7 @@ template class Hlt::TSelection<LHCb::L0CaloCandidate>;
 template class Hlt::TSelection<LHCb::L0MuonCandidate>;
 template class Hlt::TSelection<LHCb::Particle>;
 
-
 template class Hlt::TSelection<Hlt::Candidate>         ;
 template class Hlt::TSelection<Hlt::Stage>             ;
 template class Hlt::TSelection<Hlt::MultiTrack>        ;
 template class Hlt::TSelection<Hlt::L0DiMuonCandidate> ;
-
-
-//FIXME: why do we need this? (in HltSelectionFilter...)
-template class Hlt::TSelection<Hlt::Selection>;
-
