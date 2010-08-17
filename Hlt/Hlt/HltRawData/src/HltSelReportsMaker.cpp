@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.26 2010-07-17 17:08:37 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.27 2010-08-17 08:45:05 graven Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -35,7 +35,7 @@ using namespace LHCb;
 
 
 namespace {
-    template <typename E> ContainedObject* getFirst(const Hlt::Selection* sel ) {
+    template <typename E> const ContainedObject* getFirst(const Hlt::Selection* sel ) {
         if ( sel->classID() != E::classID() ) return 0;
         const Hlt::TSelection<E>& tsel = dynamic_cast<const Hlt::TSelection<E>&>(*sel);
         return *tsel.begin();
@@ -273,11 +273,11 @@ StatusCode HltSelReportsMaker::execute() {
      // unsuccessful selections can't save candidates
      if( !sel->decision() )continue;
      
-     ContainedObject*  candidate = getFirst<LHCb::Track>(sel);
-     if (candidate==0) candidate = getFirst<LHCb::RecVertex>(sel);
-     if (candidate==0) candidate = getFirst<LHCb::Particle>(sel);
-     if (candidate==0) candidate = getFirst<LHCb::CaloCluster>(sel);
-     if (candidate==0) {
+     const ContainedObject* candidate = getFirst<LHCb::Track>(sel);
+     if (candidate==0)      candidate = getFirst<LHCb::RecVertex>(sel);
+     if (candidate==0)      candidate = getFirst<LHCb::Particle>(sel);
+     if (candidate==0)      candidate = getFirst<LHCb::CaloCluster>(sel);
+     if (candidate==0)      {
        
        if( sel->classID()==1 )continue; // skip selections of selections for now
        
@@ -350,12 +350,13 @@ StatusCode HltSelReportsMaker::execute() {
        }
      }
 
-     std::vector<ContainedObject*> candidates;
      
      const Hlt::Selection* sel = is->second.selection;
 
      // unsuccessful selections can't save candidates
      if( !sel->decision() )continue;
+
+     std::vector<const ContainedObject*> candidates; candidates.reserve( sel->size() );
      
      if( sel->classID() == LHCb::Track::classID() ) {
        
@@ -414,7 +415,7 @@ StatusCode HltSelReportsMaker::execute() {
      unsigned int iWord(0);
      Particle2Vertex::Table* table(0);
 
-     for (std::vector<ContainedObject*>::const_iterator ic = candidates.begin();
+     for (std::vector<const ContainedObject*>::const_iterator ic = candidates.begin();
           ic != candidates.end(); ++ic) {
 
 
