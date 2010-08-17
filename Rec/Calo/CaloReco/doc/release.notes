@@ -6,6 +6,11 @@
 
 ! -----------------------------------------------------------------------------
 
+
+! 2010-08-17 - Olivier Deschamps
+ - python/Configuration.py : CaloProcessor adapted to change in CaloPIDs (PIDList) + consolidation of the configurables 
+
+
 !========================== CaloReco v5r5p2  2010-06-01 ========================
 ! 2010-06-01 - Gerhard Raven
  - suppress printout of another error from CaloClusterCovarianceAlg, but keep
