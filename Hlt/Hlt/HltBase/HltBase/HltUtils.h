@@ -68,10 +68,6 @@ namespace HltUtils
   
 
   //! return the impact parameter vector
-  double rImpactParameter(const LHCb::RecVertex& vertex,
-                          const LHCb::Track& track);
-  
-  //! return the impact parameter vector
   inline double impactParameter(const LHCb::RecVertex& vertex,
                                 const LHCb::Track& track) {
       const LHCb::State& state = track.firstState();

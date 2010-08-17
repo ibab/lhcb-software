@@ -18,36 +18,6 @@ void Hlt::VertexCreator::operator() (const LHCb::Track& track1,
 }
 
 
-double HltUtils::rImpactParameter(const RecVertex& vertex, 
-                                  const Track& track)
-{
-  //WARNING: this does not hold for a generic track, only for 2D tracks...
-  //question: how does one recognize such a track???
-  const State& state = track.firstState();
-  double rt  = state.x();
-  double phi = state.y();
-  double zt  = state.z();
-  double tr  = state.tx();
-  
-  const XYZPoint& p = vertex.position();
-  double xv = p.x();
-  double yv = p.y();
-  double zv = p.z();
-
-  rt = rt+tr*(zv-zt);
-  zt = zv;
-  double rv = xv*cos(phi)+yv*sin(phi);
-
-  double Dr = rt-rv;
-  double Dz = zt-zv;
-  double dz = -(Dr*tr+Dz)/(1+tr*tr);
-  double RR = Dr+tr*dz;
-  double ZZ = Dz+dz;
-  double rIP = sqrt(RR*RR+ZZ*ZZ);
-  return (ZZ<0)? -rIP : rIP;
-}
-
-
 XYZVector HltUtils::closestDistance(const Track& track1, 
                                     const Track& track2) {
   const State& state1 = track1.firstState();
@@ -91,6 +61,7 @@ double HltUtils::impactParameterSignificance(const LHCb::RecVertex& vertex,
       Gaudi::XYZVector dip2ddelta = 2*(delta-dot*dir);
       delta *= -2*dot*dir.z();
 
+      //WARNING: this assumes the track is not used in the vertex...
       double err2 = Gaudi::Math::Similarity( dip2ddelta, vertex.covMatrix() )
                   +  ROOT::Math::Similarity( Gaudi::Vector5( -dip2ddelta.x()
                                                            , -dip2ddelta.y()
