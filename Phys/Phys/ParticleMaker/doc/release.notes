@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.118 2010-08-03 07:23:59 pkoppenb Exp $ 
+! $Id: release.notes,v 1.119 2010-08-17 12:08:25 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+
+! 2010-08-16 - Olivier Deschamps
+ - improve bremstrahlung correction : 
+    - bremAdding machinery moved to ParticleMakerBase so it is applied to all ParticleMaker algos (in particular, now in NoPIDsParticleMaker)
+    - brem correction can be activated for any particle ID passed in options (defaut electrons only)
 
 !========================== ParticleMaker v5r6p2 2010-08-03 ==================
 ! 2010-08-03 - Patrick Koppenburg
