@@ -233,7 +233,9 @@ StatusCode DeVeloPixSquareType::initialize()
     s << nl+1;
     //bottom left corner of the active part of ladder nl
     Gaudi::XYZPoint point(param<double>("XRef"+s.str()),param<double>("YRef"+s.str()),param<double>("ZRef"+s.str()));
-    PixelLadder tmp_ladder(point,param<int>("NChip"+s.str()),(bool)param<int>("Ladder"+s.str()+"_IsHorizontal"));
+    bool ishorizontal_tmp = false;
+    if(param<int>("Ladder"+s.str()+"_IsHorizontal")>0.5) ishorizontal_tmp = true;
+    PixelLadder tmp_ladder(point,param<int>("NChip"+s.str()),ishorizontal_tmp);
     std::vector<int> tmp_interPixPos (tmp_ladder.nChip());
     numOfChips+=tmp_ladder.nChip();
     for ( int nchip = 0 ; nchip < tmp_ladder.nChip() ; nchip++)

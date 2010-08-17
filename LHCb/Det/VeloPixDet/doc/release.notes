@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2010-08-17 - Victor Coco
+ - Change in DeVeloPixSquareType initialization to fix a win32 warning due to
+   cast of int in bool
+
 ! 2010-08-15 - Victor Coco
  - Deep modification in DeVeloPixSquareType in the way pixel position are
    encoded when passing from MINIPLANE layout to STRAWMAN layout. 
