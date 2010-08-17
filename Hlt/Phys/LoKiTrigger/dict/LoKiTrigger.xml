@@ -10,9 +10,9 @@
   <class name    = "LoKi::Interface<Hlt::IData>"        />
   <class name    = "LoKi::Interface<Hlt::IInspector>"   />
   
-  <class name    = "LoKi::ITgrFunctorFactory"       />
-  <class name    = "LoKi::ITgrFunctorAntiFactory"   />
-  <class name    = "LoKi::Hybrid::TgrEngine"        />
+  <class name    = "LoKi::ITrgFunctorFactory"       />
+  <class name    = "LoKi::ITrgFunctorAntiFactory"   />
+  <class name    = "LoKi::Hybrid::TrgEngine"        />
   
 
   <!-- Hlt::Candidate --> 

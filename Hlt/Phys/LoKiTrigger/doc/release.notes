@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 ! 2010-08-17 - Gerhard Raven
  - follow changes in HltBase: Hlt::TSelection now contains const T* instead of T*
+ - fix typos in dictionary
 
 ! 2010-08-12 - Vanya Belyaev
  - Hlt::Unit
