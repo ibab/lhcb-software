@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-08-17 - Wouter Hulsbergen
+ - added some methods to TrackTraj to make it more suitable for inheritance
+
 !========================== TrackKernel v1r4 2010-06-19 ===================
 ! 2010-06-10 - Wouter Hulsbergen
  - add test on inversion in TrackStateVertex

@@ -13,14 +13,15 @@ namespace LHCb
   {
     return lhs->z() < rhs->z() ;
   }
-
+  
   inline bool equalStateZ(const State* lhs, const State* rhs)
   {
-    return fabs(lhs->z() - rhs->z()) < TrackParameters::propagationTolerance ;
+    return std::abs(lhs->z() - rhs->z()) < TrackParameters::propagationTolerance ;
   }
   
   TrackTraj::TrackTraj(const Track& track, const IMagneticFieldSvc* magfieldsvc)
-    : ZTrajectory(), m_bfield(0,0,0)
+    : ZTrajectory(), m_bfield(0,0,0),
+      m_cachedindex(InvalidCacheIndex)
   {
     // the sorting takes a lot of time. therefore, we rely on the fact
     // that nodes and states in a track are already sorted. we use
@@ -60,7 +61,8 @@ namespace LHCb
   }
   
   TrackTraj::TrackTraj(const std::vector<Node*>& nodes, const IMagneticFieldSvc* magfieldsvc)
-    : ZTrajectory(), m_bfield(0,0,0)
+    : ZTrajectory(), m_bfield(0,0,0),
+      m_cachedindex(InvalidCacheIndex)
   {
     // the sorting takes a lot of time. therefore, we rely on the fact
     // that nodes and states in a track are already sorted. 
@@ -87,7 +89,8 @@ namespace LHCb
   }
   
   TrackTraj::TrackTraj(const TrackTraj::StateContainer& states, const IMagneticFieldSvc* magfieldsvc)
-    : ZTrajectory(),m_states(states), m_bfield(0,0,0)
+    : ZTrajectory(),m_states(states), m_bfield(0,0,0),
+      m_cachedindex(InvalidCacheIndex)
   {
     // sort
     std::sort(m_states.begin(), m_states.end(),compareStateZ) ;
@@ -96,7 +99,8 @@ namespace LHCb
   }
   
   TrackTraj::TrackTraj(const LHCb::Track::StateContainer& states, const IMagneticFieldSvc* magfieldsvc)
-    : ZTrajectory(), m_bfield(0,0,0)
+    : ZTrajectory(), m_bfield(0,0,0),
+      m_cachedindex(InvalidCacheIndex)
   {
     // insert
     m_states.insert(m_states.begin(),states.begin(),states.end()) ;
@@ -121,25 +125,24 @@ namespace LHCb
     if( magfieldsvc ) 
       magfieldsvc->fieldVector( m_states.front()->position(), m_bfield ).ignore();
 
-    // initialize the cache
-    if( m_states.size() > 1 ) {
-      m_cachedindex = 1 ;
-      m_cachedinterpolation.init(*m_states[0],*m_states[1]) ;
-    } else {
-      m_cachedindex = 0 ;
-      m_cachedinterpolation.init(*m_states[0], m_bfield) ;
-    }
+    // invalidate the cache
+    invalidateCache() ;
   }
+
 
   void TrackTraj::updatecache(double z) const
   {
     // m_cachedindex==0: before first state
     // m_cachedindex==[1,...,numstates-1] --> between states
     // m_cachedindex==numstates --> after last state
+    // m_cachedindex==INVALIDCACHEINDEX --> cache is not valid
     bool cacheisvalid = 
-      (m_cachedindex==0 && z <= m_states.front()->z()) ||
-      (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ||
-      (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z()) ;
+      (m_cachedindex != size_t(InvalidCacheIndex)) &&
+      (
+       (m_cachedindex==0 && z <= m_states.front()->z()) ||
+       (m_cachedindex==m_states.size() && z >= m_states.back()->z()) ||
+       (m_cachedindex!=0 && m_states[m_cachedindex-1]->z() <= z && z < m_states[m_cachedindex]->z())
+       ) ;
     
     if( !cacheisvalid ) {
       if( z <= m_states.front()->z() ) {
@@ -156,7 +159,8 @@ namespace LHCb
       }
     }
   }
-  
+
+
   // Copied from Gerhard
   class ArcLengthComputer
   {

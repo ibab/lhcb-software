@@ -88,12 +88,24 @@ namespace LHCb
     /// Estimate for mu which minimizes point poca
     double muEstimate(const Gaudi::XYZPoint& p) const ;
 
+    /// return the set of reference states
+    const StateContainer& refStates() const { return m_states ; }
+
     /// return the set of reference statevectors for this parameterization (if any)
     std::vector<StateVector> refStateVectors() const ;
+
+  protected:
+    /// return the set of reference states
+    StateContainer& refStates() { return m_states ; }
+
+    /// invalidate the cache
+    void invalidateCache() { m_cachedindex = InvalidCacheIndex ; }
+
   private:
     void updatecache(double z) const ;
     void init(const IMagneticFieldSvc* magfieldsvc) ;
   private:
+    enum { InvalidCacheIndex = -1 } ;
     StateContainer m_states ; ///< Container of states
     Gaudi::XYZVector m_bfield ; ///< Bfield at upstream end of track
     mutable size_t m_cachedindex ; ///< Index for cached z-range
