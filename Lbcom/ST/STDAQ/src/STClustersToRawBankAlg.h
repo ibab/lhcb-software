@@ -64,6 +64,7 @@ private:
 
   unsigned int bankSize(STClustersOnBoard::ClusterVector& clusCont) const;
 
+  unsigned int getPCN() const;
 
   // create a new bank
   void writeBank(STClustersOnBoard::ClusterVector& clusCont , 
@@ -71,6 +72,7 @@ private:
                  const STTell1ID aBoardID);
   
   std::string m_clusterLocation;
+  std::string m_summaryLocation;
 
   LHCb::RawBank::BankType m_bankType;
 
@@ -79,9 +81,11 @@ private:
   ClusterMap m_clusMap;  
   std::vector<STClustersOnBoard* > m_clusVectors;
 
+ 
   unsigned int m_overflow;
   int m_maxClustersPerPPx;
   unsigned int m_maxClusterSize;
+  unsigned int m_pcn;
 
    
 };

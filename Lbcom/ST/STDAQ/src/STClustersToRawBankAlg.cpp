@@ -22,6 +22,7 @@
 #include "Event/STCluster.h"
 #include "Event/RawEvent.h"
 #include "Event/BankWriter.h"
+#include "Event/STSummary.h"
 
 // Kernel
 #include "Kernel/STChannelID.h"
@@ -45,11 +46,13 @@ STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
   :ST::AlgBase( name, pSvcLocator ),
    m_bankMapping(0),
    m_overflow(0),
-   m_maxClusterSize(4)
+   m_maxClusterSize(4),
+   m_pcn(128)
 {
   // constructer
 
   declareSTConfigProperty("clusterLocation", m_clusterLocation , STClusterLocation::TTClusters);
+  declareSTConfigProperty("summaryLocation", m_summaryLocation , STSummaryLocation::TTSummary);
   declareProperty("maxClusters", m_maxClustersPerPPx = 512);
 
   m_bankMapping = new STBoardToBankMap();
@@ -177,6 +180,15 @@ void STClustersToRawBankAlg::initEvent(){
   } // iter
  
   m_overflow = 0; 
+
+  // locate and set the pcn from the summary block if it exists
+  // in the case there is no summary block write 128
+  if (exist<LHCb::STSummary>(m_summaryLocation) == true){
+    const LHCb::STSummary* sum = get<LHCb::STSummary>(m_summaryLocation);
+    m_pcn = sum->pcn();
+  }
+
+
 }
 
 StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
@@ -228,8 +240,7 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector&
   unsigned int nClus = clusCont.size();
 
   // make a bank header
-  unsigned int pcn = 128;
-  SiHeaderWord aHeader = SiHeaderWord(nClus,pcn);
+  SiHeaderWord aHeader = SiHeaderWord(nClus,getPCN());
   bWriter << aHeader.value();
 
   // pick up the data and write first half of the bank into temp container...
@@ -276,4 +287,8 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector&
   } // iCluster
 
   return;
+}
+
+unsigned int STClustersToRawBankAlg::getPCN() const{
+  return m_pcn;
 }
