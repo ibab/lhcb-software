@@ -38,10 +38,10 @@ namespace LHCb
     // return the number of track parameters
     int nTrackParameters() const { return m_nTrackParameters ; }
     
-    // set the number of track parameters and reset the chisquare cache.
+    // set the number of track parameters and reset the cache
     void setNTrackParameters(int n) { 
       m_nTrackParameters = n ; 
-      m_chi2 = ChiSquare() ; }
+      m_chi2CacheValid = false ; }
     
     // return (chisq,dof) for the velo part of this track
     const ChiSquare& chi2() const {
