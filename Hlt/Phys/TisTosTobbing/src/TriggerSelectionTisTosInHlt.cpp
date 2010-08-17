@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.9 2010-07-21 21:22:17 tskwarni Exp $
+// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.10 2010-08-17 08:54:52 graven Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -19,6 +19,16 @@
 #include "HltBase/HltSelection.h"
 
 using namespace LHCb;
+
+namespace {
+    
+    template<typename T, typename I>
+    std::vector<T*> convert(I i,I end) {
+           std::vector<T*> v; v.reserve( end-i );
+           while (i!=end)  v.push_back( const_cast<T*>( *i++ ) );
+           return v;
+    }
+};
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TriggerSelectionTisTosInHlt
@@ -196,25 +206,22 @@ unsigned int TriggerSelectionTisTosInHlt::tisTosSelection( const std::string & s
     if( sel->classID() == LHCb::Track::classID() ) {
 
       const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-      const std::vector<Track*> tracks = tsel.vct();
-      if (tracks.size() >0) {
-        result = IParticleTisTos::tisTos<Track>(tracks);
+      if (tsel.size() >0) {
+        result = IParticleTisTos::tisTos<Track>( convert<Track>( tsel.begin(), tsel.end() ));
       }
       
     } else if( sel->classID() == LHCb::RecVertex::classID() ) {
 
       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-      const std::vector<RecVertex*> vertices = tsel.vct();
-      if (vertices.size() >0) {
-        result = IParticleTisTos::tisTos<RecVertex>(vertices);
+      if (tsel.size() >0) {
+        result = IParticleTisTos::tisTos<RecVertex>( convert<RecVertex>(tsel.begin(),tsel.end() ) );
       }
 
     }  else if( sel->classID() == LHCb::Particle::classID() ) {
 
       const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-      const std::vector<Particle*> particles = tsel.vct();
-      if( particles.size() > 0 ){
-        result = IParticleTisTos::tisTos<Particle>(particles);
+      if( tsel.size() > 0 ){
+        result = IParticleTisTos::tisTos<Particle>(convert<Particle>( tsel.begin(), tsel.end() ));
       }
 
     } else {
@@ -281,8 +288,8 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection( const std::str
     if( sel->classID() == LHCb::Track::classID() ) {
 
       const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-      const std::vector<Track*> tracks = tsel.vct();
-      if (tracks.size() >0) {
+      if (tsel.size() >0) {
+        std::vector<Track*> tracks = convert<Track>(tsel.begin(),tsel.end());
         report << analysisReport<Track>(tracks);
         result = IParticleTisTos::tisTos<LHCb::Track>(tracks);
       }
@@ -290,19 +297,20 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection( const std::str
     } else if( sel->classID() == LHCb::RecVertex::classID() ) {
 
       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-      const std::vector<RecVertex*> vertices = tsel.vct();
-      if (vertices.size() >0) {
-        report<< analysisReport<RecVertex>(vertices);
-        result = IParticleTisTos::tisTos<RecVertex>(vertices);
+      if (tsel.size() >0) {
+        std::vector<RecVertex*> v = convert<RecVertex>( tsel.begin(), tsel.end() );
+        report<< analysisReport<RecVertex>(v);
+        result = IParticleTisTos::tisTos<RecVertex>(v);
       }
 
     }  else if( sel->classID() == LHCb::Particle::classID() ) {
 
       const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-      const std::vector<Particle*> particles = tsel.vct();
-      if( particles.size() > 0 ){
-        report<< analysisReport<Particle>(particles);
-        result = IParticleTisTos::tisTos<Particle>(particles);
+      if( tsel.size() > 0 ){
+        std::vector<Particle*> p = convert<Particle>( tsel.begin(), tsel.end() );
+
+        report<< analysisReport<Particle>(p);
+        result = IParticleTisTos::tisTos<Particle>(p);
       }
 
     } else {
@@ -349,20 +357,20 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection( const std::str
   if( !(sel->size()) )return false;\
   if( sel->classID() == LHCb::Track::classID() ) {\
     const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   \
-    const std::vector<Track*> tracks = tsel.vct();\
-    if (tracks.size() >0) {\
+    if (tsel.size() >0) {\
+      std::vector<Track*> tracks = convert<Track>(tsel.begin(),tsel.end());\
       return IParticleTisTos::FUN<LHCb::Track>(tracks);\
     }      \
   } else if( sel->classID() == LHCb::RecVertex::classID() ) {\
     const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     \
-    const std::vector<RecVertex*> vertices = tsel.vct();\
-    if (vertices.size() >0) {\
+    if (tsel.size() >0) {\
+      std::vector<RecVertex*> vertices = convert<RecVertex>(tsel.begin(),tsel.end());\
       return IParticleTisTos::FUN<RecVertex>(vertices);\
     }\
   }  else if( sel->classID() == LHCb::Particle::classID() ) {\
     const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   \
-    const std::vector<Particle*> particles = tsel.vct();\
-    if( particles.size() > 0 ){\
+    if( tsel.size() > 0 ){\
+      std::vector<Particle*> particles = convert<Particle>(tsel.begin(),tsel.end());\
       return IParticleTisTos::FUN<Particle>(particles);\
     }\
   } else {\
@@ -461,7 +469,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
   if( sel->classID() == LHCb::Track::classID() ) {
 
     const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-    const std::vector<Track*> objects = tsel.vct();
+    std::vector<Track*> objects = convert<Track>(tsel.begin(),tsel.end());
     for( std::vector<Track*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
       Track* object= *obj; 
       TISTOSSELECTSTORE()
@@ -470,7 +478,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
   } else if( sel->classID() == LHCb::RecVertex::classID() ) {
 
     const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-    const std::vector<RecVertex*> objects = tsel.vct();
+    std::vector<RecVertex*> objects = convert<RecVertex>(tsel.begin(),tsel.end());
     for( std::vector<RecVertex*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
       RecVertex* object= *obj; 
       TISTOSSELECTSTORE()
@@ -480,7 +488,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
   } else if( sel->classID() == LHCb::Particle::classID() ) {
 
     const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-    const std::vector<Particle*> objects = tsel.vct();
+    std::vector<Particle*> objects = convert<Particle>(tsel.begin(),tsel.end());
     for( std::vector<Particle*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
       Particle* object= *obj; 
       TISTOSSELECTSTORE()      
