@@ -6,6 +6,9 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+ ! 2010-08-17 - Olivier Deschamps for F. Machefert
+  - add default photonID PDF (photonPDF.root) : used in CaloPID when no data is found in CondDB
+
 !======================= ParamFiles v8r2 2009-11-25 ==========================
 ! 2009-11-25 - Marco Cattaneo for Julien Cogan
  - New version of L0MuonKernel.xml:
