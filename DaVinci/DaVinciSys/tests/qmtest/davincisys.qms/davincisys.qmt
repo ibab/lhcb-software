@@ -7,7 +7,6 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciSequence              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   DaVinciPreFilterSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
