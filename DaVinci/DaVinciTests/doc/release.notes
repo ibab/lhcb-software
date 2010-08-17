@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r2 2010-08-16 =================
+
 ! 2010-08-16 - Juan Palacios
  - tests/qmtest/davinci.qms/test_davinci_initialise.qmt
   . DaVinci sequence structure has changed after introduction of DaVinciPreFilterSeq.
