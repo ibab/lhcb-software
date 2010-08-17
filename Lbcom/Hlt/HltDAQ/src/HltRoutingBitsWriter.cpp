@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.14 2010-08-10 14:05:37 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.15 2010-08-17 11:20:33 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -223,7 +223,7 @@ StatusCode HltRoutingBitsWriter::execute() {
   // bits 0--7 are for ODIN
   LHCb::ODIN* odin = get<LHCb::ODIN>( m_odin_location );
   
-  if (m_startOfRun == 0 ) m_startOfRun = odin->gpsTime(); // just in case we did not have the conditions DB start-of-run time...
+  if (m_startOfRun == 0) m_startOfRun = odin->gpsTime(); // just in case we did not have the conditions DB start-of-run time...
 
   // go from microseconds to minutes...
   double t = odin->gpsTime()>=m_startOfRun ? double(odin->gpsTime() - m_startOfRun) : -double(m_startOfRun - odin->gpsTime()) ;

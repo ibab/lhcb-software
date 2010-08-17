@@ -399,26 +399,25 @@ Sub-banks immediately follow the header.'
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
         <code>
           unsigned int ic = integrityCode();
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelRepRawBank : { "  &lt;&lt; " nSubBanks " &lt;&lt; numberOfSubBanks() 
-             &lt;&lt; " size Allocated " &lt;&lt; allocatedSize()  &lt;&lt; " Actual " &lt;&lt; size()
-             &lt;&lt; " integrity code "  
-             &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
-             &lt;&lt;  std::endl;
+          s &lt;&lt; " HltSelRepRawBank : { "  &lt;&lt; " nSubBanks " &lt;&lt; numberOfSubBanks() 
+            &lt;&lt; " size Allocated " &lt;&lt; allocatedSize()  &lt;&lt; " Actual " &lt;&lt; size()
+            &lt;&lt; " integrity code "  
+            &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
+            &lt;&lt;  std::endl;
           if( 0==ic ) 
           for(unsigned int iBank=0;iBank!=numberOfSubBanks();++iBank){
-            ss &lt;&lt; " subBank : " &lt;&lt; iBank &lt;&lt; " size " &lt;&lt; subBankSize(iBank)
-               &lt;&lt; " id " &lt;&lt; subBankID(iBank)  &lt;&lt; (" "+HltSelRepRBEnums::SubBankIDsToString( subBankID(iBank) ))
-               &lt;&lt; " begin " &lt;&lt; subBankBegin(iBank)  &lt;&lt; " end " &lt;&lt; subBankEnd(iBank)
-               &lt;&lt; std::endl;
+            s &lt;&lt; " subBank : " &lt;&lt; iBank &lt;&lt; " size " &lt;&lt; subBankSize(iBank)
+              &lt;&lt; " id " &lt;&lt; subBankID(iBank)  &lt;&lt; (" "+HltSelRepRBEnums::SubBankIDsToString( subBankID(iBank) ))
+              &lt;&lt; " begin " &lt;&lt; subBankBegin(iBank)  &lt;&lt; " end " &lt;&lt; subBankEnd(iBank)
+              &lt;&lt; std::endl;
           }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
         </code>
       </method>
 

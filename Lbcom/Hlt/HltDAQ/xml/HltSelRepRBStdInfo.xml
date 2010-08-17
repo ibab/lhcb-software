@@ -362,15 +362,15 @@ Info can only be read and stored sequencially.'
         argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
         <code>
           unsigned int ic = integrityCode();
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelRepRBStdInfo : { "  &lt;&lt; " nObj " &lt;&lt; numberOfObj() 
-             &lt;&lt; " size Allocated " &lt;&lt; sizeAllocated()  
-             &lt;&lt; " Actual " &lt;&lt; size() 
-             &lt;&lt; " integrity code "  
-             &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
-             &lt;&lt;  std::endl;
+          s &lt;&lt; " HltSelRepRBStdInfo : { "  &lt;&lt; " nObj " &lt;&lt; numberOfObj() 
+            &lt;&lt; " size Allocated " &lt;&lt; sizeAllocated()  
+            &lt;&lt; " Actual " &lt;&lt; size() 
+            &lt;&lt; " integrity code "  
+            &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
+            &lt;&lt;  std::endl;
           if( 0==ic ){ 
 
 	  unsigned int iteraInfo=0;
@@ -379,7 +379,7 @@ Info can only be read and stored sequencially.'
              unsigned int nInfo = sizeInfo( itera );
              ++itera;
 
-             ss &lt;&lt; " " &lt;&lt; itera &lt;&lt; " nInfo " &lt;&lt; nInfo &lt;&lt; " { ";
+             s &lt;&lt; " " &lt;&lt; itera &lt;&lt; " nInfo " &lt;&lt; nInfo &lt;&lt; " { ";
  
              for(unsigned int i=0;i!=nInfo;++i){
 
@@ -392,14 +392,14 @@ Info can only be read and stored sequencially.'
                 IntFloat a; a.mInt = m_location[iWord2]; 
                 float infFloat = a.mFloat;
 
-                ss   &lt;&lt;  infFloat &lt;&lt; " ";
+                s   &lt;&lt;  infFloat &lt;&lt; " ";
              }
-	     ss &lt;&lt; " } " &lt;&lt; std::endl;
+	     s &lt;&lt; " } " &lt;&lt; std::endl;
 
 	  }
           }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
         </code>
       </method>
 

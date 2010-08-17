@@ -291,33 +291,32 @@ by the CLID before using this insertor.
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
         <code>
           unsigned int ic = integrityCode();
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelRepRBObjTyp : { "  &lt;&lt; " nObjTyp " &lt;&lt; numberOfObjTyp() 
-             &lt;&lt; " nObj " &lt;&lt; numberOfObj()
-             &lt;&lt; " size Allocated " &lt;&lt; allocatedSize()   &lt;&lt; " Actual " &lt;&lt; size()
-             &lt;&lt; " integrity code "  
-             &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
-             &lt;&lt;  std::endl;
+          s &lt;&lt; " HltSelRepRBObjTyp : { "  &lt;&lt; " nObjTyp " &lt;&lt; numberOfObjTyp() 
+            &lt;&lt; " nObj " &lt;&lt; numberOfObj()
+            &lt;&lt; " size Allocated " &lt;&lt; allocatedSize()   &lt;&lt; " Actual " &lt;&lt; size()
+            &lt;&lt; " integrity code "  
+            &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
+            &lt;&lt;  std::endl;
           if( 0==ic ){ 
             unsigned int iold=0;
             for(unsigned int iObjTyp=0;iObjTyp!=numberOfObjTyp();++iObjTyp){
                unsigned int iWord = kInitialPosition + iObjTyp;
                unsigned int nObj =   ( m_location[iWord] &amp; 0xFFFFL );
                unsigned int clid =  ( ( m_location[iWord] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
-               ss &lt;&lt; "  " &lt;&lt; iObjTyp 
-                  &lt;&lt; " type " &lt;&lt; clid  
-                  &lt;&lt; " #-of-objs "  &lt;&lt; nObj-iold &lt;&lt; " cumulative "  &lt;&lt; nObj;
-                  iold = nObj;
-               ss &lt;&lt; std::endl;
+               s &lt;&lt; "  " &lt;&lt; iObjTyp 
+                 &lt;&lt; " type " &lt;&lt; clid  
+                 &lt;&lt; " #-of-objs "  &lt;&lt; nObj-iold &lt;&lt; " cumulative "  &lt;&lt; nObj;
+                 iold = nObj;
+               s &lt;&lt; std::endl;
              }
           }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
         </code>
       </method>
 

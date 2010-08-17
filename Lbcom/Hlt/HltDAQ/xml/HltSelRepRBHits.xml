@@ -318,27 +318,26 @@ Then sequences must be pushed back in the sequencial order.'
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
         <code>
           unsigned int ic = integrityCode();
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelRepRBHits : { "  &lt;&lt; " nSeq " &lt;&lt; numberOfSeq() 
-              &lt;&lt; " size " &lt;&lt; size() 
-             &lt;&lt; " integrity code "  
-             &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
-             &lt;&lt; std::endl;
+          s &lt;&lt; " HltSelRepRBHits : { "  &lt;&lt; " nSeq " &lt;&lt; numberOfSeq() 
+            &lt;&lt; " size " &lt;&lt; size() 
+            &lt;&lt; " integrity code "  
+            &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
+            &lt;&lt; std::endl;
           if( 0==ic )
           for(unsigned int iSeq=0;iSeq!=numberOfSeq();++iSeq){
-            ss &lt;&lt; " seq : " &lt;&lt; iSeq &lt;&lt; " size " &lt;&lt; seqSize(iSeq);
+            s &lt;&lt; " seq : " &lt;&lt; iSeq &lt;&lt; " size " &lt;&lt; seqSize(iSeq);
                  for( unsigned int iHit=seqBegin(iSeq);iHit!=seqEnd(iSeq);++iHit){
-                     ss &lt;&lt; " " &lt;&lt; m_location[iHit];
+                     s &lt;&lt; " " &lt;&lt; m_location[iHit];
                  }
-            ss &lt;&lt; std::endl;
+            s &lt;&lt; std::endl;
           }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
         </code>
       </method>
 

@@ -378,13 +378,12 @@ Never write into into the bank with iterator not at its end-of-the bank position
       <method
         name='fillStream'
         type='std::ostream&amp;'
-        argList='std::ostream&amp; s'
         desc='intelligent printout' 
         const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
         <code>
           unsigned int ic = integrityCode();
-          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltSelRepRBSubstr : { "  &lt;&lt; " nSubstr " &lt;&lt; numberOfObj() 
+          s &lt;&lt; " HltSelRepRBSubstr : { "  &lt;&lt; " nSubstr " &lt;&lt; numberOfObj() 
              &lt;&lt; " size Allocated " &lt;&lt; allocatedSize()   &lt;&lt; " Actual " &lt;&lt; size()
              &lt;&lt; " integrity code "  
              &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
@@ -402,8 +401,8 @@ Never write into into the bank with iterator not at its end-of-the bank position
                   nW = (unsigned short) ( m_location[iWord] &amp; 0xFFFFL );
                }
                unsigned int nL = lenSubstr(nW);
-               ss &lt;&lt; " subStr : " &lt;&lt; iSub &lt;&lt; " size " &lt;&lt; nL
-                  &lt;&lt; " hitType " &lt;&lt; hitSubstr(nW)  &lt;&lt; " { ";
+               s &lt;&lt; " subStr : " &lt;&lt; iSub &lt;&lt; " size " &lt;&lt; nL
+                 &lt;&lt; " hitType " &lt;&lt; hitSubstr(nW)  &lt;&lt; " { ";
                for(unsigned int i=0;i!=nL;++i){
                   unsigned int iWord = itera / 2;
                   unsigned int iPart = itera % 2;
@@ -414,13 +413,13 @@ Never write into into the bank with iterator not at its end-of-the bank position
                   } else {
                      n = (unsigned short)   ( m_location[iWord] &amp; 0xFFFFL );
                   }
-                  ss  &lt;&lt; " "  &lt;&lt; int(n);
+                  s  &lt;&lt; " "  &lt;&lt; int(n);
                }
-               ss &lt;&lt; " } "  &lt;&lt; std::endl;
+               s &lt;&lt; " } "  &lt;&lt; std::endl;
              }
           }
-          ss &lt;&lt; " }" &lt;&lt; std::endl;
-          return ss;
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
         </code>
       </method>
 
