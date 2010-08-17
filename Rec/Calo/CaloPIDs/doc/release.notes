@@ -5,6 +5,13 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+
+! 2010-08-17 - Olivier Deschamps
+ - new version of CaloPhotonIDAlg (get data from condDB or THS) from F. Machefert 
+ - python/PIDs.py : remove default hardcoded neutralID PDF
+ - python/Configuration.py : add PIDList to select the PID component(s) to be added to the caloPIDs sequence
+
+
 !========================== CaloPIDs v5r6p1 2010-06-21 ========================
 ! 2010-06-04 - Rob Lambert
  - Fixes for some windows warnings savannah 15808

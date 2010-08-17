@@ -1,8 +1,12 @@
-// $Id: CaloPhotonIdAlg.cpp,v 1.2 2010-03-08 13:11:45 odescham Exp $
+// $Id: $
 // Include files 
 
+#include <math.h>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "DetDesc/HistoParam.h"
+#include <GaudiUtils/Aida2ROOT.h>
+
 // local
 #include "CaloPhotonIdAlg.h"
 
@@ -13,176 +17,172 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloPhotonIdAlg );
-
+DECLARE_ALGORITHM_FACTORY( CaloPhotonIdAlg);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CaloPhotonIdAlg::CaloPhotonIdAlg( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-  ,m_tracking(true)
-  ,m_extrapol(true)
-  ,m_seed(false)
-  ,m_neig(false)
-  ,m_type("PhotonID")
-  ,m_inputs()
-  ,m_output()
-{
+CaloPhotonIdAlg::CaloPhotonIdAlg(const std::string& name,
+    ISvcLocator* pSvcLocator) :
+  GaudiAlgorithm(name, pSvcLocator), m_tracking(true), m_extrapol(true),
+      m_seed(false), m_neig(false), m_type("PhotonID"),
+      m_pdfEPrs(true), m_pdfChi2(true), m_pdfSeed(true),
+      m_dlnL(true),
+      m_isRunnable( true ),
+      m_useCondDB(),
+      m_conditionName(),
+      m_histo_path("CaloNeutralPIDs/PhotonID/"),
 
+      m_title_Sig_EPrs_10("Signal_Prs_noSpdHit_10"),
+      m_title_Sig_EPrs_11("Signal_Prs_noSpdHit_11"),
+      m_title_Sig_EPrs_12("Signal_Prs_noSpdHit_12"),
+      m_title_Sig_EPrs_15("Signal_Prs_SpdHit_15"),
+      m_title_Sig_EPrs_16("Signal_Prs_SpdHit_16"),
+      m_title_Sig_EPrs_17("Signal_Prs_SpdHit_17"),
+
+      m_title_Sig_Chi2_20("Signal_Chi2Tk_noSpdHit_20"),
+      m_title_Sig_Chi2_21("Signal_Chi2Tk_noSpdHit_21"),
+      m_title_Sig_Chi2_22("Signal_Chi2Tk_noSpdHit_22"),
+      m_title_Sig_Chi2_25("Signal_Chi2Tk_SpdHit_25"),
+      m_title_Sig_Chi2_26("Signal_Chi2Tk_SpdHit_26"),
+      m_title_Sig_Chi2_27("Signal_Chi2Tk_SpdHit_27"),
+
+      m_title_Sig_Seed_30("Signal_ESeed_noSpdHit_30"),
+      m_title_Sig_Seed_31("Signal_ESeed_noSpdHit_31"),
+      m_title_Sig_Seed_32("Signal_ESeed_noSpdHit_32"),
+      m_title_Sig_Seed_35("Signal_ESeed_SpdHit_35"),
+      m_title_Sig_Seed_36("Signal_ESeed_SpdHit_36"),
+      m_title_Sig_Seed_37("Signal_ESeed_SpdHit_37"),
+
+      m_title_Bkg_EPrs_110("Background_Prs_noSpdHit_110"),
+      m_title_Bkg_EPrs_111("Background_Prs_noSpdHit_111"),
+      m_title_Bkg_EPrs_112("Background_Prs_noSpdHit_112"),
+      m_title_Bkg_EPrs_115("Background_Prs_SpdHit_115"),
+      m_title_Bkg_EPrs_116( "Background_Prs_SpdHit_116"),
+      m_title_Bkg_EPrs_117("Background_Prs_SpdHit_117"),
+
+      m_title_Bkg_Chi2_120("Background_Chi2Tk_noSpdHit_120"),
+      m_title_Bkg_Chi2_121("Background_Chi2Tk_noSpdHit_121"),
+      m_title_Bkg_Chi2_122("Background_Chi2Tk_noSpdHit_122"),
+      m_title_Bkg_Chi2_125("Background_Chi2Tk_SpdHit_125"),
+      m_title_Bkg_Chi2_126("Background_Chi2Tk_SpdHit_126"),
+      m_title_Bkg_Chi2_127("Background_Chi2Tk_SpdHit_127"),
+
+      m_title_Bkg_Seed_130("Background_ESeed_noSpdHit_130"),
+      m_title_Bkg_Seed_131("Background_ESeed_noSpdHit_131"),
+      m_title_Bkg_Seed_132("Background_ESeed_noSpdHit_132"),
+      m_title_Bkg_Seed_135("Background_ESeed_SpdHit_135"),
+      m_title_Bkg_Seed_136("Background_ESeed_SpdHit_136"),
+      m_title_Bkg_Seed_137("Background_ESeed_SpdHit_137")
+
+      , m_Sig_EPrs_10(0), m_Sig_EPrs_11(0), m_Sig_EPrs_12(0), m_Sig_EPrs_15(0),
+      m_Sig_EPrs_16(0), m_Sig_EPrs_17(0)
+
+      , m_Sig_Chi2_20(0), m_Sig_Chi2_21(0), m_Sig_Chi2_22(0), m_Sig_Chi2_25(0),
+      m_Sig_Chi2_26(0), m_Sig_Chi2_27(0)
+
+      , m_Sig_Seed_30(0), m_Sig_Seed_31(0), m_Sig_Seed_32(0), m_Sig_Seed_35(0),
+      m_Sig_Seed_36(0), m_Sig_Seed_37(0)
+
+      , m_Bkg_EPrs_110(0), m_Bkg_EPrs_111(0), m_Bkg_EPrs_112(0),
+      m_Bkg_EPrs_115(0), m_Bkg_EPrs_116(0), m_Bkg_EPrs_117(0)
+
+      , m_Bkg_Chi2_120(0), m_Bkg_Chi2_121(0), m_Bkg_Chi2_122(0),
+      m_Bkg_Chi2_125(0), m_Bkg_Chi2_126(0), m_Bkg_Chi2_127(0)
+
+      , m_Bkg_Seed_130(0), m_Bkg_Seed_131(0), m_Bkg_Seed_132(0),
+      m_Bkg_Seed_135(0), m_Bkg_Seed_136(0), m_Bkg_Seed_137(0)
+
+{
 
   // TODO : split PID estimator (Prs-Spd-Ecal(Chi2, seed/cluster) + add estimator ( E4/E9, Hcal/Ecal, shower-shape,  ...)
   // and let NeutralProtoParticle to combine ...
-  
-  declareProperty( "Type"                 , m_type = "PhotonID"         );
-  declareProperty( "Inputs"               , m_inputs        ); // CaloHypo location (default set in initialize)
-  declareProperty( "Output"               , m_output        ); // relation table output location (default set in initialize)
-  declareProperty( "Tracking"             , m_tracking=true ); // use track-cluster matching 
-  declareProperty( "ClusterMatchLocation" , m_tableLocation ); // track-cluster table
-  declareProperty( "Extrapolation"        ,m_extrapol=true  ); // Spd/Prs matching
-  declareProperty( "AddSeed"              ,m_seed=false     );
-  declareProperty( "AddNeighbors"         ,m_neig=false     );
-  
+
+  declareProperty("Type", m_type = "PhotonID");
+  declareProperty("Inputs", m_inputs); // CaloHypo location (default set in initialize)
+  declareProperty("Output", m_output); // relation table output location (default set in initialize)
+  declareProperty("ClusterMatchLocation", m_tableLocation); // track-cluster table
+
+  declareProperty("Tracking", m_tracking);
+
+//  declareProperty("Extrapolation", m_extrapol = true); // Spd/Prs matching
+//  declareProperty("AddSeed", m_seed = false);
+//  declareProperty("AddNeighbors", m_neig = false);
+
+  declareProperty("PdfEPrs", m_pdfEPrs );
+  declareProperty("PdfChi2", m_pdfChi2 );
+  declareProperty("PdfSeed", m_pdfSeed );
+
+  declareProperty("DlnL", m_dlnL = true );
+
+  declareProperty("UseCondDB", m_useCondDB = true,
+      "get DLLs from CondDB or from a root file via THS");
+  declareProperty("ConditionName", m_conditionName = "Conditions/ParticleID/Calo/PhotonID");
+
   using namespace LHCb::CaloAlgUtils;
-  m_tableLocation =  CaloIdLocation( "ClusterMatch" , context() );
+  m_tableLocation = CaloIdLocation("ClusterMatch", context());
 
-  // Data (temp : should go to condDB)
-  declareProperty("EPrs"          ,m_binEPrs);
-  declareProperty("Chi2"          ,m_binChi2);
-  declareProperty("Seed"          ,m_binSeed);  
-  
-  declareProperty("SigEPrs_noSpd_0_Data"  ,m_signalEPrsData_0);
-  declareProperty("SigEPrs_Spd_0_Data"     ,m_signalEPrsSpdData_0);
-  declareProperty("BkgEPrs_noSpd_0_Data"  ,m_backgrEPrsData_0);
-  declareProperty("BkgEPrs_Spd_0_Data"      ,m_backgrEPrsSpdData_0);
-  declareProperty("SigChi2_noSpd_0_Data"  ,m_signalChi2Data_0);
-  declareProperty("SigChi2_Spd_0_Data"     ,m_signalChi2SpdData_0);
-  declareProperty("BkgChi2_noSpd_0_Data"  ,m_backgrChi2Data_0);
-  declareProperty("BkgChi2_Spd_0_Data"      ,m_backgrChi2SpdData_0);
-  declareProperty("SigSeed_noSpd_0_Data"  ,m_signalSeedData_0);
-  declareProperty("SigSeed_Spd_0_Data"      ,m_signalSeedSpdData_0);
-  declareProperty("BkgSeed_noSpd_0_Data"  ,m_backgrSeedData_0);
-  declareProperty("BkgSeed_Spd_0_Data"      ,m_backgrSeedSpdData_0);
-
-  declareProperty("SigEPrs_noSpd_1_Data"  ,m_signalEPrsData_1);
-  declareProperty("SigEPrs_Spd_1_Data"     ,m_signalEPrsSpdData_1);
-  declareProperty("BkgEPrs_noSpd_1_Data"  ,m_backgrEPrsData_1);
-  declareProperty("BkgEPrs_Spd_1_Data"      ,m_backgrEPrsSpdData_1);
-  declareProperty("SigChi2_noSpd_1_Data"  ,m_signalChi2Data_1);
-  declareProperty("SigChi2_Spd_1_Data"     ,m_signalChi2SpdData_1);
-  declareProperty("BkgChi2_noSpd_1_Data"  ,m_backgrChi2Data_1);
-  declareProperty("BkgChi2_Spd_1_Data"      ,m_backgrChi2SpdData_1);
-  declareProperty("SigSeed_noSpd_1_Data"  ,m_signalSeedData_1);
-  declareProperty("SigSeed_Spd_1_Data"      ,m_signalSeedSpdData_1);
-  declareProperty("BkgSeed_noSpd_1_Data"  ,m_backgrSeedData_1);
-  declareProperty("BkgSeed_Spd_1_Data"      ,m_backgrSeedSpdData_1);
-
-  declareProperty("SigEPrs_noSpd_2_Data"  ,m_signalEPrsData_2);
-  declareProperty("SigEPrs_Spd_2_Data"     ,m_signalEPrsSpdData_2);
-  declareProperty("BkgEPrs_noSpd_2_Data"  ,m_backgrEPrsData_2);
-  declareProperty("BkgEPrs_Spd_2_Data"      ,m_backgrEPrsSpdData_2);
-  declareProperty("SigChi2_noSpd_2_Data"  ,m_signalChi2Data_2);
-  declareProperty("SigChi2_Spd_2_Data"     ,m_signalChi2SpdData_2);
-  declareProperty("BkgChi2_noSpd_2_Data"  ,m_backgrChi2Data_2);
-  declareProperty("BkgChi2_Spd_2_Data"      ,m_backgrChi2SpdData_2);
-  declareProperty("SigSeed_noSpd_2_Data"  ,m_signalSeedData_2);
-  declareProperty("SigSeed_Spd_2_Data"      ,m_signalSeedSpdData_2);
-  declareProperty("BkgSeed_noSpd_2_Data"  ,m_backgrSeedData_2);
-  declareProperty("BkgSeed_Spd_2_Data"      ,m_backgrSeedSpdData_2);
-  
 }
 
-  
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloPhotonIdAlg::~CaloPhotonIdAlg() {} 
+CaloPhotonIdAlg::~CaloPhotonIdAlg() {
+}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode CaloPhotonIdAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if (sc.isFailure())
+    return sc; // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG))
+    debug() << "==> Initialize" << endmsg;
 
+  if (m_dlnL) {
+    info() << "PhotonId : Delta Log Likelihood calculation." << endmsg;
+  }
+  else {
+    info() << "PhotonId : Likelihood estimator." << endmsg;
+  }
+  // Initialize histogram access
+  if (m_useCondDB && !existDet<DataObject>(detSvc(), m_conditionName) ){
+    warning() << "Initialise: Condition '" << m_conditionName
+              << "' not found -- switch to reading the DLLs from THS!" << endmsg; 
+    m_useCondDB = false;
+  }
 
-
-
+  sc = m_useCondDB ? initializeWithCondDB() : initializeWithoutCondDB();
 
   // context-dependent inputs/output (if not defined via options)
   using namespace LHCb::CaloAlgUtils;
-  if( m_type == "MergedID"){
-    if(m_inputs.empty())m_inputs.push_back(CaloHypoLocation( "MergedPi0s"    , context() ) );
-    if(""==m_output)m_output =  CaloIdLocation( "MergedID" , context() )  ;
-  } else if(m_type == "PhotonID") {
-    if(m_inputs.empty())m_inputs.push_back(CaloHypoLocation( "Photons"    , context() ) );
-    if(""==m_output)m_output =  CaloIdLocation( "PhotonID" , context() )  ;
+  if (m_type == "MergedID") {
+    if (m_inputs.empty())
+      m_inputs.push_back(CaloHypoLocation("MergedPi0s", context()));
+    if ("" == m_output)
+      m_output = CaloIdLocation("MergedID", context());
+  }
+  else if (m_type == "PhotonID") {
+    if (m_inputs.empty())
+      m_inputs.push_back(CaloHypoLocation("Photons", context()));
+    if ("" == m_output)
+      m_output = CaloIdLocation("PhotonID", context());
   } else if(m_type == "PhotonFromMergedID") {
     if(m_inputs.empty())m_inputs.push_back(CaloHypoLocation( "SplitPhotons"    , context() ) );
     if(""==m_output)m_output =  CaloIdLocation( "PhotonFromMergedID" , context() )  ;
   }
 
   // Spd/Prs matching based on CaloHypo2Calo :
-  m_toCalo = tool<ICaloHypo2Calo>("CaloHypo2Calo", "CaloHypo2Calo" , this );
+  m_toCalo = tool<ICaloHypo2Calo> ("CaloHypo2Calo", "CaloHypo2Calo", this);
   // Warning : the algorithm settings overwrite the tool settings
-  std::string seed = m_seed     ? "true"  : "false";
-  std::string line = m_extrapol ? "true"  : "false";
-  std::string neig = m_neig     ? "true" : "false";
-  m_toCalo->_setProperty("Seed", seed ).ignore();
-  m_toCalo->_setProperty("PhotonLine", line).ignore();
-  m_toCalo->_setProperty("AddNeighbors",neig).ignore();
-  
-
-  // Check data consistency
-  if (m_binEPrs.size()!=6)
-  { return Error("Wrong Binning Parameter (EPrs)"); }
-  if (m_tracking) {
-    if (m_binChi2.size()!=6)
-    { return Error("Wrong Binning Parameter (Chi2Tk)"); }
-  }
-  if (m_binSeed.size()!=6)
-  { return Error("Wrong Binning Parameter (Seed)"); }
-
-
-// Build useful vector
-  int index;
-  double width;
-  width=(m_binEPrs[ 2 ]-m_binEPrs[ 1 ])/double(m_binEPrs[ 0 ]);
-  for ( index=0; index<=int (m_binEPrs[ 0 ]); ++index ) {
-    m_ePrsXBin.push_back(double(index)*width+m_binEPrs[ 1 ]);
-  }
-  if (m_tracking){
-    width=(m_binChi2[ 2 ]-m_binChi2[ 1 ])/double(m_binChi2[ 0 ]);
-    for ( index=0; index<=int (m_binChi2[ 0 ]); ++index ) {
-      m_chi2XBin.push_back(double(index)*width+m_binChi2[ 1 ]);
-    }
-  }
-
-  width=(m_binSeed[ 2 ]-m_binSeed[ 1 ])/double(m_binSeed[ 0 ]);
-  for ( index=0; index<=int (m_binSeed[ 0 ]); ++index ) {
-    m_seedXBin.push_back(double(index)*width+m_binSeed[ 1 ]);
-  }
-  width=(m_binEPrs[ 5 ]-m_binEPrs[ 4 ])/double(m_binEPrs[ 3 ]);
-  for ( index=0; index<=int (m_binEPrs[ 3 ]); ++index ) {
-    m_ePrsYBin.push_back(double(index)*width+m_binEPrs[ 4 ]);
-  }
-
-  if (m_tracking) {
-    width=(m_binChi2[ 5 ]-m_binChi2[ 4 ])/double(m_binChi2[ 3 ]);
-    for ( index=0; index<=int (m_binChi2[ 3 ]); ++index ) {
-      m_chi2YBin.push_back(double(index)*width+m_binChi2[ 4 ]);
-    }
-  }
-
-  width=(m_binSeed[ 5 ]-m_binSeed[ 4 ])/double(m_binSeed[ 3 ]);
-  for ( index=0; index<=int (m_binSeed[ 3 ]); ++index ) {
-    m_seedYBin.push_back(double(index)*width+m_binSeed[ 4 ]);
-  }
-
-
+  std::string seed = m_seed ? "true" : "false";
+  std::string line = m_extrapol ? "true" : "false";
+  std::string neig = m_neig ? "true" : "false";
+  m_toCalo->_setProperty("Seed", seed);
+  m_toCalo->_setProperty("PhotonLine", line);
+  m_toCalo->_setProperty("AddNeighbors", neig);
 
   return StatusCode::SUCCESS;
 }
@@ -194,38 +194,44 @@ StatusCode CaloPhotonIdAlg::initialize() {
 //=============================================================================
 StatusCode CaloPhotonIdAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG))
+    debug() << "==> Execute" << endmsg;
 
   // create the table
-  typedef LHCb::Relation1D<LHCb::CaloHypo,float>   Table  ; 
+  typedef LHCb::Relation1D<LHCb::CaloHypo, float> Table;
   BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::Calo2Track::IHypoEvalTable));
-  Table* table = new Table;
-  put( table , m_output );
+  Table* table = new Table(200);
+  put(table, m_output);
 
   // fill the table
-  for( std::vector<std::string>::iterator iloc = m_inputs.begin() ; m_inputs.end() != iloc ; ++iloc){
+  for (std::vector<std::string>::iterator iloc = m_inputs.begin(); m_inputs.end()
+      != iloc; ++iloc) {
     std::string loc = *iloc;
-    if( exist<LHCb::CaloHypos>( loc ) ){
-      const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( loc );
-      counter ("#Hypos in " + loc ) += hypos->size();
-      for( LHCb::CaloHypos::const_iterator h = hypos->begin();hypos->end() != h ; ++ h){
+    if (exist<LHCb::CaloHypos> (loc)) {
+      const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos> (loc);
+      counter("#Hypos in " + loc) += hypos->size();
+      for (LHCb::CaloHypos::const_iterator h = hypos->begin(); hypos->end()
+          != h; ++h) {
         const LHCb::CaloHypo* hypo = *h;
-        if( NULL == hypo ){
-          counter("hypo points to NULL in " + loc ) += 1;
+        if (NULL == hypo) {
+          counter("hypo points to NULL in " + loc) += 1;
           continue;
         }
-        double l = likelihood( hypo );        
-        counter("likelihood")+= l;
-        table->i_push( hypo , (float) l ) ;
+        double l = m_isRunnable ? likelihood(hypo) : -999.;
+        counter("likelihood") += l;
+        table->i_push(hypo, (float)(l));
       }
-    }else{
-      if ( msgLevel( MSG::DEBUG) )debug() << "CaloHypo not found at location : " << loc << endmsg;
-      counter("Empty location " + loc )+=1;
+    }
+    else {
+      if (msgLevel(MSG::DEBUG))
+        debug() << "CaloHypo not found at location : " << loc << endmsg;
+      counter("Empty location " + loc) += 1;
     }
   }
-  table->i_sort() ;
-  // statistics 
-  counter (Gaudi::Utils::toString( m_inputs )+" => "+ m_output ) += table->i_relations().size();
+  table->i_sort();
+  // statistics
+  counter(Gaudi::Utils::toString(m_inputs) + " ==> " + m_output)
+      += table->i_relations().size();
   return StatusCode::SUCCESS;
 }
 
@@ -233,256 +239,378 @@ StatusCode CaloPhotonIdAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CaloPhotonIdAlg::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  if (msgLevel(MSG::DEBUG))
+    debug() << "==> Finalize" << endmsg;
+  return GaudiAlgorithm::finalize(); // must be called after all other actions
 }
 
 //=============================================================================
 
-
-
-// ============================================================================
-double CaloPhotonIdAlg::likelihood(const LHCb::CaloHypo* hypo )  const
-{
+//============================================================================
+double CaloPhotonIdAlg::likelihood(const LHCb::CaloHypo* hypo) {
   // Get the relevant information - basic checks
-  if( 0 == hypo ){
-    Warning("CaloHypo points to NULL",StatusCode::SUCCESS ).ignore();
-    counter("Null hypo")+=1;
-    return -1.;
+  if (0 == hypo) {
+    Warning("CaloHypo points to NULL", StatusCode::SUCCESS).ignore();
+    counter("Null hypo") += 1;
+    return -999.;
   }
 
   double energy, et, eSeed, eSpd, ePrs;
   unsigned int area;
-  evalParam(hypo, energy, et, eSeed, eSpd, ePrs, area);
   
   double chi2 = -999.;
+
+  // parameter evaluation
+  if (evalParam(hypo, 
+                energy, 
+                et, 
+                eSeed, 
+                eSpd, 
+                ePrs, 
+                area).isFailure()){
+    return -999.;
+  }
+
+
+  SmartRef<LHCb::CaloCluster> cluster;
+  chi2=-999.;
   if (m_tracking) {
-    if( 1 != hypo->clusters().size() ){
-      if ( msgLevel( MSG::DEBUG) )debug() <<"Number of clusters != 1"<<endmsg;
-      return -1.;
+    if (1 > hypo->clusters().size()) {
+      if( m_type == "PhotonFromMergedID"){
+        cluster =  hypo->clusters().back(); // select the associated SplitCluster
+      }else{
+        if (msgLevel(MSG::DEBUG))
+          debug() << "Number of clusters != 1" << endmsg; // should never happen
+        return -999.;
+      } 
+    }else{      
+      cluster = hypo->clusters().front();
     }
-    const SmartRef<LHCb::CaloCluster> cluster=hypo->clusters().front();
     chi2 = evalChi2(cluster);
-  }    
-  return evalLikelihood(energy, et, eSeed, eSpd, ePrs, chi2, area);
-};  
-
-
+  }
+  return evalLikelihood(energy, 
+                        et, 
+                        eSeed, 
+                        eSpd, 
+                        ePrs, 
+                        chi2, 
+                        area);
+}
 
 
 //***********************************************************
 double CaloPhotonIdAlg::evalChi2(const LHCb::CaloCluster* cluster) const {
-  double chi2=-999.;
-  if( !exist<LHCb::Calo2Track::IClusTrTable>(m_tableLocation)){
-    Warning("ClusterMatch table not found at " + m_tableLocation,StatusCode::SUCCESS).ignore();
-    counter("ClusterMatch table not found " + m_tableLocation ) +=1;
+  double chi2 = -999.;
+  if( NULL == cluster){
+    counter("Cluster point to null") += 1;
+    return chi2;  
+  }
+  
+  if (!exist<LHCb::Calo2Track::IClusTrTable> (m_tableLocation)) {
+    Warning("ClusterMatch table not found at " + m_tableLocation,
+        StatusCode::SUCCESS).ignore();
+    counter("ClusterMatch table not found " + m_tableLocation) += 1;
     return chi2;
   }
-  LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ) ;
-  const LHCb::Calo2Track::IClusTrTable::Range range = table -> relations ( cluster ) ;
-  if( range.empty() )  { 
-    chi2=1.e+6; 
-  }            // bad match -> large value !
+  LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> (
+      m_tableLocation);
+  const LHCb::Calo2Track::IClusTrTable::Range range = table -> relations(
+      cluster);
+  if (range.empty()) {
+    chi2 = 1.e+6;
+  } // bad match -> large value !
   else {
     chi2 = range.front().weight();
   }
   return chi2;
 }
-  
+
 //***********************************************************
-void CaloPhotonIdAlg::evalParam(const LHCb::CaloHypo* hypo,
-					  double       &energy,
-					  double       &et, 
-					  double       &eSeed,
-					  double       &eSpd,
-					  double       &ePrs,
-					  unsigned int &area) const {
-  if( 1 != hypo->clusters().size() ){
-    if ( msgLevel( MSG::DEBUG) )debug() <<"Number of clusters != 1"<<endmsg;
-    return ;
+StatusCode CaloPhotonIdAlg::evalParam(const LHCb::CaloHypo* hypo, 
+                                      double &energy,
+                                      double &et, 
+                                      double &eSeed, 
+                                      double &eSpd, 
+                                      double &ePrs, 
+                                      unsigned int &area) const {
+  
+  SmartRef<LHCb::CaloCluster> cluster ;
+  if (1 != hypo->clusters().size()) {
+    if( m_type == "PhotonFromMergedID")
+      cluster =  hypo->clusters().back(); // select the associated SplitCluster
+    else{
+        if (msgLevel(MSG::DEBUG))debug() << "Number of clusters != 1" << endmsg;
+        return StatusCode::FAILURE;
+    }
+  }else{
+    cluster = hypo->clusters().front();
   }
 
-  const SmartRef<LHCb::CaloCluster> cluster=hypo->clusters().front();
 
+  if (0==cluster) {
+    Warning("Could not get hypo cluster.", StatusCode::SUCCESS).ignore();    
+    return StatusCode::FAILURE;    
+  }
+  
 
-  if( cluster->entries().empty() ){
-    Warning("Empty entries",StatusCode::SUCCESS ).ignore();
-    counter("Empty entries")+=1;
-    return;
+  if (cluster->entries().empty()) {
+    Warning("Empty entries", StatusCode::SUCCESS).ignore();
+    counter("Empty entries") += 1;
+    return StatusCode::FAILURE;
   }
 
   LHCb::CaloCluster::Entries::const_iterator iseed =
-    LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
-                                        cluster->entries().end  () ,
-                                        LHCb::CaloDigitStatus::SeedCell  ) ;
+      LHCb::ClusterFunctors::locateDigit(cluster->entries().begin(),
+          cluster->entries().end(), LHCb::CaloDigitStatus::SeedCell);
 
-
-  if( iseed == cluster->entries().end() ){
-    Warning("Empty Entries",StatusCode::SUCCESS ).ignore();
-    counter("Empty entries")+=1;
-    return;
+  if (iseed == cluster->entries().end()) {
+    Warning("Empty Entries", StatusCode::SUCCESS).ignore();
+    counter("Empty entries") += 1;
+    return StatusCode::FAILURE;
   }
 
   const LHCb::CaloDigit* seed = iseed->digit();
-  if( 0 == seed ){
-    Warning("Seed point to NULL",StatusCode::SUCCESS ).ignore();
-    counter("NULL seed")+=1;
-    return;
+  if (0 == seed) {
+    Warning("Seed point to NULL", StatusCode::SUCCESS).ignore();
+    counter("NULL seed") += 1;
+    return StatusCode::FAILURE;
   }
-  
+
   //***
   // Evaluate Estimator Parameters : Energy, EPrs, Chi2 and Eseed ...
 
-
   // Et
-  LHCb::CaloMomentum mom( hypo );
-  energy=mom.e();
-  et=mom.pt();
-  
+  LHCb::CaloMomentum mom(hypo);
+  energy = mom.e();
+  et = mom.pt();
+
   // Seed energy
-  eSeed = energy>0.?(seed->e())/energy:-1.;
-  
+  eSeed = energy > 0. ? (seed->e()) / energy : -1.;
+
   // area
   area = seed->cellID().area();
 
   //Spd hit and Prs deposit
-  eSpd = m_toCalo->energy( *hypo ,"Spd");
-  ePrs = m_toCalo->energy( *hypo ,"Prs");
+  eSpd = m_toCalo->energy(*hypo, "Spd");
+  ePrs = m_toCalo->energy(*hypo, "Prs");
 
-  return; 
+  return StatusCode::SUCCESS;
 }
 
 //***********************************************************
-double CaloPhotonIdAlg::evalLikelihood(double energy,
-                                               double et,
-                                               double eSeed,
-                                               double eSpd,
-                                               double ePrs,
-                                               double chi2,
-                                               unsigned int area) const {
-  
-  // Corresponding Energy bin
-  double transfE=log(1.35914*energy)-6.21461;
-  unsigned int ibin;
+double CaloPhotonIdAlg::evalLikelihood(double energy, double et, double eSeed,
+    double eSpd, double ePrs, double chi2, unsigned int area) {
 
   // Initialization
   double estimator;
   double signal, backgr;
-  signal=1.; 	backgr=1.;
-
+  const double epsilon = 1.e-20;
   // SPD Hit
-  if (eSpd>1) {
-    if (0==area){
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Spy Lh(Photon) - Area 0/Spd ( Etransf="<<transfE<<")"<<endmsg;
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      if ( msgLevel( MSG::DEBUG) )debug()<<"EPrs bin="<<ibin<<endmsg;
-      signal *= m_signalEPrsSpdData_0[ ibin ];
-      backgr *= m_backgrEPrsSpdData_0[ ibin ];
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Sig Pdf="<<m_signalEPrsSpdData_0[ ibin ]<<endmsg;
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Bkg Pdf="<<m_backgrEPrsSpdData_0[ ibin ]<<endmsg;
-      if (m_tracking) {
-        ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-        if ( msgLevel( MSG::DEBUG) )debug()<<"Chi2 bin="<<ibin<<endmsg;      
-        signal *= m_signalChi2SpdData_0[ ibin ];
-        backgr *= m_backgrChi2SpdData_0[ ibin ];
-        if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Sig Pdf="<<m_signalChi2SpdData_0[ ibin ]<<endmsg;
-        if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Bkg Pdf="<<m_backgrChi2SpdData_0[ ibin ]<<endmsg;
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Seed bin="<<ibin<<endmsg;      
-      signal *= m_signalSeedSpdData_0[ ibin ];
-      backgr *= m_backgrSeedSpdData_0[ ibin ];
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Sig Pdf="<<m_signalSeedSpdData_0[ ibin ]<<endmsg;
-      if ( msgLevel( MSG::DEBUG) )debug()<<"Partial Bkg Pdf="<<m_backgrSeedSpdData_0[ ibin ]<<endmsg;
-    }
-    if (1==area){
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      signal *= m_signalEPrsSpdData_1[ ibin ];
-      backgr *= m_backgrEPrsSpdData_1[ ibin ];
-      if (m_tracking){
-        ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-        signal *= m_signalChi2SpdData_1[ ibin ];
-        backgr *= m_backgrChi2SpdData_1[ ibin ];
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      signal *= m_signalSeedSpdData_1[ ibin ];
-      backgr *= m_backgrSeedSpdData_1[ ibin ];
-    }
-    if (2==area){
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      signal *= m_signalEPrsSpdData_2[ ibin ];
-      backgr *= m_backgrEPrsSpdData_2[ ibin ];
-      if (m_tracking){
-        ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-        signal *= m_signalChi2SpdData_2[ ibin ];
-        backgr *= m_backgrChi2SpdData_2[ ibin ];
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      signal *= m_signalSeedSpdData_2[ ibin ];
-      backgr *= m_backgrSeedSpdData_2[ ibin ];
+
+  signal=epsilon;
+  backgr=epsilon;
+
+  if (eSpd < 1.6) {
+    signal = CaloPhotonIdAlg::dLL(energy, ePrs, chi2, eSeed,
+        CaloPhotonIdAlg::SIGNAL, area);
+    if (m_isRunnable){
+      backgr = CaloPhotonIdAlg::dLL(energy, ePrs, chi2, eSeed,
+                                    CaloPhotonIdAlg::BACKGROUND, area);
     }
   }
-
-  // No SPD Hit
   else {
-    if (0==area){
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      signal *= m_signalEPrsData_0[ ibin ];
-      backgr *= m_backgrEPrsData_0[ ibin ];
-      if (m_tracking){
-	ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-	signal *= m_signalChi2Data_0[ ibin ];
-	backgr *= m_backgrChi2Data_0[ ibin ];
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      signal *= m_signalSeedData_0[ ibin ];
-      backgr *= m_backgrSeedData_0[ ibin ];
-    }
-    if (1==area){
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      signal *= m_signalEPrsData_1[ ibin ];
-      backgr *= m_backgrEPrsData_1[ ibin ];
-      if (m_tracking){
-        ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-        signal *= m_signalChi2Data_1[ ibin ];
-        backgr *= m_backgrChi2Data_1[ ibin ];
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      signal *= m_signalSeedData_1[ ibin ];
-      backgr *= m_backgrSeedData_1[ ibin ];
-    }
-    if (2==area){
-      ibin=bin(transfE,m_ePrsYBin)+(m_ePrsYBin.size()+1)*bin(ePrs,m_ePrsXBin);
-      signal *= m_signalEPrsData_2[ ibin ];
-      backgr *= m_backgrEPrsData_2[ ibin ];
-      if (m_tracking){
-        ibin=bin(transfE,m_chi2YBin)+(m_chi2YBin.size()+1)*bin(chi2,m_chi2XBin);
-        signal *= m_signalChi2Data_2[ ibin ];
-        backgr *= m_backgrChi2Data_2[ ibin ];
-      }
-      ibin=bin(transfE,m_seedYBin)+(m_seedYBin.size()+1)*bin(eSeed,m_seedXBin);
-      signal *= m_signalSeedData_2[ ibin ];
-      backgr *= m_backgrSeedData_2[ ibin ];
+    signal = CaloPhotonIdAlg::dLL(energy, ePrs, chi2, eSeed,
+        CaloPhotonIdAlg::SIGNAL_SPD, area);
+    if (m_isRunnable){
+      backgr = CaloPhotonIdAlg::dLL(energy, ePrs, chi2, eSeed,
+                                    CaloPhotonIdAlg::BACKGROUND_SPD, area);
     }
   }
 
-  estimator=(signal+backgr>0.)?signal/(signal+backgr):-1.;
-
-  if ( msgLevel( MSG::DEBUG) ){    
-    debug() <<"Photon Candidate :"<<endmsg;
-    debug() <<" -E       ="<<energy<<endmsg;
-    debug() <<" -Et      ="<<et<<endmsg;
-    debug() <<" -Spd hit ="<<eSpd<<endmsg;
-    debug() <<" -EPrs    ="<<ePrs<<endmsg;
-    if (m_tracking) debug() <<" -Chi2    ="<<chi2<<endmsg;
-    debug() <<" -ESeed   ="<<eSeed<<endmsg;
-    debug() <<"      => estimator="<<estimator<<endmsg;
+  if (m_dlnL) {
+    if (m_isRunnable){
+      if (signal < epsilon)
+        signal = epsilon;
+      if (backgr < epsilon)
+        backgr = epsilon;
+      estimator = log(signal) - log(backgr);
+    }
+    else estimator=-999.;
   }
-  
+  else {
+    if (m_isRunnable){
+      estimator = (signal + backgr > 0.) ? signal / (signal + backgr) : -1.;
+    }
+    else {
+      estimator = -999.;
+    }
+  }
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Photon Candidate :" << endmsg;
+    debug() << " -E       =" << energy << endmsg;
+    debug() << " -Et      =" << et << endmsg;
+    debug() << " -Spd hit =" << eSpd << endmsg;
+    debug() << " -EPrs    =" << ePrs << endmsg;
+    debug() << " -Chi2    =" << chi2 << endmsg;
+    debug() << " -ESeed   =" << eSeed << endmsg;
+    if (m_dlnL)
+      debug() << "      => DlnL     = " << estimator << endmsg;
+    else
+      debug() << "      => estimator= " << estimator << endmsg;
+  }
+
   return estimator;
+}
+;
 
-};
+// ============================================================================
+StatusCode CaloPhotonIdAlg::initializeWithCondDB() {
+  info() << "init with CondDB, m_conditionName = " << m_conditionName << endmsg;
+  try {
+    registerCondition(m_conditionName, m_cond, &CaloPhotonIdAlg::i_updateDLL);
+  }
+  catch (GaudiException &e) {
+    fatal() << e << endmsg;
+    m_isRunnable=false;
+    return StatusCode::FAILURE;
+  }
 
+  StatusCode sc = runUpdate(); // load the conditions
 
+  return sc;
+}
+
+// ============================================================================
+StatusCode CaloPhotonIdAlg::initializeWithoutCondDB() {
+  info() << "init w/o CondDB, pdf histos path is " 
+         << m_histo_path
+         << endmsg;
+
+  m_Sig_EPrs_10 = locateHistoOnDisk(m_title_Sig_EPrs_10);
+  m_Sig_EPrs_11 = locateHistoOnDisk(m_title_Sig_EPrs_11);
+  m_Sig_EPrs_12 = locateHistoOnDisk(m_title_Sig_EPrs_12);
+  m_Sig_EPrs_15 = locateHistoOnDisk(m_title_Sig_EPrs_15);
+  m_Sig_EPrs_16 = locateHistoOnDisk(m_title_Sig_EPrs_16);
+  m_Sig_EPrs_17 = locateHistoOnDisk(m_title_Sig_EPrs_17);
+
+  m_Sig_Chi2_20 = locateHistoOnDisk(m_title_Sig_Chi2_20);
+  m_Sig_Chi2_21 = locateHistoOnDisk(m_title_Sig_Chi2_21);
+  m_Sig_Chi2_22 = locateHistoOnDisk(m_title_Sig_Chi2_22);
+  m_Sig_Chi2_25 = locateHistoOnDisk(m_title_Sig_Chi2_25);
+  m_Sig_Chi2_26 = locateHistoOnDisk(m_title_Sig_Chi2_26);
+  m_Sig_Chi2_27 = locateHistoOnDisk(m_title_Sig_Chi2_27);
+
+  m_Sig_Seed_30 = locateHistoOnDisk(m_title_Sig_Seed_30);
+  m_Sig_Seed_31 = locateHistoOnDisk(m_title_Sig_Seed_31);
+  m_Sig_Seed_32 = locateHistoOnDisk(m_title_Sig_Seed_32);
+  m_Sig_Seed_35 = locateHistoOnDisk(m_title_Sig_Seed_35);
+  m_Sig_Seed_36 = locateHistoOnDisk(m_title_Sig_Seed_36);
+  m_Sig_Seed_37 = locateHistoOnDisk(m_title_Sig_Seed_37);
+
+  m_Bkg_EPrs_110 = locateHistoOnDisk(m_title_Bkg_EPrs_110);
+  m_Bkg_EPrs_111 = locateHistoOnDisk(m_title_Bkg_EPrs_111);
+  m_Bkg_EPrs_112 = locateHistoOnDisk(m_title_Bkg_EPrs_112);
+  m_Bkg_EPrs_115 = locateHistoOnDisk(m_title_Bkg_EPrs_115);
+  m_Bkg_EPrs_116 = locateHistoOnDisk(m_title_Bkg_EPrs_116);
+  m_Bkg_EPrs_117 = locateHistoOnDisk(m_title_Bkg_EPrs_117);
+
+  m_Bkg_Chi2_120 = locateHistoOnDisk(m_title_Bkg_Chi2_120);
+  m_Bkg_Chi2_121 = locateHistoOnDisk(m_title_Bkg_Chi2_121);
+  m_Bkg_Chi2_122 = locateHistoOnDisk(m_title_Bkg_Chi2_122);
+  m_Bkg_Chi2_125 = locateHistoOnDisk(m_title_Bkg_Chi2_125);
+  m_Bkg_Chi2_126 = locateHistoOnDisk(m_title_Bkg_Chi2_126);
+  m_Bkg_Chi2_127 = locateHistoOnDisk(m_title_Bkg_Chi2_127);
+
+  m_Bkg_Seed_130 = locateHistoOnDisk(m_title_Bkg_Seed_130);
+  m_Bkg_Seed_131 = locateHistoOnDisk(m_title_Bkg_Seed_131);
+  m_Bkg_Seed_132 = locateHistoOnDisk(m_title_Bkg_Seed_132);
+  m_Bkg_Seed_135 = locateHistoOnDisk(m_title_Bkg_Seed_135);
+  m_Bkg_Seed_136 = locateHistoOnDisk(m_title_Bkg_Seed_136);
+  m_Bkg_Seed_137 = locateHistoOnDisk(m_title_Bkg_Seed_137);
+
+  return StatusCode::SUCCESS;
+}
+
+// ============================================================================
+TH2D* CaloPhotonIdAlg::locateHistoOnDisk(std::string histoname) { // locate the histogram
+  TH2D *histo = 0;
+  if (!histoname.empty()) {
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D> (histoSvc(),m_histo_path + histoname);
+    if (0==aida) {
+      warning()<<"Could not find AIDA::IHistogram2D* "
+               <<m_histo_path + histoname<<"."<<endmsg;
+      m_isRunnable=false;
+      return 0;
+    }
+    
+    histo = Gaudi::Utils::Aida2ROOT::aida2root(aida);
+  }
+  return histo;
+}
+
+// ============================================================================
+StatusCode CaloPhotonIdAlg::i_updateDLL() {
+  debug() << "i_updateDLL() called" << endmsg;
+  if (!m_cond)
+    return StatusCode::FAILURE;
+
+  try {
+    m_Sig_EPrs_10 = locateHistoOnDB(m_title_Sig_EPrs_10);
+    m_Sig_EPrs_11 = locateHistoOnDB(m_title_Sig_EPrs_11);
+    m_Sig_EPrs_12 = locateHistoOnDB(m_title_Sig_EPrs_12);
+    m_Sig_EPrs_15 = locateHistoOnDB(m_title_Sig_EPrs_15);
+    m_Sig_EPrs_16 = locateHistoOnDB(m_title_Sig_EPrs_16);
+    m_Sig_EPrs_17 = locateHistoOnDB(m_title_Sig_EPrs_17);
+
+    m_Sig_Chi2_20 = locateHistoOnDB(m_title_Sig_Chi2_20);
+    m_Sig_Chi2_21 = locateHistoOnDB(m_title_Sig_Chi2_21);
+    m_Sig_Chi2_22 = locateHistoOnDB(m_title_Sig_Chi2_22);
+    m_Sig_Chi2_25 = locateHistoOnDB(m_title_Sig_Chi2_25);
+    m_Sig_Chi2_26 = locateHistoOnDB(m_title_Sig_Chi2_26);
+    m_Sig_Chi2_27 = locateHistoOnDB(m_title_Sig_Chi2_27);
+
+    m_Sig_Seed_30 = locateHistoOnDB(m_title_Sig_Seed_30);
+    m_Sig_Seed_31 = locateHistoOnDB(m_title_Sig_Seed_31);
+    m_Sig_Seed_32 = locateHistoOnDB(m_title_Sig_Seed_32);
+    m_Sig_Seed_35 = locateHistoOnDB(m_title_Sig_Seed_35);
+    m_Sig_Seed_36 = locateHistoOnDB(m_title_Sig_Seed_36);
+    m_Sig_Seed_37 = locateHistoOnDB(m_title_Sig_Seed_37);
+
+    m_Bkg_EPrs_110 = locateHistoOnDB(m_title_Bkg_EPrs_110);
+    m_Bkg_EPrs_111 = locateHistoOnDB(m_title_Bkg_EPrs_111);
+    m_Bkg_EPrs_112 = locateHistoOnDB(m_title_Bkg_EPrs_112);
+    m_Bkg_EPrs_115 = locateHistoOnDB(m_title_Bkg_EPrs_115);
+    m_Bkg_EPrs_116 = locateHistoOnDB(m_title_Bkg_EPrs_116);
+    m_Bkg_EPrs_117 = locateHistoOnDB(m_title_Bkg_EPrs_117);
+
+    m_Bkg_Chi2_120 = locateHistoOnDB(m_title_Bkg_Chi2_120);
+    m_Bkg_Chi2_121 = locateHistoOnDB(m_title_Bkg_Chi2_121);
+    m_Bkg_Chi2_122 = locateHistoOnDB(m_title_Bkg_Chi2_122);
+    m_Bkg_Chi2_125 = locateHistoOnDB(m_title_Bkg_Chi2_125);
+    m_Bkg_Chi2_126 = locateHistoOnDB(m_title_Bkg_Chi2_126);
+    m_Bkg_Chi2_127 = locateHistoOnDB(m_title_Bkg_Chi2_127);
+
+    m_Bkg_Seed_130 = locateHistoOnDB(m_title_Bkg_Seed_130);
+    m_Bkg_Seed_131 = locateHistoOnDB(m_title_Bkg_Seed_131);
+    m_Bkg_Seed_132 = locateHistoOnDB(m_title_Bkg_Seed_132);
+    m_Bkg_Seed_135 = locateHistoOnDB(m_title_Bkg_Seed_135);
+    m_Bkg_Seed_136 = locateHistoOnDB(m_title_Bkg_Seed_136);
+    m_Bkg_Seed_137 = locateHistoOnDB(m_title_Bkg_Seed_137);
+  }
+  catch (GaudiException &exc) {
+    fatal() << "DLL update failed! msg ='" << exc << "'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+// ============================================================================
+TH2D* CaloPhotonIdAlg::locateHistoOnDB(std::string histoname) { // locate the histogram
+  TH2D* histo = 0;
+  if (!histoname.empty()) {
+    histo = reinterpret_cast<TH2D *> (&m_cond->param<DetDesc::Params::Histo2D> (
+            histoname));
+  }
+  return histo;
+}

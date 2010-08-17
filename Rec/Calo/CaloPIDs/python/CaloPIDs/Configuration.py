@@ -40,11 +40,19 @@ class CaloPIDsConf(LHCbConfigurableUser):
     ## define the slots
     __slots__ = {
         ##
-        "Context"              : "Offline"   # The context within which to run
+        "Context"              : ''   # The context within which to run
         , "MeasureTime"        : True        # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
         , 'Sequence'           : ''          # The sequencer to add the CALO reconstruction algorithms to
+        , 'PIDList'            : ['InAcceptance',
+                                  'Match',
+                                  'Energy',
+                                  'Chi2',
+                                  'DLL',
+                                  'NeutralPID'
+                                  ] # List of PID fragments to be included (alternative full sequence per technique : [ 'EcalPID', 'BremPID', 'HcalPID', 'PrsPID', 'SpdPID', 'NeutralPID' ] )
+
         , 'EnablePIDsOnDemand' : False       # enable Reco-On-Demand
         ##
         , 'DataType'           : 'MC09'      # Data type  
@@ -71,6 +79,7 @@ class CaloPIDsConf(LHCbConfigurableUser):
 
         cmp = caloPIDs ( self.getProp( 'Context'            )  ,
                          self.getProp( 'EnablePIDsOnDemand' )  ,
+                         self.getProp('PIDList'),
                          _elocs  ,
                          self.getProp('SkipNeutrals'),
                          self.getProp('SkipCharged')
@@ -113,6 +122,19 @@ class CaloPIDsConf(LHCbConfigurableUser):
         # configure the histogram input: 
         hsvc = HistogramSvc ( 'HistogramDataSvc' )
         inputs = hsvc.Input
+
+        # photon PDF default
+        pfound  = False  
+        for line in inputs :
+            if 0 == line.find ( 'CaloNeutralPIDs') : pfound = True
+
+        if pfound :
+            log.info ("CaloPIDsConf: LUN 'CaloNeutralPIDs' has been defined already") 
+        else:
+            hsvc.Input += [ "CaloNeutralPIDs DATAFILE='$PARAMFILESROOT/data/PhotonPdf.root' TYP='ROOT'" ]
+
+
+        # charged PDF default
         found  = False  
         for line in inputs :
             if 0 == line.find ( 'CaloPIDs') : found = True
