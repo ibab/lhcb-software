@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hlt1Units.py,v 1.2 2010-03-02 11:23:22 gligorov Exp $ 
+# $Id: Hlt1Units.py,v 1.3 2010-08-17 14:09:21 graven Exp $ 
 # =============================================================================
 ## @file HltConf/Hlt1Units.py
 #  Collection of utilities for dealing with Hlt1 "units"
@@ -26,7 +26,7 @@ See:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
@@ -45,8 +45,6 @@ __all__ = (
     'VeloT'          , ## the 'track-match'-configuration   for VeloT
     ## bi-functions
     'RZVeloTMatch'   , ## track-bi-function configuration for RZVeloTMatch
-    'Calo2DChi2'     , ## track-bi-function configuration for Calo2DChi2 
-    'Ecal2DChi2'     , ## track-bi-function configuration for Ecal2DChi2
     'Calo3DChi2'     , ## track-bi-function configuration for Calo3DChi2 
     'Ecal3DChi2'     , ## track-bi-function configuration for Ecal3DChi2
     ## track functions
@@ -370,14 +368,6 @@ RZVeloTMatch  = LoKi.Hlt1.TrackBiFunction (
     "HltMatchTVeloTracks/RZVeloTMatch",                       ## tool type-name 
     False                                                     ##   public tool?
     )
-Calo2DChi2    = LoKi.Hlt1.TrackBiFunction (
-    "HltRZVeloTCaloMatch/Calo2DChi2"  ,                       ## tool type-name
-    False                                                     ##   public tool?
-    )
-Ecal2DChi2    = LoKi.Hlt1.TrackBiFunction (
-    "HltRZVeloEcalMatch/Ecal2DChi2"   ,                       ## tool type-name
-    False                                                     ##   public tool?
-    )
 Calo3DChi2    = LoKi.Hlt1.TrackBiFunction (
     "HltVeloTCaloMatch/Calo3DChi2"    ,                       ## tool type-name
     False                                                     ##   public tool?
@@ -389,9 +379,7 @@ Ecal3DChi2    = LoKi.Hlt1.TrackBiFunction (
 
 _trFun2s = {}
 _trFun2s [ 'RZVeloTMatch' ] = RZVeloTMatch
-_trFun2s [ 'Calo2DChi2'   ] = Calo2DChi2
 _trFun2s [ 'Calo3DChi2'   ] = Calo3DChi2
-_trFun2s [ 'Ecal2DChi2'   ] = Ecal2DChi2
 _trFun2s [ 'Ecal3DChi2'   ] = Ecal3DChi2
 
 # =============================================================================

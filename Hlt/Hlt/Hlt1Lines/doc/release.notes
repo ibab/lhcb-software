@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.192 2010-08-13 17:05:45 albrecht Exp $
+! $Id: release.notes,v 1.193 2010-08-17 14:09:21 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-17 - Gerhard Raven
+ - remove obsolete 2D matching
 
 ! 2010-08-13 - Johannes Albrecht
  - speed up muon alleys
