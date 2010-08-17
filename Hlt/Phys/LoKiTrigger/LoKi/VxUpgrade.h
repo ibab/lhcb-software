@@ -29,7 +29,7 @@ namespace LoKi
      *  @date   2008-11-13
      */
     class VxUpgrade 
-      : public LoKi::BasicFunctors<LHCb::RecVertex*>::Pipe
+      : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe
       , public LoKi::Hlt1::UpgradeTool 
       , public LoKi::Hlt1::VxCreator
     {

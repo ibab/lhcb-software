@@ -250,7 +250,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class RvSelection : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source
+    class RvSelection : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Source
     {
       // ======================================================================
     public:
@@ -300,7 +300,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
      */
-    class RvRegister : public LoKi::BasicFunctors<LHCb::RecVertex*>::Pipe
+    class RvRegister : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe
     {
       // ======================================================================
     public:
@@ -400,7 +400,7 @@ namespace LoKi
      *  @date   2009-07-13
      */
     class RvTESInput
-      : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source 
+      : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Source 
     {
     public: 
       // ======================================================================

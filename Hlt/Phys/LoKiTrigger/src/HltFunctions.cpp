@@ -116,15 +116,6 @@ LoKi::Tracks::TrackMatch::operator()
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::Tracks::RadialIP::result_type 
-LoKi::Tracks::RadialIP::operator() 
-  ( LoKi::Tracks::RadialIP::argument a ) const 
-{
-  return HltUtils::rImpactParameter ( a.second , a.first ) ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
 LoKi::Tracks::ImpactParameter::result_type 
 LoKi::Tracks::ImpactParameter::operator() 
   ( LoKi::Tracks::ImpactParameter::argument a ) const 

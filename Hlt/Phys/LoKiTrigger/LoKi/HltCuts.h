@@ -57,24 +57,6 @@ namespace LoKi
      */
     const LoKi::Tracks::ImpactParameter                                 TrVIP ;
     // ========================================================================
-    /** @var TrVRIP
-     *  Evaluator of "radial" impact parameter of the track 
-     *  with respect to the vertex 
-     *  @attention track needs to be of Velo RZ type
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::rImpactParam
-     *  @see LoKi::Tracks::TrMATCH
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */
-    const LoKi::Tracks::RadialIP                                       TrVRIP ;
-    // ========================================================================
-
-
-    // ========================================================================
     /** @var TTrDA
      *  The evaluator of "delta angle" between two tracks 
      *  

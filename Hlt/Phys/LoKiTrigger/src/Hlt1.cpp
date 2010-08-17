@@ -226,7 +226,7 @@ std::ostream& LoKi::Hlt1::TrRegister::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Hlt1::RvSelection::RvSelection 
 ( const Hlt::TSelection<LHCb::RecVertex>* selection ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_selection ( selection )
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
@@ -237,7 +237,7 @@ LoKi::Hlt1::RvSelection::RvSelection
 // ============================================================================
 LoKi::Hlt1::RvSelection::RvSelection 
 ( const Hlt::Selection* sel ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_selection ( 0 ) 
 {
   Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
@@ -250,7 +250,7 @@ LoKi::Hlt1::RvSelection::RvSelection
 // ============================================================================
 LoKi::Hlt1::RvSelection::RvSelection 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_selection ( 0 )
   , m_selName ( selection )
 {
@@ -284,7 +284,7 @@ std::ostream& LoKi::Hlt1::RvSelection::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Hlt1::RvRegister::RvRegister 
 ( const std::string&    selection ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Pipe () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe () 
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
@@ -419,7 +419,7 @@ std::ostream& LoKi::Hlt1::TrTESInput::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::RvTESInput::RvTESInput
 ( const std::string&         key  , 
   const LoKi::Types::RVCuts& cuts ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -439,7 +439,7 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 LoKi::Hlt1::RvTESInput::RvTESInput
 ( const LoKi::Types::RVCuts& cuts ,
   const std::string&         key  )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( cuts ) 
@@ -458,7 +458,7 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
 ( const std::string&         key  )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_unit (      ) 
   , m_key  ( key  ) 
   , m_cut  ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 

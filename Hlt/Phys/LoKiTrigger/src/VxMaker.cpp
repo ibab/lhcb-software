@@ -35,7 +35,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
   const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
   const std::string&                   key     ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
   , m_track2 ( tr2 ) 
   , m_same   ( &tr1 == &tr2 ) 
@@ -56,7 +56,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
   const std::string&                   key     ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
   , m_track2 ( tr2 ) 
   , m_same   ( &tr1 == &tr2 ) 
@@ -77,7 +77,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
   const std::string&                   key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
   , m_track2 ( tr2 ) 
   , m_same   ( &tr1 == &tr2 ) 
@@ -99,7 +99,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const std::string&                   key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
   , m_track2 ( tr2 ) 
   , m_same   ( &tr1 == &tr2 ) 
@@ -121,7 +121,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const std::string&                   key     ,
   const LoKi::Types::RVCuts&           cuts4rv ,
   const LoKi::Types::TTrCuts&          cuts2tr )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
   , m_track2 ( tr2 ) 
   , m_same   ( &tr1 == &tr2 ) 
@@ -140,7 +140,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const Gaudi::StringKey&              key     ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -160,7 +160,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const Gaudi::StringKey&              key     ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -180,7 +180,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const Gaudi::StringKey&              key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -201,7 +201,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const Gaudi::StringKey&              key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -222,7 +222,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const Gaudi::StringKey&              key     ,
   const LoKi::Types::RVCuts&           cuts4rv ,
   const LoKi::Types::TTrCuts&          cuts2tr )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -241,7 +241,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const std::string&                   key     ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -261,7 +261,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const std::string&                   key     ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -281,7 +281,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
   const std::string&                   key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -302,7 +302,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const std::string&                   key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -323,7 +323,7 @@ LoKi::Hlt1::VxMaker::VxMaker
   const std::string&                   key     ,
   const LoKi::Types::RVCuts&           cuts4rv ,
   const LoKi::Types::TTrCuts&          cuts2tr )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  : LoKi::BasicFunctors<const LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
   , m_same   ( true ) 
@@ -435,7 +435,7 @@ LoKi::Hlt1::VxMaker::operator() () const
 
   // send the vertices into TES 
   for ( Output::const_iterator iout = output.begin() ; output.end()  != iout ; ++iout ) 
-  { overtices->insert ( *iout ) ; }
+  { overtices->insert ( const_cast<LHCb::RecVertex*>(*iout) ) ; }
   
   // use "sink": register object for Hlt Data Service 
   return m_sink ( output )  ; // RETURN 

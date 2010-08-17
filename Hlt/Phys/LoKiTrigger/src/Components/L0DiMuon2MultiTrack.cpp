@@ -243,7 +243,7 @@ StatusCode Hlt::L0DiMuon2MultiTrack::execute  ()
     for ( Input::const_iterator item = input->begin() ; 
           input->end() != item ; ++item  )
     {
-      Hlt::Candidate*   candidate = *item ;
+      const Hlt::Candidate*   candidate = *item ;
       if ( 0 == candidate ) { continue ; }
       //
       const Hlt::Stage* stage     = candidate->currentStage() ;
@@ -292,7 +292,7 @@ StatusCode Hlt::L0DiMuon2MultiTrack::execute  ()
       // keep it: create new stage 
       Hlt::Stage* newstage = new Hlt::Stage() ;
       stages      -> push_back   ( newstage ) ;
-      candidate   -> addToStages ( newstage ) ;
+      const_cast<Hlt::Candidate*>(candidate)   -> addToStages ( newstage ) ;
       //
       Hlt::Stage::Lock lock    ( newstage , this  ) ;
       newstage    -> set       ( mtrack           ) ;      

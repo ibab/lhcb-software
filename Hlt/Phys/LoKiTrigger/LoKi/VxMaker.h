@@ -33,7 +33,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-11
      */
-    class VxMaker : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source
+    class VxMaker : public LoKi::BasicFunctors<const LHCb::RecVertex*>::Source
     {
     private:
       // ======================================================================

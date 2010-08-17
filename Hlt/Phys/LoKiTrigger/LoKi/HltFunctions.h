@@ -158,32 +158,6 @@ namespace LoKi
       LoKi::Interface<ITrackBiFunctionTool> m_tool ; ///< the tool itself 
     } ;  
     // ========================================================================
-    /** @class RadialIP
-     *  Evaluator of "radial" impact parameter between track and vertex
-     *  @attention track needs to be of Velo RZ type
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *  @see HltUtils::rImpactParameter
-     *  @see LoKi::Cuts::TrVRIP
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-08-13
-     */     
-    class RadialIP 
-      : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function
-    {
-    public:
-      /// MANDATORY: virtual destructor 
-      virtual ~RadialIP() {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  RadialIP* clone() const { return new RadialIP(*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrVRIP" ; }      
-    } ;
-    // ========================================================================
     /** @class ImpactParameter 
      *  Evaluator of impact parameter between track and vertex
      *
