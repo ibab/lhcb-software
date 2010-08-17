@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.11 2009-12-30 10:04:15 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.12 2010-08-17 08:47:19 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -70,7 +70,7 @@ namespace Hlt {
   class TFunctionCreator_ : public IFunctionCreator<T1>, boost::noncopyable {
   public:
     typedef typename zen::function<T1> TFunction;
-    typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
+    typedef typename T2Selection::candidate_type T2;
     typedef typename zen::bifunction<T1,T2> BiFunction;
     typedef zen::bifilter<double,double> Comparator;
 
@@ -84,7 +84,7 @@ namespace Hlt {
     TFunction* create(const std::string& name, HltAlgorithm* algo) {
       assert(algo!=0);
       algo->Assert(!name.empty(), "create() must have input name in binder function ");
-      const T2Selection& sel = algo->retrieveTSelection<T2>(name);
+      const T2Selection& sel = algo->retrieveTSelection<typename boost::remove_const<T2>::type >(name);
       TFunction *fun(0);
       typedef typename zen::binder_function<T1,T2Selection> BinderFunction;
       BinderFunction* bfun = new BinderFunction(m_constructor(),sel,COMPARATOR());
@@ -108,8 +108,7 @@ namespace Hlt {
 
 
 template <class T>
-class HltTFunctionFactory : public HltBaseTool, 
-                            virtual public IFunctionFactory<T> {
+class HltTFunctionFactory : public HltBaseTool, public virtual IFunctionFactory<T> {
 public: 
   /// Standard constructor
   HltTFunctionFactory( const std::string& type, 
@@ -131,32 +130,31 @@ protected:
     Assert(m_creators.find(name) == m_creators.end(), 
            "declare() already declared Function Creator "+name);
     m_creators[name] = creator;
-    debug() << " declared Function Creator " << name << endreq;
+    this->debug() << " declared Function Creator " << name << endreq;
   }
   
-
   template <typename FUNCTION>
   void declare(const std::string& name) {
     declare(name, Hlt::FunctionCreator<T>(new_ptr<FUNCTION>() ,this));
   }
+  
   void declare(const std::string& name) {
-    int id = hltInfoID(name);
+    int id = this->hltInfoID(name);
     typedef Hlt::Info<T> FUNCTION;
     declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),id) ,this));  
   }
+
   template <typename INTERFACE>
   void declare(const std::string& name, const std::string& toolname) {
     typedef Hlt::FunctionTool<T,INTERFACE> FUNCTION;
     declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),toolname,this) ,this));
   }
   
-  
   template <class FUNCTION,class COMPARATOR,class T2Selection>
   void declare(const std::string& name) {
     declare(name,       Hlt::TFunctionCreator<T,T2Selection,COMPARATOR>(constructor<FUNCTION>()));
     declare(name+"Key", Hlt::TFunctionCreator<T,T2Selection,COMPARATOR>(constructor<FUNCTION>(),true));
   }
-  
   
   template <class INTERFACE,class COMPARATOR,class T2Selection>
   void declare(const std::string& name, const std::string& toolname) {
@@ -165,7 +163,6 @@ protected:
     declare(name+"Key", Hlt::TFunctionCreator<T,T2Selection,COMPARATOR>(bind(constructor<Hlt::BiFunctionTool<T,T2,INTERFACE> >(),toolname,this),true));
   }
 
-private:
   std::map<std::string, Hlt::IFunctionCreator<T>* > m_creators;
   bool m_smart;
 

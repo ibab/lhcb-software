@@ -1,4 +1,4 @@
-// $Id: HltTrackFilter.cpp,v 1.14 2010-08-05 08:44:32 ibelyaev Exp $ 
+// $Id: HltTrackFilter.cpp,v 1.15 2010-08-17 08:47:19 graven Exp $ 
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -149,7 +149,7 @@ Hlt::TrackFilter::TrackFilter
   declareProperty
     ( "Code"    , 
       m_code    , 
-      "tghe actual LoKi/Bender python code to beused for filtyering")
+      "the actual LoKi/Bender python code to beused for filtyering")
     -> declareUpdateHandler( &TrackFilter::updateCode, this );
   declareProperty
     ( "Preambulo" , 
@@ -174,19 +174,16 @@ StatusCode Hlt::TrackFilter::initialize()
 StatusCode Hlt::TrackFilter::execute() 
 {
   
-  const Hlt::TSelection<LHCb::Track>* in = m_selection.input<1>();
   Hlt::TSelection<LHCb::Track>*       out = m_selection.output();
   
-  //counter("#input")  +=  in->size();
   assert(out->empty());
-  
-  out->insert(out->end(), in->begin(), in->end());
+  *m_selection.input<1>() >> *out;
   for (std::vector<Filter>::iterator i = m_predicates.begin(); i!=m_predicates.end(); ++i) 
   {
     out->erase( std::remove_if
                 ( out -> begin () , 
                   out -> end   () ,
-                  adapt(i->predicate()) )
+                  adapt(i->predicate()) ) // move adapt into *i... write an apply for this erase/remove_if construct
                 , out->end() );
     i->counterPass() += !out->empty();
     if (out->empty()) break;
@@ -217,7 +214,11 @@ StatusCode Hlt::TrackFilter::decode()
     //
     LoKi::TrackTypes::TrCut cut = LoKi::BasicFunctors<const LHCb::Track*>::BooleanConstant( false ) ;
     StatusCode sc = factory->get ( *i, cut, m_preambulo );
-    if (sc.isFailure()) return sc;
+    if (sc.isFailure()) {
+        error() << "Failed to decode " << *i << endmsg;
+        error() << "with preamble " << m_preambulo << endmsg;
+        return sc;
+    }
     std::string title = boost::str(boost::format("%02d:%s") % m_predicates.size() % *i);
     m_predicates.push_back 
       ( Filter (  cut                               ,  

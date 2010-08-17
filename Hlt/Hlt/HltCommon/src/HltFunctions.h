@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.34 2010-06-06 15:57:10 graven Exp $
+// $Id: HltFunctions.h,v 1.35 2010-08-17 08:47:19 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -28,6 +28,7 @@
 #include <Event/State.h>
 
 #include "GaudiKernel/Vector4DTypes.h"
+#include "LHCbMath/MatrixTransforms.h"
 
 #include "EFunctions.h"
 #include <memory>
@@ -330,7 +331,7 @@ namespace Hlt {
   };
 
   template <class T, class T2, class ITOOL>
-  class BiFunctionTool : public zen::bifunction<T,T2> {
+  class BiFunctionTool : public zen::bifunction<T,typename boost::remove_const<T2>::type> {
   public:
     BiFunctionTool(const std::string& toolname, GaudiTool *parent) 
            : _tool( parent->tool<ITOOL>(toolname,parent) )
@@ -339,27 +340,14 @@ namespace Hlt {
       if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
     }
     double operator() (const T& t1, const T2& t2) const {
-      double value = _tool->function(t1,t2);return value;
+       return _tool->function(t1,t2);
     }
-    zen::bifunction<T,T2>* clone() const {
+    zen::bifunction<T,typename boost::remove_const<T2>::type>* clone() const {
       return new Hlt::BiFunctionTool<T,T2,ITOOL>(_tool);
     }
   private:
     ITOOL* _tool;
   };  
-
-  /* rIP:
-   *   return the radial impact parameter between a track and a vertex
-   *   track needs to be of Velo RZ type!
-   */
-  class rIP : public Hlt::TrackVertexBiFunction {
-  public:
-    explicit rIP(){}
-    double operator() (const LHCb::Track& track, 
-                       const LHCb::RecVertex& vertex) const
-    {return HltUtils::rImpactParameter(vertex, track);}
-    rIP* clone() const {return new rIP();}
-  };
 
   /* IP:
    *   return the impact parameter between a track and a vertex
@@ -406,6 +394,27 @@ namespace Hlt {
     }
     D* clone() const {return new D();}
   };
+
+
+#if 0
+  class DS : public Hlt::VertexBiFunction {
+  public:
+    explicit DS() {}
+    double operator() (const LHCb::RecVertex& v1, 
+                       const LHCb::RecVertex& v2) const {
+          Gaudi::XYZVector delta = v1.position()-v2.position();
+          // project momentum onto delta to get sign... note: which one is primary, and which secondary???
+          //
+          //Gaudi::SymMatrix3x3 cov = v1.covMatrix() + v2.covMatrix();
+          //return cov.Invert() ? Gaudi::Math::Similarity(delta,cov) : -1 ;
+
+          double err2 = sqrt(4*Gaudi::Math::Similarity(  delta, v1.covMatrix() +v2.covMatrix()));
+          return 2*delta.Mag2()/err2;
+    }
+    DS* clone() const {return new DS();}
+  };
+#endif
+
   
   
   /* FC:

@@ -36,7 +36,7 @@ namespace zen
   class binder_function : public zen::function<T1> 
   {
   public:
-    typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
+    typedef typename boost::remove_const<typename Container::candidate_type>::type T2; 
     typedef typename Container::const_iterator iterator;
     typedef typename std::pair<double,iterator> Pair;
     explicit binder_function(const zen::bifunction<T1,T2>& f,

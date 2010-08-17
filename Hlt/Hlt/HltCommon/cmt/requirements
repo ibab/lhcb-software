@@ -22,6 +22,7 @@ use TrackEvent          v*    Event
 use HltBase             v*    Hlt
 use LoKiTrigger         v*    Phys
 use LoKiHlt         v*    Phys
+use LoKiTracks         v*    Phys
 
 use TrackInterfaces     v*    Tr
 use HltInterfaces     v*    Kernel

@@ -1,4 +1,4 @@
-// $Id: HltTrackBiFunctionFactory.cpp,v 1.4 2010-04-16 01:17:13 gligorov Exp $
+// $Id: HltTrackBiFunctionFactory.cpp,v 1.5 2010-08-17 08:47:19 graven Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -23,16 +23,11 @@ DECLARE_TOOL_FACTORY( HltTrackBiFunctionFactory );
 // Standard constructor, initializes variables
 //=============================================================================
 HltTrackBiFunctionFactory::HltTrackBiFunctionFactory( const std::string& type,
-                                                  const std::string& name,
-                                                  const IInterface* parent )
+                                                      const std::string& name,
+                                                      const IInterface* parent )
   : HltBaseTool( type, name , parent )
 {
-  declareInterface< IBiTrackFactory >(this);
-}
-
-StatusCode HltTrackBiFunctionFactory::initialize() {
-  
-  return HltBaseTool::initialize();
+  declareInterface< IBiFunctionFactory<LHCb::Track,LHCb::Track> >(this);
 }
 
 bool HltTrackBiFunctionFactory::command(const std::string& command,
@@ -52,7 +47,7 @@ HltTrackBiFunctionFactory::function(const std::string& fn)
            name == "DimuonMass"   ? new Hlt::DimuonMass()    :
            name == "DikaonMass"   ? new Hlt::DikaonMass()    :
            name == "SumPT"        ? new Hlt::SumPT()         :
-           name == "CosThetaStar" ? new Hlt:: CosThetaStar() :
+           name == "CosThetaStar" ? new Hlt::CosThetaStar()  :
            (Hlt::TrackBiFunction*)0;
   
   Assert( fun != 0, " function() not able to create function" + name);
@@ -63,9 +58,7 @@ HltTrackBiFunctionFactory::function(const std::string& fn)
 
 Hlt::TrackBiFilter* 
 HltTrackBiFunctionFactory::filter(const std::string& name) {
-
-  info() << " not able to create filter " << name << endreq;
-
+  error() << " not able to create filter " << name << endreq;
   return 0;
   
 }

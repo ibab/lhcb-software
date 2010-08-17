@@ -1,4 +1,4 @@
-// $Id: HltTrackBiFunctionFactory.h,v 1.3 2009-10-08 20:23:57 graven Exp $
+// $Id: HltTrackBiFunctionFactory.h,v 1.4 2010-08-17 08:47:19 graven Exp $
 #ifndef HLTCOMMON_HLTTRACKBIFUNCTIONFACTORY_H 
 #define HLTCOMMON_HLTTRACKBIFUNCTIONFACTORY_H 1
 
@@ -14,11 +14,8 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-03-22
  */
-class HltTrackBiFunctionFactory : public HltBaseTool, virtual public IBiFunctionFactory<LHCb::Track, LHCb::Track> {
+class HltTrackBiFunctionFactory : public HltBaseTool, public virtual IBiFunctionFactory<LHCb::Track, LHCb::Track> {
 public: 
-  
-  typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> IBiTrackFactory;
-
   /// Standard constructor
   HltTrackBiFunctionFactory( const std::string& type, 
                            const std::string& name,
@@ -26,8 +23,6 @@ public:
 
   virtual ~HltTrackBiFunctionFactory( ); ///< Destructor
 
-  StatusCode initialize();
-  
   virtual bool command(const std::string& command,
                        const std::string& value = "");
   
@@ -35,8 +30,6 @@ public:
   Hlt::TrackBiFunction* function(const std::string& name);
   
   Hlt::TrackBiFilter* filter(const std::string& mode);
-
-
 
 };
 #endif // HLTFUNCTIONFACTORY_H

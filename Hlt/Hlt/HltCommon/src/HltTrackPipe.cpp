@@ -1,4 +1,4 @@
-// $Id: HltTrackPipe.cpp,v 1.3 2010-08-05 08:44:32 ibelyaev Exp $
+// $Id: HltTrackPipe.cpp,v 1.4 2010-08-17 08:47:19 graven Exp $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -94,6 +94,7 @@ namespace
     LoKi::Identity<LHCb::Track::ConstVector>() ;
   // ==========================================================================
 }
+
 // ============================================================================
 Hlt::TrackPipe::TrackPipe( const std::string& name,
                            ISvcLocator* pSvcLocator)
@@ -116,7 +117,7 @@ Hlt::TrackPipe::TrackPipe( const std::string& name,
   declareProperty 
     ( "Preambulo"  , 
       m_preambulo_ ,
-      "The Preambulo lines to be added into Bender script")
+      "The Preambulo lines to be added into python script")
     ->declareUpdateHandler(&TrackPipe::updatePreambulo , this);
   //
   declareProperty 
@@ -124,10 +125,10 @@ Hlt::TrackPipe::TrackPipe( const std::string& name,
       m_monitor     = false ) ;
   declareProperty 
     ( "InputMonitor"  , 
-      m_postMonitor = ""    ) ;
+      m_preMonitor = ""    ) ;
   declareProperty 
     ( "OutputMonitor" , 
-      m_preMonitor  = ""    ) ;
+      m_postMonitor  = ""    ) ;
 }
 //=============================================================================
 // Initialization
@@ -145,22 +146,14 @@ StatusCode Hlt::TrackPipe::initialize()
 // ============================================================================
 StatusCode Hlt::TrackPipe::execute() 
 {
-  counter("#input")  +=  m_selection.input<1>()->size();
-  if (m_monitor) { }
-  //
   Assert( m_selection.output()->empty() , "Output is not empty!" ) ;
+
+  counter("#input")  +=  m_selection.input<1>()->size();
+  if (m_monitor) { /* TODO: use m_preMonitor here */ }
   //
-  const LHCb::Track::Vector& _in   = m_selection.input<1>()->vct() ;
-  const LHCb::Track::Vector& _out  = _in >> m_pipe ;
-  // const LHCb::Track::Vector& _out  = LoKi::apply ( m_pipe , _in ) ;
-  const LHCb::Track::Vector* _out_ = &_out ;
+  m_selection.input<1>()->vct() >> m_pipe >> *m_selection.output();
   //
-  m_selection.output()->insert
-    ( m_selection.output()->end() , 
-      _out_ -> begin () ,
-      _out_ -> end   () ) ;
-  //
-  if (m_monitor) { }
+  if (m_monitor) { /* TODO: use m_postMonitor here */ }
   //
   setFilterPassed( !m_selection.output()->empty() );
   //

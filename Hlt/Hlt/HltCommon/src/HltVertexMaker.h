@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.16 2009-12-23 16:14:31 graven Exp $
+// $Id: HltVertexMaker.h,v 1.17 2010-08-17 08:47:19 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -19,17 +19,17 @@
 namespace HltVertexMaker_details {
         class combinatorics_engine {
         public: 
-              typedef std::vector<LHCb::Track*>::const_iterator iterator;
+              typedef std::vector<const LHCb::Track*>::const_iterator iterator;
               combinatorics_engine(iterator begin1,iterator end1,
                                    iterator begin2,iterator end2,bool merge) ;
               combinatorics_engine(iterator begin1,iterator end1);
-              std::pair<LHCb::Track*,LHCb::Track*> operator()() { return std::make_pair(*m_current.first,*m_current.second); }
+              std::pair<const LHCb::Track*,const LHCb::Track*> operator()() { return std::make_pair(*m_current.first,*m_current.second); }
               combinatorics_engine& operator++();
               bool end() const  { return atEnd1()||atEnd2(); }
         private:
               std::pair<iterator,iterator> m_range1,m_range2;
               std::pair<iterator,iterator> m_current;
-              std::vector<LHCb::Track*> m_mergedList;
+              std::vector<const LHCb::Track*> m_mergedList;
               bool m_merge;
               void inc1()    { if (m_current.first !=m_range1.second ) ++m_current.first; }
               void inc2()    { if (m_current.second!=m_range2.second ) ++m_current.second; }

@@ -1,4 +1,4 @@
-// $Id: HltFilterFittedVertices.cpp,v 1.2 2010-08-11 11:47:22 gligorov Exp $
+// $Id: HltFilterFittedVertices.cpp,v 1.3 2010-08-17 08:47:19 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 
 // from Event
 #include "HltFilterFittedVertices.h"
+#include "HltFunctions.h"
 
 using namespace LHCb;
 
@@ -71,7 +72,7 @@ StatusCode HltFilterFittedVertices::execute() {
   //Lets see what we just did, for debug
   if (msgLevel(MSG::DEBUG)) {
         verbose() << "Printing out the vertices" << endmsg;
-        BOOST_FOREACH( LHCb::RecVertex* iV, *m_selections.input<1>()) {
+        BOOST_FOREACH( const LHCb::RecVertex* iV, *m_selections.input<1>()) {
                 verbose() << iV << endmsg;
         }
   }
@@ -80,7 +81,7 @@ StatusCode HltFilterFittedVertices::execute() {
   double topfd   = 0.;
 
   //Do the filtering
-  BOOST_FOREACH( LHCb::RecVertex* iV, *m_selections.input<1>()) {
+  BOOST_FOREACH( const LHCb::RecVertex* iV, *m_selections.input<1>()) {
     //First get the tracks from the vertex
     const LHCb::Track* t1 = iV->tracks()[0];
     const LHCb::Track* t2 = iV->tracks()[1];
@@ -113,9 +114,10 @@ StatusCode HltFilterFittedVertices::execute() {
     //If more than one PV, we will require that the minimum value is greater than the cut
     double bestchi2 = 100000.;
     double bestfd   = 100000.;
-    BOOST_FOREACH( LHCb::RecVertex* iV, *m_selections.input<2>()) {
+    BOOST_FOREACH(const  LHCb::RecVertex* iV2, *m_selections.input<2>()) {
       double fd = 0; double chi2 = 0;
-      sc = m_dist->distance( iV, &vertex, fd, chi2 ); 
+      sc = m_dist->distance( iV2, &vertex, fd, chi2 ); 
+      // always() << " chi2 = " << chi2 << " : " << Hlt::DS()(*iV,*iV2) << endmsg;
       if (chi2 < bestchi2) {
         bestchi2 = chi2;
         bestfd   = fd  ;
@@ -143,7 +145,7 @@ StatusCode HltFilterFittedVertices::execute() {
   if (msgLevel(MSG::DEBUG)) {
         debug() << "About to print out a mountain of crap" << endmsg;
         debug() << "Printing out the output tracks" << endmsg;
-        BOOST_FOREACH( LHCb::RecVertex *iV, *m_selections.output() ) {
+        BOOST_FOREACH( const LHCb::RecVertex *iV, *m_selections.output() ) {
                 debug() << iV << endmsg;
         }
   }

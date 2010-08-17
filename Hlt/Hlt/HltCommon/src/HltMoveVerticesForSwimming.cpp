@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.9 2010-03-25 02:44:25 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.10 2010-08-17 08:47:19 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -81,7 +81,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   //Lets see what we just did, for debug
   if (msgLevel(MSG::DEBUG)) {
         debug() << "Printing out the input vertices" << endmsg;
-        BOOST_FOREACH( LHCb::RecVertex* v, *m_selections.input<1>()) {
+        BOOST_FOREACH(const LHCb::RecVertex* v, *m_selections.input<1>()) {
                 debug() << *v << endmsg;
         }
   }
@@ -125,11 +125,11 @@ double HltMoveVerticesForSwimming::move_PVs(){
   double vertexCosTheta = 0.;
   double bestVertexCosTheta = 0.;
 
-  LHCb::RecVertex* bestVertex = m_selections.input<1>()->front();
+  const LHCb::RecVertex* bestVertex = m_selections.input<1>()->front();
   
   debug() << "Trying to find the best vertex" << endmsg;
 
-  BOOST_FOREACH( LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
+  BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
 	debug() << "First candidate is " << vertex << endmsg;
   	vertexCosTheta = ((m_bVertexPosition - vertex->position()).Unit()).Dot(m_bDirection.Unit());
 	debug() << "It has a cos theta of " << vertexCosTheta << endmsg;
@@ -148,7 +148,7 @@ double HltMoveVerticesForSwimming::move_PVs(){
   debug() << "Z coordinate " << bestVertex->position().Z() << endmsg;
 
   newVertPos = bestVertex->position() + m_swimmingDistance*(m_bDirection.Unit()); 
-  bestVertex->setPosition(newVertPos); //@FIXME @TODO should NOT modify input vertex
+  const_cast<LHCb::RecVertex*>(bestVertex)->setPosition(newVertPos); //@FIXME @TODO should NOT modify input vertex
 
   debug() << "The moved vertex is at " << bestVertex << endmsg;
   debug() << "With X coordinate " << bestVertex->position().X() << endmsg;
