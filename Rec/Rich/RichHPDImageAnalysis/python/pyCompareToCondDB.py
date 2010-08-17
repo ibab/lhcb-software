@@ -12,7 +12,7 @@ import os, sys
 from Gaudi.Configuration import *
 from Configurables import DDDBConf, CondDB, CondDBAccessSvc
 
-DDDBConf(DataType = "2009")
+DDDBConf(DataType = "2010")
 CondDB()
 
 from rootStyle import applyRootStyle 

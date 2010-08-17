@@ -29,7 +29,7 @@ def counterFromDict( countername, counterdict ):
     """
     Return average, error and entries from the dict of counters 
     """
-    if countername  in counterdict:
+    if countername in counterdict:
         treevalues = counterdict[countername]
         treearr = treevalues.value()
         if 0 == treearr[1]:

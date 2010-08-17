@@ -10,14 +10,27 @@ def imageOffset( rootfile, histname, hpdcopynr ):
     """
     Extracts the offset from the monitoring histogram
     """
+
+    retVal = 0;
+       
     hist = rootfile.Get('RICH/RichHPDImageSummary/'+histname)
-    if None == hist:
-        raise Exception('InvalidHist')
-  
-    nentries = hist.GetBinContent(2*hpdcopynr+1)
-    offset   = hist.GetBinContent(2*hpdcopynr+2)
     
-    return (1.0*offset)/(1.0*nentries)
+    if None == hist:
+        
+        raise Exception('HistogramMissing')
+
+    else:
+        
+        nentries = hist.GetBinContent(2*hpdcopynr+1)
+        offset   = hist.GetBinContent(2*hpdcopynr+2)
+
+        # Protect against div by zero
+        if nentries == 0:
+            raise Exception('BinHasNoEntries')
+        else:
+            retVal = (1.0*offset)/(1.0*nentries)
+    
+    return retVal
 
 def imageOffsetX( rootfile, hpdcopynr ):
     """

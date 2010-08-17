@@ -4,10 +4,16 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-08-17 - Chris Jones
+ - Add a new python script to run over a set of ROOT files, each for a given
+   run and to create a DB slice containing the Si sensor alignments for each
+   run, based on the chip shift offsets computed by the HPD image analysis
+   algorithm.
+
 !================= Rich/RichHPDImageAnalysis v1r1 2010-07-26 =================
+
 ! 2010-07-22 - Thomas BLAKE
  - Added histogramming of X,Y offsets.
-
 
 !================= Rich/RichHPDImageAnalysis v1r0p1 2010-05-21 ==================
 ! 2010-05-13 - Rob Lambert
