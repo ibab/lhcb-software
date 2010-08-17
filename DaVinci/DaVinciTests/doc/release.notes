@@ -4,7 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
-!============================== DaVinciTests v1r2 2010-08-16 =================
+!============================== DaVinciTests v1r2 2010-08-17q =================
+
+! 2010-08-17 - Juan Palacios
+ - tests/qmtest/davinci.qms/stripping.qms/test_bu2llk_dc06.qmt
+  . Change in efficiencies.
 
 ! 2010-08-16 - Juan Palacios
  - tests/qmtest/davinci.qms/test_davinci_initialise.qmt
