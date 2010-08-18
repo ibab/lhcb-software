@@ -32,28 +32,7 @@ _loadFile('lhcb.display.fsm','css');
 
 */
 
-var DetStatus = function(msg)   {
-  var tr, td, tb, tab;
-  table           = document.createElement('table');
-  table.body      = document.createElement('tbody');
-  table.messages  = msg;
-  table.provider  = null;
-  table.logger    = null;
-
-  table.add = function() {
-    tr = document.createElement('tr');
-    td = document.createElement('td');
-    td.setAttribute('colSpan',2);
-    tr.appendChild(td);
-    this.body.appendChild(tr);
-    return td;
-  };
-
-  table.className = table.body.className = 'MonitorOuterFrame';
-  table.display = table.add();
-  table.logDisplay = table.add();
-  table.appendChild(table.body);
-
+var init_graphics = function() {
   lhcb.widgets.Magnet_ProbeStatus = function() {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
@@ -144,6 +123,29 @@ var DetStatus = function(msg)   {
     };
     return tab;
   };
+};
+
+var DetStatus = function(msg)   {
+  var tr, td, tb, tab;
+  table           = document.createElement('table');
+  table.body      = document.createElement('tbody');
+  table.messages  = msg;
+  table.provider  = null;
+  table.logger    = null;
+
+  table.add = function() {
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('colSpan',2);
+    tr.appendChild(td);
+    this.body.appendChild(tr);
+    return td;
+  };
+
+  table.className = table.body.className = 'MonitorOuterFrame';
+  table.display = table.add();
+  table.logDisplay = table.add();
+  table.appendChild(table.body);
 
   table.subscribe = function() {
     this.voltages.subscribe(this.provider);
@@ -233,32 +235,29 @@ var DetStatus = function(msg)   {
     this.display.appendChild(tab);
     return this;
   };
-
   return table;
 };
 
-var detstatus_unload = function()  {
-  dataProviderReset();
-};
-
+var detstatus_unload = function()  {  dataProviderReset();   };
 
 var detstatus_body = function()  {
+
+  init_graphics();
+
   var msg  = the_displayObject['messages'];
   var body = document.getElementsByTagName('body')[0];
   var tips = init_tooltips(body);
-  var selector;
+  var selector = DetStatus(msg);
 
-  selector = DetStatus(msg);
   body.appendChild(selector);
   body.className = 'MainBody';
   setWindowTitle('LHCb Detector High Voltage Status');
   if ( msg > 0 )
-    selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
+    selector.logger = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
   else
-    selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+    selector.logger = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
-  //selector.start('PARTITIONS','lbWeb.PARTITIONS');
   selector.build();
   selector.subscribe();
   selector.provider.start();
