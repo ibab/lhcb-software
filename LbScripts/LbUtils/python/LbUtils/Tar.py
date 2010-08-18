@@ -211,28 +211,31 @@ def updateTarBallFromFilterDict(srcdict, filename, pathfilter=None, dereference=
                 break
         if not srcexist :
             return 1
-        for dirname in srcdict :
-            prefix = srcdict[dirname]
-            if prefix :
-                log.debug("Adding %s to %s" % (dirname, prefix))
+        for dirname in srcdict.keys() :
+            if os.path.exists(dirname) :
+                prefix = srcdict[dirname]
+                if prefix :
+                    log.debug("Adding %s to %s" % (dirname, prefix))
+                else :
+                    log.debug("Adding %s" % dirname)
+                if prefix :
+                    dstprefix = os.path.join(tmpdir.getName(), prefix)
+                    if not os.path.exists(dstprefix) :
+                        os.makedirs(dstprefix)
+                for y in listTarBallObjects(dirname, pathfilter, prefix) :
+                    if y[1] not in extracted_objs :
+                        tobeupdated = True
+                        src = y[0]
+                        dst = os.path.join(tmpdir.getName(), y[1])
+                        if not dereference and os.path.islink(src) :
+                            linkto = os.readlink(src)
+                            os.symlink(linkto, dst)
+                        elif os.path.isdir(src) :
+                            os.mkdir(dst)
+                        else :
+                            copy2(src, dst)
             else :
-                log.debug("Adding %s" % dirname)
-            if prefix :
-                dstprefix = os.path.join(tmpdir.getName(), prefix)
-                if not os.path.exists(dstprefix) :
-                    os.makedirs(dstprefix)
-            for y in listTarBallObjects(dirname, pathfilter, prefix) :
-                if y[1] not in extracted_objs :
-                    tobeupdated = True
-                    src = y[0]
-                    dst = os.path.join(tmpdir.getName(), y[1])
-                    if not dereference and os.path.islink(src) :
-                        linkto = os.readlink(src)
-                        os.symlink(linkto, dst)
-                    elif os.path.isdir(src) :
-                        os.mkdir(dst)
-                    else :
-                        copy2(src, dst)
+                log.debug("The directory %s doesn't exist. Skipping." % dirname)
         if tobeupdated :
             log.debug("Updating tarball %s" % filename)
             status = createTarBallFromFilter([tmpdir.getName()], filename, pathfilter=None,
@@ -273,14 +276,17 @@ def createTarBallFromFilterDict(srcdict, filename, pathfilter=None,
             status = 1 # status=1 means that the src directories do not exist
         else :
             for dirname in srcdict.keys() :
-                prefix = srcdict[dirname]
-                if prefix :
-                    log.debug("Adding %s to %s" % (dirname, prefix))
+                if os.path.exists(dirname) :
+                    prefix = srcdict[dirname]
+                    if prefix :
+                        log.debug("Adding %s to %s" % (dirname, prefix))
+                    else :
+                        log.debug("Adding %s" % dirname)                    
+                    for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
+                        keep_tar = True
+                        tarf.add(fullo, relo, recursive=False)
                 else :
-                    log.debug("Adding %s" % dirname)                    
-                for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
-                    keep_tar = True
-                    tarf.add(fullo, relo, recursive=False)
+                    log.debug("The directory %s doesn't exist. Skipping." % dirname)
             closeTar(tarf, lock, filename)
             if not keep_tar :
                 log.warning("%s file is empty. Removing it." % filename)

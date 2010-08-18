@@ -1,3 +1,8 @@
+2010-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Tar.py: explicit skipping of the missing directory when constructing a tar ball
+	with several source directories.
+
 2010-07-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Links.py: removed useless messages.
