@@ -54,10 +54,7 @@ var DetStatus = function(msg)   {
   table.logDisplay = table.add();
   table.appendChild(table.body);
 
-  table.LHCb_HT_header = lhcb.widgets.LHCb_HT_header;
-  tooltips.set(table.LHCb_HT_header,'HT summary state of the LHCb subdetector');
-
-  table.Magnet_summary = function() {
+  lhcb.widgets.Magnet_ProbeStatus = function() {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
@@ -68,43 +65,43 @@ var DetStatus = function(msg)   {
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));
     c.style.width='30%';
-    tr.appendChild(this.lastMagnetReading=Cell('',null,null));
-    this.lastMagnetReading.style.width='30%';
+    tr.appendChild(tab.lastMagnetReading=Cell('',null,null));
+    tab.lastMagnetReading.style.width='30%';
     tr.appendChild(c=Cell('Polarity:',null,'MonitorDataHeader'));
     c.style.width='20%';
-    this.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
-    this.magnetPolarity.style.width='30%';
-    this.magnetPolarity.conversion = function(data) {
+    tab.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
+    tab.magnetPolarity.style.width='30%';
+    tab.magnetPolarity.conversion = function(data) {
       if ( data>0 )
 	return '+&nbsp;(Down)';
       return '-&nbsp;(Up)';
     };
-    tr.appendChild(this.magnetPolarity);
+    tr.appendChild(tab.magnetPolarity);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Current:',null,'MonitorDataHeader'));
-    this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'%7.0f A');
-    tr.appendChild(this.magnetCurrent);
-    this.magnetCurrent.magnetState = this.lastMagnetReading;
-    this.magnetCurrent.conversion = function(data) {
+    tab.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'%7.0f A');
+    tr.appendChild(tab.magnetCurrent);
+    tab.magnetCurrent.magnetState = tab.lastMagnetReading;
+    tab.magnetCurrent.conversion = function(data) {
       this.magnetState.innerHTML = Math.abs(parseFloat(data)) > 1e1 ? 'ON' : 'OFF';
       return data;
     };
     tr.appendChild(c=Cell('Set:',null,'MonitorDataHeader'));
-    this.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.0f A');
-    this.magnetCurrentSet.style.width='120px';
-    tr.appendChild(this.magnetCurrentSet);
+    tab.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.0f A');
+    tab.magnetCurrentSet.style.width='120px';
+    tr.appendChild(tab.magnetCurrentSet);
     tb.appendChild(tr);
 
-    this.magnetField0 = StyledItem('lbWeb.LbMagnet.BSensor0.Babs',null,'%7.3f');
-    this.magnetField1 = StyledItem('lbWeb.LbMagnet.BSensor1.Babs',null,'%7.3f');
-    this.magnetField2 = StyledItem('lbWeb.LbMagnet.BSensor2.Babs',null,'%7.3f');
-    this.magnetField3 = StyledItem('lbWeb.LbMagnet.BSensor3.Babs',null,'%7.3f');
-    this.magnetTemp0  = StyledItem('lbWeb.LbMagnet.BSensor0.Temp',null,'%7.2f');
-    this.magnetTemp1  = StyledItem('lbWeb.LbMagnet.BSensor1.Temp',null,'%7.2f');
-    this.magnetTemp2  = StyledItem('lbWeb.LbMagnet.BSensor2.Temp',null,'%7.2f');
-    this.magnetTemp3  = StyledItem('lbWeb.LbMagnet.BSensor3.Temp',null,'%7.2f');
+    tab.magnetField0 = StyledItem('lbWeb.LbMagnet.BSensor0.Babs',null,'%7.3f');
+    tab.magnetField1 = StyledItem('lbWeb.LbMagnet.BSensor1.Babs',null,'%7.3f');
+    tab.magnetField2 = StyledItem('lbWeb.LbMagnet.BSensor2.Babs',null,'%7.3f');
+    tab.magnetField3 = StyledItem('lbWeb.LbMagnet.BSensor3.Babs',null,'%7.3f');
+    tab.magnetTemp0  = StyledItem('lbWeb.LbMagnet.BSensor0.Temp',null,'%7.2f');
+    tab.magnetTemp1  = StyledItem('lbWeb.LbMagnet.BSensor1.Temp',null,'%7.2f');
+    tab.magnetTemp2  = StyledItem('lbWeb.LbMagnet.BSensor2.Temp',null,'%7.2f');
+    tab.magnetTemp3  = StyledItem('lbWeb.LbMagnet.BSensor3.Temp',null,'%7.2f');
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Probe',null,'MonitorDataHeader'));
@@ -116,41 +113,41 @@ var DetStatus = function(msg)   {
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Field [&nbsp;T&nbsp;]',null,'MonitorDataHeader'));
-    tr.appendChild(this.magnetField0);
-    tr.appendChild(this.magnetField1);
-    tr.appendChild(this.magnetField2);
-    tr.appendChild(this.magnetField3);
+    tr.appendChild(tab.magnetField0);
+    tr.appendChild(tab.magnetField1);
+    tr.appendChild(tab.magnetField2);
+    tr.appendChild(tab.magnetField3);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Temperature [&#186;C]',null,'MonitorDataHeader'));
-    tr.appendChild(this.magnetTemp0);
-    tr.appendChild(this.magnetTemp1);
-    tr.appendChild(this.magnetTemp2);
-    tr.appendChild(this.magnetTemp3);
+    tr.appendChild(tab.magnetTemp0);
+    tr.appendChild(tab.magnetTemp1);
+    tr.appendChild(tab.magnetTemp2);
+    tr.appendChild(tab.magnetTemp3);
     tb.appendChild(tr);
     
     tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.magnetPolarity);
+      provider.subscribeItem(this.magnetCurrent);
+      provider.subscribeItem(this.magnetCurrentSet);
+      provider.subscribeItem(this.magnetField0);
+      provider.subscribeItem(this.magnetField1);
+      provider.subscribeItem(this.magnetField2);
+      provider.subscribeItem(this.magnetField3);
+      provider.subscribeItem(this.magnetTemp0);
+      provider.subscribeItem(this.magnetTemp1);
+      provider.subscribeItem(this.magnetTemp2);
+      provider.subscribeItem(this.magnetTemp3);
+    };
     return tab;
   };
 
-  table.subscribeItem = function(item) {
-    this.provider.subscribe(item.name,item);
-  };
   table.subscribe = function() {
-    this.subscribeItem(this.magnetPolarity);
-    this.subscribeItem(this.magnetCurrent);
-    this.subscribeItem(this.magnetCurrentSet);
-    this.subscribeItem(this.magnetField0);
-    this.subscribeItem(this.magnetField1);
-    this.subscribeItem(this.magnetField2);
-    this.subscribeItem(this.magnetField3);
-    this.subscribeItem(this.magnetTemp0);
-    this.subscribeItem(this.magnetTemp1);
-    this.subscribeItem(this.magnetTemp2);
-    this.subscribeItem(this.magnetTemp3);
-
     this.voltages.subscribe(this.provider);
+    this.magnet_summary.subscribe(this.provider);
     this.clock_summary.subscribe(this.provider);
     this.veloPosition.subscribe(this.provider);
     this.background_summary.subscribe(this.provider);
@@ -201,7 +198,7 @@ var DetStatus = function(msg)   {
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Magnet_summary());
+    td1.appendChild(this.magnet_summary=lhcb.widgets.Magnet_ProbeStatus());
 
     var opts = {style:'Arial12pt',legend:true,logger:this.logger};
     tb1.appendChild(tr1=document.createElement('tr'));
