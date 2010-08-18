@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-18 - Jibo He
+ - add Hlt1NSZVelo line
+
 ! 2010-08-12 - Jibo He
  - Exclusive_Leptonic.py
    + Added Bc->JpsiX lines, tiny extra time and rate 
