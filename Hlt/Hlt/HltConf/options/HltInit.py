@@ -572,6 +572,8 @@ HltANNSvc().InfoID = {
     "Hlt1SingleHadronTF1FitTrack"                : 6263, 
     "Hlt1SingleHadronTFSingleHadronIP"           : 6264, 
     "Hlt1SingleHadronTFSingleHadronPT"           : 6265, 
+    "Hlt1SingleHadronTFSingleHadronMom"           : 6288,
+    "Hlt1SingleHadronTFSingleHadronIP"           : 6287,
     "Hlt1SingleHadronTUFitTrack"                 : 6266, 
     "Hlt1SingleHadronViaTTFTConf"                : 6267, 
     "Hlt1SingleHadronViaTTFVelo3DIP"             : 6268, 
