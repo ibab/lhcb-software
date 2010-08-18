@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichAlignment
+! Responsible : Chris Jones
+! Purpose     : Algorithms and scripts related to RICH alignment
+!-----------------------------------------------------------------------------
+
+! 2010-08-18 - Chris Jones
+ - First version. 
+  + Alignment algorithms moved over from Rich/RichRecQC
+  + scripts directory containing ganga based run by run scripts
+
