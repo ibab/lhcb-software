@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -204,7 +204,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VU', 'Forward'
                            , RecoName = 'Forward'
                            , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward", self.getProp('HadCompanion_PTCut') )] )]
+                                             ,tools = [ConfiguredPR( "Forward" )] )]
                            )
                 , Member ( 'VF', 'DiHadronPT1', 
                            FilterDescriptor = [ 'VertexMaxPT,>,%s'%self.getProp("HadMain_PTCut")],
@@ -281,7 +281,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                                 'MonForward',
                                 RecoName = 'Forward',
                                 tools = [ Tool( HltTrackUpgradeTool,
-                                                tools = [ConfiguredPR( "Forward", self.getProp('HadCompanion_PTCut') )]
+                                                tools = [ConfiguredPR( "Forward" )]
                                               )
                                         ]
                               )

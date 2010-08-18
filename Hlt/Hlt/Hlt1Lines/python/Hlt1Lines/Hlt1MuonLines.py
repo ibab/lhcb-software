@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.22 2010-08-13 17:04:33 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.23 2010-08-18 22:21:16 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 
@@ -337,11 +337,12 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------------------------------
         # Single Muon without IP cut from L0Muon (MuonNoGlob)
         #--------------------------------------------------------------------
+        from Hlt1Lines.Hlt1GECs import Hlt1_GEC
         if self.getProp('L0SingleMuon') in L0Channels() :
             SingleMuonNoIPL0 = Line( 'SingleMuonNoIPL0'
                                      , prescale = self.prescale
                                      , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
-                                     , algos = [ MuonPrep 
+                                     , algos = [ Hlt1_GEC('All',reject=True),MuonPrep 
                                                  , Member( 'TF', 'PT' 
                                                            , FilterDescriptor = ['PT,>,%(Muon_PtCut)s'%self.getProps()] 
                                                            , HistoDescriptor = { 'PT': ( 'Pt',0.,7000.,100), 'PTBest': ( 'Pt Best',0.,7000.,100)}
@@ -356,7 +357,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             SingleMuonNoVeloL0 = Line( 'SingleMuonNoVeloL0'
                                      , prescale = self.prescale
                                      , L0DU = "L0_CHANNEL('%(L0MuonNoVelo)s')"%self.getProps()
-                                     , algos = [ MuonPrepT 
+                                     , algos = [ Hlt1_GEC('All',reject=True),MuonPrepT 
                                                , Member( 'TF', 'PTNV' 
                                                          , OutputSelection = '%Decision'
                                                          , FilterDescriptor = ['PT,>,%(MuonTS_PtCut)s'%self.getProps()] 
@@ -372,7 +373,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             SingleMuonNoIPGEC = Line( 'SingleMuonNoIPGEC'
                                       , prescale = self.prescale
                                       , L0DU = "L0_CHANNEL('%(L0SingleMuonGEC)s')"%self.getProps()
-                                      , algos = [ MuonGECPrep 
+                                      , algos = [ Hlt1_GEC('All',reject=True),MuonGECPrep 
                                                   , Member( 'TF', 'PT' 
                                                             , FilterDescriptor = ['PT,>,%(Muon_PtCut)s'%self.getProps()] 
                                                             , HistoDescriptor = { 'PT': ( 'Pt',0.,7000.,100), 'PTBest': ( 'Pt Best',0.,7000.,100)}
@@ -387,7 +388,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             SingleMuonIPCL0 = Line( 'SingleMuonIPCL0'
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
-                                    , algos = [ MuonPrep
+                                    , algos = [ Hlt1_GEC('All',reject=True),MuonPrep
                                                 , PV3D().ignoreOutputSelection()
                                                 , Member ( 'TF', 'PT'
                                                            , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ]
@@ -403,7 +404,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             SingleMuonIPCGEC = Line( 'SingleMuonIPCGEC'
                                      , prescale = self.prescale
                                      , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
-                                     , algos = [ MuonGECPrep  
+                                     , algos = [ Hlt1_GEC('All',reject=True),MuonGECPrep  
                                                  , Member ( 'TF', 'PT'
                                                             , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ]
                                                             , HistoDescriptor = { 'PT': ( 'Pt',0.,7000.,100), 'PTBest': ( 'Pt Best',0.,7000.,100)}
@@ -420,7 +421,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuonNoIPL0Di = Line( 'DiMuonNoIPL0Di'
                                    , prescale = self.prescale
                                    , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
-                                   , algos = [ DiMuonPrep
+                                   , algos = [ Hlt1_GEC('All',reject=True),DiMuonPrep
                                                , Member( 'VF', 'Mass' 
                                                          , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuon_MassCut'))]
                                                          , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',0.,5000,100),
@@ -436,7 +437,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuonNoVeloL0 = Line( 'DiMuonNoVeloL0'
                                      , prescale = self.prescale
                                      , L0DU = "L0_CHANNEL('%(L0MuonNoVelo)s')"%self.getProps()
-                                     , algos = [ MuonPrepT 
+                                     , algos = [ Hlt1_GEC('All',reject=True),MuonPrepT 
 					         , Member( 'VM1', 'MuonT'
                                                            , OutputSelection = '%Decision'
 							   , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuonTS_DOCACut')) ]
@@ -454,7 +455,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                   , prescale = self.prescale
                                   , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                                   , algos = 
-                                  [ MuonPrep 
+                                  [ Hlt1_GEC('All',reject=True),MuonPrep 
                                     , AllL0MuPrep
                                     , Member( 'VM2', 'VeloT'
                                               , InputSelection1 = MuonPrep
@@ -478,7 +479,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuonNoIPL0GEC = Line( 'DiMuonNoIPL0GEC'
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
-                                    , algos = [ MuonGECPrep
+                                    , algos = [Hlt1_GEC('All',reject=True), MuonGECPrep
                                                 , MuonPrep
                                                 , Member( 'VM2', 'VeloT'
                                                           , InputSelection1 = MuonGECPrep
@@ -503,7 +504,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                                     , algos = 
-                                    [ MuonSegPrep
+                                    [ Hlt1_GEC('All',reject=True),MuonSegPrep
                                       , Member( 'VM2', 'VeloT'
                                                 , InputSelection1 = MuonPrep
                                                 , InputSelection2 = MuonSegPrep
@@ -531,7 +532,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
                                      , algos = 
-                                     [  MuonGECSegPrep
+                                     [  Hlt1_GEC('All',reject=True),MuonGECSegPrep
                                         , Member( 'VM2', 'VeloT'
                                                   , InputSelection1 = MuonGECPrep
                                                   , InputSelection2 = MuonGECSegPrep
@@ -554,7 +555,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuonIPCL0Di = Line( 'DiMuonIPCL0Di'
                                   , prescale = self.prescale
                                   , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
-                                  , algos = [ DiMuonPrep ] + FastFitVtxWithIP
+                                  , algos = [ Hlt1_GEC('All',reject=True),DiMuonPrep ] + FastFitVtxWithIP
                                   , postscale = self.postscale
                                   )
         #--------------------------------------------------------------------
@@ -565,7 +566,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                  , prescale = self.prescale
                                  , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                                  , algos = 
-                                 [ MuonPrep 
+                                 [ Hlt1_GEC('All',reject=True),MuonPrep 
                                    , AllL0MuPrep
                                    , Member( 'VM2', 'VeloT'
                                              , InputSelection1 = MuonPrep
@@ -585,7 +586,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
                                    , algos = 
-                                   [ MuonGECPrep
+                                   [ Hlt1_GEC('All',reject=True),MuonGECPrep
                                      , MuonPrep
                                      , Member( 'VM2', 'VeloT'
                                                , InputSelection1 = MuonGECPrep
@@ -605,7 +606,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                                    , algos = 
-                                   [ MuonSegPrep
+                                   [ Hlt1_GEC('All',reject=True),MuonSegPrep
                                      , Member( 'VM2', 'VeloT'
                                                , InputSelection1 = MuonPrep
                                                , InputSelection2   = MuonSegPrep
@@ -625,7 +626,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
                                     , algos = 
-                                    [ MuonGECSegPrep
+                                    [ Hlt1_GEC('All',reject=True),MuonGECSegPrep
                                       , Member( 'VM2', 'VeloT'
                                                 , InputSelection1 = MuonGECPrep
                                                 , InputSelection2   = MuonGECSegPrep
@@ -644,7 +645,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuonNoPVL0Di = Line( 'DiMuonNoPVL0Di'
                                    , prescale = self.prescale
                                    , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuonNoPV'))+"')"
-                                   , algos = [ DiMuonNoPVPrep
+                                   , algos = [ Hlt1_GEC('All',reject=True),DiMuonNoPVPrep
                                                , Member( 'VF', 'Mass' 
                                                          , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('DiMuonNoPV_MassCut'))]
                                                          , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',0.,5000,100),
@@ -661,7 +662,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                  , prescale = self.prescale
                                  , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonNoPV'))+"')"
                                  , algos = 
-                                 [ MuonNoPVPrep 
+                                 [ Hlt1_GEC('All',reject=True),MuonNoPVPrep 
                                    , Member( 'VM1', 'VeloT'
 					     , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ]
 			                     , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100),
@@ -683,7 +684,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonNoPV'))+"')"
                                     , algos = 
-                                    [ MuonNoPVSegPrep
+                                    [ Hlt1_GEC('All',reject=True),MuonNoPVSegPrep
                                       , Member( 'VM2', 'VeloT'
                                                 , InputSelection1 = MuonNoPVPrep
                                                 , InputSelection2   = MuonNoPVSegPrep
@@ -708,7 +709,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                            , prescale = self.prescale
                            , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                            , algos =
-                           [ MuonPrep
+                           [ Hlt1_GEC('All',reject=True),MuonPrep
                              , Member( 'TF','MuonPt' # // Select Muons with pT
                                        , HistogramUpdatePeriod = 0
                                        , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt'))]
@@ -816,7 +817,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                 , prescale = self.prescale
                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                                 , algos =
-                                [ MuonPrep
+                                [ Hlt1_GEC('All',reject=True),MuonPrep
                                   , Member( 'TF','MuonPt' # // Select Muons with pT
                                             , HistogramUpdatePeriod = 0
                                             , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt4JPsi'))]
