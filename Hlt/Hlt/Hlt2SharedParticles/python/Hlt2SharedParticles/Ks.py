@@ -8,7 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.GoodParticles import GoodPions
-from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions, BiKalmanFittedPions
 from Configurables import CombineParticles
 from HltLine.HltLine import bindMembers, Hlt2Member
 
@@ -23,6 +23,17 @@ Hlt2SharedKsLL = Hlt2Member( CombineParticles, "KsLL"
                            )
 
 KsLL = bindMembers( "SharedKsLL", [ GoodPions, Hlt2SharedKsLL ] )
+
+# The LL K shorts, track fitted
+Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
+                           , DecayDescriptor = "KS0 -> pi+ pi-" 
+                           , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" } 
+                           , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
+                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+                           , InputLocations = [ BiKalmanFittedPions ]
+                           )
+
+KsLLTF = bindMembers( "SharedKsLLTF", [BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
 
 # Now the downstream K shorts, requires fitted tracks!
 Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"

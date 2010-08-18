@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.100 2010-07-19 21:37:23 graven Exp $
+$Id: release.notes,v 1.101 2010-08-18 22:08:08 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-08-18 - V. Gligorov
+ - Add new track fitted LL K short for Jussara.
 
 !========================== Hlt2SharedParticles v4r3 2010-07-19 ===================
 ! 2010-07-15 - Roel Aaij
