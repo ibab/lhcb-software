@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.201 2010-07-07 14:24:49 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.202 2010-08-18 22:02:23 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -225,6 +225,7 @@ class HltConf(LHCbConfigurableUser):
                       , 52 : "HLT_PASS_RE('Hlt1.*SingleHadron.*Decision')"
                       , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1.*(SingleMuon|DiMuon|MuTrack).*Decision')"
+                      , 55 : "HLT_PASS_RE('Hlt1.*OneTrack.*Decision')"  
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
