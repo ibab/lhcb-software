@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-08-18 - Gerhard Raven
+ - add Hlt1NZS.* to Hlt2 transparent
+
 ! 2010-08-13 - Gerhard Raven
  - fix to the commit of the 27th: require PV3D in B2hh
 
