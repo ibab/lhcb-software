@@ -44,7 +44,7 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_CoreHlt2_Sep10           ( Physics_Hig
         from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
         thresholds.update( Electrons_Minimal_TrackFitted().Thresholds() )
 
-        from Hadrons_Minimal import Hadrons_Minimal
+        from Hadrons_September10 import Hadrons_Minimal
         thresholds.update( Hadrons_Minimal().Thresholds() )
     
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
