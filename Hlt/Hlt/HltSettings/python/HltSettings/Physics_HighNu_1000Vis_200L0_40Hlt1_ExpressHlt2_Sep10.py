@@ -222,6 +222,7 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                  , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
                  , 'Hlt1Incident'
                  , 'Hlt1ErrorEvent'
+                 , 'Hlt1NZSVelo'
                  ]
 
         lines += [ i + 'RateLimited' for i in lines 
