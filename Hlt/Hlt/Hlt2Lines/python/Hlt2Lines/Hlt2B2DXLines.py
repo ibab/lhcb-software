@@ -22,20 +22,36 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
     __slots__ = {## One-stage track-fit cuts
                   'UseGEC'              : True       # use global event cut?
                   , 'GEC'               : 120        # max number of tracks allowed in GEC
+                  #Reduction factor 20
+                  #, 'OSTFAllTrkPtLL'       : 200        # track pT (MeV)
+                  #, 'OSTFKsDDPtLL'         : 100        # KsDD pT (MeV)
+                  #, 'OSTFPtBachelorLL'     : 350        # bachelor pT (MeV)
+                  #, 'OSTFAllTrkPLL'        : 2000       # track p (MeV)
+                  #, 'OSTFKsDDPLL'          : 500        # KsDD p (MeV)
+                  #, 'OSTFAllTrkPVIPChi2LL' : 4          # track-PV IP chi2 (unitless)
+                  #, 'OSTFKsDDPVIPChi2LL'   : 2          # KsDD-PV IP chi2 (unitless)
+                  #, 'OSTFAllTrkChi2UL'     : 10         # track fit chi2 (unitless)
+                  #, 'OSTFPairMinDocaUL'    : 0.2        # min DOCA (mm)
+                  #, 'OSTFPairMaxDocaUL'    : 1          # max DOCA (mm)
+                  #, 'OSTFTrkMaxPtLL'       : 1500       # track max pT (MeV)
+                  #, 'OSTFVtxPVDispChi2LL'  : 225        # B endvertex-PV disp. chi2 (unitless)
+                  #, 'OSTFVtxPVDDispChi2LL' : 196        # D endvertex-PV disp. chi2 (unitless)
+                  #, 'OSTFVtxDispUL'        : 20         # B-D signed vertex-vertex disp.
+                  #Reduction factor 50
                   , 'OSTFAllTrkPtLL'       : 200        # track pT (MeV)
                   , 'OSTFKsDDPtLL'         : 100        # KsDD pT (MeV)
                   , 'OSTFPtBachelorLL'     : 350        # bachelor pT (MeV)
                   , 'OSTFAllTrkPLL'        : 2000       # track p (MeV)
                   , 'OSTFKsDDPLL'          : 500        # KsDD p (MeV)
-                  , 'OSTFAllTrkPVIPChi2LL' : 4          # track-PV IP chi2 (unitless)
+                  , 'OSTFAllTrkPVIPChi2LL' : 16         # track-PV IP chi2 (unitless)
                   , 'OSTFKsDDPVIPChi2LL'   : 2          # KsDD-PV IP chi2 (unitless)
                   , 'OSTFAllTrkChi2UL'     : 10         # track fit chi2 (unitless)
-                  , 'OSTFPairMinDocaUL'    : 0.2        # min DOCA (mm)
+                  , 'OSTFPairMinDocaUL'    : 0.05       # min DOCA (mm)
                   , 'OSTFPairMaxDocaUL'    : 1          # max DOCA (mm)
-                  , 'OSTFTrkMaxPtLL'       : 1500       # track max pT (MeV)
+                  , 'OSTFTrkMaxPtLL'       : 1000       # track max pT (MeV)
                   , 'OSTFVtxPVDispChi2LL'  : 225        # B endvertex-PV disp. chi2 (unitless)
                   , 'OSTFVtxPVDDispChi2LL' : 196        # D endvertex-PV disp. chi2 (unitless)
-                  , 'OSTFVtxDispUL'        : 20         # B-D signed vertex-vertex disp.
+                  , 'OSTFVtxDispUL'        : 20         # B-D signed vertex-vertex disp.                  
                   ## Pre- and post-scales
                   , 'Prescale'                : { #Broad MW sidebands
                                                  'Hlt2B2D2hhBachelorOSTFTUSBroadMW'          : 0.01
