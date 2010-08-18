@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.38 2010-07-02 07:49:15 graven Exp $ 
+# $Id: HltLine.py,v 1.39 2010-08-18 14:54:06 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.39 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -678,6 +678,9 @@ class bindMembers (object) :
         
         # create (the configurable for) the algorithm and add it to the sequencer:
         self._members += [ alg.createConfigurable( line , **margs ) ]
+
+    def _handle_NoneType( self, line, alg ) :
+        pass
 
     def __init__( self, line, algos ) :
         self._members = []
@@ -1398,7 +1401,7 @@ class Hlt2Line(object):
                 last = getattr(last,'Members')[-1]
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
             needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
-            knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>' ]
+            knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>','HltIncidentGenerator','TF::PatVeloAlignTrackFilter' ]
             if last.getType() not in knownLastMembers :
               log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType() )
             members = _members

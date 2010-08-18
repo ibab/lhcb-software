@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.105 2010-08-13 12:30:25 graven Exp $
+! $Id: release.notes,v 1.106 2010-08-18 14:54:06 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-08-18 - Gerhard Raven
+ - handle None as a member (just skip it)
 ! 2010-08-13 - Gerhard Raven
  - more elegant python import
 !========================== HltLine v4r4  2010-07-02 ===================
