@@ -1,5 +1,7 @@
 
-from Gaudi.Configuration import *
+#from Gaudi.Configuration import *
+
+tempRootDir = "/var/work/jonesc/tmp"
 
 def initialise():
     
@@ -14,7 +16,7 @@ def initialise():
     import GaudiPython
     GaudiPython.AppMgr().initialize()
 
-def detSvc():
+def iDataSvc():
     import GaudiPython
     return GaudiPython.AppMgr().detSvc()
 
@@ -23,8 +25,13 @@ def umsSvc():
     GaudiPython.AppMgr().createSvc('UpdateManagerSvc')
     return GaudiPython.AppMgr().service('UpdateManagerSvc','IUpdateManagerSvc')
 
+def iDetDataSvc():
+    import GaudiPython
+    #GaudiPython.AppMgr().createSvc('DetDataSvc')
+    return GaudiPython.AppMgr().service('DetectorDataSvc','IDetDataSvc')
+
 def richSystem():
-    return detSvc()["Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem"]
+    return iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem"]
 
 def rootFileListFromTextFile(rootFileList='RootFileNames.txt'):
 
@@ -57,7 +64,7 @@ def getHPD(copyNumber):
     hpdLoc = richSystem().getDeHPDLocation(smartID)
 
     # return the HPD
-    return detSvc()[hpdLoc]
+    return iDataSvc()[hpdLoc]
 
 def getHPDAlignment(copyNumber) : return getAlignment(copyNumber,"HPD")
 
@@ -76,30 +83,30 @@ def getAlignment(copyNumber,type):
     alignLoc = "/dd/Conditions/Alignment/"+rich[smartID.rich()]+"/"+type+str(copyNumber.data())+"_Align"
 
     # get the aligonment condition
-    align = detSvc()[alignLoc]
+    align = iDataSvc()[alignLoc]
 
     # Force an update
     umsSvc().invalidate(align)
     align.forceUpdateMode()
 
-    # return a copy (so any changes do not affect the originals)
-    return gbl.AlignmentCondition(align)
+    # Return the aligngment condition
+    return align
 
-def alignmentFilePath(copyNumber):
+def siliconAlignmentFilePath(copyNumber):
 
-    rich  = ["Rich1","Rich2"]
+    rich = ["Rich1","Rich2"]
 
     # RichSmartID
     smartID = richSystem().richSmartID(copyNumber)
     
-    return "/Conditions/"+rich[smartID.rich()]+"/Alignment/HPDsAndSiSensorsP"+str(smartID.panel())+".xml"
+    return "/Conditions/"+rich[smartID.rich()]+"/Alignment/SiSensorsP"+str(smartID.panel())+".xml"
 
-def xmlHeader(run):
+def xmlHeader(type,flag):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
-<!-- HPD Image alignment for run """ + str(run) + """ -->
+<!-- HPD Image alignment for """ + str(type) + """ """ + str(flag) + """ -->
 """
 
 def xmlFooter():
@@ -114,33 +121,25 @@ def hpdXMLComment(copyNumber):
 """
 
 # Get the run number from file name (ugly, but works ...)
-def getRunNumber(filename):
+def getIntInfo(filename,type):
     run = 0
     split = ''
     splits = filename.split('_')
     for split in splits:
         s = split.split('-')
-        if s[0] == 'Run' : run = s[1]
-    return run.split('.')[0]
+        if s[0] == type : run = s[1]
+    return int(run.split('.')[0])
 
 def getUNIXTime(dtime):
     import time
     t = time.mktime(dtime.timetuple())
     return int( t * 1e9 )
 
-def correctStartTime(run,time):
-    # Runs before 72908 incorrectly did not have their secs stored, so correct by 60s
-    # Otherwise use 5 secs
-    retTime = 0
-    if run < 72908 :
-        startTimeOffset = int( 60 * 1e9 )
-        retTime = time - startTimeOffset
-    else:
-        startTimeOffset = int( 5 * 1e9 )
-        retTime = time - startTimeOffset
-    return retTime
+def correctStartTime(time):
+    startTimeOffset = int( 5 * 1e9 )
+    return time - startTimeOffset
 
-def getRunTimes(files):
+def getRunFillData(files):
 
     import datetime, time, os
 
@@ -148,39 +147,76 @@ def getRunTimes(files):
     from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
     database = BookkeepingClient()
 
-    times = { }
-    times["RunTimes"] = { }
-    times["GlobalStopTime"] = None
+    runfilldata = { }
+    runfilldata["RunData"] = { }
+    runfilldata["FillData"] = { }
+    runfilldata["GlobalStopTime"] = None
 
-    runList = [ ]
-    for filename in files:
-        run = getRunNumber(filename)
-        if run not in runList : runList += [run]
-    runList.sort()
-
-    # Loop over the sorted run list and get the times
+    # Loop over the sorted run list and get the runfilldata
     tmpTime = 0
-    for run in runList:
+    for filename in files:
+        run = getIntInfo(filename,'Run')
         # Get run start and stop times
         res = database.getRunInformations(int(run))
         if res['OK'] :
             start = res['Value']['RunStart']
             stop  = res['Value']['RunEnd']
-            times["RunTimes"][run] = { "Start" : start, "Stop" : stop }
-            print "Run", run, "is from", start, "to", stop
+            fill  = int(res['Value']['FillNumber'])
+            runfilldata["RunData"][run] = { "Start" : start, "Stop" : stop, "Fill" : fill }
+            if fill not in runfilldata["FillData"].keys():
+                runfilldata["FillData"][fill] = { "Start" : start, "Stop" : stop, "Files" : []  }
+            fillData = runfilldata["FillData"][fill]
+            if fillData["Start"] > start : fillData["Start"] = start
+            if fillData["Stop"] < stop   : fillData["Stop"]  = stop
+            fillData["Files"] += [filename]
+            print "Run", run, "is from", start, "to", stop, "Fill", fill
             unixEndTime = getUNIXTime( stop )
             if unixEndTime > tmpTime :
                 tmpTime = unixEndTime
-                times["GlobalStopTime"] = stop
+                runfilldata["GlobalStopTime"] = stop
         else:
             print "ERROR Getting start/stop times for run", run
             import DIRAC
             DIRAC.exit(1)
 
     # Return the Run Time Information
-    return times
+    return runfilldata
 
-def runCalibration(rootfiles='RootFileNames.txt'):
+def mergeRootFile(fill,infiles):
+
+    import os
+
+    # Create merged ROOT files for given fill data
+    mergedfile = globals()["tempRootDir"]+"/HPDAlign_Fill-"+str(fill)+".root"
+    if os.path.exists(mergedfile) : os.remove(mergedfile)
+    command = "hadd "+mergedfile
+    for infile in infiles : command += " " + str(infile)
+    print command
+    os.system(command)
+
+    return mergedfile
+
+def runToFill(run):
+    # Database API
+    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    database = BookkeepingClient()
+    res = database.getRunInformations(int(run))
+    fill = 0
+    if res['OK'] :
+        fill = res['Value']['FillNumber']
+    else:
+        print "ERROR Getting Fill for run", run
+        import DIRAC
+        DIRAC.exit(1)
+    return fill
+
+def calibrationByRuns(rootfiles='RootFileNames.txt'):
+    return calibration(rootfiles,'Run')
+
+def calibrationByFills(rootfiles='RootFileNames.txt'):
+    return calibration(rootfiles,'Fill')
+
+def calibration(rootfiles,type):
 
     import pyHistoParsingUtils
     from ROOT import TFile
@@ -198,36 +234,48 @@ def runCalibration(rootfiles='RootFileNames.txt'):
     nHPDs = 484
 
     # Open new alignment SQL slice
-    dbFileName = "NewRichHPDAlignments.db"
+    dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
     if os.path.exists(dbFileName) : os.remove(dbFileName)
     db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                           create_new_db=True, readOnly=False )
 
     # Get the run time info
-    runsTimes = getRunTimes(files)
+    runFillData = getRunFillData(files)
 
     # List of paths already created in the DB
     createdPaths = [ ]
 
+    # If calibrating by Fill, group and merge files
+    filesToLoopOver = files
+    if type == 'Fill' :
+        filesToLoopOver = [ ]
+        for fill in sorted(runFillData["FillData"].keys()):
+            infiles = runFillData["FillData"][fill]["Files"]
+            filesToLoopOver += [mergeRootFile(fill,infiles)]
+
     # Loop over the root files and fit the HPD images
-    for filename in files:
+    for filename in filesToLoopOver:
 
         # Open the root file
         file = TFile(filename)
 
         # Run number
-        run = getRunNumber(filename)
-        print "Processing Run", run, "(", filename, ")"
+        flag = getIntInfo(filename,type)
 
         # Alignment data files
         alignments = { }
 
         # Get run start/stop time
-        unixStartTime = getUNIXTime(runsTimes["RunTimes"][run]["Start"])
-        unixStopTime  = getUNIXTime(runsTimes["RunTimes"][run]["Stop"])
+        startTime = runFillData[type+"Data"][flag]["Start"]
+        stopTime  = runFillData[type+"Data"][flag]["Stop"]
+        unixStartTime = getUNIXTime(startTime)
+        unixStopTime  = getUNIXTime(stopTime)
+
+        print "Processing", type , flag, "(", filename, ")"
+        print " ->", type, "Start", startTime, "Stop", stopTime
 
         # Set UMS to the time for this run
-        #umsSvc().newEvent( gbl.Gaudi.Time(unixStartTime) )
+        iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
 
         for hpdID in range(0,nHPDs):
@@ -237,8 +285,8 @@ def runCalibration(rootfiles='RootFileNames.txt'):
 
             # Get the alignment conditions
             siAlign  = getSiSensorAlignment(copyNumber)
-            hpdAlign = getHPDAlignment(copyNumber)
-     
+            #hpdAlign = getHPDAlignment(copyNumber)
+
             # Get the offsets. Use try to catch errors
             try:
                 
@@ -264,22 +312,23 @@ def runCalibration(rootfiles='RootFileNames.txt'):
                 #print "No alignment update possible for HPD", hpdID
                 pass
 
-            # The alignment path for the HPD
-            alignPath = alignmentFilePath(copyNumber)
+            # The alignment path for the HPD silicon
+            alignPath = siliconAlignmentFilePath(copyNumber)
 
             # Get alignment XML file
-            if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(run)
+            if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(type,flag)
 
             # Add alignments for this HPD
             alignments[alignPath] += hpdXMLComment(copyNumber)
-            alignments[alignPath] += hpdAlign.toXml() + '\n' # Soon not needed
+            #alignments[alignPath] += hpdAlign.toXml() + '\n' # Not needed with new DB
             alignments[alignPath] += siAlign.toXml()  + '\n'
 
         # close the ROOT file
         file.Close()
+        os.remove(filename)
 
         # Update the DB with the HPD alignments for the IOV for this run
-        startTime = correctStartTime( run, unixStartTime )
+        startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
         for xmlpath in alignments.keys():
             # The XML data
