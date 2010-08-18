@@ -18,4 +18,7 @@ def setupHltFastTrackFit( fit ) :
     fitter = ConfiguredFastFitter( getattr(fit,'Fit') )
     fitter.NodeFitter.BiDirectionalFit    = True
     fitter.NodeFitter.Smooth        = True
-    fitter.AddDefaultReferenceNodes = True
+    #fitter.AddDefaultReferenceNodes = True
+    fitter.NumberFitIterations = 1
+    fitter.MaxNumberOutliers = 2
+    fitter.UpdateTransport = False
