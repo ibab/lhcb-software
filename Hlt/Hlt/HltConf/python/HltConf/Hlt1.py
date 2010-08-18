@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.42 2010-05-27 21:59:44 gligorov Exp $
+# $Id: Hlt1.py,v 1.43 2010-08-18 22:02:50 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,7 +31,7 @@ from Hlt1Lines.Hlt1PhotonLines   import Hlt1PhotonLinesConf
 from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
 from Hlt1Lines.Hlt1CosmicLines   import Hlt1CosmicLinesConf
 from Hlt1Lines.Hlt1MBLines import Hlt1MBLinesConf
-
+from Hlt1Lines.Hlt1OneTrackLines import Hlt1OneTrackLinesConf
 
 
 class Hlt1Conf(LHCbConfigurableUser):
@@ -42,6 +42,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1VeloLinesConf
                             , Hlt1MuonLinesConf
                             , Hlt1HadronLinesConf
+                            , Hlt1OneTrackLinesConf
                             , Hlt1HadronViaTLinesConf
                             , Hlt1PhotonLinesConf
                             , Hlt1ElectronLinesConf

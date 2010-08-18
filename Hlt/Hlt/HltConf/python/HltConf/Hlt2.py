@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.71 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.72 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -34,6 +34,8 @@ from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesC
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
 from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
+from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
+from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
 #
 # The tracking configurations
 #
@@ -73,6 +75,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2XGammaLinesConf
                              , Hlt2B2HHLinesConf
                              , Hlt2B2HHLTUnbiasedLinesConf
+                             , Hlt2B2HHPi0LinesConf
+                             , Hlt2B2KsHHLinesConf
                              , Hlt2B2LLXLinesConf                         
                              , Hlt2DisplVerticesLinesConf
                              , Hlt2CommissioningLinesConf

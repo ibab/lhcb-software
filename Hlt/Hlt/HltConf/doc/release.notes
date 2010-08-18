@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.483 2010-08-18 14:55:55 graven Exp $ 
+! $Id: release.notes,v 1.484 2010-08-18 22:05:33 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-08-18 - V. Gligorov
+ - Add various new lines to Hlt1/Hlt2, mainly the OneTrack lines. Add a routing bit
+   for the onetrack lines.
+
 ! 2010-08-18 - Gerhard Raven
  - add Hlt1VeloNZS to HltInit
 
