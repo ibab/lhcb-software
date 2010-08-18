@@ -2,31 +2,35 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.63 2010-01-23 01:21:48 jonrob Exp $
-#============================================================================
 
 package           RichRecQC
 version           v2r44
 
-# Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
-include_path none
+# Structure
+#============================================================================
+branches          cmt doc src
 
-#================ environment ==============================================
-set RICHRECQCOPTS $(RICHRECQCROOT)/options
-
-# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+# Used packages
 #============================================================================
 use MCEvent              v*    Event
 use RichRecBase          v*    Rich
 use MCInterfaces         v*    Kernel
+use RichAlignment        v*    Rich
 
+include_path none
+#============================================================================
 # Component library building rule
 #============================================================================
 library          RichRecQC  ../src/*.cpp  -import=AIDA
+
+#============================================================================
+# define component library link options
+#============================================================================
 apply_pattern component_library library=RichRecQC
 
+#============================================================================
 # Setup Python Configurables
 #============================================================================
 macro RichRecQCConfUserModules "RichRecQC.Alignment RichRecQC.Configuration"

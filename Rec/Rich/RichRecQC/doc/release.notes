@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-08-18 - Chris Jones
+ - Move alignment code and options to new Rich/Alignment package
+ - Fix some typos in histogram labels in RichRecoQC.cpp
+
 !======================= RichRecQC v2r44 2010-07-27 ========================
 ! 2010-07-27 - Chris Jones
  - Temporarily disable the PID checks from data, since there are problems
