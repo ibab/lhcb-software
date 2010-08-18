@@ -1,5 +1,4 @@
 
-#from Gaudi.Configuration import *
 
 tempRootDir = "/var/work/jonesc/tmp"
 
@@ -27,7 +26,7 @@ def umsSvc():
 
 def iDetDataSvc():
     import GaudiPython
-    #GaudiPython.AppMgr().createSvc('DetDataSvc')
+    #GaudiPython.AppMgr().createSvc('DetectorDataSvc')
     return GaudiPython.AppMgr().service('DetectorDataSvc','IDetDataSvc')
 
 def richSystem():
