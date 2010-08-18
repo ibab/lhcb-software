@@ -206,6 +206,8 @@ var status_body = function()  {
   var selector = new PartitionSelector(msg);
 
   s_display_font_size = the_displayObject['size'];
+  if ( null == s_display_font_size && screen.width>1500 ) s_display_font_size = 2;
+
   body.appendChild(selector);
   body.className = 'MainBody';
 

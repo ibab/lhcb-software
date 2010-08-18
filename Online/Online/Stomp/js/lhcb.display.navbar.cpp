@@ -41,7 +41,6 @@ var NavigationBar = function() {
   };
   
   table.open_abs_url = function(loc) {
-    //alert(navigator.appName+'\n\n'+loc);
     doc = document;
     if ( parent.frames["viewer"] != null )  {
       if ( navigator.appName.indexOf("Netscape") != -1 )  {
@@ -147,12 +146,22 @@ var NavigationBar = function() {
 
   table.changeImages = function() {
     this.client.haveSmallIcons = !this.client.haveSmallIcons;
+    if ( this.client.haveSmallIcons ) the_displayObject['icons'] = 'small';
+    else the_displayObject['icons'] = 'large';
     return this.client.setImages(this.client.haveSmallIcons);
   };
-  table.seeSubdetectors = function() 
-  {   document.location = HTML_HEAD.url_base+'?type=navbar&system=subdetectors';  };
-  table.seeGeneral = function() 
-  {   document.location = HTML_HEAD.url_base+'?type=navbar';  };
+  table.seeSubdetectors = function() {
+    var icns = the_displayObject['icons'];
+    var loc  = HTML_HEAD.url_base+'?type=navbar&system=subdetectors';
+    if ( icns && icns == 'small' ) loc = loc + '&icons=small';
+    document.location = loc;
+  };
+  table.seeGeneral = function()  {
+    var icns = the_displayObject['icons'];
+    var loc = HTML_HEAD.url_base+'?type=navbar';
+    if ( icns && icns == 'small' ) loc = loc + '&icons=small';
+    document.location = loc;
+  };
 
   return table;
 };
@@ -162,7 +171,6 @@ var navBar = null;
 
 var navbar_general = function(navBar) {
   navBar.sdets = navBar.addButton('Subdetectors','See subdetector pages', 'DisplayButton', navBar.seeSubdetectors);
-
   //navBar.addURL('Got to the LHCb Online home page',lhcb.constants.lhcb.online_home_page);
   navBar.add('Help',
 	     'Help',
@@ -194,7 +202,6 @@ var navbar_general = function(navBar) {
 
 var navbar_subdetectors = function(navBar) {
   navBar.sdets = navBar.addButton('LHCb general','Go back', 'DisplayButton', navBar.seeGeneral);
-
   navBar.add('Help',
 	     'Help',
 	     'JavaScript:navBar.open_abs_url("News.htm")',
@@ -221,7 +228,7 @@ var navbar_body = function()  {
   setupHTML_HEAD();
   setupHTML_BASE(HTML_HEAD.url_base+'/..');
   var sys  = the_displayObject['system'];
-
+  var icns = the_displayObject['icons'];
 
   navBar = NavigationBar();
   navBar.icons = navBar.addButton('Small Icons','Change icon layout', 'DisplayButton', navBar.changeImages);
@@ -249,6 +256,7 @@ var navbar_body = function()  {
 		  lhcb.constants.images.beams_department.src,120,32);
   navBar.addURL('CERN home page',lhcb.constants.urls.cern);
   
+  navBar.haveSmallIcons = (icns && icns == 'small');
   navBar.build();
   HTML_HEAD.body = document.getElementsByTagName('body')[0];
   HTML_HEAD.body.appendChild(navBar);

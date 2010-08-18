@@ -387,6 +387,9 @@ var magnet_body = function()  {
   var body = document.getElementsByTagName('body')[0];
   var tips = init_tooltips(body);
   var selector;
+  var disp_size = 'Screen availible dimensions:'+screen.availWidth+'x'+screen.availHeight+'\n'+
+  'Screen dimensions:'+screen.width+'x'+screen.height+'\n';
+  //alert(disp_size);
 
   selector = MagnetStatus(msg);
   body.appendChild(selector);

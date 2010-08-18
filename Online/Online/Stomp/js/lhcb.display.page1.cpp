@@ -195,6 +195,7 @@ var page1_body = function()  {
   selector.provider.topic = '/topic/status';
   selector.build();
 
+  if ( null == siz && screen.width>1500 ) siz = 3;
   if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
   else  zoom_changeFontSizeEx(0);
   if ( siz != null ) zoom_changeFontSizeEx(siz);
