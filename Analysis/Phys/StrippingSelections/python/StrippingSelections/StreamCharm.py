@@ -83,13 +83,13 @@ stream.appendLines( [
 #        , StrippingD2hhhXS.lineD2PPP_B_NoPID_BkgXS
 #        , StrippingD2hhhXS.lineD2PPP_B_NoPID_SigXS
 #        , StrippingD2hhhXS.lineD2KPP_B_NoPID_BkgXS
-        , StrippingD2hhhXS.lineD2KPP_B_LoosePID_BkgXS
+      #  , StrippingD2hhhXS.lineD2KPP_B_LoosePID_BkgXS
 #        , StrippingD2hhhXS.lineD2KPP_B_NoPID_SigXS
-        , StrippingD2hhhXS.lineD2KPP_B_LoosePID_SigXS
+     #   , StrippingD2hhhXS.lineD2KPP_B_LoosePID_SigXS
 #        , StrippingD2hhhXS.lineD2KKP_B_NoPID_BkgXS
-        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS
+     #   , StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS
 #        , StrippingD2hhhXS.lineD2KKP_B_NoPID_SigXS
-        , StrippingD2hhhXS.lineD2KKP_B_LoosePID_SigXS
+     #   , StrippingD2hhhXS.lineD2KKP_B_LoosePID_SigXS
 #        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_BkgXS
 #        , StrippingD2hhhXS.lineD2KKK_B_LoosePID_SigXS
 #        , StrippingD2hhhXS.lineDs2KPP_B_LoosePID_SigXS
