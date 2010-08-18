@@ -1,4 +1,4 @@
-// $Id: HltGEC.h,v 1.1 2010-08-02 15:55:59 ibelyaev Exp $
+// $Id: HltGEC.h,v 1.2 2010-08-18 22:06:31 gligorov Exp $
 // ============================================================================
 #ifndef HLTCOMMON_HLTGEC_H 
 #define HLTCOMMON_HLTGEC_H 1
@@ -85,6 +85,10 @@ namespace Hlt
     // ========================================================================
     /// the maximum number of OT-hits 
     unsigned int m_maxOTHits;                  // the maximum number of OT-hits 
+    /// the maximum number of IT-hits 
+    unsigned int m_maxITHits;                  // the maximum number of IT-hits
+    /// the maximum number of Velo-hits 
+    unsigned int m_maxVeloHits;                  // the maximum number of Velo-hits    
     /// the decodetr tool 
     IOTRawBankDecoder* m_rawBankDecoder; // the decodetr tool 
     // ========================================================================

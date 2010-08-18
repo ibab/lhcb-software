@@ -1,10 +1,12 @@
-// $Id: HltGEC.cpp,v 1.1 2010-08-02 15:55:59 ibelyaev Exp $
+// $Id: HltGEC.cpp,v 1.2 2010-08-18 22:06:31 gligorov Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // local
 // ============================================================================
 #include "HltGEC.h"
+#include "Event/STLiteCluster.h"
+#include "Event/VeloLiteCluster.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class Hlt::GEC
@@ -27,11 +29,21 @@ Hlt::GEC::GEC
   const IInterface*  parent )   // the tool parent 
   : base_class  ( type , name , parent )
   , m_maxOTHits ( 10000 )
+  , m_maxITHits ( 3000 )
+  , m_maxVeloHits ( 3000 )    
 {
   declareProperty
     ( "MaxOTHits" , 
       m_maxOTHits , 
       "Maximalnumber of OT-hits" ) ;
+  declareProperty
+    ( "MaxITHits" , 
+      m_maxITHits , 
+      "Maximalnumber of IT-hits" ) ;
+  declareProperty
+    ( "MaxVeloHits" , 
+      m_maxVeloHits , 
+      "Maximalnumber of Velo-hits" ) ;
 }
 // ============================================================================
 // virtual & protected destructor 
@@ -61,7 +73,16 @@ StatusCode Hlt::GEC::finalize ()
 // accept 
 // ============================================================================
 bool Hlt::GEC::accept () const 
-{ return m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits ; }
+{ 
+  const LHCb::STLiteCluster::STLiteClusters* clusterContIT 
+    = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
+  const LHCb::VeloLiteCluster::VeloLiteClusters* clusterContVelo
+    = get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
+  return ((m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits) && 
+          (clusterContIT->size() < m_maxITHits) &&
+          (clusterContVelo->size() < m_maxVeloHits)
+         ); 
+}
 // ============================================================================
 // check
 // ============================================================================
