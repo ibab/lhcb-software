@@ -1,10 +1,19 @@
 _loadScript('lhcb.display.items.cpp');
+_loadScript('lhcb.display.constants.cpp');
 _loadScript('lhcb.display.widgets.cpp');
+_loadScript('lhcb.display.zoom.cpp');
 
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
 function _loadWidgets() {
+
+  lhcb.widgets.lumiConvert = function(data) {
+    val = parseFloat(data);
+    if      ( val > 2e6 ) return [val/1e6,'fb<sup>-1</sup>'];
+    else if ( val > 2e3 ) return [val/1e3,'nb<sup>-1</sup>'];
+    return [data,'&mu;b<sup>-1</sup>'];
+  };
 
   lhcb.widgets.fillTimes = function(options) {
     var tab = document.createElement('table');
@@ -13,7 +22,7 @@ function _loadWidgets() {
     var cell;
 
     tooltips.set(tab,'Current fill statistics<br>Click to see LHC operations planning page');
-    tab.onclick = function() { document.location = "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHCCOORD"; };
+    tab.onclick = function() { document.location = lhcb.constants.operations_url('LHCCOORD'); };
 
     tab.className = tb.className   = 'MonitorPage';
     if ( options.fontSize ) {
@@ -133,35 +142,35 @@ function _loadWidgets() {
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Ramped',null,'MonitorDataHeader'));
-    tr.appendChild(tab.rampedTime=Cell('', null,null));
+    tr.appendChild(tab.rampedTime =Cell('', null,null));
     tr.appendChild(tab.rampedIntB1=Cell('', null,null));
     tr.appendChild(tab.rampedIntB2=Cell('', null,null));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Squeeze',null,'MonitorDataHeader'));
-    tr.appendChild(tab.squeezeTime=Cell('', null,null));
+    tr.appendChild(tab.squeezeTime =Cell('', null,null));
     tr.appendChild(tab.squeezeIntB1=Cell('', null,null));
     tr.appendChild(tab.squeezeIntB2=Cell('', null,null));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Stable',null,'MonitorDataHeader'));
-    tr.appendChild(tab.stableTime=Cell('', null,null));
+    tr.appendChild(tab.stableTime =Cell('', null,null));
     tr.appendChild(tab.stableIntB1=Cell('', null,null));
     tr.appendChild(tab.stableIntB2=Cell('', null,null));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Ended',   null,'MonitorDataHeader'));
-    tr.appendChild(tab.endedTime=Cell('', null,null));
+    tr.appendChild(tab.endedTime =Cell('', null,null));
     tr.appendChild(tab.endedIntB1=Cell('', null,null));
     tr.appendChild(tab.endedIntB2=Cell('', null,null));
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(tab.now=Cell('Now',   null,'MonitorDataHeader'));
-    tr.appendChild(tab.nowTime=Cell('', null,null));
+    tr.appendChild(tab.nowTime =Cell('', null,null));
     tr.appendChild(tab.nowIntB1=Cell('', null,null));
     tr.appendChild(tab.nowIntB2=Cell('', null,null));
     tb.appendChild(tr);
@@ -223,11 +232,20 @@ function _loadWidgets() {
     tab.lumi.display = function(data) {
       var v = data[1].split('/',20);
       var t = this.parent;
+      var val;
       t.lumiNOW.display(    [22,v[8]]);
-      t.lumiREC.display(    [22,v[11]]);
-      t.lumiDEL.display(    [22,v[12]]);
-      t.lumiYearRec.display([22,v[9]]);
-      t.lumiYearDel.display([22,v[10]]);
+      val = lhcb.widgets.lumiConvert(v[11]);
+      t.lumiREC.display(    [22,val[0]]);
+      t.lumiREC_unit.innerHTML = val[1];
+      val = lhcb.widgets.lumiConvert(v[12]);
+      t.lumiDEL.display(    [22,val[0]]);
+      t.lumiDEL_unit.innerHTML = val[1];
+      val = lhcb.widgets.lumiConvert(v[9]);
+      t.lumiYearRec.display([22,val[0]]);
+      t.lumiYearRec_unit.innerHTML = val[1];
+      val = lhcb.widgets.lumiConvert(v[10]);
+      t.lumiYearDel.display([22,val[0]]);
+      t.lumiYearDel_unit.innerHTML = val[1];
     };
 
     tr.appendChild(Cell('Lumi NOW', null,'MonitorDataHeader'));
@@ -245,12 +263,12 @@ function _loadWidgets() {
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Fill from start',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiDEL);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
+    tr.appendChild(tab.lumiDEL_unit=Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Fill recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiREC);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
+    tr.appendChild(tab.lumiREC_unit=Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('No. L&Oslash; events',null,'MonitorDataHeader'));
@@ -269,12 +287,12 @@ function _loadWidgets() {
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Delivered',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiYearDel);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
+    tr.appendChild(tab.lumiYearDel_unit=Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Recorded',null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiYearRec);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
+    tr.appendChild(tab.lumiYearRec_unit=Cell('&mu;b<sup>-1</sup>',null,'Text-Left'));
 
     tab.appendChild(tb);
 
@@ -642,8 +660,13 @@ function _loadWidgets() {
       tr.fillNo = parseInt(v[0]);
       tr.fill.innerHTML = v[0];
       tr.date.innerHTML = v[1].substr(v[1].indexOf('-')+1);
-      tr.lumi_total.innerHTML  = sprintf('%7.2f &mu;b<sup>-1</sup>',d[2]);
-      tr.lumi_logged.innerHTML = sprintf('%7.2f &mu;b<sup>-1</sup>',d[6]);
+
+      var val = lhcb.widgets.lumiConvert(d[2]);
+      tr.lumi_total.innerHTML    = sprintf('%7.3f '+val[1],val[0]);
+      var val = lhcb.widgets.lumiConvert(d[6]);
+      tr.lumi_logged.innerHTML = sprintf('%7.3f '+val[1],val[0]);
+      //tr.lumi_total.innerHTML  = sprintf('%7.2f &mu;b<sup>-1</sup>',d[2]);
+      //tr.lumi_logged.innerHTML = sprintf('%7.2f &mu;b<sup>-1</sup>',d[6]);
 
       if ( tab.showInefficiencies==0 ) {
 	// For cumulative inefficiencies
@@ -670,7 +693,7 @@ function _loadWidgets() {
 	tr.logged.innerHTML      = sprintf('%7.2f %%',d[5]>1e-9 ? 100*(1.-(d[6]/d[5])): 0.);
       }
       tr.daq.innerHTML         = sprintf('%7.2f %%  /  ',(veloin<1e-9) ? 0. : (1.-(d[5]/veloin))*100.);
-      tr.daq2.innerHTML        = sprintf('%7.2f &mu;b<sup>-1</sup>',d[4]-d[5]);
+      tr.daq2.innerHTML        = sprintf('%7.0f &mu;b<sup>-1</sup>',d[4]-d[5]);
       if ( tot == 1.0 ) {
 	tr.hvon.innerHTML        = '--';
 	tr.veloin.innerHTML      = '--';
@@ -776,12 +799,12 @@ var BigBrother = function(msg)   {
 
   table.beforeComment = function() {
     var tab, tb, td, tr = document.createElement('tr');
-    var opts        = {system:'LHCb',style:'Arial12pt',legend:true,logger:this.logger};
-    var fillTimes   = lhcb.widgets.fillTimes(opts);
-    var fillLumi    = lhcb.widgets.fillLuminosity(opts);
+    var opts             = {system:'LHCb',style:'Arial12pt',legend:true,logger:this.logger};
+    var fillTimes        = lhcb.widgets.fillTimes(opts);
+    var fillLumi         = lhcb.widgets.fillLuminosity(opts);
     var interactionRates = lhcb.widgets.interactionRates(opts);
-    var effi_matrix = lhcb.widgets.fillEfficiencyMatrix(opts);
-    var history     = lhcb.widgets.fillHistory(opts);
+    var effi_matrix      = lhcb.widgets.fillEfficiencyMatrix(opts);
+    var history          = lhcb.widgets.fillHistory(opts);
 
     tr.vAlign='top';
     tr.appendChild(td=document.createElement('td'));
@@ -839,4 +862,11 @@ var BigBrother = function(msg)   {
 };
 
 var bigbrother_unload = function() { lhcb.widgets.SubdetectorPage.stop();  };
-var bigbrother_body = function()   { return lhcb.widgets.SubdetectorPage.start(BigBrother); };
+var bigbrother_body = function()   { 
+  var siz              = the_displayObject['size'];
+  var ret = lhcb.widgets.SubdetectorPage.start(BigBrother); 
+  if ( null == siz && screen.width>1500 ) siz = 3;
+  if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
+  if ( siz != null ) zoom_changeFontSizeEx(siz);
+  return ret;
+};

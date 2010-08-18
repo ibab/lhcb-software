@@ -738,6 +738,11 @@ var RunStatusDisplay = function(partition,provider,logger) {
     this.run_properties.appendChild(this.runPropertyDisplay);
 
     this.fsmDisplay = FSMDisplay(this._provider,this._logger,null);
+    var used_systems = [];
+    for(var i=0; i<systems.length;++i) {
+      if ( systems[i]=='LHCb_HV')continue;
+      used_systems.push(systems[i]);
+    }
     this.fsmDisplay.setup(systems).build();
     this.fsm_items.appendChild(this.fsmDisplay);
     return this;

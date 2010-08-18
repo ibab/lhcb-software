@@ -192,8 +192,13 @@ var DetectorListener = function(logger,provider,parent,msg,opts) {
 
     for(var i=0; i<systems.length; ++i) {
       var sys = systems[i].split('|');
-      sys_names[i] = sys[0];
-      sys_states[i] = sys[1];
+      // Remove HV, INF and injector from LHCb.
+      // These are not controlled by the run-control itself.
+      if ( sys[0]=='LHCb_HV' ) continue;
+      if ( sys[0]=='LHCb_INF' ) continue;
+      if ( sys[0]=='LHCb_Injector' ) continue;
+      sys_names.push(sys[0]);
+      sys_states.push(sys[1]);
     }
     this.handle_data(this.partition, sys_names, sys_states);
     this.subscribeSubListeners();

@@ -558,10 +558,10 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr);
   
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('LHCb HT is:',1,null));    
-    c.style.width = '120px';
-    //this.hvState = StyledItem('lbWeb.LHCb.HVState',null,null);
-    this.hvState = StyledItem('lbWeb.LHCb_HV.FSM.state',null,null);
+    tr.appendChild(c=Cell('LHCb LV & HV is:',1,null));    
+    c.style.width  = '120px';
+    this.hvState   = StyledItem('lbWeb.LHCb_LHC_HV.FSM.state',null,null);
+    //this.hvState = StyledItem('lbWeb.LHCb_HV.FSM.state',null,null);
     this.hvState.conversion = function(val) {
       if ( val ) {
 	var v=val.split('/',4);
@@ -1148,14 +1148,13 @@ if ( !lhcb.widgets ) {
     tab.buildTable = function(options) {
       var tb, tr, cell;
       tb = document.createElement('tbody');
-      tb.className  = 'MonitorPage';
+      tb.className = 'MonitorPage';
       tb.height    = '120px';
+      if ( options.split ) this.split = true;
       tooltips.set(tb,'HT summary of LHCb');
-      //alert('opts:'+options);
       if ( options.style ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('Voltages',6,options.style));
-	tb.appendChild(tr);
       }
       if ( options.top ) {
 	tb.appendChild(tr=document.createElement('tr'));
@@ -1163,7 +1162,7 @@ if ( !lhcb.widgets ) {
 	tr.appendChild(Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(Cell('Requested',1,'MonitorDataHeader'));
 
-	this.hvState  = FSMItem('lbWeb.LHCb_LHC_HV',this.logger,true);
+	this.hvState   = FSMItem('lbWeb.LHCb_LHC_HV',this.logger,true);
 	this.hvRequest = StyledItem('lbWeb.LHCb_LHC_HV_Info.requestedState',null,null);
 	
 	tb.appendChild(tr=document.createElement('tr'));
@@ -1180,12 +1179,11 @@ if ( !lhcb.widgets ) {
       tb.className  = 'MonitorPage';
       tb.height    = '120px';
       if ( options.hv ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('High Voltage',6,'Arial12pt'));
-	tb.appendChild(tr);
       }
       if ( options.hv_legend ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(cell=Cell('Subdetector',1,'MonitorDataHeader'));
 	tr.appendChild(cell=Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
@@ -1200,17 +1198,15 @@ if ( !lhcb.widgets ) {
       tb.className  = 'MonitorPage';
       tb.height    = '120px';
       if ( options.lv ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('Low Voltage',6,'Arial12pt'));
-	tb.appendChild(tr);
       }
       if ( options.lv_legend ) {
-	tr = document.createElement('tr');
+	tb.appendChild(tr=document.createElement('tr'));
 	tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
 	tr.appendChild(Cell('State',1,'MonitorDataHeader'));
 	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
 	tr.appendChild(Cell('LV State Side A / Side C',2,'MonitorDataHeader'));
-	tb.appendChild(tr);
       }
       this.addLV(tb);
       this.appendChild(tb);
