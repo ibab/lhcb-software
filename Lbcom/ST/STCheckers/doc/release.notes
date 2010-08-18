@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-08-18 - Jeroen Van Tilburg
+ - Add some histograms to STClusterResolution.
+
 !=========================== STCheckers v3r1 2010-07-20 =======================
 ! 2010-07-15 - Jeroen VAN TILBURG
  - Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).

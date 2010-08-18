@@ -165,9 +165,27 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     plot( uRec-uTrue, 10+id,"Resolution "+histTitle, -0.25, 0.25, 100 );
     plot( (uRec-uTrue)/error, 20+id, "Pull "+histTitle, -10., 10., 100 );
 
-    // Fill fractional position histograms
-    plot( measVal.fractionalPosition , 40+id,"Frac position "+histTitle, 
-          -0.005, 1.005, 101);
+    // Fill true fraction position versus reconstructed frac position
+    double trueFracPos = uTrue - aSensor->localU( measVal.strip.strip(), 0 );
+    int sign = (aSensor->localU(2) - aSensor->localU(1) > 0 ) ? 1 : -1;
+    trueFracPos = double(sign)*trueFracPos/aSensor->pitch();
+    profile1D( measVal.fractionalPosition, trueFracPos, 50+id,
+               "True frac position "+histTitle+" vs rec frac pos", 
+               -0.005, 1.005, 101);
+ 
+    // Plot the cluster size versus angle in each station (Lorentz deflection)
+    profile1D( aHit->dxdz(), aCluster->size(), 60+aChan.station(), 
+               "Cluster size vs dx/dz in station "
+               +ST::toString(aChan.station()), -0.2, 0.2, 50);
+
+    // Plot total number and number of symmetric two-strip clusters versus
+    // angle in each station (the ratio shows the Lorentz deflection)
+    if( id == 2 && fabs(measVal.fractionalPosition-0.5) < 0.2) 
+      plot( aHit->dxdz(),70+aChan.station(),
+            "Num sym 2-strip clus vs dxdz in station " 
+            + ST::toString(aChan.station()), -0.2, 0.2, 50);
+    plot( aHit->dxdz(),80+aChan.station(), "Num of clus vs dxdz in station " 
+          + ST::toString(aChan.station()), -0.2, 0.2, 50);
 
     // now the online version
     double uOnline = aSensor->localU( aChan.strip(),
@@ -189,26 +207,14 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     m_poca -> minimize( mcTraj, s1, clusTraj, s2, distance,  0.005);
     double residual = distance.R() * GSL_SIGN( distance.x() );
 
+    // Resolution and pull plots
+    plot( residual, 110,"Resolution "+detType()+" (using Trajectories)",
+          -0.25, 0.25, 100 );
+    plot( residual/error, 120, "Pull "+detType()+" (using Trajectories)",
+          -10., 10., 100 );
     histTitle += " (using Trajectories)";
     plot( residual, 110+id,"Resolution "+histTitle, -0.25, 0.25, 100 );
     plot( residual/error, 120+id, "Pull "+histTitle, -10., 10., 100 );
-
-    // Plot the residual versus the angle
-    double angle = ROOT::Math::VectorUtil::Angle( distance, 
-                                                  aSensor->plane().Normal() );
-
-    angle -= 0.5*M_PI;
-    plot2D(angle, residual, 100, "residual vs angle",-1.55,1.55,
-           -0.5,0.5,50,50);
-
-    // cluster size v angle
-    plot2D(angle, measVal.clusterSize, 1001, "trimmed size vs angle",-1.55,1.55,
-           -0.5, 10.5, 100, 11);
-
-   plot2D(angle, aCluster->size(), 1002, "size vs angle",-1.55,1.55,
-           -0.5, 10.5, 100, 11);
-
-    
 
   } // aHit
   
