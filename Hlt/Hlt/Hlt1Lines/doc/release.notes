@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.193 2010-08-17 14:09:21 graven Exp $
+! $Id: release.notes,v 1.194 2010-08-18 15:01:39 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-18 - Gerhard Raven
+ - change the GEC setup a bit
+ - add a Hlt1NZSVelo line
 
 ! 2010-08-17 - Gerhard Raven
  - remove obsolete 2D matching

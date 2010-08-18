@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -100,9 +100,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             L0Channel = self.getProp("L0Channel")
             # get the L0 candidates (all or L0)
             # also, implement the global event cuts 
-            from Hlt1Lines.Hlt1GECs import Hlt1_IT_GEC, Hlt1_OT_GEC, Hlt1_Velo_GEC
-            l0 = bindMembers(prefix, [ Hlt1_OT_GEC("<"),Hlt1_Velo_GEC("<"),Hlt1_IT_GEC("<"),convertL0Candidates(L0Channel)] )
-            return l0
+            from Hlt1Lines.Hlt1GECs import Hlt1_GEC
+            return bindMembers(prefix, [ Hlt1_GEC('All',reject=True),convertL0Candidates(L0Channel)] )
 
         def confirmationtrackmatch(type=""):
             prefix = 'HadronConfPreTrackMatch'+type

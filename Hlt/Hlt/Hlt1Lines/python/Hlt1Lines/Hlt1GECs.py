@@ -1,59 +1,62 @@
-def Hlt1_IT_GEC( logic ):
-  from Configurables import LoKi__VoidFilter as VoidFilter
-  from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-  from HltLine.HltLine import bindMembers
 
-  modules =  CoreFactory('CoreFactory').Modules
-  for i in [ 'LoKiTrigger.decorators' ] : 
-    if i not in modules : modules.append(i)
+global __accept, __reject,__initialized
+__initialized = False
+__accept = None
+__reject = None
 
-  # The IT Void filter
-  Hlt1_IT_GEC_Code   = "CONTAINS('Raw/IT/LiteClusters') " +logic+ " 3000"
-  
-  Hlt1_IT_GEC_Filter = VoidFilter('Hlt1_IT_GEC'
-                                 , Code = Hlt1_IT_GEC_Code
-                                 )   
+# TODO: make this a class, and give these globals class scope...
+def __data( ) :
 
-  return bindMembers( None, [ Hlt1_IT_GEC_Filter ] ) 
+  global __initialized,__accept,__reject
+  if not __initialized : 
+      from Configurables import LoKi__VoidFilter as VoidFilter
+      from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+      from HltLine.HltLine import bindMembers
 
-def Hlt1_Velo_GEC( logic ):
-  from Configurables import LoKi__VoidFilter as VoidFilter
-  from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-  from HltLine.HltLine import bindMembers
+      modules =  CoreFactory('CoreFactory').Modules
+      for i in [ 'LoKiTrigger.decorators' ] : 
+        if i not in modules : modules.append(i)
 
-  modules =  CoreFactory('CoreFactory').Modules
-  for i in [ 'LoKiTrigger.decorators' ] : 
-    if i not in modules : modules.append(i)
+      from Configurables import Hlt__GEC
+      from HltLine.HltDecodeRaw import DecodeIT,DecodeVELO
+      from HltLine.HltLine import Hlt1Tool
+      cuts = {  'IT' :   { 'Code' : "CONTAINS('Raw/IT/LiteClusters')   < 3000" , 'Prerequisite' : DecodeIT }
+             ,  'VELO' : { 'Code' : "CONTAINS('Raw/Velo/LiteClusters') < 10000", 'Prerequisite' : DecodeVELO }
+             ,  'OT' :   { 'Code' : "ACCEPT('Hlt::GEC/OTGEC')", 'Prerequisite' : None, 'tools' : Hlt1Tool( Hlt__GEC, "MyGEC", MaxOTHits = 10000 ) }
+             }
 
-  # The Velo Void filter
-  Hlt1_Velo_GEC_Code = "CONTAINS('Raw/Velo/LiteClusters') " +logic+ " 10000" 
-  
-  Hlt1_Velo_GEC_Filter = VoidFilter('Hlt1_Velo_GEC'
-                                   , Code = Hlt1_Velo_GEC_Code
-                                   ) 
+      
+      __accept = dict()
+      __reject = dict()
+      for (name,config) in cuts.iteritems() :
+        reject = VoidFilter("Hlt1GEC%sReject" % name, Code = config['Code'])
+        accept = VoidFilter("Hlt1GEC%sAccept" % name, Code = '~( %s )' % config['Code'])
+        if 'tools' in config : 
+            config['tools'].createConfigurable( accept ) 
+            config['tools'].createConfigurable( reject ) 
+        __accept[ name ] = bindMembers( None, [ config['Prerequisite'],  accept ] )
+        __reject[ name ] = bindMembers( None, [ config['Prerequisite'],  reject ] )
 
-  return bindMembers( None, [ Hlt1_Velo_GEC_Filter ] )
+      __reject[ 'All' ] = bindMembers( None, [ __reject['OT'], __reject['VELO'], __reject['IT'] ] )
 
-def Hlt1_OT_GEC( logic ):
-  from Configurables import LoKi__VoidFilter as VoidFilter
-  from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-  from HltLine.HltLine import bindMembers
+  return (__reject,__accept)
 
-  modules =  CoreFactory('CoreFactory').Modules
-  for i in [ 'LoKiTrigger.decorators' ] : 
-    if i not in modules : modules.append(i)
+def Hlt1_GEC_IT( reject = True ):
+    ( __reject, __accept ) = __data()
+    return __reject['IT'] if reject else __accept['IT']
 
-  # The OT Void filter
-  Hlt1_OT_GEC_Code = ""
-  if   (logic == "<") : Hlt1_OT_GEC_Code = "ACCEPT('Hlt::GEC/MyGEC')"
-  elif (logic == ">") : Hlt1_OT_GEC_Code = "~ACCEPT('Hlt::GEC/MyGEC')" 
-  else : return 0 
+def Hlt1_Velo_GEC( reject = True ):
+    ( __reject, __accept ) = __data()
+    return __reject['VELO'] if reject else __accept['VELO']
 
-  Hlt1_OT_GEC_Filter = VoidFilter('Hlt1_OT_GEC'
-                                   , Code = Hlt1_OT_GEC_Code
-                                   )
-  from Configurables import Hlt__GEC as GEC 
-  Hlt1_OT_GEC_Filter.addTool ( GEC , "MyGEC" )
-  Hlt1_OT_GEC_Filter.MyGEC.MaxOTHits = 10000
+def Hlt1_OT_GEC( reject = True ):
+    ( __reject, __accept ) = __data()
+    return __reject['OT'] if reject else __accept['OT']
 
-  return bindMembers( None, [ Hlt1_OT_GEC_Filter ] )
+
+
+def Hlt1_GEC( system, reject = True ):
+    ( __reject, __accept ) = __data()
+    return __reject[system] if reject else __accept[system]
+
+    

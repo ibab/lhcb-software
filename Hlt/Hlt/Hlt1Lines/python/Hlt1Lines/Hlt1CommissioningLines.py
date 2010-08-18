@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -23,30 +23,24 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
                                , 'Hlt1ErrorEvent'   : 'RATE(1)' 
-                               , 'Hlt1VeloGECPassThrough' : 0.01
-                               , 'Hlt1ITGECPassThrough'   : 0.01}
+                               , 'Hlt1NZSVelo'      : 'RATE(1)'
+                               , 'Hlt1GEC.*'        : 'RATE(1)'
+                               }
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
-        from Hlt1GECs import Hlt1_IT_GEC, Hlt1_OT_GEC,Hlt1_Velo_GEC
+        from Hlt1GECs import Hlt1_GEC
 
-        Line('VeloGECPassThrough' 
-            , prescale = self.prescale
-            , postscale = self.postscale
-            , algos = [Hlt1_Velo_GEC(">")]
-            )
-        Line('ITGECPassThrough' 
-            , prescale = self.prescale
-            , postscale = self.postscale
-            , algos = [Hlt1_IT_GEC(">")]
-            )
-        Line('OTGECPassThrough' 
-            , prescale = self.prescale
-            , postscale = self.postscale
-            , algos = [Hlt1_OT_GEC(">")]
-            )
+        for i in [ 'VELO','IT','OT' ] :
+            # WARNING: these imply we always decode Velo & IT 
+            Line('GECPassThrough%s'  % i
+                , L0DU = 'L0_DECISION_PHYSICS'
+                , prescale = self.prescale
+                , postscale = self.postscale
+                , algos = [Hlt1_GEC(i,reject=False)]
+                )
         Line('ODINPhysics',   ODIN = self.getProp('ODINPhysics')
             , prescale = self.prescale
             , postscale = self.postscale
@@ -57,10 +51,18 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             )
         from Configurables import FilterByBankType
         Line('Tell1Error'
-            , ODIN='ODIN_ALL'
             , algos = [ FilterByBankType('Hlt1Tell1ErrorDecision' 
                                         , PassSelectedEvents = True
                                         , BankNames = [ ".*Error" ] 
+                                        )
+                      ]
+            , prescale = self.prescale
+            , postscale = self.postscale
+            )
+        Line('NZSVelo'
+            , algos = [ FilterByBankType('Hlt1NZSVeloDecision' 
+                                        , PassSelectedEvents = True
+                                        , BankNames = [ "VeloFull" ] 
                                         )
                       ]
             , prescale = self.prescale
