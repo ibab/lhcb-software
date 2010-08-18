@@ -89,7 +89,7 @@ def getAlignment(copyNumber,type):
     umsSvc().invalidate(align)
     align.forceUpdateMode()
 
-    # Return the aligngment condition
+    # Return the alignment condition
     return align
 
 def siliconAlignmentFilePath(copyNumber):
@@ -239,7 +239,7 @@ def calibration(rootfiles,type):
     db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                           create_new_db=True, readOnly=False )
 
-    # Get the run time info
+    # Get the run/fill info
     runFillData = getRunFillData(files)
 
     # List of paths already created in the DB
@@ -259,13 +259,13 @@ def calibration(rootfiles,type):
         # Open the root file
         file = TFile(filename)
 
-        # Run number
+        # Run/fill number
         flag = getIntInfo(filename,type)
 
         # Alignment data files
         alignments = { }
 
-        # Get run start/stop time
+        # Get run/fill start and stop time
         startTime = runFillData[type+"Data"][flag]["Start"]
         stopTime  = runFillData[type+"Data"][flag]["Stop"]
         unixStartTime = getUNIXTime(startTime)
@@ -274,7 +274,7 @@ def calibration(rootfiles,type):
         print "Processing", type , flag, "(", filename, ")"
         print " ->", type, "Start", startTime, "Stop", stopTime
 
-        # Set UMS to the time for this run
+        # Set UMS to the start time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
 
@@ -327,7 +327,7 @@ def calibration(rootfiles,type):
         file.Close()
         os.remove(filename)
 
-        # Update the DB with the HPD alignments for the IOV for this run
+        # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
         for xmlpath in alignments.keys():
