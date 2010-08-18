@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.62 2010-01-31 20:54:03 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.63 2010-08-18 09:20:01 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -279,7 +279,7 @@ StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel) const{
        error() <<"Failed to add Selection" << sel->id() << endmsg; 
        return StatusCode::FAILURE;
     }
-    if (produceHistos()) m_outputHisto = const_cast<HltAlgorithm*>(this)->initializeHisto(sel->id().str());
+    if (produceHistos()) m_outputHisto = const_cast<HltAlgorithm*>(this)->initializeHisto("Ncandidate");
     if (msgLevel(MSG::DEBUG)) debug() << " registered selection " << sel->id() << " type " << sel->classID() << endreq;
     return StatusCode::SUCCESS;
 }
