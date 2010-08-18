@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.18 2010-07-14 08:34:41 akozlins Exp $
+## $Id: Hlt2CharmLines.py,v 1.19 2010-08-18 16:30:31 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-07-14 08:34:41 $'
-__version__ = '$Revision: 1.18 $'
+__date__    = '$Date: 2010-08-18 16:30:31 $'
+__version__ = '$Revision: 1.19 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -713,7 +713,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTF3BodySeq = self.__tfFilter('CharmPostTF3Body'
                                      , [charmTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
 
         # Main 4-body charm post-track-fit sequence and line.
@@ -769,7 +769,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTF3BodySBSeq = self.__tfFilter('CharmPostTF3BodyWideMass'
                                      , [charmTF3Body]
-                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
 
         # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
@@ -855,7 +855,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmOSTF3BodySeq = self.__ostfFilter('CharmOSTF3Body'
                                      , [charmOSTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
 
         # 4-body decision
@@ -876,7 +876,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmOSTF3BodySBSeq = self.__ostfFilter('CharmPostOSTF3BodyWideMass'
                                      , [charmOSTF3Body]
-                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
 
         # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
