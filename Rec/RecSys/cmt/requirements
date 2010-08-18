@@ -50,6 +50,7 @@ use RichRecTools         v4r12   Rich # Chris Jones
 use RichRecTrackTools    v1r23   Rich # Chris Jones
 use RichENNRingFinder    v1r2    Rich # Chris Jones, Ulrich Kerzel
 use RichIFBAnalysis      v1r1p1  Rich # Ross Young, Chris Jones
+use RichAlignment        v1r0    Rich # Chris Jones, Antonis Papanestis
 
 # Tf packages: Track Pattern Recognition
 use PatAlgorithms        v4r5    Tf   # Stephanie Hansmann-Menzemer
