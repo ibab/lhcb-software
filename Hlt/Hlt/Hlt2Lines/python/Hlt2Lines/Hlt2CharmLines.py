@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.19 2010-08-18 16:30:31 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.20 2010-08-18 22:10:02 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-08-18 16:30:31 $'
-__version__ = '$Revision: 1.19 $'
+__date__    = '$Date: 2010-08-18 22:10:02 $'
+__version__ = '$Revision: 1.20 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -137,6 +137,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2CharmD02PiPiForD02MuMuDecision' : 50972
                                    , 'Hlt2CharmD02KPiForD02MuMuDecision' : 50973
                                    , 'Hlt2CharmD02KKForD02MuMuDecision' : 50974
+                                   ## KS0h lines
+                                   , 'Hlt2CharmD2KS0PiLLDecision' : 50969
+                                   , 'Hlt2CharmD2KS0PiDDDecision' : 50970
                                    }
                   }
 
@@ -594,6 +597,61 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         return charmNBody
     # }
 
+    def __DMesonCombine(self, name, inputSeq, decayDesc = ["[D+ -> KS0 pi+]cc"]  , extracuts = None) : # {
+        """
+        # Function to configure the D -> KS0 Pi combinations
+        #   It lashes the new CombineParticles to a bindMembers with its
+        #   antecedents.
+        # Its arguments:
+        #     name      : string name
+        #     inputSeq  : list of input particle sequences
+        #     decayDesc : list of string decay descriptors
+        #     extracuts : dictionary of extra cuts to be applied.
+        #                 Can include cuts at the CombinationCut or at
+        #                 the MotherCut level.
+        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
+        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D
+        
+        # Construct a cut string for the combination.
+        DCombCuts = "(AM> 1380*MeV) & (AM < 2220*MeV) & (AMAXDOCA('') < 1.0*mm) "
+        
+        # Construct a cut string for the daughter pions - allowed???
+        DDaughterCuts =  { "pi+" : "(P > 2*GeV) & (TRCHI2DOF < 10) & (MIPCHI2DV(PRIMARY) > 49)",
+                           "KS0" : "CHILDCUT(MIPCHI2DV(PRIMARY)>100, 1) & CHILDCUT(MIPCHI2DV(PRIMARY)>100, 2)"  
+                         }
+        
+        
+        
+        # extracuts allows additional cuts to be applied for special
+        #   cases, including the tight doca requirement of the 2-body and
+        #   the additional cuts to reduce stored combinations in the 4-body.
+        #if extracuts and extracuts.has_key('CombinationCut') :
+         #  DCombCuts  = DCombCuts + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        DMotherCuts = """(VFASPF(VCHI2/VDOF)< 20 )
+                          & (MM> 1400*MeV) & (MM < 2200*MeV)
+                          & (MIPCHI2DV(PRIMARY) < 4) """ 
+            
+
+        #if extracuts and extracuts.has_key('MotherCut') :
+          # DMotherCuts  = DMotherCuts  + '&' + extracuts['MotherCut']
+                                   
+        combineD = Hlt2Member( CombineParticles
+                                   , 'CombineD'
+                                   , DecayDescriptors = decayDesc
+                                   , InputLocations = inputSeq
+                                   , DaughtersCuts =  DDaughterCuts
+                                   , CombinationCut = DCombCuts
+                                   , MotherCut = DMotherCuts
+                                 )
+
+        charmD = bindMembers( name, inputSeq + [ PV3D(), combineD ] )
+        return charmD
 
 
     def __apply_configuration__(self) :
@@ -1058,3 +1116,16 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                             , MotherCut = D0MotherCut)
         self.__makeLine('CharmD02KKForD02MuMu'
                         , algos = [ PV3D(), NoCutsKaons, D02KKForD02MuMuCombine ])
+
+        from Hlt2SharedParticles.Ks import KsLLTF
+
+        ## D -> KS0 Pi construction sequences.
+        ###################################################################
+
+        combineD2KS0PiLL = self.__DMesonCombine('CharmD2KS0PiLL'
+                                        , [KsLLTF, BiKalmanFittedPions])
+
+        ## Make the lines
+        ###################################################################
+
+        self.__makeLine('CharmD2KS0PiLL' , algos = [ combineD2KS0PiLL ])
