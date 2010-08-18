@@ -1,3 +1,7 @@
+2010-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/buildLCGTar: early exit if the output directory doesn't exist.
+
 2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: added the generation of the MD5 sum for the LCGCMT tarball.
