@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.140 2010-08-17 08:41:18 graven Exp $
+!$Id: release.notes,v 1.141 2010-08-18 21:56:47 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-08-18 - V. Gligorov 
+ - Changes to Hlt2Tracking
+  . Minimum P/PT cuts in Forward Reco of 5000/500 MeV
+  . Minimum P cut of 2500 MeV in Seeding
+  . Change to fast fit to remove 2 Outliers, 1 extra iteration, 
+    do not update transport service
 
 ! 2010-08-17 - Gerhard Raven
  - remove RZ based matching

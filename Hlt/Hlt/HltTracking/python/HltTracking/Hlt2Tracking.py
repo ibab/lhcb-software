@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -56,8 +56,9 @@ from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesC
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
 from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines      import Hlt2B2HHLTUnbiasedLinesConf
-
-
+from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
+from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
+ 
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -96,6 +97,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2InclusiveDiElectronLinesConf
                              , Hlt2InclusiveElectronLinesConf
                              , Hlt2B2KstareeLinesConf  
+                             , Hlt2B2HHPi0LinesConf
+                             , Hlt2B2KsHHLinesConf
                              ]
     __slots__ = { "DataType"                        : '2009' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
@@ -875,7 +878,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 fitter.NodeFitter.BiDirectionalFit    = True
                 fitter.NodeFitter.Smooth        = True
                 fitter.AddDefaultReferenceNodes = True    # says Wouter
-        
+                fitter.NumberFitIterations = 1 
+                fitter.MaxNumberOutliers = 2 
+                fitter.UpdateTransport = False        
+ 
         # Build the bindMembers        
         bm_name         = self.__trackfitAlgosAndToolsPrefix()+"FastFitSeq"
         bm_members      = [tracks, Hlt2StagedFastFit]
@@ -1003,7 +1009,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
-       
+        recoForward.PatForwardTool.SecondLoop = True
+        recoForward.PatForwardTool.MaxChi2 = 40
+        recoForward.PatForwardTool.MaxChi2Track = 40
+        recoForward.PatForwardTool.MinHits = 12
+        recoForward.PatForwardTool.MinOTHits = 14
+        recoForward.PatForwardTool.MinMomentum = 5000
+        recoForward.PatForwardTool.MinPt = 500
+     
         if self.getProp("EarlyDataTracking") :
             # configure pattern reco with early data flags
             # first forward algorithm
@@ -1050,7 +1063,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoSeeding.PatSeedingTool.UseForward        = True
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
         recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()
-  
+        recoSeeding.PatSeedingTool.MinMomentum = 2500 
+ 
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
             recoSeeding.PatSeedingTool.OTNHitsLowThresh=12
