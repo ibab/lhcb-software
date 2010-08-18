@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.194 2010-08-18 15:01:39 graven Exp $
+! $Id: release.notes,v 1.195 2010-08-18 22:23:38 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-18 - V. Gligorov
+ - Add GECs to all Hlt1 "physics" lines. Add new tracking options to
+   HltConfiguredPR. Add new FastFit options (remove 2 outliers) to
+   HltFastTrackFit.
 
 ! 2010-08-18 - Gerhard Raven
  - change the GEC setup a bit
