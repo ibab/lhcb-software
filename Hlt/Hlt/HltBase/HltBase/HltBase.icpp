@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.27 2010-01-07 14:02:53 graven Exp $
+// $Id: HltBase.icpp,v 1.28 2010-08-18 09:51:11 graven Exp $
 // Include files
 
 
@@ -53,8 +53,7 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
   if (!EBASE::produceHistos()) return histo;
 
   const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
-  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = 
-        values.find(title);
+  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
   EBASE::debug() << " booking histogram  " << hd << endreq;
