@@ -56,7 +56,7 @@ str_cutOffline3DaugB = '(MIPCHI2DV(PRIMARY) > 2.0)'
 str_cutOffline4B_asMothCut = '(BPVVDCHI2 > 60.0)'
 
 # 5) Vertex quality of D+
-str_cutOffline5Moth = '(VFASPF(VCHI2)<18.0)'
+#str_cutOffline5Moth = '(VFASPF(VCHI2)<18.0)'
 
 
 # 6) PT cuts
@@ -90,7 +90,7 @@ str_cutOfflineMassPostFit = '((M > 1780*MeV) & (M < 2060*MeV))'
 # B: 1=Moth, 2=Moth, 3=Comb, 4=Moth, 5=Moth,      6=Comb+Moth+Daug, 7=Daug
 
 str_cutOfflineDaugB      = '(' + str_cutOffline3DaugB + '&'+str_cutOffline6DaugB + '&' + str_cutOffline7B_asDaugCut + '&'+ str_cutOffline8B_asDaugCut + ')'
-str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&' + str_cutOffline4B_asMothCut + '&' + str_cutOffline5Moth + '&' + str_cutOfflineMassPostFit + ')'
+str_cutOfflineMothB      = '(' + str_cutOffline1B_asMothCut + '&' + str_cutOffline4B_asMothCut + '&' + str_cutOfflineMassPostFit + ')'# + str_cutOffline5Moth + '&'
 
 str_cutOfflineCombB      = '(' + str_cutOfflineMassPreFit + '&' + str_cutOffline6BComb + '&' + str_cutOffline3B_asCombCut + ')'
 
