@@ -613,6 +613,11 @@ def generateLCGMD5(project, version, cmtconfig=None, input_dir=None):
     else :
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
+def fixWinMacroValue(macro_value):
+    fixed_value = macro_value.replace("\\", os.sep)
+    fixed_value = fixed_value.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
+    return fixed_value
+
 def generateLCGTar(project, version=None, cmtconfig=None, 
                    top_dir=None, output_dir=None, overwrite=False,
                    update=False, md5=True, html=True):
@@ -670,15 +675,13 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                                                 binary=cmtconfig) :
                 if p.name().split(os.sep)[0] == "LCG_Interfaces" :
                     if not lcg_relloc :
-                        lcg_relloc = p.getMacroValue("LCG_release")
+                        lcg_relloc = fixWinMacroValue(p.getMacroValue("LCG_release"))
                     if not lcg_extloc :
-                        lcg_relloc = p.getMacroValue("LCG_external")
+                        lcg_relloc = fixWinMacroValue(p.getMacroValue("LCG_external"))
                     ext_name = os.sep.join(p.name().split(os.sep)[1:])
                     ext_dict[ext_name] = []
                     ext_dict[ext_name].append(p.fullLocation())
-                    ext_home = p.getMacroValue("%s_home" % ext_name)
-                    ext_home = ext_home.replace("\\", os.sep)
-                    ext_home = ext_home.replace("%SITEROOT%", os.environ.get("SITEROOT", ""))
+                    ext_home = fixWinMacroValue(p.getMacroValue("%s_home" % ext_name))
                     ext_dict[ext_name].append(ext_home)
                     ext_config_version = p.getMacroValue("%s_config_version" % ext_name)
                     ext_dict[ext_name].append(ext_config_version)

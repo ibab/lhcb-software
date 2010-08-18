@@ -1,5 +1,7 @@
 2010-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbRelease/TarBall.py: fixed macro expansion for the windows platform when
+	running on Linux.
 	* scripts/buildLCGTar: early exit if the output directory doesn't exist.
 
 2010-08-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

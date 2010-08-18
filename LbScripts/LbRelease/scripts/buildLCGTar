@@ -76,8 +76,7 @@ class BuildLCGTarScript(Script):
         if opts.output_dir :
             opts.output_dir = os.path.realpath(opts.output_dir)
             if not os.path.exists(opts.output_dir) :
-                log.critical("The output directory %s doesn't exist" % opts.output_dir)
-                sys.exit(1)
+                log.fatal("The output directory %s doesn't exist" % opts.output_dir)
                 
         status = buildLCGTar(project, version, opts.cmtconfig, 
                              opts.top_dir, opts.output_dir, 
