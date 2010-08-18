@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.54 2010-08-16 14:54:37 ggiacomo Exp $
+! $Id: release.notes,v 1.55 2010-08-18 13:42:06 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
 ! 20100816 GG
+ - improve messages when raising down alarms 
  - small fix in OMACheckDeadBins
 
 ! 20100803 GG

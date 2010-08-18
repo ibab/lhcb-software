@@ -1,6 +1,7 @@
-// $Id: OMAMsgInterface.cpp,v 1.37 2010-08-11 16:29:51 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.38 2010-08-18 13:42:06 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
+#include <time.h>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
@@ -294,7 +295,12 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
   anaId << message.anaId();
   sendLine( "========== ANALYSIS ID "+ anaId.str() + "   MESSAGE ID " + msgId.str() +
             "=============================", OMAMessage::INFO);
-  char* time = message.humanlastTime();
+  time_t rawtime;
+  struct tm * timeinfo;
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+  char* time = asctime (timeinfo);
+
 #ifndef _WIN32
   std::remove(time, time+strlen(time)+1,'\n');
 #endif
@@ -305,7 +311,7 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
     sendLine("    in analysis " +  message.ananame() , OMAMessage::INFO ); 
   if(!message.hIdentifier().empty())
     sendLine("   on histogram " + message.hIdentifier(),  OMAMessage::INFO);
-  sendLine(   "      from saveset " + message.saveSet(), OMAMessage::INFO);
+  sendLine(   "   after analyzing  saveset " + m_savesetName, OMAMessage::INFO);
   sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
   sendLine("===================================================================", OMAMessage::INFO );
   return true;
