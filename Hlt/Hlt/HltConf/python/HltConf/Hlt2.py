@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.70 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.71 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -190,7 +190,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         # set Hlt2 PID
         self.configureReconstruction()
         # lines
-        print self
         if self.getProp("DefaultVoidFilter") :
             from HltLine.HltLine import Hlt2Line  
             Hlt2Line.setDefaultVoidFilter( self.getProp("DefaultVoidFilter") )

@@ -30,6 +30,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1IncidentDecision"                  :   30,
     "Hlt1Tell1ErrorDecision"                :   31,
     "Hlt1ErrorEventDecision"                :   32,
+    "Hlt1NZSVeloDecision"                   :   33,
     # LU Hlt1Lumi.*Decision
     "Hlt1LumiDecision"                      :   40, 
     "Hlt1LumiLowNoBeamDecision"             :   41, 

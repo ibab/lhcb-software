@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.482 2010-07-19 21:38:48 graven Exp $ 
+! $Id: release.notes,v 1.483 2010-08-18 14:55:55 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-08-18 - Gerhard Raven
+ - add Hlt1VeloNZS to HltInit
+
 !========================== HltConf v8r2 2010-07-19 ===================
 ! 2010-07-18 - V. Gligorov
  - Remove an obsolete Hlt2 tracking configuration which had been
