@@ -16,7 +16,7 @@ use HltEcalAlley        v3r0    Hlt   # Mariusz Witek
 use HltGlobalMonitor    v3r6p2  Hlt   # Bruno de Paula
 use HltHidValley        v1r3p1  Hlt   # Marcin Kucharczyk
 use HltL0Conf           v2r14   Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r8    Hlt   # Alessia Satta/Sandra Amato
+#use HltL0MuonConf       v3r8    Hlt   # Alessia Satta/Sandra Amato
 use HltLine             v4r4    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r17   Hlt   # Jaap Panman
 use HltMuonAlley        v3r0p1  Hlt   # Sandra Amato
@@ -32,7 +32,7 @@ use Fidel               v1r4p1  Phys  # Sara Furcas
 use LoKiTrigger         v10r1   Phys  # Vanya Belyaev  ###### CHECK
 use TisTosTobbing       v5r0    Phys  # Tomasz Skwarnicki
 
-use LoKiTracks          v*      Phys  # Vanya Belyaev  
+use LoKiTracks          v0r0    Phys  # Vanya Belyaev   #### update!
 
 # Declare this as a container package
 apply_pattern container_package
