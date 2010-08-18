@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-08-02 - Chris Jones
+ - Small CPU optimisation suggestion from Marco Ca.
+
 ! 2010-07-27 - Chris Jones
  - Tidy up a little the previous commit.
 
