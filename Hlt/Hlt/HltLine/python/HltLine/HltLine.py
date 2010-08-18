@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.39 2010-08-18 14:54:06 graven Exp $ 
+# $Id: HltLine.py,v 1.40 2010-08-18 21:58:02 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.39 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.40 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -93,6 +93,7 @@ from Configurables import HltMoveVerticesForSwimming as MoveVerticesForSwimming
 from Configurables import HltSelectTracksForSwimming as SelectTracksForSwimming
 from Configurables import HltFilterFittedVertices
 from Configurables import HltFilterFittedTracks
+from Configurables import HltFilterFittedParticles
 from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltVertexToTracks      as VertexToTracks 
@@ -345,6 +346,7 @@ _types_ = { TrackUpgrade  : 'TU'
           , SelectTracksForSwimming : 'SelectTracksForSwimming'   
           , HltFilterFittedVertices : 'HltFilterFittedVertices'
           , HltFilterFittedTracks : 'HltFilterFittedTracks'
+          , HltFilterFittedParticles : 'HltFilterFittedParticles'
           , Hlt__TrackFilter : 'Hlt::TrackFilter'
           , Hlt__TrackPipe : 'Hlt::TrackPipe'
           , GlobalHcalCut  : 'GlobalHcalCut'

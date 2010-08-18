@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.106 2010-08-18 14:54:06 graven Exp $
+! $Id: release.notes,v 1.107 2010-08-18 21:58:46 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-08-18 - V.Gligorov
+ - New Hlt1Member to allow filtering on Particles.
 ! 2010-08-18 - Gerhard Raven
  - handle None as a member (just skip it)
 ! 2010-08-13 - Gerhard Raven
