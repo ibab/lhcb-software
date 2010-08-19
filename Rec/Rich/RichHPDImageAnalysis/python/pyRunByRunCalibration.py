@@ -1,6 +1,8 @@
 
-
-tempRootDir = "/var/work/jonesc/tmp"
+# Globals
+imageFileName = ''
+canvas        = None
+tempRootDir   = "/var/work/jonesc/tmp"
 
 def initialise():
     
@@ -224,6 +226,10 @@ def calibration(rootfiles,type):
     import CondDBUI
     import datetime, time, os
     from PyCool import cool
+
+    # Start a PDF file
+    globals()["imageFileName"] = type+"Calibration.ps"
+    printCanvas('[')
         
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -252,6 +258,9 @@ def calibration(rootfiles,type):
             infiles = runFillData["FillData"][fill]["Files"]
             filesToLoopOver += [mergeRootFile(fill,infiles)]
 
+    # Save shift data for plots
+    plotData = { }
+
     # Loop over the root files and fit the HPD images
     for filename in filesToLoopOver:
 
@@ -277,6 +286,9 @@ def calibration(rootfiles,type):
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
 
+        # Initialise plot data
+        plotData[flag] = { }
+
         for hpdID in range(0,nHPDs):
 
             # Get the HPD for this copy number
@@ -291,6 +303,11 @@ def calibration(rootfiles,type):
                 
                 xOff = pyHistoParsingUtils.imageOffsetX(file,hpdID)
                 yOff = pyHistoParsingUtils.imageOffsetY(file,hpdID)
+
+                shiftMag = sqrt(xOff*xOff+yOff*yOff)
+                plotData[flag][hpdID] = { "ShiftR" : shiftMag,
+                                          "ShiftX" : xOff,
+                                          "ShiftY" : yOff }
 
                 # Update the Si alignment with the image movement data
                 #print "Aligning HPD", hpdID
@@ -324,7 +341,7 @@ def calibration(rootfiles,type):
 
         # close the ROOT file
         file.Close()
-        os.remove(filename)
+        if type == 'Fill' : os.remove(filename)
 
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
@@ -339,3 +356,116 @@ def calibration(rootfiles,type):
                 db.createNode(xmlpath)
                 createdPaths += [xmlpath]
             db.storeXMLString( xmlpath, data, startTime, stopTime )
+
+    printCanvas(']')
+
+def printCanvas(tag=''):
+    canvas = rootCanvas()
+    canvas.Update()
+    imageType = imageFileName.split(".")[1]
+    canvas.Print(imageFileName+tag,imageType)
+    # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
+    if tag == ']' and imageType == 'ps' :
+        import os
+        print "Converting", imageFileName, "to PDF"
+        os.system('ps2pdf '+imageFileName)
+        os.remove(imageFileName)
+        
+def rootCanvas():
+    from ROOT import TCanvas
+    if globals()["canvas"] == None :
+        rootStyle()
+        globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",1000,750)
+    return globals()["canvas"]
+
+def rootStyle():
+    # make ROOT plots less unpleasant to look at ...
+    
+    from ROOT import gROOT, gStyle, kWhite, kBlack
+
+    # Start from a plain default
+    gROOT.SetStyle("Plain")
+
+    lhcbMarkerType    = 8
+    lhcbMarkerSize    = 0.8
+    lhcbFont          = 62
+    lhcbStatFontSize  = 0.02
+    lhcbStatBoxWidth  = 0.12
+    lhcbStatBoxHeight = 0.12
+    lhcbWidth         = 1
+    lhcbTextSize      = 0.05
+    lhcbLabelSize     = 0.035
+    lhcbAxisLabelSize = 0.035
+    lhcbForeColour = kBlack
+
+    gStyle.SetFrameBorderMode(0)
+    gStyle.SetPadBorderMode(0)
+
+    # canvas options
+    gStyle.SetCanvasBorderSize(0)
+    gStyle.SetCanvasBorderMode(0)
+
+    # fonts
+    gStyle.SetTextFont(lhcbFont)
+    gStyle.SetTextSize(lhcbTextSize)
+    gStyle.SetLabelFont(lhcbFont,"x")
+    gStyle.SetLabelFont(lhcbFont,"y")
+    gStyle.SetLabelFont(lhcbFont,"z")
+    gStyle.SetLabelSize(lhcbLabelSize,"x")
+    gStyle.SetLabelSize(lhcbLabelSize,"y")
+    gStyle.SetLabelSize(lhcbLabelSize,"z")
+    gStyle.SetTitleFont(lhcbFont)
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"x")
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"y")
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"z")
+    gStyle.SetTitleColor(kWhite)
+    gStyle.SetTitleFillColor(kWhite)
+    gStyle.SetTitleColor(kBlack)
+    gStyle.SetTitleBorderSize(0)
+    gStyle.SetTitleTextColor(kBlack)
+
+    # set title position
+    gStyle.SetTitleX(0.15)
+    gStyle.SetTitleY(0.97)
+    # turn off Title box
+    gStyle.SetTitleBorderSize(0)
+    gStyle.SetTitleTextColor(lhcbForeColour)
+    gStyle.SetTitleColor(lhcbForeColour)
+
+    # use bold lines and markers
+    gStyle.SetLineWidth(lhcbWidth)
+    gStyle.SetFrameLineWidth(lhcbWidth)
+    gStyle.SetHistLineWidth(lhcbWidth)
+    gStyle.SetFuncWidth(lhcbWidth)
+    gStyle.SetGridWidth(lhcbWidth)
+    gStyle.SetLineStyleString(2,"[12 12]")
+    gStyle.SetMarkerStyle(lhcbMarkerType)
+    gStyle.SetMarkerSize(lhcbMarkerSize)
+
+    # label offsets
+    gStyle.SetLabelOffset(0.015)
+
+    # by default, do not display histogram decorations:
+    gStyle.SetOptStat(1111)
+    # show probability, parameters and errors
+    gStyle.SetOptFit(1011)
+
+    # look of the statistics box:
+    gStyle.SetStatBorderSize(1)
+    gStyle.SetStatFont(lhcbFont)
+    gStyle.SetStatFontSize(lhcbStatFontSize)
+    gStyle.SetStatX(0.9)
+    gStyle.SetStatY(0.9)
+    gStyle.SetStatW(lhcbStatBoxWidth)
+    gStyle.SetStatH(lhcbStatBoxHeight)
+
+    # put tick marks on top and RHS of plots
+    gStyle.SetPadTickX(1)
+    gStyle.SetPadTickY(1)
+
+    # histogram divisions
+    gStyle.SetNdivisions(505,"x")
+    gStyle.SetNdivisions(510,"y")
+
+    # Force the style
+    gROOT.ForceStyle()
