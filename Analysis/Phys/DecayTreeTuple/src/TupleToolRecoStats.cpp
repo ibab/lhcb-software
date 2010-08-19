@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.cpp,v 1.4 2010-08-11 12:59:48 jhe Exp $
+// $Id: TupleToolRecoStats.cpp,v 1.5 2010-08-19 11:15:57 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -108,3 +108,35 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
   return StatusCode(test) ;
     
   } 
+//=============================================================================
+// nVelo by Matt, with a protection by PK
+//============================================================================
+unsigned TupleToolRecoStats::nVelo(const LHCb::Tracks* tracks) {
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "nVelo" << endmsg ;
+    std::vector<LHCb::Track*> tmpCont;
+    LHCb::Tracks::const_iterator iterT = tracks->begin();
+    for(; iterT != tracks->end() ;++iterT) {
+      if ((*iterT)->hasVelo() == true) tmpCont.push_back(*iterT); 
+    }
+    if (msgLevel(MSG::VERBOSE)) verbose() << "tmpCont " << tmpCont.size() << endmsg ;
+    if (tmpCont.empty()) return 0;
+    std::vector<LHCb::Track*> keepCont;
+    keepCont.push_back(tmpCont.front());
+    
+    std::vector<LHCb::Track*>::const_iterator iterT2 = tmpCont.begin();
+    for (;iterT2 != tmpCont.end(); ++iterT2 ){
+      const std::vector<LHCb::LHCbID>& vids = (*iterT2)->lhcbIDs();
+      std::vector<LHCb::LHCbID> veloHits; veloHits.reserve(vids.size());
+      LoKi::select(vids.begin(), vids.end(), std::back_inserter(veloHits), boost::bind(&LHCb::LHCbID::isVelo,_1));
+      
+      if (inCloneContainer(keepCont,veloHits) == false){
+        // nothing
+      } 
+      else {
+        keepCont.push_back(*iterT2);   
+      }
+    } // iterT2
+    if (msgLevel(MSG::VERBOSE)) verbose() << "keepCont " << keepCont.size() << endmsg ;
+    return keepCont.size();
+}
