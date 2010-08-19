@@ -115,7 +115,7 @@ VaryGasPressureTemperatureAlg::updateRadiator( const Rich::RadiatorType rad )
              << endmsg;
     }
 
-    // Vary the presssure
+    // Vary the pressure
     const double newPres = (m_presVaryShift*Gaudi::Units::Pa) + m_nomPressure[rad] + 
       ( Gaudi::Units::Pa * m_presVaryAmp * std::sin(M_PI*2.0*m_nEvt/m_presVaryPeriod) );
     if ( fabs(newPres-currentPres) > m_presTol )
