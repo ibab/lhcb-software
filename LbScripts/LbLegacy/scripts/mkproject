@@ -613,11 +613,11 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 
     if wlock :
         afs_dir_path = os.path.join(rel_dir, maindir)
-        afs_vol = Volume(afs_dir_path)
+        afs_vol = Volume(dirname=afs_dir_path)
         afs_vol.lock()
     if wunlock :
         afs_dir_path = os.path.join(rel_dir, maindir)
-        afs_vol = Volume(afs_dir_path)
+        afs_vol = Volume(dirname=afs_dir_path)
         afs_vol.unlock()
 
 #-----------------------------------------------------------------------------------
