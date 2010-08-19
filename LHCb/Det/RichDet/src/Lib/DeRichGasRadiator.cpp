@@ -1,10 +1,8 @@
+
 //----------------------------------------------------------------------------
 /** @file DeRichGasRadiator.cpp
  *
  *  Implementation file for detector description class : DeRichGasRadiator
- *
- *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.19 2010-01-14 16:39:03 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -64,11 +62,11 @@ StatusCode DeRichGasRadiator::initialize ( )
 
   bool foundGasConditions( false );
 
-  // in HLT mode the "normal gas conditions are not available
+  // in HLT mode the normal gas conditions are not available
   bool HltMode( true );
 
   // setup gas conditions
-  if ( hasCondition( "GasParameters" ) && condition("GasParameters") )
+  if ( hasCondition("GasParameters") && condition("GasParameters") )
   {
     m_gasParametersCond = condition( "GasParameters" );
     msg << MSG::DEBUG << "Using condition <GasParameters>" << endmsg;
@@ -233,72 +231,142 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   TabulatedProperty::Table& aTable = modTabProp->table();
   aTable.clear();
   aTable.reserve( momVect.size() );
+  // identify the gas radiator and the ref index formula type.
+  // for now use the Single term formula for CF4 as default. This may be switched to classic by changing the following
+  // flag in the future, if needed.
 
-  // Get parameters
-  const double SellE1 = param<double>("SellE1Param");
-  const double SellE2 = param<double>("SellE2Param");
-  const double SellF1 = param<double>("SellF1Param");
-  const double SellF2 = param<double>("SellF2Param");
-  const double SellLorGasFac = param<double>("SellmeirLorenzFact");
-  const double RhoEffectiveSellDefault = param<double>("RhoEffectiveSellParam");
-  const double GasMolWeight   = param<double>("GasMolWeightParam");
-  const bool isC3F8Medium = ( material()->name().find("C3F08") != std::string::npos ) ? true : false;
+  double RefTemperature(293.0);
 
+  enum GasRadRef {C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm};
 
-  double AParam =0.0;
-  double AMultParam=0.0;
-  double EphyZSq =0.0;
-  double MomConvWave=0.0;
-  if(isC3F8Medium ) {
-    AParam = param<double>("C3F8SellMeirAFactor");
-    AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
-    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
-    const double aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
-
-
-    if(aWaveZero != 0.0) {
-      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+  GasRadRef curRadMedium = C4F10_Classic;  // initialize with one of the options.
+  if ( material()->name().find("CF4") != std::string::npos )
+  {
+    // the following value is for backward compatibility with old versions of DB.
+    bool CF4_RefIndex_Use_SingleTerm_Formula= exists("CF4ReferenceTempSellmeirAbjean") ? true : false;
+    if ( CF4_RefIndex_Use_SingleTerm_Formula )
+    {
+      curRadMedium=CF4_SingleTerm ;
+      //RefTemperature= param<double> ("CF4ReferenceTempSellmeirAbjean" ); // redundant since stp temp is directly used.
+    }
+    else
+    {
+      curRadMedium=CF4_Classic;
+      // RefTemperature = param<double>("CF4ReferenceTempSellmeirClassic"); // not used since is initialized to the
+      // correct value and the old versions of DB does not contain this.
     }
   }
-
+  else if(  material()->name().find("C3F08") != std::string::npos )
+  {
+    curRadMedium=C3F8_SingleTerm;
+    // RefTemperature= param<double> ("C3F8ReferenceTemp"); // redundant since STP temp is directly used for this case.
+  }
+  else if (material()->name().find("C4F10")!= std::string::npos )
+  { // this check kept for safety.
+    curRadMedium=C4F10_Classic;
+    RefTemperature = param<double>("C4F10ReferenceTemp");
+  }
+  else
+  {  // it is none of the known radiator gases.
+    error()<<" Unknown radiator medium for refractive index determination in DeRichGasRadiator:  "
+           <<  material()->name()<< endmsg;
+    return StatusCode::FAILURE;
+  }
+  double SellE1(0.0),SellE2(0.0),SellF1(0.0),SellF2(0.0),SellLorGasFac(0.0);
+  double RhoEffectiveSellDefault(0.0),GasMolWeight(0.0) ;
+  double AParam(0.0),AMultParam(0.0),MomConvWave(0.0), aWaveZero(0.0),EphyZSq(0.0);
   double GasRhoCur( 0.0 );
 
-  if ( material()->name().find("C4F10") != std::string::npos ) {
-    const double RefTemperature = param<double>("C4F10ReferenceTemp");
+  // the classic sellmeir formulae here are all at reference temperature of
+  // 293K whereas the single pole formulae are at the reference temperature of 273K.
+  // the reference temp for classic is read from the db for now.
+
+  if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium)  )
+  {
+
+    SellE1 = param<double>("SellE1Param");
+    SellE2 = param<double>("SellE2Param");
+    SellF1 = param<double>("SellF1Param");
+    SellF2 = param<double>("SellF2Param");
+    SellLorGasFac = param<double>("SellmeirLorenzFact");
+    RhoEffectiveSellDefault = param<double>("RhoEffectiveSellParam");
+    GasMolWeight   = param<double>("GasMolWeightParam");
     GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
       ( RefTemperature/curTemp );
-  }else if ( isC3F8Medium  ) {
+
+  }
+  else if ( CF4_SingleTerm == curRadMedium )
+  {
+
+    AParam = param<double>("CF4SellMeirAFactor");
+    AMultParam = param<double>("CF4SellMeirAMultiplicationFactor");
+    aWaveZero=  param<double> ("CF4SellMeirLambdaZeroFactor");
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+    if(aWaveZero > 1.0)  // typical value when exists = 61.9
+    {
+      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+    }
     GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
       (Gaudi::Units::STP_Temperature/curTemp);
 
-  }else {
-
-
-    GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
-      (Gaudi::Units::STP_Temperature/curTemp);
   }
+  else if ( C3F8_SingleTerm == curRadMedium )
+  {
+
+    AParam = param<double>("C3F8SellMeirAFactor");
+    AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
+    aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+    if(aWaveZero > 1.0) //typical value when exists=64.4
+    {
+      EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+    }
+    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
+      (Gaudi::Units::STP_Temperature/curTemp);
+
+  }
+  else
+  {
+
+    error()<<" Unknown radiator medium for refractive index determination in DeRichGasRadiator:  "<<endmsg;
+    return StatusCode::FAILURE;
+
+  }  // end if on ref index options
 
   // calculate ref index
+  double nMinus1=0.0;
   for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
   {
     const double epho = momVect[ibin]/Gaudi::Units::eV;
-    double nMinus1=0.0;
 
-    if( isC3F8Medium ) {
-      nMinus1 =
-        scaleFactor * (AParam*AMultParam*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
-    }else {
-      const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
+    if ( (C4F10_Classic == curRadMedium) ||  (CF4_Classic == curRadMedium)  )
+    {
+
+      const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) ) +
         (SellF2/( (SellE2*SellE2) - (epho * epho) ));
       const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
       nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
-    }
 
+    }
+    else if ( (CF4_SingleTerm == curRadMedium)  ||  ( C3F8_SingleTerm == curRadMedium )  )
+    {
+
+      nMinus1 =
+        scaleFactor * (AParam*AMultParam*MomConvWave*MomConvWave*GasRhoCur)/(EphyZSq-(epho*epho));
+
+    }
+    else
+    {
+
+      nMinus1=0.0;
+
+    }  // end if on ref index options
 
     const double curRindex = 1.0+nMinus1;
 
     aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
-  }
+
+  } // end loop over bins of photon energy.
 
   debug() << "Table in TabulatedProperty " << tabProp->name()
           << " updated with " << momVect.size() << " bins" << endmsg;
