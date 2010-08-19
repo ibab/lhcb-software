@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
- *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.14 2008-10-16 15:59:34 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
@@ -110,6 +107,26 @@ namespace Rich
                                                             const bool createIfMissing = true ) const
       {
         return this->richSmartIDs ( RawEventLocations(1,taeLoc), hpdID, createIfMissing );
+      }
+
+      /** Access the total number of RICH hits in the current event, for all configured TAE spills
+       *  @return The total number of hits for the configured TAE locations
+       */
+      virtual unsigned int nTotalHits() const = 0;
+
+      /** Access the total number of RICH hits in the current event, for the given list of TAE spills
+       *  @param taeLocs The TAE location(s) ( "" for main event, "Prev1" for -25 ns etc. )
+       *  @return The total number of hits for the configured TAE locations
+       */
+      virtual unsigned int nTotalHits( const RawEventLocations& taeLocs ) const = 0;
+
+      /** Access the total number of RICH hits in the current event, for the given TAE spill
+       *  @param taeLoc The TAE location ( "" for main event, "Prev1" for -25 ns etc. )
+       *  @return The total number of hits for the configured TAE location
+       */
+      inline unsigned int nTotalHits( const RawEventLocation& taeLoc )
+      {
+        return this->nTotalHits ( RawEventLocations(1,taeLoc) );
       }
 
     };
