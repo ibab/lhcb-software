@@ -4,8 +4,6 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.26 2009-08-03 09:22:37 jonrob Exp $
- *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
  */
@@ -34,7 +32,7 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichSystem::DeRichSystem( const std::string & name )
-  : DeRichBase(name) 
+  : DeRichBase(name)
 { }
 
 //=============================================================================
@@ -94,7 +92,7 @@ StatusCode DeRichSystem::initialize ( )
 //=========================================================================
 StatusCode DeRichSystem::buildHPDMappings()
 {
-  info() << "Update triggered for HPD numbering maps" << endmsg;
+  debug() << "Update triggered for HPD numbering maps" << endmsg;
 
   // clear maps and containers
   m_soft2hard.clear();
@@ -285,7 +283,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     {
       m_inactiveHardIDs.push_back  ( hardID );
       m_inactiveSmartIDs.push_back ( hpdID  );
-      info() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
+      debug() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
     }
   }
   std::sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
@@ -330,8 +328,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     }
   }
 
-  info() << "Built mappings for " << boost::format("%2i") % (m_l1IDs.size()-saveL1size)
-         << " L1 and " << nHPDs << " HPDs in " << rich << endmsg;
+  debug() << "Built mappings for " << boost::format("%2i") % (m_l1IDs.size()-saveL1size)
+          << " L1 and " << nHPDs << " HPDs in " << rich << endmsg;
 
   return StatusCode::SUCCESS;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-08-08 - Chris Jones
+ - Suppress info messages from DeRichSystem on number of L1 boards etc.
+
 !======================== RichDet v14r5 2010-07-19 ===========================
 ! 2010-06-24 - Chris Jones
  - Various improvements to Rich::TabulatedFunction1D
