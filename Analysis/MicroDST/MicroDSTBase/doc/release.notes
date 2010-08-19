@@ -1,10 +1,16 @@
-!$Id: release.notes,v 1.56 2010-08-12 14:47:51 jpalac Exp $
+!$Id: release.notes,v 1.57 2010-08-19 15:24:18 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-08-19 - Juan Palacios
+ - MicroDST/MicroDSTCommon.h
+  . Fix get<T> method.
+ - Temporarily add Particle2LHCbIDVectorMap, a persistifiable class to hold 
+   a map of SmartRef<Particle>, vector<LHCbID>. This should be moved elsewhere!
 
 ! 2010-08-12 - Juan Palacios
  - Removed MicroDST::ContainerClonerAlg
