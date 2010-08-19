@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-19 - G.Graziani
+ - declare trend histograms via new OnlineHistDB::declareTrendingHistogram method
+
 ! 2010-08-16 - Patrick Robbe
  - src/Archive.cpp: fix use of PresenterInformation class for history trend
    plots

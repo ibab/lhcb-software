@@ -1,4 +1,4 @@
-// $Id: CreateTrendingHistogramDialog.cpp,v 1.2 2010-08-08 15:37:20 robbep Exp $
+// $Id: CreateTrendingHistogramDialog.cpp,v 1.3 2010-08-19 16:11:08 ggiacomo Exp $
 
 #include <iostream>
 
@@ -75,11 +75,12 @@ void CreateTrendingHistogramDialog::ok() {
       std::string tagName  ( tag_entry -> GetText() -> Data() ) ;
       std::string fileName ( m_fileEntry -> GetText() ) ;
 
-      // task name = histo name
-      // algorithm name = file name
-      // histogram name = tag name
-      m_histdb -> declareHistogram( histoName , tagName , fileName , 
-				    OnlineHistDBEnv::TRE ) ;
+      if (histoName.empty()) {
+        m_histdb -> declareTrendingHistogram( fileName, tagName);
+      }
+      else {
+        m_histdb -> declareTrendingHistogram( fileName, tagName, histoName );
+      }
       bool result = m_histdb -> commit() ;
       int retCode ;
       if ( result ) {    
