@@ -115,20 +115,10 @@ StatusCode TimingTuple::execute() {
   fillTuple(tuple, "backwardTracks", nBack);
   fillTuple(tuple, "veloTracks", veloTracks);
   fillTuple(tuple, "BestTracks",number<LHCb::Tracks>(LHCb::TrackLocation::Default));
-  fillTuple(tuple, "HPDHits", nRichHits());
+  fillTuple(tuple, "HPDHits", m_richTool->nTotalHits());
   
   return tuple->write();
 
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TimingTuple::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -163,30 +153,3 @@ unsigned TimingTuple::nVelo(const LHCb::Tracks* tracks) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "keepCont " << keepCont.size() << endmsg ;
     return keepCont.size();
 }
-
-//=============================================================================
-// nRichHits by Chris
-//============================================================================
-unsigned int TimingTuple::nRichHits(){
-
-  unsigned int nHits(0);
-  Rich::DAQ::L1Map data  = m_richTool->allRichSmartIDs();
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 ){
-    // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = 
-            (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
-    {
-      // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = 
-              (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
-      {
-        nHits += (*iHPD).second.smartIDs().size() ;
-      }
-    }
-  }
-  return nHits;
-}
-

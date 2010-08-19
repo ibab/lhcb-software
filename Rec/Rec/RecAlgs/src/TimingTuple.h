@@ -33,11 +33,9 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   unsigned int nVelo(const LHCb::Tracks* tracks); ///< extract and count velo tracks
-  unsigned int nRichHits(); ///< Rich hits
 
 private:
   ISequencerTimerTool* m_timerTool ; ///< timer tool
