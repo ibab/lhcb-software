@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.11 2010-08-12 14:47:51 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.12 2010-08-19 15:08:37 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -131,7 +131,7 @@ public:
   }
 
   template <class T>
-  inline T* get(const std::string& location) {
+  inline typename Gaudi::Utils::GetData<T>::return_type get(const std::string& location) {
     return PBASE:: template get<T>(location);
   }
 
