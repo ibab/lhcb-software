@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.40 2010-08-18 21:58:02 gligorov Exp $ 
+# $Id: HltLine.py,v 1.41 2010-08-19 09:37:07 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.40 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -727,7 +727,7 @@ class Hlt1Tool (object ) :
                 if type(tool) is not Hlt1Tool : 
                     raise AttributeError, "The type %s is not an Hlt1Tool"%type(tool)
                 tool.createConfigurable( instance )
-
+        return instance
         
    
 

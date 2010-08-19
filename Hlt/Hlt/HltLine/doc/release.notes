@@ -1,16 +1,22 @@
-! $Id: release.notes,v 1.107 2010-08-18 21:58:46 gligorov Exp $
+! $Id: release.notes,v 1.108 2010-08-19 09:37:07 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-08-19 - Gerhard Raven
+ - return created instance from Hlt1Tool
+
 ! 2010-08-18 - V.Gligorov
  - New Hlt1Member to allow filtering on Particles.
+
 ! 2010-08-18 - Gerhard Raven
  - handle None as a member (just skip it)
+
 ! 2010-08-13 - Gerhard Raven
  - more elegant python import
+
 !========================== HltLine v4r4  2010-07-02 ===================
 ! 2010-07-02 - Gerhard Raven
  - create infrastructure for default VoidFilter cuts in each Hlt2 line
