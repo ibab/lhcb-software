@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.196 2010-08-19 09:53:47 graven Exp $
+! $Id: release.notes,v 1.197 2010-08-19 13:51:39 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2010-08-19 - Gerhard Raven
  - update to latest iteration of GEC code
+ - fix naming convention in DiHadronLifetimeUnbiased
 
 ! 2010-08-18 - V. Gligorov
  - Add GECs to all Hlt1 "physics" lines. Add new tracking options to

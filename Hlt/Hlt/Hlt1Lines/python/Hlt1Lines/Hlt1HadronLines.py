@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -291,8 +291,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
 
         # lifetime unbiased dihadron part
         #---------------------
-        def LTUnbDiHadron(type=""):
-            prefix = "LTUnbDi"
+        def LTUnbDiHadron(prefix,type=""):
 
             DocaCut                = str(self.getProp("HadLTUnbVertex_DOCACut"))
             VertexPCut             = str(self.getProp("HadLTUnbVertex_PCut"))
@@ -416,7 +415,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , algos = [confirmationl0part()]+\
                            [confirmationtrackmatch()]+\
                            [confirmationguidedforward()]+\
-                           [LTUnbDiHadron()]
+                           [LTUnbDiHadron(prefix='DiHadronLTUnbiased')]
                  )     
             
 
