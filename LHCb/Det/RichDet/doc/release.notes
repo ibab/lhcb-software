@@ -3,7 +3,20 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-
+!2010-08-19 - Sajan Easo
+ - Refractive index of CF4 corrected by using the correct reference
+   temperature. This fine tunes the refractive index by shifting n-1 by about
+   7 percent. This can be used with older versions of DDDB.
+   The adhoc corrections made in conddb so far 
+   for real data can be removed when using this by setting the
+   RefractivityScaleFactor" to 1.0 in ../Conditions/Rich2/Environment/Gas.xml
+   For MC data this was always 1.0 anyway. All changes in DeRichGasRadiator.cpp
+- Improved Refractive index of RICH2 gas by using a new parametrization
+  from a recent reference.
+   This needs the new DDDB modifications as of Aug20-2010. 
+   In case of using the old DDDB the above
+   mentioned correction will be automatically used to give the same correct
+   refractive index. All changes in DeRichGasRadiator.cpp
 ! 2010-08-08 - Chris Jones
  - Suppress info messages from DeRichSystem on number of L1 boards etc.
 
