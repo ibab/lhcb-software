@@ -69,10 +69,10 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                    }
                        , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut'                : 1000.
                                                 , 'Muon_DeltaPCut'               :   -1 
-                                                , 'Muon_TConfNSigmaX'            :   10 
-                                                , 'Muon_TConfNSigmaY'            :   10 
-                                                , 'Muon_TConfNSigmaTx'           :   10 
-                                                , 'Muon_TConfNSigmaTy'           :   10 
+                                                , 'Muon_TConfNSigmaX'            :    8
+                                                , 'Muon_TConfNSigmaY'            :    7 
+                                                , 'Muon_TConfNSigmaTx'           :    8
+                                                , 'Muon_TConfNSigmaTy'           :    7 
                                                 , 'Muon_PtCut'                   : 1350
                                                 , 'MuonIP_PtCut'                 : 850
                                                 , 'Muon_IPMinCut'                : 0.09
