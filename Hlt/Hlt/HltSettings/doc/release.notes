@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-19 - Johannes Albrecht
+ - tighten HLT1 muon Pr for muons
+ - add Calibration_VeloMicroBias
+
 ! 2010-08-18 - V. Gligorov
  - First iteration of September 2010 threshold settings.  
 
