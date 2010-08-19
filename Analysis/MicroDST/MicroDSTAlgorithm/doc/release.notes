@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.94 2010-08-12 14:45:16 jpalac Exp $
+! $Id: release.notes,v 1.95 2010-08-19 15:34:43 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2010-08-19 - Juan Palacios
+ - Added CopyParticle2LHCbIDs
+  . Copies map of SmartRef<Particle> -> vector<LHCbID>
 
 ! 2010-08-12 - Juan Palacios
  - CopyParticles and CopyPrimaryVertices are KeyedContainerClonerAlgs,
