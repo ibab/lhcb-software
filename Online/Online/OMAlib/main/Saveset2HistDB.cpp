@@ -1,10 +1,17 @@
-// $Id: Saveset2HistDB.cpp,v 1.6 2010-07-22 16:21:51 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.7 2010-08-19 16:13:22 ggiacomo Exp $
 #include <iostream>
+#include <unistd.h>
 #include <TFile.h>
 #include <TKey.h>
 #include <TH1.h>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
+// all the rest for the trending tool
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "Reflex/PluginService.h"
+#include "Trending/ITrendingTool.h"
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -19,11 +26,25 @@ public:
   SavesetHistID(std::string &hAlg,
                 std::string &hName,
                 OnlineHistDBEnv::HistType &hType) :
-    alg(hAlg), name(hName), type(hType) {}
+    alg(hAlg), name(hName), type(hType), isTrend(false)  { dump();}
+  SavesetHistID(std::string &hAlg,
+                std::string &hName):
+    alg(hAlg), name(hName), type(OnlineHistDBEnv::TRE), isTrend(true)  {dump();}
   ~SavesetHistID() {}
+  void dump() {
+    if (isTrend)
+      cout << "Declaring trend histogram: tag " << name <<" from File "<<alg<<
+        "  of type "<< OnlineHistDBEnv_constants::HistTypeName[(int) type]
+           <<endl;
+    else
+      cout << "Declaring histogram " << Task<<"/"<<alg<<
+        "/"<<name << "  of type "<< OnlineHistDBEnv_constants::HistTypeName[(int) type]
+           <<endl;
+  }
   std::string alg;
   std::string name;
   OnlineHistDBEnv::HistType type;
+  bool isTrend;
 };
 std::vector<SavesetHistID*> histos;
 
@@ -33,8 +54,7 @@ void usage();
 OnlineHistDBEnv::HistType typeFromClass(std::string cl);
 
 int main(int narg,char **argv ) {
-  
-
+  ITrendingTool * trendingTool = NULL;
   if(narg < 2) {
     usage();
     return 0;
@@ -47,6 +67,10 @@ int main(int narg,char **argv ) {
       if ('h' == opt) {
         usage();
         return 0;
+      }
+      else if ('r' == opt) {
+        Task = "TrendHistograms";
+        firstfile = iarg+1;
       }
       else {
         setoption( *(argv[iarg]+1), argv[iarg+1] );
@@ -68,9 +92,9 @@ int main(int narg,char **argv ) {
   
   // connect to DB
   if(DBpw == "") {
-    cout << "Enter the " << DBuser <<" password on "<<DB<<":";
-    cin >> DBpw;
-    cout<<endl;
+   char  *pass;
+   pass=getpass("Enter your password:");   
+   DBpw=pass;
   }
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
 
@@ -81,10 +105,35 @@ int main(int narg,char **argv ) {
   
   // loop on input root files and store histograms to be declared
   int nh=0;
-  for (iarg = firstfile ; iarg < narg ; iarg++ ) {
-    TFile saveset(argv[iarg],"READ");
-    nh += declareDir ((TDirectory*) &saveset);
-    saveset.Close();
+  for (iarg = firstfile ; iarg < narg ; iarg++ ) {    
+    if (Task == "TrendHistograms") {
+      // special case of trending histograms
+      ISvcLocator * iface = Gaudi::svcLocator() ;
+      IService * isvc ;
+      iface -> getService( "ToolSvc" , isvc ) ;
+      const IInterface *a3( isvc ) ;
+      const std::string &name("TrendingTool");
+      IAlgTool * intf = ROOT::Reflex::PluginService::Create<IAlgTool *>( name,
+                                                                         name, name , a3 );
+      
+      trendingTool = dynamic_cast<ITrendingTool *>(intf) ;
+      boost::filesystem::path filePath(argv[iarg] );
+      trendingTool->openRead( filePath.replace_extension("").string() ) ;
+      std::vector< std::string > tags ;
+      trendingTool->tags( tags );
+      std::vector< std::string >::iterator it;
+      std::string fileName( argv[iarg] );
+      for (it=tags.begin() ; it<tags.end(); it++) {
+        nh++;
+        std::string& tagname=*it;
+        histos.push_back( new SavesetHistID(fileName, tagname ));
+      }
+    }
+    else {
+      TFile saveset(argv[iarg],"READ");
+      nh += declareDir ((TDirectory*) &saveset);
+      saveset.Close();
+    }
   }
 
   // ask for confirmation
@@ -100,10 +149,13 @@ int main(int narg,char **argv ) {
       // declare and commit
       int j=0;
       for ( ih=histos.begin(); ih != histos.end() ; ih++) {
-        HistDB->declareHistogram(Task, 
-                                 (*ih)->alg,
-                                 (*ih)->name,
-                                 (*ih)->type);
+        if((*ih)->isTrend)
+          HistDB->declareTrendingHistogram((*ih)->alg, (*ih)->name);
+        else
+          HistDB->declareHistogram(Task, 
+                                   (*ih)->alg,
+                                   (*ih)->name,
+                                   (*ih)->type);
         if ((++j)%50 == 0) cout <<"."<<flush;
       }
       HistDB->commit();
@@ -111,9 +163,12 @@ int main(int narg,char **argv ) {
     }
     for ( ih=histos.begin(); ih != histos.end() ; ih++) {
       delete (*ih);
-    }
+    }    
   }
   delete HistDB;
+  // Release trending tool
+  if(trendingTool)
+    delete trendingTool ;
   return 0;
 }
 
@@ -145,9 +200,7 @@ int declareDir(TDirectory* dir, std::string algo,std::string hpath) {
         nh++;
         histos.push_back( new SavesetHistID(algo, hname, type ) );
         
-        cout << "Declaring histogram " << Task<<"/"<<algo<<
-          "/"<<hname << "  of type "<< OnlineHistDBEnv_constants::HistTypeName[(int) type]
-             <<endl;
+        
       }
     }
   }
@@ -196,7 +249,8 @@ void usage()
 {
   cout << "Saveset2HistDB <options> saveset1.root saveset2.root ..." <<endl;
   cout << "   where options are:" <<endl;
-  cout << "      -t  <TaskName> \t mandatory " <<endl;
+  cout << "      -t  <TaskName> \t mandatory, unless -r" <<endl;
+  cout << "      -r  source contains trending histograms (equivalent to -t TrendHistograms)" <<endl;
   cout << "      -d  <DB>    \t choose database (default is the production DB at the pit)" <<endl;
   cout << "      -u  <DBuser>\t database login user (default is HIST_WRITER)" <<endl;
   cout << "      -p  <DBpw>  \t database login password " <<endl;

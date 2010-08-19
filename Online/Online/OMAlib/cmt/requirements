@@ -10,11 +10,12 @@ branches src cmt doc OMAlib
 
 
 use   ROOT             v*       LCG_Interfaces
+use   Boost            v*       LCG_Interfaces
 
 use   OnlineHistDB     v7*       Online
 use   GaudiAlg         v*
 use   DIM              v*  	Online
-
+use   Trending         v*       Online
 #
 apply_pattern install_more_includes more=OMAlib
 #
