@@ -9,4 +9,8 @@
     </class>
   </exclusion>
   <class name = "std::vector<LHCb::RecVertex>" />
+  <class name = "std::vector<LHCb::LHCbID>"/>
+  <class name = "GaudiUtils::VectorMap< const LHCb::Particle*, std::vector<LHCb::LHCbID> >" />
+  <class name = "Particle2LHCbIDVectorMap"
+         id = "00000370-0000-0000-0000-000000000000"/>
 </lcgdict>
