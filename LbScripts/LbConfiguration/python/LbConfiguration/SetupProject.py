@@ -1137,7 +1137,7 @@ class SetupProject:
             if len(parser.rargs) < 1:
                 raise OptionValueError("%s must be followed by the project name and optionally by the version"%opt_str)
             p_name = parser.rargs.pop(0)
-            if len(parser.rargs) and re.match("^v[0-9]+r[0-9]+(p[0-9]+)?$",parser.rargs[0]):
+            if len(parser.rargs) and re.match(r"^(v[0-9]+r[0-9]+(p[0-9]+)?)|([0-9]+[a-z]?)|(.*[\[\]\*\?].*)$",parser.rargs[0]):
                 v = parser.rargs.pop(0)
             else:
                 v = None
