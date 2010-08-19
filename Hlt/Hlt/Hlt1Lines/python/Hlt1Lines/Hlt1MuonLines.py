@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.25 2010-08-19 10:24:01 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.26 2010-08-19 14:42:07 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 
 
@@ -122,7 +122,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                          , nSigmaTx=self.getProp('Muon_TConfNSigmaTx')
                          , nSigmaTy=self.getProp('Muon_TConfNSigmaTy')
                          , restrictSearch = True
-                         , tools = [ConfiguredPR( "PatSeeding" , 5000)]
+                         , tools = [ConfiguredPR( "PatSeeding" ,0,0,5000)]
                                            )]
                                          )]
                                        )] 
