@@ -71,8 +71,9 @@
 		 MidHCal,
 		 EndHCal,
                  Muon,
+	         LastMeasurement,
 	         Vertex,
-	         LastMeasurement'
+	         V0Vertex'
        access = 'PUBLIC'
        strTypConv = 'TRUE'
        unknownValue = 'LocationUnknown'

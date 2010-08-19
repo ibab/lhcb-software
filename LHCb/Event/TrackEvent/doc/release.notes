@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2010-08-20 Wouter Hulsbergen
+ - Added V0Vertex to State::Location
+
 !======================= TrackEvent v5r6 2010-07-26 ==========================
 ! 2010-07-23 Wouter Hulsbergen
  - Added Calo to Measurement::Types
