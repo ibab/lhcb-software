@@ -594,7 +594,9 @@ def dateTimeString():
 
 def createTempOptsFile(name):
     import os
-    return os.getcwd()+"/tempOpts/"+name+"_"+dateTimeString()+".py"
+    tempFullPath = os.getcwd()+"/tempOpts"
+    if not os.path.exists(tempFullPath) : os.makedirs(tempFullPath)
+    return tempFullPath+"/"+name+"_"+dateTimeString()+".py"
 
 #=============================================================================================
 
