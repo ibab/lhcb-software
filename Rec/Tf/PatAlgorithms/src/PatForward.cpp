@@ -117,7 +117,7 @@ StatusCode PatForward::execute() {
     // (ProcStatus returns zero status for us in cases where we don't
     // explicitly add a status code)
     procStat->addAlgorithmStatus(name(), "Tracking", "LimitVeloTracksExceeded", -3 , true );
-    return Warning("Too many velo tracks", StatusCode::SUCCESS, 1);
+    return Warning("Too many velo tracks", StatusCode::SUCCESS, 0);
   }
  // reject hot events
   const LHCb::STLiteCluster::STLiteClusters* clusterCont 
@@ -130,7 +130,7 @@ StatusCode PatForward::execute() {
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
       procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfITHitsExceeded", -3 , true );
-    return Warning("To many IT hits event rejected", StatusCode::SUCCESS, 1);
+    return Warning("Too many IT hits event rejected", StatusCode::SUCCESS, 0);
   }  
 
   const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
@@ -142,7 +142,7 @@ StatusCode PatForward::execute() {
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
      procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfOTHitsExceeded", -3 , true );
-    return Warning("To Many OT hits event rejected", StatusCode::SUCCESS,1); 
+    return Warning("Too Many OT hits event rejected", StatusCode::SUCCESS,0); 
   }
 
   if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;

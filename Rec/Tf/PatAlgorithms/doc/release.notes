@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-08-19 - Gerhard Raven
+ - kill Warning printout during event loop of 'Too Many XYZ'
+
 ! 2010-08-05 - Stephanie Hansmann-Menzemer
  - New tuning of PatForward
 
