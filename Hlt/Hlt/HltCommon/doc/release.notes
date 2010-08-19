@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-19 - V. Gligorov
+ - New HltAlgorithm to filter on Particles in Hlt1.
+
 ! 2010-08-18 - V. Gligorov
  - HltGEC now to cut on OT/IT/Velo cluster multiplicities.
 
