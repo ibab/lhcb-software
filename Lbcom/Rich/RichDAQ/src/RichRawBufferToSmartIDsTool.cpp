@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
- * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.29 2009-09-03 16:54:43 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -188,4 +185,47 @@ const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
     m_rawFormatT->decodeToSmartIDs( m_rawEventLocs, data );
   }
   return data;
+}
+
+unsigned int RawBufferToSmartIDsTool::nTotalHits() const
+{
+  const Rich::DAQ::L1Map & data = allRichSmartIDs();
+  return countTotalHits(data);
+}
+
+unsigned int RawBufferToSmartIDsTool::nTotalHits( const RawEventLocations& taeLocs ) const
+{
+  const Rich::DAQ::L1Map & data = allRichSmartIDs(taeLocs);
+  return countTotalHits(data);
+}
+
+unsigned int RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data ) const
+{
+  // tally of the number of hits
+  unsigned int nHits(0);
+
+  // Loop over L1 boards
+  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
+        iL1 != data.end(); ++iL1 )
+  {
+    // loop over ingresses for this L1 board
+    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+          iIn != (*iL1).second.end(); ++iIn )
+    {
+      // Loop over HPDs in this ingress
+      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      { 
+        // skip inhibited HPDs ?
+        if ( (*iHPD).second.header().inhibit() ) { continue; }
+        // Is the smart ID valid ?
+        if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+        // all OK so count hits
+        nHits += (*iHPD).second.smartIDs().size();
+      }
+    }
+  }
+
+  // return the final count
+  return nHits;
 }

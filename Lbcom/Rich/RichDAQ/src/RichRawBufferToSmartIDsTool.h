@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
- *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.20 2009-06-03 08:45:11 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -91,6 +88,12 @@ namespace Rich
       const LHCb::RichSmartID::Vector& richSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs,
                                                      const LHCb::RichSmartID hpdID,
                                                      const bool createIfMissing = true ) const;
+
+      // Access the total number of RICH hits in the current event, for all configured TAE spills
+      unsigned int nTotalHits() const;
+
+      // Access the total number of RICH hits in the current event, for the given list of TAE spills
+      unsigned int nTotalHits( const RawEventLocations& taeLocs ) const;
       
     private: // private methods
 
@@ -113,6 +116,9 @@ namespace Rich
 
       /// Dummy vector of hits
       const LHCb::RichSmartID::Vector & dummyVector() const;
+
+      /// Count the total number of hits in a L1Map
+      unsigned int countTotalHits( const Rich::DAQ::L1Map & data ) const;
 
     private: // private data
 

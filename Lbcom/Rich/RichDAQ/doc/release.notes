@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2010-08-19 - Chris Jones
+ - Add new methods to RawBufferToSmartIDsTool to return the total number of 
+   hits in the current event.
+
 !========================== RichDAQ v3r27 2010-05-22 =========================
 ! 2010-04-27 - Chris Jones
  - Turn back on the Event ID cross checks within the RICH data (but not with
