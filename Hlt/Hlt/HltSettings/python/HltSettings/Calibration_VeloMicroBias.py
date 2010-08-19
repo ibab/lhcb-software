@@ -1,6 +1,6 @@
 class Calibration_VeloMicroBias :
     """
-    Threshold settings for Hlt1 and 2 in nominal conditions (list of commissioning)
+    Threshold settings for OT aging activity 
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
@@ -35,9 +35,8 @@ class Calibration_VeloMicroBias :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        return {
-            Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } 
-                                          , 'Postscale': { 'Hlt1MBMicroBias.*' : 1. }
-                                     }
+        return { Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1. } 
+                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 1. }
+                                   }
         
-            }
+               }
