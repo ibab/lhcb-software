@@ -4,6 +4,12 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-08-19 - Patrick Koppenburg
+ - New algorithm TimingTuple that writes an nTuple with timing,
+   memory and some hits and track counters. Some code duplication
+   with DecayTreeTuple that cannot easily be run in Brunel
+ - Add a dependency on RichKernel
+
 !========================== RecAlgs v1r9 2010-07-20 ==========================
 ! 2010-07-16 - Chris Jones
  - Add new monitor for ProcStatus processing aborts. Fill a single histogram

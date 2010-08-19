@@ -15,6 +15,7 @@ use LHCbKernel      v* Kernel
 use GaudiAlg        v*
 use GaudiUtils      v*
 use AIDA            v*   LCG_Interfaces
+use RichKernel      v* Rich
 
 library RecAlgs ../src/*.cpp
 
