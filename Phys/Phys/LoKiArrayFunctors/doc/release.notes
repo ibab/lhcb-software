@@ -5,6 +5,8 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiArrayFunctors v9r3 2010-08-19 =================
+
 ! 2010-08-05 - Vanya Belyaev
 
  - add ASUM metafunctor 
