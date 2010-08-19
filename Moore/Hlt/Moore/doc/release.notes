@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-08-19 - Gerhard Raven
+ - move configuration of MonitorSvc around
+
 !========================== Moore v9r4 2010-07-17 ===================
 ! 2010-07-16 - Gerhard Raven
  - fix L0 TCK format in case of leading 0

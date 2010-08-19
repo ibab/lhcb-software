@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.128 2010-07-17 18:30:06 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.129 2010-08-19 15:58:40 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -111,7 +111,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import LoKiSvc
         LoKiSvc().Welcome = False
 
-	import OnlineEnv 
+        import OnlineEnv 
         self.setProp('UseTCK', True)
         self._configureDataOnDemand()
 
@@ -119,9 +119,12 @@ class Moore(LHCbConfigurableUser):
         EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
         EventLoopMgr().Warnings = False
 
-        app=ApplicationMgr()
+        from Configurables import MonitorSvc
+        MonitorSvc().disableDimPropServer      = 1
+        MonitorSvc().disableDimCmdServer       = 1
 
-	
+        app=ApplicationMgr()
+        
         # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
@@ -136,36 +139,33 @@ class Moore(LHCbConfigurableUser):
             del allConfigurables['EventSelector']
 
         if not self.getProp('RunMonitoringFarm') :
-		TAE = OnlineEnv.TAE != 0
-		input   = 'EVENT' if not TAE else 'MEP'
-		output  = 'SEND'
-		mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
-		app.Runable = OnlineEnv.evtRunable(mepMgr)
-		app.ExtSvc.append(mepMgr)
-		evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
-		evtMerger.DataType = OnlineEnv.MDF_BANKS
-		eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
-		app.ExtSvc.append(eventSelector)
-		OnlineEnv.evtDataSvc()
+            TAE = OnlineEnv.TAE != 0
+            input   = 'EVENT' if not TAE else 'MEP'
+            output  = 'SEND'
+            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
+            app.Runable = OnlineEnv.evtRunable(mepMgr)
+            app.ExtSvc.append(mepMgr)
+            evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
+            evtMerger.DataType = OnlineEnv.MDF_BANKS
+            eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
+            app.ExtSvc.append(eventSelector)
+            OnlineEnv.evtDataSvc()
 
-		# define the send sequence
-		writer =  GaudiSequencer('SendSequence')
-		writer.OutputLevel = OnlineEnv.OutputLevel
-		writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
-		app.TopAlg.append( writer )
-		#app.OutStream.append( writer )
-	else :
-		input = 'Events'
-		mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
-		app.Runable = OnlineEnv.evtRunable(mepMgr)
-		app.ExtSvc.append(mepMgr)
-		eventSelector = OnlineEnv.mbmSelector(input=input,decode=False)
-		app.ExtSvc.append(eventSelector)
-		OnlineEnv.evtDataSvc()
-        	if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-
-
-
+            # define the send sequence
+            writer =  GaudiSequencer('SendSequence')
+            writer.OutputLevel = OnlineEnv.OutputLevel
+            writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
+            app.TopAlg.append( writer )
+            #app.OutStream.append( writer )
+        else :
+            input = 'Events'
+            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
+            app.Runable = OnlineEnv.evtRunable(mepMgr)
+            app.ExtSvc.append(mepMgr)
+            eventSelector = OnlineEnv.mbmSelector(input=input,decode=False)
+            app.ExtSvc.append(eventSelector)
+            OnlineEnv.evtDataSvc()
+            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
 
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
@@ -186,7 +186,7 @@ class Moore(LHCbConfigurableUser):
             os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
             log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
         msg.fifoPath = os.environ['LOGFIFO']
-	import OnlineEnv 
+        import OnlineEnv 
         msg.OutputLevel = OnlineEnv.OutputLevel
         msg.doPrintAlways = False
 
@@ -230,7 +230,7 @@ class Moore(LHCbConfigurableUser):
         conddb.IgnoreHeartBeat = self.getProp('IgnoreDBHeartBeat') 
 
         if self.getProp('EnableRunChangeHandler') : 
-	    import OnlineEnv 
+            import OnlineEnv 
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
@@ -461,7 +461,7 @@ class Moore(LHCbConfigurableUser):
         #       Online requires UseTCK
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
- 	    import OnlineEnv 
+             import OnlineEnv 
             self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
@@ -481,10 +481,6 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
 
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
-
-        from Configurables import MonitorSvc
-        MonitorSvc().disableDimPropServer      = 1
-        MonitorSvc().disableDimCmdServer       = 1
 
 
         # forward some settings... 
