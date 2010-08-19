@@ -1,4 +1,4 @@
-// $Id: HltGEC.cpp,v 1.2 2010-08-18 22:06:31 gligorov Exp $
+// $Id: HltGEC.cpp,v 1.3 2010-08-19 09:51:40 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,18 +32,9 @@ Hlt::GEC::GEC
   , m_maxITHits ( 3000 )
   , m_maxVeloHits ( 3000 )    
 {
-  declareProperty
-    ( "MaxOTHits" , 
-      m_maxOTHits , 
-      "Maximalnumber of OT-hits" ) ;
-  declareProperty
-    ( "MaxITHits" , 
-      m_maxITHits , 
-      "Maximalnumber of IT-hits" ) ;
-  declareProperty
-    ( "MaxVeloHits" , 
-      m_maxVeloHits , 
-      "Maximalnumber of Velo-hits" ) ;
+  declareProperty ( "MaxOTHits" , m_maxOTHits , "Maximum number of OT-hits" ) ;
+  declareProperty ( "MaxITHits" , m_maxITHits , "Maximum number of IT-hits" ) ;
+  declareProperty ( "MaxVeloHits" , m_maxVeloHits , "Maximum number of Velo-hits" ) ;
 }
 // ============================================================================
 // virtual & protected destructor 
@@ -74,14 +65,10 @@ StatusCode Hlt::GEC::finalize ()
 // ============================================================================
 bool Hlt::GEC::accept () const 
 { 
-  const LHCb::STLiteCluster::STLiteClusters* clusterContIT 
-    = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
-  const LHCb::VeloLiteCluster::VeloLiteClusters* clusterContVelo
-    = get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
-  return ((m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits) && 
-          (clusterContIT->size() < m_maxITHits) &&
-          (clusterContVelo->size() < m_maxVeloHits)
-         ); 
+  return (m_maxOTHits<0   || m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits)
+      && (m_maxITHits<0   || get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters)->size() < m_maxITHits)
+      && (m_maxVeloHits<0 || get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default)->size() < m_maxVeloHits) 
+      ;
 }
 // ============================================================================
 // check
@@ -100,5 +87,3 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Hlt, GEC )
 // ============================================================================
 // The END 
 // ============================================================================
-
-

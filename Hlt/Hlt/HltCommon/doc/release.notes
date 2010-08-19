@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-19 - Gerhard Raven
+ - update GEC code once more
+
 ! 2010-08-19 - V. Gligorov
  - New HltAlgorithm to filter on Particles in Hlt1.
 
