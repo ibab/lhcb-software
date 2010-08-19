@@ -20,6 +20,7 @@ def __data( ) :
       from Configurables import Hlt__GEC
       from HltLine.HltDecodeRaw import DecodeIT,DecodeVELO
       from HltLine.HltLine import Hlt1Tool
+      #### This does not work, as CONTAINS is incompatible with FastClusterContainer...
       cuts = {  'IT' :   { 'Code' : "CONTAINS('Raw/IT/LiteClusters')   < 3000" , 'Prerequisite' : DecodeIT }
              ,  'VELO' : { 'Code' : "CONTAINS('Raw/Velo/LiteClusters') < 10000", 'Prerequisite' : DecodeVELO }
              ,  'OT' :   { 'Code' : "ACCEPT('Hlt::GEC/OTGEC')", 'Prerequisite' : None, 'tools' : Hlt1Tool( Hlt__GEC, "MyGEC", MaxOTHits = 10000 ) }
