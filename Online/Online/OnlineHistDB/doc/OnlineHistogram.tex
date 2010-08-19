@@ -8,6 +8,17 @@
  full path name of the page to which this histogram object is attached
 
 
+\item    OnlineHistPage* {\bf pageObject}();
+
+
+ associated OnlineHistPage object
+
+
+\item    inline OnlineHistoOnPage* {\bf onpage}() ;
+
+ link to OnlineHistoOnPage object (if available)
+
+
 \item    inline int {\bf instance}() const ;
 
  counter (starting from 1) to distinguish several instances of the same histogram on the same page
@@ -40,12 +51,12 @@
 
 \item    inline std::string\& {\bf hstype}() ;
 
- histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+ histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'', ``CNT'' or ``TRE'' )
 
 
 \item    inline OnlineHistDBEnv::HistType {\bf type}() ;
 
- histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
+ histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'', ``CNT'' or ``TRE'' )
 
 
 \item    inline int {\bf dimension}() ;
@@ -380,7 +391,10 @@
                       std::vector$<$float$>$* warn,\\\mbox{}~~~~~~~~~ 
                       std::vector$<$float$>$* alarm,\\\mbox{}~~~~~~~~~
                       std::vector$<$float$>$* inputs,\\\mbox{}~~~~~~~~~
-                      bool \&mask);
+                      bool \&mask,\\\mbox{}~~~~~~~~~
+                      long \&statusbits,\\\mbox{}~~~~~~~~~
+                      float \&minstat,\\\mbox{}~~~~~~~~~
+                      float \&minstatfrac);
 
  gets parameters for analysis with ID AnaID. Returns true on success
 

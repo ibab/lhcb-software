@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.45 2010-06-10 16:57:50 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.46 2010-08-19 16:12:58 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -94,6 +94,28 @@ void OnlineHistDB::declareHistByServiceName(const std::string &ServiceName)
 {
   declareHistogram(ServiceName,"","_BYSN_",H1D);
 }
+
+void OnlineHistDB::declareTrendingHistogram(std::string File,
+                                            std::string tag,
+                                            std::string HistoTitle) {
+  m_StmtMethod = "OnlineHistDB::declareTrendingHistogram";
+  declareHistogram(OnlineHistDBEnv_constants::TrendHistoTask, 
+                   tag, 
+                   File, 
+                   OnlineHistDBEnv::TRE);
+  std::string id = OnlineHistDBEnv_constants::TrendHistoTask +"/" +
+    tag +"/" + File;
+  OnlineHistogram * h=getHistogram(id);
+  if(h) {
+    if (HistoTitle=="_default_") HistoTitle=tag;
+    h->setDisplayOption("SHOWTITLE", &HistoTitle );
+    h->saveHistDisplayOptions();
+  }
+  else {
+    warningMessage("trending histogram declaration failed! file="+File+" tag="+tag);
+  }
+}
+
 
 void OnlineHistDB::declareHistogram(std::string TaskName,
 				    std::string AlgorithmName,

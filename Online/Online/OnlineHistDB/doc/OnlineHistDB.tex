@@ -98,13 +98,20 @@
  declares an Histogram to the DB by its attributes.  The enum HistType is defined in class OnlineHistDBEnv
 
 
+\item    void {\bf declareTrendingHistogram}(std::string File,\\\mbox{}~~~~~~~~~
+                                std::string tag,\\\mbox{}~~~~~~~~~
+                                std::string HistoTitle="\_default\_");
+
+ declares a trending histogram. optional HistoTitle is the title to be displayed, the default is the tag name
+
+
 \item    OnlineHistogram* {\bf declareAnalysisHistogram}(std::string Algorithm,\\\mbox{}~~~~~~~~~
                                             std::string Name,\\\mbox{}~~~~~~~~~
                                             std::vector$<$OnlineHistogram*$>$ \&Sources,\\\mbox{}~~~~~~~~~
                                             std::vector$<$float$>$* Parameters = NULL,\\\mbox{}~~~~~~~~~
                                             OnlineHistogram* InputSet = NULL);
 
- declares an histogram to be produced at analysis
+ declares a virtual histogram to be produced at display or analysis
  level using algorithm Algorithm. Name is the histogram name. Sources
  and/or InputSet must contain the pointers to the input histograms or set. 
  Parameters is a
@@ -291,5 +298,12 @@
 
 
  gets the list of algorithms, type can be "\_ALL\_", "CHECK", "HCREATOR"
+
+
+\item    int {\bf getConditions}(std::vector$<$int$>$\& bits,\\\mbox{}~~~~~~~~~ 
+                     std::vector$<$std::string$>$\& conditions,\\\mbox{}~~~~~~~~~
+                     std::vector$<$std::string$>$\& dimservices);
+
+ gets the list of known detector status conditions that can be checked by automatic analysis, returning their number
 
 

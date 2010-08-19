@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.30 2010-06-10 16:57:50 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.31 2010-08-19 16:12:58 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -45,7 +45,11 @@ class  OnlineHistDB : public OnlineHistDBEnv,
 			std::string AlgorithmName,
 			std::string HistogramName,
 			HistType Type); 
-  /// declares an histogram to be produced at analysis
+  /// declares a trending histogram. optional HistoTitle is the title to be displayed, the default is the tag name
+  void declareTrendingHistogram(std::string File,
+                                std::string tag,
+                                std::string HistoTitle="_default_");
+  /// declares a virtual histogram to be produced at display or analysis
   /// level using algorithm Algorithm. Name is the histogram name. Sources
   /// and/or InputSet must contain the pointers to the input histograms or set. 
   /// Parameters is a
