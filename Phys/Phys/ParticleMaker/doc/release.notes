@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.119 2010-08-17 12:08:25 odescham Exp $ 
+! $Id: release.notes,v 1.120 2010-08-19 07:00:03 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+!========================== ParticleMaker v5r7 2010-08-19 =====================
 
 ! 2010-08-16 - Olivier Deschamps
  - improve bremstrahlung correction : 
