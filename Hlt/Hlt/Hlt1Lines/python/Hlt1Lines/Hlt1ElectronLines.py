@@ -129,12 +129,12 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
         ##### Lines
         from Hlt1Lines.HltL0Candidates import L0Channels
-        from Hlt1Lines.Hlt1GECs import Hlt1_GEC
+        from Hlt1Lines.Hlt1GECs import Hlt1GEC
         if 'Electron' in L0Channels() :
             Line ('SingleElectronWithIP'
                      , prescale = self.prescale
                      , L0DU = "L0_CHANNEL('Electron')"
-                     , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + prepareElectronWithIP
+                     , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronWithIP
                              + [ Member ( 'TF','PTCut'
                                         , FilterDescriptor = ['PT,>,'+str(self.getProp('EleIP_PtCut'))]
                                         , HistogramUpdatePeriod = 0
@@ -153,7 +153,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
             Line ('SingleElectronNoIP'
                      , prescale = self.prescale
                      , L0DU = "L0_CHANNEL('Electron')"
-                     , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + prepareElectronNoIP
+                     , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronNoIP
                              + [ Member ( 'TF','PTCut'
                                         , FilterDescriptor = ['PT,>,'+str(self.getProp('Ele_PtCut'))]
                                         , HistogramUpdatePeriod = 0
@@ -167,7 +167,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
             Line( 'ElectronTrackWithIP' 
                  , prescale = self.prescale
                  , L0DU = "L0_CHANNEL('Electron')"
-                 , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
+                 , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
                          + [ Member ( 'VF', 'VertexCut'
                                     , FilterDescriptor = [ 'VertexPointing_PV3D,<,0.5', 'VertexDz_PV3D,>,0.' ]
                                     )
@@ -183,7 +183,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
             Line( 'ElectronTrackNoIP' 
                  , prescale = self.prescale
                  , L0DU = "L0_CHANNEL('Electron')"
-                 , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
+                 , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
                          + [ DecodeECAL
                            , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                            , Member ( 'VF', 'MassCut'

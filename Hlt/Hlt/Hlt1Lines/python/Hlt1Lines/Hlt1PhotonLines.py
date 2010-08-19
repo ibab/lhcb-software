@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
 # =============================================================================
 
 
@@ -121,12 +121,12 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                       ]
 
         from Hlt1Lines.HltL0Candidates import L0Channels
-        from Hlt1Lines.Hlt1GECs import Hlt1_GEC
+        from Hlt1Lines.Hlt1GECs import Hlt1GEC
         if 'Photon' in L0Channels() :
             Line ('PhotonTrack' 
                   , prescale = self.prescale
                   , L0DU = "L0_CHANNEL('Photon')"
-                  , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Photon') ] + commonSeq1
+                  , algos = [ Hlt1GEC(),convertL0Candidates('Photon') ] + commonSeq1
                           + [ Member ('TF', 'Forward'
                                      , FilterDescriptor = ['PT,>,'+str(self.getProp('Track_PtCut'))]
                                      , HistogramUpdatePeriod = 0
@@ -148,7 +148,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
             Line ('PhotonTrackFromEle' 
                   , prescale = self.prescale
                   , L0DU = "L0_CHANNEL('Electron')"
-                  , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + commonSeq1
+                  , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + commonSeq1
                           + [ Member ('TF', 'Forward'
                                      , FilterDescriptor = ['PT,>,'+str(self.getProp('Track_PtCut'))]
                                      , HistogramUpdatePeriod = 0
@@ -171,7 +171,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
             Line ('PhotonDiTrack' 
                   , prescale = self.prescale
                   , L0DU = "L0_CHANNEL('Photon')"
-                  , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Photon') ] + commonSeq1 + commonSeq2
+                  , algos = [ Hlt1GEC(),convertL0Candidates('Photon') ] + commonSeq1 + commonSeq2
                           + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision'
                                      , InputSelection1 = '%VFFitTrack'
                                      , InputSelection2 = '%TFPhoton'
@@ -185,7 +185,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
             Line ('PhotonDiTrackFromEle' 
                   , prescale = self.prescale
                   , L0DU = "L0_CHANNEL('Electron')"
-                  , algos = [ Hlt1_GEC('All',reject=True),convertL0Candidates('Electron') ] + commonSeq1 + commonSeq2
+                  , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + commonSeq1 + commonSeq2
                           + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision'
                                      , InputSelection1 = '%VFFitTrack'
                                      , InputSelection2 = '%TFPhoton'

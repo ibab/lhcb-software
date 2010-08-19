@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -31,16 +31,15 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
-        from Hlt1GECs import Hlt1_GEC
-
-        for i in [ 'VELO','IT','OT' ] :
-            # WARNING: these imply we always decode Velo & IT 
-            Line('GECPassThrough%s'  % i
-                , L0DU = 'L0_DECISION_PHYSICS'
-                , prescale = self.prescale
-                , postscale = self.postscale
-                , algos = [Hlt1_GEC(i,reject=False)]
-                )
+        #from Hlt1GECs import Hlt1_GEC
+        #for i in [ 'VELO','IT','OT' ] :
+        #    # WARNING: these imply we always decode Velo & IT 
+        #    Line('GECPassThrough%s'  % i
+        #        , L0DU = 'L0_DECISION_PHYSICS'
+        #        , prescale = self.prescale
+        #        , postscale = self.postscale
+        #        , algos = [Hlt1_GEC(i,reject=False)]
+        #        )
         Line('ODINPhysics',   ODIN = self.getProp('ODINPhysics')
             , prescale = self.prescale
             , postscale = self.postscale

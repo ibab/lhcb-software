@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -47,8 +47,8 @@ class Hlt1OneTrackLinesConf(HltLinesConfigurableUser) :
         def trackprepare(ip,pt,p):
             #OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
             from HltLine.HltDecodeRaw import DecodeIT
-            from Hlt1Lines.Hlt1GECs import Hlt1_GEC
-            sh = [  Hlt1_GEC('All',reject=True),
+            from Hlt1Lines.Hlt1GECs import Hlt1GEC
+            sh = [  Hlt1GEC(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
