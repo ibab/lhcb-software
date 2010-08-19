@@ -38,9 +38,12 @@ the same dir as this file and import it
 The file has a series of methods to submit the calibration jobs, and analyse the
 results. For submission just run at the ganga prompt 
 
- > RichCKCalibrate.submitCalibrationJobs('XYZ.pck')
+ > RichCKCalibrate.submitCalibrationJobs(['XYZ.pck'])
 
-where XYZ.pck is a file created in step 1.
+where XYZ.pck is a file created in step 1. If you have more than one pickled file you
+wish to submit, just extend the list, e.g.
+
+ > RichCKCalibrate.submitCalibrationJobs(['XYZ1.pck','XYZ2.pck'])
 
 This will submit a load of jobs, which with the grid gods willing, will eventually run...
 

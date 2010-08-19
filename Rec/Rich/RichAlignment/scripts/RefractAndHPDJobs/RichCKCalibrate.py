@@ -91,15 +91,15 @@ def submitControlJobs(pickedRuns="Run71813-LFNs.pck"):
                 #j.remove()
 
 ## Submits calibration jobs
-def submitCalibrationJobs(pickedRuns="RunLFNs.pck"):
-    submitRecoJobs(pickedRuns,"RefractIndexCalib")
+def submitCalibrationJobs(pickedRunsList=["RunLFNs.pck"]):
+    submitRecoJobs(pickedRunsList,"RefractIndexCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(pickedRuns="RunLFNs.pck"):
-    submitRecoJobs(pickedRuns,"RefractIndexVerify")
+def submitVerificationJobs(pickedRunsList=["RunLFNs.pck"]):
+    submitRecoJobs(pickedRunsList,"RefractIndexVerify")
 
 ## Real underlying method
-def submitRecoJobs(pickedRuns,jobType):
+def submitRecoJobs(pickedRunsList,jobType):
 
     import os
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, DiracSplitter, 
@@ -112,89 +112,90 @@ def submitRecoJobs(pickedRuns,jobType):
     else:
         nEventsTotal = 250000
         nFilesMax    = 100
-    
-    RunLFNs = getRunLFNData(pickedRuns)
-    
-    # Loop over runs
-    sortedRuns = sorted(RunLFNs.keys())
-    print "Submitting", jobType, "jobs for runs", sortedRuns
-    nJob = 0
-    for run in sortedRuns:
 
-        # Count jobs
-        nJob += 1
+    for pickedRuns in pickedRunsList:
 
-        # LFNs for this run
-        lfns = RunLFNs[run]
-        if len(lfns)>0 :
+        # Loop over runs
+        print "Reading runs from", pickedRuns
+        RunLFNs = getRunLFNData(pickedRuns)
+        sortedRuns = sorted(RunLFNs.keys())
+        
+        print "Submitting", jobType, "jobs for runs", sortedRuns
+        nJob = 0
+        for run in sortedRuns:
 
-            nFiles = len(lfns)
-            if nFiles > nFilesMax : nFiles = nFilesMax
-            nEventsPerFile = nEventsTotal / nFiles
-            print "Using", nFiles, "data files,", nEventsPerFile, "events per file"
+            # Count jobs
+            nJob += 1
+
+            # LFNs for this run
+            lfns = RunLFNs[run]
+            if len(lfns)>0 :
+
+                nFiles = len(lfns)
+                if nFiles > nFilesMax : nFiles = nFilesMax
+                nEventsPerFile = nEventsTotal / nFiles
+                print "Using", nFiles, "data files,", nEventsPerFile, "events per file"
           
-            # Make a job object
-            j = Job( application = Brunel( version = 'v37r6p1' ) )
+                # Make a job object
+                j = Job( application = Brunel( version = 'v37r6p1' ) )
 
-            # name
-            j.name = jobType+"_Run-"+str(run)
-            print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
+                # name
+                j.name = jobType+"_Run-"+str(run)
+                print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
 
-            # Custom options for this job
-            tmpOptsFile = createTempOptsFile(j.name)
-            extraopts = open(tmpOptsFile,"w")
+                # Custom options for this job
+                tmpOptsFile = createTempOptsFile(j.name)
+                extraopts = open(tmpOptsFile,"w")
 
-            # Sandbox
-            mySandBox = [ ]
+                # Sandbox
+                mySandBox = [ ]
 
-            # Basic additions
-            extraopts.write("from Configurables import Brunel\n")
-            extraopts.write("from Brunel.Configuration import *\n")
-            extraopts.write("HistogramPersistencySvc().OutputFile = \""+j.name+".root\"\n")
-            extraopts.write("Brunel().EvtMax = "+str(nEventsPerFile)+"\n")
+                # Basic additions
+                extraopts.write("from Configurables import Brunel\n")
+                extraopts.write("from Brunel.Configuration import *\n")
+                extraopts.write("HistogramPersistencySvc().OutputFile = \""+j.name+".root\"\n")
+                extraopts.write("Brunel().EvtMax = "+str(nEventsPerFile)+"\n")
 
-            # Only for Calibration jobs
-            if jobType == "RefractIndexCalib" :
-                extraopts.write("from Configurables import UpdateManagerSvc\n")
-                extraopts.write("ums = UpdateManagerSvc()\n")
-                extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
-                extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
+                # Only for Calibration jobs
+                if jobType == "RefractIndexCalib" :
+                    extraopts.write("from Configurables import UpdateManagerSvc\n")
+                    extraopts.write("ums = UpdateManagerSvc()\n")
+                    extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
+                    extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
 
-            # For verification jobs, use custom DB Slice
-            if jobType == "RefractIndexVerify" :
-                dbFile = "NewRichCKRefIndexCalib.db"
-                extraopts.write("from Gaudi.Configuration import *\n")
-                extraopts.write("from Configurables import CondDB, CondDBAccessSvc\n")
-                extraopts.write("CondDB().addLayer(CondDBAccessSvc(\"RichCKCond\",ConnectionString=\"sqlite_file:"+dbFile+"/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
-                mySandBox += [dbFile]
+                # For verification jobs, use custom DB Slice
+                if jobType == "RefractIndexVerify" :
+                    dbFile = "NewRichCKRefIndexCalib.db"
+                    extraopts.write("from Gaudi.Configuration import *\n")
+                    extraopts.write("from Configurables import CondDB, CondDBAccessSvc\n")
+                    extraopts.write("CondDB().addLayer(CondDBAccessSvc(\"RichCKCond\",ConnectionString=\"sqlite_file:"+dbFile+"/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
+                    mySandBox += [dbFile]
 
-            # Close file
-            extraopts.close()
+                # Close file
+                extraopts.close()
 
-            # Job options
-            j.application.optsfile = [ File('CKRefractCalib-FullBrunelReco.py'),
-                                       File(extraopts.name) ]
+                # Job options
+                j.application.optsfile = [ File('CKRefractCalib-FullBrunelReco.py'),
+                                           File(extraopts.name) ]
 
-            # Set the LFNs to run over
-            j.inputdata = LHCbDataset(lfns)
+                # Set the LFNs to run over
+                j.inputdata = LHCbDataset(lfns)
 
-            # Split job into 1 file per subjob
-            j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = nFiles )
+                # Split job into 1 file per subjob
+                j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = nFiles )
 
-            # Merge the output
-            j.merger = SmartMerger( files = [j.name+".root"],
-                                    ignorefailed = True, overwrite = True )
+                # Merge the output
+                j.merger = SmartMerger( files = [j.name+".root"],
+                                        ignorefailed = True, overwrite = True )
 
-            # Optional input files
-            j.inputsandbox = mySandBox
+                # Optional input files
+                j.inputsandbox = mySandBox
 
-            # Dirac backend
-            j.backend = Dirac()
+                # Dirac backend
+                j.backend = Dirac()
 
-            # Submit !!
-            j.submit()
-            #print j
-            #j.remove()
+                # Submit !!
+                j.submit()
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
