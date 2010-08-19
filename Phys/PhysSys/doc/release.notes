@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r9>2010-08-19 Phys v9r9 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r9                                   #
+###############################################################################
+
+
+- Based on LHCb v31r4 and Gaudi v21r10p1. For MicroDST production tests.
+ * Hlt2 default fitter changes from TrgVertexFitter to LoKi::FastVertexFitter.
+ * Suppress some PhysDesktop warnings.
+
 </PRE><H1><A NAME=v9r8>2010-07-26 Phys v9r8 </A></H1><PRE>
 
 ###############################################################################
