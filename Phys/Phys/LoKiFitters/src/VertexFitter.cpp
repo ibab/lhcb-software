@@ -213,7 +213,7 @@ StatusCode LoKi::VertexFitter::_iterate
     } 
   } // end of iterations
   //
-  return Warning ( "No convergency has been reached" , NoConvergency , 1  ) ; // RETURN 
+  return Warning ( "No convergency has been reached" , NoConvergency , m_prints  ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -254,21 +254,21 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   Gaudi::XYZPoint pnt ( m_seed[0] , m_seed[1] , m_seed[2] ) ;
   if ( m_seedZmin > pnt.Z() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Zmin' fiducial volume " , sc , 1 ).ignore() ; 
+    _Warning ("_seed(): Seed is outside of 'Zmin' fiducial volume " , sc ) ; 
     m_seed[2] = 0.5 * ( 0.0 + m_seedZmin ) ; 
     m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
     m_seedci(2,2) = 4.0/m_seedZmin/m_seedZmin;
   }
   if ( m_seedZmax < pnt.Z() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Zmax' fiducial volume " , sc , 1 ).ignore() ; 
+    _Warning ("_seed(): Seed is outside of 'Zmax' fiducial volume " , sc ) ; 
     m_seed[2] = 0.5 * ( 0.0 + m_seedZmax ) ; 
     m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
     m_seedci(2,2) = 4.0/m_seedZmax/m_seedZmax;
   }
   if ( m_seedRho  < pnt.Rho() ) 
   { 
-    Warning ("_seed(): Seed is outside of 'Rho'  fiducial volume " , sc , 1 ).ignore() ; 
+    _Warning ("_seed(): Seed is outside of 'Rho'  fiducial volume " , sc ) ; 
     m_seed[0]     = 0.0 ; m_seed[1] = 0.0 ; 
     m_seedci(0,1) = 0   ; m_seedci(0,2) = 0 ; 
     m_seedci(1,2) = 0   ; m_seedci(0,2) = 0 ;
@@ -313,12 +313,10 @@ StatusCode LoKi::VertexFitter::fit
   { vertex.addToOutgoingParticles( *ip ) ; } ;
   // keep for future tracing
   m_vertex = &vertex ;
-  if ( m_seedZmin > vertex.position().Z() ) 
-  { _Warning ( "fit(): Vertex is outside of 'Zmin' fiducial volume " ) ; }
-  if ( m_seedZmax < vertex.position().Z() ) 
-  { _Warning ( "fit(): Vertex is outside of 'Zmax' fiducial volume " ) ; }
-  if ( m_seedRho  < vertex.position().Rho() ) 
-  { _Warning ( "fit(): Vertex is outside of 'Rho'  fiducial volume " ) ; }
+  if ( m_seedZmin > vertex.position().Z()  
+    || m_seedZmax < vertex.position().Z() 
+    || m_seedRho  < vertex.position().Rho() ) 
+  { _Warning ( "fit(): Vertex is outside of fiducial volume " ) ; }
   //
   return sc ;
 } 

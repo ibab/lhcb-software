@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+
+! 2010-08-19 - Gerhard Raven
+ - VertexFitter: fix a few forgotten printouts
+
 !========================== LoKiFitters v2r7 2010-08-19 =====================
 
 ! 2010-08-11 - Vanya Belyaev
