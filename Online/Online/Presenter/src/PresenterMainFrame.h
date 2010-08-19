@@ -221,9 +221,6 @@ public:
   /// set the saveset file name
   void setSavesetFileName(const std::string & svsFilename) { m_savesetFileName = svsFilename;}
 
-  void setImagePath(const std::string & imagePath);
-  void setDumpFormat(const std::string & dumpFormat);
-
   void setKnownDatabases(const std::string & databasesCfg,
                          const std::string & dbCredentials);
 
@@ -427,7 +424,15 @@ public:
   void setCurrentPageName( const std::string & pageName ) { 
     m_currentPageName = pageName ; } ;
 
-private:
+  /// Set the path for images
+  void setImagePath(const std::string & imagePath) { 
+    m_imagePath = imagePath; };
+
+  /// Set format for image saving
+  void setDumpFormat(const std::string & dumpFormat) {
+    m_dumpFormat = dumpFormat; } ;
+  
+ private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;
   pres::MsgLevel    m_verbosity;

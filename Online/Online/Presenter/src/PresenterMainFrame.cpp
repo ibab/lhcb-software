@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.331 2010-08-16 16:53:57 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.332 2010-08-19 20:55:20 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -44,7 +44,6 @@
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TROOT.h>
-//#include <TThread.h>
 #include <TTimer.h>
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
@@ -57,6 +56,7 @@
 // BOOST
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 // Online
 #include "dim/dic.hxx"
@@ -307,7 +307,8 @@ void PresenterMainFrame::buildGUI() {
     m_editHistogramPropertiesText = new TGHotString("&Histogram Properties...");
     m_editRemoveHistoText = new TGHotString("&Delete Histogram from Page");
     m_editPickReferenceHistogramText = new TGHotString("Set &Reference Histogram...");
-    m_editSaveSelectedHistogramAsReferenceText = new TGHotString("&Save as Reference Histogram");
+    m_editSaveSelectedHistogramAsReferenceText = 
+      new TGHotString("&Save as Reference Histogram");
     m_editPagePropertiesText = new TGHotString("&Page Properties...");
     m_editAddTrendingHistoText = new TGHotString("&Create New Trending Histogram...");
 
@@ -368,7 +369,8 @@ void PresenterMainFrame::buildGUI() {
     m_iconSet = gClient->GetPicture("pack-empty_t.xpm");
     m_iconLevel = gClient->GetPicture("bld_vbox.png");
 
-    m_stockNewFormula =  picpool->GetPicture("stock_new_formula_xpm", (char**)stock_new_formula_xpm);
+    m_stockNewFormula =  picpool->GetPicture("stock_new_formula_xpm", 
+					     (char**)stock_new_formula_xpm);
 
     // File menu
     m_fileMenu = new TGPopupMenu(fClient->GetRoot());
@@ -698,8 +700,9 @@ void PresenterMainFrame::buildGUI() {
 
     // Set reference
     const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
-    m_pickReferenceHistoButton = new TGPictureButton(m_toolBar, f1_tpic,
-                                                     PICK_REFERENCE_HISTO_COMMAND);
+    m_pickReferenceHistoButton = 
+      new TGPictureButton( m_toolBar , f1_tpic , 
+			   PICK_REFERENCE_HISTO_COMMAND ) ;
     m_pickReferenceHistoButton->SetToolTipText("Pick reference histogram");
     m_pickReferenceHistoButton->AllowStayDown(false);
     m_toolBar->AddButton(this, m_pickReferenceHistoButton, 0);
@@ -1618,9 +1621,9 @@ void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode & databaseMode
   }
 }
 
-//==================================================================================
+//=============================================================================
 // Set reference path
-//==================================================================================
+//=============================================================================
 void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
   m_referencePath = referencePath;
   if (m_analysisLib) m_analysisLib->setRefRoot(m_referencePath);
@@ -1631,9 +1634,9 @@ void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
   }
 }
 
-//==================================================================================
+//=============================================================================
 // set saveset path
-//==================================================================================
+//=============================================================================
 void PresenterMainFrame::setSavesetPath(const std::string & savesetPath) {
   m_savesetPath = savesetPath;
   if (!m_savesetPath.empty()) {
@@ -1642,16 +1645,10 @@ void PresenterMainFrame::setSavesetPath(const std::string & savesetPath) {
     }
   }
 }
-void PresenterMainFrame::setImagePath(const std::string & imagePath) {
-  m_imagePath = imagePath;
-}
-void PresenterMainFrame::setDumpFormat(const std::string & dumpFormat) {
-  m_dumpFormat = dumpFormat;
-}
 
-//==============================================================================
+//=============================================================================
 // Change the mode of the presenter
-//==============================================================================
+//=============================================================================
 void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
   switch ( pMode ) {
   case pres::Init:
@@ -1691,9 +1688,9 @@ void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
   if ( ! isBatch() ) reconfigureGUI();
 }
 
-//======================================================================================
+//=============================================================================
 // Set the known databases
-//======================================================================================
+//=============================================================================
 void PresenterMainFrame::setKnownDatabases(const std::string & databasesCfg,
                                            const std::string & dbcredentials) {
   TObjArray* databaseItems(TString(databasesCfg.c_str()).Tokenize(s_configToken));
@@ -2818,23 +2815,19 @@ void PresenterMainFrame::reconfigureGUI() {
   UInt_t current_height = 0;
   current_width = this->GetWidth();
   current_height = this->GetHeight();
-  if (isConnectedToHistogramDB()) {
+  if ( isConnectedToHistogramDB( ) ) {
     refreshPagesDBListTree();
     if(m_alarmDisplay) {
       m_alarmDisplay->enable(true);
       m_alarmDisplay->listAlarmsFromHistogramDB();
     }
     enableAutoCanvasLayoutBtn();
-    if (canWriteToHistogramDB() &&
-        ((pres::EditorOnline == presenterMode()) ||
-         (pres::EditorOffline == presenterMode()))) {
-      showDBTools(pres::ReadWrite);
-    } else {
-      showDBTools(pres::ReadOnly);
-    }
-  } else {
-    hideDBTools();
-  }
+    if ( ( canWriteToHistogramDB() ) &&
+	 ( ( pres::EditorOnline == presenterMode() ) ||
+	   ( pres::EditorOffline == presenterMode() ) || 
+	   ( pres::History == presenterMode () ) ) ) showDBTools(pres::ReadWrite);
+    else showDBTools(pres::ReadOnly);
+  } else hideDBTools();
 
   if ( pres::Online == presenterMode()) {
     if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots() ; 
@@ -3060,9 +3053,9 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
   enablePageLoading();
 }
 
-//=============================================================================================
+//============================================================================
 // refresh histo list from DB
-//=============================================================================================
+//============================================================================
 void PresenterMainFrame::refreshHistoDBListTree() {
   if (m_verbosity >= pres::Verbose) { std::cout << m_message << std::endl; }
   listHistogramsFromHistogramDB(m_databaseHistogramTreeList,
@@ -3838,12 +3831,13 @@ void PresenterMainFrame::toggleFastHitMapDraw() {
   }
 }
 
-//===========================================================================================
+//=============================================================================
 // Enable alarm display
-//===========================================================================================
+//=============================================================================
 void PresenterMainFrame::enableAlarmDisplay(bool mode) {
   m_alarmDisplayEnabled = mode;
-  if (!m_alarmDisplayEnabled && m_viewMenu->IsEntryChecked(SHOW_ALARM_LIST_COMMAND)) {
+  if ( ! ( m_alarmDisplayEnabled ) && 
+       ( m_viewMenu->IsEntryChecked(SHOW_ALARM_LIST_COMMAND) ) ) {
     m_leftMiscFrame->HideFrame(m_databaseAlarmsDock);
     m_viewMenu->UnCheckEntry(SHOW_ALARM_LIST_COMMAND);
     m_viewMenu->DisableEntry(SHOW_ALARM_LIST_COMMAND);
@@ -3851,9 +3845,9 @@ void PresenterMainFrame::enableAlarmDisplay(bool mode) {
   }
 }
 
-//===========================================================================================
+//=============================================================================
 // Toggle show alarm list
-//===========================================================================================
+//=============================================================================
 void PresenterMainFrame::toggleShowAlarmList() {
   if (m_viewMenu->IsEntryChecked(SHOW_ALARM_LIST_COMMAND)) {
     m_viewMenu->UnCheckEntry(SHOW_ALARM_LIST_COMMAND);
@@ -3864,9 +3858,9 @@ void PresenterMainFrame::toggleShowAlarmList() {
   }
 }
 
-//===================================================================
+//=============================================================================
 // Display window listing already known problems
-//===================================================================
+//=============================================================================
 void PresenterMainFrame::toggleShowKnownProblemList() {
   if (m_viewMenu->IsEntryChecked(SHOW_KNOWNPROBLEM_LIST_COMMAND)) {
     m_viewMenu->UnCheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
@@ -3878,19 +3872,18 @@ void PresenterMainFrame::toggleShowKnownProblemList() {
   }
 }
 
-//===================================================================
+//=============================================================================
 // Pick reference histogram
-//===================================================================
+//=============================================================================
 void PresenterMainFrame::pickReferenceHistogram() {
   DbRootHist* histogram = selectedDbRootHistogram();
 
   if (0 != histogram) {
-    TVirtualPad *padsav = gPad;
+    TVirtualPad * padsav = gPad;
     fClient->WaitFor(new ReferencePicker(this, histogram));
     padsav->cd();
   }
 }
-
 
 //===================================================================
 // Save selected histogram as reference
@@ -3904,7 +3897,7 @@ void PresenterMainFrame::saveSelectedHistogramAsReference() {
                  kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
     switch (m_msgBoxReturnCode) {
     case kMBYes:
-      m_archive->saveAsReferenceHistogram(histogram);
+      m_archive -> saveAsReferenceHistogram( histogram ) ;
       break;
     default:
       break;
@@ -4717,6 +4710,22 @@ void PresenterMainFrame::previousInterval() {
     m_presenterInfo.
       setGlobalTimePoint(m_archive->substractIsoTimeDate( m_presenterInfo.globalTimePoint(),
 							  m_presenterInfo.globalStepSize()));
+
+    boost::posix_time::ptime startTime = 
+      boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
+    boost::posix_time::time_duration duration = 
+      boost::posix_time::duration_from_string( m_presenterInfo.globalStepSize() ) ;
+    boost::posix_time::ptime endTime = startTime + duration ;
+
+    m_intervalPickerData -> setStartTime( startTime.date().year(), startTime.date().month() , 
+					  startTime.date().day() , startTime.time_of_day().hours() , 
+					  startTime.time_of_day().minutes() , 
+					  startTime.time_of_day().seconds() ) ;
+
+    m_intervalPickerData -> setEndTime( endTime.date().year(), endTime.date().month() , 
+					endTime.date().day() , endTime.time_of_day().hours() , 
+					endTime.time_of_day().minutes() , 
+					endTime.time_of_day().seconds() ) ;
     
     if (!m_currentPageName.empty()) 
       loadSelectedPageFromDB(m_currentPageName, m_presenterInfo.globalTimePoint() , 
@@ -4762,6 +4771,23 @@ void PresenterMainFrame::nextInterval() {
     m_presenterInfo.
       setGlobalTimePoint( m_archive -> addIsoTimeDate( m_presenterInfo.globalTimePoint() ,
 						       m_presenterInfo.globalStepSize() ) ) ;
+
+    boost::posix_time::ptime startTime = 
+      boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
+    boost::posix_time::time_duration duration = 
+      boost::posix_time::duration_from_string( m_presenterInfo.globalStepSize() ) ;
+    boost::posix_time::ptime endTime = startTime + duration ;
+    
+    m_intervalPickerData -> setStartTime( startTime.date().year(), startTime.date().month() , 
+					  startTime.date().day() , startTime.time_of_day().hours() , 
+					  startTime.time_of_day().minutes() , 
+					  startTime.time_of_day().seconds() ) ;
+    
+    m_intervalPickerData -> setEndTime( endTime.date().year(), endTime.date().month() , 
+					endTime.date().day() , endTime.time_of_day().hours() , 
+					endTime.time_of_day().minutes() , 
+					endTime.time_of_day().seconds() ) ;
+
     if ( ! m_currentPageName.empty() ) 
       loadSelectedPageFromDB( m_currentPageName , m_presenterInfo.globalTimePoint() , 
 			      m_presenterInfo.globalPastDuration() ) ;

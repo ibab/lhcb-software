@@ -1,11 +1,10 @@
-// $Id: DbRootHist.cpp,v 1.180 2010-08-13 16:51:51 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.181 2010-08-19 20:55:20 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
 #include <iostream>
-#include <stdlib.h>
-#include <malloc.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 
 // ROOT
 #ifdef WIN32
@@ -21,17 +20,13 @@
 #include <TProfile.h>
 #include <TStyle.h>
 #include <TSystem.h>
-#include <TMath.h>
 #include <TEllipse.h>
 #include <TObjArray.h>
 #include <TFile.h>
 #include <TPaveStats.h>
 #include <TCanvas.h>
 #include <TKey.h>
-#include <TThread.h>
 #include <TImage.h>
-#include <TText.h>
-#include <THashList.h>
 #ifdef WIN32
 #  pragma warning( pop )
 #endif
@@ -729,7 +724,7 @@ void DbRootHist::fillHistogram() {
       
 	      yerr = 0;
 	      if (entriesPerBin[i] > 0)
-		yerr = TMath::Sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
+		yerr = sqrt(sumWT2PerBin[i]/entriesPerBin[i]-yvalue*yvalue);
 	      // RMS = sqrt(E[x**2]-E[x]**2)
 	      m_rootHistogram->SetBinError(i, yerr);
         
