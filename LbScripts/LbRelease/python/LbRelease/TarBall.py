@@ -234,18 +234,6 @@ def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None
             hf.write(depcont)
             hf.close()
 
-#    prefix = prj_conf.releasePrefix(version)
-#    prj_path = os.path.join(top_dir, prefix)
-#    prj = CMT.Project(prj_path)
-#    cmtprojectpath = os.environ["LHCBRELEASES"]
-#    if os.environ["GAUDISOFT"] != cmtprojectpath :
-#        cmtprojectpath = os.pathsep.join([cmtprojectpath, os.environ["GAUDISOFT"]])
-#    cmtprojectpath = os.pathsep.join([cmtprojectpath, os.environ["LCG_release_area"]])
-#    for p in  prj.externalPackages(cmtprojectpath=cmtprojectpath) :
-#        parprj = p.parentProjectPath()
-#        print p.name(), parprj.name(), parprj.version()
-#    for data in CMT.walk(top=prj, cmtprojectpath=cmtprojectpath) :
-#        print "%s\t\t%s\t\t@\t\t%s" % (data[0].name(), data[0].version(), data[0].fullLocation())
 
 def generateDataHTML(package, version, top_dir=None, output_dir=None) :
     log = logging.getLogger()
@@ -732,8 +720,6 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                                         
             log.info("Adding %d shared locations" % len(ext_shared_dict))         
             log.info("Adding %d binary locations" % len(ext_binary_dict))         
-    #        print ext_shared_dict
-    #        print ext_binary_dict
             log.debug("="*100)
             if overwrite :
                 os.remove(filename)
