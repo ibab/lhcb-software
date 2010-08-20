@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.202 2010-07-30 07:31:09 jpalac Exp $
+# $Id: requirements,v 1.203 2010-08-20 15:07:39 jpalac Exp $
 package AnalysisSys
-version v4r8
+version v4r9
 
 branches doc cmt
 
@@ -10,8 +10,8 @@ branches doc cmt
 use  GaudiPatches               v1r2
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r8     Phys   # Juan Palacios
-use  DSTWriterTests             v1r4p1   Phys   # Juan Palacios
+use  DSTWriters                 v1r10    Phys   # Juan Palacios
+use  DSTWriterTests             v1r5     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
@@ -20,18 +20,18 @@ use  FlavourTagging             v11r3    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r12p1  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5     Rich   # Chris Jones
-use  KaliCalo                   v4r2p2   Phys   # Vanya Belyaev
+use  KaliCalo                   v4r3     Phys   # Vanya Belyaev
 ####################################################################
-use  DaVinciMCTools     	v9r25p4  Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r26    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r6     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v3r6     Phys   # Rob Lambert
+use  DecayTreeTuple             v3r7     Phys   # Rob Lambert
 use  LoKiJets                   v5r2p2   Phys   # Victor Coco
-use  DisplVertices              v6r9     Phys   # Neal Gueissaz
+use  DisplVertices              v6r10    Phys   # Neal Gueissaz
 use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
 #
@@ -42,20 +42,20 @@ use PyAna                       v1r2     Analysis
 # Stripping
 #
 use StrippingAlgs               v1r3   Phys   # Anton Poluektov
-use StrippingConf               v3r6   Phys   # Anton Poluektov
-use StrippingSelections         v1r25  Phys   # Anton Poluektov
-
+use StrippingConf               v3r7   Phys   # Anton Poluektov
+use StrippingSelections         v1r26  Phys   # Anton Poluektov
+use MvaPreSelB2DH               v1r0   Phys   # Sajan Easo
 ####################################################################
-use  MicroDSTBase        	v1r7p4  MicroDST          # Juan Palacios
-use  MicroDSTInterfaces  	v1r4    MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r6p1  MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r10   MicroDST          # Juan Palacios
+use  MicroDSTBase        	v2r0    MicroDST          # Juan Palacios
+use  MicroDSTInterfaces  	v1r5    MicroDST          # Juan Palacios
+use  MicroDSTTools      	v2r0    MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	v4r0    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r9    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r6    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r6    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r13p1 Ex                # Juan Palacios
+use MicroDSTExample             v2r13p2 Ex                # Juan Palacios
 
 # Declare this as a container package
 apply_pattern container_package
