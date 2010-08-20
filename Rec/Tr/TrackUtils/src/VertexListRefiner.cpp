@@ -1,4 +1,4 @@
-// $Id: VertexListRefiner.cpp,v 1.1 2010-04-15 09:30:50 wouter Exp $
+// $Id: VertexListRefiner.cpp,v 1.1 2010/04/15 09:30:50 wouter Exp $
 
 
 /** @class VertexListRefiner VertexListRefiner.h
@@ -35,6 +35,12 @@ private:
   int m_minNumForwardTracks ;
   int m_minNumLongTracks ;
   double m_maxChi2PerDoF ;
+  double m_minX ;
+  double m_maxX ;
+  double m_minY ;
+  double m_maxY ;
+  double m_minZ ;
+  double m_maxZ ;
   bool m_deepCopy ;
 };
 
@@ -54,6 +60,12 @@ VertexListRefiner::VertexListRefiner(const std::string& name,
   declareProperty( "MinNumTracks", m_minNumTracks = 0) ;
   declareProperty( "MaxChi2PerDoF", m_maxChi2PerDoF = -1 ) ;
   declareProperty( "DeepCopy", m_deepCopy = false ) ;
+  declareProperty( "MinX", m_minX = 1) ;
+  declareProperty( "MaxX", m_maxX = -1) ;
+  declareProperty( "MinY", m_minY = 1) ;
+  declareProperty( "MaxY", m_maxY = -1) ;
+  declareProperty( "MinZ", m_minZ = 1) ;
+  declareProperty( "MaxZ", m_maxZ = -1) ;
 }
 
 VertexListRefiner::~VertexListRefiner()
@@ -71,9 +83,14 @@ StatusCode VertexListRefiner::execute()
 
     bool accept = true ;
 
-    // unfortunately stl doesn't work with the smartrefs in vertex
-    std::vector<const LHCb::Track*> tracks(vertex->tracks().size()) ;
-    std::copy(vertex->tracks().begin(),vertex->tracks().end(),tracks.begin()) ;
+    // unfortunately stl doesn't work with the smartrefs in
+    // vertex. furthermore, when reading a dst, track pointers can be
+    // zero.
+
+    std::vector<const LHCb::Track*> tracks ;
+    tracks.reserve( vertex->tracks().size() ) ;
+    BOOST_FOREACH( const LHCb::Track* track, vertex->tracks() ) 
+      if(track) tracks.push_back(track) ;
     
     accept = accept && (m_maxChi2PerDoF<0 || vertex->chi2PerDoF() < m_maxChi2PerDoF) ;
     
@@ -82,6 +99,16 @@ StatusCode VertexListRefiner::execute()
     accept = accept && (m_minNumLongTracks == 0 ||
       std::count_if( tracks.begin(), tracks.end(),
 		     TrackPredicates::Type(LHCb::Track::Long) ) >= m_minNumLongTracks) ;
+    
+    if( accept && m_minX < m_maxX ) 
+      accept = m_minX < vertex->position().x() &&  vertex->position().x() < m_maxX ;
+
+    if( accept && m_minY < m_maxY ) 
+      accept = m_minY < vertex->position().y() &&  vertex->position().y() < m_maxY ;
+
+    if( accept && m_minZ < m_maxZ ) 
+      accept = m_minZ < vertex->position().z() &&  vertex->position().z() < m_maxZ ;
+    
     
     if( accept && (m_minNumBackwardTracks > 0 || m_minNumForwardTracks>0 ) ) {
       int numback = std::count_if( tracks.begin(), tracks.end(),
