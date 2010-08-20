@@ -514,16 +514,21 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 
 # ======================= action: build Doxygen documentation ================================
     if doxygen :
-        log.info('build doxygen documentation')
-        os.chdir(os.path.join(rel_dir, maindir, packSys, 'doc'))
-        os.system(command + os.path.join(rel_dir, maindir, packSys, 'cmt', 'setup' + ext))
-        str = 'makedoc'
-        os.system(str)
-        os.chdir(os.path.join(rel_dir, maindir))
-        if not os.path.islink('doc'):
-            os.symlink(os.path.join(packSys, 'doc'), 'doc')
-        if not os.path.islink('requirements'):
-            os.symlink(os.path.join(packSys, 'cmt', 'requirements'), 'requirements')
+#        log.info('build doxygen documentation')
+#        os.chdir(os.path.join(rel_dir, maindir, packSys, 'doc'))
+#        os.system(command + os.path.join(rel_dir, maindir, packSys, 'cmt', 'setup' + ext))
+#        str = 'makedoc'
+#        os.system(str)
+#        os.chdir(os.path.join(rel_dir, maindir))
+#        if not os.path.islink('doc'):
+#            os.symlink(os.path.join(packSys, 'doc'), 'doc')
+#        if not os.path.islink('requirements'):
+#            os.symlink(os.path.join(packSys, 'cmt', 'requirements'), 'requirements')
+#        os.chdir(rel_dir)
+
+        log.info("Creating the entry in the release web site for %s %s" % (pname, pversion))
+        os.chdir(os.path.join(os.environ["LHCBRELEASES"], "DOC"))
+        os.system("scripts/addrel.py %s %s" % (pname, pversion))
         os.chdir(rel_dir)
 
 # ======================= action: update the "latest versions" html page =====================

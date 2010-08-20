@@ -2,6 +2,10 @@
 
 	* cmt/requirements: release of version v3r4
 
+2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: call addrel.py instead of generating the doxygen documentation for the project.
+
 2010-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: fixed wrong call to the AFS Volume constructor
