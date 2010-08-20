@@ -189,14 +189,12 @@ const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
 
 unsigned int RawBufferToSmartIDsTool::nTotalHits() const
 {
-  const Rich::DAQ::L1Map & data = allRichSmartIDs();
-  return countTotalHits(data);
+  return countTotalHits( allRichSmartIDs() );
 }
 
 unsigned int RawBufferToSmartIDsTool::nTotalHits( const RawEventLocations& taeLocs ) const
 {
-  const Rich::DAQ::L1Map & data = allRichSmartIDs(taeLocs);
-  return countTotalHits(data);
+  return countTotalHits( allRichSmartIDs(taeLocs) );
 }
 
 unsigned int RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data ) const
