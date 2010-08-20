@@ -183,6 +183,18 @@ def getRunFillData(files):
     # Return the Run Time Information
     return runfilldata
 
+def rFromXY(a,b):
+
+    from math import sqrt
+
+    R = sqrt(a[0]*a[0]+b[0]*b[0])
+
+    tempA = a[0]*a[0]*a[1]*a[1] + b[0]*b[0]*b[1]*b[1]
+    tempB = a[0]*a[0] + b[0]*b[0]
+    error = sqrt( tempA / tempB )
+
+    return (R,error)
+
 def mergeRootFile(fill,infiles):
 
     import os
@@ -235,6 +247,9 @@ def calibration(rootfiles,type):
     #nHPDs = 1
     nHPDs = 484
 
+    # Min number of entries in HPD alignment histogram for update
+    minHPDEntries = 10
+
     # Open new alignment SQL slice
     dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
     if os.path.exists(dbFileName) : os.remove(dbFileName)
@@ -257,6 +272,9 @@ def calibration(rootfiles,type):
 
     # Save shift data for plots
     plotData = { }
+
+    # Save last 'good' alignment conditions for each HPD copy number
+    lastGoodAlignment = { }
 
     # Loop over the root files and fit the HPD images
     for filename in filesToLoopOver:
@@ -294,38 +312,44 @@ def calibration(rootfiles,type):
             #hpdAlign = getHPDAlignment(copyNumber)
                 
             # Get the offsets. Use try to catch errors
+            updateOK = True
             try:
 
-                xOff = pyHistoParsingUtils.imageOffsetX(file,hpdID)
-                yOff = pyHistoParsingUtils.imageOffsetY(file,hpdID)
-                shiftMag = sqrt(xOff*xOff+yOff*yOff)
+                xOff = pyHistoParsingUtils.imageOffsetX(file,hpdID,minHPDEntries)
+                yOff = pyHistoParsingUtils.imageOffsetY(file,hpdID,minHPDEntries)
 
                 if hpdID not in plotData.keys() : plotData[hpdID] = { }
-                plotData[hpdID][flag] = { "ShiftR"    : shiftMag,
+                plotData[hpdID][flag] = { "ShiftR"    : rFromXY(xOff,yOff),
                                           "ShiftX"    : xOff,
-                                          "ShiftY"    : yOff,
-                                          "ShiftXerr" : 0.0,
-                                          "ShiftYerr" : 0.0,
-                                          "ShiftRerr" : 0.0
+                                          "ShiftY"    : yOff
                                           }
 
-                # Update the Si alignment with the image movement data
+                # Save as last good alignment for this HPD
+                lastGoodAlignment[hpdID] = [xOff,yOff]
+                
+            except Exception,e:
+
+                #print "No good fit for this", type
+                if hpdID in lastGoodAlignment.keys():
+                    #print " -> Using last good alignment", lastGoodAlignment[hpdID]
+                    xOff = lastGoodAlignment[hpdID][0]
+                    yOff = lastGoodAlignment[hpdID][1]
+                else:
+                    #print " -> No update for HPD", hpdID, "possible. Stick with current DB value"
+                    updateOK = False
+
+            # Update the Si alignment with the image movement data
+            if updateOK :
                 paramName = "dPosXYZ"
                 vect = siAlign.paramAsDoubleVect(paramName)
-                vect[0] = xOff
-                vect[1] = yOff
+                vect[0] = xOff[0]
+                vect[1] = yOff[0]
                 vect[2] = 0
                 siAlign.addParam( paramName, vect, "" )
                 vect = siAlign.paramAsDoubleVect(paramName)
-            
                 # Double check update is correct
-                if vect[0] != xOff or vect[1] != yOff :
-                    print "Warning :  Update mismatch ", xOff, yOff, ":", vect[0], vect[1]
-                
-            except Exception,e:
-                
-                #print "No alignment update possible for HPD", hpdID
-                pass
+                if vect[0] != xOff[0] or vect[1] != yOff[0] :
+                    print "Warning :  Update mismatch ", xOff[0], yOff[0], ":", vect[0], vect[1]
 
             # The alignment path for the HPD silicon
             alignPath = siliconAlignmentFilePath(copyNumber)
@@ -377,12 +401,12 @@ def calibration(rootfiles,type):
             values = data[fl]
             vflag.append(fl)
             vflagerr.append(0.0)
-            vshiftX.append(values['ShiftX'])
-            vshiftXerr.append(values['ShiftXerr'])
-            vshiftY.append(values['ShiftY'])
-            vshiftYerr.append(values['ShiftYerr'])
-            vshiftR.append(values['ShiftR'])
-            vshiftRerr.append(values['ShiftRerr'])
+            vshiftX.append(values['ShiftX'][0])
+            vshiftXerr.append(values['ShiftX'][1])
+            vshiftY.append(values['ShiftY'][0])
+            vshiftYerr.append(values['ShiftY'][0])
+            vshiftR.append(values['ShiftR'][0])
+            vshiftRerr.append(values['ShiftR'][1])
 
         plot = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
         plot.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
