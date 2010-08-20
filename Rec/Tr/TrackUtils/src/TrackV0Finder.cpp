@@ -17,6 +17,7 @@ class IMagneticFieldSvc ;
 class ITrackVertexer ;
 class ITrackExtrapolator ;
 class ITrackInterpolator ;
+
 #include "Event/TwoProngVertex.h"
 namespace LHCb {
   class ParticleProperty ;
@@ -43,7 +44,8 @@ protected:
 			 double& decaylengtherr) const ;
   
   bool hasV0Topology(LHCb::TwoProngVertex& vertex,
-		     const LHCb::RecVertices& pvs) const ;
+		     const LHCb::RecVertices& pvs,
+		     double& decaylength) const ;
 private:
   std::string m_trackInputListName; // Input Tracks container location
   std::string m_pvContainerName;
@@ -57,13 +59,13 @@ private:
   const LHCb::ParticleProperty* m_lambdaProperty ;
   const LHCb::ParticleProperty* m_pionProperty ;
   const LHCb::ParticleProperty* m_protonProperty ;
+  double m_maxTrackChi2PerDoF ;
   unsigned int m_maxNumCommonHits ;
   double m_zmin ;
   double m_zmax ;
+  double m_minDeltaZ ;
   double m_distanceCutUpstream ;
   double m_distanceCutLong ;
-  double m_deltaZCut ;
-  double m_deltaZSignificanceCut ;
   double m_maxChi2V0Vertex ;
   double m_maxChi2PVConstraint ;
   double m_minDecayLengthSignificance ;
@@ -74,10 +76,13 @@ private:
   double m_ksmasscut ;
   double m_lambdamasscut ;
   double m_chisqProbCut ;
+  double m_minCTauKs ;
+  double m_minCTauLambda ;
   bool m_useExtrapolator ;
   bool m_excludePVTracks ;
   bool m_rejectUpstreamHits ;
   bool m_addExtraInfo ;
+  bool m_addStateAtVertex ;
 };
 
 #include "GaudiKernel/AlgFactory.h" 
@@ -117,16 +122,16 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
     m_trackInputListName(LHCb::TrackLocation::Default),
     m_extrapolator("TrackMasterExtrapolator",this),
     m_interpolator("TrackInterpolator",this),
+    m_maxTrackChi2PerDoF(10),
     m_zmin(-100*Gaudi::Units::cm),
     m_zmax( 300*Gaudi::Units::cm),
+    m_minDeltaZ(1*Gaudi::Units::cm),
     m_distanceCutUpstream(5*Gaudi::Units::mm),
     m_distanceCutLong(1*Gaudi::Units::mm),
-    m_deltaZCut(5*Gaudi::Units::cm),
-    m_deltaZSignificanceCut(5),
-    m_maxChi2V0Vertex(25),     // 1 dof
+    m_maxChi2V0Vertex(16),     // 1 dof
     m_maxChi2PVConstraint(20), // 2 dofs
-    m_minDecayLengthSignificance(5),
-    m_correctBFlight(true),
+    m_minDecayLengthSignificance(10),
+    m_correctBFlight(false),
     m_sigmaBFlightX(0.5*Gaudi::Units::mm), // approx RMS of flight length of B in X
     m_sigmaBFlightY(0.5*Gaudi::Units::mm), // approx RMS of flight length of B in Y
     m_sigmaBFlightZ(10*Gaudi::Units::mm),  // approx RMS of flight length of B in Z
@@ -135,7 +140,8 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
     m_useExtrapolator(true),
     m_excludePVTracks(true),
     m_rejectUpstreamHits(true),
-    m_addExtraInfo(false)
+    m_addExtraInfo(false),
+    m_addStateAtVertex(true)
 {
   declareProperty( "TrackContainer", m_trackInputListName = LHCb::TrackLocation::Default  );
   declareProperty( "PVContainer", m_pvContainerName = LHCb::RecVertexLocation::Primary ) ;
@@ -145,7 +151,7 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
   declareProperty( "UseExtrapolator", m_useExtrapolator) ;
   declareProperty( "ExcludePVTracks", m_excludePVTracks) ;
   declareProperty( "MaxNumCommonHits", m_maxNumCommonHits = 0 ) ;
-  declareProperty( "MinDeltaZ", m_deltaZCut) ;
+  declareProperty( "MinDeltaZ", m_minDeltaZ) ;
   declareProperty( "MinDecayLengthSignificance",m_minDecayLengthSignificance) ;
   declareProperty( "MaxChi2V0Vertex", m_maxChi2V0Vertex) ;
   declareProperty( "MaxChi2PVConstraint", m_maxChi2PVConstraint ) ;
@@ -155,7 +161,11 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
   declareProperty( "Extrapolator", m_extrapolator ) ;
   declareProperty( "MaxDistanceLong", m_distanceCutLong ) ;
   declareProperty( "MaxDistanceUpstream", m_distanceCutLong ) ;
+  declareProperty( "AddStateAtVertex", m_addStateAtVertex ) ;
+  declareProperty( "MinCTauKs",     m_minCTauKs     = -1) ; // ctau =27 mm
+  declareProperty( "MinCTauLambda", m_minCTauLambda = -1) ; // ctau =79 mm
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -233,10 +243,10 @@ StatusCode TrackV0Finder::execute()
   if( pvcontainer->empty() ) 
     return Warning("No primary verticesfound. Skip V0 search",StatusCode::SUCCESS,0) ;
 
-  double zprimary = -9999 ;
+  double zprimary = 9999 ;
   for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ; 
        ipv != pvcontainer->end(); ++ipv ) 
-    zprimary = std::max(zprimary, (*ipv)->position().z()) ;
+    zprimary = std::min(zprimary, (*ipv)->position().z()) ;
   
   // Get the Tracks
   const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackInputListName );
@@ -248,7 +258,9 @@ StatusCode TrackV0Finder::execute()
        it != tracks->end(); ++it) {
     const LHCb::Track* track = *it ;
     // require tracks with T and (TT or Velo)
-    if( track->hasT() && (track->hasVelo()||track->hasTT()) &&
+    if( (track->type() == LHCb::Track::Long ||
+	 track->type() == LHCb::Track::Downstream ) &&
+	track->chi2PerDoF() < m_maxTrackChi2PerDoF &&
         // remove tracks from PVs, if required
         (pvcontainer==0 || !m_excludePVTracks || !inAnyVertex(*track,*pvcontainer) ) ) {
       if( (*it)->firstState().qOverP()>0 ) postracks.push_back(*it) ;
@@ -273,7 +285,6 @@ StatusCode TrackV0Finder::execute()
   const double pmass  = m_protonProperty->mass() ;
   const double ksmass  = m_ksProperty->mass() ;
   const double lambdamass = m_lambdaProperty->mass() ;
-  
   
   for( TrackContainer::iterator ipos = postracks.begin() ;
        ipos != postracks.end(); ++ipos) 
@@ -304,8 +315,8 @@ StatusCode TrackV0Finder::execute()
 	  bool isVeloCombi = (*ipos)->hasVelo() && (*ineg)->hasVelo() ;
 	  if( (distance < m_distanceCutLong ||
 	       (distance < m_distanceCutUpstream && !isVeloCombi)) &&
-	      zprimary + m_deltaZCut < z && z< m_zmax ) {
-
+	      m_zmin < z && z< m_zmax && zprimary + m_minDeltaZ < z) {
+	    
 	    // now make an invariant mass cut
 	    Gaudi::XYZVector mompos = postraj.momentum(mupos) ;
 	    Gaudi::XYZVector momneg = negtraj.momentum(muneg) ;
@@ -313,15 +324,18 @@ StatusCode TrackV0Finder::execute()
 				       std::sqrt(mompos.Mag2()+pimass*pimass)) ;
 	    Gaudi::LorentzVector p4neg(momneg.X(),momneg.y(),momneg.Z(),
 				       std::sqrt(momneg.Mag2()+pimass*pimass)) ;
-	    double pipimass = (p4pos+p4neg).M() ;
+	    Gaudi::LorentzVector p4pipi = p4pos+p4neg ;
+	    double pipimass = p4pipi.M() ;
 	    p4pos.SetE( std::sqrt(mompos.Mag2()+pmass*pmass)) ;
-	    double ppimass = (p4pos+p4neg).M() ;
+	    Gaudi::LorentzVector p4ppi = p4pos+p4neg ;
+	    double ppimass = p4ppi.M() ;
 	    p4pos.SetE( std::sqrt(mompos.Mag2()+pimass*pimass)) ;
 	    p4neg.SetE( std::sqrt(momneg.Mag2()+pmass*pmass)) ;
-	    double pipmass = (p4pos+p4neg).M() ;
-	    bool iskscandidate = fabs(pipimass - ksmass) < m_ksmasscut ;
-	    bool islambdacandidate = fabs(ppimass - lambdamass) < m_lambdamasscut ;
-	    bool isantilambdacandidate = fabs(pipmass - lambdamass) < m_lambdamasscut ;
+	    Gaudi::LorentzVector p4pip = p4pos+p4neg ;
+	    double pipmass = p4pip.M() ;
+	    bool iskscandidate = std::abs(pipimass - ksmass) < m_ksmasscut ;
+	    bool islambdacandidate = std::abs(ppimass - lambdamass) < m_lambdamasscut ;
+	    bool isantilambdacandidate = std::abs(pipmass - lambdamass) < m_lambdamasscut ;
 	    
 	    if( iskscandidate || islambdacandidate || isantilambdacandidate) {
 	      // Determine the states passed to the vertexer. At this
@@ -334,14 +348,22 @@ StatusCode TrackV0Finder::execute()
 		// extrapolators are guaranteed to be wrong half the
 		// time!)
 		StatusCode sc ;
-		if( (*ipos)->nodes().empty() ) sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
-		else                           sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
+		if( (*ipos)->nodes().empty() ) 
+		  sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
+		else {
+		  sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
+		  if( sc.isSuccess() ) posstate.setLocation(LHCb::State::V0Vertex) ;
+		}
 		if(!sc.isSuccess() ) {
 		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  posstate = postraj.state(z) ;
+		} 
+		if( (*ineg)->nodes().empty() ) 
+		  sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
+		else {
+		  sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
+		  if( sc.isSuccess() ) negstate.setLocation(LHCb::State::V0Vertex) ;
 		}
-		if( (*ineg)->nodes().empty() ) sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
-		else                           sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
 		if(!sc.isSuccess() ) {
 		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  negstate = negtraj.state(z) ;
@@ -353,43 +375,67 @@ StatusCode TrackV0Finder::execute()
 	      
 	      // finally, create the vertex and cut on the significance
 	      LHCb::TwoProngVertex* vertex = m_vertexer->fit(posstate,negstate ) ;
+	      double decaylength ;
 	      if( vertex == 0 ) {
 		Warning("TrackVertexer Failure", StatusCode::SUCCESS, 0 ).ignore() ;
 	      } else if( vertex->chi2() < m_maxChi2V0Vertex 
-			 && hasV0Topology( *vertex, *pvcontainer ) ) {
+			 && hasV0Topology( *vertex, *pvcontainer,decaylength ) ) {
+
+		// cut on ctau
+		if( m_minCTauKs>0 || m_minCTauLambda >0 ) {
+		  iskscandidate = iskscandidate && 
+		    decaylength * pipimass / p4pipi.P() > m_minCTauKs ;
+		  
+		  islambdacandidate = islambdacandidate &&
+		    decaylength * ppimass / p4ppi.P() > m_minCTauLambda ;
+		  
+		  isantilambdacandidate = isantilambdacandidate &&
+		    decaylength * pipmass / p4pip.P() > m_minCTauLambda ;
+		}
+
 		// one last check: test that there are no hits upstream of the vertex on either track
-		const LHCb::State* mstatepos = (*ipos)->stateAt(LHCb::State::FirstMeasurement ) ;
-		const LHCb::State* mstateneg = (*ineg)->stateAt(LHCb::State::FirstMeasurement ) ;
 		bool hasUpstreamHits = false ;
-		if( m_rejectUpstreamHits || m_addExtraInfo ) {
+		if( m_rejectUpstreamHits ) {
+		  const LHCb::State* mstatepos = (*ipos)->stateAt(LHCb::State::FirstMeasurement ) ;
+		  const LHCb::State* mstateneg = (*ineg)->stateAt(LHCb::State::FirstMeasurement ) ;
 		  hasUpstreamHits =
 		    (mstatepos && mstatepos->z() < vertex->position().z() ) ||
 		    (mstateneg && mstateneg->z() < vertex->position().z() ) ;
 		}
 		
-		if( m_addExtraInfo ) {
-		  vertex->addInfo(100,distance) ;
-		  vertex->addInfo(101,z-zprimary) ;
-		  vertex->addInfo(102,pipimass) ;
-		  vertex->addInfo(103,ppimass) ;
-		  vertex->addInfo(104,pipmass) ;
-		  vertex->addInfo(105,double(hasUpstreamHits)) ;
+		if( !hasUpstreamHits && (iskscandidate || islambdacandidate || isantilambdacandidate )) {
+		  
+		  if( m_addExtraInfo ) {
+		    vertex->addInfo(100,distance) ;
+		    vertex->addInfo(101,z-zprimary) ;
+		    vertex->addInfo(102,pipimass) ;
+		    vertex->addInfo(103,ppimass) ;
+		    vertex->addInfo(104,pipmass) ;
+		  }
+		  vertex->addToTracks(*ipos) ;
+		  vertex->addToTracks(*ineg) ;
+		  if(iskscandidate) {
+		    LHCb::ParticleID pid = LHCb::ParticleID(m_ksProperty->pdgID());
+		    vertex->addPID( pid ) ;
+		  }
+		  if(islambdacandidate) {
+		    LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->pdgID());
+		    vertex->addPID( pid ) ;
+		  }
+		  if(isantilambdacandidate) {
+		    LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID());
+		    vertex->addPID( pid ) ;
+		  }
+		  v0container->add( vertex ) ;
+		  // finally add the states to the tracks, provided the extrapolation was done properly
+		  // (the 'Vertex' location was only set for properly interpolated tracks.
+		  if( m_addStateAtVertex ) {
+		    if( posstate.location()==LHCb::State::V0Vertex ) 
+		      (const_cast<LHCb::Track*>(*ipos))->addToStates( posstate ) ;
+		    if( negstate.location()==LHCb::State::V0Vertex ) 
+		      (const_cast<LHCb::Track*>(*ineg))->addToStates( negstate ) ;
+		  }
 		}
-		vertex->addToTracks(*ipos) ;
-		vertex->addToTracks(*ineg) ;
-		if(iskscandidate) {
-		  LHCb::ParticleID pid = LHCb::ParticleID(m_ksProperty->pdgID());
-		  vertex->addPID( pid ) ;
-		}
-		if(islambdacandidate) {
-		  LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->pdgID());
-		  vertex->addPID( pid ) ;
-		}
-		if(isantilambdacandidate) {
-		  LHCb::ParticleID pid = LHCb::ParticleID(m_lambdaProperty->antiParticle()->pdgID());
-		  vertex->addPID( pid ) ;
-		}
-		v0container->add( vertex ) ;
 	      } else {
 		delete vertex ;
 	      }
@@ -403,7 +449,6 @@ StatusCode TrackV0Finder::execute()
   counter("numselected") += v0container->size() ;
   return StatusCode::SUCCESS;
 }
-
 
 //=============================================================================
 // Check how well this V0 candidate fits to the PV
@@ -508,16 +553,20 @@ TrackV0Finder::constrainToVertex(const Gaudi::XYZPoint& pos,
 
 bool
 TrackV0Finder::hasV0Topology(LHCb::TwoProngVertex& vertex,
-			     const LHCb::RecVertices& pvs) const
+			     const LHCb::RecVertices& pvs,
+			     double& decaylength) const
 {
   // returns true if V0 candidate accepted. we veto two types of background:
   // * V0 candidates that do not point to any PV ( chi2 > m_maxChi2PVConstraint)
   // * V0 candidates that point to a PV but with too small decay length
 
-  bool isFromPV = false ;
-  double chi2(0),decaylength(0),decaylengtherr(1) ;
+  bool accept = true ;
 
   if(pvs.size()>0) {
+    bool isFromPV = false ;
+    double chi2(999),decaylengtherr(1) ;
+    decaylength = 0 ;
+
     // first find the best fitting primary vertex
     const Gaudi::XYZPoint& pos = vertex.position() ;
     Gaudi::SymMatrix7x7 cov7x7  = vertex.covMatrix7x7(0,0) ;
@@ -535,13 +584,18 @@ TrackV0Finder::hasV0Topology(LHCb::TwoProngVertex& vertex,
       // veto this candidate if it is compatible with this PV
       isFromPV = isFromPV ||
 	( tmpchi2 < m_maxChi2PVConstraint &&
-	  tmpdecaylength / tmpdecaylengtherr < m_minDecayLengthSignificance ) ;
+	  std::abs(tmpdecaylength / tmpdecaylengtherr) < m_minDecayLengthSignificance ) ;
     }
+
+    if(m_addExtraInfo) {
+      vertex.addInfo( 1000, chi2 ) ;
+      vertex.addInfo( 1001, decaylength/decaylengtherr ) ;
+    }
+    
+    accept = !isFromPV 
+      && chi2 < m_maxChi2PVConstraint 
+      && decaylength/decaylengtherr > m_minDecayLengthSignificance ;
   }
-  if(m_addExtraInfo) {
-    vertex.addInfo( 1000, chi2 ) ;
-    vertex.addInfo( 1001, decaylength/decaylengtherr ) ;
-  }
-  // select this one if it is not compatible with any PV, but still points to a PV:  
-  return !isFromPV && chi2 < m_maxChi2PVConstraint ;
+  
+  return accept ;
 }
