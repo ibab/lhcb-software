@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-08-20 - Wouter Hulsbergen
+ - Add FirstMeasurement state to long and upstream tracks
+
 ! 2010-07-30 - Olivier Callot
  - Add PatMatch and PatSeeding as known tracks in TrackAddLikeliood.cpp
 
