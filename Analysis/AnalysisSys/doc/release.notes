@@ -3,6 +3,16 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r9>2010-08-20 Analysis v4r9 </A></H1><PRE>
+
+ *** MicroDST production and stripping line development version ***
+      *** NOT TO BE USED IN PRODUCTION ***
+
+ * Enhancements to MicroDST writing.
+   - Mainly for TisTosTobbing.
+   - Module DSTWriters.__dev__ has new versions of writers with high configurability.
+   - StrippingSelections are head as of 2010/08/20 17:00.
+
 </PRE><H1><A NAME=v4r8>2010-07-27 Analysis v4r8 </A></H1><PRE>
 
  ***
