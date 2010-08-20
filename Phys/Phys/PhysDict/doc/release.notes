@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-19 - Juan Palacios
+ - Changes removed. Particle2LHCbIDVectorMap equivalent class is now in
+   Phys/DaVinciMaps, which generates the necessary dictionaries.
+
+! 2010-08-19 - Juan Palacios
  - Attemt at genereting dictionaries for Particle2LHCbIDVectorMap.
 
 !========================== PhysDict v4r2 2010-02-17 =======================
