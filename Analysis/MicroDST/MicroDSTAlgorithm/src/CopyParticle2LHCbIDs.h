@@ -1,11 +1,10 @@
-// $Id: CopyParticle2LHCbIDs.h,v 1.1 2010-08-19 15:34:31 jpalac Exp $
+// $Id: CopyParticle2LHCbIDs.h,v 1.2 2010-08-20 09:47:07 jpalac Exp $
 #ifndef COPYPARTICLE2LHCBIDS_H 
 #define COPYPARTICLE2LHCBIDS_H 1
 
 // Include files
 // from Gaudi
 #include "MicroDST/MicroDSTAlgorithm.h"
-#include "MicroDST/Particle2LHCbIDVectorMap.h"
 
 class ITriggerTisTos;
 

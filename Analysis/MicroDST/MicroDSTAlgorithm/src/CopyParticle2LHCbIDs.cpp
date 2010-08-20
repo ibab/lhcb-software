@@ -1,4 +1,4 @@
-// $Id: CopyParticle2LHCbIDs.cpp,v 1.1 2010-08-19 15:34:31 jpalac Exp $
+// $Id: CopyParticle2LHCbIDs.cpp,v 1.2 2010-08-20 09:47:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 #include "Event/Particle.h"
 // DaVinci
 #include "Kernel/DaVinciStringUtils.h"
+#include "Kernel/Particle2LHCbIDs.h"
 // local
 #include "CopyParticle2LHCbIDs.h"
 
@@ -110,7 +111,7 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
     return;
   }
 
-  Particle2LHCbIDVectorMap* p2LHCbID = new Particle2LHCbIDVectorMap;
+  DaVinci::Map::Particle2LHCbIDs* p2LHCbID = new DaVinci::Map::Particle2LHCbIDs;
 
   put(p2LHCbID, outputLocation);
 
@@ -129,12 +130,12 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 
   // test that we find the stuff.
   
-  Particle2LHCbIDVectorMap* test = get<Particle2LHCbIDVectorMap>(outputLocation);
+  DaVinci::Map::Particle2LHCbIDs* test = get<DaVinci::Map::Particle2LHCbIDs>(outputLocation);
   if (test) {
     debug() << "Test passed, found P2LHCbID map with " 
             << test->size() <<" entries!" << endmsg;
     if (!test->empty()) {
-      for (Particle2LHCbIDVectorMap::const_iterator iMap = test->begin();
+      for (DaVinci::Map::Particle2LHCbIDs::const_iterator iMap = test->begin();
            iMap!=test->end();
            ++iMap) {
         debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
