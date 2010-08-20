@@ -3,6 +3,8 @@
 
 from LbUtils.Lock import Lock2
 
+import logging
+
 import re, os
 from subprocess import Popen, PIPE, STDOUT
 from time import sleep
@@ -134,6 +136,8 @@ class Directory(object):
                     d_inst = Directory(dirpath)
                     d_inst.removeACL(acl_dict, recursive=False)
     def lockACL(self, recursive=False) :
+        log = logging.getLogger()
+        log.debug("Locking ACL of %s" % self.name())
         dir_acl = self.getACL()
         perm_to_remove = "idwk"
         for g in dir_acl.keys() :
