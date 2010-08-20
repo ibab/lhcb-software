@@ -1,7 +1,7 @@
 
 __author__ = 'Jussara Miranda'
 __date__ = '02/04/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Stripping selection for B->KShh' , B==(Bs,Bd); h,h'=(K+-,pi+-) 
@@ -24,7 +24,7 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         ,  'B_Vchi2'         :  15.   
         ,  'B_IPPTmax'       :  0.05   
         ,  'B_pointpt'       :  0.2   
-        ,  'B_IPsumhh'       :  0.0 
+        ,  'B_IPsumhh'       :  0.08 
 	,  'TrackCHI2DOF'    :  10. 
         ,  'DOCAhh'          :  0.3   
         ,  'KS_Mwindow'      :  30.   
@@ -33,11 +33,13 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         ,  'B_PTsum_LL'      :  3200.   
         ,  'B_FDchi2_LL'     :  20.   
         ,  'KS_FDCHI2opv_LL' :  40.    
+        ,  'KS_VCHI2_LL'     :  10.    
         ,  'B_IP_DD'         :  0.1   
         ,  'B_PTmed_DD'      :  800.   
         ,  'B_PTsum_DD'      :  3800.
         ,  'B_FDchi2_DD'     :  10.   
         ,  'KS_FDCHI2opv_DD' :  20.   
+        ,  'KS_VCHI2_DD'     :  15.   
         }
 
     _propertyDocDct = {
@@ -57,11 +59,13 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         ,  'B_PTsum_LL'      : """ B daughter PT sum - for candidates  with KSLL"""
         ,  'B_FDchi2_LL'     : """ B flight distance - for candidates  with KSLL"""
         ,  'KS_FDCHI2opv_LL' : """ KS flight distance wrt CHI2 PV - for candidates  with KSLL"""
+        ,  'KS_VCHI2_LL'     : """ KS vertex chi2 - for candidates  with KSLL"""
         ,  'B_IP_DD'         : """ B IP- for candidates with KSDD """    
         ,  'B_PTmed_DD'      : """ B daughter with medimum PT - for candidates with KSDD"""  
         ,  'B_PTsum_DD'      : """ B daughter PT sum - for candidates  with KSDD"""    
         ,  'B_FDchi2_DD'     : """ B flight distance - for candidates  with KSDD"""    
         ,  'KS_FDCHI2opv_DD' : """ KS flight distance CHI2 wrt PV - for candidates  with KSDD"""    
+        ,  'KS_VCHI2_DD'     : """ KS vetex CHI2  - for candidates  with KSDD"""    
 
         }
 
@@ -70,30 +74,52 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
     ###############################################
     def B2KSLLhh( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        B2KShh_StrippingNumTracksGEC=self.GEC_NumTracks_Alg()
         KSLLforB2KShh = self.KSLLforB2KShhAlg()
         B2KSLLhh = self.B2KSLLhhAlg()
         return StrippingLine('B2KSLLhh_line'
                              , prescale = 1
-                             , algos = [KSLLforB2KShh,B2KSLLhh]
+                             , algos = [B2KShh_StrippingNumTracksGEC,KSLLforB2KShh,B2KSLLhh]
                             , postscale = 1
                              )
     def B2KSDDhh( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        B2KShh_StrippingNumTracksGEC=self.GEC_NumTracks_Alg()
         KSDDforB2KShh = self.KSDDforB2KShhAlg()
         B2KSDDhh = self.B2KSDDhhAlg()
         return StrippingLine('B2KSDDhh_line'
                              , prescale = 1
-                             , algos = [KSDDforB2KShh,B2KSDDhh]
+                             , algos = [B2KShh_StrippingNumTracksGEC,KSDDforB2KShh,B2KSDDhh]
                              , postscale = 1
                              )
+    ##############
+    #  #of tracks#
+    ##############
+
+    def GEC_NumTracks_Alg( self ):
+        from Configurables import LoKi__VoidFilter as VoidFilter# Need the Void filter for the GEC
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
+
+        # Define the GEC on number of tracks, needed in order to control
+        # the time for the combinatorics
+        B2KShh_StrippingNumTracksGEC = VoidFilter('B2KShh_StrippingNumTracksGEC'
+                                     , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
+                                           )
+        return B2KShh_StrippingNumTracksGEC
+
+
     ########
     # KSLL # 
     ########
     def KSLLforB2KShhAlg(self):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
-        KSLL_FilterCuts="(BPVVDCHI2 > %(KS_FDCHI2opv_LL)s)  \
-	                 & (ADMASS('KS0')<%(KS_Mwindow)s *MeV ) \
+        KSLL_FilterCuts="(ADMASS('KS0')<%(KS_Mwindow)s *MeV )  \
+	                 & (BPVVDCHI2 > %(KS_FDCHI2opv_LL)s) \
+	                 & (VFASPF(VCHI2)<%(KS_VCHI2_LL)s) \
 			 & (CHILDCUT((TRCHI2DOF < %(TrackCHI2DOF)s),1)) \
 			 & (CHILDCUT((TRCHI2DOF < %(TrackCHI2DOF)s),2)) "% self.getProps()
 
@@ -108,7 +134,9 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
     def KSDDforB2KShhAlg(self):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
-        KSDD_FilterCuts="(BPVVDCHI2 > %(KS_FDCHI2opv_DD)s) & (ADMASS('KS0')<%(KS_Mwindow)s *MeV)"% self.getProps()
+        KSDD_FilterCuts="(ADMASS('KS0')<%(KS_Mwindow)s *MeV) \
+	                & (BPVVDCHI2 > %(KS_FDCHI2opv_DD)s) \
+		        & (VFASPF(VCHI2)<%(KS_VCHI2_DD)s)"% self.getProps()
 
 	KSDDforB2KShh=FilterDesktop("StripKSDDforB2KShh")
 	KSDDforB2KShh.InputLocations = ["StdLooseKsDD"]
