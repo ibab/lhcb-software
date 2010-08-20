@@ -1,3 +1,7 @@
+2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r4
+
 2010-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: fixed macro expansion for the windows platform when
