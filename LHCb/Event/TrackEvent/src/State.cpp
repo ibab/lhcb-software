@@ -72,22 +72,28 @@ SymMatrix6x6 State::posMomCovariance() const
   // Gaudi::Math::JacobdP4dMom, so we should just merge that.
 
   const double qP = qOverP();
+  const double qP2 = qP*qP;
+
   const double tX = tx();
+  const double tX2 = tX*tX;
+
   const double tY = ty();
-  const double invNorm = 1. / sqrt( 1. + tX*tX + tX*tX );
+  const double tY2 = tY*tY;
+  
+  const double invNorm = 1. / sqrt( 1. + tX2 + tY2 );
   const double mom = p();
   const double invNorm3 = invNorm * invNorm * invNorm;
-  const double q = fabs(qP) > TrackParameters::lowTolerance ? (qP > 0 ? 1 : -1) : 0;
+  const int q = fabs(qP) > TrackParameters::lowTolerance ? (qP > 0 ? 1 : -1) : 0;
   ROOT::Math::SMatrix<double, 6, 5> jmat;
   jmat(0,0) = jmat(1,1) = 1.;
-  jmat(3,2) = mom * (1.+tY*tY)*invNorm3;
+  jmat(3,2) = mom * (1.+tY2)*invNorm3;
   jmat(3,3) = jmat(4,2) = -mom * tX * tY * invNorm3;
-  jmat(3,4) = -q * tX * invNorm / (qP*qP);
-  jmat(4,3) = mom * (1.+tX*tX)*invNorm3;
-  jmat(4,4) = -q *tY * invNorm / (qP*qP);
+  jmat(3,4) = -q * tX * invNorm / (qP2);
+  jmat(4,3) = mom * (1.+tX2)*invNorm3;
+  jmat(4,4) = -q *tY * invNorm / (qP2);
   jmat(5,2) = -mom * tX * invNorm3;
   jmat(5,3) = -mom * tY * invNorm3;
-  jmat(5,4) = -q * invNorm * mom * mom;
+  jmat(5,4) = -q * invNorm * mom * mom; // -q == -1/q
   
   return ROOT::Math::Similarity( jmat, covariance() );
 };
