@@ -121,7 +121,7 @@ stream.appendLines( [
         , StrippingDstarD02KKmumuRegular.line1
           ,StrippingDs2piPhiConf().line() 
     ] )
-stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
+stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 stream.appendLines( StrippingDstarD02xxConf().lines() )
 # Charmonium -> p pbar
