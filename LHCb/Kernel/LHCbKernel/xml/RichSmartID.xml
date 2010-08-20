@@ -483,6 +483,14 @@
             name = "s"/>
         </method>
 
+        <method 
+          name    = "toString" 
+          desc    = "Return the output of the ostream printing of this object as a string. Mainly for use in GaudiPython."
+          type    = "std::string" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+        </method>
+
     </class>
   </package>
 </gdd>

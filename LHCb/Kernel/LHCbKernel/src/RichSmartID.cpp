@@ -4,12 +4,13 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.11 2009-10-11 12:23:14 jonrob Exp $
- *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
  */
 //-----------------------------------------------------------------------------
+
+// STL
+#include <sstream>
 
 // Gaudi
 #include "GaudiKernel/GaudiException.h"
@@ -60,4 +61,11 @@ void LHCb::RichSmartID::rangeError(const int value,
   throw GaudiException ( message+" value "+boost::lexical_cast<std::string>(value)
                          +" exceeds field maximum "+boost::lexical_cast<std::string>(max),
                          "*RichSmartID*", StatusCode::FAILURE );
+}
+
+std::string LHCb::RichSmartID::toString() const
+{
+  std::ostringstream text;
+  text << *this;
+  return text.str();
 }
