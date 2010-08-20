@@ -10,7 +10,6 @@
   <class name = "ISequencerTimerTool" />
   <class name = "IConfigTreeEditor" />
 
-  <class name = "IConfigTreeEditor" />
   
   <class name   = "Hlt::Cache" />
   
