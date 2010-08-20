@@ -239,3 +239,13 @@ class CloneBackCat(MicroDSTElement) :
         cloner.OutputLevel=4
         self.setOutputPrefix(cloner)
         return [backCatAlg, cloner]
+
+class CloneLHCbIDs(MicroDSTElement) :
+    def __call__(self, sel) :
+        from Configurables import CopyParticle2LHCbIDs
+        cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
+                                                            'CopyLHCbIDs'))
+        cloner.InputLocations = self.dataLocations(sel,"Particles")
+        cloner.OutputLevel=3
+        self.setOutputPrefix(cloner)
+        return [cloner]
