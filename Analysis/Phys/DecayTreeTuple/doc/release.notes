@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r7 2010-08-20 ==================
+
 ! 2010-08-19 - Patrick Koppenburg
  - TupleToolRecoStats: add a protection against no velo tracks in the event
    (happens every 100000 events or so)
