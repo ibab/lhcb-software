@@ -87,10 +87,8 @@ def submitControlJobs(pickedRuns="Run71813-LFNs.pck"):
 
                 # Submit !!
                 j.submit()
-                #print j
-                #j.remove()
 
-## Submits calibration jobs
+## Submits DB calibration jobs
 def submitCalibrationJobs(pickedRunsList=["RunLFNs.pck"]):
     submitRecoJobs(pickedRunsList,"RefractIndexCalib")
 
@@ -113,6 +111,7 @@ def submitRecoJobs(pickedRunsList,jobType):
         nEventsTotal = 250000
         nFilesMax    = 100
 
+    # Loop over the list of pickled run data files
     for pickedRuns in pickedRunsList:
 
         # Loop over runs
@@ -191,8 +190,13 @@ def submitRecoJobs(pickedRunsList,jobType):
                 # Optional input files
                 j.inputsandbox = mySandBox
 
+                # CPU limit for Dirac
+                maxCPUlimit = 50000
+
+                timePerEvent = 15153.52 / 2781
+
                 # Dirac backend
-                j.backend = Dirac()
+                j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
 
                 # Submit !!
                 j.submit()
@@ -568,6 +572,37 @@ def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
     # Return the fit result
     return result
 
+def averageCPUTimePerEvent(jobs):
+
+    from ROOT import TH1F
+
+    globals()["imageFileName"] = "CPUTime.png"
+
+    # Root canvas
+    rootCanvas()
+
+    # Book a histogram
+    minTime = 0
+    maxTime = 100000
+    cpuHist = TH1F( "NormCPUTime", "Normalised Total CPU Time",
+                    100, minTime, maxTime )
+
+    for job in jobs:
+        for sjob in job.subjobs:
+
+            # Get the CPU time of this job
+            totCPUTime = float(sjob.backend.normCPUTime)
+
+            # Fill the hist
+            cpuHist.Fill(totCPUTime)
+
+            if totCPUTime > maxTime :
+                print "Job %s.%s CPU time %s > HistMax %s" % (job.id,sjob.id,totCPUTime,maxTime)
+            
+    # Print plot to PNG
+    cpuHist.Draw('E')
+    printCanvas()
+    
 def addRunToPlot(run):
     from ROOT import TText
     text = TText()
