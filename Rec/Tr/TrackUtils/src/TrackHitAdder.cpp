@@ -17,6 +17,7 @@
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
+#include "TrackInterfaces/ITrackHitCollector.h"
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/Line.h"
 
@@ -43,11 +44,13 @@ private:
   ToolHandle<Tf::IITHitCreator> m_ithitcreator ;
   ToolHandle<Tf::ITTHitCreator> m_tthitcreator ;
   ToolHandle<Tf::IOTHitCreator> m_othitcreator ;
+  ToolHandle<ITrackHitCollector> m_trackhitcollector ;
 
   std::string m_trackLocation ;
   double m_maxDistOT ;
   double m_maxDistIT ;
   double m_maxDistTT ;
+  double m_maxDistVelo ;
   double m_maxTolY ;
 } ;
 
@@ -59,12 +62,14 @@ TrackHitAdder::TrackHitAdder( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator ),
     m_ithitcreator("Tf::STHitCreator<Tf::IT>/Tf::ITHitCreator"),
     m_tthitcreator("Tf::STHitCreator<Tf::TT>/Tf::TTHitCreator"),
-    m_othitcreator("Tf::OTHitCreator")
+    m_othitcreator("Tf::OTHitCreator"),
+    m_trackhitcollector("TrackHitCollector",this)
 {
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty("MaxDistOT", m_maxDistOT = 2.5 ) ;
   declareProperty("MaxDistIT", m_maxDistIT = 1.0 ) ;
   declareProperty("MaxDistTT", m_maxDistTT = 0.5 ) ;
+  declareProperty("MaxDistVelo", m_maxDistVelo = 0.1 ) ;
   declareProperty("MaxTolY", m_maxTolY = 10.0 ) ; 
 }
 
@@ -83,6 +88,10 @@ StatusCode TrackHitAdder::initialize() {
   if(!m_othitcreator.retrieve().isSuccess()) 
     return Error("==> Failed to retrieve OT hit creator",StatusCode::FAILURE);
 
+  if(!m_trackhitcollector.retrieve().isSuccess()) 
+    return Error("==> Failed to retrieve hit collector",StatusCode::FAILURE);
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -91,6 +100,7 @@ StatusCode TrackHitAdder::finalize()
   m_ithitcreator.release() ;
   m_tthitcreator.release() ;
   m_othitcreator.release() ;
+  m_trackhitcollector.release() ;
   return GaudiHistoAlg::finalize();
 }
 
@@ -157,8 +167,9 @@ namespace {
 	  //tolx = m_numSigmaOT * std::sqrt( state.covariance()(0,0) ) + m_hitSigmaOT/region->cosT() ;
 	  //toly = m_numSigmaOT * std::sqrt( state.covariance()(1,1) ) + m_hitSigmaOT/region->sinT() ;
 	  
-	  double tolx = 5*maxDist/region->cosT() ;
-	  double toly = std::min(5*maxDist/(region->sinT()+0.000001),5000.) ; 
+	  double tolx = 10*maxDist/region->cosT() ;
+	  double toly = 2*maxTolY ;
+	  //std::min(10*maxDist/(region->sinT()+0.000001),5000.) ; 
 	  
 	  if( region->isXCompatible( statex, tolx ) &&
 	      region->isYCompatible( statey, toly ) ) {
@@ -167,8 +178,8 @@ namespace {
 	    typename TYPE::HitRangeType thesehits = hitcreator.hitsLocalXRange( istation, ilayer, iregion, 
 										localx -  tolx,
 										localx +  tolx) ;
-	    Gaudi::XYZPointF trkpoint((float) state.x(),(float) state.y(),(float) state.z()) ;
-	    Gaudi::XYZVectorF trkdir((float) state.tx(),(float) state.ty(),1) ;
+	    Gaudi::XYZPointF trkpoint(state.x(),state.y(),state.z()) ;
+	    Gaudi::XYZVectorF trkdir(state.tx(),state.ty(),1) ;
 	    // if there is more than one hit, choose the closest?
 	    lhcbids.reserve( lhcbids.size() + thesehits.size() ) ;
 	    BOOST_FOREACH( const typename TYPE::HitType* hit, thesehits ) 
@@ -193,6 +204,21 @@ namespace {
 #include <boost/lambda/lambda.hpp>
 using namespace boost::lambda;
 
+namespace {
+  size_t addLHCbIDs( std::vector<LHCb::LHCbID>& lhcbids,
+		     std::vector<LHCb::LHCbID>& newlhcbids)
+  {
+    std::sort( newlhcbids.begin(), newlhcbids.end() ) ;
+    std::vector<LHCb::LHCbID> mergedlhcbids( lhcbids.size() + newlhcbids.size()) ;
+    std::vector<LHCb::LHCbID>::iterator end = 
+      std::set_union( lhcbids.begin(), lhcbids.end(),
+		      newlhcbids.begin(), newlhcbids.end(),
+		      mergedlhcbids.begin() ) ;
+    mergedlhcbids.erase( end, mergedlhcbids.end() ) ;
+    return mergedlhcbids.size() - lhcbids.size() ;
+  }
+}
+
 StatusCode TrackHitAdder::execute() 
 {
   // Get tracks.
@@ -204,35 +230,78 @@ StatusCode TrackHitAdder::execute()
   for( LHCb::Tracks::iterator itrk = tracks->begin() ;
        itrk != tracks->end() ; ++itrk ) {
     LHCb::Track* track = *itrk ;
-    if( track->nStates() > 0 && track->hasT() ) {
-      LHCb::TrackTraj tracktraj( *track ) ;
+
+    bool trackIsModified(false) ;
+    if( track->nStates() > 0 ) {
+
+      // check that the LHCbIDs on the track are unique and sorted
+      LHCb::Track::LHCbIDContainer lhcbids = track->lhcbIDs() ;
+      std::sort( lhcbids.begin(), lhcbids.end() ) ;
+      if( lhcbids != track->lhcbIDs() ) {
+	error() << "LHCbIds on input track are not sorted!" << endmsg;
+	BOOST_FOREACH(const LHCb::LHCbID& id, track->lhcbIDs() ) {
+	  error() << id << endmsg ;
+	}
+      }
+
+      LHCb::Track::LHCbIDContainer::iterator it = std::unique( lhcbids.begin(), lhcbids.end() ) ;
+      if( it != lhcbids.end() ) {
+	error() << "LHCbIds on input track are not unique!" << endmsg;
+	BOOST_FOREACH(const LHCb::LHCbID& id, track->lhcbIDs() ) {
+	  error() << id << endmsg ;
+	}
+	lhcbids.erase( it, lhcbids.end() ) ;
+      }
       
-      std::vector<LHCb::LHCbID> lhcbids ;
-      /*size_t numot =*/ addHits<OT>( tracktraj, *m_othitcreator, m_maxDistOT, m_maxTolY, lhcbids) ;
-      /*size_t numit =*/ addHits<IT>( tracktraj, *m_ithitcreator, m_maxDistIT, m_maxTolY, lhcbids) ;
-      // only add TT hits if there are already TT hits on the track.
+      LHCb::TrackTraj tracktraj( *track ) ;
+      LHCb::Track::LHCbIDContainer lhcbidsorig = lhcbids ;
+      
+      if( track->hasT() && m_maxDistOT>0) {
+	// add OT hits
+	std::vector<LHCb::LHCbID> otlhcbids ;
+	addHits<OT>( tracktraj, *m_othitcreator, m_maxDistOT, m_maxTolY, otlhcbids) ;
+	size_t numotadded = addLHCbIDs(lhcbids,otlhcbids) ;
+	counter("NumOTHitsAdded") += numotadded ;
+      }
+
+      if( track->hasT() && m_maxDistIT>0) {
+	// add IT hits
+	std::vector<LHCb::LHCbID> itlhcbids ;
+	addHits<IT>( tracktraj, *m_ithitcreator, m_maxDistIT, m_maxTolY, itlhcbids) ;
+	size_t numitadded = addLHCbIDs(lhcbids,itlhcbids) ;
+	counter("NumITHitsAdded") += numitadded ;
+      }
+      
       const unsigned int nTTHits = std::count_if(track->lhcbIDs().begin(), track->lhcbIDs().end(),
 						 bind(&LHCb::LHCbID::isTT,_1));
-      if( nTTHits>0 )
-	/*size_t numit =*/ addHits<TT>( tracktraj, *m_tthitcreator, m_maxDistTT, m_maxTolY, lhcbids) ;
-      
-      // add the hits to the track
-      std::sort( lhcbids.begin(), lhcbids.end() ) ;
-      std::vector<LHCb::LHCbID> mergedlhcbids( lhcbids.size() + track->lhcbIDs().size()) ;
-      std::vector<LHCb::LHCbID>::iterator end = 
-	std::set_union( lhcbids.begin(), lhcbids.end(),
-			track->lhcbIDs().begin(), track->lhcbIDs().end(),
-			mergedlhcbids.begin() ) ;
-      mergedlhcbids.erase( end, mergedlhcbids.end() ) ;
-      int numadded = mergedlhcbids.size() - track->lhcbIDs().size() ;
-      if( numadded > 0 ) {
-	//std::cout << "Number of added hits. "
-	//<< mergedlhcbids.size() - track->lhcbIDs().size() << std::endl ;
-	track->setFitResult(0) ;
-	track->setLhcbIDs( mergedlhcbids ) ;
+      if( nTTHits>0 && m_maxDistTT > 0 ) {
+	std::vector<LHCb::LHCbID> ttlhcbids ;
+	addHits<TT>( tracktraj, *m_tthitcreator, m_maxDistTT, m_maxTolY, ttlhcbids) ;
+	counter("NumOTHitsAdded") += addLHCbIDs(lhcbids,ttlhcbids) ;
       }
-      counter("NumHitsAdded") += numadded ;
+
+      if( track->hasVelo() && m_maxDistVelo > 0 ) {
+	// delegate to ITrackHitCollector
+	std::vector<ITrackHitCollector::IDWithResidual> veloidswithresidual ;
+	m_trackhitcollector->execute(*track,veloidswithresidual,true,false,false,false,false) ;
+	std::vector<LHCb::LHCbID> velolhcbids ;
+	BOOST_FOREACH( const ITrackHitCollector::IDWithResidual& id, veloidswithresidual) {
+	  if( std::abs(id.m_res) < m_maxDistVelo )
+	    velolhcbids.push_back( id.m_id ) ;
+	}
+	counter("NumVeloHitsAdded") += addLHCbIDs(lhcbids,velolhcbids) ;
+      }
+  
+      // if there were hits added, make sure fit is entirely
+      // reinitialized. this is where we can gain a lot of time by
+      // wrigin some functionality to insert nodes in existing track.
+      if( lhcbidsorig != lhcbids ) {
+	track->setSortedLhcbIDs( lhcbids ) ;
+	track->setFitResult(0) ;
+	trackIsModified = true ;
+      }
     }
+    counter("FracTracksModified") += trackIsModified ;
   }
   
   return StatusCode::SUCCESS ;
