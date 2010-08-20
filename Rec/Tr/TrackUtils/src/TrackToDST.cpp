@@ -46,7 +46,9 @@ TrackToDST::TrackToDST(const std::string& name,
                         ("BegHCal", State::BegHCal)
                         ("MidHCal",State::MidHCal)
                         ("EndHCal",State::EndHCal)
-                        ("Muon",State::Muon);
+                        ("Muon",State::Muon)
+                        ("V0Vertex",State::V0Vertex);
+
 
   declareProperty("veloStates", m_veloStrings);
   declareProperty("longStates", m_longStrings); 
@@ -56,10 +58,10 @@ TrackToDST::TrackToDST(const std::string& name,
   declareProperty("muonState", m_muonStrings);
 
   m_veloStrings = list_of("ClosestToBeam");
-  m_longStrings =  list_of("ClosestToBeam")("BegRich1")("BegRich2");
+  m_longStrings =  list_of("ClosestToBeam")("FirstMeasurement")("BegRich1")("BegRich2")("V0Vertex");
   m_tStrings = list_of("FirstMeasurement")( "BegRich2");
-  m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2");
-  m_upstreamStrings = list_of("ClosestToBeam")("BegRich1");
+  m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2")("V0Vertex");
+  m_upstreamStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich1");
   m_muonStrings     = list_of("ClosestToBeam")("BegRich1")("BegRich2")("Muon");
 
 }
@@ -140,7 +142,7 @@ void TrackToDST::cleanStates(Track* aTrack, const SLocations& loc) const{
     const State* state = aTrack->stateAt(*iterL);
     if(state) 
       tempCont.push_back(state->clone());
-    else {
+    else if( *iterL!= LHCb::State::V0Vertex) {
       Warning("Failed to find state - more info in DEBUG",StatusCode::SUCCESS,1).ignore();
       debug() << "Missing state at " << *iterL << " on track " << aTrack->key() 
               << " of type " << aTrack->type() << endmsg;
