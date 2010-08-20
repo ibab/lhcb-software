@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.55 2010-08-02 13:13:11 jpalac Exp $
+!$Id: release.notes,v 1.56 2010-08-20 13:31:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r13p2 2010-08-20 ===============
 
 ! 2010-08-02 - Juan Palacios
  - python/MicroDSTExample/Selections/Jpsi2MuMu.py
