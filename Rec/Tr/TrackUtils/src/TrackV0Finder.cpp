@@ -333,6 +333,7 @@ StatusCode TrackV0Finder::execute()
 	    p4neg.SetE( std::sqrt(momneg.Mag2()+pmass*pmass)) ;
 	    Gaudi::LorentzVector p4pip = p4pos+p4neg ;
 	    double pipmass = p4pip.M() ;
+	    double mom     = p4pipi.P() ;
 	    bool iskscandidate = std::abs(pipimass - ksmass) < m_ksmasscut ;
 	    bool islambdacandidate = std::abs(ppimass - lambdamass) < m_lambdamasscut ;
 	    bool isantilambdacandidate = std::abs(pipmass - lambdamass) < m_lambdamasscut ;
@@ -383,14 +384,9 @@ StatusCode TrackV0Finder::execute()
 
 		// cut on ctau
 		if( m_minCTauKs>0 || m_minCTauLambda >0 ) {
-		  iskscandidate = iskscandidate && 
-		    decaylength * pipimass / p4pipi.P() > m_minCTauKs ;
-		  
-		  islambdacandidate = islambdacandidate &&
-		    decaylength * ppimass / p4ppi.P() > m_minCTauLambda ;
-		  
-		  isantilambdacandidate = isantilambdacandidate &&
-		    decaylength * pipmass / p4pip.P() > m_minCTauLambda ;
+		  iskscandidate = iskscandidate && decaylength * pipimass / mom > m_minCTauKs ;
+		  islambdacandidate = islambdacandidate && decaylength * ppimass / mom > m_minCTauLambda ;
+		  isantilambdacandidate = isantilambdacandidate && decaylength * pipmass / mom > m_minCTauLambda ;
 		}
 
 		// one last check: test that there are no hits upstream of the vertex on either track
