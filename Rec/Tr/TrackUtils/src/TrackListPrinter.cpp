@@ -1,4 +1,4 @@
-// $Id: TrackListPrinter.cpp,v 1.1 2007-09-13 08:35:07 wouter Exp $
+// $Id: TrackListPrinter.cpp,v 1.1 2007/09/13 08:35:07 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,7 +7,6 @@
 #include "Event/Track.h"
 
 #include "TrackListPrinter.h"
-using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( TrackListPrinter );
 
@@ -16,7 +15,7 @@ TrackListPrinter::TrackListPrinter(const std::string& name,
   GaudiAlgorithm(name, pSvcLocator)
 {
   // constructor
-  declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Default );
+  declareProperty( "InputLocation",  m_inputLocation  = LHCb::TrackLocation::Default );
 }
 
 TrackListPrinter::~TrackListPrinter()
@@ -27,12 +26,10 @@ TrackListPrinter::~TrackListPrinter()
 
 StatusCode TrackListPrinter::execute()
 {
-  Tracks* inCont = get<Tracks>(m_inputLocation);
+  LHCb::Track::Range tracks  = get<LHCb::Track::Range>(m_inputLocation) ;
+  for (LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end(); ++iterT) 
+    info() << **iterT << endmsg ;
   
-  if(inCont)
-    for (Tracks::const_iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) 
-      info() << **iterT << endmsg ;
-
   return StatusCode::SUCCESS;
 };
 
