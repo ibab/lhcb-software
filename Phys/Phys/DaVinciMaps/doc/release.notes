@@ -4,5 +4,8 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciMaps v1r0 2010-08-20 ========================
+
 ! 2010-08-20 - Juan Palacios
- - First import.
+ - First import. Contains DaVinci::Map::Particle2LHCbIDs, a DataObject that
+   stores a limited interface LHCb::Particle*, std::vector<LHCb::LHCbID> map.
