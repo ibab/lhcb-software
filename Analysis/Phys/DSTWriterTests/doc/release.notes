@@ -4,6 +4,8 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v1r5 2010-08-20 ==================
+
 ! 2010-08-16 - Juan Palacios
  - scripts/*.py
   . Write summary to file specified by command line --output option. 
