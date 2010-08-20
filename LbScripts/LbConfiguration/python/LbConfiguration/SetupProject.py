@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -W ignore::DeprecationWarning
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
 _cvs_id = "$Id: SetupProject.py,v 1.36 2010-03-05 11:51:52 marcocle Exp $"

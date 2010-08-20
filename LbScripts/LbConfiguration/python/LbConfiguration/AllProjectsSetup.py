@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -W ignore::DeprecationWarning
 # $Id: AllProjectsSetup.py,v 1.3 2010-02-09 18:09:44 hmdegaud Exp $
 
 from LbUtils.Script import SourceScript

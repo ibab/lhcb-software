@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -W ignore::DeprecationWarning
 """
   Script to install a project where you are
   Please have a look at the documentation in the release.notes

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -W ignore::DeprecationWarning
 from LbUtils.Script import Script
 from LbUtils.CVS import CVS2Version
 from LbConfiguration.Project import project_list

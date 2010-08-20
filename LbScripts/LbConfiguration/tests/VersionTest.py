@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -W ignore::DeprecationWarning
 
 from LbConfiguration.Version import CoreVersion, NotAVersion
 from LbConfiguration.Version import sortVersions, extractVersion, sortStrings
