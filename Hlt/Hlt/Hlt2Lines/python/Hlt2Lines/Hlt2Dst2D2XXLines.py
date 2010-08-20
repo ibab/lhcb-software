@@ -33,6 +33,8 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                   ,'XminPT'             : 800.       # MeV
                   ,'XmaxPT'             : 1200.      # MeV
                   ,'XminP'              : 3400.      # MeV
+                  ,'XTrackChi2'         : 25         # adimensional
+                  ,'XminIPChi2'         : 1        # adimensional
                   ,'DDira'              : 0.9987     # adimensional
                   ,'PiMinPT'            : 110.       # MeV
                   ,'PiMaxIP'            : 4.0        # mm
@@ -41,9 +43,9 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                   ,'D0MaxIP'            : 0.35       # mm
                   ,'DstMassWin'         : 110.       # MeV
                   ,'DstD0DMWin'         : 10.        # MeV
-                  ,'DstD0DMWinTight'    : 5.         # MeV           
+                  ,'DstD0DMWinTight'    : 5.         # MeV
                   }
-    
+
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
@@ -57,7 +59,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)"
         d0comb_combcut_tight = "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWinTight)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)" 
 
-        d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV)" 
+        d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (BPVIPCHI2()> %(XminIPChi2)s)" 
         d0comb_d0cut = "(BPVDIRA> %(DDira)s)"
         
         
