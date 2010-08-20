@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.54 2010-08-12 12:34:45 jpalac Exp $
+!$Id: release.notes,v 1.55 2010-08-20 14:43:56 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! ======================== DSTWriters v1r10 2010-08-20 =======================
+
+! 2010-08-20 - Juan Palacios
+ - python/DSTWriters/microdstelements.py
+  . Add CloneParticle2LHCbIDs. For creating and copying DaVinci::Map::Particle2LHCbIDs
+    objects starting from a particle location.
 
 ! 2010-08-12 - Juan Palacios
  - python/DSTWriters/microdstelements.py
