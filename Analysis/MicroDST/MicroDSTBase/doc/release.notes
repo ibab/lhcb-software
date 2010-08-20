@@ -1,10 +1,12 @@
-!$Id: release.notes,v 1.58 2010-08-20 09:45:56 jpalac Exp $
+!$Id: release.notes,v 1.59 2010-08-20 13:35:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+!====================== MicroDSTBase v2r0 2010-08-20 =========================
 
 ! 2010-08-20 - Juan Palacios
  - Move Particle2LHCbIDVectorMap to DaVinci::Map::Particle2LHCbIDs, available
