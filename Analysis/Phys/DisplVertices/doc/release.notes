@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r10 2010-08-20 ===================
+
 ! 2010-08-05 - Neal Gauvin
  - New option UsePartFromTES in RecVertices2Particles. DisplVertices consequently adapted.
 
