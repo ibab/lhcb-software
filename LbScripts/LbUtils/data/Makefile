@@ -64,6 +64,12 @@ Makefile := NMake
 else
 Makefile := Makefile
 endif
+# Name of the mkdir command
+ifneq ($(findstring winxp-vc9,$(CMTCONFIG)),)
+MKDIR := gmkdir
+else
+MKDIR := mkdir
+endif
 # Banners to be printed for the targets.
 define build_banner
 echo "#==============================================================================="
@@ -207,7 +213,7 @@ MKDEPCMD := cmt show uses | sed 's/^\# */\# /' | tr " " "\t" | awk -F"\t" '/^\#\
 .$(CMTCONFIG).d/%.pack.d: pack=$(call unescape_slash,$*)
 .$(CMTCONFIG).d/%.pack.d:
 	@echo Computing dependencies for package $(pack)
-	@mkdir -p .$(CMTCONFIG).d
+	@$(MKDIR) -p .$(CMTCONFIG).d
 	@echo $(pack)_build: $(patsubst %,%_build,$(filter $(packages),$(shell cd $(pack)/cmt; $(MKDEPCMD)))) > $@
 	@echo $@: $(pack)/cmt/requirements >> $@
 

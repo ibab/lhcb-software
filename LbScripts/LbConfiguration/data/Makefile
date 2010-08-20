@@ -31,6 +31,13 @@ endif
 ifeq ($(_building_container),true)
 $(warning Adding "no-pyzip" to the CMTEXTRATAGS)
 override CMTEXTRATAGS := no-pyzip,$(CMTEXTRATAGS)
+ifeq ($(platform),windows)
+ifeq ($(find CMTEXTRATAGS,$(make_extra_flags)),)
+# This is to ensure that when we add something to CMTEXTRATAGS it is passed
+# to nmake explicitely
+make_extra_flags += CMTEXTRATAGS="$(CMTEXTRATAGS)"
+endif
+endif
 endif
 endif
 
@@ -84,7 +91,7 @@ endif
 	echo "Building doxygen documentation in $$TMPDOYXGENDIR" ; \
 	cmt -pack=$(container) run 'cd ../doc ; $(ignore_latex_errors_cmd) doxygen $$TMPDOXYFILE' && \
 	( echo "Installing documentation in InstallArea/doc" ; \
-	  $(RM) -r InstallArea/doc ; mkdir -p InstallArea/doc ; \
+	  $(RM) -r InstallArea/doc ; $(MKDIR) -p InstallArea/doc ; \
 	  cp -fa $$TMPDOYXGENDIR/* InstallArea/doc ) ; \
 	echo "Removing temporary files" ; \
 	$(RM) -r $$TMPDOYXGENDIR $$TMPDOXYFILE

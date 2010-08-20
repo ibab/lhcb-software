@@ -1,3 +1,7 @@
+2010-08-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: minor change to avoid a problem with VC9 version of NMake.
+
 2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r4
@@ -11,15 +15,15 @@
 
 	* python/LbUtils/Links.py: removed useless messages.
 	* python/LbUtils/CMT/Common.py: created a new function CMTLog for the logging of CMT messages
-	* python/LbUtils/CMT/Package.py: 
+	* python/LbUtils/CMT/Package.py:
 	-factored out the "cmt show macro_value" in a new method called getMacroValue.
 	-factored out the "cmt show set_value" in a new method called getSetValue.
-	
+
 
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* LbUtils/python/LbUtils/File.py: 
-	* LbUtils/python/LbUtils/Tar.py: 
+	* LbUtils/python/LbUtils/File.py:
+	* LbUtils/python/LbUtils/Tar.py:
 	* LbUtils/python/LbUtils/VersionsDB.py: added a protection for the used of the builtin "set". Use
 	the Set class from the sets modules if the builtin is not available. This is the case
 	for python version < 2.4.
@@ -27,14 +31,14 @@
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r3
-	
+
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Tar.py: fixed the top_most feature in listTarBallObjects.
 
 2010-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Tar.py: 
+	* python/LbUtils/Tar.py:
 	- fixed wrong usage of the prefix in updateTarBallFromFilterDict
 	- added some more debug statements.
 	- added possibility to stop on the top most objects in listTarBallObjects according to
@@ -43,16 +47,16 @@
 
 2010-06-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Tar.py: added updateTarBallFromFilterDict and 
-	createTarBallFromFilterDict functions which are more general then the 
+	* python/LbUtils/Tar.py: added updateTarBallFromFilterDict and
+	createTarBallFromFilterDict functions which are more general then the
 	corresponding ones without the "Dict". They allow to have a unique prefix
 	offset for each source directory.
 
 2010-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Script.py: changed the default config file location. Now uses 
+	* python/LbUtils/Script.py: changed the default config file location. Now uses
 	XDG_CONFIG_HOME
-	* tests/ScriptTest.py: 
+	* tests/ScriptTest.py:
 
 2010-06-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
