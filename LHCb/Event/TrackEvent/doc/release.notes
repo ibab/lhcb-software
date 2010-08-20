@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2010-08-20 - Juan Palacios
+ - src/State.cpp
+  . Fix bug in posMomCovariance method.
+
 ! 2010-08-20 Wouter Hulsbergen
  - Added V0Vertex to State::Location
 
