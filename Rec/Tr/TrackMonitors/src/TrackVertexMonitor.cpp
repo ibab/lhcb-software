@@ -73,6 +73,8 @@ private:
   AIDA::IHistogram1D* m_twoprongDocaPull ;
   AIDA::IHistogram1D* m_twoprongDecaylength ;
   AIDA::IHistogram1D* m_twoprongDecaylengthSignificance ;
+  AIDA::IHistogram1D* m_twoprongCTau ;
+  AIDA::IHistogram1D* m_twoprongTau ;
   AIDA::IHistogram1D* m_twoprongIPChisquare ;
   AIDA::IProfile1D* m_twoprongDocaVsEta ; 
   AIDA::IProfile1D* m_twoprongDocaVsPhi ;
@@ -144,7 +146,9 @@ StatusCode TrackVertexMonitor::initialize()
   m_twoprongDoca      = book1D("twoprong doca",-m_ipmax,m_ipmax) ;
   m_twoprongDocaPull  = book1D("twoprong doca pull",-5,5) ;
   m_twoprongDecaylength = book1D("twoprong decaylength",-2,2) ;
-  m_twoprongDecaylengthSignificance = book1D("twoprong decaylength significance",-5,5) ;
+  m_twoprongDecaylengthSignificance = book1D("twoprong decaylength significance",-5,5) ; 
+  m_twoprongCTau = book1D("twoprong ctau",-0.1,0.1) ;
+  m_twoprongTau  = book1D("twoprong proper lifetime (ps)",-0.2,0.2) ;
   m_twoprongIPChisquare = book1D("twoprong IP chi2 per dof",0,10) ;
 
   m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs vs eta",2.0,5.0,m_nprbins) ;
@@ -169,8 +173,10 @@ namespace {
 
   std::vector<const LHCb::Track*> myconvert( const SmartRefVector<LHCb::Track> & tracks )
   {
-    std::vector<const LHCb::Track*> rc(tracks.size()) ;
-    std::copy(tracks.begin(),tracks.end(),rc.begin()) ;
+    std::vector<const LHCb::Track*> rc ;
+    rc.reserve( tracks.size() ) ;
+    BOOST_FOREACH(const LHCb::Track* t, tracks )
+      if( t ) rc.push_back( t ) ;
     return rc ;
   }
   
@@ -219,7 +225,6 @@ StatusCode TrackVertexMonitor::execute()
 { 
   
   LHCb::RecVertex::Range pvcontainer  = get<LHCb::RecVertex::Range>(m_pvContainerName) ;
-
   LHCb::Track::Range alltracks = get<LHCb::Track::Range>( m_trackContainerName );
   
   TrackTypePredicate isLong( LHCb::Track::Long ) ;
@@ -447,14 +452,16 @@ StatusCode TrackVertexMonitor::execute()
 	    // the easiest way to compute the pull is with a vertex fit
 	    LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
 	    if(twoprong) {
-	      m_twoprongMomentum->fill( twoprong->p3().R() / Gaudi::Units::GeV ) ;
+	      double pc = twoprong->p3().R() ;
+	      m_twoprongMomentum->fill( pc / Gaudi::Units::GeV ) ;
 	      m_twoprongDocaPull->fill(std::sqrt(twoprong->chi2()) * (doca>0 ? 1 : -1)) ;	      
 	      double chi2, decaylength,decaylengtherr ;
 	      m_vertexer->computeDecayLength( *twoprong, *restvertex, chi2, decaylength,decaylengtherr ) ;
 	      m_twoprongDecaylength->fill( decaylength ) ;
 	      m_twoprongDecaylengthSignificance->fill( decaylength/decaylengtherr ) ;
 	      m_twoprongIPChisquare->fill( chi2 / 2 ) ;
-	      
+	      m_twoprongCTau->fill( decaylength * mass / pc ) ;
+	      m_twoprongTau->fill( decaylength * mass / (pc * Gaudi::Units::c_light * Gaudi::Units::picosecond) ) ;
 	      delete twoprong ;
 	    }
 	  }
