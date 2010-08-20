@@ -220,16 +220,13 @@ def calibrationByFills(rootfiles='RootFileNames.txt'):
 def calibration(rootfiles,type):
 
     import pyHistoParsingUtils
-    from ROOT import TFile
+    from ROOT import TFile, TGraphErrors
     import GaudiPython
     from GaudiPython import gbl
     import CondDBUI
     import datetime, time, os
     from PyCool import cool
-
-    # Start a PDF file
-    globals()["imageFileName"] = type+"Calibration.ps"
-    printCanvas('[')
+    from math import sqrt
         
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -286,9 +283,7 @@ def calibration(rootfiles,type):
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
 
-        # Initialise plot data
-        plotData[flag] = { }
-
+        # Loop over all HPD copy IDs
         for hpdID in range(0,nHPDs):
 
             # Get the HPD for this copy number
@@ -297,20 +292,24 @@ def calibration(rootfiles,type):
             # Get the alignment conditions
             siAlign  = getSiSensorAlignment(copyNumber)
             #hpdAlign = getHPDAlignment(copyNumber)
-
+                
             # Get the offsets. Use try to catch errors
             try:
-                
+
                 xOff = pyHistoParsingUtils.imageOffsetX(file,hpdID)
                 yOff = pyHistoParsingUtils.imageOffsetY(file,hpdID)
-
                 shiftMag = sqrt(xOff*xOff+yOff*yOff)
-                plotData[flag][hpdID] = { "ShiftR" : shiftMag,
-                                          "ShiftX" : xOff,
-                                          "ShiftY" : yOff }
+
+                if hpdID not in plotData.keys() : plotData[hpdID] = { }
+                plotData[hpdID][flag] = { "ShiftR"    : shiftMag,
+                                          "ShiftX"    : xOff,
+                                          "ShiftY"    : yOff,
+                                          "ShiftXerr" : 0.0,
+                                          "ShiftYerr" : 0.0,
+                                          "ShiftRerr" : 0.0
+                                          }
 
                 # Update the Si alignment with the image movement data
-                #print "Aligning HPD", hpdID
                 paramName = "dPosXYZ"
                 vect = siAlign.paramAsDoubleVect(paramName)
                 vect[0] = xOff
@@ -351,12 +350,62 @@ def calibration(rootfiles,type):
             data = alignments[xmlpath]
             # Add the XML footer to the XML data
             data += xmlFooter()
-            # Add to the DB
+            # First time, create the paths in the DB
             if xmlpath not in createdPaths:
                 db.createNode(xmlpath)
                 createdPaths += [xmlpath]
+            # Add to the DB
             db.storeXMLString( xmlpath, data, startTime, stopTime )
 
+    # Start a PDF file
+    globals()["imageFileName"] = "HPDImageCalibrationBy"+type+".ps"
+    printCanvas('[')
+
+    # Make plots showing the variations
+    for hpd,data in plotData.iteritems():
+
+        from array import array
+        vflag      = array('d')
+        vflagerr   = array('d')
+        vshiftR    = array('d')
+        vshiftRerr = array('d')
+        vshiftX    = array('d')
+        vshiftXerr = array('d')
+        vshiftY    = array('d')
+        vshiftYerr = array('d')
+        for fl in sorted(data.keys()):
+            values = data[fl]
+            vflag.append(fl)
+            vflagerr.append(0.0)
+            vshiftX.append(values['ShiftX'])
+            vshiftXerr.append(values['ShiftXerr'])
+            vshiftY.append(values['ShiftY'])
+            vshiftYerr.append(values['ShiftYerr'])
+            vshiftR.append(values['ShiftR'])
+            vshiftRerr.append(values['ShiftRerr'])
+
+        plot = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
+        plot.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
+        plot.GetXaxis().SetTitle(type)
+        plot.GetYaxis().SetTitle("X Offset" )
+        plot.Draw("AL*")
+        printCanvas()
+
+        plot = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
+        plot.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
+        plot.GetXaxis().SetTitle(type)
+        plot.GetYaxis().SetTitle("Y Offset" )
+        plot.Draw("AL*")
+        printCanvas()
+
+        plot = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
+        plot.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
+        plot.GetXaxis().SetTitle(type)
+        plot.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2)" )
+        plot.Draw("AL*")
+        printCanvas()
+
+    # Close the PDF 
     printCanvas(']')
 
 def printCanvas(tag=''):
@@ -374,98 +423,7 @@ def printCanvas(tag=''):
 def rootCanvas():
     from ROOT import TCanvas
     if globals()["canvas"] == None :
-        rootStyle()
+        import rootStyle
+        rootStyle.applyRootStyle()
         globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",1000,750)
     return globals()["canvas"]
-
-def rootStyle():
-    # make ROOT plots less unpleasant to look at ...
-    
-    from ROOT import gROOT, gStyle, kWhite, kBlack
-
-    # Start from a plain default
-    gROOT.SetStyle("Plain")
-
-    lhcbMarkerType    = 8
-    lhcbMarkerSize    = 0.8
-    lhcbFont          = 62
-    lhcbStatFontSize  = 0.02
-    lhcbStatBoxWidth  = 0.12
-    lhcbStatBoxHeight = 0.12
-    lhcbWidth         = 1
-    lhcbTextSize      = 0.05
-    lhcbLabelSize     = 0.035
-    lhcbAxisLabelSize = 0.035
-    lhcbForeColour = kBlack
-
-    gStyle.SetFrameBorderMode(0)
-    gStyle.SetPadBorderMode(0)
-
-    # canvas options
-    gStyle.SetCanvasBorderSize(0)
-    gStyle.SetCanvasBorderMode(0)
-
-    # fonts
-    gStyle.SetTextFont(lhcbFont)
-    gStyle.SetTextSize(lhcbTextSize)
-    gStyle.SetLabelFont(lhcbFont,"x")
-    gStyle.SetLabelFont(lhcbFont,"y")
-    gStyle.SetLabelFont(lhcbFont,"z")
-    gStyle.SetLabelSize(lhcbLabelSize,"x")
-    gStyle.SetLabelSize(lhcbLabelSize,"y")
-    gStyle.SetLabelSize(lhcbLabelSize,"z")
-    gStyle.SetTitleFont(lhcbFont)
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"x")
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"y")
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"z")
-    gStyle.SetTitleColor(kWhite)
-    gStyle.SetTitleFillColor(kWhite)
-    gStyle.SetTitleColor(kBlack)
-    gStyle.SetTitleBorderSize(0)
-    gStyle.SetTitleTextColor(kBlack)
-
-    # set title position
-    gStyle.SetTitleX(0.15)
-    gStyle.SetTitleY(0.97)
-    # turn off Title box
-    gStyle.SetTitleBorderSize(0)
-    gStyle.SetTitleTextColor(lhcbForeColour)
-    gStyle.SetTitleColor(lhcbForeColour)
-
-    # use bold lines and markers
-    gStyle.SetLineWidth(lhcbWidth)
-    gStyle.SetFrameLineWidth(lhcbWidth)
-    gStyle.SetHistLineWidth(lhcbWidth)
-    gStyle.SetFuncWidth(lhcbWidth)
-    gStyle.SetGridWidth(lhcbWidth)
-    gStyle.SetLineStyleString(2,"[12 12]")
-    gStyle.SetMarkerStyle(lhcbMarkerType)
-    gStyle.SetMarkerSize(lhcbMarkerSize)
-
-    # label offsets
-    gStyle.SetLabelOffset(0.015)
-
-    # by default, do not display histogram decorations:
-    gStyle.SetOptStat(1111)
-    # show probability, parameters and errors
-    gStyle.SetOptFit(1011)
-
-    # look of the statistics box:
-    gStyle.SetStatBorderSize(1)
-    gStyle.SetStatFont(lhcbFont)
-    gStyle.SetStatFontSize(lhcbStatFontSize)
-    gStyle.SetStatX(0.9)
-    gStyle.SetStatY(0.9)
-    gStyle.SetStatW(lhcbStatBoxWidth)
-    gStyle.SetStatH(lhcbStatBoxHeight)
-
-    # put tick marks on top and RHS of plots
-    gStyle.SetPadTickX(1)
-    gStyle.SetPadTickY(1)
-
-    # histogram divisions
-    gStyle.SetNdivisions(505,"x")
-    gStyle.SetNdivisions(510,"y")
-
-    # Force the style
-    gROOT.ForceStyle()

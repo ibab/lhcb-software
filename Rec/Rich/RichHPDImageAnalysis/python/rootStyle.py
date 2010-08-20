@@ -1,40 +1,91 @@
-from ROOT import TStyle, gROOT
 
 def applyRootStyle():
-    global printStyle
-    printStyle = TStyle('printStyle','Style For Printing')
-    printStyle.SetPalette(1)
-    printStyle.SetFrameBorderMode(0)
-    printStyle.SetCanvasBorderMode(0)
-    printStyle.SetPadBorderMode(0)
-    printStyle.SetPadColor(10)
-    printStyle.SetCanvasColor(10)
-    printStyle.SetTitleColor(1)
-    printStyle.SetStatColor(10)
-    printStyle.SetFillColor(10)
-    printStyle.SetPaperSize(20,26)
-    printStyle.SetPadTopMargin(0.05)
-    printStyle.SetPadRightMargin(0.05)
-    printStyle.SetPadBottomMargin(0.16)
-    printStyle.SetPadLeftMargin(0.12)
-    printStyle.SetTextFont(132)
-    printStyle.SetTextSize(0.08)
-    printStyle.SetLabelFont(132,"x")
-    printStyle.SetLabelFont(132,"y")
-    printStyle.SetLabelFont(132,"z")
-    printStyle.SetLabelSize(0.05,"x")
-    printStyle.SetTitleSize(0.06,"x")
-    printStyle.SetLabelSize(0.05,"y")
-    printStyle.SetTitleSize(0.06,"y")
-    printStyle.SetLabelSize(0.05,"z")
-    printStyle.SetTitleSize(0.06,"z")
-    printStyle.SetMarkerStyle(8)
-    printStyle.SetHistLineWidth(2)
-    printStyle.SetLineStyleString(2,"[12 12]")
-    printStyle.SetOptTitle(0)
-    printStyle.SetOptStat(0)
-    printStyle.SetOptFit(0)
-    printStyle.SetPadTickX(1)
-    printStyle.SetPadTickY(1)
-    gROOT.SetStyle('printStyle')
+    
+    from ROOT import gROOT, gStyle, kWhite, kBlack
+
+    # Start from a plain default
+    gROOT.SetStyle("Plain")
+
+    lhcbMarkerType    = 8
+    lhcbMarkerSize    = 0.8
+    lhcbFont          = 62
+    lhcbStatFontSize  = 0.02
+    lhcbStatBoxWidth  = 0.12
+    lhcbStatBoxHeight = 0.12
+    lhcbWidth         = 1
+    lhcbTextSize      = 0.05
+    lhcbLabelSize     = 0.035
+    lhcbAxisLabelSize = 0.035
+    lhcbForeColour = kBlack
+
+    gStyle.SetFrameBorderMode(0)
+    gStyle.SetPadBorderMode(0)
+
+    # canvas options
+    gStyle.SetCanvasBorderSize(0)
+    gStyle.SetCanvasBorderMode(0)
+
+    # fonts
+    gStyle.SetTextFont(lhcbFont)
+    gStyle.SetTextSize(lhcbTextSize)
+    gStyle.SetLabelFont(lhcbFont,"x")
+    gStyle.SetLabelFont(lhcbFont,"y")
+    gStyle.SetLabelFont(lhcbFont,"z")
+    gStyle.SetLabelSize(lhcbLabelSize,"x")
+    gStyle.SetLabelSize(lhcbLabelSize,"y")
+    gStyle.SetLabelSize(lhcbLabelSize,"z")
+    gStyle.SetTitleFont(lhcbFont)
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"x")
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"y")
+    gStyle.SetTitleSize(lhcbAxisLabelSize,"z")
+    gStyle.SetTitleColor(kWhite)
+    gStyle.SetTitleFillColor(kWhite)
+    gStyle.SetTitleColor(kBlack)
+    gStyle.SetTitleBorderSize(0)
+    gStyle.SetTitleTextColor(kBlack)
+
+    # set title position
+    gStyle.SetTitleX(0.15)
+    gStyle.SetTitleY(0.97)
+    # turn off Title box
+    gStyle.SetTitleBorderSize(0)
+    gStyle.SetTitleTextColor(lhcbForeColour)
+    gStyle.SetTitleColor(lhcbForeColour)
+
+    # use bold lines and markers
+    gStyle.SetLineWidth(lhcbWidth)
+    gStyle.SetFrameLineWidth(lhcbWidth)
+    gStyle.SetHistLineWidth(lhcbWidth)
+    gStyle.SetFuncWidth(lhcbWidth)
+    gStyle.SetGridWidth(lhcbWidth)
+    gStyle.SetLineStyleString(2,"[12 12]")
+    gStyle.SetMarkerStyle(lhcbMarkerType)
+    gStyle.SetMarkerSize(lhcbMarkerSize)
+
+    # label offsets
+    gStyle.SetLabelOffset(0.015)
+
+    # by default, do not display histogram decorations:
+    gStyle.SetOptStat(1111)
+    # show probability, parameters and errors
+    gStyle.SetOptFit(1011)
+
+    # look of the statistics box:
+    gStyle.SetStatBorderSize(1)
+    gStyle.SetStatFont(lhcbFont)
+    gStyle.SetStatFontSize(lhcbStatFontSize)
+    gStyle.SetStatX(0.9)
+    gStyle.SetStatY(0.9)
+    gStyle.SetStatW(lhcbStatBoxWidth)
+    gStyle.SetStatH(lhcbStatBoxHeight)
+
+    # put tick marks on top and RHS of plots
+    gStyle.SetPadTickX(1)
+    gStyle.SetPadTickY(1)
+
+    # histogram divisions
+    gStyle.SetNdivisions(505,"x")
+    gStyle.SetNdivisions(510,"y")
+
+    # Force the style
     gROOT.ForceStyle()

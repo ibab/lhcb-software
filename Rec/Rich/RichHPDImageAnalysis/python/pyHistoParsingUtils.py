@@ -12,8 +12,9 @@ def imageOffset( rootfile, histname, hpdcopynr ):
     """
 
     retVal = 0;
-       
-    hist = rootfile.Get('RICH/RichHPDImageSummary/'+histname)
+
+    fullhistname = 'RICH/RichHPDImageSummary/'+histname
+    hist = rootfile.Get(fullhistname)
     
     if None == hist:
         
