@@ -3,9 +3,11 @@
 ! Responsible : Sajan EASO
 ! Purpose     : 
 !-----------------------------------------------------------------------------
-
-! 2010-07-23 - Sajan EASO
-
+! 2010-08-21 - Sajan Easo.
+ - requirements file modified to remove 'private' for link options.  
+! 2010-08-13 - Sajan EASO
+ - Option to select all select candidates or just any one candidate in 
+   an event implemented.
 2010-07-23 - Sajan Easo
   First version created and installed in SVN.
   To run this in a basic way
