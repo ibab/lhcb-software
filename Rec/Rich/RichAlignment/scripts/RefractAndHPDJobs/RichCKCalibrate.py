@@ -193,10 +193,9 @@ def submitRecoJobs(pickedRunsList,jobType):
                 # CPU limit for Dirac
                 maxCPUlimit = 50000
 
-                timePerEvent = 15153.52 / 2781
-
                 # Dirac backend
-                j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
+                j.backend = Dirac()
+                #j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
 
                 # Submit !!
                 j.submit()
@@ -515,11 +514,11 @@ def printCanvas(tag=''):
         import os
         print "Converting", imageFileName, "to PDF"
         os.system('ps2pdf '+imageFileName)
-        os.remove(imageFileName)
+        os.remove(imageFileName)  
         
 def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
 
-    from ROOT import TF1, TH1, TText
+    from ROOT import TF1, TH1, TText, gMinuit
 
     # Parameters
     minEntries = 100000
@@ -546,28 +545,59 @@ def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
             # (rough estimate of peak position)
             xPeak = hist.GetBinCenter(hist.GetMaximumBin())
 
-            # Fitting range
-            delta = 0.00225
+            # Pre Fitting range
+            delta = 0.0025
             if rad == 'Rich2Gas' : delta = 0.00105
             fitMin = xPeak - delta
             fitmax = xPeak + delta
 
             # Gaussian function
-            fitFunc = TF1("Gaus"+rad,"gaus",fitMin,fitmax)
+            preFitFunc = TF1(rad+"FitF","gaus",fitMin,fitmax)
 
-            # Do the fit
-            hist.Fit(fitFunc,"R")
+            # Do the pre fit with just a Gaussian
+            hist.Fit(preFitFunc,"R")
+            preValue = preFitFunc.GetParameter(1)
+            preError = preFitFunc.GetParError(1)
+
+            # Add Run number to page
+            addRunToPlot(run,"Pre Fit")
+            
+            # Print to file
+            printCanvas()
+
+            # Full Fitting range
+            delta = 0.005
+            if rad == 'Rich2Gas' : delta = 0.002
+            fitMin = xPeak - delta
+            fitmax = xPeak + delta
+
+            # Gaus + pol3
+            fullFitFunc = TF1(rad+"FitF","gaus(0)+pol3(3)",fitMin,fitmax)
+            fullFitFunc.SetParameter(0,preFitFunc.GetParameter(0))
+            fullFitFunc.SetParameter(1,preFitFunc.GetParameter(1))
+            fullFitFunc.SetParameter(2,preFitFunc.GetParameter(2))
+        
+            # Do the final fit
+            hist.Fit(fullFitFunc,"R")
+            fullValue = fullFitFunc.GetParameter(1)
+            fullError = fullFitFunc.GetParError(1)
             hist.Draw()
 
             # Add Run number to page
-            addRunToPlot(run)
-            
+            addRunToPlot(run,"Full Fit")
+
+            # Print to file
             printCanvas()
     
             # Results of the fit
-            peakPos    = fitFunc.GetParameter(1)
-            peakPosErr = fitFunc.GetParError(1)
-            result = ['OK',fitFunc.GetParameter(1),fitFunc.GetParError(1)]
+            maxErrorForOK = 1e-4
+            if fullError < maxErrorForOK :
+                result = ['OK',fullValue,fullError]
+            else:
+                if preError < maxErrorForOK :
+                    result = ['OK',preValue,preError]
+                else:
+                    result = ['FAILED',0,0]
 
     # Return the fit result
     return result
@@ -591,24 +621,25 @@ def averageCPUTimePerEvent(jobs):
         for sjob in job.subjobs:
 
             # Get the CPU time of this job
-            totCPUTime = float(sjob.backend.normCPUTime)
+            cpuTime = sjob.backend.normCPUTime
 
-            # Fill the hist
-            cpuHist.Fill(totCPUTime)
-
-            if totCPUTime > maxTime :
-                print "Job %s.%s CPU time %s > HistMax %s" % (job.id,sjob.id,totCPUTime,maxTime)
+            # Fill the plots
+            if cpuTime != None :
+                fcpuTime = float(cpuTime)
+                cpuHist.Fill(fcpuTime)
+                if fcpuTime > maxTime :
+                    print "Job %s.%s CPU time %s > HistMax %s" % (job.id,sjob.id,fcpuTime,maxTime)
             
     # Print plot to PNG
     cpuHist.Draw('E')
     printCanvas()
     
-def addRunToPlot(run):
+def addRunToPlot(run,tag=""):
     from ROOT import TText
     text = TText()
     text.SetNDC()
     text.SetTextSize(0.03)
-    text.DrawText( 0.12, 0.85, "Run "+str(run) )
+    text.DrawText( 0.12, 0.85, tag+" Run "+str(run) )
     
 def getRunLFNData(pickedRuns):
     import pickle
