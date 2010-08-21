@@ -62,7 +62,7 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
   declareProperty("UseMap", m_UseMap = true );
-  declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
+  declareProperty("PVnbtrks", m_PVnbtrks = 10 ); //corr. to 'tight' PV reco
 }
 //=============================================================================
 // Destructor
@@ -384,13 +384,14 @@ const RecVertex * Hlt2PreSelDV::GetUpstreamPV(){
   const RecVertex * upPV = NULL;
   double tmp = 1000;
   for ( RecVertex::Range::const_iterator i = PVs.begin(); 
-	i != PVs.end() ; ++i ){
+        i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Apply some cuts
     if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
       continue;
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    if( !HasBackAndForwardTracks( pv ) ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
     //double sr = sqrt( mat(0,0) + mat(1,1) );
     if( msgLevel( MSG::DEBUG ) )
@@ -661,6 +662,23 @@ bool Hlt2PreSelDV::HasBackwardTracks( const RecVertex* RV ){
   return false;
 }
 
+//=============================================================================
+//  Loop on the daughter track to see if there is at least one backward track
+//  and one forward tracks
+//=============================================================================
+bool Hlt2PreSelDV::HasBackAndForwardTracks( const RecVertex* RV ){
+  SmartRefVector< Track >::const_iterator i = RV->tracks().begin();
+  SmartRefVector< Track >::const_iterator iend = RV->tracks().end();
+  bool back = false;
+  bool forw = false;
+  for( ; i != iend; ++i ){
+    if ( (*i)->checkFlag( Track::Backward ) ){ back = true;}
+    else { forw = true;}
+    if( back && forw ) return true;
+  }
+  return false;
+}
+
 //============================================================================
 // if particule has a daughter muon, return highest pt
 //============================================================================
@@ -828,7 +846,7 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
                                          Particle::ConstVector & RecParts ){
 
   //Save Global Cut Event
-  if( true ) SaveGEC( tuple, RecParts );
+  if( false ) SaveGEC( tuple, RecParts );
 
   vector<int>  nboftracks;
   vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, indets, muons;
@@ -894,11 +912,20 @@ StatusCode Hlt2PreSelDV::SavePreysTuple( Tuple & tuple,
 //  Event number 
 //============================================================================
 StatusCode Hlt2PreSelDV::fillHeader( Tuple & tuple ){
-  const RecHeader* header = 
-    get<RecHeader>(RecHeaderLocation::Default);  
+
+  int evtnb = 0;
+  int runnb = 0;
+  if( exist<RecHeader>(RecHeaderLocation::Default) ){  
+    const RecHeader* header = 
+      get<RecHeader>(RecHeaderLocation::Default);  
+    evtnb = (int)header->evtNumber();
+    runnb = (int)header->runNumber();
+  }
+  
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
-  tuple->column("Event", (int)header->evtNumber());
-  tuple->column("Run", (int)header->runNumber());
+  tuple->column("Event", evtnb );
+  tuple->column("Run", runnb );
+
 
   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   if( odin ){
@@ -950,6 +977,10 @@ StatusCode Hlt2PreSelDV::GetCaloInfos( string CaloType, double & En, double & Et
 
   if( CaloType == "Muon" ){
 
+    if( !exist<MuonPIDs>( MuonPIDLocation::Default ) ){
+      //warning()<<"No valid data at "<< MuonPIDLocation::Default << endmsg;
+      return StatusCode::SUCCESS ;
+    }
     const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
     for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
 	  imu !=  pMU->end() ; ++imu ){
@@ -972,6 +1003,10 @@ StatusCode Hlt2PreSelDV::GetCaloInfos( string CaloType, double & En, double & Et
 
   } else {
     double x=0,y=0,z=0;
+    if( !exist<CaloDigits>( "Raw/"+CaloType+"/Digits" ) ){
+      //warning()<<"No valid data at "<< "Raw/"+CaloType+"/Digits" << endmsg;
+      return StatusCode::SUCCESS ;
+    }
     //CaloDigitLocation::Spd
     const CaloDigits*  digitsCalo = get<CaloDigits>("Raw/"+CaloType+"/Digits");
     //Nothing in here...

@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-08-21 - Neal Gauvin
+ - Add requirement on upPV candidate : > 1 backward and forward track.
+
 ! 2010-08-05 - Neal Gauvin
  - Bux fix : removed bad usage of addresses.
 

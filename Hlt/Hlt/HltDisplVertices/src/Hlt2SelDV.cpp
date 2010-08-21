@@ -563,6 +563,23 @@ bool Hlt2SelDV::IsInRFFoil( const Gaudi::XYZPoint & pos){
 
 }
 
+//=============================================================================
+//  Loop on the daughter track to see if there is at least one backward track
+//  and one forward tracks
+//=============================================================================
+bool Hlt2SelDV::HasBackAndForwardTracks( const RecVertex* RV ){
+  SmartRefVector< Track >::const_iterator i = RV->tracks().begin();
+  SmartRefVector< Track >::const_iterator iend = RV->tracks().end();
+  bool back = false;
+  bool forw = false;
+  for( ; i != iend; ++i ){
+    if ( (*i)->checkFlag( Track::Backward ) ){ back = true;}
+    else { forw = true;}
+    if( back && forw ) return true;
+  }
+  return false;
+}
+
 //============================================================================
 // if particule has a daughter muon, return highest pt
 //============================================================================
@@ -637,6 +654,7 @@ void Hlt2SelDV::GetUpstreamPV(){
       continue;
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    if( !HasBackAndForwardTracks( pv ) ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
     if( msgLevel( MSG::DEBUG ) )
       debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;

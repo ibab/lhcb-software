@@ -1,4 +1,4 @@
-// $Id: Hlt2SelDV.h,v 1.3 2010-07-30 15:33:35 ngueissa Exp $
+// $Id: Hlt2SelDV.h,v 1.4 2010-08-21 09:24:44 ngueissa Exp $
 #ifndef HLT2SELDV_H 
 #define HLT2SELDV_H 1
 
@@ -44,6 +44,8 @@ private:
                       double range = 1*Gaudi::Units::mm );
   /// Is a point in the RF-Foil ?
   bool IsInRFFoil( const Gaudi::XYZPoint & );
+  /// Has a RecVertex a backward and a forward track ?
+  bool HasBackAndForwardTracks( const LHCb::RecVertex* );
   /// Has a candidate a daughter muon ?
   double HasMuons( const LHCb::Particle * );
   double GetSumPt( const LHCb::Particle * );
