@@ -31,7 +31,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Neal Gauvin']
 __date__ = '12/01/2009'
-__version__ = '$Revision: 1.19 $'
+__version__ = '$Revision: 1.20 $'
 __all__ = ('Hlt2DisplVerticesLinesConf')
 
 from Gaudi.Configuration import *
@@ -41,7 +41,7 @@ import GaudiKernel.SystemOfUnits as units
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  "MinNbTracks"  : { 'Hlt2RV2P' : 4
-                                    , 'Hlt2SingleLonglived' : 4
+                                    , 'Hlt2SingleLonglived' : 5
                                     , 'Hlt2DoubleLonglived' : 4
                                       }
                 ,  "RCutMethod"   : "FromUpstreamPV"
@@ -49,13 +49,13 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                     , 'Hlt2SingleLonglived' : 0.3 * units.mm
                                     , 'Hlt2DoubleLonglived' : 0.3 * units.mm
                                       }
-                ,  "MinMass"      : { 'Hlt2RV2P' : 1*units.GeV
-                                    , 'Hlt2SingleLonglived' : 4.5*units.GeV
-                                    , 'Hlt2DoubleLonglived' : 1*units.GeV
+                ,  "MinMass"      : { 'Hlt2RV2P' : 1.5*units.GeV
+                                    , 'Hlt2SingleLonglived' : 6.*units.GeV
+                                    , 'Hlt2DoubleLonglived' : 1.5*units.GeV
                                       }
                 ,  "MinSumpt"     :{ 'Hlt2RV2P' : 0*units.GeV
-                                   , 'Hlt2SingleLonglived' : 4.5*units.GeV
-                                   , 'Hlt2DoubleLonglived' : 1.*units.GeV
+                                   , 'Hlt2SingleLonglived' : 6*units.GeV
+                                   , 'Hlt2DoubleLonglived' : 3.*units.GeV
                                       } 
                 ,  "RemVtxFromDet" : { 'Hlt2RV2P' : 0
                                    , 'Hlt2SingleLonglived' : 0
@@ -134,6 +134,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2SingleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2SingleLonglived']
         Hlt2SingleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2SingleLonglived']
+        Hlt2SingleLonglived.SigmaR = 0.1*units.mm
+        Hlt2SingleLonglived.SigmaZ = 1*units.mm
         Hlt2SingleLonglived.SaveOnTES = False
 
         line = Hlt2Line( 'DisplVerticesSingle'
