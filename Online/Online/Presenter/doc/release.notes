@@ -4,6 +4,7 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v2r1 2010-08-23 =============
 ! 2010-08-19 - G.Graziani
  - declare trend histograms via new OnlineHistDB::declareTrendingHistogram method
 
