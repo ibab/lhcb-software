@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -24,7 +24,7 @@ def histosfilter(name,xlower=0.,xup=100.,nbins=100):
 
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-class Hlt1OneTrackLinesConf(HltLinesConfigurableUser) :
+class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # V. Gligorov
@@ -91,11 +91,11 @@ class Hlt1OneTrackLinesConf(HltLinesConfigurableUser) :
             from Configurables import MuonRec, MuonIDAlg
             from MuonID import ConfiguredMuonIDs
             cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="2010")
-            HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1OneTrackMuonIDAlg")
+            HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1TrackMuonIDAlg")
             HltMuonIDAlg.TrackLocation          = "Hlt1/Track/FitTrack"
-            HltMuonIDAlg.MuonIDLocation         = "Hlt1/Track/OneTrackMuons/MuonID"
-            HltMuonIDAlg.MuonTrackLocation      = "Hlt1/Track/OneTrackMuons/Muon"
-            HltMuonIDAlg.MuonTrackLocationAll   = "Hlt1/Track/OneTrackMuons/AllMuon"
+            HltMuonIDAlg.MuonIDLocation         = "Hlt1/Track/TrackMuons/MuonID"
+            HltMuonIDAlg.MuonTrackLocation      = "Hlt1/Track/TrackMuons/Muon"
+            HltMuonIDAlg.MuonTrackLocationAll   = "Hlt1/Track/TrackMuons/AllMuon"
             HltMuonIDAlg.FindQuality            = False
             after = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
@@ -113,32 +113,32 @@ class Hlt1OneTrackLinesConf(HltLinesConfigurableUser) :
             from Configurables import CombinedParticleMaker
             from Configurables import ProtoParticleMUONFilter
 
-            charged      = ChargedProtoParticleMaker("Hlt1OneTrackMuonProtoPMaker")
+            charged      = ChargedProtoParticleMaker("Hlt1TrackMuonProtoPMaker")
             charged.InputTrackLocation  = ["Hlt1/Track/FitTrack"]
-            charged.OutputProtoParticleLocation = "Hlt1/ProtoP/OneTrackMuon"
+            charged.OutputProtoParticleLocation = "Hlt1/ProtoP/TrackMuon"
             
-            muon                = ChargedProtoParticleAddMuonInfo("Hlt1OneTrackChargedProtoPAddMuon")
-            muon.ProtoParticleLocation  = "Hlt1/ProtoP/OneTrackMuon" 
-            muon.InputMuonPIDLocation   = "Hlt1/Track/OneTrackMuons/MuonID"
+            muon                = ChargedProtoParticleAddMuonInfo("Hlt1TrackChargedProtoPAddMuon")
+            muon.ProtoParticleLocation  = "Hlt1/ProtoP/TrackMuon" 
+            muon.InputMuonPIDLocation   = "Hlt1/Track/TrackMuons/MuonID"
             
-            Hlt1Muons = CombinedParticleMaker("Hlt1OneTrackMuonCPM")
+            Hlt1Muons = CombinedParticleMaker("Hlt1TrackMuonCPM")
             Hlt1Muons.Particle = "muon" 
             Hlt1Muons.addTool(ProtoParticleMUONFilter('Muon'))
             Hlt1Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
-            Hlt1Muons.Input =  "Hlt1/ProtoP/OneTrackMuon"
+            Hlt1Muons.Input =  "Hlt1/ProtoP/TrackMuon"
             Hlt1Muons.WriteP2PVRelations = False 
 
             after += [charged,muon,Hlt1Muons]
 
             from Configurables import LoKi__VoidFilter as VoidFilter
             Hlt1MuonFilter = VoidFilter('Hlt1_MuonFilter'
-                                 , Code = " CONTAINS('Phys/Hlt1OneTrackMuonCPM/Particles') > 0 "
+                                 , Code = " CONTAINS('Phys/Hlt1TrackMuonCPM/Particles') > 0 "
                                  )  
 
             after += [    Hlt1MuonFilter,
                           Member ('HltFilterFittedParticles', 'FFT',
                           OutputSelection = "%Decision",
-                          InputSelection1 = 'TES:/Event/Phys/Hlt1OneTrackMuonCPM/Particles', 
+                          InputSelection1 = 'TES:/Event/Phys/Hlt1TrackMuonCPM/Particles', 
                           InputSelection2 = 'PV3D',
                           MinIPCHI2 = ipchi2
                          )   
@@ -146,19 +146,19 @@ class Hlt1OneTrackLinesConf(HltLinesConfigurableUser) :
             return after
  
         from Hlt1Lines.HltL0Candidates import L0Channels
-        Line ( 'OneTrackAllL0'
+        Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Muon','DiMuon','Electron','Photon'] ] ) 
              , algos =  trackprepare("0.125","1250","12500") + afterburn("3",50)
              )
-        Line ( 'OneTrackMuon'
+        Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
              , algos =  trackprepare("0.08","800","8000") + muonAfterburn("10",25.)
              )
-        Line ( 'OneTrackPhoton'
+        Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
