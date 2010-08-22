@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-22 - Johannes Albrecht
+ -adapt cuts of D2mumu control channels and Hlt2UnbiasedDiMuon
+
 ! 2010-08-19 - Johannes Albrecht
  - tighten HLT1 muon Pr for muons
  - add Calibration_VeloMicroBias
