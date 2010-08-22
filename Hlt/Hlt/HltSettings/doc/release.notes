@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-22 - Jibo He
+ - Electrons_Nominal_TrackFitted.py added. 
+   + DYeh, Single High Pt electron and Bu->ee K lines added, compared 
+     to Electrons_Minimal_TrackFitted 
+
 ! 2010-08-22 - Johannes Albrecht
  -adapt cuts of D2mumu control channels and Hlt2UnbiasedDiMuon
 
