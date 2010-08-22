@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-08-23 - Roel Aaij
+ - Fix indentation error in Configuration.py
+
 ! 2010-08-19 - Gerhard Raven
  - move configuration of MonitorSvc around
 

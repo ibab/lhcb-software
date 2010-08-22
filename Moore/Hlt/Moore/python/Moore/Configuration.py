@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.129 2010-08-19 15:58:40 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.130 2010-08-22 23:57:08 raaij Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -461,7 +461,7 @@ class Moore(LHCbConfigurableUser):
         #       Online requires UseTCK
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
-             import OnlineEnv 
+            import OnlineEnv 
             self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
