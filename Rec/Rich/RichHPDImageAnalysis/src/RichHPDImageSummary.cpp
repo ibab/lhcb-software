@@ -194,11 +194,11 @@ namespace Rich
 
     TH2D* RichHPDImageSummary::create2D( const std::string& name )
     {
-      using namespace Gaudi::Utils::Aida2ROOT;
+      using namespace Gaudi::Utils;
       TH2D * hist(NULL);
       if ( m_keep2Dhistos ) 
       {
-        hist = aida2root(book2D(name,name,-0.5,31.5,32, -0.5,31.5,32));
+        hist = Aida2ROOT::aida2root(book2D(name,name,-0.5,31.5,32, -0.5,31.5,32));
       }
       else
       {
