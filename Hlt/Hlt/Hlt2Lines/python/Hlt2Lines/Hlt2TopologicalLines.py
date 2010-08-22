@@ -23,15 +23,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'MCOR_MIN'          : 4000.0, # MeV
         'SUM_PT_MIN'        : 4000.0, # MeV
         'MAX_PT_MIN'        : 1500.0, # MeV
-        'ALL_PT_MIN'        : 300.0,  # MeV
-        'ALL_P_MIN'         : 2000.0, # MeV
-        'AMAXDOCA_MAX'      : 1.0,    # mm
-        'AMINDOCA_MAX'      : 0.2,    # mm
+        'ALL_PT_MIN'        : 500.0,  # MeV
+        'ALL_P_MIN'         : 5000.0, # MeV
+        'AMAXDOCA_MAX'      : 0.15,    # mm
+        'AMINDOCA_MAX'      : 0.15,    # mm
         'USE_GEC'           : False,
         'GEC_MAX'           : 350,
         # fit cuts
-        'ALL_MIPCHI2DV_MIN' : 9.0,    # unitless
-        'ALL_TRCHI2DOF_MAX' : 10.0,   # unitless
+        'ALL_MIPCHI2DV_MIN' : 16.0,    # unitless
+        'ALL_TRCHI2DOF_MAX' : 5.0,   # unitless
         'BPVVDCHI2_MIN'     : 64.0,   # unitless
         # robust
         'ALL_MIPDV_MIN'     : 0.025,  # mm
@@ -129,8 +129,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         
         cuts = "(MAXTREE(%s,PT) > %s*MeV) &" \
                % (pid,props["MAX_PT_MIN"])
-        #cuts += '(MINTREE(%s,TRCHI2DOF) < 3) &' % pid
-        cuts += '(SUMTREE(PT,%s,0.0) > %s*MeV)' % (pid,props['SUM_PT_MIN'])
+        sum_pt_min = float(props['SUM_PT_MIN'])
+        if name.find('3Body') >=0: sum_pt_min += 250
+        if name.find('4Body') >= 0: sum_pt_min += 500
+        
+        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
         cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
                 % (props['MCOR_MIN'],props['MCOR_MAX'])
         if extraCode: cuts = cuts + ' & ' + extraCode
@@ -151,9 +154,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # by default, configure as a pass-all filter with similar code.
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
         #filtCode = "CONTAINS('/Event/Raw/Velo/LiteClusters') < 3000"
-        #if self.getProp('USE_GEC'):
-            #filtCode = "CONTAINS('" + tracks.outputSelection() + \
-            #           "') < %(GEC_MAX)s" % self.getProps()
+        if self.getProp('USE_GEC'):
+            filtCode = "CONTAINS('" + tracks.outputSelection() + \
+                       "') < %(GEC_MAX)s" % self.getProps()
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg',
                                                  Code=filtCode)

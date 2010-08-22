@@ -119,7 +119,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         ############################################################################
 
         # Filter on RICH info
-        TfKaonRichPidTf = "INGENERATION(('K+'==ABSID) & (PIDK > "+str(self.getProp('TFKaonRichPID'))+"), 2)"
+        TfKaonRichPidTf = "(2 == NINGENERATION(('K+'==ABSID) & (PIDK > "+str(self.getProp('TFKaonRichPID'))+"), 1))"
         Hlt2InclusivePhiRich 	= Hlt2Member( CombineParticles
                                          , "RichCombine"
                                          , DecayDescriptors = decayDesc

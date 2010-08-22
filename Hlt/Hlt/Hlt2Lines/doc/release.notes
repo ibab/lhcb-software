@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - V. Gligorov
+ - Update XGamma/D2mumu/DisplacedVertex lines to use fitted tracks
+ - Update inclusive phi to cut on the PID of both kaons
+ - Update topological for Mike Williams
+ - Update D2KSPi trigger for Sam Gregson 
+
 ! 2010-08-22 - Jibo He
  - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) in 
    DYeh1, DYeh2, Hlt2SingleHighPTElectron, and Bu->eeK lines

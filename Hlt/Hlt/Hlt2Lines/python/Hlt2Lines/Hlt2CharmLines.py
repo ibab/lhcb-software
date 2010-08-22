@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.20 2010-08-18 22:10:02 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.21 2010-08-22 22:46:02 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-08-18 22:10:02 $'
-__version__ = '$Revision: 1.20 $'
+__date__    = '$Date: 2010-08-22 22:46:02 $'
+__version__ = '$Revision: 1.21 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -45,6 +45,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                 , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
                 , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
                 , 'OSTFPointUL'             : 0.20       # unitless
+                , 'OSTFVtxChi2UL'           : 20.0       # unitless
+                , 'OSTFDPtLL'               : 2000.0     # in MeV 
                 ## Slots for K_S h h' lines
                 , 'KshhTFHHTrkPLL'          : 1500.0     # in MeV
                 , 'KshhTFHHTrkChi2UL'       : 20.0       # unitless
@@ -617,14 +619,12 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         
         # Construct a cut string for the combination.
-        DCombCuts = "(AM> 1380*MeV) & (AM < 2220*MeV) & (AMAXDOCA('') < 1.0*mm) "
+        DCombCuts = "(AM> 1380*MeV) & (AM < 2220*MeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 1.0*mm) "
         
         # Construct a cut string for the daughter pions - allowed???
         DDaughterCuts =  { "pi+" : "(P > 2*GeV) & (TRCHI2DOF < 10) & (MIPCHI2DV(PRIMARY) > 49)",
-                           "KS0" : "CHILDCUT(MIPCHI2DV(PRIMARY)>100, 1) & CHILDCUT(MIPCHI2DV(PRIMARY)>100, 2)"  
+                           "KS0" : "CHILDCUT(MIPCHI2DV(PRIMARY)>100,1) & CHILDCUT(MIPCHI2DV(PRIMARY)>100,2) & (MIPCHI2DV(PRIMARY) > 9)"
                          }
-        
-        
         
         # extracuts allows additional cuts to be applied for special
         #   cases, including the tight doca requirement of the 2-body and
@@ -906,21 +906,21 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmOSTF2BodySeq = self.__ostfFilter('CharmOSTF2Body'
                                      , [charmOSTF2Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0)')
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2/VDOF) < %(OSTFVtxChi2UL)s)' % self.getProps()) 
 
 
         # 3-body decision
         ###################################################################
         charmOSTF3BodySeq = self.__ostfFilter('CharmOSTF3Body'
                                      , [charmOSTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2/VDOF) < %(OSTFVtxChi2UL)s)' % self.getProps() )
 
 
         # 4-body decision
         ###################################################################
         charmOSTF4BodySeq = self.__ostfFilter('CharmOSTF4Body'
                                      , [charmOSTF4Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2/VDOF) < %(OSTFVtxChi2UL)s)' % self.getProps())
 
 
         # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
@@ -1075,47 +1075,47 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 #        D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > 0.1 * ps)"
         D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
 
-        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions, NoCutsKaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons, BiKalmanFittedPions, BiKalmanFittedKaons
 
         D02MuMuCombine = Hlt2Member(CombineParticles
                                     , 'D02MuMuCombine'
                                     , DecayDescriptor = '[ D0 -> mu+ mu- ]cc'
-                                    , InputLocations = [ Muons ]
+                                    , InputLocations = [ BiKalmanFittedMuons ]
                                     , DaughtersCuts = { "mu+" : D0DaughterCut }
                                     , CombinationCut = D0CombinationCut
                                     , MotherCut = D0MotherCut)
         self.__makeLine('CharmD02MuMu'
-                        , algos = [ PV3D(), Muons, D02MuMuCombine ])
+                        , algos = [ PV3D(), BiKalmanFittedMuons, D02MuMuCombine ])
 
         D02PiPiForD02MuMuCombine = Hlt2Member(CombineParticles
                                               , 'D02PiPiForD02MuMuCombine'
                                               , DecayDescriptor = '[ D0 -> pi+ pi- ]cc'
-                                              , InputLocations = [ NoCutsPions ]
+                                              , InputLocations = [ BiKalmanFittedPions ]
                                               , DaughtersCuts = { "pi+" : D0DaughterCut }
                                               , CombinationCut = D0CombinationCut
                                               , MotherCut = D0MotherCut)
         self.__makeLine('CharmD02PiPiForD02MuMu'
-                        , algos = [ PV3D(), NoCutsPions, D02PiPiForD02MuMuCombine ])
+                        , algos = [ PV3D(), BiKalmanFittedPions, D02PiPiForD02MuMuCombine ])
 
         D02KPiForD02MuMuCombine = Hlt2Member(CombineParticles
                                              , 'D02KPiForD02MuMuCombine'
                                              , DecayDescriptor = '[ D0 -> K+ pi- ]cc'
-                                             , InputLocations = [ NoCutsKaons, NoCutsPions ]
+                                             , InputLocations = [ BiKalmanFittedKaons, BiKalmanFittedPions ]
                                              , DaughtersCuts = { "K+" : D0DaughterCut, "pi+" : D0DaughterCut }
                                              , CombinationCut = D0CombinationCut
                                              , MotherCut = D0MotherCut)
         self.__makeLine('CharmD02KPiForD02MuMu'
-                        , algos = [ PV3D(), NoCutsKaons, NoCutsPions, D02KPiForD02MuMuCombine ])
+                        , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, D02KPiForD02MuMuCombine ])
 
         D02KKForD02MuMuCombine = Hlt2Member(CombineParticles
                                             , 'D02KKForD02MuMuCombine'
                                             , DecayDescriptor = '[ D0 -> K+ K- ]cc'
-                                            , InputLocations = [ NoCutsKaons ]
+                                            , InputLocations = [ BiKalmanFittedKaons ]
                                             , DaughtersCuts = { "K+" : D0DaughterCut }
                                             , CombinationCut = D0CombinationCut
                                             , MotherCut = D0MotherCut)
         self.__makeLine('CharmD02KKForD02MuMu'
-                        , algos = [ PV3D(), NoCutsKaons, D02KKForD02MuMuCombine ])
+                        , algos = [ PV3D(), BiKalmanFittedKaons, D02KKForD02MuMuCombine ])
 
         from Hlt2SharedParticles.Ks import KsLLTF
 
@@ -1128,4 +1128,4 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Make the lines
         ###################################################################
 
-        self.__makeLine('CharmD2KS0PiLL' , algos = [ combineD2KS0PiLL ])
+        self.__makeLine('CharmD2KS0PiLL' , algos = [ PV3D(),combineD2KS0PiLL ])

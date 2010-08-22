@@ -53,7 +53,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions, NoCutsKaons, Electrons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons, BiKalmanFittedPions, BiKalmanFittedKaons, BiKalmanFittedElectrons
         
         # Common cuts
         d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV)"
@@ -79,7 +79,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , CombinationCut = d0comb_combcut % self.getProps()
                                  , DaughtersCuts = { "pi+" : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [NoCutsPions ])
+                                 , InputLocations = [BiKalmanFittedPions ])
         
         # D0-> mu mu combination for Dst-> D0(->mumu) pi
         D2MuMuComb = Hlt2Member( CombineParticles 
@@ -89,7 +89,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , CombinationCut = d0comb_combcut % self.getProps()
                                  , DaughtersCuts = { "mu+" : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [ Muons ])
+                                 , InputLocations = [ BiKalmanFittedMuons ])
         
         # D0-> pi mu combination for Dst-> D0(->pimu) pi 
         D2PiMuComb = Hlt2Member( CombineParticles 
@@ -99,7 +99,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                  , DaughtersCuts = { "mu+" : d0comb_childcut % self.getProps(),
                                                      "pi+"  : d0comb_childcut % self.getProps() }
                                  , MotherCut = d0comb_d0cut  % self.getProps()
-                                 , InputLocations = [NoCutsPions, Muons])
+                                 , InputLocations = [BiKalmanFittedPions, BiKalmanFittedMuons])
 
         # D0-> K pi combination for Dst-> D0(->Kpi) pi
         D2KPiComb = Hlt2Member( CombineParticles 
@@ -109,7 +109,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "K+" : d0comb_childcut % self.getProps(),
                                                     "pi+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [NoCutsPions, NoCutsKaons])
+                                , InputLocations = [BiKalmanFittedPions, BiKalmanFittedKaons])
         # D0-> K mu combination for Dst-> D0(->K mu) pi
         D2KMuComb = Hlt2Member( CombineParticles 
                                 , "KMu"     
@@ -118,7 +118,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "K+" : d0comb_childcut % self.getProps(),
                                                     "mu+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [Muons, NoCutsKaons])
+                                , InputLocations = [BiKalmanFittedMuons, BiKalmanFittedKaons])
 
         # D0-> e mu combination for Dst-> D0(->e mu) pi
         D2EMuComb = Hlt2Member( CombineParticles 
@@ -128,7 +128,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = { "e+" : d0comb_childcut % self.getProps(),
                                                     "mu+"  : d0comb_childcut % self.getProps() }
                                 , MotherCut = d0comb_d0cut  % self.getProps()
-                                , InputLocations = [Electrons, Muons])
+                                , InputLocations = [BiKalmanFittedElectrons, BiKalmanFittedMuons])
         ########################################################################
         # Common Dst -> D0 pi combination
         Dst2D0PiComb = Hlt2Member( CombineParticles 
@@ -139,7 +139,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
                                                           "D0"    : dstcomb_d0cut % self.getProps()
                                                           }
                                    , MotherCut =  dstcomb_dstcut % self.getProps()
-                                   , InputLocations = [D2PiPiComb, NoCutsPions])
+                                   , InputLocations = [D2PiPiComb, BiKalmanFittedPions])
         
         ###########################################################################
         # Define the Hlt2 Lines
@@ -148,31 +148,31 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine = Hlt2Line('Dst2PiD02PiPi'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                            , prescale = self.prescale
                            , postscale = self.postscale
-                           , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
+                           , algos = [ BiKalmanFittedPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                            )
         
         D0SBline_pp = DstLine.clone('Dst2PiD02PiPiD0SB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
-                                    , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions],
+                                    , algos = [ BiKalmanFittedPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
+                                    , DstD0Pi = { "InputLocations" : [D2PiPiComb, BiKalmanFittedPions],
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_pp = DstLine.clone('Dst2PiD02PiPiDMSB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
+                                    , algos = [ BiKalmanFittedPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                                     , PiPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                    , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions] }
+                                    , DstD0Pi = { "InputLocations" : [D2PiPiComb, BiKalmanFittedPions] }
                                     )
         
         Signalline_pp = DstLine.clone('Dst2PiD02PiPiSignal'
                                       , prescale = self.prescale
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
+                                      , algos = [ BiKalmanFittedPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                                       , PiPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                      , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions],
+                                      , DstD0Pi = { "InputLocations" : [D2PiPiComb, BiKalmanFittedPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                       )
 
@@ -183,32 +183,32 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_mm = DstLine.clone('Dst2PiD02MuMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
-                                   , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] }
+                                   , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
+                                   , DstD0Pi = { "InputLocations" : [D2MuMuComb, BiKalmanFittedPions] }
                                    )
         
         D0SBline_mm = DstLine.clone('Dst2PiD02MuMuD0SB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
-                                    , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] ,
+                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
+                                    , DstD0Pi = { "InputLocations" : [D2MuMuComb, BiKalmanFittedPions] ,
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_mm = DstLine.clone('Dst2PiD02MuMuDMSB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
+                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                     , MuMu = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                    , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] }
+                                    , DstD0Pi = { "InputLocations" : [D2MuMuComb, BiKalmanFittedPions] }
                                     )
         
         Signalline_mm = DstLine.clone('Dst2PiD02MuMuSignal'
                                       , prescale = self.prescale
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
+                                      , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                       , MuMu = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                      , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions],
+                                      , DstD0Pi = { "InputLocations" : [D2MuMuComb, BiKalmanFittedPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                       )
         
@@ -220,15 +220,15 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_pm = DstLine.clone('Dst2PiD02PiMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ NoCutsPions, Muons, PV3D(), D2PiMuComb , Dst2D0PiComb ]
-                                   , DstD0Pi = { "InputLocations" : [D2PiMuComb, NoCutsPions] }
+                                   , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2PiMuComb , Dst2D0PiComb ]
+                                   , DstD0Pi = { "InputLocations" : [D2PiMuComb, BiKalmanFittedPions] }
                                    )
 
         DstLine_km = DstLine.clone('Dst2PiD02KMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ NoCutsPions, Muons, NoCutsKaons, PV3D(), D2KMuComb , Dst2D0PiComb ]
-                                   , DstD0Pi = { "InputLocations" : [D2KMuComb, NoCutsPions] }
+                                   , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, BiKalmanFittedKaons, PV3D(), D2KMuComb , Dst2D0PiComb ]
+                                   , DstD0Pi = { "InputLocations" : [D2KMuComb, BiKalmanFittedPions] }
                                    )
         ################################################################################
         #
@@ -236,38 +236,38 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_kp = DstLine.clone('Dst2PiD02KPi'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
-                                   , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions] }
+                                   , algos = [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
+                                   , DstD0Pi = { "InputLocations" : [D2KPiComb, BiKalmanFittedPions] }
                                    )
         
         D0SBline_kp = DstLine.clone('Dst2PiD02KPiD0SB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
-                                    , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions],
+                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
+                                    , DstD0Pi = { "InputLocations" : [D2KPiComb, BiKalmanFittedPions],
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_kp = DstLine.clone('Dst2PiD02KPiDMSB'
                                     , prescale = self.prescale
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
+                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                     , KPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                    , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions] }
+                                    , DstD0Pi = { "InputLocations" : [D2KPiComb, BiKalmanFittedPions] }
                                     )
         
         Signalline_kp = DstLine.clone('Dst2PiD02KPiSignal'
                                       , prescale = self.prescale
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
+                                      , algos = [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                       , KPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
-                                      , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions],
+                                      , DstD0Pi = { "InputLocations" : [D2KPiComb, BiKalmanFittedPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                       )
         
 ##         DstLine_emu = DstLine.clone('Dst2PiD02EMu'
-##                                     , algos = [ NoCutsPions, Electrons, Muons, PV3D(), D2EMuComb , Dst2D0PiComb ]
-##                                     , DstD0Pi = { "InputLocations" : [D2EMuComb, NoCutsPions] }
+##                                     , algos = [ BiKalmanFittedPions, BiKalmanFittedElectrons, BiKalmanFittedMuons, PV3D(), D2EMuComb , Dst2D0PiComb ]
+##                                     , DstD0Pi = { "InputLocations" : [D2EMuComb, BiKalmanFittedPions] }
 ##                                     )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02PiPiDecision" : 50420 } )

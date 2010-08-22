@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.8 2010-03-17 22:29:47 gligorov Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.9 2010-08-22 22:46:02 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -25,7 +25,7 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
-        from Hlt2SharedParticles.BasicParticles import NoCutsKaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiPhiDecision" : 55375 } )
 
@@ -33,7 +33,7 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         phiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
-                                 , InputLocations = [NoCutsKaons] #[Hlt2GoodKaons]
+                                 , InputLocations = [BiKalmanFittedKaons] #[Hlt2GoodKaons]
                                  , InputPrimaryVertices = "None"
                                  , UseP2PVRelations = False
                                  , DaughtersCuts = { "K+" : "(PT>%(KaonPtCut)s)"% self.getProps() }
@@ -53,5 +53,5 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2PhiPhi'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [NoCutsKaons, phiCombine, PV3D(), BsCombine]
+                        , algos = [BiKalmanFittedKaons, phiCombine, PV3D(), BsCombine]
                         )

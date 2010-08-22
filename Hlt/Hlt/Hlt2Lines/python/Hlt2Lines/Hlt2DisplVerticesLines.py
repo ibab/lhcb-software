@@ -31,7 +31,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Neal Gauvin']
 __date__ = '12/01/2009'
-__version__ = '$Revision: 1.20 $'
+__version__ = '$Revision: 1.21 $'
 __all__ = ('Hlt2DisplVerticesLinesConf')
 
 from Gaudi.Configuration import *
@@ -73,8 +73,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import GaudiSequencer, HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter
-        from Hlt2SharedParticles.BasicParticles import NoCutsPions
-        #from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
+        #from Hlt2SharedParticles.BasicParticles import NoCutsPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from HltTracking.HltPVs import PV3D
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
@@ -105,8 +105,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         #######################################################################
         #Get the pions
-        DVSeq.append( NoCutsPions )
-        #DVSeq.append( BiKalmanFittedPions )
+        #DVSeq.append( NoCutsPions )
+        DVSeq.append( BiKalmanFittedPions )
         
         #######################################################################
         #Run Get the candidates
@@ -114,8 +114,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
 
         Hlt2RV2P = Hlt2PreSelDV("Hlt2RV2P")
         DVSeq.append( Hlt2RV2P )
-        Hlt2RV2P.InputLocations = [NoCutsPions.outputSelection()]
-        #Hlt2RV2P.InputLocations = [BiKalmanFittedPions.outputSelection()]
+        #Hlt2RV2P.InputLocations = [NoCutsPions.outputSelection()]
+        Hlt2RV2P.InputLocations = [BiKalmanFittedPions.outputSelection()]
         Hlt2RV2P.RecVerticesLocation = [Hlt2PatPV3D.OutputVerticesName] 
         Hlt2RV2P.RCutMethod = self.getProp('RCutMethod')
         Hlt2RV2P.RMin = self.getProp('RMin')['Hlt2RV2P']
