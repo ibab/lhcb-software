@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.15 2010-04-23 13:01:32 evh Exp $
+! $Id: release.notes,v 1.16 2010-08-22 09:49:43 robbep Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
+
+! 2010-08-22 - Patrick Robbe
+ - src/lib/MonH2D.cpp: fix problem with number of bins for vertical axis
+   labels.
+
 ! 2010-04-23 - Eric van Herwijnen
  - Added axis label support to the end of the boost binary archive and used
  boost class versioning. Presenters from Online v4r37 can read these histograms,
@@ -16,7 +21,6 @@
  and sets an EOR flag on the saveset. This happens a few minutes after stopping
  the run, although the Adder/Saver are then already in the READY state.
  - Behaviour on fast run change still to be tested.
-
 
 ! 2009-11-05 - Eric van Herwijnen
  - moved msg in MonProfile.splitObject - not understood bug

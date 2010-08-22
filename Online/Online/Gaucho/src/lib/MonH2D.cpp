@@ -342,7 +342,7 @@ void MonH2D::splitObject(){
   }
   
   bBinLabelY = false;
-  for (int i = 1; i < (nbinsx+1) ; ++i){
+  for (int i = 1; i < (nbinsy+1) ; ++i){
     std::string binLab = m_hist->GetYaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
       bBinLabelY = true;
@@ -352,7 +352,7 @@ void MonH2D::splitObject(){
   
   if (bBinLabelY){
       binLabelY.clear();
-    for (int i = 1; i < (nbinsx+1) ; ++i){
+    for (int i = 1; i < (nbinsy+1) ; ++i){
       binLabelY.push_back(m_hist->GetYaxis()->GetBinLabel(i));
     }
   }
