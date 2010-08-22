@@ -23,20 +23,25 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                   'UseGEC'              : True       # use global event cut?
                   , 'GEC'               : 120        # max number of tracks allowed in GEC
                   ## One-stage track-fit cuts
-                  , 'OSTFAllTrkPtLL'       : 500        # track pT (MeV) #500
-                  , 'OSTFAllTrkPLL'        : 5000       # track p (MeV) #5000
-                  , 'OSTFAllTrkPVIPChi2LL' : 16         # track-PV IP chi2 (unitless) #16 , 4
-                  , 'OSTFAllTrkChi2UL'     : 5          # track fit chi2 (unitless) #5 , 10
+                  , 'OSTFAllTrkPtLL'       : 500        # track pT (MeV)
+                  , 'OSTFAllTrkPLL'        : 5000       # track p (MeV)
+                  , 'OSTFAllTrkPVIPChi2LL' : 16         # track-PV IP chi2 (unitless)
+                  , 'OSTFAllTrkChi2UL'     : 5          # track fit chi2 (unitless)
                   , 'OSTFTrkMaxPtLL'       : 1500       # track max pT (MeV)
                   , 'OSTFKsDDPtLL'         : 100        # KsDD pT (MeV)
                   , 'OSTFKsDDPLL'          : 500        # KsDD p (MeV)
                   , 'OSTFKsDDPVIPChi2LL'   : 2          # KsDD-PV IP chi2 (unitless)
-                  , 'OSTFPtBachelorLL'     : 500        # bachelor pT (MeV) #500
-                  , 'OSTFPairMinDocaUL'    : 0.2        # min DOCA (mm) #0.1 , 0.2
-                  , 'OSTFPairMaxDocaUL'    : 0.5        # max DOCA (mm) #0.5 , 1.0
+                  , 'OSTFPtBachelorLL'     : 500        # bachelor pT (MeV)
+                  , 'OSTFPairMinDocaUL'    : 0.2        # min DOCA (mm)
+                  , 'OSTFPairMaxDocaUL'    : 0.5        # max DOCA (mm)
                   , 'OSTFVtxPVDispChi2LL'  : 225        # B endvertex-PV disp. chi2 (unitless)
                   , 'OSTFVtxPVDDispChi2LL' : 196        # D endvertex-PV disp. chi2 (unitless)
                   , 'OSTFVtxDispUL'        : 20         # B-D signed vertex-vertex disp.
+                  ## Mass windows
+                  , 'MWSignalMin'          : 5
+                  , 'MWSignalMax'          : 5.5
+                  , 'MWBroadMin'           : 4
+                  , 'MWBroadMax'           : 6
                   ## Pre- and post-scales
                   , 'Prescale'                : { #Broad MW sidebands
                                                  'Hlt2B2D2hhBachelorOSTFTUSBroadMW'          : 0.01
@@ -172,15 +177,11 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
-                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
-        
         if extracode :
             filter = Hlt2Member( FilterDesktop
                                  , 'Filter'
                                  , InputLocations = inputSeq
                                  , Code = extracode
-                                 , Preambulo = preambulo
                                  )
         else :
             filter = Hlt2Member( FilterDesktop
@@ -226,14 +227,12 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons
         B2DXOSTFInputKaons = self.__OSTFInputParticleFilter('B2DXOSTFInputKaons', [ BiKalmanFittedKaons ] )
-        #B2DXOSTFInputKaons = self.__OSTFTUSInputParticleFilter('B2DXOSTFInputKaons', [ BiKalmanFittedKaons ] )        
 
         ###################################################################
         # Absorb the post-track fit pions into this configurable
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         B2DXOSTFInputPions = self.__OSTFTUSInputParticleFilter('B2DXOSTFInputPions', [ BiKalmanFittedPions ] )
-        #B2DXOSTFInputPions = self.__OSTFInputParticleFilter('B2DXOSTFInputPions', [ BiKalmanFittedPions ] )
 
         ###################################################################
         # Create one-stage track fit sequences
@@ -241,9 +240,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         OSTFTUS2Body = self.__OSTFCombine(  name = 'OSTFTUS2Body'
                                             , inputSeq = [ B2DXOSTFInputKaons, B2DXOSTFInputPions ]
-                                            #, inputSeq = [ B2DXOSTFInputKaons ]
                                             , decayDesc = ["K*(892)0 -> K+ pi+", "K*(892)0 -> K+ pi-", "K*(892)0 -> K- pi-"]
-                                            #, decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"] 
                                             , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMinDocaUL)s )" % self.getProps() }
                                             )
 
@@ -252,9 +249,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         OSTFTUS3Body = self.__OSTFCombine(  name = 'OSTFTUS3Body'
                                             , inputSeq = [ OSTFTUS2Body, B2DXOSTFInputKaons ]
-                                            #, inputSeq = [ OSTFTUS2Body, B2DXOSTFInputPions ]
                                             , decayDesc =[ "D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
-                                            #, decayDesc =[ "D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                             , extracuts = {'MotherCut' : "(BPVVDCHI2> %(OSTFVtxPVDDispChi2LL)s )" % self.getProps()}
                                             )
                 
@@ -281,22 +276,16 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         B2D2hhBachelorOSTFTUSSeq = self.__OSTFCombine(name = 'B2D2hhBachelorOSTFTUSSeq'
                                                       , inputSeq = [ OSTFTUS2BodySeq, B2DXOSTFInputKaons ]
-                                                      #, inputSeq = [ OSTFTUS2BodySeq, B2DXOSTFInputPions ]
                                                       , decayDesc = ["B0 -> K*(892)0  K-","B0 -> K*(892)0  K+"]
-                                                      #, decayDesc = ["B0 -> K*(892)0  pi-","B0 -> K*(892)0  pi+"]
                                                       , extracuts = {'MotherCut' : "(BPVVDCHI2> %(OSTFVtxPVDispChi2LL)s ) & (D2DVVDSIGN(1)< %(OSTFVtxDispUL)s)" % self.getProps(),
-                                                                     #'pi+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                                      'K+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                       )
         
         B2D2hhhBachelorOSTFTUSSeq = self.__OSTFCombine(name = 'B2D2hhhBachelorOSFTUSSeq'
                                                        , inputSeq = [ OSTFTUS3Body, B2DXOSTFInputKaons ]
-                                                       #, inputSeq = [ OSTFTUS3Body, B2DXOSTFInputPions ]
                                                        , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)- K+"]
-                                                       #, decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)- pi+"]
                                                        , extracuts = {'MotherCut' : "(BPVVDCHI2> %(OSTFVtxPVDispChi2LL)s ) & (D2DVVDSIGN(1)< %(OSTFVtxDispUL)s)" \
                                                                       % self.getProps(),
-                                                                      #'pi+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                                       'K+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                        )
         
@@ -328,12 +317,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         B2D2hhhBachelorWithKsOSTFTUSSeq = self.__OSTFCombine(name = 'B2D2hhhBachelorWithKsOSTFTUSSeq'
                                                              , inputSeq = [ OSTFTUS3BodyWithKs, B2DXOSTFInputKaons ]
-                                                             #, inputSeq = [ OSTFTUS3BodyWithKs, B2DXOSTFInputPions ] 
                                                              , decayDesc = ["B0 -> D*(2010)+ K-","B0 -> D*(2010)- K+"]
-                                                             #, decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)- pi+"]
                                                              , extracuts = {'MotherCut' : "(BPVVDCHI2> %(OSTFVtxPVDispChi2LL)s )  & (D2DVVDSIGN(1)< %(OSTFVtxDispUL)s)" \
                                                                             % self.getProps(),
-                                                                            #'pi+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                                             'K+':"(PT> %(OSTFPtBachelorLL)s *MeV)" % self.getProps()}
                                                              )
         
@@ -341,22 +327,30 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # Filter everything in signal and broad mass windows
         ###################################################################
         B2D2hhBachelorOSTFTUSSeqSignalFilter = self.__OSTFFilter('B2D2hhBachelorOSTFTUSSeqSignalFilter',
-                                                                 [B2D2hhBachelorOSTFTUSSeq], extracode = "(MCOR>5.0*GeV) & (MCOR<5.5*GeV)")
+                                                                 [B2D2hhBachelorOSTFTUSSeq],
+                                                                 extracode = "(M>%(MWSignalMin)s*GeV) & (M<%(MWSignalMax)s*GeV)" % self.getProps())
         B2D2hhhBachelorOSTFTUSSeqSignalFilter = self.__OSTFFilter('B2D2hhhBachelorOSTFTUSSeqSignalFilter',
-                                                                  [B2D2hhhBachelorOSTFTUSSeq], extracode = "(MCOR>5.0*GeV) & (MCOR<5.5*GeV)")
+                                                                  [B2D2hhhBachelorOSTFTUSSeq],
+                                                                  extracode = "(M>%(MWSignalMin)s*GeV) & (M<%(MWSignalMax)s*GeV)" % self.getProps())
         B2D2hhKstarPhiOSTFTUSSeqSignalFilter = self.__OSTFFilter('B2D2hhKstarPhiOSTFTUSSeqSignalFilter',
-                                                                 [B2D2hhKstarPhiOSTFTUSSeq], extracode = "(MCOR>5.0*GeV) & (MCOR<5.5*GeV)")
+                                                                 [B2D2hhKstarPhiOSTFTUSSeq],
+                                                                 extracode = "(M>%(MWSignalMin)s*GeV) & (M<%(MWSignalMax)s*GeV)" % self.getProps())
         B2D2hhhBachelorWithKsOSTFTUSSeqSignalFilter = self.__OSTFFilter('B2D2hhhBachelorWithKsOSTFTUSSeqSignalFilter',
-                                                                        [B2D2hhhBachelorWithKsOSTFTUSSeq], extracode = "(MCOR>5.0*GeV) & (MCOR<5.5*GeV)")
+                                                                        [B2D2hhhBachelorWithKsOSTFTUSSeq],
+                                                                        extracode = "(M>%(MWSignalMin)s*GeV) & (M<%(MWSignalMax)s*GeV)" % self.getProps())
         
         B2D2hhBachelorOSTFTUSSeqBroadMWFilter = self.__OSTFFilter('B2D2hhBachelorSeqBroadMWFilter',
-                                                                  [B2D2hhBachelorOSTFTUSSeq], extracode = "(MCOR>4*GeV) & (MCOR<6*GeV)")
+                                                                  [B2D2hhBachelorOSTFTUSSeq],
+                                                                  extracode = "(M>%(MWBroadMin)s*GeV) & (M<%(MWBroadMax)s*GeV)" % self.getProps())
         B2D2hhhBachelorOSTFTUSSeqBroadMWFilter = self.__OSTFFilter('B2D2hhhBachelorSeqBroadMWFilter',
-                                                                   [B2D2hhhBachelorOSTFTUSSeq], extracode = "(MCOR>4*GeV) & (MCOR<6*GeV)")
+                                                                   [B2D2hhhBachelorOSTFTUSSeq],
+                                                                   extracode = "(M>%(MWBroadMin)s*GeV) & (M<%(MWBroadMax)s*GeV)" % self.getProps())
         B2D2hhKstarPhiOSTFTUSSeqBroadMWFilter = self.__OSTFFilter('B2D2hhKstarPhiSeqBroadMWFilter',
-                                                                  [B2D2hhKstarPhiOSTFTUSSeq], extracode = "(MCOR>4*GeV) & (MCOR<6*GeV)")        
+                                                                  [B2D2hhKstarPhiOSTFTUSSeq],
+                                                                  extracode = "(M>%(MWBroadMin)s*GeV) & (M<%(MWBroadMax)s*GeV)" % self.getProps())        
         B2D2hhhBachelorWithKsOSTFTUSSeqBroadMWFilter = self.__OSTFFilter('B2D2hhhBachelorWithKsSeqBroadMWFilter',
-                                                                         [B2D2hhhBachelorWithKsOSTFTUSSeq], extracode = "(MCOR>4*GeV) & (MCOR<6*GeV)")
+                                                                         [B2D2hhhBachelorWithKsOSTFTUSSeq],
+                                                                         extracode = "(M>%(MWBroadMin)s*GeV) & (M<%(MWBroadMax)s*GeV)" % self.getProps())
 
         ###################################################################
         # OSTF TUS signal lines
