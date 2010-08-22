@@ -8,6 +8,20 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-08-22 - Jibo He
+ - Tighten selections in inclusive DiProton lines 
+   and require Hlt1 hadron lines (Hlt1.*Hadron.*Decision)
+   . python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py
+
+! 2010-08-22 - Jibo He
+ - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) 
+   in all (running) Hlt2 electron lines 
+   . python/Hlt2Lines/Hlt2B2JpsiXLines.py 
+   . python/Hlt2Lines/Hlt2B2KstareeLines.py
+   . python/Hlt2Lines/Hlt2InclusiveDiElectronLines.py
+   . python/Hlt2Lines/Hlt2InclusiveElectronLines.py
+
+
 !2010-08-21 - Neal Gauvin
  - Adapt nominal settings for Hlt2DisplVertices.py.
 

@@ -172,6 +172,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	#define the line
 	line=Hlt2Line('B2KstareeRobustAndFittedLargeBMassWindow'
 	              , prescale = self.prescale
+                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
 		      , algos = [ Electrons,
                                   LowPtDiElectron,
                                   BiKalmanFittedElectrons,
@@ -200,6 +201,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeRobustAndFittedLargeBMassWindowSignal'
                    , prescale = self.prescale
+                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                    , algos = [ B2KstareeRobustAndFittedAll, FilterSignal ]
                    , postscale = self.postscale )  
 
@@ -217,6 +219,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone( 'B2KstareeRobustAndFitted'
                     , prescale = self.prescale
+                    , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                     , algos = [ B2KstareeRobustAndFittedAll, FilterB ]
                     , postscale = self.postscale )
 
@@ -232,6 +235,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeRobustAndFittedSignal'
                    , prescale = self.prescale
+                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                    , algos = [ B2KstareeRobustAndFittedAll, FilterSignalAndB ]
                    , postscale = self.postscale )
         
@@ -296,6 +300,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	##########################
 	#define the line
 	line=Hlt2Line('B2KstareeFittedLargeBMassWindow'
+                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
 	              , prescale = self.prescale
 		      , algos = [ BiKalmanFittedElectrons,
                                   PV3D(),
@@ -321,6 +326,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
         
         line.clone('B2KstareeFittedLargeBMassWindowSignal'
                    , prescale = self.prescale
+                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                    , algos = [ B2KstareeFittedAll, FilterSignal ]
                    , postscale = self.postscale )
 
@@ -338,6 +344,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone( 'B2KstareeFitted'
                     , prescale = self.prescale
+                    , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                     , algos = [ B2KstareeFittedAll, FilterB ]
                     , postscale = self.postscale )
 
@@ -353,6 +360,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeFittedSignal'
                    , prescale = self.prescale
+                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                    , algos = [ B2KstareeFittedAll, FilterSignalAndB ]
                    , postscale = self.postscale )
 	

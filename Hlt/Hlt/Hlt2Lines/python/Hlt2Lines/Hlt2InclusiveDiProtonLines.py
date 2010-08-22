@@ -23,24 +23,26 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   ,'Postscale'         : {  'Hlt2IncDiProton'             : 1.
                                            ,'Hlt2IncDiProtonPresel'       : 1.
                                            ,'Hlt2IncDiProtonTrackFitted'  : 1.  
-                                           }
-                  
-                  , 'ProtonPT'         :  1600.   # MeV
+                                            }
+
+                  , 'SpdMult'          :   600.
+                  , 'ProtonPT'         :  1800.   # MeV
                   , 'CombUpperMass'    :  4000.   # MeV, before Vtx fit
-                  , 'CombLowerMass'    :  2700.   # MeV, before Vtx fit
+                  , 'CombLowerMass'    :  2800.   # MeV, before Vtx fit
                   , 'UpperMass'        :  3950.   # MeV, after Vtx fit
-                  , 'LowerMass'        :  2750.   # MeV, after Vtx fit
-                  , 'VtxCHI2'          :    36.   # dimensionless
+                  , 'LowerMass'        :  2850.   # MeV, after Vtx fit
+                  , 'VtxCHI2'          :    16.   # dimensionless
                   # Track Fitted
-                  , 'TFProtonPT'         :  1800.   # MeV
+                  , 'TFProtonPT'         :  1900.   # MeV
+                  , 'TFProtonTrkChi2'    :     4.   
                   , 'TFCombUpperMass'    :  3950.   # MeV, before Vtx fit
-                  , 'TFCombLowerMass'    :  2750.   # MeV, before Vtx fit
+                  , 'TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
                   , 'TFUpperMass'        :  3900.   # MeV, after Vtx fit
-                  , 'TFLowerMass'        :  2800.   # MeV, after Vtx fit
-                  , 'TFVtxCHI2'          :    25.   # dimensionless
+                  , 'TFLowerMass'        :  2900.   # MeV, after Vtx fit
+                  , 'TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
-                  , 'TFRichProtonPIDppi'   :   2.   # CombDLL(p-pi)
-                  , 'TFRichProtonPIDpK'    :   2.   # CombDLL(p-K)
+                  , 'TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
+                  , 'TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)
                   , 'HltANNSvcID'      : { 'IncDiProton'             : 51000
                                            ,'IncDiProtonPresel'      : 51001
                                            ,'IncDiProtonTrackFitted' : 51002 
@@ -79,7 +81,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Track Fitted
         #------------------------------------
-        TFProtonCut = "(PT> %(TFProtonPT)s *MeV)" % self.getProps()
+        TFProtonCut = "(PT> %(TFProtonPT)s *MeV) & (TRCHI2DOF < %(TFProtonTrkChi2)s)" % self.getProps()
         TFCombCut = "(%(TFCombLowerMass)s *MeV < AM) & (AM < %(TFCombUpperMass)s *MeV)" % self.getProps()
         TFMomCut = "(VFASPF(VCHI2/VDOF)< %(TFVtxCHI2)s) & (%(TFLowerMass)s *MeV < MM) & (MM < %(TFUpperMass)s *MeV)" % self.getProps()
         
@@ -117,6 +119,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('IncDiProton'
                         , prescale = self.prescale
+                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
+                        , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()   
                         , algos = [ NoCutsProtons
                                     , Combine
                                     , BiKalmanFittedProtons
@@ -132,6 +136,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------        
         line = Hlt2Line('IncDiProtonPresel'
                         , prescale = self.prescale
+                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
+                        , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()  
                         , algos = [ NoCutsProtons
                                     , Combine
                                     ]
@@ -143,6 +149,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('IncDiProtonTrackFitted'
                         , prescale = self.prescale
+                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
+                        , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()  
                         , algos = [ NoCutsProtons
                                     , Combine
                                     , BiKalmanFittedProtons

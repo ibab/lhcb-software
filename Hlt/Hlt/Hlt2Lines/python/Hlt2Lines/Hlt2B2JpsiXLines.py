@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.23 2010-05-23 17:32:09 jhe Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.24 2010-08-22 09:42:47 jhe Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -459,6 +459,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # Final Wide Selection
         line = Hlt2Line('TFBs2JpsieePhiUnbiasedPT'
                         , prescale = self.prescale
+                        , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                         , algos = [BiKalmanFittedElectrons, JpsiCombine, BiKalmanFittedKaons, PhiCombine, BsCombine]
                         , postscale = self.postscale
                         )
@@ -478,6 +479,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line.clone('TFBs2JpsieePhiSignal'
                    , prescale = self.prescale
+                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                    , algos = [ TFBs2JpsieePhiUnbiased, PV3D(), FilterTFBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    

@@ -246,6 +246,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         SingleElectronLine = Hlt2Line("SingleElectron"
                                       , prescale = self.prescale
+                                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')" 
                                       , algos = [ PV3D()
                                                   , Electrons
                                                   , FilterSingleElectron ]
@@ -331,6 +332,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         SingleTFElectronLine = Hlt2Line("SingleTFElectron"
                                         , prescale = self.prescale
+                                        , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                                         , algos = [ PV3D()
                                                     , BiKalmanFittedElectrons
                                                     , FilterSingleTFElectron ]
@@ -378,6 +380,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         TFElectronPlusTrackLine = Hlt2Line("TFElectronPlusTrack"
                                            , prescale = self.prescale
+                                           , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                                            , algos = [ PV3D()
                                                        , BiKalmanFittedElectrons
                                                        , BiKalmanFittedKaons
