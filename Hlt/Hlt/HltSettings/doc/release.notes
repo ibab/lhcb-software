@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - V. Gligorov
+ - Update list of hadron lines which are "in".
+
 ! 2010-08-22 - Jibo He
  - Electrons_Nominal_TrackFitted.py added. 
    + DYeh, Single High Pt electron and Bu->ee K lines added, compared 

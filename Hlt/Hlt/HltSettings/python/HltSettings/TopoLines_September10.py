@@ -60,12 +60,12 @@ class TopoLines :
             'MAX_PT_MIN'        : 1500.0, # MeV
             'ALL_PT_MIN'        : 500.0,  # MeV
             'ALL_P_MIN'         : 5000.0, # MeV
-            'AMAXDOCA_MAX'      : 0.2,    # mm
-            'AMINDOCA_MAX'      : 0.2,    # mm 
+            'AMAXDOCA_MAX'      : 0.15,    # mm
+            'AMINDOCA_MAX'      : 0.15,    # mm 
             'USE_GEC'           : False,
             'GEC_MAX'           : 200,
             # fit cuts
-            'ALL_MIPCHI2DV_MIN' : 9.0,    # unitless
+            'ALL_MIPCHI2DV_MIN' : 16.0,    # unitless
             'ALL_TRCHI2DOF_MAX' : 5.0,   # unitless
             'BPVVDCHI2_MIN'     : 64.0,   # unitless
             # robust

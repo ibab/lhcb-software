@@ -32,31 +32,32 @@ class Hadrons_Minimal :
             'Hlt2B2HH',
             'Hlt2B2HHLTUnbiased',
             'Hlt2Bs2PhiPhi',
-            #'Hlt2IncDiProton', 
-            #'Hlt2IncDiProtonPresel', 
-            #'Hlt2IncDiProtonTrackFitted',
+            'Hlt2IncDiProton', 
+            'Hlt2IncDiProtonPresel', 
+            'Hlt2IncDiProtonTrackFitted',
             'Hlt2DisplVerticesDouble', 
             'Hlt2DisplVerticesSingle',            
             #'Hlt2B2HHPi0_Merged',
             #'Hlt2B2HHPi0_Resolved',
             'Hlt2CharmD2KS0PiLL',        
             # The topological 
-            'Hlt2TopoOSTF3Body',
             'Hlt2TopoOSTF2Body',
+            'Hlt2TopoOSTF3Body',
+            'Hlt2TopoOSTF4Body',
             # The charm lines
-            'Hlt2CharmTF2BodySA',
-            'Hlt2CharmTF3BodySA',
-            'Hlt2CharmTF2BodyWideMassSA',
-            'Hlt2CharmTF3BodyWideMassSA',
+            'Hlt2CharmOSTF2Body',
+            'Hlt2CharmOSTF3Body',
+            'Hlt2CharmOSTF2BodyWideMass',
+            'Hlt2CharmOSTF3BodyWideMass',
             # B2DX lines
-            "Hlt2B2D2hhBachelorOSTFTUSSignal",
-            "Hlt2B2D2hhhBachelorOSTFTUSSignal",
-            "Hlt2B2D2hhKstarOSTFTUSSignal",
-            "Hlt2B2D2hhhBachelorWithKsOSTFTUSSignal", 
-            "Hlt2B2D2hhBachelorOSTFTUSBroadMW",
-            "Hlt2B2D2hhhBachelorOSTFTUSBroadMW",
-            "Hlt2B2D2hhKstarOSTFTUSBroadMW",
-            "Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMW" 
+            #"Hlt2B2D2hhBachelorOSTFTUSSignal",
+            #"Hlt2B2D2hhhBachelorOSTFTUSSignal",
+            #"Hlt2B2D2hhKstarOSTFTUSSignal",
+            #"Hlt2B2D2hhhBachelorWithKsOSTFTUSSignal", 
+            #"Hlt2B2D2hhBachelorOSTFTUSBroadMW",
+            #"Hlt2B2D2hhhBachelorOSTFTUSBroadMW",
+            #"Hlt2B2D2hhKstarOSTFTUSBroadMW",
+            #"Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMW" 
             ]
 
         # For inclusive phi extend using Kim's setting
