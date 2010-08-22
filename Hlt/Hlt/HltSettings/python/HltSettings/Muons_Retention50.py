@@ -56,7 +56,8 @@ class Muons_Retention50 :
         from Hlt2Lines.Hlt2InclusiveDiMuonLines  import Hlt2InclusiveDiMuonLinesConf
         d.update( { Hlt2InclusiveDiMuonLinesConf : { 
             ## Cut values
-            'UnbiasedDiMuonPt'         : 0.0      # MeV
+            'UnbiasedDiMuonMinMass'    : 2900      # MeV
+            ,'UnbiasedDiMuonPt'        : 0.0      # MeV
             ,'UnbiasedDiMuonMuPt'      : 0.0      # MeV
             ,'UnbiasedDiMuonLowPt'     : 0.0      # MeV
             ,'UnbiasedDiMuonLowMuPt'   : 0.0      # MeV

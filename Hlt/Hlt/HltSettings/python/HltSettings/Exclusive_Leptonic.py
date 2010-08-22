@@ -64,11 +64,16 @@ class Exclusive_Leptonic :
         d.update( { Hlt2Dst2D2XXLinesConf : { 
             ## Cut values
             'D0MinPT'            : 1600.      # MeV
-            , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi' : 0.1
+            , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi'         :  0.05
                                , 'Hlt2Dst2PiD02KPi'        :  0.05
                                , 'Hlt2Dst2PiD02KPiD0SB'    :  0.05
                                , 'Hlt2Dst2PiD02KPiDMSB'    :  0.05
                                , 'Hlt2Dst2PiD02KPiSignal'  :  0.1
+                               , 'Hlt2Dst2PiD02PiPiD0SB'   :  0.05
+                               , 'Hlt2Dst2PiD02PiPiDMSB'   :  0.05
+                               , 'Hlt2Dst2PiD02PiPiSignal' :  0.05
+                      
+          
                                }
             }}
                   )
