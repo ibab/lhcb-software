@@ -388,6 +388,10 @@ def calibration(rootfiles,type):
     # Make plots showing the variations
     for hpd,data in plotData.iteritems():
 
+        #copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
+        #smartID = richSystem().richSmartID(copyNumber)
+        #print smartID
+
         from array import array
         vflag      = array('d')
         vflagerr   = array('d')
@@ -411,21 +415,21 @@ def calibration(rootfiles,type):
         plot = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
         plot.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
         plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("X Offset" )
+        plot.GetYaxis().SetTitle("X Offset / mm" )
         plot.Draw("AL*")
         printCanvas()
 
         plot = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
         plot.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
         plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("Y Offset" )
+        plot.GetYaxis().SetTitle("Y Offset / mm" )
         plot.Draw("AL*")
         printCanvas()
 
         plot = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
         plot.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
         plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2)" )
+        plot.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
         plot.Draw("AL*")
         printCanvas()
 

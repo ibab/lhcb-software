@@ -102,7 +102,11 @@ namespace Rich
       bool m_compareCondDB;
       
       /// Maximum allowed movement before triggering the update
-      double m_maxMovement;      
+      double m_maxMovement;   
+
+      /// Flag to turn on the saving of 2D histograms
+      bool m_keep2Dhistos;
+
     };
   } // namespae Mon
 } // namespace Rich 

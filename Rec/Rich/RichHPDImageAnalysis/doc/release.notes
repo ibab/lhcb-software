@@ -4,6 +4,12 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-08-22 - Chris Jones
+ - Update the algorithm to add an explicit flag to turn on the saving of
+   all 2D plots to the final root file. Previously was done implicitly in
+   MSG::DEBUG mode.
+ - More small updates to the alignment scripts.
+
 ! 2010-08-17 - Chris Jones
  - Add a new python script to run over a set of ROOT files, each for a given
    run and to create a DB slice containing the Si sensor alignments for each
@@ -21,7 +27,6 @@
 
 ! 2010-04-25 - Thomas BLAKE
  - Added histograms of difference to CondDB value
-
 
 !================= Rich/RichHPDImageAnalysis v1r0 2010-03-24 ==================
 ! 2010-03-23 - Thomas BLAKE
