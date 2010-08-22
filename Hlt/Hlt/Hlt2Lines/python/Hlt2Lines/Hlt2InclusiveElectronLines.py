@@ -109,7 +109,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     , InputLocations  = [BiKalmanFittedElectrons]
                                                     )
         line = Hlt2Line( 'SingleHighPTElectron'
-                         , prescale = self.prescale 
+                         , prescale = self.prescale
+                         , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                          , algos = [ BiKalmanFittedElectrons, Hlt2SelSingleHighPTElectron]
                          , postscale = self.postscale
                          )
@@ -131,10 +132,11 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line1 = Hlt2Line( 'DYeh1'
-                         , prescale = self.prescale 
-                         , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY1]
-                         , postscale = self.postscale
-                         )
+                          , prescale = self.prescale
+                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                          , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY1]
+                          , postscale = self.postscale
+                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DYeh1Decision" : 50461 } )
 
         combine_DY2 = Hlt2Member( CombineParticles
@@ -148,10 +150,11 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line2 = Hlt2Line( 'DYeh2'
-                         , prescale = self.prescale 
-                         , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY2]
-                         , postscale = self.postscale
-                         )
+                          , prescale = self.prescale
+                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                          , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY2]
+                          , postscale = self.postscale
+                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DYeh2Decision" : 50462 } )
 
  

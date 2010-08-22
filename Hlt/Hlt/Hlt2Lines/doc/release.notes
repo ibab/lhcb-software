@@ -9,6 +9,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-22 - Jibo He
+ - Require Hlt1 electrons lines (Hlt1.*Electron.*Decision) in 
+   DYeh1, DYeh2, Hlt2SingleHighPTElectron, and Bu->eeK lines
+
+! 2010-08-22 - Jibo He
  - python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py  
    . Remove Hlt1 hadron lines requirements 
 
