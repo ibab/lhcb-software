@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-23 - V. Gligorov
+ - New functors to allow cutting on PT/P of a track.
+
 ! 2010-08-19 - Gerhard Raven
  - update GEC code once more
 

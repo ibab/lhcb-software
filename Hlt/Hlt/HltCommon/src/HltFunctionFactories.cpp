@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.38 2010-08-13 12:04:02 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.39 2010-08-22 22:49:17 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::PT>("PT");
   declare<Hlt::PT>("PT0");
   declare<Hlt::P>("P");
+  declare<Hlt::PTFraction>("PTFraction");
+  declare<Hlt::TrackPerpSlope>("TrackPerpSlope");  
   declare<Hlt::TrackFlag>("IsBackward");
   declare<Hlt::MissedVeloHits>("MissedVeloHits");
   declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");

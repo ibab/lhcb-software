@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.35 2010-08-17 08:47:19 graven Exp $
+// $Id: HltFunctions.h,v 1.36 2010-08-22 22:49:17 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -165,7 +165,20 @@ namespace Hlt {
     double operator() (const LHCb::Track& t) const {return t.p();}
     P* clone() const {return new P();}
   };
-  
+ 
+  class PTFraction : public Hlt::TrackFunction {
+  public:
+    explicit PTFraction() {}
+    double operator() (const LHCb::Track& t) const {return (t.pt()/t.p());}
+    PTFraction* clone() const {return new PTFraction();}
+  }; 
+
+  class TrackPerpSlope : public Hlt::TrackFunction {
+  public:
+    explicit TrackPerpSlope() {}
+    double operator() (const LHCb::Track& t) const {return sqrt(pow(t.slopes().x(),2)+pow(t.slopes().y(),2));}
+    TrackPerpSlope* clone() const {return new TrackPerpSlope();}
+  };     
 
   class ETCalo : public Hlt::TrackFunction
   {
