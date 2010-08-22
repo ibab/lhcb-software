@@ -119,7 +119,6 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('IncDiProton'
                         , prescale = self.prescale
-                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
                         , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()   
                         , algos = [ NoCutsProtons
                                     , Combine
@@ -136,7 +135,6 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------        
         line = Hlt2Line('IncDiProtonPresel'
                         , prescale = self.prescale
-                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
                         , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()  
                         , algos = [ NoCutsProtons
                                     , Combine
@@ -149,7 +147,6 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('IncDiProtonTrackFitted'
                         , prescale = self.prescale
-                        , HLT = "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
                         , VoidFilter = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()  
                         , algos = [ NoCutsProtons
                                     , Combine

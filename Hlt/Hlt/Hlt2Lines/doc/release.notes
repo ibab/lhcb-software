@@ -9,6 +9,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-22 - Jibo He
+ - python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py  
+   . Remove Hlt1 hadron lines requirements 
+
+! 2010-08-22 - Jibo He
  - Tighten selections in inclusive DiProton lines 
    and require Hlt1 hadron lines (Hlt1.*Hadron.*Decision)
    . python/Hlt2Lines/Hlt2InclusiveDiProtonLines.py
