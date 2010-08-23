@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - Chris Jones
+ - Update algorithm to store shifts and # entries in seperate plots
+ - Add new plots for the fitted errors on the shifts.
+
 ! 2010-08-22 - Chris Jones
  - Update the algorithm to add an explicit flag to turn on the saving of
    all 2D plots to the final root file. Previously was done implicitly in

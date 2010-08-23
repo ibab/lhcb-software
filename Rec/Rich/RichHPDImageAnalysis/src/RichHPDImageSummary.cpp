@@ -211,51 +211,59 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
 
 //=============================================================================
 
-void RichHPDImageSummary::summaryINFO( const unsigned int ID, const TH2D* hist ) const
+void RichHPDImageSummary::summaryINFO( const unsigned int ID,
+                                       const TH2D* hist ) const
 {
-  int nPix = (int) hist->Integral();
+  const int nPix = (int) hist->Integral();
   if ( nPix < m_minOccupancy ) return ;
 
   HPDBoundaryFcn FCN( hist , m_cutFraction );
 
-  int boundarySize = FCN.findBoundary() ;
+  const int boundarySize = FCN.findBoundary() ;
   if ( boundarySize < m_minBoundary ) return ;
 
   ROOT::Minuit2::MnUserParameters par;
 
-  par.Add("Col0", 16. , 0.5 );
-  par.Add("Row0", 16. , 0.5 );
+  par.Add("Col0",   16. , 0.5 );
+  par.Add("Row0",   16. , 0.5 );
   par.Add("Radius", 16. , 0.5 );
 
   ROOT::Minuit2::MnMigrad migrad( FCN, par );
-  ROOT::Minuit2::FunctionMinimum min = migrad() ;
+  ROOT::Minuit2::FunctionMinimum min = migrad();
 
-  const double Col = migrad.Value("Col0");
-  const double Row = migrad.Value("Row0");
+  const double Col    = migrad.Value("Col0");
+  const double Row    = migrad.Value("Row0");
+  const double ColErr = migrad.Error("Col0");
+  const double RowErr = migrad.Error("Row0");
 
-  const double x0 = -1.0*localXFromPixels( Col );
-  const double y0 = -1.0*localYFromPixels( Row );
+  const double x0 = -1.0 * localXFromPixels( Col );
+  const double y0 = -1.0 * localYFromPixels( Row );
+  const double xErr0 = localErrorFromPixels( ColErr );
+  const double yErr0 = localErrorFromPixels( RowErr );
 
   const double ds = distanceToCondDBValue( ID, x0, y0 );
 
   plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
   plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,483.5,484,ds);
 
-  plot1D( 2*ID+1 , "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,967.5,968,nPix*x0);
-  plot1D( 2*ID+1 , "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,967.5,968,nPix*y0);
-  plot1D( 2*ID   , "dPosXvsCopyNr", "x entries for HPD Copy Nr",-0.5,967.5,968,nPix);
-  plot1D( 2*ID   , "dPosYvsCopyNr", "y entries for HPD Copy Nr",-0.5,967.5,968,nPix);
+  plot1D( ID, "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,483.5,484,x0);
+  plot1D( ID, "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,483.5,484,y0);
+  plot1D( ID, "dPosXErrvsCopyNr", "x-displacement error versus HPD Copy Nr",-0.5,483.5,484,xErr0);
+  plot1D( ID, "dPosYErrvsCopyNr", "y-displacement error versus HPD Copy Nr",-0.5,483.5,484,yErr0);
+
+  plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,483.5,484,nPix);
 
   const double Rad = m_pixelsize*migrad.Value("Radius");
   const double RadErrSq = std::pow(m_pixelsize*migrad.Error("Radius"),2);
 
-  plot1D( 2*ID+1 , "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,967.5,968,nPix*Rad);
-  plot1D( 2*ID   , "RadiusvsCopyNr", "Fitted image radius HPD Copy Nr",-0.5,967.5,968,nPix);
+  plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,483.5,484,nPix*Rad);
 
-  if ( m_compareCondDB && ( ds < m_maxMovement ) ){
+  if ( m_compareCondDB && ( ds < m_maxMovement ) )
+  {
     if ( msgLevel(MSG::DEBUG) ) debug() << " Exisiting CondDB value ok for " << ID <<  endmsg;
   }
-  else {
+  else
+  {
     std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
 
     if ( msgLevel(MSG::DEBUG) ) debug() << " Adding counter " << nameHPD << endmsg ;
@@ -271,3 +279,112 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID, const TH2D* hist )
 }
 
 //=============================================================================
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+
+RichHPDImageSummary::HPDBoundaryFcn::HPDBoundaryFcn( const TH2* hist , 
+                                                     const double thr ) 
+  : m_errDef(1.),
+    m_threshold( thr ),
+    m_hist( hist ),
+    m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 )
+{ }
+
+//=============================================================================
+// Destructor
+//=============================================================================
+
+RichHPDImageSummary::HPDBoundaryFcn::~HPDBoundaryFcn() {}
+
+double RichHPDImageSummary::HPDBoundaryFcn::nPixels() const
+{
+  return ( NULL == m_hist ? 0.0 : m_hist->Integral() );
+}
+
+int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
+{
+  if ( NULL == m_hist ) return 0 ;
+  m_boundary.clear() ;
+
+  int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
+  double thr = m_threshold*m_hist->Integral()/(1.0*nbins);
+
+  for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
+  {
+    int ROW0 = -1;
+    int ROW1 = -1;
+
+    for ( int irow = 0; irow <m_hist->GetNbinsY() ; ++irow )
+    {
+      if ( hasNeighbour( m_hist, icol, irow, thr ) &&
+           m_hist->GetBinContent( icol+1, irow+1 ) > thr ) 
+      {
+        ROW0 = irow ;
+        break;
+      }
+    }
+    for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
+    {
+      if ( hasNeighbour( m_hist, icol, irow, thr ) &&
+           m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
+      {
+        ROW1 = m_hist->GetNbinsX() - irow - 1;
+        break;
+      }
+    }
+    if ( -1 != ROW0 )
+    {
+      m_boundary.push_back( std::make_pair( icol, ROW0 ) );
+    }
+    if ( -1 != ROW1 && ROW1 != ROW0 ) 
+    {
+      m_boundary.push_back( std::make_pair( icol, ROW1 ) );
+    }
+  }
+
+  return (int) m_boundary.size() ;
+}
+
+bool
+RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const TH2* hist,
+                                                   const int COL,
+                                                   const int ROW,
+                                                   const double thr ) const 
+{
+
+  for ( int icol = COL-1; icol <= COL+1 ; ++icol )
+  {
+    for ( int irow = ROW-1; irow <= ROW+1 ; ++irow )
+    {
+      if ( COL == icol && ROW == irow ) { continue ; }
+      else if ( icol >= 0 && icol < hist->GetNbinsX() &&
+                irow >= 0 && irow < hist->GetNbinsY() )
+      {
+        if ( hist->GetBinContent( icol+1, irow+1 ) > thr ) return true ;
+      }
+    }
+  }
+
+  return false ;
+}
+
+double
+RichHPDImageSummary::HPDBoundaryFcn::operator()( const std::vector<double>& par ) const
+{
+  assert( 3 == par.size() );
+
+  double chi2 = 0.0;
+
+  for ( std::vector< std::pair<int,int> >::const_iterator iter = m_boundary.begin(); 
+        iter != m_boundary.end(); ++iter )
+  {
+    const double deltaCol = 1.0*iter->first - par[0];
+    const double deltaRow = m_sf*iter->second - par[1];
+    const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
+    chi2 += ( dist-par[2] )*( dist-par[2] )*12.0;
+  }
+
+  return chi2 ;
+}
