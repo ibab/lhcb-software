@@ -39,7 +39,7 @@ class IMaterialLocator ;
 class TrackMasterExtrapolator: public TrackExtrapolator 
 {
 
- public:
+public:
   /// Constructor
   TrackMasterExtrapolator( const std::string& type, 
                            const std::string& name, 
@@ -69,33 +69,16 @@ class TrackMasterExtrapolator: public TrackExtrapolator
                                 Gaudi::TrackMatrix* transMat,
                                 LHCb::ParticleID partId = LHCb::ParticleID(211) ) const ;
 
- private:
-  /// z scatter
-  double zScatter(const double z1, const double z2, bool isUpstream ) const;
-
-  // Multiple scattering tools
-  IStateCorrectionTool* m_thinmstool;
-  IStateCorrectionTool* m_thickmstool;
-
-  // dE/dx tools
-  IStateCorrectionTool* m_dedxtool;
-  IStateCorrectionTool* m_elecdedxtool;
-
+private:
   /// extra selector
-  ITrackExtraSelector* m_extraSelector;
+  ToolHandle<ITrackExtraSelector> m_extraSelector;
 
   /// transport service
   IMaterialLocator* m_materialLocator ;
   
   // job options
   std::string m_materialLocatorname;   ///< name of materialLocator
-  std::string m_thinmstoolname;    ///< name of thin MS correction tool
-  std::string m_thickmstoolname;   ///< name of thick MS correction tool
-  std::string m_dedxtoolname;      ///< name of dE/dx correction tool
-  std::string m_elecdedxtoolname;  ///< name of electron's dE/dx correction tool
-  std::string m_extraSelectorName; ///< extrapolator selector
   bool   m_applyMultScattCorr;     ///< turn on/off multiple scattering correction
-  double m_thickWall;              ///< thick wall
   bool   m_applyEnergyLossCorr;    ///< turn on/off dE/dx correction
   double m_maxStepSize;            ///< maximum length of a step
   double m_maxSlope;               ///< maximum slope of state vector
@@ -103,8 +86,8 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
   /// turn on/off electron energy loss corrections
   bool   m_applyElectronEnergyLossCorr;
-  double m_startElectronCorr;   ///< z start for electron energy loss
-  double m_stopElectronCorr;    ///< z start for electron energy loss 
+  //double m_startElectronCorr;   ///< z start for electron energy loss
+  //double m_stopElectronCorr;    ///< z start for electron energy loss 
 
   bool m_debugLevel;
 };

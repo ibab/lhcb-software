@@ -14,6 +14,9 @@
 // from TrackEvent
 #include "Event/TrackParameters.h"
 
+// from TrackKernel
+#include "TrackKernel/CubicStateInterpolationTraj.h"
+
 // from TrackInterfaces
 #include "TrackInterfaces/IStateCorrectionTool.h"
 #include "TrackInterfaces/ITrackExtraSelector.h"
@@ -34,31 +37,21 @@ DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent)
+  : TrackExtrapolator(type, name, parent),
+    m_extraSelector("TrackDistanceExtraSelector",this)
 {
   //job options
-  declareProperty( "ExtraSelector",
-                   m_extraSelectorName = "TrackDistanceExtraSelector" );
+  declareProperty( "ExtraSelector", m_extraSelector ) ;
   declareProperty( "ApplyMultScattCorr"  , m_applyMultScattCorr  = true );
-  declareProperty( "ThickWall"           , m_thickWall           = 0.*mm );
   declareProperty( "ApplyEnergyLossCorr" , m_applyEnergyLossCorr = true );
   declareProperty( "MaxStepSize"         , m_maxStepSize         = 1000.*mm );
   declareProperty( "MaxSlope"            , m_maxSlope            = 5. );
   declareProperty( "MaxTransverse"       , m_maxTransverse       = 10.*m );
-  // State correction tools
-  declareProperty( "ThinMSCorrectionTool",
-                   m_thinmstoolname  = "StateThinMSCorrectionTool" );
-  declareProperty( "ThickMSCorrectionTool",
-                   m_thickmstoolname  = "StateThickMSCorrectionTool" );
-  declareProperty( "GeneralDedxToolName",
-                   m_dedxtoolname     = "StateDetailedBetheBlochEnergyCorrectionTool" );
-  declareProperty( "ElectronDedxCorrectionTool",
-                   m_elecdedxtoolname = "StateElectronEnergyCorrectionTool" );
+
   //for electrons
-  declareProperty( "ApplyElectronEnergyLossCorr",
-                   m_applyElectronEnergyLossCorr = true );
-  declareProperty( "StartElectronCorr", m_startElectronCorr = 2500.*mm );
-  declareProperty( "StopElectronCorr",  m_stopElectronCorr  = 9000.*mm );
+  declareProperty( "ApplyElectronEnergyLossCorr",m_applyElectronEnergyLossCorr = true );
+  //declareProperty( "StartElectronCorr", m_startElectronCorr = 2500.*mm );
+  //declareProperty( "StopElectronCorr",  m_stopElectronCorr  = 9000.*mm );
   declareProperty("MaterialLocator", m_materialLocatorname = "DetailedMaterialLocator" ) ;
 }
 
@@ -75,29 +68,23 @@ StatusCode TrackMasterExtrapolator::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
 
-  // tools for multiple scattering corrections
-  m_thinmstool  = tool<IStateCorrectionTool>( m_thinmstoolname,"ThinMSTool",this  );
-  m_thickmstool = tool<IStateCorrectionTool>( m_thickmstoolname,"ThickMSTool",this  );
-
-  // tools for dE/dx corrections
-  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
-  m_elecdedxtool = tool<IStateCorrectionTool>( m_elecdedxtoolname );
-
   // selector
-  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName,
-                                               "ExtraSelector",this );
-
+  sc = m_extraSelector.retrieve() ;
+  if( !sc.isSuccess() ) {
+    error() << "Cannot retrieve ExtraSelector" << endreq ;
+  }
+  
   // initialize transport service
   m_materialLocator = tool <IMaterialLocator> (m_materialLocatorname, "MaterialLocator", this);
-    
+  
   m_debugLevel = msgLevel( MSG::DEBUG );
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode TrackMasterExtrapolator::finalize()
 {
-    
+  m_extraSelector.release().ignore() ;
   return TrackExtrapolator::finalize() ;
 }
 
@@ -116,34 +103,35 @@ StatusCode TrackMasterExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   return thisExtrapolator->propagate( stateVec, zOld, zNew, transMat, pid );
 }
 
+
 //=========================================================================
 //  Main method: Extrapolate a State
 //=========================================================================
 StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state, 
-                                               double zNew,
-                                               Gaudi::TrackMatrix* transMat,
-                                               LHCb::ParticleID partId ) const
+					       double zNew,
+					       Gaudi::TrackMatrix* transMat,
+					       LHCb::ParticleID pid ) const
 {
   StatusCode sc(StatusCode::SUCCESS,true) ;
-  // Create transport update matrix
+
+  // Create transport update matrix. The reason to make a pointer to a
+  // local object (rather than just create it with new) is all the
+  // intermediate returns.
   TrackMatrix updateMatrix = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   TrackMatrix* upMat = NULL;
-  // Check transport matrix
-  if( transMat != NULL )
-    {
-      *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
-      upMat = &updateMatrix;
-    }
-
+  if( transMat != NULL ) {
+    *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    upMat = &updateMatrix ;
+  }
+  
   //check if not already at required z position
   const double zStart = state.z();
-  if (fabs(zNew-zStart) < TrackParameters::propagationTolerance) {
+  if (std::abs(zNew-zStart) < TrackParameters::propagationTolerance) {
     if( m_debugLevel ) debug() << "already at required z position" << endreq;
     return StatusCode::SUCCESS;
   }
 
-  bool isUpstream = zStart > zNew ; 
-  int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
+  int    nbStep = (int)( std::abs( zNew-zStart ) / m_maxStepSize ) + 1;
   double zStep  = ( zNew - zStart ) / nbStep;
   size_t nWallsTot(0) ;
   
@@ -157,129 +145,70 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
     XYZVector vect( tX[2]*zStep, tX[3]*zStep, zStep );
     
     // protect against vertical or looping tracks
-    if ( fabs(start.x()) > m_maxTransverse ) {
+    if ( std::abs(start.x()) > m_maxTransverse ) {
       if( m_debugLevel )
 	debug() << "Protect against absurd tracks: x=" << start.x() 
 		<< " (max " << m_maxTransverse << " allowed)." << endreq;
       return Warning( "Protect against absurd tracks. See debug for details", StatusCode::FAILURE,1 );
     }
-    if ( fabs(start.y()) > m_maxTransverse ) {
+    if ( std::abs(start.y()) > m_maxTransverse ) {
                //          StatusCode::FAILURE, 1 );
       if( m_debugLevel )
 	debug() << "Protect against absurd tracks: y=" << start.y() 
 		<< " (max " << m_maxTransverse << " allowed)." << endreq;
       return Warning( "Protect against absurd tracks. See debug for details", StatusCode::FAILURE,1 );
     }
-    if (fabs(state.tx()) > m_maxSlope) {
+    if (std::abs(state.tx()) > m_maxSlope) {
       if( m_debugLevel )
 	debug() << "Protect against looping tracks: tx=" << state.tx() 
 		<< " (max " << m_maxSlope << " allowed)." << endreq;
       return Warning( "Protect against looping tracks. See debug for details", StatusCode::FAILURE,1 );
     }    
-    if (fabs(state.ty()) > m_maxSlope) {
+    if (std::abs(state.ty()) > m_maxSlope) {
       if( m_debugLevel )
 	debug() << "Protect against looping tracks: ty=" << state.ty() 
 		<< " (max " << m_maxSlope << " allowed). " << endreq;
       return Warning( "Protect against looping tracks. See debug for details", StatusCode::FAILURE,1 );
     }
+ 
+    // propagate the state, without any material corrections:
+    double zorigin = state.z() ;
+    double ztarget = zorigin + zStep ;
+
+    LHCb::State stateAtOrigin( state ) ;
+    const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(zorigin,ztarget);
+    sc = thisExtrapolator->propagate( state, ztarget, upMat );
+
+    // check for success
+    if ( sc.isFailure() ) {
+      if ( m_debugLevel ) debug() << "Transport to " << ztarget
+				  << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+      return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc,1 );
+    }
     
-    // process walls
-
+    //update f
+    if( transMat != 0 ) {
+      TrackMatrix tempMatrix = *transMat;
+      *transMat = updateMatrix * tempMatrix; 
+    }
+  
+    // now apply material corrections
     if( m_applyMultScattCorr || m_applyEnergyLossCorr || m_applyElectronEnergyLossCorr ) {
-
-      IMaterialLocator::Intersections intersections;
-      int nWall = m_materialLocator->intersect( start, vect,intersections  );
-      nWallsTot += nWall ;
-
-      for( IMaterialLocator::Intersections::const_iterator it = intersections.begin() ;
-	   it != intersections.end(); ++it ) {
-	double zWall = zScatter( it->z1, it->z2, isUpstream );
-	double tWall = fabs( it->z2 - it->z1 ) ;
-	//for thick scatterers it is always z2. double zWall = it->z2 ;
-	const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),zWall);
-	sc = thisExtrapolator->propagate( state, zWall, upMat );
-	
-	// check for success
-	if ( sc.isFailure() ) {
-	  if( m_debugLevel )
-	    debug() << "Transport to " << zWall
-		    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-	  return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc,1 );
-	}
-	
-	//update f
-	if( transMat != 0 ) {
-          TrackMatrix tempMatrix = *transMat;
-          *transMat = updateMatrix * tempMatrix; 
-	}
-	
-	// multiple scattering
-	if ( m_applyMultScattCorr ) {
-	  if ( tWall >= m_thickWall ) {
-	    m_thickmstool -> correctState( state, it->material, tWall, isUpstream, partId );
-	  } else {
-	    m_thinmstool -> correctState( state, it->material, tWall, isUpstream , partId);
-	  }
-	}
-	
-	// dE/dx energy loss
-	if ( m_applyEnergyLossCorr ) 
-	  m_dedxtool -> correctState( state, it->material, tWall, isUpstream, partId );
-		
-	// electron energy loss
-	if ( ( 11 == partId.abspid() ) && 
-	     m_applyElectronEnergyLossCorr &&
-	     (state.z() > m_startElectronCorr) &&
-	     (state.z() < m_stopElectronCorr) ) {
-	  m_elecdedxtool -> correctState( state, it->material, tWall, isUpstream, partId );
-	}
-      } // loop over walls
-    }
-
-    // propagate from last wall to target
-    double ztarget = start.z() + vect.z() ;
-    if( fabs( state.z() - ztarget )> TrackParameters::propagationTolerance ) {
-      const ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
-      sc = thisExtrapolator->propagate( state, ztarget, upMat );
-      
-      // check for success
-      if ( sc.isFailure() ) {
-        if ( m_debugLevel ) debug() << "Transport to " << ztarget
-				    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc,1 );
-      }
-      
-      //update f
-      if( transMat != 0 ) {
-	TrackMatrix tempMatrix = *transMat;
-        *transMat = updateMatrix * tempMatrix; 
+      LHCb::CubicStateInterpolationTraj traj( stateAtOrigin, state ) ;
+      IMaterialLocator::Intersections intersections ;
+      if( m_materialLocator->intersect( traj, intersections) >0 ) {
+	nWallsTot += intersections.size() ;
+	m_materialLocator->applyMaterialCorrections(state,intersections,zorigin,pid,
+						    m_applyMultScattCorr,
+						    m_applyEnergyLossCorr || m_applyElectronEnergyLossCorr ) ;
       }
     }
-
   } // loop over steps
-
+  
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "state_out = " << state << std::endl
 					   << "number of walls = " << nWallsTot << endreq ;
-
+  
   return sc ;
-}
-
-//=============================================================================
-//
-//=============================================================================
-double TrackMasterExtrapolator::zScatter( const double z1, 
-                                          const double z2,
-					  bool isUpstream ) const
-{
-  double zS;
-  if ( fabs(z1-z2) >= m_thickWall ) {
-    // thick scatter
-    zS = (isUpstream ) ? GSL_MIN(z1,z2) : GSL_MAX(z1,z2) ; 
-  } else {
-    // thin scatter - at centre in z
-    zS = 0.5*(z1+z2);
-  }
-  return zS;
 }
 
 //=============================================================================
