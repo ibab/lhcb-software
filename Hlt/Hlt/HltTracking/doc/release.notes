@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.141 2010-08-18 21:56:47 gligorov Exp $
+!$Id: release.notes,v 1.142 2010-08-23 20:35:31 witekma Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+
+! 2010-08-23 - M. Witek
+ - Specify PVSeedTool for PatPV3D reconstruction since default in PatPV changed to PVSeed3DTool. 
 
 ! 2010-08-18 - V. Gligorov 
  - Changes to Hlt2Tracking

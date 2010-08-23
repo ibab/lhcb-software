@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.10 2010-05-23 19:38:40 gligorov Exp $
+# $Id: HltPVs.py,v 1.11 2010-08-23 20:32:30 witekma Exp $
 # =============================================================================
 ## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -59,6 +59,7 @@ def PV3D() :
 
     recoPV3D =  PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
+    recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
     recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
