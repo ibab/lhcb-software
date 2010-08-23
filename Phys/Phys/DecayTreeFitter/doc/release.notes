@@ -8,6 +8,11 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - Wouter Hulsbergen
+
+ - RecoTrack: pick closest state rather than first state. should help
+ for V0. (a real fix is still being worked on.)
+
 !======================= DecayTreeFitter v1r9 2010-07-11 =====================
 
 ! 2010-07-07 - Wouter Hulsbergen
