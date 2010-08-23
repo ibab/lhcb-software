@@ -19,7 +19,7 @@ namespace DecayTreeFitter
     virtual int type() const { return kRecoTrack ; }
 
     virtual ErrCode projectRecoConstraint(const FitParams&, Projection&) const ;
-    ErrCode updCache(double flt) ;
+    ErrCode updCache(const FitParams& fitparams) ;
     //tatic void setApplyCovCorrection(bool b=true) { gApplyCovCorrection = b ; }
     //static void correctCov(HepSymMatrix& V) ;
     

@@ -15,11 +15,6 @@ namespace DecayTreeFitter
       m_cached(false),
       m_flt(0)
   {
-    m_state = m_track->firstState() ;
-    if( m_state.location() != LHCb::State::ClosestToBeam ) {
-      std::cout << "DecayTreeFitter/RecoTrack: weird state: "
-		<< name() << " " << m_state << std::endl ;
-    }
   }
   
   RecoTrack::~RecoTrack() {}
@@ -27,18 +22,20 @@ namespace DecayTreeFitter
   ErrCode
   RecoTrack::initPar2(FitParams* fitparams)
   {
+    ErrCode rc = updCache(*fitparams) ;
     const Gaudi::XYZVector& recoP = m_state.momentum() ;
     int momindex = momIndex() ;
     fitparams->par(momindex+1) = recoP.x() ;
     fitparams->par(momindex+2) = recoP.y() ;
     fitparams->par(momindex+3) = recoP.z() ;
-    return ErrCode() ;
+    return rc ;
   }
   
   ErrCode
   RecoTrack::initCov(FitParams* fitparams) const 
   {
     // we only need a rough estimate of the covariance 
+    assert(m_cached) ;
     Gaudi::SymMatrix3x3 covP = m_state.errMomentum() ;
     int momindex = momIndex() ;
     for(int row=1; row<=3; ++row) 
@@ -47,9 +44,11 @@ namespace DecayTreeFitter
   }
   
   ErrCode
-  RecoTrack::updCache(double /*dz*/)
+  RecoTrack::updCache(const FitParams& fitparams)
   {
     // we'll do this properly another time
+    double z = fitparams.par()(mother()->posIndex() + 3 ) ;
+    m_state = m_track->closestState( z ) ;
     m_cached = true ;
     return ErrCode() ;
   }
@@ -65,6 +64,7 @@ namespace DecayTreeFitter
   RecoTrack::projectRecoConstraint(const FitParams& fitparams, Projection& p) const
   {
     ErrCode status ;
+    assert(m_cached) ;
 
     int posindex = mother()->posIndex() ;
     Gaudi::XYZPoint motherpos(fitparams.par()(posindex+1),
@@ -129,4 +129,4 @@ namespace DecayTreeFitter
 
     return status ;
   }
-  }
+}
