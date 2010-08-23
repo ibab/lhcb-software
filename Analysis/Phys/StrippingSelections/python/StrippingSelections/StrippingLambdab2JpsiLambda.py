@@ -1,8 +1,8 @@
-# $Id: StrippingLambdab2JpsiLambda.py,v 1.3 2010-07-29 18:36:22 yamhis Exp $
+# $Id: StrippingLambdab2JpsiLambda.py,v 1.4 2010-08-23 14:11:19 yamhis Exp $
 
 __author__ = ['Yasmine Amhis']
 __date__ = '29/07/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 StrippingSelections for Lambda_b0-> Jpsi Lambda ( LL and DD )
@@ -24,19 +24,19 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         #---------------------------------------------------------
         #Jpsi cuts
         #---------------------------------------------------------
-                "MuonTRCHI2"	: 20.0	# adimensional 
-        ,	"JpsiMassWin"	: 100.0	# MeV
+                "MuonTRCHI2"	: 15.0	# adimensional 
+        ,	"JpsiMassWin"	: 60.0	# MeV
         ,	"JpsiVCHI2"	: 25.0	# adimensional
         #---------------------------------------------------------
         #Lambda cuts
         #---------------------------------------------------------
-        ,       "ProtonTRCHI2"	: 20.0	# adimensional
-        ,       "PionTRCHI2"    : 20.0  #adimensional  
+        ,       "ProtonTRCHI2"	: 15.0	# adimensional
+        ,       "PionTRCHI2"    : 15.0  #adimensional  
       
-        ,       "ProtonPT" 	: 100.0 # MeV                     
+        ,       "ProtonPT" 	: 500.0 # MeV                     
         ,       "PionPT" 	: 100.0 # MeV 
 
-        ,	"LambdaMassWin"	: 30.0	# MeV
+        ,	"LambdaMassWin"	: 20.0	# MeV
         ,	"LambdaVCHI2" 	: 25.0	# adimensional
         #---------------------------------------------------------
         #Lambda_b cuts
@@ -124,7 +124,7 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         
         Lambdab = Selection("SelLambdab2JpsiLambdaLL",
                             Algorithm = _Lambdab,
-                            RequiredSelections = [Jpsi, Lambda])
+                            RequiredSelections = [Lambda,Jpsi])
         
         return Lambdab
     #---------------------------------------------------------
@@ -145,7 +145,7 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         
         Lambdab = Selection("SelLambdab2JpsiLambdaDD",
                             Algorithm = _Lambdab,
-                            RequiredSelections = [Jpsi, Lambda])
+                            RequiredSelections = [Lambda, Jpsi])
         
         return Lambdab
     
