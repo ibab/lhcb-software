@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.485 2010-08-22 22:51:19 gligorov Exp $ 
+! $Id: release.notes,v 1.486 2010-08-23 16:40:22 raaij Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-08-23 - Roel Aaij
+ - Update routing bit 46. Hlt2ExpressHLT1Physics is automatically included
 
 ! 2010-08-23 - V. Gligorov
  - Update routing bit to follow renaming of one track lines.

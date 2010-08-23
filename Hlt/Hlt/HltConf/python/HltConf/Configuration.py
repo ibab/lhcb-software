@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.204 2010-08-22 22:50:32 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.205 2010-08-23 16:40:22 raaij Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -193,8 +193,6 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
 
         from Configurables import HltRoutingBitsWriter
-        HltRoutingBitsWriter().Preambulo = [ "Hlt1ExpressPhysics = scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1))" ]
-               
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  8 : 'L0_DECISION_PHYSICS'
@@ -206,7 +204,7 @@ class HltConf(LHCbConfigurableUser):
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
-                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')|Hlt1ExpressPhysics", self.getProp('ExpressStreamRateLimit') )
+                      , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')" 
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
