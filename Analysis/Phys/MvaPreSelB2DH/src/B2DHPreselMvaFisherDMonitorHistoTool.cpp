@@ -13,6 +13,11 @@
 #include "GaudiKernel/HistogramBase.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+//#include "GaudiUtils/Aida2ROOT.h"
+//#include "GaudiAlg/GaudiHistoTool.h"
+//#include "GaudiAlg/IHistoTool.h"
+//#include "Kernel/IPlotTool.h"
+
 
 using namespace Gaudi;
 
@@ -89,6 +94,7 @@ void B2DHPreselMvaFisherDMonitorHistoTool::fillHistoForEventSelectionSteps( cons
   //  info()<<" aIps aProb at histo "<< i<<"  "<<  aIps[i]<<"   "<<aProb[i]<<endmsg;
   // }
   
+  verbose()<<  anumCand <<"  "<<aCandIndex<<endmsg;
   
 
     if( indexOfbestCand >=0 ) {
