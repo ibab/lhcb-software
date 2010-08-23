@@ -99,14 +99,15 @@ StatusCode TrackExtrapolator::propagate( State& state,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state, 
                                          double z,
-                                         Gaudi::TrackMatrix* transMat,
+                                         Gaudi::TrackMatrix* tm,
                                          ParticleID pid ) const
 {
-  StatusCode sc = propagate( state.stateVector(), state.z(), z, transMat, pid );
+  Gaudi::TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  StatusCode sc = propagate( state.stateVector(), state.z(), z, &transMat, pid );
   state.setZ(z);
   state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-                       ( *transMat, state.covariance() ) );
-  
+                       ( transMat, state.covariance() ) );
+  if( tm ) *tm = transMat ;
   return sc;
 }
 
