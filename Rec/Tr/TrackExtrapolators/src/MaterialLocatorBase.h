@@ -49,14 +49,12 @@ public:
   virtual size_t intersect( const LHCb::StateVector& origin, const LHCb::StateVector& target,
 			    Intersections& intersepts ) const ;
 
-  void computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
-				 Gaudi::TrackVector& delta,
-				 const IMaterialLocator::Intersections& intersepts,
-				 double zorigin,
-				 double ztarget,
-				 double momentum,
-				 LHCb::ParticleID pid) const ;
-  
+  void applyMaterialCorrections(LHCb::State& stateAtTarget,
+				const IMaterialLocator::Intersections& intersepts,
+				double zorigin,
+				LHCb::ParticleID pid,
+				bool applyScatteringCorrection,
+				bool applyEnergyLossCorrection) const ;
 private:
   std::string m_dedxtoolname;
   size_t m_maxNumIntervals ;

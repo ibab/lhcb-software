@@ -23,22 +23,23 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
 
 StatusCode MaterialLocatorBase::initialize()
 {
-    StatusCode sc = GaudiTool::initialize();
-    
-    m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
-
-  return 
-    sc &&
-    m_scatteringtool.retrieve() && 
-    m_elecdedxtool.retrieve() ;
+  StatusCode sc = GaudiTool::initialize();
+  
+  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
+  
+  if( sc.isSuccess() )
+    sc = m_scatteringtool.retrieve() ;
+  if( sc.isSuccess() )
+    sc = m_elecdedxtool.retrieve() ;
+  
+  return sc ;
 }
 
 StatusCode MaterialLocatorBase::finalize()
 {
-  return 
-    m_scatteringtool.release() && 
-      m_elecdedxtool.release() && 
-    GaudiTool::finalize() ;
+  m_scatteringtool.release().ignore() ;
+  m_elecdedxtool.release().ignore() ;
+  return GaudiTool::finalize() ;
 }
 
 size_t MaterialLocatorBase::intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
@@ -227,27 +228,23 @@ size_t MaterialLocatorBase::intersect( const LHCb::StateVector& origin,
   return intersepts.size() ;
 } ;
 
-
 void
-MaterialLocatorBase::computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
-                                               Gaudi::TrackVector& delta,
-                                               const IMaterialLocator::Intersections& intersepts,
-                                               double zorigin,
-                                               double ztarget,
-                                               double momentum,
-                                               LHCb::ParticleID pid) const
+MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
+					      const IMaterialLocator::Intersections& intersepts,
+					      double zorigin,
+					      LHCb::ParticleID pid,
+					      bool applyScatteringCorrection,
+					      bool applyEnergyLossCorrection) const
 {
-  double qop = 1/momentum ;
+  double ztarget = stateAtTarget.z() ;
   bool upstream = zorigin > ztarget ;
-  // reset whatever comes in
-  delta = Gaudi::TrackVector() ;
-  noise = Gaudi::TrackSymMatrix() ;
+  double qop = stateAtTarget.qOverP() ;
+
   // loop over all intersections and do the work. note how we
   // explicitely keep the momentum constant. note that the way we
   // write this down, we rely on the fact that it is totally
   // irrelevant how the intersepts are sorted (because the propagation
-  // is assumed to be linear.) 
-
+  // is assumed to be linear.)
 
   // the only thing that is tricky is dealing with the fact that z1
   // and z2 need not be in increasing value, nor intersept.z1 and
@@ -272,12 +269,16 @@ MaterialLocatorBase::computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
       state.setTy( it->ty ) ;
       
       // now add the wall
-      m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
-      dedxtool->correctState( state, it->material, thickness, upstream, pid );
+      if( applyScatteringCorrection ) {
+	m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
+      }
+      if( applyEnergyLossCorrection) {
+	dedxtool->correctState( state, it->material, thickness, upstream, pid );
+      }
       
-      // extract the energy loss
-      delta(4) += state.qOverP() - qop ;
-
+      // add the change in qOverP
+      stateAtTarget.setQOverP( stateAtTarget.qOverP() + state.qOverP() - qop ) ;
+      
       // propagate the noise to the target. linear propagation, only
       // non-zero contributions
       double dz = upstream ? ztarget - z1 : ztarget - z2 ; 
@@ -285,7 +286,8 @@ MaterialLocatorBase::computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
       state.covariance()(2,0) += dz*state.covariance()(2,2) ;
       state.covariance()(1,1) += 2*dz*state.covariance()(3,1) + dz*dz*state.covariance()(3,3) ;
       state.covariance()(3,1) += dz*state.covariance()(3,3) ;
-      noise +=  state.covariance() ;
+      stateAtTarget.covariance() += state.covariance() ;
     }
   }
 }
+
