@@ -1,5 +1,6 @@
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r4p1
 	* python/LbRelease/GetPack.py: 
 	* python/LbRelease/LHCbDoc.py: 
 	* python/LbRelease/rcs.py: fixed wrong test about the presence of "set" in the builtins
