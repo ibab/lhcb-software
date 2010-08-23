@@ -75,7 +75,8 @@ LSIterPVFitter::~LSIterPVFitter() {}
 //=============================================================================
 StatusCode LSIterPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint, 
                                      std::vector<const LHCb::Track*>& rTracks, 
-				     LHCb::RecVertex& vtx)
+                                     LHCb::RecVertex& vtx, 
+                                     std::vector<const LHCb::Track*>& tracks2remove)
 {
   StatusCode sc = StatusCode::SUCCESS;
   m_pvTracks.clear();
@@ -105,7 +106,7 @@ StatusCode LSIterPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     }
     return StatusCode::FAILURE;
   }
-  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks);
+  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks, tracks2remove);
   if(scvfit == StatusCode::SUCCESS) {
     copyTrackVertex(&(pvVertex.primVtx),&vtx);
     vtx.setTechnique(LHCb::RecVertex::Primary);
@@ -117,7 +118,8 @@ StatusCode LSIterPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 // Least square iterative PV fit
 //=============================================================================
 StatusCode LSIterPVFitter::fit(LHCb::RecVertex& vtx, 
-                               std::vector<PVTrack*>& pvTracks) 
+                               std::vector<PVTrack*>& pvTracks,
+                               std::vector<const LHCb::Track*>& tracks2remove) 
 {
   if(msgLevel(MSG::DEBUG)) {
     verbose() << "Least square iterative PV fit" << endmsg;
@@ -175,6 +177,13 @@ StatusCode LSIterPVFitter::fit(LHCb::RecVertex& vtx,
     }
     return StatusCode::FAILURE;
   } 
+
+  // fill tracks to remove from next PV search
+  for( SmartRefVector<LHCb::Track>::const_iterator it = vtx.tracks().begin(); it != vtx.tracks().end(); ++it) {    
+      tracks2remove.push_back( *it );
+  }
+
+
   return scfit;
 }
 

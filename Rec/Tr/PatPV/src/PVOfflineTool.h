@@ -65,7 +65,9 @@ private:
   std::vector<std::string> m_inputTracks;
   std::string m_pvFitterName;
   std::string m_pvSeedingName;
-
+  double m_pvsChi2Separation;
+  double m_pvsChi2SeparationLowMult;
+  
   StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,  
 			      std::vector<LHCb::RecVertex>& outvtxvec, 
 			      LHCb::RecVertex& outvtx);

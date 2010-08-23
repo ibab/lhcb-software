@@ -33,10 +33,9 @@ class seedTrack
 {
 public:
   const Track* lbtrack;
-  int nclose;
-  int used;
+  bool used;
   
-  seedTrack():lbtrack(0),nclose(0),used(0) {};
+  seedTrack():lbtrack(0),used(0) {};
 };
 
 class closeNode 
@@ -45,15 +44,15 @@ public:
   seedTrack* seed_track;
   double distance;
   EPoint closest_point;
-  int take;
+  bool take;
   
   closeNode():seed_track(0),distance(0.),closest_point(),take(0){};
 };
 
-bool  trackcomp( const seedTrack &first, const seedTrack &second ) {
-    return first.nclose > second.nclose;
-    //    return first->distance < second->distance;
+bool  seedcomp( const seedPoint &first, const seedPoint &second ) {
+    return first.multiplicity > second.multiplicity;
 }
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -67,9 +66,9 @@ PVSeed3DTool::PVSeed3DTool( const std::string& type,
     m_zMaxSpread(0.)
 {
   declareInterface<IPVSeeding>(this);
-  declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 1. * Gaudi::Units::mm );
+  declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 0.3 * Gaudi::Units::mm );
   declareProperty("MinCloseTracks",  m_MinCloseTracks  = 4);
-  declareProperty("zMaxSpread",   m_zMaxSpread   = 5. * Gaudi::Units::mm);
+  declareProperty("zMaxSpread",   m_zMaxSpread   = 3. * Gaudi::Units::mm);
 
 }
 //=============================================================================
@@ -85,6 +84,8 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
 
   if(inputTracks.size() < 3 ) return; 
 
+
+  std::vector<seedPoint> seed_points;
   std::vector<seedTrack> seed_tracks;
   seed_tracks.reserve(inputTracks.size());
 
@@ -92,8 +93,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
   for ( it = inputTracks.begin(); it != inputTracks.end(); it++ ) {
     const LHCb::Track* ptr = (*it);
     seedTrack seedtr;
-    seedtr.used=0;
-    seedtr.nclose=0;
+    seedtr.used = false;
     seedtr.lbtrack = ptr;
     seed_tracks.push_back(seedtr);
   }
@@ -102,95 +102,93 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
      debug() << " seed_tracks.size  " << seed_tracks.size() << endmsg; 
      debug() << " inputTracks.size  " << inputTracks.size() << endmsg;; 
   }
-   
-  std::vector<seedTrack>::iterator its1,its2;
-  for(its1 = seed_tracks.begin(); its1 != seed_tracks.end()--; its1++) {       
-     for(its2 = its1+1; its2 != seed_tracks.end(); its2++) {
-        const Track* lbtr1 = its1->lbtrack;
-        const Track* lbtr2 = its2->lbtrack;
 
-        EPoint closestPoint;
-        double distance;
-        bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closestPoint);
-        if (ok && distance < m_TrackPairMaxDistance) {
-	  its1->nclose++;
-	  its2->nclose++;
-        }
-     }
-  }
-  
-  std::sort(seed_tracks.begin(), seed_tracks.end(), trackcomp);
+  std::vector<closeNode> close_nodes;
+  std::vector<seedTrack>::iterator its1,its2;
 
   for(its1 = seed_tracks.begin(); its1 != seed_tracks.end(); its1++) {
 
-    if(its1->nclose<m_MinCloseTracks) break;
-    if ( its1->used > 0 ) continue;
+    if ( ! its1->used ) {
+      int closeTracksNumber = 0;
+      close_nodes.clear();
 
-    std::vector<closeNode> close_nodes;
-
-    for(its2 = seed_tracks.begin(); its2 != seed_tracks.end(); its2++) {
-      if ( its2->used > 0 || its1 == its2 ) continue;
-       EPoint closest_point;
-       double distance;
-       const Track* lbtr1 = its1->lbtrack;
-       const Track* lbtr2 = its2->lbtrack;
-       bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closest_point);
-       double costh = thetaTracks(*lbtr1, *lbtr2);
-       if (ok && distance < m_TrackPairMaxDistance && costh<0.999) {
-         closeNode closetr; 
-         closetr.take           = 1;
-         closetr.seed_track    =  &(*its2); 
-         closetr.distance      = distance;
-         closetr.closest_point = closest_point;
-         close_nodes.push_back( closetr );
-       }
-    }  // its2
-
-    if(msgLevel(MSG::DEBUG))  {
-      debug() << " close nodes (pairs of tracks wrt one track): " << endreq;
-      std::vector<closeNode>::iterator itd;
-      for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
-        debug() << format(" xyz %7.3f %7.3f %7.3f distance %7.3f ",
-			  itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z(),
-                          itd->distance) << endmsg;           
-      }
-    }
-
-    seedPoint mean_point;
-    seedPoint mean_point_w;
-    bool OK = simpleMean(close_nodes, mean_point);
-    if ( OK ) {
-      its1->used=1; // base track
-      int multi = 1;
-      std::vector<closeNode>::iterator it;
-      for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) { 
-        if ( it->take > 0 ) {
-          it->seed_track->used = 1;
-          multi++;
-	}
-      }   
-      if ( multi < m_MinCloseTracks ) continue;
-      seedTrack* base_track = &(*its1); 
-      wMean(close_nodes, base_track, mean_point_w);
-      seeds.push_back(mean_point_w.position);
-      
-      if(msgLevel(MSG::DEBUG)) {
+      for(its2 = seed_tracks.begin(); its2 != seed_tracks.end(); its2++) {
+        if ( ! its2->used  && its1 != its2 ) {
+          
+          EPoint closest_point;
+          double distance;
+          const Track* lbtr1 = its1->lbtrack;
+          const Track* lbtr2 = its2->lbtrack;
+          bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closest_point);
+          double costh = thetaTracks(*lbtr1, *lbtr2);
+          if (ok && distance < m_TrackPairMaxDistance && costh<0.999) {
+      			closeTracksNumber ++;
+            closeNode closetr; 
+            closetr.take           = true;
+            closetr.seed_track    =  &(*its2); 
+            closetr.distance      = distance;
+            closetr.closest_point = closest_point;
+            close_nodes.push_back( closetr );
+          }
+        }
         
-        debug() << " xyz seed multi  " 
-                << mean_point_w.position.X()  << " " 
-                << mean_point_w.position.Y()  << " " 
-                << mean_point_w.position.Z()  << " | " 
-                << mean_point_w.error.X()  << " " 
-                << mean_point_w.error.Y()  << " " 
-                << mean_point_w.error.Z()  << " | " 
-                << mean_point_w.multiplicity  << " " 
-                << endmsg;
-      }
-    }
+      }  // its2
 
-  } // its1     
+      if ( closeTracksNumber < m_MinCloseTracks ) continue;
+
+      // debug
+      if(msgLevel(MSG::DEBUG))  {
+        debug() << " close nodes (pairs of tracks wrt one track): " << endreq;
+        std::vector<closeNode>::iterator itd;
+        for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
+          debug() << format(" xyz %7.3f %7.3f %7.3f distance %7.3f ",
+  			  itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z(),
+                            itd->distance) << endmsg;           
+        }
+      }
+
+      seedPoint mean_point;
+      seedPoint mean_point_w;
+      bool OK = simpleMean(close_nodes, mean_point);
+      if ( OK ) {
+        its1->used=true; // base track
+        std::vector<closeNode>::iterator it;
+        for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) { 
+          if ( it->take ) {
+            it->seed_track->used = true;
+          }          
+        }   
+        seedTrack* base_track = &(*its1); 
+        wMean(close_nodes, base_track, mean_point_w);
+        seed_points.push_back(mean_point_w);      
+        
+      }      
+      
+    }
+    
+  }
+
+  std::sort(seed_points.begin(), seed_points.end(), seedcomp);
+  for ( unsigned int i=0; i<seed_points.size(); i++) {
+    seeds.push_back(seed_points[i].position);
+
+    if(msgLevel(MSG::DEBUG)) 
+    {
+      debug() << " xyz seed multi  " 
+              << seed_points[i].position.X()  << " " 
+              << seed_points[i].position.Y()  << " " 
+              << seed_points[i].position.Z()  << " | " 
+              << seed_points[i].error.X()  << " " 
+              << seed_points[i].error.Y()  << " " 
+              << seed_points[i].error.Z()  << " | " 
+              << seed_points[i].multiplicity  << " " 
+              << endmsg;
+    }
+  }
 
 }
+
+  
 
 //=============================================================================
 // closestPoints

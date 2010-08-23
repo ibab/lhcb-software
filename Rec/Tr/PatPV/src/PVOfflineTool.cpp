@@ -26,7 +26,9 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_pvSeedTool(0),
     m_inputTracks(0),
     m_pvFitterName(""),
-    m_pvSeedingName("")
+    m_pvSeedingName(""),
+    m_pvsChi2Separation(0.0),
+    m_pvsChi2SeparationLowMult(0.0)
 {
   declareInterface<IPVOfflineTool>(this);
   declareProperty("RequireVelo"      , m_requireVelo   = true);
@@ -34,8 +36,11 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
   declareProperty("InputTracks"      , m_inputTracks);
   declareProperty("InputVerticesName", m_inputVerticesName = LHCb::RecVertexLocation::Velo3D);
   declareProperty("PVFitterName"     , m_pvFitterName  = "LSAdaptPVFitter");
-  declareProperty("PVSeedingName"    , m_pvSeedingName = "PVSeedTool");
+  declareProperty("PVSeedingName"    , m_pvSeedingName = "PVSeed3DTool");
   declareProperty("LookForDisplaced" , m_lookForDisplaced = false);
+  declareProperty("PVsChi2Separation", m_pvsChi2Separation = 25.);
+  declareProperty("PVsChi2SeparationLowMult", m_pvsChi2SeparationLowMult = 91.);
+  
 }
 
 //=========================================================================
@@ -75,10 +80,11 @@ PVOfflineTool::~PVOfflineTool() {}
 StatusCode PVOfflineTool::reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
                                               LHCb::RecVertex& outvtx)  
 {
+  std::vector<const LHCb::Track*> tracks2remove;
   std::vector<const LHCb::Track*> rtracks;
   readTracks(rtracks); 
 
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx );
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, tracks2remove );
   return scvfit;
 }
 //=============================================================================
@@ -88,7 +94,8 @@ StatusCode PVOfflineTool::reconstructSinglePVFromTracks(const Gaudi::XYZPoint xy
                                                         std::vector<const LHCb::Track*>& tracks2use,
                                                         LHCb::RecVertex& outvtx)  
 {
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, tracks2use, outvtx );
+  std::vector<const LHCb::Track*> tracks2remove;
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, tracks2use, outvtx, tracks2remove );
   return scvfit;
 }
 
@@ -105,7 +112,8 @@ StatusCode PVOfflineTool::reDoSinglePV(const Gaudi::XYZPoint xyzseed,
   if(tracks2exclude.size()>0) {
     removeTracksByLHCbIDs(rtracks, tracks2exclude);
   }
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx );
+  std::vector<const LHCb::Track*> tracks2remove;
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, tracks2remove );
   return scvfit;
 
 }
@@ -138,8 +146,7 @@ StatusCode PVOfflineTool::reDoMultiPV(const LHCb::RecVertex& invtx,
 //=============================================================================
 // multi vtx search and fit with tracks from default location
 //=============================================================================
-StatusCode PVOfflineTool::reconstructMultiPV(
-                                             std::vector<LHCb::RecVertex>& outvtxvec)  
+StatusCode PVOfflineTool::reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxvec)  
 {
   std::vector<const LHCb::Track*> rtracks;
   readTracks(rtracks); 
@@ -150,8 +157,7 @@ StatusCode PVOfflineTool::reconstructMultiPV(
 //=============================================================================
 // multi vtx search and fit with tracks specified
 //=============================================================================
-StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
-                                                       std::vector<const LHCb::Track*>& tracks2use,
+StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
                                                        std::vector<LHCb::RecVertex>& outvtxvec)  
 {
 
@@ -160,6 +166,14 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
   
   outvtxvec.clear();
   
+  if (m_saveSeedsAsPV) {
+    std::vector<Gaudi::XYZPoint> seeds;
+    m_pvSeedTool->getSeeds(rtracks, seeds); 
+    storeDummyVertices(seeds, rtracks, outvtxvec);
+    return StatusCode::SUCCESS;
+  }
+  
+
   int nvtx_before = -1;
   int nvtx_after  =  0;
   while ( nvtx_after > nvtx_before ) {
@@ -173,7 +187,11 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
     //TIMEBOMB fixed
     if (m_pvfit==NULL) 
       return Warning("m_pvfit is null ", StatusCode::FAILURE);
-    
+
+    if(msgLevel(MSG::DEBUG)) {
+      debug() << " seeds  " << seeds.size()
+              << " pos: " << seeds << endmsg;
+    }
     for (is = seeds.begin(); is != seeds.end(); is++) {
       LHCb::RecVertex recvtx;
       //    Gaudi::XYZPoint *pxyz = &is;
@@ -189,8 +207,10 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
       //  verbose() << "about to call the fit" << endmsg;
       //}
       
-      StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx );
-      removeTracksUsedByVertex(rtracks, recvtx);
+      std::vector<const LHCb::Track*> tracks2remove;
+      StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx, tracks2remove );
+      removeTracks(rtracks, tracks2remove);
+      
       if(scvfit == StatusCode::SUCCESS) {
         bool isSepar = separatedVertex(recvtx,outvtxvec);
         if ( isSepar ) {
@@ -211,21 +231,24 @@ bool PVOfflineTool::separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::Re
   if(outvtxvec.size() < 1 ) return true;
 
   bool vsepar = true;
-  double sig2min = 1e10;
+  double chi2min = 1e10;
+  
   std::vector<LHCb::RecVertex>::iterator itv, itvclosest;
   for (itv = outvtxvec.begin(); itv != outvtxvec.end(); itv++) {
-    double dist2v = (rvtx.position() - (*itv).position()).Mag2();
+    double distz = (rvtx.position().z() - (*itv).position().z());
+    double dist2z = distz*distz;
     double sigma2z_1 =   rvtx.covMatrix()(2,2); 
     double sigma2z_2 = (*itv).covMatrix()(2,2); 
-    double sig2 = dist2v/(sigma2z_1+sigma2z_2);
-    if ( sig2 < sig2min ) {
+    double chi2 = dist2z/(sigma2z_1+sigma2z_2);
+    if ( chi2 < chi2min ) {
       itvclosest = itv;  
-      sig2min = sig2;
+      chi2min = chi2;
     }
   }
 
-  if ( sig2min < 9. ) vsepar = false;
-  if ( sig2min < 81. && rvtx.tracks().size() < 9 ) vsepar = false;
+  if ( chi2min < m_pvsChi2Separation ) vsepar = false;
+  // protect secondary vertices of B signal
+  if ( chi2min < m_pvsChi2SeparationLowMult && rvtx.tracks().size() < 7 ) vsepar = false;
   return vsepar;
 
 }
@@ -483,4 +506,5 @@ StatusCode PVOfflineTool::matchVtxByTracks(const LHCb::RecVertex& invtx,
   debug() << " vtx succesfully matched at tracks rate: " << lastrate << endmsg;
   return StatusCode::SUCCESS;
 }
+
 

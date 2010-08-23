@@ -25,8 +25,9 @@ public:
   virtual StatusCode initialize();
   // Fitting 
   StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
-		       std::vector<const LHCb::Track*>& tracks,
-		       LHCb::RecVertex& vtx);
+                       std::vector<const LHCb::Track*>& tracks,
+                       LHCb::RecVertex& vtx, 
+                       std::vector<const LHCb::Track*>& tracks2remove);
 private:
   double m_Chi2Cut;       // How big chi2 is allowed
   int    m_Iterations;    // Number of iterations for minimisation
@@ -38,7 +39,7 @@ private:
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
   ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
   // Least square iterative PV fit
-  StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks);
+  StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove);
   // Add track for PV
   StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks);
   StatusCode collectTracks(PVTracks& pvTracks, 

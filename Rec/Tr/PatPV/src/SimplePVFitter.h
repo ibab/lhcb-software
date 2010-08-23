@@ -25,8 +25,9 @@ public:
   virtual StatusCode initialize();
   // Fitting 
   StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
-		       std::vector<const LHCb::Track*>& tracks,
-		       LHCb::RecVertex& vtx);
+                       std::vector<const LHCb::Track*>& tracks,
+                       LHCb::RecVertex& vtx, 
+                       std::vector<const LHCb::Track*>& tracks2remove);
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
@@ -34,12 +35,13 @@ private:
   double m_extrapRCut;    // Radius after which one uses full extrapolator
   double m_maxDeltaZ;     // Fit convergence condition
   double m_acceptTrack;   // Value of the Tukey's weight to accept a track
+  double m_trackMaxChi2Remove; // Max chi2 tracks to be removed from next PV search
   PVTracks m_pvTracks;
   // Extrapolators
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
   ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
   // Least square iterative PV fit
-  StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks);
+  StatusCode fit(LHCb::RecVertex& vtx,std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove);
   // Add track for PV
   StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks,
                            double zseed);

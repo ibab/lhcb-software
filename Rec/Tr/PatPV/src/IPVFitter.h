@@ -25,7 +25,8 @@ class IPVFitter : virtual public IAlgTool {
   // Fit
   virtual StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
 			       std::vector<const LHCb::Track*>& tracks,
-			       LHCb::RecVertex& vtx) = 0;
+                               LHCb::RecVertex& vtx,
+                               std::vector<const LHCb::Track*>& tracks2remove) = 0;
 
 };
 #endif // IPVFITTER_H

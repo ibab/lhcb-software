@@ -26,8 +26,9 @@ public:
   virtual StatusCode initialize();
   // Fitting
   StatusCode fitVertex(const Gaudi::XYZPoint seedPoint,
-		       std::vector<const LHCb::Track*>& tracks,
-		       LHCb::RecVertex& vtx);
+                       std::vector<const LHCb::Track*>& tracks,
+                       LHCb::RecVertex& vtx, 
+                       std::vector<const LHCb::Track*>& tracks2remove);
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
@@ -39,13 +40,15 @@ private:
   double  m_x0MS;         // X0 (tunable) of MS to add for extrapolation of
                           // track parameters to PV
   double m_trackMaxChi2;  // maximum chi2 track to accept track in PV fit
+  double m_trackMaxChi2Remove; // Max chi2 tracks to be removed from next PV search
   double m_trackChi;      // sqrt of m_trackMaxChi2
-  bool m_AddMultipleScattering;
-  bool m_CalculateMultipleScattering;
+  bool   m_AddMultipleScattering;
+  bool   m_CalculateMultipleScattering;
   double m_scatCons;      // calculated from m_x0MS
-  PVTracks m_pvTracks;
-  double m_myZero; //myzero=1E-12;
+  double m_myZero;        //myzero=1E-12 small number
   double m_zVtxShift;
+
+  PVTracks m_pvTracks;
   
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,

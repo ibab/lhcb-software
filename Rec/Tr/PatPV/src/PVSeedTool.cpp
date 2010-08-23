@@ -58,13 +58,12 @@ PVSeedTool::PVSeedTool( const std::string& type,
   declareProperty( "factorToIncreaseErrors" , m_factorToIncreaseErrors  = 15. );
 
   // steering parameters for final cluster selection			
-  declareProperty( "minClusterMult",          m_minClusterMult =   6     );
-  declareProperty( "dzCloseTracksInCluster",  m_dzCloseTracksInCluster  =   2.*Gaudi::Units::mm );
-  declareProperty( "minCloseTracksInCluster", m_minCloseTracksInCluster =   5     );
+  declareProperty( "minClusterMult",          m_minClusterMult =   3     );
+  declareProperty( "dzCloseTracksInCluster",  m_dzCloseTracksInCluster  =   5.*Gaudi::Units::mm );
+  declareProperty( "minCloseTracksInCluster", m_minCloseTracksInCluster =   3     );
   declareProperty( "highMult",                m_highMult                =  10     );
-  declareProperty( "ratioSig2HighMult",       m_ratioSig2HighMult       = 0.9     );
-  declareProperty( "ratioSig2LowMult",        m_ratioSig2LowMult        = 0.7     );
-  //  declareProperty( "",      m_      =   );
+  declareProperty( "ratioSig2HighMult",       m_ratioSig2HighMult       = 1.0     );
+  declareProperty( "ratioSig2LowMult",        m_ratioSig2LowMult        = 0.9     );
 
   m_p2mstatic=5000;
 

@@ -42,6 +42,9 @@ SimplePVFitter::SimplePVFitter(const std::string& type,
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Value of the Tukey's weight to accept a track
   declareProperty("acceptTrack", m_acceptTrack = 0.00001);
+  // Max chi2 tracks to be removed from next PV search
+  declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 36.);
+
 }
 
 //=========================================================================
@@ -78,9 +81,10 @@ SimplePVFitter::~SimplePVFitter() {}
 //=============================================================================
 // Least square adaptive fitting method
 //=============================================================================
-StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint, 
-                                      std::vector<const LHCb::Track*>& rTracks, 
-                                      LHCb::RecVertex& vtx)
+StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
+                                     std::vector<const LHCb::Track*>& rTracks, 
+                                     LHCb::RecVertex& vtx, 
+                                     std::vector<const LHCb::Track*>& tracks2remove)
 {
   StatusCode sc = StatusCode::SUCCESS;
   m_pvTracks.clear();
@@ -116,7 +120,7 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     return StatusCode::FAILURE;
   }
 
-  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks);
+  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks,tracks2remove);
   if (!scvfit.isSuccess() ) {
     debug() << "PV fit failed" << endmsg;  
   }
@@ -130,7 +134,7 @@ StatusCode SimplePVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 // Least square adaptive PV fit
 //=============================================================================
 StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx, 
-                                std::vector<PVTrack*>& pvTracks) 
+                               std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove) 
 {
   if(msgLevel(MSG::DEBUG)) {
     verbose() << "Least square adaptive PV fit" << endmsg;
@@ -194,6 +198,7 @@ StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx,
   }
 
   setChi2(vtx,pvTracks);
+
   // Check the weight of tracks to be accepted for PV candidate
   int outTracks = 0;
   for(PVTrackPtrs::iterator iFitTr = pvTracks.begin(); 
@@ -217,8 +222,19 @@ StatusCode SimplePVFitter::fit(LHCb::RecVertex& vtx,
     return StatusCode::FAILURE;
   }
 
+  // fill tracks arounf PV to remove from next PV search
+  for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
+      itrack != pvTracks.end(); itrack++) {
+    
+    if ( (*itrack)->chi2 < m_trackMaxChi2Remove) {
+      tracks2remove.push_back( (*itrack)->refTrack );
+    }
+    
+  }
+
   return StatusCode::SUCCESS;;
 }
+
 
 //=============================================================================
 // Add track for PV
@@ -236,13 +252,7 @@ StatusCode SimplePVFitter::addTrackForPV(const LHCb::Track* pvtr,
   pvtrack.refTrack = pvtr;
   LHCb::State mstate;
   mstate =  pvtr->firstState();
-//  if(msgLevel(MSG::DEBUG)) {
-//    debug() << format("x,y,z: %9.4f %9.4f %9.4f  hasVelo: %d  closest: %d",
-//                      mstate.x(), mstate.y(), mstate.z(), pvtr->hasVelo(),
-//                      mstate.checkLocation(LHCb::State::ClosestToBeam)) << endreq;                
-//    //    debug() << mstate << endreq;
-//    
-//  }
+
   if ( (mstate.checkLocation(LHCb::State::ClosestToBeam) != true) || 
        fabs(mstate.z())>500. )  {
     // extrapolate
@@ -258,14 +268,9 @@ StatusCode SimplePVFitter::addTrackForPV(const LHCb::Track* pvtr,
     
   }
 
-
   pvtrack.stateG = mstate; 
   pvtrack.unitVect = pvtrack.stateG.slopes().Unit();
   pvTracks.push_back(pvtrack);
-//  if(msgLevel(MSG::DEBUG)) {
-//    debug() << format("x,y,z: %7.4f %7.4f %7.4f  track added",
-//                      mstate.x(), mstate.y(), mstate.z()) << endreq;                
-//  }
 
   return StatusCode::SUCCESS;
 }

@@ -26,8 +26,8 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
     m_TrackErrorScaleFactor(0.),
     m_x0MS(0.),
     m_scatCons(0.),
-    m_pvTracks(0),
-    m_myZero(1E-12)
+    m_myZero(1E-12),
+    m_pvTracks(0)
 {
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex
@@ -35,7 +35,7 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   // Number of iterations
   declareProperty("Iterations", m_Iterations = 20);
   // Maximum IP of a track to accept track
-  declareProperty("maxIP2PV", m_maxIP2PV = 5.0 * Gaudi::Units::mm);
+  declareProperty("maxIP2PV", m_maxIP2PV = 2.0 * Gaudi::Units::mm);
   // Fit convergence condition
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
@@ -45,8 +45,10 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   declareProperty("CalculateMultipleScattering", m_CalculateMultipleScattering = true );
   declareProperty("AddMultipleScattering", m_AddMultipleScattering = true );
   declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  // Max chi2 tracks to be removed from next PV search
+  declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 25.);
   // Min number of iterations
-  declareProperty("minIter", m_minIter = 3);
+  declareProperty("minIter", m_minIter = 5);
   declareProperty("zVtxShift", m_zVtxShift = 0.0 );
 }
 
@@ -75,10 +77,13 @@ LSAdaptPV3DFitter::~LSAdaptPV3DFitter() {}
 // Least square adaptive fitting method
 //=============================================================================
 StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
-                                      std::vector<const LHCb::Track*>& rTracks,
-                                      LHCb::RecVertex& vtx)
+                                        std::vector<const LHCb::Track*>& rTracks,
+                                        LHCb::RecVertex& vtx, 
+                                        std::vector<const LHCb::Track*>& tracks2remove)
 {
   if(msgLevel(MSG::DEBUG)) debug() << "================Test==================" << endmsg;
+ 
+  tracks2remove.clear();
   
   Gaudi::XYZPoint xyzvtx = seedPoint;
   // prepare tracks
@@ -162,7 +167,10 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     }
 
     // check nr of tracks that entered the fit
-    if(ntrin < 2) return StatusCode::FAILURE;
+    if(ntrin < 2) {
+      return StatusCode::FAILURE;
+    }
+    
     int fail;
     hess.Inverse(fail);
     if (0 != fail) {
@@ -222,6 +230,13 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     }
   }
   vtx.setTechnique(LHCb::RecVertex::Primary);
+
+  // fill tracks to remove from next PV search
+  for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
+    if( iFitTr->chi2 < m_trackMaxChi2Remove) {
+      tracks2remove.push_back( iFitTr->refTrack);
+    }
+  }
 
   if(msgLevel(MSG::DEBUG)) {
     debug() << "Vertex" << endmsg;
