@@ -298,8 +298,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY4Decision":   50209 } )
 
-
-        
         #----------------------------------------------------------------------------------------
         
         '''
@@ -418,4 +416,19 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonIPDecision"      : 50043 } )
         
+        #----------------------------------------------------------------------------------------
+        ''' Inclusive Biased Jpsi
+            Roel Aaij, roel.aaij@cern.ch
+
+            This line is uses track fitted dimuons and cuts on a decay length significance of 3.
+
+        '''
+        from Hlt2SharedParticles.TrackFittedDiMuon import DetachedTrackFittedJpsi2MuMu
         
+        DiMuonBiasedJpsi = Hlt2Line ( 'DiMuonBiasedJPsi'
+                                      , prescale = self.prescale 
+                                      , algos = [ PV3D(), DetachedTrackFittedJpsi2MuMu ]
+                                      , postscale = self.postscale
+                                      )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonBiasedJPsiDecision" : 50044 } )

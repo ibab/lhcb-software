@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - Roel Aaij
+ - Added Hlt2ExpressHLT1Physics line to simplify monitoring
+ - Added Hlt2DiMuonBiasedJPsi, a line for detached J/psis.
+
 !2010-08-23 - Neal Gauvin
  - Added new heavily post-scaled line Hlt2DisplVerticesSinglePostScaled.
 	It is just the Hlt2DisplVerticesSingle line with the settings before the required adaptations for higher nu data. Necessary to understand these new data.

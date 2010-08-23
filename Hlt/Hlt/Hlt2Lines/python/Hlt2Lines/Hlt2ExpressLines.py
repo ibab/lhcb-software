@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.29 2010-07-15 15:10:33 raaij Exp $
+# $Id: Hlt2ExpressLines.py,v 1.30 2010-08-23 16:36:34 raaij Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -28,6 +28,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressDs2PhiPi'    : 1.
                                , 'Hlt2ExpressBeamHalo'    : 1.
                                , 'Hlt2ExpressDStar2D0Pi'  : 1.
+                               , 'Hlt2ExpressHLT1Physics' : 1.
                                  }
                , 'Postscale' : { 'Hlt2ExpressJPsi'        : 'RATE(5)'
                                , 'Hlt2ExpressJPsiTagProbe': 'RATE(5)'
@@ -36,6 +37,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressDs2PhiPi'    : 'RATE(1)'
                                , 'Hlt2ExpressBeamHalo'    : 'RATE(1)'
                                , 'Hlt2ExpressDStar2D0Pi'  : 'RATE(1)'
+                               , 'Hlt2ExpressHLT1Physics' : 'RATE(1)'
                                  }
                , 'ExJPsiMassWindow'        :  120   # MeV
                , 'ExJPsiPt'                : 1000   # MeV
@@ -393,7 +395,18 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                       ) 
       
       #--------------------------------------------                      
-      
+      '''
+      Hlt1Physics for Express stream
+      '''
+      Hlt1Physics = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
+      line = Hlt2Line('ExpressHLT1Physics'
+                      , prescale = self.prescale
+                      , HLT = Hlt1Physics
+                      , VoidFilter = '' # explicitly require NO pile up filter... 
+                      , postscale = self.postscale
+                      )
+
+      #--------------------------------------------                      
       
       HltANNSvc().Hlt2SelectionID.update( { 'Hlt2ExpressJPsiDecision'         : 50090
                                           , 'Hlt2ExpressJPsiTagProbeDecision' : 50091
@@ -402,5 +415,6 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                           , 'Hlt2ExpressDs2PhiPiDecision'     : 50094
                                           , 'Hlt2ExpressBeamHaloDecision'     : 50095
                                           , 'Hlt2ExpressDStar2D0PiDecision'   : 50096
+                                          , 'Hlt2ExpressHLT1PhysicsDecision'  : 50097
                                           } )
 
