@@ -18,6 +18,7 @@ static const InterfaceID IID_IMaterialLocator ( "IMaterialLocator", 1, 0 );
 
 // forwarded
 namespace LHCb {
+  class State ;
   class StateVector ;
   class ZTrajectory ;
 }
@@ -61,16 +62,14 @@ public:
   virtual size_t intersect( const LHCb::StateVector& origin, const LHCb::StateVector& target,
 			    Intersections& intersepts ) const = 0 ;
 
-  /// 
-  /// virtual StatusCode process( const Trajectory& traj, TrackSymMatrix* noise, TrackVector* delta, bool upstream) const = 0 ;
-  virtual void computeMaterialCorrection(Gaudi::TrackSymMatrix& noise,
-					 Gaudi::TrackVector& delta,
+  /// Apply material corrections using material in intersepts
+  virtual void applyMaterialCorrections( LHCb::State& stateAtTarget,
 					 const Intersections& intersepts,
 					 double zorigin,
-					 double ztarget,
-					 double momentum,
-					 LHCb::ParticleID pid) const = 0 ;
-   
+					 LHCb::ParticleID pid,
+					 bool applyScatteringCorrection = true,
+					 bool applyELossCorrection = true ) const = 0 ;
+  
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IMaterialLocator ; }
   

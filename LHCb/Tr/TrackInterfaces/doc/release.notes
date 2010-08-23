@@ -6,6 +6,7 @@
 
 ! 2010-08-23 - Wouter Hulsbergen
  - Added ITrackStateProvider
+ - Small change in interface of IMaterialLocator
 
 !====================== TrackInterfaces v4r14 2010-07-19 =====================
 ! 2010-07-15 - Jeroen VAN TILBURG
