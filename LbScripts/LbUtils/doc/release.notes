@@ -1,5 +1,6 @@
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r4p1
 	* python/LbUtils/_helpers/subprocess.py: 
 	* python/LbUtils/File.py: 
 	* python/LbUtils/Tar.py: 
