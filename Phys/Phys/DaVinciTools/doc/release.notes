@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.570 2010-08-19 06:51:26 jpalac Exp $
+! $Id: release.notes,v 1.571 2010-08-23 09:01:04 tblake Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-08-23 - Thomas BLAKE
+ - Bd2KstarMuMuAngleCalculator
+   . Updated tool to work for both (ee, mumu) combinations
+
 
 !========================== DaVinciTools v21r5 2010-08-19 ===================
 
