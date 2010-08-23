@@ -180,8 +180,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
         Returns a list of active lines
         """
         hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent']
-        from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
-        hlt2.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
+        from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
+        hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
 
 ##         from DefaultHlt2Lines import DefaultHlt2Lines 
 ##         list.extend( DefaultHlt2Lines().ActiveHlt2Lines() )

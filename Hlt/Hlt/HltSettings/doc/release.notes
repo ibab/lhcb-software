@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - Roel Aaij
+ - Add Express_Hlt2_Sep10; it is used by 1000Vis Express and Core configurations
+ - Add DiMuonBiasedJPsi to Muons_Retention50
+
 ! 2010-08-23 - V. Gligorov
  - Update list of hadron lines which are "in".
 

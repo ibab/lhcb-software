@@ -27,6 +27,7 @@ class Muons_Retention50 :
             'Hlt2DiMuonUnbiasedPsi2S',
             'Hlt2DiMuonUnbiasedBmm',
             'Hlt2DiMuonUnbiasedZmm',
+            'Hlt2DiMuonBiasedJPsi',
             'Hlt2DiMuonDY1',
             'Hlt2DiMuonDY2',
             'Hlt2DiMuonDY3',
