@@ -659,9 +659,10 @@ void B2DHMvaPreSelectionParamTool::resetParamInCurrentEvent()
   }
   m_FisherDParamList.clear();
   m_FisherDParamList.resize(m_numFisherDParam);
-  for(int j=0; j<m_numFisherDParam; ++j) {
-    m_FisherDParamList[j]==100.0;
-  }
+  std::fill(m_FisherDParamList.begin(), m_FisherDParamList.end(), 100.);  
+//   for(int j=0; j<m_numFisherDParam; ++j) {
+//     m_FisherDParamList[j]==100.0;
+//   }
   //  m_FisherDParamList.assign(m_numFisherDParam,-100.0);  
 
   

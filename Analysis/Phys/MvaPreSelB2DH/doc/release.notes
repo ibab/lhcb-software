@@ -3,6 +3,13 @@
 ! Responsible : Sajan EASO
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!=========================== MvaPreSelB2DH v1r0 2010-08-23 ===================
+
+! 2010-08-23 - Juan Palacios
+ - src/B2DHMvaPreSelectionParamTool.cpp
+  . Fix compilation warning.
+
 ! 2010-08-21 - Sajan Easo.
  - requirements file modified to remove 'private' for link options.  
 ! 2010-08-13 - Sajan EASO
