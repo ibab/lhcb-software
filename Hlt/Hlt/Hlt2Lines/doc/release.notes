@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!2010-08-23 - Neal Gauvin
+ - Added new heavily post-scaled line Hlt2DisplVerticesSinglePostScaled.
+	It is just the Hlt2DisplVerticesSingle line with the settings before the required adaptations for higher nu data. Necessary to understand these new data.
+
 ! 2010-08-23 - V. Gligorov
  - Update XGamma/D2mumu/DisplacedVertex lines to use fitted tracks
  - Update inclusive phi to cut on the PID of both kaons
