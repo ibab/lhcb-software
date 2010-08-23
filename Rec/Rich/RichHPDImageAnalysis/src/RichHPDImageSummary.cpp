@@ -214,7 +214,7 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
 void RichHPDImageSummary::summaryINFO( const unsigned int ID,
                                        const TH2D* hist ) const
 {
-  const int nPix = (int) hist->Integral();
+  int nPix = (int) hist->Integral();
   if ( nPix < m_minOccupancy ) return ;
 
   HPDBoundaryFcn FCN( hist , m_cutFraction );
@@ -223,18 +223,28 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   if ( boundarySize < m_minBoundary ) return ;
 
   ROOT::Minuit2::MnUserParameters par;
-
   par.Add("Col0",   16. , 0.5 );
   par.Add("Row0",   16. , 0.5 );
   par.Add("Radius", 16. , 0.5 );
 
+  // Make the minimiser
   ROOT::Minuit2::MnMigrad migrad( FCN, par );
-  ROOT::Minuit2::FunctionMinimum min = migrad();
+  // minimise ...
+  const ROOT::Minuit2::FunctionMinimum min = migrad();
 
-  const double Col    = migrad.Value("Col0");
-  const double Row    = migrad.Value("Row0");
-  const double ColErr = migrad.Error("Col0");
-  const double RowErr = migrad.Error("Row0");
+  // if fit failed, don't fill.
+  if ( !min.IsValid() ) 
+  { 
+    std::ostringstream mess;
+    mess << "Fit for HPD " << ID << " FAILED";
+    Warning( mess.str() ).ignore();
+    return;
+  }
+
+  const double Col    = min.UserParameters().Value("Col0");
+  const double Row    = min.UserParameters().Value("Row0");
+  const double ColErr = min.UserParameters().Error("Col0");
+  const double RowErr = min.UserParameters().Error("Row0");
 
   const double x0 = -1.0 * localXFromPixels( Col );
   const double y0 = -1.0 * localYFromPixels( Row );
@@ -246,14 +256,14 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
   plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,483.5,484,ds);
 
-  plot1D( ID, "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,483.5,484,x0);
-  plot1D( ID, "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,483.5,484,y0);
-  plot1D( ID, "dPosXErrvsCopyNr", "x-displacement error versus HPD Copy Nr",-0.5,483.5,484,xErr0);
-  plot1D( ID, "dPosYErrvsCopyNr", "y-displacement error versus HPD Copy Nr",-0.5,483.5,484,yErr0);
+  plot1D( ID, "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,483.5,484,nPix*x0);
+  plot1D( ID, "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,483.5,484,nPix*y0);
+  plot1D( ID, "dPosXErrvsCopyNr", "x-displacement error versus HPD Copy Nr",-0.5,483.5,484,nPix*xErr0);
+  plot1D( ID, "dPosYErrvsCopyNr", "y-displacement error versus HPD Copy Nr",-0.5,483.5,484,nPix*yErr0);
 
   plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,483.5,484,nPix);
 
-  const double Rad = m_pixelsize*migrad.Value("Radius");
+  const double Rad = m_pixelsize * min.UserParameters().Value("Radius");
   const double RadErrSq = std::pow(m_pixelsize*migrad.Error("Radius"),2);
 
   plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,483.5,484,nPix*Rad);

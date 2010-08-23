@@ -27,6 +27,7 @@
 #include <map>
 #include <vector>
 #include <cmath>
+#include <sstream>
 
 // Minuit2
 #include "Minuit2/FunctionMinimum.h"
