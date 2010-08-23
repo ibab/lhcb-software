@@ -12,14 +12,14 @@ branches src cmt doc
 #############################################################
 use DaVinciKernel      v*  Phys
 use PhysDict           v*  Phys
-use DaVinci            v*  Phys
 use MCEvent            v*  Event
 use PhysEvent          v*  Event
 use LinkerEvent        v*  Event
 use RecEvent           v*  Event
 use DAQEvent           v*  Event
 use L0Event            v*  Event
-use HltEvent           v*  Event
+#use HltEvent           v*  Event
+use AIDA               v*  LCG_Interfaces
 
 #apply_pattern install_python_modules
 
