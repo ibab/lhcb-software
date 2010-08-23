@@ -691,19 +691,18 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
     for(++inode; inode!=nodes.end(); ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode) ;
       double ztarget = node->z() ;
-      Gaudi::TrackSymMatrix noise ;
-      Gaudi::TrackVector delta;
-      m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
-                                                   scatteringMomentum, pid) ;
-      node->setNoiseMatrix( noise ) ;
-      node->setDeltaEnergy( 0 ) ;
-      if( applyenergyloss ) {
-	double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
-	node->setDeltaEnergy( deltaE ) ;
-      }
+      
+      LHCb::State state = (*inode)->state() ;
+      state.covariance() = Gaudi::TrackSymMatrix() ;
+      state.setQOverP( 1/scatteringMomentum  ) ;
+      m_materialLocator->applyMaterialCorrections(state,intersections,zorigin,pid,true,applyenergyloss) ;
+      double deltaE = 1/state.qOverP() - scatteringMomentum ;
+      
+      node->setNoiseMatrix( state.covariance() ) ;
+      node->setDeltaEnergy( deltaE  ) ;
+      
       zorigin = ztarget ;
     }
-    
   }
   return StatusCode::SUCCESS ;
 }
