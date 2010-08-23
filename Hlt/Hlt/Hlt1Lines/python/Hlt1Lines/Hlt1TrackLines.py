@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -48,11 +48,11 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             #OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
             from HltLine.HltDecodeRaw import DecodeIT
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
-            sh = [  Hlt1GEC(),
+            return [ Hlt1GEC(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
-                           , FilterDescriptor = [ 'IP_PV3D,>,'+ip]
+                           , FilterDescriptor = [ 'IP_PV3D,>,%s'%ip]
                          ),
                     DecodeIT,
                     Member ( 'TU', 'Forward'
@@ -61,20 +61,19 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                                              ,tools = [ConfiguredPR( "Forward" )] )]
                            ),
                     Member ( 'TF' , 'OTPT' ,
-                            FilterDescriptor = ['PT,>,'+pt],
+                            FilterDescriptor = ['PT,>,%s'%pt],
                             ),
                     Member ( 'TF' , 'OTMom' ,
-                            FilterDescriptor = ['P,>,'+p],
+                            FilterDescriptor = ['P,>,%s'%p],
                             )
                    ]
-            return sh
 
 
         def afterburn(chi2,ipchi2):
-            after = [ PV3D().ignoreOutputSelection()
+            return [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , 'TrkChi2'
-                           , FilterDescriptor = ["FitChi2OverNdf,<,"+chi2],
+                           , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
                            HistogramUpdatePeriod = 1,
                            HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
                            )
@@ -85,7 +84,6 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                           MinIPCHI2 = ipchi2
                          )
                 ]
-            return after
 
         def muonAfterburn(chi2,ipchi2) :
             from Configurables import MuonRec, MuonIDAlg
@@ -100,7 +98,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             after = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , 'TrkChi2'
-                           , FilterDescriptor = ["FitChi2OverNdf,<,"+chi2],
+                           , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
                            HistogramUpdatePeriod = 1,
                            HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
                            )
@@ -140,7 +138,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                           OutputSelection = "%Decision",
                           InputSelection1 = 'TES:/Event/Phys/Hlt1TrackMuonCPM/Particles', 
                           InputSelection2 = 'PV3D',
-                          MinIPCHI2 = ipchi2
+                          MinIPCHI2 = '%s'%ipchi2
                          )   
                 ]
             return after
@@ -150,18 +148,18 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Muon','DiMuon','Electron','Photon'] ] ) 
-             , algos =  trackprepare("0.125","1250","12500") + afterburn("3",50)
+             , algos =  trackprepare(ip=0.125,pt=1250,p=12500) + afterburn(chi2=3,ipchi2=50)
              )
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
-             , algos =  trackprepare("0.08","800","8000") + muonAfterburn("10",25.)
+             , algos =  trackprepare(ip=0.08,pt=800,p=8000) + muonAfterburn(chi2=10,ipchi2=25.)
              )
         Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
-             , algos =  trackprepare("0.125","800","8000") + afterburn("5",50)
+             , algos =  trackprepare(ip=0.125,pt=800,p=8000) + afterburn(chi2=5,ipchi2=50)
              )    
 
