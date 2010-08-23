@@ -35,11 +35,28 @@ TrackFittedDiMuon = bindMembers( "Shared", [ BiKalmanFittedMuons, Hlt2SharedTrac
 ##
 Hlt2SharedTrackFittedJpsi2MuMu = Hlt2Member( FilterDesktop
                                              , "TrackFittedJpsi2MuMu"
-                                             , Code = "ADMASS('J/psi(1S)')<100*MeV"
+                                             , Code = "ADMASS('J/psi(1S)')<120*MeV"
                                              , InputLocations  = [ TrackFittedDiMuon ]
                                              )
 
 TrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedDiMuon, Hlt2SharedTrackFittedJpsi2MuMu ] )
+
+###
+#
+#  Detached Track Fitted J/psi -> mumu
+#
+#  @author R. Aaij roel.aaij@cern.ch
+#  @date 2010-8-23
+#
+##
+Hlt2SharedDetachedTrackFittedJpsi2MuMu = Hlt2Member( FilterDesktop
+                                                     , "DetachedTrackFittedJpsi2MuMu"
+                                                     , Code = "BPVDLS > 3"
+                                                     , InputLocations  = [ TrackFittedJpsi2MuMu ]
+                                                     )
+
+DetachedTrackFittedJpsi2MuMu = bindMembers( "Shared", [ TrackFittedJpsi2MuMu,
+                                                        Hlt2SharedDetachedTrackFittedJpsi2MuMu ] )
 
 ###
 #
