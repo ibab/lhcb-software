@@ -1,5 +1,11 @@
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed dependency bug when using --check. The html dependency
+	file is only present for the exlicitly installed project. For the intermediate ones installed as
+	dependencies, the html file is opened on the fly (requires network access).
+
+2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v3r4p1
 
 2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

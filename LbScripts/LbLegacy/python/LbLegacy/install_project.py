@@ -600,6 +600,12 @@ def getFile(url, fname):
 
     return exist_flag
 
+def getFileContent(url):
+    fd = urlopen(url)
+    content = fd.readlines()
+    fd.close()
+    return content
+
 def isTarBall(filename):
     fc = filename.split(".")
     if fc[-1] == "gz" and fc[-2] == "tar" :
@@ -764,25 +770,28 @@ def getProjectList(name, version, binary=None):
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
+    os.chdir(this_html_dir)
+
+    tar_file_html = tar_file + '.html'
+
     if not check_only :
         checkWriteAccess(this_html_dir)
-    os.chdir(this_html_dir)
-    if not check_only :
-        getFile(url_dist + 'html/', tar_file + '.html')
+        getFile(url_dist + 'html/', tar_file_html)
 
-
-    # loop over projects to be downloaded
     project_list = {}
     html_list = []
-    tar_file_html = tar_file + '.html'
+
+
     if os.path.exists(tar_file_html) :
         fd = open(tar_file_html)
+        fdlines = fd.readlines()
+        fd.close()
     else :
-        log.error("File %s doesn't exist" % os.path.join(this_html_dir, tar_file_html))
-        log.warning("%s %s %s is not installed" % (name, version, binary))
-        sys.exit("some projects are not installed. Exiting ...")
+        try :
+            fdlines = getFileContent(url_dist + "html/" + tar_file_html)
+        except :
+            log.fatal("Cannot retrieve dependency information for %s %s %s" % (name, version, binary))
 
-    fdlines = fd.readlines()
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
             log.info('the required project %s %s %s is not available' % (name, version, binary))
@@ -799,7 +808,7 @@ def getProjectList(name, version, binary=None):
             project_list[fname] = source
             html_list.append(fname)
 
-
+    # loop over projects to be downloaded
     for fname in project_list.keys():
         if project_list[fname] == "source":
             pack_ver = getPackVer(fname)
