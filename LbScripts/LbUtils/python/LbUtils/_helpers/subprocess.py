@@ -359,7 +359,9 @@ mswindows = (sys.platform == "win32")
 import os
 import types
 import traceback
-if "set" not in dir(__builtins__):
+
+import __builtin__
+if "set" not in dir(__builtin__):
     from sets import Set as set
 
 # Exception classes used by this module.

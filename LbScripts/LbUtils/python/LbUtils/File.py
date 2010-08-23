@@ -11,7 +11,8 @@ import fnmatch
 import stat
 import os, sys
 
-if "set" not in dir(__builtins__):
+import __builtin__
+if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
     from sets import Set as set
 

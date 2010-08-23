@@ -8,7 +8,9 @@ __version__ = "$Id: VersionsDB.py,v 1.16 2008-05-09 12:07:53 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
-if "set" not in dir(__builtins__):
+
+import __builtin__
+if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
     from sets import Set as set    
 

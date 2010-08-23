@@ -9,7 +9,8 @@ from LbConfiguration import createProjectMakefile
 from LbConfiguration.Repository import repositories as __repositories__, SVNReposInfo, CVSReposInfo
 import rcs
 
-if "set" not in dir(__builtins__):
+import __builtin__
+if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
     from sets import Set as set
 
