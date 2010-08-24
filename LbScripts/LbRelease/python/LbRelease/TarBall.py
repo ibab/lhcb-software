@@ -24,6 +24,53 @@ import shutil
 class EmptyTarBallException(Exception): pass
 class EmptySourceDirsException(Exception): pass
 class TarBallExistException(Exception): pass
+class NotATarBall(Exception): pass
+
+def getTarBallNameItems(tar_name):
+    name = None
+    version = None
+    binary = None
+    if not tar_name.endswith(".tar.gz") :
+        raise NotATarBall
+
+    core_name = tar_name.replace(".tar.gz", "")
+    for b in Platform.binary_list + Platform.extra_binary_list :
+        if core_name.endswith(b) :
+            binary = b
+            core_name = core_name.replace("_%s" %b, "")
+            break
+    
+    cptes = core_name.split("_")
+    nm = cptes[0]
+    if nm.upper() in [ x.upper() for x in Project.project_names ] :
+        version = Version.CoreVersion(cptes[-1]).name()
+        prjcfg = Project.getProject(cptes[0])
+        if prjcfg.tarBallName(version, cmtconfig=binary, full=True) == tar_name :
+            name = prjcfg.Name()
+        else :
+            raise NotATarBall
+    elif nm.upper() in [ x.upper() for x in Package.project_names ] :
+        version = Version.CoreVersion(cptes[-1]).name()
+        pkgnm = None
+        for c in cptes :
+            if c in Package.package_names :
+                pkgnm = c
+                break
+        if pkgnm :
+            pkgcfg = Package.getPackage(pkgnm)
+        else :
+            raise NotATarBall
+        if pkgcfg.tarBallName(version, full=True) == tar_name :
+            name = pkgcfg.Name()
+        else :
+            raise NotATarBall
+        
+    else :
+        if nm.upper() == "LCGCMT" :
+            name = "LCGCMT"
+            version = Version.LCGVersion(cptes[1]).name()
+    
+    return name, version, binary
 
 class TarBall(object):
     def __init__(self, name, srcloc=None):
