@@ -10,7 +10,6 @@ use  DaVinciTests               v1r2
 # Patches
 use  HltDAQ                     v2r1     Hlt
 use  LumiAlgs                   v3r7p1   Rec
-use  TisTosTobbing              v5r1     Phys
 
 # Declare this as a container package
 apply_pattern container_package
