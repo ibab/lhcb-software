@@ -11,6 +11,7 @@ use GaudiKernel     v*
 use LHCbKernel      v*    Kernel
 use DigiEvent       v*    Event
 use RecEvent        v*    Event
+use L0Event         v*    Event
 use CaloDet         v*    Det
 
 # =============== include directories =========================================
