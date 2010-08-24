@@ -431,9 +431,9 @@ namespace LHCb
   {
     return p4(masshypos).M() ;
   }
-  
-  double TrackStateVertex::massErr(const std::vector<double>& masshypos) const 
-  {  
+
+  Gaudi::SymMatrix4x4 TrackStateVertex::p4CovMatrix(const std::vector<double>& masshypos) const 
+  {
     Gaudi::SymMatrix4x4 p4cov ;
     size_t dim = m_tracks.size() ;
     std::vector<Gaudi::Matrix4x3> dP4dMom(dim) ;
@@ -448,6 +448,47 @@ namespace LHCb
 	p4cov += stmp4x4 ;
       }
     }
+    return p4cov ;
+  }
+
+  Gaudi::SymMatrix7x7 TrackStateVertex::covMatrix7x7( const std::vector<double>& masshypos ) const
+  {
+    //< Return the covariance matrix for the V0
+    Gaudi::SymMatrix4x4 p4cov ;
+    size_t dim = m_tracks.size() ;
+    std::vector<Gaudi::Matrix4x3> dP4dMom(dim) ;
+    Gaudi::Matrix4x4    tmp4x4 ;
+    Gaudi::SymMatrix4x4 stmp4x4 ;
+    Gaudi::Matrix4x3 covmompos;
+    for( size_t index = 0 ; index<dim ; ++index) {
+      // this is something we can still optimize
+      Gaudi::Math::JacobdP4dMom(m_tracks[index]->mom(),masshypos[index],dP4dMom[index]);
+      p4cov += ROOT::Math::Similarity( dP4dMom[index], m_tracks[index]->momcov() ) ;
+      covmompos += dP4dMom[index] * m_tracks[index]->momposcov() ;
+      for( size_t jndex = 0 ; jndex<index ; ++jndex) {
+	tmp4x4 = dP4dMom[index] * momMomCovMatrixFast(index,jndex) * ROOT::Math::Transpose(dP4dMom[jndex]);
+	ROOT::Math::AssignSym::Evaluate( stmp4x4, tmp4x4 + ROOT::Math::Transpose( tmp4x4 ) ) ;
+	p4cov += stmp4x4 ;
+      }
+    }
+    
+    // finally copy everything to the 7x7 matrix
+    Gaudi::SymMatrix7x7 cov7x7;
+    // position part from rec vertex
+    cov7x7.Place_at(m_poscov, 0, 0);
+    // momentum part
+    cov7x7.Place_at(p4cov, 3,3);
+    // off diagonal elements
+    for(int i = 0 ; i <4; ++i)
+      for(int j =0;j<3;++j)
+        cov7x7(i+3,j) = covmompos(i,j);
+    
+    return cov7x7 ;
+  }
+  
+  double TrackStateVertex::massErr(const std::vector<double>& masshypos) const 
+  {  
+    Gaudi::SymMatrix4x4 p4cov = p4CovMatrix( masshypos ) ;
     ROOT::Math::SMatrix<double,1,4> dMdP4 ;
     Gaudi::LorentzVector p4sum = p4(masshypos) ;
     double m = p4sum.M() ;

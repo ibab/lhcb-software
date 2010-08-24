@@ -92,6 +92,10 @@ namespace LHCb
       return j<=i ? momMomCovMatrixFast(i,j) : ROOT::Math::Transpose( momMomCovMatrixFast(j,i) ) ; }  
     /// Get the total p4 given the mass hypotheses
     Gaudi::LorentzVector p4(const std::vector<double>& masshypos) const ;
+    /// Get the total p4 given the mass hypotheses
+    Gaudi::SymMatrix4x4 p4CovMatrix(const std::vector<double>& masshypos) const ;
+    /// Get the cov7x7
+    Gaudi::SymMatrix7x7 covMatrix7x7( const std::vector<double>& masshypos ) const ;
     /// Get the mass given a set of mass hypotheses
     double mass(const std::vector<double>& masshypos) const ;
     /// Get the error on the mass given a set of mass hypotheses

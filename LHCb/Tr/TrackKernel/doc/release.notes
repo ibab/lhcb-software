@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Wouter Hulsbergen
+ - added methods to TrackStateVertex to compute p4cov and cov7x7
+
 ! 2010-08-17 - Wouter Hulsbergen
  - added some methods to TrackTraj to make it more suitable for inheritance
 
