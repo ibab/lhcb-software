@@ -1,8 +1,8 @@
-# $Id: StrippingLambdab2JpsiLambda.py,v 1.4 2010-08-23 14:11:19 yamhis Exp $
+# $Id: StrippingLambdab2JpsiLambda.py,v 1.5 2010-08-24 17:56:14 yamhis Exp $
 
 __author__ = ['Yasmine Amhis']
 __date__ = '29/07/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 StrippingSelections for Lambda_b0-> Jpsi Lambda ( LL and DD )
@@ -24,19 +24,19 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         #---------------------------------------------------------
         #Jpsi cuts
         #---------------------------------------------------------
-                "MuonTRCHI2"	: 15.0	# adimensional 
+                "MuonTRCHI2"	: 10.0	# adimensional 
         ,	"JpsiMassWin"	: 60.0	# MeV
         ,	"JpsiVCHI2"	: 25.0	# adimensional
         #---------------------------------------------------------
         #Lambda cuts
         #---------------------------------------------------------
-        ,       "ProtonTRCHI2"	: 15.0	# adimensional
-        ,       "PionTRCHI2"    : 15.0  #adimensional  
+        ,       "ProtonTRCHI2"	: 10.0	# adimensional
+        ,       "PionTRCHI2"    : 10.0  #adimensional  
       
         ,       "ProtonPT" 	: 500.0 # MeV                     
         ,       "PionPT" 	: 100.0 # MeV 
 
-        ,	"LambdaMassWin"	: 20.0	# MeV
+        ,	"LambdaMassWin"	: 10.0	# MeV
         ,	"LambdaVCHI2" 	: 25.0	# adimensional
         #---------------------------------------------------------
         #Lambda_b cuts
@@ -77,8 +77,8 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         StdLooseLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL")
         _LambdaFilter = FilterDesktop("LambdaFilterForLambdab2JpsiLambda")
         _LambdaFilter.Code = "  (MAXTREE('p+'==ABSID, TRCHI2DOF) < %(ProtonTRCHI2)s)" \
-                             "&  (MAXTREE('p+'==ABSID, PT) > %(ProtonPT)s)"\
                              "&  (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(PionTRCHI2)s)" \
+                             "&  (MAXTREE('p+'==ABSID, PT) > %(ProtonPT)s)"\
                              "&  (MAXTREE('pi-'==ABSID, PT) > %(PionPT)s)"\
                              "& (ADMASS('Lambda0') < %(LambdaMassWin)s *MeV)" \
                              "& (VFASPF(VCHI2/VDOF) < %(LambdaVCHI2)s)" % self.getProps()        
