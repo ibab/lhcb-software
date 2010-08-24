@@ -3,18 +3,22 @@
 #include "Event/Particle.h"
 #include "RecoTrack.h"
 #include "FitParams.h"
+#include "TrackKernel/TrackTraj.h"
 
 namespace DecayTreeFitter
 {
 
   extern int vtxverbose ;
 
-  RecoTrack::RecoTrack(const LHCb::Particle& cand, const ParticleBase* mother) 
+  RecoTrack::RecoTrack(const LHCb::Particle& cand, 
+		       const ParticleBase* mother)
     : RecoParticle(cand,mother),
       m_track(cand.proto()->track()),
       m_cached(false),
       m_flt(0)
   {
+    // set it to something such that we have a momentum estimate
+    m_state = m_track->firstState() ;
   }
   
   RecoTrack::~RecoTrack() {}
@@ -48,7 +52,26 @@ namespace DecayTreeFitter
   {
     // we'll do this properly another time
     double z = fitparams.par()(mother()->posIndex() + 3 ) ;
-    m_state = m_track->closestState( z ) ;
+    m_state = m_track->closestState(z) ;
+
+    // temporary hack: inside RecoTrack we only use linear
+    // extrapolation. for V0 this is not good enough. so, if the
+    // closest state is not 'ClosestToBeamLine' or if we are
+    // extrapolating far or are far away from the beam line, we'll use
+    // tracktraj.  why not use TrackTraj always? actually there isn't
+    // a really good reason, but you would slightly overestimate the
+    // errors for prompt tracks in between the first-measurement state
+    // and the closest-to-beam state.
+    const double maxR = 1 * Gaudi::Units::cm ;
+    const double maxDeltaZ = 10 * Gaudi::Units::cm ;
+    double dz = z - m_state.z() ;
+    double x = m_state.x() + dz * m_state.tx() ;
+    double y = m_state.y() + dz * m_state.ty() ;
+    double r = std::sqrt( x*x + y*y ) ;
+    if( m_state.location() != LHCb::State::ClosestToBeam || r > maxR || std::abs(dz) > maxDeltaZ ) {
+      LHCb::TrackTraj traj( *m_track ) ;
+      m_state = traj.state( z ) ;
+    }
     m_cached = true ;
     return ErrCode() ;
   }
