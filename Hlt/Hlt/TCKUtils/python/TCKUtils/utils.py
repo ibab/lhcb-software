@@ -572,6 +572,12 @@ def orphanScan( cas = ConfigAccessSvc() ) :
 
 def getConfigurations( cas = ConfigAccessSvc() ) :
     return execInSandbox( _getConfigurations, cas )
+def getTCKInfo(x) :
+    for (i,j) in getConfigurations().iteritems() :
+        if x in j['TCK'] : return (j['hlttype'],j['release'])
+    return None
+
+
 def getReleases( cas = ConfigAccessSvc() ) :
     return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
 def getHltTypes( release, cas = ConfigAccessSvc() ) :
