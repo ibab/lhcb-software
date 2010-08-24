@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.cpp,v 1.9 2010-08-17 17:23:04 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.10 2010-08-24 13:21:01 frankb Exp $
 #include "RootDataConnection.h"
 #include "RootUtils.h"
 
@@ -23,18 +23,19 @@ typedef const string& CSTR;
 static string s_empty;
 static string s_local = "<localDB>";
 
+#ifdef __POOL_COMPATIBILITY
 #include "PoolTool.h"
+#endif
 #include "RootTool.h"
 
 /// Standard constructor
-RootConnectionSetup::RootConnectionSetup()
-: refCount(1), m_msgSvc(0)
+RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
 {
 }
 
 /// Standard destructor      
 RootConnectionSetup::~RootConnectionSetup() {
-  if ( m_msgSvc ) m_msgSvc->release();
+  if ( m_msgSvc ) delete m_msgSvc;
   m_msgSvc = 0;
 }
 
@@ -52,11 +53,10 @@ void RootConnectionSetup::release() {
 }
 
 /// Set message service reference
-void RootConnectionSetup::setMessageSvc(IMessageSvc* m) {
-  IMessageSvc* tmp = m_msgSvc;
-  if ( m ) m->addRef();
+void RootConnectionSetup::setMessageSvc(MsgStream* m) {
+  MsgStream* tmp = m_msgSvc;
   m_msgSvc = m;
-  if ( tmp ) tmp->release();
+  if ( tmp ) delete tmp;
 }
 
 /// Standard constructor
@@ -93,17 +93,16 @@ void RootDataConnection::saveStatistics(CSTR statisticsFile) {
 
 /// Enable TTreePerStats
 void RootDataConnection::enableStatistics(CSTR section) {
-  MsgStream msg(msgSvc(),m_name);
   if ( 0 == m_statistics ) {
     TTree* t=getSection(section,false);
     if ( t ) {
       m_statistics = new TTreePerfStats((section+"_ioperf").c_str(),t);
       return;
     }
-    msg << MSG::WARNING << "Failed to enable perfstats for tree:" << section << endmsg;
+    msgSvc() << MSG::WARNING << "Failed to enable perfstats for tree:" << section << endmsg;
     return;
   }
-  msg << MSG::INFO << "Perfstats are ALREADY ENABLED." << endmsg;
+  msgSvc() << MSG::INFO << "Perfstats are ALREADY ENABLED." << endmsg;
 }
 
 /// Create file access tool to encapsulate POOL compatibiliy
@@ -112,8 +111,10 @@ RootDataConnection::Tool* RootDataConnection::makeTool()   {
   if ( !m_refs ) m_refs = (TTree*)m_file->Get("Refs");
   if ( m_refs )
     m_tool = new RootTool(this);
+#ifdef __POOL_COMPATIBILITY
   else if ( m_file->Get("##Links") != 0 )
     m_tool = new PoolTool(this);
+#endif
   return m_tool;
 }
 
@@ -122,24 +123,27 @@ StatusCode RootDataConnection::connectRead()  {
   m_file = TFile::Open(m_pfn.c_str());
   if ( m_file && !m_file->IsZombie() )   {
     StatusCode sc = StatusCode::FAILURE;
-    MsgStream msg(msgSvc(),m_name);
-    msg << MSG::INFO << "Opened file " << m_pfn << " in mode READ. [" << m_fid << "]" << endmsg << MSG::DEBUG;    
-    if ( msg.isActive() ) m_file->ls();
-    msg << MSG::VERBOSE;
-    if ( msg.isActive() ) m_file->Print();
+    msgSvc() << MSG::DEBUG << "Opened file " << m_pfn << " in mode READ. [" << m_fid << "]" << endmsg << MSG::DEBUG;    
+    if ( msgSvc().isActive() ) m_file->ls();
+    msgSvc() << MSG::VERBOSE;
+    if ( msgSvc().isActive() ) m_file->Print();
     if ( makeTool() ) sc = m_tool->readRefs();
     if ( sc.isSuccess() ) {
+      bool need_fid = m_fid == m_pfn;
+      string fid = m_fid;
       for(size_t i=0, n=m_params.size(); i<n; ++i) {
 	if ( m_params[i].first == "FID" && m_params[i].second != m_fid )    {
 	  if ( m_fid == m_pfn ) {
 	    m_fid = m_params[i].second;
-	    msg << MSG::INFO << "Using FID " << m_fid << " from params table...." << endmsg;
 	    continue;
 	  }
-	  msg << MSG::ERROR << "FID mismatch:" << m_params[i].second << " != " << m_fid << endmsg;
-	  return StatusCode::FAILURE;
 	}
       }
+      if ( !need_fid && fid != m_fid ) {
+	msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg;
+	return StatusCode::FAILURE;
+      }
+      msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg;
       return sc;
     }
   }
@@ -151,14 +155,13 @@ StatusCode RootDataConnection::connectRead()  {
 }
 
 StatusCode RootDataConnection::connectWrite(IoType typ)  {
-  MsgStream msg(msgSvc(),m_name);
-  msg << MSG::DEBUG;
+  msgSvc() << MSG::DEBUG;
   switch(typ)  {
   case CREATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"CREATE","Root event data");
     m_refs = new TTree("Refs","Root reference data");
-    msg << "Opened file " << m_pfn << " in mode CREATE. [" << m_fid << "]" << endmsg;
+    msgSvc() << "Opened file " << m_pfn << " in mode CREATE. [" << m_fid << "]" << endmsg;
     m_params.push_back(make_pair("PFN",m_pfn));
     if ( m_fid != m_pfn ) {
       m_params.push_back(make_pair("FID",m_fid));
@@ -168,7 +171,7 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
   case RECREATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"RECREATE","Root event data");
-    msg << "Opened file " << m_pfn << " in mode RECREATE. [" << m_fid << "]" << endmsg;
+    msgSvc() << "Opened file " << m_pfn << " in mode RECREATE. [" << m_fid << "]" << endmsg;
     m_refs = new TTree("Refs","Root reference data");
     m_params.push_back(make_pair("PFN",m_pfn));
     if ( m_fid != m_pfn ) {
@@ -179,7 +182,7 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
   case UPDATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"UPDATE","Root event data");
-    msg << "Opened file " << m_pfn << " in mode UPDATE. [" << m_fid << "]" << endmsg;
+    msgSvc() << "Opened file " << m_pfn << " in mode UPDATE. [" << m_fid << "]" << endmsg;
     if ( m_file && !m_file->IsZombie() )  {
       if ( makeTool() ) return m_tool->readRefs();
       TDirectory::TContext ctxt(m_file);
@@ -198,10 +201,9 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
 
 StatusCode RootDataConnection::disconnect()    {
   if ( m_file ) {
-    MsgStream msg(msgSvc(),m_name);
     if ( !m_file->IsZombie() )   {
       if ( m_file->IsWritable() ) {
-	msg << MSG::DEBUG;
+	msgSvc() << MSG::DEBUG;
 	TDirectory::TContext ctxt(m_file);
 	if ( m_refs ) {
 	  m_tool->saveRefs().ignore();
@@ -210,18 +212,18 @@ StatusCode RootDataConnection::disconnect()    {
 	for(Sections::iterator i=m_sections.begin(); i!= m_sections.end();++i) {
 	  if ( (*i).second ) {
 	    (*i).second->Write();
-	    msg << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endmsg;
+	    msgSvc() << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endmsg;
 	  }
 	}
 	m_sections.clear();
       }
-      msg << MSG::DEBUG;
-      if ( msg.isActive() ) m_file->ls();
-      msg << MSG::VERBOSE;
-      if ( msg.isActive() ) m_file->Print();
+      msgSvc() << MSG::DEBUG;
+      if ( msgSvc().isActive() ) m_file->ls();
+      msgSvc() << MSG::VERBOSE;
+      if ( msgSvc().isActive() ) m_file->Print();
       m_file->Close();
     }
-    msg << MSG::DEBUG << "Disconnected file " << m_pfn << " " << m_file->GetName() << endmsg;
+    msgSvc() << MSG::DEBUG << "Disconnected file " << m_pfn << " " << m_file->GetName() << endmsg;
     delete m_file;
     m_file = 0;
     releasePtr(m_tool);
@@ -242,16 +244,15 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 	//t->SetAutoFlush(100);
       }
       if ( m_setup->cacheSize>-2 )  {
-	MsgStream msg(msgSvc(),m_name);
 	t->SetCacheSize(m_setup->cacheSize);
 	t->SetCacheLearnEntries(m_setup->learnEntries);
-	msg << MSG::DEBUG;
+	msgSvc() << MSG::DEBUG;
 	if ( create ) {
-	  msg << "Tree:" << section << "Setting up tree cache:" << m_setup->cacheSize << endmsg;
+	  msgSvc() << "Tree:" << section << "Setting up tree cache:" << m_setup->cacheSize << endmsg;
 	}
 	else {
-	  msg << "Tree:" << section << " Setting up tree cache:" << m_setup->cacheSize << " Add all branches." << endmsg;
-	  msg << "Tree:" << section << " Learn for " << m_setup->learnEntries << " entries." << endmsg;
+	  msgSvc() << "Tree:" << section << " Setting up tree cache:" << m_setup->cacheSize << " Add all branches." << endmsg;
+	  msgSvc() << "Tree:" << section << " Learn for " << m_setup->learnEntries << " entries." << endmsg;
 	  t->AddBranchToCache("*",kTRUE);
 	}
       }
@@ -261,17 +262,7 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
   return t;
 }
 
-/// Access data branch by name: Get existing branch in write mode
-TBranch* RootDataConnection::getBranch(CSTR section, CSTR n, const CLID& /* clid */) {
-  return getBranch(section,n);
-}
-
-/// Access data branch by name: Get existing branch in read only mode
-TBranch* RootDataConnection::getBranch(CSTR section, CSTR n) {
-  return m_tool->getBranch(section,n);
-}
-
-/// Access data branch by name: Get existing branch in write mode
+// Access data branch by name: Get existing branch in write mode
 TBranch* RootDataConnection::getBranch(CSTR section, CSTR n, TClass* cl) {
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
@@ -295,7 +286,7 @@ int RootDataConnection::makeLink(CSTR p) {
   return m_links.size()-1;
 }
 
-/// Access database/file name from saved index
+// Access database/file name from saved index
 CSTR RootDataConnection::getDb(int which) const {
   if ( (which>=0) && (size_t(which)<m_dbs.size()) )  {
     if ( *(m_dbs.begin()+which) == s_local ) return m_fid;
@@ -308,43 +299,39 @@ CSTR RootDataConnection::empty() const {
   return s_empty;
 }
 
-/// Save object of a given class to section and container
+// Save object of a given class to section and container
 pair<int,unsigned long> 
 RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj) {
   DataObjectPush push(pObj);
   return save(section,cnt,cl,pObj);
 }
 
-/// Save object of a given class to section and container
+// Save object of a given class to section and container
 pair<int,unsigned long> 
 RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj) {
   TBranch* b = getBranch(section, cnt, cl);
   if ( b ) {
     b->SetAddress(&pObj);
     long evt = b->GetEntries();
-    if ( evt>0 && (evt%m_setup->autoFlush)==0 ) {
-      if ( cnt=="/Event" ) {
-	if ( (evt%m_setup->autoFlush)==0 ) {
-	  b->GetTree()->SetEntries(evt);
-	}
+    if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
+      if ( cnt == "/Event" ) {
 	if ( evt == m_setup->autoFlush ) {
 	  b->GetTree()->SetAutoFlush(m_setup->autoFlush);
 	  b->GetTree()->SetEntries(evt);
 	  b->GetTree()->OptimizeBaskets(40000000,1.,"");
 	}
-	else if ( (evt%m_setup->autoFlush)==0 ) {
+	else   {
 	  b->GetTree()->FlushBaskets();
 	}
       }
     }
     return make_pair(b->Fill(),evt);
   }
-  MsgStream err(msgSvc(),m_name);
-  err << "Failed to access branch " << m_name << "/" << cnt << endmsg;
+  msgSvc() << MSG::ERROR << "Failed to access branch " << m_name << "/" << cnt << endmsg;
   return make_pair(-1,~0);
 }
 
-/// Load object
+// Load object
 int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, DataObject*& pObj) {
   TBranch* b = getBranch(section,cnt);
   if ( b ) {
@@ -357,23 +344,46 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
       if ( Long64_t(entry) != t->GetReadEntry() ) {
 	t->LoadTree(Long64_t(entry));
       }
-      return b->GetEntry(entry);
+      int nb = b->GetEntry(entry);
+      msgSvc() << MSG::VERBOSE;
+      if ( msgSvc().isActive() ) {
+	msgSvc() << "Load [" << entry << "] --> " << section 
+		 << ":" << cnt << "  " << nb << " bytes." 
+		 << endmsg;
+      }
+      return nb;
     }
   }
   return -1;
 }
 
-/// Load references object
-int RootDataConnection::loadRefs(CSTR section, CSTR cnt, unsigned long entry, RootObjectRefs& refs)   {
-  return m_tool->loadRefs(section,cnt,entry,refs);
+// Access link section for single container and entry
+pair<const RootRef*,const RootDataConnection::ContainerSection*> 
+RootDataConnection::getMergeSection(const string& container, int entry) const {
+  MergeSections::const_iterator i=m_mergeSects.find(container);
+  if ( i != m_mergeSects.end() ) {
+    size_t cnt = 0;
+    const ContainerSections& s = (*i).second;
+    for(ContainerSections::const_iterator j=s.begin(); j != s.end(); ++j,++cnt) {
+      const ContainerSection& c = *j;
+      if ( entry >= c.start && entry < (c.start+c.length) ) {
+	if ( m_linkSects.size() > cnt ) {
+	  return make_pair(&(m_linkSects[cnt]), &c);
+	}
+      }
+    }
+  }
+  msgSvc() << MSG::ERROR << "Return INVALID MergeSection:  [" << entry << "]" << endmsg;
+  return make_pair((const RootRef*)0,(const ContainerSection*)0);
 }
 
+// Create reference object from registry entry
 void RootDataConnection::makeRef(IRegistry* pR, RootRef& ref) {
   IOpaqueAddress* pA = pR->address();
   makeRef(pR->name(),pA->clID(),pA->svcType(),pA->par()[0],pA->par()[1],-1,ref);
 }
 
-/// Create reference object from values
+// Create reference object from values
 void RootDataConnection::makeRef(CSTR name, long clid, int tech, CSTR dbase, CSTR cnt, int entry, RootRef& ref) {
   string db(dbase);
   int cdb=-1, ccnt=-1, clnk=-1;

@@ -95,7 +95,6 @@ namespace Gaudi {
     std::string   container;
     /// Class ID of the described object
     unsigned long clid;
-
     /// Standard constructor
     RootNTupleDescriptor() {}
     /// Standard destructor
@@ -104,6 +103,8 @@ namespace Gaudi {
 }
 
 // The following two classes are the interfaces to facilitate reading POOL formatted ROOT files:
+
+typedef Gaudi::RootNTupleDescriptor PoolDbNTupleDescriptor;
 
 /*
  *   POOL namespace declaration
@@ -119,8 +120,44 @@ namespace pool  {
   public:
     /// POOL OID data member
     std::pair<int, int> m_oid;
+    bool operator==(const Token& t) const { return m_oid.first==t.m_oid.first && m_oid.second==t.m_oid.second;}
   };
 }
+
+struct UCharDbArray {
+  public: 
+  /// Size of buffer
+  int    m_size; 
+  /// Buffer with object content
+  unsigned char *m_buffer;//[m_size]
+  UCharDbArray() : m_size(0), m_buffer(0)  {}
+  virtual ~UCharDbArray() {
+    if ( m_buffer ) delete [] m_buffer;
+    m_buffer = 0;
+  }
+}; 
+
+/** @class PoolDbTokenWrap PoolDbNTupleDescriptor.h PoolDb/PoolDbNTupleDescriptor.h
+  *
+  * Description:
+  *
+  * @author  M.Frank
+  * @version 1.0
+  */
+struct PoolDbTokenWrap {
+  /// Aggregated token object
+  pool::Token token;
+  /// Standard constructor
+  PoolDbTokenWrap() {}
+  /// Copy constructor
+  PoolDbTokenWrap(const PoolDbTokenWrap& wrp)  {    token = wrp.token;  }
+  /// Standard destructor
+  virtual ~PoolDbTokenWrap() {}
+  /// Equality operator
+  bool operator==(const PoolDbTokenWrap& c) const {    return token == c.token;  }
+  /// Assignment operator
+  PoolDbTokenWrap& operator=(const PoolDbTokenWrap& wrp)  {    token = wrp.token;    return *this;  }
+};
 
 /** @class PoolDbLinkManager PoolDbLinkManager.h GaudiPoolDb/PoolDbLinkManager.h
   *

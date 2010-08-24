@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.cpp,v 1.2 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootStatCnv.cpp,v 1.3 2010-08-24 13:21:01 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootStatCnv
@@ -126,7 +126,7 @@ StatusCode RootStatCnv::saveDescription(const string&  path,
 	int nb = b->Fill();
 	if ( nb > 1 ) {
 	  MsgStream log(msgSvc(),"RootConverter");
-	  log << MSG::INFO << "Save description for " << ident << endmsg;
+	  log << MSG::DEBUG << "Save description for " << ident << endmsg;
 	  return StatusCode::SUCCESS;
 	}
       }

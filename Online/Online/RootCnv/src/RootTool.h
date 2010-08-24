@@ -1,8 +1,21 @@
 
+/*
+ * Gaudi namespace declaration
+ */
 namespace Gaudi {
 
+  /** @class RootTool RootTool.h src/RootTool.h
+   *
+   * Description:
+   *
+   * Concrete implementation to read objects from ROOT files.
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
   class RootTool : virtual public RootDataConnection::Tool {
   public:
+    /// Standard constructor
     RootTool(RootDataConnection* con) { c = con; }
 
     /// Access data branch by name: Get existing branch in read only mode
@@ -13,54 +26,179 @@ namespace Gaudi {
       return b;
     }
 
-    /// Load references object
+    /// Load references object from file
     virtual int loadRefs(CSTR section, CSTR cnt, unsigned long entry, RootObjectRefs& refs)   {
       TBranch* b = getBranch(section,cnt+"#R");
+      RootObjectRefs* prefs = &refs;
       if ( b ) {
-	RootObjectRefs* prefs = &refs;
 	b->SetAddress(&prefs);
-	return b->GetEntry(entry);
+	int nb = b->GetEntry(entry);
+	if ( nb >= 1 )   {
+	  const MergeSections& ms = c->mergeSections();
+	  if ( !ms.empty() ) {
+	    MsgStream& msg = msgSvc();
+	    msgSvc() << MSG::VERBOSE;
+	    pair<const RootRef*,const ContainerSection*> ls = c->getMergeSection(cnt,entry);
+	    if ( ls.first )  {
+	      if ( ls.first->dbase >= 0 ) {
+		// Now patch the references and links 'en block' to be efficient
+		// First the leafs from the TES
+		if ( msg.isActive() ) {
+		  msg << "Refs: LS [" << entry << "] -> " 
+		      << ls.first->dbase << "," << ls.first->container 
+		      << "," << ls.first->link 
+		      << "," << ls.first->entry
+		      << endmsg;
+		}
+		for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
+		  RootRef& r = refs.refs[j];
+		  if ( r.entry>= 0 && r.dbase >= 0 ) {
+		    int db = r.dbase + ls.first->dbase;
+		    if ( c->getDb(db) == c->fid() ) {
+		      if ( r.dbase      ) r.dbase     += ls.first->dbase;
+		      if ( r.container  ) r.container += ls.first->container;
+		      if ( r.link       ) r.link      += ls.first->link;
+		      const string& rc = c->getCont(r.container);
+ 		      MergeSections::const_iterator k = ms.find(rc);
+		      if ( k != ms.end() )   {
+			const ContainerSections& cs = (*k).second;
+			r.entry = ( ls.first->entry >= 0 && ls.first->entry < (int)cs.size() )
+			  ? cs[ls.first->entry].start + r.entry : -1;
+			if ( msg.isActive() ) {
+			  msg << "Add link [" << r.entry 
+			      << "," << ls.first->entry 
+			      << "," << ls.first->container
+			      << "," << r.container
+			      << "," << r.entry
+			      << "] to -> " << rc << endmsg;
+			}
+		      }
+		      else {
+			msg << MSG::WARNING << "Evt:" << entry << " Invalid link to " << rc << endmsg;
+			msg << MSG::VERBOSE;
+		      }
+		    }
+		  }
+		}
+		/// Link manager:
+		for(vector<int>::iterator i=refs.links.begin(); i!=refs.links.end();++i) {
+		  (*i) += ls.first->link;
+		}
+	      }
+	      return nb;
+	    }
+	    return -1;
+	  }
+	  return nb;
+	}
       }
       return -1;
     }
 
-    void addParam(RootDataConnection::ParamMap& c, char* p) {
+    void addParam(ParamMap& c, char* p) {
       char* q = strchr(p,'=');
       if ( q ) {
 	*q = 0;
 	c.push_back(make_pair(p,++q));
       }
     }
-    void addEntry(RootDataConnection::StringVec& c, char* val) {
+    void addEntry(StringVec& c, char* val) {
       c.push_back(val);
     }
-    template <class C, class F> StatusCode readBranch(const char* nam, C& v, F pmf) {
+    template <class C, class F> StatusCode readBranch(TTree* t, const char* nam, C& v, F pmf) {
       char text[2048];
-      TBranch* b = refs()->GetBranch(nam);
+      TBranch* b = t->GetBranch(nam);
       if ( b ) {
 	TLeaf* l = b->GetLeaf(nam);
 	if ( l ) {
 	  b->SetAddress(text);
+	  msgSvc() << MSG::VERBOSE;
 	  for(Long64_t i=0, n=b->GetEntries(); i<n; ++i)
-	    if ( b->GetEntry(i)>0 )
-	      (this->*pmf)(v,(char*)l->GetValuePointer());
+	    if ( b->GetEntry(i)>0 ) {
+	      char* p = (char*)l->GetValuePointer();
+	      msgSvc() << "Add Value[" << b->GetName() << "]:" << p << endmsg;
+	      (this->*pmf)(v,p);
+	    }
 	  return StatusCode::SUCCESS;
 	}
       }
-      MsgStream msg(msgSvc(),name());
-      msg << MSG::ERROR << "Failed to read '" << nam << "' table." << endmsg;
+      msgSvc() << MSG::ERROR << "Failed to read '" << nam << "' table." << endmsg;
       return StatusCode::FAILURE;
     }
-    /// Internal helper to read reference tables
+    bool get(const string& dsc, pair<string,ContainerSection>& e) {
+      if ( dsc != "[END-OF-SECTION]" ) { 
+	size_t id1 = dsc.find("[CNT=");
+	size_t id2 = dsc.find("[START=");
+	size_t id3 = dsc.find("[LEN=");
+	if ( id1 != string::npos && id2 != string::npos && id3 != string::npos ) {
+	  string tmp;
+	  string cnt = dsc.substr(id1+5, id2-1-5);
+	  int section_start  = ::atoi((tmp=dsc.substr(id2+7,id3-id2-8)).c_str());
+	  int section_length = ::atoi((tmp=dsc.substr(id3+5,dsc.find("]",id3+5)-id3-5)).c_str());
+	  e.first = cnt;
+	  e.second = ContainerSection(section_start,section_length);
+	  return true;
+	}
+      }
+      e.first = "";
+      e.second = ContainerSection(-1,-1);
+      return false;
+    }
+    void analyzeMergeMap(StringVec& tmp) {
+      StringVec::const_iterator i;
+      LinkSections&  ls = linkSections();
+      MergeSections& ms = mergeSections();
+      pair<string,ContainerSection> e;
+      MsgStream& msg = msgSvc();
+      RootRef r;
+      int cnt = 0;
+      ls.clear();
+      ms.clear();
+      msg << MSG::VERBOSE;
+      r.dbase = r.container = r.link = r.clid = r.svc = r.entry = 0;
+      for(i=tmp.begin(); i!=tmp.end();++i) {
+	if ( get(*i,e) ) {
+	  ms[e.first].push_back(e.second);
+	  if (      e.first == "Links" )
+	    r.link      = e.second.start;
+	  else if ( e.first == "Containers" )
+	    r.container = e.second.start;
+	  else if ( e.first == "Databases" )
+	    r.dbase     = e.second.start;
+	  else if ( e.first == "Params" )
+	    r.svc       = e.second.start;
+	}
+	else if ( (*i) == "[END-OF-SECTION]" ) {
+	  r.entry = cnt;
+	  if ( msg.isActive() ) {
+	    msg << "Link Section [" << r.entry << "," << ls.size()
+		<< "] -> D:" << r.dbase
+		<< " C:" << r.container
+		<< " L:" << r.link 
+		<< " P:" << r.svc
+		<< endmsg;
+	  }
+	  ls.push_back(r);
+	  cnt++;
+	}
+      }
+    }
+
+    /// Read reference tables
     StatusCode readRefs()  {
-      if ( refs() ) {
-	if ( !readBranch("Databases", dbs(),    &RootTool::addEntry).isSuccess() )
+      TTree* t = (TTree*)c->file()->Get("Sections");
+      StringVec tmp;
+      if ( t && !readBranch(t,  "Sections",  tmp,       &RootTool::addEntry).isSuccess() )
+	return StatusCode::FAILURE;
+      else if ( refs() ) {
+	analyzeMergeMap(tmp);
+	if ( !readBranch(refs(),"Databases", dbs(),     &RootTool::addEntry).isSuccess() )
 	  return StatusCode::FAILURE;
-	if ( !readBranch("Containers",conts(),  &RootTool::addEntry).isSuccess() )
+	if ( !readBranch(refs(),"Containers",conts(),   &RootTool::addEntry).isSuccess() )
 	  return StatusCode::FAILURE;
-	if ( !readBranch("Links",     links(),  &RootTool::addEntry).isSuccess() )
+	if ( !readBranch(refs(),"Links",     links(),   &RootTool::addEntry).isSuccess() )
 	  return StatusCode::FAILURE;
-	if ( !readBranch("Params",    params(), &RootTool::addParam).isSuccess() )
+	if ( !readBranch(refs(),"Params",    params(),  &RootTool::addParam).isSuccess() )
 	  return StatusCode::FAILURE;
 	return StatusCode::SUCCESS;
       }
@@ -81,13 +219,14 @@ namespace Gaudi {
 	for(i=b->GetEntries(), n=v.size(); i<n; ++i) {
 	  val = (this->*pmf)(v[i]);
 	  b->SetAddress((char*)val.c_str());
+	  msgSvc() << MSG::VERBOSE << "Save Value[" << b->GetName() << "]:" << val << endmsg;
 	  if ( b->Fill() <= 1) sc = StatusCode::FAILURE;
 	}
 	return sc;
       }
       return StatusCode::FAILURE;
     }
-    /// Internal helper to save/update reference tables
+    /// Save/update reference tables
     StatusCode saveRefs() {
       RootDataConnection* c = c;
       if ( refs() ) {

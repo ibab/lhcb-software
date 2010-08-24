@@ -2,12 +2,13 @@
 ApplicationMgr.TopAlg = { "EvtCollectionWrite/Writer" };
 ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
 ReadAlg.OutputLevel        = 4;
-Writer.OutputLevel         = 4;
+Writer.OutputLevel         = 2;
 Writer.NumMcTracks         = 1;
 EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO2.dst' SVC='Gaudi::RootEvtSelector'"};
 EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
 
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='UPDATE' SVC='Gaudi::RootCnvSvc'" };
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO_castor.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
-EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
-EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO_local.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
+
+EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
+EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };

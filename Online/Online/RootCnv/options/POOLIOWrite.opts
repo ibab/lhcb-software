@@ -9,10 +9,12 @@ RootDst.ItemList       = { "/Event#999" } ;
 RootDst.Output         = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";
 RootDst.Output         = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO2.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";
 ApplicationMgr.EvtMax    = 500000;
-//RootDst.Output         = "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";
-//ApplicationMgr.EvtMax    = 1000;
+
+RootDst.Output         = "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";
+ApplicationMgr.EvtMax    = 600;
 
 FileCatalog.Catalogs   = { "xmlcatalog_file:POOLIO.xml" } ;
 ApplicationMgr.AuditAlgorithms = True ;
 ApplicationMgr.ExtSvc += { "AuditorSvc"} ;
 AuditorSvc.Auditors   += { "ChronoAuditor" };
+FileCatalog.Catalogs   = { "xmlcatalog_file:ROOTIO.xml" } ;

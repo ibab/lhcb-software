@@ -1,8 +1,11 @@
-
 #include "$ROOTCNVROOT/options/Setup.opts"
 ApplicationMgr.TopAlg      = { "ReadAlg"};
 ApplicationMgr.ExtSvc     += { "TagCollectionSvc/EvtTupleSvc" };
-EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:data/ROOTIO.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>90)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
 EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:data/ROOTIO_local.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
 EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:data/ROOTIO_local.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
+
+EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:data/ROOTIO.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
+EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:data/POOLIO.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
+RootCnvSvc.OutputLevel = 3;
 MessageSvc.OutputLevel = 3;
+ReadAlg.OutputLevel = 3;

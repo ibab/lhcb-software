@@ -8,4 +8,4 @@ RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb
 ApplicationMgr.EvtMax      = 100000;
 //RootDst.Output             = "DATAFILE='PFN:data/ROOTIO_2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
-//ApplicationMgr.EvtMax      = 600;
+ApplicationMgr.EvtMax      = 600;

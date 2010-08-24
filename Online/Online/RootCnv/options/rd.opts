@@ -1,12 +1,6 @@
 #include "$ROOTCNVROOT/options/Setup.opts"
 ApplicationMgr.TopAlg      = { "ReadAlg" };
-ReadAlg.OutputLevel        = 4;
+ReadAlg.OutputLevel        = 2;
 EventSelector.FirstEvent   = 1;
-EventSelector.Input        = {
-	"DATAFILE='PFN:data/ROOTIO_1.dst' SVC='Gaudi::RootEvtSelector'",
-	"DATAFILE='PFN:data/ROOTIO_2.dst' SVC='Gaudi::RootEvtSelector'"
-};
 EventSelector.Input        = {"DATAFILE='PFN:data/POOLIO.dst' SVC='Gaudi::RootEvtSelector'"};
-EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
-EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
-EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO2.dst' SVC='Gaudi::RootEvtSelector'"};
+//ApplicationMgr.EvtMax      = 5;

@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.4 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.5 2010-08-24 13:21:01 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -120,7 +120,14 @@ StatusCode createItem ( TTree* tree, INTuple* tuple, istream& is,const string& n
     return S_FAIL;
   }
   if ( add ) {
-    tree->GetBranch(it->name().c_str())->SetAddress((void*)it->buffer());
+    TBranch* b = tree->GetBranch(it->name().c_str());
+    if ( b ) {
+      b->SetAddress((void*)it->buffer());
+    }
+    else {
+      //return StatusCode::SUCCESS;
+      return tuple->add(it);
+    }
   }
   return tuple->add(it);
 }
@@ -132,8 +139,10 @@ template <class T> static inline void putRange(ostream& os, NTuple::_Data<T>* it
 
 static inline string _tr(const string& s) {
   string local = s;
-  for(size_t i=0; i<local.length();++i)
-    if ( !isalnum(local[i])) local[i] = '_';
+  char* p = (char*)local.c_str();
+  if ( strncmp(p,"<local>",7)==0 ) p += 7;
+  for(;*p;++p)
+    if ( !isalnum(*p) ) *p = '_';
   return local;
 }
 
@@ -168,7 +177,7 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
     par[2] = _tr(cntName);
     TTree* tree = con->getSection(par[2]);
     if ( 0 == tree ) {
-      return makeError("Filed to access N-Tuple tree:"+cntName);
+      return makeError("Failed to access N-Tuple tree:"+cntName);
     }
     if ( !par_val.empty() )      {
       SmartIF<INTupleSvc> ntupleSvc(dataProvider());
@@ -269,107 +278,120 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 
 // Update the transient object: NTuples end here when reading records
 StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
-  typedef INTuple::ItemContainer Cont;
   INTuple* tupl = dynamic_cast<INTuple*>(pObj);
   RootAddress* rpA = dynamic_cast<RootAddress*>(pAddr);
   if ( 0 != tupl && 0 != rpA )  {
-    const string*   par = pAddr->par();
-    unsigned long* ipar = const_cast<unsigned long*>(pAddr->ipar());
     RootDataConnection* con = rpA->connection;
     if ( con )   {
       TTree* tree = rpA->section;
       if ( tree ) {
-	if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
-	  GenericAddress* pA = 0;
-	  Cont& it = tupl->items();
-	  size_t k, n = it.size();
-	  vector<RootRef*> paddr(n);
-	  vector<RootRef>  addr(n);
-	  for(k = 0; k < n; ++k)      {
-	    Cont::value_type j = it[k];
-	    switch( j->type() )  {
-	    case DataTypeInfo::OBJECT_ADDR:
-	      //cout << "Item:" << j->name() << " Buff:" << j->buffer();
-	      //if ( j->buffer() ) cout << " Value:" << *(void**)(j->buffer());
-	      //else cout << " No Value ";
-	      //cout << endl;
-	      paddr[k] = &addr[k];
-	      tree->SetBranchAddress(j->name().c_str(),&paddr[k]);
-	      break;
-	    default:
-	      break;
-	    }
-	  }
-	  int nb = 0;
-	  ULong64_t last = (ULong64_t)tree->GetEntries();
-	  ISelectStatement* sel = tupl->selector();
-	  ++ipar[1];
-	  if ( sel ) {
-	    MsgStream log(msgSvc(),"NTupleCnv");
-	    string criteria = (sel && (sel->type() & ISelectStatement::STRING))
-	      ? sel->criteria() : std::string("");
-	    if ( !(criteria.length() == 0 || criteria == "*") )  {
-	      if ( rpA->select == 0 ) {
-		log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
-		rpA->select = new RootSelect(criteria.c_str(), tree);
-	      }
-	      rpA->select->SetTree(tree);
-	      // loop on all selected entries
-	      for( ; ipar[1] < last; ++ipar[1]) {
-		tree->LoadTree(ipar[1]);
-		rpA->select->GetNdata();
-		if ( rpA->select->EvalInstance(0) != 0 ) {
-		  break;
-		}
-		log << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
-	      }
-	    }
-	  }
-	  if ( ipar[1] < last ) {
-	    nb = tree->GetEntry(ipar[1]);
-          }
-	  if ( nb>1 )   {
-	    RootRef *r = 0;
-	    string  *spar = 0;
-	    for(k = 0; k < n; ++k)      {
-	      Cont::value_type j = it[k];
-	      switch( j->type() )  {
-	      case DataTypeInfo::OBJECT_ADDR:
-		r = paddr[k];
-		pA = (*(GenericAddress**)j->buffer());
-		if ( pA ) { // Fill only if item is connected!
-		  spar = (string*)pA->par();
-		  ipar = (unsigned long*)pA->ipar();
-		  spar[0] = con->getDb(r->dbase);
-		  spar[1] = con->getCont(r->container);
-		  spar[2] = con->getLink(r->link);		
-		  ipar[0] = 0;
-		  ipar[1] = r->entry;
-		  pA->setClID(r->clid);
-		  pA->setSvcType(r->svc);
-		}
-		break;
-	      default:
-		break;
-	      }
-	    }
-	    return StatusCode::SUCCESS;
-	  }
-	  return StatusCode::FAILURE;
-	}
-	return StatusCode::FAILURE;
+	if ( con->tool()->refs() ) 
+	  return i__updateObjRoot(rpA,tupl,tree,con);
+#ifdef __POOL_COMPATIBILITY
+	// POOL compatibility mode:
+	return i__updateObjPool(rpA,tupl,tree,con);
+#else
+	return makeError("Failed to access reference branch for data tree:"+rpA->par()[1]);
+#endif
       }
-      return makeError("Failed to access data tree:"+par[1]);
+      return makeError("Failed to access data tree:"+pAddr->par()[1]);
     }
     return makeError("updateObj> Failed to access data source!");
   }
   return makeError("updateObj> Invalid Tuple reference.");
 }
 
+// Update the transient object: NTuples end here when reading records
+StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con)  {
+  typedef INTuple::ItemContainer Cont;
+  const string*   par = rpA->par();
+  unsigned long* ipar = const_cast<unsigned long*>(rpA->ipar());
+  if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
+    GenericAddress* pA = 0;
+    Cont& it = tupl->items();
+    size_t k, n = it.size();
+    vector<RootRef*> paddr(n);
+    vector<RootRef>  addr(n);
+    for(k = 0; k < n; ++k)      {
+      Cont::value_type j = it[k];
+      switch( j->type() )  {
+      case DataTypeInfo::OBJECT_ADDR:
+	paddr[k] = &addr[k];
+	tree->SetBranchAddress(j->name().c_str(),&paddr[k]);
+	break;
+      default:
+	break;
+      }
+    }
+
+    ULong64_t last = (ULong64_t)tree->GetEntries();
+    ISelectStatement* sel = tupl->selector();
+    ++ipar[1];
+    if ( sel ) {
+      MsgStream log(msgSvc(),"NTupleCnv");
+      string criteria = (sel && (sel->type() & ISelectStatement::STRING))
+	? sel->criteria() : std::string("");
+      if ( !(criteria.length() == 0 || criteria == "*") )  {
+	if ( rpA->select == 0 ) {
+	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
+	  rpA->select = new RootSelect(criteria.c_str(), tree);
+	}
+	rpA->select->SetTree(tree);
+	for( ; ipar[1] < last; ++ipar[1]) {	// loop on all selected entries
+	  tree->LoadTree(ipar[1]);
+	  rpA->select->GetNdata();
+	  if ( rpA->select->EvalInstance(0) != 0 ) {
+	    break;
+	  }
+	  log << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
+	}
+      }
+    }
+    if ( ipar[1] < last ) {
+      if ( tree->GetEntry(ipar[1]) > 1 )   {
+	RootRef *r = 0;
+	string  *spar = 0;
+	for(k = 0; k < n; ++k)      {
+	  Cont::value_type j = it[k];
+	  switch( j->type() )  {
+	  case DataTypeInfo::OBJECT_ADDR:
+	    r = paddr[k];
+	    pA = (*(GenericAddress**)j->buffer());
+	    if ( pA ) { // Fill only if item is connected!
+	      spar = (string*)pA->par();
+	      ipar = (unsigned long*)pA->ipar();
+	      spar[0] = con->getDb(r->dbase);
+	      spar[1] = con->getCont(r->container);
+	      spar[2] = con->getLink(r->link);		
+	      ipar[0] = 0;
+	      ipar[1] = r->entry;
+	      pA->setClID(r->clid);
+	      pA->setSvcType(r->svc);
+	      break;
+	    }
+	    break;
+	  default:
+	    break;
+	  }
+	}
+	return StatusCode::SUCCESS;
+      }
+      MsgStream log(msgSvc(),"NTupleCnv");
+      log << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
+      return StatusCode::FAILURE;
+    }
+    MsgStream log(msgSvc(),"NTupleCnv");
+    log << MSG::INFO << "End of input Ntuple." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::FAILURE;
+}
+
 /// Convert the transient object to the requested representation.
 StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
   IRegistry* pRegistry = pObj->registry();
   if ( 0 != pRegistry )  {
+    MsgStream log(msgSvc(),"NTupleCnv");
     pAddr = pRegistry->address();
     if ( 0 != pAddr ) {
       return S_OK;
@@ -378,12 +400,13 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
     RootDataConnection* con = 0;
     string path    = fileName(pRegistry);
     string cntName = containerName(pRegistry);
+    string secName = cntName.c_str();
     const INTuple* nt = dynamic_cast<const INTuple*>(pObj);
     StatusCode status = m_dbMgr->connectDatabase(path, IDataConnection::UPDATE, &con);
     if ( !status.isSuccess() ) {
       return makeError("Failed to access Tuple file:"+path);
     }
-    TTree* tree = con->getSection(_tr(cntName),true);
+    TTree* tree = con->getSection(_tr(secName),true);
     if ( 0 != nt )  {
       const INTuple::ItemContainer& items = nt->items();
       ostringstream os;
@@ -572,11 +595,12 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
 	      desc = n + tmp + "[" + itm->name() + "]" + desc;
 	    }
 	    else {
-	      sprintf(text,"[%ld]",it->dim(1));
+	      sprintf(text,"[%ld]",it->dim(0));
 	      desc = n + tmp + text + desc;
 	    }
 	  }
-	  cout << "Create branch:" << n << " " << desc << " " << it->type() << endl;
+	  log << MSG::DEBUG << "Create branch:" << n << " Desc:" << desc 
+	      << " of type:" << it->type() << endmsg;
 	  switch(it->type()) {
 	  case DataTypeInfo::OBJECT_ADDR:
 	    branches[n] = tree->Branch(n.c_str(),cl->GetName(),(void*)it->buffer());
@@ -590,6 +614,9 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
 	  }
 	}
       }
+
+      log << MSG::DEBUG << "Save description:" << path << " -> " << cntName << endmsg
+	  << os.str() << endmsg;
       status = saveDescription(path,cntName,os.str(),"",pObj->clID());
       if ( status.isSuccess() )  {
 	status = m_dbMgr->commitOutput(path, true);
@@ -662,3 +689,159 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
   }
   return makeError("fillRepRefs> Invalid Tuple reference.");
 }      
+
+#ifdef __POOL_COMPATIBILITY
+
+namespace {
+  class IOBuffer : public StreamBuffer {
+  public:
+    UCharDbArray d;
+    IOBuffer() : StreamBuffer() {  }
+    virtual ~IOBuffer() { m_pointer=0; m_length=0; m_buffer=0;}
+    void start() {m_pointer=0; m_buffer=(char*)d.m_buffer; m_length=d.m_size;}
+  };
+}
+
+// Helper to read
+template <class T> static inline int load(int blob, IOBuffer& s, void* buff)  {
+  if ( blob ) {
+    int len;
+    s >> len;
+    s.swapFromBuffer(buff, len*sizeof(T));
+  }
+  return 0;
+}
+
+// Helper to read specialized for strings
+template <> inline int load<std::string>(int blob, IOBuffer& s, void* ptr)   {
+  if ( blob ) {
+    std::string* str = (std::string*)ptr;
+    s >> (*str);
+  }
+  return 0;
+}
+// Update the transient object: NTuples end here when reading records
+StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con)  {
+  typedef INTuple::ItemContainer Cont;
+  const string*   par = rpA->par();
+  unsigned long* ipar = const_cast<unsigned long*>(rpA->ipar());
+  if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
+    Cont& it = tupl->items();
+    size_t k, n = it.size();
+    vector<PoolDbTokenWrap*> paddr(n);
+    vector<PoolDbTokenWrap>  addr(n);
+    vector<int>      blob_items(n,0);
+    for(k = 0; k < n; ++k)      {
+      Cont::value_type j = it[k];
+      switch( j->type() )  {
+      case DataTypeInfo::OBJECT_ADDR:
+	paddr[k] = &addr[k];
+	tree->SetBranchAddress(j->name().c_str(),&paddr[k]);
+	break;
+      default:
+	if ( 0 == tree->GetBranch(j->name().c_str()) ) blob_items[k] = 1;
+	break;
+      }
+    }
+    ULong64_t last = (ULong64_t)tree->GetEntries();
+    ISelectStatement* sel = tupl->selector();
+    ++ipar[1];
+    if ( sel ) {
+      MsgStream log(msgSvc(),"NTupleCnv");
+      string criteria = (sel && (sel->type() & ISelectStatement::STRING))
+	? sel->criteria() : std::string("");
+      if ( !(criteria.length() == 0 || criteria == "*") )  {
+	if ( rpA->select == 0 ) {
+	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
+	  rpA->select = new RootSelect(criteria.c_str(), tree);
+	}
+	rpA->select->SetTree(tree);
+	// loop on all selected entries
+	for( ; ipar[1] < last; ++ipar[1]) {
+	  tree->LoadTree(ipar[1]);
+	  rpA->select->GetNdata();
+	  if ( rpA->select->EvalInstance(0) != 0 ) {
+	    break;
+	  }
+	  log << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
+	}
+      }
+    }
+    if ( ipar[1] < last ) {
+      IOBuffer blob;
+      UCharDbArray *pblob = &blob.d;
+      tree->GetBranch("BlobData")->SetAddress(&pblob);
+      if ( tree->GetEntry(ipar[1]) > 1 )   {
+	int sc = 0;
+	blob.start();
+	for(k = 0; k < n; ++k)      {
+	  Cont::value_type j = it[k];
+	  char* buf = (char*)j->buffer();
+	  switch( j->type() )  {
+	  case DataTypeInfo::OBJECT_ADDR: {
+            RootRef r = con->tool()->poolRef(addr[k].token.m_oid.first);
+	    GenericAddress* pA = (*(GenericAddress**)buf);
+	    if ( pA ) { // Fill only if item is connected!
+	      string  *spar = (string*)pA->par();
+	      ipar = (unsigned long*)pA->ipar();
+	      spar[0] = con->getDb(r.dbase);
+	      spar[1] = con->getCont(r.container);
+	      spar[2] = con->getLink(r.link);		
+	      ipar[0] = 0;
+	      ipar[1] = addr[k].token.m_oid.second;
+	      if ( r.svc == POOL_ROOT_StorageType || 
+		   r.svc == POOL_ROOTKEY_StorageType || 
+		   r.svc == POOL_ROOTTREE_StorageType ) {
+		r.svc = ROOT_StorageType;
+	      }
+	      pA->setClID(r.clid);
+	      pA->setSvcType(r.svc);
+	      break;
+	    }
+	    sc = 11;
+	    break;
+	  }
+	  case DataTypeInfo::UCHAR:       sc=load<unsigned char> (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::USHORT:      sc=load<unsigned short>(blob_items[k],blob,buf); break;
+	  case DataTypeInfo::UINT:        sc=load<unsigned int>  (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::ULONG:       sc=load<unsigned long> (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::CHAR:        sc=load<char>          (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::SHORT:       sc=load<short>         (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::INT:         sc=load<int>           (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::LONG:        sc=load<long>          (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::BOOL:        sc=load<bool>          (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::FLOAT:       sc=load<float>         (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::DOUBLE:      sc=load<double>        (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::STRING:      sc=load<std::string>   (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::NTCHAR:      sc=load<char*>         (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::POINTER:     sc = 0;                            break;
+	  case DataTypeInfo::UNKNOWN:                                        break;
+	  default:                                                           break;
+	  }
+	  if ( 0 != sc )  {
+	    MsgStream log(msgSvc(), "PoolDbNTupleCnv");
+	    log << MSG::DEBUG;
+	    switch (sc)  {
+	    case 10:
+	      log << "CANNOT Set Ntuple token: dynamic_cast<GenericAddress*> is NULL";
+	      break;
+	    case 11:
+	      log << "CANNOT Set Ntuple token: invalid address buffer";
+	      break;
+	    }
+	    log << endmsg;
+	  }
+	}
+	return StatusCode::SUCCESS;
+      }
+      MsgStream log(msgSvc(),"NTupleCnv");
+      log << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
+      return StatusCode::FAILURE;
+    }
+    MsgStream log(msgSvc(),"NTupleCnv");
+    log << MSG::INFO << "End of input Ntuple." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::FAILURE;
+}
+#endif

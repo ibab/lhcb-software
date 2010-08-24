@@ -1,4 +1,4 @@
-// $Id: RootDirectoryCnv.cpp,v 1.2 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootDirectoryCnv.cpp,v 1.3 2010-08-24 13:21:01 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDirectoryCnv
@@ -61,7 +61,7 @@ RootDirectoryCnv::createRep(DataObject* pObj,IOpaqueAddress*& /* refpAddr */)  {
   }
   std::string ident = containerName(pObj->registry());
   std::string path  = fileName(pObj->registry());
-  return saveDescription(path, ident, dsc, "", objType());
+  return saveDescription(path, ident, dsc, ident, objType());
 }
 
 // Fill transient object references
@@ -76,7 +76,7 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
   typedef std::vector<RootNTupleDescriptor*> REFS;
   REFS refs;
   StatusCode status = StatusCode(StatusCode::FAILURE,true);
-  MsgStream log(msgSvc(), "RootDatabaseCnv");
+  MsgStream log(msgSvc(), "RootDirectoryCnv");
   if ( pAddr ) {
     IRegistry* pReg = pAddr->registry();
     if ( pReg )  {
@@ -90,7 +90,7 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
       if ( status.isSuccess() )  {
 	TClass* cl = gROOT->GetClass("Gaudi::RootNTupleDescriptor",kTRUE);
 	if ( cl ) {
-	  TBranch* b = con->getBranch("##Descriptors","GaudiStatisticsDescription",cl);
+	  TBranch* b = con->getBranch("##Descriptors","GaudiStatisticsDescription");//,cl);
 	  if ( b ) {
 	    for(Long64_t n=b->GetEntries(), i=0; i<n; ++i)  {
 	      RootNTupleDescriptor* ref=0;
@@ -98,7 +98,8 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
 	      int nb = b->GetEntry(i);
 	      if ( nb > 1 ) {
 		std::string s = ref->container.substr(0,cntName.length());
-		// log << MSG::INFO << "Read description:" << ref->container << " " << ident << " " << cntName << endmsg;
+		log << MSG::VERBOSE << "Read description:" << ref->container 
+		    << " " << ident << " " << cntName << endmsg;
 		if ( s == cntName )  {
 		  if ( ref->container.length() >= cntName.length()+1 )  {
 		    if ( ref->container.find('/',cntName.length()+1) == std::string::npos ) {
@@ -112,7 +113,7 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
             }
           }
         }
-	// log << MSG::ALWAYS << "Got " << refs.size() << " tuple connection(s)....." << endmsg;
+	log << MSG::DEBUG << "Got " << refs.size() << " tuple connection(s)....." << endmsg;
         status = m_dataMgr->objectLeaves(pObject, leaves);
         if ( status.isSuccess() )    {
           for(REFS::iterator i = refs.begin(); i != refs.end(); ++i)  {
@@ -146,7 +147,8 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
                   std::string leaf_name = top + ref->container.substr(7);
                   status = m_dataMgr->registerAddress(leaf_name, pA);
                   if ( status.isSuccess() )  {
-		    log << MSG::DEBUG << "Created address for " << leaf_name << " of type " << ref->clid << endmsg;
+		    log << MSG::DEBUG << "Created address for " << leaf_name 
+			<< " of type " << ref->clid << endmsg;
                     continue;
                   }
                   makeError("Failed to register leaves to directory:"+ident,false).ignore();

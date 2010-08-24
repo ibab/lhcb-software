@@ -1,6 +1,6 @@
 ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.TopAlg      = { "ReadAlg" };
-ReadAlg.OutputLevel        = 4;
+ReadAlg.OutputLevel        = 2;
 MessageSvc.OutputLevel     = 3;
 ApplicationMgr.EvtMax      = -1;
 EventSelector.OutputLevel  = 2;
@@ -11,9 +11,10 @@ PoolDbCacheSvc.OutputLevel = 4;
 ChronoStatSvc.OutputLevel  = 4;
 
 EventSelector.Input  = { "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO_2.dst' TYP='POOL_ROOT' OPT='READ'" };
-EventSelector.Input  = { "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
 EventSelector.Input  = { "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO.dst' TYP='POOL_ROOT' OPT='READ'" };
+EventSelector.Input  = { "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
 FileCatalog.Catalogs += { "xmlcatalog_file:POOLIO.xml" } ;
 ApplicationMgr.AuditAlgorithms = True ;
 ApplicationMgr.ExtSvc += { "AuditorSvc"} ;
 AuditorSvc.Auditors   += { "ChronoAuditor" };
+FileCatalog.Catalogs   = { "xmlcatalog_file:ROOTIO.xml" } ;

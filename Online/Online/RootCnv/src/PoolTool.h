@@ -1,29 +1,47 @@
 /*
- *  gaudi namespace declaration
+ *  Gaudi namespace declaration
  */
 namespace Gaudi {
 
 
+  /** @class RootTool RootTool.h src/RootTool.h
+   *
+   * Description:
+   *
+   * Concrete implementation to read objects from POOL files.
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
   class PoolTool : virtual public RootDataConnection::Tool {
+    /// Image of the POOL ##Links table
     std::vector<Gaudi::RootRef> m_poolLinks;
 
   public:
+    /// Standard constructor
     PoolTool(RootDataConnection* con) { c = con; }
 
+    /// Convert TES object identifier to ROOT tree name
     string _treeName(string t) {
       for(string::iterator j = t.begin(); j != t.end(); ++j ) 
 	if ( *j == '/' ) *j = '_';
       return t;
     }
 
-    /// Load references object
+    virtual RootRef poolRef(size_t i) const { return m_poolLinks[i]; }
+
+    /// Load references object from file
     virtual int loadRefs(CSTR /* section */, CSTR cnt, unsigned long entry, RootObjectRefs& refs)   {
       string tname = _treeName(cnt);
-      TTree* t = c->getSection(tname);
+      TTree* t = sections()[cnt];
+      if ( !t ) {
+	string tname = _treeName(cnt);
+	t = (TTree*)c->file()->Get(tname.c_str());
+      }
       if ( t ) {
 	TBranch* b1 = t->GetBranch("Links");
 	TBranch* b2 = t->GetBranch("Refs");
-	MsgStream msg(msgSvc(),name());
+	MsgStream& msg = msgSvc();
 	if ( b1 && b2 ) {
 	  LinkManager lm, *plm = &lm;
 	  PoolDbLinkManager mgr, *pmgr = &mgr;
@@ -62,39 +80,41 @@ namespace Gaudi {
 	    return nb1 + nb2;
 	  }
 	}
-	msg << MSG::ERROR << "Faled to access POOL Ref/Link branches:" << cnt << " [" << tname << "]" << endmsg;
+	msg << MSG::ERROR << "Failed to access POOL Ref/Link branches:" << cnt << " [" << tname << "]" << endmsg;
 	t->Print();
       }
       return -1;
     }
 
     /// Access data branch by name: Get existing branch in read only mode
-    virtual TBranch* getBranch(CSTR /* section */, CSTR n) {
-      string tname = _treeName(n);
-      TTree* t = c->getSection(tname);
+    virtual TBranch* getBranch(CSTR /* section */, CSTR branch_name) {
+      TTree* t = sections()[branch_name];
+      if ( t ) {
+	return (TBranch*)t->GetListOfBranches()->At(0);
+      }
+      string tname = _treeName(branch_name);
+      t = (TTree*)c->file()->Get(tname.c_str()); // c->getSection(tname);
       if ( t )   {
 	TBranch* b = (TBranch*)t->GetListOfBranches()->At(0);
 	if ( b ) {
-	  //b->Print();
+	  sections()[branch_name] = t;
 	  return b;
 	}
-	MsgStream msg(msgSvc(),name());
-	msg << MSG::ERROR << "Faled to access POOL branch:" << n << " [" << tname << "]" << endmsg;
+	msgSvc() << MSG::ERROR << "Failed to access POOL branch:" 
+		 << branch_name << " [" << tname << "]" << endmsg;
 	t->Print();
       }
       return 0;
     }
 
-    /// Save references section when closing data file
-    virtual StatusCode saveRefs() {
-      return StatusCode::FAILURE;
-    }
-    /// Internal helper to read reference tables
+    /// Save references section when closing data file (NOT SUPPORTED)
+    virtual StatusCode saveRefs()     {      return StatusCode::FAILURE;     }
+
+    /// Internal helper to read reference tables ##Params and ##Links
     StatusCode readRefs()  {
       int i;
       char text[2048];
-      MsgStream msg(msgSvc(),name());
-      msg << MSG::VERBOSE;
+      msgSvc() << MSG::VERBOSE;
 
       // First read ##Params
       TTree* t = (TTree*)c->file()->Get("##Params");
@@ -118,7 +138,7 @@ namespace Gaudi {
 	    *id11 = 0;
 	    *id22 = 0;
 	    params().push_back(make_pair(id1,id2));
-	    msg << "Param:" << id1 << "=" << id2 << "." << endmsg;
+	    msgSvc() << "Param:" << id1 << "=" << id2 << "." << endmsg;
 	  }
 	}
       }
@@ -170,8 +190,8 @@ namespace Gaudi {
 	}
 	c->makeRef("",clid,technology,db,container,-1,m_poolLinks[i+2]);
 	RootRef& r = m_poolLinks[i];
-	msg << "Add link[" << i << "]:" << db << container << " [" << r.dbase << "," << r.container << "] " 
-	    << " tech:" << hex << setw(8) << technology << " CLID:" << setw(8) << clid << dec << endmsg;
+	msgSvc() << "Add link[" << i << "]:" << db << container << " [" << r.dbase << "," << r.container << "] " 
+		 << " tech:" << hex << setw(8) << r.svc << " CLID:" << setw(8) << r.clid << dec << endmsg;
       }
       return StatusCode::SUCCESS;
     }

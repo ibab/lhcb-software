@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.5 2010-08-17 17:23:04 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.6 2010-08-24 13:21:01 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -109,7 +109,7 @@ StatusCode RootCnvSvc::initialize()  {
   if ( !(status=service("EventDataSvc",pSvc)).isSuccess() )
     return error("Failed to get data provider.");
   setDataProvider(pSvc);
-  m_setup->setMessageSvc(msgSvc());
+  m_setup->setMessageSvc(new MsgStream(msgSvc(),name()));
   GaudiRoot::patchStreamers(log);
   DataObject data_obj;
   m_classDO = getClass(&data_obj);
@@ -285,7 +285,17 @@ StatusCode RootCnvSvc::connectOutput(CSTR db_name)  {
 }
 
 // Commit pending output on open container
-StatusCode  RootCnvSvc::commitOutput(CSTR /* dsn */, bool /* doCommit */) {
+StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
+  if ( m_current ) {
+    TBranch* b = m_current->getBranch(m_section, "/Event");
+    if ( b ) {
+      long evt = b->GetEntries();
+      b->GetTree()->SetEntries(evt);
+    }
+    else {
+      return error("commitOutput> Filed to update entry numbers on "+dsn);
+    }
+  }
   return S_OK;
 }
 

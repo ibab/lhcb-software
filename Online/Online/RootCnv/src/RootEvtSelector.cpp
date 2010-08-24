@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.5 2010-03-03 14:30:47 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.6 2010-08-24 13:21:01 frankb Exp $
 //====================================================================
 //	RootSelector.cpp
 //--------------------------------------------------------------------
@@ -132,7 +132,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
         string input = *fileit;
 	StatusCode sc=m_dbMgr->connectDatabase(input,IDataConnection::READ,&con);
 	if ( sc.isSuccess() ) {
-	  b = con->getBranch(m_dbMgr->section(),m_rootName,m_rootCLID);
+	  b = con->getBranch(m_dbMgr->section(),m_rootName);
 	  if ( b ) {
 	    pCtxt->setBranch(b);
 	    return next(ctxt);

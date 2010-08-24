@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootNTupleCnv.h,v 1.2 2010-08-24 13:21:01 frankb Exp $
 //====================================================================
 // NTuple converter class definition
 //--------------------------------------------------------------------
@@ -49,6 +49,14 @@ namespace Gaudi {
     StatusCode write(INTuple* pTuple,TBranch* branch);
 
     StatusCode bind(INTuple* pTuple,TBranch* branch);
+
+    /// Update the transient object: NTuples end here when reading records
+    StatusCode i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con);
+
+#ifdef __POOL_COMPATIBILITY
+    /// Update the transient object: NTuples end here when reading records
+    StatusCode i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con);
+#endif
 
   public:
     /// Standard constructor

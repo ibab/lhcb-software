@@ -1,8 +1,9 @@
-// $Id: RootDataConnection.h,v 1.5 2010-08-17 17:16:24 frankb Exp $
+// $Id: RootDataConnection.h,v 1.6 2010-08-24 13:21:01 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
 // Framework include files
+#include "GaudiKernel/ClassID.h"
 #include "GaudiUtils/IIODataManager.h" // for IDataConnection class definition
 #include <string>
 #include <vector>
@@ -16,7 +17,8 @@ class TTree;
 class TClass;
 class TBranch;
 class TTreePerfStats;
-class DataObject;
+
+class MsgStream;
 class IRegistry;
 class DataObject;
 
@@ -36,7 +38,7 @@ namespace Gaudi  {
     /// Object refrfence count
     int refCount;
     /// Reference to message service
-    IMessageSvc* m_msgSvc;
+    MsgStream* m_msgSvc;
 
   public:
     /// RootCnvSvc Property: Root data cache size
@@ -53,9 +55,9 @@ namespace Gaudi  {
     /// Decrease reference count
     void release();
     /// Set message service reference
-    void setMessageSvc(IMessageSvc* m);
+    void setMessageSvc(MsgStream* m);
     /// Retrieve message service
-    IMessageSvc* msgSvc() const {  return m_msgSvc; }
+    MsgStream& msgSvc() const {  return *m_msgSvc; }
   };
 
   /** @class RootDataConnection RootDataConnection.h GAUDIROOT/RootDataConnection.h
@@ -66,17 +68,30 @@ namespace Gaudi  {
     */
   class RootDataConnection : virtual public Gaudi::IDataConnection  {
   public:
+    struct ContainerSection {
+      ContainerSection() : start(-1), length(0) {}
+      ContainerSection(int s, int l) : start(s), length(l) {}
+      ContainerSection(const ContainerSection& s) : start(s.start), length(s.length) {}
+      ContainerSection& operator=(const ContainerSection& s) { start=s.start;length=s.length; return *this;}
+      int start;
+      int length;
+    };
+
     /// Type definition for string maps
     typedef std::vector<std::string>                                 StringVec;
     /// Type definition for the parameter map
     typedef std::vector<std::pair<std::string,std::string> >         ParamMap;
-    /// Type definition for the chain map
-    typedef std::map<std::string, std::vector<std::pair<int,int> > > ChainMap;
     /// Definition of tree sections
     typedef std::map<std::string,TTree*>                             Sections;
+    /// Definition of container sections to handle merged files
+    typedef std::vector<ContainerSection>                            ContainerSections;
+    /// Definition of database section to handle merged files
+    typedef std::map<std::string,ContainerSections>                  MergeSections;
+    /// Link sections definition
+    typedef std::vector<RootRef>                                     LinkSections;
 
     /// Allow access to printer service
-    IMessageSvc* msgSvc() const {  return m_setup->msgSvc(); }
+    MsgStream& msgSvc() const {  return m_setup->msgSvc(); }
 
 
   protected:
@@ -90,6 +105,10 @@ namespace Gaudi  {
     StringVec            m_links;
     /// Parameter map for file parameters
     ParamMap             m_params;
+    /// Database section map for merged files
+    MergeSections        m_mergeSects;
+    /// Database link sections
+    LinkSections         m_linkSects;
     /// Buffer for empty string reference
     std::string          m_empty;
     /// Reference to the setup structure 
@@ -121,18 +140,27 @@ namespace Gaudi  {
      */
     class Tool {
     protected:
-      typedef RootDataConnection::StringVec StringVec;
-      typedef RootDataConnection::ParamMap  ParamMap;
+      typedef RootDataConnection::StringVec          StringVec;
+      typedef RootDataConnection::ParamMap           ParamMap;
+      typedef RootDataConnection::Sections           Sections;
+      typedef RootDataConnection::MergeSections      MergeSections;
+      typedef RootDataConnection::LinkSections       LinkSections;
+      typedef RootDataConnection::ContainerSection   ContainerSection;
+      typedef RootDataConnection::ContainerSections  ContainerSections;
+
       /// Pointer to containing data connection object
       RootDataConnection* c;
     public:
-      TTree* refs()              const { return c->m_refs;    }
-      StringVec& dbs()           const { return c->m_dbs;     }
-      StringVec& conts()         const { return c->m_conts;   }
-      StringVec& links()         const { return c->m_links;   }
-      ParamMap&  params()        const { return c->m_params;  }
-      IMessageSvc* msgSvc()      const { return c->msgSvc();  }
-      const std::string& name()  const { return c->m_name;    }
+      TTree*             refs()               const { return c->m_refs;       }
+      StringVec&         dbs()                const { return c->m_dbs;        }
+      StringVec&         conts()              const { return c->m_conts;      }
+      StringVec&         links()              const { return c->m_links;      }
+      ParamMap&          params()             const { return c->m_params;     }
+      MsgStream&         msgSvc()             const { return c->msgSvc();     }
+      const std::string& name()               const { return c->m_name;       }
+      Sections&          sections()           const { return c->m_sections;   }
+      LinkSections&      linkSections()       const { return c->m_linkSects;  }
+      MergeSections&     mergeSections()      const { return c->m_mergeSects; }
 
       /// Default destructor
       virtual ~Tool() {}
@@ -140,6 +168,9 @@ namespace Gaudi  {
       virtual void release() { delete this; }
       /// Access data branch by name: Get existing branch in read only mode
       virtual TBranch* getBranch(const std::string&  section, const std::string& n) = 0;
+
+      virtual RootRef poolRef(size_t /* which */) const { return RootRef(); }
+	
 
       /// Read references section when opening data file
       virtual StatusCode readRefs() = 0;
@@ -161,11 +192,18 @@ namespace Gaudi  {
     virtual ~RootDataConnection();
 
     /// Direct access to TFile structure
-    TFile* file() const                     {     return m_file;      }
+    TFile* file() const                       {  return m_file;         }
     /// Check if connected to data source
-    virtual bool isConnected() const        {     return m_file != 0; }
+    virtual bool isConnected() const          {  return m_file != 0;    }
     /// Is the file writable?
-    bool isWritable() const                 {  return m_file != 0 && m_file->IsWritable(); }
+    bool isWritable() const                   {  return m_file != 0 && m_file->IsWritable(); }
+    /// Access tool
+    Tool* tool() const                        {  return m_tool;         }
+    /// Access merged data section inventory
+    const MergeSections& mergeSections() const {  return m_mergeSects;  }
+    /// Access link section for single container and entry
+    std::pair<const RootRef*,const ContainerSection*>  getMergeSection(const std::string& container, int entry) const;
+
     /// Enable TTreePerStats
     void enableStatistics(const std::string& section);
     /// Save TTree access statistics if required
@@ -175,7 +213,8 @@ namespace Gaudi  {
     int loadObj(const std::string& section, const std::string& cnt, unsigned long entry, DataObject*& pObj);
 
     /// Load references object
-    int loadRefs(const std::string& section, const std::string& cnt, unsigned long entry, RootObjectRefs& refs);
+    int loadRefs(const std::string& section, const std::string& cnt, unsigned long entry, RootObjectRefs& refs)
+    { return m_tool->loadRefs(section,cnt,entry,refs); }
 
     /// Save object of a given class to section and container
     std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj);
@@ -200,11 +239,10 @@ namespace Gaudi  {
     TTree* getSection(const std::string& sect, bool create=false);
 
     /// Access data branch by name: Get existing branch in read only mode
-    TBranch* getBranch(const std::string& sect,const std::string& n);
+    TBranch* getBranch(const std::string& section,const std::string& branch_name) 
+    { return m_tool->getBranch(section,branch_name); }
     /// Access data branch by name: Get existing branch in write mode
-    TBranch* getBranch(const std::string& sect,const std::string& n,const CLID& clid);
-    /// Access data branch by name: Get existing branch in write mode
-    TBranch* getBranch(const std::string& sect, const std::string& n, TClass* cl);
+    TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl);
 
     /// Create reference object from registry entry
     void makeRef(IRegistry* pA, RootRef& ref);
