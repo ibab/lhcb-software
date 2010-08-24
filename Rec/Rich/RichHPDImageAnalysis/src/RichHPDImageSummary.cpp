@@ -241,6 +241,8 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
     return;
   }
 
+  const unsigned int nHPDs = 484;
+
   const double Col    = min.UserParameters().Value("Col0");
   const double Row    = min.UserParameters().Value("Row0");
   const double ColErr = min.UserParameters().Error("Col0");
@@ -249,25 +251,33 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   const double x0    = localXFromPixels( Col );
   const double y0    = localYFromPixels( Row );
   const double xErr0 = localErrorFromPixels( ColErr );
-  const double yErr0 = localErrorFromPixels( RowErr );
-
-  const double ds = distanceToCondDBValue( ID, x0, y0 );
-
-  plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
-  plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,483.5,484,ds);
-
-  plot1D( ID, "dPosXvsCopyNr", "x-displacement versus HPD Copy Nr",-0.5,483.5,484,nPix*x0);
-  plot1D( ID, "dPosYvsCopyNr", "y-displacement versus HPD Copy Nr",-0.5,483.5,484,nPix*y0);
-  plot1D( ID, "dPosXErrvsCopyNr", "x-displacement error versus HPD Copy Nr",-0.5,483.5,484,nPix*xErr0);
-  plot1D( ID, "dPosYErrvsCopyNr", "y-displacement error versus HPD Copy Nr",-0.5,483.5,484,nPix*yErr0);
-
-  plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,483.5,484,nPix);
+  const double yErr0 = localErrorFromPixels( RowErr ); 
 
   const double Rad    = m_pixelsize * min.UserParameters().Value("Radius");
   const double RadErr = m_pixelsize * min.UserParameters().Error("Radius");
 
-  plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,483.5,484,nPix*Rad);
-  plot1D( ID, "RadiusErrvsCopyNr", "Fitted image radius error vs HPD Copy Nr",-0.5,483.5,484,nPix*RadErr);
+  const double OneOverXErrSq = ( xErr0>0.0  ? 1.0/(xErr0*xErr0) : 0.0 );
+  const double OneOverYErrSq = ( yErr0>0.0  ? 1.0/(yErr0*yErr0) : 0.0 );
+  const double OneOverRErrSq = ( RadErr>0.0 ? 1.0/(RadErr*RadErr) : 0.0 );
+
+  const double ds = distanceToCondDBValue( ID, x0, y0 );
+
+  plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
+  plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,nHPDs-0.5,nHPDs,ds);
+
+  // Update these to allow the wieghted mean of the fit results to be correctly computed
+  // Need to compute 
+  //                weighted mean     = Sum( x / error^2 ) / Sum( 1 / error^2 )
+  //                (error of mean)^2 = 1 /  Sum( 1 / error^2 ) 
+  plot1D( ID, "dPosXvsCopyNr",    "x-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,x0*OneOverXErrSq);
+  plot1D( ID, "dPosXvsCopyNrErr", "x-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverXErrSq);
+  plot1D( ID, "dPosYvsCopyNr",    "y-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,y0*OneOverYErrSq);
+  plot1D( ID, "dPosYvsCopyNrErr", "y-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverYErrSq);
+
+  plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD",-0.5,nHPDs-0.5,nHPDs,Rad*OneOverRErrSq);
+  plot1D( ID, "RadiusErrvsCopyNr", "Fitted image radius error vs HPD",-0.5,nHPDs-0.5,nHPDs,OneOverRErrSq);
+
+  plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,nHPDs-0.5,nHPDs,nPix);
 
   if ( m_compareCondDB && ( ds < m_maxMovement ) )
   {
@@ -330,7 +340,7 @@ int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
 
     for ( int irow = 0; irow <m_hist->GetNbinsY() ; ++irow )
     {
-      if ( hasNeighbour( m_hist, icol, irow, thr ) &&
+      if ( hasNeighbour( icol, irow, thr ) &&
            m_hist->GetBinContent( icol+1, irow+1 ) > thr ) 
       {
         ROW0 = irow ;
@@ -339,7 +349,7 @@ int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
     }
     for ( int irow = 0; irow < m_hist->GetNbinsY() ; ++irow )
     {
-      if ( hasNeighbour( m_hist, icol, irow, thr ) &&
+      if ( hasNeighbour( icol, irow, thr ) &&
            m_hist->GetBinContent( icol+1, m_hist->GetNbinsX()-irow ) > thr )
       {
         ROW1 = m_hist->GetNbinsX() - irow - 1;
@@ -360,8 +370,7 @@ int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
 }
 
 bool
-RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const TH2* hist,
-                                                   const int COL,
+RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const int COL,
                                                    const int ROW,
                                                    const double thr ) const 
 {
@@ -371,10 +380,10 @@ RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const TH2* hist,
     for ( int irow = ROW-1; irow <= ROW+1 ; ++irow )
     {
       if ( COL == icol && ROW == irow ) { continue ; }
-      else if ( icol >= 0 && icol < hist->GetNbinsX() &&
-                irow >= 0 && irow < hist->GetNbinsY() )
+      else if ( icol >= 0 && icol < m_hist->GetNbinsX() &&
+                irow >= 0 && irow < m_hist->GetNbinsY() )
       {
-        if ( hist->GetBinContent( icol+1, irow+1 ) > thr ) return true ;
+        if ( m_hist->GetBinContent( icol+1, irow+1 ) > thr ) return true ;
       }
     }
   }

@@ -80,7 +80,7 @@ namespace Rich
 
       protected:
 
-        bool hasNeighbour( const TH2* hist, const int COL, const int ROW, const double thr ) const ;
+        bool hasNeighbour( const int COL, const int ROW, const double thr ) const ;
 
       private:
 
