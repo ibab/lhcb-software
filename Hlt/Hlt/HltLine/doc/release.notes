@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.108 2010-08-19 09:37:07 graven Exp $
+! $Id: release.notes,v 1.109 2010-08-24 08:04:26 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-08-24 - Gerhard Raven
+ - more verbosity on warnings produced during python configuration
 
 ! 2010-08-19 - Gerhard Raven
  - return created instance from Hlt1Tool

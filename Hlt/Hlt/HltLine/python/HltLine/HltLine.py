@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.41 2010-08-19 09:37:07 graven Exp $ 
+# $Id: HltLine.py,v 1.42 2010-08-24 08:04:26 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -943,7 +943,7 @@ class Hlt1Line(object):
                     _add_to_hlt1_output_selections_ ( _m.name         () )
 
         if self._outputsel is not None and self._outputsel!= decisionName( line ) :
-            log.warning( "Line '%s' has a final output selection named '%s'"%(line,self._outputsel) )
+            log.warning( "Line '%s' has a final output selection named '%s' -- this does not match the rules, TISTOS will not work for this line"%(line,self._outputsel) )
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -1405,7 +1405,7 @@ class Hlt2Line(object):
             needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
             knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>','HltIncidentGenerator','TF::PatVeloAlignTrackFilter' ]
             if last.getType() not in knownLastMembers :
-              log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType() )
+              log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with unknown type ' + last.getType() + '; as a result, TISTOS may not work for this line'  )
             members = _members
             if last.getType() in needsCopy :
                 members += [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
