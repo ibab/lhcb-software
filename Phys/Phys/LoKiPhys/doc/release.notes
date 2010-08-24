@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-24 - Gerhard Raven
+ - set max printout for some errors to 0
+
 ! ========================== LoKiPhys v9r3 2010-08-19 =========================
 
 ! 2010-08-07 - Vanya Belyaev

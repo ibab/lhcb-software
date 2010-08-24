@@ -83,7 +83,7 @@ LoKi::Particles::LifeTime::lifeTime
 {
   if ( 0 == p ) 
   {
-    Error ("LHCb::Particle* points to NULL, return -InvalidTime") ;
+    Error ("LHCb::Particle* points to NULL, return -InvalidTime").ignore() ;
     return -LoKi::Constants::InvalidTime ;                         // RETURN 
   }
   // check the vertex
@@ -99,7 +99,7 @@ LoKi::Particles::LifeTime::lifeTime
     m_fitter -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc ) ;
+    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidTime ;  // RETURN 
   }
   /** apply embedded chi2-cut! 
@@ -119,7 +119,7 @@ LoKi::Particles::LifeTime::lifeTimeChi2
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ) ;
+    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
@@ -155,7 +155,7 @@ LoKi::Particles::LifeTime::lifeTimeSignedChi2
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ) ;
+    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
@@ -171,7 +171,7 @@ LoKi::Particles::LifeTime::lifeTimeSignedChi2
     fitter() -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc ) ;
+    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // apply embedded chi2-cut! 
@@ -195,7 +195,7 @@ LoKi::Particles::LifeTime::lifeTimeFitChi2
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ) ;
+    Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
@@ -211,7 +211,7 @@ LoKi::Particles::LifeTime::lifeTimeFitChi2
     fitter () -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc ) ;
+    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   //
@@ -244,7 +244,7 @@ LoKi::Particles::LifeTime::lifeTimeError
     fitter () -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc ) ;
+    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidTime ;                             // RETURN 
   }
   //
