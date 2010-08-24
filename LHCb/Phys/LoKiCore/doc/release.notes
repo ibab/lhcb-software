@@ -16,6 +16,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-08-24 - Gerhard Raven
+ - add max print to Error and Warning
+
 ! 2010-08-06 - Vanya Belyaev
 
  - more fixed in doxygenurl module 

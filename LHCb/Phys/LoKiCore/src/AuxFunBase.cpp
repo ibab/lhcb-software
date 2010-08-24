@@ -126,10 +126,11 @@ LoKi::AuxFunBase::~AuxFunBase()
 // ============================================================================
 StatusCode LoKi::AuxFunBase::Error
 ( const std::string& msg , 
-  const StatusCode&  sc  ) const 
+  const StatusCode&  sc  ,
+  int mxprint            ) const 
 {
   sc.ignore() ;
-  return LoKi::Report::Error ( objType() + ": \t" + msg  , sc ) ; 
+  return LoKi::Report::Error ( objType() + ": \t" + msg  , sc, mxprint ) ; 
 }
 // ============================================================================
 /*  print Warning message 
@@ -140,10 +141,11 @@ StatusCode LoKi::AuxFunBase::Error
 // ============================================================================
 StatusCode LoKi::AuxFunBase::Warning
 ( const std::string& msg , 
-  const StatusCode&  sc  ) const 
+  const StatusCode&  sc  ,
+  int mxprint            ) const 
 {
   sc.ignore() ;
-  return LoKi::Report::Warning ( objType() + ": \t " + msg , sc ) ; 
+  return LoKi::Report::Warning ( objType() + ": \t " + msg , sc, mxprint ) ; 
 } 
 // ============================================================================
 /*  thrown an exception  

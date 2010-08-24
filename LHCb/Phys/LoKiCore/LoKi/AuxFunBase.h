@@ -67,14 +67,16 @@ namespace LoKi
      */
     StatusCode Error
     ( const std::string& msg                                             , 
-      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
+      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ,
+      int mxprint = 10                                                   ) const ;
     /** print warning message 
      *  @param msg  warning message 
      *  @param sc   status code 
      */
     StatusCode Warning
     ( const std::string& msg                                             , 
-      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
+      const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ,
+      int mxprint = 10                                                   ) const ;
     /** thrown an exception 
      *  @param msg  warning message 
      *  @param sc   status code 
