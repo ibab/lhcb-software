@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Rob Lambert
+ - TrackHitAdder, supress warnings in windows, converting from double to float
+   and this used for tool handle
+
 ! 2010-08-20 - Wouter Hulsbergen
  - Add FirstMeasurement state to long and upstream tracks
  - TrackHitAdder now also adds velo hits (using Manuel's code)

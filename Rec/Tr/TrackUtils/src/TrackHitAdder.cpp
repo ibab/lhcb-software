@@ -23,6 +23,11 @@
 
 #include <boost/foreach.hpp>
 
+#ifdef _WIN32
+#pragma warning ( disable : 4355 ) // this in base member init. list, needed for tool handles
+#pragma warning ( disable : 4244 ) // conversion of double to float in Root
+#endif
+
 
 class TrackHitAdder : public GaudiHistoAlg
 {
