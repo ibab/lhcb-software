@@ -4,6 +4,10 @@
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-08-24 - Gerhard Raven
+ - cleanup some const issues
+
 ! 2010-08-17 - Gerhard Raven
  - follow changes in HltBase: Hlt::TSelection now contains const T* instead of T*
  - fix typos in dictionary

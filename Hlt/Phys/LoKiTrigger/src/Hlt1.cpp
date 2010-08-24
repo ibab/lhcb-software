@@ -104,7 +104,7 @@ LoKi::Hlt1::Sink::operator()
   {
     const Hlt::Candidate* t = *ia ;
     if ( 0 == t ) { continue ; }
-    m_selection->push_back ( const_cast<Hlt::Candidate*> ( t ) ) ;
+    m_selection->push_back ( t ) ;
   }
   //
   return a ;
@@ -207,7 +207,7 @@ LoKi::Hlt1::TrRegister::operator()
   {
     const LHCb::Track* t = *ia ;
     if ( 0 == t ) { continue ; }
-    m_selection->push_back ( const_cast<LHCb::Track*> ( t ) ) ;
+    m_selection->push_back ( t ) ;
   }
   //
   return a ;

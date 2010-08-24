@@ -146,19 +146,17 @@ LoKi::Hlt1::VxUpgrade::operator()
     {
       for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout ) 
       {
-        LHCb::RecVertex* rv = *iout ;
-        rv->setExtraInfo ( vx -> extraInfo () ) ;    
+        (*iout)->setExtraInfo ( vx -> extraInfo () ) ;    
       }  
     }
     // add vertices into the global list of vertices 
-    output.insert ( output.end() , out.begin() , out.end() ) ; //TODO: here we add const...
+    output.insert ( output.end() , out.begin() , out.end() ) ;
+    // add vertices into the TES constainer  -- this is where the ownership goes!!
+    for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout )  {
+        vertices -> insert ( *iout ) ; 
+    }
     // ========================================================================
   } // end of the loop over all vertices 
-  //
-  // add vertices into the TES constainer  -- this is where the ownership goes!!
-  for ( CONST_OUTPUT::const_iterator iout = output.begin() ; 
-        output.end() != iout ; ++iout ) 
-  { vertices -> insert ( const_cast<LHCb::RecVertex*>(*iout) ) ; } // TODO: and here we remove it again...
   //
   // register vertices for Hlt Data Service
   return m_sink ( output ) ;

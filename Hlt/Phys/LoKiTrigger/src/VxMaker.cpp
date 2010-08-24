@@ -429,14 +429,11 @@ LoKi::Hlt1::VxMaker::operator() () const
     if ( !m_cut4rv_trivial && !m_cut4rv ( *vertex ) ) { continue ; } // CONTINUE
     
     // good vertex! add it to the seelction! 
-    output.push_back ( vertex.release() ) ; // "vertex is not valid anymore
-    
+    output.push_back ( vertex.get() ) ;    // "vertex is not valid anymore 
+    overtices->insert( vertex.release() ); // this is in the TES and assumes ownership
+   
   }
 
-  // send the vertices into TES 
-  for ( Output::const_iterator iout = output.begin() ; output.end()  != iout ; ++iout ) 
-  { overtices->insert ( const_cast<LHCb::RecVertex*>(*iout) ) ; }
-  
   // use "sink": register object for Hlt Data Service 
   return m_sink ( output )  ; // RETURN 
 }
