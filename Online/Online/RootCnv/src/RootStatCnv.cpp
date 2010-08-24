@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.cpp,v 1.3 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootStatCnv.cpp,v 1.4 2010-08-24 23:30:32 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootStatCnv
@@ -22,13 +22,13 @@
 using namespace std;
 using namespace Gaudi;
 
-/// Standard Constructor
+// Standard Constructor
 RootStatCnv::RootStatCnv (long typ,const CLID& clid, ISvcLocator* svc, RootCnvSvc* mgr) 
   : RootConverter(typ, clid, svc, mgr), m_dataMgr(0)
 {
 }
 
-/// Initialize converter object
+// Initialize converter object
 StatusCode RootStatCnv::initialize() {
   StatusCode sc = RootConverter::initialize();
   if ( sc.isSuccess() ) {
@@ -40,7 +40,7 @@ StatusCode RootStatCnv::initialize() {
   return sc;
 }
 
-/// Finalize converter object
+// Finalize converter object
 StatusCode RootStatCnv::finalize() {
   if ( m_dataMgr ) {
     m_dataMgr->release();
@@ -66,6 +66,7 @@ const string RootStatCnv::containerName(IRegistry* pReg) const {
   return local;
 }
 
+// Retrieve the name of the file a given object is placed into
 const string RootStatCnv::fileName(IRegistry* pReg) const {
   string path = topLevel(pReg);
   DataObject* pObj = 0;
@@ -79,7 +80,7 @@ const string RootStatCnv::fileName(IRegistry* pReg) const {
   return "";
 }
 
-/// Retrieve the full path of the file a given object is placed into
+// Retrieve the full path of the file a given object is placed into
 const string RootStatCnv::topLevel(IRegistry* pReg) const   {
   if ( pReg )    {
     string path = pReg->identifier();
@@ -95,6 +96,7 @@ const string RootStatCnv::topLevel(IRegistry* pReg) const   {
   return "";
 }
 
+// Helper method to issue error messages.
 StatusCode RootStatCnv::makeError(const std::string& msg, bool throw_exc)  const {
   MsgStream log(msgSvc(),"RootConverter");
   log << MSG::ERROR << msg << endmsg;
@@ -103,6 +105,7 @@ StatusCode RootStatCnv::makeError(const std::string& msg, bool throw_exc)  const
   return StatusCode::FAILURE;
 }
 
+// Save statistics object description.
 StatusCode RootStatCnv::saveDescription(const string&  path, 
 					const string&  ident, 
 					const string&  desc,

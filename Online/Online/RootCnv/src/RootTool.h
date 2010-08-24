@@ -17,7 +17,6 @@ namespace Gaudi {
   public:
     /// Standard constructor
     RootTool(RootDataConnection* con) { c = con; }
-
     /// Access data branch by name: Get existing branch in read only mode
     virtual TBranch* getBranch(CSTR section, CSTR n) {
       TTree* t = c->getSection(section);
@@ -25,7 +24,6 @@ namespace Gaudi {
       if ( b ) b->SetAutoDelete(kFALSE);
       return b;
     }
-
     /// Load references object from file
     virtual int loadRefs(CSTR section, CSTR cnt, unsigned long entry, RootObjectRefs& refs)   {
       TBranch* b = getBranch(section,cnt+"#R");
@@ -94,7 +92,7 @@ namespace Gaudi {
       }
       return -1;
     }
-
+    /// Helper function to read params table
     void addParam(ParamMap& c, char* p) {
       char* q = strchr(p,'=');
       if ( q ) {
@@ -102,9 +100,9 @@ namespace Gaudi {
 	c.push_back(make_pair(p,++q));
       }
     }
-    void addEntry(StringVec& c, char* val) {
-      c.push_back(val);
-    }
+    /// Helper function to read string tables
+    void addEntry(StringVec& c, char* val) {      c.push_back(val);    }
+    /// Helper function  to read internal file tables
     template <class C, class F> StatusCode readBranch(TTree* t, const char* nam, C& v, F pmf) {
       char text[2048];
       TBranch* b = t->GetBranch(nam);
@@ -125,6 +123,7 @@ namespace Gaudi {
       msgSvc() << MSG::ERROR << "Failed to read '" << nam << "' table." << endmsg;
       return StatusCode::FAILURE;
     }
+    /// Analyze the Sections table entries
     bool get(const string& dsc, pair<string,ContainerSection>& e) {
       if ( dsc != "[END-OF-SECTION]" ) { 
 	size_t id1 = dsc.find("[CNT=");
@@ -144,6 +143,7 @@ namespace Gaudi {
       e.second = ContainerSection(-1,-1);
       return false;
     }
+    /// Build merge sections from the Sections table entries
     void analyzeMergeMap(StringVec& tmp) {
       StringVec::const_iterator i;
       LinkSections&  ls = linkSections();
@@ -183,7 +183,6 @@ namespace Gaudi {
 	}
       }
     }
-
     /// Read reference tables
     StatusCode readRefs()  {
       TTree* t = (TTree*)c->file()->Get("Sections");
@@ -204,10 +203,11 @@ namespace Gaudi {
       }
       return StatusCode::FAILURE;
     }
-
+    /// Helper function to convert string vectors to branch entries
     string getEntry(const string& c)              {  return c;                    }
+    /// Helper function to convert parameter vectors to branch entries
     string getParam(const pair<string,string>& p) {  return p.first+"="+p.second; }
-
+    /// Helper function to save internal tables
     template <class C, class F> StatusCode saveBranch(const char* nam, C& v, F pmf) {
       Long64_t i, n;
       string val, typ = nam;

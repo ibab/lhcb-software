@@ -1,11 +1,11 @@
-// $Id: RootDataConnection.cpp,v 1.11 2010-08-24 14:03:03 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.12 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 //	RootDataConnection.cpp
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.11 2010-08-24 14:03:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.12 2010-08-24 23:30:32 frankb Exp $
 
 // Framework include files
 #include "RootDataConnection.h"
@@ -15,7 +15,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
-
+// ROOT include files
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -36,22 +36,22 @@ static string s_local = "<localDB>";
 #endif
 #include "RootTool.h"
 
-/// Standard constructor
+// Standard constructor
 RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
 {
 }
 
-/// Standard destructor      
+// Standard destructor      
 RootConnectionSetup::~RootConnectionSetup() {
   deletePtr(m_msgSvc);
 }
 
-/// Increase reference count
+// Increase reference count
 void RootConnectionSetup::addRef() {
   ++refCount;
 }
 
-/// Decrease reference count
+// Decrease reference count
 void RootConnectionSetup::release() {
   int tmp = --refCount;
   if ( tmp <= 0 ) {
@@ -59,14 +59,14 @@ void RootConnectionSetup::release() {
   }
 }
 
-/// Set message service reference
+// Set message service reference
 void RootConnectionSetup::setMessageSvc(MsgStream* m) {
   MsgStream* tmp = m_msgSvc;
   m_msgSvc = m;
   deletePtr(tmp);
 }
 
-/// Standard constructor
+// Standard constructor
 RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, RootConnectionSetup* setup)
   : IDataConnection(owner,fname), m_setup(setup), m_statistics(0), m_tool(0)
 { //               01234567890123456789012345678901234567890
@@ -80,13 +80,13 @@ RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, Root
   m_refs = 0;
 }
 
-/// Standard destructor      
+// Standard destructor      
 RootDataConnection::~RootDataConnection()   {
   m_setup->release();
   releasePtr(m_tool);
 }
 
-/// Save TTree access statistics if required
+// Save TTree access statistics if required
 void RootDataConnection::saveStatistics(CSTR statisticsFile) {
   if ( m_statistics ) {
     m_statistics->Print();
@@ -96,7 +96,7 @@ void RootDataConnection::saveStatistics(CSTR statisticsFile) {
   }
 }
 
-/// Enable TTreePerStats
+// Enable TTreePerStats
 void RootDataConnection::enableStatistics(CSTR section) {
   if ( 0 == m_statistics ) {
     TTree* t=getSection(section,false);
@@ -110,7 +110,7 @@ void RootDataConnection::enableStatistics(CSTR section) {
   msgSvc() << MSG::INFO << "Perfstats are ALREADY ENABLED." << endmsg;
 }
 
-/// Create file access tool to encapsulate POOL compatibiliy
+// Create file access tool to encapsulate POOL compatibiliy
 RootDataConnection::Tool* RootDataConnection::makeTool()   {
   releasePtr(m_tool);
   if ( !m_refs ) m_refs = (TTree*)m_file->Get("Refs");
@@ -123,7 +123,7 @@ RootDataConnection::Tool* RootDataConnection::makeTool()   {
   return m_tool;
 }
 
-/// Connect the file in READ mode
+// Connect the file in READ mode
 StatusCode RootDataConnection::connectRead()  {
   m_file = TFile::Open(m_pfn.c_str());
   if ( m_file && !m_file->IsZombie() )   {
@@ -158,6 +158,7 @@ StatusCode RootDataConnection::connectRead()  {
   return StatusCode::FAILURE;
 }
 
+// Open data stream in write mode
 StatusCode RootDataConnection::connectWrite(IoType typ)  {
   msgSvc() << MSG::DEBUG;
   switch(typ)  {
@@ -203,6 +204,7 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
   return 0==m_file ? StatusCode::FAILURE : StatusCode::SUCCESS;
 }
 
+// Release data stream and release implementation dependent resources
 StatusCode RootDataConnection::disconnect()    {
   if ( m_file ) {
     if ( !m_file->IsZombie() )   {
@@ -234,6 +236,7 @@ StatusCode RootDataConnection::disconnect()    {
   return StatusCode::SUCCESS;
 }
 
+// Access TTree section from section name. The section is created if required.
 TTree* RootDataConnection::getSection(CSTR section, bool create) {
   TTree* t = m_sections[section];
   if ( !t ) {
@@ -279,6 +282,7 @@ TBranch* RootDataConnection::getBranch(CSTR section, CSTR n, TClass* cl) {
   return b;
 }
 
+// Convert path string to path index
 int RootDataConnection::makeLink(CSTR p) {
   int cnt = 0;
   StringVec::iterator ip;
@@ -298,6 +302,7 @@ CSTR RootDataConnection::getDb(int which) const {
   return s_empty;
 }
 
+// Empty string reference
 CSTR RootDataConnection::empty() const { 
   return s_empty;
 }

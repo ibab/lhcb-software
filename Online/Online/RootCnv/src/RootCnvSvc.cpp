@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.7 2010-08-24 14:03:03 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.8 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -338,7 +338,7 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
 // Save object references to data file
 StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj) {
   if ( pObj ) {
-    typedef std::vector<IRegistry*> Leaves;
+    typedef vector<IRegistry*> Leaves;
     Leaves leaves;
     RootObjectRefs refs;
     IRegistry* pR = pObj->registry();

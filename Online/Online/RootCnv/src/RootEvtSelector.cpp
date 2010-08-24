@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.6 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.7 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 //	RootSelector.cpp
 //--------------------------------------------------------------------
@@ -7,47 +7,75 @@
 //
 //	Author     : M.Frank
 //====================================================================
+#ifndef GAUDIROOTCNV_ROOTEVTSELECTORCONTEXT_H
+#define GAUDIROOTCNV_ROOTEVTSELECTORCONTEXT_H
 
 // Include files
 #include "RootEvtSelector.h"
 #include <vector>
+
+// Forward declarations
 class TBranch;
 
+/*
+ *  Gaudi namespace declaration
+ */
 namespace Gaudi {
-  /** @class RootContext
+
+  /** @class RootEvtSelectorContext
+   *
+   *  ROOT specific event selector context.
+   *  See the base class for a detailed description.
    *
    *  @author  M.Frank
    *  @version 1.0
    */
-  class RootContext : public IEvtSelector::Context {
+  class RootEvtSelectorContext : public IEvtSelector::Context {
   public:
+    /// Definition of the file container
     typedef std::vector<std::string> Files;
   private:
+    /// Reference to the hosting event selector instance
     const RootEvtSelector*        m_sel;
+    /// The file container managed by this context
     Files                         m_files;
+    /// The iterator to the 
     Files::const_iterator         m_fiter;
+    /// Current entry of current file
     long                          m_entry;
+    /// Reference to the top level branch (typically /Event) used to iterate
     TBranch*                      m_branch;
   public:
-    /// Standard constructor
-    RootContext(const RootEvtSelector* s) : m_sel(s), m_entry(-1), m_branch(0){}
+    /// Standard constructor with initialization
+    RootEvtSelectorContext(const RootEvtSelector* s) : m_sel(s),m_entry(-1),m_branch(0){}
     /// Standard destructor
-    virtual ~RootContext()                           {                        }
+    virtual ~RootEvtSelectorContext()                {                        }
+    /// Access to the file container
     const Files& files() const                       { return m_files;        }
+    /// Set the file container
     void setFiles(const Files& f)                    { 
       m_files = f; 
-      m_fiter=m_files.begin();
+      m_fiter = m_files.begin();
     }
+    /// Context identifier
     virtual void* identifier() const                 { return (void*)m_sel;   }
+    /// Access to the file iterator
     Files::const_iterator fileIterator() const       { return m_fiter;        }
+    /// Set file iterator
     void setFileIterator(Files::const_iterator i)    { m_fiter = i;           }
+    /// Access to the current event entry number
     long entry() const                               { return m_entry;        }
+    /// Set current event entry number
     void setEntry(long e)                            { m_entry = e;           }
+    /// Access to the top level branch (typically /Event) used to iterate
     TBranch* branch() const                          { return m_branch;       }
+    /// Set the top level branch (typically /Event) used to iterate
     void setBranch(TBranch* b)                       { m_branch = b;          }
   };
 }
+#endif // GAUDIROOTCNV_ROOTEVTSELECTORCONTEXT_H
 
+// Include files
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -62,6 +90,7 @@ using namespace Gaudi;
 using namespace std;
 
 
+// Service Constructor
 RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )
 : base_class(name, svcloc), m_rootCLID(CLID_NULL)
 {
@@ -69,13 +98,14 @@ RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )
   declareProperty("DbType",  m_dummy);
 }
 
+// Helper method to issue error messages
 StatusCode RootEvtSelector::error(const string& msg) const   {
   MsgStream log(msgSvc(), name());
   log << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
-/// IService implementation: Db event selector override
+// IService implementation: Db event selector override
 StatusCode RootEvtSelector::initialize()    {
   // Initialize base class
   StatusCode status = Service::initialize();
@@ -101,7 +131,7 @@ StatusCode RootEvtSelector::initialize()    {
   return status;
 }
 
-/// IService implementation: Service finalization
+// IService implementation: Service finalization
 StatusCode RootEvtSelector::finalize()    {
   // Initialize base class
   if ( m_dbMgr ) m_dbMgr->release();
@@ -109,22 +139,24 @@ StatusCode RootEvtSelector::finalize()    {
   return Service::finalize();
 }
 
+// Create a new event loop context
 StatusCode RootEvtSelector::createContext(Context*& refpCtxt) const  {
-  refpCtxt = new RootContext(this);
+  refpCtxt = new RootEvtSelectorContext(this);
   return StatusCode::SUCCESS;
 }
 
-/// Access last item in the iteration
+// Access last item in the iteration
 StatusCode RootEvtSelector::last(Context& /*refContext*/) const  {
   return StatusCode::FAILURE;
 }
 
+// Get next iteration item from the event loop context
 StatusCode RootEvtSelector::next(Context& ctxt) const  {
-  RootContext* pCtxt = dynamic_cast<RootContext*>(&ctxt);
+  RootEvtSelectorContext* pCtxt = dynamic_cast<RootEvtSelectorContext*>(&ctxt);
   if ( pCtxt ) {
     TBranch* b = pCtxt->branch();
     if ( !b ) {
-      RootContext::Files::const_iterator fileit = pCtxt->fileIterator();
+      RootEvtSelectorContext::Files::const_iterator fileit = pCtxt->fileIterator();
       pCtxt->setBranch(0);
       pCtxt->setEntry(-1);
       if ( fileit != pCtxt->files().end() ) {
@@ -150,7 +182,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
       pCtxt->setEntry(++ent);
       return StatusCode::SUCCESS;
     }
-    RootContext::Files::const_iterator fit = pCtxt->fileIterator();
+    RootEvtSelectorContext::Files::const_iterator fit = pCtxt->fileIterator();
     pCtxt->setFileIterator(++fit);
     pCtxt->setEntry(-1);
     pCtxt->setBranch(0);
@@ -159,6 +191,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
   return StatusCode::FAILURE;
 }
 
+// Get next iteration item from the event loop context
 StatusCode RootEvtSelector::next(Context& ctxt,int jump) const  {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
@@ -172,10 +205,12 @@ StatusCode RootEvtSelector::next(Context& ctxt,int jump) const  {
   return StatusCode::FAILURE;
 }
 
+// Get previous iteration item from the event loop context
 StatusCode RootEvtSelector::previous(Context& /* ctxt */) const   {
   return error("EventSelector Iterator, operator -- not supported ");
 }
 
+// Get previous iteration item from the event loop context
 StatusCode RootEvtSelector::previous(Context& ctxt, int jump) const  {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
@@ -189,10 +224,11 @@ StatusCode RootEvtSelector::previous(Context& ctxt, int jump) const  {
   return StatusCode::FAILURE;
 }
 
+// Rewind the dataset
 StatusCode RootEvtSelector::rewind(Context& ctxt) const   {
-  RootContext* pCtxt = dynamic_cast<RootContext*>(&ctxt);
+  RootEvtSelectorContext* pCtxt = dynamic_cast<RootEvtSelectorContext*>(&ctxt);
   if ( pCtxt ) {
-    RootContext::Files::const_iterator fileit = pCtxt->fileIterator();
+    RootEvtSelectorContext::Files::const_iterator fileit = pCtxt->fileIterator();
     if ( fileit != pCtxt->files().end() ) {
       string input = *fileit;
       m_dbMgr->disconnect(input).ignore();
@@ -205,15 +241,16 @@ StatusCode RootEvtSelector::rewind(Context& ctxt) const   {
   return StatusCode::FAILURE;
 }
 
+// Create new Opaque address corresponding to the current record
 StatusCode
 RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const  {
-  const RootContext* pctxt = dynamic_cast<const RootContext*>(&ctxt);
+  const RootEvtSelectorContext* pctxt = dynamic_cast<const RootEvtSelectorContext*>(&ctxt);
   if ( pctxt ) {
     long ent = pctxt->entry();
     if ( ent >= 0 )  {
-      RootContext::Files::const_iterator fileit = pctxt->fileIterator();
+      RootEvtSelectorContext::Files::const_iterator fileit = pctxt->fileIterator();
       if ( fileit != pctxt->files().end() ) {
-	const std::string par[2] = {*fileit, m_rootName};
+	const string par[2] = {*fileit, m_rootName};
 	const unsigned long ipar[2] = {0,ent};
 	return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
       }
@@ -223,8 +260,9 @@ RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
   return StatusCode::FAILURE;
 }
 
+// Release existing event iteration context
 StatusCode RootEvtSelector::releaseContext(Context*& ctxt) const   {
-  RootContext* pCtxt = dynamic_cast<RootContext*>(ctxt);
+  RootEvtSelectorContext* pCtxt = dynamic_cast<RootEvtSelectorContext*>(ctxt);
   if ( pCtxt ) {
     delete pCtxt;
     return StatusCode::SUCCESS;
@@ -232,11 +270,13 @@ StatusCode RootEvtSelector::releaseContext(Context*& ctxt) const   {
   return StatusCode::FAILURE;
 }
 
+// Will set a new criteria for the selection of the next list of events and will change
+// the state of the context in a way to point to the new list.
 StatusCode
 RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
 {
   MsgStream log(msgSvc(), name());
-  RootContext* ctxt = dynamic_cast<RootContext*>(&context);
+  RootEvtSelectorContext* ctxt = dynamic_cast<RootEvtSelectorContext*>(&context);
   string db, typ, item, sel, stmt, aut, addr;
   if ( ctxt )  {
     if ( criteria.substr(0,5) == "FILE " )  {
@@ -282,7 +322,7 @@ RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
     // The format for the criteria is:
     //        FILE  filename1, filename2 ...
     //        JOBID number1-number2, number3, ...
-    RootContext::Files files;
+    RootEvtSelectorContext::Files files;
     string rest = db;
     files.clear();
     while(true)  {
@@ -300,7 +340,6 @@ RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
   }
   return error("Invalid iteration context.");
 }
-
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector);

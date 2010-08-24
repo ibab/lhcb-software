@@ -1,10 +1,10 @@
-// $Id: RootDataConnection.h,v 1.6 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootDataConnection.h,v 1.7 2010-08-24 23:30:32 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
 // Framework include files
 #include "GaudiKernel/ClassID.h"
-#include "GaudiUtils/IIODataManager.h" // for IDataConnection class definition
+#include "GaudiUtils/IIODataManager.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -26,12 +26,23 @@ class DataObject;
  *  Gaudi namespace declaration
  */
 namespace Gaudi  {
+
   // Forward declarations
   class RootRef;
   class RootObjectRefs;
 
 
-  class RootConnectionSetup {
+  /** @class RootConnectionSet RootDataConnection.h GaudiRootCnv/RootDataConnection.h
+    *
+    *  Class describing the setup parameters of a ROOT data connection.
+    *  The parameters are filled by the conversion service (using properties)
+    *  and is then passed to all data connections served by this service.
+    *
+    *  @author  M.Frank
+    *  @version 1.0
+    *  @date    20/12/2009
+    */
+  class GAUDI_API RootConnectionSetup {
   protected:
     /// Standard destructor      
     virtual ~RootConnectionSetup();
@@ -60,20 +71,39 @@ namespace Gaudi  {
     MsgStream& msgSvc() const {  return *m_msgSvc; }
   };
 
-  /** @class RootDataConnection RootDataConnection.h GAUDIROOT/RootDataConnection.h
+  /** @class RootDataConnection RootDataConnection.h GaudiRootCnv/RootDataConnection.h
+    *
+    *  Concrete implementation of the IDataConnection interface to access ROOT files.
     *
     *  @author  M.Frank
     *  @version 1.0
     *  @date    20/12/2009
     */
-  class RootDataConnection : virtual public Gaudi::IDataConnection  {
+  class GAUDI_API RootDataConnection : virtual public Gaudi::IDataConnection  {
   public:
+
+    /** @class ContainerSection RootDataConnection.h GaudiRootCnv/RootDataConnection.h
+     *
+     *  Internal helper class, which described a TBranch section in a ROOT file.
+     *  TBranch sections (ie. an intervall of events) are used to describe
+     *  files using the ROOT fast merge mechanism.
+     *
+     *  @author  M.Frank
+     *  @version 1.0
+     *  @date    20/12/2009
+     */
     struct ContainerSection {
+      /// Default constructor
       ContainerSection() : start(-1), length(0) {}
+      /// Initializing constructor
       ContainerSection(int s, int l) : start(s), length(l) {}
+      /// Copy constructor
       ContainerSection(const ContainerSection& s) : start(s.start), length(s.length) {}
+      /// Assignment operator to copy objects
       ContainerSection& operator=(const ContainerSection& s) { start=s.start;length=s.length; return *this;}
+      /// The start entry of the section
       int start;
+      /// The length of the section
       int length;
     };
 
@@ -95,8 +125,16 @@ namespace Gaudi  {
 
 
   protected:
+    /// Reference to the setup structure 
+    RootConnectionSetup* m_setup;
+    /// I/O read statistics from TTree
+    TTreePerfStats*      m_statistics;
     /// Reference to ROOT file
     TFile*               m_file;
+    /// Pointer to the reference tree
+    TTree               *m_refs;
+    /// Tree sections in TFile
+    Sections             m_sections;
     /// Map containing external database file names (fids)
     StringVec            m_dbs;
     /// Map containing external container names
@@ -111,16 +149,6 @@ namespace Gaudi  {
     LinkSections         m_linkSects;
     /// Buffer for empty string reference
     std::string          m_empty;
-    /// Reference to the setup structure 
-    RootConnectionSetup* m_setup;
-
-    /// I/O read statistics from TTree
-    TTreePerfStats*      m_statistics;
-
-    /// Tree sections in TFile
-    Sections m_sections;
-    /// Pointer to the reference tree
-    TTree   *m_refs;
 
     /// Empty string reference
     const std::string& empty() const;
@@ -168,10 +196,9 @@ namespace Gaudi  {
       virtual void release() { delete this; }
       /// Access data branch by name: Get existing branch in read only mode
       virtual TBranch* getBranch(const std::string&  section, const std::string& n) = 0;
-
+      /// Internal overload to facilitate the access to POOL files
       virtual RootRef poolRef(size_t /* which */) const { return RootRef(); }
 	
-
       /// Read references section when opening data file
       virtual StatusCode readRefs() = 0;
       /// Save references section when closing data file
@@ -192,15 +219,15 @@ namespace Gaudi  {
     virtual ~RootDataConnection();
 
     /// Direct access to TFile structure
-    TFile* file() const                       {  return m_file;         }
+    TFile* file() const                         {  return m_file;                              }
     /// Check if connected to data source
-    virtual bool isConnected() const          {  return m_file != 0;    }
+    virtual bool isConnected() const            {  return m_file != 0;                         }
     /// Is the file writable?
-    bool isWritable() const                   {  return m_file != 0 && m_file->IsWritable(); }
+    bool isWritable() const                     {  return m_file != 0 && m_file->IsWritable(); }
     /// Access tool
-    Tool* tool() const                        {  return m_tool;         }
+    Tool* tool() const                          {  return m_tool;                              }
     /// Access merged data section inventory
-    const MergeSections& mergeSections() const {  return m_mergeSects;  }
+    const MergeSections& mergeSections() const  {  return m_mergeSects;                        }
     /// Access link section for single container and entry
     std::pair<const RootRef*,const ContainerSection*>  getMergeSection(const std::string& container, int entry) const;
 
@@ -226,7 +253,7 @@ namespace Gaudi  {
     virtual StatusCode connectRead();
     /// Open data stream in write mode
     virtual StatusCode connectWrite(IoType typ);
-    /// Release data stream
+    /// Release data stream and release implementation dependent resources
     virtual StatusCode disconnect();
     /// Read root byte buffer from input stream
     virtual StatusCode read(void* const, size_t)   { return StatusCode::FAILURE; }

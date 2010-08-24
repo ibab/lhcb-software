@@ -1,4 +1,4 @@
-// $Id: RootIOHandler.cpp,v 1.1 2010-08-17 17:23:18 frankb Exp $
+// $Id: RootIOHandler.cpp,v 1.2 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 //
 //  Package    : RootCnv
@@ -21,6 +21,8 @@
 #include "TInterpreter.h"
 #include "TClassStreamer.h"
 #include <memory>
+
+using namespace std;
 
 namespace GaudiRoot {
   static const DataObject* last_link_object = 0;
@@ -65,14 +67,14 @@ namespace GaudiRoot {
 	else
 	  put(b,obj);
       }
-      catch( const std::exception& e )    {
-	std::string err = "Class:" + std::string(m_root->GetName()) + "> Exception in object I/O";
+      catch( const exception& e )    {
+	string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
 	err += e.what();
-	throw std::runtime_error(err);
+	throw runtime_error(err);
       }
       catch( ... )    {
-	std::string err = "Class:" + std::string(m_root->GetName()) + "> Exception in object I/O";
-	throw std::runtime_error(err);
+	string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
+	throw runtime_error(err);
       }
     }
     /// Callback for reading the object
@@ -94,7 +96,7 @@ namespace GaudiRoot {
       (*r.ContainedRef)(Gaudi::getCurrentDataObject());
       break;
     default:
-      std::cout << "Hit uninitialized smartRef!!!!" << std::endl;
+      cout << "Hit uninitialized smartRef!!!!" << endl;
       break;
     }
   }
@@ -122,11 +124,11 @@ namespace GaudiRoot {
 	  }
 	}
 	pDO = 0;
-	std::cout << "IOHandler<SmartRefBase>::onWrite> "
+	cout << "IOHandler<SmartRefBase>::onWrite> "
 		  << "Found invalid smart reference with object "
 		  << "having no parent."
-		  << std::endl;
-	throw std::runtime_error("IOHandler<SmartRefBase>::onWrite> "
+		  << endl;
+	throw runtime_error("IOHandler<SmartRefBase>::onWrite> "
 				 "Found invalid smart reference with object "
 				 "having no parent.");
 	break;
@@ -179,11 +181,11 @@ namespace GaudiRoot {
   }
   
   template <> void IOHandler<pool::Token>::put(TBuffer &, void* ) {
-    throw std::runtime_error("Writing POOL files is not implemented!");
+    throw runtime_error("Writing POOL files is not implemented!");
   }
 
   template <class T> static bool makeStreamer(MsgStream& log)  {
-    std::string cl_name = System::typeinfoName(typeid(T));
+    string cl_name = System::typeinfoName(typeid(T));
     TClass* c = gROOT->GetClass(cl_name.c_str());
     if ( c ) {
       TClassStreamer* s = new IOHandler<T>(c);

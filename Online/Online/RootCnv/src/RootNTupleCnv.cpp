@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.5 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.6 2010-08-24 23:30:32 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -7,17 +7,13 @@
 //
 //------------------------------------------------------------------------------
 
-#include <algorithm>
-
 #define ALLOW_ALL_TYPES
 // Include files
 #include "RootRefs.h"
 #include "RootAddress.h"
 #include "RootNTupleCnv.h"
 #include "RootDataConnection.h"
-#include "GaudiKernel/LinkManager.h"
 
-#include "GaudiKernel/xtoa.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SmartRef.h"
@@ -27,47 +23,34 @@
 #include "GaudiKernel/ISelectStatement.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/CnvFactory.h"
 
-
+// ROOT include files
 #include "TROOT.h"
 #include "TTree.h"
 #include "TBranch.h"
+#include "Reflex/Reflex.h"
+
+#include <memory>
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
 
-#include <memory>
-
 using namespace Gaudi;
 using namespace std;
-
-namespace GaudiRoot {
-  void popCurrentDataObject();
-  void pushCurrentDataObject(DataObject** pobjAddr);
-}
 
 static inline istream& loadLong(istream& is)    {
   long i;
   is >> i;
   return is;
 }
-static inline istream&
-operator>>(istream& is, SmartRef<DataObject>& /*pObj*/)   {
-  return loadLong(is);
-}
-static inline istream&
-operator>>(istream& is, SmartRef<ContainedObject>& /*pObj*/)   {
-  return loadLong(is);
-}
-static inline istream&
-operator>>(istream& is, IOpaqueAddress*& /*pObj*/)   {
-  return loadLong(is);
-}
-static inline istream&
-operator>>(istream& is, string& /*pObj*/)   {
-  return loadLong(is);
-}
+static inline istream& operator>>(istream& is, SmartRef<DataObject>& /*pObj*/)   
+{  return loadLong(is);          }
+static inline istream& operator>>(istream& is, SmartRef<ContainedObject>& /*pObj*/)   
+{  return loadLong(is);          }
+static inline istream& operator>>(istream& is, IOpaqueAddress*& /*pObj*/)
+{  return loadLong(is);          }
+static inline istream& operator>>(istream& is, string& /*pObj*/)   
+{  return loadLong(is);          }
 
 template<class TYP> static
 StatusCode createItem ( TTree* tree, INTuple* tuple, istream& is,const string& name,bool add,const TYP& null)  {
@@ -330,7 +313,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
     if ( sel ) {
       MsgStream log(msgSvc(),"NTupleCnv");
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
-	? sel->criteria() : std::string("");
+	? sel->criteria() : string("");
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
 	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
@@ -621,7 +604,7 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
       if ( status.isSuccess() )  {
 	status = m_dbMgr->commitOutput(path, true);
 	if ( status.isSuccess() ) {
-	  std::string spar[]   = { path, cntName};
+	  string spar[]   = { path, cntName};
 	  unsigned long ipar[] = { (unsigned long)con, ~0x0 };
 	  status = m_dbMgr->createAddress(repSvcType(),pObj->clID(),spar,ipar,pAddr);
 	  if ( status.isSuccess() ) {
@@ -641,7 +624,7 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
   return S_FAIL;
 }
 
-/// Resolve the references of the converted object.
+// Resolve the references of the converted object.
 StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)   {
   typedef INTuple::ItemContainer Cont;
   INTuple* tupl = dynamic_cast<INTuple*>(pObj);
@@ -691,8 +674,10 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
 }      
 
 #ifdef __POOL_COMPATIBILITY
+// Compatibility code to access ETCs, which were written using POOL
 
 namespace {
+  // Blob I/O helper class
   class IOBuffer : public StreamBuffer {
   public:
     UCharDbArray d;
@@ -713,13 +698,14 @@ template <class T> static inline int load(int blob, IOBuffer& s, void* buff)  {
 }
 
 // Helper to read specialized for strings
-template <> inline int load<std::string>(int blob, IOBuffer& s, void* ptr)   {
+template <> inline int load<string>(int blob, IOBuffer& s, void* ptr)   {
   if ( blob ) {
-    std::string* str = (std::string*)ptr;
+    string* str = (string*)ptr;
     s >> (*str);
   }
   return 0;
 }
+
 // Update the transient object: NTuples end here when reading records
 StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con)  {
   typedef INTuple::ItemContainer Cont;
@@ -749,7 +735,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
     if ( sel ) {
       MsgStream log(msgSvc(),"NTupleCnv");
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
-	? sel->criteria() : std::string("");
+	? sel->criteria() : string("");
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
 	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
@@ -812,7 +798,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
 	  case DataTypeInfo::BOOL:        sc=load<bool>          (blob_items[k],blob,buf); break;
 	  case DataTypeInfo::FLOAT:       sc=load<float>         (blob_items[k],blob,buf); break;
 	  case DataTypeInfo::DOUBLE:      sc=load<double>        (blob_items[k],blob,buf); break;
-	  case DataTypeInfo::STRING:      sc=load<std::string>   (blob_items[k],blob,buf); break;
+	  case DataTypeInfo::STRING:      sc=load<string>        (blob_items[k],blob,buf); break;
 	  case DataTypeInfo::NTCHAR:      sc=load<char*>         (blob_items[k],blob,buf); break;
 	  case DataTypeInfo::POINTER:     sc = 0;                            break;
 	  case DataTypeInfo::UNKNOWN:                                        break;

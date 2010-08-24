@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.h,v 1.2 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootNTupleCnv.h,v 1.3 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 // NTuple converter class definition
 //--------------------------------------------------------------------
@@ -6,8 +6,8 @@
 //  Author     : M.Frank
 //
 //====================================================================
-#ifndef ROOT_ROOTNTUPLECNV_H
-#define ROOT_ROOTNTUPLECNV_H 1
+#ifndef GAUDIROOTCNV_ROOTNTUPLECNV_H
+#define GAUDIROOTCNV_ROOTNTUPLECNV_H 1
 
 // Include files
 #include "RootStatCnv.h"
@@ -16,12 +16,14 @@
 class INTuple;
 class TBranch;
 
+/*
+ *  Gaudi namespace declaration
+ */
 namespace Gaudi {
-
 
   /** @class RootNTupleCnv RootNTupleCnv.h Root/RootNTupleCnv.h
    *
-   * NTuple converter class definition
+   * NTuple converter class definition for NTuples writted/read using ROOT.
    *
    * Description:
    * Definition of the generic converter for row wise and column wise
@@ -32,23 +34,6 @@ namespace Gaudi {
    */
   class GAUDI_API RootNTupleCnv: public RootStatCnv {
   protected:
-    /// Callback to bind N-tuple data for reading
-    /**
-     * @param   pTuple    [IN]  Pointer to N-tuple structure
-     *
-     * @return StatusCode indicating success or failure
-     */
-    StatusCode read(INTuple* pTuple,TBranch* branch,long entry);
-
-    /// Callback to bind N-tuple data for writing
-    /**
-     * @param   pTuple    [IN]  Pointer to N-tuple structure
-     *
-     * @return StatusCode indicating success or failure
-     */
-    StatusCode write(INTuple* pTuple,TBranch* branch);
-
-    StatusCode bind(INTuple* pTuple,TBranch* branch);
 
     /// Update the transient object: NTuples end here when reading records
     StatusCode i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTree* tree, RootDataConnection* con);
@@ -164,4 +149,4 @@ namespace Gaudi {
   };
 }
 
-#endif    // ROOT_ROOTNTUPLECNV_H
+#endif    // GAUDIROOTCNV_ROOTNTUPLECNV_H

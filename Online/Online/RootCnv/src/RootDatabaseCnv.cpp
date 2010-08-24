@@ -1,4 +1,4 @@
-// $Id: RootDatabaseCnv.cpp,v 1.3 2010-08-24 14:03:03 frankb Exp $
+// $Id: RootDatabaseCnv.cpp,v 1.4 2010-08-24 23:30:32 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDatabaseCnv
@@ -23,6 +23,7 @@ PLUGINSVC_FACTORY_WITH_ID( RootDatabaseCnv,
 #endif
 
 using namespace Gaudi;
+using namespace std;
 
 // Standard Constructor
 RootDatabaseCnv::RootDatabaseCnv(long typ, const CLID& cl, ISvcLocator* svc, RootCnvSvc* mgr)
@@ -43,17 +44,17 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
     RootDataConnection* con = 0;
     IRegistry* pReg = pAddr->registry();
     const unsigned long* ipars = pAddr->ipar();
-    const std::string*   spars = pAddr->par();
+    const string*   spars = pAddr->par();
     char mode = char(ipars[1]);
-    std::string fname   = spars[0];
-    std::string oname   = pReg->name();
+    string fname   = spars[0];
+    string oname   = pReg->name();
     bool recrea = mode == 'R';
     bool create = mode == 'N';
     bool update = mode == 'U';
     bool read   = mode == 'O';
     const CLID& clid = objType();
     status = StatusCode::SUCCESS;
-    std::string cntName = containerName(pReg);
+    string cntName = containerName(pReg);
     if ( create ) {
       m_dbMgr->connectDatabase(fname,IDataConnection::CREATE,&con).ignore();
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);

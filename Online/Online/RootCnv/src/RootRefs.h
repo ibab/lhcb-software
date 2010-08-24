@@ -1,3 +1,11 @@
+// $Id: RootRefs.h,v 1.4 2010-08-24 23:30:32 frankb Exp $
+//====================================================================
+// Dictionary classes for internal classes used to write ROOT files.
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef GAUDIROOTCNV_ROOTREFS_H
 #define GAUDIROOTCNV_ROOTREFS_H
 
@@ -111,7 +119,7 @@ typedef Gaudi::RootNTupleDescriptor PoolDbNTupleDescriptor;
  */
 namespace pool  {
 
-  /** class Token
+  /** @class Token
    *
    *  Shadow class to mimik POOL tokens.
    *
@@ -124,13 +132,20 @@ namespace pool  {
   };
 }
 
+  /** @class UCharDbArray
+   *
+   *  Shadow class to mimik POOL blobs.
+   *
+   */
 struct UCharDbArray {
   public: 
   /// Size of buffer
   int    m_size; 
   /// Buffer with object content
   unsigned char *m_buffer;//[m_size]
+  /// Default constructor
   UCharDbArray() : m_size(0), m_buffer(0)  {}
+  /// Standard destructor
   virtual ~UCharDbArray() {
     if ( m_buffer ) delete [] m_buffer;
     m_buffer = 0;

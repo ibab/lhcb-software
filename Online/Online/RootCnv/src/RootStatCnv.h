@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.h,v 1.1 2010-01-11 17:14:50 frankb Exp $
+// $Id: RootStatCnv.h,v 1.2 2010-08-24 23:30:32 frankb Exp $
 //------------------------------------------------------------------------------
 // Definition of class :  RootStatCnv
 //
@@ -11,23 +11,27 @@
 // Include files
 #include "RootConverter.h"
 
+// Forward declarations
 class IDataManagerSvc;
 
+/*
+ *  Gaudi namespace declaration
+ */
 namespace Gaudi {
 
   /** @class RootStatCnv RootStatCnv.h Root/RootStatCnv.h
    *
    * Description:
-   * NTuple directory converter class definition
-   * Definition of the converter to manage the
-   * directories in an database representing N-Tuples.
+   * Base class converter for N-tuples and related classes.
    *
    * @author  M.Frank
    * @version 1.0
    */
   class GAUDI_API RootStatCnv: public RootConverter   {
   protected:
+    /// Reference to data manager service to manipulate the TES
     IDataManagerSvc* m_dataMgr;
+
   protected:
 
     /// Initialize converter object
@@ -35,7 +39,6 @@ namespace Gaudi {
 
     /// Finalize converter object
     virtual StatusCode finalize();
-
 
     /** Retrieve the name of the container a given object is placed into
      * @param      pReg     [IN]    Pointer to registry entry.
@@ -58,6 +61,14 @@ namespace Gaudi {
      */
     virtual const std::string topLevel(IRegistry* pReg) const;
 
+    /** Helper method to issue error messages.
+     * @param      msg      [IN]     Text of the error message
+     * @param      throw_exc[IN]     If true throw an exception of type std::runtime_error
+     *
+     * @return    Status code indicating success or failure.
+     */
+    StatusCode makeError(const std::string& msg, bool throw_exception=false)  const;
+
     /** Save statistics object description.
      * @param      path     [IN]    Path of file to save the description on.
      * @param      ident    [IN]    Identifier of description to be saved.
@@ -73,8 +84,6 @@ namespace Gaudi {
 				const std::string&  desc,
 				const std::string&  opt,
 				const CLID&         clid);
-
-    StatusCode makeError(const std::string& msg, bool throw_exception=false)  const;
 
   public:
 

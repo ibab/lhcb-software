@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.h,v 1.2 2010-01-13 19:08:56 frankb Exp $
+// $Id: RootEvtSelector.h,v 1.3 2010-08-24 23:30:32 frankb Exp $
 //====================================================================
 //	RootTreeEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,15 +13,18 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootEvtSelector.h,v 1.2 2010-01-13 19:08:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootEvtSelector.h,v 1.3 2010-08-24 23:30:32 frankb Exp $
 
-#ifndef ROOT_ROOTEVTSELECTOR_H
-#define ROOT_ROOTEVTSELECTOR_H 1
+#ifndef GAUDIROOTCNV_ROOTEVTSELECTOR_H
+#define GAUDIROOTCNV_ROOTEVTSELECTOR_H 1
 
-// Include files
+// Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IEvtSelector.h"
 
+/*
+ *  Gaudi namespace declaration
+ */
 namespace Gaudi {
 
   // Forward declarations
@@ -29,12 +32,15 @@ namespace Gaudi {
 
   /** @class RootEvtSelector RootEvtSelector.h GAUDIROOT/RootEvtSelector.h
    *
+   *  Concrete event selector implementation to access ROOT files.
+   *
    *  @author  M.Frank
    *  @version 1.0
    *  @date    20/12/2009
    */
   class GAUDI_API RootEvtSelector : public extends1<Service, IEvtSelector> {
 
+    /// Helper method to issue error messages
     StatusCode error(const std::string& msg)  const;
   public:
 
@@ -122,12 +128,18 @@ namespace Gaudi {
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
   protected:
     // Data Members
+    /// Reference to the corresponding conversion service
     mutable RootCnvSvc*             m_dbMgr;
+    /// Class id of root node to create opaque address
     CLID                            m_rootCLID;
-    std::string                     m_cnvSvcName;
+    /// Property; Name of the concversion service used to create opaque addresses
+    std::string                     m_cnvSvcName;    
+    /// Property: Name of the ROOT entry name
     std::string                     m_rootName;
+    /// Property: File criteria to define item iteration
     std::string                     m_criteria;
+    /// Property: dummy to fake backwards compatibility
     std::string                     m_dummy;
   };
 }
-#endif  // ROOT_ROOTEVTSELECTOR_H
+#endif  // GAUDIROOTCNV_ROOTEVTSELECTOR_H
