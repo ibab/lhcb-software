@@ -303,10 +303,6 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
 
 //=============================================================================
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-
 RichHPDImageSummary::HPDBoundaryFcn::HPDBoundaryFcn( const TH2* hist , 
                                                      const double thr ) 
   : m_errDef(1.),
@@ -315,18 +311,9 @@ RichHPDImageSummary::HPDBoundaryFcn::HPDBoundaryFcn( const TH2* hist ,
     m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 )
 { }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-
 RichHPDImageSummary::HPDBoundaryFcn::~HPDBoundaryFcn() {}
 
-double RichHPDImageSummary::HPDBoundaryFcn::nPixels() const
-{
-  return ( NULL == m_hist ? 0.0 : m_hist->Integral() );
-}
-
-int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
+unsigned int RichHPDImageSummary::HPDBoundaryFcn::findBoundary() const
 {
   if ( NULL == m_hist ) return 0 ;
   m_boundary.clear() ;
@@ -367,7 +354,7 @@ int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
     }
   }
 
-  return (int) m_boundary.size() ;
+  return m_boundary.size() ;
 }
 
 bool
@@ -375,7 +362,6 @@ RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const int COL,
                                                    const int ROW,
                                                    const double thr ) const 
 {
-
   for ( int icol = COL-1; icol <= COL+1 ; ++icol )
   {
     for ( int irow = ROW-1; irow <= ROW+1 ; ++irow )
@@ -388,17 +374,13 @@ RichHPDImageSummary::HPDBoundaryFcn::hasNeighbour( const int COL,
       }
     }
   }
-
-  return false ;
+  return false;
 }
 
 double
 RichHPDImageSummary::HPDBoundaryFcn::operator()( const std::vector<double>& par ) const
 {
-  assert( 3 == par.size() );
-
   double chi2 = 0.0;
-
   for ( std::vector< std::pair<int,int> >::const_iterator iter = m_boundary.begin(); 
         iter != m_boundary.end(); ++iter )
   {
@@ -407,6 +389,5 @@ RichHPDImageSummary::HPDBoundaryFcn::operator()( const std::vector<double>& par 
     const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
     chi2 += ( dist-par[2] )*( dist-par[2] )*12.0;
   }
-
   return chi2 ;
 }

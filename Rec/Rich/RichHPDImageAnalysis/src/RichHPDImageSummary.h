@@ -73,8 +73,8 @@ namespace Rich
         virtual double Up() const{  return m_errDef; }
         void setErrDef( const double def ){ m_errDef = def; }
 
-        int findBoundary() ;
-        double nPixels() const ;
+        unsigned int findBoundary() const;
+        double nPixels() const;
 
         virtual ~HPDBoundaryFcn( ); ///< Destructor
 
@@ -88,7 +88,7 @@ namespace Rich
         double m_threshold ;
         const TH2* m_hist ;
         double m_sf ;
-        std::vector< std::pair< int, int > > m_boundary ;
+        mutable std::vector< std::pair< int, int > > m_boundary ;
 
       };
 
@@ -196,6 +196,12 @@ inline double
 Rich::Mon::RichHPDImageSummary::localErrorFromPixels( const double pixerr ) const
 {
   return pixerr * m_pixelsize;
+}
+
+inline double 
+Rich::Mon::RichHPDImageSummary::HPDBoundaryFcn::nPixels() const
+{
+  return ( m_hist ? m_hist->Integral() : 0.0 );
 }
 
 #endif // RICHHPDIMAGEMOVEMENT_H
