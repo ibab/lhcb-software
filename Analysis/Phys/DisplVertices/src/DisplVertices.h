@@ -130,6 +130,8 @@ private:
   /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::Particle * );
   bool HasBackwardTracks( const LHCb::RecVertex * );
+  /// Has a RecVertex a backward and a forward track ?
+  bool HasBackAndForwardTracks( const LHCb::RecVertex* );
   /// Has a candidate a daughter muon ?
   double HasMuons( const LHCb::Particle * );
   const LHCb::MCParticle * WhichMother( const LHCb::Particle * );

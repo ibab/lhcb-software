@@ -41,7 +41,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
     , m_pt(400.)
 {
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
-  declareProperty("UsePartFromTES", m_UsePartFromTES = true );
+  declareProperty("UsePartFromTES", m_UsePartFromTES = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
   //Bc+ Mass 6.286GeV
   //declareProperty("PreyMinMass", m_PreyMinMass = 6.3*Gaudi::Units::GeV );
@@ -444,6 +444,7 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
       continue;
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
+    if( !HasBackAndForwardTracks( pv ) ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
     //double sr = sqrt( mat(0,0) + mat(1,1) );
     if( msgLevel( MSG::DEBUG ) )
@@ -842,6 +843,23 @@ bool RecVertices2Particles::HasBackwardTracks( const RecVertex* RV ){
   SmartRefVector< Track >::const_iterator iend = RV->tracks().end();
   for( ; i != iend; ++i ){
     if ( (*i)->checkFlag( Track::Backward ) ) return true;
+  }
+  return false;
+}
+
+//=============================================================================
+//  Loop on the daughter track to see if there is at least one backward track
+//  and one forward tracks
+//=============================================================================
+bool RecVertices2Particles::HasBackAndForwardTracks( const RecVertex* RV ){
+  SmartRefVector< Track >::const_iterator i = RV->tracks().begin();
+  SmartRefVector< Track >::const_iterator iend = RV->tracks().end();
+  bool back = false;
+  bool forw = false;
+  for( ; i != iend; ++i ){
+    if ( (*i)->checkFlag( Track::Backward ) ){ back = true;}
+    else { forw = true;}
+    if( back && forw ) return true;
   }
   return false;
 }
