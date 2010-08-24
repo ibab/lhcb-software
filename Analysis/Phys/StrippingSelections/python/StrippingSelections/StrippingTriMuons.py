@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingTriMuons.py,v 1.2 2010-08-11 08:56:19 ibelyaev Exp $
+# $Id: StrippingTriMuons.py,v 1.3 2010-08-24 11:05:43 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -17,23 +17,24 @@
 #
 #   tau+ :
 #   
-#      - three muons chi2(ip)>4
-#      - at least one muon with PT>1 GeV 
-#      - +-200 MeV mass-window
+#      - three muons chi2(ip)>4, pt > 250 MeV 
+#      - at least one muon with PT > 1 GeV 
+#      - +-250 MeV mass-window
 #      - c*tau > 40 um  
 #
 #   B_c+ :
 #   
-#      - three muons chi2(ip)>4
+#      - three muons chi2(ip)>4, pt > 250 MeV 
 #      - at least one muon with pt > 1 GeV
-#      - at least one mu+mu- combination in wide charmonium mass windos
-#      - mass is in excess of 'm(J/psi) - 150 MeV'
+#      - at least one mu+mu- combination in wide +-200 MeV
+#                mass window around J/psi or psi'
+#      - mass is in excess of 'm(J/psi) - 200 MeV'
 #      - c*tau' > 20 um, where c*tau' is corrected c*tau :
 #                        c*tau' = c*tau * pdg_mass(B_c) / mass(3mu)  
 #
 #   ThreeMuons :
 #   
-#      - at least three muons chi2(ip)>9 and pt > 1 GeV 
+#      - at least three muons chi2(ip)>9 and pt > 1.2 GeV 
 #
 #  
 #   The Global Event Selection:
@@ -42,25 +43,24 @@
 #    - the Hlt-requirements: MicroBias or Muon-trigger
 #         HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 #
-#
-#  Test with 100k events Reco04-Stripping07-SDSTs.py : 
+#  Test with 100k events Reco05-Stripping08_SDSTs.py : 
 # 
-#  +------------------------------+-----------+----------+---------+
-#  | Decision name                |     Rate  | Accepted |  Mult.  |
-#  + -----------------------------+-----------+----------+---------+
-#  | StrippingGlobal              | 0.000530  |       53 |   ---   |
-#  + -----------------------------+-----------+----------+---------+
-#  | StrippingSequenceStreamTest  | 0.000530  |      53  |   ---   |  
-#  | -- StrippingTau2ThreeMu      | 0.000260  |      26  |   1.423 |
-#  | -- StrippingBc2ThreeMu       | 0.000050  |       5  |   1.600 |
-#  | -- StrippingThreeMuons       | 0.000230  |      23  | 266.739 |
-#  +------------------------------+-----------+--------------------+
+#   +-----------------------------+-----------+-----------+---------+--------+
+#   | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
+#   +-----------------------------+-----------+-----------+---------+--------+
+#   | StrippingGlobal             | 0.000930  |      93   |         | 1.035  |
+#   +-----------------------------+-----------+-----------+---------+--------+
+#   | StrippingSequenceStreamTest | 0.000930  |      93   |         |  1.029 | 
+#   | -- StrippingThreeMuons      | 0.000510  |      51   | 226.000 |  0.860 | 
+#   | -- StrippingBc2ThreeMu      | 0.000180  |      18   | 1.556   |  0.057 | 
+#   | -- StrippingTau2ThreeMu     | 0.000240  |      24   | 1.500   |  0.051 | 
+#   +-----------------------------+-----------+---------------------+--------+
 #
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2010-08-10
 # 
-# $Revision: 1.2 $
-# Last modification $Date: 2010-08-11 08:56:19 $
+# $Revision: 1.3 $
+# Last modification $Date: 2010-08-24 11:05:43 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -74,23 +74,24 @@ Strip three-muon events:
 
    tau+ :
    
-      - three muons chi2(ip)>4
+      - three muons chi2(ip)>4, pt>250 MeV
       - at least one muon with pt>1 GeV 
-      - +-200 MeV mass-window
+      - +-250 MeV mass-window
       - c*tau > 40 um  
 
    B_c+ :
    
-      - three muons chi2(ip)>4
+      - three muons chi2(ip)>4, pt>250 MeV 
       - at least one muon with PT>1 GeV
-      - at least one mu+mu- combination in wide charmonium mass windos
-      - mass is in excess of 'm(J/psi)-150 MeV'
+      - at least one mu+mu- combination in wide +-200 MeV
+                   mass window around J/psi or psi'
+      - mass is in excess of 'm(J/psi)-200 MeV'
       - c*tau' > 20 um, where c*tau' is corrected c*tau :
                         c*tau' = c*tau * pdg_mass(B_c) / mass(3mu)  
 
    ThreeMuons :
    
-      - at least three muons chi2(ip)>9 and pt> 1 GeV 
+      - at least three muons chi2(ip)>9 and pt>1.2 GeV 
 
   
    The Global Event Selection:
@@ -100,27 +101,28 @@ Strip three-muon events:
          HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 
 
-   Test with 100k events Reco04-Stripping07-SDSTs.py :
-   
-   +------------------------------+-----------+----------+---------+
-   | Decision name                |     Rate  | Accepted |  Mult.  |
-   + -----------------------------+-----------+----------+---------+
-   | StrippingGlobal              | 0.000530  |       53 |   ---   |
-   + -----------------------------+-----------+----------+---------+
-   | StrippingSequenceStreamTest  | 0.000530  |      53  |   ---   |  
-   | -- StrippingTau2ThreeMu      | 0.000260  |      26  |   1.423 |
-   | -- StrippingBc2ThreeMu       | 0.000050  |       5  |   1.600 |
-   | -- StrippingThreeMuons       | 0.000230  |      23  | 266.739 |
-   +------------------------------+-----------+--------------------+
+   Test with 100k events Reco05-Stripping08_SDSTs.py : 
  
-$Revision: 1.2 $
-Last modification $Date: 2010-08-11 08:56:19 $
+    +-----------------------------+-----------+-----------+---------+--------+
+    | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
+    +-----------------------------+-----------+-----------+---------+--------+
+    | StrippingGlobal             | 0.000930  |      93   |         | 1.035  |
+    +-----------------------------+-----------+-----------+---------+--------+
+    | StrippingSequenceStreamTest | 0.000930  |      93   |         |  1.029 | 
+    | -- StrippingThreeMuons      | 0.000510  |      51   | 226.000 |  0.860 | 
+    | -- StrippingBc2ThreeMu      | 0.000180  |      18   | 1.556   |  0.057 | 
+    | -- StrippingTau2ThreeMu     | 0.000240  |      24   | 1.500   |  0.051 | 
+    +-----------------------------+-----------+---------------------+--------+
+
+ 
+$Revision: 1.3 $
+Last modification $Date: 2010-08-24 11:05:43 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-08'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 # =============================================================================
 __all__ = (
     #
@@ -155,8 +157,8 @@ _Preambulo  = [
     "ctauBc  = PDGM('B_c+')/M * BPVLTIME ( ) * c_light "  
     ]
 
-muoncuts      = " ( TRCHI2DOF < 10  ) & ( BPVIPCHI2 () > 4 ) "
-tightmuoncuts = " ( PT > 1.00 * GeV ) & ( BPVIPCHI2 () > 9 ) "
+muoncuts      = " ( PT > 250 * MeV ) & ( TRCHI2DOF < 10  ) & ( BPVIPCHI2 () > 4 ) "
+tightmuoncuts = " ( PT > 1.2 * GeV )                       & ( BPVIPCHI2 () > 9 ) "
 
 ## helper selection of 'good' muons 
 _GoodMuons = FilterDesktop (
@@ -231,10 +233,13 @@ _Tau2ThreeMu = CombineParticles (
     } ,
     ## 
     CombinationCut  = """
-    ( ADAMASS('tau+') < 200 * MeV ) & AHASCHILD ( PT > 1 * GeV ) 
-    """ , ## wide mass-combination
+    ( ADAMASS('tau+') < 250 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+    """ , ## wide mass-combination + PT-cuts 
     ##
-    MotherCut       = " ( chi2vx < 25 ) & ( ctau > 40 * micrometer ) " 
+    MotherCut       = """
+    ( chi2vx < 25 ) &
+    ( ctau   > 40 * micrometer )
+    """ 
     )
 
 ## make selections
@@ -255,11 +260,14 @@ _Bc2ThreeMu = CombineParticles (
     ##
     Preambulo        = _Preambulo + [
     ## mass-windows :
-    "mPsi1S  = PDGM('J/psi(1S)' ) " , 
-    "mPsi2S  = PDGM(  'psi(2S)' ) " ,
-    "lowMass = mPsi1S - 200 * MeV " , 
-    "dm1     = AM13 > lowMass "     , 
-    "dm2     = AM23 > lowMass "     , 
+    "mPsi1S = PDGM('J/psi(1S)' ) " , 
+    "mPsi2S = PDGM(  'psi(2S)' ) " ,
+    "l1S    = mPsi1S - 200 * MeV " , 
+    "h1S    = mPsi1S + 200 * MeV " , 
+    "l2S    = mPsi2S - 200 * MeV " , 
+    "h2S    = mPsi2S + 200 * MeV " , 
+    "dm1    = in_range ( l1S , AM13 , h1S ) | in_range ( l2S , AM13 , h2S ) " , 
+    "dm2    = in_range ( l1S , AM23 , h1S ) | in_range ( l2S , AM23 , h2S ) " 
     ] ,
     ##
     DaughtersCuts    = {
@@ -267,7 +275,7 @@ _Bc2ThreeMu = CombineParticles (
     } ,
     ## 
     CombinationCut  = """
-    ( lowMass < AM ) & AHASCHILD( PT > 1 * GeV ) & ( dm1 | dm2 )  
+    ( l1S < AM ) & AHASCHILD( PT > 1.0 * GeV ) & ( dm1 | dm2 )
     """,
     ##
     MotherCut       = " ( chi2vx < 25 ) & ( ctauBc > 20 * micrometer ) " 
@@ -319,9 +327,9 @@ ThreeMuons_Line  = StrippingLine (
     )
 
 Lines = [
-    Tau2ThreeMu_Line ,
+    ThreeMuons_Line  ,
     Bc2ThreeMu_Line  ,
-    ThreeMuons_Line  
+    Tau2ThreeMu_Line 
     ]
 
 # =============================================================================
