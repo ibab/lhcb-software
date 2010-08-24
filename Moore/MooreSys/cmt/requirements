@@ -1,23 +1,12 @@
 package MooreSys
-version v9r4
-
+version v9r5
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v9r4   Hlt
-
-use Hlt2Lines           v4r3    Hlt
-use Hlt2SharedParticles v4r3    Hlt
-use HltConf             v8r2    Hlt
-use HltRawData          v2r8    Hlt
-use HltSettings         v2r2    Hlt
-use HltTracking         v6r2    Hlt
-
-use PatAlgorithms       v4r4    Tf
-use DaVinciTools        v21r3p2 Phys
+use  Moore              v9r5   Hlt
 
 # Declare this as a container package
 apply_pattern container_package
