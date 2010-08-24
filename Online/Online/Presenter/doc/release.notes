@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-08-23 - Olivier Callot
+ - Add the crypto.c code of Elog (with minor changes to allow silent compilation)
+   into Elog.cpp to cope with Elog 2.8 to be released soon.
+ - Fix the reporting of error in Elog posting, so that failure are indicated
+   as such in the reporting window! 
+
 !============ Presenter v2r1 2010-08-23 =============
 ! 2010-08-19 - G.Graziani
  - declare trend histograms via new OnlineHistDB::declareTrendingHistogram method

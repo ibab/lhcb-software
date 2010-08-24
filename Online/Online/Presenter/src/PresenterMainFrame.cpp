@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.332 2010-08-19 20:55:20 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.333 2010-08-24 05:29:01 ocallot Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1895,12 +1895,19 @@ void PresenterMainFrame::reportToLog() {
       std::cout << "=== produced entry " << number << std::endl;
       char statusMessage[100];
       char linkText[100];
-      sprintf( linkText, "http://lblogbook.cern.ch/%s/%d", logbook.c_str(), number );
-      sprintf( statusMessage, "Entry %d created in logbook %s", number, logbook.c_str() );
-      m_mainStatusBar->SetText( statusMessage, 2);
-
       std::string message = "Created ELOG entry ";
-      message = message + std::string( linkText );
+      if ( 0 != number ) {
+        sprintf( linkText, "http://lblogbook.cern.ch/%s/%d", logbook.c_str(), number );
+        sprintf( statusMessage, "Entry %d created in logbook %s", number, logbook.c_str() );
+        message = message + std::string( linkText );
+      } else {
+        sprintf( statusMessage, "Failed to create entry, see log file" );
+        sprintf( linkText,  "Failed to create entry, see log file" );
+        message = "*** Failed to create Elog entry, see log file ***";
+        title = "";
+      }
+
+      m_mainStatusBar->SetText( statusMessage, 2);
 
       if ( "" != title ) {
         ProblemDB myProblem( m_pbdbConfig );
