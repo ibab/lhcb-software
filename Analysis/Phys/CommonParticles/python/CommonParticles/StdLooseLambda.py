@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseLambda.py,v 1.1 2009-10-09 12:39:26 pkoppenb Exp $ 
+# $Id: StdLooseLambda.py,v 1.2 2010-08-24 17:48:00 yamhis Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseLambda.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Lambda'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseLambdaLL' ,
@@ -30,8 +30,8 @@ StdLooseLambdaLL = CombineParticles ( 'StdLooseLambdaLL' )
 StdLooseLambdaLL.InputLocations = [ "StdLoosePions", "StdLooseProtons" ]
 StdLooseLambdaLL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc" 
 
-StdLooseLambdaLL.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<20)",
-                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<20)" } 
+StdLooseLambdaLL.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<10)",
+                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<10)" } 
 StdLooseLambdaLL.CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
 StdLooseLambdaLL.MotherCut = "(ADMASS('Lambda0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
 
@@ -47,8 +47,8 @@ StdLooseLambdaDD = StdLooseLambdaLL.clone( 'StdLooseLambdaDD' )
 
 StdLooseLambdaDD.InputLocations = [ "StdNoPIDsDownPions", "StdNoPIDsDownProtons" ]
 
-StdLooseLambdaDD.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<20)",
-                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<20)" } 
+StdLooseLambdaDD.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<10)",
+                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<10)" } 
 StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV)"
 StdLooseLambdaDD.MotherCut = "(ADMASS('Lambda0')<64*MeV) & (VFASPF(VCHI2/VDOF)<30)"
 

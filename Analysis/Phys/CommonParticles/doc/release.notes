@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.187 2010-08-11 12:43:05 ukerzel Exp $
+ )!$Id: release.notes,v 1.188 2010-08-24 17:48:00 yamhis Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+! 2010-08-24 Yasmine Amhis 
+  - Change  track chi2/ndof (20 -> 10) cut of pions and proton in StdLooseLambda.py 
 
 ! 2010-08-11 - Ulrich Kerzel
 - Add StdNoPIDsElectrons for Upstream, Downstream and VELO tracks
