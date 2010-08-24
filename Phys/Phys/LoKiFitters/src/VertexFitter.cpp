@@ -72,6 +72,10 @@ StatusCode LoKi::VertexFitter::_load
   { return _Warning ( "_load(): the error from _load:" , sc          ) ; } // RETURN 
   if ( m_entries.empty() ) 
   { return _Warning ( "_load(): no valid data found"   , InvalidData ) ; } // RETURN 
+  //
+  if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) ) 
+  { return _Error("Input set could not be verticized"  , InvalidData ) ; }
+  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -87,17 +91,17 @@ StatusCode LoKi::VertexFitter::_load
   switch ( particleType ( particle ) ) 
   {
     //
-  case LoKi::KalmanFilter::LongLivedParticle  : 
+  case LoKi::KalmanFilter::LongLivedParticle  :
     return LoKi::KalmanFilter::loadAsFlying     ( *particle  , entry ) ; // RETURN 
     //
-  case LoKi::KalmanFilter::GammaLikeParticle  : 
-    return LoKi::KalmanFilter::loadAsGamma      ( *particle  , entry ) ; // RETURN 
-    // 
   case LoKi::KalmanFilter::ShortLivedParticle : 
     return LoKi::KalmanFilter::loadAsShortLived ( *particle  , entry ) ; // RETURN 
     //
+  case LoKi::KalmanFilter::GammaLikeParticle  : 
+    return LoKi::KalmanFilter::loadAsGamma      ( *particle  , entry ) ; // RETURN 
+    //
   default:
-    return LoKi::KalmanFilter::load         ( *particle  , entry ) ; // RETURN 
+    return LoKi::KalmanFilter::load             ( *particle  , entry ) ; // RETURN 
   }
   //
   return LoKi::KalmanFilter::load ( *particle  , entry ) ;  
@@ -106,16 +110,16 @@ StatusCode LoKi::VertexFitter::_load
 // add one particle at the end of the queue
 // ============================================================================
 StatusCode LoKi::VertexFitter::_add 
-( const LHCb::Particle*              child     , 
-  const double                       newZ      ) const
+( const LHCb::Particle*  child , 
+  const Gaudi::XYZPoint& point ) const
 {
   m_entries.push_back( Entry() ) ;
   StatusCode sc = _load      ( child , m_entries.back() ) ;
   if ( sc.isFailure() ) 
-  { Warning ("_add(): the error from _add()      , ignore", sc , 1 ).ignore() ; }
-  sc = _transport ( m_entries.back() , newZ ) ;
+  { _Warning ("_add(): the error from _add()      , ignore", sc ) ; }
+  sc = _transport ( m_entries.back() , point ) ;
   if ( sc.isFailure() ) 
-  { Warning ("_add(): the error from _transport(), ignore", sc , 1 ).ignore() ; }
+  { _Warning ("_add(): the error from _transport(), ignore", sc ) ; }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -136,10 +140,11 @@ StatusCode LoKi::VertexFitter::_iterate
   for ( size_t iIter = 1 ; iIter <= nIterMax ; ++iIter ) 
   {    
     // make a proper transportation 
-    const double newZ = (*x)(2) ;
-    StatusCode sc = _transport ( newZ ) ;
+    Gaudi::XYZPoint point ;
+    Gaudi::Math::la2geo ( *x , point ) ;
+    StatusCode sc = _transport ( point ) ;
     if ( sc.isFailure() ) 
-    { Warning ( "_iterate(): problem with transport ", sc , 1 ).ignore() ;}    
+    { _Warning ( "_iterate(): problem with transport ", sc ) ; }    
     // initialize the covariance matrix 
     if ( 0 != iIter ) { m_seedci = (*ci) * s_scale2 ; }
     ci   = &m_seedci ;
@@ -149,7 +154,9 @@ StatusCode LoKi::VertexFitter::_iterate
     // start the kalman filter 
     bool done = false ;
     // A) the simplest case: 2 body fit 
-    if  ( 2 == m_entries.size() && m_use_twobody_branch ) 
+    if  ( m_use_twobody_branch  && 
+          2 == m_entries.size() && 
+          2 == LoKi::KalmanFilter::nGood ( m_entries ) )  
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
                                       m_entries[1] , 
@@ -188,13 +195,13 @@ StatusCode LoKi::VertexFitter::_iterate
     // kalman smooth
     sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
     if ( sc.isFailure() ) 
-    { Warning ( "_iterate(): problem with smoother", sc , 1 ).ignore() ; }
+    { _Warning ( "_iterate(): problem with smoother", sc ) ; }
     // distance in the absolute position 
     const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
     // distance in the chi2 units 
     const double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
     if ( d2 < 0 ) 
-    {  Warning ( "_iterate: negative chi2 detected, ignore" , sc , 1 ).ignore() ; }
+    { _Warning ( "_iterate: negative chi2 detected, ignore" , sc ) ; }
     // termination conditions:
     //
     //  (1) STOP if the distance is sufficiently small 
@@ -205,7 +212,7 @@ StatusCode LoKi::VertexFitter::_iterate
     {
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
-      { Warning ( "_iterate(): problems with covariances" , sc , 1 ).ignore() ; }
+      { _Warning ( "_iterate(): problems with covariances" , sc ) ; }
       // 
       counter ( "#iterations" ) += iIter ;
       //
@@ -213,7 +220,7 @@ StatusCode LoKi::VertexFitter::_iterate
     } 
   } // end of iterations
   //
-  return Warning ( "No convergency has been reached" , NoConvergency , m_prints  ) ; // RETURN 
+  return _Warning ( "No convergency has been reached" , NoConvergency ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -224,7 +231,9 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   const Gaudi::XYZPoint&     p = vertex->position  () ;
   const Gaudi::SymMatrix3x3& c = vertex->covMatrix () ;
   
-  if ( m_seedZmin < p.Z() && m_seedZmax > p.Z() && m_seedRho > p.Rho()   && 
+  if ( m_seedZmin < p.Z()   && 
+       m_seedZmax > p.Z()   && 
+       m_seedRho  > p.Rho() && 
        s_small2 < Gaudi::Math::min_diagonal ( c ) && 
        s_large2 > Gaudi::Math::max_diagonal ( c )   ) 
   {
@@ -239,7 +248,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
       return StatusCode::SUCCESS ;                            // RETURN 
     } 
   }
-  
+  //
   StatusCode sc = LoKi::KalmanFilter::seed 
     ( m_entries , m_seed , m_seedci , s_scale2 ) ;
   
@@ -248,7 +257,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
     Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
     m_seedci(2,2) = 1.0/s_large2 ;
-    Warning ( "_seed(): error in matrix inversion" , sc , 1 ).ignore()  ; 
+    _Warning ( "_seed(): error in matrix inversion" , sc ) ; 
   }
   /// check the validity of the seed 
   Gaudi::XYZPoint pnt ( m_seed[0] , m_seed[1] , m_seed[2] ) ;
@@ -362,6 +371,9 @@ StatusCode LoKi::VertexFitter::fit
   {
     Gaudi::Math::add ( vct , i->m_parq ) ;
     m_cmom  += i->m_d ;
+    //
+    if ( i->special() ) { continue ; } // gamma & digamma
+    //
     m_mpcov += i->m_e ;
     for ( EIT j = i + 1 ; m_entries.end() != j ; ++j ) 
     {	
@@ -375,11 +387,11 @@ StatusCode LoKi::VertexFitter::fit
   particle.setPosMomCovMatrix ( m_mpcov ) ;
   // mass & error in mass 
   const double mass = particle.momentum().M() ;
-  if ( 0 > mass ) { Warning( "fit(): mass is negative!") ; }
+  if ( 0 > mass ) { _Warning ( "fit(): mass is negative!"       ) ; }
   Gaudi::Vector4 dmdp (  -vct.X() , -vct.Y() , -vct.Z() , vct.E() ) ;
   dmdp /= mass ;
   const double merr = Similarity ( dmdp , m_cmom ) ;
-  if ( 0 > merr ) { Warning( "fit(): mass error is negative " ) ; }  
+  if ( 0 > merr ) { _Warning ( "fit(): mass error is negative " ) ; }  
   particle.setMeasuredMass    ( mass             ) ;
   particle.setMeasuredMassErr ( ::sqrt ( ::fabs ( merr  ) ) ) ;
   //
@@ -399,6 +411,16 @@ StatusCode LoKi::VertexFitter::add
   if ( 0 == particle ) 
   { return _Error ( "add: Particle* point to NULL!" , InvalidParticle ) ; }
   //
+  switch ( particleType ( particle ) ) 
+  {
+  case LoKi::KalmanFilter::GammaLikeParticle   :
+    return _Error ( "add: No way to add   Gamma-like" , InvalidParticle ) ; 
+  case LoKi::KalmanFilter::DiGammaLikeParticle : 
+    return _Error ( "add: No way to add DiGamma-like" , InvalidParticle ) ;
+  default: 
+    break ;
+  }
+  //
   if ( &vertex != m_vertex ) 
   {
     // first need to fit it! 
@@ -408,9 +430,9 @@ StatusCode LoKi::VertexFitter::add
                   vertex.outgoingParticles().begin () , 
                   vertex.outgoingParticles().end   () ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "add: error from 'fit'", sc , 1 ) ; }
+    { return _Error ( "add: error from 'fit'", sc ) ; }
   }
-  StatusCode sc = _add ( particle , vertex.position().Z() ) ;
+  StatusCode sc = _add ( particle , vertex.position() ) ;
   if ( sc.isFailure() ) { _Warning ("add(): failure from _add" , sc ) ; }
   //
   Entry& entry    =   m_entries.back()   ;
@@ -602,15 +624,15 @@ StatusCode LoKi::VertexFitter::initialize()
   // get particle property service 
   m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true );
   // validate  
-  sc = m_longLived.validate ( m_ppSvc ) ;
+  sc = m_longLived.validate  ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Long-Lived particles"  , sc ) ; }
+  { return Error ( "Unable to validate Long-Lived  particles" , sc ) ; }
   sc = m_shortLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
-  sc = m_gammaLike.validate ( m_ppSvc ) ;
+  sc = m_gammaLike.validate  ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
+  { return Error ( "Unable to validate Gamma-Like  particles" , sc ) ; }
   //
   if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
   {
@@ -685,7 +707,8 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
 // transport the data to a certain position 
 // ============================================================================
 StatusCode LoKi::VertexFitter::_transport 
-( LoKi::VertexFitter::Entry& entry , const double newZ ) const 
+( LoKi::VertexFitter::Entry& entry , 
+  const Gaudi::XYZPoint&     point ) const 
 {
   const double refPointZ = entry.m_p.referencePoint().Z() ;
   const double parZ      = entry.m_parx [2]               ;
@@ -704,15 +727,15 @@ StatusCode LoKi::VertexFitter::_transport
       { return StatusCode::SUCCESS ; }                                // RETURN 
       // else : transport them into own vertex 
       return LoKi::KalmanFilter::transport 
-        ( entry , vertexZ , transporter () ) ;                        // RETURN
+        ( entry , vertex->position() , transporter () ) ;             // RETURN
     }
   }
   // no need for transport?
-  if ( std::fabs ( refPointZ - newZ ) < m_transport_tolerance && 
-       std::fabs ( parZ      - newZ ) < m_transport_tolerance  ) 
+  if ( std::fabs ( refPointZ - point.Z () ) < m_transport_tolerance && 
+       std::fabs ( parZ      - point.Z () ) < m_transport_tolerance  ) 
   { return StatusCode::SUCCESS ; }                                    // RETURN 
   // finally: transport it! 
-  return LoKi::KalmanFilter::transport ( entry , newZ , transporter() ) ; 
+  return LoKi::KalmanFilter::transport ( entry , point , transporter() ) ; 
 }  
 // ============================================================================
 /// the factory needed for instantiation

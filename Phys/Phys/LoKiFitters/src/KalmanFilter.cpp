@@ -15,6 +15,10 @@
 // ============================================================================
 #include "KalmanFilter.h"
 // ============================================================================
+// CaloUtils 
+// ============================================================================
+#include "CaloUtils/CaloMomentum.h"
+// ============================================================================
 /** @file 
  *  Implementation file for functions from namespace LoKi::KalmanFilter
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -99,9 +103,17 @@ namespace
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     //
-    if ( LoKi::KalmanFilter::LongLivedParticle == type  
-         || 
-         _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
+    if ( LoKi::KalmanFilter::GammaLikeParticle  == type ) 
+    {
+      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ;
+    }
+    else if ( LoKi::KalmanFilter::DiGammaLikeParticle  == type ) 
+    {
+      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ;      
+    }
+    else if ( LoKi::KalmanFilter::LongLivedParticle == type  
+              || 
+              _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
     {
       Gaudi::SymMatrix2x2 cixy ;
       // basic particle? : use some tricks to 
@@ -125,6 +137,7 @@ namespace
       //
       // REDEFINE THE PARTICLE TYPE 
       entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
+      //
     }
     else // ShortLived Particle 
     {
@@ -133,10 +146,11 @@ namespace
       if ( !entry.m_vxi.Invert() )
       { return StatusCode 
           ( LoKi::KalmanFilter::ErrorInMatrixInversion2 , true ) ; }   // RETURN 
+      //
     }
     // 
-    Gaudi::Math::geo2LA ( entry.m_p.referencePoint () , entry.m_parx ) ;
-    Gaudi::Math::geo2LA ( entry.m_p.momentum       () , entry.m_parq ) ;
+    Gaudi::Math::geo2LA      ( entry.m_p.referencePoint () , entry.m_parx ) ;
+    Gaudi::Math::geo2LA      ( entry.m_p.momentum       () , entry.m_parq ) ;
     //
     return StatusCode::SUCCESS ;
   }
@@ -231,9 +245,27 @@ StatusCode LoKi::KalmanFilter::step
   const Gaudi::SymMatrix3x3&  ci    , 
   const double                chi2  ) 
 {
+  // the special case :  gamma and digamma
+  if ( entry.special () )
+  {
+    entry.m_x    = x    ;
+    entry.m_ci   = ci   ;
+    entry.m_chi2 = chi2 ;
+    //
+    // OK ! 
+    int ifail = 0 ;
+    /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
+    entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
+    if ( 0 != ifail ) 
+    { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+    //
+    return StatusCode::SUCCESS ;
+  }
+  // regular case: 
   // OK !
   /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
   entry.m_ci = ci + entry.m_vxi  ; 
+  //
   // OK ! 
   int ifail = 0 ;
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
@@ -242,8 +274,7 @@ StatusCode LoKi::KalmanFilter::step
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   // OK ! 
   /// \f$\vec{x}_k\f$
-  entry.m_x = entry.m_c * 
-    ( ci*x + entry.m_vxi * entry.m_parx  ) ; 
+  entry.m_x = entry.m_c * ( ci*x + entry.m_vxi * entry.m_parx  ) ; 
   // OK ! 
   const Gaudi::Vector3 dx = entry.m_parx - entry.m_x ;  
   // OK !
@@ -277,6 +308,15 @@ StatusCode LoKi::KalmanFilter::step
   const Gaudi::SymMatrix3x3&  /* ci */ , 
   const double                chi2     ) 
 {
+  //
+  if ( entry1.m_type != LongLivedParticle  && 
+       entry1.m_type != ShortLivedParticle  ) 
+  { return StatusCode( ErrorInInputData , true ) ; }
+  //
+  if ( entry2.m_type != LongLivedParticle  && 
+       entry2.m_type != ShortLivedParticle  ) 
+  { return StatusCode( ErrorInInputData , true ) ; }
+  //
   entry1.m_ci = entry1.m_vxi + entry2.m_vxi ; 
   entry2.m_ci = entry1.m_ci ;
   //
@@ -323,6 +363,9 @@ StatusCode LoKi::KalmanFilter::smooth
   {
     /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
     entry -> m_x  = last.m_x ;
+    ///
+    if ( !entry->regular() ) { continue ; }
+    ///
     const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
     /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
     entry -> m_q = entry -> m_parq 
@@ -346,14 +389,25 @@ StatusCode LoKi::KalmanFilter::evalCov
   {
     /// \f$ C^n_k = C_n \f$  
     entry -> m_c = last.m_c ;
-    /// \f$ F_k = G_{p}^{-1}G^T{xp} = - V^T_{xp}V^{-1}_x \f$ 
-    entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
-    /// \f$ E_k = - F_k C_n \f$ 
-    entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
-    /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
-    entry -> m_d = entry->m_p.momCovMatrix() 
-      - Similarity ( entry -> m_p.posMomCovMatrix() , entry -> m_vxi ) 
-      + Similarity ( entry -> m_f                   , entry -> m_c   ) ;
+    // 
+    if ( entry->regular() ) 
+    {
+      /// \f$ F_k = G_{p}^{-1}G^T{xp} = - V^T_{xp}V^{-1}_x \f$ 
+      entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
+      /// \f$ E_k = - F_k C_n \f$ 
+      entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
+      /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
+      entry -> m_d = entry->m_p.momCovMatrix() 
+        - Similarity ( entry -> m_p.posMomCovMatrix() , entry -> m_vxi ) 
+        + Similarity ( entry -> m_f                   , entry -> m_c   ) ;
+    }
+    else  // gamma & digamma 
+    {
+      Gaudi::Math::setToScalar ( entry->m_f , 0.0 ) ;
+      Gaudi::Math::setToScalar ( entry->m_e , 0.0 ) ;
+      entry -> m_d = entry->m_p.momCovMatrix()  ;
+    }
+    //
   }
   //
   return StatusCode::SUCCESS ;
@@ -374,6 +428,9 @@ StatusCode LoKi::KalmanFilter::seed
   for ( Entries::const_iterator it = entries.begin() ; 
         entries.end() != it ; ++it ) 
   {
+    //
+    if ( ! it->regular() ) { continue ; } // CONTINUE 
+    //
     ci   += it->m_vxi                ;
     seed += it->m_vxi * it -> m_parx ;
   }
@@ -404,8 +461,128 @@ StatusCode LoKi::KalmanFilter::seed
   Gaudi::Math::la2geo ( xx ,  x ) ; //  3-vector-LA -> 3D-point
   return sc ;
 }  
-// ========================================================================      
-
+// ============================================================================
+/*  transport the entry into new point 
+ *  @param entry     (UPDATE) the entry to be transported 
+ *  @param newpoint  (INPUT)  new 
+ *  @param tool      (INPUT)  the particle transporter tool
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::transport 
+( LoKi::KalmanFilter::Entry& entry    , 
+  const Gaudi::Vector3&      point    , 
+  IParticleTransporter*      tool     ) 
+{
+  Gaudi::XYZPoint        xxx ;
+  //  3D-point-LA    -> 3-vector
+  Gaudi::Math::la2geo ( point , xxx ) ;
+  //
+  return transport ( entry , xxx , tool ) ;
+}
+// ============================================================================
+/*  transport the entry into new point 
+ *  @param entry     (UPDATE) the entry to be transported 
+ *  @param newpoint  (INPUT)  new 
+ *  @param tool      (INPUT)  the particle transporter tool
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::transport 
+( LoKi::KalmanFilter::Entry& entry    , 
+  const Gaudi::XYZPoint&     point    , 
+  IParticleTransporter*      tool     ) 
+{
+  // regular or uknown entry ?
+  if ( !entry.special() ) { return transport ( entry , point.Z () , tool ) ; }
+  //
+  // Gamma-like & Digamma-like entry 
+  LHCb::CaloMomentum calo ;
+  calo.setReferencePoint ( point ) ;
+  //
+  if      ( GammaLikeParticle == entry.m_type ) 
+  {
+    calo.addCaloPosition ( entry.m_p0->proto() ) ;
+  }
+  else if ( DiGammaLikeParticle == entry.m_type ) 
+  {
+    /// @todo add the treatment of digammas 
+  }
+  //
+  const bool ok = calo.evaluate() ;
+  if ( !ok ) { return StatusCode ( ErrorFromCaloMomentum , true ) ; }
+  //
+  // extract the values:
+  entry.m_p.setReferencePoint ( point                ) ;
+  entry.m_p.setMomentum       ( calo.momentum     () ) ;
+  entry.m_p.setMomCovMatrix   ( calo.momCovMatrix () ) ;
+  //
+  Gaudi::Math::setToScalar
+    ( const_cast<Gaudi::SymMatrix3x3&>( entry.m_p.posCovMatrix    () ) , 0.0 ) ;
+  Gaudi::Math::setToScalar
+    ( const_cast<Gaudi::Matrix4x3&>   ( entry.m_p.posMomCovMatrix () ) , 0.0 ) ;
+  //
+  return StatusCode::SUCCESS ;  
+}
+// ============================================================================
+/*  get number of 'good' entries for verticing 
+ *  @param entries   (input) the vector of entries 
+ *  @return number of good entries for verticing
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+unsigned short LoKi::KalmanFilter::nGood 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{
+  //
+  unsigned short result = 0 ;
+  for ( Entries::const_iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    switch ( ientry->m_type ) 
+    {
+    case ShortLivedParticle : ++result    ; break ;
+    case LongLivedParticle  : ++result    ; break ;
+    default                 :               break ;
+    } 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+/*  check if the collection of entries is OK for vertex:
+ *   - either at least one short-lived particle 
+ *   - or at least two long-lived particles 
+ *  @return true of colelction of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+bool LoKi::KalmanFilter::okForVertex 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{
+  unsigned short nLong = 0 ;
+  for ( Entries::const_iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    //
+    switch ( ientry->m_type ) 
+    {
+    case ShortLivedParticle : return true ;           // RETURN 
+    case LongLivedParticle  : ++nLong ; break ;
+    default                 :           break ;
+    } 
+    //
+    if ( 2 <= nLong )       { return true ; }        //  RETURN 
+  }
+  //
+  return 2 <= nLong ;
+}
 
 // ============================================================================
 // The END 

@@ -475,15 +475,19 @@ namespace LoKi
     StatusCode _load ( const LHCb::Particle::ConstVector& daughters ) const ;
     /// add one particle at the end of the queue
     StatusCode _add 
-    ( const LHCb::Particle* child , const double newZ ) const ;
+    ( const LHCb::Particle*  child , 
+      const Gaudi::XYZPoint& point ) const ;
     /// transport the data to a certain position 
-    StatusCode _transport ( Entry& entry , const double newZ ) const ;
+    StatusCode _transport
+    ( Entry&                 entry  , 
+      const Gaudi::XYZPoint& point  ) const ;
     /// transport all data to a certain position 
-    StatusCode _transport ( const double newZ ) const 
+    StatusCode _transport 
+    ( const Gaudi::XYZPoint& point ) const 
     {
       for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
       { 
-        StatusCode sc = _transport ( *entry , newZ ) ; 
+        StatusCode sc = _transport ( *entry , point ) ; 
         if ( sc.isFailure() ) 
         { _Warning ( "_transport(): the error from transport(), ignore", sc ) ; }
       }

@@ -164,6 +164,10 @@ namespace LoKi
       ErrorInMatrixInversion3      = 405 ,  // Error in Matrix Inversion
       /// Error in Matrix Inversion (IV)
       ErrorInMatrixInversion4      = 406 ,  // Error in Matrix Inversion
+      /// Error in InputData 
+      ErrorInInputData             = 407 ,  // Error in Input  Data
+      /// Error from CaloMomentum 
+      ErrorFromCaloMomentum        = 408 ,  // Error from CaloMomentum
       /// Error from Particle Transporter 
       ErrorFromParticleTransporter = 410    // Error form particle transporter 
       // ======================================================================
@@ -183,7 +187,9 @@ namespace LoKi
       /// Long-lived/stable particle
       LongLivedParticle       ,                  //  Long-lived/stable particle
       /// Photon-like 
-      GammaLikeParticle                          //        Photon-like particle 
+      GammaLikeParticle       ,                  //        Photon-like particle 
+      /// Di-Photon-like 
+      DiGammaLikeParticle                        //     Di-Photon-like particle 
       // ======================================================================
     } ;
     // ========================================================================
@@ -229,6 +235,18 @@ namespace LoKi
       Gaudi::Matrix4x3                  m_e    ; // covariance matrix for (x,q)
       /// \f$F=WB^{T}GA\f$
       Gaudi::Matrix4x3                  m_f    ; // auxillary matrix F 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// is it the regular entry ? 
+      bool regular () const { return !special() ; }
+      /// is it the special entry ? 
+      bool special () const 
+      {
+        return
+          GammaLikeParticle   == m_type || 
+          DiGammaLikeParticle == m_type ;
+      }
       // ======================================================================
     } ;
     // ========================================================================
@@ -295,10 +313,10 @@ namespace LoKi
     ( const LHCb::Particle&      particle , 
       LoKi::KalmanFilter::Entry& entry    ) ;
     // ========================================================================
-    /** transport the entry into new Z 
-     *  @param entry the entry to be transported 
-     *  @param newZ  new Z-position 
-     *  @param tool  the particle transporter tool
+    /** transport the regular entry into new Z 
+     *  @param entry (UPATE) the entry to be transported 
+     *  @param newZ  (INPUT) new Z-position 
+     *  @param tool  (INPUT) the particle transporter tool
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-06
@@ -306,6 +324,32 @@ namespace LoKi
     StatusCode transport 
     ( LoKi::KalmanFilter::Entry& entry    , 
       const double               newZ     , 
+      IParticleTransporter*      tool     ) ;
+    // ========================================================================
+    /** transport the entry into new point 
+     *  @param entry     (UPDATE) the entry to be transported 
+     *  @param newpoint  (INPUT)  new 
+     *  @param tool      (INPUT)  the particle transporter tool
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode transport 
+    ( LoKi::KalmanFilter::Entry& entry    , 
+      const Gaudi::Vector3&      point    , 
+      IParticleTransporter*      tool     ) ;
+    // ========================================================================
+    /** transport the entry into new point 
+     *  @param entry     (UPDATE) the entry to be transported 
+     *  @param newpoint  (INPUT)  new 
+     *  @param tool      (INPUT)  the particle transporter tool
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode transport 
+    ( LoKi::KalmanFilter::Entry& entry    , 
+      const Gaudi::XYZPoint&     point    , 
       IParticleTransporter*      tool     ) ;
     // ========================================================================
     /** make one step of Kalman filter 
@@ -401,8 +445,26 @@ namespace LoKi
       Gaudi::SymMatrix3x3&               ci             , 
       const double                       scale = 1.e-4  ) ;
     // ========================================================================      
-  } // end of namespace LoKi::KalmanFilter
-} //end of namespace LoKi
+    /** get number of 'good' entries for verticing 
+     *  @param entries   (input) the vector of entries 
+     *  @return number of good entries for verticing
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    unsigned short nGood ( const Entries& entries ) ;
+    // ========================================================================      
+    /** check if the collection of entries is OK for vertex:
+     *   - either at least one short-lived particle 
+     *   - or at least two long-lived particles 
+     *  @return true of colelction of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    bool okForVertex ( const Entries& entries ) ;
+    // ========================================================================
+  } //                                      end of namespace LoKi::KalmanFilter
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

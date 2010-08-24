@@ -5,6 +5,17 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-24 - Vanya Belyaev
+
+ - VertexFitter:
+
+     The first attempt to add the photons.
+     NOT TESTED YET! 
+
+ - cmt/requirements
+
+     version increment to v3r0 
+
 
 ! 2010-08-19 - Gerhard Raven
  - VertexFitter: fix a few forgotten printouts
