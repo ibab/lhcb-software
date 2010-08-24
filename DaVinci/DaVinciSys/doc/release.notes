@@ -7,6 +7,27 @@ Purpose             : LHCb physics analysis application
 
   * Based on LHCb v31r4 software stack.
   * Many, many MicroDST enhancements.
+  * New DaVinci().EventPreFilters slot: takes list of algorithms that filter
+    on DST (or MicroDST) data *before* anything else is run. This can save 
+    *a lot* of time when analysing e.g. one or two lines in DSTs with many
+    lines. Example:
+
+    from PhysConf.Filters import Filters 
+
+    fltrs = Filters  (
+    HLT_CODE = "HLTPASS_RE('Hlt.*(MicroBias|Hadron).*Decision')" , STRIP_CODE = 'HLT_PASS_RE('StrippingStripD2K(K|P)P_(A|B)_LoosePID_.*Decision')" , 
+VOID_CODE = " EXISTS('/Event/Strip') & EXISTS('/Event/Charm')" 
+                     ) 
+
+    DaVinci ( 
+             ...
+             EventPreFilters = fltr.filters('MyFilters')
+             ...
+             )
+
+    This will apply HLT and Stripping dec report requirements, plus filter on 
+    the existence of '/Event/Strip' and '/Event/Charm' before anything else 
+    is cone.
 
 </PRE><H1><A NAME=v25r7>2010-07-28 DaVinci v25r7. Version for Stripping line development and Reco05-Stripping08 production.</A></H1><PRE>
 
