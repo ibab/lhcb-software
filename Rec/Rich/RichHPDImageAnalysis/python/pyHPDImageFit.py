@@ -26,6 +26,7 @@ class HPDBoundaryFcn :
         self.hist      = _hist
         if _hist != None:
             self.sf        = (1.0*_hist.GetNbinsX())/(1.0*_hist.GetNbinsY())
+        self.boundary  = [ ]
 
     def nPixels(self):
         value = 0.0
@@ -87,7 +88,6 @@ def chiSquare(x,y,r):
     
     chi2 = 0.0
     for bound in fitFunc.boundary:
-
         deltaCol = (1.0        * bound[0]) - x
         deltaRow = (fitFunc.sf * bound[1]) - y
         dist = sqrt( deltaCol*deltaCol + deltaRow*deltaRow )

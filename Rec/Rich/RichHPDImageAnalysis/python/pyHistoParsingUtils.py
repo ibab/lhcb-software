@@ -58,6 +58,8 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
     """
     Returns the HPD local offset in mm
     """
+    xoffset = (0,0)
+    yoffset = (0,0)
     if not fullFit:
         xoffset = imageOffsetX( rootfile, hpdcopynr, minEntries )
         yoffset = imageOffsetY( rootfile, hpdcopynr, minEntries )
@@ -68,8 +70,7 @@ def hpdLocalOffset( rootfile, hpdcopynr, minEntries, fullFit = False ):
             xoffset = fitR["XShift"]
             yoffset = fitR["YShift"]
         else:
-            xoffset = (0,0)
-            yoffset = (0,0)
+            raise Exception('HPDImageFitFailed')
     return (xoffset,yoffset)
 
 def hpdCentreInPixels( rootfile, hpdcopynr, fullFit = False ):
