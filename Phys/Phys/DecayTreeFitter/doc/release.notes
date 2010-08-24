@@ -10,8 +10,8 @@
 
 ! 2010-08-23 - Wouter Hulsbergen
 
- - RecoTrack: pick closest state rather than first state. should help
- for V0. (a real fix is still being worked on.)
+ - RecoTrack: use tracktraj if closest-state is too far away. should
+ help  for V0. (a real fix is still being worked on.)
 
 !======================= DecayTreeFitter v1r9 2010-07-11 =====================
 
