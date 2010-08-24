@@ -45,8 +45,7 @@ namespace {
         //m_2DHotOccupancy = alg.book2D( Layername + "2DHotOccupancy", "2D Hot Occupancy", -3157.0, 3157.0, 74, -2800,2800,100);
         
       } else {
-        m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
-                                               -3157.0, 3157.0, 74, -2800,2800,100);
+        m_2DHitEfficiency = 0;
         m_2DHotEfficiency =0;
         m_2DExpOccupancy = 0;
       }

@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 Christian Linn
+ - Excluded 2D profiles from OT online monitoring 
+
 ! 2010-08-05 M Needham
  - Adjust track multiplicity histogram range
 
