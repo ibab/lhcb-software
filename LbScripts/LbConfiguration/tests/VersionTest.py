@@ -2,6 +2,7 @@
 
 from LbConfiguration.Version import CoreVersion, NotAVersion
 from LbConfiguration.Version import sortVersions, extractVersion, sortStrings
+from LbConfiguration.Version import LCGVersion
 
 import unittest
 
@@ -82,6 +83,42 @@ class VersionTestCase(unittest.TestCase):
                                      ["GAUDI_v0r0", "v1r0", "wwe/GAUDI_v1r2.tar.gz", "ddv2r0"])
         self.assertEqual(sortStrings(vlist, safe=True, reverse=True), 
                                      ["ddv2r0", "wwe/GAUDI_v1r2.tar.gz", "v1r0", "GAUDI_v0r0"])
+
+    def testLCGConstructor(self):
+        v1 = "57a"
+        self.assertEqual(LCGVersion(v1).name(), v1)
+        self.assertEqual(LCGVersion(v1).version(), (57, "a"))
+        self.assertNotEqual(LCGVersion(v1).version(), (57, "b"))
+        self.assertNotEqual(LCGVersion(v1).version(), (55, "a"))
+        self.assertRaises(NotAVersion, LCGVersion, "57aa")
+
+        v2 = "59"
+        self.assertEqual(LCGVersion(v2).name(), v2)
+        self.assertEqual(LCGVersion(v2).version(), (59, ""))
+        
+    def testLCGString(self):
+        v1 = "43w"
+        self.assertEqual("%s" % LCGVersion(v1) , v1)
+               
+    def testLCGComp(self):
+        v1 = LCGVersion("56")
+        v2 = LCGVersion("57")
+        v3 = LCGVersion("54a")
+        v4 = LCGVersion("57b")
+        v5 = LCGVersion("57c")
+        self.assertTrue(v1 < v2)
+        self.assertFalse(v1 > v2)
+        self.assertFalse(v1 == v2)
+        self.assertTrue(v1 > v3)
+        self.assertTrue(v1 < v4)
+        self.assertTrue(v1 < v5)
+        self.assertTrue(v4 < v5)
+
+    def testLCGExtract(self):
+        v1 = "wwe/LCGCMT_56a.tar.gz"
+        self.assertEqual(extractVersion(v1, versiontype=LCGVersion).name(), "56a")
+        v2 = "CGCMT_58.tar.gz"
+        self.assertEqual(extractVersion(v2, versiontype=LCGVersion).name(), "58")
 
         
 if __name__ == '__main__':

@@ -27,6 +27,7 @@ class NotAVersion(Exception):
     pass
 
 class CoreVersion:
+    txt_version_style = _txt_version_style
     version_style = re.compile("%s$" % _txt_version_style)
     def __init__(self, vname):
         self._vname = vname
@@ -61,6 +62,27 @@ class CoreVersion:
     def version(self):
         return self._version
 
+class LCGVersion(CoreVersion):
+    txt_version_style = _txt_lcg_version_style
+    version_style = re.compile("%s$" % _txt_lcg_version_style)
+    def __init__(self, vname):
+        self._vname = vname
+        self._version = None
+        self._patchversion = False
+        try :
+            m = self.version_style.match(self._vname)
+        except TypeError:
+            raise NotAVersion, vname
+        if m :
+            a, b = m.groups()
+            if a is None :
+                raise NotAVersion, vname
+            a = int(a)
+            self._version = (a, b)
+        else :
+            raise NotAVersion, vname
+
+
 
 def sortVersions(versionlist, versiontype=CoreVersion, safe=False, reverse=False):
     if not safe :
@@ -80,7 +102,8 @@ def sortVersions(versionlist, versiontype=CoreVersion, safe=False, reverse=False
 
 def extractVersion(strname, versiontype=CoreVersion):
     result = None
-    m = version_style.search(strname)
+    verstyle = re.compile(versiontype.txt_version_style)
+    m = verstyle.search(strname)
     if m :
         result = versiontype(m.group())
     return result
