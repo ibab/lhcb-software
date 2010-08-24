@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-24 - Jibo He
+ - Lifetime unbiased inclusive dimuon lines tightened, as agreed by Gaia. 
+
 ! 2010-08-23 - Yasmine Amhis
   -Change the cuts in Lambdab2JpsiLambdaLL/DD lines 
 

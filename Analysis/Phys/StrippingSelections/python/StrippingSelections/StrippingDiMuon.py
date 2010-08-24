@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.8 2010-07-20 11:30:02 pkoppenb Exp $
+# $Id: StrippingDiMuon.py,v 1.9 2010-08-24 00:35:14 jhe Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -17,18 +17,18 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
     Definition of Jpsi -> mu mu stripping.
     """
     __slots__ = {
-			"MuonPT":		500.	# MeV
+			"MuonPT":		650.	# MeV
 		,	"MuonPTLoose":		500.	# MeV
-		,	"MuonTRCHI2":		10.	# adimensional
-		,	"MuonTRCHI2Loose":	10.	# adimensional
-		,	"JpsiAM":		2500.	# MeV
-		,	"JpsiAMLoose":		2500.	# MeV
-		,	"JpsiVCHI2":		20.	# adimensional
-		,	"JpsiVCHI2Loose":	20.	# adimensional
+		,	"MuonTRCHI2":		  5.	# adimensional
+		,	"MuonTRCHI2Loose":	 10.	# adimensional
+		,	"JpsiAM":	       2900.	# MeV
+		,	"JpsiAMLoose":	       2500.	# MeV
+		,	"JpsiVCHI2":		  9.	# adimensional
+		,	"JpsiVCHI2Loose":	 20.	# adimensional
                 ,       "DiMuonFDCHI2" :        100.    # adimensional
-                ,       "DiMuonHighPT" :        2000.   # MeV
-                ,       "DiMuonHighIP" :        9.      # adimensional
-                ,       "DiMuonVCHI2" :         10.     # adimensional
+                ,       "DiMuonHighPT" :       2000.    # MeV
+                ,       "DiMuonHighIP" :          9.    # adimensional
+                ,       "DiMuonVCHI2" :          10.    # adimensional
 		}
 
     def nominal_line( self ):
