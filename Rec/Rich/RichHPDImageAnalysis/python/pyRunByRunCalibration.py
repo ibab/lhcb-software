@@ -114,11 +114,11 @@ def xmlFooter():
     return """
 </DDDB>"""
 
-def hpdXMLComment(copyNumber):
+def hpdXMLComment(copyNumber,text=""):
     smartID = richSystem().richSmartID(copyNumber)
     hardID  = richSystem().hardwareID(smartID)
     return """
-<!-- HPD hardwareID: H"""+str(hardID.data())+"""  Copy Number: """+str(copyNumber.data())+""" -->
+<!-- HPD hardwareID H"""+str(hardID.data())+"""  Copy# """+str(copyNumber.data())+""" """+text+"""-->
 """
 
 # Get the run number from file name (ugly, but works ...)
@@ -140,45 +140,97 @@ def correctStartTime(time):
     startTimeOffset = int( 5 * 1e9 )
     return time - startTimeOffset
 
-def getRunFillData(files):
+def fileMD5(file):
+    # Compute the MD5 sum of the root files list
+    import hashlib
+    infile = open(file,'rb')
+    content = infile.read()
+    infile.close()
+    m = hashlib.md5()
+    m.update(content)
+    return m.hexdigest()
 
-    import datetime, time, os
+def pickleData(filename,data):
+    import pickle, os
+    file = open(filename,"w")
+    pickle.dump(data,file)
+    file.close()
 
-    # Database API
-    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-    database = BookkeepingClient()
+def loadData(filename):
+    import pickle, os
+    data = { }
+    if os.path.exists(filename) :
+        file = open(filename,"r")
+        data = pickle.load(file)
+        file.close()
+    return data
 
+def runInfoCache():
+    return loadData("RunInfoCache.pck")
+
+def saveRunInfoCache(data):
+    pickleData("RunInfoCache.pck",data)
+
+def getRunFillData(rootfiles):
+
+    # get file MD5 sum
+    md = fileMD5(rootfiles)
+
+    # Cache run data
+    dataCache = runInfoCache()
+
+    # Initialise return data
     runfilldata = { }
     runfilldata["RunData"] = { }
     runfilldata["FillData"] = { }
     runfilldata["GlobalStopTime"] = None
 
-    # Loop over the sorted run list and get the runfilldata
-    tmpTime = 0
-    for filename in files:
-        run = getIntInfo(filename,'Run')
-        # Get run start and stop times
-        res = database.getRunInformations(int(run))
-        if res['OK'] :
-            start = res['Value']['RunStart']
-            stop  = res['Value']['RunEnd']
-            fill  = int(res['Value']['FillNumber'])
-            runfilldata["RunData"][run] = { "Start" : start, "Stop" : stop, "Fill" : fill }
-            if fill not in runfilldata["FillData"].keys():
-                runfilldata["FillData"][fill] = { "Start" : start, "Stop" : stop, "Files" : []  }
-            fillData = runfilldata["FillData"][fill]
-            if fillData["Start"] > start : fillData["Start"] = start
-            if fillData["Stop"] < stop   : fillData["Stop"]  = stop
-            fillData["Files"] += [filename]
-            print "Run", run, "is from", start, "to", stop, "Fill", fill
-            unixEndTime = getUNIXTime( stop )
-            if unixEndTime > tmpTime :
-                tmpTime = unixEndTime
-                runfilldata["GlobalStopTime"] = stop
-        else:
-            print "ERROR Getting start/stop times for run", run
-            import DIRAC
-            DIRAC.exit(1)
+    # Do we already have results for this
+    if md in dataCache.keys() :
+
+        runfilldata = dataCache[md]
+
+    else:
+
+        import datetime, time, os
+
+        # Database API
+        from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+        database = BookkeepingClient()
+
+        # Load the list of root files
+        files = rootFileListFromTextFile(rootfiles)
+
+        # Loop over the sorted run list and get the runfilldata
+        tmpTime = 0
+        for filename in files:
+            run = getIntInfo(filename,'Run')
+            # Get run start and stop times
+            res = database.getRunInformations(int(run))
+            if res['OK'] :
+                start = res['Value']['RunStart']
+                stop  = res['Value']['RunEnd']
+                fill  = int(res['Value']['FillNumber'])
+                runfilldata["RunData"][run] = { "Start" : start, "Stop" : stop, "Fill" : fill }
+                if fill not in runfilldata["FillData"].keys():
+                    runfilldata["FillData"][fill] = { "Start" : start, "Stop" : stop, "Files" : []  }
+                fillData = runfilldata["FillData"][fill]
+                if fillData["Start"] > start : fillData["Start"] = start
+                if fillData["Stop"] < stop   : fillData["Stop"]  = stop
+                fillData["Files"] += [filename]
+                print "Run", run, "is from", start, "to", stop, "Fill", fill
+                unixEndTime = getUNIXTime( stop )
+                if unixEndTime > tmpTime :
+                    tmpTime = unixEndTime
+                    runfilldata["GlobalStopTime"] = stop
+            else:
+                print "ERROR Getting start/stop times for run", run
+                import DIRAC
+                DIRAC.exit(1)
+
+        # Save the result to the cache
+        dataCache[md] = runfilldata
+        saveRunInfoCache(dataCache)
 
     # Return the Run Time Information
     return runfilldata
@@ -187,11 +239,14 @@ def rFromXY(a,b):
 
     from math import sqrt
 
-    R = sqrt(a[0]*a[0]+b[0]*b[0])
+    RR = a[0]*a[0]+b[0]*b[0]
+    R = 0
+    if RR > 0 : R = sqrt(RR)
 
     tempA = a[0]*a[0]*a[1]*a[1] + b[0]*b[0]*b[1]*b[1]
     tempB = a[0]*a[0] + b[0]*b[0]
-    error = sqrt( tempA / tempB )
+    error = 0
+    if tempB > 0 : error = sqrt( tempA / tempB )
 
     return (R,error)
 
@@ -232,7 +287,7 @@ def calibrationByFills(rootfiles='RootFileNames.txt'):
 def calibration(rootfiles,type):
 
     import pyHistoParsingUtils
-    from ROOT import TFile, TGraphErrors
+    from ROOT import TFile, TGraphErrors, TGraph, TF1
     import GaudiPython
     from GaudiPython import gbl
     import CondDBUI
@@ -250,17 +305,8 @@ def calibration(rootfiles,type):
     # Min number of entries in HPD alignment histogram for update
     minHPDEntries = 10
 
-    # Open new alignment SQL slice
-    dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
-    if os.path.exists(dbFileName) : os.remove(dbFileName)
-    db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
-                          create_new_db=True, readOnly=False )
-
     # Get the run/fill info
-    runFillData = getRunFillData(files)
-
-    # List of paths already created in the DB
-    createdPaths = [ ]
+    runFillData = getRunFillData(rootfiles)
 
     # If calibrating by Fill, group and merge files
     filesToLoopOver = files
@@ -273,9 +319,6 @@ def calibration(rootfiles,type):
     # Save shift data for plots
     plotData = { }
 
-    # Save last 'good' alignment conditions for each HPD copy number
-    lastGoodAlignment = { }
-
     # Loop over the root files and fit the HPD images
     for filename in filesToLoopOver:
 
@@ -284,9 +327,6 @@ def calibration(rootfiles,type):
 
         # Run/fill number
         flag = getIntInfo(filename,type)
-
-        # Alignment data files
-        alignments = { }
 
         # Get run/fill start and stop time
         startTime = runFillData[type+"Data"][flag]["Start"]
@@ -307,90 +347,59 @@ def calibration(rootfiles,type):
             # Get the HPD for this copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
 
-            # Get the alignment conditions
-            siAlign  = getSiSensorAlignment(copyNumber)
-            #hpdAlign = getHPDAlignment(copyNumber)
-                
+            # Get the alignment condition
+            siAlign = getSiSensorAlignment(copyNumber)
+
+            # Make sure this HPD has an entry
+            if hpdID not in plotData.keys() : plotData[hpdID] = { }
+               
             # Get the offsets. Use try to catch errors
-            updateOK = True
             try:
 
-                xOff = pyHistoParsingUtils.imageOffsetX(file,hpdID,minHPDEntries)
-                yOff = pyHistoParsingUtils.imageOffsetY(file,hpdID,minHPDEntries)
-
-                if hpdID not in plotData.keys() : plotData[hpdID] = { }
-                plotData[hpdID][flag] = { "ShiftR"    : rFromXY(xOff,yOff),
-                                          "ShiftX"    : xOff,
-                                          "ShiftY"    : yOff
+                offsets = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries)
+                xOff    = offsets[0]
+                yOff    = offsets[1]
+                
+                plotData[hpdID][flag] = { "FitOK"   : True,
+                                          "ShiftR"  : rFromXY(xOff,yOff),
+                                          "ShiftX"  : xOff,
+                                          "ShiftY"  : yOff,
                                           }
-
-                # Save as last good alignment for this HPD
-                lastGoodAlignment[hpdID] = [xOff,yOff]
                 
             except Exception,e:
 
-                #print "No good fit for this", type
-                if hpdID in lastGoodAlignment.keys():
-                    #print " -> Using last good alignment", lastGoodAlignment[hpdID]
-                    xOff = lastGoodAlignment[hpdID][0]
-                    yOff = lastGoodAlignment[hpdID][1]
-                else:
-                    #print " -> No update for HPD", hpdID, "possible. Stick with current DB value"
-                    updateOK = False
+                plotData[hpdID][flag] = { "FitOK" : False }
 
-            # Update the Si alignment with the image movement data
-            if updateOK :
-                paramName = "dPosXYZ"
-                vect = siAlign.paramAsDoubleVect(paramName)
-                vect[0] = xOff[0]
-                vect[1] = yOff[0]
-                vect[2] = 0
-                siAlign.addParam( paramName, vect, "" )
-                vect = siAlign.paramAsDoubleVect(paramName)
-                # Double check update is correct
-                if vect[0] != xOff[0] or vect[1] != yOff[0] :
-                    print "Warning :  Update mismatch ", xOff[0], yOff[0], ":", vect[0], vect[1]
+            # Save the DB values for plotting
+            dbShift = siAlign.paramAsDoubleVect("dPosXYZ")
+            if dbShift.size() == 3:
+                plotData[hpdID][flag]["DBShiftX"] = dbShift[0]
+                plotData[hpdID][flag]["DBShiftY"] = dbShift[1]
+            else:
+                plotData[hpdID][flag]["DBShiftX"] = 0
+                plotData[hpdID][flag]["DBShiftY"] = 0
 
-            # The alignment path for the HPD silicon
-            alignPath = siliconAlignmentFilePath(copyNumber)
-
-            # Get alignment XML file
-            if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(type,flag)
-
-            # Add alignments for this HPD
-            alignments[alignPath] += hpdXMLComment(copyNumber)
-            #alignments[alignPath] += hpdAlign.toXml() + '\n' # Not needed with new DB
-            alignments[alignPath] += siAlign.toXml()  + '\n'
+            # Add the start/stop times for this run/fill
+            plotData[hpdID][flag]["UnixStartTime"] = unixStartTime
+            plotData[hpdID][flag]["UnixStopTime"]  = unixStopTime
 
         # close the ROOT file
         file.Close()
         if type == 'Fill' : os.remove(filename)
 
-        # Update the DB with the HPD alignments for the IOV for this run/fill
-        startTime = correctStartTime( unixStartTime )
-        stopTime  = cool.ValidityKeyMax
-        for xmlpath in alignments.keys():
-            # The XML data
-            data = alignments[xmlpath]
-            # Add the XML footer to the XML data
-            data += xmlFooter()
-            # First time, create the paths in the DB
-            if xmlpath not in createdPaths:
-                db.createNode(xmlpath)
-                createdPaths += [xmlpath]
-            # Add to the DB
-            db.storeXMLString( xmlpath, data, startTime, stopTime )
-
     # Start a PDF file
     globals()["imageFileName"] = "HPDImageCalibrationBy"+type+".ps"
     printCanvas('[')
 
+    # Average X and Y values
+    averageShifts = { }
+
     # Make plots showing the variations
+    # Also, fit for the average
     for hpd,data in plotData.iteritems():
 
-        #copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
-        #smartID = richSystem().richSmartID(copyNumber)
-        #print smartID
+        # Min max flag values
+        minMaxFlag = [999,-999]
 
         from array import array
         vflag      = array('d')
@@ -401,41 +410,195 @@ def calibration(rootfiles,type):
         vshiftXerr = array('d')
         vshiftY    = array('d')
         vshiftYerr = array('d')
+        dbX        = array('d')
+        dbY        = array('d')
+        dbR        = array('d')
+        
         for fl in sorted(data.keys()):
+            
+            if fl < minMaxFlag[0] : minMaxFlag[0] = fl
+            if fl > minMaxFlag[1] : minMaxFlag[1] = fl
+            
             values = data[fl]
-            vflag.append(fl)
-            vflagerr.append(0.0)
-            vshiftX.append(values['ShiftX'][0])
-            vshiftXerr.append(values['ShiftX'][1])
-            vshiftY.append(values['ShiftY'][0])
-            vshiftYerr.append(values['ShiftY'][0])
-            vshiftR.append(values['ShiftR'][0])
-            vshiftRerr.append(values['ShiftR'][1])
+            if values['FitOK'] :
+                vflag.append(fl)
+                vflagerr.append(0.0)
+                vshiftX.append(values['ShiftX'][0])
+                vshiftXerr.append(values['ShiftX'][1])
+                vshiftY.append(values['ShiftY'][0])
+                vshiftYerr.append(values['ShiftY'][0])
+                vshiftR.append(values['ShiftR'][0])
+                vshiftRerr.append(values['ShiftR'][1])
+                dbX.append(values["DBShiftX"])
+                dbY.append(values["DBShiftY"])
+                dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
 
-        plot = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
-        plot.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
-        plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("X Offset / mm" )
-        plot.Draw("AL*")
-        printCanvas()
+        alignColor = 1
+        refColor = 4
 
-        plot = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
-        plot.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
-        plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("Y Offset / mm" )
-        plot.Draw("AL*")
-        printCanvas()
+        if len(vflag) > 0:
 
-        plot = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
-        plot.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
-        plot.GetXaxis().SetTitle(type)
-        plot.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
-        plot.Draw("AL*")
-        printCanvas()
+            linearFit = TF1("AverageFit","pol0",minMaxFlag[0],minMaxFlag[1])
+            linearFit.SetParName(0,"Fitted Shift")
+
+            plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
+            plotX.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
+            plotX.GetXaxis().SetTitle(type)
+            plotX.GetYaxis().SetTitle("X Offset / mm" )
+            plotX.SetMarkerColor(alignColor)
+            plotX.SetLineColor(alignColor)
+            plotX.Fit(linearFit,"QRS")
+            avX = linearFit.GetParameter(0)
+            plotX.Draw("ALP")
+            plotXDB = TGraph( len(vflag), vflag, dbX )
+            plotXDB.SetMarkerColor(refColor)
+            plotXDB.SetLineColor(refColor)
+            plotXDB.Draw("LP")
+            labelDataDB(alignColor,refColor)
+            printCanvas()
+
+            plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
+            plotY.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
+            plotY.GetXaxis().SetTitle(type)
+            plotY.GetYaxis().SetTitle("Y Offset / mm" )
+            plotY.SetMarkerColor(alignColor)
+            plotY.SetLineColor(alignColor)
+            plotY.Fit(linearFit,"QRS")
+            avY = linearFit.GetParameter(0)
+            plotY.Draw("ALP")
+            plotYDB = TGraph( len(vflag), vflag, dbY )
+            plotYDB.SetMarkerColor(refColor)
+            plotYDB.SetLineColor(refColor)
+            plotYDB.Draw("LP")
+            labelDataDB(alignColor,refColor)
+            printCanvas()
+
+            # Save the fitted averages for this HPD
+            averageShifts[hpd] = [avX,avY]
+
+            plotR = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
+            plotR.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
+            plotR.GetXaxis().SetTitle(type)
+            plotR.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
+            plotR.SetMarkerColor(alignColor)
+            plotR.SetLineColor(alignColor)
+            plotR.Draw("ALP")
+            plotRDB = TGraph( len(vflag), vflag, dbR )
+            plotRDB.SetMarkerColor(refColor)
+            plotRDB.SetLineColor(refColor)
+            plotRDB.Draw("LP")
+            labelDataDB(alignColor,refColor)
+            printCanvas()
 
     # Close the PDF 
     printCanvas(']')
 
+    # Dictionary for the final DB updates
+    dbUpdates = { }
+
+    # Open new alignment SQL slice
+    dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
+    print "Creating DB Slice", dbFileName
+    if os.path.exists(dbFileName) : os.remove(dbFileName)
+    db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
+                          create_new_db=True, readOnly=False )
+
+    # Finally, loop over the data to create DB updates per HPD
+    for hpdID,data in plotData.iteritems() :
+
+        for flag in sorted(data.keys()) :
+
+            values = data[flag]
+
+            # Get the HPD for this copy number
+            copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
+        
+            # Get the alignment condition
+            siAlign = getSiSensorAlignment(copyNumber)
+
+            # Start time
+            unixStartTime = values["UnixStartTime"]
+
+            # Initialise data for this start time
+            if unixStartTime not in dbUpdates.keys():
+                dbUpdates[unixStartTime] = { }
+
+            # Get the offsets
+            if values["FitOK"] :
+                xOff = values["ShiftX"][0]
+                yOff = values["ShiftY"][0]
+                text = "From Fit"
+            else:
+                if hpdID in averageShifts.keys():
+                    xOff = averageShifts[hpdID][0]
+                    yOff = averageShifts[hpdID][1]
+                    text = "From Average"
+                    print "Using average for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
+                else:
+                    xOff = values["DBShiftX"]
+                    yOff = values["DBShiftY"]
+                    text = "From original DB"
+            print type, flag, "HPD", hpdID, text
+
+            # Update the Si alignment with the image movement data
+            paramName = "dPosXYZ"
+            vect = siAlign.paramAsDoubleVect(paramName)
+            vect[0] = xOff
+            vect[1] = yOff
+            vect[2] = 0
+            siAlign.addParam( paramName, vect, "" )
+            vect = siAlign.paramAsDoubleVect(paramName)
+            # Double check update is correct
+            if vect[0] != xOff or vect[1] != yOff :
+                print "Warning :  Update mismatch ", xOff, yOff, ":", vect[0], vect[1]
+            
+            # The alignment path for the HPD silicon
+            alignPath = siliconAlignmentFilePath(copyNumber)
+        
+            # Get alignment XML file
+            alignments = dbUpdates[unixStartTime]
+            if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(type,flag)
+        
+            # Add alignments for this HPD
+            alignments[alignPath] += hpdXMLComment(copyNumber,text)
+            alignments[alignPath] += siAlign.toXml()  + '\n'
+
+    # List of paths already created in the DB
+    createdPaths = [ ]
+
+    # Loop over final DB updates and fill SQL file
+    for unixStartTime in sorted(dbUpdates.keys()) :
+        data = dbUpdates[unixStartTime]
+
+        # Update the DB with the HPD alignments for the IOV for this run/fill
+        startTime = correctStartTime( unixStartTime )
+        stopTime  = cool.ValidityKeyMax
+
+        # Loop over XML files in the DB
+        for xmlpath in data.keys():
+            
+            # The XML data
+            alignment = data[xmlpath]
+            # Add the XML footer to the XML data
+            alignment += xmlFooter()
+            
+            # First time, create the paths in the DB
+            if xmlpath not in createdPaths:
+                db.createNode(xmlpath)
+                createdPaths += [xmlpath]
+            # Add to the DB
+            db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+
+def labelDataDB(dataColor,dbColor):
+    from ROOT import TText
+    text = TText()
+    text.SetNDC()
+    text.SetTextSize(0.03)
+    text.SetTextColor(dataColor)
+    text.DrawText( 0.12, 0.85, "From Image Shifts" )
+    text.SetTextColor(dbColor)
+    text.DrawText( 0.12, 0.80, "From DB" )
+    
 def printCanvas(tag=''):
     canvas = rootCanvas()
     canvas.Update()

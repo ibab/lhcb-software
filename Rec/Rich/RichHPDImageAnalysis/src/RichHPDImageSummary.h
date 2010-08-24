@@ -183,13 +183,13 @@ namespace Rich
 inline double
 Rich::Mon::RichHPDImageSummary::localXFromPixels( const double col ) const
 {
-  return col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx ;
+  return -1.0 * ( col*m_pixelsize + 0.5*m_pixelsize - 0.5*m_siliconx );
 }
 
 inline double
 Rich::Mon::RichHPDImageSummary::localYFromPixels( const double row ) const
 {
-  return 0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize ;
+  return -1.0 * ( 0.5*m_silicony - row*m_pixelsize - 0.5*m_pixelsize );
 }
 
 inline double

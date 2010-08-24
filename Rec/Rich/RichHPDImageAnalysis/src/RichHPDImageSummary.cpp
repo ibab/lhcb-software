@@ -246,8 +246,8 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   const double ColErr = min.UserParameters().Error("Col0");
   const double RowErr = min.UserParameters().Error("Row0");
 
-  const double x0 = -1.0 * localXFromPixels( Col );
-  const double y0 = -1.0 * localYFromPixels( Row );
+  const double x0    = localXFromPixels( Col );
+  const double y0    = localYFromPixels( Row );
   const double xErr0 = localErrorFromPixels( ColErr );
   const double yErr0 = localErrorFromPixels( RowErr );
 
@@ -263,10 +263,11 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
 
   plot1D( ID, "entriesvsCopyNr", "# entries for HPD Copy Nr",-0.5,483.5,484,nPix);
 
-  const double Rad = m_pixelsize * min.UserParameters().Value("Radius");
-  const double RadErrSq = std::pow(m_pixelsize*migrad.Error("Radius"),2);
+  const double Rad    = m_pixelsize * min.UserParameters().Value("Radius");
+  const double RadErr = m_pixelsize * min.UserParameters().Error("Radius");
 
   plot1D( ID, "RadiusvsCopyNr", "Fitted image radius vs HPD Copy Nr",-0.5,483.5,484,nPix*Rad);
+  plot1D( ID, "RadiusErrvsCopyNr", "Fitted image radius error vs HPD Copy Nr",-0.5,483.5,484,nPix*RadErr);
 
   if ( m_compareCondDB && ( ds < m_maxMovement ) )
   {
@@ -276,13 +277,14 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   {
     std::string nameHPD = "RICH_HPD_" + boost::lexical_cast<std::string>( ID );
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << " Adding counter " << nameHPD << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding counter " << nameHPD << endmsg ;
 
-    const double x0ErrSq = std::pow(m_pixelsize*migrad.Error("Col0"),2);
-    const double y0ErrSq = std::pow(m_pixelsize*migrad.Error("Row0"),2);
+    const double x0ErrSq  = std::pow(xErr0,2);
+    const double y0ErrSq  = std::pow(yErr0,2);
+    const double RadErrSq = std::pow(RadErr,2);
 
-    counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0, nPix*x0ErrSq, 0. , 0. );
-    counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0, nPix*y0ErrSq, 0. , 0. );
+    counter( nameHPD + "_XOffset" ) = StatEntity( nPix, nPix*x0,  nPix*x0ErrSq,  0. , 0. );
+    counter( nameHPD + "_YOffset" ) = StatEntity( nPix, nPix*y0,  nPix*y0ErrSq,  0. , 0. );
     counter( nameHPD + "_Radius" )  = StatEntity( nPix, nPix*Rad, nPix*RadErrSq, 0. , 0. );
   }
   return;
