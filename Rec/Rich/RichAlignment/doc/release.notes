@@ -4,6 +4,12 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Chris Jones
+ - Various improvements to the calibration scripts
+
+! 2010-08-21 - Chris Jones
+ - Add a better gauss + pol3 fit for the refractive index calibration
+
 ! 2010-08-18 - Chris Jones
  - First version. 
   + Alignment algorithms moved over from Rich/RichRecQC

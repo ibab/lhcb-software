@@ -5,21 +5,14 @@ from PyCool import cool
 import os
 import pickle
 import datetime, time
+import DIRAC
 
 def genXML(data,run):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
-<!-- (n-1) Calibration for Run """+str(run)+""" -->
-    
-<condition name="GasPressure">
-<param name="CurrentPressure" type="double">0.970*bar </param>
-</condition>
-
-<condition name="GasTemperature">
-<param name="CurrentTemperature" type="double">293.0*kelvin </param>
-</condition>
+<!-- Run """+str(run)+""" -->
 
 <condition name="RefractivityScaleFactor">
 <param name="CurrentScaleFactor" type="double">"""+str(data)+""" </param>
@@ -117,7 +110,6 @@ def getRunTimes(calibrations):
                 times["GlobalStopTime"] = stop
         else:
             print "ERROR Getting start/stop times for run", run
-            import DIRAC
             DIRAC.exit(1)
 
     # Return the Run Time Information
@@ -137,5 +129,9 @@ cali2 = getCalibrationsFromFile('Rich2')
 runsTimes = getRunTimes([cali1,cali2])
 
 # Fill the Conditions
+print "Filling CondDB slice ...."
 fillDB(cali1,db,runsTimes,'Rich1')
 fillDB(cali2,db,runsTimes,'Rich2')
+print "Done"
+
+DIRAC.exit(0)

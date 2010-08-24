@@ -11,7 +11,7 @@ LHCbApp().CondDBtag = "head-20100730"
 
 Brunel().OutputType = "None"
 
-Brunel().EvtMax    = 1000
+Brunel().EvtMax    = 100
 Brunel().PrintFreq = 100
 
 # Only tracking and RICH reco
@@ -43,3 +43,7 @@ importOptions("/usera/jonesc/MyDataOptions/Collisions10/Raw/RUN_75718_RealData_9
 
 #from Configurables import CondDB, CondDBAccessSvc
 #CondDB().addLayer(CondDBAccessSvc("RichCKCond",ConnectionString="sqlite_file:NewRichCKRefIndexCalib.db/LHCBCOND",DefaultTAG="HEAD"))
+
+from Configurables import Rich__Mon__RichHPDImageSummary
+imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
+imageSummary.Keep2DHistograms = True

@@ -37,3 +37,8 @@ rMoni.removeMonitors ( ["HPDIFBMonitoring","PidMonitoring","TracklessRingAngles"
 from Configurables import RichAlignmentConf
 conf = RichAlignmentConf("OfflineRichMoni_RichAlignmentConf")
 conf.Histograms = "Expert"
+
+# Save all histograms from image analysis
+from Configurables import Rich__Mon__RichHPDImageSummary
+imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
+imageSummary.Keep2DHistograms = True

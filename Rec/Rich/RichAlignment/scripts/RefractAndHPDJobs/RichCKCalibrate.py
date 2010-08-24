@@ -105,8 +105,8 @@ def submitRecoJobs(pickedRunsList,jobType):
 
     # Number of target events to process
     if jobType == "RefractIndexCalib" :
-        nEventsTotal = 250000
-        nFilesMax    = 100
+        nEventsTotal = 500000
+        nFilesMax    = 150
     else:
         nEventsTotal = 250000
         nFilesMax    = 100
@@ -130,75 +130,92 @@ def submitRecoJobs(pickedRunsList,jobType):
             lfns = RunLFNs[run]
             if len(lfns)>0 :
 
-                nFiles = len(lfns)
-                if nFiles > nFilesMax : nFiles = nFilesMax
-                nEventsPerFile = nEventsTotal / nFiles
-                print "Using", nFiles, "data files,", nEventsPerFile, "events per file"
+                # Construct the job name
+                jobname = jobType+"_Run-"+str(run)
+
+                # is this job already submitted ?
+                if jobExists(jobname):
+
+                    print "Job", jobname, "already submitted"
+
+                else:
+
+                    # Configure number of files and events per file
+                    nFiles = len(lfns)
+                    if nFiles > nFilesMax : nFiles = nFilesMax
+                    nEventsPerFile = nEventsTotal / nFiles
           
-                # Make a job object
-                j = Job( application = Brunel( version = 'v37r6p1' ) )
+                    # Make a job object
+                    j = Job( application = Brunel( version = 'v37r6p1' ), name = jobname )
 
-                # name
-                j.name = jobType+"_Run-"+str(run)
-                print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
+                    # Custom options for this job
+                    tmpOptsFile = createTempOptsFile(j.name)
+                    extraopts = open(tmpOptsFile,"w")
 
-                # Custom options for this job
-                tmpOptsFile = createTempOptsFile(j.name)
-                extraopts = open(tmpOptsFile,"w")
+                    # Sandbox
+                    mySandBox = [ ]
 
-                # Sandbox
-                mySandBox = [ ]
+                    # Basic additions
+                    extraopts.write("from Configurables import Brunel\n")
+                    extraopts.write("from Brunel.Configuration import *\n")
+                    extraopts.write("HistogramPersistencySvc().OutputFile = \""+j.name+".root\"\n")
+                    extraopts.write("Brunel().EvtMax = "+str(nEventsPerFile)+"\n")
 
-                # Basic additions
-                extraopts.write("from Configurables import Brunel\n")
-                extraopts.write("from Brunel.Configuration import *\n")
-                extraopts.write("HistogramPersistencySvc().OutputFile = \""+j.name+".root\"\n")
-                extraopts.write("Brunel().EvtMax = "+str(nEventsPerFile)+"\n")
+                    # Only for Calibration jobs
+                    if jobType == "RefractIndexCalib" :
+                        extraopts.write("from Configurables import UpdateManagerSvc\n")
+                        extraopts.write("ums = UpdateManagerSvc()\n")
+                        extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
+                        extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
+                        
+                    # For verification jobs, use custom DB Slice
+                    if jobType == "RefractIndexVerify" :
+                        dbFile = "NewRichCKRefIndexCalib.db"
+                        extraopts.write("from Gaudi.Configuration import *\n")
+                        extraopts.write("from Configurables import CondDB, CondDBAccessSvc\n")
+                        extraopts.write("CondDB().addLayer(CondDBAccessSvc(\"RichCKCond\",ConnectionString=\"sqlite_file:"+dbFile+"/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
+                        mySandBox += [dbFile]
 
-                # Only for Calibration jobs
-                if jobType == "RefractIndexCalib" :
-                    extraopts.write("from Configurables import UpdateManagerSvc\n")
-                    extraopts.write("ums = UpdateManagerSvc()\n")
-                    extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
-                    extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
+                    # Close file
+                    extraopts.close()
 
-                # For verification jobs, use custom DB Slice
-                if jobType == "RefractIndexVerify" :
-                    dbFile = "NewRichCKRefIndexCalib.db"
-                    extraopts.write("from Gaudi.Configuration import *\n")
-                    extraopts.write("from Configurables import CondDB, CondDBAccessSvc\n")
-                    extraopts.write("CondDB().addLayer(CondDBAccessSvc(\"RichCKCond\",ConnectionString=\"sqlite_file:"+dbFile+"/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
-                    mySandBox += [dbFile]
+                    # Job options
+                    j.application.optsfile = [ File('CKRefractCalib-FullBrunelReco.py'),
+                                               File(extraopts.name) ]
 
-                # Close file
-                extraopts.close()
+                    # Set the LFNs to run over
+                    if nFiles == len(lfns):
+                        j.inputdata = LHCbDataset(lfns)
+                    else:
+                        import random
+                        j.inputdata = LHCbDataset( random.sample(lfns,nFiles) )
 
-                # Job options
-                j.application.optsfile = [ File('CKRefractCalib-FullBrunelReco.py'),
-                                           File(extraopts.name) ]
+                    # Split job into 1 file per subjob
+                    j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = nFiles )
 
-                # Set the LFNs to run over
-                j.inputdata = LHCbDataset(lfns)
+                    # Merge the output
+                    j.merger = SmartMerger( files = [j.name+".root"],
+                                            ignorefailed = True, overwrite = True )
 
-                # Split job into 1 file per subjob
-                j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = nFiles )
+                    # Optional input files
+                    j.inputsandbox = mySandBox
 
-                # Merge the output
-                j.merger = SmartMerger( files = [j.name+".root"],
-                                        ignorefailed = True, overwrite = True )
+                    # CPU limit for Dirac
+                    maxCPUlimit = 50000
 
-                # Optional input files
-                j.inputsandbox = mySandBox
+                    # Dirac backend
+                    j.backend = Dirac()
+                    # j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
 
-                # CPU limit for Dirac
-                maxCPUlimit = 50000
+                    # Submit !!
+                    print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
+                    print " -> Using", nFiles, "data files,", nEventsPerFile, "events per file"
+                    j.submit()
 
-                # Dirac backend
-                j.backend = Dirac()
-                #j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
-
-                # Submit !!
-                j.submit()
+def jobExists(jobname):
+    from Ganga.GPI import jobs
+    slice = jobs.select(name=jobname)
+    return len(slice) > 0
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
@@ -217,6 +234,11 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # Keep tabs on min and max scale factor (for plots)
     minMaxScale = [999.0,-999.0]
 
+    # Raw mean and sigma
+    ckmeans  = { }
+    cksigmas = { }
+
+    # Loop over jobs
     for j in jobs :
 
         run = int(getInfoFromJob(j,'Run'))
@@ -224,12 +246,15 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         print "Fitting job", rad, "Run =", run
         fitResult = getPeakPosition(j,rad)
 
-        if fitResult[0] == 'OK':
+        if fitResult['OK'] :
             scale = nScaleFromShift(fitResult,rad)
-            print " -> Fit OK. Scale factor =", scale
-            calibrations[run] = scale
             if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
             if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
+            calibrations[run] = scale
+            ckmeans[run]  = fitResult['Mean']
+            cksigmas[run] = fitResult['Sigma']
+        else:
+            print " -> Fit failed"
 
     # Write out calibrations to a pickled python file
     file = open(rad+"-RefIndexCalib.pck","w")
@@ -245,28 +270,52 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     runsErr   = array('d')
     scales    = array('d')
     scalesErr = array('d')
+    means     = array('d')
+    meansErr  = array('d')
+    sigmas    = array('d')
+    sigmasErr = array('d')
     for run in sorted(calibrations.keys()):
-        # For scatter plot
-        scale = calibrations[run]
+        scale   = calibrations[run]
+        ckmean  = ckmeans[run]
+        cksigma = cksigmas[run]
         runs.append(float(run))
         runsErr.append(0.0)
         scales.append(scale[0])
         scalesErr.append(scale[1])
-        # Fill 1D histo
+        means.append(ckmean[0])
+        meansErr.append(ckmean[1])
+        sigmas.append(cksigma[0])
+        sigmasErr.append(cksigma[1])
+        # Fill 1D histo(s)
         scaleHist.Fill(scale[0])
 
     # Fit and Print the histo
     fitFunc = TF1("Scale"+rad,"gaus",minMaxScale[0],minMaxScale[1])
-    scaleHist.Fit(fitFunc,"R")
+    scaleHist.Fit(fitFunc,"QR")
     scaleHist.Draw('E')
     printCanvas()
 
-    # Make a plot
-    graph = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
-    graph.SetTitle( rad+" (n-1) corrections by Run" )
-    graph.GetXaxis().SetTitle("Run Number")
-    graph.GetYaxis().SetTitle("(n-1) Scale Factor")
-    graph.Draw("AL*")
+    # Make trend plots
+
+    meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
+    meanTrend.SetTitle( rad+" <Delta CK Theta> by Run" )
+    meanTrend.GetXaxis().SetTitle("Run Number")
+    meanTrend.GetYaxis().SetTitle("<Delta CK Theta> / mrad")
+    meanTrend.Draw("ALP")
+    printCanvas()
+
+    sigmaTrend = TGraphErrors( len(runs),runs,sigmas,runsErr,sigmasErr )
+    sigmaTrend.SetTitle( rad+" Delta CK Theta Resolution by Run" )
+    sigmaTrend.GetXaxis().SetTitle("Run Number")
+    sigmaTrend.GetYaxis().SetTitle("Delta CK Theta Resolution / mrad")
+    sigmaTrend.Draw("ALP")
+    printCanvas()
+
+    scaleTrend = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
+    scaleTrend.SetTitle( rad+" (n-1) corrections by Run" )
+    scaleTrend.GetXaxis().SetTitle("Run Number")
+    scaleTrend.GetYaxis().SetTitle("(n-1) Scale Factor")
+    scaleTrend.Draw("ALP")
     printCanvas()
        
     # Close PDF file
@@ -297,19 +346,18 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
   
         print "Fitting job", rad, "Run =", run, "index =", refIndex
         fitResult = getPeakPosition(j,rad)
-        print fitResult
 
-        if fitResult[0] == 'OK':
+        if fitResult['OK'] :
             x.append(float(refIndex))
             xe.append(0.0)
-            y.append(float(fitResult[1]))
-            ye.append(float(fitResult[2]))
+            y.append(float(fitResult['Mean'][0]))
+            ye.append(float(fitResult['Mean'][1]))
 
     graph = TGraphErrors( len(x),x,y,xe,ye )
     graph.SetTitle( rad+" (n-1) Control plot" )
     graph.GetXaxis().SetTitle("(n-1) Scale factor")
     graph.GetYaxis().SetTitle("CK theta shift")
-    graph.Draw("AL*")
+    graph.Draw("ALP")
     printCanvas()
     
     maxIndex = len(x) - 1
@@ -377,7 +425,7 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
     graph.SetTitle( rad+" <Expected CK theta> by Run" )
     graph.GetXaxis().SetTitle("Run Number")
     graph.GetYaxis().SetTitle("<Expected CK theta>")
-    graph.Draw("AL*")
+    graph.Draw("ALP")
     printCanvas()
        
     # Close output file
@@ -406,18 +454,18 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
         print "Fitting job", rad, "Run =", run
         fitResult = getPeakPosition(j,rad,'thetaRec')
 
-        if fitResult[0] == 'OK':
+        if fitResult['OK'] :
             runs.append(float(run))
             runsErr.append(0.0)
-            reco.append(float(fitResult[1]))
-            recoErr.append(float(fitResult[2]))
+            reco.append(float(fitResult['Mean'][0]))
+            recoErr.append(float(fitResult['Mean'][1]))
                  
     # Make a plot
     graph = TGraphErrors( len(runs),runs,reco,runsErr,recoErr )
     graph.SetTitle( rad+" Peak Reco CK Theta by Run" )
     graph.GetXaxis().SetTitle("Run Number")
     graph.GetYaxis().SetTitle("CK Theta Peak / mrad")
-    graph.Draw("AL*")
+    graph.Draw("ALP")
     printCanvas()
        
     # Close PDF file
@@ -460,8 +508,8 @@ def nScaleFromShift(shift,rad='Rich1Gas'):
     #if rad == 'Rich2Gas': slope = 69.6869097141
     #if rad == 'Rich2Gas': slope = 69.4
     if rad == 'Rich2Gas': slope = 68.2
-    result = 1.0 + (shift[1]*slope)
-    error  = shift[2]*slope
+    result = 1.0 + (shift['Mean'][0]*slope)
+    error  = shift['Mean'][1]*slope
     return [result,error]
 
 def getRootFilePath(j):
@@ -518,13 +566,14 @@ def printCanvas(tag=''):
         
 def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
 
-    from ROOT import TF1, TH1, TText, gMinuit
+    from ROOT import TF1, TH1, TText
+    #from ROOT import TFitResultPtr, TFitResult
 
     # Parameters
     minEntries = 100000
 
-    # Default return result failed ...
-    result = ['Failed',0,0]
+    # Default return result
+    result = { 'OK' : False }
 
     # Run number
     run = getInfoFromJob(j,'Run')
@@ -552,52 +601,64 @@ def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
             fitmax = xPeak + delta
 
             # Gaussian function
-            preFitFunc = TF1(rad+"FitF","gaus",fitMin,fitmax)
+            preFitF = TF1(rad+"FitF","gaus",fitMin,fitmax)
 
             # Do the pre fit with just a Gaussian
-            hist.Fit(preFitFunc,"R")
-            preValue = preFitFunc.GetParameter(1)
-            preError = preFitFunc.GetParError(1)
+            hist.Fit(preFitF,"QRS")
 
-            # Add Run number to page
+            # Draw the histogram
+            hist.Draw()
+            
+            # Add Run number to plot
             addRunToPlot(run,"Pre Fit")
             
             # Print to file
             printCanvas()
 
             # Full Fitting range
-            delta = 0.005
-            if rad == 'Rich2Gas' : delta = 0.002
-            fitMin = xPeak - delta
-            fitmax = xPeak + delta
+            delta = 0.0051
+            if rad == 'Rich2Gas' : delta = 0.0023
+            fitMin = preFitF.GetParameter(1) - delta
+            fitmax = preFitF.GetParameter(1) + delta
 
             # Gaus + pol3
-            fullFitFunc = TF1(rad+"FitF","gaus(0)+pol3(3)",fitMin,fitmax)
-            fullFitFunc.SetParameter(0,preFitFunc.GetParameter(0))
-            fullFitFunc.SetParameter(1,preFitFunc.GetParameter(1))
-            fullFitFunc.SetParameter(2,preFitFunc.GetParameter(2))
+            bkgFunc = "pol2"
+            fullFitF = TF1(rad+"FitF","gaus(0)+"+bkgFunc+"(3)",fitMin,fitmax)
+            fullFitF.SetParName  (0,"Gaus Constant")
+            fullFitF.SetParName  (1,"Gaus Mean")
+            fullFitF.SetParName  (2,"Gaus Sigma")
+            fullFitF.SetParameter(0,preFitF.GetParameter(0))
+            fullFitF.SetParameter(1,preFitF.GetParameter(1))
+            fullFitF.SetParameter(2,preFitF.GetParameter(2))
         
             # Do the final fit
-            hist.Fit(fullFitFunc,"R")
-            fullValue = fullFitFunc.GetParameter(1)
-            fullError = fullFitFunc.GetParError(1)
+            hist.Fit(fullFitF,"QRSE")
+
+            # Draw the histogram
             hist.Draw()
-
-            # Add Run number to page
+            
+            # Add Run number to plot
             addRunToPlot(run,"Full Fit")
-
+            
             # Print to file
             printCanvas()
     
             # Results of the fit
             maxErrorForOK = 1e-4
-            if fullError < maxErrorForOK :
-                result = ['OK',fullValue,fullError]
+            if fullFitF.GetParError(1) < maxErrorForOK :
+                result = { 'OK'    : True,
+                           'Mean'  : [fullFitF.GetParameter(1),fullFitF.GetParError(1)],
+                           'Sigma' : [fullFitF.GetParameter(2),fullFitF.GetParError(2)]
+                           }
             else:
-                if preError < maxErrorForOK :
-                    result = ['OK',preValue,preError]
-                else:
-                    result = ['FAILED',0,0]
+                if preFitF.GetParError(1) < maxErrorForOK :
+                    result = { 'OK'    : True,
+                               'Mean'  : [preFitF.GetParameter(1),preFitF.GetParError(1)],
+                               'Sigma' : [preFitF.GetParameter(2),preFitF.GetParError(2)]
+                               }
+
+        # Close the rootfile
+        rootfile.Close()
 
     # Return the fit result
     return result
@@ -639,7 +700,9 @@ def addRunToPlot(run,tag=""):
     text = TText()
     text.SetNDC()
     text.SetTextSize(0.03)
-    text.DrawText( 0.12, 0.85, tag+" Run "+str(run) )
+    text.DrawText( 0.12, 0.85, "Run "+str(run) )
+    if tag != "":
+        text.DrawText( 0.12, 0.80, tag )
     
 def getRunLFNData(pickedRuns):
     import pickle
