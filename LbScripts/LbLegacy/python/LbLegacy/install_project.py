@@ -750,10 +750,64 @@ def getPackVer(fname):
 #
 #  get the project_list =====================================================
 #
-def getProjectList(name, version, binary=None):
+
+def updateProjectList(src_list, target_list):
+    log = logging.getLogger()
+    for s in src_list.keys() :
+        if s not in target_list.keys() :
+            log.debug("Adding %s to the project list" % s)
+            target_list[s] = src_list[s]
+
+def updateHTMLList(src_list, target_list):
+    log = logging.getLogger()
+    for s in src_list :
+        if s not in target_list :
+            log.debug("Adding %s to the html list" % s)
+            target_list.append(s)
+
+try :
+    from LbRelease.TarBall import getTarBallNameItems
+except ImportError:
+    def getTarBallNameItems(tar_name):
+        name = None
+        version = None
+        binary = None
+        core_name = tar_name.replace(".tar.gz", "")
+        from LbConfiguration.Platform import binary_list
+        for b in binary_list :
+            if core_name.endswith(b) :
+                binary = b
+                core_name = core_name.replace("_%s" %b, "")
+                break
+    
+        cptes = core_name.split("_")
+        nm = cptes[0]
+        from LbConfiguration import Project, Package
+        if nm.upper() in [ x.upper() for x in Project.project_names ] :
+            version = cptes[-1]
+            for x in Project.project_names :
+                if nm.upper() == x.upper() :
+                    name = x
+                    break
+        elif nm.upper() in [ x.upper() for x in Package.project_names ] :
+            version = cptes[-1]
+            for c in cptes :
+                if c in Package.package_names :
+                    name = c
+                    break
+        else :
+            if nm.upper() == "LCGCMT" :
+                name = "LCGCMT"
+                version = cptes[1]       
+        return name, version, binary
+
+def getProjectList(name, version, binary=None, recursive=True):
     log = logging.getLogger()
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
+
+    project_list = {}
+    html_list = []
 
     import LbConfiguration.Platform
     import LbConfiguration.Package
@@ -761,25 +815,24 @@ def getProjectList(name, version, binary=None):
     if name in LbConfiguration.Package.package_names :
         p = LbConfiguration.Package.getPackage(name)
         tar_file = p.tarBallName(version)
+    elif name == "LCGCMT" :
+        tar_file = "_".join([name.upper(), version, binary]) 
     else:
-        tar_file = name.upper() + '_' + name.upper()
+        tar_file = name.upper() + "_" + name.upper()
         if version != 0 :
-            tar_file = tar_file + '_' + version
+            tar_file = tar_file + "_" + version
         if binary:
-            tar_file = tar_file + '_' + binary
+            tar_file = tar_file + "_" + binary
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
     os.chdir(this_html_dir)
 
-    tar_file_html = tar_file + '.html'
+    tar_file_html = tar_file + ".html"
 
     if not check_only :
         checkWriteAccess(this_html_dir)
-        getFile(url_dist + 'html/', tar_file_html)
-
-    project_list = {}
-    html_list = []
+        getFile(url_dist + "html/", tar_file_html)
 
 
     if os.path.exists(tar_file_html) :
@@ -791,14 +844,18 @@ def getProjectList(name, version, binary=None):
             fdlines = getFileContent(url_dist + "html/" + tar_file_html)
         except :
             log.fatal("Cannot retrieve dependency information for %s %s %s" % (name, version, binary))
-
+            sys.exit(1)
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
-            log.info('the required project %s %s %s is not available' % (name, version, binary))
-            log.info('remove %s.html and exit ' % tar_file)
-            fd.close()
-            os.remove(tar_file + '.html')
-            sys.exit(' %s %s %s is not available' % (name, version, binary) + '\n')
+            if name.upper() == "LCGCMT" :
+                log.debug('the required project %s %s %s is not available. Skipping ...' % (name, version, binary))
+                os.remove(tar_file_html)
+                return project_list, html_list
+            else :
+                log.fatal('the required project %s %s %s is not available' % (name, version, binary))
+                log.info('remove %s and exit ' % tar_file_html)
+                os.remove(tar_file_html)
+                sys.exit(1)
         if fdline.find('HREF=') != -1:
             eq_sign = fdline.find('HREF=')
             gt_sign = fdline.find('>')
@@ -827,6 +884,15 @@ def getProjectList(name, version, binary=None):
 
     os.chdir(here)
 
+    if recursive :
+        for tb_name in html_list :
+            s_name, s_version, s_binary = getTarBallNameItems(tb_name)
+            if s_name and s_version :
+                if not (s_name.upper() == name.upper() and s_version == version and s_binary == binary) :
+                    sub_project_list, sub_html_list = getProjectList(s_name, s_version, s_binary)
+                    updateProjectList(sub_project_list, project_list)
+                    updateHTMLList(sub_html_list, html_list)
+                        
     return project_list, html_list
 
 #----------------------------------------------------------------------------------
@@ -2111,9 +2177,11 @@ def main():
             if os.path.exists(fallback_mysiteroot) :
                 thelog.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
                 os.environ["MYSITEROOT"] = fallback_mysiteroot
-            else :
-                sys.exit('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
-
+    
+    
+    if not os.environ.has_key("MYSITEROOT") :
+        thelog.fatal('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
+        sys.exit(1)
 
     if not check_only and fix_perm:
         changePermissions('install_project.py', recursive=False)
