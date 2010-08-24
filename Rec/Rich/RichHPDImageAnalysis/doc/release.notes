@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-24 - Chris Jones
- - Update the monitor again to fill summary historys with 1/error^" weights,
+ - Update the monitor again to fill summary historys with 1/error^2 weights,
    to properly allow the computation of the weight average and error when root
    files are merged.
 
