@@ -1291,7 +1291,7 @@ double RecVertices2Particles::RFromBL( const Gaudi::XYZPoint& p ){
 }
 
 //=============================================================================
-// Compute the sum pT of a bunch of track (daughters of a Particle)
+// Compute the sum pT of daughter tracks
 //=============================================================================
 double RecVertices2Particles::GetSumPt( const Particle * p ){
 
@@ -1309,6 +1309,8 @@ double RecVertices2Particles::GetSumPt( const LHCb::RecVertex * rv ){
   SmartRefVector< Track >::const_iterator iend = rv->tracks().end();
   for( SmartRefVector< Track >::const_iterator i = rv->tracks().begin();
        i < iend; ++i ){
+    //cout<<"Track "<< i->target()->type() <<" momentum "
+    //  << i->target()->momentum() <<" pt "<< i->target()->pt() << endl;
     sumpt += i->target()->pt();
   }
   return sumpt;
