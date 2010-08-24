@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Chris Jones
+ - Comment out use of RichPIDQCConf, which I still cannot get to work properly
+
 ! 2010-08-18 - Chris Jones
  - Move alignment code and options to new Rich/Alignment package
  - Fix some typos in histogram labels in RichRecoQC.cpp
