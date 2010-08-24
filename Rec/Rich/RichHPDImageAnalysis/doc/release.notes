@@ -4,6 +4,11 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Chris Jones
+ - Update the monitor again to fill summary historys with 1/error^" weights,
+   to properly allow the computation of the weight average and error when root
+   files are merged.
+
 ! 2010-08-23 - Chris Jones
  - Update algorithm to store shifts and # entries in seperate plots
  - Add new plots for the fitted errors on the shifts.
