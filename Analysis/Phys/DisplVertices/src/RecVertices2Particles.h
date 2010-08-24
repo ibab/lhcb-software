@@ -83,6 +83,7 @@ private:
   //Geometric tools
   double RFromBL( const Gaudi::XYZPoint& );
   double GetSumPt( const LHCb::Particle * );
+  double GetSumPt( const LHCb::RecVertex * );
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   double Angle( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
   double Angle( const Gaudi::XYZVector &, const Gaudi::XYZVector & );
@@ -104,6 +105,7 @@ private:
   int    m_nTracks;           ///< Min # of tracks at reconstructed vertex
   double m_PreyMinMass;       ///< Minimum reconstructed mass
   double m_PreyMaxMass;       ///< Maximum reconstructed mass
+  double m_SumPt;            ///< Sumpt of all daughters tracks
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_Dist;              ///< Distance bet. RV to be said isolated

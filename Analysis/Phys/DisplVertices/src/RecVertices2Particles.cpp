@@ -47,6 +47,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   //declareProperty("PreyMinMass", m_PreyMinMass = 6.3*Gaudi::Units::GeV );
   declareProperty("PreyMinMass", m_PreyMinMass = 0.0 );
   declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*Gaudi::Units::TeV );
+  declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
   declareProperty("RMin", m_RMin = 0.3*Gaudi::Units::mm );
   declareProperty("RMax", m_RMax = 50.*Gaudi::Units::m );
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks
@@ -137,6 +138,7 @@ StatusCode RecVertices2Particles::initialize() {
     info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
     info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
     info()<<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
+    info()<<"Min sum of daughters's pT : "<< m_SumPt/GeV <<" GeV"<< endmsg;
     info()<<"Minimum number of tracks at the RecVertex : "
           << m_nTracks <<" tracks."<< endmsg;
     info()<< "The radial displacement is ";
@@ -350,6 +352,16 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
         debug() <<"RV did not passed the cuts  --> disguarded !"<< endmsg;
       continue;
     }
+
+    //Cut on the sum pt of daughter tracks
+    double sumpt = GetSumPt( rv );
+    if( sumpt < m_SumPt ){
+      if( msgLevel(MSG::DEBUG) )
+        debug() <<"RV has sumpt "<< sumpt/GeV <<" < "<< m_SumPt/GeV 
+                <<" --> disguarded !"<< endmsg;
+      continue;
+    }
+    
 
     //Turn it into a Particle !
     //Eventually don't keep it if close to/in detector material
@@ -1291,6 +1303,17 @@ double RecVertices2Particles::GetSumPt( const Particle * p ){
   }
   return sumpt;
 }
+
+double RecVertices2Particles::GetSumPt( const LHCb::RecVertex * rv ){
+  double sumpt = 0;
+  SmartRefVector< Track >::const_iterator iend = rv->tracks().end();
+  for( SmartRefVector< Track >::const_iterator i = rv->tracks().begin();
+       i < iend; ++i ){
+    sumpt += i->target()->pt();
+  }
+  return sumpt;
+}
+
 
 //=============================================================================
 // Distance between two vertices

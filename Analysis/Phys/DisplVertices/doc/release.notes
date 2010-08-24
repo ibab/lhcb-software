@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-24 - Neal Gauvin
+ - Added SumPt cut in RecVertices2Particles before creating the Particles.  
+
+! 2010-08-24 - Neal Gauvin
  - Require at least one backward and one forward track in upPV candidate.
 
 !========================== DisplVertices v6r10 2010-08-20 ===================

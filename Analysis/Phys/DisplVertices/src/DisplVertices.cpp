@@ -211,7 +211,7 @@ StatusCode DisplVertices::initialize() {
            << m_nTracks <<" tracks."<< endmsg ;
     info() << "Max distance of the vertices "<< m_DistMax <<" mm" << endmsg;
     info() << "Max chi2/ndof of a vertex "<< m_MaxChi2OvNDoF << endmsg;
-    info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
+    info() << "Min sum of daughters's pT "<< m_SumPt/GeV <<" GeV"<< endmsg;
     info() << m_MinX/mm <<" mm < pos X < "<< m_MaxX/mm <<" mm"<< endmsg;
     info() << m_MinY/mm <<" mm < pos Y < "<< m_MaxY/mm <<" mm"<< endmsg;
     info() << m_MinZ/mm <<" mm < pos Z < "<< m_MaxZ/mm <<" mm"<< endmsg;
