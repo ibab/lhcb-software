@@ -482,6 +482,7 @@ def calibration(rootfiles,type,fullFit):
             plotR.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
             plotR.SetMarkerColor(alignColor)
             plotR.SetLineColor(alignColor)
+            plotR.Fit(linearFit,"QRS")
             plotR.Draw("ALP")
             plotRDB = TGraph( len(vflag), vflag, dbR )
             plotRDB.SetMarkerColor(refColor)
