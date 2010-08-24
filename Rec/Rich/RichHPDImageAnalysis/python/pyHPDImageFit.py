@@ -36,7 +36,8 @@ class HPDBoundaryFcn :
         for icol in range(COL-1,COL+2):
             for irow in range(ROW-1,ROW+2):
                 if COL == icol and ROW == irow : continue
-                if icol >= 0 and icol < self.hist.GetNbinsX() and irow >= 0 and irow < self.hist.GetNbinsY():
+                if ( icol >= 0 and icol < self.hist.GetNbinsX() and
+                     irow >= 0 and irow < self.hist.GetNbinsY() ):
                     if self.hist.GetBinContent(icol+1,irow+1) > thr :
                         return True
         return False
@@ -53,11 +54,13 @@ class HPDBoundaryFcn :
             ROW0 = -1
             ROW1 = -1
             for irow in range(0,self.hist.GetNbinsY()):
-                if self.hasNeighbour(icol,irow,thr) and self.hist.GetBinContent(icol+1,irow+1) > thr:
+                if ( self.hasNeighbour(icol,irow,thr) and
+                     self.hist.GetBinContent(icol+1,irow+1) > thr ):
                     ROW0 = irow 
                     break
             for irow in range(0,self.hist.GetNbinsY()):
-                if self.hasNeighbour(icol,irow,thr) and self.hist.GetBinContent(icol+1,self.hist.GetNbinsX()-irow) > thr:
+                if ( self.hasNeighbour(icol,irow,thr) and
+                     self.hist.GetBinContent(icol+1,self.hist.GetNbinsX()-irow) > thr ):
                     ROW1 = self.hist.GetNbinsX() - irow - 1
                     break
             if -1 != ROW0 :
@@ -125,6 +128,6 @@ def fit( rootfile, hpdcopynr, minEntries ):
     yErr = fitFunc.localErrorFromPixels( m.errors["y"] )
 
     result["OK"]     = True
-    result["XShift"] = [x,xErr]
-    result["YShift"] = [y,yErr]
+    result["XShift"] = (x,xErr)
+    result["YShift"] = (y,yErr)
     return result

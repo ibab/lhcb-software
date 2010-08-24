@@ -305,7 +305,7 @@ def calibration(rootfiles,type,fullFit):
     #maxHPDID = 10
 
     # Min number of entries in HPD alignment histogram for update
-    minHPDEntries = 10
+    minHPDEntries = 1000
 
     # Get the run/fill info
     runFillData = getRunFillData(rootfiles)
@@ -359,15 +359,12 @@ def calibration(rootfiles,type,fullFit):
             try:
 
                 offsets = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fullFit)
-                print "Fit Result", hpdID, offsets
                 xOff    = offsets[0]
                 yOff    = offsets[1]
-                
                 plotData[hpdID][flag] = { "FitOK"   : True,
                                           "ShiftR"  : rFromXY(xOff,yOff),
                                           "ShiftX"  : xOff,
-                                          "ShiftY"  : yOff,
-                                          }
+                                          "ShiftY"  : yOff }
                 
             except Exception,e:
 
