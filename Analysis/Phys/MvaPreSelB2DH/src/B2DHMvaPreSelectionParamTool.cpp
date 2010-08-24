@@ -252,7 +252,7 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForBsParticle(const L
     
     sc = sc && ( m_distanceCalculator-> pathDistance ( b, aPV , aFDA, aFerrA, achiFsA) );
     if( aFerrA !=0.0 )  aFsBs=aFDA/aFerrA;
-    m_FsBs=fabs(aFsBs);
+    m_FsBs=std::fabs(aFsBs);
     //info()<<" BS FS "<<aFsBs<<endmsg;
     m_FisherDParamList[0]=(aFsBs>-100.0) ? log(aFsBs+100): 0.0;
 
@@ -298,8 +298,8 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionCutsParamForBsParticle(cons
    
 
      m_ZPvDiff=(b->endVertex()->position().z()) - aPV->position().z() ;
-     m_BsMassDiff = fabs( b-> measuredMass()- (m_B2DHPreselMvaUtilityTool->massStdBsValue()));
-     m_BdMassDiff =  fabs( b-> measuredMass()- (m_B2DHPreselMvaUtilityTool->massStdBsValue()));
+     m_BsMassDiff = std::fabs( b-> measuredMass()- (m_B2DHPreselMvaUtilityTool->massStdBsValue()));
+     m_BdMassDiff = std::fabs( b-> measuredMass()- (m_B2DHPreselMvaUtilityTool->massStdBsValue()));
      //info()<<" Bs measured mass diff "<<m_BsMassDiff<<endmsg;
      
      // end of standard basic cuts for further preselection.
@@ -334,8 +334,8 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForDsDaughterOfBs(con
       //     (aPidVal ==  (m_B2DHPreselMvaUtilityTool ->pdgDdValue())) ||
       //    (aPidVal == -1* (m_B2DHPreselMvaUtilityTool ->pdgDdValue())) ) { // this is a Ds or Dd
 
-      if( ( (int) fabs(aPidVal) >  (m_B2DHPreselMvaUtilityTool ->pdg_MinDValue())) &&
-          ( (int) fabs(aPidVal) <  (m_B2DHPreselMvaUtilityTool ->pdg_MaxDValue())) ) { // this is some form of D
+      if( ( (int) std::fabs(aPidVal) >  (m_B2DHPreselMvaUtilityTool ->pdg_MinDValue())) &&
+          ( (int) std::fabs(aPidVal) <  (m_B2DHPreselMvaUtilityTool ->pdg_MaxDValue())) ) { // this is some form of D
         
             aDsCount++;
              m_dvtxchisq =    aPart->endVertex()-> chi2();
@@ -367,8 +367,8 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionCutsParamsForDsDaughterOfBs
 
     //info()<<" Current Ds  Pt Mom mass "<<    m_ptDs  <<"  "<<m_momDs <<"  "<< aDsPart->measuredMass()<< endmsg;
     
-    m_DsMassDiff =fabs( ( aDsPart->measuredMass() ) - (m_B2DHPreselMvaUtilityTool-> massStdDsValue()) ) ;
-    m_DdMassDiff =fabs( ( aDsPart->measuredMass() ) - (m_B2DHPreselMvaUtilityTool-> massStdDdValue()) ) ;
+    m_DsMassDiff =std::fabs( ( aDsPart->measuredMass() ) - (m_B2DHPreselMvaUtilityTool-> massStdDsValue()) ) ;
+    m_DdMassDiff =std::fabs( ( aDsPart->measuredMass() ) - (m_B2DHPreselMvaUtilityTool-> massStdDdValue()) ) ;
 
 
      double aFDA=0.0;
@@ -378,7 +378,7 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionCutsParamsForDsDaughterOfBs
     double aFsDs =0.0;
     sc = sc && ( m_distanceCalculator-> pathDistance ( aDsPart, aPV , aFDA, aFerrA, achiFsA) );
     if( aFerrA !=0.0 )  aFsDs=aFDA/aFerrA;
-    m_FsDs=fabs(aFsDs);
+    m_FsDs=std::fabs(aFsDs);
     return sc;
 
 }
@@ -400,7 +400,7 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForBachelorDaughterOf
     // loop through Bs daughters
    
       const LHCb::Particle* aPart = (*iterPartA);
-      int aPidVal= (int)  fabs(aPart -> particleID().pid());
+      int aPidVal= (int)  std::fabs(aPart -> particleID().pid());
       if(m_current_B2DH_channel_Number == 0) {
         if (  ( aPidVal ==   (m_B2DHPreselMvaUtilityTool-> pdgKaonValue()  ) ) ) { // this is kaon
         aBachelorKaonCount++;
@@ -494,8 +494,8 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForSecondaryDaughters
       //      if( ( aPart -> particleID().pid() == ( m_B2DHPreselMvaUtilityTool->pdgDsValue())) || 
       //    ( aPart -> particleID().pid() == (-1* ( m_B2DHPreselMvaUtilityTool->pdgDsValue()))) ) {    // this is Ds
 
-      if( ( (int) fabs(aPidVal) >  (m_B2DHPreselMvaUtilityTool ->pdg_MinDValue())) &&
-          ( (int) fabs(aPidVal) <  (m_B2DHPreselMvaUtilityTool ->pdg_MaxDValue())) ) { // this is some form of D
+      if( ( (int) std::fabs(aPidVal) >  (m_B2DHPreselMvaUtilityTool ->pdg_MinDValue())) &&
+          ( (int) std::fabs(aPidVal) <  (m_B2DHPreselMvaUtilityTool ->pdg_MaxDValue())) ) { // this is some form of D
 
 
 

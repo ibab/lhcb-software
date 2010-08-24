@@ -142,8 +142,8 @@ void B2DHMvaPreSelectionCutsTool::setBs2DsPiCutValues(){
 }
 void B2DHMvaPreSelectionCutsTool::setCutFlags_Common(){
   m_zPVBsSel = ( m_B2DHMvaPreSelectionParamTool->ZPvDiff()) > m_zPVBsCutValue;
-  m_massBsWindowSel = fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
-  m_massDsWindowSel = fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
+  m_massBsWindowSel = std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
+  m_massDsWindowSel = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
 
   m_massWindowSel = m_massBsWindowSel && m_massDsWindowSel;
   
@@ -196,17 +196,17 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsK(){
   
   m_auxCut_Dll_Bs2DsK =  
     (m_B2DHMvaPreSelectionParamTool-> BachelorKaDll() > m_dllBachelorKaonCutValue_Bs2DsK) &&
-     (adllKaonMinusProtonBach >  m_dllKaonMinusProtonBachelorKaonCutValue_Bs2DsK) &&
+    (adllKaonMinusProtonBach >  m_dllKaonMinusProtonBachelorKaonCutValue_Bs2DsK) &&
     (( aSecKaonDll[0]- aSecProtonDll[0]) >   m_dllKaonMinusProtonSecCut_Bs2DsK ) &&
     (( aSecKaonDll[1]- aSecProtonDll[1]) >   m_dllKaonMinusProtonSecCut_Bs2DsK ) &&
     ( m_B2DHMvaPreSelectionParamTool -> BachelorPrDll() > m_dllProtonBachelorLowerCut_Bs2DsK ) &&
-     (aSecProtonDll[0] > m_dllProtonSecCut_Bs2DsK) &&
+    (aSecProtonDll[0] > m_dllProtonSecCut_Bs2DsK) &&
     (aSecProtonDll[1] > m_dllProtonSecCut_Bs2DsK );
   
 
-   m_massBsWindowSel_Bs2DsK=fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
-   m_massDsWindowSel_Bs2DsK = fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue_Bs2DsK;
-   m_massWindowSel_Bs2DsK= m_massBsWindowSel_Bs2DsK && m_massDsWindowSel_Bs2DsK;
+  m_massBsWindowSel_Bs2DsK=std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
+  m_massDsWindowSel_Bs2DsK = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue_Bs2DsK;
+  m_massWindowSel_Bs2DsK= m_massBsWindowSel_Bs2DsK && m_massDsWindowSel_Bs2DsK;
  
 
   m_fisher_Sel_Bs2DsK =  m_B2DHMvaPreSelectionParamTool-> getfisherDProbValue() > m_fisherDCutValue_Bs2DsK;
@@ -277,9 +277,9 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsPi(){
                             ( aprotonSecDll [2] >  m_dllProtonSec2LowerCutValue_Bs2DsPi ) &&
                             ( aprotonSecDll [2] < m_dllProtonSec2UpperCutValue_Bs2DsPi);
 
-   m_massBsWindowSel_Bs2DsPi=fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue_Bs2DsPi;
-   m_massDsWindowSel_Bs2DsPi = fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
-   m_massWindowSel_Bs2DsPi= m_massBsWindowSel_Bs2DsPi && m_massDsWindowSel_Bs2DsPi;
+  m_massBsWindowSel_Bs2DsPi=std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue_Bs2DsPi;
+  m_massDsWindowSel_Bs2DsPi = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
+  m_massWindowSel_Bs2DsPi= m_massBsWindowSel_Bs2DsPi && m_massDsWindowSel_Bs2DsPi;
 
     m_vtxChisqSel_Bs2DsPi = (m_B2DHMvaPreSelectionParamTool-> bvtxchisq() < m_vtxBsChisqCutValue_Bs2DsPi) && 
                   (m_B2DHMvaPreSelectionParamTool-> dvtxchisq() < m_vtxDsChisqCutValue_Bs2DsPi);
