@@ -198,7 +198,7 @@ class genClassDicts:
         elif line.find('<exclusion>')  != -1 : appendExclusions = 1
         elif line.find('</exclusion>') != -1 : appendExclusions = 0
         elif (appendExclusions):
-          if line != '\n' : self.sClassExclusions.append(line)
+          if line != '\n' : self.sClassExclusions.append(line[:-1])
         elif (appendSelections):
           self.sClassSelections = self.conc(self.sClassSelections, line[:-1])
  #--------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ class genClassDicts:
     self.packageDict['includes']        = '\n'.join(self.sIncludes)
     self.packageDict['dictInstances']   = '\n'.join(self.sDictInstances)
     self.packageDict['classSelections'] = '\n'.join(self.sClassSelections)
-    self.packageDict['classExclusions'] = ''.join(self.sClassExclusions)
+    self.packageDict['classExclusions'] = '\n'.join(self.sClassExclusions)
     # parse the template file and generate the content for the file
     g.parse(self.godRoot+'templates/'+tmplname+'.tpl',self.packageDict)
     # open file and write the parser content to it

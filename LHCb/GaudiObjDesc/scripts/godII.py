@@ -197,13 +197,16 @@ Produce c++ source files and dictionary files from xml descriptions
         print '%s: ERROR: %s passed as source location is neither directory nor a .xml file' % (self.argv0, src)
 
     if self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
-    if self.gClassDicts :
-      gClassDicts = genClassDicts.genClassDicts(self.godRoot, self.dictOutput, self.srcOutput)
-      if not self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
     if self.gNamespaces : gNamespaces = genNamespaces.genNamespaces(self.godRoot)
     if self.gAssocDicts : gAssocDicts = genAssocDicts.genAssocDicts(self.godRoot, self.dictOutput, self.srcOutput)
     
     for srcFile in srcFiles:
+
+      #--->PM<--- Needs to be reset each time! Otherwise it doubles the contents for 'instantiations' and 'exclusions'
+      if self.gClassDicts :
+        gClassDicts = genClassDicts.genClassDicts(self.godRoot, self.dictOutput, self.srcOutput)
+        if not self.gClasses : gClasses = genClasses.genClasses(self.godRoot)
+
       gdd = x.parseSource(srcFile)
       godPackage = gdd['package'][0]
 
