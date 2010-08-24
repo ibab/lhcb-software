@@ -35,8 +35,8 @@ DECLARE_ALGORITHM_FACTORY( LumiAccounting );
 //=============================================================================
 LumiAccounting::LumiAccounting( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_calibThresholds()
 {
   declareProperty( "RawEventLocation"  ,  m_rawEventLocation = LHCb::RawEventLocation::Default );
   declareProperty( "InputDataContainer",  m_DataName = LHCb::HltLumiSummaryLocation::Default );
@@ -168,7 +168,7 @@ StatusCode LumiAccounting::execute() {
     m_lumiFSR->incrementInfo(key, value);
     // check if over threshold and increment with offset
     // TODO: !!!  threholds should be in database !!!
-    int threshold = m_calibThresholds[key];
+    double threshold = m_calibThresholds[key];
     int binary = value > threshold ? 1 : 0 ;
     m_lumiFSR->incrementInfo(key + LHCb::LumiMethods::PoissonOffset, binary);
   }
