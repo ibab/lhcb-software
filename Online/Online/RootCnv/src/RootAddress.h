@@ -1,17 +1,18 @@
-// $Id: RootAddress.h,v 1.5 2010-08-17 17:23:04 frankb Exp $
+// $Id: RootAddress.h,v 1.6 2010-08-24 14:03:03 frankb Exp $
 //====================================================================
 //	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.5 2010-08-17 17:23:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.6 2010-08-24 14:03:03 frankb Exp $
 #ifndef GAUDIROOTCNV_ROOTADDRESS_H
 #define GAUDIROOTCNV_ROOTADDRESS_H
 
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
 #include "RootSelect.h"
+#include "RootUtils.h"
 
 // Forward declaration
 class TTree;
@@ -34,8 +35,7 @@ namespace Gaudi {
    * @author  M.Frank
    * @version 1.0
    */
-  class RootAddress : virtual public GenericAddress {
-  protected:
+  class GAUDI_API RootAddress : virtual public GenericAddress {
   public:
     /// Pointer to ROOT select statement (filled for N-tuples only)
     RootSelect*         select;
@@ -52,13 +52,9 @@ namespace Gaudi {
 		 const std::string& p2="",
 		 unsigned long ip1=0,
 		 unsigned long ip2=0)
-      : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), connection(0), section(0)    {}
-
+      : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), connection(0), section(0) { }
     /// Standard Destructor
-    virtual ~RootAddress() {
-      if ( select ) delete select;
-      select = 0;
-    }
+    virtual ~RootAddress() {  deletePtr(select);  }
   };
 }
 

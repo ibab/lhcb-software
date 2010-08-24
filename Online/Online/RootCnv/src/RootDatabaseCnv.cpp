@@ -1,4 +1,4 @@
-// $Id: RootDatabaseCnv.cpp,v 1.2 2010-03-03 14:30:47 frankb Exp $
+// $Id: RootDatabaseCnv.cpp,v 1.3 2010-08-24 14:03:03 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDatabaseCnv
@@ -6,7 +6,7 @@
 // Author :                   Markus Frank
 //
 //------------------------------------------------------------------------------
-// Include files
+// Framework include files
 #include "RootDatabaseCnv.h"
 #include "RootDataConnection.h"
 
@@ -14,23 +14,23 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/CnvFactory.h"
-
-using namespace Gaudi;
 
 #if 0
+#include "GaudiKernel/CnvFactory.h"
 PLUGINSVC_FACTORY_WITH_ID( RootDatabaseCnv,
                            ConverterID(ROOT_StorageType,CLID_StatisticsFile),
                            IConverter*(long, CLID, ISvcLocator*) );
 #endif
 
-/// Standard Constructor
+using namespace Gaudi;
+
+// Standard Constructor
 RootDatabaseCnv::RootDatabaseCnv(long typ, const CLID& cl, ISvcLocator* svc, RootCnvSvc* mgr)
 : RootDirectoryCnv(typ, cl, svc, mgr)
 {
 }
 
-/// Standard destructor
+// Standard destructor
 RootDatabaseCnv::~RootDatabaseCnv()   {
 }
 

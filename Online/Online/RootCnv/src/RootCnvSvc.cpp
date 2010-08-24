@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.6 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.7 2010-08-24 14:03:03 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -21,7 +21,6 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/System.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "RootRefs.h"
 #include "RootCnvSvc.h"
@@ -72,6 +71,7 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   : ConversionSvc( nam, svc, ROOT_StorageType), 
     m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
 {
+  m_classRefs = m_classDO = 0;
   m_setup = new RootConnectionSetup();
   declareProperty("ShareFiles",       m_shareFiles       = "NO");
   declareProperty("EnableIncident",   m_incidentEnabled  = false);
@@ -97,6 +97,7 @@ StatusCode RootCnvSvc::error(CSTR msg)  {
 
 // Initialize the Db data persistency service
 StatusCode RootCnvSvc::initialize()  {
+  string cname;
   IDataProviderSvc* pSvc = 0;
   StatusCode status = ConversionSvc::initialize();
   MsgStream log(msgSvc(), name());
@@ -111,13 +112,13 @@ StatusCode RootCnvSvc::initialize()  {
   setDataProvider(pSvc);
   m_setup->setMessageSvc(new MsgStream(msgSvc(),name()));
   GaudiRoot::patchStreamers(log);
-  DataObject data_obj;
-  m_classDO = getClass(&data_obj);
-  string cname = System::typeinfoName(typeid(RootObjectRefs));
-  m_classRefs = gROOT->GetClass(cname.c_str());
 
+  cname = System::typeinfoName(typeid(DataObject));
+  m_classDO = gROOT->GetClass(cname.c_str());
   if ( 0 == m_classDO )
     return error("Unable to load class description for DataObject");    
+  cname = System::typeinfoName(typeid(RootObjectRefs));
+  m_classRefs = gROOT->GetClass(cname.c_str());
   if ( 0 == m_classRefs )
     return error("Unable to load class description for ObjectRefs");
   return S_OK;

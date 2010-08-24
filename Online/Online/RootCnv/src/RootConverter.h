@@ -1,4 +1,4 @@
-// $Id: RootConverter.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
+// $Id: RootConverter.h,v 1.5 2010-08-24 14:03:03 frankb Exp $
 //====================================================================
 //	RootConverter class definition
 //
@@ -30,7 +30,7 @@ namespace Gaudi {
    * @author  M.Frank
    * @version 1.0
    */
-  class RootConverter : public Converter   {
+  class GAUDI_API RootConverter : public Converter   {
   protected:
 
     /// Conversion service needed for proper operation to forward requests

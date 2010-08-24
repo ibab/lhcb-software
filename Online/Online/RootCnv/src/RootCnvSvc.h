@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.5 2010-08-24 14:03:03 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef GAUDIROOTCNV_GAUDIROOTCNVSVC_H
 #define GAUDIROOTCNV_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.4 2010-08-17 17:23:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.5 2010-08-24 14:03:03 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -43,9 +43,8 @@ namespace Gaudi {
    *  @version 1.0
    *  @date    20/12/2009
    */
-  class RootCnvSvc : public ConversionSvc  {
+  class GAUDI_API RootCnvSvc : public ConversionSvc  {
   protected:
-    typedef std::vector<DataObject*> Objects;
 
     /// Services needed for proper operation: Data Manager
     IDataManagerSvc*            m_dataMgr;
@@ -55,24 +54,23 @@ namespace Gaudi {
     IIncidentSvc*               m_incidentSvc;
     /// On writing: reference to active output stream
     Gaudi::RootDataConnection*  m_current;
-    /// Flag to enable incidents on FILE_OPEN
-    bool                        m_incidentEnabled;
-    /// Share files ? If set to YES, files will not be closed on finalize
-    std::string                 m_shareFiles;
-    /// Property: ROOT section name
-    std::string                 m_section;
-    /// Property: Switch between reference type (in same tree (default) or not)
-    int                         m_refTypes;
-    /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
-    std::string                 m_ioPerfStats;
-    /// Set with bad files/tables
-    std::set<std::string>       m_badFiles;
     /// TClass pointer to reference class
     TClass*                     m_classRefs;
     /// TClass pointer to DataObject class
     TClass*                     m_classDO;
     /// Setup structure (ref-counted) and passed to data connections
     RootConnectionSetup*        m_setup;
+
+    /// Property: Flag to enable incidents on FILE_OPEN
+    bool                        m_incidentEnabled;
+    /// Property: Share files ? If set to YES, files will not be closed on finalize
+    std::string                 m_shareFiles;
+    /// Property: ROOT section name
+    std::string                 m_section;
+    /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
+    std::string                 m_ioPerfStats;
+    /// Set with bad files/tables
+    std::set<std::string>       m_badFiles;
 
     /// Helper: Get TClass for a given DataObject pointer
     TClass* getClass(DataObject* pObject);

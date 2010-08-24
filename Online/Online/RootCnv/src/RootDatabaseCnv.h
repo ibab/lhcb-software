@@ -1,16 +1,19 @@
-// $Id: RootDatabaseCnv.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootDatabaseCnv.h,v 1.2 2010-08-24 14:03:03 frankb Exp $
 //====================================================================
 //  Statistics file converter class definition
 //
 //  Author     : M.Frank
 //
 //====================================================================
-#ifndef ROOT_ROOTDATABASECNV_H
-#define ROOT_ROOTDATABASECNV_H 1
+#ifndef GAUDIROOTCNV_ROOTDATABASECNV_H
+#define GAUDIROOTCNV_ROOTDATABASECNV_H 1
 
-// Include files
+// Framework include files
 #include "RootDirectoryCnv.h"
 
+/*
+ *   Gaudi namespace declaration
+ */
 namespace Gaudi {
 
   /** @class RootDatabaseCnv RootDatabaseCnv.h Root/RootDatabaseCnv.h
@@ -18,9 +21,7 @@ namespace Gaudi {
    * Statistics file converter class definition
    *
    * Description:
-   * Definition of the converter to open Database file.
-   * Wether this is a real file or only a connection to
-   * a database depends on the underlying engine.
+   * Definition of the converter to open root database files.
    *
    * @author  M.Frank
    * @version 1.0
@@ -31,6 +32,7 @@ namespace Gaudi {
     /** Initializing Constructor
      * @param      typ      [IN]     Concrete storage type of the converter
      * @param      svc      [IN]     Pointer to service locator object
+     * @param      mgr      [IN]     Pointer to hosting conversion service
      *
      * @return Reference to RootDatabaseCnv object
      */
@@ -58,4 +60,4 @@ namespace Gaudi {
     virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj);
   };
 }
-#endif    // ROOT_ROOTDATABASECNV_H
+#endif    // GAUDIROOTCNV_ROOTDATABASECNV_H

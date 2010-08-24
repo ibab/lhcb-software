@@ -1,7 +1,15 @@
-// $Id: RootDataConnection.cpp,v 1.10 2010-08-24 13:21:01 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.11 2010-08-24 14:03:03 frankb Exp $
+//====================================================================
+//	RootDataConnection.cpp
+//--------------------------------------------------------------------
+//
+//	Author     : M.Frank
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.11 2010-08-24 14:03:03 frankb Exp $
+
+// Framework include files
 #include "RootDataConnection.h"
 #include "RootUtils.h"
-
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
@@ -35,8 +43,7 @@ RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
 
 /// Standard destructor      
 RootConnectionSetup::~RootConnectionSetup() {
-  if ( m_msgSvc ) delete m_msgSvc;
-  m_msgSvc = 0;
+  deletePtr(m_msgSvc);
 }
 
 /// Increase reference count
@@ -56,7 +63,7 @@ void RootConnectionSetup::release() {
 void RootConnectionSetup::setMessageSvc(MsgStream* m) {
   MsgStream* tmp = m_msgSvc;
   m_msgSvc = m;
-  if ( tmp ) delete tmp;
+  deletePtr(tmp);
 }
 
 /// Standard constructor
@@ -83,11 +90,9 @@ RootDataConnection::~RootDataConnection()   {
 void RootDataConnection::saveStatistics(CSTR statisticsFile) {
   if ( m_statistics ) {
     m_statistics->Print();
-    if ( !statisticsFile.empty() ) {
+    if ( !statisticsFile.empty() )
       m_statistics->SaveAs(statisticsFile.c_str());
-    }
-    delete m_statistics;
-    m_statistics = 0;
+    deletePtr(m_statistics);
   }
 }
 
@@ -148,8 +153,7 @@ StatusCode RootDataConnection::connectRead()  {
     }
   }
   else if ( m_file ) {
-    delete m_file;
-    m_file = 0;
+    deletePtr(m_file);
   }
   return StatusCode::FAILURE;
 }
@@ -224,8 +228,7 @@ StatusCode RootDataConnection::disconnect()    {
       m_file->Close();
     }
     msgSvc() << MSG::DEBUG << "Disconnected file " << m_pfn << " " << m_file->GetName() << endmsg;
-    delete m_file;
-    m_file = 0;
+    deletePtr(m_file);
     releasePtr(m_tool);
   }
   return StatusCode::SUCCESS;
