@@ -203,8 +203,8 @@ StatusCode TrackTimingMonitor::execute()
     const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );  
     theTuple->column("RunNb", odin->runNumber());
 
-    unsigned long hi_num =  (odin->eventNumber() >> 32);
-    unsigned long low_num = (odin->eventNumber() & 0xffffffff);
+    unsigned long hi_num =  (unsigned long) (odin->eventNumber() >> 32);
+    unsigned long low_num = (unsigned long) (odin->eventNumber() & 0xffffffff);
  
     theTuple->column("EventNb_hi", hi_num);
     theTuple->column("EventNb_low", low_num);
