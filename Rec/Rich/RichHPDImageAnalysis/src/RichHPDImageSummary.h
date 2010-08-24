@@ -139,7 +139,7 @@ namespace Rich
       bool m_displayWarnings ;
 
       /// Minimum number of hits required in HPD
-      int m_minOccupancy ;
+      unsigned int m_minOccupancy ;
 
       /// Minimum number of pixels needed to define HPD edge
       int m_minBoundary ;

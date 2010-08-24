@@ -129,7 +129,7 @@ StatusCode RichHPDImageSummary::execute()
         for ( LHCb::RichSmartID::Vector::const_iterator iHit = hitIDs.begin();
               iHit != hitIDs.end(); ++iHit )
         {
-          hist->Fill(  iHit->pixelCol(), iHit->pixelRow() ) ;
+          hist->Fill( iHit->pixelCol(), iHit->pixelRow() ) ;
         }
       }
     }
@@ -214,7 +214,8 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
 void RichHPDImageSummary::summaryINFO( const unsigned int ID,
                                        const TH2D* hist ) const
 {
-  int nPix = (int) hist->Integral();
+
+  const unsigned int nPix = hist->Integral();
   if ( nPix < m_minOccupancy ) return ;
 
   HPDBoundaryFcn FCN( hist , m_cutFraction );
@@ -263,12 +264,12 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
   const double ds = distanceToCondDBValue( ID, x0, y0 );
 
   plot1D( ds, "dPosCondDB", "Distance between image centre and CondDB value",0.0,3.0,30);
-  plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD Copy Nr",-0.5,nHPDs-0.5,nHPDs,ds);
+  plot1D( ID, "dPosCondDBvsCopyNr", "Distance versus HPD",-0.5,nHPDs-0.5,nHPDs,ds);
 
-  // Update these to allow the wieghted mean of the fit results to be correctly computed
-  // Need to compute 
-  //                weighted mean     = Sum( x / error^2 ) / Sum( 1 / error^2 )
-  //                (error of mean)^2 = 1 /  Sum( 1 / error^2 ) 
+  // Update these to allow the weighted mean of the fit results to be correctly computed
+  // when ROOT first are merged.  Need to compute 
+  //                weighted mean     = Sum( x_i / error_i^2 ) / Sum( 1 / error_i^2 )
+  //                (error of mean)^2 = 1 /  Sum( 1 / error_i^2 ) 
   plot1D( ID, "dPosXvsCopyNr",    "x-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,x0*OneOverXErrSq);
   plot1D( ID, "dPosXvsCopyNrErr", "x-displacement error versus HPD",-0.5,nHPDs-0.5,nHPDs,OneOverXErrSq);
   plot1D( ID, "dPosYvsCopyNr",    "y-displacement versus HPD",      -0.5,nHPDs-0.5,nHPDs,y0*OneOverYErrSq);
@@ -330,14 +331,14 @@ int RichHPDImageSummary::HPDBoundaryFcn::findBoundary()
   if ( NULL == m_hist ) return 0 ;
   m_boundary.clear() ;
 
-  int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
-  double thr = m_threshold*m_hist->Integral()/(1.0*nbins);
+  const int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
+  const double thr = m_threshold*m_hist->Integral()/(1.0*nbins);
 
   for ( int icol = 0 ; icol < m_hist->GetNbinsX() ; ++icol )
   {
     int ROW0 = -1;
     int ROW1 = -1;
-
+ 
     for ( int irow = 0; irow <m_hist->GetNbinsY() ; ++irow )
     {
       if ( hasNeighbour( icol, irow, thr ) &&
@@ -401,8 +402,8 @@ RichHPDImageSummary::HPDBoundaryFcn::operator()( const std::vector<double>& par 
   for ( std::vector< std::pair<int,int> >::const_iterator iter = m_boundary.begin(); 
         iter != m_boundary.end(); ++iter )
   {
-    const double deltaCol = 1.0*iter->first - par[0];
-    const double deltaRow = m_sf*iter->second - par[1];
+    const double deltaCol = (1.0*iter->first) - par[0];
+    const double deltaRow = (m_sf*iter->second) - par[1];
     const double dist = std::sqrt( deltaCol*deltaCol + deltaRow*deltaRow );
     chi2 += ( dist-par[2] )*( dist-par[2] )*12.0;
   }

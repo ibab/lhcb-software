@@ -8,6 +8,11 @@
  - Update the monitor again to fill summary historys with 1/error^2 weights,
    to properly allow the computation of the weight average and error when root
    files are merged.
+ - Add new file pyHPDImageFit.py that performs a fit to the HPD image in python
+   using pyminuit2.
+ - Update hpdLocalOffset method in pyHistoParsingUtils.py with a fullFit flag
+   to turn on the use of the full fit to the HPD image. Default False uses
+   the summary histograms instead.
 
 ! 2010-08-23 - Chris Jones
  - Update algorithm to store shifts and # entries in seperate plots

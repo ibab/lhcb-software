@@ -278,13 +278,13 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def calibrationByRuns(rootfiles='RootFileNames.txt'):
-    return calibration(rootfiles,'Run')
+def calibrationByRuns(rootfiles='RootFileNames.txt',fullFit=False):
+    return calibration(rootfiles,'Run',fullFit)
 
-def calibrationByFills(rootfiles='RootFileNames.txt'):
-    return calibration(rootfiles,'Fill')
+def calibrationByFills(rootfiles='RootFileNames.txt',fullFit=False):
+    return calibration(rootfiles,'Fill',fullFit)
 
-def calibration(rootfiles,type):
+def calibration(rootfiles,type,fullFit):
 
     import pyHistoParsingUtils
     from ROOT import TFile, TGraphErrors, TGraph, TF1
@@ -299,8 +299,10 @@ def calibration(rootfiles,type):
     files = rootFileListFromTextFile(rootfiles)
 
     # Number of HPDs
-    #nHPDs = 1
-    nHPDs = 484
+    minHPDID = 0
+    maxHPDID = 484
+    #minHPDID = 9
+    #maxHPDID = 10
 
     # Min number of entries in HPD alignment histogram for update
     minHPDEntries = 10
@@ -342,7 +344,7 @@ def calibration(rootfiles,type):
         umsSvc().newEvent()
 
         # Loop over all HPD copy IDs
-        for hpdID in range(0,nHPDs):
+        for hpdID in range(minHPDID,maxHPDID):
 
             # Get the HPD for this copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
@@ -356,7 +358,8 @@ def calibration(rootfiles,type):
             # Get the offsets. Use try to catch errors
             try:
 
-                offsets = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries)
+                offsets = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries,fullFit)
+                print "Fit Result", hpdID, offsets
                 xOff    = offsets[0]
                 yOff    = offsets[1]
                 
@@ -426,17 +429,17 @@ def calibration(rootfiles,type):
                 vshiftX.append(values['ShiftX'][0])
                 vshiftXerr.append(values['ShiftX'][1])
                 vshiftY.append(values['ShiftY'][0])
-                vshiftYerr.append(values['ShiftY'][0])
+                vshiftYerr.append(values['ShiftY'][1])
                 vshiftR.append(values['ShiftR'][0])
                 vshiftRerr.append(values['ShiftR'][1])
                 dbX.append(values["DBShiftX"])
                 dbY.append(values["DBShiftY"])
                 dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
 
-        alignColor = 1
-        refColor = 4
-
         if len(vflag) > 0:
+
+            alignColor = 1
+            refColor   = 4
 
             linearFit = TF1("AverageFit","pol0",minMaxFlag[0],minMaxFlag[1])
             linearFit.SetParName(0,"Fitted Shift")
@@ -533,12 +536,12 @@ def calibration(rootfiles,type):
                     xOff = averageShifts[hpdID][0]
                     yOff = averageShifts[hpdID][1]
                     text = "From Average"
-                    print "Using average for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
+                    #print "Using average for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
                 else:
                     xOff = values["DBShiftX"]
                     yOff = values["DBShiftY"]
                     text = "From original DB"
-            print type, flag, "HPD", hpdID, text
+                    #print "Using DB for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
 
             # Update the Si alignment with the image movement data
             paramName = "dPosXYZ"
