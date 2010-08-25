@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r10 2010-08-25 ==========================
 ! 2010-08-19 - Chris Jones
  - Adapt TimingTuple to new RICH interfrace that directly gives the number
    of hits
