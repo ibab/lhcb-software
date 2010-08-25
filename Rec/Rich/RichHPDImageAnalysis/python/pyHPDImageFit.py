@@ -127,6 +127,7 @@ def fit( rootfile, hpdcopynr, minEntries ):
     xErr = fitFunc.localErrorFromPixels( m.errors["x"] )
     yErr = fitFunc.localErrorFromPixels( m.errors["y"] )
 
+    # return the fit results
     result["OK"]     = True
     result["XShift"] = (x,xErr)
     result["YShift"] = (y,yErr)

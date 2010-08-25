@@ -2,7 +2,7 @@
 # Globals
 imageFileName = ''
 canvas        = None
-tempRootDir   = "/var/work/jonesc/tmp"
+tempDir       = "/var/work/jonesc/tmp"
 
 def initialise():
     
@@ -15,7 +15,13 @@ def initialise():
     CondDB()
     
     import GaudiPython
+    msgSvc().setOutputLevel(4)
     GaudiPython.AppMgr().initialize()
+
+def msgSvc():
+    import GaudiPython
+    #GaudiPython.AppMgr().createSvc('MessageSvc')
+    return GaudiPython.AppMgr().service('MessageSvc','IMessageSvc')
 
 def iDataSvc():
     import GaudiPython
@@ -140,6 +146,17 @@ def correctStartTime(time):
     startTimeOffset = int( 5 * 1e9 )
     return time - startTimeOffset
 
+def stringsMD5(strings):
+    string = ''
+    for str in strings : string += str
+    return stringMD5(string)
+
+def stringMD5(string):
+    import hashlib
+    m = hashlib.md5()
+    m.update(string)
+    return m.hexdigest()
+
 def fileMD5(file):
     # Compute the MD5 sum of the root files list
     import hashlib
@@ -254,13 +271,18 @@ def mergeRootFile(fill,infiles):
 
     import os
 
-    # Create merged ROOT files for given fill data
-    mergedfile = globals()["tempRootDir"]+"/HPDAlign_Fill-"+str(fill)+".root"
-    if os.path.exists(mergedfile) : os.remove(mergedfile)
-    command = "hadd "+mergedfile
-    for infile in infiles : command += " " + str(infile)
-    print command
-    os.system(command)
+    # Get unique MD5 hash for input files
+    hash = stringsMD5(infiles)
+
+    # merged ROOT file for given fill data
+    mergedfile = globals()["tempDir"]+"/HPDAlign_Fill-"+str(fill)+"_"+stringsMD5(infiles)+".root"
+
+    # Make if not there
+    if not os.path.exists(mergedfile) : 
+        command = "hadd "+mergedfile
+        for infile in infiles : command += " " + str(infile)
+        print command
+        os.system(command)
 
     return mergedfile
 
@@ -322,6 +344,7 @@ def calibration(rootfiles,type,fullFit):
     plotData = { }
 
     # Loop over the root files and fit the HPD images
+    nFile = 0
     for filename in filesToLoopOver:
 
         # Open the root file
@@ -336,17 +359,18 @@ def calibration(rootfiles,type,fullFit):
         unixStartTime = getUNIXTime(startTime)
         unixStopTime  = getUNIXTime(stopTime)
 
-        print "Processing", type , flag, "(", filename, ")"
-        print " ->", type, "Start", startTime, "Stop", stopTime
+        nFile += 1
+        print "Processing", type , flag, "( #", nFile, "of", len(filesToLoopOver), ")", filename
+        #print " ->", type, "Start", startTime, "Stop", stopTime
 
         # Set UMS to the start time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
         umsSvc().newEvent()
-
+        
         # Loop over all HPD copy IDs
         for hpdID in range(minHPDID,maxHPDID):
 
-            # Get the HPD for this copy number
+            # HPD copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
 
             # Get the alignment condition
@@ -385,7 +409,6 @@ def calibration(rootfiles,type,fullFit):
 
         # close the ROOT file
         file.Close()
-        if type == 'Fill' : os.remove(filename)
 
     # Start a PDF file
     globals()["imageFileName"] = "HPDImageCalibrationBy"+type+".ps"
@@ -494,8 +517,12 @@ def calibration(rootfiles,type,fullFit):
     # Close the PDF 
     printCanvas(']')
 
-    # Dictionary for the final DB updates
-    dbUpdates = { }
+    # Resort the data as run as primary key
+    alignData = { }
+    for hpd,data in plotData.iteritems() :
+        for flag,values in data.iteritems() :
+            if flag not in alignData.keys() : alignData[flag] = { }
+            alignData[flag][hpd] = values
 
     # Open new alignment SQL slice
     dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
@@ -503,26 +530,38 @@ def calibration(rootfiles,type,fullFit):
     if os.path.exists(dbFileName) : os.remove(dbFileName)
     db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                           create_new_db=True, readOnly=False )
+    # List of paths already created in the DB
+    createdPaths = [ ]
 
     # Finally, loop over the data to create DB updates per HPD
-    for hpdID,data in plotData.iteritems() :
+    nflag = 0
+    for flag in sorted(alignData.keys()):
+        nflag += 1
+        print " -> Creating alignment update for", type, flag, \
+              "( #", nflag, "of", len(alignData.keys()), ")"
 
-        for flag in sorted(data.keys()) :
+        # alignments for this run/fill
+        alignments = { }
 
-            values = data[flag]
+        # Get run/fill start and stop time
+        startTime = runFillData[type+"Data"][flag]["Start"]
+        stopTime  = runFillData[type+"Data"][flag]["Stop"]
+        unixStartTime = getUNIXTime(startTime)
+        unixStopTime  = getUNIXTime(stopTime)
 
-            # Get the HPD for this copy number
+        # Set UMS to the start time for this run/fill
+        iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
+        umsSvc().newEvent()
+
+        # Loop over HPDs
+        for hpdID in sorted(alignData[flag].keys()):
+            values = alignData[flag][hpdID]
+
+            # HPD copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
         
             # Get the alignment condition
             siAlign = getSiSensorAlignment(copyNumber)
-
-            # Start time
-            unixStartTime = values["UnixStartTime"]
-
-            # Initialise data for this start time
-            if unixStartTime not in dbUpdates.keys():
-                dbUpdates[unixStartTime] = { }
 
             # Get the offsets
             if values["FitOK"] :
@@ -557,29 +596,21 @@ def calibration(rootfiles,type,fullFit):
             alignPath = siliconAlignmentFilePath(copyNumber)
         
             # Get alignment XML file
-            alignments = dbUpdates[unixStartTime]
             if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(type,flag)
         
             # Add alignments for this HPD
             alignments[alignPath] += hpdXMLComment(copyNumber,text)
             alignments[alignPath] += siAlign.toXml()  + '\n'
 
-    # List of paths already created in the DB
-    createdPaths = [ ]
-
-    # Loop over final DB updates and fill SQL file
-    for unixStartTime in sorted(dbUpdates.keys()) :
-        data = dbUpdates[unixStartTime]
-
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
 
         # Loop over XML files in the DB
-        for xmlpath in data.keys():
+        for xmlpath in alignments.keys() :
             
             # The XML data
-            alignment = data[xmlpath]
+            alignment = alignments[xmlpath]
             # Add the XML footer to the XML data
             alignment += xmlFooter()
             
@@ -589,6 +620,8 @@ def calibration(rootfiles,type,fullFit):
                 createdPaths += [xmlpath]
             # Add to the DB
             db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+            
+    print "Done ..."
 
 def labelDataDB(dataColor,dbColor):
     from ROOT import TText
