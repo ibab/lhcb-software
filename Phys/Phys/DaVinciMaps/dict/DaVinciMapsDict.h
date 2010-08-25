@@ -12,6 +12,7 @@
 #include "Event/Particle.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/Particle2LHCbIDs.h"
+#include "Kernel/Particle2VertexBase.h"
 
 namespace 
 {
