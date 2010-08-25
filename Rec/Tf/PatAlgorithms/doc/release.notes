@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+======================== PatAlgorithms v4r6 2010-08-25 =======================
 ! 2010-08-19 - Gerhard Raven
  - kill Warning printout during event loop of 'Too Many XYZ'
 
