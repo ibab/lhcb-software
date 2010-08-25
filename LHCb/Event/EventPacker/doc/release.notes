@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v2r4 2010-08-25 ====================
 ! 2010-08-24 - Pere Mato
  - Added explicit [missing] dependency to DAQ/MDF package. Only needed for the CMake tests. 
 
