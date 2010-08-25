@@ -242,7 +242,7 @@ def get_native_versions(native_version, binary):
 #
 #  get LCGCMT tar file names ===============================================
 #
-def get_tar_name(root,gen,native,bin):
+def get_tar_name(root, gen, native, bin):
     if debug_flag == 1: print ' get_tar_name for %s %s %s %s '%(root,gen,native,bin)
     lcgbin = '__LCG_'+bin
     lcg_app_dir = os.getenv('LCG_release_area')
@@ -281,7 +281,7 @@ def get_tar_name(root,gen,native,bin):
                 else:
                     name = None
 
-    return name,dirlist
+    return name, dirlist
 
 
 def get_output_filename(native_version, binary, packages_versions):
@@ -332,7 +332,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     if output_file :
         tarfile = output_file
     else :
-        tarfile = os.path.join(lhcbtar,main_dir+'_'+binary_dir+'.tar.gz')
+        tarfile = os.path.join(lhcbtar, main_dir+'_'+binary_dir+'.tar.gz')
 
     if tarfile.endswith(".tar.gz") :
         md5file = tarfile.replace(".tar.gz",".md5")
@@ -361,11 +361,11 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
     for key in packages_versions.keys():
         value = packages_versions[key]
         tar_dir = lcg_tar_dir
-        file,dirlist = get_tar_name(tar_dir,key,value,binary_dir)
+        file, dirlist = get_tar_name(tar_dir,key, value, binary_dir)
         if file == None:
             tar_dir = lhcbtar
-            file,dirlist = get_tar_name(tar_dir,key,value,binary_dir)
-        if debug_flag == 1: print 'get_tar_files %s %s '%(file,dirlist)
+            file, dirlist = get_tar_name(tar_dir, key, value, binary_dir)
+        if debug_flag == 1: print 'get_tar_files %s %s ' % (file, dirlist)
         if file != None:
             Ffile = os.path.join(tar_dir,file)
             pack = file.split('_')[0]
@@ -419,7 +419,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 
 # make the final tar file from /tmp/main_dir/binary_dir
     if len(missing) == 0 and len(tarko) == 0:
-        os.chdir(os.path.join('/tmp',main_dir,binary_dir))
+        os.chdir(os.path.join('/tmp', main_dir, binary_dir))
         os.system("symlinks -c -r external")
         str = 'tar zcf '
         str += tarfile
@@ -447,8 +447,28 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
         logfile.write('missing tar files= %s'%(missing)+'\n')
         logfile.write('wrong tar files = %s'%(tarko)+'\n')
 
+def genHTMLfile(native_version, packages_versions,binary_dir, output_file):
+    
+    main_dir = get_output_filename(native_version, binary_dir, packages_versions)
 
+    name = main_dir.split("_")[0]
+    version = main_dir.split("_")[1]
+    core_name = main_dir+'_'+binary_dir
+    
+    htmlfile = None
+    if output_file :
+        tarfile = output_file
+        if tarfile.endswith(".tar.gz") :
+            htmlfile = tarfile.replace(".tar.gz", ".html")
+    else :
+        tarfile  = os.path.join(lhcbhtml, core_name + ".tar.gz")
+        htmlfile = os.path.join(lhcbhtml, core_name + ".html")
 
+    if htmlfile :
+        fd = open(htmlfile, "w")
+        fd.write("<H3>Project %s version %s (%s binary files) </H3>\n" % (name, version, binary_dir))
+        fd.write("<A NAME=%s HREF=source/%s>%s</A>\n" % (core_name, core_name + ".tar.gz", core_name))
+        fd.close()
 
 #
 # -------------------------------------------------------------------
@@ -509,8 +529,9 @@ if __name__ == "__main__":
     else:
         rmcmd = '/bin/rm -fr '
 
-    lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_release_area'],'..','..','external'))
-    lhcbtar = os.path.join(os.environ['LHCBHOME'],'distribution','source')
+    lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_release_area'], '..', '..', 'external'))
+    lhcbtar  = os.path.join(os.environ['LHCBHOME'], 'distribution', 'source')
+    lhcbhtml = os.path.join(os.environ['LHCBHOME'], 'distribution', 'html')
     binary = os.environ['CMTCONFIG']
     source = ' '
     package = ' '
@@ -518,6 +539,7 @@ if __name__ == "__main__":
     native_version = 0
     exclusion_pattern = ''
     output_file = None
+    html_only = False
 
     arguments = sys.argv[1:]
     if len(sys.argv) == 1:
@@ -525,7 +547,7 @@ if __name__ == "__main__":
         sys.exit()
     try:
         keys, values = getopt.getopt(arguments,'hdb:n:e:o:',
-                       ['help','debug','plugins','binary=','native=','exclude=', 'output='])
+                       ['help','debug','plugins','binary=','native=','exclude=', 'output=', "html-only"])
 
     except getopt.GetoptError:
         help()
@@ -551,6 +573,8 @@ if __name__ == "__main__":
         if key in ('-p', '--plugins'):
             plugins_flag = 1
             native_version = 'PLUGINS'
+        if key in ('--html-only'):
+            html_only = True
 
     if plugins_flag == 1:
         logfile.write( 'debug_flag %s, binary %s from $LHCBRELEASES/context/requirements '%(debug_flag,binary)+'\n')
@@ -562,4 +586,6 @@ if __name__ == "__main__":
     if debug_flag == 1:
         print ' packages_versions = ', packages_versions
 
-    rc = get_tar_files(native_version, packages_versions, binary, output_file)
+    if not html_only :
+        rc = get_tar_files(native_version, packages_versions, binary, output_file)
+    genHTMLfile(native_version, packages_versions, binary, output_file)
