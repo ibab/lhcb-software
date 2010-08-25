@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-25
+ - Harder cuts in StrippingD2hh.py D2hhPIDLine.
+
 ! 2010-08-25 - Anton Poluektov 
  - Tightened StrippingB2DX selections: introduced DIRA, DOCA for D candidates, 
    minimum PV separation for at least one of daughters for D->hh, D->hhh, 
