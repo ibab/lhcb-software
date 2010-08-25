@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v37r7>2010-08-25 Brunel v37r7</A></H1><PRE>
+
 </PRE><H1><A NAME=v37r6p1>2010-08-04 Brunel v37r6p1</A></H1><PRE>
 
 - There were a few bugs in the v10r3 Rec release. This is an emergency patch of those.
