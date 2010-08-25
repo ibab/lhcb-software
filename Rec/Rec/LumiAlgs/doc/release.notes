@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v4r0p1 2010-08-25 ========================
 ! 2010-08-24 - Rob Lambert
  - Fixed compiler warning about converting double to int
 
