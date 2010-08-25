@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.205 2010-08-23 16:40:22 raaij Exp $"
+__version__ = "$Id: Configuration.py,v 1.206 2010-08-25 17:24:05 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -214,7 +214,7 @@ class HltConf(LHCbConfigurableUser):
                       , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                       , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
-                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
+                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
                       , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
                       , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
                       , 49 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"

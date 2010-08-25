@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.486 2010-08-23 16:40:22 raaij Exp $ 
+! $Id: release.notes,v 1.487 2010-08-25 17:24:53 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-08-25 - V. Gligorov
+ - Explicitly exclude NZSVelo from RB 46.
 
 ! 2010-08-23 - Roel Aaij
  - Update routing bit 46. Hlt2ExpressHLT1Physics is automatically included
