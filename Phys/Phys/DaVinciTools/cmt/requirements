@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.153 2010-08-04 14:52:43 jpalac Exp $
+# $Id: requirements,v 1.154 2010-08-25 16:30:00 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v21r5
+version           v21r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,6 +16,7 @@ branches          cmt doc src python
 #============================================================================
 use  Boost                 v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
+use  DaVinciMaps           v* Phys
 use  LHCbMath              v* Kernel
 use  CaloUtils             v* Calo
 use  LoKiPhys              v* Phys
