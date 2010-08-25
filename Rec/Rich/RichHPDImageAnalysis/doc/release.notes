@@ -4,6 +4,8 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!================= Rich/RichHPDImageAnalysis v1r2 2010-08-25 =================
+
 ! 2010-08-24 - Chris Jones
  - Update the monitor again to fill summary historys with 1/error^2 weights,
    to properly allow the computation of the weight average and error when root
