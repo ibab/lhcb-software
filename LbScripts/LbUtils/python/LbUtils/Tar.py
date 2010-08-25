@@ -8,7 +8,7 @@ from shutil import copy2
 import fnmatch
 import tarfile
 import logging
-import os, sys
+import os
 
 import __builtin__
 if "set" not in dir(__builtin__):
