@@ -65,17 +65,17 @@ namespace DaVinci{
         return m_map.find(key);
       }
 
-      inline const mapped_type& operator()(const LHCb::Particle* key) const
+      inline mapped_type operator()(const LHCb::Particle* key) const
       {
         return m_map(key);
       }
   
-      inline const mapped_type& operator[](const LHCb::Particle* key) const
+      inline mapped_type operator[](const LHCb::Particle* key) const
       {
         return m_map[key];    
       }
 
-      inline const mapped_type& at(const LHCb::Particle* key) const
+      inline mapped_type at(const LHCb::Particle* key) const
       {
         return m_map(key); 
       }
