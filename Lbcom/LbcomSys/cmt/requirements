@@ -45,12 +45,12 @@ use RichTools         v2r30   Rich      # Chris Jones
 use SiTools           v1r8    Si        # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v4r2    ST        # Jeroen van Tilburg, Matt Needham
+use STAlgorithms      v4r3    ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v3r2    ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r22   ST        # Jeroen van Tilburg, Matt Needham
 use STMonitors        v3r2    ST        # Mark Tobin
-use STTools           v4r3    ST        # Jeroen van Tilburg, Matt Needham
+use STTools           v4r4    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v5r2    Velo      # Tomasz Szumlak
