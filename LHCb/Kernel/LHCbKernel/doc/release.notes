@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v12r4 2010-08-25 ========================
 ! 2010-08-20 - Chris Jones
  - Add the method toString() to RichSmartID, that returns the result of
    printing the object to ostream as an std::string object. Useful in
