@@ -1,3 +1,8 @@
+2010-08-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fix for "-C" option (lists compatible CMTCONFIG). It
+	doesn't require any arguments any more on the command line.
+
 2010-08-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: get now the html dependencies recursively.

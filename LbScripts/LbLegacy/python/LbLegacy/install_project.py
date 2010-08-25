@@ -2133,7 +2133,7 @@ def parseArgs():
 
     if not pname and len(args) > 0 :
         pname = args[0]
-    if pname.find("/") != -1 :
+    if pname and pname.find("/") != -1 :
         plist = pname.split("/")
         pname = "/".join(plist[1:])
 
