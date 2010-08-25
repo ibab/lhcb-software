@@ -14,6 +14,7 @@ Purpose             : LHCb physics packages
 
  * Phys/DecayTreeFitter: fixes for V0s.
  * Phys/LoKiFitters: Untested treatment of photons in LoKi::VertexFitter.
+ * Phys/DaVinciMaps: test one-to-one Particle->PV map.
 
 </PRE><H1><A NAME=v9r9>2010-08-19 Phys v9r9 </A></H1><PRE>
 
