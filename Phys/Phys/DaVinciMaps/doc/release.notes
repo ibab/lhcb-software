@@ -4,6 +4,8 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciMaps v1r1 2010-08-25 ========================
+
 ! 2010-08-25 - Juan Palacios
  - Add Contains DaVinci::Map::Particle2VertexBase, one-to-one map for particle
    to PV.
