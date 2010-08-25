@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v4r3 2010-08-25 ========================
 ! 2010-08-08 M Needham
  - Set key in copied clusters in STClusterContainerCopy
 
