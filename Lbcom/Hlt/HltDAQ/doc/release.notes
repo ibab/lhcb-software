@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================== HltDAQ v2r2 2010-08-25 ============================
 ! 2010-08-24 - Rob Lambert
  - fix compiler warning about long long int from double in HltRoutingBitsWriter.cpp
 
