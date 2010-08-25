@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.16 2010-08-24 15:33:21 rlambert Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.17 2010-08-25 07:01:52 rlambert Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -203,7 +203,7 @@ HltRoutingBitsWriter::i_updateConditions()
         error() << "Condition does not contain RunStartTime " << endmsg;
         return StatusCode::FAILURE;
     }
-    m_startOfRun = (long long unsigned int) m_runpars->param<int>("RunStartTime")*1e6; //from seconds -> microseconds since 1/1/1970
+    m_startOfRun = (long long unsigned int) (m_runpars->param<int>("RunStartTime")*1e6); //from seconds -> microseconds since 1/1/1970
     return StatusCode::SUCCESS;
 }
 
