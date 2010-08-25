@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2010-08-25 - Rob Lambert
+ - Supress windows warning from tool handles
+
 ! 2010-08-23 - Wouter Hulsbergen
  - added TrackStateProvider
  - changed MaterialLocatorBase to make it usable from TrackExtrapolator

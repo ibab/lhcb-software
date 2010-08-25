@@ -31,6 +31,13 @@ using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 
+// Disable warning on windows about using 'this' in constructors
+// necessary for tool handles
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif
+
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
