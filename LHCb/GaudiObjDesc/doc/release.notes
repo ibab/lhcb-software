@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Pere Mato
+ - Fixed a bug that was visible when several xml files were provided in a single 
+   command invocation. Class instantiations and exclusions sections were accumulating.
+   This was not visible when using CMT because commands are executed with a single
+   xml input file.    
+
 !======================== GaudiObjDesc v11r10p1 2010-02-24 ===================
 ! 2010-02-16 - Stefan Roiser
  - Fix bug #62936: for unknown enums, print the numerical value in the error
