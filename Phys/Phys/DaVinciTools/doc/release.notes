@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.571 2010-08-23 09:01:04 tblake Exp $
+! $Id: release.notes,v 1.572 2010-08-25 16:30:34 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v21r6 2010-08-25 ===================
+
+! 2010-08-25 - Juan Palacios
+ - Add BestPValg2, a temporary clone of BestPVAlg, writing out one-to-one
+   DaVinci::Map::Particle2VertexBase.
+ - cmt/requirements
+  . Increase to v21r6.
 
 ! 2010-08-23 - Thomas BLAKE
  - Bd2KstarMuMuAngleCalculator
