@@ -33,6 +33,12 @@
  *  @date   14/08/2010
  **/
 
+// Disable warning on windows about using 'this' in constructors
+// necessary for tool handles
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif
+
 
 // forward declarations
 namespace {
