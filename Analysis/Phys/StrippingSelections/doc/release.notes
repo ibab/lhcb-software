@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-25 - Greig Cowan
+ - Set prescale of StrippingDstarVeryLooseWithD02HH to 0.01 as it was taking too much rate.
+   Should now be ~0.06% retention.
 
 ! 2010-08-24 - Yasmine Amhis
  - Tightened  track cuts for StrippingLambdab2JpsiLambda lines.
