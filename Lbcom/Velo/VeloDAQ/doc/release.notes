@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v6r0 2010-08-25 =======================
 ! 2010-08-03 - David Hutchcroft
  - Added a ProcStatus when the bank has a header bit error and is not 
    decoded
