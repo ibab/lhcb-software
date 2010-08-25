@@ -4,6 +4,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2010-08-24 - Pere Mato
+ - Added explicit [missing] dependency to Event/L0Event package. Only needed for the CMake tests. 
+
 !========================= CaloInterfaces v7r18 2010-03-17 ====================
 ! 2010-03-08 - Olivier Deschamps 
  - ICaloHypo2Calo : new virtual method _setProperty() 
