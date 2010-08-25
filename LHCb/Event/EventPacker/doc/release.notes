@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2010-08-24 - Pere Mato
+ - Added explicit [missing] dependency to DAQ/MDF package. Only needed for the CMake tests. 
+
 ! 2010-07-21 - Chris Jones
  - Adapt ReadPackedDst to new ProcStatus interface
 
