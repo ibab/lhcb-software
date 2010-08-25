@@ -29,7 +29,7 @@ apply_pattern install_more_includes more=Event
 # define component library link options
 #============================================================================
 library LumiEvent ../src/*.cpp
-apply_pattern    linker_library library=LumiEvent
+apply_pattern    component_library library=LumiEvent
 
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
