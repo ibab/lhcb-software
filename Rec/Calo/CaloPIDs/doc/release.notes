@@ -6,6 +6,7 @@
 !------------------------------------------------------------------------------
 
 
+!========================== CaloPIDs v5r7 2010-08-25 ========================
 ! 2010-08-17 - Olivier Deschamps
  - new version of CaloPhotonIDAlg (get data from condDB or THS) from F. Machefert 
  - python/PIDs.py : remove default hardcoded neutralID PDF
