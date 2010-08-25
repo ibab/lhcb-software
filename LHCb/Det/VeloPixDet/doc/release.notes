@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r6 2010-08-25 =======================
 ! 2010-08-17 - Victor Coco
  - Change in DeVeloPixSquareType initialization to fix a win32 warning due to
    cast of int in bool
