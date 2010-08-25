@@ -1,4 +1,4 @@
-// $Id: HltGEC.cpp,v 1.3 2010-08-19 09:51:40 graven Exp $
+// $Id: HltGEC.cpp,v 1.4 2010-08-25 07:41:02 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -65,9 +65,9 @@ StatusCode Hlt::GEC::finalize ()
 // ============================================================================
 bool Hlt::GEC::accept () const 
 { 
-  return (m_maxOTHits<0   || m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits)
-      && (m_maxITHits<0   || get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters)->size() < m_maxITHits)
-      && (m_maxVeloHits<0 || get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default)->size() < m_maxVeloHits) 
+  return (m_maxOTHits<0   || (int)m_rawBankDecoder->totalNumberOfHits() < m_maxOTHits)
+      && (m_maxITHits<0   || (int)get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters)->size() < m_maxITHits)
+      && (m_maxVeloHits<0 || (int)get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default)->size() < m_maxVeloHits) 
       ;
 }
 // ============================================================================

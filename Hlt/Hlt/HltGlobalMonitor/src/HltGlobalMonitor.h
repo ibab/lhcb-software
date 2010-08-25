@@ -89,7 +89,7 @@ private:
             m_profile->fill(x,y);
         }
         void operator()(double CPUtime) {
-            int n = m_parent->exist<ObjectContainerBase>(m_loc) ?  m_parent->get<ObjectContainerBase>(m_loc)->numberOfObjects() : -1 ;
+            int n = m_parent->exist<ObjectContainerBase>(m_loc) ?  (int)m_parent->get<ObjectContainerBase>(m_loc)->numberOfObjects() : -1 ;
             fill( n , CPUtime );
         }
   private:
