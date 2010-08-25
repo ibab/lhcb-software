@@ -1,8 +1,11 @@
 2010-08-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: added the generation of the html file for LCGCMT like tarballs
-	* python/LbLegacy/install_project.py: fix for "-C" option (lists compatible CMTCONFIG). It
-	doesn't require any arguments any more on the command line.
+	* python/LbLegacy/install_project.py: 
+	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments 
+	  any more on the command line.
+	- allows the listing of LCGCMT like tarballs
+	- fixed the binary of LCGCMT like tarballs: it is always optimized.
 
 2010-08-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

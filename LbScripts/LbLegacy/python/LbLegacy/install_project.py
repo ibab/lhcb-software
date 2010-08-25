@@ -26,7 +26,7 @@ url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
 site_subdirs = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp']
-
+lcg_tar      = ["LCGCMT", "LCGGrid", "LCGGanga"]
 # dynamic modules
 
 LbLegacy = None
@@ -719,7 +719,7 @@ def getPackVer(fname):
     if name == "LBSCRIPTS" :
         file_base = []
         file_base.append(os.path.join(base_dir[0], name, name + '_' + vers))
-    if name == "LCGCMT" or name == "GENSER" or name == "LCGGrid" or name == "LCGGanga":
+    if  name == "GENSER" or name in lcg_tar:
         if len(packver) >= 2:
             vers = '_'.join(packver[1:])
             file_path = os.path.join(this_lcg_dir, name, name + '_' + vers)
@@ -796,8 +796,8 @@ except ImportError:
                     name = c
                     break
         else :
-            if nm.upper() == "LCGCMT" :
-                name = "LCGCMT"
+            if nm in lcg_tar :
+                name = nm
                 version = cptes[1]       
         return name, version, binary
 
@@ -815,14 +815,16 @@ def getProjectList(name, version, binary=None, recursive=True):
     if name in LbConfiguration.Package.package_names :
         p = LbConfiguration.Package.getPackage(name)
         tar_file = p.tarBallName(version)
-    elif name == "LCGCMT" :
-        tar_file = "_".join([name.upper(), version, binary]) 
+    elif name in lcg_tar:
+        tar_file = "_".join([name, version]) 
+        if binary :
+            tar_file += "_%s" % binary
     else:
         tar_file = name.upper() + "_" + name.upper()
         if version != 0 :
-            tar_file = tar_file + "_" + version
+            tar_file += "_%s" % version
         if binary:
-            tar_file = tar_file + "_" + binary
+            tar_file += "_%s" % binary
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
@@ -847,7 +849,7 @@ def getProjectList(name, version, binary=None, recursive=True):
             sys.exit(1)
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
-            if name.upper() == "LCGCMT" :
+            if name in lcg_tar :
                 log.debug('the required project %s %s %s is not available. Skipping ...' % (name, version, binary))
                 os.remove(tar_file_html)
                 return project_list, html_list
@@ -1261,9 +1263,16 @@ def getVersionList(pname, ver=None):
         PROJECT = p.project().upper()
         datapackage = True
     else :
-        PROJECT = pname.upper()
+        if pname in lcg_tar :
+            PROJECT = pname
+        else :
+            PROJECT = pname.upper()
 
-    webpage = urlopen(url_dist + '/' + PROJECT)
+    if pname in lcg_tar :
+        webpage = urlopen(url_dist+'/source')
+    else :
+        webpage = urlopen(url_dist + '/' + PROJECT)
+
     weblines = webpage.readlines()
     plist = []
     for webline in weblines:
@@ -1280,9 +1289,14 @@ def getVersionList(pname, ver=None):
                         plist.append(filename)
                 else :
                     plist.append(filename)
+    plist.sort()
 
     atexit.register(urlcleanup)
-    return sortStrings(plist, safe=True)
+
+    if pname not in lcg_tar :
+        plist = sortStrings(plist, safe=True)
+        
+    return plist
 
 def listVersions(pname, ver=None):
     log = logging.getLogger()
@@ -1695,10 +1709,8 @@ def runInstall(pname, pversion, binary=None):
     project_list, html_list = getProjectList(pname, pversion)
 
 
-    cmtconfig_dbg = getBinaryDbg(cmtconfig)
     cmtconfig_opt = cmtconfig
     if isBinaryDbg(cmtconfig) :
-        cmtconfig_dbg = cmtconfig
         cmtconfig_opt = getBinaryOpt(cmtconfig)
 
     if not check_only :
@@ -1723,6 +1735,8 @@ def runInstall(pname, pversion, binary=None):
 
 
     if binary :
+        if pname in lcg_tar :
+            binary = cmtconfig_opt
         binary_project_list, binary_html_list = getProjectList(pname, pversion, binary)
         project_list.update(binary_project_list)
         html_list += binary_html_list
