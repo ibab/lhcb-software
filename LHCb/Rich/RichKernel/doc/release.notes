@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r38 2010-08-25 ====================
 ! 2010-08-19 - Chris Jones
  - Extend SmartID decoding tool interface with methods to return the 
    total number of hits in the event
