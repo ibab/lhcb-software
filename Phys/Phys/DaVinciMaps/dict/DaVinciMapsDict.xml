@@ -6,4 +6,11 @@
   <class name = "DaVinci::Map::Particle2LHCbIDs"
          id = "00000370-0000-0000-0000-000000000000"/>
 
+  <class name = "std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> >" />
+  <class name = "std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > >" />
+  <class name = "_P2PV" />
+  <class name = "DaVinci::Map::Particle2VertexBase"
+         id = "00000371-0000-0000-0000-000000000000"/>
+
+
 </lcgdict>

@@ -16,12 +16,21 @@
 namespace 
 {
   typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _P2LHCbIDs;
+
+    typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _P2PV;
+
   struct _Instantiations 
   {
     std::vector<LHCb::LHCbID> _i0;
     std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _i1;
     std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > > _i2;
     _P2LHCbIDs _i3;
+
+    std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _i4;
+    std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > > _i5;
+    _P2LHCbIDs _i6;
+
+
   };
   
 }
