@@ -3,6 +3,9 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+
+!======================== RichDet v15r0 2010-08-25 ===========================
+
 !2010-08-19 - Sajan Easo
  - Refractive index of CF4 corrected by using the correct reference
    temperature. This fine tunes the refractive index by shifting n-1 by about
@@ -17,6 +20,7 @@
    In case of using the old DDDB the above
    mentioned correction will be automatically used to give the same correct
    refractive index. All changes in DeRichGasRadiator.cpp
+
 ! 2010-08-08 - Chris Jones
  - Suppress info messages from DeRichSystem on number of L1 boards etc.
 
