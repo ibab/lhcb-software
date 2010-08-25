@@ -1,37 +1,39 @@
 
 __author__ = ['Marco Gersabeck','Harry Cliff']
 __date__ = '13/08/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Prompt D0->KK/Kpi stripping selection for measuring yCP.
 '''
 
 from Gaudi.Configuration import *
-from GaudiKernel.SystemOfUnits import MeV
+from GaudiKernel.SystemOfUnits import MeV, mm
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 class StrippingD2hhConf(LHCbConfigurableUser):
     __slots__ = { 
-                  'DaugPt'               : 500.*MeV
+                    'DaugPt'             : 500.*MeV
+                  , 'DaugPtPID'          : 900.*MeV   
                   , 'DaugP'              : 2000.*MeV
                   , 'DaugTrkChi2'        : 10
                   , 'DaugIPChi2'         : 9
-                  , 'DaugMaxPID'         : 5 
+                  , 'DaugMaxPID'         : 0 
                   #
                   , 'D0PtNoPID'          : 1500.*MeV
-                  , 'D0PtPID'            : 1000.*MeV
+                  , 'D0PtPID'            : 1500.*MeV
                   , 'D0P'                : 5000.*MeV
                   , 'D0VtxChi2Ndof'      : 10
                   , 'D0FDChi2NoPID'      : 16
-                  , 'D0FDChi2PID'        : 35
+                  , 'D0FDChi2PID'        : 10
                   , 'D0BPVDira'          : 0.9999
                   , 'D0IPChi2NoPID'      : 100
-                  , 'D0IPChi2PID'        : 9
+                  , 'D0IPChi2PID'        : 30
                   , 'D0MassWindowCentre' : 1940.*MeV
-                  , 'D0MassWindowWidth' : 125.*MeV
+                  , 'D0MassWindowWidth'  : 125.*MeV
+                  , 'D0DOCA'             : 0.06*mm
                 }
 
     _NoPIDLine = None
@@ -126,7 +128,7 @@ class StrippingD2hhConf(LHCbConfigurableUser):
         from Configurables import CombineParticles
 	stdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
 
-        daugCuts = "(PT > %(DaugPt)s)" \
+        daugCuts = "(PT > %(DaugPtPID)s)" \
                    "& (ISLONG)" \
                    "& (P > %(DaugP)s)" \
                    "& (TRCHI2DOF < %(DaugTrkChi2)s)" % self.getProps()
@@ -134,6 +136,7 @@ class StrippingD2hhConf(LHCbConfigurableUser):
         combCuts = "(APT > %(D0PtPID)s)" \
                    "& (AHASCHILD( PIDK > %(DaugMaxPID)s ) )" \
                    "& (ADAMASS(%(D0MassWindowCentre)s) < %(D0MassWindowWidth)s)" \
+                   "&(ADOCA(1,2)< %(D0DOCA)s)"\
                    "& (AP > %(D0P)s)" % self.getProps()
 
         d0Cuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
