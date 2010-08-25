@@ -1,28 +1,46 @@
+// $Id:$ 
+// ============================================================================
 #ifndef GAUDIROOT_FASTCLUSTERCONTAINER_H
 #define GAUDIROOT_FASTCLUSTERCONTAINER_H
-
-// Framework include files
-#include "GaudiKernel/DataObject.h"
-// C++ include files
+// ============================================================================
+// Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
-
+// ============================================================================
+// Gaudi
+// ============================================================================
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/ObjectContainerBase.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include "boost/static_assert.hpp"
+// ============================================================================
 /** @class FastClusterContainer FastClusterContainer.h <dir>/FastClusterContainer.h
-  *
-  * Fast containers can only be used for containees not having a virtual table.
-  * Though the container behaves like a vector and allows the access of objects
-  * of type VISIBLE, the internal representation is of type INTERNAL.
-  * This avoids unnecessary calls to the constructor of the VISIBLE provided of 
-  * course that the INTERNAL type maps ideally to a primitive.
-  * The size of the INTERNAL and the VISIBLE type must be identical.
-  *
-  * @author  M.Frank
-  * @version 1.0
-  *
-  */
+ *
+ * Fast containers can only be used for containees not having a virtual table.
+ * Though the container behaves like a vector and allows the access of objects
+ * of type VISIBLE, the internal representation is of type INTERNAL.
+ * This avoids unnecessary calls to the constructor of the VISIBLE provided of 
+ * course that the INTERNAL type maps ideally to a primitive.
+ * The size of the INTERNAL and the VISIBLE type must be identical.
+ *
+ * @author  M.Frank
+ * @version 1.0
+ *
+ */
 template <typename VISIBLE, typename INTERNAL> 
-class FastClusterContainer : public DataObject  {
+class FastClusterContainer : public ObjectContainerBase 
+{
+private:
+  // ==========================================================================
+  /// static compile-time assertion 
+  BOOST_STATIC_ASSERT( sizeof(VISIBLE) == sizeof(INTERNAL) ) ;
+  // ==========================================================================  
 private:
   typedef typename std::vector<VISIBLE>       VD;
 public:
@@ -38,8 +56,9 @@ public:
   typedef typename VD::reference              reference;
   typedef typename VD::const_reference        const_reference;
   typedef typename VISIBLE::chan_type         chan_type;
-
+  
 private:
+  
   typedef std::vector<INTERNAL> InternalData;
   /// Data holder
   InternalData m_data;
@@ -51,7 +70,8 @@ private:
 
 public:
   /// Standard constructor
-  FastClusterContainer()  {
+  FastClusterContainer() : ObjectContainerBase() 
+  {
     m_r.internal = &m_data;
     if ( sizeof(VISIBLE) != sizeof(INTERNAL) )   {
       throw std::runtime_error("Cannot remap data of different size!");
@@ -128,7 +148,24 @@ public:
     }
     return &(*it);
   }
-
+  
+  // ==========================================================================
+public: // fake methods form ObjectContainerBase 
+  // ==========================================================================
+  /// Distance of a given object from the beginning of its container
+  virtual long index( const ContainedObject* /* obj */ ) const { return -1 ; }
+  /// Pointer to an object of a given distance
+  virtual ContainedObject* containedObject( long /* dist */ ) const { return 0 ; }
+  /// Number of objects in the container
+  virtual size_type numberOfObjects() const { return this->size() ; }
+  /// Add an object to the container
+  virtual long add    ( ContainedObject* /* obj */ ) { return -1 ; }
+  /// Release object from the container
+  virtual long remove ( ContainedObject* /* obj */ ) { return -1 ; }
+  // ==========================================================================
 };
-
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // GAUDIROOT_FASTCLUSTERCONTAINER_H
+// ============================================================================

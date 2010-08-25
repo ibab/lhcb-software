@@ -4,6 +4,19 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-08-25 - Vanya Belyaev
+
+ - FastClusterContainer:
+
+      add almost fictive inheritance from ObjectContainerBase class.
+      It allows the treatment of *all* type of containers in very generic way,
+      in particular it extends the scope of functor CONTAINS to "lite-clusters",
+      thus e.eg. making possibel correct applictaion of global event cuts 
+
+ - cmt/requirements 
+
+     version increment to v12r5 
+
 !===================== LHCbKernel v12r4 2010-08-25 ========================
 ! 2010-08-20 - Chris Jones
  - Add the method toString() to RichSmartID, that returns the result of
