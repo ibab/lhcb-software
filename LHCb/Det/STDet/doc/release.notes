@@ -3,6 +3,7 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r22 2010-08-25 =========================
 ! 2010-07-23 M Needham
   - Add first and lastSector method to DeITLayer
   - Add first and lastLayer method to DeITBox  
