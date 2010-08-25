@@ -36,7 +36,8 @@ class Hadrons_Minimal :
             'Hlt2IncDiProtonPresel', 
             'Hlt2IncDiProtonTrackFitted',
             'Hlt2DisplVerticesDouble', 
-            'Hlt2DisplVerticesSingle',            
+            'Hlt2DisplVerticesSingle',
+            'Hlt2DisplVerticesSinglePostScaled',            
             #'Hlt2B2HHPi0_Merged',
             #'Hlt2B2HHPi0_Resolved',
             'Hlt2CharmD2KS0PiLL',        
@@ -49,15 +50,6 @@ class Hadrons_Minimal :
             'Hlt2CharmOSTF3Body',
             'Hlt2CharmOSTF2BodyWideMass',
             'Hlt2CharmOSTF3BodyWideMass',
-            # B2DX lines
-            #"Hlt2B2D2hhBachelorOSTFTUSSignal",
-            #"Hlt2B2D2hhhBachelorOSTFTUSSignal",
-            #"Hlt2B2D2hhKstarOSTFTUSSignal",
-            #"Hlt2B2D2hhhBachelorWithKsOSTFTUSSignal", 
-            #"Hlt2B2D2hhBachelorOSTFTUSBroadMW",
-            #"Hlt2B2D2hhhBachelorOSTFTUSBroadMW",
-            #"Hlt2B2D2hhKstarOSTFTUSBroadMW",
-            #"Hlt2B2D2hhhBachelorWithKsOSTFTUSBroadMW" 
             ]
 
         # For inclusive phi extend using Kim's setting
