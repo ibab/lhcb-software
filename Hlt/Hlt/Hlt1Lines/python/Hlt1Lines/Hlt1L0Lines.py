@@ -1,4 +1,4 @@
-# =============================================================================
+
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -9,16 +9,15 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1L0LinesConf(HltLinesConfigurableUser) :
-   __slots__ = { 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001  # set new default Postscale for these lines!
-                               , 'Hlt1L0.*RateLimited' : 'RATE(100)'
-                               }
-               , 'Prescale'  : { 'Hlt1L0Any'       : 0.000001 }
+   # note: we prescale everything _except_ for the .*RateLimited, which we rate limit instead
+   __slots__ = { 'Postscale' : { 'Hlt1L0.*RateLimited'       : 'RATE(100)' }
+               , 'Prescale'  : { 'Hlt1L0.*(?<!RateLimited)$' : 0.000001  }
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }
 

@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -28,7 +28,21 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = { 
+    __slots__ = {       'AllL0_PT'      : 1250.
+                    ,   'AllL0_P'       : 12500.
+                    ,   'AllL0_IP'      : 0.125
+                    ,   'AllL0_IPChi2'  : 50
+                    ,   'AllL0_TrChi2'  : 3
+                    ,   'Muon_PT'       : 800.
+                    ,   'Muon_P'        : 8000.
+                    ,   'Muon_IP'       : 0.080
+                    ,   'Muon_IPChi2'   : 25
+                    ,   'Muon_TrChi2'   : 10
+                    ,   'Photon_PT'     : 800.
+                    ,   'Photon_P'      : 8000.
+                    ,   'Photon_IP'     : 0.125
+                    ,   'Photon_IPChi2' : 50
+                    ,   'Photon_TrChi2' : 5     
                 }
     
     def __apply_configuration__(self) : 
@@ -45,7 +59,6 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltFilterFittedVertices
         
         def trackprepare(ip,pt,p):
-            #OutputOfConfirmation = confirmationguidedforward(type).outputSelection()
             from HltLine.HltDecodeRaw import DecodeIT
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
             return [ Hlt1GEC(),
@@ -142,24 +155,26 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                          )   
                 ]
             return after
- 
+
+        props = self.getProps()
+     
         from Hlt1Lines.HltL0Candidates import L0Channels
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Muon','DiMuon','Electron','Photon'] ] ) 
-             , algos =  trackprepare(ip=0.125,pt=1250,p=12500) + afterburn(chi2=3,ipchi2=50)
+             , L0DU = "L0_DECISION_PHYSICS" 
+             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
              )
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
-             , algos =  trackprepare(ip=0.08,pt=800,p=8000) + muonAfterburn(chi2=10,ipchi2=25.)
+             , algos =  (trackprepare(ip=props["Muon_IP"],pt=props["Muon_PT"],p=props["Muon_P"]) + muonAfterburn(chi2=props["Muon_TrChi2"],ipchi2=props["Muon_IPChi2"]))
              )
         Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
-             , algos =  trackprepare(ip=0.125,pt=800,p=8000) + afterburn(chi2=5,ipchi2=50)
+             , algos = (trackprepare(ip=props["Photon_IP"],pt=props["Photon_PT"],p=props["Photon_P"]) + afterburn(chi2=props["Photon_TrChi2"],ipchi2=props["Photon_IPChi2"]))  
              )    
 

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.198 2010-08-19 14:43:29 albrecht Exp $
+! $Id: release.notes,v 1.199 2010-08-25 17:18:31 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2010-08-25 - V. Gligorov
+ - "Slotify" the 1Track lines.
+
 ! 2010-08-19 - Johannes Albrecht
  - add minimum p cut to HltConfiguredPR (default = 3000)
  - add this cut in the muon alley
