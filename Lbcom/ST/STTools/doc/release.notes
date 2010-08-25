@@ -2,6 +2,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v4r4 2010-08-25 ==========================
 ! 2010-08-06 M Needham 
  - Add STSelectChannelIDOnTrack tool [selects channels that are on tracks] 
 
