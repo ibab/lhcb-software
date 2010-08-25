@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-08-25 - V. Gligorov
+ - New functor to allow cutting on vertex PT. 
+
 ! 2010-08-23 - V. Gligorov
  - New functors to allow cutting on PT/P of a track.
 

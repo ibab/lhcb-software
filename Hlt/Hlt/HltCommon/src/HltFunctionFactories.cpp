@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.39 2010-08-22 22:49:17 gligorov Exp $
+// $Id: HltFunctionFactories.cpp,v 1.40 2010-08-25 17:20:12 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -123,6 +123,7 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexDimuonMass>("FitVertexDimuonMass");
   declare<Hlt::VertexDikaonMass>("VertexDikaonMass");
   declare<Hlt::VertexDikaonMass>("FitVertexDikaonMass");
+  declare<Hlt::VertexPT>("VertexPT");
   declare<Hlt::VertexSumPT>("VertexSumPT");
   declare<Hlt::VertexMinPT>("VertexMinPT");
   declare<Hlt::VertexMaxPT>("VertexMaxPT");

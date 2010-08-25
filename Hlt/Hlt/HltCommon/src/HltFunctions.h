@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.36 2010-08-22 22:49:17 gligorov Exp $
+// $Id: HltFunctions.h,v 1.37 2010-08-25 17:20:12 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -534,6 +534,20 @@ namespace Hlt {
     }
     SumPT* clone() const {return new SumPT();}
   };
+
+  class VertexPT : public Hlt::VertexFunction {
+  public: 
+    explicit VertexPT() {}
+    double operator() (const LHCb::RecVertex& vertex) const { 
+      Hlt::PT fun;
+      const LHCb::Track& t1 = *(vertex.tracks()[0]);
+      const LHCb::Track& t2 = *(vertex.tracks()[1]);
+      double v_px = t1.momentum().x() + t2.momentum().x();
+      double v_py = t1.momentum().y() + t2.momentum().y();  
+      return sqrt(pow(v_px,2)+pow(v_py,2)); 
+    }
+    VertexPT* clone() const {return new VertexPT();}
+  };  
 
   class VertexSumPT : public Hlt::VertexFunction {
   public:
