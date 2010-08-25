@@ -2,7 +2,8 @@
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
-!====================== VeloEvent v16r9 2010-08-18=======================
+
+!====================== VeloEvent v16r9 2010-08-25=======================
 ! 2010-08-18 - Tomasz Szumlak
  - add new data object that is a part of the new Velo NZS info service.
    the standard begin event incident service is not useful for the NZS
