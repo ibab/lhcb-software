@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.55 2010-08-20 14:43:56 jpalac Exp $
+!$Id: release.notes,v 1.56 2010-08-25 12:26:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-08-25 - Juan Palacios
+ - cmt/requirements
+  . Use PhysSel/PhysSelPython
+  . Increase to v1r11
 
 ! ======================== DSTWriters v1r10 2010-08-20 =======================
 
