@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v10r4>2010-08-25 RecSys v10r4</A></H1><PRE>
+This version uses Gaudi v21r10p1 and LHCb v31r5
+
 ! 2010-08-18 - Chris Jones
  - Add new package Rich/RichAlignment
 
