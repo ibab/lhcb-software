@@ -18,7 +18,8 @@ __all__ = ( 'CloneRecHeader',
             'CloneL0DUReport',
             'CloneHltDecReports',
             'CloneBackCat',
-            'CloneRawBanks')
+            'CloneRawBanks',
+            'CloneLHCbIDs')
 
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
