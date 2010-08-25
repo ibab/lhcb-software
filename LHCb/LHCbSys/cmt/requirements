@@ -117,7 +117,7 @@ use CondDBUI              v3r5    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3p2  Tools   # In SVN. Marco Clemencic
 use TfKernel              v2r18   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6    Tf      # Matt Needham
-use TrackInterfaces       v4r14   Tr      # Matt Needham
+use TrackInterfaces       v4r15   Tr      # Matt Needham
 use TrackKernel           v1r5    Tr      # Wouter Hulsbergen
 
 # Declare this as a container package
