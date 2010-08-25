@@ -5,6 +5,7 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v2r5 2010-08-25 =========================
 ! 2010-08-06 - Marco Clemencic
  - Fixes and improvements in UpdateManagerSvc
    - removed 'queryInterface', adapted to the new interfaces system of Gaudi v21
