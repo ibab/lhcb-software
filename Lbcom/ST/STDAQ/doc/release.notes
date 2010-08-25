@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r23 2010-08-25 ======================
 ! 2010-08-17 M Needham
  - Add possibility to copy pcn from summary block to the raw bank when encoding
 
