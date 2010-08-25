@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-25 - Anton Poluektov 
+ - Tightened StrippingB2DX selections: introduced DIRA, DOCA for D candidates, 
+   minimum PV separation for at least one of daughters for D->hh, D->hhh, 
+   cut on the number of tracks in the event. 
+   Default set of cuts gives 1.6% total retention for all B2DX lines. 
+
 ! 2010-08-25 - Greig Cowan
  - Set prescale of StrippingDstarVeryLooseWithD02HH to 0.01 as it was taking too much rate.
    Should now be ~0.06% retention.
