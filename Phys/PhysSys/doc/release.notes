@@ -3,6 +3,18 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r10>2010-08-25 Phys v9r10 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r10                                  #
+###############################################################################
+
+
+- Based on LHCb v31r5 and Gaudi v21r10p1. For MicroDST production tests.
+
+ * Phys/DecayTreeFitter: fixes for V0s.
+ * Phys/LoKiFitters: Untested treatment of photons in LoKi::VertexFitter.
+
 </PRE><H1><A NAME=v9r9>2010-08-19 Phys v9r9 </A></H1><PRE>
 
 ###############################################################################
