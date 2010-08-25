@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v9r2 2010-08-25 =======================
 ! 2010-08-02 - Vanya Belyaev
 
  - add new functors CHECK & ACCEPT, 
