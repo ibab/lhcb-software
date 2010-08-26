@@ -29,3 +29,4 @@ apply_pattern python_alias script=buildTar
 apply_pattern python_alias script=checkTar
 
 
+apply_pattern python_alias script=copyLCG

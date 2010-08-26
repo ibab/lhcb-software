@@ -1,0 +1,238 @@
+#!/usr/bin/env python
+
+import os
+import shutil
+from subprocess import Popen, PIPE
+import logging
+
+def lcg_root(env, vers):
+    """
+    Compute the path of a version of LCGCMT using the specified environment.
+    """
+    return os.path.join(env["LCG_release_area"], "LCGCMT", vers)
+
+def lcg_rel_cmt(env, vers):
+    """
+    Compute the path of a the LCG_Release package using the specified environment.
+    """
+    return os.path.join(lcg_root(env, vers), "LCG_Release", "cmt")
+
+def get_projects(ver, afs_lcg = None, mysiteroot = None, use_cache = False):
+    """
+    Find the projects (AA and external) defined in the required version of LCGCMT
+    and return a pair with path in AFS and path in the local installation for each
+    of them.
+    @param ver: version of LCGCMT
+    @param afs_lcg: root of the LCG software (e.g. /afs/cern.ch/sw/lcg)
+    @param mysiteroot: path to the local installation
+    @param use_cache: flag stating if the function has to use a cache file instead of
+                      calling CMT
+    @return: a dictionary of the format {name: (src, dest), ...}
+    """
+    # Prepare environment for AFS
+    if afs_lcg is None:
+        afs_lcg = os.path.join(os.environ.get("AFS", "Z:"),
+                               "cern.ch", "sw", "lcg", "app", "releases")
+    else:
+        afs_lcg = os.path.normpath(afs_lcg)
+    afs_env = dict(os.environ)
+    afs_env.update({"CMTPROJECTPATH": afs_lcg,
+                    "CMTSITE": "CERN",
+                    "AFS": os.environ.get("AFS", "Z:"),
+                    "LCG_release_area": afs_lcg
+                    })
+    if "PWD" in afs_env:
+        del afs_env["PWD"]
+    # Prepare environment for local
+    loc_env = dict(os.environ)
+    if mysiteroot is None:
+        mysiteroot = loc_env["MYSITEROOT"]
+    mysiteroot = os.path.normpath(mysiteroot)
+    loc_env.update({"CMTPROJECTPATH": afs_lcg, # we are using AFS LCGCMT to get the paths to local
+                    "CMTSITE": "LOCAL",
+                    "SITEROOT": mysiteroot,
+                    "LCG_release_area": os.path.join(mysiteroot, "lcg", "external")
+                    })
+    if "PWD" in loc_env:
+        del loc_env["PWD"]
+
+    log = logging.getLogger("get_projects")
+
+    if use_cache:
+        from hashlib import md5
+        cache_name = "copy_lcgcmt.cache.%s" % md5(str(ver) + os.environ["CMTCONFIG"] + afs_lcg + mysiteroot).hexdigest()
+        if os.path.exists(cache_name):
+            log.info("Using cache %s", cache_name)
+            return eval(open(cache_name).read())
+
+    log.debug("entering function")
+    project_names = []
+
+    # Check LCG root and version
+    base = lcg_root(afs_env, "")
+    v = filter(os.path.isdir, [os.path.join(base, x % ver) for x in ["%s", "LCGCMT_%s", "LCGCMT-%s"] ])
+    if not v:
+        raise RuntimeError("Cannot find LCGCMT version '%s' in '%s'" % (ver, base))
+    ver = os.path.basename(v[0])
+
+    log.info("discover LCGCMT projects in %s", lcg_root(afs_env, ver))
+    lines = Popen(["cmt", "show", "macros", "_home"],
+                  stdout = PIPE, cwd = lcg_rel_cmt(afs_env, ver),
+                  env = afs_env).communicate()[0].splitlines()
+    ignored_projects = ["LCG", "LCGCMT", "Cygwin", "llvm"]
+    if "win" in os.environ["CMTCONFIG"]:
+        ignored_projects.append("gcc")
+    for l in lines:
+        if l.startswith("#"):
+            log.error(l)
+            continue
+        var = l.split('=')[0] # assume that lines are in the format "name=value"
+        proj = var.replace('_home', '') # assume that the '_home' dirs are in the format "<package>_home"
+        if proj not in ignored_projects: # ignore wrong projects (or projects that cannot be handled like that)
+            project_names.append(proj)
+    log.debug("projects -> %r", project_names)
+    # get the two homes for each project (note: use always the package in AFS)
+    def project_home(env, project):
+        from os.path import basename, dirname
+        macro_value = Popen(["cmt", "show", "macro_value", "%s_home" % project],
+                            stdout = PIPE, cwd = lcg_rel_cmt(afs_env, ver), env = env).communicate()[0].strip()
+        path = os.path.normpath(macro_value)
+        if env["CMTCONFIG"] in path:
+            while basename(path) != env["CMTCONFIG"]:
+                path = dirname(path)
+        return path
+    projects = {}
+    for p in project_names:
+        log.info("getting directories of '%s'", p)
+        afs_home = project_home(afs_env, p)
+        local_home = project_home(loc_env, p)
+        if afs_home != local_home:
+            projects[p] = (afs_home, local_home)
+            log.debug("found %r", projects[p])
+        else:
+            log.info("project %s src and dst are the same (%s)", p, afs_home)
+    if projects:
+        # Add LCGCMT by hand because it cannot be detected
+        projects["LCGCMT"] = (lcg_root(afs_env, ver), lcg_root(loc_env, ver))
+    if use_cache:
+        log.debug("writing cache %s", cache_name)
+        from pprint import pformat
+        open(cache_name,"w").write(pformat(projects))
+    log.debug("exiting function")
+    return projects
+
+def recursive_copy(src, dst, force = False):
+    """
+    Copy a directory tree from one path to the other.
+    All the requested directory are created if missing.
+    By default, already existing files in the destination are kept, unless the
+    parameter 'force' is set to True.
+    """
+    log = logging.getLogger("recursive_copy")
+    src, dst = map(os.path.realpath, (src, dst))
+    log.info("starting copy '%s' -> '%s'", src, dst)
+    srclen = len(src) + 1 # count for a dir separator
+    for root, dirs, files in os.walk(src):
+        rel_root = root[srclen:]
+        dst_root = os.path.join(dst, rel_root)
+        # check for destination dir
+        if not os.path.isdir(dst_root):
+            log.debug("create dir '%s'", dst_root)
+            os.makedirs(dst_root)
+        for f in files:
+            s = os.path.join(root, f)
+            d = os.path.join(dst_root, f)
+            if force or not os.path.exists(d):
+                log.debug("copy file '%s'", os.path.join(rel_root, f))
+                shutil.copy(s, d)
+        if "LCGCMT" in root and "InstallArea" in dirs:
+            dirs.remove("InstallArea")
+    log.debug("copy done")
+
+def copy_project(src, dst, ignore_missing = True, force = True):
+    """
+    Copy a project (AA or external)from one location to another.
+    @param ignore_missing: if True, the project is copied only if there is already
+        a version of it in the destination area; if False, the project is copied anyway
+    @param force: if True the already existing destination files are overwritten
+    """
+    log = logging.getLogger("copy_project")
+    from os.path import dirname, exists, join
+    if src == dst:
+        log.warning("Requested to copy '%s' on itself", src)
+        return
+    proj_dir = dirname(dst)
+    if (not ignore_missing) or exists(dirname(proj_dir)):
+        if exists(src):
+            recursive_copy(src, dst, force = force)
+            # treat independently the optional include directory
+            src_inc = join(dirname(dirname(src)), "include")
+            if exists(src_inc):
+                dst_inc = join(dirname(proj_dir), "include")
+                recursive_copy(src_inc, dst_inc, force = force)
+    else:
+            log.warning("ignoring missing '%s'", src)
+
+#def copy_project(src, dst, force):
+#    print src, "->", dst
+
+from LbUtils.Script import Script
+
+class CopyLCGCMT(Script):
+    __usage__ = "%prog [options] <lcg version>"
+    def defineOpts(self):
+        parser = self.parser
+        #parser.add_option("--debug", action = "store_const",
+        #                  const = logging.DEBUG, dest = "level",
+        #                  help = "print debug messages")
+        #parser.add_option("-v", "--verbose", action = "store_const",
+        #                  const = logging.INFO, dest = "level",
+        #                  help = "print more messages")
+        #parser.add_option("--quiet", action = "store_const",
+        #                  const = logging.WARNING, dest = "level",
+        #                  help = "print only warnings or errors (default)")
+        parser.add_option("--lcg", action = "store",
+                          help = "location of the source LCGCMT")
+        parser.add_option("--mysiteroot", action = "store",
+                          help = "location of the local installation")
+        parser.add_option("-i", "--include", action = "append",
+                          help = "force the inclusion of a package (use ALL to copy all the packages)")
+        parser.add_option("-x", "--exclude", action = "append",
+                          help = "exclude package")
+        parser.add_option("--force", action = "store_true",
+                          help = "overwrite files")
+        parser.add_option("--cache", action = "store_true",
+                          help = "cache the list of project directories")
+        parser.add_option("--dry-run", action = "store_true",
+                          help = "do not copy, just show what would be copied")
+        parser.set_defaults(level = logging.WARNING,
+                            include = [],
+                            exclude = [])
+
+    def main(self):
+        opts, args = self.options, self.args
+        if len(args) != 1:
+            self.parser.error("Wrong number of arguments.")
+
+        vers = args[0]
+
+        #logging.basicConfig(level = opts.level)
+        projs = get_projects(vers, opts.lcg, opts.mysiteroot, use_cache = opts.cache)
+        if opts.dry_run:
+            for n in projs:
+                s, d = projs[n]
+                print "Would try to copy '%s'\n  %s -> %s" %(n, s, d)
+            return 0
+        for n in projs:
+            if n in opts.exclude:
+                self.log.info("excluding %s", n)
+            self.log.info("process %s", n)
+            src, dst = projs[n]
+            copy_project(src, dst,
+                         ignore_missing = not ("ALL" in opts.include or n in opts.include),
+                         force = opts.force)
+        return 0
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(CopyLCGCMT().run())

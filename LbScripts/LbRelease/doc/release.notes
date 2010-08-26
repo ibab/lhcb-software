@@ -1,3 +1,7 @@
+2010-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/copyLCG: (new) script to copy AFS LCG software into a local installation
+
 2010-08-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/TarBall.py: added getTarBallNameItems function to extract name, version and binary
@@ -6,8 +10,8 @@
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r4p1
-	* python/LbRelease/GetPack.py: 
-	* python/LbRelease/LHCbDoc.py: 
+	* python/LbRelease/GetPack.py:
+	* python/LbRelease/LHCbDoc.py:
 	* python/LbRelease/rcs.py: fixed wrong test about the presence of "set" in the builtins
 
 2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -39,8 +43,8 @@
 
 2010-07-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* LbRelease/python/LbRelease/GetPack.py: 
-	* LbRelease/python/LbRelease/LHCbDoc.py: 
+	* LbRelease/python/LbRelease/GetPack.py:
+	* LbRelease/python/LbRelease/LHCbDoc.py:
 	* LbRelease/python/LbRelease/rcs.py: added a protection for the used of the builtin "set". Use
 	the Set class from the sets modules if the builtin is not available. This is the case
 	for python version < 2.4.
