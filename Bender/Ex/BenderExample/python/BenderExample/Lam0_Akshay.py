@@ -1,5 +1,9 @@
 #! /usr/bin/env python
-# ==========================================================================================
+# =============================================================================
+# $Id: Lam0_Akshay.py,v 1.2 2010-08-26 13:34:18 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
+# =============================================================================
 ## @file BenderExample/Lam0_Akshay.py
 #
 #  A little bit modified version of original script by Alexander KOZLINSKY  and
@@ -23,7 +27,10 @@
 #  @author Alexander KOZLINSKY  akozlins@gmail.com
 #  @author Thomas    BAUER       thomas@nikhef.nl
 #  @author Vanya     BELYAEV    vanya@nikhef.nl
-#  @date   2010-06-21   
+#  @date   2010-06-21
+#
+#  Last modification $Date: 2010-08-26 13:34:18 $
+#                 by $Author: ibelyaev $
 # ===========================================================================================
 """
 
@@ -43,11 +50,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:18 $
+               by $Author: ibelyaev $
 """
 # ===========================================================================================
 __author__   = " Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "
 __date__     = " 2010-06-21 "
-__version__  = " CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
+__version__  = " Verison $Release:$"
 # ===========================================================================================
 import ROOT                           ## needed to produce/visualize the histograms
 import LHCbMath.Types                 ## easy access to various geometry routines 
@@ -214,12 +223,14 @@ if '__main__' == __name__ :
     print ' Date    : %s ' %   __date__
     print '*'*120  
     
-    configure (
-        ## V0-stream       (use for testing) 
-        ## [ '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00006614/0000/00006614_00000%03d_1.v0.dst' % n             for n in range ( 2 , 196 ) ] + 
-        ## min-bias stream (use for real work)
-        [ '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00006590/0000/00006590_00000%03d_1.minibias.dst' % n for n in range ( 5 , 508 ) ] 
-        ) 
+    ## V0-stream 
+    inputdata = [
+        ## min-bias stream 
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000%03d_1.minibias.dst' % n for n in range ( 11 , 34 )
+        ]
+    
+    configure ( inputdata ) 
+
     
     run ( 10000 )
 

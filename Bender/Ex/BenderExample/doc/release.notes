@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.51 2010-07-13 18:46:07 ibelyaev Exp $
+! $Id: release.notes,v 1.52 2010-08-26 13:34:17 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -6,8 +6,13 @@
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
 
+! ====================== Ex/BenderExample v14r5 2010-08-26 ====================
 
-! ====================== Ex/BenderExample v14r6 2010-07-13 ====================
+! 2010-08-26 - Vanya Belyaev
+ - prepare for v14r5 
+
+
+! ====================== Ex/BenderExample v14r3 2010-07-13 ====================
 
 ! 2010-07-13 - Vanya Belyaev
 

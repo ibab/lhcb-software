@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: RealDstar_CHARM.py,v 1.2 2010-08-26 13:34:18 ibelyaev Exp $
+# =============================================================================
+# $URL$ 
+# =============================================================================
 ## @file BenderExample/RealDstar_V0.py
 #
 #  The script to analyse the D*+ -> ( D0 -> K- pi+ ) pi+
@@ -22,6 +26,9 @@
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2010-06-18
+#
+#  Last modification $Date: 2010-08-26 13:34:18 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 
@@ -43,11 +50,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:18 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
-__author__   = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__date__     = "2010-06-18"
-__version__  = "CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
+__author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru"
+__date__     = " 2010-06-18 "
+__version__  = " Version $Revision: 1.2 $ "
 # =============================================================================
 import ROOT                           ## needed to produce/visualize the histograms
 import LHCbMath.Types                 ## easy access to various geometry routines 
@@ -151,7 +160,10 @@ def configure ( datafiles , catalogs = [] ) :
         HistogramFile = 'RealDstar_V0_Histos.root'
         )
     
-    from GaudiConf.Configuration import NTupleSvc   
+    ## from Configurables import CondDB
+    ## CondDB ( UseOracle = True ) 
+    
+    from Configurables import NTupleSvc   
     NTupleSvc (
         Output = [ "DSTAR DATAFILE='RealDstar_V0.root' TYPE='ROOT' OPT='NEW'" ]
         )
@@ -201,43 +213,13 @@ if '__main__' == __name__ :
     print ' Date    : %s ' %   __date__
     print '*'*120  
     
-    configure (
-        [ '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00006579/0000/00006579_00000%03d_1.charm.dst' % n for n in range ( 1 , 118 ) ] 
-        ) 
+    inputdata = [
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007583/0000/00007583_0000%04d_1.charm.dst' % n for n in range ( 48 , 285 )
+        ] 
+    configure ( inputdata ) 
     
     run ( 10000 )
     
-##  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-##  | "# /Event/Charm/Phys/SelectionDstar2D0PiWithD02P|       540 |       1028 |     1.9037 |     1.4549 |      1.0000 |      12.000 |
-##  | "# input particles"                             |     10000 |       1028 |    0.10280 |    0.54720 |      0.0000 |      12.000 |
-##  | "No P->PV table at /Event/Charm/Phys/SelectionDs|      9073 |       9073 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-##  | "Non-existing location /Event/Charm/Phys/Selecti|      9460 |       9460 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-##  | "Recalculating P->PV table"                     |      9188 |       9188 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-## TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-## TimingAuditor.T...   INFO EVENT LOOP                    |     3.094 |     5.623 |    1.798    1409.5 |   10000 |    56.226 |
-## TimingAuditor.T...   INFO  MySeq                        |     0.791 |     1.773 |    0.291    1068.2 |   10000 |    17.729 |
-## TimingAuditor.T...   INFO   MySeq_HLT                   |     0.415 |     0.429 |    0.254    1029.4 |   10000 |     4.289 |
-## TimingAuditor.T...   INFO   MySeq_STRIP                 |     0.368 |     1.339 |    0.831      38.7 |    9998 |    13.388 |
-## TimingAuditor.T...   INFO   MySeq_VOID                  |     0.015 |     0.009 |    0.004       0.2 |     538 |     0.005 |
-## TimingAuditor.T...   INFO  Dstar                        |     0.953 |     1.485 |    0.245     703.2 |   10000 |    14.847 |
-## TimingAuditor.T...   INFO * createODIN                  |     0.916 |     1.699 |    0.182     938.4 |   10000 |    16.988 |
-## TimingAuditor.T...   INFO *   HltDecReportsDecoder      |     0.352 |     0.364 |    0.212     932.2 |   10000 |     3.635 |
-## TimingAuditor.T...   INFO *  UnpackRecVertex            |     0.141 |     0.195 |    0.096      69.9 |   10000 |     1.949 |
-## TimingAuditor.T...   INFO *  UnpackCharged              |     4.765 |    12.302 |    0.237     610.3 |     205 |     2.522 |
-## TimingAuditor.T...   INFO *  UnpackTrack                |    14.593 |    29.506 |    0.341     697.6 |     205 |     6.049 |
-## TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-    
-## TimingAuditor.T...   INFO EVENT LOOP                    |     2.857 |     6.720 |    1.065   10528.6 |   10000 |    67.203 |
-## TimingAuditor.T...   INFO  MySeq                        |     0.791 |     2.594 |    0.327    9502.0 |   10000 |    25.937 |
-## TimingAuditor.T...   INFO   MySeq_HLT                   |     0.419 |     1.259 |    0.249    9333.6 |   10000 |    12.590 |
-## TimingAuditor.T...   INFO   MySeq_STRIP                 |     0.366 |     1.330 |    0.845     168.4 |    9998 |    13.296 |
-## TimingAuditor.T...   INFO   MySeq_VOID                  |     0.007 |     0.009 |    0.005       0.2 |     538 |     0.005 |
-## TimingAuditor.T...   INFO  Dstar                        |     1.060 |     2.179 |    0.247     928.2 |   10000 |    21.794 |
-## TimingAuditor.T...   INFO * createODIN                  |     0.890 |     1.814 |    0.187     711.7 |   10000 |    18.144 |
-## TimingAuditor.T...   INFO *   HltDecReportsDecoder      |     0.346 |     1.174 |    0.206    9054.3 |   10000 |    11.739 |
-## TimingAuditor.T...   INFO *  UnpackRecVertex            |     0.143 |     0.249 |    0.096     239.9 |   10000 |     2.491 |
-## TimingAuditor.T...   INFO *  UnpackCharged              |     4.487 |    14.773 |    0.289     735.0 |     205 |     3.028 |
-## TimingAuditor.T...   INFO *  UnpackTrack                |    14.222 |    33.248 |    0.344     913.5 |     205 |     6.816 |
 
 # =============================================================================
 # The END 

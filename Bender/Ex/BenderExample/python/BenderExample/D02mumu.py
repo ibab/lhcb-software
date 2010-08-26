@@ -2,6 +2,8 @@
 # =============================================================================
 # #Id:$ 
 # =============================================================================
+# $URL$
+# =============================================================================
 ## @file BEnderExample/D02mumu.py
 #  The simple Bender-based example: find recontructed D0 -> mumu candidates 
 #
@@ -22,6 +24,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example: find recontructed D0 -> mumu candidates
@@ -39,11 +44,14 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " Version $Revision: 1.9 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -182,8 +190,7 @@ if __name__ == '__main__' :
     print '*'*120  
 
     ## configure the job:
-    configure( [
-        #"DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    inputdata =  [
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
         ## files with Meike's selection:
@@ -194,8 +201,10 @@ if __name__ == '__main__' :
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911379/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911380/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911382/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911383/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-               )
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911383/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        ]
+    
+    configure( inputdata ) 
     
     ## run the job
     run(501)

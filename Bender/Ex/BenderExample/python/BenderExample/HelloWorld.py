@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $URL$
+# =============================================================================
 ## @file BenderExample/HelloWorld.py
 #  The most trivial Bender-based : HelloWorld example
 #
@@ -20,6 +22,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#
+#  Last modification $Date: 2010-08-26 13:34:18 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The most trivial Bender-based  ``Hello,World'' example
@@ -37,11 +42,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:18 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
+__version__ = " Version $Revision: 1.11 $ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 
@@ -109,11 +116,12 @@ if __name__ == '__main__' :
     print '*'*120  
     
     ## configure the job:
-    configure ( [
+    inputdata = [
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-                )
-    
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
+        ]
+
+    configure ( inpudata ) 
     ## run the job
     run(50)
     

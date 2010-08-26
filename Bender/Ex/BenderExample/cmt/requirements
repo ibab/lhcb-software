@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.65 2010-07-13 18:46:07 ibelyaev Exp $ 
+# $Id: requirements,v 1.66 2010-08-26 13:34:17 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v14r3
+version          v14r5
 
 # ============== structure ===================================================
 branches         cmt doc python

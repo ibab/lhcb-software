@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: CheckGen.py,v 1.1 2010-07-13 16:58:13 ibelyaev Exp $ 
+# $Id: CheckGen.py,v 1.2 2010-08-26 13:34:17 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# $URL$
 # =============================================================================
 ## The simple Bender-script to check generator 
 #
@@ -23,6 +23,9 @@
 #
 #  @date 2009-05-18
 #  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-script to check generator 
@@ -40,11 +43,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-05-18 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " Version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender
 import ROOT 
@@ -152,12 +157,13 @@ if __name__ == '__main__' :
     print '*'*120
     
     ## configure the job:
-    configure (
-        [ '/castor/cern.ch/grid/lhcb/MC/2010/DST/00006645/0000/00006645_000000' + ( '%02d_1.dst') % f for f in range ( 1 , 28 ) ] 
-        )
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/MC/2010/DST/00006645/0000/00006645_000000' + ( '%02d_1.dst') % f for f in range ( 1 , 28 )
+        ] 
+    configure ( inputdata ) 
     
     ## run the job
-    run (100000)
+    run (5000)
 
     
 # =============================================================================

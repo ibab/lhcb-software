@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: AP.py,v 1.5 2010-03-14 17:05:03 ibelyaev Exp $ 
+# $Id: AP.py,v 1.6 2010-08-26 13:34:17 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
 # =============================================================================
 ## @file BenderExample/AP.py
 #
-# The simple Bender-based example: show " Lambda0 <-> K0S " reflection
+#  The simple Bender-based example: show " Lambda0 <-> K0S " reflection
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -23,6 +25,9 @@
 #
 #  @date 2009-09-01
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 
@@ -41,11 +46,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__date__    = "2009-09-01"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
+__date__    = " 2009-09-01 "
+__version__ = " Version $Revision: 1.6 $ "
 # =============================================================================
 ## import everything from Bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -224,7 +231,7 @@ if __name__ == '__main__' :
     print '*'*120
     
     ## configure the job:
-    configure ( [
+    inputfiles = [
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -238,7 +245,8 @@ if __name__ == '__main__' :
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
-                )
+    
+    configure ( inputfiles ) 
     
     ## run the job
     run(1000)

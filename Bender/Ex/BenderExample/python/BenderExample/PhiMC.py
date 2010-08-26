@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PhiMC.py,v 1.13 2010-07-13 18:46:07 ibelyaev Exp $ 
+# $Id: PhiMC.py,v 1.14 2010-08-26 13:34:18 ibelyaev Exp $ 
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file BenderExample/PhiMC.py
 # The simple Bender-based example: plot dikaon mass peak with MC-truth
@@ -22,6 +24,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:18 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example plot dikaon mass peak with MC-truth
@@ -39,11 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:18 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
+__version__ = " Version $Revision: 1.14 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -144,8 +151,8 @@ def configure ( datafiles , catalogs  = [] ) :
         'Relations/Rec/ProtoP/Charged' ]        ## MC-truth relation tables
         )
     
-    ## gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
+    gaudi.addAlgorithm ( alg ) 
+    ## gaudi.setAlgorithms( [alg] )
     
     return SUCCESS 
     
@@ -161,13 +168,13 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120  
   
-    ## configure the job:
-    configure (
-        [ '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 2 , 150 ) ]
-        ) 
+    ## configure the job: 
+    inputdata = [
+        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 2 , 150 )
+        ]
+    configure ( inputdata ) 
     
     run(500) 
-
 
 # =============================================================================
 # The END 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Fitters.py,v 1.1 2010-07-13 18:46:07 ibelyaev Exp $ 
+# $Id: Fitters.py,v 1.2 2010-08-26 13:34:17 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
 # =============================================================================
 ## @file BenderExample/Fitters.py
 #  The simple Bender-based example to compare variosu fitters
@@ -23,6 +25,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 
@@ -44,11 +49,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__date__    = "2010-07-10"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__date__    = " 2010-07-10 "
+__version__ = " Version $Revision: 1.2 $ "
 # =============================================================================
 import LHCbMath.Types 
 ## import everything from bender 
@@ -506,13 +513,12 @@ if __name__ == '__main__' :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
-
-
     
     ## configure the job:
-    configure (
-        [ '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 ) ]
-        ) 
+    inputdata  = [
+        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 )
+        ]
+    configure ( inputdata ) 
 
     ## run the job
     run(500)

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D02hh.py,v 1.6 2010-03-12 16:41:13 ibelyaev Exp $
+# $Id: D02hh.py,v 1.7 2010-08-26 13:34:17 ibelyaev Exp $
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file BenderExample/D02hh.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -22,6 +24,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example: find recontructed D0 -> hh candidates
@@ -39,11 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " Version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -180,11 +187,12 @@ if __name__ == '__main__' :
     print '*'*120  
 
     ## configure the job:
-    configure( [
+    inputdata = [
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-               )
+               
+    configure( inputdata ) 
 
     ## run the job
     run ( 501 )

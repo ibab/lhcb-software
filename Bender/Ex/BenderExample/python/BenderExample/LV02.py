@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: LV02.py,v 1.6 2010-03-12 16:41:14 ibelyaev Exp $ 
+# $Id: LV02.py,v 1.7 2010-08-26 13:34:18 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
 # =============================================================================
 ## @file BenderExample/LV02.py
 # The simple Bender-based example:
@@ -23,6 +25,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:18 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example:
@@ -41,11 +46,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:18 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " Version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -75,21 +82,37 @@ class LV02Alg(AlgoMC) :
         ds += Nodes.CC('pi+')
         
         ## B_s0 -> Ds+/Ds- K-/K+
-        bsk = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bsk += mark ( ds ) 
+        bsk  = Trees.MCExclusive ( Nodes.CC('B_s0')  )
+        bsk += ds 
         bsk += Nodes.CC("K+") 
         
-        st =  bsk.validate ( self.ppSvc() )
+        ## B_s0 -> ^Ds+/Ds- K-/K+
+        bskm = Trees.MCExclusive ( Nodes.CC('B_s0')  )
+        bskm += mark ( ds ) 
+        bskm += Nodes.CC("K+") 
+
+        st =  bsk.validate  ( self.ppSvc() )
+        if st.isFailure()  : return st
+        
+        st =  bskm.validate ( self.ppSvc() )
         if st.isFailure()  : return st
 
         ## B_s0 -> Ds+/Ds- pi-/pi+
         bspi = Trees.MCExclusive ( Nodes.CC('B_s0')  )
-        bspi += mark ( ds ) 
+        bspi += ds 
         bspi += Nodes.CC("pi+") 
+        
+        ## B_s0 -> ^Ds+/Ds- pi-/pi+
+        bspim = Trees.MCExclusive ( Nodes.CC('B_s0')  )
+        bspim += mark ( ds ) 
+        bspim += Nodes.CC("pi+") 
         
         st =  bspi.validate ( self.ppSvc() )
         if st.isFailure()  : return st
-        
+
+        st =  bspim.validate ( self.ppSvc() )
+        if st.isFailure()  : return st
+
         cutk   = MCDECTREE( bsk  ) 
         mcbsk  = self.mcselect ('mcbsk'  , ( 'B_s0' == MCABSID ) & cutk  )
         
@@ -253,7 +276,7 @@ if __name__ == '__main__' :
     
     
     ## configure the job:
-    configure( [
+    inputdata = [
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
@@ -264,8 +287,8 @@ if __name__ == '__main__' :
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         ]
-               )
-    
+
+    configure( inputdata ) 
     ## run the job
     run(1000)
     

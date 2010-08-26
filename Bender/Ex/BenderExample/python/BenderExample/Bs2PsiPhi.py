@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.16 2010-07-13 18:46:07 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.17 2010-08-26 13:34:17 ibelyaev Exp $ 
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file BenderExample/Bs2PsiPhi.py
 #  The simple Bender-based example for Bs-> Jpsi phi selection
@@ -22,6 +24,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example for Bs-> Jpsi phi selection
@@ -39,11 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
+__date__    = " 2006-10-12 "
+__version__ = " Version $Revision: 1.17 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -265,9 +272,8 @@ def configure ( datafiles , catalogs = [] ) :
         InputLocations    = [ 'StdTightKaons' , 'StdTightMuons' ] 
         )
     
-    ## if runs locally at CERN lxplus 
-    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
-        
+    gaudi.addAlgorithm ( alg ) 
+      
     return SUCCESS 
     
 # =============================================================================
@@ -283,9 +289,11 @@ if __name__ == '__main__' :
     print '*'*120  
     
     ## configure the job:
-    configure (
-        [ '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 ) ]
-        ) 
+    inputdata = [
+        '/castor/cern.ch/grid' + '/lhcb/MC/2010/DST/00006522/0000/00006522_00000%03d_1.dst' % n for n in range ( 1 , 150 )
+        ]
+    
+    configure ( inputdata ) 
     
     ## run the job
     run(501)

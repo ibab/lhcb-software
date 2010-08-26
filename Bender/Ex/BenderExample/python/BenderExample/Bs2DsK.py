@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2DsK.py,v 1.7 2010-05-30 17:11:39 ibelyaev Exp $ 
+# $Id: Bs2DsK.py,v 1.8 2010-08-26 13:34:17 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Bs -> BsK candidates 
@@ -22,6 +24,9 @@
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example: find recontructed Bs -> BsK candidates
@@ -39,11 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-26 13:34:17 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
+__date__    = " 2006-10-12 "
+__version__ = " Version $Revision: 1.8 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -71,29 +78,38 @@ class Bs2DsK(AlgoMC) :
         ds += 'K-'
         ds += Nodes.CC('pi+')
         
-        ## Xb -> ^Ds+/Ds- K+/K-
+        ## Xb -> Ds+/Ds- K+/K-
         bs = Trees.MCExclusive ( Nodes.Beauty )
-        bs += mark ( ds )     # mark Ds!
+        bs += ds                 # mark Ds!
         bs += Nodes.CC("K+") 
         
         st =  bs.validate ( self.ppSvc() )
         if st.isFailure()  : return st
+
+        ## Xb -> ^Ds+/Ds- K+/K-
+        bsm = Trees.MCExclusive ( Nodes.Beauty )
+        bsm += mark ( ds )     # mark Ds!
+        bsm += Nodes.CC("K+") 
+        
+        st =  bsm.validate ( self.ppSvc() )
+        if st.isFailure()  : return st
         
         cut = MCDECTREE(bs) 
-        mcbs = self.mcselect ('mcbs' , ( 'B_s0' == MCABSID )  & cut  )
-            
+        mcbs = self.mcselect ('mcbs' , ( 'B_s0' == MCABSID ) & cut  )
+
         if mcbs.empty() or 1 < mcbs.size() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
 
         # collect "marked" MC particles
         mcds = LHCb.MCParticle.ConstVector ()
 
-        bs.reset() 
+        bsm.reset() 
         for b in mcbs :
-            if bs ( b ) :
-                bs.collect ( mcds )
-                bs.reset()
-                
+            if bsm ( b ) :
+                bsm.collect ( mcds )
+                bsm.reset()
+
+
         mcBs = MCTRUTH ( self.mcTruth() , mcbs )        
         mcDs = MCTRUTH ( self.mcTruth() , mcds )
         
@@ -182,9 +198,11 @@ def configure ( datafiles  , catalogs = [] ) :
         ## print histos 
         HistoPrint     = True , 
         ## define the input particles:
-        InputLocations = [ 'StdTightKaons'  ,
-                           'StdTightPions'  ,
-                           'StdNoPIDsKaons' ]
+        InputLocations = [
+        'StdTightKaons'  ,
+        'StdTightPions'  ,
+        'StdNoPIDsKaons'
+        ]
         )
     
     gaudi.addAlgorithm ( alg ) 
@@ -206,7 +224,7 @@ if __name__ == '__main__' :
     print '*'*120
     
     ## configure the job:
-    configure( [ 
+    inputdata = [ 
         # Bs -> Ds K
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000103_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000104_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -218,8 +236,11 @@ if __name__ == '__main__' :
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000110_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000111_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000112_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-               )
+
     
+    configure( inputdata ) 
+
+
     ## run the job
     run ( 201 )
     

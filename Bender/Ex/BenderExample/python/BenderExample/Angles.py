@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Angles.py,v 1.1 2010-07-13 16:58:13 ibelyaev Exp $
+# $Id: Angles.py,v 1.2 2010-08-26 13:34:17 ibelyaev Exp $
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file BenderExample/Angles.py
 #  The simple Bender-based example to illustrate the calculation of angles
@@ -23,6 +25,9 @@
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2010-05-31
+#
+#  Last modification $Date: 2010-08-26 13:34:17 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 The simple Bender-based example to illustrate the calculation of angles
@@ -41,11 +46,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+  Last modification $Date: 2010-08-26 13:34:17 $
+                 by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2010-05-31 " 
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.Awesome import *
@@ -521,7 +528,7 @@ if __name__ == '__main__' :
     print '*'*120  
     
     ## configure the job:
-    configure( [ 
+    inputdata = [ 
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -532,7 +539,8 @@ if __name__ == '__main__' :
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-               )
+               
+    configure( inputdata )  
     
     ## run the job
     run(501)
