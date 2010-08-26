@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.97 2010-08-20 13:33:20 jpalac Exp $
+! $Id: release.notes,v 1.98 2010-08-26 17:07:03 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2010-08-26 - Juan Palacios
+ - cmt/requirements
+  . Increase version to v4r1
+ - Add CopyParticle2PVMap algorithm. Copies DaVinci::Map::Particle2VertexBase.
 
 !========================== MicroDSTAlgorithm v4r0 2010-08-20 =================
 
