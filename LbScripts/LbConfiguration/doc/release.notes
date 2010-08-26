@@ -1,7 +1,7 @@
 2010-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: Ignore projects that are being released
-	(checks if there is a file called "LOCKED" in the project directory)
+	(checks if there is a file called "NOT_READY" in the project directory)
 
 2010-08-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
