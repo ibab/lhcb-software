@@ -142,8 +142,12 @@ void B2DHMvaPreSelectionCutsTool::setBs2DsPiCutValues(){
 }
 void B2DHMvaPreSelectionCutsTool::setCutFlags_Common(){
   m_zPVBsSel = ( m_B2DHMvaPreSelectionParamTool->ZPvDiff()) > m_zPVBsCutValue;
-  m_massBsWindowSel = std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
-  m_massDsWindowSel = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
+  double aBsMassDiffAbs = m_B2DHMvaPreSelectionParamTool->BsMassDiff();
+  if( aBsMassDiffAbs < 0.0 )  aBsMassDiffAbs = aBsMassDiffAbs * (-1.0 );
+  double aDsMassDiffAbs =   m_B2DHMvaPreSelectionParamTool->DsMassDiff();
+  if( aDsMassDiffAbs < 0.0 ) aDsMassDiffAbs =  aDsMassDiffAbs * (-1.0);  
+  m_massBsWindowSel = aBsMassDiffAbs < m_massBsWindowCutValue;
+  m_massDsWindowSel = aDsMassDiffAbs < m_massDsWindowCutValue;
 
   m_massWindowSel = m_massBsWindowSel && m_massDsWindowSel;
   
@@ -202,10 +206,15 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsK(){
     ( m_B2DHMvaPreSelectionParamTool -> BachelorPrDll() > m_dllProtonBachelorLowerCut_Bs2DsK ) &&
     (aSecProtonDll[0] > m_dllProtonSecCut_Bs2DsK) &&
     (aSecProtonDll[1] > m_dllProtonSecCut_Bs2DsK );
-  
 
-  m_massBsWindowSel_Bs2DsK=std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue;
-  m_massDsWindowSel_Bs2DsK = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue_Bs2DsK;
+  double aBsMassDiffAbs = m_B2DHMvaPreSelectionParamTool->BsMassDiff();
+  if( aBsMassDiffAbs < 0.0 )  aBsMassDiffAbs = aBsMassDiffAbs * (-1.0 );
+  double aDsMassDiffAbs =   m_B2DHMvaPreSelectionParamTool->DsMassDiff();
+  if( aDsMassDiffAbs < 0.0 ) aDsMassDiffAbs =  aDsMassDiffAbs * (-1.0);  
+    
+  
+  m_massBsWindowSel_Bs2DsK=aBsMassDiffAbs  < m_massBsWindowCutValue;
+  m_massDsWindowSel_Bs2DsK =aDsMassDiffAbs  < m_massDsWindowCutValue_Bs2DsK;
   m_massWindowSel_Bs2DsK= m_massBsWindowSel_Bs2DsK && m_massDsWindowSel_Bs2DsK;
  
 
@@ -277,8 +286,15 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsPi(){
                             ( aprotonSecDll [2] >  m_dllProtonSec2LowerCutValue_Bs2DsPi ) &&
                             ( aprotonSecDll [2] < m_dllProtonSec2UpperCutValue_Bs2DsPi);
 
-  m_massBsWindowSel_Bs2DsPi=std::fabs(m_B2DHMvaPreSelectionParamTool->BsMassDiff()) < m_massBsWindowCutValue_Bs2DsPi;
-  m_massDsWindowSel_Bs2DsPi = std::fabs( m_B2DHMvaPreSelectionParamTool->DsMassDiff() ) < m_massDsWindowCutValue;
+
+  double aBsMassDiffAbs = m_B2DHMvaPreSelectionParamTool->BsMassDiff();
+  if( aBsMassDiffAbs < 0.0 )  aBsMassDiffAbs = aBsMassDiffAbs * (-1.0 );
+  double aDsMassDiffAbs =   m_B2DHMvaPreSelectionParamTool->DsMassDiff();
+  if( aDsMassDiffAbs < 0.0 ) aDsMassDiffAbs =  aDsMassDiffAbs * (-1.0);  
+
+
+  m_massBsWindowSel_Bs2DsPi=aBsMassDiffAbs  < m_massBsWindowCutValue_Bs2DsPi;
+  m_massDsWindowSel_Bs2DsPi = aDsMassDiffAbs < m_massDsWindowCutValue;
   m_massWindowSel_Bs2DsPi= m_massBsWindowSel_Bs2DsPi && m_massDsWindowSel_Bs2DsPi;
 
     m_vtxChisqSel_Bs2DsPi = (m_B2DHMvaPreSelectionParamTool-> bvtxchisq() < m_vtxBsChisqCutValue_Bs2DsPi) && 
