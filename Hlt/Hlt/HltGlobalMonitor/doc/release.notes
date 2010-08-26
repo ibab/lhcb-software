@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.89 2010-08-26 08:45:29 graven Exp $
+!$Id: release.notes,v 1.90 2010-08-26 08:47:30 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r6p3 2010-08-26 ===================
 ! 2010-08-26 - Gerhard Raven
  - use Gaudi::Utils::Histo to set binlabels instead of the code in HltBase
 
