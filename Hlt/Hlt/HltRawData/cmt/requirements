@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.28 2010-08-17 08:45:05 graven Exp $
+#$Id: requirements,v 1.29 2010-08-26 09:39:36 graven Exp $
 #============================================================================
 # Created    : 2008-07-12
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltRawData
-version           v2r9
+version           v2r8p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
