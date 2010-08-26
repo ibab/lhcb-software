@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.121 2010-08-12 08:13:18 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.122 2010-08-26 09:50:50 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -140,6 +140,10 @@ class DaVinci(LHCbConfigurableUser) :
             if (inputType == "RDST")  and (redo) :
                 log.warning("Re-doing MC links not possible for RDST")
                 self.setProp("RedoMCLinks", False )
+
+        if self.getProp("Simulation") and self.getProp('Lumi') :
+            log.warning('Lumi not valid for Simulation. Setting Lumi = False')
+            self.setProp('Lumi', False )
 
 ################################################################################
 # Configure slaves
