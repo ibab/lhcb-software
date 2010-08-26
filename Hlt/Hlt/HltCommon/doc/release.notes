@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v7r0 2010-08-26 ===================
 ! 2010-08-25 - V. Gligorov
  - New functor to allow cutting on vertex PT. 
 
