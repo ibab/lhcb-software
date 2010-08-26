@@ -1,45 +1,21 @@
 from LbUtils.Tar import createTarBall
 from LbUtils.Temporary import TempFile
+from LbUtils.File import genTemplateFile
 
 try:
     from base64 import standard_b64encode as encode
 except ImportError:
     from base64 import encode
     
-
-
+import os
 
 def createSelfExtractFile(filename, sourcedir, execscript):
+    tmpl_dict = {}
+    tmpl_dict["script"] = execscript
     tarball = TempFile()
     createTarBall(tarball.name, sourcedir)
-    tbstr = encode(open(tarball.name, "r").read())
+    tmpl_dict["tarball"] = encode(open(tarball.name, "r").read())
     del tarball
-    f = open(filename,"wb+")
-    f.write(_script_body % (execscript, tbstr))
-    f.close()
+    tmpl_file = os.path.join(os.environ["LBUTILSROOT"], "data", "SelfExtract-header.tmpl")
+    genTemplateFile(tmpl_file, tmpl_dict, filename)
 
-
-
-
-_script_body = """ 
-#!/usr/bin/env python
-
-import os
-from tempfile import mkdtemp, mkstemp
-try:
-    from base64 import standard_b64decode as decode
-except ImportError:
-    from base64 import decode
-
-if __name__ == '__main__':
-    pass
-
-
-
-_sef_script = "%s"
-_sef_tarball = "%s"
-
-
-
-
-"""

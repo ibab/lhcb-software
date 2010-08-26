@@ -1,3 +1,10 @@
+2010-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* data/SelfExtract-header.tmpl: New file.
+	* python/LbUtils/File.py: added genTemplateFile function to generate a file from a template file
+	with a string dictionary.
+	* python/LbUtils/SelfExtract.py: changed to use the template generator.
+
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r4p1
