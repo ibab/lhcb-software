@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -101,6 +101,14 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             # get the L0 candidates (all or L0)
             # also, implement the global event cuts 
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
+            if type == "LTUnb" :
+                from Configurables import LoKi__VoidFilter as VoidFilter
+                from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+                modules =  CoreFactory('CoreFactory').Modules
+                if 'LoKiTrigger.decorators' not in modules:
+                    modules.append('LoKiTrigger.decorators')
+                L0HadVoid = VoidFilter('L0HadVoid',Code = "(CONTAINS('Hlt/Track/Hlt1L0"+L0Channel+"Decision') > 1)")
+                return bindMembers(prefix, [ Hlt1GEC(),convertL0Candidates(L0Channel),L0HadVoid] )
             return bindMembers(prefix, [ Hlt1GEC(),convertL0Candidates(L0Channel)] )
 
         def confirmationtrackmatch(type=""):
@@ -412,7 +420,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , postscale = self.postscale
                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')"%self.getProps()
-                 , algos = [confirmationl0part()]+\
+                 , algos = [confirmationl0part("LTUnb")]+\
                            [confirmationtrackmatch()]+\
                            [confirmationguidedforward()]+\
                            [LTUnbDiHadron(prefix='DiHadronLTUnbiased')]
