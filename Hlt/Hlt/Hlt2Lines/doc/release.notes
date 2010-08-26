@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+
+! 2010-08-26 - Olivier Deschamps for Régis Lefèvre 
+ - Tuned Hlt2B2HHPi0Lines.py
+
 !========================== Hlt2Lines v5r0 2010-08-26 ===================
 ! 2010-08-23 - Roel Aaij
  - Added Hlt2ExpressHLT1Physics line to simplify monitoring
