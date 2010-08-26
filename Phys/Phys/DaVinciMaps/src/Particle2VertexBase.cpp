@@ -36,12 +36,10 @@ DaVinci::Map::Particle2VertexBase::Particle2VertexBase(  )
   DataObject(),
   Map()
 {
-  std::cout << "Particle2VertexBase(  )" << std::endl;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 DaVinci::Map::Particle2VertexBase::~Particle2VertexBase() {
-  std::cout << "~Particle2VertexBase(  )" << std::endl;
 }
 //=============================================================================
