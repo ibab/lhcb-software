@@ -8,8 +8,113 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v10r4>2010-08-26 RecSys v10r4</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
 
-! 2010-08-18 - Chris Jones
- - Add new package Rich/RichAlignment
+- This version pick up the latest geometry and event model changes
+  from LHCb and Lbcom. 
+
+- The Luminosity methods have been updated to allow for -log(P), and write those FSRs
+  but this requires a full reprocessing before they can be used
+
+- Tracking and Vertexing have been updated to more appropriate cuts,
+  timing has also been improved slightly
+
+
+- bug #71012, has been totally fixed
+  . (new fit mechanism for tracks breaks Calo photon reconstruction)
+	. this allows the new code from Tr/TrackFitter and Tr/TrackTools to be used
+
+- Packages Added:
+	Rich/RichAlignment v1r0: 
+    . Alignment algorithms moved over from Rich/RichRecQC
+    . scripts directory containing ganga based run by run scripts 
+
+- Packages Modified:
+  Calo/CaloPIDs v5r7, Calo/CaloReco v5r6, Rec/LumiAlgs v4r0p1,
+  Rec/RecAlgs v1r10, Rich/RichGlobalPID v3r14p2, Rich/RichHPDImageAnalysis v1r2,
+  Rich/RichRecQC v2r45, Rich/RichRecTrackTools v1r24, Tf/PatAlgorithms v4r6,
+  Tf/TrackMatching v2r31, Tf/TsaAlgorithms v3r23, Tr/PatPV v3r17,
+  Tr/TrackExtrapolators v2r28, Tr/TrackFitEvent v5r3,
+  Tr/TrackFitter v3r0, Tr/TrackMonitors v1r29, Tr/TrackTools v3r34p2,
+  Tr/TrackUtils v1r38, Velo/VeloRecMonitors v2r11
+
+- In Calo/CaloPIDs v5r7:
+  . new CaloPhotonIDAlg (PDF from condDB) + configurable update r53594 
+
+- In Calo/CaloReco v5r6:
+  . adapt to change in CaloPIDs + configurable consolidation r53596 
+
+- In Rec/LumiAlgs v4r0p1:
+  . changes in code and configurables to move to -log(P) method 
+
+- In Rec/RecAlgs v1r10:
+  . New monitoring algorithm TimingTuple _not_ to be run by default in Brunel
+  . Adapt TimingTuple to new RICH interfrace that directly gives the number of hits 
+
+- In Rich/RichGlobalPID v3r14p2:
+  . Small cpu optimisation and tidy up
+
+- In Rich/RichHPDImageAnalysis v1r2:
+  . Add a new python script to run over a set of ROOT files, 
+    each for a given run and to create a DB slice containing the Si sensor alignments for each run, 
+    based on the chip shift offsets computed by the HPD image analysis algorithm
+  . Update monitor with an explicit flag to turn on saving off all 2D plots 
+  . Add new file pyHPDImageFit.py that performs a fit to the HPD image 
+  . Update hpdLocalOffset method in pyHistoParsingUtils.py with a fullFit flag 
+  . Add fit to R graph 
+
+- In Rich/RichRecQC v2r45:
+  . Move alignment code and options to new Rich/Alignment package 
+  . Fix some typos in histogram labels in RichRecoQC.cpp 
+  . Comment out use of RichPIDQCConf
+
+- In Rich/RichRecTrackTools v1r24:
+  . Add criteria to the Track Selectors to allow rejection of tracks with a failed fit status (default is enabled). 
+
+- In Tf/PatAlgorithms v4r6:
+  . Tunes PatMatch for good performance 
+  . new tuning of PatForward 
+  . kill Warning printout during event loop of 'Too Many XYZ' in PatForward 
+
+- In Tf/TrackMatching v2r31:
+  . New tuning of the track matching for early data 
+
+- In Tf/TsaAlgorithms v3r23:
+  . Fix hardcoding of first and last sectors in the overlap hit adder 
+  . add switches for timing measurements 
+  . New tuning of the seeding for early data 
+
+- In Tr/PatPV v3r17:
+  . Improvements for high mu data 
+
+- In Tr/TrackExtrapolators v2r28:
+  . added TrackStateProvider
+  . changed MaterialLocatorBase to make it usable from TrackExtrapolator
+  . adapted TrackMasterExtrapolator to use MaterialLocatorBase for its material corrections
+
+- In Tr/TrackFitEvent v5r3:
+  . Fixed bug on caching in KalmanFitResult leading to wrong output for track match chi2
+
+- In Tr/TrackFitter v3r0:
+  . fill filtered states in FitNode 
+  . make TrackEventFitter deal properly with tracks that failed in TrackStateInitAlg
+  . split counters by track type
+  . we had lost some diagnositics since we moved to fitting a single list
+
+- In Tr/TrackMonitors v1r29:
+  . Adjust track multiplicity histogram ranges 
+  . Excluded 2D profiles from OT online monitoring 
+
+- In Tr/TrackTools v3r34p2:
+  . cleaned up TrackInterpolator by using cached filtered states in FitNode  
+
+- In Tr/TrackUtils v1r38:
+  . Add FirstMeasurement state to long and upstream tracks 
+  . TrackHitAdder now also adds velo hits (using Manuel's code)
+  . tightened some cuts on TrackV0Finder
+  . add state-at-vertex to tracks from V0
+
+- In Velo/VeloRecMonitors v2r11:
+  . Added plots of IP resolution vs eta and phi in VeloIPResolutionMonitor 
+
 
 </PRE><H1><A NAME=v10r3p1>2010-08-04 RecSys v10r3p1</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r4
