@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.142 2010-08-23 20:35:31 witekma Exp $
+!$Id: release.notes,v 1.143 2010-08-26 09:42:25 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== HltTracking v6r3 2010-08-26 ===================
 ! 2010-08-23 - M. Witek
  - Specify PVSeedTool for PatPV3D reconstruction since default in PatPV changed to PVSeed3DTool. 
 
