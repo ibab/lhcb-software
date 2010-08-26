@@ -29,6 +29,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'photonPT'            : 2600     # MeV
                    ,'PhiVCHI2'            : 25       # dimensionless
                    ,'KstVCHI2'            : 16       # dimensionless
+                   ,'TrChi2'              : 10.       # dimensionless
                    ,'Prescale'           : {'Hlt2Bs2PhiGamma$'          : 1.0
                                             ,'Hlt2Bs2PhiGamma.+'        : 0.1       # prescale by a factor of 10
                                             ,'Hlt2Bd2KstGamma$'         : 1.0
@@ -73,7 +74,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         Hlt2Phi4PhiGamma = Hlt2Member( CombineParticles
                                        , "CombinePhi"
                                        , DecayDescriptors =[ "phi(1020) -> K+ K-" ] #decayDesc
-                                       , DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
+                                       , DaughtersCuts = { "K+" : "(TRCHI2DOF <"+str(self.getProp('TrChi2'))+")&(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
                                        , CombinationCut =  "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('PhiVCHI2'))+")"
                                        , ParticleCombiners = {'' : 'TrgVertexFitter'}
@@ -84,8 +85,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         Hlt2Kst4KstGamma = Hlt2Member( CombineParticles
                                        , "CombineKstar"
                                        , DecayDescriptors =["[K*(892)0 -> K+ pi-]cc"] 
-                                       , DaughtersCuts = { "K+"  : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")",
-                                                           "pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
+                                       , DaughtersCuts = { "K+"  : "(TRCHI2DOF <"+str(self.getProp('TrChi2'))+")&(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")",
+                                                           "pi-" : "(TRCHI2DOF <"+str(self.getProp('TrChi2'))+")&(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
                                        , ParticleCombiners = {'' : 'TrgVertexFitter'} 

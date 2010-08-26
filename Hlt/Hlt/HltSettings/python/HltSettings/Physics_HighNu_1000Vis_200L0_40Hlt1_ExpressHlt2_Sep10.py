@@ -130,8 +130,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                                          } 
                                                         , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                       }
-                       , Hlt1LumiLinesConf :     {  'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'   : 0.1 
-                                                                    , 'Hlt1LumiMid.*(?<!RateLimited)$' : 1.
+                       , Hlt1LumiLinesConf :     {  'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'   : 0.00001 
+                                                                    , 'Hlt1LumiMid.*(?<!RateLimited)$' : 0.0005
                                                                     }
                                                     , 'Postscale' : { 'Hlt1LumiLowNoBeamRateLimited'   : 'RATE(5)' 
                                                                       , 'Hlt1LumiLowBeam2RateLimited'  : 'RATE(10)' 

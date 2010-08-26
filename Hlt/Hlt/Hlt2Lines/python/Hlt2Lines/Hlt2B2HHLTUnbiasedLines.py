@@ -12,7 +12,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'PIDK_min'           :     0.1
                    ,'PIDK_max'           :     0.1
                    ,'PIDMu_min'          :     2.0
-                   ,'TrackChi2'          :    10
+                   ,'TrackChi2'          :    5.
                    ,'VertexChi2'         :    10.0
                    }
     

@@ -37,6 +37,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'ALL_MIPDV_MIN'     : 0.025,  # mm
         'BPVVD_MIN'         : 2.0,    # mm
         'BPVVDR_MIN'        : 0.2,    # mm
+        'HLT1FILTER'        : "",
         # pre- and post-scale values are set in HltSettings/TopoLines.py
         'Prescale' : {},
         'Postscale' : {},
@@ -77,8 +78,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         Hlt2TopoKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [Hlt2TopoKillTooManyInTrk] 
         lclAlgos.extend(algos)
-        
-        Hlt2Line(lineName, prescale=self.prescale, postscale=self.postscale,
+       
+        hltfilter = self.getProp("HLT1FILTER")
+        if hltfilter == "" : hltfilter = None
+     
+        Hlt2Line(lineName, HLT = hltfilter, prescale=self.prescale, postscale=self.postscale,
                  algos=lclAlgos) 
         self.__updateHltANNSvc(lineName)
         
