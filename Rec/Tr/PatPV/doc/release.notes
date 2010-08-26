@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!============================= PatPV v3r17 2010-08-25 ======================
 ! 2010-08-23 - Mariusz Witek
  - Number of improvements for high mu data
  - See http://indico.cern.ch/conferenceDisplay.py?confId=99584
