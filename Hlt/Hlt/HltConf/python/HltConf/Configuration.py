@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.206 2010-08-25 17:24:05 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.207 2010-08-26 20:34:38 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -23,7 +23,7 @@ class HltConf(LHCbConfigurableUser):
     __slots__ = { "L0TCK"                          : ''
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
-                , "DataType"                       : '2009'
+                , "DataType"                       : '2010'
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
@@ -157,6 +157,7 @@ class HltConf(LHCbConfigurableUser):
         Hlt2Conf().WithMC = self.getProp("WithMC")
         if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
             Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
+
 
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
