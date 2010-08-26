@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.442 2010-08-14 14:31:28 jpalac Exp $
+! $Id: release.notes,v 1.443 2010-08-26 09:51:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-26 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Set Lumi to False if Simulation is True.
+ - cmt/requirements
+  . Increase to v25r9
 
 !========================== DaVinci v25r8 2010-08-15 =======================
 
