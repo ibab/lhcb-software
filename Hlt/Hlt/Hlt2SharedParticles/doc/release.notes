@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.102 2010-08-23 16:39:29 raaij Exp $
+$Id: release.notes,v 1.103 2010-08-26 08:51:34 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v4r4 2010-08-26 ===================
 ! 2010-08-23 - Roel Aaij
  - Add a new track fitted detached J/psi
  - Widen J/psi mass window to 120 MeV in accordance with offline
