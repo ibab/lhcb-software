@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.201 2010-08-26 19:31:55 gligorov Exp $
+! $Id: release.notes,v 1.202 2010-08-26 20:31:49 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Protect the LT unbiased hadron lines against Autumn 2010
    running conditions by explicitly requiring a double L0 Hadron
    trigger before doing any reconstruction.
 
-!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-25 - V. Gligorov
  - "Slotify" the 1Track lines.
 

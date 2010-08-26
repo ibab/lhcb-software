@@ -3,10 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+!========================== HltSettings v3r0  2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Update September10 configurations again. Prescale LumiLow and LumiMid heavily.
    Prescale charm mass sidebands to 1%. Add B2HHPi0Merged to Hadrons_September10.     
-!========================== HltSettings v3r0  2010-08-26 ===================
 ! 2010-08-25 - V. Gligorov
  - Update September10 configurations with what is currently the best knowledge
    available. 
