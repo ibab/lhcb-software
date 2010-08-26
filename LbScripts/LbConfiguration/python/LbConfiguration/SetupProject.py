@@ -298,7 +298,8 @@ def _sync_dicts(src, dest):
         dest[k] = src[k]
 
 def isProject(path):
-    return os.path.isfile(os.path.join(path,'cmt','project.cmt'))
+    return os.path.isfile(os.path.join(path,'cmt','project.cmt')) and \
+           not os.path.exists(os.path.join(path, 'LOCKED')) # Ignore projects that are being released
 
 def _extract_version(project, version):
     # By default, the version is the name of the version directory
