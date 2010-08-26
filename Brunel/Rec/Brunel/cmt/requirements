@@ -16,7 +16,7 @@ use HepMC   v*  LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB        v*    Det  -no_auto_imports
-use ParamFiles  v8r2       -no_auto_imports
+use ParamFiles  v8r3       -no_auto_imports
 use FieldMap    v5r*       -no_auto_imports
 use AppConfig   v3r*       -no_auto_imports
 
