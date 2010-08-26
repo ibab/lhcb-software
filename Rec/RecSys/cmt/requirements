@@ -79,7 +79,7 @@ use TrackTools           v3r34p2 Tr   # Eduardo Rodrigues
 use TrackUtils           v1r38   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
-use PatPV                v3r16   Tr   # Mariusz Witek
+use PatPV                v3r17   Tr   # Mariusz Witek
 
 # Velo
 use VeloRecMonitors      v2r11   Velo # Malcom John, Eduardo Rodrigues
