@@ -215,9 +215,9 @@ void RichHPDImageSummary::summaryINFO( const unsigned int ID,
                                        const TH2D* hist ) const
 {
 
-  const unsigned int nPix = hist->Integral();
+  const unsigned int nPix = (unsigned int) (hist->Integral());
   if ( nPix < m_minOccupancy ) return ;
-
+  
   HPDBoundaryFcn FCN( hist , m_cutFraction );
 
   const int boundarySize = FCN.findBoundary() ;

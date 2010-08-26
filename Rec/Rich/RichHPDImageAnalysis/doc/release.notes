@@ -4,7 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
-!================= Rich/RichHPDImageAnalysis v1r2 2010-08-25 =================
+
+!================= Rich/RichHPDImageAnalysis v1r2 2010-08-26 =================
+! 2010-08-26 - Rob Lambert
+ - fixed compiler warning from RichHPDImageSummary.cpp
 
 ! 2010-08-24 - Chris Jones
  - Update the monitor again to fill summary historys with 1/error^2 weights,
