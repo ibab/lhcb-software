@@ -141,14 +141,14 @@ def make_tar(pname, pversion, binary=''):
     compMiscLinuxIa32 = 'i686-slc'
 
     # exclude following files and directories from source tar file
-    exclude_source = ['install.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo',
+    exclude_source = ['install.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo', 'NOT_READY',
                       compLinux + '*',
                       compWIN32 + '*',
                       compMac + '*',
                       compMiscLinuxAmd64 + '*',
                       compMiscLinuxIa32 + '*']
     # exclude following files from binary tar file
-    exclude_binary = ['.glimpse_*', 'core.*', 'html', '*.o', 'lib*.a', '*.obj']
+    exclude_binary = ['.glimpse_*', 'core.*', 'html', '*.o', 'lib*.a', '*.obj', 'NOT_READY']
 
     if binary == '':
     # source tar file

@@ -246,7 +246,13 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         if not os.path.exists(PACK): os.mkdir(PACK)
         if not os.path.exists(os.path.join(PACK, PACK + '_' + pversion)): os.mkdir(os.path.join(PACK, PACK + '_' + pversion))
 
-
+        not_ready_file = os.path.join(rel_dir, PACK, PACK + "_" + pversion, "NOT_READY")
+        if not os.path.exists(not_ready_file) :
+            fd = open(not_ready_file, "w")
+            fd.write("This project is not ready and cannot be used by SetupProject\n")
+            fd.write("In order to finalize the project and remove this file, use the 'K' action\n")
+            fd.close()
+            
         if CMTPROJECTPATH == '':
             # create cmt project
             log.warning(' no CMTPROJECTPATH : build cmt/project.cmt')
@@ -617,6 +623,8 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
 
     if wlock :
+        if os.path.exists(not_ready_file) :
+            os.remove(not_ready_file)
         afs_dir_path = os.path.join(rel_dir, maindir)
         afs_vol = Volume(dirname=afs_dir_path)
         afs_vol.lock()

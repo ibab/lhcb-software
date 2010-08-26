@@ -1,3 +1,9 @@
+2010-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLHCbtar: exclude the "NOT_READY" from the tarball creation.
+	* scripts/mkproject: creates a "NOT_READY" file at the start to prevent its
+	usage by SetupProject. This file is removed when using the "K" (locK) action.
+
 2010-08-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: added the generation of the html file for LCGCMT like tarballs
