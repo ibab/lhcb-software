@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.199 2010-08-25 17:18:31 gligorov Exp $
+! $Id: release.notes,v 1.200 2010-08-26 08:49:48 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-25 - V. Gligorov
  - "Slotify" the 1Track lines.
 
