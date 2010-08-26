@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.38 2010-07-12 06:31:20 graven Exp $
+#$Id: requirements,v 1.39 2010-08-26 08:39:54 graven Exp $
 #============================================================================
 # Created    : 2008-01-21
 # Maintainer : Bruno Souza de Paula	 
@@ -24,6 +24,7 @@ use L0Event     		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
+use GaudiUtils          v*    
 
 use TrackInterfaces     v*    Tr
 
