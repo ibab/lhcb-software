@@ -1,8 +1,8 @@
-# $Id: StrippingBu2KJpsiPiPi.py,v 1.1 2010-08-05 12:19:51 nmangiaf Exp $
+# $Id: StrippingBu2KJpsiPiPi.py,v 1.2 2010-08-26 13:16:50 nmangiaf Exp $
 
 __author__ = ['Nicola Mangiafave']
 __date__ = '19/03/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bu->K J/psi(MuMu) Pi Pi stripping selection using LoKi::Hybrid and python configurables.
@@ -24,7 +24,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
     __slots__ = { 
     			"PionMIPCHI2DVLoose"	: 2.0	# adimensional
                 ,	"PionMIPCHI2DV" 	: 3.0	# adimensional        
-		,	"MuonMIPCHI2DVLoose"	: 0.5	# adimensional
+		,	"MuonMIPCHI2DVLoose"	: 1.0	# adimensional
 		,	"MuonMIPCHI2DV" 	: 1.0	# adimensional       
 		,	"KaonMIPCHI2DVLoose"	: 2.0	# adimensional
 		,	"KaonMIPCHI2DV"	        : 3.0	# adimensional
@@ -33,7 +33,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
 		,	"JpsiMassWinLoose"   	: 100.0	# MeV
                 ,	"JpsiMassWin"   	: 80.0	# MeV    
 		,	"JpsiVCHI2VDOF" 	: 15.0	# adimensional
-		,	"JpsiPiPiMassWinLoose"	: 400.0	# MeV
+		,	"JpsiPiPiMassWinLoose"	: 190.0	# MeV
                 ,	"X3872MassWinADA"	: 180.0	# MeV, equal to Psi2S mass window, Used in ADAMASS 
 		,	"X3872MassWin"		: 150.0	# MeV, equal to Psi2S mass window 
 		,	"JpsiPiPiVCHI2VDOFLoose": 10.0	# adimensional
@@ -109,7 +109,8 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
             self.Rho2PiPiLoose( )            
 	_X3872Loose = CombineParticles("X38722JpsiRhoLoose")
       	_X3872Loose.DecayDescriptor = "X_1(3872) -> J/psi(1S) rho(770)0"
-        _X3872Loose.CombinationCut = "(ADAMASS('X_1(3872)') < %(JpsiPiPiMassWinLoose)s *MeV)" % self.getProps()
+        _X3872Loose.CombinationCut = "(ADAMASS('X_1(3872)') < %(JpsiPiPiMassWinLoose)s *MeV) "\
+                                     "| (ADAMASS('psi(2S)') < %(JpsiPiPiMassWinLoose)s *MeV)" % self.getProps()
         _X3872Loose.MotherCut = " (VFASPF(VCHI2/VDOF) < %(JpsiPiPiVCHI2VDOFLoose)s)" % self.getProps()
 
 	X3872Loose = Selection("SelX38722JpsiRhoForBu2KJpsiPiPiLoose",
