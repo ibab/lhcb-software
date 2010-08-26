@@ -5,13 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v10r4>2010-07-16 HltSys v10r6</A></H1><PRE>
+</PRE><H1><A NAME=v11r0>2010-08-26 HltSys v11r0/A></H1><PRE>
+ - towards 10^32, with mu of 1.5 and above...
+
+</PRE><H1><A NAME=v10r7>2010-08-21 HltSys v10r7</A></H1><PRE>
+ - minimal rebuild on top of Phys v9r9
+
+</PRE><H1><A NAME=v10r6>2010-07-16 HltSys v10r6</A></H1><PRE>
  - plain rebuild on top of Phys v9r8
 
-</PRE><H1><A NAME=v10r4>2010-07-12 HltSys v10r5</A></H1><PRE>
+</PRE><H1><A NAME=v10r5>2010-07-12 HltSys v10r5</A></H1><PRE>
  - plain rebuild on top of Phys v9r7
 
-</PRE><H1><A NAME=v10r4>2010-06-04 HltSys v10r4p1</A></H1><PRE>
+</PRE><H1><A NAME=v10r4p1>2010-06-04 HltSys v10r4p1</A></H1><PRE>
  - small changes to Jun10 settings, now corresponds to the  
    TCKs in TCK/HltTCK v1r16
 
