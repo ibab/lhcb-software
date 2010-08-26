@@ -8,6 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v5r0 2010-08-26 ===================
 ! 2010-08-23 - Roel Aaij
  - Added Hlt2ExpressHLT1Physics line to simplify monitoring
  - Added Hlt2DiMuonBiasedJPsi, a line for detached J/psis.
