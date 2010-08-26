@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-26 - Rob Lambert
+ - Prescaled StrippingB02DplusMuXPresel to 10%, as agreed earlier
+   by the taskforce.
+
 ! 2010-08-26 - Nicola Mangiafave
  - Tightened Bu2KJpsiPiPiLooseLine to reach 0.1% retention.
 

@@ -1,4 +1,4 @@
-# $Id: StrippingB0q2DplusMuX.py,v 1.4 2010-07-15 18:35:06 rlambert Exp $
+# $Id: StrippingB0q2DplusMuX.py,v 1.5 2010-08-26 15:38:37 rlambert Exp $
 '''
 Module for constuction of B0q->DplusMuNuX lines
 
@@ -31,13 +31,13 @@ The lines look basically like this:
 '''
 __author__ = [ 'Rob Lambert' ]
 __date__ = '2010-07-15'
-__version = '$Revision: 1.4 $'
+__version = '$Revision: 1.5 $'
 
 #### This is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
 
 confdict={
-    'Presel' : { 'Prescale'    : 1.0 ,
+    'Presel' : { 'Prescale'    : 0.1 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
