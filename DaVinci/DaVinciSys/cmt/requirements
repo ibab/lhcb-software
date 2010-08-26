@@ -1,5 +1,5 @@
 package DaVinciSys
-version v25r8
+version v25r9
 
 branches doc cmt
 
@@ -8,8 +8,8 @@ use  DaVinci                 	v25r8   Phys
 use  DaVinciTests               v1r2
 
 # Patches
-use  HltDAQ                     v2r1     Hlt
-use  LumiAlgs                   v3r7p1   Rec
+#use  HltDAQ                     v2r1     Hlt
+#use  LumiAlgs                   v3r7p1   Rec
 
 # Declare this as a container package
 apply_pattern container_package
