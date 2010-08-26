@@ -5,10 +5,124 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v31r5>2010-08-25 LHCbSys v31r5</A></H1><PRE>
+</PRE><H1><A NAME=v31r5>2010-08-26 LHCbSys v31r5</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LCG_58e
 
+- LHCb version to collect developments in the event model, 
+  detector description, and LoKiCore, necessary for the pit.
+
+- This version includes the latest Event/LumiEvent, where -log(P) FSRs are
+  added, however they can't be used until after a full reprocessing.
+
 - Packages Modified:
+  Det/CaloDet v10r6, Det/DetCond  v12r14, Det/DetDescSvc v2r5,
+  Det/RichDet v15r0, Det/STDet v4r22, Det/VeloDet v12r12, Det/VeloPixDet v1r6,
+  Event/EventPacker v2r4, Event/LumiEvent v3r0p1, Event/RecEvent v2r31,
+  Event/TrackEvent v5r7, Event/VeloEvent v16r9, Kernel/LHCbKernel v12r4,
+  L0/L0MuonKernel v9r4, Phys/LoKiCore v10r3, Phys/LoKiNumbers v9r2,
+  Rich/RichKernel v7r38, ST/STKernel v2r3, Tools/CondDBUI v3r5,
+  Tools/XmlTools v6r3p2, Tr/TrackInterfaces v4r15, Tr/TrackKernel v1r5
+
+- In Det/CaloDet v10r6:
+  . Register and update new conditions/parameters for Ecal/Hcal/Prs 
+
+- In Det/DetCond v12r14:
+  . Improved DetCondTest::TestConditionAlg to allow testing 
+    artificial dependencies between conditions. 
+  . Modified test detcond.heart_beat to expose bug #66497 
+
+
+- In Det/DetDescSvc v2r5:
+  . Fixes and improvements in UpdateManagerSvc 
+  . removed 'queryInterface', adapted to the new interfaces system of Gaudi v21
+  . replaced the 'dia' debug output with the 'dot' (graphviz) one
+  . moved the call to the 'dump' method to the 'stop' transition 
+  . fixed bug #66497 (velo motor positions updated several times) 
+
+
+- In Det/RichDet v15r0:
+  . suppress info messages from DeRichSystem 
+  . RICH2Gas refractive index minor correction
+
+- In Det/STDet v4r22:
+  . Add first and last sector methods to DeITLayer 
+  . Add first last layer methods to DeITBox 
+
+- In Det/VeloDet v12r12:
+  . Fix size of dead region between inner/outer phi zones, 
+  . suppressed unnecessary debug/verbose messages 
+  . Updated reference file of the test velodet.veloaligncond.updates. 
+
+- In Det/VeloPixDet v1r6:
+  . The geometry model modified to match with the new Strawman design. 
+
+- In Event/EventPacker v2r4:
+  . Adapt to changes in ProcStatus interface.
+  . add a missing dependency to the DAQ/MDF package, only needed for CMake
+
+- In Event/LumiEvent v3r0p1:
+  . change to -log(P) method 
+  . revert changes in requirements file to behave as component library, 
+    fixes missing configurable
+
+- In Event/RecEvent v2r31:
+  . update to the ProcStatus method
+  . Remove ProcStatus::algorithmStatus(const std::string& name) 
+  . Add a setter for the algs list (needed by EventPacker). 
+  . Add a nicer explicit implementation of ProcStatus::fillStream. 
+
+- In Event/TrackEvent v5r7:
+  . Added V0Vertex to State::Location for use in TrackV0Finder 
+  . Fix bug in LHCb::State::posMomCovariance()
+
+- In Event/VeloEvent v16r9:
+  . Add new data object necessary for the new NZS event info service 
+
+- In Kernel/LHCbKernel v12r4:
+  . Add new interface IAccept 
+  . Add the method toString() to RichSmartID
+
+- In L0/L0MuonKernel v9r4:
+  . Bug fix (non initialized variable) 
+
+- In Phys/LoKiCore v10r3:
+  . Minor improvement in streamers 
+  . Solve the problem with const/non-const ambiguity for pipes 
+  . Add new functors CHECK and ACCEPT for implementation of Global Event cut
+    in Hlt,see task #16675 
+  . Fixes for pipes & sources 
+  . Fixes for LoKiCore.doxygenurl module 
+  . honour max print in Error and Warning 
+  . Add SVN keywords 
+
+- In Phys/LoKiNumbers v9r2:
+  . Add new functors CHECK and ACCEPT for implementation of Global Event cuts 
+    in Hlt, see task #16675 
+
+- In Rich/RichKernel v7r38:
+  . Extend SmartID decoding tool interface
+    with methods to return the total number of hits in the event 
+
+- In ST/STKernel v2r3:
+  . Update to new procStatus syntax 
+
+- In Tools/CondDBUI v3r5:
+  . Use pygraphics + Qt instead of pyqt
+  . bugfix for PyCoolDiff. 
+  . The IOV samples skipping behavior for db diffing is tuned up. 
+
+- In Tools/XmlTools v6r3p2:
+  . Removed Windows warnings appeared after the switch to XercesC 3.1
+
+- In Tr/TrackInterfaces v4r15:
+  . updated IMaterialLocator. 
+  . added ITrackStateProvider for use in vertexers and particletransporter 
+
+- In Tr/TrackKernel v1r5:
+  . added some methods to TrackTraj to make it more suitable for inheritance. 
+    needed for new tool TrackStateProvider 
+  . added methods to TrackStateVertex to compute p4cov and cov7x7 
+
 
 </PRE><H1><A NAME=v31r4>2010-07-28 LHCbSys v31r4</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LCG_58e
