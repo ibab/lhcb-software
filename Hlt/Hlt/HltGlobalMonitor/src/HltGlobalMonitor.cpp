@@ -1,5 +1,5 @@
 
-// $Id: HltGlobalMonitor.cpp,v 1.75 2010-08-13 12:31:51 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.76 2010-08-26 08:45:29 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,6 +29,7 @@
 // GaudiUtils
 // ============================================================================
 #include "GaudiUtils/HistoStats.h"
+#include "GaudiUtils/HistoLabels.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -39,12 +40,8 @@
 #include "GaudiKernel/Timing.h"
 #include "GaudiKernel/Memory.h"
 // ============================================================================
-// HLT
+// Event
 // ============================================================================
-#include "HltBase/HltHistogramUtilities.h"
-using namespace Hlt::HistogramUtilities;
-
-
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
 // ============================================================================
@@ -54,6 +51,7 @@ using namespace Hlt::HistogramUtilities;
 // ============================================================================
 
 using namespace LHCb;
+using namespace Gaudi::Utils::Histos;
 
 
 HltGlobalMonitor::histopair::histopair(GaudiHistoAlg& parent,const std::string& loc, const Gaudi::Histo1DDef& def, const char* yaxislabel ) 
