@@ -6,10 +6,40 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v9r6>2010-08-25 LbcomSys v9r6</A></H1><PRE>
+</PRE><H1><A NAME=v9r6>2010-08-26 LbcomSys v9r6</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
 
 - Modified packages:
+	Hlt/HltDAQ v2r2, Rich/RichDAQ v3r28, ST/STAlgorithms v4r3,
+  ST/STCheckers v3r2, ST/STTools v4r4, Velo/VeloDAQ v6r0
+
+- In Hlt/HltDAQ v2r2:
+  . ANNDispatchSvc: fix bug that disallowed setting of properties 
+  . a bug fix for non-standard RawEvent location 
+  . Allow the use (disabled by default) of the conditions DB to find 
+    the time of the start of run used for the trend plots of the various rates
+  . fix fillStream declaration in xml so that const_cast can be removed 
+  . fix compiler warning in HltRoutingBitsWriter.cpp 
+
+- In Rich/RichDAQ v3r28:
+  . Add new methods to RawBufferToSmartIDsTool to return 
+    the total number of hits in the current event. 
+
+- In ST/STAlgorithms v4r3:
+  . Add STClusterContainerCopy algorithm 
+
+- In ST/STCheckers v3r2:
+  . Add some histograms to STClusterResolution
+
+- In ST/STTools v4r4:
+  . Add tool to select STChannelIDs on tracks 
+
+- In Velo/VeloDAQ v6r0:
+  . Added a ProcStatus when the bank has a header bit error and is not decoded 
+  . Change in the nzs data stream decoder to cope with corrupted banks 
+    (related with error banks)
+
+
 
 </PRE><H1><A NAME=v9r5p1>2010-07-28 LbcomSys v9r5p1</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r4
