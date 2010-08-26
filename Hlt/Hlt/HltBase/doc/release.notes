@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v10r0 2010-08-26 ===================
 ! 2010-08-26 - Gerhard Raven
  - remove HltHistogramUtilities.h, now lives in GaudiUtils, Gaudi::Histo::Utils
 
