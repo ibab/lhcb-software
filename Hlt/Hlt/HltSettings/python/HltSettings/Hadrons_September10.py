@@ -39,7 +39,7 @@ class Hadrons_Minimal :
             'Hlt2DisplVerticesSingle',
             'Hlt2DisplVerticesSinglePostScaled',            
             'Hlt2B2HHPi0_Merged',
-            #'Hlt2B2HHPi0_Resolved',
+            'Hlt2B2HHPi0_Resolved',
             'Hlt2CharmD2KS0PiLL',        
             # The topological 
             'Hlt2TopoOSTF2Body',

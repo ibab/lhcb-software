@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-08-27 - V. Gligorov
+ - Update September10 configurations again. Add prescales to express lines.
+
 !========================== HltSettings v3r0  2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Update September10 configurations again. Prescale LumiLow and LumiMid heavily.
