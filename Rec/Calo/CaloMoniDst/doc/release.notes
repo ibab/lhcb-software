@@ -5,6 +5,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-27 - Olivier Deschamps
+  - new algorithm : CaloHypoNtp
+  - CaloHypoMonitor : new monitoring histogram Nhypo/Nclusters
+
 !========================== CaloMoniDst v5r3 2010-06-22 =======================
 ! 2010-06-05 - Rob Lambert
  - Fixes for mistake in yesterday's commit

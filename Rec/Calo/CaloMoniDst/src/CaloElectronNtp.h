@@ -1,4 +1,4 @@
-// $Id: CaloElectronNtp.h,v 1.1 2010-05-20 09:55:38 odescham Exp $
+// $Id: CaloElectronNtp.h,v 1.1 2010/05/20 09:55:38 odescham Exp $
 #ifndef CALOELECTRONNTP_H 
 #define CALOELECTRONNTP_H 1
 
@@ -44,7 +44,6 @@ private:
   ICaloElectron* m_caloElectron;
   bool m_pairing;
   std::string m_extrapolatorType;
-  bool m_tupling;
   std::pair<double,double> m_e;
   std::pair<double,double> m_et;
   std::pair<double,double> m_prs;
@@ -54,5 +53,7 @@ private:
   ICaloHypo2Calo* m_toPrs ;
   DeCalorimeter* m_calo;
   IEventTimeDecoder* m_odin;
+  bool m_histo;
+  bool m_tupling;
 };
 #endif // CALOELECTRONNTP_H

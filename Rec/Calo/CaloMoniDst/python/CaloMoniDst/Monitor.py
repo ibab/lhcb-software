@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.8 2010-05-20 09:55:38 odescham Exp $
+# $Id: Monitor.py,v 1.8 2010/05/20 09:55:38 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
+__version__ = "CVS tag $Name:  $, version $Revision: 1.8 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -182,13 +182,13 @@ def hyposMoni ( context ) :
 
 
     if not alg1.isPropertySet('histoList') :
-        alg1 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
+        alg1 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ,"14"]
     if not alg2.isPropertySet('histoList') :
-        alg2 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
+        alg2 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ,"14"]
     if not alg3.isPropertySet('histoList') :
         alg3 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
     if not alg4.isPropertySet('histoList') :
-        alg4 .histoList = [ "1", "2" , "3" , "4" , "7", "8" , "9"]
+        alg4 .histoList = [ "1", "2" , "3" , "4" , "7", "8" , "9","14"]
 
  
     alg.Members = [ alg1 , alg2 , alg3 , alg4 ]

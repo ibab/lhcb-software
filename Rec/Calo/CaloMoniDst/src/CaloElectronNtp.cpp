@@ -1,4 +1,4 @@
-// $Id: CaloElectronNtp.cpp,v 1.3 2010-06-05 18:18:10 rlambert Exp $
+// $Id: CaloElectronNtp.cpp,v 1.1 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -34,6 +34,8 @@ CaloElectronNtp::CaloElectronNtp( const std::string& name,
   declareProperty("EtFilter"  , m_et = std::make_pair(150.,999999.));
   declareProperty("PrsFilter" , m_prs  = std::make_pair(-1.,1024));
   declareProperty("ElectronPairing", m_pairing = true );
+  declareProperty( "Tupling"  , m_tupling = true);
+  declareProperty( "Histo"    , m_histo = true);
   
 }
 //=============================================================================
@@ -71,7 +73,8 @@ StatusCode CaloElectronNtp::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  Tuple ntp = nTuple(500, "e_tupling" ,CLID_ColumnWiseTuple);
+  Tuple ntp = NULL;
+  if(m_tupling)ntp=nTuple(500, "e_tupling" ,CLID_ColumnWiseTuple);
   StatusCode scnt;
 
   // get input data
@@ -83,7 +86,7 @@ StatusCode CaloElectronNtp::execute() {
 
   // GET ODIN INFO
   int run = 0;
-  unsigned long long int evt = 0;
+  long evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -154,104 +157,109 @@ StatusCode CaloElectronNtp::execute() {
     }    
     
     // proto info
-    sc=ntp->column("TrackMatch", proto->info(LHCb::ProtoParticle::CaloTrMatch, 9999.));
-    sc=ntp->column("ElecMatch", proto->info(LHCb::ProtoParticle::CaloElectronMatch, 9999.));
-    sc=ntp->column("BremMatch", proto->info(LHCb::ProtoParticle::CaloBremMatch, 9999.));
-    sc=ntp->column("Spd", iSpd );
-    sc=ntp->column("Prs", ePrs );
-    sc=ntp->column("TrajectoryL", proto->info(LHCb::ProtoParticle::CaloTrajectoryL, 9999.));
-    sc=ntp->column("VeloCharge", proto->info(LHCb::ProtoParticle::VeloCharge, -1.));
-    sc=ntp->column("DLLe", proto->info(LHCb::ProtoParticle::CombDLLe, 0.));
-    sc=ntp->column("RichDLLe", proto->info(LHCb::ProtoParticle::RichDLLe, 0.));
-    // hypo info
-    sc=ntp->column("EoP" , eOp );
-    sc=ntp->column("HypoE", e  );
-    sc=ntp->column("HypoR", hR  );
-    // track info
-    sc=ntp->column("TrackP", t  );
-    sc=ntp->column("TrackR", tR  );
-    sc=ntp->column("caloState",cs);
-    sc=ntp->column("incidence",theta);
-    // cluster info
-    sc=ntp->column("id", id.index());
-    sc=ntp->column("ClusterE",cluster->e());
-    sc=ntp->column("ClusterR",cR); 
-    // brem info
-    sc=ntp->column("BremId", bid.index());
-    sc=ntp->column("BremP", bP );
-
-    // odin info
-    sc=ntp->column("run"   , run         );
-    sc=ntp->column("event" , (unsigned long int) evt );
-    sc=ntp->column("triggertype" , tty );
+    if(m_tupling){
+      sc=ntp->column("TrackMatch", proto->info(LHCb::ProtoParticle::CaloTrMatch, 9999.));
+      sc=ntp->column("ElecMatch", proto->info(LHCb::ProtoParticle::CaloElectronMatch, 9999.));
+      sc=ntp->column("BremMatch", proto->info(LHCb::ProtoParticle::CaloBremMatch, 9999.));
+      sc=ntp->column("Spd", iSpd );
+      sc=ntp->column("Prs", ePrs );
+      sc=ntp->column("TrajectoryL", proto->info(LHCb::ProtoParticle::CaloTrajectoryL, 9999.));
+      sc=ntp->column("VeloCharge", proto->info(LHCb::ProtoParticle::VeloCharge, -1.));
+      sc=ntp->column("DLLe", proto->info(LHCb::ProtoParticle::CombDLLe, 0.));
+      sc=ntp->column("RichDLLe", proto->info(LHCb::ProtoParticle::RichDLLe, 0.));
+      // hypo info
+      sc=ntp->column("EoP" , eOp );
+      sc=ntp->column("HypoE", e  );
+      sc=ntp->column("HypoR", hR  );
+      // track info
+      sc=ntp->column("TrackP", t  );
+      sc=ntp->column("TrackR", tR  );
+      sc=ntp->column("caloState",cs);
+      sc=ntp->column("incidence",theta);
+      // cluster info
+      sc=ntp->column("id", id.index());
+      sc=ntp->column("ClusterE",cluster->e());
+      sc=ntp->column("ClusterR",cR); 
+      // brem info
+      sc=ntp->column("BremId", bid.index());
+      sc=ntp->column("BremP", bP );
       
-
+      // odin info
+      sc=ntp->column("run"   , run         );
+      sc=ntp->column("event" , evt );
+      sc=ntp->column("triggertype" , tty );
+    }
+    
+      
     // histogramming / channel
     
-
-    std::ostringstream sid;
-    int feb = m_calo->cardNumber( id );
-    sid << "crate" << format("%02i", m_calo->cardCrate( feb ) ) <<  "/"
-        << "feb"   << format( "%02i" , m_calo->cardSlot( feb  ) )<< "/"
+    if(m_histo){
+      std::ostringstream sid;
+      int feb = m_calo->cardNumber( id );
+      sid << "crate" << format("%02i", m_calo->cardCrate( feb ) ) <<  "/"
+          << "feb"   << format( "%02i" , m_calo->cardSlot( feb  ) )<< "/"
         <<Gaudi::Utils::toString( m_calo->cardColumn( id ) + nColCaloCard * m_calo->cardRow( id ) );
-    plot1D(eOp, sid.str() , sid.str() , 0., 2.5, 100);
-
-
-    // perform electron pairing
-    double mas = 999999.;
-    if( !m_pairing)continue;
-    for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
-      const LHCb::ProtoParticle* proto2 = *pp;
-      if( !m_caloElectron->set(proto2))continue;;
-      LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
-      if ( NULL == hypo2 ) continue;
-      if( hypo == hypo2 )continue;
-      LHCb::CaloMomentum momentum2( hypo2 );
-
-
-      // filtering proto2
-      const double e2 = momentum2.e();
-      const double et2 = momentum2.pt();
-      if( !inRange(m_et , et2))continue;
-      if( !inRange(m_e  , e2  ))continue;
-      double ePrs2 = m_toPrs->energy ( *hypo2 , "Prs"  );
-      if( !inRange(m_prs, ePrs2))continue;
-      double eOp2 = m_caloElectron->eOverP();
-      if( !inRange( m_eop, eOp2))continue;
-
-
-      // compute mass
-      const LHCb::Track*  t1 = proto->track();
-      const LHCb::Track*  t2 = proto2->track();
-
-      if( NULL == t1 || NULL == t2)continue;
-      if( -1 != t1->charge()*t2->charge())continue;
-      LHCb::State st1 = t1->firstState();
-      LHCb::State st2 = t2->firstState();
-      
-      if( NULL == extrapolator() ){
-        Warning("No extrapolator defined");
-        continue;
-      }
-      StatusCode sc = extrapolator()->propagate(st1, 0.);
-      if(sc.isFailure())Warning("Propagation 1 failed").ignore();
-      sc = extrapolator()->propagate(st2, 0.);
-      if(sc.isFailure())Warning("Propagation 2 failed").ignore();
-      Gaudi::XYZVector p1 = st1.momentum();
-      Gaudi::XYZVector p2 = st2.momentum();
-      double m2  = p1.R()*p2.R();
-      m2 -= p1.X()*p2.X();
-      m2 -= p1.Y()*p2.Y();
-      m2 -= p1.Z()*p2.Z();
-      m2 *= 2;
-      if( m2 > 0){
-        double m = sqrt(m2) ;
-        if( m < mas )mas = m;
-      }
+      plot1D(eOp, sid.str() , sid.str() , 0., 2.5, 100);
     }
-    // add mass
-    sc = ntp->column("MinMee",mas);
-    sc = ntp->write();
+    
+
+    if(m_tupling){
+      // perform electron pairing
+      double mas = 999999.;
+      if( !m_pairing)continue;
+      for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
+        const LHCb::ProtoParticle* proto2 = *pp;
+        if( !m_caloElectron->set(proto2))continue;;
+        LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
+        if ( NULL == hypo2 ) continue;
+        if( hypo == hypo2 )continue;
+        LHCb::CaloMomentum momentum2( hypo2 );
+
+        
+        // filtering proto2
+        const double e2 = momentum2.e();
+        const double et2 = momentum2.pt();
+        if( !inRange(m_et , et2))continue;
+        if( !inRange(m_e  , e2  ))continue;
+        double ePrs2 = m_toPrs->energy ( *hypo2 , "Prs"  );
+        if( !inRange(m_prs, ePrs2))continue;
+        double eOp2 = m_caloElectron->eOverP();
+        if( !inRange( m_eop, eOp2))continue;
+        
+        
+        // compute mass
+        const LHCb::Track*  t1 = proto->track();
+        const LHCb::Track*  t2 = proto2->track();
+        
+        if( NULL == t1 || NULL == t2)continue;
+        if( -1 != t1->charge()*t2->charge())continue;
+        LHCb::State st1 = t1->firstState();
+        LHCb::State st2 = t2->firstState();
+        
+        if( NULL == extrapolator() ){
+          Warning("No extrapolator defined");
+          continue;
+        }
+        StatusCode sc = extrapolator()->propagate(st1, 0.);
+        if(sc.isFailure())Warning("Propagation 1 failed").ignore();
+        sc = extrapolator()->propagate(st2, 0.);
+        if(sc.isFailure())Warning("Propagation 2 failed").ignore();
+        Gaudi::XYZVector p1 = st1.momentum();
+        Gaudi::XYZVector p2 = st2.momentum();
+        double m2  = p1.R()*p2.R();
+        m2 -= p1.X()*p2.X();
+        m2 -= p1.Y()*p2.Y();
+        m2 -= p1.Z()*p2.Z();
+        m2 *= 2;
+        if( m2 > 0){
+          double m = sqrt(m2) ;
+          if( m < mas )mas = m;
+        }
+      }
+      // add mass
+      sc = ntp->column("MinMee",mas);
+      sc = ntp->write();
+    }
   }
   return StatusCode::SUCCESS;
 }

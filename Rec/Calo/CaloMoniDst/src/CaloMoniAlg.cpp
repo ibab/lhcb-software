@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.15 2010-05-20 09:55:38 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.15 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -69,6 +69,8 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty ("SaturationBin1D"       , m_sat = true);
   declareProperty ("SaturationBin2D"       , m_sat2D = false);
   declareProperty ("SplitSides"           , m_splitSides = false);
+  declareProperty ("PrintOut" , m_print = false);
+  
 
   m_removeHisto.clear();
   m_histoList.clear();

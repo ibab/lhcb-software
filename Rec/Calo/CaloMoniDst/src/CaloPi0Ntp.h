@@ -35,7 +35,7 @@ private:
 
   void hTuning(std::string base, int spd,double prs1, double prs2,
                const Gaudi::LorentzVector c1 , const LHCb::CaloCellID id1, 
-               const Gaudi::LorentzVector c2 , const LHCb::CaloCellID id2);
+               const Gaudi::LorentzVector c2 , const LHCb::CaloCellID id2,int nVert);
   
 
   
@@ -60,5 +60,9 @@ private:
   double m_hMax;
   int m_hBin;
   IEventTimeDecoder* m_odin;
-
+  bool m_tupling;
+  bool m_histo;
+  std::string m_vertLoc;
+  int m_spdBin;
+  int m_spdMult;
 };

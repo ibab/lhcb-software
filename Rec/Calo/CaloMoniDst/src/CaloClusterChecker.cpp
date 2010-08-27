@@ -1,8 +1,11 @@
-// $Id: CaloClusterChecker.cpp,v 1.4 2009-03-05 15:52:51 odescham Exp $
+// $Id: CaloClusterChecker.cpp,v 1.4 2009/03/05 15:52:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name:  $, version $Revision: 1.4 $
 // ============================================================================
-// $Log: not supported by cvs2svn $
+// $Log: CaloClusterChecker.cpp,v $
+// Revision 1.4  2009/03/05 15:52:51  odescham
+// new splitArea functionality
+//
 // Revision 1.3  2009/02/20 18:03:24  odescham
 // prepare for DQ
 //

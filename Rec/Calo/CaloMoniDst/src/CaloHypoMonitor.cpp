@@ -1,4 +1,4 @@
-// $Id: CaloHypoMonitor.cpp,v 1.13 2010-03-08 01:38:28 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.13 2010/03/08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -14,6 +14,7 @@
 // CaloUtils
 // ============================================================================
 #include  "CaloUtils/CaloMomentum.h"
+#include  "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -67,6 +68,7 @@ public:
     hBook1(  "9", "Prs/Hypo      " + inputData(),  m_prsMin,  m_prsMax , m_prsBin  );
     hBook2( "10", "Hypo barycenter position x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
     hBook2( "11", "Energy-weighted hypo barycenter position x vs y " + inputData(),m_xMin,m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
+    hBook1( "14", "#Hypo/#Cluster" + inputData(), 0., 1.,100);
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -88,7 +90,8 @@ protected:
     declareProperty("NPrsBin" ,m_prsMax = 10.);
     declareProperty("NPrsBin" ,m_prsBin = 10);
 
-    m_multMax = 150;
+    m_clLoc =  LHCb::CaloAlgUtils::CaloClusterLocation( name, context() ) ;
+    m_multMax = 250;
     m_multBin =  50;
     setInputData( LHCb::CaloAlgUtils::CaloHypoLocation( name , context() ) );
   }
@@ -112,8 +115,8 @@ private:
   int m_prsBin;
   double m_prsMax;
   double m_prsMin;
+  std::string m_clLoc;
   
-
 };
 DECLARE_ALGORITHM_FACTORY( CaloHypoMonitor );
 
@@ -154,7 +157,7 @@ StatusCode CaloHypoMonitor::execute(){
     LHCb::CaloCellID id = LHCb::CaloCellID();
     if ( (*hypo)->clusters().size() > 0 ){
       SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
-      id = (*cluster).seed();      
+      if( NULL != cluster)id = (*cluster).seed();      
     }
 
 
@@ -183,6 +186,18 @@ StatusCode CaloHypoMonitor::execute(){
   }
   // fill multiplicity histogram
   fillCounters("1");
+
+
+  //cluster fraction (no area-splittable so far)
+  int nClus=0;
+  if(exist<LHCb::CaloClusters>(m_clLoc)){
+    LHCb::CaloClusters* clusters = get<LHCb::CaloClusters> ( m_clLoc );
+    if( NULL != clusters )nClus = clusters->size();
+  }
+  double frac = 0;
+  if( 0 < nClus )frac = (double) m_count / (double) nClus;
+  hFill1("14",frac);
+  
   return StatusCode::SUCCESS;
 }
 

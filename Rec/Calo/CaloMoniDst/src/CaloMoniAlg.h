@@ -329,7 +329,8 @@ protected:
   int m_xBin;
   int m_multBin;
   int m_sizeBin;
-
+  bool m_print;
+  
   double m_eFilter;
   double m_etFilter;
   double m_massFilterMin; 

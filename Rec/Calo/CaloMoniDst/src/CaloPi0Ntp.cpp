@@ -5,7 +5,8 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/ODIN.h" 
 #include "CaloPi0Ntp.h"
-
+#include "Event/RecVertex.h"
+#include "Event/L0DUReport.h"
 
 DECLARE_ALGORITHM_FACTORY( CaloPi0Ntp );
 
@@ -27,6 +28,11 @@ CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
   declareProperty( "etBin"    , m_etBin      = 150.);
   declareProperty( "leBin"    , m_leBin      = 0.25);
   declareProperty( "thBin"    , m_thBin      = 0.005); // (x1 inner, x2 middle, x4 outer)
+  declareProperty( "spdBin"   , m_spdBin     = 50   ); 
+
+  declareProperty( "Tupling"  , m_tupling = true);
+  declareProperty( "Histo"    , m_histo = true);
+  declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Velo3D);
 };
 CaloPi0Ntp::~CaloPi0Ntp(){};
 
@@ -68,17 +74,25 @@ StatusCode CaloPi0Ntp::execute(){
 
 
 
-  Tuple ntp = nTuple(500, "pi0_tupling" ,CLID_ColumnWiseTuple);
+  Tuple ntp = NULL;
+  if( m_tupling)ntp = nTuple(500, "pi0_tupling" ,CLID_ColumnWiseTuple);
 
 
   if( !exist<Hypos>(LHCb::CaloHypoLocation::Photons) )return Error("Photon hypo container not found", StatusCode::SUCCESS );
   Hypos* hypos = get<Hypos>( LHCb::CaloHypoLocation::Photons );
   if ( 0 == hypos ) return StatusCode::SUCCESS;
 
+  m_spdMult = 0;
+  std::string l0loc = LHCb::L0DUReportLocation::Default;
+  if( exist<LHCb::L0DUReport>( l0loc)){
+    LHCb::L0DUReport* l0   = get<LHCb::L0DUReport>( l0loc );
+    m_spdMult = l0->dataValue("Spd(Mult)");
+  }
+  
 
   // GET ODIN INFO
   int run = 0;
-  unsigned long long int evt = 0;
+  long evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -215,32 +229,16 @@ StatusCode CaloPi0Ntp::execute(){
       if( (isPi0 ) || (m_bkg && isBkg ) ){
 
         double prs2 = m_toPrs->energy ( *p2 , "Prs"  );
-        
-        sc=ntp->column("p1" , v1);
-        sc=ntp->column("p2" , v2);
-        sc=ntp->column("r1" , point1);
-        sc=ntp->column("r2" , point2);
-        sc=ntp->column("prs1", prs1);
-        sc=ntp->column("prs2", prs2);
-        int spd = 0;
+        int spd = 0.;
         int spd2 = m_toSpd->multiplicity ( *p2 , "Spd");
         if(  spd2 >0 )spd +=1;
         if(  spd1 >0 )spd +=2;
-        sc=ntp->column("spd", spd );
-        sc=ntp->column("id1", id1.index() );
-        sc=ntp->column("id2", id2.index() );
         Gaudi::LorentzVector c2( cl2->position().x(), cl2->position().y(), cl2->position().z(), cl2->e() );
-        sc=ntp->column("cl1", c1);
-        sc=ntp->column("cl2", c2);
         double pi0m = isPi0 ? pi0.mass() : 0. ;
         double bkgm = isBkg ? bkg.mass() : 0. ;
-        sc=ntp->column("mass",pi0m);
-        if(m_bkg)sc=ntp->column("bkg",bkgm );
         int typ = 0;
         if( isPi0) typ += 1;
         if( isBkg) typ += 2;
-        sc=ntp->column("type", typ);
-        sc=ntp->column("p", pi0  );
         // cluster mass
         Gaudi::XYZVector pos2( cl2->position().x(),cl2->position().y(),cl2->position().z());
         Gaudi::LorentzVector cc2(  cl2->e()*pos2.X()/pos2.R(),cl2->e()*pos2.Y()/pos2.R(), cl2->e()*pos2.Z()/pos2.R(),cl2->e() );
@@ -250,28 +248,50 @@ StatusCode CaloPi0Ntp::execute(){
         Gaudi::LorentzVector ccc(ccc1 + ccc2);
         double ccmas = (isPi0) ? cc.mass() : 0;
         double cccmas = (isPi0) ? ccc.mass() : 0;
-        sc=ntp->column("clmass",ccmas);
-        sc=ntp->column("clEmass",cccmas);
-
-        // odin info
-        sc=ntp->column("run"   , run         );
-        sc=ntp->column("event" , (unsigned long int) evt );
-        sc=ntp->column("triggertype" , tty );
+        // vertices
+        int nVert = 0;
+        if( exist<LHCb::VertexBases>(m_vertLoc) ){
+          LHCb::VertexBases* verts= get<LHCb::VertexBases>(m_vertLoc);
+          if( NULL != verts)nVert = verts->size();
+        }
+        debug() << "found " << nVert << " vertex at " << m_vertLoc << endmsg;
         
-          
 
-
-
-        sc=ntp->write();
-
-        // histograms for tuning
+        if( m_tupling){
+          sc=ntp->column("p1" , v1);
+          sc=ntp->column("p2" , v2);
+          sc=ntp->column("r1" , point1);
+          sc=ntp->column("r2" , point2);
+          sc=ntp->column("prs1", prs1);
+          sc=ntp->column("prs2", prs2);
+          sc=ntp->column("spd", spd );
+          sc=ntp->column("id1", id1.index() );
+          sc=ntp->column("id2", id2.index() );
+          sc=ntp->column("cl1", c1);
+          sc=ntp->column("cl2", c2);
+          sc=ntp->column("mass",pi0m);
+          if(m_bkg)sc=ntp->column("bkg",bkgm );
+          sc=ntp->column("type", typ);
+          sc=ntp->column("p", pi0  );
+          sc=ntp->column("clmass",ccmas);
+          sc=ntp->column("clEmass",cccmas);
+          // odin info
+          sc=ntp->column("run"   , run         );
+          sc=ntp->column("event" , evt );
+          sc=ntp->column("triggertype" , tty );
+          // #vertices
+          sc=ntp->column("Nvertices", nVert);
+          // #SpdMult
+          sc=ntp->column("spdMult", m_spdMult);
+          sc=ntp->write();
+          ok = true;
+        }        
         if( !isPi0) continue;
-        hTuning("Cluster", spd ,prs1,prs2, ccc1, id1 , ccc2 , id2);
-        hTuning("Corrected", spd , prs1,prs2,v1, id1 , v2 , id2);
-
-
-
-        ok = true;
+        // histograms for tuning
+        if( m_histo){
+          hTuning("Cluster", spd ,prs1,prs2, ccc1, id1 , ccc2 , id2,nVert);
+          hTuning("Corrected", spd , prs1,prs2,v1, id1 , v2 , id2,nVert);
+        }
       }
     }
   }
@@ -319,7 +339,7 @@ std::vector<double> CaloPi0Ntp::toVector(const Gaudi::XYZPoint& point){
 
 void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
                          const Gaudi::LorentzVector c1 , const LHCb::CaloCellID id1, 
-                         const Gaudi::LorentzVector c2 , const LHCb::CaloCellID id2){
+                         const Gaudi::LorentzVector c2 , const LHCb::CaloCellID id2,int nVert){
 
 
   std::string s1 = id1.areaName() ;
@@ -334,6 +354,9 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
   // theta bins
   int bth1 = int( c1.Theta() / m_thBin/pow(2,2-id1.area() ));
   int bth2 = int( c2.Theta() / m_thBin/pow(2,2-id2.area() ));
+
+  // spd bins
+  int spdslot = int( m_spdMult / m_spdBin);
   
   std::string sspd;
   if ( spd==0 ) sspd = "gg";
@@ -345,8 +368,34 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
   if( prs2 > 5)prs += 1;
 
   std::string sprs = "prs" + Gaudi::Utils::toString( prs );
-  
+
+
   Gaudi::LorentzVector di( c1+c2);
+
+  // pi0->gg versus nPV
+  if( spd == 0 ){
+    std::string sVert = "PV" + Gaudi::Utils::toString( nVert );
+    plot1D(di.mass(), base+"/"+sVert+"/all" , base+"/all  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+    double Y1 = m_calo->cellCenter( id1 ).Y();
+    double Y2 = m_calo->cellCenter( id2 ).Y();
+    if( abs(Y1)<300 && abs(Y2)<300)
+      plot1D(di.mass(), base+"/"+sVert+"/band" , base+"/band  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
+  }
+
+
+  // pi0->gg versus spdMult
+  if( spd == 0 ){
+    std::string sSpd = "Spd" + Gaudi::Utils::toString( spdslot*m_spdBin ); 
+    plot1D(di.mass(), base+"/"+sSpd+"/all" , base+"/all  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+    double Y1 = m_calo->cellCenter( id1 ).Y();
+    double Y2 = m_calo->cellCenter( id2 ).Y();
+    if( abs(Y1)<300 && abs(Y2)<300)
+      plot1D(di.mass(),base+"/"+sSpd+"/band",base+"/band  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
+  }
+
+
+  
+  // highPt selection
   if( spd == 0 && di.Pt() > 2000 && c1.Pt()>800 && c2.Pt() >800)
     plot1D(di.mass(), base+"/all_highPt_sel1" , base+"/all highPt  sel1 spd == 0" , m_hMin, m_hMax, m_hBin);
   if( spd == 0 &&  ((c1.Pt()>1050 && c2.Pt() >250) || (c2.Pt()>1050 && c1.Pt() >250)) )
@@ -395,13 +444,8 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
 
   
   std::string uuu = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/all";
-  std::string uuu1 = base +"/" + 
-    sarea +"/"+ sspd +"/" + sprs +
-    "/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2,2-id1.area()));
-  std::string uuu2 = base +"/" + 
-    sarea +"/"+ sspd +"/" + sprs +
-    "/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()));
-  
+  std::string uuu1 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth1 * m_thBin*pow(2,2-id1.area()));
+  std::string uuu2 = base +"/" + sarea +"/"+ sspd +"/" + sprs +"/Theta/b"+Gaudi::Utils::toString( (double) bth2 * m_thBin*pow(2,2-id2.area()));
   plot1D( di.mass(), uuu1 , uuu1 , m_hMin, m_hMax, m_hBin);
   if( uu2 != uu1) plot1D( di.mass(), uuu2,uuu2,m_hMin, m_hMax, m_hBin);
   plot1D( di.mass(), uuu , uuu , m_hMin, m_hMax, m_hBin);
