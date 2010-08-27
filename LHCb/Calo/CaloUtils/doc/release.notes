@@ -3,7 +3,7 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-! 2010-06-11 - O. Deschamps
+! 2010-08-27 - O. Deschamps
  - CaloAlgUtils :  new method ClusterFromHypo(CaloHypo*) return hypo->cluster with special care for SplitPhotons
 
 !========================== CaloUtils v8r13 2010-06-18 ========================
