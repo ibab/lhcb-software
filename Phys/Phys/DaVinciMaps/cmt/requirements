@@ -8,13 +8,14 @@ version           v1r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src Kernel
+branches          cmt doc src Kernel python
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   PhysEvent      v*    Event
 use   GaudiKernel    v*
+use   GaudiPython    v*
 #============================================================================
 apply_pattern install_more_includes more=Kernel
 #============================================================================
@@ -31,4 +32,6 @@ apply_pattern reflex_dictionary                                             \
               headerfiles=$(DAVINCIMAPSROOT)/dict/DaVinciMapsDict.h     \
               selectionfile=$(DAVINCIMAPSROOT)/dict/DaVinciMapsDict.xml \
               options="-U__MINGW32__"
-
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================
