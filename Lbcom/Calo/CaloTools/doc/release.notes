@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2010-08-27 - O. Deschamps
+ - new tool CaloHypoEstimator + update CaloHypo2Calo
+
 !========================== CaloTools v5r16p1 2010-06-21 =======================
 ! 2010-06-10 - Marco Cattaneo
  - Fix Windows compilation warnings

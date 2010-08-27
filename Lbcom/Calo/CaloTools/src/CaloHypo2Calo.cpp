@@ -9,6 +9,7 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // local
 #include "CaloHypo2Calo.h"
 
@@ -63,16 +64,9 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
 
   if ( msgLevel( MSG::DEBUG) ) debug() << "Matching CaloHypo to " << toCalo << " hypo energy = " << fromHypo.e() << endmsg;
 
-  LHCb::CaloHypo::Clusters clusters = fromHypo.clusters();    
+  // get the cluster 
+  const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( &fromHypo );
 
-  
-  // get the smallest cluster (i.e. for merged photons)
-  LHCb::CaloCluster* cluster = 0;
-  unsigned int minSize = 999999;
-  for(LHCb::CaloHypo::Clusters::iterator icl = clusters.begin();icl!=clusters.end();++icl){
-    if( (*(*icl)).entries().size() < minSize)cluster = *icl;
-  }
-  
   if(cluster == 0){
     Error("No valid cluster!").ignore() ;
     return m_cells;
