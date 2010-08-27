@@ -1,14 +1,14 @@
-$Id: release.notes,v 1.104 2010-08-27 14:26:32 gligorov Exp $
+$Id: release.notes,v 1.105 2010-08-27 14:50:27 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v4r4 2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Tighten PT cut in resolved Pi0 maker to 500 MeV.
 
-!========================== Hlt2SharedParticles v4r4 2010-08-26 ===================
 ! 2010-08-23 - Roel Aaij
  - Add a new track fitted detached J/psi
  - Widen J/psi mass window to 120 MeV in accordance with offline
