@@ -4,6 +4,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2010-08-27 - Olivier Deschamps
+ - new interface : ICaloHypoEstimator
+
 ! 2010-08-24 - Pere Mato
  - Added explicit [missing] dependency to Event/L0Event package. Only needed for the CMake tests. 
 
