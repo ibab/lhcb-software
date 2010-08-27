@@ -1,6 +1,8 @@
 // ============================================================================
 #ifndef CALOUTILS_CALOALGUTILS_H 
 #define CALOUTILS_CALOALGUTILS_H 1
+#include "Event/CaloHypo.h"
+#include "Event/CaloCluster.h"
 #include <string>
 #include <map>
 
@@ -56,6 +58,7 @@ namespace LHCb{
     std::string CaloHypoLocation( std::string type , std::string context="");
     std::string CaloIdLocation( std::string type, std::string context = "");
     std::vector<std::string> TrackLocations( std::string context="" );
+    const LHCb::CaloCluster*  ClusterFromHypo(const LHCb::CaloHypo* hypo,bool split=true);
   } // end of namespace CaloUtils
 }// end of namespace LHCb
 #endif // CALOUTILS_CALOALGUTILS_H

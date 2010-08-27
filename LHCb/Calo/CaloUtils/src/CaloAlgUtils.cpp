@@ -1,10 +1,9 @@
-#include "Event/CaloCluster.h"
-#include "Event/CaloHypo.h"
 #include "Event/ProtoParticle.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloDigit.h"
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloAlgUtils.h"
+#include "GaudiKernel/IRegistry.h"
 
 
 // Default location for CaloObject as function of detector and possibly context
@@ -136,3 +135,46 @@ std::vector<std::string>  LHCb::CaloAlgUtils::TrackLocations( std::string contex
   return locs;
 }
 
+const LHCb::CaloCluster*  LHCb::CaloAlgUtils::ClusterFromHypo(const LHCb::CaloHypo* hypo,bool split){
+  if( NULL == hypo)return NULL;
+
+  if( 1 == hypo->clusters().size() )return hypo->clusters().front(); // single hypo
+
+  const SmartRefVector<LHCb::CaloCluster>& clusters = hypo->clusters();
+  // split hypo
+  if( NULL != hypo->parent() && NULL != hypo->parent()->registry() ){
+    std::string hcont = hypo->parent()->registry()->identifier();
+    std::string uHcont = toUpper( hcont );
+    bool hsplit = ( std::string::npos != uHcont.find( "SPLIT" ) && 1 < hypo->clusters().size() ); // split hypo
+    if( !hsplit )return hypo->clusters().front(); // SHOULD NEVER OCCUR
+    SmartRef<LHCb::CaloCluster> cluster ;
+    for(LHCb::CaloHypo::Clusters::const_iterator icl =  clusters.begin();icl!= clusters.end();++icl){
+      if( NULL == *icl)continue;
+      std::string ccont = (*icl)->parent()->registry()->identifier();
+      std::string uCcont = toUpper( ccont );
+      if( split  &&  std::string::npos != uCcont.find( "SPLIT" ) )cluster = *icl;   // return splitCluster
+      else if( !split &&  std::string::npos == uCcont.find( "SPLIT" ) )cluster = *icl; // return mainCluster
+    }
+    return cluster;
+    
+  }else{ // unregistered caloHypo -> return the smallest/largest cluster according to getsplit
+    SmartRef<LHCb::CaloCluster> minCl ;
+    SmartRef<LHCb::CaloCluster> maxCl ;
+    unsigned int min = 999999;
+    unsigned int max = -999999;
+    for(LHCb::CaloHypo::Clusters::const_iterator icl = clusters.begin();icl!=clusters.end();++icl){
+      if( NULL == *icl)continue;
+      if( (*icl)->entries().size() < min){
+        minCl = *icl;
+        min = (*icl)->entries().size();
+      }
+      if( (*icl)->entries().size() > max){
+        maxCl = *icl;
+        max = (*icl)->entries().size();
+      }
+    }
+    return split ? minCl : maxCl;
+  }
+}
+
+  
