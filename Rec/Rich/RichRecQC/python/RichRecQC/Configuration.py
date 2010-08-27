@@ -22,7 +22,7 @@ from Configurables import ( GaudiSequencer, MessageSvc )
 #        pass
 # -------------------------------------------------------------------------------------------
 
-__all__ = [ "RichRecQCConf" ]
+#__all__ = [ "RichRecQCConf" ]
 
 ## @class RichRecQCConf
 #  High level Configuration tools for RICH Data Quality monitoring

@@ -110,7 +110,7 @@ StatusCode RecoQC::prebookHistograms()
       richHisto1D( HID("ckResAllStereoRefit",*rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                   "delta(Cherenov theta) / mrad" );
+                   "delta(Cherenkov theta) / mrad" );
       richHisto1D( HID("ckResAllStereoRefitIsolated",*rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
@@ -158,7 +158,7 @@ StatusCode RecoQC::prebookHistograms()
           title << "Rec-Exp Cktheta | All photons | Tile " << *tileID;
           richHisto1D( HID(id.str(),*rad), title.str(),
                        -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                       "delta(Cherenov theta) / mrad" );
+                       "delta(Cherenkov theta) / mrad" );
           id.str("");
           title.str("");
           id << "thetaRecTile" << *tileID;

@@ -33,5 +33,4 @@ apply_pattern component_library library=RichRecQC
 #============================================================================
 # Setup Python Configurables
 #============================================================================
-macro RichRecQCConfUserModules "RichRecQC.Alignment RichRecQC.Configuration"
 apply_pattern install_python_modules

@@ -4,7 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-08-27 - Chris Jones
+ - Remove Alignment Configurable reference from requirements file
+ - Fix a few more (missed last time) histogram labels in RichRecoQC
+
 !======================= RichRecQC v2r45 2010-08-25 ========================
+
 ! 2010-08-24 - Chris Jones
  - Comment out use of RichPIDQCConf, which I still cannot get to work properly
 
