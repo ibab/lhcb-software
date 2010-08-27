@@ -18,7 +18,7 @@ use   CLHEP       	v* 	LCG_Interfaces
 use   LoKiCore          v*      Phys
 use   DaVinciKernel     v*      Phys 
 use   TrackInterfaces   v*      Tr
-
+use   TrackKernel       v*      Tr
 
 apply_pattern install_more_includes more=DecayTreeFitter
 
