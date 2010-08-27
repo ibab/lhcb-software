@@ -418,6 +418,41 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         
     return seq
 
+
+
+def referencePIDs( dataType='' ) :
+
+    """
+    Define various reference Histograms on THS
+    """
+    hsvc = HistogramSvc ( 'HistogramDataSvc' )
+    inputs = hsvc.Input 
+    
+    # photon PDF default
+    pfound  = False   
+    for line in inputs : 
+        if 0 == line.find ( 'CaloNeutralPIDs') : pfound = True 
+
+    if pfound : 
+        log.info ("CaloPIDsConf: LUN 'CaloNeutralPIDs' has been defined already")  
+    else: 
+        hsvc.Input += [ "CaloNeutralPIDs DATAFILE='$PARAMFILESROOT/data/PhotonPdf.root' TYP='ROOT'" ] 
+
+
+    # charged PDF default 
+    found  = False   
+    for line in inputs : 
+        if 0 == line.find ( 'CaloPIDs') : found = True 
+        
+    if found : 
+        log.info ("CaloPIDsConf: LUN 'CaloPIDs' has been defined already") 
+    elif 'DC06' == dataType : 
+        hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'" ]
+    else: 
+        hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'" ] 
+
+    return
+
     
 # =============================================================================
 if '__main__' == __name__ :

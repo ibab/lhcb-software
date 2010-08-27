@@ -6,22 +6,21 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from LHCb
+#include "CaloInterfaces/ICaloHypoEstimator.h"
 #include "CaloUtils/CaloAlgUtils.h"
-#include "Event/Track.h"
-#include "CaloUtils/Calo2Track.h"
-#include "CaloInterfaces/ICaloHypo2Calo.h"
+#include "CaloUtils/ClusterFunctors.h"
+#include "boost/static_assert.hpp"
+#include "DetDesc/Condition.h"
 #include "Relations/Relation1D.h"
 #include "Relations/IRelationWeighted.h"
-#include "CaloUtils/ClusterFunctors.h"
-#include "CaloUtils/CaloMomentum.h"
-#include "boost/static_assert.hpp"
-
-#include "DetDesc/Condition.h"
-
+#include "CaloUtils/Calo2Track.h"
 // Histogramming 
 #include "TH2D.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include "AIDA/IHistogram2D.h"
+
+
+
 
 /** @class CaloPhotonIdAlg CaloPhotonIdAlg.h
  *  
@@ -58,13 +57,9 @@ private:
   inline double dLL(const double, const double, const double, const double,
                     const CaloPhotonIdAlg::TYPE, const int) ;
 
-  double evalChi2(const LHCb::CaloCluster*) const;
+  StatusCode evalParam(const LHCb::CaloHypo*, double &, double &, double &, int &, double &, unsigned int &) const;
 
-  StatusCode evalParam(const LHCb::CaloHypo*, double &, double &, double &, double &,
-      double &, unsigned int &) const;
-
-  double evalLikelihood(double, double, double, double, double, double,
-      unsigned int) ;
+  double evalLikelihood(double, double, double, int, double, double, unsigned int) ;
 
   TH2D *locateHistoOnDisk(std::string);
 
@@ -88,10 +83,7 @@ private:
 
   bool m_isRunnable;
 
-  // Relations 
-  std::string m_tableLocation;
   // 
-  ICaloHypo2Calo* m_toCalo;
 
   std::vector<std::string> m_inputs;
   std::string m_output;
@@ -101,6 +93,9 @@ private:
   std::string m_conditionName;
   Condition * m_cond;
 
+
+  ICaloHypoEstimator* m_estimator ;
+  
   // Photon Pdf
 
   std::string m_histo_path;

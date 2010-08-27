@@ -27,6 +27,7 @@ from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        hltContext     ,
                                        setTheProperty ) 
 from CaloPIDs.PIDs            import caloPIDs
+from CaloPIDs.PIDs            import referencePIDs
 
 # =============================================================================
 ## @class CaloPIDsConf
@@ -84,6 +85,10 @@ class CaloPIDsConf(LHCbConfigurableUser):
                          self.getProp('SkipNeutrals'),
                          self.getProp('SkipCharged')
                          ) 
+
+
+        referencePIDs( self.getProp("DataType" ) )
+
         log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
         ##
         return cmp 
@@ -119,38 +124,18 @@ class CaloPIDsConf(LHCbConfigurableUser):
             log.info ('Configure Calorimeter PIDs blocks ' )            
             log.info ( prntCmp ( pids ) )
             
-        # configure the histogram input: 
-        hsvc = HistogramSvc ( 'HistogramDataSvc' )
-        inputs = hsvc.Input
-
-        # photon PDF default
-        pfound  = False  
-        for line in inputs :
-            if 0 == line.find ( 'CaloNeutralPIDs') : pfound = True
-
-        if pfound :
-            log.info ("CaloPIDsConf: LUN 'CaloNeutralPIDs' has been defined already") 
-        else:
-            hsvc.Input += [ "CaloNeutralPIDs DATAFILE='$PARAMFILESROOT/data/PhotonPdf.root' TYP='ROOT'" ]
-
-
-        # charged PDF default
-        found  = False  
-        for line in inputs :
-            if 0 == line.find ( 'CaloPIDs') : found = True
-            
-        if found :
-            log.info ("CaloPIDsConf: LUN 'CaloPIDs' has been defined already") 
-        elif 'DC06' == self.getProp('DataType') :
-            hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'" ]
-        else:
-            hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'" ]
-
                     
         if self.getProp( 'EnablePIDsOnDemand')  :
             log.info ( printOnDemand () ) 
 
+
+            
         ##print ' ON-DEMAND ' , printOnDemand () 
+
+
+
+
+
 
 # =============================================================================
 ## @class HltCaloPIDsConf

@@ -10,6 +10,7 @@
 // local
 #include "CaloPhotonIdAlg.h"
 
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloPhotonIdAlg
 //
@@ -101,7 +102,6 @@ CaloPhotonIdAlg::CaloPhotonIdAlg(const std::string& name,
   declareProperty("Type", m_type = "PhotonID");
   declareProperty("Inputs", m_inputs); // CaloHypo location (default set in initialize)
   declareProperty("Output", m_output); // relation table output location (default set in initialize)
-  declareProperty("ClusterMatchLocation", m_tableLocation); // track-cluster table
 
   declareProperty("Tracking", m_tracking);
 
@@ -118,10 +118,6 @@ CaloPhotonIdAlg::CaloPhotonIdAlg(const std::string& name,
   declareProperty("UseCondDB", m_useCondDB = true,
       "get DLLs from CondDB or from a root file via THS");
   declareProperty("ConditionName", m_conditionName = "Conditions/ParticleID/Calo/PhotonID");
-
-  using namespace LHCb::CaloAlgUtils;
-  m_tableLocation = CaloIdLocation("ClusterMatch", context());
-
 }
 
 //=============================================================================
@@ -172,17 +168,17 @@ StatusCode CaloPhotonIdAlg::initialize() {
   } else if(m_type == "PhotonFromMergedID") {
     if(m_inputs.empty())m_inputs.push_back(CaloHypoLocation( "SplitPhotons"    , context() ) );
     if(""==m_output)m_output =  CaloIdLocation( "PhotonFromMergedID" , context() )  ;
-  }
+  }  
 
-  // Spd/Prs matching based on CaloHypo2Calo :
-  m_toCalo = tool<ICaloHypo2Calo> ("CaloHypo2Calo", "CaloHypo2Calo", this);
-  // Warning : the algorithm settings overwrite the tool settings
+  // Warning : the algorithm settings overwrite the caloHypo2Calo default settings
+  m_estimator = tool<ICaloHypoEstimator>("CaloHypoEstimator","CaloHypoEstimator",this);
   std::string seed = m_seed ? "true" : "false";
   std::string line = m_extrapol ? "true" : "false";
   std::string neig = m_neig ? "true" : "false";
-  m_toCalo->_setProperty("Seed", seed);
-  m_toCalo->_setProperty("PhotonLine", line);
-  m_toCalo->_setProperty("AddNeighbors", neig);
+  m_estimator->hypo2Calo()->_setProperty("Seed", seed).ignore();
+  m_estimator->hypo2Calo()->_setProperty("PhotonLine", line).ignore();
+  m_estimator->hypo2Calo()->_setProperty("AddNeighbors", neig).ignore();
+  m_estimator->_setProperty("SkipNeutralID","true").ignore(); // avoid recursive loop
 
   return StatusCode::SUCCESS;
 }
@@ -255,151 +251,50 @@ double CaloPhotonIdAlg::likelihood(const LHCb::CaloHypo* hypo) {
     return -999.;
   }
 
-  double energy, et, eSeed, eSpd, ePrs;
+  double energy, et, eSeed,  ePrs;
+  int nSpd;
   unsigned int area;
   
   double chi2 = -999.;
 
   // parameter evaluation
-  if (evalParam(hypo, 
-                energy, 
-                et, 
-                eSeed, 
-                eSpd, 
-                ePrs, 
-                area).isFailure()){
+  if (evalParam(hypo,energy,et,eSeed,nSpd,ePrs,area).isFailure())
     return -999.;
-  }
 
-
-  SmartRef<LHCb::CaloCluster> cluster;
+  // get chi2
   chi2=-999.;
-  if (m_tracking) {
-    if (1 > hypo->clusters().size()) {
-      if( m_type == "PhotonFromMergedID"){
-        cluster =  hypo->clusters().back(); // select the associated SplitCluster
-      }else{
-        if (msgLevel(MSG::DEBUG))
-          debug() << "Number of clusters != 1" << endmsg; // should never happen
-        return -999.;
-      } 
-    }else{      
-      cluster = hypo->clusters().front();
-    }
-    chi2 = evalChi2(cluster);
-  }
-  return evalLikelihood(energy, 
-                        et, 
-                        eSeed, 
-                        eSpd, 
-                        ePrs, 
-                        chi2, 
-                        area);
+  if (m_tracking) 
+    chi2 = m_estimator->data(hypo,CaloDataType::ClusterMatch, -999.);
+
+  // evaluate
+  return evalLikelihood(energy,et,eSeed,nSpd,ePrs,chi2,area);
 }
 
 
-//***********************************************************
-double CaloPhotonIdAlg::evalChi2(const LHCb::CaloCluster* cluster) const {
-  double chi2 = -999.;
-  if( NULL == cluster){
-    counter("Cluster point to null") += 1;
-    return chi2;  
-  }
-  
-  if (!exist<LHCb::Calo2Track::IClusTrTable> (m_tableLocation)) {
-    Warning("ClusterMatch table not found at " + m_tableLocation,
-        StatusCode::SUCCESS).ignore();
-    counter("ClusterMatch table not found " + m_tableLocation) += 1;
-    return chi2;
-  }
-  LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> (
-      m_tableLocation);
-  const LHCb::Calo2Track::IClusTrTable::Range range = table -> relations(
-      cluster);
-  if (range.empty()) {
-    chi2 = 1.e+6;
-  } // bad match -> large value !
-  else {
-    chi2 = range.front().weight();
-  }
-  return chi2;
-}
 
 //***********************************************************
 StatusCode CaloPhotonIdAlg::evalParam(const LHCb::CaloHypo* hypo, 
                                       double &energy,
                                       double &et, 
                                       double &eSeed, 
-                                      double &eSpd, 
+                                      int    &nSpd, 
                                       double &ePrs, 
                                       unsigned int &area) const {
-  
-  SmartRef<LHCb::CaloCluster> cluster ;
-  if (1 != hypo->clusters().size()) {
-    if( m_type == "PhotonFromMergedID")
-      cluster =  hypo->clusters().back(); // select the associated SplitCluster
-    else{
-        if (msgLevel(MSG::DEBUG))debug() << "Number of clusters != 1" << endmsg;
-        return StatusCode::FAILURE;
-    }
-  }else{
-    cluster = hypo->clusters().front();
-  }
 
-
-  if (0==cluster) {
-    Warning("Could not get hypo cluster.", StatusCode::SUCCESS).ignore();    
-    return StatusCode::FAILURE;    
-  }
-  
-
-  if (cluster->entries().empty()) {
-    Warning("Empty entries", StatusCode::SUCCESS).ignore();
-    counter("Empty entries") += 1;
-    return StatusCode::FAILURE;
-  }
-
-  LHCb::CaloCluster::Entries::const_iterator iseed =
-      LHCb::ClusterFunctors::locateDigit(cluster->entries().begin(),
-          cluster->entries().end(), LHCb::CaloDigitStatus::SeedCell);
-
-  if (iseed == cluster->entries().end()) {
-    Warning("Empty Entries", StatusCode::SUCCESS).ignore();
-    counter("Empty entries") += 1;
-    return StatusCode::FAILURE;
-  }
-
-  const LHCb::CaloDigit* seed = iseed->digit();
-  if (0 == seed) {
-    Warning("Seed point to NULL", StatusCode::SUCCESS).ignore();
-    counter("NULL seed") += 1;
-    return StatusCode::FAILURE;
-  }
-
-  //***
-  // Evaluate Estimator Parameters : Energy, EPrs, Chi2 and Eseed ...
-
-  // Et
-  LHCb::CaloMomentum mom(hypo);
-  energy = mom.e();
-  et = mom.pt();
-
-  // Seed energy
-  eSeed = energy > 0. ? (seed->e()) / energy : -1.;
-
-  // area
-  area = seed->cellID().area();
-
-  //Spd hit and Prs deposit
-  eSpd = m_toCalo->energy(*hypo, "Spd");
-  ePrs = m_toCalo->energy(*hypo, "Prs");
-
+  using namespace CaloDataType;
+  energy = m_estimator->data(hypo, HypoE);
+  et     = m_estimator->data(hypo, HypoEt);
+  eSeed  = m_estimator->data(hypo, E1Hypo) ;
+  nSpd   = m_estimator->data(hypo, ToSpdM);
+  ePrs   = m_estimator->data(hypo, ToPrsE);
+  area   = LHCb::CaloCellID(m_estimator->data(hypo, CellID)).area();
+  if( !m_estimator->status() )return StatusCode::FAILURE;
   return StatusCode::SUCCESS;
 }
 
 //***********************************************************
 double CaloPhotonIdAlg::evalLikelihood(double energy, double et, double eSeed,
-    double eSpd, double ePrs, double chi2, unsigned int area) {
+                                       int nSpd, double ePrs, double chi2, unsigned int area) {
 
   // Initialization
   double estimator;
@@ -410,7 +305,7 @@ double CaloPhotonIdAlg::evalLikelihood(double energy, double et, double eSeed,
   signal=epsilon;
   backgr=epsilon;
 
-  if (eSpd < 1.6) {
+  if (nSpd == 0) {
     signal = CaloPhotonIdAlg::dLL(energy, ePrs, chi2, eSeed,
         CaloPhotonIdAlg::SIGNAL, area);
     if (m_isRunnable){
@@ -446,14 +341,17 @@ double CaloPhotonIdAlg::evalLikelihood(double energy, double et, double eSeed,
     }
   }
 
+
+
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Photon Candidate :" << endmsg;
-    debug() << " -E       =" << energy << endmsg;
-    debug() << " -Et      =" << et << endmsg;
-    debug() << " -Spd hit =" << eSpd << endmsg;
-    debug() << " -EPrs    =" << ePrs << endmsg;
-    debug() << " -Chi2    =" << chi2 << endmsg;
-    debug() << " -ESeed   =" << eSeed << endmsg;
+    debug() << " -E         =" << energy <<endmsg;
+    debug() << " -Et        =" << et << endmsg;
+    debug() << " -#Spd hits =" << nSpd << endmsg;
+    debug() << " -EPrs      =" << ePrs << endmsg;
+    debug() << " -Chi2      =" << chi2 << endmsg;
+    debug() << " -ESeed     =" << eSeed << endmsg;
     if (m_dlnL)
       debug() << "      => DlnL     = " << estimator << endmsg;
     else

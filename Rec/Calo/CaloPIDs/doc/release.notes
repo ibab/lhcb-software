@@ -5,6 +5,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2010-08-27 - Olivier Deschamps
+  - python/PID.py : new class referencePDF() to feed HistogramDataSvc with default THS PDFs
+  - CaloPhotonIDAlg : simplify using the new CaloHypoEstimator tool
 
 !========================== CaloPIDs v5r7 2010-08-25 ========================
 ! 2010-08-17 - Olivier Deschamps
