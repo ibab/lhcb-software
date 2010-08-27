@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.83 2010-07-11 19:08:08 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.84 2010-08-27 13:48:25 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -97,7 +97,7 @@ DVAlgorithm::DVAlgorithm
   declareProperty("WriteP2PVRelations", m_writeP2PV, 
                   "Write out P->PV relations table to TES. Default: true");
 
-  declareProperty( "IngoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
+  declareProperty( "IgnoreP2PVFromInputLocations", m_ignoreP2PVFromInputLocations);
   
 
   // 
