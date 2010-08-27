@@ -170,18 +170,20 @@ bool ChargedProtoParticleAddEcalInfo::addEcal( LHCb::ProtoParticle * proto ) con
 
       // Get the highest weight associated electron CaloHypo (3D matching)
       hRange = m_elecTrTable ->relations ( proto->track() ) ;
-      if ( !hRange.empty() )
-      {
-        proto->addToCalo ( hRange.front().to() );
+      if ( !hRange.empty() ){
+
+        const LHCb::CaloHypo* hypo = hRange.front().to();
+        proto->addToCalo ( hypo );
         // CaloElectron->caloTrajectory must be after addToCalo
-        if ( electronTool()->set(proto) )
-        {
-          proto->addInfo( LHCb::ProtoParticle::CaloTrajectoryL,
-                          electronTool()->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
+        if ( electronTool()->set(proto) ){
+          proto->addInfo( LHCb::ProtoParticle::CaloTrajectoryL, electronTool()->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
         }
-        proto->addInfo(LHCb::ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
-        proto->addInfo(LHCb::ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
-        proto->addInfo(LHCb::ProtoParticle::CaloChargedEcal, CaloEcal( hRange.front().to() ));
+
+        using namespace CaloDataType;
+        proto->addInfo(LHCb::ProtoParticle::CaloChargedSpd,  m_estimator->data(hypo, HypoSpdM ) > 0 );
+        proto->addInfo(LHCb::ProtoParticle::CaloChargedPrs,  m_estimator->data(hypo, HypoPrsE )   );
+        proto->addInfo(LHCb::ProtoParticle::CaloChargedEcal, m_estimator->data(hypo, ClusterE )  );
+        proto->addInfo(LHCb::ProtoParticle::CaloChargedID       ,  m_estimator->data(hypo, CellID )  );
         proto->addInfo(LHCb::ProtoParticle::CaloElectronMatch , hRange.front().weight() );
       }
 

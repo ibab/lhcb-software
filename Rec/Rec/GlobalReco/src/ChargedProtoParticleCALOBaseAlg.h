@@ -31,6 +31,7 @@
 // Relations
 #include "Relations/IRelation.h"
 #include "Relations/IRelationWeighted2D.h"
+#include "CaloInterfaces/ICaloHypoEstimator.h"
 
 /** @class ChargedProtoParticleCALOBaseAlg ChargedProtoParticleCALOBaseAlg.h
  *
@@ -75,9 +76,7 @@ protected:
   }
 
   // Add extra info from CaloDigits (Spd+Prs)
-  double CaloSpd  ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Spd value
-  double CaloPrs  ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Prs value
-  double CaloEcal ( const LHCb::CaloHypo* hypo ) const ; ///< Returns Calo Ecal value
+  ICaloHypoEstimator* m_estimator ;
 
 private:
 

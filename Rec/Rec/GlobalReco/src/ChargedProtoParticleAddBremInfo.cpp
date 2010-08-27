@@ -138,13 +138,17 @@ bool ChargedProtoParticleAddBremInfo::addBrem( LHCb::ProtoParticle * proto ) con
 
       // Get the highest weight associated brem. CaloHypo (3D matching)
       hRange = m_bremTrTable ->relations ( proto->track() ) ;
-      if ( !hRange.empty() )
-      {
-        proto->addToCalo ( hRange.front().to() );
-        proto->addInfo(LHCb::ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
-        proto->addInfo(LHCb::ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
-        proto->addInfo(LHCb::ProtoParticle::CaloNeutralEcal, CaloEcal( hRange.front().to() ));
-        proto->addInfo(LHCb::ProtoParticle::CaloBremMatch , hRange.front().weight() );
+      if ( !hRange.empty() ){
+        const LHCb::CaloHypo* hypo = hRange.front().to();
+        proto->addToCalo ( hypo );
+        using namespace CaloDataType;
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralSpd, m_estimator->data(hypo, HypoSpdM ) > 0 );
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralPrs, m_estimator->data(hypo, HypoPrsE )  );
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralEcal, m_estimator->data(hypo, ClusterE )  );
+        proto->addInfo(LHCb::ProtoParticle::CaloBremMatch , m_estimator->data(hypo, BremMatch ) );
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralID ,  m_estimator->data(hypo, CellID )  );
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralHcal2Ecal  ,  m_estimator->data(hypo, Hcal2Ecal )  );
+        proto->addInfo(LHCb::ProtoParticle::CaloNeutralE49        ,  m_estimator->data(hypo, E49 )  );
       }
 
       // Get the BremChi2 (intermediate) estimator

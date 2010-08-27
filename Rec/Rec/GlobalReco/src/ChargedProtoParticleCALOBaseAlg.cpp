@@ -46,6 +46,9 @@ StatusCode ChargedProtoParticleCALOBaseAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
+
+  m_estimator = tool<ICaloHypoEstimator>("CaloHypoEstimator","CaloHypoEstimator",this);
+
   return sc;
 }
 
@@ -67,36 +70,3 @@ StatusCode ChargedProtoParticleCALOBaseAlg::execute()
 }
 //=============================================================================
 
-double ChargedProtoParticleCALOBaseAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
-{
-  if ( NULL == hypo ) return 0;
-  LHCb::CaloHypo::Digits digits = hypo->digits();
-  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
-  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
-  return ( it == digits.begin() ) ? 0. : +1.;
-}
-
-double ChargedProtoParticleCALOBaseAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
-{
-  if ( NULL == hypo) return 0;
-  LHCb::CaloHypo::Digits digits = hypo->digits();
-  LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
-  LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
-  double CaloPrs = 0. ;
-  for ( LHCb::CaloHypo::Digits::iterator id = digits.begin(); id != it ; ++id )
-  {
-    if (0 != *id) CaloPrs += (*id)->e();
-  }
-  return CaloPrs  ;
-}
-
-double ChargedProtoParticleCALOBaseAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
-{
-  if ( NULL == hypo) return 0;
-  SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
-  if ( clusters.empty() ) return 0.;
-  SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
-  LHCb::CaloCluster* cluster = *icluster;
-  if ( NULL == cluster) return 0;
-  return cluster->e();
-}

@@ -5,17 +5,12 @@
 // ============================================================================
 // Include files
 // ============================================================================
-#include "Relations/IRelationWeighted.h"
-#include "Relations/IRelation.h"
 // Event
-#include "Event/Track.h"
 #include "Event/CaloHypo.h"
-#include "Event/CaloCluster.h"
 #include "Event/ProtoParticle.h"
 // Calo
-#include "CaloUtils/ClusterFunctors.h"
 #include "CaloUtils/CaloAlgUtils.h"
-#include "CaloInterfaces/ICaloHypo2Calo.h"
+#include "CaloInterfaces/ICaloHypoEstimator.h"
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 /** @class NeutralProtoPAlg NeutralProtoPAlg.h
@@ -65,37 +60,20 @@ protected:
   /// use"light" mode? ( suitable fo recalibration purposes)
   inline bool lightMode() const { return m_light_mode ; }
 private:// method  
-  double caloTrMatch   ( const LHCb::CaloHypo*  hypo  , const LHCb::Calo2Track::IClusTrTable*     table )  const ;
-  double clusterMass   ( const LHCb::CaloHypo*  hypo  )  const ;
-  double showerShape   ( const LHCb::CaloHypo*  hypo  )  const ;
-  double caloDepositID ( const LHCb::CaloHypo*  hypo  )  const ;
-  double neutralID     ( const LHCb::CaloHypo*  hypo  , const LHCb::Calo2Track::IHypoEvalTable* table )  const ;
-  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ;
-  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
-  double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ;
 
 private:// data
   // ==========================================================================
   std::string               m_protoLocation     ;
   std::vector<std::string>  m_hyposLocations    ;
-  std::string               m_matchLocation     ;
   double                    m_caloTrMatch_bad   ;
   double                    m_caloDepositID_bad ;
   double                    m_showerShape_bad   ;
   double                    m_clusterMass_bad   ;
   double                    m_photonID_bad      ;
-  LHCb::ClusterFunctors::ClusterFromCalo         m_calo        ;  
-  ICaloHypo2Calo* m_toCalo;
-  std::map<std::string,std::string> m_pidLocations;
-  std::map<std::string,LHCb::Calo2Track::IHypoEvalTable*> m_idTable;
   /// flag to indicate "light/calibration" mode 
   bool  m_light_mode ;
   bool  m_first;
-  // ==========================================================================
+  ICaloHypoEstimator* m_estimator ;
 };
-// ============================================================================
-// The END 
-// ============================================================================
 #endif // GLOBALRECO_NEUTRALPROTOPALG_H
-// ============================================================================
 
