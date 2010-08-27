@@ -21,16 +21,23 @@ namespace DaVinci{
      *  @author Juan Palacios
      *  @date   2010-08-25
      */
-    class Particle2VertexBase : public DataObject, public  GaudiUtils::VectorMap<SmartRef<LHCb::Particle>, 
-                                                                                 SmartRef<LHCb::VertexBase> >
+    class Particle2VertexBase : public DataObject 
     {
 
     public:
-
-      typedef GaudiUtils::VectorMap<SmartRef<LHCb::Particle>, 
-                                    SmartRef<LHCb::VertexBase> > Map;
+      typedef  GaudiUtils::VectorMap<SmartRef<LHCb::Particle>, 
+                                     SmartRef<LHCb::VertexBase> > Map;
+      typedef Map::iterator iterator;
+      typedef Map::const_iterator const_iterator;
+      typedef Map::reverse_iterator reverse_iterator;
+      typedef Map::const_reverse_iterator const_reverse_iterator;
+      //      typedef Map::mapped_type mapped_type;
       typedef const LHCb::VertexBase* mapped_type;
+      typedef Map::result_type result_type;
+      typedef Map::value_type value_type;
+      typedef Map::size_type size_type;
       typedef const LHCb::Particle* key_type;
+  
 
     public: 
       /// Standard constructor
@@ -56,30 +63,79 @@ namespace DaVinci{
 
       inline iterator find(const LHCb::Particle* key) const
       {
-        return this->find(key);
+        return m_map.find(key);
       }
 
       inline mapped_type operator()(const LHCb::Particle* key) const
       {
-        return this->operator()(key);
+        return m_map(key);
       }
   
       inline mapped_type operator[](const LHCb::Particle* key) const
       {
-        return this->operator[](key);    
+        return m_map[key];    
       }
 
       inline mapped_type at(const LHCb::Particle* key) const
       {
-        return this->at(key); 
+        return m_map.at(key); 
+      }
+
+      inline size_type count(const LHCb::Particle* key) const 
+      {
+        return m_map.count(key);
       }
 
       inline result_type insert(const LHCb::Particle* key,
-                                mapped_type mapped) 
+                                Map::mapped_type mapped) 
       {
-        return this->insert(key, mapped);
+        return m_map.insert(key, mapped);
       }
   
+      inline iterator begin  () const 
+      {
+        return m_map.begin  () ;
+      }
+  
+      inline iterator end() const 
+      {
+        return m_map.end    () ;
+      }
+
+      inline reverse_iterator rbegin  () const
+      {
+        
+        return m_map.rbegin  () ;
+    
+      }
+
+      inline reverse_iterator rend() const
+      { 
+        return m_map.rend    () ; 
+      }
+  
+      inline size_type size() const
+      {
+        return m_map.size();
+      }
+  
+      inline bool empty() const 
+      {
+        return m_map.empty();
+      }
+  
+      inline key_type key_at(const size_t index) const 
+      {
+        return m_map.key_at(index);
+      }
+
+      inline mapped_type value_at(const size_t index) const 
+      {
+        return m_map.value_at(index);
+      }
+
+    private :
+      Map m_map;
 
     };
 

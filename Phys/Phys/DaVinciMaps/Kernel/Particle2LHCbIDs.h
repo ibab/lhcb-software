@@ -34,6 +34,7 @@ namespace DaVinci{
       typedef Map::mapped_type mapped_type;
       typedef Map::result_type result_type;
       typedef Map::value_type value_type;
+      typedef Map::size_type size_type;
       typedef const LHCb::Particle* key_type;
   
 
@@ -76,7 +77,12 @@ namespace DaVinci{
 
       inline const mapped_type& at(const LHCb::Particle* key) const
       {
-        return m_map(key); 
+        return m_map.at(key); 
+      }
+
+      inline size_type count(const key_type key) const 
+      {
+        return m_map.count(key);
       }
 
       inline result_type insert(const LHCb::Particle* key,
@@ -97,18 +103,15 @@ namespace DaVinci{
 
       inline reverse_iterator rbegin  () const
       {
-        
-        return m_map.rbegin  () ;
-    
+        return m_map.rbegin  () ;    
       }
-  
 
       inline reverse_iterator rend() const
       { 
         return m_map.rend    () ; 
       }
   
-      inline size_t size() const
+      inline size_type size() const
       {
         return m_map.size();
       }
@@ -117,7 +120,16 @@ namespace DaVinci{
       {
         return m_map.empty();
       }
-  
+
+      inline key_type key_at(const size_t index) const 
+      {
+        return m_map.key_at(index);
+      }
+
+      inline const mapped_type& value_at(const size_t index) const 
+      {
+        return m_map.value_at(index);
+      }
 
     private :
       Map m_map;
