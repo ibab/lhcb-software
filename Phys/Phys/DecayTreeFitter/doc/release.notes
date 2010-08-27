@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-08-27 - Wouter Hulsbergen
+
+ - added missing dependency to requirements file
+
 !======================= DecayTreeFitter v1r10 2010-08-25 ====================
 
 ! 2010-08-23 - Wouter Hulsbergen
