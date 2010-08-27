@@ -68,6 +68,7 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , m_nameOfSplitClusters ( LHCb::CaloClusterLocation:: EcalSplit     )
   , m_toolTypeNames       ()
   , m_tools               ()
+  , m_pi0tools               ()
   , TrShOut_nospd ()
   , TrShMid_nospd ()
   , TrShInn_nospd ()
@@ -87,6 +88,7 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "SplitClusters"          , m_nameOfSplitClusters ) ;
   // tool to be apllyed to all hypos 
   declareProperty ( "Tools"                 , m_toolTypeNames       ) ;
+  declareProperty ( "Pi0Tools"              , m_pi0toolTypeNames       ) ;
   // Transv. shape parametrization
   declareProperty ( "TrShOut_nospd"         , TrShOut_nospd ) ;
   declareProperty ( "TrShMid_nospd"         , TrShMid_nospd ) ;
@@ -148,12 +150,15 @@ StatusCode CaloMergedPi0Alg::initialize()
   if(m_createClusterOnly)info() << "only SplitClusters to be produced" << endmsg;
   
   // locate tools
-  for ( Names::const_iterator it = m_toolTypeNames.begin() ;
-        m_toolTypeNames.end() != it ; ++it )
-  {
+  for ( Names::const_iterator it = m_toolTypeNames.begin() ;m_toolTypeNames.end() != it ; ++it ){
     ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this );
     if( 0 == t ) { return StatusCode::FAILURE ; }
     m_tools.push_back( t ) ;
+  }
+  for ( Names::const_iterator it = m_pi0toolTypeNames.begin() ;m_pi0toolTypeNames.end() != it ; ++it ){
+    ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this );
+    if( 0 == t ) { return StatusCode::FAILURE ; }
+    m_pi0tools.push_back( t ) ;
   }
   
   // check vectors of parameters 
@@ -183,6 +188,7 @@ StatusCode CaloMergedPi0Alg::initialize()
 StatusCode CaloMergedPi0Alg::finalize() 
 {  
   m_tools.clear() ;
+  m_pi0tools.clear() ;
   /// finalize the base class 
   return GaudiAlgorithm::finalize();
 };
@@ -1024,26 +1030,35 @@ StatusCode CaloMergedPi0Alg::execute()
         
         { // Apply the tool 
           if ( msgLevel ( MSG::DEBUG ) ){ 
-            debug() << "Apply hypo tools ("<< m_tools.size() << ")" << endmsg;
+            debug() << "Apply hypo tools on splitPhotons ("<< m_tools.size() << ")" << endmsg;
+            debug() << "Apply hypo tools on MergedPi0s ("<< m_pi0tools.size() << ")" << endmsg;
           }
           
           int i = 0;
           for( Tools::iterator it = m_tools.begin() ; m_tools.end() != it ; ++it ){
             i++;
-            if ( msgLevel ( MSG::DEBUG ) ){ 
-              debug() << " apply tool " << i << "/" << m_tools.size() << endmsg;
-            }
-            
+            if ( msgLevel ( MSG::DEBUG ) )debug() << " apply SplitPhoton tool " << i << "/" << m_tools.size() << endmsg;
             ICaloHypoTool* t = *it ;
             if( 0 == t ) { continue; } 
             StatusCode sc         = StatusCode::SUCCESS ;
             sc                    = (*t) ( g1 ) ;
-            if( sc.isFailure() )
-            { Error("Error from 'Tool' for g1 " , sc ).ignore() ; }
+            if( sc.isFailure() ) Error("Error from 'Tool' for g1 " , sc ).ignore() ; 
             sc                    = (*t) ( g2 ) ;          
-            if( sc.isFailure() ) 
-            { Error("Error from 'Tool' for g2 " , sc ).ignore() ; }
+            if( sc.isFailure() )Error("Error from 'Tool' for g2 " , sc ).ignore() ; 
           }
+          i = 0;
+          for( Tools::iterator it = m_pi0tools.begin() ; m_pi0tools.end() != it ; ++it ){
+            i++;
+            if ( msgLevel ( MSG::DEBUG ) )debug() << " apply MergedPi0 tool " << i << "/" << m_pi0tools.size() << endmsg;
+            ICaloHypoTool* t = *it ;
+            if( 0 == t ) { continue; } 
+            StatusCode sc         = StatusCode::SUCCESS ;
+            sc                    = (*t) ( pi0 ) ;
+            if( sc.isFailure() )Error("Error from 'Tool' for pi0 " , sc ).ignore() ; 
+          }
+
+
+
         } 
       }
     } //End of "good" MergedPi0 condition      

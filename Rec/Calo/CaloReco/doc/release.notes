@@ -6,6 +6,8 @@
 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-27 - Olivier Deschamps
+ - CaloMergedPi0Alg : add extraDigit tool to both mergedPi0 and splitPhotons + update python/Reconstruction.py (and old style options)
 
 !========================== CaloReco v5r6  2010-06-01 =======================
 ! 2010-08-17 - Olivier Deschamps

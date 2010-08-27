@@ -341,8 +341,6 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
 
 
-
-
     # temporary : will be from condDB
     pi0.PropertiesPrint = False
     pi0.TrShOut_nospd = [ -0.0060,  2.4956,115.0827,  9.8842,  0.0320,  2.0982,  1.0302,  0.0409,  0.0030, -9.6135 ]
@@ -373,30 +371,32 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         return sseq
 
     ## MergedPi0 sequence
-    addAlgs ( seq , pi0 ) 
 
     ## 2/ SplitPhotons
-    splitg = getAlgo ( CaloHypoAlg , 'PhotonFromMergedRec' , context )    
-    splitg.HypoType = "SplitPhotons";
-    splitg.PropertiesPrint = False   
+#    splitg = getAlgo ( CaloHypoAlg , 'PhotonFromMergedRec' , context )    
+#    splitg.HypoType = "SplitPhotons";
+#    splitg.PropertiesPrint = False   
     
     ## Add Prs/Spd digits
-    splitg.addTool ( CaloExtraDigits , 'SpdExtraG' )
+    pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraS' )
+    pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraM' )
     ## correction tools
-    splitg.addTool ( CaloECorrection , 'ECorrection' )
-    splitg.addTool ( CaloSCorrection , 'SCorrection' )
-    splitg.addTool ( CaloLCorrection , 'LCorrection' )
-    ecorr = splitg.ECorrection
-    scorr = splitg.SCorrection
-    lcorr = splitg.LCorrection
+    pi0.addTool ( CaloECorrection , 'ECorrection' )
+    pi0.addTool ( CaloSCorrection , 'SCorrection' )
+    pi0.addTool ( CaloLCorrection , 'LCorrection' )
+    ecorr = pi0.ECorrection
+    scorr = pi0.SCorrection
+    lcorr = pi0.LCorrection
     
     ## temporary : will be from condDB
     from Corrections import eCorrection, sCorrection, lCorrection
     ecorr = eCorrection ( ecorr )
     scorr = sCorrection ( scorr )
     lcorr = lCorrection ( lcorr )
-    splitg.Tools = [ splitg.SpdExtraG , ecorr , scorr , lcorr ]
-    addAlgs ( seq , splitg ) 
+    pi0.Tools = [ pi0.SpdPrsExtraS , ecorr , scorr , lcorr ]
+    pi0.Pi0Tools = [ pi0.SpdPrsExtraM ]
+    addAlgs ( seq , pi0 ) 
+#    addAlgs ( seq , splitg ) 
     
     ## 3/ (PhotonFrom)MergedID
     if neutralID : 

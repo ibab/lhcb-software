@@ -364,6 +364,7 @@ class CaloProcessor( CaloRecoConf ):
         'ProtoSequencer'      : None,
         'NeutralProtoSequencer'  : None,
         'ChargedProtoSequencer'  : None,
+        'DataType'               : 'MC09',
         'PIDList'            : ['InAcceptance',
                                   'Match',
                                   'Energy',
@@ -384,6 +385,8 @@ class CaloProcessor( CaloRecoConf ):
     def caloPIDs ( self ) :
 
         from CaloPIDs.PIDs import caloPIDs
+        from CaloPIDs.PIDs import referencePIDs
+
 
         ## confuse configurable on purpose 
         _locs = self.getProp ( 'TrackLocations'    )
@@ -403,7 +406,8 @@ class CaloProcessor( CaloRecoConf ):
                          self.getProp('SkipCharged'),
                          self.getName()
                          ) 
-        
+        referencePIDs( self.getProp('DataType') )
+       
         log.info ('Configured Calo PIDs           : %s ' % cmp.name()  ) 
         ##
         return cmp 

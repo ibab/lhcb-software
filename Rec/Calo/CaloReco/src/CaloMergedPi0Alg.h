@@ -135,6 +135,8 @@ private:
   typedef std::vector<ICaloHypoTool*>  Tools ;
   Names        m_toolTypeNames               ;
   Tools        m_tools                       ;
+  Names        m_pi0toolTypeNames               ;
+  Tools        m_pi0tools                       ;
   
   // Input Parameters
   typedef std::vector<double>    Parameters  ;

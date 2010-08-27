@@ -3,3 +3,4 @@ PhotonFromMergedRec.HypoType = "SplitPhotons";
 PhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrection
 PhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
 PhotonFromMergedRec.Tools    += { "CaloLCorrection/LCorrection" };   // Lcorrection
+PhotonFromMergedRec.Tools    += { "CaloExtraDigits/SpdPrsExtraS" };   // ExtraDigits
