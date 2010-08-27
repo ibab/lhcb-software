@@ -41,8 +41,8 @@ macro singleq '"'
 pattern generateShellLogin \
    macro generate_<shell>_Login_output "../scripts/LbLogin.<shell>" \
                                  WIN32 "..\scripts\LbLogin.<shell>" ; \
-   macro generate_<shell>_Login_command "python -W ignore::DeprecationWarning ../scripts/generateLogin" \
-                                  WIN32 "python -W ignore::DeprecationWarning ..\scripts\generateLogin" ; \ 
+   macro generate_<shell>_Login_command "python ../scripts/generateLogin" \
+                                  WIN32 "python ..\scripts\generateLogin" ; \ 
    macro_append generate_<shell>_Login_command " --build --login-version=$(singleq)$(version)$(singleq)" ; \
    macro_append generate_<shell>_Login_command " $(Lblogin_script_location)" ; \
    macro_append generate_<shell>_Login_command " $(generate_<shell>_Login_output)" ; \   
