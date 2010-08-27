@@ -6,6 +6,13 @@
 
 !======================== DaVinciMaps v1r1 2010-08-26 ========================
 
+! 2010-08-27 - Juan Palacios
+ - Revert changes to DaVinci::Map::Particle2VertexBase.
+ - Add methods key_at, value_at, count to all maps.
+ - add python module DaVinciMaps.Pythonizations to add python dict-like
+   methods to Davinci::Map classes. useage:
+   >>> import DaVinciMaps.
+
 ! 2010-08-26 - Juan Palacios
  - DaVinci::Map::Particle2VertexBase inherits from GaudiUtils::VectorMap,
    enhances interface.
