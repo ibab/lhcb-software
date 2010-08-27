@@ -30,6 +30,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'PhiVCHI2'            : 25       # dimensionless
                    ,'KstVCHI2'            : 16       # dimensionless
                    ,'TrChi2'              : 10.       # dimensionless
+                   ,'HLT1FILTER'         : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
                    ,'Prescale'           : {'Hlt2Bs2PhiGamma$'          : 1.0
                                             ,'Hlt2Bs2PhiGamma.+'        : 0.1       # prescale by a factor of 10
                                             ,'Hlt2Bd2KstGamma$'         : 1.0
@@ -66,7 +67,9 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import  BiKalmanFittedKaons, BiKalmanFittedPions
       
-      
+        hltfilter = self.getProp("HLT1FILTER")
+        if hltfilter == "" : hltfilter = None
+ 
         ############################################################################
         #    Make Phi and Kstar candidates
         ############################################################################
@@ -134,6 +137,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('Bs2PhiGamma'
                         , prescale = self.prescale
+                        , HLT = hltfilter
                         , algos = [ BiKalmanFittedKaons, 
                                     PV3D(),
                                     Hlt2Phi4PhiGamma, 
@@ -180,6 +184,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line('Bd2KstGamma'
                         , prescale = self.prescale
+                        , HLT = hltfilter
                         , algos = [ BiKalmanFittedKaons,
                                     BiKalmanFittedPions,
                                     PV3D(),

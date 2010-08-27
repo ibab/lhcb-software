@@ -7,6 +7,10 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-08-27 - V. Gligorov
+ - Allow XGamma, PiPiPi0 lines to be linked to an HLT1 line
+   (default photon|electron) from a slot.
+
 !========================== Hlt2Lines v5r0 2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Add Track Chi2 cuts to XGamma lines, default 10.

@@ -29,6 +29,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
                     ,'BMinDIRA_R'           : 0.9999    # unitless
                     ,'BMinVVDChi2_M'        : 64        # unitless
                     ,'BMinVVDChi2_R'        : 100       # unitless
+                    ,'HLT1FILTER'           : "HLT_PASS_RE('Hlt1.*(Photon|Electron).*Decision')"
                     ,'Prescale'           : {   'Hlt2B2HHPi0_Merged'         : 1.0
                                               , 'Hlt2B2HHPi0_Resolved'       : 1.0
                                                 }
@@ -50,7 +51,10 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
         from Hlt2SharedParticles.Pi0 import MergedPi0s,ResolvedPi0s
         from HltTracking.HltPVs import PV3D
-        
+       
+        hltfilter = self.getProp("HLT1FILTER")
+        if hltfilter == "" : hltfilter = None
+ 
        ###########################################################################
         Hlt2Rho4HHPi0_M = Hlt2Member(
             CombineParticles , "CombineRho"
@@ -95,6 +99,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         ############################################################################
         line = Hlt2Line('B2HHPi0_Merged'
                         , prescale = self.prescale
+                        , HLT = hltfilter
                         , algos = [ BiKalmanFittedPions, PV3D(), Hlt2Rho4HHPi0_M, MergedPi0s, Hlt2B2HHPi0 ]
                         , postscale = self.postscale
                         )
