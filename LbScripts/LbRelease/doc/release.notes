@@ -1,3 +1,7 @@
+2010-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/copyLCG: fixed copy of AA projects' includes, and ROOT, plus minor fixes
+
 2010-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/copyLCG: (new) script to copy AFS LCG software into a local installation

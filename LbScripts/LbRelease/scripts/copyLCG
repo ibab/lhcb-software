@@ -60,7 +60,7 @@ def get_projects(ver, afs_lcg = None, mysiteroot = None, use_cache = False):
 
     if use_cache:
         from hashlib import md5
-        cache_name = "copy_lcgcmt.cache.%s" % md5(str(ver) + os.environ["CMTCONFIG"] + afs_lcg + mysiteroot).hexdigest()
+        cache_name = "copyLCG.cache.%s" % md5(str(ver) + os.environ["CMTCONFIG"] + afs_lcg + mysiteroot).hexdigest()
         if os.path.exists(cache_name):
             log.info("Using cache %s", cache_name)
             return eval(open(cache_name).read())
@@ -93,14 +93,9 @@ def get_projects(ver, afs_lcg = None, mysiteroot = None, use_cache = False):
     log.debug("projects -> %r", project_names)
     # get the two homes for each project (note: use always the package in AFS)
     def project_home(env, project):
-        from os.path import basename, dirname
         macro_value = Popen(["cmt", "show", "macro_value", "%s_home" % project],
                             stdout = PIPE, cwd = lcg_rel_cmt(afs_env, ver), env = env).communicate()[0].strip()
-        path = os.path.normpath(macro_value)
-        if env["CMTCONFIG"] in path:
-            while basename(path) != env["CMTCONFIG"]:
-                path = dirname(path)
-        return path
+        return os.path.normpath(macro_value)
     projects = {}
     for p in project_names:
         log.info("getting directories of '%s'", p)
@@ -157,21 +152,39 @@ def copy_project(src, dst, ignore_missing = True, force = True):
     @param force: if True the already existing destination files are overwritten
     """
     log = logging.getLogger("copy_project")
-    from os.path import dirname, exists, join
+    from os.path import dirname, exists, join, basename
     if src == dst:
         log.warning("Requested to copy '%s' on itself", src)
         return
-    proj_dir = dirname(dst)
-    if (not ignore_missing) or exists(dirname(proj_dir)):
-        if exists(src):
-            recursive_copy(src, dst, force = force)
-            # treat independently the optional include directory
-            src_inc = join(dirname(dirname(src)), "include")
-            if exists(src_inc):
-                dst_inc = join(dirname(proj_dir), "include")
-                recursive_copy(src_inc, dst_inc, force = force)
+    if not exists(src):
+        log.warning("'%s' not found", src)
+        return
+    if ignore_missing:
+        # Check if the project is already in the destination (may be in a different version)
+        # We have 4 cases:
+        # lcg/external/sqlite/3.6.22/$CMTCONFIG
+        # lcg/external/AIDA/3.2.1/share
+        # lcg/app/releases/COOL/COOL_2_8_7/$CMTCONFIG
+        # lcg/app/releases/ROOT/5.27.00c/$CMTCONFIG/root
+
+        # Drop all levels below the CMTCONFIG dir
+        proj_dir = dst
+        if os.environ["CMTCONFIG"] in proj_dir:
+            while basename(proj_dir) != os.environ["CMTCONFIG"]:
+                proj_dir = dirname(proj_dir)
+        # Drop the CMTCONFIG (or the platform directory like "share")
+        proj_dir = dirname(proj_dir)
+        requested = exists(dirname(proj_dir))
     else:
-            log.warning("ignoring missing '%s'", src)
+        requested = True
+    if requested:
+        recursive_copy(src, dst, force = force)
+        # Treat independently the optional include directory, like
+        # lcg/app/releases/COOL/COOL_2_8_7/include
+        src_inc = join(dirname(src), "include")
+        if exists(src_inc):
+            dst_inc = join(proj_dir, "include")
+            recursive_copy(src_inc, dst_inc, force = force)
 
 #def copy_project(src, dst, force):
 #    print src, "->", dst
