@@ -34,12 +34,14 @@ const CLID& DaVinci::Map::Particle2VertexBase::classID()
 DaVinci::Map::Particle2VertexBase::Particle2VertexBase(  ) 
   :
   DataObject(),
-  Map()
+  m_map()
 {
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 DaVinci::Map::Particle2VertexBase::~Particle2VertexBase() {
+  m_map.clear();
 }
 //=============================================================================
