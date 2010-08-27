@@ -19,7 +19,7 @@ Hlt2ResolvedPi0s.DecayDescriptor 	= "Pi0"
 Hlt2ResolvedPi0s.addTool(PhotonMaker)
 Hlt2ResolvedPi0s.PhotonMaker.Input 	= neutralProtos.outputSelection() 
 Hlt2ResolvedPi0s.MassWindow 		= 30.* MeV
-Hlt2ResolvedPi0s.PhotonMaker.PtCut 	= 500.*MeV
+Hlt2ResolvedPi0s.PhotonMaker.PtCut 	= 200.*MeV
 ##########################################################################
 # Make the pi0
 #
