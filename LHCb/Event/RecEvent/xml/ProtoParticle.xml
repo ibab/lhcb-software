@@ -65,14 +65,16 @@
         <enumval name="CaloChargedSpd"     value="313"  desc="Spd Digits (0,1) associated to CaloHypo (charged)"/>
         <enumval name="CaloChargedPrs"     value="314"  desc="Prs Digits (0,sum) associated to CaloHypo (charged)"/>        
         <enumval name="CaloChargedEcal"    value="315"  desc="Cluster  energy associated to CaloHypo (charged)"/>        
-
+        <enumval name="CaloChargedID"    value="316"  desc="Hcal/Ecal energy ratio associated to CaloHypo (charged)"/>        
         <enumval name="CaloDepositID"      value="320"  desc="CaloID estimator : Spd/Prs deposit (neutral)"/>
         <enumval name="ShowerShape"        value="321"  desc="CaloID estimator : 2nd order moment of the cluster (neutral) "/>
         <enumval name="ClusterMass"        value="322"  desc="CaloID estimator : MergedPi0Alg cluster Mass (neutral)"/>
         <enumval name="CaloNeutralSpd"     value="323"  desc="Spd Digits (0,1) associated to CaloHypo (neutral)"/>
         <enumval name="CaloNeutralPrs"     value="324"  desc="Prs Digits (0,sum) associated to CaloHypo (neutral)"/>        
         <enumval name="CaloNeutralEcal"    value="325"  desc="Cluster energy associated to CaloHypo (neutral)"/>        
-
+        <enumval name="CaloNeutralHcal2Ecal"    value="326"  desc="Hcal/Ecal energy ratio associated to CaloHypo (neutral)"/>        
+        <enumval name="CaloNeutralE49"    value="327"  desc="2x2/3x3 energy ratio associated to CaloHypo (neutral)"/>        
+        <enumval name="CaloNeutralID"    value="328"  desc="CellID.all() associated to CaloHypo seed (neutral)"/>        
         <enumval name="CaloSpdE"           value="330"  desc="CaloID estimator : Spd  hit (charged)"/>
         <enumval name="CaloPrsE"           value="331"  desc="CaloID estimator : Prs  energy deposit (charged)"/>
         <enumval name="CaloEcalE"          value="332"  desc="CaloID estimator : Ecal energy deposit (charged)"/>
@@ -81,14 +83,12 @@
         <enumval name="CaloBremChi2"       value="335"  desc="CaloID estimator : currently equivalent to CaloBremMatch"/>
         <enumval name="CaloClusChi2"       value="336"  desc="CaloID estimator : currently equivalent to CaloTrMatch"/>
         <enumval name="CaloTrajectoryL"    value="337"  desc="CaloID estimator : Longitudinal parameter of Ecal Shower"/>
-
         <enumval name="EcalPIDe"        value="360"  desc="Ecal-based DLL for electron-ID (charged)"/>
         <enumval name="PrsPIDe"         value="361"  desc="Prs-based  DLL for electron-ID (charged)"/>
         <enumval name="BremPIDe"        value="362"  desc="Brem-based DLL for electron-ID (charged)"/>
         <enumval name="HcalPIDe"        value="363"  desc="Hcal-based DLL for electron-ID (charged)"/>
         <enumval name="HcalPIDmu"       value="364"  desc="Hcal-based DLL for muon-ID DLL (charged)"/>
         <enumval name="EcalPIDmu"       value="365"  desc="Ecal-based DLL for muon-ID DLL (charged)"/>
-
         <enumval name="PhotonID"        value="380"  desc="Combined PDF for photonID (neutral)"/>
 
         <enumval name="VeloCharge"      value="400"  desc="The dE/dx charge from the VELO system"/>
