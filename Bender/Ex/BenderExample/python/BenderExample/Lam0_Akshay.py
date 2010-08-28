@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # =============================================================================
-# $Id: Lam0_Akshay.py,v 1.2 2010-08-26 13:34:18 ibelyaev Exp $ 
+# $Id: Lam0_Akshay.py,v 1.3 2010-08-28 13:43:12 ibelyaev Exp $ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -29,7 +29,7 @@
 #  @author Vanya     BELYAEV    vanya@nikhef.nl
 #  @date   2010-06-21
 #
-#  Last modification $Date: 2010-08-26 13:34:18 $
+#  Last modification $Date: 2010-08-28 13:43:12 $
 #                 by $Author: ibelyaev $
 # ===========================================================================================
 """
@@ -50,7 +50,7 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:18 $
+Last modification $Date: 2010-08-28 13:43:12 $
                by $Author: ibelyaev $
 """
 # ===========================================================================================
@@ -179,13 +179,16 @@ def configure ( datafiles , catalogs = [] ) :
         DataType      = '2010' ,
         PrintFreq     = 1000   ,
         EvtMax        = -1     , 
-        HistogramFile = 'Lam0_Akshay_Histos.root' 
+        HistogramFile = 'Lam0_Akshay_Histos.root' ,
+        Lumi          = False 
         )
     
+    from Configurables import CondDB
+    CondDB( IgnoreHeartBeat = True ) 
+    
     from GaudiConf.Configuration import NTupleSvc
-    NTupleSvc (
-        Output = [ "LAM0 DATAFILE='Lam0_Akshay_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
-        )
+    ntSvc = NTupleSvc()
+    ntSvc.Output += [ "LAM0 DATAFILE='Lam0_Akshay_Tuples.root' TYPE='ROOT' OPT='NEW'" ]
     
     ## define the input data:
     setData ( datafiles , catalogs )
@@ -230,9 +233,8 @@ if '__main__' == __name__ :
         ]
     
     configure ( inputdata ) 
-
     
-    run ( 10000 )
+    run ( 500 )
 
 
 # =============================================================================

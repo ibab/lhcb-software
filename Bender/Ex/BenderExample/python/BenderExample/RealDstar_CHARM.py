@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealDstar_CHARM.py,v 1.2 2010-08-26 13:34:18 ibelyaev Exp $
+# $Id: RealDstar_CHARM.py,v 1.3 2010-08-28 13:43:12 ibelyaev Exp $
 # =============================================================================
 # $URL$ 
 # =============================================================================
@@ -27,7 +27,7 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2010-06-18
 #
-#  Last modification $Date: 2010-08-26 13:34:18 $
+#  Last modification $Date: 2010-08-28 13:43:12 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
@@ -50,13 +50,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:18 $
+Last modification $Date: 2010-08-28 13:43:12 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__     = " 2010-06-18 "
-__version__  = " Version $Revision: 1.2 $ "
+__version__  = " Version $Revision: 1.3 $ "
 # =============================================================================
 import ROOT                           ## needed to produce/visualize the histograms
 import LHCbMath.Types                 ## easy access to various geometry routines 
@@ -143,7 +143,6 @@ def configure ( datafiles , catalogs = [] ) :
     
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
-        ## ODIN_Code  = " in_range ( 1000 , ODIN_RUN  " ,
         HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
         STRIP_Code = " HLT_PASS('StrippingDstarPromptWithD02HHNoPtDecision') " ,
         VOID_Code  = " EXISTS ('/Event/Strip') " 
@@ -157,19 +156,23 @@ def configure ( datafiles , catalogs = [] ) :
     davinci = DaVinci (
         DataType      = '2010' ,
         PrintFreq     = 1000   ,
-        HistogramFile = 'RealDstar_V0_Histos.root'
+        HistogramFile = 'RealDstar_CHARM_Histos.root' ,
+        ##
+        CondDBtag       = "head-20100730"  ,
+        ##
+        EventPreFilters = fltrs.filters('Filters') ,
+        UserAlgorithms  = [ GaudiSequencer('MySeq') ] , 
+        #
         )
     
-    ## from Configurables import CondDB
-    ## CondDB ( UseOracle = True ) 
+    ## TEMPORARY to be removed!
+    from Configurables import CondDB
+    CondDB( IgnoreHeartBeat = True ) 
     
-    from Configurables import NTupleSvc   
-    NTupleSvc (
-        Output = [ "DSTAR DATAFILE='RealDstar_V0.root' TYPE='ROOT' OPT='NEW'" ]
-        )
-    
-    mysequence = fltrs.sequence ( 'MySeq' )
-    ## mysequence.Members += [ 'Dstar' ]
+    from Configurables import NTupleSvc
+    ntSvc = NTupleSvc() 
+    ntSvc.Output += [ "DSTAR DATAFILE='RealDstar_CHARM.root' TYPE='ROOT' OPT='NEW'" ]
+
     
     ## define the input data:
     setData ( datafiles , catalogs )
@@ -181,22 +184,23 @@ def configure ( datafiles , catalogs = [] ) :
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
+    SELECTION = 'DstarPromptWithD02HHNoPt'
+    
     ## create local algorithm:
     alg = Dstar (
+        #
         'Dstar'             ,   ## Algorithm name
+        #
         NTupleLUN = 'DSTAR' ,   ## Logical unit for output file with N-tuples
-        ##
-        ## PreloadData = False , 
-        PreloadData = True , 
-        ## RecoStripping-04 conventions! 
-        InputLocations = [
-        '/Event/Charm/Phys/SelectionDstar2D0PiWithD02PiPiKPiKK' ## input particles 
-        ]
+        #
+        ## RecoStripping-09 conventions! 
+        RootInTES        =  '/Event/Charm/' , 
+        InputLocations   = [ SELECTION ] ## input particles 
         )
     
-    gaudi.setAlgorithms ( [ 'GaudiSequencer/MySeq'] ) 
-
-    gaudi.addAlgorithm ( alg ) 
+    ## finally inform Application Manager about our algorithm
+    dvMainSeq = gaudi.algorithm ('DaVinciMainSequence')
+    dvMainSeq.Members += [ alg.name() ]
     
     return SUCCESS 
 
@@ -212,13 +216,15 @@ if '__main__' == __name__ :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
+
     
-    inputdata = [
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007583/0000/00007583_0000%04d_1.charm.dst' % n for n in range ( 48 , 285 )
-        ] 
-    configure ( inputdata ) 
+    inputdata  = [
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007583/0000/00007583_00000%03d_1.charm.dst' % n for n in range(48,286)
+        ]
+    configure ( inputdata )
     
-    run ( 10000 )
+    ## run the job
+    run (1000)
     
 
 # =============================================================================
