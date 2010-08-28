@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.40 2010-08-25 17:20:12 gligorov Exp $
+// $Id: HltFunctionFactories.cpp,v 1.41 2010-08-28 23:22:16 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -47,6 +47,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::MissedVeloHits>("MissedVeloHits");
   declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");
   declare<Hlt::NumberOfCSideVeloHits>("NumberOfCSideVeloHits");
+  declare<Hlt::NumberOfTrackHits>("NumberOfTrackHits");
 
   declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("IPS");
   declare<Hlt::IPS,zen::abs_min,const Hlt::VertexSelection>("FitIPS");

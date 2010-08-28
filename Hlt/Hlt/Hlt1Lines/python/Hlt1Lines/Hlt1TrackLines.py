@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -42,7 +42,12 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                     ,   'Photon_P'      : 8000.
                     ,   'Photon_IP'     : 0.125
                     ,   'Photon_IPChi2' : 50
-                    ,   'Photon_TrChi2' : 5     
+                    ,   'Photon_TrChi2' : 5
+                    ,   'Velo_NHits'    : 9 # Minimum number of hits on a Velo track - 1
+                    ,   'Velo_Qcut'     : 3 # This - 1 is the maximum allowed difference between
+                                            # the number of hits on a velo track and the 
+                                            # expected number of hits from the track's angle
+                                            # and first measured point on the track        
                 }
     
     def __apply_configuration__(self) : 
@@ -66,6 +71,12 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
                            , FilterDescriptor = [ 'IP_PV3D,>,%s'%ip]
+                         ),
+                    Member ( 'TF', 'OTNH'
+                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits')]
+                         ),
+                    Member ( 'TF', 'OTEXH'
+                           , FilterDescriptor = [ 'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut')]
                          ),
                     DecodeIT,
                     Member ( 'TU', 'Forward'
@@ -163,6 +174,12 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS" 
+             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
+             )
+        Line ( 'TrackNoMu'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Electron','Photon'] ] ) 
              , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
              )
         Line ( 'TrackMuon'

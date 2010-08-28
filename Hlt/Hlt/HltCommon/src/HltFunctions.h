@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.37 2010-08-25 17:20:12 gligorov Exp $
+// $Id: HltFunctions.h,v 1.38 2010-08-28 23:22:16 gligorov Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -118,6 +118,15 @@ namespace Hlt {
       }
     }
     MissedVeloHits* clone() const { return new MissedVeloHits(); }
+  };
+
+  class NumberOfTrackHits : public Hlt::TrackFunction {
+  public:
+    explicit NumberOfTrackHits(){}
+    double operator()(const LHCb::Track& t) const{
+      return (double) t.nLHCbIDs();
+    }   
+    NumberOfTrackHits* clone() const {return new NumberOfTrackHits();}
   };
 
   class NumberOfASideVeloHits : public Hlt::TrackFunction {
