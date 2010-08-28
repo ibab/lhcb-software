@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-08-28 - Yasmine Amhis 
+  - Modify Lambdab2JpsiLambda lines 
+  . release Lambda mass cut. 
 ! 2010-08-26 - Rob Lambert
  - Prescaled StrippingB02DplusMuXPresel to 10%, as agreed earlier
    by the taskforce.
