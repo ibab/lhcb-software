@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.7 2010-08-28 14:26:14 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.8 2010-08-28 14:47:57 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -27,7 +27,7 @@
 #  @author ...
 #  @date   ...
 #
-# Last modification $Date: 2010-08-28 14:26:14 $
+# Last modification $Date: 2010-08-28 14:47:57 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -46,13 +46,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-28 14:26:14 $
+Last modification $Date: 2010-08-28 14:47:57 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__verison__ = " Version $Revision: 1.7 $ "
+__verison__ = " Version $Revision: 1.8 $ "
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.Main import * 
@@ -94,7 +94,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Gaudi.Configuration import NTupleSvc
     ntSvc = NTupleSvc()
-    nt.Svc.Output += [ "MYLUN DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
+    ntSvc.Output += [ "MYLUN DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] 
     
     ## define/set the input data 
     setData ( datafiles , catalogs )
