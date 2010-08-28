@@ -41,12 +41,14 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $'
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $'
 __all__     = ()
 # =============================================================================
 
 ## some straneglines... Refles feature ?
 from GaudiPython.Bindings import gbl as cpp
+
+print '*'*120
 
 # =============================================================================
 ## "at-exit action 
@@ -61,9 +63,11 @@ def _bender_at_exit_ () :
     print 'Bender.Fixes:  custom "atexit" handler is being invoked'
     print '*'*120
     
-    from GaudiPython.Bindings import AppMgr
-    g = AppMgr()
-    g.exit()
+    from GaudiPython.Bindings import _gaudi 
+    if _gaudi :
+        print 'Bender.Fixes:  AppMgr.exit() is being called'
+        g = AppMgr()
+        g.exit()
 
     print '*'*120
     print 'Bender.Fixes:  custom "atexit" handler has been invoked'
@@ -72,6 +76,7 @@ def _bender_at_exit_ () :
 
 import atexit
 atexit.register( _bender_at_exit_ )
+print 'Bender.Fixes: - add custom "atexit" handler'
 
 
 import GaudiPython.Bindings
@@ -148,24 +153,29 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
+    print 'Bender.Fixes: - decorate iEventSelector to open RAW/MDF & CASTOR -files'
 
 
 ## Decorate iDataSvc with proper dir/ls methods '
 import AnalysisPython.Dir 
+print 'Bender.Fixes: - decorate iDataSvc with proper "dir/ls" methods '
 
 # =============================================================================
 ## decorate the ranges
 # =============================================================================
-import LoKiCore.decorators
-cpp.Gaudi.RangeBase_ .__iter__     = LoKiCore.decorators._iter_1_ 
-cpp.Gaudi.RangeBase_ .__getslice__ = LoKiCore.decorators._slice_ 
 
+_rb = cpp.Gaudi.RangeBase_
 
-print '*'*120
-print 'Bender.Fixes: 1. add custom "atexit" handler'
-print 'Bender.Fixes: 2. decorate iEventSelector to open RAW/MDF & CASTOR -files'
-print 'Bender.Fixes: 3. decorate iDataSvc with proper "dir/ls" methods '
-print 'Bender.Fixes: 4. Fix the problem with Gaudi.RangeBase_ '
+if not hasattr ( _rb , '__iter__' ) or not hasattr ( _rb , '__getslice__' )    :
+    
+    import LoKiCore.decorators
+    
+    if not hasattr ( _rb , '__iter__' ) or not hasattr ( _rb , '__getslice__' )    :
+        
+        _rb .__iter__     = LoKiCore.decorators._iter_1_  
+        _rb .__getslice__ = LoKiCore.decorators._slice_ 
+        print 'Bender.Fixes: - Fix the problem with Gaudi.RangeBase_ '
+    
 print '*'*120
 
 # =============================================================================

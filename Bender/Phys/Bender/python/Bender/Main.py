@@ -40,7 +40,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $' 
 # =============================================================================
 
 import os 
@@ -196,12 +196,20 @@ def appMgr( *varg , **kwarg ) :
     """
     Get the application manager 
     """
-    import GaudiPython.Bindings
-    _g = GaudiPython.Bindings._gaudi
-    ## if not _g : _g = GaudiPython.Bindings.AppMgr( *varg , **kwarg )
-    if not _g : _g = GaudiPython.Bindings.AppMgr()
+    from GaudiPython.Bindings import AppMgr 
+    _g = AppMgr()
     if not 'LoKiSvc' in _g.ExtSvc : _g.ExtSvc += [ 'LoKiSvc']
     return _g
+
+# =============================================================================
+## define "easy"-function to browse TES
+def ls  ( *args ) :
+    """
+    Browse the Transient Store 
+    """
+    _g  = appMgr()
+    _es = _g.evtSvc()
+    return _es.ls ( *args ) 
 
 
 ## massive imports of everything 
