@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -22,26 +22,35 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'L0ChannelBeam1'          : "B1gas"
                 , 'L0ChannelBeam2'          : "B2gas"
+                , 'L0ChannelBXLonelyBeam1'  : "B1gas"
+                , 'L0ChannelBXLonelyBeam2'  : "B2gas"
                 # , 'L0FilterBeamCrossing'    : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['SPD','PU'] ] )
                 , 'L0FilterBeamCrossing'    : "|".join( [ "(L0_DATA('Spd(Mult)') > 2)" , "(L0_DATA('PUHits(Mult)') > 3)" ] )
-                , 'Beam1VtxRangeLow'        : -2000.
-                , 'Beam1VtxRangeUp'         :   600.
-                , 'Beam2VtxRangeLow'        :     0.
-                , 'Beam2VtxRangeUp'         :  2000.
-                , 'BGVtxExclRangeMin'       :  -350.      # These 2 options take effect
-                , 'BGVtxExclRangeMax'       :   250.      # only for the Lines for bb BX
-                , 'MaxBinValueCut'          :     4
-                , 'HistoBinWidth'           :    14
+                , 'Beam1VtxRangeLow'        : -1500.
+                , 'Beam1VtxRangeUp'         :   300.
+                , 'Beam2VtxRangeLow'        :   100.
+                , 'Beam2VtxRangeUp'         :  1500.
+                , 'BGVtxExclRangeMin'       :  -300.      # These 2 options take effect
+                , 'BGVtxExclRangeMax'       :   300.      # only for the Lines for bb BX
+                , 'MaxBinValueCut'          :     5
+                , 'HistoBinWidth'           :    12
                 , 'ForcedInputRateLimit'    :  1000.
+                , 'BXLonelyBeam1RateLimit'  : 50000.
+                , 'BXLonelyBeam2RateLimit'  : 10000.
+
                 , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
                                               , 'Hlt1BeamGasBeam2' :                1.0
                                               , 'Hlt1BeamGasCrossing' :             1.0
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
+                                              , 'Hlt1BeamGasCrossingLonelyBeam1'  : 1.0
+                                              , 'Hlt1BeamGasCrossingLonelyBeam2'  : 1.0
                                               }
-                , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
-                                              , 'Hlt1BeamGasBeam2' :                'RATE(25)'
+                , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(15)'
+                                              , 'Hlt1BeamGasBeam2' :                'RATE(15)'
                                               , 'Hlt1BeamGasCrossing' :             'RATE(25)'
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 'RATE(25)'
+                                              , 'Hlt1BeamGasCrossingLonelyBeam1'  : 'RATE(25)'
+                                              , 'Hlt1BeamGasCrossingLonelyBeam2'  : 'RATE(25)'
                                               }
                 } 
 
@@ -80,18 +89,52 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
  
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
+
         channel = self.getProp('L0Channel' + whichBeam)
         ##  Only create an Hlt1 line if the corresponding L0 channel exists...
         from Hlt1Lines.HltL0Candidates import L0Channels
         if channel not in L0Channels() : return None
         from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
         mask = L0Mask(channel)
-        return Line( name
-                   , prescale = self.prescale
-                   , ODIN  = L0Mask2ODINPredicate(mask) 
-                   , L0DU  = "L0_CHANNEL('%s')" % channel
-                   , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
-                   , postscale = self.postscale )
+        lineBeamEmptyBX =  Line( name
+                               , prescale = self.prescale
+                               , ODIN  = L0Mask2ODINPredicate(mask) 
+                               , L0DU  = "L0_CHANNEL('%s')" % channel
+                               , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
+                               , postscale = self.postscale
+                               )
+
+        # Create a line to look for beam-empty events in bb crossings
+        # Accept only events tagged with ODIN TriggerType = BeamGas
+        # Force VELO RZ track reconstruction and exclude the luminous region
+
+        nameLonely = 'BeamGasCrossingLonely'+whichBeam
+        rateLimit = self.getProp('BXLonely'+whichBeam+'RateLimit') 
+        L0condition = "L0_CHANNEL('%s')" %(self.getProp('L0ChannelBXLonely' + whichBeam))
+
+        algVtxCutBXLonelyBG = BeamGasTrigVertexCut( 'Hlt1%sDecision' % nameLonely
+                                                  , RZTracksInputLocation = algRZTracking.OutputTracksName
+                                                  , MaxBinValueCut     = self.getProp("MaxBinValueCut")
+                                                  , HistoBinWidth      = self.getProp("HistoBinWidth")
+                                                  , HistoZRangeLow     = self.getProp(whichBeam+"VtxRangeLow")
+                                                  , HistoZRangeUp      = self.getProp(whichBeam+"VtxRangeUp")
+                                                  , ZExclusionRangeLow = self.getProp("BGVtxExclRangeMin")
+                                                  , ZExclusionRangeUp  = self.getProp("BGVtxExclRangeMax")
+                                                  , MinCandidates      = 1
+                                                  )
+
+        lineBXLonely = Line( nameLonely
+                           , priority = None
+                           , prescale = self.prescale
+                           , ODIN  = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing) & (ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger)'
+                           , L0DU = 'scale( %s, RATE(%s) )' % (L0condition, rateLimit) if rateLimit else L0condition
+                           , algos = [ DecodeVELO, algRZTracking, algVtxCutBXLonelyBG ]
+                           , postscale = self.postscale 
+                           )
+
+    
+        return lineBeamEmptyBX, lineBXLonely
+
 
    
     def __create_beam_crossing_lines__(self) :
@@ -170,6 +213,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                                                , algos = [ MinimalRZVelo ] + bgTrigAlgos 
                                                                , postscale = self.postscale 
                                                                )
+            
         return line_beamCrossing, line_beamCrossingForcedRZReco
         
     def __apply_configuration__(self) : 

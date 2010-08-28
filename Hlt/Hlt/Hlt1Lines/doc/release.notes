@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.202 2010-08-26 20:31:49 graven Exp $
+! $Id: release.notes,v 1.203 2010-08-28 19:04:29 phopchev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-28 - P. Hopchev
+ - Add 2 new Hlt1 Lines to Hlt1BeamGasLines
+
 !========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Protect the LT unbiased hadron lines against Autumn 2010
