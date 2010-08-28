@@ -41,7 +41,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $'
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $'
 __all__     = ()
 # =============================================================================
 
@@ -65,9 +65,8 @@ def _bender_at_exit_ () :
     
     from GaudiPython.Bindings import _gaudi 
     if _gaudi :
-        print 'Bender.Fixes:  AppMgr.exit() is being called'
-        g = AppMgr()
-        g.exit()
+        print 'Bender.Fixes:  AppMgr.exit() is being invoked'
+        _gaudi.exit()
 
     print '*'*120
     print 'Bender.Fixes:  custom "atexit" handler has been invoked'

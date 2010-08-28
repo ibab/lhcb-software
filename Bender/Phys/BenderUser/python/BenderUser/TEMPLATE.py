@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.8 2010-08-28 14:47:57 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.9 2010-08-28 15:01:48 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -27,7 +27,7 @@
 #  @author ...
 #  @date   ...
 #
-# Last modification $Date: 2010-08-28 14:47:57 $
+# Last modification $Date: 2010-08-28 15:01:48 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -46,13 +46,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-28 14:47:57 $
+Last modification $Date: 2010-08-28 15:01:48 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__verison__ = " Version $Revision: 1.8 $ "
+__version__ = " Version $Revision: 1.9 $ "
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.Main import * 
@@ -109,10 +109,10 @@ def configure ( datafiles , catalogs = [] ) :
     ## create local algorithm:
     
     alg = Template(
-    'MyAlg'
-    # Ntuples
-    NTupelLUN = "MYLUN" 
-    )
+        'MyAlg'               , ## algorithm instance name 
+        # Ntuples 
+        NTupleLUN = "MYLUN"     ## LogicalUnit for N-tuples 
+        )
     
     ## gaudi.addAlgorithm ( alg ) 
     ## gaudi.setAlgorithms( [alg] )
