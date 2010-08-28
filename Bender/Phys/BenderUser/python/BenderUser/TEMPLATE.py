@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.6 2010-03-14 17:34:34 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.7 2010-08-28 14:26:14 ibelyaev Exp $ 
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file
-#  This a template file for the Bender-based scriopt/module
 #
+#  This a template file for the Bender-based script/module
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -24,9 +26,12 @@
 #
 #  @author ...
 #  @date   ...
+#
+# Last modification $Date: 2010-08-28 14:26:14 $
+#                by $Author: ibelyaev $
 # =============================================================================
 """
-This a template file for the Bender-based scriopt/module
+This a template file for the Bender-based module
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -41,17 +46,19 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+Last modification $Date: 2010-08-28 14:26:14 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.6 $"
+__verison__ = " Version $Revision: 1.7 $ "
 # =============================================================================
 ## import all nesessary stuff from Bender
-from Bender.MainMC import * 
+from Bender.Main import * 
 # =============================================================================
 ## @class Template
-class Tempate(AlgoMC) :
+class Template(Algo) :
     """
     This is the template algorithm 
     """        
@@ -66,6 +73,8 @@ class Tempate(AlgoMC) :
 
 # =============================================================================
 ## job configuration:
+#  @attention the function with such signature is required
+#             by Ganga for submission of Grid jobs!
 def configure ( datafiles , catalogs = [] ) :
     """
     Configure the job
@@ -77,16 +86,16 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     DaVinci (
-        DataType   = '2009' , 
-        Simulation = False  ) 
+        DataType = '2010' 
+        ) 
     
     from Gaudi.Configuration import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
     
     from Gaudi.Configuration import NTupleSvc
-    NTupleSvc ( Output = [ "FILE1 DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
-   
-
+    ntSvc = NTupleSvc()
+    nt.Svc.Output += [ "MYLUN DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
+    
     ## define/set the input data 
     setData ( datafiles , catalogs )
     
@@ -98,12 +107,15 @@ def configure ( datafiles , catalogs = [] ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-
-    ## alg = Template( .... )
+    
+    alg = Template(
+    'MyAlg'
+    # Ntuples
+    NTupelLUN = "MYLUN" 
+    )
     
     ## gaudi.addAlgorithm ( alg ) 
     ## gaudi.setAlgorithms( [alg] )
-    
     
     return SUCCESS
 
@@ -117,7 +129,6 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
     
     ## configure the job:
