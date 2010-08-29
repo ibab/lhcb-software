@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.204 2010-08-28 23:21:12 gligorov Exp $
+! $Id: release.notes,v 1.205 2010-08-29 17:46:29 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-28 - V. Gligorov
  - Add velo track quality cuts to the 1Track lines. 
 
 ! 2010-08-28 - P. Hopchev
  - Add 2 new Hlt1 Lines to Hlt1BeamGasLines
 
-!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov
  - Protect the LT unbiased hadron lines against Autumn 2010
    running conditions by explicitly requiring a double L0 Hadron
