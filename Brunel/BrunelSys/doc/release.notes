@@ -5,9 +5,15 @@ Purpose: LHCb reconstruction programs
 
 </PRE><H1><A NAME=v37r7>2010-08-25 Brunel v37r7</A></H1><PRE>
 This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r6,
- Rec v10r4 and SQLDDDB v5r34, ParamFiles v8r2, FieldMap v5r5, AppConfig v3r*
+ Rec v10r4 and SQLDDDB v5r34, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
 
+- NB: This version of Rec and LHCb require new Database tags otherwise processing will fail.
+  LHCBCOND and DDDB must be >= head-20100826
+  SIMCOND depends on the data being analysed
+  Consult the defaults in Det/DDDB for more information
+  Det/DDDB has been updated with these new defaults
 
+- Added Package: Det/DDDB v1r34, which should be removed if a new LHCb is released
 
 </PRE><H1><A NAME=v37r6p1>2010-08-04 Brunel v37r6p1</A></H1><PRE>
 This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1,

@@ -11,6 +11,8 @@ branches cmt doc tests
 use Brunel v37r7   Rec
 
 # Add here any component libraries to be added as patches
+use DDDB v1r34 Det
+#new database tags, required for Rec v10r4. should be removed once a new LHCb is released.
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
