@@ -1,4 +1,4 @@
-// $Id: HltStage.h,v 1.8 2010-08-02 18:15:38 ibelyaev Exp $ 
+// $Id: HltStage.h,v 1.9 2010-08-29 12:23:15 graven Exp $ 
 // =============================================================================
 #ifndef HltEvent_Stage_H
 #define HltEvent_Stage_H 1
@@ -199,7 +199,7 @@ namespace Hlt
     // ========================================================================
   public:
     // ========================================================================
-#ifndef GOD_NOALLOC
+
     /// operator new
     static void* operator new(size_t size) 
     {
@@ -226,7 +226,7 @@ namespace Hlt
     static void operator delete(void* p, void* pObj) {
       ::operator delete(p, pObj);
     }
-#endif
+
     // ========================================================================
   public: // cache
     // ========================================================================
