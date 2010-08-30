@@ -73,7 +73,6 @@ stream.appendLines( [
 			StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine(),
                     	StrippingBs2PhiMuMuConf().Bs2f0MuMuLine(),
 		        StrippingBs2Jpsif0Conf().nominal_line(),  
-		        StrippingBs2Jpsif0Conf().loose_line(),  
                     	StrippingBs2Jpsif0Conf().nominalKst_line(), 
 		        StrippingBiasedBs2JpsiPhi.line,  
 		        StrippingBu2JpsiKConf().nominal_line(),  

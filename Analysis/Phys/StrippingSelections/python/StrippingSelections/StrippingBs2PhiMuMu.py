@@ -1,6 +1,6 @@
 __author__ = ['Liming Zhang']
 __date__ = '24/03/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 """
 Bs->phiMuMu and f0(980)MuMu selections
 """
@@ -9,35 +9,36 @@ from LHCbKernel.Configuration import *
 
 class StrippingBs2PhiMuMuConf(LHCbConfigurableUser):
     __slots__ = {
-         "MINIP"         : 0.05   # mm
-        ,"MINIPCHI2"     : 2.25   # adimensiional
+         "MINIPCHI2"     : 4.00   # adimensiional
         ,"TRCHI2"        : 10.0   # adimensiional
-        ,"KaonPIDK"      : -10.0  # adimensiional
+        ,"KaonPIDK"      : 1e-10  # adimensiional
         ,"PhiPT"         : 100    # MeV
-        ,"MuonMINIP"     : 0.00   # mm
-        ,"MuonMINIPCHI2" : 0.00   # adimensiional
-        ,"MuonPIDmu"     : -10.0  # adimensiional
+        ,"MuonMINIPCHI2" : 2.25   # adimensiional
+        ,"MuonPIDmu"     : -5.0  # adimensiional
         ,"MuonTRCHI2"    : 10.0   # adimensiional
         ,"BsMassWin"     : 250.0  # MeV
-        ,"BsVCHI2"       : 40.0   # adimensiional
-        ,"BsDIRA"        : 0.999  # adimensiional
-        ,"BsFDCHI2"      : 16.0   # adimensiional
+        ,"BsVCHI2DOF"    : 8.0   # adimensiional
+        ,"BsDIRA"        : 0.9993  # adimensiional
+        ,"BsFDCHI2"      : 25.0   # adimensiional
         ,"PionPIDK"      : 10.0   # adimensiional
-        ,"f0MassWin"     : 500.0  # MeV
+        ,"f0MassWin"     : 200.0  # MeV
+        ,"VCHI2"         : 10.0   # adimensiional
+        ,"BsIPCHI2"      : 36.0  # adimensiional
+        ,"DocaMax"       : 0.5  #mm
         }
 
     def _phiFilter( self ):
         from Configurables import FilterDesktop
-        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
-        _phi = FilterDesktop("phi_Bs2PhiMuMu", InputLocations = [ "StdLoosePhi2KK" ] )
-        _phi.Code = "(PT > %(PhiPT)s *MeV) & (2==NINTREE( ('K+'==ABSID) & ((MIPDV(PRIMARY)> %(MINIP)s *mm) | (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) ) & (TRCHI2DOF < %(TRCHI2)s) & (PIDK> %(KaonPIDK)s)))" % self.getProps()
+        from CommonParticles.StdLooseDetachedPhi import StdLooseDetachedPhi2KK
+        _phi = FilterDesktop("phi_Bs2PhiMuMu", InputLocations = [ "StdLooseDetachedPhi2KK" ] )
+        _phi.Code = "(PT > %(PhiPT)s *MeV) & (VFASPF(VCHI2) < %(VCHI2)s) & (2==NINTREE( ('K+'==ABSID) & (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s ) & (TRCHI2DOF < %(TRCHI2)s) & (PIDK> %(KaonPIDK)s)))" % self.getProps()
         return _phi
 
     def _diMuonFilter( self ):
         from Configurables import FilterDesktop
-        from CommonParticles.StdLoosePhi import StdLoosePhi2KK
-        _diMuon = FilterDesktop("diMuon_Bs2PhiMuMu", InputLocations = [ "StdVeryLooseDiMuon" ])
-        _diMuon.Code = "(2==NINTREE( ('mu+'==ABSID) & ((MIPDV(PRIMARY)> %(MuonMINIP)s *mm) | (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s) ) & (HASMUON) & (PIDmu> %(MuonPIDmu)s) & (TRCHI2DOF< %(MuonTRCHI2)s))) & (BPVDIRA > 0.0)" % self.getProps()
+        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon        
+        _diMuon = FilterDesktop("diMuon_Bs2PhiMuMu", InputLocations = [ "StdLooseDiMuon" ])
+        _diMuon.Code = "(VFASPF(VCHI2) < %(VCHI2)s) & (2==NINTREE( ('mu+'==ABSID) & (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s) & (HASMUON) & (PIDmu> %(MuonPIDmu)s) & (TRCHI2DOF< %(MuonTRCHI2)s))) & (BPVDIRA > 0.0)" % self.getProps()
         return _diMuon
 
     def _Bs2PhiMuMu( self ):
@@ -46,10 +47,11 @@ class StrippingBs2PhiMuMuConf(LHCbConfigurableUser):
         _Bs.InputLocations = [ "diMuon_Bs2PhiMuMu", "phi_Bs2PhiMuMu" ]
         _Bs.DecayDescriptors = [ 'B_s0 -> J/psi(1S) phi(1020)']
         _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % self.getProps()
-        _Bs.MotherCut = "  (VFASPF(VCHI2) < %(BsVCHI2)s)" \
+        _Bs.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BsVCHI2DOF)s)" \
                         "& (BPVDIRA > %(BsDIRA)s)" \
+                        "& (BPVIPCHI2() < %(BsIPCHI2)s)" \
                         "& (BPVVDCHI2 > %(BsFDCHI2)s)" % self.getProps()
-        _Bs.ReFitPVs = True
+#        _Bs.ReFitPVs = True
         # Set the OfflineVertexFitter to keep the 4 tracks
         _Bs.addTool( OfflineVertexFitter() )
         _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -61,10 +63,10 @@ class StrippingBs2PhiMuMuConf(LHCbConfigurableUser):
         _f0 = CombineParticles("f0_Bs2f0MuMu")
         _f0.InputLocations = [ "StdLoosePions" ]
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-"]
-        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & (APT > %(PhiPT)s)" % self.getProps()
-        _f0.DaughtersCuts = { "pi+" : "  ((MIPDV(PRIMARY)> %(MINIP)s *mm) | (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) )"\
+        _f0.CombinationCut = "(ADAMASS('f_0(980)') < %(f0MassWin)s *MeV) & (APT > %(PhiPT)s) & (ACUTDOCA( %(DocaMax)s *mm, ''))" % self.getProps()
+        _f0.DaughtersCuts = { "pi+" : "  (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s )"\
                                       "& (TRCHI2DOF < %(TRCHI2)s) & (PIDK< %(PionPIDK)s)" % self.getProps() }
-        _f0.MotherCut = "(VFASPF(VCHI2) < 25.0)"                                       
+        _f0.MotherCut = "(VFASPF(VCHI2) < %(VCHI2)s)"  % self.getProps()                                       
         return _f0
     
     def _Bs2f0MuMu( self ):
