@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.206 2010-08-30 01:06:21 gligorov Exp $
+! $Id: release.notes,v 1.207 2010-08-30 06:41:48 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v4r2   2010-08-29 ===================
 ! 2010-08-29 - V. Gligorov
  - Add histogramming to 1Track lines.
 
-!========================== Hlt1Lines v4r2   2010-08-26 ===================
 ! 2010-08-28 - V. Gligorov
  - Add velo track quality cuts to the 1Track lines. 
 
