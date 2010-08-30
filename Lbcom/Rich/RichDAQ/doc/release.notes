@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2010-08-30 - Chris Jones
+ - Suppress unneccessary warning message during initialisation of the 
+   decoding tool
+
 !========================== RichDAQ v3r28 2010-05-22 =========================
 ! 2010-08-19 - Chris Jones
  - Add new methods to RawBufferToSmartIDsTool to return the total number of 

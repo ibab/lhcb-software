@@ -90,8 +90,8 @@ StatusCode RawDataFormatTool::initialize()
 
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endmsg;
 
-  if ( m_decodeUseOdin )
-    Warning( "ODIN integrity checks are enabled",          StatusCode::SUCCESS ).ignore();
+  //if ( m_decodeUseOdin )
+  //  Warning( "ODIN integrity checks are enabled",          StatusCode::SUCCESS ).ignore();
   if ( !m_checkDataIntegrity )
     Warning( "HPD Data integrity checks are disabled",     StatusCode::SUCCESS ).ignore();
   if ( !m_checkODINEventsIDs )
