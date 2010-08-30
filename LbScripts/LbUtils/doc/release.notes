@@ -1,6 +1,8 @@
 2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* tests/FileTest.py: New file.
+	* tests/FileTest.py: 
+	- New file.
+	- added test for the double quoting in the template file.
 	* python/LbUtils/afs/directory.py: 
 	- added TODO task about filenames with special chars
 	- fixed the problem of special characters in filenames
