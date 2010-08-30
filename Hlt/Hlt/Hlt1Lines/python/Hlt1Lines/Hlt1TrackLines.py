@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -71,6 +71,8 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
                            , FilterDescriptor = [ 'IP_PV3D,>,%s'%ip]
+                           , HistogramUpdatePeriod = 1
+                           , HistoDescriptor  = histosfilter('IP',0.,1.,100) 
                          ),
                     Member ( 'TF', 'OTNH'
                            , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits')]
@@ -85,10 +87,14 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                                              ,tools = [ConfiguredPR( "Forward" )] )]
                            ),
                     Member ( 'TF' , 'OTPT' ,
-                            FilterDescriptor = ['PT,>,%s'%pt],
+                            FilterDescriptor = ['PT,>,%s'%pt]
+                            , HistogramUpdatePeriod = 1 
+                            , HistoDescriptor  = histosfilter('PT',0.,8000.,200)
                             ),
                     Member ( 'TF' , 'OTMom' ,
-                            FilterDescriptor = ['P,>,%s'%p],
+                            FilterDescriptor = ['P,>,%s'%p]
+                            , HistogramUpdatePeriod = 1 
+                            , HistoDescriptor  = histosfilter('P',0.,80000.,200)
                             )
                    ]
 
