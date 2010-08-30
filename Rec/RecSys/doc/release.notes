@@ -17,6 +17,9 @@ This version uses Gaudi v21r10p1 and LHCb v31r5
 - Tracking and Vertexing have been updated to more appropriate cuts,
   timing has also been improved slightly
 
+- The DDDB, SIMCOND, LHCBCOND tags required to use this software have been
+  updated. The software is not strictly backward-compatible on the old DB tags.
+  head-20100826 tags should be used. Det/DDDB v1r34 contains the new defaults.
 
 - bug #71012, has been totally fixed
   . (new fit mechanism for tracks breaks Calo photon reconstruction)
