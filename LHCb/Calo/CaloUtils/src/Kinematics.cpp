@@ -69,7 +69,7 @@ namespace
     
     const double dgz_dxc = -1.0 * dx * gz3 ; // d( gz ) / d( xc ) 
     const double dgz_dyc = -1.0 * dy * gz3 ; // d( gz ) / d( yc )
-    
+
     // 
     // Jacobian-I:   d(px,py,pz,E)/d(xc,yc,E)
     // 
@@ -139,7 +139,7 @@ namespace
       
       const double dgz_dxv = dx * gz3 ; // d( gz ) / d( xv ) 
       const double dgz_dyv = dy * gz3 ; // d( gz ) / d( yv ) 
-      const double dgz_dzv = dz * gz3 ; // d( gz ) / d( zv )
+      const double dgz_dzv = dz * gz3 ; // d( gz ) / d( zv ) 
       
       //   d(px)/d(xv) 
       f12 ( 0 , 0 ) =  e * ( dx_dxv * gz + dx * dgz_dxv ) ;

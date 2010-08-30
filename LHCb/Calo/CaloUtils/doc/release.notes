@@ -3,7 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-!========================== CaloUtils v8r13 2010-06-18 ========================
+! 2010-08-30 - Vanya Belyaev
+
+ - a bit more polishing to Kinemactics functions 
+
 ! 2010-08-30 - Vanya Belyaev
 
  - Kinematics.h, 

@@ -296,12 +296,12 @@ void LHCb::CaloMomentum::addCaloPosition
     m_status |= LHCb::CaloMomentum::NullProtoPart;
     return;    
   }
+
   if ( 0 != proto->charge() )
   {
     m_status |= LHCb::CaloMomentum::ChargedProtoPart;
     return;    
   }
-  
   const SmartRefVector<LHCb::CaloHypo>& hypos = proto->calo();
   
   if( hypos.empty())
@@ -330,8 +330,7 @@ bool LHCb::CaloMomentum::evaluate(int param)
   // adapted from PhotonParam.h (thanks to Vanya Belyaev)
   
   Gaudi::LorentzVector p4 ;
-  
-  
+
   LHCb::CaloMomentum::MomCovariance      C11      ;   // 4-moment 4x4 covariance matrix
   LHCb::CaloMomentum::PointCovariance    C22  = m_pointCovMatrix; // 3-point  3x3 covariance matrix
   LHCb::CaloMomentum::MomPointCovariance C12      ;   // momentum-point 4x3 off-diagonal block
@@ -341,7 +340,7 @@ bool LHCb::CaloMomentum::evaluate(int param)
         icalo != m_caloPositions.end() ; ++icalo ) 
   {
     
-    const LHCb::CaloPosition& calo = *icalo;
+    LHCb::CaloPosition calo = *icalo;
     
     // Evaluate the 4-momentum
     if ( 0 != ( LHCb::CaloMomentum::Momentum & param ) )
@@ -433,7 +432,6 @@ bool LHCb::CaloMomentum::evaluate(int param)
       
       // C11 += S11.similarity( F11 ) + S22.similarity( F12 ) ;
       
-      
       // OK, get all jacobians: 
       Calo::Kinematics::jacobians ( calo , m_point , F11 , F12 ) ;
       
@@ -444,7 +442,7 @@ bool LHCb::CaloMomentum::evaluate(int param)
       // @ToDo : adapt to the case of correlated CaloPositions
       
       C11 += Similarity( F11,S11 ) + Similarity( F12, S22 ) ;
-      C12 += F12   * S22 ;
+      C12 += F12   * S22 ;      
     }    
   }    
   
@@ -460,7 +458,6 @@ bool LHCb::CaloMomentum::evaluate(int param)
     m_momPointCovMatrix = C12 ;
     m_flag |= LHCb::CaloMomentum::CovarianceEvaluated;
   }
-  
   return true ;
 }
 // ===========================================================================
