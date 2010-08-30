@@ -1,3 +1,11 @@
+2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* tests/FileTest.py: New file.
+	* python/LbUtils/afs/directory.py: added TODO task about filenames with special chars
+	* python/LbUtils/File.py: Fixed the genTemplate function. It is now reading the template file into one and only
+	string
+	* python/LbUtils/Tar.py: fixed dangerous argument passing.
+
 2010-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* data/SelfExtract-header.tmpl: New file.

@@ -52,9 +52,13 @@ def _singleTarFilter(namelist, sel=None, binary_set=set()):
     return selected
 
 
-def tarFilter(namelist, sel_binary=[], binary_list=[]):
+def tarFilter(namelist, sel_binary=None, binary_list=None):
     """ Select the items from the namelist matching sel_binary but not binary_list """
     selected = set()
+    if not sel_binary :
+        sel_binary = []
+    if not binary_list :
+        binary_list = []
     this_sel_set = set(sel_binary[:])
     if not this_sel_set :
         this_sel_set.add(None)

@@ -250,8 +250,8 @@ def checkMD5Info(md5fname, target_name):
 def genTemplateFile(tmpl_file, string_dict, output_file):
     """ generate a file from a template using a dictionary of strings """
     ft = open(tmpl_file)
-    txt = ft.readlines()
-    ft.close
+    txt = ft.read()
+    ft.close()
     
     fo = open(output_file, "w")
     fo.write(txt % string_dict)
