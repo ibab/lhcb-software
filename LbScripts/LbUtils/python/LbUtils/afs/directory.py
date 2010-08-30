@@ -29,8 +29,7 @@ class Directory(object):
         return self._id
     def getID(self):
         """ get the ID of a directory """
-        # TODO: fix this expression for filename containing special characters like "+"
-        exp = re.compile("File\s+" + self._name + "\s+\((.*)\)")
+        exp = re.compile("File\s+" + re.escape(self._name) + "\s+\((.*)\)")
         p = Popen(["fs","examine",self._name], stdout=PIPE, stderr=STDOUT)
         for line in p.stdout.xreadlines() :
             volmatch = exp.search(line)
