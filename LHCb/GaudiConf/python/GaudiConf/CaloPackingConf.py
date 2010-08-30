@@ -122,6 +122,8 @@ class CaloDstUnPackConf ( ConfigurableUser ) :
         Apply the configuration 
         """
         self.checkConfiguration()
+
+        print 'CALOUNPACKDST : apply conf ', self.getProp('Enable')
         
         log.info ('CaloDstUnPackConf: Apply Calo Dst-UnPacking Configuration ')
         log.info ( self )

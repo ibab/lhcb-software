@@ -221,11 +221,13 @@ class DstConf(LHCbConfigurableUser):
 
         caloPackSeq = GaudiSequencer("CaloPacking")
         packDST.Members += [caloPackSeq]
-        CaloDstPackConf (
-            Enable       = True    ,
-            Sequence     = caloPackSeq ,
-            AlwaysCreate = alwaysCreate
-            )
+        
+        caloPack = CaloDstPackConf ()
+        if not caloPack.isPropertySet('Enable') :
+            CaloDstPackConf ( Enable = True )
+        caloPack.Sequence     = caloPackSeq ,
+        caloPack.AlwaysCreate = alwaysCreate
+
 
         packChargedPs = PackProtoParticle( name               = "PackChargedProtos",
                                            AlwaysCreateOutput = alwaysCreate,
@@ -341,7 +343,14 @@ class DstConf(LHCbConfigurableUser):
         unpackVertex       = UnpackRecVertex()
         unpackV0           = UnpackTwoProngVertex()
 
-        CaloDstUnPackConf ( Enable = True )
+        print " I AM UNPACK "
+
+        caloUnpack = CaloDstUnPackConf ()
+        if not caloUnpack.isPropertySet('Enable') :
+            print " I'll     SET UNPACK to TRUE " 
+            caloUnpack.Enable = True
+        else : 
+            print " I'll NOT SET UNPACK to TRUE ", caloUnpack.Enable  
 
         unpackCharged  = UnpackProtoParticle(name       = "UnpackCharged",
                                              OutputName = "/Event/Rec/ProtoP/Charged",
@@ -376,6 +385,8 @@ class DstConf(LHCbConfigurableUser):
 
         log.info(self)
 
+        print ' I AM DSTCONF '
+        
         sType = self.getProp( "SimType" ).capitalize()
         if sType not in self.KnownSimTypes:
             raise TypeError( "Unknown SimType '%s'"%sType )

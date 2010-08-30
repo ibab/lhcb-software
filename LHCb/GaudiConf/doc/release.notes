@@ -3,6 +3,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-08-30 - Vanya Belyaev
+ - Enable calodst unpacking only if the 
+   property have not been set explicitly. 
+   It is useful to force calormeetr reconstruction on-flight 
+
+
 !======================== GaudiConf v13r5 2010-04-26 ========================
 ! 2010-04-21 - Marco Cattaneo
  - Add SDST ("slim" or "stripping" DST) type to DstConf. Content is identical
