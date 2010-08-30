@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -126,7 +126,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         lineBXLonely = Line( nameLonely
                            , priority = None
                            , prescale = self.prescale
-                           , ODIN  = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing) & (ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger)'
+                           , ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
                            , L0DU = 'scale( %s, RATE(%s) )' % (L0condition, rateLimit) if rateLimit else L0condition
                            , algos = [ DecodeVELO, algRZTracking, algVtxCutBXLonelyBG ]
                            , postscale = self.postscale 
