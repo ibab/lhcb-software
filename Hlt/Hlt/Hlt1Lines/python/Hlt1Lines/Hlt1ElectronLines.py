@@ -15,7 +15,8 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                 , 'EleIPCompanion_PtCut'   :  1000.    # di-electron with IP cut
                 , 'EleCompanion_PtCut'     :  1000.    # di-electron without IP cut           
                 , 'DiEle_LowMassCut'       :  2400.
-                , 'DiEle_HighMassCut'      :  3200.    
+                , 'DiEle_HighMassCut'      :  -1.0     # do not user upper mass cut    
+                , 'DiEle_PtCut'            :  2500.    # pt cut for di-electron
                 }
 
 #
@@ -186,6 +187,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                  , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
                          + [ DecodeECAL
                            , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
+                           , Member ( 'VF', 'VertexPT', FilterDescriptor = [ 'VertexPT,>,'+str(self.getProp('DiEle_PtCut')) ] )
                            , Member ( 'VF', 'MassCut'
                                     , FilterDescriptor = [ 'VertexDiElectronMass,>,%s'%self.getProp('DiEle_LowMassCut') ] + (
                                                          [ 'VertexDiElectronMass,<,%s'% self.getProp('DiEle_HighMassCut') ] if self.getProp('DiEle_HighMassCut') > 0 else [] )
