@@ -3,7 +3,7 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
-!========================== HltSettings v3r0  2010-08-27 ===================
+!========================== HltSettings v3r0  2010-08-30 ===================
 ! 2010-08-30 - Gerhard Raven
  - Update September10 configurations: 
     o remove Hlt1L0XYZ for all XYZ except Any.
