@@ -14,6 +14,7 @@
 #include "CaloUtils/CaloCellIDAsProperty.h"
 #include "CaloUtils/CaloUtils.h"
 #include "CaloUtils/ICaloElectron.h"
+#include "CaloUtils/Kinematics.h"
 // ============================================================================
 // DigiEvent 
 // ============================================================================

@@ -3,6 +3,21 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r13 2010-06-18 ========================
+! 2010-08-30 - Vanya Belyaev
+
+ - Kinematics.h, 
+   Kinematics.cpp
+
+     factor out the actual evaluation of various quantities 
+     from CaloMomentum class
+ 
+    FIX THE BUG in Evaluation of F11 and F12 matrix elements! 
+
+  - cmt/requirements 
+
+    version inrement to v9r0 
+
 ! 2010-08-27 - O. Deschamps
  - CaloAlgUtils :  new method ClusterFromHypo(CaloHypo*) return hypo->cluster with special care for SplitPhotons
 

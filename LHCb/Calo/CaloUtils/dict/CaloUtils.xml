@@ -35,6 +35,8 @@
   
   <class pattern = "CaloVector<LHCb::CaloDigit*>"  /> 
   <class pattern = "CaloVector<LHCb::CaloAdc*>"    /> 
+
+  <function name = "Calo::Kinematics::momentum"    />
   
   <exclusion>
 
