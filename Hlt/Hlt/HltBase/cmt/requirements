@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.65 2010-08-26 08:54:33 graven Exp $
+#$Id: requirements,v 1.66 2010-08-30 13:00:44 amazurov Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v10r0
+version           v10r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -24,6 +24,10 @@ use LoKiCore            v*    Phys
 use DetDesc             v*    Det
 
 use Boost        v*   LCG_Interfaces
+
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
 
 # include directory
 #=========================================================================

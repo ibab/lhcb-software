@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-08-30 - Alexander Mazurov
+ - cmt/requirements 
+    update requirements to properly use GOD_NOALLOC
+    version increment v10r1
 !========================== HltBase v10r0 2010-08-26 ===================
 ! 2010-08-26 - Gerhard Raven
  - remove HltHistogramUtilities.h, now lives in GaudiUtils, Gaudi::Histo::Utils

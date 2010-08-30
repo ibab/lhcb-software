@@ -1,4 +1,4 @@
-// $Id: HltMultiTrack.h,v 1.3 2010-08-29 12:23:15 graven Exp $
+// $Id: HltMultiTrack.h,v 1.4 2010-08-30 13:00:44 amazurov Exp $
 // ============================================================================ 
 #ifndef HltEvent_MultiTrack_H
 #define HltEvent_MultiTrack_H 1
@@ -90,7 +90,7 @@ namespace Hlt
     // ========================================================================
   public:
     // ========================================================================
-
+#ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )
     {
@@ -121,7 +121,7 @@ namespace Hlt
     {
       ::operator delete (p, pObj);
     }
-
+#endif
     // ========================================================================
   protected:
     // ========================================================================

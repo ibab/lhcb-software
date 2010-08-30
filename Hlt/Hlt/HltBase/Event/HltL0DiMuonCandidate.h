@@ -110,7 +110,7 @@ namespace Hlt
     void setSecond(const LHCb::L0MuonCandidate* value);
   
   
-
+  #ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )
     {
@@ -141,7 +141,7 @@ namespace Hlt
     {
       ::operator delete (p, pObj);
     }
-
+  #endif
   protected:
 
   private:
