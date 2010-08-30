@@ -1,14 +1,14 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.122 2010-08-26 09:50:50 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.123 2010-08-30 16:47:47 ibelyaev Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf,
-                            HltConf, DstConf, CaloDstUnPackConf, L0Conf, LumiAlgsConf )
+                            HltConf, DstConf, L0Conf, LumiAlgsConf )
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
 
@@ -95,7 +95,6 @@ class DaVinci(LHCbConfigurableUser) :
         AnalysisConf      ,
         HltConf           ,
         DstConf           ,
-        CaloDstUnPackConf ,
         L0Conf            ,
         LumiAlgsConf      ,
         LumiIntegratorConf,
@@ -418,13 +417,11 @@ class DaVinci(LHCbConfigurableUser) :
         # if property set explcicitly - use it! 
         if self.isPropertySet('EnableUnpack') :
             unPack = self.getProp('EnableUnpack')
-            DstConf           ( EnableUnpack = unPack ) 
-            CaloDstUnPackConf ( Enable       = unPack )    
+            DstConf           ( EnableUnpack = unPack )
         elif inputType!="MDST" and ( self.getProp("DataType") != "DC06"
                                      and inputType != "MDF" ):
             # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
             DstConf           ( EnableUnpack = True ) 
-            CaloDstUnPackConf ( Enable       = True )
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
@@ -603,8 +600,10 @@ class DaVinci(LHCbConfigurableUser) :
         log.info( self )
 
         self.checkOptions()
-        self.sequence().Members = [self.eventPreFilterSeq(),
-                                   GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)]
+        self.sequence().Members = [
+            self.eventPreFilterSeq()  ,
+            GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)
+            ]
         ApplicationMgr().TopAlg = [self.sequence()]
         self.configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
@@ -627,3 +626,4 @@ class DaVinci(LHCbConfigurableUser) :
         self.mainSequence()
         # monitoring
         self.moniSequence()
+        

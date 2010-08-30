@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.443 2010-08-26 09:51:42 jpalac Exp $
+! $Id: release.notes,v 1.444 2010-08-30 16:47:47 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-30 - Vanya Belyaev
+
+ - do not force the setting of CaloDstUnpack proeprties 
+   rely on DstConf behaviour  
 
 ! 2010-08-26 - Juan Palacios
  - python/DaVinci/Configuration.py
