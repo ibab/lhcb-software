@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2010-08-30 - Rob Lambert
+ - Changed default SIMCOND tags for MC09 and 2009:
+   . MC09-20100827-vc-md100 for MC09 SIMCOND
+   . MC-20100827-vc15mm-md100 for 2009 SIMCOND
+
 !========================== DDDB v1r34 2010-08-29 ============================
 ! 2010-08-27 - Rob Lambert
  - Changed default tags for 2008, 2009 and 2010 data:
