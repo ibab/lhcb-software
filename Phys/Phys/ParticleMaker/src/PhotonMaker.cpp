@@ -179,7 +179,6 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   // locate input data
   const LHCb::ProtoParticles* pps = get< LHCb::ProtoParticles > (m_input);
   if( 0 == pps ) { return StatusCode::FAILURE ; }
-
   
   unsigned long nConverted = 0 ;
   unsigned long nUnconverted = 0 ;
@@ -191,20 +190,23 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   // Loop over PP
   for( LHCb::ProtoParticles::const_iterator ipp = pps->begin() ;
        pps->end() != ipp ; ++ipp ){
-
-    LHCb::ProtoParticle* pp = *ipp ;
-
+    
+    const LHCb::ProtoParticle* pp = *ipp ;
+    
     // skip invalid and charged
-    if ( 0 == pp || 0 != pp->track() )   { continue ; }        
-
+    if ( 0 == pp || 0 != pp->track() )   { continue ; }
+    
+    const SmartRefVector<LHCb::CaloHypo>& hypos  = pp->calo() ;
+    if ( hypos.empty() ) { continue ; }
     
     // Check the hypothesis 
-    const LHCb::CaloHypo*   hypo  = *( (pp->calo()).begin() );
-    if(LHCb::CaloHypo::Photon != hypo->hypothesis() )continue;    
+    const LHCb::CaloHypo*   hypo  = *(hypos.begin());
+    
+    if ( 0 == hypo || LHCb::CaloHypo::Photon != hypo->hypothesis() ) { continue ; }
 
     // skip negative energy
     if( hypo->e() <= 0 ) continue;
-
+    
     // Photon conversion (Spd-based for late conversion after magnet)
     bool cnv = ( pp->info(LHCb::ProtoParticle::CaloDepositID, 0.)<0) ;  // temporary re-definition of conversion
     //    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ; // failed due to bug in NeutralProtoPAlg
@@ -221,12 +223,12 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     // evaluate the Confidence Level
     const double CL = confLevel( pp );
     if ( CL  < m_clCut                      ) continue ;
-  
+    
     // Pt cut
     LHCb::CaloMomentum momentum(pp , m_point , m_pointErr);
-    if(momentum.pt() < m_ptCut)continue;
+    if ( 0 != momentum.status()  ) { continue ; }
+    if ( momentum.pt() < m_ptCut ) { continue; }
     
-
     cnv ? ++nSelConverted : ++nSelUnconverted;
 
     
@@ -245,6 +247,7 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     // fill photon parameters (4-momentum, vertex and correlations)
     LHCb::CaloParticle calopart(particle, m_point , m_pointErr);
     calopart.updateParticle();
+
     if( calopart.status() !=0 ){
       delete particle ;
       nSkip++;

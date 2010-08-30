@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.120 2010-08-19 07:00:03 jpalac Exp $ 
+! $Id: release.notes,v 1.121 2010-08-30 16:42:12 ibelyaev Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2010-08-30 - Vanya Belyaev
+ - minor changes 
+ - cmt/requiremens 
+   verison incremen to v5r8 
 
 !========================== ParticleMaker v5r7 2010-08-19 =====================
 
