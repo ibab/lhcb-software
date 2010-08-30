@@ -1,4 +1,4 @@
-class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
+class Commissioning_Moore_v11_Release_Testing :
     """
     Threshold settings for Hlt1 for 2010 conditions with pileup
     
@@ -25,8 +25,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
         return '0x001F'
 
     def HltType(self) :
-        self.verifyType( Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 )
-        return          'Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10'
+        self.verifyType( Commissioning_Moore_v11_Release_Testing )
+        return          'Commissioning_Moore_v11_Release_Testing'
     
     def Thresholds(self) :
         """
