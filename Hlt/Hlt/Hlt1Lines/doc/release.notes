@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.207 2010-08-30 06:41:48 graven Exp $
+! $Id: release.notes,v 1.208 2010-08-30 08:09:31 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v4r2   2010-08-29 ===================
+! 2010-08-30 - M. Witek
+ - add vertex pt cut to  electron lines.
+
 ! 2010-08-29 - V. Gligorov
  - Add histogramming to 1Track lines.
 
