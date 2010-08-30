@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.38 2010-08-28 23:22:16 gligorov Exp $
+// $Id: HltFunctions.h,v 1.39 2010-08-30 08:09:18 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -548,12 +548,11 @@ namespace Hlt {
   public: 
     explicit VertexPT() {}
     double operator() (const LHCb::RecVertex& vertex) const { 
-      Hlt::PT fun;
       const LHCb::Track& t1 = *(vertex.tracks()[0]);
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       double v_px = t1.momentum().x() + t2.momentum().x();
       double v_py = t1.momentum().y() + t2.momentum().y();  
-      return sqrt(pow(v_px,2)+pow(v_py,2)); 
+      return sqrt(v_px*v_px+v_py*v_py);
     }
     VertexPT* clone() const {return new VertexPT();}
   };  
@@ -562,7 +561,6 @@ namespace Hlt {
   public:
     explicit VertexSumPT() {}
     double operator() (const LHCb::RecVertex& vertex) const {
-      Hlt::SumPT fun;
       const LHCb::Track& t1 = *(vertex.tracks()[0]);
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       return Hlt::SumPT()(t1,t2);
