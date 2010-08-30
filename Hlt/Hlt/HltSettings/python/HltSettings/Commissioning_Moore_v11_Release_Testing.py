@@ -217,8 +217,8 @@ class Commissioning_Moore_v11_Release_Testing :
                  #, 'Hlt1MBNoBias'
                  #, 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                  'Hlt1TrackAllL0'#, 'Hlt1TrackMuon', 'Hlt1TrackPhoton' #Add one track lines!
-                 #, 'Hlt1SingleHadron'     
-                 #, 'Hlt1DiHadron'
+                 , 'Hlt1SingleHadron'     
+                 , 'Hlt1DiHadron'
                  , 'Hlt1DiHadronLTUnbiased' 
                  , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
                  , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
