@@ -43,7 +43,7 @@ namespace RTL {
     /// Standard constructor
     Process();
     /// Constructor to explore existing process
-    Process(int pid);
+    explicit Process(int pid);
     /// Constructor to start new process
     Process(const std::string& name, const std::string& exe, const char* a[]);
     /// Constructor to start new process

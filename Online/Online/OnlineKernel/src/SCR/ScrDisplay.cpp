@@ -13,16 +13,16 @@
 using namespace SCR;
 static Pasteboard* pb = 0;
 
-static const int TEE_LEFT       = '-';
-static const int TEE_RIGHT      = '-';
+//static const int TEE_LEFT       = '-';
+//static const int TEE_RIGHT      = '-';
 static const int HORZ_BAR       = scrc_horizontal_bar();
-static const int VERT_BAR       = scrc_vertical_bar();
+//static const int VERT_BAR       = scrc_vertical_bar();
 static const int FAT_VERT_BAR   = ' ';
 static const int DIM_VERT_BAR   = '.';
-static const int LEFT_LOW_EDGE  = scrc_bottom_left_corner();
-static const int RIGHT_LOW_EDGE = scrc_bottom_right_corner();
-static const int LEFT_UP_EDGE   = scrc_top_left_corner();
-static const int RIGHT_UP_EDGE  = scrc_top_right_corner();
+//static const int LEFT_LOW_EDGE  = scrc_bottom_left_corner();
+//static const int RIGHT_LOW_EDGE = scrc_bottom_right_corner();
+//static const int LEFT_UP_EDGE   = scrc_top_left_corner();
+//static const int RIGHT_UP_EDGE  = scrc_top_right_corner();
 
 static int s_border = 0;
 

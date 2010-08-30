@@ -119,12 +119,12 @@ int ProcessGroup::removeAll() {
 #include <cmath>
 
 extern "C" int rtl_test_process_group(int, char** ) {
-  Process* p1, *p2, *p3;
+  Process *p2;
   ProcessGroup pg;
   const char *a1[] = {"5",0}, *a2[]={"10",0}, *a3[]={"15",0};
-  pg.add(p1=new Process("SLEEPER_1","/bin/sleep",a1));
+  pg.add(   new Process("SLEEPER_1","/bin/sleep",a1));
   pg.add(p2=new Process("SLEEPER_2","/bin/sleep",a2));
-  pg.add(p3=new Process("SLEEPER_3","/bin/sleep",a3));
+  pg.add(   new Process("SLEEPER_3","/bin/sleep",a3));
   time_t start = ::time(0);
   pg.start();
   Process::setDebug(true);
@@ -165,7 +165,7 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
 }
 
 extern "C" int rtl_test_sub_processes(int, char** ) {
-  Process* p1, *p2, *p3, *p4, *p5, *p6;
+  Process *p2, *p4, *p6;
   ProcessGroup pg;
   const char *a1[]={"rtl_test_process_sleep","4",0}, *a2[]={"rtl_test_process_sleep","5",0};
   const char *a3[]={"rtl_test_process_sleep","6",0}, *a4[]={"rtl_test_process_sleep","7",0};
@@ -176,13 +176,13 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   cmd += "/test.exe";
   ::lib_rtl_signal_log(false);
   Process::setDebug(true);
-  pg.add(p1=new Process("SLEEPER_1",cmd.c_str(),a1,"/dev/null"));
+  pg.add(   new Process("SLEEPER_1",cmd.c_str(),a1,"/dev/null"));
   pg.add(p2=new Process("SLEEPER_2",cmd.c_str(),a2));
   pg.start();
-  pg.add(p3=new Process("SLEEPER_3",cmd.c_str(),a3,"/dev/null"));
+  pg.add(   new Process("SLEEPER_3",cmd.c_str(),a3,"/dev/null"));
   pg.add(p4=new Process("SLEEPER_4",cmd.c_str(),a4));
   pg.start();
-  pg.add(p5=new Process("SLEEPER_5",cmd.c_str(),a5,"/dev/null"));
+  pg.add(   new Process("SLEEPER_5",cmd.c_str(),a5,"/dev/null"));
   pg.add(p6=new Process("SLEEPER_6",cmd.c_str(),a6));
   pg.start();
   time_t start = ::time(0);

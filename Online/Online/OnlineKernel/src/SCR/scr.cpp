@@ -623,12 +623,11 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
   Paste_entry *d;
   Display *dd;
   Pasteboard *pb;
-  int cols;
 
   if (!disp->paste) return 1;
 
   pb   = disp->pb;
-  cols = disp->cols + 2;
+  //int cols = disp->cols + 2;
 
   row = disp->row;
   col = disp->col;
@@ -1159,7 +1158,7 @@ int scrc_puts (const char* s, Pasteboard *pb)   {
 //----------------------------------------------------------------------------
 int scrc_puti (int i, Pasteboard *pb)   {
   char *buf = pb->bufout + pb->bufptr;
-  *buf      = i;
+  *buf      = char(i);
   pb->bufptr ++;
   if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
@@ -1184,7 +1183,7 @@ int scrc_begin_pasteboard_update (Pasteboard *pb)   {
 //---------------------------------------------------------------------------
 int scrc_end_pasteboard_update (Pasteboard *pb)   {
   char *m, *old_m;
-  uint_t *a, *old_a, *last;
+  uint_t *a, *old_a;
   int r, c;
   int cols;
   Update *u;
@@ -1213,7 +1212,7 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   l = u->mod_rows;
 
   cols = pb->cols;
-  last = a + pb->rows*cols - 1;
+  //uint_t *last = a + pb->rows*cols - 1;
 
   for (r=1; r<=pb->rows; ++r, ++l)  {
     if (*l) {

@@ -333,7 +333,7 @@ int scrc_show_window (Window *w, Display *d)    {
   Display *dd;
   Window *ww;
   Screen *s = System.cur;
-  int scr;
+  int scr, shift, row, col;
 
   if (s && (ww = s->wind.cur))  {
     switch (ww->type)    {
@@ -354,9 +354,6 @@ int scrc_show_window (Window *w, Display *d)    {
   }
     
   if (w->type != DETACHED_WINDOW)  {
-    int shift;
-    Window *ww;
-    int col;
     Linked_list* father = (Linked_list*)&System.scr[ICONIFIED].wind;
     if (w->father == father)  {
       s = &System.scr[SEQUENTIAL];
@@ -390,7 +387,7 @@ int scrc_show_window (Window *w, Display *d)    {
   
   if (!(dd = w->on_screen) || dd != d || scrc_display_occluded (d) || w->iconified)  {
     if (dd && dd != d) scrc_unpaste_display(dd, System.pb);
-    int row = w->row + 1;
+    row = w->row + 1;
     if (d == w->title) row--;
     d->wind = 0;
     ::scrc_paste_display (d, System.pb, row, w->col+1);

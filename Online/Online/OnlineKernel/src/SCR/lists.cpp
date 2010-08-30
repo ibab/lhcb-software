@@ -91,7 +91,6 @@ void list_transfer_entry (Link* _entry, Linked_list* _list,
                           Link* _before, Link* _after)
 /*---------------------------------------------------------------------------*/
 {
-  Linked_list* list;
   /* syntax check */
   if (_before)  {
     if (_list != _before->father) return;
@@ -111,7 +110,7 @@ void list_transfer_entry (Link* _entry, Linked_list* _list,
   if (!_before && _after) _before = _after->prev;
   if (!_after && _before) _after  = _before->next;
   
-  list = _entry->father;
+  //Linked_list* list = _entry->father;
 
   /* Now put entry back. */
   
