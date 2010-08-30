@@ -22,7 +22,7 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
 
     
     def L0TCK(self) :
-        return '0x001F'
+        return '0x001F'   ###TODO/FIXME: MUST BE UPDATED
 
     def HltType(self) :
         self.verifyType( Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 )
@@ -102,7 +102,7 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                           , 'MuTrackMuChi24JPsi'                 : 50.
                                           , 'MuTrackTrChi24JPsi'                 : 16.
                                           }
-                       , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.0001 
+                       , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
                                                             , 'Hlt1L0AnyRateLimited' : 1 }
                                             , 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001
                                                               , 'Hlt1L0Any'            :  1
@@ -130,8 +130,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                                          } 
                                                         , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                       }
-                       , Hlt1LumiLinesConf :     {  'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'   : 0.00001 
-                                                                    , 'Hlt1LumiMid.*(?<!RateLimited)$' : 0.0005
+                       , Hlt1LumiLinesConf :     {  'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'   : 0.01  # assume remainder done in L0!
+                                                                    , 'Hlt1LumiMid.*(?<!RateLimited)$' : 0.1 # assume remainder done in L0!
                                                                     }
                                                     , 'Postscale' : { 'Hlt1LumiLowNoBeamRateLimited'   : 'RATE(5)' 
                                                                       , 'Hlt1LumiLowBeam2RateLimited'  : 'RATE(10)' 
