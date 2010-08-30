@@ -18,7 +18,7 @@ class IOPortManager  {
   __NetworkPort__ m_port;  
 public:
   /// Standard constructor
-  IOPortManager(NetworkChannel::Port p): m_port(p)  {}
+  explicit IOPortManager(NetworkChannel::Port p): m_port(p)  {}
   /// Set port number for this connection group
   void setPort(NetworkChannel::Port p)  {  m_port = p;    }
   /// Access port number for this connection group

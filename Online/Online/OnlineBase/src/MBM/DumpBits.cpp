@@ -18,13 +18,16 @@ namespace {
 }
 namespace MBM {
   class BitmapDump : public RTL::ConsoleDisplay {
+    /// Vector with MBM identifiers
     std::vector<BMID> m_bm;
   public:
-    BitmapDump(const char* bm_name) : ConsoleDisplay(), m_bm(0) {
+    /// Initializing constructor
+    explicit BitmapDump(const char* bm_name) : ConsoleDisplay(), m_bm(0) {
       if ( bm_name ) {
         addBuffer(bm_name);
       }
     }
+    /// Default destructor
     ~BitmapDump()  {
       if ( !m_bm.empty() )  {
         for(std::vector<BMID>::iterator i=m_bm.begin(); i != m_bm.end(); ++i)  {
@@ -32,12 +35,15 @@ namespace MBM {
         }
       }
     }
+    /// Add buffer to dumper
     void addBuffer(const char* name)  {
       BMID id = mbm_map_memory(name);
       if ( id ) m_bm.push_back(id);
       else  printf("Failed to map to buffer %s:\n", name);
     }
+    /// Access buffer identifier
     int id() const  {  return m_bm.size(); }
+    /// Dump information
     void put_info()  {
       int cnt = 1;
       std::vector<std::string> words;
@@ -76,6 +82,7 @@ namespace MBM {
     }
   };
 }
+
 extern "C" int mbm_dump_bitmap(int argc,char ** argv) {
   RTL::CLI cli(argc, argv, help);
   std::string buffer="0";

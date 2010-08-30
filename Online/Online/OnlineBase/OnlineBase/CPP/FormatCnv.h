@@ -44,9 +44,9 @@ private:
   int       alloc_size;
   int       curr_size;  
 public:
-  DataStructure( int = 8);
+  explicit DataStructure( int = 8);
+  explicit DataStructure( const char* s);
   DataStructure( const DataStructure& );
-  DataStructure( const char* s);
   virtual ~DataStructure();
   DataStructure& Add( AtomicDataType, int);
   DataStructure& Add( const char* );

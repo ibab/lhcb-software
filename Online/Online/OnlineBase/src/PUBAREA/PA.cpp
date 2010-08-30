@@ -24,7 +24,7 @@ PubArea::PubArea(const char* name)   {
   m_index  = 0; //... Pointer to the index table
   m_name   = name;
   for(size_t i=0; i<m_name.length(); ++i)  {
-    m_name[i] = ::toupper(m_name[i]);
+    m_name[i] = char(::toupper(m_name[i]));
   }
   std::string lck_name = m_name;
   lck_name += "_lock";
@@ -204,14 +204,11 @@ int PubArea::LinkPubArea(char* Node)    {
     strcpy(m_header->NodeName,Node);
     return PA_SUCCESS;
   }
-  else  {
-    m_ptr       = 0;
-    m_header = 0;
-    m_index  = 0;
-    PubAreaPrint(3,0,"PubArea::LinkPubArea: Failed to get pubarea from %s",Node);
-    return PA_FAILURE;
-  }
-  return PA_SUCCESS; 
+  m_ptr    = 0;
+  m_header = 0;
+  m_index  = 0;
+  PubAreaPrint(3,0,"PubArea::LinkPubArea: Failed to get pubarea from %s",Node);
+  return PA_FAILURE;
 }
 
 int PubArea::LinkPubArea(int Size /* in bytes */)    {

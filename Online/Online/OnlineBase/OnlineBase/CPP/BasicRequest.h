@@ -37,7 +37,7 @@ public:
 
   //@Man: Public member functions
   ///  Standard Constructor: Returns reference to BasicRequest instance
-  BasicRequest( int typ = WORK_REQUEST ) : __RequestType(typ) {
+  explicit BasicRequest( int typ = WORK_REQUEST ) : __RequestType(typ) {
   }
   ///  Standard Destructor
   virtual ~BasicRequest() {

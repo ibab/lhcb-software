@@ -19,8 +19,8 @@ protected:
   /// Pointer to the actual PubArea object  
   PaObject* obj;
 public:  
-  _PubArea(const char* name);  //.................................... Constructor
-  ~_PubArea(); //..................................................... Destructor
+  explicit _PubArea(const char* name);  //.......................... Constructor
+  ~_PubArea(); //.................................................... Destructor
   int AllocateSlot(int SlotType,int SlotSize, void* &Slot);//....Allocates space
   int FreeSlot(void* SlotPtr); //............................. Deallocates space
   int PrepareSlot(void* SlotPtr); //..................... Initializes slot space

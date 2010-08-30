@@ -25,7 +25,7 @@ namespace RTL  {
     int m_offset;
   public:
     /// Initializing constructor
-    DoubleLinkedQueue(qentry_t* h, int o=0) 
+    explicit DoubleLinkedQueue(qentry_t* h, int o=0) 
       : m_head(h), m_park(new qentry_t(0,0)), m_offset(o) {}
     /// Default destructor
     ~DoubleLinkedQueue()  {

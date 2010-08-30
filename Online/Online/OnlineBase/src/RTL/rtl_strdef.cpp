@@ -9,7 +9,7 @@ int str_upcase(const char* src, char* dst, size_t dest_len)  {
   if ( dst )  {
     char* s1=dst, *p=dst+dest_len;
     while(*src && s1<p) {
-      *s1++ = ::toupper(*src++);
+      *s1++ = char(::toupper(*src++));
     }
     *s1 = 0;
     return 1;
@@ -21,7 +21,7 @@ int str_lowcase(const char* src, char* dst, size_t dest_len)  {
   if ( dst )  {
     char* s1=dst, *p=dst+dest_len;
     while(*src && s1<p) {
-      *s1++ = ::tolower(*src++);
+      *s1++ = char(::tolower(*src++));
     }
     *s1 = 0;
     return 1;
@@ -32,15 +32,15 @@ int str_lowcase(const char* src, char* dst, size_t dest_len)  {
 int str_trim(const char* src, char* dst, size_t* resultant_length)    {
   if ( dst )  {
     if ( src )  {
-	    size_t s2_length = strlen(src);		// Length of string
-	    // Determine the end of the string
-	    while ((s2_length > 0) && ((src[s2_length-1] == ' ') || (src[s2_length-1] == '\t')))	{
-		    s2_length--;
-	    }
+      size_t s2_length = strlen(src);		// Length of string
+      // Determine the end of the string
+      while ((s2_length > 0) && ((src[s2_length-1] == ' ') || (src[s2_length-1] == '\t')))	{
+	s2_length--;
+      }
       *resultant_length = *resultant_length < s2_length ? *resultant_length - 1 : s2_length;
       dst[*resultant_length] = 0;
       // Now, copy that much to the destination
-	    memcpy(dst, src, *resultant_length);
+      memcpy(dst, src, *resultant_length);
       return *resultant_length;
     }
     memset(dst,0,*resultant_length);
@@ -60,8 +60,8 @@ static bool match1(const char* pat, const char* str, bool case_sensitive) {
   bool star = false;
   if ( first ) {
     for (int i = 0; i < 256; ++i) {
-      mapCaseTable[i] = i;
-      mapNoCaseTable[i] = ( i >= 'a' && i <='z' ) ? i+'A'-'a' : i;
+      mapCaseTable[i] = char(i);
+      mapNoCaseTable[i] = char(( i >= 'a' && i <='z' ) ? i+'A'-'a' : i);
     }
     first = false;
   }

@@ -3,20 +3,25 @@
 
 class TableEntry;
 
+/** @class Table  Table.h CPP/Table.h
+ *
+ */
 class Table {
 public:
-    Table(int);
-    ~Table();
-    void Insert(void*, void*);
-    bool  Find(void**, void*);
-    void Remove(void*);
+  /// Initializing constructor
+  explicit Table(int);
+  /// Default destructor
+  virtual ~Table();
+  void Insert(void*, void*);
+  bool  Find(void**, void*);
+  void Remove(void*);
 private:
-    int size;
-    TableEntry** first;
-    TableEntry** last;
-
-    TableEntry* Probe(void*);
-    TableEntry** ProbeAddr(void*);
+  int size;
+  TableEntry** first;
+  TableEntry** last;
+  
+  TableEntry* Probe(void*);
+  TableEntry** ProbeAddr(void*);
 };
 
 #endif

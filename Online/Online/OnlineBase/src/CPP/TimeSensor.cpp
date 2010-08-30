@@ -21,11 +21,13 @@ namespace {
     bool          m_cyclic;
     Period*       m_next;
   public:
-    Period( char* );
+    /// Initializing constructor
+    explicit Period( char* );
+    /// Default destructor
     ~Period();
     void Set();
     void cancel();
-    unsigned long& id()      {  return m_alrmID;   }
+    // unsigned long& id()      {  return m_alrmID;   }
     Period* next()  const    {  return m_next;     }
     void setNext(Period* n)  {  m_next = n;        }
     static int ast( void* param );
@@ -37,7 +39,8 @@ namespace {
     Interactor* Inter;
     void*       Data;
   public:
-    InteractorTarget( Interactor* i, void* d = 0 ) { Inter = i; Data = d;}
+    /// Initializing constructor
+    explicit InteractorTarget( Interactor* i, void* d = 0 ) { Inter = i; Data = d;}
   };
 
   //----------------------------------------------------------------------------

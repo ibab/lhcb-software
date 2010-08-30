@@ -86,7 +86,7 @@ protected:
   DataStructure* m_idxFmt; //..... Format of the index entry used for conversion
   DataStructure* m_idxBuffer[PA_MAX_INDEX]; //...... Formats of the buffer areas
 public:
-  PubArea(const char* name);   //................................... Constructor
+  explicit PubArea(const char* name);   //.......................... Constructor
   ~PubArea(); //..................................................... Destructor
   int AllocateSlot(int SlotType,int SlotSize, void* &Slot);//....Allocates space
   int FreeSlot(void* SlotPtr); //............................. Deallocates space

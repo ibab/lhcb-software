@@ -61,7 +61,7 @@ public:
 public:
   //@Man: Public interface: 
   /// Constructor to build request message
-  TanMessage ( u_int func, const char* proc = "" );
+  explicit TanMessage ( u_int func, const char* proc = "" );
   /// Standard constructor
   TanMessage ();
   /// Standard destructor
@@ -119,7 +119,7 @@ inline TanMessage::TanMessage (u_int func, const char* proc)  {
   m_error     = htonl (TAN_SS_SUCCESS);
   m_function  = htonl (func);
   for (i=0, n=::strlen(proc); i<n; i++)
-     m_name[i] = ::tolower(proc[i]);
+    m_name[i] = char(::tolower(proc[i]));
   m_name[i] = 0;
   ::memset  (&m_sin, 0, sizeof (m_sin));
 }

@@ -19,7 +19,7 @@ namespace RTL  {
     lib_rtl_lock_t m_id;
   public:
     /// Initializing constructor for inverted lock
-    Lock(lib_rtl_lock_t id, bool inverted=false);
+    explicit Lock(lib_rtl_lock_t id, bool inverted=false);
     /// Standard destructor
     ~Lock();
     /// Create now named lock

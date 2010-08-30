@@ -8,7 +8,7 @@
 namespace {
   void fill (char *buff,int len)    {
     for (int i = 0; i < len; i++)
-      buff [i] = (len + i) & 0xFF;
+      buff [i] = (char)((len + i) & 0xFF);
   }
   void help() {
     ::printf("amsc_sender -opt [-opt]\n");
@@ -36,7 +36,7 @@ extern "C" int amsc_sender(int argc, char **argv)  {
   wmessage = new char[length];
   printf (" Starting ams test task (%s) \n",amsname.c_str());
   strcpy(source,target.c_str());
-  printf(" task %s: size %d  facility:%d turns:%d\n",source,length,facility,loop);
+  printf(" task %s: size %d  facility:%d turns:%d\n",source,length,int(facility),loop);
   int sc = amsc_init (amsname.c_str());
   if (sc != AMS_SUCCESS)  {
     printf ("Can't initialise ams\n");

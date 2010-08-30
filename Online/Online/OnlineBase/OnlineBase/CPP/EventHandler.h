@@ -38,7 +38,7 @@ protected:
 public:
   //@Man: public member functions
   /// Constructor
-  EventHandler(EventReactor* reactor) : m_pEventReactor(reactor)  {}
+  explicit EventHandler(EventReactor* reactor) : m_pEventReactor(reactor)  {}
   /// Destructor
   virtual ~EventHandler()    {}
   /// Forward event handling to the proper reactor pattern

@@ -85,11 +85,11 @@ static int USER_ws_off;
 static int USER_we_off;
 static int USER_wes_off;
 static int EVENT_next_off;
-static int USER_active_off;
-static int CONTROL_cwe_off;
-static int CONTROL_pws_off;
-static int CONTROL_wes_off;
-static int CONTROL_ev_off;
+//static int USER_active_off;
+//static int CONTROL_cwe_off;
+//static int CONTROL_pws_off;
+//static int CONTROL_wes_off;
+//static int CONTROL_ev_off;
 static RTL_ast_t _mbm_wes_ast_add = 0;
 static int disable_rundown=0;
 
@@ -231,14 +231,16 @@ class UserLock  {
   USER* m_user;
   int m_status;
 public:
-  UserLock(BMID bm, int def=MBM_ILL_CONS) : m_lock(bm), m_user(0) {
+  /// Initializing constructor
+  explicit UserLock(BMID bm, int def=MBM_ILL_CONS) : m_lock(bm), m_user(0) {
     if ( m_lock ) {
       m_user = bm->_user();
       m_status = m_user ? MBM_NORMAL : (errno = def);
     }
     m_status = m_lock.status();
   }
-  virtual ~UserLock() {
+  /// Default destructor
+  ~UserLock() {
   }
   USER* user()      const   {
     return m_user;
@@ -1724,12 +1726,12 @@ int _mbm_fill_offsets() {
   byte_offset(USER,wsnext,USER_ws_off);
   byte_offset(USER,wenext,USER_we_off);
   byte_offset(USER,wesnext,USER_wes_off);
-  byte_offset(USERDesc,next,USER_active_off);
-  byte_offset(USERDesc,wev_head,CONTROL_cwe_off);
-  byte_offset(USERDesc,wsp_head,CONTROL_pws_off);
-  byte_offset(USERDesc,wes_head,CONTROL_wes_off);
+  //byte_offset(USERDesc,next,USER_active_off);
+  //byte_offset(USERDesc,wev_head,CONTROL_cwe_off);
+  //byte_offset(USERDesc,wsp_head,CONTROL_pws_off);
+  //byte_offset(USERDesc,wes_head,CONTROL_wes_off);
   byte_offset(EVENT,next,EVENT_next_off);
-  byte_offset(EVENTDesc,next,CONTROL_ev_off);
+  //byte_offset(EVENTDesc,next,CONTROL_ev_off);
   return MBM_NORMAL;
 }
 

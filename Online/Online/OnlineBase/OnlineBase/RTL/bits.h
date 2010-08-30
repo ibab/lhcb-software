@@ -45,11 +45,14 @@ namespace Bits  {
   void dumpWords(const void* field, int len, std::vector<std::string>& words);
   template <int i> struct BitMask  {
     unsigned int m_mask[i];
+    /// Default bitfield constructor
     BitMask() {
     }
-    BitMask(int def) {
+    /// Initializing bitfield constructor
+    explicit BitMask(int def) {
       for(int j=0; j<i;++j) m_mask[j]=def;
     }
+    /// Clear bitfield
     void clear()  {
       ::memset(m_mask, 0, i * sizeof(m_mask[0]));
     }

@@ -14,7 +14,7 @@ static void err_print(int sc) {
 
 static void fill (char *buff,int len)    {
   for (int i = 0; i < len; i++)
-    buff [i] = (len + i) & 0xFF;
+    buff [i] = char((len + i) & 0xFF);
 }
 
 static void check (char *buff1,char *buff2,int len1,int len2)    {
@@ -27,7 +27,7 @@ static void check (char *buff1,char *buff2,int len1,int len2)    {
         break;
       if (buff1 [i] != buff2 [i])
         printf ("Mismatch: sent 0x%X received 0x%X at %d\n",
-        buff2 [i], buff1 [i], i);
+		buff2 [i], buff1 [i], i);
     }
 }
 static void help() {
@@ -121,8 +121,9 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       ::printf ("%s Shutdown done....\n", amsname.c_str());
       ::fflush(stdout);
       ::exit(0);
-      return 0;
+      goto Done;
     }
   }
+ Done:
   return 0;
 }

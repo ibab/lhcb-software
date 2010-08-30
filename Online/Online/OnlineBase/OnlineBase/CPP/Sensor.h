@@ -39,7 +39,7 @@ public:
   unsigned int     m_facility;
   bool             m_rearmPending;
   std::string Name;
-  Sensor( unsigned int fac, const char* = "NONAME", bool = true);
+  explicit Sensor( unsigned int fac, const char* = "NONAME", bool = true);
   /// Standard destructor
   virtual ~Sensor();
   Sensor* next()  const   {  return m_next; }

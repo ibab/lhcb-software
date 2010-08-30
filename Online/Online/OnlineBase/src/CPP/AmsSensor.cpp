@@ -22,14 +22,14 @@ namespace {
     Address      m_address;
     AmsSource*   m_next;
   public:
-    AmsSource( const Address& );
+    explicit AmsSource( const Address& );
     ~AmsSource() {}
     int Compare( const Address& );
     AmsSource* next()           { return m_next;     }
     void setNext(AmsSource* n)  { m_next = n;        }
-    Address&  address()         { return m_address;  }
-    AmsSource* current()        { return this;       }
-    AmsSource* first()          { return this;       }
+    //Address&  address()         { return m_address;  }
+    //AmsSource* current()        { return this;       }
+    //AmsSource* first()          { return this;       }
   };
   static AmsSource* SourceHead = 0;
   typedef std::map<AmsSource*, Interactor*>  InteractorTable;

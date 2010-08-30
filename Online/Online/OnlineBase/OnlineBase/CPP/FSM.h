@@ -55,8 +55,10 @@ protected:
   Transition*  m_head;               // Transition head list
   ErrCond i_addTransition( State, State, const char*, ActionFunc);
 public:
+  /// Default constructor
   FSM();
-  FSM(Transition**);
+  /// Initializing constructor
+  explicit FSM(Transition**);
   /// Standard destructor
   virtual ~FSM() {}
   /// Head of transition set

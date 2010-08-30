@@ -38,7 +38,7 @@ namespace XML  {
     std::ostream m_os;
   public:
     /// Standard Constructor
-    Stream(std::streambuf* s) : m_os(s) {                                 }
+    explicit Stream(std::streambuf* s) : m_os(s) {                        }
     /// Standard Destructor
     virtual ~Stream()                                      {              }
     /// XML header string
@@ -129,15 +129,15 @@ namespace XML  {
   struct tag   {
     std::string name;
     int         number;
-    tag(CSTR& t, int i=-1) : name(t), number(i)  {}
+    explicit tag(CSTR& t, int i=-1) : name(t), number(i)  {}
   };
 
   /** Start an XML element                                                */
-  struct start : public tag { start(CSTR& t, int i=-1) : tag(t,i)  {}  };
+  struct start : public tag { explicit start(CSTR& t,int i=-1):tag(t,i){} };
   /** End an XML tag                                                      */
-  struct end : public tag  { end(CSTR& t, int i=-1) : tag(t,i)  {}  };
+  struct end : public tag  { explicit end(CSTR& t,int i=-1):tag(t,i)  {}  };
   /** Serialize individual items                                          */
-  template <class T> struct _data { T value;  _data(T t) : value(t) {} };
+  template <class T> struct _data{ T value; explicit _data(T t):value(t){}};
   /** Serialize (nearly) any XML item                                     */
   template<class T> struct _item : public tag, public _data<T*>  
   { _item(CSTR& t, T* o, int i=-1)  : tag(t,i), _data<T*>(o)  {}          };
