@@ -1,7 +1,7 @@
 project DAVINCI
 
-use HLT      HLT_HEAD
-use PHYS     PHYS_HEAD
+use HLT      HLT_v11r0
+use PHYS     PHYS_v9r10
 use ANALYSIS ANALYSIS_HEAD
 use REC      REC_v10r4
 use LBCOM    LBCOM_v9r6
