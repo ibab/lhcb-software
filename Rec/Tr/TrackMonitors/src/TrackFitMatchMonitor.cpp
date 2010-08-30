@@ -6,6 +6,7 @@
 #include "Event/FitNode.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include <boost/foreach.hpp>
 
@@ -30,7 +31,6 @@ public:
   virtual StatusCode execute();
 
 private:
-  void filter(const LHCb::FitNode& node, LHCb::State& state) const ;
   void plotDelta(const std::string& name,const LHCb::FitNode& node,bool upstream) ;
   inline void myPlot1D(double x, const std::string& path,const std::string& title, double xmin, double xmax) ;
   inline void myProfile1D(double x, double y, const std::string& path,const std::string& title, 
@@ -41,10 +41,16 @@ private:
   int m_constrainMethod ;
   AIDA::IProfile1D* m_curvatureRatioTToLongPr ;
   AIDA::IProfile1D* m_curvatureRatioVeloTTToLongPr ;
+  AIDA::IProfile1D* m_curvatureRatioTToLongVsTxPos ;
+  AIDA::IProfile1D* m_curvatureRatioVeloTTToLongVsTxPos ;
+  AIDA::IProfile1D* m_curvatureRatioTToLongVsTxNeg ;
+  AIDA::IProfile1D* m_curvatureRatioVeloTTToLongVsTxNeg ;
   AIDA::IHistogram1D* m_curvatureRatioTToLongH1 ;
   AIDA::IHistogram1D* m_curvatureRatioVeloTTToLongH1 ;
   AIDA::IHistogram1D* m_curvatureRatioTToLongPullH1 ;
   AIDA::IHistogram1D* m_curvatureRatioVeloTTToLongPullH1 ;
+  AIDA::IHistogram1D* m_kickZH1 ;
+  AIDA::IProfile1D*  m_kickZVsXPr ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -80,10 +86,18 @@ StatusCode TrackFitMatchMonitor::initialize()
   setHistoTopDir("Track/") ;
   m_curvatureRatioTToLongPr = bookProfile1D("curvatureRatioTToLongVsQoP", "curvature ratio T to Long versus q/p",-0.4,0.4,40) ;
   m_curvatureRatioVeloTTToLongPr = bookProfile1D("curvatureRatioVeloTTToLongVsQoP", "curvature ratio Velo-TT to Long versus q/p",-0.4,0.4,40) ;
+  m_curvatureRatioTToLongVsTxPos = bookProfile1D("curvatureRatioTToLongVsTx", "curvature ratio T to Long versus tx for pos",-0.25,0.25,40) ;
+  m_curvatureRatioVeloTTToLongVsTxPos = bookProfile1D("curvatureRatioVeloTTToLongVsTx", "curvature ratio Velo-TTT to Long versus tx for pos",-0.25,0.25,40) ;
+  m_curvatureRatioTToLongVsTxNeg = bookProfile1D("curvatureRatioTToLongVsTx", "curvature ratio T to Long versus tx for neg",-0.25,0.25,40) ;
+  m_curvatureRatioVeloTTToLongVsTxNeg = bookProfile1D("curvatureRatioVeloTTToLongVsTx", "curvature ratio Velo-TTT to Long versus tx for neg",-0.25,0.25,40) ;
+
   m_curvatureRatioTToLongH1 = book1D("curvatureRatioTToLong", "curvature ratio T to Long",0,2) ;
   m_curvatureRatioVeloTTToLongH1 = book1D("curvatureRatioVeloTTToLong", "curvature ratio Velo-TT to Long",0,2) ;
   m_curvatureRatioTToLongPullH1 = book1D("curvatureRatioTToLongPull", "curvature ratio T to Long pull",-5,5) ;
   m_curvatureRatioVeloTTToLongPullH1 = book1D("curvatureRatioVeloTTToLongPull", "curvature ratio Velo-TT to Long pull",-5,5) ;
+  
+  m_kickZH1    = book1D("kickZ","Z position of magnet kick", 4900,5400) ;
+  m_kickZVsXPr = bookProfile1D("kickZVsX","Z position of magnet kick versus x",-1500,1500) ;
 
   return sc;
 }
@@ -94,33 +108,6 @@ StatusCode TrackFitMatchMonitor::initialize()
 StatusCode TrackFitMatchMonitor::finalize() 
 {
   return GaudiHistoAlg::finalize() ;
-}
-
-//=========================================================================
-// 
-//=========================================================================
-void TrackFitMatchMonitor::filter(const LHCb::FitNode& node, LHCb::State& state) const
-{
-  // get reference to the state vector and cov
-  Gaudi::TrackVector&    X = state.stateVector();
-  Gaudi::TrackSymMatrix& C = state.covariance();
-
-  // calculate the linearized residual of the prediction and its error
-  const Gaudi::TrackProjectionMatrix& H = node.projectionMatrix();
-  const double errorMeas2 = node.errMeasure2();
-  double res        = node.refResidual() + ( H * (node.refVector().parameters() - X) ) (0) ;
-  double errorRes2  = errorMeas2 + Similarity(H,C)(0,0) ;  
-  
-  // calculate gain matrix K
-  ROOT::Math::SMatrix<double,5,1> K = (C * Transpose(H)) / errorRes2;
-  
-  // update the state vector
-  X += K.Col(0) * res ;
-  Gaudi::SymMatrix1x1 R ;
-  R(0,0) = errorRes2;
-  Gaudi::TrackSymMatrix tmp ;
-  ROOT::Math::AssignSym::Evaluate(tmp, -2 * K * H * C) ;
-  C += tmp + Similarity(K,R) ;  
 }
 
 inline void TrackFitMatchMonitor::myPlot1D(double x, const std::string& path,
@@ -143,11 +130,9 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
 				     const LHCb::FitNode& node,
 				     bool upstream)
 {
-  // get the two predictions
-  LHCb::State stateUp   = node.predictedStateForward() ;
-  LHCb::State stateDown = node.predictedStateBackward() ;
-  // filter one of them
-  filter(node, upstream ? stateUp : stateDown ) ;
+  const LHCb::State& stateUp   = upstream ? node.filteredStateForward()  : node.predictedStateForward() ;
+  const LHCb::State& stateDown = upstream ? node.predictedStateBackward() : node.filteredStateBackward() ;
+
   // compute the difference
   Gaudi::TrackVector delta  = stateUp.stateVector() - stateDown.stateVector() ;
   Gaudi::TrackSymMatrix cov = stateUp.covariance() + stateDown.covariance() ;
@@ -221,18 +206,29 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
   myPlot1D(deltacpull(3),thisname,"dty pull",-10,10) ;
   //if(!m_constrainQoPOnly) plot(deltacpull(4),std::string("dqop pull"), -10,10) ;
 
-  if( fabs(deltacpull(0))<5 ) {
+  if( std::abs(deltacpull(0))<5 ) {
     myProfile1D(node.state().tx(),deltacpull(0),thisname,"dx pull vs tx", -0.25,0.25,20) ;
+    myProfile1D(node.state().tx(),deltac(0),thisname,"dx vs tx", -0.25,0.25,20) ;
     myProfile1D(node.state().ty(),deltacpull(0),thisname,"dx pull vs ty", -0.25,0.25,20) ;
+    myProfile1D(node.state().qOverP()*Gaudi::Units::GeV,deltacpull(0),thisname,"dx pull vs qop", -0.2,0.2,40) ;
+    myProfile1D(node.state().qOverP()*Gaudi::Units::GeV,deltac(0),thisname,"dx vs qop", -0.2,0.2,40) ;
+    myProfile1D(node.state().x(),deltacpull(0),thisname,"dx pull vs x", -2400,2400,48) ;
+    myProfile1D(node.state().x(),deltac(0),thisname,"dx vs x", -2400,2400,48) ;
     //profile1D(node.state().qOverP(),deltacpull(0), std::string("dx pull vs qop"), -4e-4,4e-4,20) ;
   }
-  if( fabs(deltacpull(1))<5 ) {
+  if( std::abs(deltacpull(1))<5 ) {
     myProfile1D(node.state().tx(),deltacpull(1),thisname,"dy pull vs tx", -0.25,0.25,20) ;
     myProfile1D(node.state().ty(),deltacpull(1),thisname,"dy pull vs ty", -0.25,0.25,20) ;
     //profile1D(node.state().qOverP(),deltacpull(1), std::string("dy pull vs qop"), -4e-4,4e-4,20) ;
   }
+  if( std::abs(deltacpull(2))<5 ) {
+    myProfile1D(node.state().x(),deltac(2), thisname,"dtx vs x", -2400, 2400, 48) ;
+    myProfile1D(node.state().x(),deltacpull(2), thisname,"dtx pull vs x", -2400, 2400, 48) ;
+    myProfile1D(node.state().qOverP()*Gaudi::Units::GeV,deltac(2),thisname,"dtx vs qop", -0.2, 0.2, 40) ;
+    myProfile1D(node.state().qOverP()*Gaudi::Units::GeV,deltacpull(2),thisname,"dtx pull vs qop", -0.2, 0.2, 40) ;
+  }
   if( fullDetail() ) {
-    if( fabs(deltacpull(2))<5 ) {
+    if( std::abs(deltacpull(2))<5 ) {
       myProfile1D(node.state().tx(),deltacpull(2),thisname,"dtx pull vs tx", -0.25,0.25,20) ;
       myProfile1D(node.state().ty(),deltacpull(2),thisname,"dty pull vs ty", -0.25,0.25,20) ;
       //profile1D(node.state().qOverP(),deltacpull(2), std::string("dtx pull vs qop"), -4e-4,4e-4,20) ;
@@ -245,59 +241,57 @@ StatusCode TrackFitMatchMonitor::execute()
 { 
   setHistoTopDir("Track/") ;
 
-  if (!exist<LHCb::Tracks>(m_trackContainerName)) 
-    return Warning( m_trackContainerName+" not found", StatusCode::SUCCESS, 0);
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackContainerName ) ;
-  for( LHCb::Tracks::const_iterator itr = tracks->begin() ;
-       itr != tracks->end(); ++itr) {
-    //plot((**itr).chi2PerDoF(),"chi2 per dof",0,10) ;
-    plot((**itr).info(LHCb::Track::FitMatchChi2,-1),"match chi2",0,50) ;
-    plotCurvatureMatch( **itr ) ;
-
-    const LHCb::FitNode *lastVelo(0),*firstTT(0),*lastTT(0),*firstT(0) ;
-    const LHCb::FitNode *fitnode(0) ;
-    LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
-    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-	 inode != nodes.end(); ++inode) 
-      if( (*inode)->hasMeasurement() &&
-	  (fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ) ) {
-	switch(fitnode->measurement().type()) {
-	case LHCb::Measurement::VeloR:
-	case LHCb::Measurement::VeloPhi:
-	case LHCb::Measurement::VeloLiteR:
-	case LHCb::Measurement::VeloLitePhi:
-	  if( !lastVelo || (lastVelo->z() < fitnode->z()) ) lastVelo = fitnode ;
-	  break ;
-	case LHCb::Measurement::TT:
-	  if( !firstTT || (firstTT->z() > fitnode->z()) ) firstTT=fitnode ;
-	  if( !lastTT || (lastTT->z() < fitnode->z()) ) lastTT=fitnode ;
-	  break;
-	case LHCb::Measurement::OT:
-	case LHCb::Measurement::IT:
-	  if( !firstT || (firstT->z() > fitnode->z() ) ) firstT=fitnode ;
-	  break;
-	default:
-	  break ;
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackContainerName ) ;
+  
+  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+    if( track->fitResult() && track->fitResult()->nodes().size()>0 ) {
+      plotCurvatureMatch( *track ) ;
+      
+      const LHCb::FitNode *lastVelo(0),*firstTT(0),*lastTT(0),*firstT(0) ;
+      const LHCb::FitNode *fitnode(0) ;
+      LHCb::Track::ConstNodeRange nodes = track->nodes() ;
+      for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+	   inode != nodes.end(); ++inode) 
+	if( (*inode)->hasMeasurement() &&
+	    (fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ) ) {
+	  switch(fitnode->measurement().type()) {
+	  case LHCb::Measurement::VeloR:
+	  case LHCb::Measurement::VeloPhi:
+	  case LHCb::Measurement::VeloLiteR:
+	  case LHCb::Measurement::VeloLitePhi:
+	    if( !lastVelo || (lastVelo->z() < fitnode->z()) ) lastVelo = fitnode ;
+	    break ;
+	  case LHCb::Measurement::TT:
+	    if( !firstTT || (firstTT->z() > fitnode->z()) ) firstTT=fitnode ;
+	    if( !lastTT || (lastTT->z() < fitnode->z()) ) lastTT=fitnode ;
+	    break;
+	  case LHCb::Measurement::OT:
+	  case LHCb::Measurement::IT:
+	    if( !firstT || (firstT->z() > fitnode->z() ) ) firstT=fitnode ;
+	    break;
+	  default:
+	    break ;
+	  }
 	}
-      }
     
-    // take only tracks with VELO
-    if( lastVelo) {
-
-      // now split this between tracks with and tracks without TT
-      if( lastTT ) {
-
-	// you can take either of these two: they give identical results.
-	//plotDelta("Velo-TT at TT",*firstTT,true) ;
-	plotDelta("Velo-TT",*lastVelo,false) ;
-
-	if( firstT )
-	  //plotDelta("T-TT at T",*firstT,true) ;
-	  plotDelta("T-TT",*lastTT,false) ;
+      // take only tracks with VELO
+      if( lastVelo) {
 	
-      } else if (firstT) {
-	//plotDelta("Velo-T at T",*firstT,true) ;
-	plotDelta("Velo-T",*lastVelo,false) ;
+	// now split this between tracks with and tracks without TT
+	if( lastTT ) {
+	  
+	  // you can take either of these two: they give identical results.
+	  plotDelta("Velo-TT",*firstTT,true) ;
+	  //plotDelta("Velo-TT",*lastVelo,false) ;
+	  
+	  if( firstT )
+	    plotDelta("T-TT",*firstT,true) ;
+	  //plotDelta("T-TT",*lastTT,false) ;
+	  
+	} else if (firstT) {
+	  plotDelta("Velo-T",*firstT,true) ;
+	  //plotDelta("Velo-T",*lastVelo,false) ;
+	}
       }
     }
   }
@@ -307,11 +301,6 @@ StatusCode TrackFitMatchMonitor::execute()
 
 void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
 {
-  // check input
-  if ((&track == NULL) || (track.fitResult() == NULL)) {
-    return;
-  }
- 
   // inspired by the problems we see in the field. see also TT field study 
   if( track.hasT() && track.hasVelo() && track.hasTT() && std::abs(track.firstState().qOverP()) > 0 ) {
     
@@ -347,27 +336,62 @@ void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
       const LHCb::FitNode *fitNodeBefore = dynamic_cast<const LHCb::FitNode*>(nodeBefore) ;
 
       if ((fitNodeBefore != NULL) && (fitNodeAfter != NULL)) {
-
+      
 	// NOTE: we dont have the filtered states, so we take the
 	// predicted state at the next node! for q/p this is okay. don't
 	// do this for any of the other parameters!!
 
-	double qopT      = fitNodeBefore->predictedStateForward().qOverP() ;
 	double qop       = fitNodeBefore->state().qOverP() ;
-	double qopVeloTT = fitNodeAfter->predictedStateBackward().qOverP() ;
+	double tx        = fitNodeBefore->state().tx() ;
+	
+	// extract the 'upstream' filtered state of T segment
+	bool upstream = track.fitResult()->nodes().front()->z() > track.fitResult()->nodes().back()->z() ;
+	const LHCb::State& stateT = upstream ? fitNodeAfter->filteredStateForward() : fitNodeAfter->filteredStateBackward() ;
+	double qopT      = stateT.qOverP() ;
+	double qoperrT   = std::sqrt(stateT.covariance()(4,4));
 
-	double qoperrT = std::sqrt(fitNodeBefore->predictedStateForward().covariance()(4,4));
-	double qoperrVeloTT = std::sqrt(fitNodeAfter->predictedStateForward().covariance()(4,4));
-
+	// extract the 'downstream' filtered state of Velo-TT segment
+	const LHCb::State& stateVeloTT = upstream ? fitNodeBefore->filteredStateBackward() : fitNodeBefore->filteredStateForward() ;
+	double qopVeloTT = stateVeloTT.qOverP() ;
+	double qoperrVeloTT = std::sqrt(stateVeloTT.covariance()(4,4));
+	
 	m_curvatureRatioTToLongH1->fill(qopT / qop ) ;
 	m_curvatureRatioVeloTTToLongH1->fill(qopVeloTT / qop ) ;
 	m_curvatureRatioTToLongPullH1->fill( (qopT - qop) / qoperrT ) ;
 	m_curvatureRatioVeloTTToLongPullH1->fill( (qopVeloTT - qop) / qoperrVeloTT ) ;
-
-	if( std::abs(qopT / qop - 1 ) < 1 ) 
+	
+	if( std::abs(qopT / qop - 1 ) < 1 ) {
 	  m_curvatureRatioTToLongPr->fill(qop * Gaudi::Units::GeV, qopT / qop ) ;
-	if( std::abs(qopVeloTT / qop - 1 ) < 1 ) 
+	  if( qop>0 ) 
+	    m_curvatureRatioTToLongVsTxPos->fill(tx, qopT / qop ) ;
+	  else
+	    m_curvatureRatioTToLongVsTxNeg->fill(tx, qopT / qop ) ;
+	}
+	
+	if( std::abs(qopVeloTT / qop - 1 ) < 1 ) {
 	  m_curvatureRatioVeloTTToLongPr->fill(qop * Gaudi::Units::GeV, qopVeloTT / qop ) ;
+	  
+	  if( std::abs(qopT / qop - 1 ) < 1 ) 
+	    m_curvatureRatioTToLongPr->fill(qop * Gaudi::Units::GeV, qopT / qop ) ;
+	  if( std::abs(qopVeloTT / qop - 1 ) < 1 ) 
+	    m_curvatureRatioVeloTTToLongPr->fill(qop * Gaudi::Units::GeV, qopVeloTT / qop ) ;
+	}
+	
+	if( qop>0 ) 
+	  m_curvatureRatioVeloTTToLongVsTxPos->fill(tx, qopVeloTT / qop ) ;
+	else
+	  m_curvatureRatioVeloTTToLongVsTxNeg->fill(tx, qopVeloTT / qop ) ;
+
+	// compute the (x,z) point of the intersection of the 2 segments for linear propagation
+	// FIXME: it must be better to take a fixed z position in T.
+	if( 1/std::abs(qop) > 5*Gaudi::Units::GeV ) {
+	  double zkick = ( stateVeloTT.z()*stateVeloTT.tx() - stateVeloTT.x() + stateT.x() - stateT.z()*stateT.tx() ) / ( stateVeloTT.tx() - stateT.tx() ) ;
+	  double xkick = stateT.x() + (zkick - stateT.z()) * stateT.tx() ;
+	  double xkickprime = stateVeloTT.x() + (zkick - stateVeloTT.z()) * stateVeloTT.tx() ;
+	  m_kickZH1->fill( zkick) ;
+	  if( 5000*Gaudi::Units::mm < zkick && zkick < 5300*Gaudi::Units::mm ) 
+	    m_kickZVsXPr->fill(xkick,zkick) ;
+	}
       }
     }
   }
