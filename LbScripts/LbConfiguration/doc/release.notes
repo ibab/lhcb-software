@@ -1,3 +1,9 @@
+2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the "--dev" option. It allows to use the LHCBDEV area for
+	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in 
+	the shell wrappers (LbLogin.{sh,csh,bat}) do not match.
+
 2010-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: Ignore projects that are being released

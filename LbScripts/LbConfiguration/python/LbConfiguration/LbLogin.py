@@ -95,6 +95,11 @@ def _userAreaScripts_cb(option, opt_str, value, parser):
     parser.values.user_area_scripts = True
     parser.values.use_cache = False
 
+def _useDev_cb(option, opt_str, value, parser):
+    parser.values.usedevarea = True
+    parser.values.use_cache = False
+
+
 class LbLoginScript(SourceScript):
     _version = __version__
     _description = __doc__
@@ -154,6 +159,12 @@ class LbLoginScript(SourceScript):
         parser.add_option("--scripts-version",
                           dest="scriptsvers",
                           help="version of LbScripts to be setup [default: %default]")
+        parser.set_defaults(usedevarea=False)
+        parser.add_option("--dev",
+                          dest="usedevarea",
+                          action="callback",
+                          callback=_useDev_cb,
+                          help="add the LHCBDEV area for the LbScripts setup [default: %default]")
         parser.set_defaults(pythonvers=None)
         parser.add_option("--python-version",
                           dest="pythonvers",
@@ -797,6 +808,8 @@ class LbLoginScript(SourceScript):
                 setupprojargs.append("--silent")
             if not opts.user_area_scripts :
                 setupprojargs.append("--no-user-area")
+            if opts.usedevarea :
+                setupprojargs.append("--dev")
             setupprojargs.append("--disable-CASTOR")
             setupprojargs.append("--no-touch-logfile")
             if self.output_name :
