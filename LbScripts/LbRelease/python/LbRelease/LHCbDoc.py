@@ -69,8 +69,9 @@ def _which(cmd, path = None):
     if type(path) is str:
         path = path.split(os.path.pathsep)
     for p in path:
-        if cmd in os.listdir(p):
-            return p
+        fp = os.path.join(p, cmd)
+        if os.path.exists(fp):
+            return fp
     return None
 
 _has_AFS = bool(_which("afs_admin"))
@@ -355,15 +356,25 @@ class Doc(object):
         # Note: if the directory is locked, we can assume we could still host the
         #       file, but it will not be actually added
 
+        # Projects without dependencies (like LbScripts) cannot be added to any
+        # existing documentation.
+        if not deps:
+            return False
         # The project must not be included
         if self.getVersion(project) is not None:
             return False
-        # each dependency must be already present with the right version or
-        # not present
+        # Each dependency must be already present with the right version or
+        # not present and there must be projects in the dependencies that are
+        # already in the doc
+        has_common = False
         for p, v in deps:
-            if not self.getVersion(p) in [v, None]:
-                return False
-        return True
+            hosted = self.getVersion(p)
+            if hosted is not None: # we do have the project p
+                if v == hosted: # with the same version
+                    has_common = True
+                else: # with another version
+                    return False
+        return has_common
     def add(self, project, version):
         """
         Add a project to the list of contained ones.
@@ -397,7 +408,7 @@ class Doc(object):
         Generate the main page file for the documentation directory and return
         it as a string.
 
-        @param depgraphsize: tuple with the width and heigth of the dependency
+        @param depgraphsize: tuple with the width and height of the dependency
             graph (to give the correct size to the svg image).
         """
         page = "/** \\mainpage LHCb Software Documentation\n" + \
@@ -435,14 +446,14 @@ class Doc(object):
         page += "\\endhtmlonly\n*/\n"
         return page
 
-    def _generateDoxyFile(self):
+    def _generateDoxyConf(self):
         """
         Generate the doxygen configuration file for the current doc directory.
         """
         if self.locked:
             self._log.warning("Cannot generate Doxygen configuration in a locked directory")
             return
-        self._log.info("Generate DoxyFile.cfg")
+        self._log.info("Generate Doxygen configuration")
         doxycfg = DoxyFileCfg([("PROJECT_NAME", "LHCb Software"),
                                ('OUTPUT_DIRECTORY', self.output),
                                ('GENERATE_TAGFILE', 'LHCbSoft.tag'),
@@ -489,7 +500,9 @@ class Doc(object):
             "*/slc4_*/*",
             "*/*-slc5-*/*",
             "*/win32_*/*",
+            "*/*-winxp-*/*",
             "*/osx105_*/*",
+            "*/*-mac106-*/*",
             # Exclude version control metadata
             "*/CVS/*",
             "*/.svn/*",
@@ -503,8 +516,7 @@ class Doc(object):
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
 
-        files = [ "*.cpp", "*.h", "*.icpp", "*.py" ]
-        #files = [ "requirements" ]
+        files = []
         for p in doxycfg["INPUT"]:
             for d in [ d
                        for d in os.listdir(os.path.join(self.path, p))
@@ -583,7 +595,15 @@ class Doc(object):
         if not os.path.isdir(confdir):
             self._log.debug("Creating directory %s", confdir)
             os.makedirs(confdir)
-        open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
+        # Back-up
+        files = doxycfg["FILE_PATTERNS"]
+        # C++ configuration
+        doxycfg["FILE_PATTERNS"] = [ "*.cpp", "*.h", "*.icpp" ] + files
+        open(os.path.join(confdir, "DoxyFileCpp.cfg"), "w").write(str(doxycfg))
+        # Python configuration
+        doxycfg["FILE_PATTERNS"] = [ "*.py" ] + files
+        doxycfg["OPTIMIZE_OUTPUT_JAVA"] = True # see http://www.stack.nl/~dimitri/doxygen/config.html#cfg_optimize_output_java
+        open(os.path.join(confdir, "DoxyFilePy.cfg"), "w").write(str(doxycfg))
         # generate the dependency graph
         depgraphsize = self._genDepGraph(confdir)
         open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage(depgraphsize = depgraphsize))
@@ -656,9 +676,52 @@ class Doc(object):
                 height = int(float(height) / 72 * 96)
         return (width, height) # return the size in pixels of the image
 
+    def _buildDox(self, conf, workdir):
+        """
+        Run Doxygen using a configuration file to generate the output into a
+        specified directory.
+        """
+        retcode = 0
+        if "LHCBDOC_TESTING" not in os.environ:
+            # use a temporary configuration file to generate the output in the work directory
+            import tempfile
+            tmpFd, tmpName = tempfile.mkstemp(prefix = conf)
+            try:
+                tmp = os.fdopen(tmpFd, "w")
+                tmp.write(open(conf).read())
+                tmp.write("\nOUTPUT_DIRECTORY = %s\n" % workdir)
+                tmp.close()
+                proc = Popen(["doxygen", tmpName],
+                             cwd = self.path, stdin = PIPE)
+                proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
+                retcode = proc.wait()
+            finally:
+                os.remove(tmpName)
+        else:
+            # Fake execution for testing
+            os.mkdir(os.path.join(workdir, "html"))
+            open(os.path.join(workdir, "html", "index.html"), "w").write("testing\n")
+        if retcode != 0:
+            raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, workdir))
+
+
+    def _buildCpp(self, workdir):
+        """
+        Build the actual doxygen documentation (C++).
+        """
+        self._buildDox(os.path.join(self.path, "conf", "DoxyFileCpp.cfg"), workdir)
+
+    def _buildPy(self, workdir):
+        """
+        Build the actual doxygen documentation (Python).
+        """
+        self._buildDox(os.path.join(self.path, "conf", "DoxyFilePy.cfg"), workdir)
+
     def build(self):
         """
-        Build the actual doxygen documentation.
+        Build the doxygen documentation.
+        Prepare the infrastructure to build both C++ and Python documentation,
+        then call the specific methods.
         """
         if self.locked:
             self._log.warning("Cannot build in a locked directory")
@@ -667,11 +730,8 @@ class Doc(object):
         self._log.info("Creating lock file '%s'", self._lockFile)
         open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(), datetime.now()))
         try:
-            self._generateDoxyFile()
-            self._log.info("Running doxygen")
-            self._log.debug(_which("doxygen"))
-            # @todo: build the documentation in a temporary directory
-            # modify the doxygen file to use a temporary directory
+            # Build the documentation in a temporary directory.
+            # - prepare the temporary directory
             import getpass, tempfile
             username = getpass.getuser()
             tempdirs = filter(os.path.isdir,
@@ -682,21 +742,26 @@ class Doc(object):
                 tempdir = tempfile.mkdtemp("doxygen", dir = tempdirs[0])
             else:
                 tempdir = tempfile.mkdtemp("doxygen")
-            # use a temporary configuration file to generate the output in a temporary directory
-            shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
-                            os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
-            open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
-            if "LHCBDOC_TESTING" not in os.environ:
-                proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
-                             cwd = self.path, stdin = PIPE)
-                proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
-                retcode = proc.wait()
-            else:
-                os.mkdir(os.path.join(tempdir, "html"))
-                open(os.path.join(tempdir, "html", "index.html"), "w").write("testing\n")
-                retcode = 0
-            if retcode != 0:
-                raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
+
+            # Make C++ doc only if we have a dependency on Gaudi
+            has_cpp = "GAUDI" in self.projects
+            # use a subdirectory of the tempdir for each of C++ and Python
+            if has_cpp:
+                cpptempdir = os.path.join(tempdir, "cpp")
+                os.makedirs(cpptempdir)
+            pytempdir = os.path.join(tempdir, "py")
+            os.makedirs(pytempdir)
+
+            self._generateDoxyConf()
+
+            self._log.info("Running doxygen")
+            self._log.debug(_which("doxygen"))
+            # - modify the doxygen file to use a temporary directory
+
+            if has_cpp:
+                self._buildCpp(cpptempdir)
+            self._buildPy(pytempdir)
+
             if os.path.exists(self.output + ".bk"):
                 # Remove old backups before copying the new documentation
                 shutil.rmtree(self.output + ".bk")
@@ -711,7 +776,14 @@ class Doc(object):
                     output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
             # copy the documentation from the temporary directory to the final place with a temporary name
             self._log.info("Copy generated files from temporary directory")
-            shutil.copytree(tempdir, self.output + ".new")
+            if has_cpp:
+                # Copy C++ with structure
+                shutil.copytree(cpptempdir, self.output + ".new")
+                # Copy Python html as a directory in the C++ one
+                shutil.copytree(os.path.join(pytempdir, "html"), os.path.join(self.output + ".new", "html", "py"))
+            else:
+                # Copy Python with structure
+                shutil.copytree(pytempdir, self.output + ".new")
             # copy the dependency graph to the doxygen directory
             for f in [ f for f in os.listdir(os.path.join(self.path, "conf")) if f.startswith("dependencies.") ]:
                 shutil.copyfile(os.path.join(self.path, "conf", f), os.path.join(self.output + ".new", "html", f))
@@ -730,7 +802,6 @@ class Doc(object):
             # rename the new documentation
             os.rename(self.output + ".new", self.output)
             shutil.rmtree(tempdir)
-            os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
             self._updateCommonLinks()
             # Mark as built
             self.toBeBuilt = False
@@ -738,6 +809,7 @@ class Doc(object):
             if os.path.exists(self._rebuildFlagFile):
                 os.remove(self._rebuildFlagFile)
             self._log.debug("Documentation ready")
+
         finally:
             # clean up the lock
             os.remove(self._lockFile)
@@ -847,12 +919,8 @@ def makeDocs(projects, root = None, no_build = False):
         if (project, version) in projects_added:
             continue
         # Get all the dependencies of the project
-        # @todo: projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc
+        # (projects without dependencies like LbScript will use their own doc directory)
         deps = _getProjDeps(project, version)
-        if not deps: # ignore projects without dependencies
-            _log.info("Ignoring %s %s, no dependencies", project, version)
-            projects_added.add((project, version))
-            continue
         # get the candidates, i.e. the doc directories that can include the requested
         # project with its dependencies
         candidates = [ d for d in docs
@@ -888,7 +956,7 @@ def makeDocs(projects, root = None, no_build = False):
     for doc in filter(lambda d: d.toBeBuilt, docs):
         if no_build:
             # if we should not run doxygen, at least generate the doxygen configuration
-            doc._generateDoxyFile()
+            doc._generateDoxyConf()
             # and create the fake sym-links
             doc._updateCommonLinks()
         else:
@@ -928,7 +996,7 @@ def findProjects(exclude = None):
     releases = os.environ["LHCBRELEASES"]
     logging.debug("Looking for projects in '%s'", releases)
     if exclude is None: # default exclusion
-        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4" ])
+        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4", "COMPAT" ])
     else:
         exclude = set([ p.upper() for p in exclude ])
     projects = []
@@ -939,7 +1007,8 @@ def findProjects(exclude = None):
             for versdir, version in [ (m.group(0), m.group(1))
                                       for m in map(version_re.match, os.listdir(projdir))
                                       if m ]:
-                if os.path.exists(os.path.join(projdir, versdir, "cmt", "project.cmt")):
+                if os.path.exists(os.path.join(projdir, versdir, "cmt", "project.cmt")) and \
+                  not os.path.exists(os.path.join(projdir, versdir, 'NOT_READY')): # Ignore projects that are being released
                     projects.append((project, version))
     projects.sort()
     logging.debug("Found %s", projects)

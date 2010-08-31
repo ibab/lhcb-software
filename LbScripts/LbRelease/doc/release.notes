@@ -1,3 +1,8 @@
+2010-08-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc: separated C++ and Python documentation, added correct handling
+	of projects without dependencies (e.g. LbScripts), ignores project "NOT_READY" and exclude COMPAT
+
 2010-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/copyLCG: fixed copy of AA projects' includes, and ROOT, plus minor fixes
