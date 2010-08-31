@@ -22,7 +22,7 @@ class Commissioning_Moore_v11_Release_Testing :
 
     
     def L0TCK(self) :
-        return '0x001F'
+        return '0x0025'
 
     def HltType(self) :
         self.verifyType( Commissioning_Moore_v11_Release_Testing )
@@ -216,7 +216,7 @@ class Commissioning_Moore_v11_Release_Testing :
                  #, 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                  #, 'Hlt1MBNoBias'
                  #, 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
-                 'Hlt1TrackAllL0'#, 'Hlt1TrackMuon', 'Hlt1TrackPhoton' #Add one track lines!
+                 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton' #Add one track lines!
                  , 'Hlt1SingleHadron'     
                  , 'Hlt1DiHadron'
                  , 'Hlt1DiHadronLTUnbiased' 
