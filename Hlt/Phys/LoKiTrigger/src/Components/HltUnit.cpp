@@ -269,6 +269,9 @@ StatusCode LoKi::HltUnit::execute ()
   //
   // set the filter:
   setFilterPassed ( result ) ;
+
+  for ( OMap::iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
+  { iout->second->setDecision( !iout->second->empty() ) ; }
   
   /// Monitor output selections  (*ALWAYS*)
   for ( OMap::const_iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
