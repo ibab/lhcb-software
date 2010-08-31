@@ -38,7 +38,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl "
 __date__    = "2010-07-17"
-__version__ = "CVS tag $Name:$, version $Revision:$ "
+__version__ = "CVS tag $Name:$, version $Revision$ "
 # =============================================================================
 
 from   LoKiTracks.functions import *
@@ -98,11 +98,11 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.FunValOps(_pt)              ) ## call-traits
 
     # "cutval" : vector<T> -> bool    
-    _decorated |= _LoKiCore.getAndDecorateFunVals ( 
+    _decorated |= _LoKiCore.getAndDecorateCutVals ( 
         name                                   , ## module name  
         LoKi.Functor   (_vt,bool)              , ## the base
         LoKi.Dicts.CutValOps(_pt)              ) ## call-traits
-
+    
      # "element": vector<T> -> T    
     _decorated |= _LoKiCore.getAndDecorateElements ( 
         name                                   , ## module name  

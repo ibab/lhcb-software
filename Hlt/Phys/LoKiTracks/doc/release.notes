@@ -5,6 +5,14 @@
 ! Purpose     : tarcj-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-31 - Vanya Belyaev
+
+ - LoKiTracks/decorators.py
+    fix a bug with proer decorations of 'CutVal's
+
+ - cmt/requirements 
+    version increment to v1r1 
+
 !========================== LoKiTracks v1r0 2010-08-26 ===================
 ! 2010-08-11 - Vanya Belyaev
 
