@@ -29,8 +29,9 @@ static inline void ___print(const char* fmt,...)
 {
   va_list args; 
   va_start(args,fmt); 
-  vprintf(fmt,args); printf("\n"); 
+  vprintf(fmt,args); 
   va_end(args); 
+  printf("\n"); 
 }
 #define print printf("DIM Wrapper: %s:%d ::%s: ", __FILE__, (int)__LINE__, __FUNCTION__); ___print 
 //#else
