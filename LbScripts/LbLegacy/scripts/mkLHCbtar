@@ -136,6 +136,7 @@ def make_tar(pname, pversion, binary=''):
     # binary directory name starts with:
     compLinux = 'slc'
     compWIN32 = 'win32_vc71'
+    altcompWIN32 = 'i686-winxp'
     compMac = 'osx10'
     compMiscLinuxAmd64 = 'x86_64-slc'
     compMiscLinuxIa32 = 'i686-slc'
@@ -144,6 +145,7 @@ def make_tar(pname, pversion, binary=''):
     exclude_source = ['install.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo', 'NOT_READY',
                       compLinux + '*',
                       compWIN32 + '*',
+                      altcompWIN32 + '*',
                       compMac + '*',
                       compMiscLinuxAmd64 + '*',
                       compMiscLinuxIa32 + '*']
