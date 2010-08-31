@@ -1,5 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.10 2010-08-03 12:08:13 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.11 2010-08-31 16:54:11 ggiacomo Exp $
 #include <cmath>
+#include <cstdlib>
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TMath.h>
@@ -55,36 +56,37 @@ TH1* OMAEfficiency::exec(TH1* okH,
     }
     else {
       // attach a TGraphAsymmErrors for asymmetric errors
-      int n=okH->GetNbinsX();
-      Float_t x[n];
-      Float_t y[n];  
-      Float_t exl[n]; 
-      Float_t eyl[n]; 
-      Float_t exh[n]; 
-      Float_t eyh[n]; 
+      int nb=okH->GetNbinsX();
+      Float_t* x= (Float_t*) malloc(nb * sizeof(Float_t));
+      Float_t* y= (Float_t*) malloc(nb * sizeof(Float_t));  
+      Float_t* exl= (Float_t*) malloc(nb * sizeof(Float_t)); 
+      Float_t* eyl= (Float_t*) malloc(nb * sizeof(Float_t)); 
+      Float_t* exh= (Float_t*) malloc(nb * sizeof(Float_t)); 
+      Float_t* eyh= (Float_t*) malloc(nb * sizeof(Float_t)); 
       double central;
-      for (Int_t i=0;i<n;i++) {
-        x[i] = outHist->GetXaxis()->GetBinCenter(i+1);
-        exl[i] = exh[i] = (outHist->GetBinWidth(i+1))/2.05;
+      for (Int_t i=0;i<nb;i++) {
+        *(x+i) = outHist->GetXaxis()->GetBinCenter(i+1);
+        *(exl+i) = *(exh+i) = (outHist->GetBinWidth(i+1))/2.05;
         double c = okH->GetBinContent(i+1);
         double n = allH->GetBinContent(i+1);
         if (n==0.) {
-          central = eyl[i] = eyh[i] =.5; 
+          central = *(eyl+i) = *(eyh+i) =.5; 
         }
         else {
           central = c/n;
           // use the score confidence interval Agresti-Coull formula for more reasonable binomial errors  
           double pstar= (c+2.)/(n+4.);
           double error = sqrt(pstar*(1-pstar)/(n+4.));
-          eyl[i] = TMath::Max(0.,central-(pstar-error));
-          eyh[i] = TMath::Max(0.,(pstar+error)-central);
+          *(eyl+i) = TMath::Max(0.,central-(pstar-error));
+          *(eyh+i) = TMath::Max(0.,(pstar+error)-central);
         }
-        y[i]=central;
+        *(y+i)=central;
         outHist->SetBinContent(i+1,central);
         outHist->SetBinError(i+1,0);
       }
-      TGraphAsymmErrors* gr = new TGraphAsymmErrors(n,x,y,exl,exh,eyl,eyh);
+      TGraphAsymmErrors* gr = new TGraphAsymmErrors(nb,x,y,exl,exh,eyl,eyh);
       outHist->GetListOfFunctions()->Add(gr,"p");
+      free(x); free(y); free(exl); free(exh); free(eyl); free(eyh);
     }
     outHist->SetEntries(okH->GetEntries());
   }
