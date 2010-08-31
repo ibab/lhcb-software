@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.26 2010-08-19 14:42:07 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.27 2010-08-31 06:14:40 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
 # =============================================================================
 
 
@@ -43,6 +43,10 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'Muon_TConfNSigmaY'        :    5.
         ,'Muon_TConfNSigmaTx'       :    5.
         ,'Muon_TConfNSigmaTy'       :    5.
+        ,'MSeg_TConfNSigmaX'        :    5.
+        ,'MSeg_TConfNSigmaY'        :    5.
+        ,'MSeg_TConfNSigmaTx'       :    5.
+        ,'MSeg_TConfNSigmaTy'       :    5.
         ,'Muon_DeltaPCut'           :    0.
         ,'Muon_3DVeloTMatchCut'     :    6.
         ,'Muon_VeloTMatchCut'       :  200.
@@ -111,16 +115,17 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool, PatForwardTool
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
 
-        MatchT = [ DecodeIT
+        def MatchT(name='Muon') :
+            return [ DecodeIT
                    , Member ('TU', 'TConf' , RecoName = 'TMuonConf'
                      , tools = [ Tool( HltTrackUpgradeTool
                        , tools = [ Tool( L0ConfirmWithT, 'TMuonConf'
                          , particleType = 0
                          , tools = [ Tool( PatConfirmTool
-                         , nSigmaX=self.getProp('Muon_TConfNSigmaX')
-                         , nSigmaY=self.getProp('Muon_TConfNSigmaY')
-                         , nSigmaTx=self.getProp('Muon_TConfNSigmaTx')
-                         , nSigmaTy=self.getProp('Muon_TConfNSigmaTy')
+                         , nSigmaX=self.getProp(name+'_TConfNSigmaX')
+                         , nSigmaY=self.getProp(name+'_TConfNSigmaY')
+                         , nSigmaTx=self.getProp(name+'_TConfNSigmaTx')
+                         , nSigmaTy=self.getProp(name+'_TConfNSigmaTy')
                          , restrictSearch = True
                          , tools = [ConfiguredPR( "PatSeeding" ,0,0,5000)]
                                            )]
@@ -245,19 +250,19 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 				              , HistoDescriptor = { 'PT0': ('Pt(L0) ',0.,5000.,100),
 						               'PT0Best': ('Pt(L0) Best',0.,5000.,100)}
 				              ) 
-                                   ] + MatchT + TMatchV )
+                                   ] + MatchT('Muon') + TMatchV )
 
         if self.getProp('L0MuonNoVelo') in L0Channels() :
             MuonPrepT = bindMembers( 'MuonPrepT',
                                  #[ convertL0Candidates( str(self.getProp('L0SingleMuon')) )
                                  [ convertL0Candidates('AllMuon')
-                                   ] + MatchT )
+                                   ] + MatchT('Muon') )
 
         if self.getProp('L0SingleMuon') in L0Channels() :
             # Muons 
             MuonPrep = bindMembers( 'MuonPrep',
                                     [ convertL0Candidates( str(self.getProp('L0SingleMuon')) )
-                                      ] + MatchT + TMatchV )
+                                      ] + MatchT('Muon') + TMatchV )
             # Muon Segments
             MuonSegPrep = bindMembers ('MuonSegPrep' ,
                                        [ MuonPrep
@@ -269,7 +274,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 						   , HistoDescriptor = { 'DoShareM3_Hlt1MuonPrepTMVeloT': ('Shared Hits',0,5,6),
 							   'DoShareM3_Hlt1MuonPrepTMVeloTBest': ('Shared Hits Best',0,5,6)}
 						   )
-                                         ] + MatchT + TMatchV
+                                         ] + MatchT('MSeg') + TMatchV
                                        )
             
                         
@@ -282,7 +287,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 				                   , HistoDescriptor = { 'PT0': ('Pt(L0) ',0.,5000.,100),
 						               'PT0Best': ('Pt(L0) Best',0.,5000.,100)}
 						   ) 
-                                          ] + MatchT  + TMatchV)
+                                          ] + MatchT('Muon')  + TMatchV)
             # Muon Segments in Eventes witout Reconstructed Primary Vertices
             MuonNoPVSegPrep = bindMembers ('MuonNoPVSegPrep' ,
                                            [ MuonNoPVPrep
@@ -294,14 +299,14 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 						      , HistoDescriptor = { 'DoShareM3_Hlt1MuonNoPVPrepTMVeloT': ('Shared Hits',0,5,6),
 							   'DoShareM3_Hlt1MuonNoPVPrepTMVeloTBest': ('Shared Hits Best',0,5,6)}
 						      )
-                                             ] + MatchT + TMatchV 
+                                             ] + MatchT('Muon') + TMatchV 
                                            )
         
         if self.getProp('L0SingleMuonGEC') in L0Channels() :
             # Muons with GEC
             MuonGECPrep = bindMembers( 'MuonGECPrep',
                                        [ convertL0Candidates( str(self.getProp('L0SingleMuonGEC')) )
-                                         ] + MatchT + TMatchV )
+                                         ] + MatchT('Muon') + TMatchV )
             # Muon Segments with GEC
             MuonGECSegPrep = bindMembers ('MuonGECSegPrep' ,
                                           [ MuonGECPrep
@@ -310,7 +315,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                       , RequirePositiveInputs = False
                                                       , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuSeg.getDefaults('OutputMuonTracksName')
                                                       , FilterDescriptor = [ 'DoShareM3_'+MuonGECPrep.outputSelection()+',<,'+str(self.getProp('Muon_ShareCut')) ] )
-                                            ] + MatchT + TMatchV
+                                            ] + MatchT('Muon') + TMatchV
                                           )
         # Di Muons 
         if self.getProp('L0DiMuon') in L0Channels() :
@@ -318,7 +323,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                      [ convertL0Candidates( str(self.getProp('L0DiMuon')) )
                                        , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuon_SumPtCut')) ])
                                        , Member( 'VT', 'L0' )
-                                       ] + MatchT + TMatchV + MakeVertex
+                                       ] + MatchT('Muon') + TMatchV + MakeVertex
                                      )
         # Di Muons in Events without Reconstructed Primary Vertices
         if self.getProp('L0DiMuonNoPV') in L0Channels() :
@@ -326,7 +331,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                          [ convertL0Candidates( str(self.getProp('L0DiMuonNoPV')) )
                                            , Member( 'VM1', 'L0DiMuon' , FilterDescriptor = [ 'SumPT,>,'+str(self.getProp('DiMuonNoPV_SumPtCut')) ])
                                            , Member( 'VT', 'L0' )
-                                           ] + MatchT + TMatchV + MakeVertex
+                                           ] + MatchT('Muon') + TMatchV + MakeVertex
                                          )
             
         #--------------------------------------------------------------------
