@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2010-08-31 - Olivier Deschamps
+  - fix compilation warning on slc4
+
 ! 2010-08-27 - O. Deschamps
  - new tool CaloHypoEstimator + update CaloHypo2Calo
 
