@@ -23,17 +23,19 @@ extern "C" {
 #include <cstdlib>
 #include <cstdio>
 
-#ifdef _WIN32
- #include <cstdarg> 
-  static inline void ___print(const char* fmt,...)
-  {
-    va_list args; va_start(args,fmt); 
-    vprintf(fmt,args); printf("\n"); va_end(args); 
-  }
- #define print printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); ___print 
-#else
- #define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
-#endif
+//#ifdef _WIN32
+#include <cstdarg> 
+static inline void ___print(const char* fmt,...)
+{
+  va_list args; 
+  va_start(args,fmt); 
+  vprintf(fmt,args); printf("\n"); 
+  va_end(args); 
+}
+#define print printf("DIM Wrapper: %s:%d ::%s: ", __FILE__, (int)__LINE__, __FUNCTION__); ___print 
+//#else
+//#define print(...) printf("DIM Wrapper: %s:%u ::%s: ", __FILE__, __LINE__, __FUNCTION__); printf(__VA_ARGS__); printf("\n");
+//#endif
 
 #ifdef __DEBUG
  #define debug print
