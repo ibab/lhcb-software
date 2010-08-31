@@ -226,14 +226,14 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
     }
     if (list)   {
       q = (char**)p->list;
-      for (int i=0; i<p->list_size; i++, q++)  {
+      for (int j=0; j<p->list_size; j++, q++)  {
 	if (*q) free (*q);
       }
       if (p->list) ::free(p->list);
       q = (char**) list_malloc (list_size * sizeof(char*));
       p->list = (int*)q;
       add = (char**)list;
-      for (int i=0; i<list_size; i++, q++, add++)
+      for (int j=0; j<list_size; j++, q++, add++)
 	*q = ::strcpy ((char*)list_malloc(strlen(*add)+1), *add);
     }
     break;
@@ -405,11 +405,11 @@ void upic_refresh_param (Param* p)    {
 //---------------------------------------------------------------------------
 int upic_build_format (const char* format, Param* p)    {
   int width = 0, w2 = 0;
-  char *fmt, *conv, c = toupper(*format++);
+  char *fmt, *conv, c = char(::toupper(*format++));
   if (c == '%')  {
     if (*format == '-') format++;
     c = format[upic_non_blanks(format) - 1];
-    c = toupper(c);
+    c = char(::toupper(c));
   }
   ::sscanf (format, "%d.%d", &width, &w2);
   if (!width) return UPI_SS_INVFORM;
@@ -513,7 +513,7 @@ int upic_check_double (double val, double min, double max)  {
 //---------------------------------------------------------------------------
 int upic_valid_numeric (int type, char c)   {
   int result = 0;
-  c = toupper(c);
+  c = char(toupper(c));
   switch (type)  {
     case REAL_FMT :
       if ((c >= '0' && c <= '9') ||
@@ -778,7 +778,7 @@ int upic_itol (char* buffer, int digits, Unsigned value)    {
 
 //---------------------------------------------------------------------------
 int upic_ltoi ( char* buffer, int /* digits */ )   {
-  char c = toupper(*buffer);
+  char c = char(toupper(*buffer));
   return (c == 'T') ? 1 : 0;
 }
 
@@ -819,23 +819,23 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
   if (p->type == ASC_FMT)  {
     int len1 = upic_non_blanks (p->val.c);
     char** q = (char **)p->list;
-    for (int i=0; i<p->list_size; i++, q++)    {
+    for (int j=0; j<p->list_size; j++, q++)    {
       if (*q)  {
         int len2 = upic_non_blanks(*q);
-        if ((len1 == len2) && !strncmp (*q, p->val.c, len1)) return (i);
+        if ((len1 == len2) && !strncmp (*q, p->val.c, len1)) return (j);
       }
     }
   }
   else if (p->type == REAL_FMT)  {
     double* q = (double*)p->list;
-    for (int i=0; i<list_size; i++, q++)    {
-      if (*q == p->val.d) return (i);
+    for (int j=0; j<list_size; j++, q++)    {
+      if (*q == p->val.d) return (j);
     }
   }
   else  {
     int* q = (int*)p->list;
-    for (int i=0; i<list_size; i++, q++)    {
-      if (*q == p->val.i) return (i);
+    for (int j=0; j<list_size; j++, q++)    {
+      if (*q == p->val.i) return (j);
     }
   }
   return (-1);

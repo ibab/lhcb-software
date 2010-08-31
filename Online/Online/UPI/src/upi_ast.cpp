@@ -6,14 +6,14 @@
 #include "SCR/scr.h"
 
 #ifdef SCREEN
-static int          upic_done = 0;
+static int s_upic_done = 0;
 #endif
 extern System Sys;
 
 //---------------------------------------------------------------------------
 void upic_ast() {
 #ifdef SCREEN
-   upic_done = 1;
+  s_upic_done = 1;
 #else
 #endif
 }
@@ -29,15 +29,23 @@ void upic_enable_ast()    {
 //---------------------------------------------------------------------------
 void upic_enable_input()    {
 #ifdef SCREEN
-  upic_done = 0;
+  s_upic_done = 0;
 #else
+#endif
+}
+//---------------------------------------------------------------------------
+int upic_done()    {
+#ifdef SCREEN
+  return s_upic_done;
+#else
+  return 0;
 #endif
 }
 
 //---------------------------------------------------------------------------
 void upic_disable_input()   {
 #ifdef SCREEN
-  upic_done = 0;
+  s_upic_done = 0;
 #ifdef VAX
 #elif _OSK
   _ss_rel (0);
@@ -51,8 +59,8 @@ int upic_test_input()    {
 #ifdef SCREEN
   return (scrc_test_input());
 #else
-#endif
   return UPI_SS_NORMAL;
+#endif
 }
 
 //---------------------------------------------------------------------------

@@ -208,7 +208,7 @@ void upic_broadcast_handler (const char* message)   {
 }
 
 //---------------------------------------------------------------------------
-int upic_mouse_handler (Window* window, void* d, size_t row, size_t col)
+int upic_mouse_handler (Window* window, void* disp, size_t row, size_t col)
 //---------------------------------------------------------------------------
 /*  window is the window where the mouse click has been detected.             */
 /*         (may be 0).                                                        */
@@ -220,7 +220,7 @@ int upic_mouse_handler (Window* window, void* d, size_t row, size_t col)
 /*                                                                            */
 //---------------------------------------------------------------------------
 {
-  Display* display = (Display*)d;
+  Display* display = (Display*)disp;
   if (window && !Sys.pop_up)  {
     /*  A menu is concerned  */
     Menu* m= upic_find_menu_on_window (window);

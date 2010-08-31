@@ -574,9 +574,7 @@ int upic_key_action (unsigned int /* event */, void*)
     else if (i->param.first) 
       upic_update_vars_of_line (i);
     if (i->to)   {
-      Menu* m = i->to;
-
-      upic_set_cursor (m->id, 0, 0);
+      upic_set_cursor (i->to->id, 0, 0);
       key = SCR::INVALID;
     }
     break;
@@ -703,6 +701,24 @@ void upic_start_recorder (int*,int)  {
 }
 
 //---------------------------------------------------------------------------
+int upic_recorder_state() {
+#ifdef SCREEN
+  return Recorder_on;
+#else
+  return 0;
+#endif
+}
+
+//---------------------------------------------------------------------------
+int upic_replay_state() {
+#ifdef SCREEN
+  return Replay_on;
+#else
+  return 0;
+#endif
+}
+
+//---------------------------------------------------------------------------
 int upic_stop_recorder () {
   int pos = 0;
 #ifdef SCREEN
@@ -752,8 +768,9 @@ int upic_replay ()    {
     return 0;
   }
   return (Replay_list[Replay_pos++]);
-#endif
+#else
   return 0;
+#endif
 }
 
 #ifdef VMS

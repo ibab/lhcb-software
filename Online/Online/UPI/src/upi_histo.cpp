@@ -311,17 +311,10 @@ double upic_max_of_histo (Histo* _h)    {
 //---------------------------------------------------------------------------
 void upic_display_histo (Histo* h, int row, int col)    {
 #ifdef SCREEN
-  double* p;
-  int* q;
-  int i, j, l;
   int bin[78];
-  int row0;
-  int max_bin;
-  int dh;
-  double bmax;
-  double x, scale;
-  double mark;
   char str_mark[30];
+  int* q, i, j, l, row0, max_bin, dh;
+  double *p, bmax, scale, mark;
   char* c;
   Display* d0;
   int scaled;
@@ -365,7 +358,7 @@ void upic_display_histo (Histo* h, int row, int col)    {
     scale = (double) max_bin / bmax;
     q = &bin[0];
     for (i=0; i<h->cols; i++,q++)  {
-      j = int(x = scale * (*q));
+      j = int(scale * (*q));
       if (j < 0) j = 0;
       if (j > max_bin) j = max_bin;
       *q = j;

@@ -269,8 +269,8 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
   i->param.cur = 0;
   i->string    = 0;
   upic_init_item_strings (i, text_0, text_1);
-  i->type      = type;
-  i->enabled   = (type == COMMENT)?DISABLED:ENABLED;
+  i->type      = char(type);
+  i->enabled   = char((type == COMMENT)?DISABLED:ENABLED);
   i->to        = 0;
 
   int len = strlen(i->string);
@@ -301,7 +301,7 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
 
   if (Sys.item.cur == i) upic_wakeup();
   upic_init_item_strings (i, text_0, text_1);
-  i->type    = type;
+  i->type    = char(type);
   if (Sys.param.first || i->param.first)  {  
     Param* p = Sys.param.first;
     if ( p )  {
@@ -382,8 +382,8 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   i->string = 0;
   upic_init_item_strings (i, text_0, text_1);
 
-  i->type    = type;
-  i->enabled = (type == COMMENT)?DISABLED:ENABLED;
+  i->type    = char(type);
+  i->enabled = char((type == COMMENT)?DISABLED:ENABLED);
   i->to      = 0;
 
   if (Sys.param.first)  {

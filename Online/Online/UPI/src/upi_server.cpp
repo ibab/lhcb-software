@@ -612,87 +612,86 @@ void screen_handler()  {
 //--------------------------------------------------------------------------
 void upi_handler()  {
   int      menu, command, param, status, length, list_index, rid, remote_id;
-  SrvConnect* c;
+  SrvConnect* con;
   char* buffer;
 
   upic_get_input_with_index (&menu, &command, &param, &list_index);
   switch (menu)  {
   case MAIN_MENU:
     switch (command)    {
-  case C_DESTINATION:
-    {
-      char* c;
-      length = cut_blanks (Dest);
-      Dest[length] = '\0';
-      upper_case (Dest);
-      c = (char*) strchr (Node, ':');
-      if (c) *c = '\0';
-      c = (char*) strchr (Node, ' ');
-      if (c) *c = '\0';
-      upper_case (Node);
-      if (strlen(Node))        {
-        strcpy (Ams_dest, Node);
-        strcat (Ams_dest, "::");
-      }
-      else  {
-        strcpy (Ams_dest, My_node);
-        strcat (Ams_dest, "::");
-      }
-      strcat (Ams_dest, Dest);
+    case C_DESTINATION:
+      {
+	char* c;
+	length = cut_blanks (Dest);
+	Dest[length] = '\0';
+	upper_case (Dest);
+	c = (char*) strchr (Node, ':');
+	if (c) *c = '\0';
+	c = (char*) strchr (Node, ' ');
+	if (c) *c = '\0';
+	upper_case (Node);
+	if (strlen(Node))        {
+	  strcpy (Ams_dest, Node);
+	  strcat (Ams_dest, "::");
+	}
+	else  {
+	  strcpy (Ams_dest, My_node);
+	  strcat (Ams_dest, "::");
+	}
+	strcat (Ams_dest, Dest);
 
-      if (to_be_started (Dest))        {
-        upic_disable_command (MAIN_MENU, C_CONNECT);
-        upic_disable_command (MAIN_MENU, C_DISCONNECT);
-        upic_disable_command (MAIN_MENU, C_KILL);
-        upic_enable_command  (MAIN_MENU, C_START);
-        upic_set_cursor (MAIN_MENU, C_START, 0);
+	if (to_be_started (Dest))        {
+	  upic_disable_command (MAIN_MENU, C_CONNECT);
+	  upic_disable_command (MAIN_MENU, C_DISCONNECT);
+	  upic_disable_command (MAIN_MENU, C_KILL);
+	  upic_enable_command  (MAIN_MENU, C_START);
+	  upic_set_cursor (MAIN_MENU, C_START, 0);
+	}
+	else        {
+	  upic_enable_command  (MAIN_MENU, C_CONNECT);
+	  upic_enable_command  (MAIN_MENU, C_DISCONNECT);
+	  upic_enable_command  (MAIN_MENU, C_KILL);
+	  upic_disable_command (MAIN_MENU, C_START);
+	  upic_set_cursor (MAIN_MENU, C_CONNECT, 0);
+	}
       }
-      else        {
-        upic_enable_command  (MAIN_MENU, C_CONNECT);
-        upic_enable_command  (MAIN_MENU, C_DISCONNECT);
-        upic_enable_command  (MAIN_MENU, C_KILL);
-        upic_disable_command (MAIN_MENU, C_START);
-        upic_set_cursor (MAIN_MENU, C_CONNECT, 0);
-      }
-    }
-    break;
-  case C_CONNECT:
-    connectTask(Ams_dest);
-    break;
-  case C_DISCONNECT:
-    UpiBufferPutInt (AckBuffer, UPIF_DISCONNECT_PROCESS);
-    status = server_send_message (Ams_dest);
-    if (!(status & 1)) upic_signal_error (status, "");
-    else upic_write_message ("Disconnecting...", "");
-    break;
-  case C_KILL:
-    kill_process (Dest);
-    break;
-  case C_START:
-    upic_disable_command (MAIN_MENU, C_START);
-    upic_set_cursor (MAIN_MENU, C_DESTINATION, 0);
-    upic_end_update ();
-    start (Dest, Node);
-    break;
-  case C_LOCK:
-    if (Cursor_locked) unlock_cursor (0);
-    else lock_cursor (0);
-    break;
-  case C_SAVE_CONF:
-    save_conf();
-    break;
-  case C_RESTORE_CONF:
-    start_restore_conf();
-    break;
-  case C_EXIT:
-    End = 1;
-    break;
-  default:
-    {
+      break;
+    case C_CONNECT:
+      connectTask(Ams_dest);
+      break;
+    case C_DISCONNECT:
+      UpiBufferPutInt (AckBuffer, UPIF_DISCONNECT_PROCESS);
+      status = server_send_message (Ams_dest);
+      if (!(status & 1)) upic_signal_error (status, "");
+      else upic_write_message ("Disconnecting...", "");
+      break;
+    case C_KILL:
+      kill_process (Dest);
+      break;
+    case C_START:
+      upic_disable_command (MAIN_MENU, C_START);
+      upic_set_cursor (MAIN_MENU, C_DESTINATION, 0);
+      upic_end_update ();
+      start (Dest, Node);
+      break;
+    case C_LOCK:
+      if (Cursor_locked) unlock_cursor (0);
+      else lock_cursor (0);
+      break;
+    case C_SAVE_CONF:
+      save_conf();
+      break;
+    case C_RESTORE_CONF:
+      start_restore_conf();
+      break;
+    case C_EXIT:
+      End = 1;
+      break;
+    default:    {
       SrvConnect* cc  = find_connect_with_id(menu, &rid);
-      c = find_connect_with_id(command, &remote_id);
-      if (c)    {
-        upic_set_cursor_and_mark(c->current_menu,c->current_command,c->current_param,cc==c ? 1 : 0);
+      con = find_connect_with_id(command, &remote_id);
+      if (con)    {
+	upic_set_cursor_and_mark(con->current_menu,con->current_command,con->current_param,cc==con ? 1 : 0);
       }
     }
     }
@@ -717,44 +716,44 @@ void upi_handler()  {
       Kbd_connect* c = find_kbd_connect_with_lun (r->lun);
       upic_change_titles (2, c->name, "", "");
     }
-                       }
-                       break;
+  }
+    break;
   case LOGFILE_MENU:
     switch (command)  {
-  case C_LOG_ACTIVATE:
-    LogFile_active = 1;
-    log_show ();
-    upic_disable_command(LOGFILE_MENU, C_LOG_ACTIVATE);
-    upic_enable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
-    upic_enable_command (LOGFILE_MENU, C_LOG_RESET);
-    upic_net_start_log ();
-    break;
-  case C_LOG_DISACTIVATE:
-    LogFile_active = 0;
-    upic_enable_command  (LOGFILE_MENU, C_LOG_ACTIVATE);
-    upic_disable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
-    upic_disable_command (LOGFILE_MENU, C_LOG_RESET);
-    upic_net_stop_log ();
-    break;
-  case C_LOG_RESET:
-    log_reset ();
-    break;
-  case C_LOG_NAME:
-    log_set_name (LogFile_name);
-    break;
-  case C_LOG_SHOW:
-    log_get_name ();
-    upic_refresh_param_page (LOGFILE_MENU);
-    log_show ();
-    break;
-  case C_LOG_DUMP_DTB:
-    database_dump ();
-    upic_net_flush_log ();
-    break;
+    case C_LOG_ACTIVATE:
+      LogFile_active = 1;
+      log_show ();
+      upic_disable_command(LOGFILE_MENU, C_LOG_ACTIVATE);
+      upic_enable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
+      upic_enable_command (LOGFILE_MENU, C_LOG_RESET);
+      upic_net_start_log ();
+      break;
+    case C_LOG_DISACTIVATE:
+      LogFile_active = 0;
+      upic_enable_command  (LOGFILE_MENU, C_LOG_ACTIVATE);
+      upic_disable_command (LOGFILE_MENU, C_LOG_DISACTIVATE);
+      upic_disable_command (LOGFILE_MENU, C_LOG_RESET);
+      upic_net_stop_log ();
+      break;
+    case C_LOG_RESET:
+      log_reset ();
+      break;
+    case C_LOG_NAME:
+      log_set_name (LogFile_name);
+      break;
+    case C_LOG_SHOW:
+      log_get_name ();
+      upic_refresh_param_page (LOGFILE_MENU);
+      log_show ();
+      break;
+    case C_LOG_DUMP_DTB:
+      database_dump ();
+      upic_net_flush_log ();
+      break;
     }
     break;
   default:    
-    if ((c = find_connect_with_id (menu, &remote_id)) && !c->disabled)  {
+    if ((con = find_connect_with_id (menu, &remote_id)) && !con->disabled)  {
       UpiBufferPutInt (AckBuffer, UPIF_INPUT);
       UpiBufferPutInt (AckBuffer, remote_id);
       UpiBufferPutInt (AckBuffer, command);
@@ -763,8 +762,8 @@ void upi_handler()  {
       upic_store_vars (menu, command, &buffer, &length);
       UpiBufferPutBytes (AckBuffer, buffer, length);
       free (buffer);
-      server_send_message (c->source);
-      c->disabled = 0;
+      server_send_message (con->source);
+      con->disabled = 0;
     }
     break;
   }
@@ -800,7 +799,6 @@ int message_handler (unsigned int, void*)  {
   int       code, *cursor_context;
   char*     source = 0, *buffer = 0;
   SrvConnect*  c = 0;
-  UpiConnect connect  = 0;
   UpiBufferInfo info;
 
   int status = upic_net_read (&buffer, &message_length, &source);
@@ -812,7 +810,7 @@ int message_handler (unsigned int, void*)  {
 
   UpiBufferInit (GetBuffer, buffer, message_length);
   if (source)  {
-    connect = UpiConnectNew (source);
+    /* UpiConnect connect = */ UpiConnectNew (source);
     c = find_connect (source);
     free (source);
   }

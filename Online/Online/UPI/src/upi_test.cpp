@@ -21,8 +21,8 @@ namespace  {
   };
 
   //  Variables for creating a parameter
-  const char param_type[] = "INTEGER";
-  const char   param_string[10][81] = {"","","","","","","","","",""};
+  //const char param_type[] = "INTEGER";
+  //const char param_string[10][81] = {"","","","","","","","","",""};
 
   int Replay[80];
   int Replay_size = 0;

@@ -421,8 +421,8 @@ void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)  {
     double* s = (double*)list;
     int bytes = size * sizeof(double);
     double *p = (double*) UpiBufferExtend (buffer, bytes);
-    break;
     for (int i=0; i<size; i++,p++,s++) *p = *s;
+    break;
   }
   }
 }
