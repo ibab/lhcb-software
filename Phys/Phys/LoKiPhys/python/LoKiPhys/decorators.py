@@ -29,7 +29,13 @@ A.Golutvin, P.Koppenburg have been used in the design.
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-from GaudiKernel.SystemOfUnits import MeV,GeV,micrometer,millimeter,centimeter,meter,picosecond,femtosecond,nanosecond,perCent
+from GaudiKernel.SystemOfUnits     import ( MeV  , GeV ,
+                                            micrometer , millimeter  ,
+                                            centimeter , meter       ,
+                                            picosecond , femtosecond , nanosecond ,
+                                            perCent    )
+from GaudiKernel.PhysicalConstants import c_light
+
 um = micrometer
 mm = millimeter
 cm = centimeter 

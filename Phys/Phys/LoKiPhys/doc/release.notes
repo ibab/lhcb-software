@@ -5,6 +5,15 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-31 - Vanya Belyaev
+
+ - add 'c_light' 
+
+ - cmt/requirements 
+ 
+     version increment to v9r3p2
+
+
 ! ========================== LoKiPhys v9r3p1 2010-08-26 =======================
 
 ! 2010-08-24 - Gerhard Raven
