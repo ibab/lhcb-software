@@ -1,8 +1,8 @@
 project MOORE
 
 use HLT     HLT_v11r0
-use LBCOM	LBCOM_v9r5p1
-use REC		REC_v10r3p1
+use LBCOM	LBCOM_v9r6
+use REC		REC_v10r4
 use ONLINE  ONLINE_v4r43
 
 container       MooreSys
