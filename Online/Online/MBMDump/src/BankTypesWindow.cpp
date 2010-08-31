@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankTypesWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankTypesWindow.cpp,v 1.6 2010-08-31 16:02:34 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: BankTypesWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
+// $Id: BankTypesWindow.cpp,v 1.6 2010-08-31 16:02:34 frankb Exp $
 //
 // C++ include files
 #include <string>
@@ -36,17 +36,17 @@ BankTypesWindow::BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Bank
   addComment(C_COM6,"| Type         Type #      Vsn    No.Banks |");
   addComment(C_COM7,"+------------------------------------------+");
   for(Banks::iterator k=m_banks.begin(); k!=m_banks.end();++k)  {
-    const RawBank* b = (*k).second;
-    std::pair<int,int> typ(b->type(),b->version());
+    const RawBank* bank = (*k).second;
+    std::pair<int,int> typ(bank->type(),bank->version());
     BankMap::iterator i = m_map.find(typ);
-    if ( i == m_map.end() ) m_map.insert(std::make_pair(typ,std::make_pair(b,0)));
+    if ( i == m_map.end() ) m_map.insert(std::make_pair(typ,std::make_pair(bank,0)));
     m_map[typ].second++;
   }
   int cnt = 0;
   for(BankMap::iterator i=m_map.begin(); i != m_map.end(); ++i, ++cnt)  {
-    const RawBank* b = (*i).second.first;
+    const RawBank* bank = (*i).second.first;
     ::sprintf(txt,"  %-16s %2d %8d %11d",
-      RawEventPrintout::bankType(b->type()).c_str(),b->type(),
+      RawEventPrintout::bankType(bank->type()).c_str(),bank->type(),
       (*i).first.second,(*i).second.second);
     addCommand(C_TYPES+cnt,txt);
   }

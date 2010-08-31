@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.6 2009-04-22 11:40:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.7 2010-08-31 16:02:34 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MultiFragmentWindow.cpp,v 1.6 2009-04-22 11:40:52 frankb Exp $
+// $Id: MultiFragmentWindow.cpp,v 1.7 2010-08-31 16:02:34 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -23,8 +23,8 @@
 using namespace LHCb;
 using namespace MBMDump;
 
-MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& f, MEPMultiFragment* mf)
-: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f), m_frag(mf), 
+MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPMultiFragment* mf)
+: BaseMenu(par), m_parentCmd(cmd_id), m_fmt(fmt), m_frag(mf), 
   m_fragWindow(0), m_banksWindow(0)
 {
   char txt[256];

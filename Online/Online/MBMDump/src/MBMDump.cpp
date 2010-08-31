@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.9 2009-12-01 01:36:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMDump.cpp,v 1.10 2010-08-31 16:02:34 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMDump.cpp,v 1.9 2009-12-01 01:36:14 frankb Exp $
+// $Id: MBMDump.cpp,v 1.10 2010-08-31 16:02:34 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -24,7 +24,7 @@ void MBMDump::rconv(char c[], int word)   {
   for(int i=0;i<4;i++){
     //c[3-i] = (word>>(i*8) & 0XFF);
     //if(!isalnum(c[3-i]))c[3-i] = '.';
-    c[i] = (word>>(i*8) & 0XFF);
+    c[i] = char((word>>(i*8) & 0XFF));
     if(!isalnum(c[i]))  {
       if ( isspace(c[i]) ) c[i] = ' ';
       else if ( ispunct(c[i]) );

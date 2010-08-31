@@ -763,5 +763,5 @@ namespace MBMDump  {
     if ( ref != 0 ) delete ref;
     return ref = rep;
   }
-};
+}
 #endif //  MBMDUMP_H

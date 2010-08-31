@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MEPWindow.cpp,v 1.9 2009-04-22 11:40:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MEPWindow.cpp,v 1.10 2010-08-31 16:02:34 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MEPWindow.cpp,v 1.9 2009-04-22 11:40:52 frankb Exp $
+// $Id: MEPWindow.cpp,v 1.10 2010-08-31 16:02:34 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -31,7 +31,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
   MEPEVENT* e  = (MEPEVENT*)d.start;
   MEPEvent* me = (MEPEvent*)e->data;
   ::sprintf(txt,"MEP Event: size %ld Bytes  [MBM size:%ld Bytes]",
-    long(me->size()), long(d.length*sizeof(int)));
+	    long(me->size()), long(d.length*sizeof(int)));
   addComment(C_COM1,txt);
   unsigned int eid_h = 0, pid = 0, cnt = 0;
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf),++cnt) {
@@ -47,8 +47,8 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
       addComment(C_COM7,"| #    Size Packing  EidH Start      End           |");
       addComment(C_COM8,"+--------------------------------------------------+");
     }
-    sprintf(txt,"%3d:%7ld %7ld %5d %10p %10p",
-      cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
+    sprintf(txt,"%3u:%7ld %7ld %5u %10p %10p",
+	    cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
     addCommand(C_MULTIFRAGS+cnt,txt);
   }
   closeMenu();

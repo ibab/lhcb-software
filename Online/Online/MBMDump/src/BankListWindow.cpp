@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankListWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankListWindow.cpp,v 1.6 2010-08-31 16:02:34 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: BankListWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
+// $Id: BankListWindow.cpp,v 1.6 2010-08-31 16:02:34 frankb Exp $
 //
 // C++ include files
 #include <string>
@@ -47,13 +47,13 @@ void BankListWindow::build()  {
     unsigned int eid = m_banks[cnt].first;
     const RawBank* b = m_banks[cnt].second;
     if ( b->magic() != RawBank::MagicPattern )  {
-      sprintf(txt,"EID:%d -> Corrpted data structures at %p - No magic pattern",eid,b);
+      ::sprintf(txt,"EID:%u -> Corrpted data structures at %p - No magic pattern",eid,b);
       addComment(C_BANKS+cnt,txt);
       break;
     }
-    ::sprintf(txt," %8d %-16s %2d %8d %5d %7d %8p",
-      eid,RawEventPrintout::bankType(b->type()).c_str(),
-      b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
+    ::sprintf(txt," %8u %-16s %2d %8d %5d %7d %8p",
+	      eid,RawEventPrintout::bankType(b->type()).c_str(),
+	      b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     //if ( (cnt%10) != 0 )  {
     //  addComment(C_BANKS+cnt,txt);
     //  continue;
