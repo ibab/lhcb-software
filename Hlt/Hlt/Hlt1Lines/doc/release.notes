@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.208 2010-08-30 08:09:31 graven Exp $
+! $Id: release.notes,v 1.209 2010-08-31 06:15:37 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-08-31 - Johannes Albrecht
+ - add slot for muon segment search windows, tighten
 
 !========================== Hlt1Lines v4r2   2010-08-29 ===================
 ! 2010-08-30 - M. Witek
