@@ -5,6 +5,9 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-08-31 - Olivier Deschamps
+  - fix compilation warning on slc4
+
 ! 2010-08-27 - Olivier Deschamps
   - new algorithm : CaloHypoNtp
   - CaloHypoMonitor : new monitoring histogram Nhypo/Nclusters

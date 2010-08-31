@@ -157,7 +157,7 @@ StatusCode CaloHypoMonitor::execute(){
     LHCb::CaloCellID id = LHCb::CaloCellID();
     if ( (*hypo)->clusters().size() > 0 ){
       SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
-      if( NULL != cluster)id = (*cluster).seed();      
+      if( 0 != cluster)id = (*cluster).seed();      
     }
 
 

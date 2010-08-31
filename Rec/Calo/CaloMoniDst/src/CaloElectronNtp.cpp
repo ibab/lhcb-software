@@ -86,7 +86,7 @@ StatusCode CaloElectronNtp::execute() {
 
   // GET ODIN INFO
   int run = 0;
-  long evt = 0;
+  ulonglong evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -186,7 +186,7 @@ StatusCode CaloElectronNtp::execute() {
       
       // odin info
       sc=ntp->column("run"   , run         );
-      sc=ntp->column("event" , evt );
+      sc=ntp->column("event" , (double) evt );
       sc=ntp->column("triggertype" , tty );
     }
     

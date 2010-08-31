@@ -86,13 +86,13 @@ StatusCode CaloPi0Ntp::execute(){
   std::string l0loc = LHCb::L0DUReportLocation::Default;
   if( exist<LHCb::L0DUReport>( l0loc)){
     LHCb::L0DUReport* l0   = get<LHCb::L0DUReport>( l0loc );
-    m_spdMult = l0->dataValue("Spd(Mult)");
+    m_spdMult = (int) l0->dataValue("Spd(Mult)");
   }
   
 
   // GET ODIN INFO
   int run = 0;
-  long evt = 0;
+  ulonglong evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -229,7 +229,7 @@ StatusCode CaloPi0Ntp::execute(){
       if( (isPi0 ) || (m_bkg && isBkg ) ){
 
         double prs2 = m_toPrs->energy ( *p2 , "Prs"  );
-        int spd = 0.;
+        int spd = 0;
         int spd2 = m_toSpd->multiplicity ( *p2 , "Spd");
         if(  spd2 >0 )spd +=1;
         if(  spd1 >0 )spd +=2;
@@ -277,7 +277,7 @@ StatusCode CaloPi0Ntp::execute(){
           sc=ntp->column("clEmass",cccmas);
           // odin info
           sc=ntp->column("run"   , run         );
-          sc=ntp->column("event" , evt );
+          sc=ntp->column("event" , (double) evt );
           sc=ntp->column("triggertype" , tty );
           // #vertices
           sc=ntp->column("Nvertices", nVert);
@@ -378,7 +378,7 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
     plot1D(di.mass(), base+"/"+sVert+"/all" , base+"/all  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
     double Y1 = m_calo->cellCenter( id1 ).Y();
     double Y2 = m_calo->cellCenter( id2 ).Y();
-    if( abs(Y1)<300 && abs(Y2)<300)
+    if( fabs(Y1)<300 && fabs(Y2)<300)
       plot1D(di.mass(), base+"/"+sVert+"/band" , base+"/band  #PV="+Gaudi::Utils::toString( nVert ) , m_hMin, m_hMax, m_hBin);
   }
 
@@ -389,7 +389,7 @@ void CaloPi0Ntp::hTuning(std::string base, int spd,double prs1, double prs2,
     plot1D(di.mass(), base+"/"+sSpd+"/all" , base+"/all  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
     double Y1 = m_calo->cellCenter( id1 ).Y();
     double Y2 = m_calo->cellCenter( id2 ).Y();
-    if( abs(Y1)<300 && abs(Y2)<300)
+    if( fabs(Y1)<300 && fabs(Y2)<300)
       plot1D(di.mass(),base+"/"+sSpd+"/band",base+"/band  #Spd="+Gaudi::Utils::toString( spdslot*m_spdBin ),m_hMin,m_hMax,m_hBin);
   }
 

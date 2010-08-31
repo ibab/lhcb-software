@@ -79,7 +79,7 @@ StatusCode CaloHypoNtp::execute(){
   std::string l0loc = LHCb::L0DUReportLocation::Default;
   if( exist<LHCb::L0DUReport>( l0loc)){
     LHCb::L0DUReport* l0   = get<LHCb::L0DUReport>( l0loc );
-    m_spdMult = l0->dataValue("Spd(Mult)");
+    m_spdMult = (int) l0->dataValue("Spd(Mult)");
   }
 
   // vertices&tracks
@@ -96,7 +96,7 @@ StatusCode CaloHypoNtp::execute(){
 
   // Odin
   int run = 0;
-  long evt = 0;
+  ulonglong evt = 0;
   int tty = 0;
   m_odin->getTime();
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -171,7 +171,7 @@ StatusCode CaloHypoNtp::execute(){
         
         // odin info
         sc=ntp->column("run"   , run         );
-        sc=ntp->column("event" , evt );
+        sc=ntp->column("event" , (double) evt );
         sc=ntp->column("triggertype" , tty );
         // #vertices & tracks
         sc=ntp->column("Nvertices", nVert);
