@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.18 2009-04-17 13:16:37 frankb Exp $
+// $Id: FarmDisplay.h,v 1.19 2010-08-31 14:40:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.18 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.19 2010-08-31 14:40:45 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -60,6 +60,8 @@ namespace ROMon {
     virtual ~HelpDisplay() {}
     /// Update display content
     virtual void update(const void*) {}
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
 
   /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -78,6 +80,8 @@ namespace ROMon {
     virtual ~ProcessDisplay();
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
     /// Update display content
     void updateContent(const ProcFarm& pf);
   };
@@ -98,6 +102,8 @@ namespace ROMon {
     virtual ~CPUDisplay();
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
     /// Update display content
     void updateContent(const CPUfarm& pf);
   };
@@ -121,6 +127,8 @@ namespace ROMon {
     void setNode(int which) { m_node = which; }
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
 
   /**@class CtrlNodeDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -142,6 +150,8 @@ namespace ROMon {
     void setNode(int which) { m_node = which; }
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
 
   /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
