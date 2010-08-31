@@ -1,3 +1,7 @@
+2010-08-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added "retrieve" message in non debug mode.
+
 2010-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: exclude the "NOT_READY" from the tarball creation.

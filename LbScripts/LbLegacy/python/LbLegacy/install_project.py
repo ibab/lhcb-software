@@ -579,6 +579,7 @@ def getFile(url, fname):
         local_retries = nb_retries + 1
         hasbeendownloaded = False
         while (not hasbeendownloaded and (local_retries > 0)) :
+            log.info("Retrieving %s" % url + "/" +fname)
             h = retrieve(url + '/' + fname, dest)[1]
             if h.type.find(filetype) == -1:
                 log.warning('cannot download %s - retry' % fname)
