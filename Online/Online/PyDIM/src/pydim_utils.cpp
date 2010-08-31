@@ -25,8 +25,7 @@ extern "C" {
 
 //#ifdef _WIN32
 #include <cstdarg> 
-static inline void ___print(const char* fmt,...)
-{
+static inline void ___print(const char* fmt,...)   {
   va_list args; 
   va_start(args,fmt); 
   vprintf(fmt,args); 
