@@ -149,7 +149,7 @@ const LHCb::CaloCluster*  LHCb::CaloAlgUtils::ClusterFromHypo(const LHCb::CaloHy
     if( !hsplit )return hypo->clusters().front(); // SHOULD NEVER OCCUR
     SmartRef<LHCb::CaloCluster> cluster ;
     for(LHCb::CaloHypo::Clusters::const_iterator icl =  clusters.begin();icl!= clusters.end();++icl){
-      if( NULL == *icl)continue;
+      if( 0 == *icl)continue;
       std::string ccont = (*icl)->parent()->registry()->identifier();
       std::string uCcont = toUpper( ccont );
       if( split  &&  std::string::npos != uCcont.find( "SPLIT" ) )cluster = *icl;   // return splitCluster
@@ -161,9 +161,9 @@ const LHCb::CaloCluster*  LHCb::CaloAlgUtils::ClusterFromHypo(const LHCb::CaloHy
     SmartRef<LHCb::CaloCluster> minCl ;
     SmartRef<LHCb::CaloCluster> maxCl ;
     unsigned int min = 999999;
-    unsigned int max = -999999;
+    unsigned int max = 0;
     for(LHCb::CaloHypo::Clusters::const_iterator icl = clusters.begin();icl!=clusters.end();++icl){
-      if( NULL == *icl)continue;
+      if( 0 == *icl)continue;
       if( (*icl)->entries().size() < min){
         minCl = *icl;
         min = (*icl)->entries().size();
