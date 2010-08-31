@@ -129,7 +129,7 @@ int scrc_handler_keyboard (unsigned int fac, void* par)  {
     status = IOPortManager::getAvailBytes(fd);
     if ( status>0 )  {
       IOPortManager::getChar(fd, &Last_char);
-      if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,fac,Last_char,Last_char);
+      if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,int(fac),Last_char,Last_char);
       if ( User_Basic_Key_Handler ) (*User_Basic_Key_Handler)(Last_char);
       if ( User_mouse_handler ) ::scrc_handle_mouse(Kbd,Last_char);
       if (Key_ptr >= KEY_BUF_SIZE) status = 0;
@@ -813,7 +813,7 @@ int scrc_read_keyboard (Display * /*disp */, int wait)  {
   void* dummy;  
   if (wait) status = ::wtc_wait(&event,&dummy,&sub_status);
   int key = ::scrc_get_last_key ();
-  if(_p)printf("scrc_read_keyboard: Got char: %d %02X\n",key,key);
+  if(_p)printf("scrc_read_keyboard: Got char: %d %02X status=%d\n",key,key,status);
   return key;
 }
 

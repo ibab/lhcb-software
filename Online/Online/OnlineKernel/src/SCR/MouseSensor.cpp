@@ -7,6 +7,7 @@
 #include "RTL/SysTime.h"
 
 using namespace SCR;
+typedef unsigned char uc8;
 
 static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
   static unsigned int click = 0;
@@ -29,7 +30,7 @@ static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
 
 /// Standard constructor
 MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms) 
-: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), msec(ms), display(0)
+  : button(uc8(key&0x3)), modifier(uc8(key>>2)), x(uc8(x_val-0x20)), y(uc8(y_val-0x20)), msec(ms), display(0)
 {
 }
 

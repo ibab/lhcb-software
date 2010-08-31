@@ -2,12 +2,13 @@
 #define ONLINEKERNEL_RTL_ALLACCESS_H
 
 typedef long (*func)(int, char**);
-union Function {
-  Function(void* p) { ptr = p; }
-  void* ptr;
-  func  function;
-};
-
+namespace {
+  union Function {
+    explicit Function(void* p) { ptr = p; }
+    void* ptr;
+    func  function;
+  };
+}
 #include <string>
 
 #ifdef _WIN32

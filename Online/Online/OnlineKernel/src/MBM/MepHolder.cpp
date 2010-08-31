@@ -23,7 +23,8 @@ namespace {
       ::lib_rtl_output(LIB_RTL_INFO," RESULT buffer start: %08X\n",m_mepID->resStart);
     }
     virtual int run() {
-      while(1) {
+      bool exec = true;
+      while(exec) {
 	::mep_scan(m_mepID,0);
 #ifdef _WIN32
 	::lib_rtl_sleep(1);

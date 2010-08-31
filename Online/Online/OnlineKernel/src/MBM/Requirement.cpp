@@ -36,35 +36,35 @@ void MBM::Requirement::parse(const std::string& reqstring)
   for(int i=0;i<ikey;i++)  {
     char* keyw = strtok(items[i],"=");
     for (unsigned int j=0;j<strlen(keyw);j++)  {
-      keyw[j] = ::toupper(keyw[j]);
+      keyw[j] = char(::toupper(keyw[j]));
     }
     char* values = strtok(NULL,"=");
     if ( ::strcmp(keyw, "EVTYPE") == 0 )    {
-      sscanf(values,"%d",&evtype);
+      ::sscanf(values,"%d",&evtype);
       continue;
     }
     if ( ::strcmp(keyw,"TRIGGERMASK") == 0 )  {
       char *v = strtok(values,",");
-      memset(trmask, 0, sizeof(trmask));
+      ::memset(trmask, 0, sizeof(trmask));
       for (int j=0; v != 0 && j<4; j++)  {
         ::sscanf(v,"%x",&trmask[j]);
         v = ::strtok(NULL,",");
       }
       continue;
     }
-    if (strcmp(keyw,"VETOMASK") == 0)    {
-      memset(vetomask, 0, sizeof(vetomask));
+    if ( ::strcmp(keyw,"VETOMASK") == 0 )    {
+      ::memset(vetomask, 0, sizeof(vetomask));
       char *v = strtok(values,",");
       for (int j=0; v != 0 && j<4; j++)  {
-        sscanf(v,"%x",&vetomask[j]);
+        ::sscanf(v,"%x",&vetomask[j]);
         v = strtok(NULL,",");
       }
     }
-    if (strcmp(keyw, "MASKTYPE") == 0)  {
+    if ( ::strcmp(keyw, "MASKTYPE") == 0 )  {
       for (unsigned int j=0;j<strlen(values);j++)  {
-        values[j] = toupper(values[j]);
+        values[j] = char(::toupper(values[j]));
       }
-      if (strcmp(values,"ANY") == 0)  {
+      if ( ::strcmp(values,"ANY") == 0 )  {
         maskType = BM_MASK_ANY;
       }
       else  {
@@ -74,7 +74,7 @@ void MBM::Requirement::parse(const std::string& reqstring)
     }
     if (strcmp(keyw, "USERTYPE") == 0)   {
       for (unsigned int j=0;j<strlen(values);j++)  {
-        values[j] = toupper(values[j]);
+        values[j] = char(::toupper(values[j]));
       }
       if (strcmp(values,"USER") == 0)
         userType = BM_REQ_USER;
@@ -86,7 +86,7 @@ void MBM::Requirement::parse(const std::string& reqstring)
     }
     if (strcmp(keyw, "FREQUENCY") == 0)  {
       for (unsigned int j=0;j<strlen(values);j++)  {
-        values[j] = toupper(values[j]);
+        values[j] = char(::toupper(values[j]));
       }
       if (strcmp(values,"MANY") == 0)
         freqType = BM_FREQ_MANY;

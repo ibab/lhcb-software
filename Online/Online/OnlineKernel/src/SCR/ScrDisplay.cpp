@@ -42,7 +42,7 @@ Pasteboard* ScrDisplay::pasteboard() const {
 }
 
 void ScrDisplay::print_char(int x, int y, int attr, int val) {
-  ::scrc_put_char(m_display,val,attr,y,x);
+  ::scrc_put_char(m_display,char(val),attr,y,x);
 }
 
 void ScrDisplay::setup_window() {
@@ -204,13 +204,13 @@ extern "C" int scr_ascii(int /* argc */, char** /* argv */) {
   ::scrc_end_pasteboard_update (pb);
   ::scrc_fflush (pb);
   ::scrc_begin_pasteboard_update (pb);
-  for ( unsigned char j=0, v='0', vv='0'; j < 100; ++j)  {
+  for (char j=0, v='0', vv='0'; j < 100; ++j)  {
     vv = '0'+(j/10);
     if ( vv != v ) {
       v = vv;
-      ::scrc_put_char(display,'0'+(j/10),NORMAL,2,2+j);
+      ::scrc_put_char(display,char('0'+(j/10)),NORMAL,2,2+j);
     }
-    ::scrc_put_char(display,'0'+(j%10),NORMAL,3,2+j);
+    ::scrc_put_char(display,char('0'+(j%10)),NORMAL,3,2+j);
   }
   for ( unsigned char i=0; i < 255; ++i)  {
     ::scrc_put_char(display,i,NORMAL,5+(i/100),2+(i%100));
