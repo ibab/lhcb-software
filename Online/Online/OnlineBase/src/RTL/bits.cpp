@@ -197,7 +197,7 @@ int BF_set(char* base, int pos, int len)   {
     msk = bit_mask+bit;
     j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
     for ( k=bit; k<j; ++k, ++msk)
-      *base |= *msk;
+      *base |= char(*msk);
     len -= j-bit;
     ++base;
   }
@@ -208,7 +208,7 @@ int BF_set(char* base, int pos, int len)   {
     base += j;
   }
   for ( k=0, msk=bit_mask; k<len; ++k,++msk )
-    *base |= *msk;
+    *base |= char(*msk);
   return 1;
 }
 
@@ -220,7 +220,7 @@ int BF_free(char* base,int pos, int len) {
     msk = inv_mask+bit;
     j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
     for(k=bit; k<j; ++k, ++msk)  {
-      *base &= *msk;
+      *base &= char(*msk);
     }
     len -= j-bit;
     ++base;
@@ -232,7 +232,7 @@ int BF_free(char* base,int pos, int len) {
     base += j;
   }
   for(k=0, msk = inv_mask; k<len; ++k,++msk)  {
-    *base &= *msk;
+    *base &= char(*msk);
   }
   return 1;
 }
@@ -282,14 +282,15 @@ void Bits::dumpWords(const void* field, int len, std::vector<std::string>& words
   for(int i = 0; i < len; i += sizeof(int) )  {
     for (int k = 0; k<BITS_PER_BYTE; ++k)  {
       word[k]    = (txt[i]&(1<<k))   ? '1' : '0';
-      word[k+BITS_PER_BYTE]   = i+1<len ? (txt[i+1]&(1<<k)) ? '1' : '0' : 0;
-      word[k+2*BITS_PER_BYTE] = i+2<len ? (txt[i+2]&(1<<k)) ? '1' : '0' : 0;
-      word[k+3*BITS_PER_BYTE] = i+3<len ? (txt[i+3]&(1<<k)) ? '1' : '0' : 0;
+      word[k+BITS_PER_BYTE]   = char(i+1<len ? (txt[i+1]&(1<<k)) ? '1' : '0' : 0);
+      word[k+2*BITS_PER_BYTE] = char(i+2<len ? (txt[i+2]&(1<<k)) ? '1' : '0' : 0);
+      word[k+3*BITS_PER_BYTE] = char(i+3<len ? (txt[i+3]&(1<<k)) ? '1' : '0' : 0);
     }
     words.push_back(word);
   }
 }
 
+#ifdef _WIN32
 static inline int generic_ffs(int x)  {
   int r = 1;
   if (!x)
@@ -343,7 +344,7 @@ static inline int generic_ffc(int x)  {
   }
   return r;
 }
-#ifdef _WIN32
+
 #define ffs generic_ffs
 #define ffc generic_ffc
 #endif

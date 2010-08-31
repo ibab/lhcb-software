@@ -23,7 +23,6 @@
 #define E_MNF  221
 
 namespace MBM {
-  static int USER_next_off;
   static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
   typedef XML::Stream XMLStream;
 
@@ -94,7 +93,6 @@ void MBM::XMLMonitorServer::getOptions(int argc, char** argv)    {
 }
 
 int MBM::XMLMonitorServer::monitor() {
-  byte_offset(USER,next,USER_next_off);
   while(1)    {
     void* par;
     unsigned int fac;
@@ -102,8 +100,9 @@ int MBM::XMLMonitorServer::monitor() {
     status = wtc_wait( &fac, &par, &sub_status );
     lib_rtl_output(LIB_RTL_ALWAYS,"Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
   }
-  return 1;
+  // Unreachable: return 1;
 }
+
 void MBM::XMLMonitorServer::handle() {
 }
 
@@ -114,14 +113,14 @@ int MBM::XMLMonitorServer::handle ( EventHandler* handler )  {
 }
 
 int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
-  int retry = 1, accept_error;                                     //
+  int retry = 1;                                                   //
   NetworkChannel::Address address;                                 //
-  NetworkChannel::Channel channel = m_pNetwork->accept(address);  // Accept
-  accept_error = m_pNetwork->error();                             //
-  int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
+  NetworkChannel::Channel channel = m_pNetwork->accept(address);   // Accept
+  int accept_error = m_pNetwork->error();                          //
+  int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
     lib_rtl_output(LIB_RTL_ALWAYS,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-      m_pNetwork->error(),retry,m_pNetwork->errMsg());
+      accept_error,retry,m_pNetwork->errMsg());
   }
   if ( channel > 0 )   {
     TcpNetworkChannel chan(channel);

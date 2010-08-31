@@ -145,7 +145,9 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
       }
       return 1;
     }
+#if defined(_WIN32)
     return ::lib_rtl_signal_message(LIB_RTL_OS,"error in deleting lock %s %08X.",h->name,h->handle);
+#endif
   }
   return ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot delete lock [INVALID HANDLE].");
 }
@@ -223,19 +225,14 @@ int lib_rtl_trylock(lib_rtl_lock_t h) {
     int sc = ::i_sem_trywait(h->handle);
     if ( sc == 0 ) return 1;
     else if ( errno == EAGAIN ) return 2;
-    else
 #elif defined(_WIN32)
     DWORD sc = ::WaitForSingleObjectEx(h->handle,0,TRUE);
     if ( sc == WAIT_OBJECT_0 ) return 1;
     else if ( sc == WAIT_ABANDONED || sc == WAIT_TIMEOUT ) return 2;
-    else
 #endif
-    {
-      return ::lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
-        h->name,h->handle);
-    }
     h->held = 1;
-    return 1;
+    return ::lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
+				    h->name,h->handle);
   }
   ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
   return 0;

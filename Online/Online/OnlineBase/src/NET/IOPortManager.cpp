@@ -89,9 +89,9 @@ namespace {
     void* param;
     int armed;
   };
-  static bool s_unloading = false;
+  // static bool s_unloading = false;
   int ioman_exithandler(void*) {
-    s_unloading = true;
+    //s_unloading = true;
     return 1;
   }
   
@@ -106,10 +106,10 @@ namespace {
   public:
     static int threadCall(void* param);
     static int consoleCall(void* param);
-    EntryMap(__NetworkPort__ p);
+    explicit EntryMap(__NetworkPort__ p);
     ~EntryMap();
-    const lib_rtl_thread_t& thread() const { return m_thread; }
-    __NetworkPort__ port() const { return m_port; }
+    //const lib_rtl_thread_t& thread() const { return m_thread; }
+    //__NetworkPort__ port() const { return m_port; }
     void setDirty() { m_dirty = true; }
     void stop();
     void join();

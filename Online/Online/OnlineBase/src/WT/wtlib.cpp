@@ -27,20 +27,20 @@ struct wt_fac_entry : public qentry  {
   unsigned int facility;
   wt_callback_t rearm;
   wt_callback_t action;
-  wt_fac_entry(unsigned int f, wt_callback_t arm, wt_callback_t act)
+  explicit wt_fac_entry(unsigned int f, wt_callback_t arm, wt_callback_t act)
     : qentry(0,0), facility(f), rearm(arm), action(act) {}
 }; 
 
 struct wt_queue_entry : public qentry  {
   unsigned int  facility;
   void*         userpar1;
-  wt_queue_entry(unsigned int f, void* p1) 
+  explicit wt_queue_entry(unsigned int f, void* p1) 
   : qentry(0,0), facility(f), userpar1(p1) {}
 }; 
 
 struct wt_enabled_fac_header : public qentry  {
   unsigned int  facility;
-  wt_enabled_fac_header(unsigned int f) : qentry(0,0), facility(f) {}
+  explicit wt_enabled_fac_header(unsigned int f) : qentry(0,0), facility(f) {}
 }; 
 
 void wtc_print_space();
@@ -104,7 +104,7 @@ int wtc_init()    {
           lib_rtl_output(LIB_RTL_ERROR,"WT: failed to create pipe...\n");
         }
 #else
-        int status = lib_rtl_create_event(0, &wt_EventFlag);
+        status = lib_rtl_create_event(0, &wt_EventFlag);
         if ( !lib_rtl_is_success(status) )  {
           return WT_NOEF;
         }
@@ -242,7 +242,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
     for(;;)  {
       if (mask_ok != 1)   {
         while ( 0 != (entry=(wt_queue_entry*)q_remove_head(wt_fired)) ) {
-          wt_fac_entry* fac = _wtc_find_facility(entry->facility,fac_list);
+          fac = _wtc_find_facility(entry->facility,fac_list);
           if ( fac != fac_list)    {
             if ( fac->rearm != 0 )    {
               WTLock unlock(wt_mutex_id,true);

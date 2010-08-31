@@ -31,7 +31,7 @@ public:
     /// Standard Constructor to initialize the connection for CONNECTOR
     TcpNetworkChannel();
     /// Constructor to initialize the connection for ACCEPTOR
-    TcpNetworkChannel(Channel channel);
+    explicit TcpNetworkChannel(Channel channel);
     /// Destructor: closes channel
     ~TcpNetworkChannel();
     /// Connect to network partner (Connector)

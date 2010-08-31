@@ -25,7 +25,7 @@ namespace RTL  {
     int m_offset;
   public:
     /// Initializing constructor
-    DoubleLinkedQueueScan(qentry_t* h, int o=0) : m_head(h), m_next(h), m_offset(o) {
+    explicit DoubleLinkedQueueScan(qentry_t* h, int o=0) : m_head(h), m_next(h), m_offset(o) {
       m_next = (qentry_t*)(((char*)m_next)+(((long)m_next->next)));
     }
     /// Default destructor

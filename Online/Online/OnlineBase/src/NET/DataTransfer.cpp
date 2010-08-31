@@ -64,7 +64,7 @@ namespace DataTransfer  {
       unsigned int  fac;
     };
     typedef std::vector<Client> Clients;
-    NET(const std::string& proc);
+    explicit NET(const std::string& proc);
     ~NET();
     unsigned int             m_refCount;
     IOPortManager            m_mgr;
@@ -659,7 +659,7 @@ namespace {
     }
     static void handle_death(netentry_t* e, const netheader_t& hdr, void* /* param */ )
     { ::printf("Task died: %s chan=%d addr=%s\n",hdr.name,e->chan,inet_ntoa(e->addr.sin_addr));  }
-    NetSensor(const std::string& proc,bool bounce=false) : m_bounce(bounce) 
+    explicit NetSensor(const std::string& proc,bool bounce=false) : m_bounce(bounce) 
     { net_subscribe(m_net=net_init(proc),this,1,handle_data,handle_death);  }
     virtual ~NetSensor() 
     { net_unsubscribe(m_net,this,1);                         }
@@ -696,7 +696,7 @@ extern "C" int net_send(int argc, char **argv)  {
 
     // receive some messages and bounce them
     for (int i=0, mx=loop; mx > 0; --mx, ++i)  {
-      for (int k = 0; k < length; k++) wmessage[k] = (length + k) & 0xFF;
+      for (int k = 0; k < length; k++) wmessage[k] = char((length + k) & 0xFF);
       int sc = net_send(c1.m_net,wmessage, length, to, 1);
       if (sc != NET_SUCCESS)
         printf("Client::send Failed: Error=%d\n",sc);
@@ -715,11 +715,11 @@ extern "C" int net_send(int argc, char **argv)  {
 
 extern "C" int net_recv(int argc, char **argv)  {
   RTL::CLI cli(argc, argv, help_recv);
-  bool bounce = cli.getopt("bounce",1) != 0;
   std::string proc = host_name()+"::RCV_0";
+  bool run = true, bounce = cli.getopt("bounce",1) != 0;
   printf (" Starting receiver:%s. Bounce:%s\n",proc.c_str(),bounce ? "true" : "false");
   NetSensor cl(proc, bounce);
-  while(1)  {
+  while(run)  {
     ::lib_rtl_sleep(100);
   }
   return 0x1;

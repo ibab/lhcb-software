@@ -59,15 +59,15 @@ namespace {
   template<class T> union func_desc   {
     void* ptr;
     T     fun;
-    func_desc(T t) { fun = t; }
-    func_desc(void* t) { ptr = t; }
+    explicit func_desc(T t) { fun = t; }
+    explicit func_desc(void* t) { ptr = t; }
   };
   class SignalHandler {
   protected:
     typedef std::map<int,std::pair<std::string, struct sigaction> > SigMap;
     MEPDESC* bmid;
     SigMap m_map;
-    SignalHandler(MEPDESC* dsc=0);
+    explicit SignalHandler(MEPDESC* dsc=0);
     ~SignalHandler() {}
   public:
     static SignalHandler* instance(MEPDESC* dsc=0);
@@ -282,9 +282,9 @@ int mep_scan(MEPID dsc, int loop_delay)  {
       }
     }}
     if ( loop_delay ) lib_rtl_usleep(loop_delay);
-    else  return MBM_NORMAL;
+    else return MBM_NORMAL;
   }
-  return MBM_NORMAL;
+  // Statement unreachable: return MBM_NORMAL;
 }
 
 static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {

@@ -71,7 +71,7 @@ public:
 };
 
 static void strup (char* s1, const char* s2)   {
-  for(; *s2; s2++) *s1++ = ::toupper(*s2);
+  for(; *s2; s2++) *s1++ = char(::toupper(*s2));
   *s1 = 0;
 }
 // ----------------------------------------------------------------------------
@@ -229,7 +229,7 @@ TanDataBase& TanDataBase::Instance() {
 NetworkChannel::Port TanDataBase::findPort ( TanMessage& msg )  {
   RTL::Lock lock(m_lock);
   Entry *e = _findEntry ( msg._Name() );  
-  return (e && e->m_dead == 0) ? e->m_port : 0;
+  return NetworkChannel::Port((e && e->m_dead == 0) ? e->m_port : 0);
 }
 // ----------------------------------------------------------------------------
 // Allocate database port from a given already alloctaed entry
@@ -317,7 +317,7 @@ Done:
   index = current_port;
 #endif
   ce->m_dead   = 0;
-  ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   // THAT'S MY PORT NUMBER
+  ce->m_port   = NetworkChannel::Port(NAMESERVICE_BASE_PORT+index+1);   // THAT'S MY PORT NUMBER
   //fprintf(stdout, "%s [%s] Got port:%d %X -> current: %d remaining: %d \n", 
   //        ce->name, ce->m_msg.m_name, ce->port,ce->port, current_port, ports_availible-current_port);
   //fflush(stdout);
@@ -528,7 +528,7 @@ int TanDataBase::Dump( std::ostream& os )  {
     _pData->_allocated,_pData->_ports);
   os << text << std::endl;
   ::sprintf(text,"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s",
-    "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
+	    "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   os << text << std::endl;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
     if ( _pData->_pEntry[i] != 0 )  {
@@ -558,9 +558,9 @@ int TanDataBase::Dump( std::ostream& os )  {
             break;
         }
         ::sprintf(text,"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s",
-          e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
-          func, htonl(e.m_msg._Length()), e.m_msg._Name(),
-          inet_ntoa(e.m_msg.address()));
+		  e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
+		  func, int(htonl(e.m_msg._Length())), e.m_msg._Name(),
+		  inet_ntoa(e.m_msg.address()));
         os << text << std::endl;
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
           a != _TheEntry(&e.al) && a != 0 && a != last;
@@ -578,8 +578,9 @@ int TanDataBase::Dump( std::ostream& os )  {
             default:                         func = "-----";       break;
           }
           ::sprintf(text,"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s",
-            ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
-            func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
+		    ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
+		    func, int(ee->m_msg._Length()), ee->m_msg._Name(), 
+		    inet_ntoa(ee->m_msg.address()));
           os << text << std::endl;
         }
       }

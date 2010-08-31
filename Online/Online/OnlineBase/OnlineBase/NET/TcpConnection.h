@@ -73,9 +73,9 @@ protected:
 public:
   //@Man: Public member functions
   /// Standard constructor with given service name
-  TcpConnection( const char* service = "UserService" );
+  explicit TcpConnection( const char* service = "UserService" );
   /// Standard constructor with given port number
-  TcpConnection( Port port );
+  explicit TcpConnection( Port port );
   /// Standard destructor
   virtual ~TcpConnection();
   /// Initialize the connection (called by constructor(s))

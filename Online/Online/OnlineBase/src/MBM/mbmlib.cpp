@@ -181,8 +181,8 @@ void _mbm_update_rusage(USER* us) {
 void _mbm_update_rusage(USER* us) {
   rusage ru;
   getrusage(RUSAGE_SELF, &ru);
-  us->utime = float(ru.ru_utime.tv_sec) + float(ru.ru_utime.tv_usec)/1e6;
-  us->stime = float(ru.ru_stime.tv_sec) + float(ru.ru_stime.tv_usec)/1e6;
+  us->utime = float(ru.ru_utime.tv_sec) + float(ru.ru_utime.tv_usec)/float(1e6);
+  us->stime = float(ru.ru_stime.tv_sec) + float(ru.ru_stime.tv_usec)/float(1e6);
 }
 #endif
 
@@ -201,7 +201,7 @@ class Lock  {
   BMID m_bm;
   int m_status;
 public:
-  Lock(BMID bm) : m_bm(bm) {
+  explicit Lock(BMID bm) : m_bm(bm) {
     m_status = _mbm_lock_tables(m_bm);
     if ( !(m_status&1) ) {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: System Lock error on BM tables.",lib_rtl_pid());
@@ -1634,7 +1634,7 @@ int _mbm_wait_space_a(void* param)  {
     int sc = mbm_wait_space(bm);
     if ( sc != MBM_NORMAL )  {
       bm->pThreadState = 1;
-      return 1;
+      break;
     }
     lib_rtl_wait_for_event(bm->WSPA_event_flag);
   }

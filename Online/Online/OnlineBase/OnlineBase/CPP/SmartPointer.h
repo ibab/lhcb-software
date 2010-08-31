@@ -25,7 +25,7 @@ public:
     //  ========================
     ///  Standard Constructor: Returns reference to SmartPointer instance
     //  Arguments: None
-    SmartPointer( Type* obj = 0 ) {
+    explicit SmartPointer( Type* obj = 0 ) {
 	__pType = obj;
     }
 

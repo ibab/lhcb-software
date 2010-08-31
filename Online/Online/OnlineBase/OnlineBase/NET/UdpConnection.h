@@ -87,9 +87,9 @@ protected:
 public:
   //@Man: Public member functions
   /// Standard constructor with given service name
-  UdpConnection( const char* service = "UserService" );
+  explicit UdpConnection( const char* service = "UserService" );
   /// Standard constructor with given port number
-  UdpConnection( Port port );
+  explicit UdpConnection( Port port );
   /// Standard destructor
   virtual ~UdpConnection();
   /// Initialize the connection (called by constructor)

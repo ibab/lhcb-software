@@ -14,8 +14,8 @@ namespace {
   template<class T> union func_desc   {
     void* ptr;
     T     fun;
-    func_desc(T t) { fun = t; }
-    func_desc(void* t) { ptr = t; }
+    explicit func_desc(T t) { fun = t; }
+    explicit func_desc(void* t) { ptr = t; }
   };
 }
 #ifdef _WIN32

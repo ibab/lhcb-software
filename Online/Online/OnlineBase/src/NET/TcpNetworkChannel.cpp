@@ -87,6 +87,7 @@ NetworkChannel::Channel TcpNetworkChannel::accept ( Address& addr, int tmo )  {
       status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
+      if ( 0 == status ) return accepted;
     }
     return accepted;
   }

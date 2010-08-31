@@ -24,31 +24,31 @@ protected:
   TcpNetworkChannel*    _pNetwork;
   TanDataBase::Entry*   _pEntry;
 public:
-  Receivehandler ( EventReactor* reactor ) 
+  explicit Receivehandler ( EventReactor* reactor ) 
     : EventHandler(reactor), _pNetwork(0), _pEntry(0)  {
-    }
-    Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
-      : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
-    {
-    }
-    virtual ~Receivehandler() {
-    }
-    TcpNetworkChannel* channel()     {
-      return _pNetwork;
-    }
-    TanDataBase::Entry* _Entry()     {
-      return _pEntry;
-    }
-    void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
-      _pNetwork = chan;
-      _pEntry   = entry;
-    }
-    void _Delete()  {
-      TcpNetworkChannel* chan = channel();
-      chan->cancel();
-      delete chan;
-      delete this;
-    }
+  }
+  explicit Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
+    : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
+  {
+  }
+  virtual ~Receivehandler() {
+  }
+  TcpNetworkChannel* channel()     {
+    return _pNetwork;
+  }
+  TanDataBase::Entry* _Entry()     {
+    return _pEntry;
+  }
+  void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
+    _pNetwork = chan;
+    _pEntry   = entry;
+  }
+  void _Delete()  {
+    TcpNetworkChannel* chan = channel();
+    chan->cancel();
+    delete chan;
+    delete this;
+  }
 };
 
 
@@ -79,7 +79,7 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor
-  NameService( NetworkConnection* ptr = 0, bool verbose = false);
+  explicit NameService( NetworkConnection* ptr = 0, bool verbose = false);
   /// Standard destructor
   virtual ~NameService();
   /// handle Tan request
@@ -116,7 +116,7 @@ class UdpNameService : public NameService {
 public:
   //@Man Public member functions
   /// Standard constructor
-  UdpNameService(bool verbose = false);
+  explicit UdpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~UdpNameService()   {
   }
@@ -158,9 +158,9 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor with initialization
-  TcpNameService(int port, bool verbose = false);
+  explicit TcpNameService(int port, bool verbose = false);
   /// Standard constructor
-  TcpNameService(bool verbose = false);
+  explicit TcpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~TcpNameService();
   /// Overloaded abstract member function: Act on Nameservice requests
@@ -422,13 +422,12 @@ int TcpNameService::handle ( EventHandler* handler )  {
 int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   int retry = 1, accept_error;                                     //
   NetworkChannel::Address address;                                 //
-  NetworkChannel::Channel channel = m_pNetwork->accept(address);  // Accept
-  accept_error = m_pNetwork->error();                             //
-  int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
-  if ( !lib_rtl_is_success(status) )  {
+  NetworkChannel::Channel channel = m_pNetwork->accept(address);   // Accept
+  accept_error = m_pNetwork->error();                              //
+  int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
+  if ( !lib_rtl_is_success(status) )  {                            //
     lib_rtl_output(LIB_RTL_ERROR,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-      m_pNetwork->error(),retry,                                  //
-      m_pNetwork->errMsg());                                      //
+		   accept_error,retry,m_pNetwork->errMsg());       //
   }                                                                //
   if ( channel <= 0 )   {                                          // Error!
     return NAME_SERVER_SUCCESS;                                    // Return status code

@@ -64,7 +64,7 @@ namespace {
     unsigned int   size;
     amsheader_t	  *message;
     amsqueue_t() : qentry_t(), size(0), message(0) {}
-    amsqueue_t(size_t len) : qentry_t(), size(len)  {
+    explicit amsqueue_t(size_t len) : qentry_t(), size(len)  {
       message  = new (::operator new(len)) amsheader_t();
       size     = len;
     }
@@ -88,7 +88,7 @@ namespace {
     char          name [NAME_LENGTH];
     char          myName [NAME_LENGTH];
     struct        sockaddr_in address;
-    amsentry_t(const char* dest=0, const char* me=0)  
+    explicit amsentry_t(const char* dest=0, const char* me=0)  
     : chan(-1), refCount(0), del_pending(0), pending(0), msg_ptr(0), sndBuffSize(0)    {
       if ( dest ) strcpy (name,dest ? dest : "");
       if ( me   ) strcpy (myName,me ? me : "");
@@ -175,7 +175,7 @@ void amsc_full_name (char *dest, const char *src, size_t length, int style) {
   }
   // Upper or lowercase depending on style; trim blanks
   for(p = dest; *p; ++p)  {
-    *p = (style == DECNET_STYLE ) ? ::toupper(*p) : ::tolower(*p);
+    *p = char((style == DECNET_STYLE ) ? ::toupper(*p) : ::tolower(*p));
     if (*p == ' ')  {
       *p = 0;
       return;
@@ -808,7 +808,7 @@ int _amsc_message_timeout_ast (void* param){
   return AMS_SUCCESS;
 }
 
-static int _amsc_mess_action( unsigned int fac,void* par )  {
+static int _amsc_mess_action(unsigned int fac,void* par )  {
   qentry_t *m;
   int rcnt;
   _amsc_printf("Message action requested.\n");
@@ -821,11 +821,10 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
 #ifdef _USE_FULL_WT
     RTL::Lock lock(_ams.lockid);
 #endif
-    char src[64];
-    unsigned int fac;
-    char buff[80];
+    unsigned int facility;
     size_t tlen, siz = 80;
-    int status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.AMS_Q);
+    char src[64], buff[80];
+    int status  = _amsc_spy_next_message(buff,&siz,src,&facility,&tlen,&_ams.AMS_Q);
     _amsc_printf("Message action: Spy on next wessage: status=%d\n",status);
     if (status == AMS_TIMEOUT)    {
       remqhi (&_ams.AMS_Q, &m);
@@ -838,7 +837,7 @@ static int _amsc_mess_action( unsigned int fac,void* par )  {
       _amsc_printf("Message action: Spy on next wessage:AMS_TIMEOUT->WT_FACILITY_AMSSYNCH!\n");
       return wtc_insert_head (WT_FACILITY_AMSSYNCH, 0);
     }
-    else if (_amsc_requirements_satisfied(src,fac) == 0)      {
+    else if (_amsc_requirements_satisfied(src,facility) == 0)      {
       _amsc_printf("Message action: message requirements not satisfied!\n");
       _amsc_stack_next_message(&_ams.AMS_Q);
     }
@@ -1046,11 +1045,10 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   }
   parking = (r_source_in != 0) || (r_facility != 0) || timeout!= 0;
   if (parking)  {
-    amsqueue_t *m;
-    char src[64], buff[80];
     size_t tlen, siz=80;
-    _ams.reqFac  = r_facility;
-    _ams.msgWaiting  = 1;
+    char src[64], buff[80];
+    _ams.reqFac = r_facility;
+    _ams.msgWaiting = 1;
     do  {
       status = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.message_Q);
       if (status == AMS_TIMEOUT)  {

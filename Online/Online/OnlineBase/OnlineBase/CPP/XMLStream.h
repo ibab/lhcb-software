@@ -272,7 +272,7 @@ namespace XML  {
   { return s.putHeader();                                                 }
   /// Submit a style sgeet to the XML stream
   struct style : public std::string  
-  { style(CSTR& url)    { this->assign(url.begin(), url.end());  }        };
+  { explicit style(CSTR& url)  { this->assign(url.begin(),url.end());  }  };
   inline Stream& operator << (Stream& s, const style& o)   
   { return s.putStyle(o);                                                 }
 
@@ -280,16 +280,16 @@ namespace XML  {
   struct Guard : public tag {
     Stream& m_s;
     /// Submit guard, which closes itself on destruction: Constructor
-    Guard(Stream& s, CSTR& t, int i=-1) : tag(t,i), m_s(s)    
+    explicit Guard(Stream& s, CSTR& t, int i=-1) : tag(t,i), m_s(s)    
     {  m_s << start(name, number) << std::endl;                            }
     /// Submit guard, which closes itself on destruction: Destructor
     ~Guard()        {  m_s << end(name, number) << std::endl;              }
   };
   /// Add comment to XML output stream
   struct comment : public std::string  {
-    comment(CSTR& c)    {
+    explicit comment(CSTR& c)    {
       std::string tmp="\n<!-- " + c + " -->\n";
-      this->assign(tmp.begin(), tmp.end());
+      this->assign(tmp.begin(),tmp.end());
     }
   };
 }

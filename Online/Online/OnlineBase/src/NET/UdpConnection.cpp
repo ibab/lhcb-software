@@ -33,7 +33,7 @@ UdpConnection::UdpConnection ( const char* service )  {
   // 
   // ----------------------------------------------------------------------------
   ::strcpy(m_service,service);
-  initialize( servicePort(Service()) );
+  initialize( (Port)servicePort(Service()) );
 }
 
 UdpConnection::UdpConnection ( UdpConnection::Port port )  {
