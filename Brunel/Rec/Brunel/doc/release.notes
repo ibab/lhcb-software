@@ -5,9 +5,9 @@ Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v37r7>2010-08-25 Brunel v37r7</A></H1><PRE>
 
-This version requires ParamFiles >= v8r3
+This version requires ParamFiles >= v8r3, Det/DDDB >= v1r34
 
-- Updated references
+- Updated references for tests
 
 
 </PRE><H1><A NAME=v37r6p1>2010-08-04 Brunel v37r6p1</A></H1><PRE>

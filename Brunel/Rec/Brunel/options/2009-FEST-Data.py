@@ -11,8 +11,8 @@ Brunel().EvtMax = 1000
 Brunel().Simulation = True
 Brunel().DataType   = "2009"
 # use last 2009 velo closed SIMCOND tag and corresponding consistent DDDB tag
-Brunel().CondDBtag  = "sim-20100202-vc-md100"
-Brunel().DDDBtag    = "head-20100119"
+Brunel().CondDBtag  = "sim-20100831-vc-md100"
+Brunel().DDDBtag    = "head-20100826"
 
 # Make sure Brunel is configured for MDF data
 if Brunel().getProp("InputType").upper() == "MDF":

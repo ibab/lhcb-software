@@ -54,6 +54,11 @@ else:
 
     EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/" + datasetName + ".digi?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 
+#-- Add patch tags of the DB
+from Configurables import CondDB
+
+CondDB().LocalTags["SIMCOND"] = ["calo-20100613", "calo-20100215", "lumi-20100423", "rich-20100826"]
+
 # Default output files names are set up using value Brunel().DatasetName property
 Brunel().DatasetName = datasetName
 
