@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.130 2010-08-22 23:57:08 raaij Exp $"
+__version__ = "$Id: Configuration.py,v 1.131 2010-09-01 16:39:02 raaij Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -237,6 +237,7 @@ class Moore(LHCbConfigurableUser):
             rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
                              , "Conditions/Online/Velo/MotionSystem"      : online_xml
                              , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
+                             , "Conditions/Online/LHCb/RunParameters"     : online_xml
                              , "Conditions/Online/Rich1/R1HltGasParameters" : online_xml
                              , "Conditions/Online/Rich2/R2HltGasParameters" : online_xml
                              }
