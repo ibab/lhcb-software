@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-09-01 - Johannes Albrecht
+ - another update of Sept10 Configuration
+  o put new express lines w/ prescales in
+  o put tighter PR in
+
 ! 2010-09-01 - Gerhard Raven
  - Update again September10 configurations
    o update L0 TCK
