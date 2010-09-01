@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.188 2010-08-24 17:48:00 yamhis Exp $
+ )!$Id: release.notes,v 1.189 2010-09-01 14:16:42 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,10 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-24 Greig Cowan
+ - Added new StdMassConstrainedJpsi2MuMu for use by beta_s B2JpsiX selections.
+
 ! 2010-08-24 Yasmine Amhis 
   - Change  track chi2/ndof (20 -> 10) cut of pions and proton in StdLooseLambda.py 
 

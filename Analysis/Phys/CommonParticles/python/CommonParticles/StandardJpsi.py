@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardJpsi.py,v 1.3 2010-01-18 10:08:49 gcowan Exp $ 
+# $Id: StandardJpsi.py,v 1.4 2010-09-01 14:16:42 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardJpsi.py
 #  configuration file for 'Standard Jpsi' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Jpsi'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 
 _locations = {} 
@@ -26,6 +26,9 @@ from CommonParticles.StdLooseJpsi2ee import *
 _locations.update ( locations )
 
 from CommonParticles.StdLTUnbiasedJpsi2MuMu import *
+_locations.update ( locations )
+
+from CommonParticles.StdMassConstrainedJpsi2MuMu import *
 _locations.update ( locations )
 
 # redefine the locations 
