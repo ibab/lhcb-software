@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-01 - Olivier Deschamps for Régis Lefèvre
+  - update StrippingB2HHPi0.py
+
+
 ! 2010-09-01 - Greig Cowan
  - Added StrippingB2JpsiXforBeta_s.py. This contains all (well, it will eventually)
    JpsiX lines associated to the beta_s group. This uses the new "selection
