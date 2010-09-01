@@ -12,7 +12,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Diego Martinez Santos','Johannes Albrecht']
 __date__ = '19/07/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 __all__ = ('Bs2MuMuLinesConf',
            'makeDefault',
@@ -263,7 +263,7 @@ def makeDetachedJPsi(name) :
 
     DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<15) "\
                               "& (BPVDIRA > 0) "\
-                              "& (BPVVDCHI2>225)"
+                              "& (BPVVDCHI2>169)"
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
 
