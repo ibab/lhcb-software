@@ -1,4 +1,4 @@
-// $Id: MergedPi0Maker.cpp,v 1.11 2010-04-14 12:42:39 odescham Exp $
+// $Id: MergedPi0Maker.cpp,v 1.12 2010-09-01 14:54:00 odescham Exp $
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -81,20 +81,20 @@ StatusCode MergedPi0Maker::initialize    ()
 
   // check vectors of paramters 
   if( 3 != m_parMas.size() ) {
-    error() << "Invalid number of parameters" << endreq ; 
+    error() << "Invalid number of parameters" << endmsg ; 
     return StatusCode::FAILURE; 
   }
   // CL techniques
   if ( msgLevel(MSG::DEBUG)){
-    debug() << " Following techniques will be used for CL evaluation : " << endreq;
+    debug() << " Following techniques will be used for CL evaluation : " << endmsg;
     if( m_useCaloTrMatch    )
-    { debug() << "  CaloTrMatch : matching with reconstructed tracks " << endreq ; }
+    { debug() << "  CaloTrMatch : matching with reconstructed tracks " << endmsg ; }
     if( m_useCaloDepositID  )
-    { debug() << " CaloDepositID: Spd/Prs combined analysis          " << endreq ; }
+    { debug() << " CaloDepositID: Spd/Prs combined analysis          " << endmsg ; }
     if( m_useShowerShape  )
-    { debug() << " ShowerShape  : Ecal Cluster shape/size            " << endreq ; }
+    { debug() << " ShowerShape  : Ecal Cluster shape/size            " << endmsg ; }
     if( m_useClusterMass  )
-    { debug() << " ClusterMass  : Ecal Cluster  mass              " << endreq ; }
+    { debug() << " ClusterMass  : Ecal Cluster  mass              " << endmsg ; }
   }
   
   if( !m_useCaloTrMatch   &&
@@ -103,14 +103,10 @@ StatusCode MergedPi0Maker::initialize    ()
       !m_useClusterMass   )
     { Warning(" No PID techniques are selected for CL evaluation" ) ; }
 
-  if( m_useCaloTrMatch    )
-    { Warning( "  For CaloTrMatch assume Gauss distribution (wrong?)"); }
-  if( m_useCaloDepositID  )
-    { Warning( "      CaloDepositID is not implemented yet " ) ; }
-  if( m_useShowerShape    )
-    { Warning( "      ShowerShape   is not implemented yet " ) ; }
-  if( m_useClusterMass    )
-    { Warning( "  For ClusterMass assume exponential distribution (wrong?)"); }
+  if( m_useCaloTrMatch    ){debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)" << endmsg;}
+  if( m_useCaloDepositID  ){debug()<< "      CaloDepositID is not implemented yet " << endmsg ; }
+  if( m_useShowerShape    ){debug()<< "      ShowerShape   is not implemented yet " << endmsg ; }
+  if( m_useClusterMass    ){debug()<< "  For ClusterMass assume exponential distribution (wrong?)"<< endmsg; }
 
   return StatusCode::SUCCESS ;
 };
@@ -190,7 +186,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     // (WARNING USE g1 split photon 'position')
     const LHCb::CaloPosition* hypoPos = g1->position();
     if( 0 == hypoPos){
-      warning()<< "CaloPositon point to null" << endreq;
+      Warning("CaloPosition point to null").ignore();
       return StatusCode::FAILURE ;
     }    
     const Gaudi::XYZPoint point( hypoPos->x(), hypoPos->y(), hypoPos->z() );
@@ -218,8 +214,8 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     if( calopart.status() !=0 ){
       delete particle ;
       nSkip++;
-      warning() << "CaloParticle status/flag : " << calopart.status() << "/" << calopart.flag();
-      warning() << "Unable to fill Merged " << m_pid << " parameters, skip particle [" << nSkip << "]"<< endreq;
+      debug() << "CaloParticle status/flag : " << calopart.status() << "/" << calopart.flag();
+      debug() << "Unable to fill Merged " << m_pid << " parameters, skip particle [" << nSkip << "]"<< endmsg;
       --nSelPp;
       continue ;                                                
     }
@@ -231,11 +227,11 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
 
     m_count[1] += 1;
     if (msgLevel(MSG::VERBOSE)){
-      verbose() << " ---- Merged " << m_pid << " found ["<< nSelPp << "]" <<  endreq;
-      verbose() << "Pt    "  << pi0Momentum.pt() << endreq;
-      verbose() << "Corrected Mass (uncorrected) " << mass << " (" << umas << ")"<<endreq;
-      verbose() << "CL (Chi2)  " << CL   << " ("<<pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << ")"<<endreq;
-      verbose() << "dist(gg)"<< dmin << endreq;
+      verbose() << " ---- Merged " << m_pid << " found ["<< nSelPp << "]" <<  endmsg;
+      verbose() << "Pt    "  << pi0Momentum.pt() << endmsg;
+      verbose() << "Corrected Mass (uncorrected) " << mass << " (" << umas << ")"<<endmsg;
+      verbose() << "CL (Chi2)  " << CL   << " ("<<pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << ")"<<endmsg;
+      verbose() << "dist(gg)"<< dmin << endmsg;
     }
     
     // add the particle to the container
@@ -244,12 +240,12 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
   }
   counter("Created merged " + m_pid) += nSelPp;
   if (msgLevel(MSG::DEBUG)){
-    debug() << " " << endreq;
-    debug() << "-----------------------" << endreq;
-    debug() << " Filtered and created :" << endreq;
-    debug() << " --> " << nSelPp << " Merged " << m_pid << " (among " << nPp <<")"<< endreq;
-    debug() << " Skipped : " << nSkip << endreq;
-    debug() << "--------------------" << endreq;
+    debug() << " " << endmsg;
+    debug() << "-----------------------" << endmsg;
+    debug() << " Filtered and created :" << endmsg;
+    debug() << " --> " << nSelPp << " Merged " << m_pid << " (among " << nPp <<")"<< endmsg;
+    debug() << " Skipped : " << nSkip << endmsg;
+    debug() << "--------------------" << endmsg;
   }
   
   return StatusCode::SUCCESS ;

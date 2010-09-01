@@ -126,15 +126,11 @@ PhotonMaker::~PhotonMaker() {};
       !m_usePhotonID     )
     { Warning(" No PID techniques are selected for CL evaluation" ) ; }
 
-  if( m_useCaloTrMatch    )
-    { Warning( "  For CaloTrMatch assume Gauss distribution (wrong?)"); }
-  if( m_useCaloDepositID  )
-    { Warning( "      CaloDepositID is not implemented yet " ) ; }
-  if( m_useShowerShape    )
-    { Warning( "      ShowerShape   is not implemented yet " ) ; }
-  if( m_useClusterMass    )
-    { Warning( "  For ClusterMass assume exponential distribution (wrong?)"); }
-
+  if( m_useCaloTrMatch    ){ debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)"<< endmsg; }
+  if( m_useCaloDepositID  ){ debug()<< "      CaloDepositID is not implemented yet " <<endmsg ; }
+  if( m_useShowerShape    ){ debug()<< "      ShowerShape   is not implemented yet " << endmsg ; }
+  if( m_useClusterMass    ){ debug()<< "  For ClusterMass assume exponential distribution (wrong?)"<<endmsg; }
+  
   if( m_converted && m_unconverted)
   {debug()<< "BOTH converted (SPD) and unconverted (no SPD) photons are to be created"<< endreq;  }
   else if ( m_converted )

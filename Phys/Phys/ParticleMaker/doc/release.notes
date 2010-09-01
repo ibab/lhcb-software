@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.121 2010-08-30 16:42:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.122 2010-09-01 14:54:00 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2010-09-01 - Olivier Deschamps
+ - MergedPi0/Photon Maker : reduce verbosity at initialize
+ 
 
 ! 2010-08-30 - Vanya Belyaev
  - minor changes 
