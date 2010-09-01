@@ -1,3 +1,7 @@
+2010-09-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: fixed the escaping of characters in regular expressions.
+
 2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* tests/FileTest.py: 
