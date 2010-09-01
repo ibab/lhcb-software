@@ -210,7 +210,7 @@ StatusCode B2DHMvaPreSelectionParamTool::acquireSelectionParams(const LHCb::Part
 
   
     for(int i=0; i< m_numFisherDParam; ++i ) {
-      m_FisherDParamListInFloat[i] = m_FisherDParamList[i];
+      m_FisherDParamListInFloat[i] = static_cast <Float_t> (m_FisherDParamList[i]);
     }
   
     double afisherProb = evaluateFisherDProb();
