@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
- *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.10 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/02/2008
@@ -84,7 +81,7 @@ StatusCode IsolatedTrackTool::initialize()
   // loop over radiators
   for ( int radi = 0; radi < Rich::NRadiatorTypes; ++radi )
   {
-    //numbers for hit pixel calculations
+    // numbers for hit pixel calculations
     m_scale[radi] = (m_ckThetaMax[radi]/m_sepGMax[radi]);
   }
 
@@ -96,6 +93,7 @@ StatusCode IsolatedTrackTool::initialize()
 bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track,
                                     const Rich::ParticleIDType pid ) const
 {
+  if ( !track ) return false;
   for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
         iS != track->richRecSegments().end(); ++iS )
   {
@@ -106,6 +104,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track,
 
 bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track ) const
 {
+  if ( !track ) return false;
   for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
         iS != track->richRecSegments().end(); ++iS )
   {
@@ -117,13 +116,13 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track ) const
 bool IsolatedTrackTool::isIsolated( const LHCb::Track * track,
                                     const Rich::ParticleIDType pid ) const
 {
-  const LHCb::RichRecTrack * rtrack = richTracks()->object(track->key());
+  const LHCb::RichRecTrack * rtrack = ( track ? richTracks()->object(track->key()) : NULL );
   return ( rtrack && isIsolated(rtrack,pid) );
 }
 
 bool IsolatedTrackTool::isIsolated( const LHCb::Track * track ) const
 {
-  const LHCb::RichRecTrack * rtrack = richTracks()->object(track->key());
+  const LHCb::RichRecTrack * rtrack = ( track ? richTracks()->object(track->key()) : NULL );
   return ( rtrack && 
            ( isIsolated( rtrack, Rich::Electron ) ||
              isIsolated( rtrack, Rich::Muon     ) ||
@@ -147,10 +146,12 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment ) const
 bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType pid ) const
 {
+  if ( !segment ) return false;
   if ( Rich::BelowThreshold == pid ) return false;
 
   LHCb::RichRecSegment * nonc_seg = const_cast<LHCb::RichRecSegment*>(segment);
- 
+  if ( !nonc_seg ) return false;
+
   bool trackIsIsolated(true);
 
   // the RICH and radiator type
@@ -194,7 +195,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
         iSeg2 != richSegments()->end(); ++iSeg2 )
   {
     const RichRecSegment * segment2 = *iSeg2;
-
+    
     if ( segment == segment2 ) continue; // check not comparing the segment with itself
 
     // The radiator type.  Must be same as main segment
@@ -212,16 +213,16 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     OK = centreXYdif > m_sizesepcut[rad];
     if (!OK) break;
     
-  }//Segment comparison loop end
+  } // Segment comparison loop end
 
   trackIsIsolated &= testCut( "track CK ring centre proximity", rad, OK );
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
-  int hittotal    = 0;
-  int hitsoutside = 0;
-  int hitsinside  = 0; //initialise all to zero for each segment
+  // initialise all to zero for each segment
+  unsigned int hittotal(0), hitsoutside(0), hitsinside(0);
 
-  IPixelCreator::PixelRange range = pixelCreator()->range(rich);//Container of pixels for this rich
+  // Container of pixels for this rich
+  IPixelCreator::PixelRange range = pixelCreator()->range(rich); 
 
   // Use PID average Ch theta for segment
   const double avtheta = m_ckAngle->avgCherenkovTheta( nonc_seg, pid );
@@ -234,7 +235,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
         iPixel != range.end(); ++iPixel )
   {
-    RichRecPixel * pixel = *iPixel;//hit pixel
+    RichRecPixel * pixel = *iPixel; // hit pixel
 
     const double sepsq = m_geomTool->trackPixelHitSep2(segment,pixel);//square of sep of pixel from track centre
     const double sep   = std::sqrt(sepsq);
@@ -248,24 +249,24 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
       const double ckThetaEsti = sep*m_scale[rad];
 
       // Does hit lie outside ring region?
-      if (ckThetaEsti>ringmax) { ++hitsoutside; }
-      if (ckThetaEsti<ringmin) { ++hitsinside;  }
+      if      ( ckThetaEsti > ringmax ) { ++hitsoutside; }
+      else if ( ckThetaEsti < ringmin ) { ++hitsinside;  }
 
     } // boundary check
-  }//loop over pixels
+  } // loop over pixels
 
   if (hittotal==0) { hittotal = 1; } // To prevent dividing by zero
   const double frachitsout = (double)(hitsinside+hitsoutside) / (double)hittotal;
   trackIsIsolated &= testCut( "Hit fraction outside CK ring", rad, (1-frachitsout) > m_sizehitregioncut[rad] );
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
-  //Photon association, position and total photon counters, initialise zero for each segment before looping over photons
+  // Photon association, position and total photon counters, initialise zero for each segment before looping over photons
   unsigned int photonassoc(0), photontotal(0);
 
   // Tally vector for number of photons in each phi region
   std::vector<int> regTally(m_nPhiRegions[rad],0);
 
-  //Loop over photons, calculations
+  // Loop over photons, calculations
   for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
         iPhot != segment->richRecPhotons().end(); ++iPhot )
   {
@@ -275,8 +276,10 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     ++photontotal; //counting total photons associated with this segment
 
     // Which CK phi region
-    const int region = (int)( m_nPhiRegions[rad] * photon->geomPhoton().CherenkovPhi() / (M_PI*2.0) );
-
+    unsigned int region = static_cast<unsigned int>( m_nPhiRegions[rad] * 
+                                                     photon->geomPhoton().CherenkovPhi() / (M_PI*2.0) );
+    if ( region >= m_nPhiRegions[rad] ) region = 0; // Protect against index being out of range
+    
     // count number in each region
     ++regTally[region];
 
@@ -284,16 +287,13 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     const unsigned int Nphotons = photon->richRecPixel()->richRecPhotons().size();
 
     // If this photon is associated with more than one track...
-    if (Nphotons>1)
-    {
-      ++photonassoc;//counting photons associated with this track and at least one other track
-    }
+    if ( Nphotons > 1 ) { ++photonassoc; }
     
-  }//photon loop end
+  } // photon loop end
 
-  //Test how many photons associated with two tracks for this segment
+  // Test how many photons associated with two tracks for this segment
 
-  if ( photontotal==0 ) { photontotal = 1; }//to prevent dividing by zero
+  if ( photontotal==0 ) { photontotal = 1; } // to prevent dividing by zero
   
   // Minimum number of associated photons
   trackIsIsolated &= testCut( "min # associated photons", rad, photontotal >= m_minSegPhotons[rad] );
@@ -301,7 +301,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
 
   const double fracphotonsassoc = (double)photonassoc/(double)photontotal;
   trackIsIsolated &= testCut( "photon multiple association", rad, 
-                              (1-fracphotonsassoc) > m_sizephotonassoccut[rad] ); 
+                              (1.0-fracphotonsassoc) > m_sizephotonassoccut[rad] ); 
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
   // How many lie in each phi region?
