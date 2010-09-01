@@ -70,10 +70,14 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                  }
                        , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' : 1600.0
                                               , 'Muon_DeltaPCut'               :   -1
-                                              , 'Muon_TConfNSigmaX'            :   10
-                                              , 'Muon_TConfNSigmaY'            :   10
-                                              , 'Muon_TConfNSigmaTx'           :   10
-                                              , 'Muon_TConfNSigmaTy'           :   10
+                                              , 'Muon_TConfNSigmaX'            :    8
+                                              , 'Muon_TConfNSigmaY'            :    7 
+                                              , 'Muon_TConfNSigmaTx'           :    8
+                                              , 'Muon_TConfNSigmaTy'           :    7
+                                            ##   , 'MSeg_TConfNSigmaX'            :    4
+##                                               , 'MSeg_TConfNSigmaY'            :    3 
+##                                               , 'MSeg_TConfNSigmaTx'           :    4
+##                                               , 'MSeg_TConfNSigmaTy'           :    3
                                               , 'Muon_PtCut' : 1350
                                               , 'MuonIP_PtCut' : 850
                                               , 'Muon_IPMinCut' : 0.09
@@ -92,7 +96,7 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                               , 'MuTrackDimuMass' : 1000
                                               , 'MuTrackPoint' : 0.4
                                               , 'MuTrackTrChi2' : 16
-                                              , 'MuTrackMuChi2' : 100
+                                              , 'MuTrackMuChi2' : 50
                                               , 'MuTrackMuPt4JPsi' : 1300
                                               , 'MuTrackTrPt4JPsi' : 400
                                               , 'MuTrackDoca4JPsi' : 0.1
@@ -163,7 +167,12 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                   # to save CPU time, prescale lines to double of needed input
                                                   # Ks takes 1/4 of HLT1 --> 10Hz
                                                   # Lambda takes 1/20 --> 50Hz
-                                                  , 'Prescale' :  {'Hlt2ExpressJPsiTagProbe': 'RATE(200)'}
+                                                  , 'Prescale' :  { 'Hlt2ExpressKS' : 'RATE(400)'
+                                                                    ,'Hlt2ExpressLambda' : 'RATE(400)'
+                                                                    ,'Hlt2ExpressBeamHalo': 'RATE(200)'
+                                                                    ,'Hlt2ExpressJPsiTagProbe': 'RATE(200)'
+                                                                    }
+
                                                   }
                        }
         
@@ -182,8 +191,9 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
         Returns a list of active lines
         """
         hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent']
-        from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
-        hlt2.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
+        from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
+        hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
+
 
 ##         from DefaultHlt2Lines import DefaultHlt2Lines 
 ##         list.extend( DefaultHlt2Lines().ActiveHlt2Lines() )
