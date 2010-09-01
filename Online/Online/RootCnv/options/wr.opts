@@ -1,11 +1,49 @@
 #include "$ROOTCNVROOT/options/Setup.opts"
-ApplicationMgr.OutStream  += { "OutputStream/RootDst"};
+ApplicationMgr.OutStream  += { "Gaudi::RootOutputStream/RootDst"};
 ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
 EventSelector.PrintFreq    = 1;
 ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
 RootDst.ItemList           = { "/Event#999" } ;
+
+RootDst.ItemList           = { 
+   "/Event",
+   "/Event/Collision_0",
+   "/Event/Collision_0/MyVertices",
+   "/Event/Collision_1",
+   "/Event/Collision_2",
+   "/Event/Header",
+   "/Event/MyTracks"
+};
+RootDst.OptItemList           = { 
+   "/Event/Prev",
+   "/Event/Prev/Header",
+   "/Event/PrevPrev",
+   "/Event/PrevPrev/Header",
+   "/Event/Next",
+   "/Event/Next/Header",
+   "/Event/NextNext",
+   "/Event/NextNext/Header"
+};
+
 RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 ApplicationMgr.EvtMax      = 100000;
-//RootDst.Output             = "DATAFILE='PFN:data/ROOTIO_2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
-RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.4.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 ApplicationMgr.EvtMax      = 600;
+RootCnvSvc.OutputLevel     = 3;
+
+
+// begin Enable FileRecordSvc
+ApplicationMgr.ExtSvc                += { "Gaudi::RootCnvSvc/FileRecordCnvSvc" };
+FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+FileRecordCnvSvc.ShareFiles           = "YES";
+FileRecordCnvSvc.OutputLevel          = 1;
+
+FileRecordDataSvc.ForceLeaves         = true;
+FileRecordDataSvc.EnableFaultHandler  = true;
+FileRecordDataSvc.RootCLID            = 1;
+
+ApplicationMgr.OutStream            += { "RecordStream/FileRecords" };
+FileRecords.ItemList                  = { "/FileRecords#999" } ;
+FileRecords.Output                    = @RootDst.Output;
+FileRecords.EvtDataSvc                = "FileRecordDataSvc";
+FileRecords.EvtConversionSvc          = "FileRecordPersistencySvc";

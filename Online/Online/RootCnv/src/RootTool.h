@@ -72,7 +72,8 @@ namespace Gaudi {
 			}
 		      }
 		      else {
-			msg << MSG::WARNING << "Evt:" << entry << " Invalid link to " << rc << endmsg;
+			msg << MSG::WARNING << c->fid() << "  [" << c->getDb(db) 
+			    << "] Evt:" << entry << " Invalid link to " << rc << endmsg;
 			msg << MSG::VERBOSE;
 		      }
 		    }
@@ -111,12 +112,13 @@ namespace Gaudi {
 	if ( l ) {
 	  b->SetAddress(text);
 	  msgSvc() << MSG::VERBOSE;
-	  for(Long64_t i=0, n=b->GetEntries(); i<n; ++i)
+	  for(Long64_t i=0, n=b->GetEntries(); i<n; ++i) {
 	    if ( b->GetEntry(i)>0 ) {
 	      char* p = (char*)l->GetValuePointer();
 	      msgSvc() << "Add Value[" << b->GetName() << "]:" << p << endmsg;
 	      (this->*pmf)(v,p);
 	    }
+	  }
 	  return StatusCode::SUCCESS;
 	}
       }
@@ -158,6 +160,7 @@ namespace Gaudi {
       r.dbase = r.container = r.link = r.clid = r.svc = r.entry = 0;
       for(i=tmp.begin(); i!=tmp.end();++i) {
 	if ( get(*i,e) ) {
+	  msg << "Added Merge Section:" << e.first << endmsg;
 	  ms[e.first].push_back(e.second);
 	  if (      e.first == "Links" )
 	    r.link      = e.second.start;

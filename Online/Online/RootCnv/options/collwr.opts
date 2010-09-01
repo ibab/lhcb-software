@@ -10,5 +10,14 @@ EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frank
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='UPDATE' SVC='Gaudi::RootCnvSvc'" };
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO_castor.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
 
-EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
-EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
+EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.0.dst' SVC='Gaudi::RootEvtSelector'"};
+EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.0.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
+
+//EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.1.dst' SVC='Gaudi::RootEvtSelector'"};
+//EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.1.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
+
+//EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.2.dst' SVC='Gaudi::RootEvtSelector'"};
+//EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.2.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
+
+//EventSelector.Input= {"DATAFILE='PFN:data/ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'"};
+//EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.3.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };

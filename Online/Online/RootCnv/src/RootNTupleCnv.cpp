@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.6 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.7 2010-09-01 18:52:48 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -245,7 +245,7 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	  MsgStream err(msgSvc(),"NTupleCnv");
 	  err << MSG::DEBUG << "Created N-tuple with description:"
 	      << par_val << endl;
-	  rpA->connection = con;
+	  ((unsigned long*)rpA->ipar())[0] = (unsigned long)con;
 	  rpA->section = tree;
 	  refpObject  = nt;
 	}
@@ -264,10 +264,11 @@ StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
   INTuple* tupl = dynamic_cast<INTuple*>(pObj);
   RootAddress* rpA = dynamic_cast<RootAddress*>(pAddr);
   if ( 0 != tupl && 0 != rpA )  {
-    RootDataConnection* con = rpA->connection;
+    RootDataConnection* con = (RootDataConnection*)rpA->ipar()[0];
     if ( con )   {
       TTree* tree = rpA->section;
       if ( tree ) {
+	con->resetAge();
 	if ( con->tool()->refs() ) 
 	  return i__updateObjRoot(rpA,tupl,tree,con);
 #ifdef __POOL_COMPATIBILITY
@@ -331,7 +332,8 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
       }
     }
     if ( ipar[1] < last ) {
-      if ( tree->GetEntry(ipar[1]) > 1 )   {
+      unsigned long entry = ipar[1];
+      if ( tree->GetEntry(entry) > 1 )   {
 	RootRef *r = 0;
 	string  *spar = 0;
 	for(k = 0; k < n; ++k)      {
@@ -343,6 +345,29 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 	    if ( pA ) { // Fill only if item is connected!
 	      spar = (string*)pA->par();
 	      ipar = (unsigned long*)pA->ipar();
+	      MsgStream log(msgSvc(),"NTupleCnv");
+	      log << MSG::ALWAYS;
+	      pair<const RootRef*,const RootDataConnection::ContainerSection*> ls = con->getMergeSection(tree->GetName(),entry);
+	      if ( ls.first )  {
+		if ( ls.first->dbase >= 0 ) {
+		  // Now patch the references and links 'en block' to be efficient
+		  // First the leafs from the TES
+
+		  r->dbase     += ls.first->dbase;
+		  r->container += ls.first->container;
+		  r->link      += ls.first->link;
+
+		  if ( log.isActive() ) {
+		    log << MSG::ERROR 
+			<< "Refs: LS [" << entry << "] -> " 
+			<< ls.first->dbase << "," << ls.first->container 
+			<< "," << ls.first->link 
+			<< "," << ls.first->entry
+			<< " DB:" << con->getDb(r->dbase)
+			<< endmsg;
+		  }
+		}
+	      }
 	      spar[0] = con->getDb(r->dbase);
 	      spar[1] = con->getCont(r->container);
 	      spar[2] = con->getLink(r->link);		
@@ -609,7 +634,7 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
 	  status = m_dbMgr->createAddress(repSvcType(),pObj->clID(),spar,ipar,pAddr);
 	  if ( status.isSuccess() ) {
 	    RootAddress* rpA = dynamic_cast<RootAddress*>(pAddr);
-	    rpA->connection = con;
+	    ((unsigned long*)rpA->ipar())[0] = (unsigned long)con;
 	    rpA->section = tree;
 	  }
 	  else  {
@@ -633,10 +658,8 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
   if ( tupl && pReg && rpA )  {
     string cntName = containerName(pReg);
     unsigned long* ipar = const_cast<unsigned long*>(pAddr->ipar());
-    //RootDataConnection* con = (RootDataConnection*)ipar[0];
-    RootDataConnection* con = rpA->connection;
+    RootDataConnection* con = (RootDataConnection*)rpA->ipar()[0];
     if ( con ) {
-      //TTree* tree = con->getSection(_tr(cntName));
       TTree* tree = rpA->section;
       if ( tree ) {
 	Cont& it = tupl->items();

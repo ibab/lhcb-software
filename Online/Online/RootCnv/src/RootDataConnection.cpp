@@ -1,11 +1,11 @@
-// $Id: RootDataConnection.cpp,v 1.12 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.13 2010-09-01 18:52:48 frankb Exp $
 //====================================================================
 //	RootDataConnection.cpp
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.12 2010-08-24 23:30:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.13 2010-09-01 18:52:48 frankb Exp $
 
 // Framework include files
 #include "RootDataConnection.h"
@@ -35,6 +35,46 @@ static string s_local = "<localDB>";
 #include "PoolTool.h"
 #endif
 #include "RootTool.h"
+
+
+static bool match_wild(const char *str, const char *pat)    {
+  //
+  // Credits: Code from Alessandro Felice Cantatore.
+  // 
+  static char table[256];
+  static bool first = true;
+  const char *s, *p;
+  bool star = false;
+  if ( first ) {
+    for (int i = 0; i < 256; ++i) table[i] = i;
+    first = false;
+  }
+ loopStart:
+  for (s = str, p = pat; *s; ++s, ++p) {
+    switch (*p) {
+    case '?':
+      if (*s == '.') goto starCheck;
+      break;
+    case '*':
+      star = true;
+      str = s, pat = p;
+      do { ++pat; } while (*pat == '*');
+      if (!*pat) return true;
+      goto loopStart;
+    default:
+      if ( *(table+*s) != *(table+*p) )
+	goto starCheck;
+      break;
+    } /* endswitch */
+  } /* endfor */
+  while (*p == '*') ++p;
+  return (!*p);
+  
+ starCheck:
+  if (!star) return false;
+  str++;
+  goto loopStart;
+}
 
 // Standard constructor
 RootConnectionSetup::RootConnectionSetup() : refCount(1), m_msgSvc(0)
@@ -136,19 +176,25 @@ StatusCode RootDataConnection::connectRead()  {
     if ( sc.isSuccess() ) {
       bool need_fid = m_fid == m_pfn;
       string fid = m_fid;
+      m_mergeFIDs.clear();
       for(size_t i=0, n=m_params.size(); i<n; ++i) {
-	if ( m_params[i].first == "FID" && m_params[i].second != m_fid )    {
-	  if ( m_fid == m_pfn ) {
+	if ( m_params[i].first == "FID" )  {
+	  m_mergeFIDs.push_back(m_params[i].second);
+	  if ( m_params[i].second != m_fid )    {
+	    msgSvc() << MSG::DEBUG << "Check FID param:" << m_params[i].second << endmsg;
+	    //if ( m_fid == m_pfn ) {
 	    m_fid = m_params[i].second;
-	    continue;
+	    //}
 	  }
 	}
       }
       if ( !need_fid && fid != m_fid ) {
-	msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg;
+	msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg
+		 << "for PFN:" << m_pfn << endmsg;
 	return StatusCode::FAILURE;
       }
-      msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg;
+      msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg
+	       << "for PFN:" << m_pfn << endmsg;
       return sc;
     }
   }
@@ -243,23 +289,55 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
     t = (TTree*)m_file->Get(section.c_str());
     if ( !t && create ) {
       TDirectory::TContext ctxt(m_file);
-      t = new TTree(section.c_str(),"Root Event data");
+      t = new TTree(section.c_str(),"Root data for Gaudi");
     }
     if ( t ) {
+      int cacheSize = m_setup->cacheSize;
       if ( create ) {
 	//t->SetAutoFlush(100);
       }
-      if ( m_setup->cacheSize>-2 )  {
-	t->SetCacheSize(m_setup->cacheSize);
-	t->SetCacheLearnEntries(m_setup->learnEntries);
-	msgSvc() << MSG::DEBUG;
+      if ( section == m_setup->loadSection && cacheSize>-2 )  {
+	MsgStream& msg = msgSvc();
+	int learnEntries = m_setup->learnEntries;
+	t->SetCacheSize(cacheSize);
+	t->SetCacheLearnEntries(learnEntries);
+	const StringVec& vB = m_setup->vetoBranches;
+	const StringVec& cB = m_setup->cacheBranches;
+	msg << MSG::DEBUG;
 	if ( create ) {
-	  msgSvc() << "Tree:" << section << "Setting up tree cache:" << m_setup->cacheSize << endmsg;
+	  msg << "Tree:" << section << "Setting up tree cache:" << cacheSize << endmsg;
 	}
 	else {
-	  msgSvc() << "Tree:" << section << " Setting up tree cache:" << m_setup->cacheSize << " Add all branches." << endmsg;
-	  msgSvc() << "Tree:" << section << " Learn for " << m_setup->learnEntries << " entries." << endmsg;
-	  t->AddBranchToCache("*",kTRUE);
+	  msg << "Tree:" << section << " Setting up tree cache:" << cacheSize << " Add all branches." << endmsg;
+	  msg << "Tree:" << section << " Learn for " << learnEntries << " entries." << endmsg;
+	  if ( cB.size()==1 && cB[0]=="*" ) {
+	    t->AddBranchToCache("*",kTRUE);
+	  }
+	  else if ( cB.size()==0 && !(vB.size()>0 && vB[0]=="*")) {
+	    t->AddBranchToCache("*",kTRUE);
+	  }
+	  else {
+	    bool add = false, veto = false;
+	    StringVec::const_iterator i;
+	    // Add all branches, which should be cached
+	    for(TIter it(t->GetListOfBranches()); it.Next(); )  {
+	      const char* n = ((TNamed*)(*it))->GetName();
+	      for(i=vB.begin(); add && i!=vB.end();++i) {
+		if ( !match_wild(n,(*i).c_str()) ) continue;
+		veto = true;
+		break;
+	      }
+	      for(i=cB.begin(); add && i!=cB.end();++i) {
+		if ( !match_wild(n,(*i).c_str()) ) continue;
+		add = true;
+		break;
+	      }
+	      if ( add && !veto ) {
+		msg << "Add " << n << " to branch cache." << endmsg;
+		t->AddBranchToCache(n,kTRUE);
+	      }
+	    }
+	  }
 	}
       }
       m_sections[section] = t;
@@ -272,7 +350,7 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 TBranch* RootDataConnection::getBranch(CSTR section, CSTR n, TClass* cl) {
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
-  if ( !b && m_file->IsWritable() ) {
+  if ( !b && cl && m_file->IsWritable() ) {
     void* ptr = 0;
     b = t->Branch(n.c_str(),cl->GetName(),&ptr);
   }
@@ -309,33 +387,34 @@ CSTR RootDataConnection::empty() const {
 
 // Save object of a given class to section and container
 pair<int,unsigned long> 
-RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj) {
+RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj,bool fill) {
   DataObjectPush push(pObj);
-  return save(section,cnt,cl,pObj);
+  return save(section,cnt,cl,pObj,fill);
 }
 
 // Save object of a given class to section and container
 pair<int,unsigned long> 
-RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj) {
+RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fill_missing) {
   TBranch* b = getBranch(section, cnt, cl);
   if ( b ) {
-    b->SetAddress(&pObj);
     long evt = b->GetEntries();
-    if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
-      if ( cnt == "/Event" ) {
-	if ( evt == m_setup->autoFlush ) {
-	  b->GetTree()->SetAutoFlush(m_setup->autoFlush);
-	  b->GetTree()->SetEntries(evt);
-	  b->GetTree()->OptimizeBaskets(40000000,1.,"");
+    if ( 0 == evt && fill_missing ) {
+      long nevt = b->GetTree()->GetEntries();
+      if ( nevt > evt ) {
+	void* p = 0;
+	b->SetAddress(&p);
+	for(int i=0; i<nevt; ++i) {
+	  b->Fill();
 	}
-	else   {
-	  b->GetTree()->FlushBaskets();
-	}
+	msgSvc() << MSG::INFO << "Added " << b->GetEntries() << " NULL entries to:" << cnt << endmsg;
       }
     }
+    b->SetAddress(&pObj);
     return make_pair(b->Fill(),evt);
   }
-  msgSvc() << MSG::ERROR << "Failed to access branch " << m_name << "/" << cnt << endmsg;
+  else if ( 0 != pObj ) {
+    msgSvc() << MSG::ERROR << "Failed to access branch " << m_name << "/" << cnt << endmsg;
+  }
   return make_pair(-1,~0);
 }
 
@@ -348,9 +427,11 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
       pObj = (DataObject*)cl->New();
       DataObjectPush push(pObj);
       b->SetAddress(&pObj);
-      TTree* t = b->GetTree();
-      if ( Long64_t(entry) != t->GetReadEntry() ) {
-	t->LoadTree(Long64_t(entry));
+      if ( section == m_setup->loadSection ) {
+	TTree* t = b->GetTree();
+	if ( Long64_t(entry) != t->GetReadEntry() ) {
+	  t->LoadTree(Long64_t(entry));
+	}
       }
       int nb = b->GetEntry(entry);
       msgSvc() << MSG::VERBOSE;
@@ -368,6 +449,8 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
 // Access link section for single container and entry
 pair<const RootRef*,const RootDataConnection::ContainerSection*> 
 RootDataConnection::getMergeSection(const string& container, int entry) const {
+  //size_t idx = cont.find('/',1);
+  //string container = cont[0]=='/' ? cont.substr(1,idx==string::npos?idx:idx-1) : cont;
   MergeSections::const_iterator i=m_mergeSects.find(container);
   if ( i != m_mergeSects.end() ) {
     size_t cnt = 0;
@@ -376,12 +459,19 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
       const ContainerSection& c = *j;
       if ( entry >= c.start && entry < (c.start+c.length) ) {
 	if ( m_linkSects.size() > cnt ) {
+	  if ( msgSvc().isActive() ) {
+	    msgSvc() << MSG::VERBOSE << "MergeSection for:" << container 
+		     << "  [" << entry << "]" << endmsg
+		     << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+	  }
 	  return make_pair(&(m_linkSects[cnt]), &c);
 	}
       }
     }
   }
-  msgSvc() << MSG::ERROR << "Return INVALID MergeSection:  [" << entry << "]" << endmsg;
+  msgSvc() << MSG::ERROR << "Return INVALID MergeSection for:" << container 
+	   << "  [" << entry << "]" << endmsg
+	   << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
   return make_pair((const RootRef*)0,(const ContainerSection*)0);
 }
 

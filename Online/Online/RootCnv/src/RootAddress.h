@@ -1,11 +1,11 @@
-// $Id: RootAddress.h,v 1.6 2010-08-24 14:03:03 frankb Exp $
+// $Id: RootAddress.h,v 1.7 2010-09-01 18:52:48 frankb Exp $
 //====================================================================
 //	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.6 2010-08-24 14:03:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.7 2010-09-01 18:52:48 frankb Exp $
 #ifndef GAUDIROOTCNV_ROOTADDRESS_H
 #define GAUDIROOTCNV_ROOTADDRESS_H
 
@@ -39,8 +39,6 @@ namespace Gaudi {
   public:
     /// Pointer to ROOT select statement (filled for N-tuples only)
     RootSelect*         select;
-    /// Pointer to ROOT data connection (filled for N-tuples only)
-    RootDataConnection* connection;
     /// Pointer to ROOT TTree (filled for N-tuples only)
     TTree*              section;
 
@@ -52,7 +50,7 @@ namespace Gaudi {
 		 const std::string& p2="",
 		 unsigned long ip1=0,
 		 unsigned long ip2=0)
-      : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), connection(0), section(0) { }
+    : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), section(0) { }
     /// Standard Destructor
     virtual ~RootAddress() {  deletePtr(select);  }
   };

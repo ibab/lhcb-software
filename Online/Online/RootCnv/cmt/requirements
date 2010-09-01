@@ -19,6 +19,8 @@ macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY '
 # macro_append  RootCnv_dependencies RootCnvGen
 apply_pattern component_library library=RootCnv
 
+application gaudi_merge ../merge/merge.cpp
+
 private
 use GaudiExamples v*
 ##use LHCbSys v*

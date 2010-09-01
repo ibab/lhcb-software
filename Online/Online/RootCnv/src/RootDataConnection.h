@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.h,v 1.7 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootDataConnection.h,v 1.8 2010-09-01 18:52:48 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
@@ -43,6 +43,9 @@ namespace Gaudi  {
     *  @date    20/12/2009
     */
   class GAUDI_API RootConnectionSetup {
+  public:
+    /// Type definition for string maps
+    typedef std::vector<std::string> StringVec;
   protected:
     /// Standard destructor      
     virtual ~RootConnectionSetup();
@@ -52,6 +55,12 @@ namespace Gaudi  {
     MsgStream* m_msgSvc;
 
   public:
+    /// Vector of strings with branches to be cached for input files
+    StringVec    cacheBranches;
+    /// Vector of strings with branches to NOT be cached for input files
+    StringVec    vetoBranches;
+    /// RootCnvSvc Property: Root data cache size
+    std::string  loadSection;
     /// RootCnvSvc Property: Root data cache size
     int          cacheSize;
     /// RootCnvSvc Property: ROOT cache learn entries
@@ -141,6 +150,8 @@ namespace Gaudi  {
     StringVec            m_conts;
     /// Map containing internal links names
     StringVec            m_links;
+    /// Map containing merge FIDs
+    StringVec            m_mergeFIDs;
     /// Parameter map for file parameters
     ParamMap             m_params;
     /// Database section map for merged files
@@ -228,6 +239,9 @@ namespace Gaudi  {
     Tool* tool() const                          {  return m_tool;                              }
     /// Access merged data section inventory
     const MergeSections& mergeSections() const  {  return m_mergeSects;                        }
+    /// Access merged FIDs
+    const StringVec& mergeFIDs() const          {  return m_mergeFIDs;                         }
+
     /// Access link section for single container and entry
     std::pair<const RootRef*,const ContainerSection*>  getMergeSection(const std::string& container, int entry) const;
 
@@ -244,9 +258,9 @@ namespace Gaudi  {
     { return m_tool->loadRefs(section,cnt,entry,refs); }
 
     /// Save object of a given class to section and container
-    std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj);
+    std::pair<int,unsigned long> saveObj(const std::string& section,const std::string& cnt, TClass* cl, DataObject* pObj,bool fill_missing=false);
     /// Save object of a given class to section and container
-    std::pair<int,unsigned long> save(const std::string& section,const std::string& cnt, TClass* cl, void* pObj);
+    std::pair<int,unsigned long> save(const std::string& section,const std::string& cnt, TClass* cl, void* pObj,bool fill_missing=false);
 
 
     /// Open data stream in read mode

@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.h,v 1.5 2010-08-24 14:03:03 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.6 2010-09-01 18:52:48 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef GAUDIROOTCNV_GAUDIROOTCNVSVC_H
 #define GAUDIROOTCNV_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.5 2010-08-24 14:03:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.6 2010-09-01 18:52:48 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -60,20 +60,27 @@ namespace Gaudi {
     TClass*                     m_classDO;
     /// Setup structure (ref-counted) and passed to data connections
     RootConnectionSetup*        m_setup;
+    /// Property: ROOT section name
+    std::string                 m_currSection;
 
     /// Property: Flag to enable incidents on FILE_OPEN
     bool                        m_incidentEnabled;
     /// Property: Share files ? If set to YES, files will not be closed on finalize
     std::string                 m_shareFiles;
-    /// Property: ROOT section name
-    std::string                 m_section;
+    /// Property: Records name to fire incident for file records
+    std::string                 m_recordName;
     /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
     std::string                 m_ioPerfStats;
     /// Set with bad files/tables
     std::set<std::string>       m_badFiles;
 
+    /// Message streamer
+    MsgStream*                  m_log;
+
     /// Helper: Get TClass for a given DataObject pointer
     TClass* getClass(DataObject* pObject);
+    /// Helper: Use message streamer
+    MsgStream& log() const {   return *m_log; }
 
   public:
 
@@ -112,7 +119,7 @@ namespace Gaudi {
   public:
 
     /// Access default section (Tree) name
-    const std::string& section() const { return m_section; }
+    //const std::string& section() const { return m_section; }
 
     /// ConversionSvc overload: initialize Db service
     virtual StatusCode initialize();
@@ -181,6 +188,22 @@ namespace Gaudi {
 				      const unsigned long* ip,
 				      IOpaqueAddress*&     refpAddress);
   
+    /** Insert null marker for not existent transient object
+     *
+     * @param    path     [IN]   Path to the (null-)object
+     *
+     * @return Status code indicating success or failure.
+     */
+    virtual StatusCode createNullRep(const std::string& path);
+
+    /** Insert null marker for not existent transient object
+     *
+     * @param    path     [IN]   Path to the (null-)object
+     *
+     * @return Status code indicating success or failure.
+     */
+    virtual StatusCode createNullRef(const std::string& path);
+
     /** Convert the transient object to the requested persistent representation.
      *
      * @param    pObj     [IN]   Pointer to data object

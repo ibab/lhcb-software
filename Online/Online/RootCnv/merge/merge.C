@@ -11,16 +11,16 @@ class TTree;
 class TFile;
 class TBranch;
 
-
-static bool s_dbg = true;
-
 /*
  * Gaudi namespace declaration
  */
 namespace Gaudi {
 
   typedef int MergeStatus;
-  enum { ERROR=0, SUCCESS=1 };
+  enum MergeStatusEnum { 
+    MERGE_ERROR=0, 
+    MERGE_SUCCESS=1 
+  };
 
   struct ContainerSection {
     int start;
@@ -39,6 +39,7 @@ namespace Gaudi {
 
     DatabaseSections   m_sections;
     TFile*             m_output;
+    bool               m_treeSections;
 
   public:
     /// Standard constructor
@@ -46,7 +47,7 @@ namespace Gaudi {
     /// Default destructor
     virtual ~RootDatabaseMerger();
     /// Check if a database exists
-    bool exists(const std::string& fid, bool dbg=true) const;
+    bool exists(const std::string& fid) const;
     /// Create new output file
     MergeStatus create(const std::string& fid);
     /// Attach to existing output file for further merging
@@ -61,6 +62,9 @@ namespace Gaudi {
     MergeStatus saveSections();
     /// Create and add new FID to the newly merged file
     MergeStatus createFID();
+
+    /// Copy all data trees from the input file to the output file.
+    MergeStatus copyAllTrees(TFile* source);
     /// Copy one single tree from the input file to the output file.
     MergeStatus copyTree(TFile* source, const std::string& name);
     /// Copy single reference branch
@@ -87,14 +91,14 @@ namespace Gaudi {
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TTreeCloner.h"
-#include <iostream>
-#include <iomanip>
-
 
 using namespace Gaudi;
 using namespace std;
 
 namespace {
+
+  static bool s_dbg = true;
+
   const char* getLinkContainer(char* txt) {
     char* p = ::strstr(txt,"[CNT=");
     if ( p ) {
@@ -114,7 +118,7 @@ namespace {
 }
 
 /// Standard constructor
-RootDatabaseMerger::RootDatabaseMerger() : m_output(0) {
+RootDatabaseMerger::RootDatabaseMerger() : m_output(0), m_treeSections(false) {
 }
 
 /// Default destructor
@@ -123,45 +127,41 @@ RootDatabaseMerger::~RootDatabaseMerger() {
 }
 
 /// Check if a database exists
-bool RootDatabaseMerger::exists(const std::string& fid, bool dbg) const {
+bool RootDatabaseMerger::exists(const std::string& fid) const {
   Bool_t result = gSystem->AccessPathName(fid.c_str(), kFileExists);
-  if ( result == kFALSE ) {
-    if ( s_dbg ) cout << "file " << fid << " EXISTS!" << endl;
-  }
-  else if ( dbg ) {
-    cout << "file " << fid << " DOES NOT EXIST!" << endl;
-  }
+  if ( s_dbg ) ::printf("File %s %s!\n",fid.c_str(),result == kFALSE ? "EXISTS" : "DOES NOT EXIST");
   return result == kFALSE;
 }
 
 /// Attach to existing output file for further merging
-MergeStatus RootDatabaseMerger::attach(const string& fid) {
+MergeStatus RootDatabaseMerger::attach(const string& file_id) {
+  const char* fid = file_id.c_str();
   if ( m_output ) {
-    cout << "+++ Another output file " << m_output->GetName() << " is already open. Request denied." << endl;
-    return ERROR;
+    ::printf("+++ Another output file %s is already open. Request denied.\n",m_output->GetName());
+    return MERGE_ERROR;
   }
-  else if ( !exists(fid) ) {
-    cout << "+++ Cannot attach output file " << fid << " --- file does not exist." << endl;
-    return ERROR;
+  else if ( !exists(file_id) ) {
+    ::printf("+++ Cannot attach output file %s --- file does not exist.\n",fid);
+    return MERGE_ERROR;
   }
-  m_output = TFile::Open(fid.c_str(),"UPDATE");
+  m_output = TFile::Open(fid,"UPDATE");
   if ( m_output && !m_output->IsZombie() ) {
-    if ( s_dbg ) cout << "+++ Opened new output file " << fid << "." << endl;
-    return SUCCESS;
+    if ( s_dbg ) ::printf("+++ Opened new output file %s.\n",fid);
+    return MERGE_SUCCESS;
   }
-  cout << "+++ Failed to open new output file " << fid << "." << endl;
-  return ERROR;
+  ::printf("+++ Failed to open new output file %s.\n",fid);
+  return MERGE_ERROR;
 }
 
 /// Create new output file
 MergeStatus RootDatabaseMerger::create(const string& fid) {
   if ( m_output ) {
-    cout << "+++ Another output file " << m_output->GetName() << " is already open. Request denied." << endl;
-    return ERROR;
+    ::printf("+++ Another output file %s is already open. Request denied.\n",m_output->GetName());
+    return MERGE_ERROR;
   }
   else if ( exists(fid) ) {
-    cout << "+++ Cannot create output file " << fid << " --- file already exists." << endl;
-    return ERROR;
+    ::printf("+++ Cannot create output file %s --- file already exists.\n",fid.c_str());
+    return MERGE_ERROR;
   }
   m_output = TFile::Open(fid.c_str(),"RECREATE");
   if ( m_output && !m_output->IsZombie() )     {
@@ -173,12 +173,12 @@ MergeStatus RootDatabaseMerger::create(const string& fid) {
       t2->Branch("Params",0,"Params/C");
       t2->Branch("Databases",0,"Databases/C");
       t2->Branch("Containers",0,"Containers/C");
-      if ( s_dbg ) cout << "+++ Opened new output file " << fid << "." << endl;
-      return SUCCESS;
+      if ( s_dbg ) ::printf("+++ Opened new output file %s.\n",fid.c_str());
+      return MERGE_SUCCESS;
     }
   }
-  cout << "+++ Failed to open new output file " << fid << "." << endl;
-  return ERROR;
+  ::printf("+++ Failed to open new output file %s.\n",fid.c_str());
+  return MERGE_ERROR;
 }
 
 /// Close output file
@@ -202,13 +202,13 @@ MergeStatus RootDatabaseMerger::createFID() {
 	b->SetAddress(text);
 	b->Fill();
 	t->Write();
-	if ( s_dbg ) cout << "+++ Added new GUID " << text << " to merge file." << endl;
-	return SUCCESS;
+	if ( s_dbg ) ::printf("+++ Added new GUID %s to merge file.\n",text);
+	return MERGE_SUCCESS;
       }
     }
   }
-  cout << "+++ Failed to add new GUID to merge file." << endl;
-  return ERROR;
+  ::printf("+++ Failed to add new GUID to merge file.\n");
+  return MERGE_ERROR;
 }
 
 /// Close output file
@@ -221,7 +221,7 @@ MergeStatus RootDatabaseMerger::close() {
     delete m_output;
     m_output = 0;
   }
-  return SUCCESS;
+  return MERGE_SUCCESS;
 }
 
 /// Save new sections to the output file
@@ -246,7 +246,7 @@ MergeStatus RootDatabaseMerger::saveSections()     {
 	    if ( nb > 0 )
 	      nbytes += nb;
 	    else
-	      cout << "+++ Failed to update Sections tree with new entries. [WRITE_ERROR]" << endl;
+	      ::printf("+++ Failed to update Sections tree with new entries. [WRITE_ERROR]\n");
 	  }
 	}
 	::sprintf(text,"[END-OF-SECTION]");
@@ -255,18 +255,19 @@ MergeStatus RootDatabaseMerger::saveSections()     {
 	if ( nb > 0 )
 	  nbytes += nb;
 	else
-	  cout << "+++ Failed to update Sections branch with new entries. [WRITE_ERROR]" << endl;
+	  ::printf("+++ Failed to update Sections branch with new entries. [WRITE_ERROR]\n");
 	t->Write();
-	if ( s_dbg ) cout << "+++ Added " << total << " Sections entries with " << nbytes << " bytes in total." << endl;    return SUCCESS;
+	if ( s_dbg ) ::printf("+++ Added %d Sections entries with %d bytes in total.\n",total,nbytes);
+	return MERGE_SUCCESS;
       }
-      cout << "+++ Failed to update Sections tree with new entries. [NO_OUTPUT_BRANCH]" << endl;
-      return ERROR;
+      ::printf("+++ Failed to update Sections tree with new entries. [NO_OUTPUT_BRANCH]\n");
+      return MERGE_ERROR;
     }
-    cout << "+++ Failed to update Sections tree with new entries. [NO_OUTPUT_TREE]" << endl;
-    return ERROR;
+    ::printf("+++ Failed to update Sections tree with new entries. [NO_OUTPUT_TREE]\n");
+    return MERGE_ERROR;
   }
-  cout << "+++ Failed to update Sections tree with new entries. [NO_OUTPUT_FILE]" << endl;
-  return ERROR;
+  ::printf("+++ Failed to update Sections tree with new entries. [NO_OUTPUT_FILE]\n");
+  return MERGE_ERROR;
 }
 
 /// Dump collected database sections
@@ -276,13 +277,11 @@ void RootDatabaseMerger::dumpSections() {
     string prefix = (*i).first;
     const ContainerSections& cntSects = (*i).second;
     for(ContainerSections::const_iterator j=cntSects.begin(); j != cntSects.end();++j, ++cnt) {
-      char text[32];
-      ::sprintf(text,"'][%d]",cnt); 
+      char text[1024];
+      ::sprintf(text,"['%s'][%d]",prefix.c_str(),cnt); 
       if ( s_dbg ) {
-	cout << "+++ " << setw(60) << left << "section['"+prefix+text
-	     << "  Start:" << setw(8) << right << (*j).start 
-	     << " ... "    << setw(8) << right << (*j).start+(*j).length 
-	     << " ["       << (*j).length << "  entries]." << endl;
+	::printf("+++ section %-55s Start:%8d ... %8d [%d entries]\n",
+		 text,(*j).start,(*j).start+(*j).length,(*j).length);
       }
     }
   }
@@ -290,27 +289,35 @@ void RootDatabaseMerger::dumpSections() {
 
 /// Merge new input to existing output
 MergeStatus RootDatabaseMerger::merge(const string& fid) {
-  if ( m_output ) {
+  if ( m_output )    {
     TFile* source = TFile::Open(fid.c_str());
     if ( source && !source->IsZombie() )  {
-      if ( copyTree(source,"E") == SUCCESS )  {
-	if ( copyRefs(source,"Refs") == SUCCESS )  {
+      if ( copyAllTrees(source) == MERGE_SUCCESS )  {
+	if ( copyRefs(source,"Refs") == MERGE_SUCCESS )  {
 	  source->Close();
 	  delete source;
-	  return SUCCESS;
+	  return MERGE_SUCCESS;
 	}
       }
     }
-    cout << "+++ Cannot open input file:" << source << endl;
+    ::printf("+++ Cannot open input file:%s\n", source->GetName());
     m_output->cd();
-    return ERROR;
+    return MERGE_ERROR;
   }
-  cout << "+++ No valid output file present. Merge request refused for fid:" << fid << endl;
-  return ERROR;
+  ::printf("+++ No valid output file present. Merge request refused for fid:%s.\n",fid.c_str());
+  return MERGE_ERROR;
 }
 
 /// Add section information for the next merge step
 MergeStatus RootDatabaseMerger::addSections(TTree* in, TTree* out) {
+  if ( m_treeSections ) {
+    ContainerSection s;
+    s.start  = (int)(out ? out->GetEntries() : 0);
+    s.length = (int)in->GetEntries();
+    m_sections[in->GetName()].push_back(s);
+    return MERGE_SUCCESS;
+  }
+
   TObjArray* a_in  = in->GetListOfBranches();
   for(int i=0, n=a_in->GetLast(); i<n; ++i) {
     TBranch* b_in = (TBranch*)a_in->At(i);
@@ -322,15 +329,15 @@ MergeStatus RootDatabaseMerger::addSections(TTree* in, TTree* out) {
       m_sections[b_in->GetName()].push_back(s);
       continue;
     }
-    cout << "+++ Cannot merge incompatible branches:" << b_in->GetName() << endl;
-    return ERROR;
+    ::printf("+++ Cannot merge incompatible branches:%s.\n",b_in->GetName());
+    return MERGE_ERROR;
   }
-  return SUCCESS;
+  return MERGE_SUCCESS;
 }
 
 /// Copy single reference branch
 MergeStatus RootDatabaseMerger::copyBranch(TTree* src_tree,TTree* out_tree,const string& name) {
-  char text[2048];
+  char text[4096];
   TBranch* s = src_tree->GetBranch(name.c_str());
   TBranch* o = out_tree->GetBranch(name.c_str());
   if ( s && o ) {
@@ -340,9 +347,32 @@ MergeStatus RootDatabaseMerger::copyBranch(TTree* src_tree,TTree* out_tree,const
       s->GetEntry(i);
       o->Fill();
     }
-    return SUCCESS;
+    return MERGE_SUCCESS;
   }
-  return ERROR;
+  return MERGE_ERROR;
+}
+
+/// Copy all data trees from the input file to the output file.
+MergeStatus RootDatabaseMerger::copyAllTrees(TFile* source) {
+  TIter nextkey(source->GetListOfKeys());
+  //m_treeSections = true;
+  for(TKey* key = (TKey*)nextkey(); key; key = (TKey*)nextkey() ) {
+    const char *classname = key->GetClassName();
+    TClass *cl = gROOT->GetClass(classname);
+    if (!cl) continue;
+    if (cl->InheritsFrom("TTree")) {
+      string name = key->GetName();
+      if ( name == "Refs" ) continue;
+      m_treeSections = 0 == ::strncmp(key->GetName(),"<local>_",7);
+      printf("Tree:%s %d\n",name.c_str(),int(m_treeSections));
+      if ( copyTree(source,name) != MERGE_SUCCESS ) {
+	m_treeSections = false;
+	return MERGE_ERROR;
+      }
+    }
+  }
+  m_treeSections = false;
+  return MERGE_SUCCESS;
 }
 
 /// Copy one single tree from the input file to the output file.
@@ -359,8 +389,8 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
     if ( out_tree == 0 ) {
       out_tree = src_tree->CloneTree(-1,"fast");
       out_tree->Write();
-      if ( s_dbg ) cout << "+++ Created new Tree " << out_tree->GetName() << endl;
-      return SUCCESS;
+      if ( s_dbg ) ::printf("+++ Created new Tree %s.\n",out_tree->GetName());
+      return MERGE_SUCCESS;
     }
     m_output->GetObject(name.c_str(),out_tree);
     TTreeCloner cloner(src_tree,out_tree,"fast");
@@ -369,17 +399,17 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
       out_tree->SetEntries(out_entries+src_entries);
       Bool_t res = cloner.Exec();
       out_tree->Write();
-      if ( s_dbg ) cout << "+++ Merged tree: " << out_tree->GetName() << " res=" << res << endl;
-      return SUCCESS;
+      if ( s_dbg ) ::printf("+++ Merged tree: %s res=%d\n",out_tree->GetName(),res);
+      return MERGE_SUCCESS;
     }
     else {
       // Fast cloning is not possible for this input TTree.
       // ... see TTree::CloneTree for example of recovery code ...
-      cout << "+++ Got a tree where fast cloning is not possible -- operation failed." << endl;
-      return ERROR;
+      ::printf("+++ Got a tree where fast cloning is not possible -- operation failed.\n");
+      return MERGE_ERROR;
     }
   }
-  return ERROR;
+  return MERGE_ERROR;
 }
 
 /// Copy refs of one single tree from the input file to the output file.
@@ -394,27 +424,27 @@ MergeStatus RootDatabaseMerger::copyRefs(TFile* source, const string& name) {
       copyBranch(src_tree,out_tree,"Containers");
       copyBranch(src_tree,out_tree,"Databases");
       out_tree->Write();
-      return SUCCESS;
+      return MERGE_SUCCESS;
     }
   }
-  return ERROR;
+  return MERGE_ERROR;
 }
 
 int merge(const char* target, const char* source, bool fixup=false, bool dbg=true) {
   s_dbg = dbg;
-  s_dbg = true;
+  //s_dbg = true;
   gSystem->Load("libCintex");
   RootDatabaseMerger m;
-  MergeStatus ret = m.exists(target,s_dbg) ? m.attach(target) : m.create(target);
-  if ( ret == SUCCESS ) {
+  MergeStatus ret = m.exists(target) ? m.attach(target) : m.create(target);
+  if ( ret == MERGE_SUCCESS ) {
     ret = m.merge(source);
-    if ( ret == SUCCESS ) {
+    if ( ret == MERGE_SUCCESS ) {
       m.dumpSections();
       if ( fixup ) m.createFID();
       m.saveSections();
       return m.close();
     }
   }
-  cout << "+++ Cannot open output file:" << target << endl;
+  ::printf("+++ Cannot open output file:%s\n",target);
   return 0;
 }
