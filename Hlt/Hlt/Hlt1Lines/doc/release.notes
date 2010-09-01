@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.209 2010-08-31 06:15:37 albrecht Exp $
+! $Id: release.notes,v 1.210 2010-09-01 13:28:34 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-09-01 - Johannes Albrecht
+ - set seeding internal p cut to 10GeV
 
 ! 2010-08-31 - Johannes Albrecht
  - add slot for muon segment search windows, tighten
