@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r24p1 2010-09-01 ================
 ! 2010-09-01 - Chris Jones
  - Fix against very rare crashed caused by an array index going out of range
    in the isolated track tool, when the photon Cherenkov phi value is 
