@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-09-01a - Johannes Albrecht
+ - fix more syntax errors, tighten muon alley
+
 ! 2010-09-01 - Johannes Albrecht
  - another update of Sept10 Configuration
   o put new express lines w/ prescales in
