@@ -1,4 +1,4 @@
-class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
+class Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
     """
     Threshold settings for Hlt1 for 2010 conditions with pileup
     
@@ -25,8 +25,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
         return '0x0025'
 
     def HltType(self) :
-        self.verifyType( Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 )
-        return          'Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10'
+        self.verifyType( Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
+        return          'Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10'
     
     def Thresholds(self) :
         """
@@ -69,15 +69,15 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                                  , 'DiEle_HighMassCut'      : -1 # only applied if >0
                                                  }
                        , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' : 1600.0
-                                              , 'Muon_DeltaPCut'               :   -1
-                                              , 'Muon_TConfNSigmaX'            :    8
-                                              , 'Muon_TConfNSigmaY'            :    7 
-                                              , 'Muon_TConfNSigmaTx'           :    8
-                                              , 'Muon_TConfNSigmaTy'           :    7
-                                            ##   , 'MSeg_TConfNSigmaX'            :    4
-##                                               , 'MSeg_TConfNSigmaY'            :    3 
-##                                               , 'MSeg_TConfNSigmaTx'           :    4
-##                                               , 'MSeg_TConfNSigmaTy'           :    3
+                                              , 'Muon_DeltaPCut'               :    0
+                                              , 'Muon_TConfNSigmaX'            :    5
+                                              , 'Muon_TConfNSigmaY'            :    5 
+                                              , 'Muon_TConfNSigmaTx'           :    5
+                                              , 'Muon_TConfNSigmaTy'           :    5
+                                              , 'MSeg_TConfNSigmaX'            :    4
+                                              , 'MSeg_TConfNSigmaY'            :    4 
+                                              , 'MSeg_TConfNSigmaTx'           :    4
+                                              , 'MSeg_TConfNSigmaTy'           :    4
                                               , 'Muon_PtCut' : 1350
                                               , 'MuonIP_PtCut' : 850
                                               , 'Muon_IPMinCut' : 0.09
@@ -85,8 +85,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                               , 'DiMuon_MassCut' : 2500
                                               , 'DiMuonIP_MassCut' : 750
                                               , 'DiMuon_IPCut' : 0.0
-                                              , 'Muon_FitChiCut' :  50.
-                                              , 'Muon_FitMuChi2Cut' : 100
+                                              , 'Muon_FitChiCut' :  10.#50
+                                              , 'Muon_FitMuChi2Cut' : 16.#100
                                               , 'MuTrackMuPt' : 800
                                               , 'MuTrackMuIP' : 0.05
                                               , 'MuTrackTrPt' : 600
@@ -96,17 +96,8 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                                               , 'MuTrackDimuMass' : 1000
                                               , 'MuTrackPoint' : 0.4
                                               , 'MuTrackTrChi2' : 16
-                                              , 'MuTrackMuChi2' : 50
-                                              , 'MuTrackMuPt4JPsi' : 1300
-                                              , 'MuTrackTrPt4JPsi' : 400
-                                              , 'MuTrackDoca4JPsi' : 0.1
-                                              , 'MuTrackAngle4JPsiLow' : 0.02
-                                              , 'MuTrackAngle4JPsiHigh' : 0.3
-                                              , 'MuTrackDimuMass4JPsiLow' : 2900
-                                              , 'MuTrackDimuMass4JPsiHigh' : -1
-                                              , 'MuTrackMuChi24JPsi' : 100
-                                              , 'MuTrackTrChi24JPsi' : 16
-                                              }
+                                              , 'MuTrackMuChi2' : 16#@JA 50
+                                                }
 
                        , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
                                                           , 'Hlt1L0AnyRateLimited' : 1 }
@@ -221,14 +212,14 @@ class Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 :
                  , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
                  , 'Hlt1MBNoBias'
                  , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
-                 , 'Hlt1OneTrackAllL0', 'Hlt1OneTrackMuon', 'Hlt1OneTrackPhoton' #Add one track lines!
+                 , 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton' #Add one track lines!
                  , 'Hlt1SingleHadron'
                  , 'Hlt1DiHadron', 'Hlt1DiHadronLTUnbiased'
                  , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
                  , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
                  , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
                  , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
-                 , 'Hlt1MuTrack'# , 'Hlt1MuTrack4JPsi'
+                 , 'Hlt1MuTrack'
                  , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
                  , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
                  , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
