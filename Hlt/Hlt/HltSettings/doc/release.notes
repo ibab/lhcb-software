@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-09-01 - Gerhard Raven
+ -  Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10 was referring
+    to Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 instead
+    of the ..._20Hlt1... version
+
 ! 2010-09-01a - Johannes Albrecht
  - fix more syntax errors, tighten muon alley
 

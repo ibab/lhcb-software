@@ -63,7 +63,7 @@ class Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10           ( Physics_Hig
         """
 
         # for now, assume this configuration has the same Hlt2 setup as below
-        list = Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10.ActiveHlt2Lines(self)
+        list = Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10.ActiveHlt2Lines(self)
 
 
         ##
