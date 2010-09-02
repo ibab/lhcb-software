@@ -1,5 +1,9 @@
 2010-08-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* python/LbRelease/LHCbDoc: Some clean up and improvements.
+
+2010-08-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbRelease/LHCbDoc: separated C++ and Python documentation, added correct handling
 	of projects without dependencies (e.g. LbScripts), ignores project "NOT_READY" and exclude COMPAT
 

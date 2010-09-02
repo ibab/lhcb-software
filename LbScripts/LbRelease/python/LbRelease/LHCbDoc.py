@@ -454,38 +454,57 @@ class Doc(object):
             self._log.warning("Cannot generate Doxygen configuration in a locked directory")
             return
         self._log.info("Generate Doxygen configuration")
-        doxycfg = DoxyFileCfg([("PROJECT_NAME", "LHCb Software"),
-                               ('OUTPUT_DIRECTORY', self.output),
-                               ('GENERATE_TAGFILE', 'LHCbSoft.tag'),
-                               ('CREATE_SUBDIRS', True),
-                               ])
-        doxycfg['INPUT'] = [ "%s_%s" % item
-                             for item in self.projects.items()
-                             if item[0] not in ["LCGCMT"] ] # avoid some projects
 
-        doxycfg['GENERATE_HTML']       = True
-        doxycfg['GENERATE_TODOLIST']   = True
-        doxycfg['GENERATE_LATEX']      = False
-        doxycfg['GENERATE_MAN']        = False
-        doxycfg['GENERATE_RTF']        = False
+        # get externals versions (used for the tag files)
+        gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
+        if os.path.isdir(gaudipath): # we use Gaudi as entry point, if it is not there, no external versions
+            gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
+            config_versions = Popen(["cmt", "show", "macros", "_config_version"],
+                                    cwd = gaudipath, stdout = PIPE).communicate()[0]
+            # Translate the cmt output
+            #  LCG_config_version='55b'
+            #  COOL_config_version='COOL_2_6_0'
+            #  CORAL_config_version='CORAL_2_1_0'
+            #  POOL_config_version='POOL_2_8_1'
+            # into a dictionary
+            #  { 'LCG': '55b',
+            #    'COOL': 'COOL_2_6_0',
+            #    'CORAL': 'CORAL_2_1_0',
+            #    'POOL': 'POOL_2_8_1' }
+            config_versions = dict([ (k.replace("_config_version", ""), v.strip("'"))
+                                     for k, v in [ l.split("=") for l in config_versions.splitlines() ] ])
+        else:
+            config_versions = {}
+
+
+        doxycfg = DoxyFileCfg()
+        #--- Project related options
+        doxycfg["PROJECT_NAME"]        = "LHCb Software"
+        doxycfg['OUTPUT_DIRECTORY']    = self.output
+        doxycfg['CREATE_SUBDIRS']      = True
         doxycfg['CASE_SENSE_NAMES']    = False
-        doxycfg['RECURSIVE']           = True
+        doxycfg['JAVADOC_AUTOBRIEF']   = True
+        doxycfg['BUILTIN_STL_SUPPORT'] = True
+
+        #--- Build related options
         doxycfg['EXTRACT_ALL']         = True
-        doxycfg['SOURCE_BROWSER']      = True
-        doxycfg['INLINE_SOURCES']      = True
-        doxycfg['HTML_ALIGN_MEMBERS']  = True
+        # append the commands to document also private and static members
+        doxycfg["EXTRACT_PRIVATE"]     = True
+        doxycfg["EXTRACT_STATIC"]      = True
+        doxycfg["EXTRACT_LOCAL_CLASSES"] = True
+        doxycfg['SHOW_DIRECTORIES']    = True
+        doxycfg['GENERATE_TODOLIST']   = True
+
+        #--- Options related to warning and progress messages
         doxycfg['QUIET']               = False
         doxycfg['WARNINGS']            = True
         doxycfg['WARN_LOGFILE']        = "DoxyWarnings.log"
-        doxycfg['ALPHABETICAL_INDEX']  = True
-        doxycfg['COLS_IN_ALPHA_INDEX'] = 3
-        doxycfg['JAVADOC_AUTOBRIEF']   = True
-        doxycfg['CLASS_DIAGRAMS']      = True
-        doxycfg['SHOW_DIRECTORIES']    = True
-        doxycfg['SEARCHENGINE']        = True
-        doxycfg['BUILTIN_STL_SUPPORT'] = True
 
-        # EXCLUDE_PATTERNS
+        #--- Input related options
+        doxycfg['INPUT'] = [ "%s_%s" % item
+                             for item in self.projects.items()
+                             if item[0] not in ["LCGCMT"] ] # avoid some projects
+        doxycfg['RECURSIVE']           = True
         excludes = [
             "*/dict/*", "*/InstallArea/*",
             # Exclude tests
@@ -515,60 +534,53 @@ class Doc(object):
             "*/Panoramix/doc/h/*",
             ]
         doxycfg["EXCLUDE_PATTERNS"] = excludes
-
         files = []
         for p in doxycfg["INPUT"]:
             for d in [ d
                        for d in os.listdir(os.path.join(self.path, p))
                        if (d.endswith("Sys") and d != "GaudiSys") or d.endswith("Release")]:
+                # FILE_PATTERNS   += *LHCbSys*requirements
                 files.append("*%s*requirements" % d)
-        # FILE_PATTERNS   += *LHCbSys*requirements
+        doxycfg["FILE_PATTERNS"] = files
 
         # Configurations details to generate the main page
         doxycfg['INPUT'].append("conf/MainPage.doxygen")
-        doxycfg['IMAGE_PATH'] = ["conf"]
 
-        doxycfg["FILE_PATTERNS"] = files
+        #--- Source browsing related options
+        doxycfg['SOURCE_BROWSER']      = True
+        doxycfg['INLINE_SOURCES']      = True
 
-        extra_packages = [ "times", "amsmath" ]
-        doxycfg["EXTRA_PACKAGES"] = extra_packages
+        #--- Alphabetical index options
+        doxycfg['ALPHABETICAL_INDEX']  = True
+        doxycfg['COLS_IN_ALPHA_INDEX'] = 3
 
-        # append the commands to use dot tool
-        doxycfg["HAVE_DOT"]              = True
-        doxycfg["DOT_PATH"] = None
-        doxycfg["COLLABORATION_GRAPH"]   = True
-        doxycfg["CLASS_GRAPH"]           = True
-        doxycfg["GRAPHICAL_HIERARCHY"]   = True
-        doxycfg["INCLUDE_GRAPH"]         = True
-        doxycfg["INCLUDED_BY_GRAPH"]     = True
+        #--- HTML related options
+        doxycfg['GENERATE_HTML']       = True
+        doxycfg['HTML_ALIGN_MEMBERS']  = True
+        doxycfg['HTML_TIMESTAMP']      = True
+        doxycfg['SEARCHENGINE']        = True
+        doxycfg['SERVER_BASED_SEARCH'] = True
+        #doxycfg['HTML_STYLESHEET']     = "lhcb_doxygen.css"
+        #doxycfg['GENERATE_ECLIPSEHELP']= True
+        #doxycfg['ECLIPSE_DOC_ID']      = self.name
 
-        # append the commands to document also private and static members
-        doxycfg["EXTRACT_PRIVATE"]       = True
-        doxycfg["EXTRACT_STATIC"]        = True
-        doxycfg["EXTRACT_LOCAL_CLASSES"] = True
+        #--- LaTeX related options
+        # (useful also for formulas)
+        doxycfg['GENERATE_LATEX']      = False
+        # doxycfg['LATEX_BATCHMODE']     = True  # I prefer the \nonstopmode
+        doxycfg["EXTRA_PACKAGES"] = [ "times", "amsmath" ]
 
-        # get externals versions (used for the tag files)
-        gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
-        if os.path.isdir(gaudipath): # we use Gaudi as entry point, if it is not there, no external versions
-            gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
-            config_versions = Popen(["cmt", "show", "macros", "_config_version"],
-                                    cwd = gaudipath, stdout = PIPE).communicate()[0]
-            # Translate the cmt output
-            #  LCG_config_version='55b'
-            #  COOL_config_version='COOL_2_6_0'
-            #  CORAL_config_version='CORAL_2_1_0'
-            #  POOL_config_version='POOL_2_8_1'
-            # into a dictionary
-            #  { 'LCG': '55b',
-            #    'COOL': 'COOL_2_6_0',
-            #    'CORAL': 'CORAL_2_1_0',
-            #    'POOL': 'POOL_2_8_1' }
-            config_versions = dict([ (k.replace("_config_version", ""), v.strip("'"))
-                                     for k, v in [ l.split("=") for l in config_versions.splitlines() ] ])
-        else:
-            config_versions = {}
+        #--- RTF related options
+        doxycfg['GENERATE_RTF']        = False
 
-        # add tags
+        #--- Man page related options
+        doxycfg['GENERATE_MAN']        = False
+
+        #--- Preprocessor related options
+        doxycfg['SKIP_FUNCTION_MACROS'] = True
+
+        #--- External reference options
+        doxycfg['GENERATE_TAGFILE']    = 'LHCbSoft.tag'
         doxycfg["TAGFILES"] = []
         # libstdc++
         tagline = os.path.join(os.environ["LCG_release_area"],
@@ -587,23 +599,43 @@ class Doc(object):
                 doxycfg["TAGFILES"].append(tagline)
         #doxycfg["TAGFILES"] = []
 
-        # Requested to run with doxygen 1.7.0
-        #doxycfg["DOT_NUM_THREADS"] = 1
+        #--- Dot options
+        doxycfg['CLASS_DIAGRAMS']      = True
+        doxycfg["HAVE_DOT"]            = True
+        doxycfg["DOT_NUM_THREADS"]     = 1 # doxygen 1.7
+        doxycfg["CLASS_GRAPH"]         = True
+        doxycfg["COLLABORATION_GRAPH"] = True
+        doxycfg["INCLUDE_GRAPH"]       = True
+        doxycfg["INCLUDED_BY_GRAPH"]   = True
+        doxycfg["GRAPHICAL_HIERARCHY"] = True
+        doxycfg["DOT_PATH"]            = None
 
-        # write the output file
+
+        doxycfg['IMAGE_PATH'] = ["conf"]
+
+        # Write the output files
+        # prepare the directory
         confdir = os.path.join(self.path, "conf")
         if not os.path.isdir(confdir):
             self._log.debug("Creating directory %s", confdir)
             os.makedirs(confdir)
-        # Back-up
-        files = doxycfg["FILE_PATTERNS"]
+
+        # Special manipulation required for the C++ and Python versions
+        orig = {}
+        for k in ['FILE_PATTERNS', 'WARN_LOGFILE']: # keep a copy
+            orig[k] = doxycfg[k]
+
         # C++ configuration
-        doxycfg["FILE_PATTERNS"] = [ "*.cpp", "*.h", "*.icpp" ] + files
+        doxycfg['FILE_PATTERNS'] = [ "*.h", "*.icpp", "*.cpp" ] + orig['FILE_PATTERNS']
+        doxycfg['WARN_LOGFILE'] = orig['WARN_LOGFILE'].replace(".log", "Cpp.log")
         open(os.path.join(confdir, "DoxyFileCpp.cfg"), "w").write(str(doxycfg))
+
         # Python configuration
-        doxycfg["FILE_PATTERNS"] = [ "*.py" ] + files
+        doxycfg['FILE_PATTERNS'] = [ "*.py" ] + orig['FILE_PATTERNS']
+        doxycfg['WARN_LOGFILE'] = orig['WARN_LOGFILE'].replace(".log", "Py.log")
         doxycfg["OPTIMIZE_OUTPUT_JAVA"] = True # see http://www.stack.nl/~dimitri/doxygen/config.html#cfg_optimize_output_java
         open(os.path.join(confdir, "DoxyFilePy.cfg"), "w").write(str(doxycfg))
+
         # generate the dependency graph
         depgraphsize = self._genDepGraph(confdir)
         open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage(depgraphsize = depgraphsize))
@@ -786,7 +818,10 @@ class Doc(object):
                 shutil.copytree(pytempdir, self.output + ".new")
             # copy the dependency graph to the doxygen directory
             for f in [ f for f in os.listdir(os.path.join(self.path, "conf")) if f.startswith("dependencies.") ]:
-                shutil.copyfile(os.path.join(self.path, "conf", f), os.path.join(self.output + ".new", "html", f))
+                src = os.path.join(self.path, "conf", f)
+                shutil.copyfile(src, os.path.join(self.output + ".new", "html", f))
+                if has_cpp: # we need to copy the graphs also in the Python directory
+                    shutil.copyfile(src, os.path.join(self.output + ".new", "html", "py", f))
             if self.isAfsVolume:
                 # Give read access to everybody
                 self._log.debug("Give read access (recursively) to %s", self.path)
