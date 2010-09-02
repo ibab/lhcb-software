@@ -6,6 +6,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 <<<<<<< release.notes
+! 2010-09-02 - Sebastian Schleich
+ - StrippingInclPhi.py. New configuration mechanism + stricter prescales
+
 ! 2010-09-02 - Harry Cliff
  - update StrippingD2hh.py
 
