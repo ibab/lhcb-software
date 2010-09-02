@@ -83,6 +83,7 @@
         <enumval name="CaloBremChi2"       value="335"  desc="CaloID estimator : currently equivalent to CaloBremMatch"/>
         <enumval name="CaloClusChi2"       value="336"  desc="CaloID estimator : currently equivalent to CaloTrMatch"/>
         <enumval name="CaloTrajectoryL"    value="337"  desc="CaloID estimator : Longitudinal parameter of Ecal Shower"/>
+        <enumval name="CaloEoverP"         value="338"  desc="Electron e/p"/>
         <enumval name="EcalPIDe"        value="360"  desc="Ecal-based DLL for electron-ID (charged)"/>
         <enumval name="PrsPIDe"         value="361"  desc="Prs-based  DLL for electron-ID (charged)"/>
         <enumval name="BremPIDe"        value="362"  desc="Brem-based DLL for electron-ID (charged)"/>

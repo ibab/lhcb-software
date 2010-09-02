@@ -5,6 +5,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-09-02 - Olivier Deschamps
+  - ProtoParticle.xml : new calo-related additional info (CaloEoverP)
+
 ! 2010-08-27 - Olivier Deschamps
   - ProtoParticle.xml : new calo-related additional info
 
