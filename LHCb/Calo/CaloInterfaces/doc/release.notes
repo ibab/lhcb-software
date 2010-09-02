@@ -4,6 +4,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2010-09-01 - Olivier Deschamps
+ - ICaloHypoEstimator/ITrack2Calo : add virtual method + increment interface ID
+
 ! 2010-08-27 - Olivier Deschamps
  - new interface : ICaloHypoEstimator
 

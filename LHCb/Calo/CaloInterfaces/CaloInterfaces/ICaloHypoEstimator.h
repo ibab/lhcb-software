@@ -9,9 +9,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/CaloHypo.h"
+#include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypo2Calo.h"
 
-static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 1, 0 );
+static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 2, 0 );
 
 
 
@@ -72,6 +73,23 @@ namespace CaloDataType{
 
 }
 
+namespace CaloMatchType{
+  enum MatchType  {  ClusterMatch     = 0,  
+                    ElectronMatch      ,     
+                    BremMatch   , 
+                    Last};
+  static const  std::string Name[Last] = { "ClusterMatch","ElectronMatch","BremMatch"};
+}
+
+namespace CaloClusterType{
+  enum ClusterType  { Main     = 0,  
+                      SplitOrMain,
+                      Last};
+  static const  std::string Name[Last] = { "Main","SplitOrMain"};
+}
+
+
+
 
 /** @class ICaloHypoEstimator ICaloHypoEstimator.h
  *  
@@ -86,6 +104,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloHypoEstimator; }
 
   typedef std::map<CaloDataType::DataType, double> caloDataType;
+  typedef std::map<CaloMatchType::MatchType, const LHCb::Track*> caloMatchType;
+  typedef std::map<CaloClusterType::ClusterType, const LHCb::CaloCluster*> caloClusterType;
 
   
   virtual StatusCode initialize()=0;
@@ -95,7 +115,9 @@ public:
   virtual StatusCode _setProperty(const std::string&, const std::string&)=0;
   virtual ICaloHypo2Calo* hypo2Calo()=0;  
   virtual bool status()=0;  
-  
+  virtual const LHCb::Track*  toTrack(CaloMatchType::MatchType match)=0;
+  virtual const LHCb::CaloCluster* toCluster(CaloClusterType::ClusterType clus=CaloClusterType::SplitOrMain)=0;
+
 protected:
 private:
   

@@ -24,7 +24,7 @@ namespace LHCb
 }
 
 
-static const InterfaceID IID_ITrack2Calo ( "ITrack2Calo", 1, 0 );
+static const InterfaceID IID_ITrack2Calo ( "ITrack2Calo", 2, 0 );
 
 /** @class ITrack2Calo ITrack2Calo.h Kernel/ITrack2Calo.h
  *  
@@ -55,6 +55,7 @@ public:
   virtual LHCb::State closestState(LHCb::CaloCluster* cluster,LHCb::ParticleID pid = LHCb::ParticleID(211))=0;
   virtual LHCb::State closestState(LHCb::CaloPosition calopos,LHCb::ParticleID pid = LHCb::ParticleID(211))=0;
   virtual LHCb::State closestState(LHCb::CaloCellID   cellID ,LHCb::ParticleID pid = LHCb::ParticleID(211))=0;
+  virtual const LHCb::Track* track()=0;  
 protected:
 
 private:
