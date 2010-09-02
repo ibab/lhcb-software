@@ -1,7 +1,7 @@
 
 __author__ = ['Marco Gersabeck','Harry Cliff']
-__date__ = '13/08/2010'
-__version__ = '$Revision: 1.3 $'
+__date__ = '02/09/2010'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Prompt D0->KK/Kpi stripping selection for measuring yCP.
@@ -16,24 +16,26 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 class StrippingD2hhConf(LHCbConfigurableUser):
     __slots__ = { 
                     'DaugPt'             : 500.*MeV
-                  , 'DaugPtPID'          : 900.*MeV   
+                  , 'DaugPtPID'          : 1100.*MeV   
                   , 'DaugP'              : 2000.*MeV
+                  , 'DaugPPID'           : 5000.*MeV
                   , 'DaugTrkChi2'        : 10
+                  , 'DaugTrkChi2PID'     : 3  
                   , 'DaugIPChi2'         : 9
-                  , 'DaugMaxPID'         : 0 
+                  , 'DaugMaxPID'         : 5 
                   #
                   , 'D0PtNoPID'          : 1500.*MeV
                   , 'D0PtPID'            : 1500.*MeV
                   , 'D0P'                : 5000.*MeV
                   , 'D0VtxChi2Ndof'      : 10
                   , 'D0FDChi2NoPID'      : 16
-                  , 'D0FDChi2PID'        : 10
+                  , 'D0FDChi2PID'        : 40
                   , 'D0BPVDira'          : 0.9999
                   , 'D0IPChi2NoPID'      : 100
                   , 'D0IPChi2PID'        : 30
                   , 'D0MassWindowCentre' : 1940.*MeV
                   , 'D0MassWindowWidth'  : 125.*MeV
-                  , 'D0DOCA'             : 0.06*mm
+                  , 'D0DOCA'             : 0.07*mm
                 }
 
     _NoPIDLine = None
@@ -70,7 +72,7 @@ class StrippingD2hhConf(LHCbConfigurableUser):
             from StrippingConf.StrippingLine import StrippingLine
 	    D02hhNoPIDSel = self.D02hhNoPIDCombPart()
 	    D02hhNoPIDSeq = SelectionSequence("SeqD02hhNoPID", TopSelection = D02hhNoPIDSel)
-	    StrippingD2hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine', prescale = 1, algos = [D02hhNoPIDSeq])
+	    StrippingD2hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine', prescale = 0.0025, algos = [D02hhNoPIDSeq])
 
 	return StrippingD2hhConf._NoPIDLine
      	
@@ -88,7 +90,7 @@ class StrippingD2hhConf(LHCbConfigurableUser):
             from StrippingConf.StrippingLine import StrippingLine
 	    D02hhControlSel = self.D02hhControlCombPart()
 	    D02hhControlSeq = SelectionSequence("SeqD02hhControl", TopSelection = D02hhControlSel)
-	    StrippingD2hhConf._ControlLine = StrippingLine('D02hhControlLine', prescale = 0.01, algos = [D02hhControlSeq])
+	    StrippingD2hhConf._ControlLine = StrippingLine('D02hhControlLine', prescale = 0.00025, algos = [D02hhControlSeq])
 
 	return StrippingD2hhConf._ControlLine
      	
@@ -130,8 +132,8 @@ class StrippingD2hhConf(LHCbConfigurableUser):
 
         daugCuts = "(PT > %(DaugPtPID)s)" \
                    "& (ISLONG)" \
-                   "& (P > %(DaugP)s)" \
-                   "& (TRCHI2DOF < %(DaugTrkChi2)s)" % self.getProps()
+                   "& (P > %(DaugPPID)s)" \
+                   "& (TRCHI2DOF < %(DaugTrkChi2PID)s)" % self.getProps()
 
         combCuts = "(APT > %(D0PtPID)s)" \
                    "& (AHASCHILD( PIDK > %(DaugMaxPID)s ) )" \
