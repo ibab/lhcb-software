@@ -10,7 +10,7 @@ static int usage() {
 	   "   -input       Specify input file name.\n"
 	   "   -debug       Switch debug flag on.\n"
 	   );
-  return MERGE_ERROR;
+  return 1;
 }
 
 int main(int argc, char** argv) {
@@ -51,8 +51,8 @@ int main(int argc, char** argv) {
     int result = merge(output.c_str(),in.c_str(),fixup,dbg);
     if ( result == MERGE_ERROR ) {
       printf("\nERROR: File merge failed after %ld files.\n\n",i+1);
-      return MERGE_ERROR;
+      return 1;
     }
   }
-  return MERGE_SUCCESS;
+  return 0;
 }
