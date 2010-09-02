@@ -14,7 +14,7 @@ RootDst.ItemList           = {
    "/Event/Header",
    "/Event/MyTracks"
 };
-RootDst.OptItemList           = { 
+RootDst.OptItemList = { 
    "/Event/Prev",
    "/Event/Prev/Header",
    "/Event/PrevPrev",
@@ -27,7 +27,7 @@ RootDst.OptItemList           = {
 
 RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 ApplicationMgr.EvtMax      = 100000;
-RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.4.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.0.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 ApplicationMgr.EvtMax      = 600;
 RootCnvSvc.OutputLevel     = 3;
 

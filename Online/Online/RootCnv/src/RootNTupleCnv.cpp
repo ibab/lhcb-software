@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.7 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.8 2010-09-02 11:59:57 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -17,7 +17,6 @@
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISelectStatement.h"
@@ -234,17 +233,15 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	    break;
 	  }
 	  if ( !status.isSuccess() )  {
-	    MsgStream err(msgSvc(),"NTupleCnv");
-	    err << MSG::FATAL
-		<< "Error connecting (Unknown) column:" << j << endmsg
-		<< par_val << endmsg;
+	    log() << MSG::FATAL
+		  << "Error connecting (Unknown) column:" << j << endmsg
+		  << par_val << endmsg;
 	    return makeError("createObj[NTuple]> Cannot determine column!");
 	  }
 	}
 	if ( status.isSuccess() )  {
-	  MsgStream err(msgSvc(),"NTupleCnv");
-	  err << MSG::DEBUG << "Created N-tuple with description:"
-	      << par_val << endl;
+	  log() << MSG::DEBUG << "Created N-tuple with description:"
+		<< par_val << endl;
 	  ((unsigned long*)rpA->ipar())[0] = (unsigned long)con;
 	  rpA->section = tree;
 	  refpObject  = nt;
@@ -312,12 +309,11 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
     ISelectStatement* sel = tupl->selector();
     ++ipar[1];
     if ( sel ) {
-      MsgStream log(msgSvc(),"NTupleCnv");
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
 	? sel->criteria() : string("");
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
-	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
+	  log() << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
 	  rpA->select = new RootSelect(criteria.c_str(), tree);
 	}
 	rpA->select->SetTree(tree);
@@ -327,7 +323,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 	  if ( rpA->select->EvalInstance(0) != 0 ) {
 	    break;
 	  }
-	  log << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
+	  log() << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
 	}
       }
     }
@@ -345,8 +341,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 	    if ( pA ) { // Fill only if item is connected!
 	      spar = (string*)pA->par();
 	      ipar = (unsigned long*)pA->ipar();
-	      MsgStream log(msgSvc(),"NTupleCnv");
-	      log << MSG::ALWAYS;
+	      log() << MSG::DEBUG;
 	      pair<const RootRef*,const RootDataConnection::ContainerSection*> ls = con->getMergeSection(tree->GetName(),entry);
 	      if ( ls.first )  {
 		if ( ls.first->dbase >= 0 ) {
@@ -357,14 +352,13 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 		  r->container += ls.first->container;
 		  r->link      += ls.first->link;
 
-		  if ( log.isActive() ) {
-		    log << MSG::ERROR 
-			<< "Refs: LS [" << entry << "] -> " 
-			<< ls.first->dbase << "," << ls.first->container 
-			<< "," << ls.first->link 
-			<< "," << ls.first->entry
-			<< " DB:" << con->getDb(r->dbase)
-			<< endmsg;
+		  if ( log().isActive() ) {
+		    log() << "Refs: LS [" << entry << "] -> " 
+			  << ls.first->dbase << "," << ls.first->container 
+			  << "," << ls.first->link 
+			  << "," << ls.first->entry
+			  << " DB:" << con->getDb(r->dbase)
+			  << endmsg;
 		  }
 		}
 	      }
@@ -384,12 +378,10 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 	}
 	return StatusCode::SUCCESS;
       }
-      MsgStream log(msgSvc(),"NTupleCnv");
-      log << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
+      log() << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
       return StatusCode::FAILURE;
     }
-    MsgStream log(msgSvc(),"NTupleCnv");
-    log << MSG::INFO << "End of input Ntuple." << endmsg;
+    log() << MSG::INFO << "End of input Ntuple." << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::FAILURE;
@@ -399,7 +391,6 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
   IRegistry* pRegistry = pObj->registry();
   if ( 0 != pRegistry )  {
-    MsgStream log(msgSvc(),"NTupleCnv");
     pAddr = pRegistry->address();
     if ( 0 != pAddr ) {
       return S_OK;
@@ -607,8 +598,8 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
 	      desc = n + tmp + text + desc;
 	    }
 	  }
-	  log << MSG::DEBUG << "Create branch:" << n << " Desc:" << desc 
-	      << " of type:" << it->type() << endmsg;
+	  log() << MSG::DEBUG << "Create branch:" << n << " Desc:" << desc 
+		<< " of type:" << it->type() << endmsg;
 	  switch(it->type()) {
 	  case DataTypeInfo::OBJECT_ADDR:
 	    branches[n] = tree->Branch(n.c_str(),cl->GetName(),(void*)it->buffer());
@@ -623,8 +614,8 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
 	}
       }
 
-      log << MSG::DEBUG << "Save description:" << path << " -> " << cntName << endmsg
-	  << os.str() << endmsg;
+      log() << MSG::DEBUG << "Save description:" << path << " -> " << cntName << endmsg
+	    << os.str() << endmsg;
       status = saveDescription(path,cntName,os.str(),"",pObj->clID());
       if ( status.isSuccess() )  {
 	status = m_dbMgr->commitOutput(path, true);
@@ -756,12 +747,11 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
     ISelectStatement* sel = tupl->selector();
     ++ipar[1];
     if ( sel ) {
-      MsgStream log(msgSvc(),"NTupleCnv");
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
 	? sel->criteria() : string("");
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
-	  log << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
+	  log() << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
 	  rpA->select = new RootSelect(criteria.c_str(), tree);
 	}
 	rpA->select->SetTree(tree);
@@ -772,7 +762,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
 	  if ( rpA->select->EvalInstance(0) != 0 ) {
 	    break;
 	  }
-	  log << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
+	  log() << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
 	}
       }
     }
@@ -828,27 +818,24 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
 	  default:                                                           break;
 	  }
 	  if ( 0 != sc )  {
-	    MsgStream log(msgSvc(), "PoolDbNTupleCnv");
-	    log << MSG::DEBUG;
+	    log() << MSG::DEBUG;
 	    switch (sc)  {
 	    case 10:
-	      log << "CANNOT Set Ntuple token: dynamic_cast<GenericAddress*> is NULL";
+	      log() << "CANNOT Set Ntuple token: dynamic_cast<GenericAddress*> is NULL";
 	      break;
 	    case 11:
-	      log << "CANNOT Set Ntuple token: invalid address buffer";
+	      log() << "CANNOT Set Ntuple token: invalid address buffer";
 	      break;
 	    }
-	    log << endmsg;
+	    log() << endmsg;
 	  }
 	}
 	return StatusCode::SUCCESS;
       }
-      MsgStream log(msgSvc(),"NTupleCnv");
-      log << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
+      log() << MSG::ERROR << "Failed to read data from NTuple tree." << endmsg;
       return StatusCode::FAILURE;
     }
-    MsgStream log(msgSvc(),"NTupleCnv");
-    log << MSG::INFO << "End of input Ntuple." << endmsg;
+    log() << MSG::INFO << "End of input Ntuple." << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::FAILURE;

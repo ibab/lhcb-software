@@ -1,4 +1,4 @@
-// $Id: RootDirectoryCnv.cpp,v 1.4 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootDirectoryCnv.cpp,v 1.5 2010-09-02 11:59:57 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDirectoryCnv
@@ -14,7 +14,6 @@
 #include "RootCnvSvc.h"
 #include "RootDirectoryCnv.h"
 #include "RootDataConnection.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/NTuple.h"
 #include "TBranch.h"
@@ -76,7 +75,6 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
   typedef vector<RootNTupleDescriptor*> REFS;
   REFS refs;
   StatusCode status = StatusCode(StatusCode::FAILURE,true);
-  MsgStream log(msgSvc(), "RootDirectoryCnv");
   if ( pAddr ) {
     IRegistry* pReg = pAddr->registry();
     if ( pReg )  {
@@ -96,8 +94,8 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
 	    int nb = b->GetEntry(i);
 	    if ( nb > 1 ) {
 	      string s = ref->container.substr(0,cntName.length());
-	      log << MSG::VERBOSE << "Read description:" << ref->container 
-		  << " " << ident << " " << cntName << endmsg;
+	      log() << MSG::VERBOSE << "Read description:" << ref->container 
+		    << " " << ident << " " << cntName << endmsg;
 	      if ( s == cntName )  {
 		if ( ref->container.length() >= cntName.length()+1 )  {
 		  if ( ref->container.find('/',cntName.length()+1) == string::npos ) {
@@ -110,7 +108,7 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
 	    delete ref;
           }
         }
-	log << MSG::DEBUG << "Got " << refs.size() << " tuple connection(s)....." << endmsg;
+	log() << MSG::DEBUG << "Got " << refs.size() << " tuple connection(s)....." << endmsg;
         status = m_dataMgr->objectLeaves(pObject, leaves);
         if ( status.isSuccess() )    {
           for(REFS::iterator i = refs.begin(); i != refs.end(); ++i)  {
@@ -144,8 +142,8 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
                   string leaf_name = top + ref->container.substr(7);
                   status = m_dataMgr->registerAddress(leaf_name, pA);
                   if ( status.isSuccess() )  {
-		    log << MSG::DEBUG << "Created address for " << leaf_name 
-			<< " of type " << ref->clid << endmsg;
+		    log() << MSG::DEBUG << "Created address for " << leaf_name 
+			  << " of type " << ref->clid << endmsg;
                     continue;
                   }
                   makeError("Failed to register leaves to directory:"+ident,false).ignore();

@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.h,v 1.2 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootStatCnv.h,v 1.3 2010-09-02 11:59:57 frankb Exp $
 //------------------------------------------------------------------------------
 // Definition of class :  RootStatCnv
 //
@@ -9,6 +9,7 @@
 #define ROOT_ROOTSTATCNV_H 1
 
 // Include files
+#include "GaudiKernel/MsgStream.h"
 #include "RootConverter.h"
 
 // Forward declarations
@@ -31,6 +32,11 @@ namespace Gaudi {
   protected:
     /// Reference to data manager service to manipulate the TES
     IDataManagerSvc* m_dataMgr;
+    /// Reference to logger object
+    MsgStream*       m_log;
+
+    /// Helper to use mesage logger 
+    MsgStream& log() const { return *m_log; }
 
   protected:
 

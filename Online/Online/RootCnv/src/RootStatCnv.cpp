@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.cpp,v 1.4 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootStatCnv.cpp,v 1.5 2010-09-02 11:59:57 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootStatCnv
@@ -12,7 +12,6 @@
 #include "RootStatCnv.h"
 #include "RootDataConnection.h"
 #include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "TROOT.h"
@@ -24,7 +23,7 @@ using namespace Gaudi;
 
 // Standard Constructor
 RootStatCnv::RootStatCnv (long typ,const CLID& clid, ISvcLocator* svc, RootCnvSvc* mgr) 
-  : RootConverter(typ, clid, svc, mgr), m_dataMgr(0)
+  : RootConverter(typ, clid, svc, mgr), m_dataMgr(0), m_log(0)
 {
 }
 
@@ -37,11 +36,17 @@ StatusCode RootStatCnv::initialize() {
       return makeError("Failed to access IDataManagerSvc interface.");
     }
   }
+  if ( m_log ) delete m_log;
+  m_log = new MsgStream(msgSvc(),System::typeinfoName(typeid(*this)));
   return sc;
 }
 
 // Finalize converter object
 StatusCode RootStatCnv::finalize() {
+  if ( m_log ) {
+    delete m_log;
+    m_log = 0;
+  }
   if ( m_dataMgr ) {
     m_dataMgr->release();
     m_dataMgr = 0;
@@ -98,8 +103,13 @@ const string RootStatCnv::topLevel(IRegistry* pReg) const   {
 
 // Helper method to issue error messages.
 StatusCode RootStatCnv::makeError(const std::string& msg, bool throw_exc)  const {
-  MsgStream log(msgSvc(),"RootConverter");
-  log << MSG::ERROR << msg << endmsg;
+  if ( m_log )  {
+    log() << MSG::ERROR << msg << endmsg;
+  }
+  else {
+    MsgStream l(msgSvc(),"RootConverter");
+    l << MSG::ERROR << msg << endmsg;    
+  }
   if ( throw_exc ) {
   }
   return StatusCode::FAILURE;
@@ -128,8 +138,7 @@ StatusCode RootStatCnv::saveDescription(const string&  path,
 	b->SetAddress(&ptr);
 	int nb = b->Fill();
 	if ( nb > 1 ) {
-	  MsgStream log(msgSvc(),"RootConverter");
-	  log << MSG::DEBUG << "Save description for " << ident << endmsg;
+	  log() << MSG::DEBUG << "Save description for " << ident << endmsg;
 	  return StatusCode::SUCCESS;
 	}
       }
@@ -137,5 +146,5 @@ StatusCode RootStatCnv::saveDescription(const string&  path,
     }
     return makeError("Failed to access TClass RootNTupleDescriptor");
   }
-  return StatusCode::FAILURE;
+  return makeError("Failed to access Tuple file:"+path);
 }
