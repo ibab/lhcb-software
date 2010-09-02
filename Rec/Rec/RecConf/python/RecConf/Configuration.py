@@ -205,7 +205,7 @@ class RecMoniConf(LHCbConfigurableUser):
        }
 
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
+    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO", "Hlt"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -323,6 +323,10 @@ class RecMoniConf(LHCbConfigurableUser):
             log.debug(conf)
             GaudiKernel.ProcessJobOptions.PrintOff()
         
+        if "Hlt" in moniSeq :
+            from HltMonitors.ConfiguredHltMonitors import ConfiguredHltMonitorSequence
+            ConfiguredHltMonitorSequence(Name='MoniHltSeq')
+
         # Expert histograms
         if self.expertHistos():
             if "TT" in moniSeq :

@@ -82,6 +82,9 @@ use TrackSeeding         v*  Tf   # Eduardo Rodrigues, Henk Jan Bulten
 # Primary Vertex Finder
 use PatPV                v*    Tr   # Mariusz Witek
 
+# Hlt monitoring
+use HltMonitors          v*    Hlt  # Roel Aaij
+
 # Muon
 use MuonTools            v*    Muon # Alessia Satta
 

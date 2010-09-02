@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2010-08-28 - Roel Aaij
+ - Add HltMonitors to the default monitoring
+
 !========================== RecConf v1r2 2010-07-20 ===========================
 ! 2010-07-16 - Chris Jones
  - Add a new ProcStatus abort rate monitor
