@@ -5,6 +5,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-01 - Olivier Deschamps
+  - fix compilation warning on windows
+  - improve CaloHypoNtp
+
 ! 2010-08-31 - Olivier Deschamps
   - fix compilation warning on slc4
 

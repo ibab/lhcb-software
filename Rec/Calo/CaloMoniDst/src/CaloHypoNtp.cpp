@@ -30,12 +30,16 @@ CaloHypoNtp::CaloHypoNtp( const std::string &name, ISvcLocator *pSvcLocator )
   declareProperty("Extrapolation", m_extrapol = true);  
   declareProperty("AddSeed"      , m_seed = false);  
   declareProperty("AddNeighbors" , m_neig = false);  
+  declareProperty("MCID" , m_mcID=-99999999);
+  declareProperty("Hypos", m_hypos);
+  declareProperty("Printout",m_print=false);
+  declareProperty("Statistics",m_stat=true);
   
-  using namespace LHCb::CaloHypoLocation;
-  m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Photons        ) );
-  m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Electrons      ) );
-  m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , MergedPi0s     ) );
-  //  m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , SplitPhotons     ) );
+  m_hypos.push_back("Electrons");
+  m_hypos.push_back("Photons");
+  m_hypos.push_back("MergedPi0s");
+  
+
 };
 CaloHypoNtp::~CaloHypoNtp(){};
 
@@ -53,6 +57,16 @@ StatusCode CaloHypoNtp::initialize(){
   m_estimator->hypo2Calo()->_setProperty("Seed", seed).ignore();
   m_estimator->hypo2Calo()->_setProperty("PhotonLine", line).ignore();
   m_estimator->hypo2Calo()->_setProperty("AddNeighbors", neig).ignore();
+
+  //
+  using namespace LHCb::CaloHypoLocation;
+  for(std::vector<std::string>::iterator h = m_hypos.begin(); h<m_hypos.end(); ++h){
+    if(*h == "Photons")m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Photons        ) );
+    else if(*h == "Electrons")m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Electrons      ) );
+    else if(*h == "MergedPi0s")m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , MergedPi0s     ) );
+    else if(*h == "SplitPhotons")m_locs.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , SplitPhotons     ) );
+  }
+  
 
   return StatusCode::SUCCESS;
 }
@@ -127,32 +141,76 @@ StatusCode CaloHypoNtp::execute(){
       std::ostringstream type("");
       type << hypo->hypothesis();
       std::string hypothesis = type.str();
+
+
       // filtering hypo
       if( !inRange( m_et ,  estimator()->data(hypo, HypoEt ,0.) ) )continue;
       if( !inRange( m_e  ,  estimator()->data(hypo, HypoE  ,0.) ) )continue;
       if( !inRange( m_spdM ,  estimator()->data(hypo, HypoSpdM ,0.) ) )continue;
       if( !inRange( m_prsE ,  estimator()->data(hypo, HypoPrsE ,0.) ) )continue;
-      //
+      
+      // MC-associated filtering
+      if( m_checker ){
+        const LHCb::MCParticle* mcp = calo2MC()->from(hypo)->bestMC();
+        if( NULL == mcp )continue;
+        if( m_mcID >= 0 && (int) mcp->particleID().abspid()  != m_mcID)continue;        
+      }      
 
+      // PrintOut
+      if ( m_print ){
+        info() << "+++ Run/Evt " << run << "/" << evt << endmsg;
+        info() << " === hypothesis " << hypo->hypothesis() << "(" << *iloc << ")" << endmsg;
+        if( m_checker )calo2MC()->from(hypo)->descriptor();
+      }
 
+      // DataTypes statistics
+      for( int i = 0 ; i < Last ; ++i){
+        double val = estimator()->data(hypo, (DataType) i ,0.);
+        if(m_stat)counter( Name[i] + " for " + hypothesis ) += val;
+        if(m_tupling)sc=ntp->column(Name[i]        , val);
+        if(m_print)info() << "   --> " <<  Name[i] << " : " <<   val << endmsg;
+      }
 
-      if( m_tupling){
+      // Tupling
+      if( m_tupling){        
+
+        // hypothesis
         sc=ntp->column("hypothesis"   , hypo->hypothesis()    );
-        for( int i = 0 ; i < Last ; ++i){
-          sc=ntp->column(Name[i]        , estimator()->data(hypo, (DataType) i ,0.)   );
-          counter( Name[i] + " for " + hypothesis ) += estimator()->data(hypo, (DataType) i ,0.);
-        }
         // kinematics
+        const LHCb::CaloCluster* cluster = estimator()->toCluster(CaloClusterType::SplitOrMain);
+        Gaudi::XYZPoint cPoint;
+        if( NULL != cluster)
+          cPoint = Gaudi::XYZPoint( cluster->position().x() , cluster->position().y() , cluster->position().z() );
+        sc=ntp->column("ClusterR" , cPoint);
         Gaudi::XYZPoint point;
         if( NULL != hypo->position() )
            point=Gaudi::XYZPoint( hypo->position()->x() , hypo->position()->y() , hypo->position()->z() );
-        sc=ntp->column("r" , point);
+        sc=ntp->column("HypoR" , point);
         LHCb::CaloMomentum mt( hypo );
         Gaudi::LorentzVector v( mt.momentum() );
-        sc=ntp->column("p" , v);
-      
+        sc=ntp->column("HypoP" , v);
 
-        // Checker Mode
+        // matched tracks
+        for( int match = 0 ; match < CaloMatchType::Last ; ++match){
+          Gaudi::LorentzVector p;
+          const LHCb::Track* track = estimator()->toTrack( (CaloMatchType::MatchType) match);
+          if( NULL != track)p=Gaudi::LorentzVector(track->momentum().x(),track->momentum().y(),track->momentum().z (),track->p());
+          sc=ntp->column( CaloMatchType::Name[match] + "TrackP" , p);
+        }        
+        
+        // odin info
+        sc=ntp->column("Run"   , run         );
+        sc=ntp->column("Event" , (double) evt );
+        sc=ntp->column("Triggertype" , tty );
+        
+        // #vertices & tracks
+        sc=ntp->column("Nvertices", nVert);
+        sc=ntp->column("NTracks", nTrack);
+        
+        // #SpdMult
+        sc=ntp->column("spdMult", m_spdMult);
+
+        // Checker Mode (MC info)
         if( m_checker ){
           int id = -999;
           double weight = -999;
@@ -167,17 +225,6 @@ StatusCode CaloHypoNtp::execute(){
           sc=ntp->column( "MCw" , weight );
           sc=ntp->column( "MCq" , quality );
         }
-        
-        
-        // odin info
-        sc=ntp->column("run"   , run         );
-        sc=ntp->column("event" , (double) evt );
-        sc=ntp->column("triggertype" , tty );
-        // #vertices & tracks
-        sc=ntp->column("Nvertices", nVert);
-        sc=ntp->column("NTracks", nTrack);
-        // #SpdMult
-        sc=ntp->column("spdMult", m_spdMult);
         sc=ntp->write();
         ok = true;
       }      

@@ -54,5 +54,9 @@ private:
   bool m_checker;
   ICalo2MCTool* m_2MC;
   ICalo2MCTool* calo2MC(){return m_2MC;}
+  int m_mcID;
+  std::vector<std::string> m_hypos;
+  bool m_print;
+  bool m_stat;
 };
 #endif // CALOHYPONTP_H
