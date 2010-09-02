@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+!========================== HltSettings v3r1  2010-09-02 ===================
+! 2010-09-02 - Gerhard Raven
+ - rename Physics_HighNu_1000Vis... into Physics_HighNu_3000Vis... as
+   they are intended for a 3 MHz visible rate.
+
 ! 2010-09-01 - Gerhard Raven
  -  Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10 was referring
     to Physics_HighNu_1000Vis_200L0_40Hlt1_ExpressHlt2_Sep10 instead
@@ -18,7 +23,7 @@
 
 ! 2010-09-01 - Gerhard Raven
  - Update again September10 configurations
-   o update L0 TCK
+   o update L0 TCK (this one also has the 1/1000 prescale on minbias mentioned below)
    o merge with latest changes from Miriam
 
 !========================== HltSettings v3r0  2010-08-30 ===================

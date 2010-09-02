@@ -1,4 +1,4 @@
-class Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
+class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
     """
     Threshold settings for Hlt1 for 2010 conditions with pileup
     
@@ -25,8 +25,8 @@ class Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
         return '0x0025'
 
     def HltType(self) :
-        self.verifyType( Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
-        return          'Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10'
+        self.verifyType( Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
+        return          'Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10'
     
     def Thresholds(self) :
         """

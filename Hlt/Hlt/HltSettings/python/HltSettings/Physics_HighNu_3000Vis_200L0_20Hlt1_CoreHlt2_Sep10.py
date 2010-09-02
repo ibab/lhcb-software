@@ -5,8 +5,8 @@ def __update_conf__( thresholds, conf, d ) :
             thresholds[conf][i].update( j )
 
 
-from  Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 import  Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10
-class Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10           ( Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 ):
+from  Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 import  Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10
+class Physics_HighNu_3000Vis_200L0_20Hlt1_CoreHlt2_Sep10           ( Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 ):
     """
     Threshold settings for Hlt1 for 2010 conditions
     
@@ -25,14 +25,14 @@ class Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10           ( Physics_Hig
         self.Hlt2DefaultVoidFilter = " CONTAINS( '%s') < 350" %  (velo) 
 
     def HltType(self) :
-        self.verifyType( Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10 )
-        return          'Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10'
+        self.verifyType( Physics_HighNu_3000Vis_200L0_20Hlt1_CoreHlt2_Sep10 )
+        return          'Physics_HighNu_3000Vis_200L0_20Hlt1_CoreHlt2_Sep10'
     
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
         """
-        thresholds = Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10.Thresholds(self)
+        thresholds = Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10.Thresholds(self)
         # Hlt2
     
         from Muons_Retention50 import Muons_Retention50         
@@ -63,7 +63,7 @@ class Physics_HighNu_1000Vis_200L0_20Hlt1_CoreHlt2_Sep10           ( Physics_Hig
         """
 
         # for now, assume this configuration has the same Hlt2 setup as below
-        list = Physics_HighNu_1000Vis_200L0_20Hlt1_ExpressHlt2_Sep10.ActiveHlt2Lines(self)
+        list = Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10.ActiveHlt2Lines(self)
 
 
         ##
