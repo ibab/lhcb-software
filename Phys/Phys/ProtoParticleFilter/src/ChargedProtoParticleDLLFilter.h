@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.h,v 1.4 2009-07-22 11:36:23 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.h,v 1.5 2010-09-02 16:53:25 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -66,7 +66,6 @@ private:
 
   /// Track selector tool
   ITrackSelector * m_trSel;
-
 };
 
 #endif // PROTOPARTICLEFILTER_ChargedProtoParticleDLLFilter_H

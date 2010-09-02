@@ -19,6 +19,7 @@ branches          cmt doc src
 use   GaudiAlg           v* 
 use   DaVinciInterfaces  v*    Phys
 use   TrackInterfaces    v*    Tr
+use   CaloUtils          v*    Calo
 
 include_path      none
 #============================================================================

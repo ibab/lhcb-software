@@ -4,6 +4,9 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+! 2010-08-27 - Olivier Deschamps
+  - ProtoParticleCALOFilter : extend filtering to any existing calo-related additionalInfo (automatic scan)
+
 !===================== ProtoParticleFilter v1r4 2009-09-11 =================
 
 ! 2009-07-28 - Juan PALACIOS

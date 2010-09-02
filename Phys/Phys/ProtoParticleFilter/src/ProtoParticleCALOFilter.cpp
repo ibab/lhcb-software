@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleCALOFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleCALOFilter.cpp,v 1.3 2009-07-20 16:43:18 jonrob Exp $
+ * $Id: ProtoParticleCALOFilter.cpp,v 1.4 2010-09-02 16:53:25 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -72,76 +72,33 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
   // cut description
   dllcut->setDescription ( "Calo Cut : "+tag+" "+delim+" "+value         );
 
-  // Try and decode the tag
-  if      ( "ECALPIDE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::EcalPIDe );
+  // automatic setting for ANY possible calo tag
+  bool ok = false;
+  for(int i=300; i < 400 ; ++i){ // select the CALO range
+    std::ostringstream var("");
+    var << (LHCb::ProtoParticle::additionalInfo) i;
+    if( std::string::npos != var.str().find("ERROR") )continue;
+    std::string uTag( tag );
+    std::string uVar( var.str() );
+    std::transform( tag.begin() , tag.end() , uTag.begin () , ::toupper ) ;
+    std::string v = var.str();
+    std::transform( v.begin() , v.end() , uVar.begin () , ::toupper ) ;
+    if( uTag == uVar){
+      ok = true;
+      dllcut->setVariable( (LHCb::ProtoParticle::additionalInfo) i );
+      break;
+    }
   }
-  else if ( "PRSPIDE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::PrsPIDe );
-  }
-  else if ( "BREMPIDE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::BremPIDe );
-  }
-  else if ( "HCALPIDE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::HcalPIDe );
-  }
-  else if ( "HCALPIDMU" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::HcalPIDmu );
-  }
-  else if ( "ECALPIDMU" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::EcalPIDmu );
-  }
-  else if ( "CALOTRMATCH" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloTrMatch );
-  }
-  else if ( "CALOELECTRONMATCH" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloElectronMatch );
-  }
-  else if ( "CALOBREMMATCH" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloBremMatch );
-  }
-  else if ( "CALOCHARGEDSPD" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloChargedSpd );
-  }
-  else if ( "CALOCHARGEDPRS" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloChargedPrs );
-  }
-  else if ( "CALOSPDE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloSpdE );
-  }
-  else if ( "CALOPRSE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloPrsE );
-  }
-  else if ( "CALOECALE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloEcalE );
-  }
-  else if ( "CALOHCALE" == tag )
-  {
-    dllcut->setVariable( LHCb::ProtoParticle::CaloHcalE );
-  }
-  else
-  {
+
+
+  if ( !ok ){
     debug() << "Unknown tag " << tag << endreq;
+    counter("Unknwon ProtoPFilter tag") += 1;
     delete dllcut;
     dllcut = NULL;
   }
 
-  if ( msgLevel(MSG::DEBUG) && dllcut )
-  {
+  if ( msgLevel(MSG::DEBUG) && dllcut ){
     debug() << "  -> Created new DLLCut : "
             << tag << " " << delim << " " << dllcut->cutValue() << endreq;
   }
