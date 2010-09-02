@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+- Packages Added:
+  Hlt/HltMonitors v1r0
+  . Algorithms for offline monitoring of Hlt rate and composition.
+
 </PRE><H1><A NAME=v10r4>2010-08-26 RecSys v10r4</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
 

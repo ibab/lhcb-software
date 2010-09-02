@@ -1,5 +1,5 @@
 package RecSys
-version v10r4
+version v10r5
 
 branches cmt doc tests
  
@@ -83,6 +83,9 @@ use PatPV                v3r17   Tr   # Mariusz Witek
 
 # Velo
 use VeloRecMonitors      v2r11   Velo # Malcom John, Eduardo Rodrigues
+
+# Hlt
+use HltMonitors          v1r0    Hlt  # Roel Aaij
 
 # Declare this as a container package
 apply_pattern container_package
