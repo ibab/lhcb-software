@@ -5,6 +5,21 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-02 - Anton Poluektov 
+ - Updated StrippingB2DX.py. Performance with 20k Reco05-Stripping08 data: 
+
+  Decision name                                      :     Rate  <T>,ms
+  -------------------------------------------------------------------------
+  StrippingSequenceStreamTest                        : 0.003200  20.888
+  -- StrippingB2DXWithD2KPiPi0MergedSidebandLine     : 0.000000   5.626
+  -- StrippingB2DXWithD2KshhSidebandLine             : 0.000550   2.326
+  -- StrippingB2DXWithD2hhhSidebandLine              : 0.000400   3.557
+  -- StrippingB2DXWithD2hhhhSidebandLine             : 0.000150   2.950
+  -- StrippingB2DXWithD2hhSidebandLine               : 0.001350   1.651
+  -- StrippingB2DXWithD2KPiPi0ResolvedSidebandLine   : 0.001100   2.933
+  -- StrippingB2DXWithLambdaSidebandLine             : 0.000550   1.790
+
+
 <<<<<<< release.notes
 ! 2010-09-02 - Sebastian Schleich
  - StrippingInclPhi.py. New configuration mechanism + stricter prescales
@@ -84,7 +99,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 
 >>>>>>> 1.345
-! 2010-09-01 - Olivier Deschamps for Régis Lefèvre
+! 2010-09-01 - Olivier Deschamps for R??gis Lef??vre
   - update StrippingB2HHPi0.py
 
 
