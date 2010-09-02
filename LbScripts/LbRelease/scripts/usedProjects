@@ -136,7 +136,7 @@ def printProjects():
     for pName in unusedProjects:
       print pName, ' versions: ', unusedProjectVersions[pName]
       if removeAll:
-        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','MOORE','LBSCRIPTS','DIRAC','LHCBDIRAC','BENDER','LHCBGRID','GANGA']:
+        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','MOORE','LBSCRIPTS','DIRAC','LHCBDIRAC','BENDER','LHCBGRID','GANGA','ERASMUS','PANORAMIX']:
           for toberemove in unusedProjectVersions[pName]:
             print 'remove ',pName,' version ',toberemove
             if not printAll:
