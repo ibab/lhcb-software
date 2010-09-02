@@ -15,9 +15,8 @@ include_path      none
 # Used packages.
 #============================================================================
 use     PatKernel       v*      Tf
-use	TfKernel	v*	Tf
-use	TfKernel	v*	Tf
-use     TrackTools	v*      Tr
+use     TfKernel        v*      Tf
+use     TrackTools  v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
 use     OTDAQ           v*      OT

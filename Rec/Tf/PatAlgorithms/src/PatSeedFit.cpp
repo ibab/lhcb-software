@@ -1,4 +1,7 @@
 // $Id: PatSeedFit.cpp,v 1.12 2009-12-07 09:45:09 mschille Exp $
+
+#include <boost/foreach.hpp>
+
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"

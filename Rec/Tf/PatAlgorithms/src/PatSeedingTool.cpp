@@ -10,8 +10,6 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-#include "OTDet/DeOTDetector.h"
-#include "STDet/DeSTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"
 
@@ -84,9 +82,11 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   // window to collect hits from
   declareProperty( "TolCollectOT",		m_tolCollectOT		=    3. * Gaudi::Units::mm );
   declareProperty( "TolCollectIT",		m_tolCollectIT		=    .3 * Gaudi::Units::mm );
+  declareProperty( "TolCollectITOT",		m_tolCollectITOT	=    .6 * Gaudi::Units::mm );
   // clone killing in xz projection
   declareProperty( "MinXPlanes",		m_minXPlanes		=    5                     );
-  declareProperty( "CloneMaxXDist",		m_cloneMaxXDist		=   10. * Gaudi::Units::mm );
+  declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
+  declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
   declareProperty( "QualityWeights",		m_qualityWeights	= boost::assign::list_of(1.0)(-0.2) );
 
@@ -97,7 +97,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "zForYMatch",		m_zForYMatch		= 9000. * Gaudi::Units::mm );
   // spread of run of stereo hits in projection plane
   declareProperty( "MaxRangeOT",		m_maxRangeOT		=  150. * Gaudi::Units::mm );
-  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   50. * Gaudi::Units::mm );
+  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   15. * Gaudi::Units::mm );
   // pointing criterium in y
   declareProperty( "yCorrection",		m_yCorrection		= -1e42);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
@@ -113,13 +113,18 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   declareProperty( "MaxChi2HitOT",		m_maxChi2HitOT		=   30.                    );
   declareProperty( "MaxChi2HitIT",		m_maxChi2HitIT		=   10.                    );
-  declareProperty( "MaxTrackChi2",		m_maxTrackChi2     	=   20.                    );
-  declareProperty( "MaxFinalChi2",		m_maxFinalChi2     	=   15.                    );
-  declareProperty( "MaxFinalTrackChi2",		m_maxFinalTrackChi2	=   10.                    );
-  declareProperty( "MaxTrackChi2LowMult",	m_maxTrackChi2LowMult	=    5.			   );
-  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=   10                     );
+  declareProperty( "MaxTrackChi2",		m_maxTrackChi2     	=   15.                    );
+  declareProperty( "MaxFinalChi2",		m_maxFinalChi2     	=   12.25                  );
+  declareProperty( "MaxFinalTrackChi2",		m_maxFinalTrackChi2	=    9.                    );
+  declareProperty( "MaxTrackChi2LowMult",	m_maxTrackChi2LowMult	=    6.			   );
+  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=    9			   );
   declareProperty( "MaxMisses",			m_maxMisses		=    1			   );
   declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   17			   );
+
+  declareProperty( "MinPlanesPerStation",	m_minPlanesPerStation	=    1			   );
+  declareProperty( "MaxHoles",			m_maxHoles		=    2			   );
+  declareProperty( "ITStubLooseChi2",		m_itStubLooseChi2	= 1500.			   );
+  declareProperty( "ITStubTightChi2",		m_itStubTightChi2	=   80.			   );
 
   //------------------------------------------------------------------------
   // final track selection
@@ -172,12 +177,11 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "OTIsolation",		m_OTIsolation		=   20. * Gaudi::Units::mm );
   declareProperty( "Cosmics",			m_cosmics		= false );
   // maximal occupancy
-  declareProperty( "MaxITOccupancy",		m_maxITOccupancy	= 0.2 );
-  declareProperty( "MaxOTOccupancy",		m_maxOTOccupancy	= 0.2 );
+  declareProperty( "MaxITHits",			m_maxITHits		= 3000 );
+  declareProperty( "MaxOTHits",			m_maxOTHits		= 10000 );
 
   declareProperty( "OnlyGood",          m_onlyGood              = false  );
   declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      ); 
-
 }
 //=============================================================================
 // Destructor
@@ -191,7 +195,7 @@ StatusCode PatSeedingTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
-  m_tHitManager    = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
+  m_tHitManager = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
@@ -248,12 +252,6 @@ StatusCode PatSeedingTool::initialize() {
     std::swap(m_driftRadiusRange[0], m_driftRadiusRange[1]);
   }
 
-  // obtain total number of channels from IT and OT
-  DeSTDetector *IT = getDet<DeSTDetector>(DeSTDetLocation::IT);
-  DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-  m_ITChannels = IT->nStrip();
-  m_OTChannels = OT->nChannels();
-
   return StatusCode::SUCCESS;
 }
 
@@ -281,8 +279,6 @@ unsigned PatSeedingTool::prepareHits()
   BOOST_FOREACH( PatFwdHit* hit, range ) {
     hit->setSelected( true );
     hit->setIgnored( false );
-
-
     if (hit->hit()->ignore()){
       hit->setIsUsed( true );
       continue;
@@ -341,28 +337,22 @@ unsigned PatSeedingTool::prepareHits()
     }
   }
 
-
-
   // update region cache: we need some information not directly available
   // from the Tf::-framework
   for (unsigned sta = 0; sta < m_nSta; ++sta) {
     for (unsigned lay = 0; lay < m_nLay; ++lay) {
       for (unsigned reg = 0; reg < m_nReg; ++reg) {
-        unsigned idx = (sta * m_nLay + lay) * m_nReg + reg;
-        m_RCtanT[idx] = region(sta,lay,reg)->sinT() /
-          region(sta,lay,reg)->cosT();
-        // because the IT is at small abs(y), we can neglect dy/dz
-        // for the OT, we use the fact that the division of the OT into upper
-        // and lower half is an artificial one
-        // we can't use the naive dz/dy=(zmax - zmin)/(ymax - ymin) because
-        // of the finite thickness of OT modules
-        m_RCdzdy[idx] = isRegionIT(reg) ? 0.0 :
-          ((region(sta,lay,reg)->zmin() - region(sta,lay,reg^1)->zmin()) /
-           (region(sta,lay,reg)->ymin() - region(sta,lay,reg^1)->ymin()));
-        // return zmid at y = 0 (instead of y = ymid)
-        // no correction for IT, see above
-        m_RCz0[idx] = region(sta,lay,reg)->z() - region(sta,lay,reg)->y() *
-          m_RCdzdy[idx];
+	unsigned idx = (sta * m_nLay + lay) * m_nReg + reg;
+	m_RCtanT[idx] = region(sta,lay,reg)->sinT() /
+	  region(sta,lay,reg)->cosT();
+	const Gaudi::XYZVector& vy(region(sta, lay, reg)->vy());
+	m_RCdzdy[idx] = vy.z() / vy.y();
+	const Gaudi::XYZVector& vx(region(sta, lay, reg)->vx());
+	m_RCdzdx[idx] = vx.z() / vx.x();
+	// return zmid at x = 0, y = 0 (instead of x = xmid, y = ymid)
+	m_RCz0[idx] = region(sta,lay,reg)->z() -
+	  region(sta,lay,reg)->y() * m_RCdzdy[idx] -
+	  region(sta,lay,reg)->x() * m_RCdzdx[idx];
       }
     }
   }
@@ -392,6 +382,7 @@ void PatSeedingTool::killClonesAndStore(
                                         std::vector<LHCb::Track*>& outputTracks,
                                         double maxUsedFraction) const
 {
+  if (finalSelection.empty()) return;
   // make sure there's space in the output
   outputTracks.reserve(outputTracks.size() + finalSelection.size());
   //== Sort tracks according to their chi2
@@ -406,9 +397,19 @@ void PatSeedingTool::killClonesAndStore(
     // hits, but the advantage is that we stop counting early, if the
     // track does not pass the cut
     int maxUsed = int(std::ceil(maxUsedFraction * track->nCoords()));
-    BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
+    unsigned nOT = 0, nIT = 0;
+    BOOST_FOREACH( const PatFwdHit* hit, track->coords() ) {
+      if (hit->hit()->type() == Tf::RegionID::OT) ++nOT;
+      else ++nIT;
       if (hit->isUsed() && (0 > --maxUsed)) break;
+    }
     if ( 0 > maxUsed ) continue;
+
+    if (nOT && (double(std::abs(track->otMonoAsym()))/double(nOT) > 0.25 
+	  && std::abs(track->otMonoAsym()) > 4)) continue;
+    if (!nIT && double(track->nbOnSide()) / double(2 * track->nPlanes()) > 1.4) continue;
+    if (track->minPlanesPerStation() < m_minPlanesPerStation) continue;
+    if (track->nHoles() > m_maxHoles) continue;
 
     if ( debug ) {
       const double scaleFactor = m_magFieldSvc->signedRelativeCurrent();
@@ -444,8 +445,7 @@ StatusCode PatSeedingTool::performTracking(
         }
       }
     }
-    if (double(nHitsIT) / double(m_ITChannels) > m_maxITOccupancy ||
-        double(nHitsOT) / double(m_OTChannels) > m_maxOTOccupancy) {
+    if (nHitsIT > m_maxITHits || nHitsOT > m_maxOTHits) {
       // in L0 confirmation context, we just return to save time
       if (0 == state) return StatusCode::SUCCESS;
       
@@ -542,18 +542,20 @@ void PatSeedingTool::collectPerRegion(
       // track can have enough hits according to the state given
       int nPlanesMax = m_nSta * m_nLay;
       for (unsigned sta = 0; m_nSta > sta; ++sta) {
-        for (unsigned lay = 0; m_nLay > lay; ++lay) {
-          const double dz = regionZ0(sta, lay, reg) - state->z();
-          const double ytol = std::sqrt(propagateEY2(dz,state->covariance()));
-          const double y = propagateY(dz, state->stateVector());
-          if (!regionY(sta,lay,reg, ytol).isInside(y))
-            if (--nPlanesMax < m_minTotalPlanes) break;
-          const double xtol = std::sqrt(propagateEX2(dz,state->covariance()));
-          const double x = propagateX(dz, state->stateVector());
-          if (!regionX(sta,lay,reg, xtol).isInside(x))
-            if (--nPlanesMax < m_minTotalPlanes) break;
-        }
-        if (nPlanesMax < m_minTotalPlanes) break;
+	for (unsigned lay = 0; m_nLay > lay; ++lay) {
+	  double dz = regionZ0(sta, lay, reg) - state->z();
+	  dz += regionDzDx(sta,lay,reg) * (state->x() + state->tx() * dz) +
+	    regionDzDy(sta,lay,reg) * (state->y() + state->ty() * dz);
+	  const double ytol = std::sqrt(propagateEY2(dz,state->covariance()));
+	  const double y = propagateY(dz, state->stateVector());
+	  if (!regionY(sta,lay,reg, ytol).isInside(y))
+	    if (--nPlanesMax < m_minTotalPlanes) break;
+	  const double xtol = std::sqrt(propagateEX2(dz,state->covariance()));
+	  const double x = propagateX(dz, state->stateVector());
+	  if (!regionX(sta,lay,reg, xtol).isInside(x))
+	    if (--nPlanesMax < m_minTotalPlanes) break;
+	}
+	if (nPlanesMax < m_minTotalPlanes) break;
       }
       if (nPlanesMax < m_minTotalPlanes) continue;
     }
@@ -645,6 +647,14 @@ void PatSeedingTool::collectPerRegion(
                      findBestRange( reg, minNbPlanes, stereo ) );
 
           if ( !ok ) continue;
+	  
+	  // remove "impossible" hits as early as feasible
+	  BOOST_FOREACH(PatFwdHit* hit, stereo) {
+	    if (!hit->hit()->isYCompatible(
+		  hit->projection() * hit->hit()->zAtYEq0() / m_zForYMatch,
+		  10. * m_tolCollect))
+	      hit->setIgnored(false);
+	  }
 
           if ( m_printing ) {
             info() << "--- After filtering of stereo hits " << endmsg;
@@ -736,13 +746,12 @@ void PatSeedingTool::collectPerRegion(
             }
           }
 
-          if ( isRegionOT(reg) &&
-               m_otNHitsLowThresh > track.nCoords() &&
-               2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
-            if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
-                                      << track.nCoords() << " coordinates" << endmsg;
-            continue;
-          }
+	  if ( isRegionOT(reg) && m_otNHitsLowThresh > track.nCoords() &&
+	      2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
+	    if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
+	      << track.nCoords() << " coordinates" << endmsg;
+	    continue;
+	  }
 
           track.setYParams( y0, sl );
 
@@ -750,19 +759,18 @@ void PatSeedingTool::collectPerRegion(
           if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endmsg;
           ok = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minTotalPlanes, false, m_printing );
 
-          if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
-                                   << ", nPlanes = " << track.nPlanes() << endmsg;
-          if ( isRegionOT(reg) &&   // OT
-               m_otNHitsLowThresh > track.nCoords() &&  // short track -> not too many neighbours
-               2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
-            if ( m_printing ) {
-              info()  << "Too many on side " << track.nbOnSide() << " with only "
-                      << track.nCoords() << " coordinates" << endmsg;
-              BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
-                debugFwdHit( hit, info() );
-            }
-            continue;
-          }
+	  if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
+	    << ", nPlanes = " << track.nPlanes() << endmsg;
+	  if ( isRegionOT(reg) && m_otNHitsLowThresh > track.nCoords() &&  // short track -> not too many neighbours
+	      2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
+	    if ( m_printing ) {
+	      info()  << "Too many on side " << track.nbOnSide() << " with only "
+		<< track.nCoords() << " coordinates" << endmsg;
+	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+		debugFwdHit( hit, info() );
+	    }
+	    continue;
+	  }
 
           if ( m_maxFinalTrackChi2 < track.chi2() || !ok ) {
             if ( m_printing ) info() << "Chi2 too big" << endmsg;
@@ -796,15 +804,20 @@ void PatSeedingTool::collectITOT(
                                  bool doOverlaps)
 {
   if ( m_measureTime ) m_timer->start( m_timeItOt );
+  // table in which to collect hits around a stub
+  // first index is station in which we have the stub, second are remaining
+  // stations (prefer to start close to the stub and at high z because of
+  // lower track multiplicity)
+  const unsigned stationorder[3][3] = { { 1, 2, 0 }, { 2, 0, 1 }, { 1, 0, 2 } };
 
   if ( m_printing ) info() << "=== remaining IT coord ====" << endmsg;
-  m_tolCollect = m_tolCollectIT;
 
   for ( unsigned reg = m_nOTReg; reg < m_nReg; ++reg ) {
-    // form track segments from unused hits in all IT regions
     finalSelection.clear();
     pool.clear();
-    for ( unsigned sta = 0; sta < m_nSta; ++sta ) {
+    m_tolCollect = m_tolCollectITOT;
+    // form track segments from unused hits in all IT regions
+    for ( unsigned sta = m_nSta; sta--; ) {
       double zScaling = ( regionZ0(sta,3,reg) - regionZ0(sta,0,reg)) /
         ( regionZ0(sta, 0, reg) - m_zMagnet );
 
@@ -846,13 +859,15 @@ void PatSeedingTool::collectITOT(
           const double tanT1 = regionTanT(sta,1,reg);
           const double tanT2 = regionTanT(sta,2,reg);
 
-          // open search window into first stereo layer
-          PatRange x1Range = regionY(sta,1,reg) *= tanT1;
-          x1Range += x0 + ( regionZ0(sta,1,reg) - z0 ) * sl;
-          x1Range.widen(m_tolCollect);
-          // restrict search window if we have a state
-          if (0 != state)
-            x1Range.intersect(predictXinRegion(state, sta, 1, reg));
+	  // open search window into first stereo layer
+	  PatRange x1Range = regionY(sta,1,reg) *= tanT1;
+	  x1Range += x0 + ( regionZ0(sta,1,reg) + regionDzDx(sta,1,reg) *
+	      (x0 + sl * (regionZ0(sta,1,reg) - z0)) +
+	      regionDzDy(sta,1,reg) * region(sta,1,reg)->y() - z0 ) * sl;
+	  x1Range.widen(1.5 * m_tolCollect);
+	  // restrict search window if we have a state
+	  if (0 != state)
+	    x1Range.intersect(predictXinRegion(state, sta, 1, reg));
 
           if ( m_printing ) info() << "     hit sta " << sta << " lay 3 x = "
                                    << hit3->hit()->xAtYEq0() << " x1Min " << x1Range.min() << " x1Max "
@@ -865,21 +880,24 @@ void PatSeedingTool::collectITOT(
             if ( hit1->isUsed() ) continue;
             if ( m_enforceIsolation && !isIsolated(itH1, rangeH1) ) continue;
 
-            // open search window into second stereo layer
-            const double y = ((x0 + (hit1->hit()->zAtYEq0() - z0) * sl) -
-                              hit1->hit()->xAtYEq0()) / hit1->hit()->dxDy();
-            // check slope in y if we have a state
-            if (state && !isGoodSlope(state, false, y / hit1->hit()->zAtYEq0()))
-              continue;
-            const double z2 = regionZ0(sta, 2, reg);
-            // assume straight line through hit1 and origin to derive y at
-            // second layer
-            const double pred = (x0 + (z2 - z0) * sl) +
-              z2 / hit1->hit()->zAtYEq0() * y * tanT2;
-            PatRange x2Range = symmetricRange(pred, 1.5 * m_tolCollect);
-            // restrict search window if we have a state
-            if (0 != state)
-              x2Range.intersect(predictXinRegion(state, sta, 2, reg));
+	    // open search window into second stereo layer
+	    const double y = ((x0 + (hit1->hit()->zAtYEq0() - z0) * sl) -
+		hit1->hit()->xAtYEq0()) / hit1->hit()->dxDy();
+	    if (!hit1->hit()->isYCompatible(y, 10. * m_tolExtrapolate)) continue;
+	    // check slope in y if we have a state
+	    if (state && !isGoodSlope(state, false, y / hit1->hit()->zAtYEq0()))
+	      continue;
+	    const double z2 = regionZ0(sta,2,reg) +
+	      regionDzDx(sta,2,reg) * (x0 + sl * (regionZ0(sta,2,reg) - z0)) +
+	      regionDzDy(sta,2,reg) * (y * regionZ0(sta,2,reg) / hit1->hit()->zAtYEq0());
+	    // assume straight line through hit1 and origin to derive y at
+	    // second layer
+	    const double pred = (x0 + (z2 - z0) * sl) +
+	      z2 / hit1->hit()->zAtYEq0() * y * tanT2;
+	    PatRange x2Range = symmetricRange(pred, 1.5 * m_tolCollect);
+	    // restrict search window if we have a state
+	    if (0 != state)
+	      x2Range.intersect(predictXinRegion(state, sta, 2, reg));
 
             if ( m_printing ) info() << "     hit sta " << sta << " lay 1 x = "
                                      << hit1->hit()->xAtYEq0() << " x2Min " << x2Range.min() << " x2Max "
@@ -891,6 +909,8 @@ void PatSeedingTool::collectITOT(
               PatFwdHit* hit2 = *itH2;
               if ( hit2->isUsed() ) continue;
               if ( m_enforceIsolation && !isIsolated(itH2, rangeH2) ) continue;
+	      if (!hit2->hit()->isYCompatible(z2 / hit1->hit()->zAtYEq0() * y,
+		    10. * m_tolExtrapolate)) continue;
 
               // restore coordinates
               restoreCoordinate(hit0);
@@ -901,17 +921,11 @@ void PatSeedingTool::collectITOT(
               if ( m_printing )
                 info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endmsg;
 
-              // ok, we have a seed
-              pool.push_back(
-                             PatSeedTrack( hit0, hit1, hit2, hit3,
-                                           m_zReference, m_dRatio, m_initialArrow ) );
-              PatSeedTrack& track = pool.back();
-              if ( 3 > track.nbHighThreshold() ) {
-                if ( m_printing ) info() << "   less than 3 with high threshold" << endmsg;
-                // unfortunately not good enough, so pop it off again
-                pool.pop_back();
-                continue;
-              }
+	      // ok, we have a seed
+	      pool.push_back(
+		  PatSeedTrack( hit0, hit1, hit2, hit3,
+		    m_zReference, m_dRatio, m_initialArrow ) );
+	      PatSeedTrack& track = pool.back();
 
               // Add neighbouring hits
               addNeighbour(track, hit0, itH0, rangeH0);
@@ -919,25 +933,67 @@ void PatSeedingTool::collectITOT(
               addNeighbour(track, hit2, itH2, rangeH2);
               addNeighbour(track, hit3, itH3, rangeH3);
 
-              if ( m_printing ) {
-                info() << "--- IT point -- " << endmsg;
-                BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
-                  debugFwdHit( hit, info() );
-              }
-            }
-          }
-        }
+	      if (3 > track.nbHighThreshold()) {
+		if ( m_printing ) info() << "   less than 3 with high threshold" << endmsg;
+		// unfortunately not good enough, so pop it off again
+		pool.pop_back();
+		continue;
+	      }
+
+	      // try to kill the seed extremely early by doing a very
+	      // loose red. chi^2 cut even before we attempt a refit
+	      track.updateHits();
+	      double chi2 = 0.;
+	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+		chi2 += track.chi2Hit(hit);
+	      if (chi2 / double(track.nCoords() - 3) > m_itStubLooseChi2) {
+		if ( m_printing )
+		  info() << "   seed prefit chi^2/ndf too large: " <<
+		    chi2 / double(track.nCoords() - 3) << endmsg;
+		pool.pop_back();
+		continue;
+	      }
+	      // refit, using fixed curvature and slope ty fixed to y0/z0
+	      if (!m_seedTool->refitStub(track, m_dRatio, m_initialArrow)) {
+		if ( m_printing )
+		  info() << "   refitStub: matrix singular or no convergence" << endmsg;
+		pool.pop_back();
+		continue;
+	      }
+	      chi2 = 0.;
+	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+		chi2 += track.chi2Hit(hit);
+	      // if the reduced chi^2 is still bad, we also kill the seed
+	      if (chi2 / double(track.nCoords() - 3) > m_itStubTightChi2) {
+		if ( m_printing )
+		  info() << "   seed chi^2/ndf too large: " <<
+		    chi2 / double(track.nCoords() - 3) << endmsg;
+		pool.pop_back();
+		continue;
+	      }
+
+	      if ( m_printing ) {
+		info() << "--- IT point -- " << endmsg;
+		BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+		  debugFwdHit( hit, info() );
+	      }
+	    }
+	  }
+	}
       }
     }
 
     // follow these track segments into OT and IT and collect more hits there
-    if ( m_printing ) info() << "===== Candidates Type " << reg << endmsg;
     finalSelection.reserve(pool.size());
+    if ( m_printing ) info() << "===== Candidates Type " << reg << endmsg;
     for ( std::vector<PatSeedTrack>::iterator itT = pool.begin();
           pool.end() != itT; ++itT ) {
       PatSeedTrack& track = *itT;
+      track.updateHits();
       track.setValid(false);
       bool centralYIT = false;
+      bool fromInsideBeampipe = false;
+      bool hasOT = false;
       bool fitOK = false;
       m_printing = msgLevel( MSG::DEBUG );
 
@@ -948,118 +1004,143 @@ void PatSeedingTool::collectITOT(
       PatFwdHit* firstHit = *track.coordBegin();
 
       unsigned ITSta = firstHit->hit()->station();
-      unsigned nbSta = 1;
       unsigned otTypMin = (track.yAtZ(firstHit->z()) > 0.0) ? 1 : 0;
       unsigned otTypMax = otTypMin + 1;
-      if (doOverlaps) otTypMin = 0, otTypMax = m_nOTReg;
+      bool dirty = false;
+      /* near y = 0 or when doing overlaps, try both OT halves */
+      if (std::abs(track.yAtZ(m_zForYMatch)) < 45. || doOverlaps)
+	otTypMin = 0, otTypMax = m_nOTReg;
 
       //== Some data in OT ??
-      for ( unsigned sta = 0; 3 > sta; ++sta ) {
-        // skip station used to produce the seed (we used all hits there)
-        if ( sta == ITSta ) continue;
-        int nbPlanes = track.nPlanes();
+      for (unsigned ista = 0, sta = stationorder[ITSta][ista]; ista < 3;
+	  sta = stationorder[ITSta][++ista]) {
+	// skip station used to produce the seed (we used all hits there)
+	if ( sta == ITSta ) continue;
+	unsigned nbPlanes = track.nPlanes();
 
-        for ( unsigned lay = 0 ; 4 > lay ; ++lay ) {
-          for (unsigned otTyp = otTypMin; otTypMax > otTyp; ++otTyp) {
-            // skip layers which are too far away in y
-            if (!regionY(sta,lay,otTyp, m_tolExtrapolate).isInside(
-                                                                   track.yAtZ(regionZ0(sta,lay,otTyp))))
-              continue;
+	for ( unsigned lay = 0 ; 4 > lay ; ++lay ) {
+	  for (unsigned otTyp = otTypMin; otTypMax > otTyp; ++otTyp) {
+	    // skip layers which are too far away in y
+	    const double zPred = regionZ0(sta,lay,otTyp) +
+	      regionDzDy(sta,lay,otTyp) * track.yAtZ(regionZ0(sta,lay,otTyp)) +
+	      regionDzDx(sta,lay,otTyp) * track.xAtZ(regionZ0(sta,lay,otTyp));
+	    const double yPred = track.yAtZ(zPred);
+	    const double xPred = track.xAtZ(zPred);
+	    if (std::abs(yPred) < 120. && std::abs(xPred) < 120.)
+	      fromInsideBeampipe = true;
+	    if (!regionY(sta,lay,otTyp, 10.0 * m_tolExtrapolate).isInside(yPred))
+	      continue;
+	    if (!regionX(sta,lay,otTyp, 2.0 * m_tolExtrapolate).isInside(xPred))
+	      continue;
 
-            // ok, check if we can pick up more hits
-            const double tanT = regionTanT(sta,lay,otTyp);
-            const double zPred = regionZ0(sta,lay,otTyp) +
-              regionDzDy(sta,lay,otTyp) * track.yAtZ(regionZ0(sta,lay,otTyp));
-            const double xPred = track.xAtZ( zPred ) + track.yAtZ( zPred )*tanT;
-            PatRange xRange = symmetricRange(xPred, m_tolExtrapolate + 3.);
-            if (0 != state)
-              xRange.intersect(predictXinRegion(state,sta,lay,otTyp));
-            if ( m_printing ) {
-              info() << "** Search in sta " << sta << " lay " << lay << " xPred " << xPred << endmsg;
-            }
+	    // ok, check if we can pick up more hits
+	    const double tanT = regionTanT(sta,lay,otTyp);
+	    PatRange xRange = symmetricRange(xPred + yPred * tanT,
+		m_tolExtrapolate + 3.);
+	    if (0 != state)
+	      xRange.intersect(predictXinRegion(state,sta,lay,otTyp));
+	    if ( m_printing ) {
+	      info() << "** Search in sta " << sta << " lay " << lay <<
+		" xPred " << (xPred + yPred * tanT) << endmsg;
+	    }
 
-            HitRange rangeXX = hitsInRange( xRange,sta,lay,otTyp );
-            HitRange::iterator it = rangeXX.begin(), end = rangeXX.end();
-            for ( ; end != it; ++it ) {
-              PatFwdHit* hit = *it;
-              if ( hit->isUsed() ) continue;
-              updateHitForTrack( hit, track.yAtZ(hit->z()),0);
-              if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
-              if (   m_tolExtrapolate < track.distance( hit ) ) break;
-              if ( m_enforceIsolation && !isIsolated(it, rangeXX) ) continue;
-              if ( m_printing ) {
-                info() << "Add coord ";
-                debugFwdHit( hit, info() );
-              }
-              track.addCoord( hit );
-            }
-          }
-        }
-        if ( 3 <= track.nPlanes() - nbPlanes  ) {
-          nbSta++;
-          int minPlanes = 3 * nbSta + 2;
-          fitOK = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
-          if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endmsg;
-        }
+	    HitRange rangeXX = hitsInRange( xRange,sta,lay,otTyp );
+	    HitRange::iterator it = rangeXX.begin(), end = rangeXX.end();
+	    for ( ; end != it; ++it ) {
+	      PatFwdHit* hit = *it;
+	      if ( hit->isUsed() ) continue;
+	      updateHitForTrack( hit, track.yAtZ(hit->hit()->zAtYEq0()),0);
+	      if ( m_tolExtrapolate < std::abs(track.distance(hit)) ) continue;
+	      if (!hit->hit()->isYCompatible(yPred, 10. * m_tolExtrapolate)) continue;
+	      if ( m_enforceIsolation && !isIsolated(it, rangeXX) ) continue;
+	      if ( m_printing ) {
+		info() << "Add coord ";
+		debugFwdHit( hit, info() );
+	      }
+	      track.addCoord( hit );
+	      dirty = true;
+	    }
+	  }
+	}
+	if ( dirty ) {
+	  hasOT = true;
+	  const double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
+	    m_maxChi2HitIT : m_maxChi2HitOT;
+	  const unsigned minPlanes = (track.nPlanes() <= 8) ?
+	    8 : m_minTotalPlanes;
+	  fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
+	  dirty = (nbPlanes != track.nPlanes());
+	  if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endmsg;
+	}
       }
-      // Try in IT again if needed
-      if ( 3 > nbSta ) {
-        unsigned minReg = doOverlaps ? (m_nOTReg) : (reg);
-        unsigned maxReg = doOverlaps ? (m_nReg) : (reg + 1);
-        for ( unsigned sta = 0; 3 > sta; ++sta ) {
-          for ( unsigned testReg = minReg; maxReg > testReg; ++testReg) {
-            if ( sta == ITSta && reg == testReg) continue;
-            int nbAdded = 0;
-            for ( unsigned lay = 0 ; 4 > lay ; ++lay ) {
-              const double zPred = regionZ0(sta,lay,testReg);
-              const double yPred = track.yAtZ( zPred );
-              if ( m_centralYIT > fabs(yPred) && doOverlaps ) centralYIT = true;
-              if (!regionY(sta, lay, testReg, m_tolExtrapolate).isInside(yPred))
-                continue;
-              const double tanT = regionTanT(sta, lay, testReg);
-              const double xPred = track.xAtZ( zPred ) + yPred * tanT;
-              if (!regionX(sta, lay, testReg, m_tolExtrapolate).isInside(xPred))
-                continue;
-              PatRange xRange = symmetricRange(xPred, m_tolExtrapolate);
-              // if we have more information from a state, use it
-              if (0 != state)
-                xRange.intersect(predictXinRegion(state,sta,lay,testReg));
-              if ( m_printing ) {
-                info() << "** Search in IT sta " << sta << " lay " << lay << " region " << testReg
-                       << " xPred " << xPred << endmsg;
-              }
 
-              HitRange rangeYY = hitsInRange( xRange, sta, lay, testReg );
-              HitRange::iterator it = rangeYY.begin(), end = rangeYY.end();
-              for ( ; end != it; ++it ) {
-                PatFwdHit* hit = *it;
-                if ( hit->isUsed() ) continue;
-                updateHitForTrack( hit, track.yAtZ(hit->z()), 0);
-                if ( - m_tolExtrapolate > track.distance( hit ) ) continue;
-                if (   m_tolExtrapolate < track.distance( hit ) ) break;
-                if ( m_enforceIsolation && !isIsolated(it, rangeYY) ) continue;
-                if ( m_printing ) {
-                  info() << "Add coord ";
-                  debugFwdHit( hit, info() );
-                }
-                track.addCoord( hit );
-                ++nbAdded;
-              }
-            }
-            if ( 3 < nbAdded ) {
-              nbSta++;
-              int minPlanes = 3 * nbSta + 1;
-              fitOK = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
-            }
-          }
-        }
+      // Try in IT again if needed
+      if ( (3 > track.nStations()) || doOverlaps ) {
+	unsigned minReg = (doOverlaps) ? (m_nOTReg) : (reg);
+	unsigned maxReg = (doOverlaps) ? (m_nReg) : (reg + 1);
+	for (unsigned ista = 0, sta = stationorder[ITSta][ista]; ista < 3;
+	    sta = stationorder[ITSta][++ista]) {
+	  for ( unsigned testReg = minReg; maxReg > testReg; ++testReg) {
+	    if ( sta == ITSta && reg == testReg) continue;
+	    for ( unsigned lay = 0 ; 4 > lay ; ++lay ) {
+	      const double zPred = regionZ0(sta,lay,testReg) +
+		regionDzDy(sta,lay,testReg) * track.yAtZ(regionZ0(sta,lay,testReg)) +
+		regionDzDx(sta,lay,testReg) * track.xAtZ(regionZ0(sta,lay,testReg));
+	      const double yPred = track.yAtZ( zPred );
+	      if ( m_centralYIT > fabs(yPred) && doOverlaps )
+		centralYIT = true;
+	      const double xPred = track.xAtZ( zPred );
+	      if (std::abs(yPred) < 120. && std::abs(xPred) < 120.)
+		fromInsideBeampipe = true;
+	      if (!regionY(sta, lay, testReg, 10.0 * m_tolExtrapolate).isInside(yPred))
+		continue;
+	      if (!regionX(sta, lay, testReg, 2.0 * m_tolExtrapolate).isInside(xPred))
+		continue;
+	      const double tanT = regionTanT(sta, lay, testReg);
+	      PatRange xRange = symmetricRange(xPred + yPred * tanT, m_tolExtrapolate);
+	      // if we have more information from a state, use it
+	      if (0 != state)
+		xRange.intersect(predictXinRegion(state,sta,lay,testReg));
+	      if ( m_printing ) {
+		info() << "** Search in IT sta " << sta << " lay " << lay << " region " << testReg
+		  << " xPred " << xPred + yPred * tanT << endmsg;
+	      }
+
+	      HitRange rangeYY = hitsInRange( xRange, sta, lay, testReg );
+	      HitRange::iterator it = rangeYY.begin(), end = rangeYY.end();
+	      for ( ; end != it; ++it ) {
+		PatFwdHit* hit = *it;
+		if ( hit->isUsed() ) continue;
+		updateHitForTrack( hit, track.yAtZ(hit->hit()->zAtYEq0()), 0);
+		if ( m_tolExtrapolate < std::abs(track.distance(hit)) ) continue;
+		if (!hit->hit()->isYCompatible(yPred, 10. * m_tolExtrapolate)) continue;
+		if ( m_enforceIsolation && !isIsolated(it, rangeYY) ) continue;
+		if ( m_printing ) {
+		  info() << "Add coord ";
+		  debugFwdHit( hit, info() );
+		}
+		track.addCoord( hit );
+		dirty = true;
+	      }
+	    }
+	    if ( dirty ) {
+	      const unsigned nSta = track.nStations();
+	      const unsigned minPlanes = (track.nPlanes() <= 8) ?
+		8 : m_minTotalPlanes;
+	      const double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
+		m_maxChi2HitIT : m_maxChi2HitOT;
+	      fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
+	      dirty = nSta != track.nStations();
+	    }
+	  }
+	}
       }
 
       if ( m_printing ) {
-        info() << " --- We have found " << nbSta << " stations, fitOK " <<
-          fitOK << "." << endmsg;
-        BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
-          debugFwdHit( hit, info() );
+	info() << " --- We have found " << track.nStations() << " stations, fitOK " <<
+	  fitOK << "." << endmsg;
+	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	  debugFwdHit( hit, info() );
       }
 
       if ( m_fieldOff ) {
@@ -1072,11 +1153,23 @@ void PatSeedingTool::collectITOT(
           continue;
         }
       }
-
-      if ( (3 == nbSta || (centralYIT && 2 == nbSta)) && fitOK ) {
-        track.setValid(true);
-        finalSelection.push_back(&track);
+      
+      if (dirty) {
+	const unsigned minPlanes = (track.nPlanes() <= 8) ?
+	  8 : m_minTotalPlanes;
+	double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
+	  m_maxChi2HitIT : m_maxFinalChi2;
+	fitOK = m_seedTool->fitTrack( track, maxchi2hit, minPlanes, false, m_printing );
       }
+      if (!fitOK) continue;
+      if (track.chi2() > m_maxTrackChi2LowMult) continue;
+
+      unsigned nbSta = track.nStations();
+      if (!(3 == nbSta || (2 == nbSta && (centralYIT || fromInsideBeampipe ||
+		PatSeedTrack::IT == track.trackRegion()))))
+	continue;
+      track.setValid(true);
+      finalSelection.push_back(&track);
     }
     // remove clones from final selection and store tracks
     killClonesAndStore(finalSelection, outputTracks, m_maxUsedFractITOT);
@@ -1118,7 +1211,7 @@ void PatSeedingTool::collectLowQualTracks(
       }
     }
     if (maxUsed < 0) continue;
-    bool isOT = isRegionOT((*track.coordBegin())->hit()->region());
+    bool isOT = (*track.coordBegin())->hit()->type() == Tf::RegionID::OT;
     m_tolCollect = isOT ? m_tolCollectOT : m_tolCollectIT;
     m_maxChi2Hit = isOT ? m_maxChi2HitOT : m_maxChi2HitIT;
 
@@ -1333,6 +1426,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
 {
   // this routine assumes that z0() is the same for all tracks
   const double xTrack = track.xAtZEqZ0();
+  const bool isOT = (*track.coordBegin())->hit()->type() == Tf::RegionID::OT;
 
   bool printing = msgLevel ( MSG::VERBOSE );
 
@@ -1351,8 +1445,10 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       lastInvalidTrack = &othertrack;
       continue;
     }
+    const bool isOtherOT = (*othertrack.coordBegin())->hit()->type() == Tf::RegionID::OT;
     //== compare the list of hits only if not too far...
-    if ( m_cloneMaxXDist < fabs( othertrack.xAtZEqZ0() - xTrack ) ) continue;
+    if ( ((isOT || isOtherOT)?m_cloneMaxXDistOT:m_cloneMaxXDistIT)
+	< std::abs( othertrack.xAtZEqZ0() - xTrack ) ) continue;
 
     // this is a funny way to check if there are too many common hits,
     // but we can stop early if this is the case
@@ -1385,8 +1481,8 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
     }
     double qual1 = 0., qual2 = 0.;
     if (0. != m_qualityWeights[0]) {
-      qual1 += m_qualityWeights[0] * double(track.nCoords());
-      qual2 += m_qualityWeights[0] * double(othertrack.nCoords());
+      qual1 += m_qualityWeights[0] * double(track.nPlanes());
+      qual2 += m_qualityWeights[0] * double(othertrack.nPlanes());
     }
     if (0. != m_qualityWeights[1]) {
       qual1 += m_qualityWeights[1] * track.chi2();
@@ -1455,9 +1551,9 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
   const unsigned reg1 = (reg0 + (m_cosmics?((reg >> 3) & 7u):0)) % m_nReg;
   const unsigned reg2 = (reg0 + (m_cosmics?((reg >> 6) & 7u):0)) % m_nReg;
 
-  const double zScaling  = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
+  const double zScaling  = ( regionZ0(2,lay2,reg2) - regionZ0(0,lay0,reg0) ) /
     ( regionZ0(0,lay0,reg0) - m_zMagnet );
-  const double zScaling2 = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
+  const double zScaling2 = ( regionZ0(2,lay2,reg2) - regionZ0(0,lay0,reg0) ) /
     regionZ0(0,lay0,reg0);
 
   bool matchIn0 = false;
@@ -1536,11 +1632,12 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       // work out intercept
       const double intercept =  x0 - z0 * slope;
       // and use it to correct for curvature in prediction of x1
-      const double dz = regionZ0(1,lay1,reg1) - z0;
+      const double dz = regionZ0(1,lay1,reg1) +
+	regionDzDx(1,lay1,reg1) * (x0 + slope * (regionZ0(1,lay1,reg1) - z0)) - z0;
       const double x1Pred = x0 + dz * (slope + m_initialArrow*intercept*dz);
       // obtain tilt-corrected range around x1Pred, open window of size
       // m_curveTol
-      PatRange x1Range = tiltCorrectedRange(1,lay1,reg1,reg0,
+      PatRange x1Range = tiltCorrectedRange(1,lay1,reg1,reg1,
                                             dz, slope, x1Pred, m_curveTol);
       // if we know more because we have a state, make use of that knowledge
       if (0 != state) x1Range.intersect(predictXinRegion(state, 1, lay1, reg1));
@@ -1574,75 +1671,80 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         track.setYParams( 0, 0);
         int nbMissed = 0;
 
-        // if we reconstruct cosmics, we need to look in all regions for hits
-        // (cosmic IT hits are rarely in different stations)
-        for (unsigned reginc = 0; reginc < (m_cosmics?m_nReg:1); ++reginc) {
-          unsigned regc = (reg0 + reginc) % m_nReg; // current region
-          // start with the other 3 layers
-          unsigned olay = lay0 ^ 3; // x layers have numbers 0 and 3
-          for ( unsigned nLay = 2; nLay-- ; olay ^= 3 ) {
-            for ( unsigned sta = 0; sta < m_nSta; ++sta ) {
-              // work out the range in x in which to look for hits
-              // apply correction for the tilt
-              PatRange xRange = tiltCorrectedRange(sta,olay,regc,reg0,
-                                                   track, 2. * m_tolCollect);
-              if (m_cosmics) {
-                // cosmic case: skip if the track does not come close to the
-                // region in question
-                if (regionX(sta, olay, regc).intersect(xRange).empty())
-                  continue;
-              }
-              // if we have a state, intersect with current window
-              if (0 != state)
-                xRange.intersect(predictXinRegion(state,sta,olay,regc));
+	// if we reconstruct cosmics, we need to look in all regions for hits
+	// (cosmic IT hits are rarely in different stations)
+	unsigned tmplay[3] = { lay0, lay1, lay2 };
+	for (unsigned reginc = 0; reginc < (m_cosmics?m_nReg:1); ++reginc) {
+	  unsigned regc = (reg0 + reginc) % m_nReg; // current region
+	  for ( unsigned nLay = 2; nLay--; ) {
+	    for ( unsigned sta = 0; sta < m_nSta; ++sta ) {
+	      // start with the other 3 layers (i.e. those not used to form
+	      // the initial parabola; reason is that we can potentially kill
+	      // the seed earlier because we exceed the permitted number of
+	      // misses)
+	      unsigned olay = tmplay[sta] ^ (nLay ? 3 : 0 ); // x layers have numbers 0 and 3
+	      // work out the range in x in which to look for hits
+	      // apply correction for the tilt
+	      PatRange xRange = tiltCorrectedRange(sta,olay,regc,regc,
+		  track, 2. * m_tolCollect);
+	      if (m_cosmics) {
+		// cosmic case: skip if the track does not come close to the
+		// region in question
+		if (regionX(sta, olay, regc).intersect(xRange).empty())
+		  continue;
+	      }
+	      // if we have a state, intersect with current window
+	      if (0 != state)
+		xRange.intersect(predictXinRegion(state,sta,olay,regc));
 
-              HitRange range = hitsInRange( xRange, sta, olay, regc );
-              unsigned nCoordsBefore = track.nCoords();
-              HitRange::iterator it = range.begin(), end = range.end();
-              for ( ; end != it; ++it) {
-                PatFwdHit* hit = *it;
-                if (hit->isUsed()) continue;
-                //== restore default measure (do it here, we use the drift
-                //   distance in a moment)
-                restoreCoordinate(hit);
-                // here, we know z of the hit at y = 0, so we can compare to a
-                // more accurate x prediction of the track
-                xRange = tiltCorrectedRange(hit, reg0,
-                                            track, m_tolCollect + hit->driftDistance());
-                if (xRange.max() < hit->x()) break;
-                if (xRange.min() > hit->x()) continue;
-                if ( m_enforceIsolation && !isIsolated(it, range))
-                  continue;
-                track.addCoord( hit );
-              }
-              if (track.nCoords() == nCoordsBefore && reg0 == regc) nbMissed++;
-              if ( m_printing ) {
-                info() << format( "         --- sta%2d lay%2d xPred%8.2f "
-                                  "found%2d nbMissed%2d", sta, olay,
-                                  track.xAtZ( regionZ0(sta,olay,regc) ),
-                                  track.nCoords() - nCoordsBefore,  nbMissed )
-                       << endmsg;
-              }
-              if ( m_maxMisses < nbMissed ) break;
-            }
-            if ( m_maxMisses < nbMissed ) break;
-          }
-          if ( m_maxMisses < nbMissed ) break;
-        }
-        if ( m_maxMisses < nbMissed ) continue;
+	      HitRange range = hitsInRange( xRange, sta, olay, regc );
+	      unsigned nCoordsBefore = track.nCoords();
+	      HitRange::iterator it = range.begin(), end = range.end();
+	      for ( ; end != it; ++it) {
+		PatFwdHit* hit = *it;
+		if (hit->isUsed()) continue;
+		//== restore default measure (do it here, we use the drift
+		//   distance in a moment)
+		restoreCoordinate(hit);
+		// here, we know z of the hit at y = 0, so we can compare to a
+		// more accurate x prediction of the track
+		const double tol = m_tolCollect +
+		  ((Tf::RegionID::OT == hit->hit()->type()) ?
+		   std::abs(hit->driftDistance()) : 0.);
+		xRange = tiltCorrectedRange(hit, regc, track, tol);
+		if (!xRange.isInside(hit->x())) continue;
+		if ( m_enforceIsolation && !isIsolated(it, range))
+		  continue;
+		track.addCoord( hit );
+	      }
+	      if (track.nCoords() == nCoordsBefore && reg0 == regc) ++nbMissed;
+	      if ( m_printing ) {
+		info() << format( "         --- sta%2d lay%2d xPred%8.2f "
+		    "found%2d nbMissed%2d", sta, olay,
+		    track.xAtZ( regionZ0(sta,olay,regc) ),
+		    track.nCoords() - nCoordsBefore,  nbMissed )
+		  << endmsg;
+	      }
+	      if ( m_maxMisses < nbMissed ) break;
+	    }
+	    if ( m_maxMisses < nbMissed ) break;
+	  }
+	  if ( m_maxMisses < nbMissed ) break;
+	}
+	if ( m_maxMisses < nbMissed ) continue;
 
-        //== Fit the track
-        if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endmsg;
-        track.sort();
-        bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
-        if ( !fitOK ) {
-          if ( m_printing ) info() << "    -- fit failed" << endmsg;
-          continue;
-        }
-        if ( m_maxTrackChi2 < track.chi2() ) {
-          if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endmsg;
-          continue;
-        }
+	track.sort();
+	//== Fit the track
+	if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endmsg;
+	bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+	if ( !fitOK ) {
+	  if ( m_printing ) info() << "    -- fit failed" << endmsg;
+	  continue;
+	}
+	if ( m_maxTrackChi2 < track.chi2() ) {
+	  if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endmsg;
+	  continue;
+	}
 
         if (m_fieldOff) {
           // cut on curvature when running without magnetic field
@@ -1696,6 +1798,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
     m_printing = msgLevel( MSG::DEBUG );
 
     bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
+    if (fitOK && ( m_maxFinalChi2 >= track.chi2() ))
     // cut on chi2 per DoF
     track.setValid( fitOK && ( m_maxFinalChi2 >= track.chi2() ) );
   }
@@ -1934,7 +2037,8 @@ bool PatSeedingTool::findBestRangeCosmics(
       const PatFwdHit *h2 = *jt;
       // only consider pairs of hits from same region, but different stations
       // (to make sure we have sufficient lever arm)
-      if (h1->hit()->region() != h2->hit()->region()) continue;
+      if (h1->hit()->region() != h2->hit()->region() &&     // careful: region ranges for IT/OT overlap
+	  h1->hit()->type() == h2->hit()->type()) continue; // need to check IT/OT as well
       if (h1->hit()->station() == h2->hit()->station()) continue;
       // for each pair of hits, work out slope and intercept
       const double z1 = h1->z();
@@ -1982,7 +2086,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
   // we use builtin arrays here because we know how big they need to be,
   // and we do not want the additional cost of allocating memory dynamically
   // for std::vector
-  boost::array<double, 3> largestDrift = { {0., 0., 0.} };
+  boost::array<double, 3> largestDrift = { { 0., 0., 0. } };
   boost::array<PatFwdHit*, 3> seeds;
   double slopeguess = 0.;
   int npoints = 0;
@@ -1999,8 +2103,8 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
     if (hit->hit()->type() != Tf::RegionID::OT ) continue;
     hit->setRlAmb( 0 );
     const int sta = hit->hit()->station();
-    if ( largestDrift[sta] < hit->driftDistance() ) {
-      largestDrift[sta] =  hit->driftDistance();
+    if ( largestDrift[sta] < std::abs(hit->driftDistance()) ) {
+      largestDrift[sta] = std::abs(hit->driftDistance());
       seeds[sta] = hit;
     }
   }
@@ -2011,17 +2115,22 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
        largestDrift[1] > largestDrift[2] ) {
     if ( largestDrift[0] < largestDrift[2] ) {
       seeds[0] = seeds[1];
+      largestDrift[0] = largestDrift[1];
+
     } else {
       seeds[2] = seeds[1];
+      largestDrift[2] = largestDrift[1];
     }
   } else if ( largestDrift[1] > largestDrift[0] ) {
     seeds[0] = seeds[1];
+    largestDrift[0] = largestDrift[1];
   } else if ( largestDrift[1] > largestDrift[2] ) {
     seeds[2] = seeds[1];
+    largestDrift[2] = largestDrift[1];
   }
 
   double bestY0 = 0., bestSl = slopeguess;
-  if ( 0.1 < largestDrift[0] && 0.1 < largestDrift[2] ) {
+  if ( .1 < largestDrift[0] && .1 < largestDrift[2] ) {
     // try all four combinations to resolve ambiguity for seeds[0]. seeds[2]
     // and take best, fix those ambiguities
     double x0 = seeds[0]->projection();
@@ -2239,7 +2348,6 @@ StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& seed,
   // - Manuel 01-28-2008
   return performTracking(tracks, &(seed.closestState(StateParameters::ZMidT)));
 }
-
 
 //=============================================================================
 StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,

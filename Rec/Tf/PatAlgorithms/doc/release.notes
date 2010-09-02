@@ -4,6 +4,34 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-09-02 - Manuel Tobias Schiller
+ - PatSeedTool: resolve OT ambiguities from pitch residuals by default, old
+   default is available as job option (new method is faster and produces fewer
+   ghosts while keeping practically same efficiency; the RMS of the OT pull is
+   slightly narrower)
+ - PatSeedTool: account for track slopes correctly when calculating hit-track
+   distances in OT
+ - PatSeedTool: simultaneous fit to X, U, V projections instead of separate
+   fits to X and Y projections (helps a little with real data in presence of
+   residual misalignments since there are about twice as many layers entering
+   the fit) - slightly slower than old method, but we gain enough with the new
+   ambiguity resolver above to have a net speed gain
+ - fixed bug in PatSeedingTool/PatSeedTool (code checking if a hit is in OT or
+   IT)
+ - fixed bug in PatSeedingTool: in collectITOT, a final track fit was omitted
+   under certain circumstances, causing a drop in efficiency
+ - PatSeedingTool: allow for 2 station IT tracks
+ - PatSeedingTool: in collectITOT, refit the one-station IT stubs before
+   continuing, killing combinatorics where possible
+ - PatSeedingTool: account for rotations of entire layers around x and y axes
+   when calculating search windows (beam tilt was accounted for before, so no
+   changes there)
+ - PatSeedingTool: change maximum occupancy cuts to cuts on maximum number of
+   IT and OT hits (3000 and 10000, respectively)
+ - PatSeedingTool: make sure that we stay roughly inside sensitive region in
+   y as we pick up stereo hits
+ - PatSeedingTool: slight tuning of cuts
+
 ======================== PatAlgorithms v4r6 2010-08-25 =======================
 ! 2010-08-19 - Gerhard Raven
  - kill Warning printout during event loop of 'Too Many XYZ'

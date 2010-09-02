@@ -1,6 +1,9 @@
 // $Id: PatSeedTrack.cpp,v 1.5 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
+#include <cmath>
+#include <algorithm>
+
 // local
 #include "PatSeedTrack.h"
 

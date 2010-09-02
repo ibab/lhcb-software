@@ -24,12 +24,16 @@
  *  @date   2007-08-20 Updated for A-Team framework 
  *  @date   2008-04-13 Added assignment operator
  *  @date   2008-04-15 Removed unused members
+ *  @date   2010-09-12 added convenience functions
  */
 
 class PatSeedTrack {
   private:
-    enum { kNPlanes = Tf::RegionID::OTIndex::kNLayers *
-      Tf::RegionID::OTIndex::kNStations };
+    enum {
+      kNPlanes = Tf::RegionID::OTIndex::kNLayers * Tf::RegionID::OTIndex::kNStations,
+      kNLayers = Tf::RegionID::OTIndex::kNLayers,
+      kNStations = Tf::RegionID::OTIndex::kNStations
+    };
     typedef boost::array<unsigned char, kNPlanes> PlaneArray;
 
   public:
@@ -44,8 +48,9 @@ class PatSeedTrack {
 
     virtual ~PatSeedTrack( ); ///< Destructor
 
+    /// get track parameters
     void getParameters( double& z0, double& bx, double &ax, double &cx, double& dx,
-			double& ay, double& by){
+			double& ay, double& by) const {
       z0 = m_z0;
       bx = m_bx;
       ax = m_ax;
@@ -55,8 +60,9 @@ class PatSeedTrack {
       by = m_by;
     }
 
+    /// set track parameters
     void setParameters (double z0, double bx, double ax, double cx, double dx,
-			double ay, double by){
+			double ay, double by) {
       m_z0 = z0;
       m_bx = bx;
       m_ax = ax;
@@ -64,6 +70,7 @@ class PatSeedTrack {
       m_dx = dx;
       m_ay = ay;
       m_by = by;
+      m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
     }
 
     double z0() const { return m_z0; } ///< return reference z
@@ -90,10 +97,15 @@ class PatSeedTrack {
     double curvature() const ///< return curvature
     { return m_cx; }
 
+    /// const iterator to first coordinate(hit)
     PatFwdHits::const_iterator coordBegin() const { return m_coords.begin(); }
+    /// const iterator to end of coordinates(hits)
     PatFwdHits::const_iterator coordEnd()   const { return m_coords.end(); }
+    /// iterator to first coordinate(hit)
     PatFwdHits::iterator coordBegin()             { return m_coords.begin(); }
+    /// iterator to end of coordinates(hits)
     PatFwdHits::iterator coordEnd()               { return m_coords.end(); }
+    /// const reference to coordinate(hit) container
     const PatFwdHits& coords() const		  { return m_coords; }
 
     unsigned nCoords() const ///< return number of hits on the track
@@ -105,19 +117,20 @@ class PatSeedTrack {
     double cosine() const ///< return cosine of track angle in xz projection
     { return m_cosine; }
 
-    unsigned nbOnSide() const ///< weighted number of hits (hits in clusters count twice)
-    { 
-      unsigned nb = 0;
-      BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
-	if (hit->hasNext()) ++nb;
-	if (hit->hasPrevious()) ++nb;
-      }
-      return nb;
-    }
+    /// return number of holes (planes without hit)
+    inline unsigned nHoles() const;
 
-    unsigned nbHighThreshold() const ///< number of hits above ST high threshold
-    { return std::count_if( m_coords.begin(), m_coords.end(),
-	countIfHighThreshold() ); }
+    /// return minimum number of planes per station of all stations
+    inline unsigned minPlanesPerStation(unsigned* minSta = 0) const;
+
+    ///< weighted number of hits (hits in clusters count twice)
+    inline unsigned nbOnSide() const;
+
+    /// return number of hits in monolayer 1 minus monolayer2
+    inline int otMonoAsym() const;
+
+    ///< number of hits above ST high threshold
+    inline unsigned nbHighThreshold() const;
 
     double chi2() const ///< track chi^2/ndf
     { return m_chi2; }
@@ -137,12 +150,12 @@ class PatSeedTrack {
       worst = m_coords.erase( worst ) - 1;
     }
 
-    double distance( const PatFwdHit* hit ) const ///< distance track to hit
+    /// perpendicular distance for fit
+    double distanceForFit( const PatFwdHit* hit ) const
     {
       double dist = hit->x() - xAtZ( hit->z() );
-      if ( 1 < hit->hit()->region() ) return dist;
-      dist *= m_cosine;
-      const double dx = hit->driftDistance();
+      if ( hit->hit()->type() == Tf::RegionID::IT ) return dist;
+      const double dx = hit->driftDistance() / m_cosine;
       if ( fabs( dist - dx ) < fabs( dist + dx ) )
 	return dist - dx;
       else
@@ -152,18 +165,28 @@ class PatSeedTrack {
     /// distance track to hit with ambiguity fixed
     double distanceWithRL( const PatFwdHit* hit ) const
     {
-      if ( 0 == hit->rlAmb() ) return distance( hit );
-      const double dist = ( hit->x() - xAtZ( hit->z() ) ) * m_cosine;
-      const double dx = hit->driftDistance();
+      if ( 0 == hit->rlAmb() || hit->hit()->type() == Tf::RegionID::IT )
+	return distanceForFit( hit );
+      const double dist = ( hit->x() - xAtZ( hit->z() ) );
+      const double dx = hit->driftDistance() / m_cosine;
       if ( 0 < hit->rlAmb() )
 	return dist + dx;
       else
 	return dist - dx;
     }
 
-    /// perpendicular distance for fit
-    double distanceForFit( const PatFwdHit* hit ) const
-    { return distance( hit ) / m_cosine; }
+    /// distance track to hit
+    double distance( const PatFwdHit* hit ) const
+    {
+      double dist = hit->x() - xAtZ( hit->z() );
+      if ( hit->hit()->type() == Tf::RegionID::IT ) return dist;
+      dist *= m_cosine;
+      const double dx = hit->driftDistance();
+      if ( fabs( dist - dx ) < fabs( dist + dx ) )
+	return dist - dx;
+      else
+	return dist + dx;
+    }
 
     /// chi^2 contribution of a hit
     double chi2Hit( const PatFwdHit* hit) const
@@ -175,18 +198,11 @@ class PatSeedTrack {
     void setYParams( double y0, double sl ) ///< set track parameters in y
     { m_ay = y0; m_by = sl; updateHits( ); }
 
-    void updateHits() ///< update hit positions
-    {
-      BOOST_FOREACH( PatFwdHit* hit, m_coords )
-	updateHitForTrack(hit, m_ay, m_by);
-    }
+    /// update hit positions
+    inline void updateHits();
 
-    void sort() ///< sort hits on track by increasing z
-    {
-      std::sort( m_coords.begin(),
-	  m_coords.end(),
-	  Tf::increasingByZ<PatForwardHit>() );
-    }
+    /// sort hits on track by increasing z
+    inline void sort();
 
     void setValid( bool flag ) ///< set if a track is valid
     { m_valid = flag; }
@@ -205,12 +221,45 @@ class PatSeedTrack {
     }
 
     /// update track parameters in x
-    void updateParameters( double dax, double dbx, double dcx )
+    void updateParameters( double dax, double dbx, double dcx, double ddx = 0. )
     {
       m_ax += dax;
       m_bx += dbx;
       m_cx += dcx;
+      m_dx += ddx;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
+    }
+
+    /// return length of track (start layer - end layer + 1)
+    unsigned length() const
+    {
+      unsigned start = 0, end = kNPlanes;
+      while (end > start && !m_planeList[end - 1]) --end;
+      while (end > start && !m_planeList[start]) ++start;
+      return end - start;
+    }
+
+    /// return number of stations hit
+    unsigned nStations() const
+    {
+      return
+	((m_planeList[0] || m_planeList[1] || m_planeList[2] || m_planeList[3]) ? 1 : 0) +
+	((m_planeList[4] || m_planeList[5] || m_planeList[6] || m_planeList[7]) ? 1 : 0) +
+	((m_planeList[8] || m_planeList[9] || m_planeList[10] || m_planeList[11]) ? 1 : 0);
+    }
+
+    /// type to represent IT only/OT only/ITOT overlap track
+    typedef enum { OT = 1, IT = 2, ITOT = 3 } TrackRegion;
+    /// return track region (IT only, OT only, ITOT overlap)
+    TrackRegion trackRegion() const
+    {
+      unsigned trreg = 0;
+      BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+	LHCb::LHCbID id(hit->hit()->lhcbID());
+	if (id.isOT()) trreg |= OT;
+	else trreg |= IT;
+      }
+      return static_cast<TrackRegion>(trreg);
     }
 
     /** predicate to sort tracks by decreasing quality
@@ -281,6 +330,77 @@ class PatSeedTrack {
   };
 
 };
+
+inline int PatSeedTrack::otMonoAsym() const
+{ 
+  int otMonoAsym = 0;
+  BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+    LHCb::LHCbID id(hit->hit()->lhcbID());
+    if (!id.isOT()) continue;
+    LHCb::OTChannelID otid = id.otID();
+    if (9 == otid.module() &&
+	(0 == otid.quarter() || 2 == otid.quarter())) {
+      if (otid.straw() > 32) ++otMonoAsym;
+      else --otMonoAsym;
+    } else {
+      if (otid.straw() > 64) ++otMonoAsym;
+      else --otMonoAsym;
+    }
+  }
+  return otMonoAsym;
+}
+
+inline unsigned PatSeedTrack::nHoles() const
+{
+  unsigned nHoles = 0, i = 0, j = kNPlanes;
+  // find first and last plane with hit
+  while (!m_planeList[i] && i < kNPlanes) ++i;
+  while (!m_planeList[--j] && j > 0);
+  for ( ; i <= j; ++i)
+    if (!m_planeList[i]) ++nHoles;
+  return nHoles;
+}
+
+inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
+{
+  boost::array<unsigned, kNStations> pps = { 0, 0, 0 };
+  for (unsigned i = kNPlanes; i--; )
+    if (m_planeList[i]) ++pps[i / kNLayers];
+  unsigned minPlanes = pps[0], minsta = 0;
+  for (unsigned i = kNStations; --i; )
+    if (0 == minPlanes || minPlanes > pps[i])
+      minPlanes = pps[i], minsta = i;
+  if (minSta) *minSta = minsta;
+  return minPlanes;
+}
+
+inline unsigned PatSeedTrack::nbOnSide() const
+{ 
+  unsigned nb = 0;
+  BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+    if (hit->hasNext()) ++nb;
+    if (hit->hasPrevious()) ++nb;
+  }
+  return nb;
+}
+
+inline unsigned PatSeedTrack::nbHighThreshold() const
+{
+  return std::count_if( m_coords.begin(), m_coords.end(),
+      countIfHighThreshold() );
+}
+
+inline void PatSeedTrack::updateHits()
+{
+  BOOST_FOREACH( PatFwdHit* hit, m_coords )
+    updateHitForTrack(hit, m_ay, m_by);
+}
+
+inline void PatSeedTrack::sort()
+{
+  std::sort( m_coords.begin(), m_coords.end(),
+      Tf::increasingByZ<PatForwardHit>() );
+}
 
 #endif // PATSEEDTRACK_H
 // vim:shiftwidth=2:tw=78

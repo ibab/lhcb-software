@@ -51,6 +51,11 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
  *  @date   2008-06-04 fixes to avoid dividing by zero in initialize,
  *          new passes to find more tracks in IT and OT (ideas due to Matt
  *          Needham and Olivier Callot, respectively - thanks a lot!)
+ *  @date   2010-09-02 address layer tilts dy/dz and dz/dx correctly,
+ *          separate IT/OT overlap collection tolerance, seperate IT/OT
+ *          clone killing x distance cut, cuts for IT stub refitting,
+ *          cuts on number of holes per track and minimum number of planes
+ *          per station
  */
 
 class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
@@ -187,6 +192,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     double m_xMagTol;
     double m_tolCollectOT;
     double m_tolCollectIT;
+    double m_tolCollectITOT;
     double m_initialArrow;
     double m_zReference;
     std::vector<double> m_zOutputs;
@@ -246,7 +252,8 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     // maximum distance of two tracks to be considered for pattern reco
     // clone killing
-    double m_cloneMaxXDist;
+    double m_cloneMaxXDistIT;
+    double m_cloneMaxXDistOT;
 
     // chi^2 cutoff for tracks with few OT hits
     double m_maxTrackChi2LowMult;
@@ -294,15 +301,22 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     // are we reconstructing cosmics? If so, combine upper/lower half
     bool m_cosmics;
 
-    // maximum occupancies
-    double m_maxITOccupancy;
-    double m_maxOTOccupancy;
-    unsigned m_ITChannels;
-    unsigned m_OTChannels;
+    // maximum number of hits per subdetector
+    unsigned m_maxITHits;
+    unsigned m_maxOTHits;
 
     // Re-using of hits on PatForward tracks
     bool m_onlyGood;
     double m_discardChi2;
+
+    /// maximum number of holes in a track (i.e. planes without hit)
+    unsigned m_maxHoles;
+    /// minimum number of planes per station
+    unsigned m_minPlanesPerStation;
+    /// max. chi^2/ndf for IT stubs before stub refit
+    double m_itStubLooseChi2;
+    /// max. chi^2/ndf for IT stubs after stub refit
+    double m_itStubTightChi2;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
@@ -346,21 +360,27 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	const int lay, const int reg) const
     { return m_tHitManager->hitsWithMinX(xmin, sta, lay, reg); }
 
-    /// provide convenient access to hits in range
+    /// provide convenient access to hits in range (x given at y = 0)
     inline HitRange hitsInRange( const PatRange& xrange, const unsigned sta,
 	const unsigned lay, const unsigned reg) const;
 
     // cache some values for the different regions
     double m_RCdzdy[m_nSta * m_nLay * m_nReg]; ///< cache for regionDzDy
+    double m_RCdzdx[m_nSta * m_nLay * m_nReg]; ///< cache for regionDzDx
     double m_RCz0[m_nSta * m_nLay * m_nReg]; ///< cache for regionZ0
     double m_RCtanT[m_nSta * m_nLay * m_nReg]; ///< cache for regionTanT
 
-    /// estimate dz/dy of a region (only OT, returns 0 for IT)
+    /// estimate dz/dy of a region
     inline double regionDzDy(const int sta, const int lay,
 	const int reg) const
     { return m_RCdzdy[(sta * m_nLay + lay) * m_nReg + reg]; }
 
-    /// estimate z at y = 0 of a region (only OT, returns ymid for IT)
+    /// estimate dz/dx of a region
+    inline double regionDzDx(const int sta, const int lay,
+	const int reg) const
+    { return m_RCdzdx[(sta * m_nLay + lay) * m_nReg + reg]; }
+
+    /// estimate z at x = 0, y = 0 of a region
     inline double regionZ0(const int sta, const int lay,
 	const int reg) const
     { return m_RCz0[(sta * m_nLay + lay) * m_nReg + reg]; }
@@ -388,21 +408,22 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     /// give x range at y = 0 predicted by state extrapolated to z
     inline PatRange predictXAtYEq0(const LHCb::State* state,
-	double z, double dxdy, double dzdy) const;
+	const double z, const double dxdy,
+	const double dzdy, const double dzdx) const;
 
     /// give x range at y = 0 predicted by state
     inline PatRange predictXinRegion(const LHCb::State* state,
 	unsigned sta, unsigned lay, unsigned reg) const
     {
       return predictXAtYEq0(state, regionZ0(sta,lay,reg),
-	  -regionTanT(sta,lay,reg), regionDzDy(sta,lay,reg));
+	  -regionTanT(sta,lay,reg), regionDzDy(sta,lay,reg), regionDzDx(sta,lay,reg));
     }
 
     /// check if hit is inside x range predicted by state at z of hit
     inline bool isGoodHit(const PatFwdHit* hit, const LHCb::State* state) const
     {
       return predictXAtYEq0(state, hit->hit()->zAtYEq0(), hit->hit()->dxDy(),
-	  hit->hit()->dzDy()).isInside(hit->hit()->xAtYEq0());
+	  hit->hit()->dzDy(), 0.).isInside(hit->hit()->xAtYEq0());
     }
 
     /// check that slopes are good
@@ -499,6 +520,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     /// propagate the error in y by dz
     inline double propagateEY2(const double dz, const Gaudi::TrackSymMatrix& cov) const
     { return cov(1, 1) + dz * (2.0 * cov(1, 3) + dz * cov(3, 3)); }
+
 };
 
 inline void PatSeedingTool::restoreCoordinate(PatFwdHit* hit) const
@@ -555,11 +577,13 @@ inline void PatSeedingTool::combineCluster(const PatFwdHit* h1, const PatFwdHit*
 }
 
 inline PatRange PatSeedingTool::predictXAtYEq0(
-    const LHCb::State* state, double z, double dxdy, double dzdy) const
+    const LHCb::State* state, const double z,
+    const double dxdy, const double dzdy, const double dzdx) const
 {
   // how far to propagate
-  const double dz = z - state->z();
   const Gaudi::TrackVector& v = state->stateVector();
+  const double dz = z + dzdy * propagateY(z - state->z(), v) +
+    dzdx * propagateX(z - state->z(), v) - state->z();
   const Gaudi::TrackSymMatrix& cov = state->covariance();
   // work out predicted uncertainties
   const double xtol2 = propagateEX2(dz, cov);
@@ -619,18 +643,22 @@ inline PatRange PatSeedingTool::tiltCorrectedRange(
     const double slope, const double xpred, const double tol) const
 {
   const double dzdy = regionDzDy(sta,lay,reg);
+  const double dzdx = regionDzDx(sta,lay,reg);
   // convert permissible slopes ty in region to x range
   PatRange range = tyRange(tyreg) *= dz * dzdy * slope;
-  // shift to xpred and widen to at least tol
+  // widen to at least tol
   range.widen(tol);
-  return range += xpred;
+  // shift to xpred, take dz/dx of layer into account
+  return range += xpred + dz * slope * slope * dzdx;
 }
 
 inline PatRange PatSeedingTool::tiltCorrectedRange(
     const unsigned sta, const unsigned lay, const unsigned reg,
     const unsigned tyreg, const PatSeedTrack& track, const double tol) const
 {
-  const double z0 = regionZ0(sta,lay,reg);
+  const double z0 = regionZ0(sta,lay,reg) +
+    regionDzDx(sta,lay,reg) * track.xAtZ(regionZ0(sta,lay,reg)) +
+    regionDzDy(sta,lay,reg) * track.yAtZ(regionZ0(sta,lay,reg));
   const double dz = z0 - m_zReference;
   const double dzdy = regionDzDy(sta,lay,reg);
   // convert permissible range in slopes ty to z range

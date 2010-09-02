@@ -24,6 +24,8 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
  *          for fit parameters (i.e. protect against solving a linear system
  *          represented by a singular matrix)
  *  @date   2008-07-11 protect against singular matrix, 2nd part
+ *  @date   2010-09-02 simultaneous fit to x and stereo hits, stub refit for
+ *          PatSeeding, OT ambiguities from pitch residuals
  */
 
 class PatSeedTool : public GaudiTool {
@@ -50,6 +52,19 @@ class PatSeedTool : public GaudiTool {
     bool fitTrack( PatSeedTrack& track, double maxChi2, unsigned minPlanes,
 	bool xOnly, bool forceDebug ) const;
 
+    /** refit a stub (four IT hits in same station)
+     *
+     * simulaneous fit for ty, x0, tx at the track's referenze z0
+     * the track is kept pointing to y = 0 at z = 0, its curvature is inferred
+     * from the x intercept of a straight line extrapolation to z = 0
+     *
+     * @param track PatSeedTrack to refit
+     * @param dRatio ratio of cubic to parabolic term to be used
+     * @param arrow conversion constant from x intercept at z=0 to curvature
+     * @return false on failure, true otherwise
+     */
+    bool refitStub(PatSeedTrack& track, double dRatio, double arrow) const;
+
   protected:
 
     /// do an initial fit in xz projection, fixing OT ambiguities if possible
@@ -65,6 +80,12 @@ class PatSeedTool : public GaudiTool {
     inline void printTCoord( MsgStream& msg,
 	const PatSeedTrack& track, const PatFwdHit* hit ) const;
   private:
+    bool m_ambigFromPitchResiduals; ///< OT ambiguities from pitch residuals
+    bool m_ambigFromLargestDrift; ///< OT ambig. from largest drift time in each station
+
+    bool isNeighbour(const PatFwdHit* h1, const PatFwdHit* h2) const;
+    void resAmbFromPitchRes(PatSeedTrack& tr) const;
+    bool fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const;
 };
 
 
