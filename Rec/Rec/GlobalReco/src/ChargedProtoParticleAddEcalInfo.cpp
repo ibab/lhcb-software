@@ -177,6 +177,7 @@ bool ChargedProtoParticleAddEcalInfo::addEcal( LHCb::ProtoParticle * proto ) con
         // CaloElectron->caloTrajectory must be after addToCalo
         if ( electronTool()->set(proto) ){
           proto->addInfo( LHCb::ProtoParticle::CaloTrajectoryL, electronTool()->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
+          proto->addInfo( LHCb::ProtoParticle::CaloEoverP, electronTool()->eOverP() );          
         }
 
         using namespace CaloDataType;

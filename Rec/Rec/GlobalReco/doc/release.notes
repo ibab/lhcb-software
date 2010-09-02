@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-09-02 - Olivier Deschamps
+  - ChargedProtoParticleAddEcal : add new additional info (CaloEoverP)
+
 ! 2010-08-27 - Olivier Deschamps
   - NeutralProtoPAlg/ChargedProtoPAlg : use new CaloHypoEstimator tool + add new additional info
 
