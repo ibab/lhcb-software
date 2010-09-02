@@ -1,0 +1,33 @@
+#============================================================================
+# Created    : 2010-08-24
+# Maintainer : Roel Aaij
+#============================================================================
+package           HltMonitors
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use     GaudiKernel  v*
+use     GaudiAlg     v*
+use     DetDesc      v*      Det
+use     GaudiUtils   v*
+use     AIDA         v*      LCG_Interfaces -no_auto_imports
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltMonitors    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltMonitors
+
+apply_pattern    install_python_modules
