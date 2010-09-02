@@ -1,9 +1,12 @@
 // $Id: L0MuonMonitorInput.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
+#include <fstream>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/ODIN.h"
+#include "Event/RawBankReadoutStatus.h"
+#include "MuonDet/MuonDAQHelper.h"
 
 // ROOT
 #include "GaudiUtils/Aida2ROOT.h"
@@ -33,6 +36,8 @@ L0MuonMonitorInput::L0MuonMonitorInput( const std::string& name,
   declareProperty( "EnableTAE" , m_enableTAE = true  );
   declareProperty( "UseNZS",     m_useNZS    = false );
   declareProperty( "L0Context" , m_l0Context = ""  );
+  declareProperty( "Offline"   , m_offline   = false );
+
 }
 //================================================================================================================================
 // Destructor
@@ -73,13 +78,37 @@ StatusCode L0MuonMonitorInput::initialize() {
   m_olerrorTool = tool<IL0MuonOLErrorTool>("L0MuonOLErrorTool","InputOLErrorTool",this); 
 
   // Histogram
-  m_summary = book1D("Summary_of_L0Muon_input_errors",-0.5,1.5,2);
+  m_summary = book1D("Summary_of_L0Muon_input_errors",-0.5,3.5,4);
 
   TH1D * hist = Gaudi::Utils::Aida2ROOT::aida2root( m_summary );
   if (hist==0) return Error("Can not get TH1D for PT_GeV",StatusCode::SUCCESS);
   TAxis* axis = hist -> GetXaxis();
   axis -> SetBinLabel(1,"Processed");
-  axis -> SetBinLabel(2,"Bad");
+  axis -> SetBinLabel(2,"Truncated");
+  axis -> SetBinLabel(3,"Bad");
+  axis -> SetBinLabel(4,"Skipped");
+
+  if ( fullDetail() ){
+    m_padsLayout[0]=MuonLayout(24,8);
+    m_padsLayout[1]=MuonLayout(48,8);
+    m_padsLayout[2]=MuonLayout(48,8);
+    m_padsLayout[3]=MuonLayout(12,8);
+    m_padsLayout[4]=MuonLayout(12,8);
+    for (int sta=0; sta<5; ++sta) {
+      std::stringstream station("");
+      station<<"M"<<(sta+1);
+      int xgrid=m_padsLayout[sta].xGrid();
+      int ygrid=m_padsLayout[sta].yGrid();
+      for (int reg=0; reg<4; ++reg){
+        int f=2*(1<<reg);
+        std::stringstream region("");
+        region<<"R"<<(reg+1);
+        m_pads[sta][reg] = book2D("Bad_"+station.str()+"_"+region.str()
+                                  ,-xgrid*f,xgrid*f,4*xgrid,-ygrid*f,ygrid*f,4*ygrid);
+      }
+    }
+  }
+
   
   return StatusCode::SUCCESS;
 }
@@ -98,10 +127,13 @@ StatusCode L0MuonMonitorInput::execute() {
   counter("EventTot")++;
   if (!m_enableTAE){
     sc = Compare();
-    if (sc.isFailure()) return Error("Comparison failed",StatusCode::SUCCESS,20);
   } else {
     sc = CompareTAE();
-    if (sc.isFailure()) return Error("Comparison failed (TAE mode)",StatusCode::SUCCESS,20);
+  }
+  
+  if (sc.isFailure()) {
+    fill(m_summary,3,1.);
+    return Error("Comparison failed",StatusCode::SUCCESS,20);
   }
   
   return StatusCode::SUCCESS;
@@ -113,6 +145,15 @@ StatusCode L0MuonMonitorInput::execute() {
 StatusCode L0MuonMonitorInput::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+
+  if (fullDetail() && m_offline){
+    std::ofstream fout;
+    fout.open("L0MuonMonitorInput.out");
+    for (std::set<LHCb::MuonTileID>::iterator ittile=m_bad_tiles.begin(); ittile!=m_bad_tiles.end(); ++ittile){
+      fout<<ittile->toString()<<"\n";
+    }
+    fout.close();
+  }
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
@@ -127,11 +168,12 @@ StatusCode L0MuonMonitorInput::Compare()
 
   // Optical links in error
   sc = m_olerrorTool->getTiles(m_optlinks);
-  if (sc.isFailure()) return Error("Failed to get list of optical links in error",StatusCode::SUCCESS,20);
+  if (sc.isFailure()) return Error("Failed to get list of optical links in error",StatusCode::FAILURE,20);
   
   // Hits from muon
   std::vector<LHCb::MuonTileID> muontiles;
-  sc = getMuonTiles(muontiles);
+  bool truncated = false;
+  sc = getMuonTiles(muontiles,truncated);
   if (sc.isFailure() ) return Error( "Unable to get muon tiles",StatusCode::FAILURE,20);
   
   // Hits from L0Muon
@@ -140,14 +182,19 @@ StatusCode L0MuonMonitorInput::Compare()
   if (sc.isFailure() ) return Error( "Unable to get l0muon tiles",StatusCode::FAILURE,20);
 
   // Comparison
-  bool diff = areDifferent(muontiles,l0muontiles);
+  bool diff = false;
+  if (!truncated) diff = areDifferent(muontiles,l0muontiles);
 
   // Histogram
   counter("EventProcessed")++;
   fill(m_summary,0,1.);
+  if (truncated) {
+    counter("MuonTruncated")++;
+    fill(m_summary,1,1.);
+  }
   if (diff) {
     counter("EventBad")++;
-    fill(m_summary,1,1.);
+    fill(m_summary,2,1.);
   }
 
   // ----------------------------------------------------------------------------
@@ -162,6 +209,23 @@ StatusCode L0MuonMonitorInput::Compare()
     }
   }
   // ----------------------------------------------------------------------------
+
+  // Fill maps with unmatched channel
+  if (fullDetail() && diff){
+    fillMaps(muontiles);
+    fillMaps(l0muontiles);
+    
+    if (m_offline){
+      std::vector<LHCb::MuonTileID>::iterator ittile;
+      for (ittile=muontiles.begin();ittile<muontiles.end(); ++ittile){
+        m_bad_tiles.insert( *ittile );
+      }
+      for (ittile=l0muontiles.begin();ittile<l0muontiles.end(); ++ittile){
+        m_bad_tiles.insert( *ittile );
+      }
+    }
+    
+  }
     
   if (diff) setFilterPassed(true);
   return StatusCode::SUCCESS;
@@ -187,6 +251,7 @@ StatusCode L0MuonMonitorInput::CompareTAE()
   }
 
   bool diff_tae = false;
+  bool truncated_tae = false;
 
   int ntae=0;
   for (int itae = -1*tae_size; itae<=tae_size; ++itae){
@@ -201,7 +266,8 @@ StatusCode L0MuonMonitorInput::CompareTAE()
     
     // Hits from muon
     std::vector<LHCb::MuonTileID> muontiles;
-    sc= getMuonTiles(muontiles,rootInTes);
+    bool truncated = false;
+    sc= getMuonTiles(muontiles,truncated,rootInTes);
     if( sc.isFailure() ) {
       Warning( "Unable to get Muon tiles for "+rootInTes,StatusCode::FAILURE,20).ignore();
       continue;
@@ -216,7 +282,9 @@ StatusCode L0MuonMonitorInput::CompareTAE()
     }
     
     // Comparison
-    bool diff = areDifferent(muontiles,l0muontiles);
+    bool diff = false;
+    if (!truncated) diff = areDifferent(muontiles,l0muontiles);
+    truncated_tae |= truncated;
     diff_tae |= diff;
 
     // --------------------------------------------------------------------------
@@ -232,7 +300,13 @@ StatusCode L0MuonMonitorInput::CompareTAE()
       }
     }
     // --------------------------------------------------------------------------
-
+    
+    // Fill maps with unmatched channel
+    if (fullDetail() && diff){
+      fillMaps(muontiles);
+      fillMaps(l0muontiles);
+    }
+    
     ++ntae;
   }
   if (ntae==0) return Error( "No valid time slice found",StatusCode::FAILURE,20);
@@ -240,9 +314,13 @@ StatusCode L0MuonMonitorInput::CompareTAE()
   // Histogram
   counter("EventProcessed")++;
   fill(m_summary,0,1.);
+  if (truncated_tae) {
+    counter("MuonTruncated")++;
+    fill(m_summary,1,1.);
+  }
   if (diff_tae) {
     counter("EventBad")++;
-    fill(m_summary,1,1.);
+    fill(m_summary,2,1.);
   }
   
   if (diff_tae) setFilterPassed(true);
@@ -252,7 +330,7 @@ StatusCode L0MuonMonitorInput::CompareTAE()
 //================================================================================================================================
 // getMuonTiles
 //================================================================================================================================
-StatusCode L0MuonMonitorInput::getMuonTiles(std::vector<LHCb::MuonTileID> & tiles, std::string rootInTes)
+StatusCode L0MuonMonitorInput::getMuonTiles(std::vector<LHCb::MuonTileID> & tiles, bool & truncated, std::string rootInTes)
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -272,7 +350,16 @@ StatusCode L0MuonMonitorInput::getMuonTiles(std::vector<LHCb::MuonTileID> & tile
   else {
     sc = m_muonBuffer->getTile(tiles);
     if (sc.isFailure() ) return Error( "Unable to get muon tiles (MuonRawBuffer Tool)",StatusCode::FAILURE,20);
+    LHCb::RawBankReadoutStatus ro_status = m_muonBuffer->status();
+    if (ro_status.status() != LHCb::RawBankReadoutStatus::OK) 
+      return Error( "Readout out status of muon is not OK",StatusCode::FAILURE,20);
+    for (unsigned int TellNum=0;TellNum<MuonDAQHelper_maxTell1Number;TellNum++){
+      for (unsigned int linkNum=0;linkNum<MuonDAQHelper_linkNumber;linkNum++){
+        truncated |= m_muonBuffer->LinkReachedHitLimit(TellNum,linkNum);
+      }
+    }
   }
+  
   m_muonBuffer->forceReset();
 
   sc = prop->setProperty( "RootInTES", "" );
@@ -283,10 +370,14 @@ StatusCode L0MuonMonitorInput::getMuonTiles(std::vector<LHCb::MuonTileID> & tile
 
 //================================================================================================================================
 // perform comparison 
+// - returns true if differences between the 2 list have been found, 
+// - modify the input list such that they contains only the hits which are missing in the other.
 //================================================================================================================================
 bool L0MuonMonitorInput::areDifferent(std::vector<LHCb::MuonTileID> & muontiles, std::vector<LHCb::MuonTileID> & l0muontiles)
 {
   bool difference = false;
+
+  std::vector<LHCb::MuonTileID> muontiles_tmp;
 
   // 1. check that all muon hits are match to a l0muon hit
   for (std::vector<LHCb::MuonTileID>::iterator itmuon=muontiles.begin(); itmuon<muontiles.end();++itmuon){
@@ -312,6 +403,7 @@ bool L0MuonMonitorInput::areDifferent(std::vector<LHCb::MuonTileID> & muontiles,
     if (itl0muon_matched<l0muontiles.end()) {
       l0muontiles.erase(itl0muon_matched);
     } else {
+      muontiles_tmp.push_back(*itmuon);
       difference = true;
     }
   }
@@ -319,7 +411,32 @@ bool L0MuonMonitorInput::areDifferent(std::vector<LHCb::MuonTileID> & muontiles,
   // 2. check that all l0muon hits have been matched
   if (l0muontiles.size()>0) difference = true;
 
+  // 3. finalize list of unmatched muon hits
+  muontiles.clear();
+  muontiles.insert(muontiles.end(), muontiles_tmp.begin(), muontiles_tmp.end());
+
   return difference;
   
+}
+
+void L0MuonMonitorInput::fillMaps(std::vector<LHCb::MuonTileID> & tiles)
+{
+  for (std::vector<LHCb::MuonTileID>::iterator ittile=tiles.begin(); ittile<tiles.end(); ++ittile){
+    int sta = ittile->station();
+    int qua = ittile->quarter();
+    int reg = ittile->region();
+    int f = 1<<reg;
+    
+    std::vector<LHCb::MuonTileID> pads = m_padsLayout[sta].tiles(*ittile);
+    for (std::vector<LHCb::MuonTileID>::iterator itpad=pads.begin(); itpad<pads.end(); ++itpad){
+      int X   = itpad->nX();
+      int Y   = itpad->nY();
+      double x = X+0.5;
+      if ( (qua==2) || (qua==3) ) x = -x;
+      double y = Y+0.5;
+      if ( (qua==1) || (qua==2) ) y = -y;
+      fill(m_pads[sta][reg],x*f,y*f,1.);
+    }
+  }
 }
 

@@ -12,6 +12,7 @@
 #include "Event/RecHeader.h"
 #include "Event/ODIN.h"
 #include "Event/L0MuonCandidate.h"
+#include "MuonDet/MuonDAQHelper.h"
 
 #include "L0MuonKernel/MonUtilities.h"
 
@@ -38,9 +39,9 @@ L0MuonMuonComp::L0MuonMuonComp( const std::string& name,
   declareProperty( "MuonZS"  , m_muonZS = true);
   declareProperty( "OutputFileName"  , m_outputFileName = "");
   declareProperty( "PDM",m_pdm=false);
-  declareProperty( "PrintOutSplashes",m_splash=true);
+  declareProperty( "PrintOutSplashes",m_splash=false);
   declareProperty( "TAE_ignore_border",m_tae_ignore_border=false);
-  declareProperty( "Use_central_finetime",m_use_central_finetime=true);
+  declareProperty( "Use_central_finetime",m_use_central_finetime=false);
 }
 
 //=============================================================================
@@ -201,6 +202,14 @@ StatusCode L0MuonMuonComp::execute() {
 
     diffCandAndData(candpads,datapads);
   }
+
+  // Check muon ro saturation
+  bool truncated = false;
+  sc = isMuonTruncatedTAE( truncated );
+  if (sc==StatusCode::FAILURE){
+    return Error("can not get muon readout saturation status",StatusCode::SUCCESS,100);
+  }
+  if (truncated) return StatusCode::SUCCESS;
   
   // Compare tiles from L0Muon and muon
   std::vector<std::pair<LHCb::MuonTileID,int > >  l0muontiles;
@@ -335,7 +344,7 @@ StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileI
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
-
+    
     setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
@@ -801,11 +810,13 @@ void L0MuonMuonComp::errorSummary() {
     tilesCounterSummary(m_tiles_absent);
   }
 
-  m_fout<<"\n* Present\n"; 
-  tilesCounterSummary(m_tiles_present);
-  m_fout<<"\n* PresentBis # check\n"; 
-  tilesCounterSummary(m_tiles_present_bis);
-
+  if (fullDetail()){
+    m_fout<<"\n* Present\n"; 
+    tilesCounterSummary(m_tiles_present);
+    m_fout<<"\n* PresentBis # check\n"; 
+    tilesCounterSummary(m_tiles_present_bis);
+  }
+  
 }
 
 void L0MuonMuonComp::olsCounterSummary() {
@@ -955,4 +966,32 @@ void L0MuonMuonComp::initFullTileList()
   tiles=stripV_layout.tiles();
   m_full_tile_list.insert(m_full_tile_list.end(),tiles.begin(),tiles.end());
 
+}
+
+StatusCode L0MuonMuonComp::isMuonTruncatedTAE( bool & truncated)
+{
+
+  // Loop over time slots
+  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+    
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+
+    if (m_muonBuffer) { // If muon raw buffer tool
+      IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
+      if( prop ) {
+        StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
+        if( sc.isFailure() )
+          return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
+      } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
+      for (unsigned int TellNum=0;TellNum<MuonDAQHelper_maxTell1Number;TellNum++){
+        for (unsigned int linkNum=0;linkNum<MuonDAQHelper_linkNumber;linkNum++){
+          truncated |= m_muonBuffer->LinkReachedHitLimit(TellNum,linkNum);
+        }
+      }
+    } else  return Error( "Unable to find the MuonRawBuffer Tool",  StatusCode::FAILURE);
+  }
+  
+  return StatusCode::SUCCESS;
+  
 }

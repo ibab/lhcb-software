@@ -47,6 +47,7 @@ private:
 
   // Histogram
   AIDA::IHistogram1D * m_summary;
+  AIDA::IHistogram2D * m_pads[5][4];
 
 private:
 
@@ -55,10 +56,11 @@ private:
   /// Compare the hits in muon and l0muon data in TAE mode and fill histogram
   StatusCode CompareTAE();
   /// Get the hits seen by the muon
-  StatusCode getMuonTiles(std::vector<LHCb::MuonTileID> & tiles, std::string rootInTes = "");
-
+  StatusCode getMuonTiles(std::vector<LHCb::MuonTileID> & tiles, bool & truncated, std::string rootInTes = "");
   /// Check if both list contains the same muon tiles
   bool areDifferent(std::vector<LHCb::MuonTileID> & muontiles, std::vector<LHCb::MuonTileID> & l0muontiles);
+  /// Fill maps with unmatched tiles
+  void fillMaps(std::vector<LHCb::MuonTileID> & tiles);
 
   std::map<int,std::string> m_tae_items;    // Definitions of tae slots
   std::vector<LHCb::MuonTileID> m_optlinks; // List of optical links in error 
@@ -66,6 +68,11 @@ private:
   IMuonRawBuffer*      m_muonBuffer;  // Muon decoding tool
   IL0MuonInputTool *   m_inputTool;   // L0Muon hits tool
   IL0MuonOLErrorTool * m_olerrorTool; // L0Muon hits tool
+
+  MuonLayout m_padsLayout[5]; // Layouts of logical pads in each station
+
+  bool m_offline;
+  std::set<LHCb::MuonTileID> m_bad_tiles;
   
 };
 #endif // COMPONENT_L0MUONMONITORINPUT_H

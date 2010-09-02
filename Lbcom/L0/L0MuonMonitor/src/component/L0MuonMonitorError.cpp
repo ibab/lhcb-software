@@ -381,9 +381,12 @@ StatusCode L0MuonMonitorError::execute() {
     for (iterr=procPU->begin(); iterr!=procPU->end(); ++iterr){
       const LHCb::L0MuonError *err = (*iterr);
   
-////     int bcid = err->bcid();
-////     if (bcid>0) fill(m_bcsu_src[quarter][board],0,1.);
-  
+//       int bcid = err->bcid();
+//       if (bcid>0) {
+//         err->index(quarter,board,pu);
+//         fill(m_bcsu_src[quarter][board],pu+1,1.);
+//       }
+      
       int hardware = err->hardware();
       if (hardware>0) {
         err->index(quarter,board,pu);
@@ -406,8 +409,11 @@ StatusCode L0MuonMonitorError::execute() {
       }
       
       int bcid = err->bcid();
-      if (bcid>0) fill(m_bcsu_src[quarter][board],0,1.);
-  
+      if (bcid>0) {
+        err->index(quarter,board,pu);
+        fill(m_bcsu_src[quarter][board],0,1.);
+      }
+      
       int hardware = err->hardware();
       if (hardware>0) {
         err->index(quarter,board,pu);
@@ -435,6 +441,12 @@ StatusCode L0MuonMonitorError::execute() {
     for (iterr=ctrlCUSU->begin(); iterr!=ctrlCUSU->end(); ++iterr){
       const LHCb::L0MuonError *err = (*iterr);
   
+//       int bcid = err->bcid();
+//       if (bcid>0) {
+//         err->index(quarter,board,pu);
+//         fill(m_sync_ctrl_src,quarter+4,1.); // requires to change histogram range
+//       }
+
       int status = (err->status()&0xC);
       if (status>0) {
         err->index(quarter,board,pu);

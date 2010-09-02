@@ -42,6 +42,7 @@ private:
   StatusCode getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles);
   StatusCode getMuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & muonpads);
   StatusCode getCandPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & candpads);
+  StatusCode isMuonTruncatedTAE( bool & truncated);
 
   bool diffCandAndData(std::vector<std::pair<LHCb::MuonTileID,int > > & candpads,
                        std::vector<std::pair<LHCb::MuonTileID,int > > & datapads);

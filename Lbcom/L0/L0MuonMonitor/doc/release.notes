@@ -4,6 +4,19 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2010-08-30 - Julien Cogan
+ - L0MuonMonitorInput : 
+   - check if muon read out is saturated before processing events
+   - add hit maps of bad channels (if FullDetail is enabled)
+   - write out list list of bad channels at the end of the job (if Offline 
+     and FullDetail are enabled)
+ - L0MuonMuonComp :
+   - check if muon read out is saturated before processing events
+ - L0MuonMonitorData : 
+   - protect FAILURE in case of missing container
+ - L0MuonMoniError : 
+   - don't fill histo per quarter for PU bcid errors
+     
 !========================== L0MuonMonitor v2r0p1 2010-06-21 =================
 ! 2010-06-10 - Marco Cattaneo
  - Fix windows compiler warnings

@@ -124,7 +124,7 @@ StatusCode L0MuonMonitorData::execute() {
       tae_size = int(odin->timeAlignmentEventWindow());
     } else {
       Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
-              ,StatusCode::FAILURE,50).ignore();
+              ,StatusCode::SUCCESS,50).ignore();
     }
   }
 
@@ -137,7 +137,7 @@ StatusCode L0MuonMonitorData::execute() {
     // Get pads
     std::vector<LHCb::MuonTileID> l0muonpads;
     sc = m_inputTool->getPads(l0muonpads, rootInTes);
-    if (sc.isFailure() ) return Error( "Unable to get l0muon pads",StatusCode::FAILURE,20);
+    if (sc.isFailure() ) return Error( "Unable to get l0muon pads",StatusCode::SUCCESS,20);
   
     // Fill histos
     for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end(); ++itpad){
