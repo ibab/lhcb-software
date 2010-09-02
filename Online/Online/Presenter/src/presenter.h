@@ -1,8 +1,9 @@
-// $Id: presenter.h,v 1.104 2010-08-22 09:33:55 robbep Exp $
+// $Id: presenter.h,v 1.105 2010-09-02 15:21:10 robbep Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
 #include <string>
+#include <malloc.h>
 
 #ifdef WIN32
 #pragma warning( push )
