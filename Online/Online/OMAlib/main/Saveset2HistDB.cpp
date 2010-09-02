@@ -1,5 +1,8 @@
-// $Id: Saveset2HistDB.cpp,v 1.8 2010-09-01 09:58:13 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.9 2010-09-02 09:57:20 ggiacomo Exp $
 #include <iostream>
+#ifndef _WIN32
+#include <stdlib.h>
+#endif
 #include <TFile.h>
 #include <TKey.h>
 #include <TH1.h>
@@ -92,7 +95,14 @@ int main(int narg,char **argv ) {
   // connect to DB
   if(DBpw == "") {
    char  *pass;
+#ifdef _WIN32
+   pass << std::cin; 
+   cout << "Enter the " << DBuser <<" password on "<<DB<<":";
+   std::cin >> DBpw;
+   std::cout<<endl;
+#else
    pass=getpass("Enter your password:");   
+#endif
    DBpw=pass;
   }
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
