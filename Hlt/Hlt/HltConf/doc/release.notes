@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.488 2010-08-26 20:34:38 graven Exp $ 
+! $Id: release.notes,v 1.489 2010-09-02 14:05:36 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-09-02 - Gerhard Raven
+ - update routing bit 45 to avoid TrackPhoton pollution, and add bits for 
+   Hlt1Track...
 
 !========================== HltConf v8r3 2010-07-19 ===================
 ! 2010-08-25 - V. Gligorov

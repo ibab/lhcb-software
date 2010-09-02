@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.207 2010-08-26 20:34:38 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.208 2010-09-02 14:05:36 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -214,7 +214,7 @@ class HltConf(LHCbConfigurableUser):
                       , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
                       , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
-                      , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
+                      , 45 : "HLT_PASS_RE('Hlt1Photon.*Decision')"
                       , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
                       , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
                       , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
@@ -225,6 +225,9 @@ class HltConf(LHCbConfigurableUser):
                       , 53 : "HLT_PASS_RE('Hlt1.*DiHadron.*Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1.*(SingleMuon|DiMuon|MuTrack).*Decision')"
                       , 55 : "HLT_PASS_RE('Hlt1Track.*Decision')"  
+                      , 56 : "HLT_PASS_RE('Hlt1TrackAllL0.*Decision')"
+                      , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
+                      , 58 : "HLT_PASS_RE('Hlt1TrackPhoton.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
