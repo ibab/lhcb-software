@@ -145,15 +145,16 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
   if( !m_skipC ){
     double chi2e = 9999;
     double trajL = 9999;
+    const LHCb::Track* etrack = NULL;
     if (exist<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc)) {
       LHCb::Calo2Track::ITrHypoTable2D* etable = get<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = etable -> inverse()->relations(hypo);
       if ( !range.empty() ){
-        chi2e= range.front().weight();        
-        const LHCb::Track* track = range.front();
-        if( NULL != track ){
+        chi2e= range.front().weight();   
+        etrack = range.front();
+        if( NULL != etrack ){
           LHCb::ProtoParticle* dummy = new LHCb::ProtoParticle();
-          dummy->setTrack( track );
+          dummy->setTrack( etrack );
           dummy->addToCalo ( hypo );
           //CaloElectron->caloTrajectory must be after addToCalo
           if ( m_electron->set(dummy) )
@@ -162,20 +163,26 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
         }
       } 
     }else
-      counter( "Missing "+ m_emLoc) += 1; 
+      counter( "Missing "+ m_emLoc) += 1;
 
+    m_track[CaloMatchType::ElectronMatch]=etrack;
     m_data[ElectronMatch] = chi2e;
     m_data[TrajectoryL]= trajL;
 
     // brem matching
     double chi2b = 9999;
+    const LHCb::Track* btrack = NULL;
     if (exist<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc)) {
       LHCb::Calo2Track::ITrHypoTable2D* btable = get<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = btable -> inverse()->relations(hypo);
-      if ( !range.empty() ) chi2b= range.front().weight(); 
+      if ( !range.empty() ){
+        chi2b= range.front().weight(); 
+        btrack = range.front();
+      }
     }else
       counter( "Missing "+ m_bmLoc) += 1; 
 
+    m_track[CaloMatchType::BremMatch]=btrack;
     m_data[BremMatch] = chi2b;
   }
   
@@ -202,6 +209,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
   }
   // link 2 cluster :
   const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );
+  m_clusters[CaloClusterType::SplitOrMain]=cluster;
+  m_clusters[CaloClusterType::Main]=  LHCb::CaloAlgUtils::ClusterFromHypo( hypo , false); // get the main cluster
   if( 0 != cluster )return estimator( cluster , hypo);
   return false;
 }
@@ -249,7 +258,7 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
       const LHCb::CaloDigit* dig = (*ie).digit();
       if( NULL == dig)continue;
       LHCb::CaloCellID id = dig->cellID();
-      if( id.area() != sid.area() || fabs(id.col() - sid.col()) > 1 ||  fabs(id.row() - sid.row()) > 1 )continue;
+      if( id.area() != sid.area() || abs((int)id.col() - (int)sid.col()) > 1 ||  abs((int)id.row() - (int)sid.row()) > 1)continue;
       if(id.col() <= sid.col() && id.row() >= sid.row() )e4s[0] += dig->e()*(*ie).fraction();
       if(id.col() >= sid.col() && id.row() >= sid.row() )e4s[1] += dig->e()*(*ie).fraction();
       if(id.col() >= sid.col() && id.row() <= sid.row() )e4s[2] += dig->e()*(*ie).fraction();
@@ -283,12 +292,18 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     if (NULL != fromHypo && fromHypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0)
       clus = LHCb::CaloAlgUtils::ClusterFromHypo( fromHypo , false); // get the main cluster
     double chi2 = 9999;
+    const LHCb::Track* ctrack = NULL;
     if (exist<LHCb::Calo2Track::IClusTrTable> (m_cmLoc)) {
       LHCb::Calo2Track::IClusTrTable* ctable = get<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
       const LHCb::Calo2Track::IClusTrTable::Range range = ctable -> relations(clus);
-      if ( !range.empty() ) chi2= range.front().weight();
+      if ( !range.empty() ){
+        chi2= range.front().weight();
+        ctrack = range.front();
+      }
     }else
       counter( "Missing "+ m_cmLoc) += 1;
+
+    m_track[CaloMatchType::ClusterMatch]=ctrack;
     m_data[ClusterMatch] = chi2;
   }
   return true;
@@ -300,5 +315,6 @@ void CaloHypoEstimator::clean(){
   m_data.clear();
   m_cluster=NULL;
   m_hypo=NULL;
+  m_track.clear();
   return;
 }

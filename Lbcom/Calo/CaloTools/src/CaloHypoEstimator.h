@@ -46,7 +46,17 @@ public:
     clean();
   } 
   virtual ICaloHypo2Calo* hypo2Calo(){return m_toCalo;};  
-
+  virtual const LHCb::Track* toTrack(CaloMatchType::MatchType match){
+    caloMatchType::iterator it = m_track.find( match );
+    if( it == m_track.end() )return NULL;
+    return (*it).second;
+  }
+  virtual const LHCb::CaloCluster* toCluster(CaloClusterType::ClusterType clus=CaloClusterType::SplitOrMain){
+    caloClusterType::iterator it = m_clusters.find( clus );
+    if( it == m_clusters.end() )return NULL;
+    return (*it).second;
+  }
+  
 
   StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
   bool status(){return m_status;}
@@ -63,6 +73,8 @@ private:
   bool m_seed;
   bool m_neig;
   caloDataType m_data;
+  caloMatchType m_track;
+  caloClusterType m_clusters;
   LHCb::CaloHypo* m_hypo ;
   LHCb::CaloCluster* m_cluster;
   std::map<std::string,std::string> m_pidLoc;

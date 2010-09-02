@@ -47,7 +47,9 @@ public:
   LHCb::State closestState(LHCb::CaloCluster* cluster,LHCb::ParticleID pid = LHCb::ParticleID(211));
   LHCb::State closestState(LHCb::CaloPosition calopos,LHCb::ParticleID pid = LHCb::ParticleID(211));
   LHCb::State closestState(LHCb::CaloCellID   cellID ,LHCb::ParticleID pid = LHCb::ParticleID(211));
+  const LHCb::Track* track(){return m_track;};  
   
+    
 
 protected:
   LHCb::State closestState(double x, double y,LHCb::ParticleID pid = LHCb::ParticleID(211));
