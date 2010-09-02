@@ -218,6 +218,8 @@ class VTree(object):
     #    #only increase the docstring if the process completes OK
     #    self.__doc__+=docstr
     #    return ret
+
+    
         
     def __append_element__(self, child):
         '''internal method to append validated elements'''
@@ -245,6 +247,51 @@ class VTree(object):
             if self.__element__.text is None or self.__element__.text.strip()=='':
                 self.__element__.getchildren()[-2].tail=str(self.__element__.text)
         return True
+
+
+    def __insert_element__(self,child,index):
+        '''internal method to insert validated elements'''
+        element_size=len(self.__element__.getchildren())
+
+        if (element_size==0 or index>=element_size):
+            return self.__append_element__(child)
+
+        if (index<=(-element_size)):
+            real_index=0
+        elif (index<0):
+            real_index=index + element_size
+        else:
+            real_index=index     
+        self.__element__.insert(real_index,child.__element__)
+        
+        #set the level
+        # now size==element_size+1
+        if real_index!=element_size-1:
+            self.__element__.getchildren()[real_index].tail=self.__element__.getchildren()[real_index+1].tail
+        else:
+            self.__element__.getchildren()[real_index].tail=self.__element__.getchildren()[real_index+1].tail[:-1]
+
+        return True
+
+    def __remove_element__(self,child):
+        '''internal method to remove validated elements'''
+        children=self.__element__.getchildren()
+        element_size=len(children)
+        if element_size==1:
+            self.__element__.remove(child.__element__)
+            # remove text if there were only \n's or \t's
+            if self.__element__.text is not None and self.__element__.text.strip()=='':
+                self.__element__.text=None
+            return True
+        elif element_size>1:
+            if child.__element__==children[element_size-1]:
+                # copy tail on the previous child
+                children[-2].tail=children[-1].tail
+            self.__element__.remove(child.__element__) 
+            return True
+        else:
+            raise TypeError, 'This should never happen since child is supposed to belong to the children of the element'
+            return False
 
     def test(self):
         '''tests that the object is OK'''
@@ -330,7 +377,8 @@ class VTree(object):
         '''Add the child to the first mother'''
         return self.find(mother)[0].add(child)
 
-    def add(self, child):
+    # ORDER IN SEQUENCES IS NOT CHECKED !!!
+    def add(self, child,index=None):
         '''add a child to the tree'''
         name=''
         if 'VTree' in child.__str__():
@@ -350,9 +398,28 @@ class VTree(object):
             raise TypeError, 'cannot add'+ name+ ' to ' + self.tag()+ ' as there are enough of this child already', name
             return False
         if 'VTree' in child.__str__():
-            return self.__append_element__(child)
+            if index is None:
+                return self.__append_element__(child)
+            else:
+                return self.__insert_element__(child,index)
         else:
-            return self.__append_element__(self.__schema__.create_default(name))
+            if index is None:
+                return self.__append_element__(self.__schema__.create_default(name))
+            else:
+                return self.__insert_element__(self.__schema__.create_default(name),index)
+
+
+    def remove(self,child):
+        '''remove a child from the tree'''
+        if child.__element__ not in self.__element__.getchildren():
+            raise TypeError, 'This object does not contain this child, the child cannot be removed'
+            return False
+        if self.nChildren(child.tag())==self.__schema__.Tag_nChild(self.tag(),child.tag())[0]:
+            raise TypeError, 'cannot remove '+ child.tag()+ ' to ' + self.tag()+ ' as there will not be enough of this child'
+            return False
+        else:
+            return self.__remove_element__(child)
+        
     
     def value(self, val=None):
         '''return the existing value, or None
@@ -498,6 +565,7 @@ class Schema(object):
                         "unsignedLong",
                         "double",
                         "string",
+                        "normalizedString",
                         "boolean"]
         self.__types__=[]
         self.__typelement__={}
@@ -543,6 +611,8 @@ class Schema(object):
                         ]=(
                            self.__schemafile_long__
                            )
+            
+    # ORDER IN SEQUENCES IS NOT CHECKED !!!
     def __check__(self,element):
         '''internal method to check an element conforms to the schema'''
         #check tag
@@ -612,7 +682,7 @@ class Schema(object):
             if self.Tag_nChild(element.tag, child)[0]>0:
                 #print child, kiddic, element.tag
                 try:
-                    if self.Tag_nChild(element.tag, child)[0]<kiddic[child]:
+                    if self.Tag_nChild(element.tag, child)[0]>kiddic[child]:
                         raise AttributeError, ( 'element '+ element.tag+ 
                                                 ' has not enough copies of '+child +
                                                 ' for the schema'
@@ -625,9 +695,12 @@ class Schema(object):
                                             )
                     
             if self.Tag_nChild(element.tag, child)[1]>0:
-                if self.Tag_nChild(element.tag, child)[1]<kiddic[child]:
-                    print 'element', element.tag, 'has too many copies of',child ,'for the schema'
-                    return False
+                try:
+                    if self.Tag_nChild(element.tag, child)[1]<kiddic[child]:
+                        print 'element', element.tag, 'has too many copies of',child ,'for the schema'
+                        return False
+                except KeyError:
+                    pass
         return True
     
     def __str__(self):
@@ -782,7 +855,8 @@ class Schema(object):
         #print 'cast of', test ,'to', atype
         if 'string' in atype:
             return str(test)
-        
+        if 'normalizedString' in atype:
+            return str(test)
         a=False
         if 'unsigned' in atype: a=True
         
@@ -937,7 +1011,8 @@ class Schema(object):
             return None
         #print 'file', xmlfile, 'sucessfully validated against the schema'
         return VTree(rt,self,None,False)
-    
+
+
     def validate(self,xmlfile):
         '''parse an xml document and validate against this schema'''
         return self.parse(xmlfile)
@@ -1255,9 +1330,9 @@ class Schema(object):
         '''what are the allowed value types for this tag/attribute?'''
         if tag in self.__type_cache__.keys():
             return self.__type_cache__[tag]
-        if self.Tag_isSequence(tag):
-            self.__type_cache__[tag]=None
-            return None
+##         if self.Tag_isSequence(tag):
+##             self.__type_cache__[tag]=None
+##             return None
         ele=self.__getele__(tag)
         if ele is None:
             if tag in self.__basetypes__:

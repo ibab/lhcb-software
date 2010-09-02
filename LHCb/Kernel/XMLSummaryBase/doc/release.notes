@@ -4,6 +4,13 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+
+
+! 2010-08-02 - Nicolas Cousin
+ - Added __insert_element__ and __remove_element__ methods
+ - Added support for type 'normalizedString'
+ - Fixed a few minor bugs
+
 !======================== XmlSummaryBase v1r1 2010-05-21 =====================
 ! 2010-04-30 - Rob Lambert
  - Fixed bug from last commit, event count made a double
