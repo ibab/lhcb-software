@@ -285,9 +285,9 @@ StatusCode CaloPhotonIdAlg::evalParam(const LHCb::CaloHypo* hypo,
   energy = m_estimator->data(hypo, HypoE);
   et     = m_estimator->data(hypo, HypoEt);
   eSeed  = m_estimator->data(hypo, E1Hypo) ;
-  nSpd   = m_estimator->data(hypo, ToSpdM);
+  nSpd   = (int) m_estimator->data(hypo, ToSpdM);
   ePrs   = m_estimator->data(hypo, ToPrsE);
-  area   = LHCb::CaloCellID(m_estimator->data(hypo, CellID)).area();
+  area   = LHCb::CaloCellID( (LHCb::CaloCellID::ContentType) m_estimator->data(hypo, CellID) ).area();
   if( !m_estimator->status() )return StatusCode::FAILURE;
   return StatusCode::SUCCESS;
 }
