@@ -1,0 +1,11 @@
+package GaudiRootCnvTests
+author  Markus Frank
+version v0r1
+branches  cmt tests
+use GaudiPolicy v*
+
+apply_pattern QMTest
+
+private
+use GaudiExamples v*
+use RootCnv v* Online

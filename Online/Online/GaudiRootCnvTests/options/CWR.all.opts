@@ -1,0 +1,8 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/CWR.opts"
+EventSelector.Input  = {"DATAFILE='PFN:ROOTIO.1.dst' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:ROOTIO.1.mdst' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:ROOTIO.2.dst' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:ROOTIO.2.mdst' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:ROOTIO.3.mdst' SVC='Gaudi::RootEvtSelector'"};
+EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:ROOTIO.all.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };

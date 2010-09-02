@@ -1,0 +1,123 @@
+JobOptionsSvc        INFO
+//GP:================================================================================
+//GP: include "/afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/GaudiExamples/options/POOLIOCollWrite.opts" (0,0)
+ApplicationMgr.TopAlg =  [ "GaudiSequencer/EventAlgs" ] ;               //GP: (1,1)
+EventAlgs.Members =  [ "EvtCollectionWrite/Writer" ] ;                  //GP: (1,1)
+EventAlgs.VetoObjects =  [ "FSR" ] ;                                    //GP: (1,1)
+ToolSvc.SequencerTimerTool.OutputLevel = 4;                             //GP: (1,1)
+EventSelector.PrintFreq = 100;                                          //GP: (1,1)
+ApplicationMgr.EvtMax = -1;                                             //GP: (1,1)
+ApplicationMgr.Histogrampersistency = "NONE";                           //GP: (1,1)
+//GP: include "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10p1/GaudiPoolDb/options/GaudiPoolDbRoot.opts" (20,10)
+ApplicationMgr.ExtSvc +=  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" , "PoolDbCacheSvc/PoolDbCacheSvc" , "PoolDbCnvSvc/PoolRootEvtCnvSvc" , "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc" , "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc" ] ;//GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootEvtCnvSvc" ] ;           //GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootTreeEvtCnvSvc" ] ;       //GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootKeyEvtCnvSvc" ] ;        //GP: (1,1)
+PoolRootEvtCnvSvc.DbType = "POOL_ROOT";                                 //GP: (1,1)
+PoolRootKeyEvtCnvSvc.DbType = "POOL_ROOTKEY";                           //GP: (1,1)
+PoolRootTreeEvtCnvSvc.DbType = "POOL_ROOTTREE";                         //GP: (1,1)
+PoolDbCacheSvc.Dlls =  [ "lcg_RootStorageSvc" , "GaudiKernelDict" ] ;   //GP: (1,1)
+PoolDbCacheSvc.OutputLevel = 4;                                         //GP: (1,1)
+PoolDbCacheSvc.DomainOpts =  [ "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" ] ;//GP: (1,1)
+ApplicationMgr.ExtSvc +=  [ "PoolDbCnvSvc/FileRecordCnvSvc" ] ;         //GP: (1,1)
+FileRecordPersistencySvc.CnvServices +=  [ "FileRecordCnvSvc" ] ;       //GP: (1,1)
+FileRecordCnvSvc.DbType = "POOL_ROOTTREE";                              //GP: (1,1)
+FileRecordCnvSvc.ShareFiles = "YES";                                    //GP: (1,1)
+FileRecordDataSvc.ForceLeaves = 1;                                      //GP: (1,1)
+FileRecordDataSvc.EnableFaultHandler = 1;                               //GP: (1,1)
+FileRecordDataSvc.RootCLID = 1;                                         //GP: (1,1)
+PoolRootEvtCnvSvc.EnableIncident = 1;                                   //GP: (1,1)
+PoolRootKeyEvtCnvSvc.EnableIncident = 1;                                //GP: (1,1)
+PoolRootTreeEvtCnvSvc.EnableIncident = 1;                               //GP: (1,1)
+//GP: end  "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10p1/GaudiPoolDb/options/GaudiPoolDbRoot.opts" (36,1)
+ApplicationMgr.ExtSvc +=  [ "TagCollectionSvc/EvtTupleSvc" ] ;          //GP: (20,10)
+EvtTupleSvc.Output =  [ "EvtColl DATAFILE='PFN:POOLIO.tags' OPT='RECREATE' TYP='POOL_ROOTTREE'" ] ;//GP: (20,10)
+EventSelector.Input =  [ "DATAFILE='PFN:POOLIO.dst'   TYP='POOL_ROOT' OPT='READ'" ] ;//GP: (20,10)
+EventSelector.Input +=  [ "DATAFILE='PFN:POOLIO.mdst'  TYP='POOL_ROOT' OPT='READ'" ] ;//GP: (20,10)
+FileCatalog.Catalogs =  [ "xmlcatalog_file:POOLIO.xml" ] ;              //GP: (20,10)
+//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/GaudiExamples/options/POOLIOCollWrite.opts" (34,1)
+//GP:================================================================================
+
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/GaudiExamples/options/POOLIOCollWrite.opts
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.1 $
+                                          running on lxplus240.cern.ch on Thu Sep  2 18:19:45 2010
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+EvtTupleSvc          INFO Added stream file:PFN:POOLIO.tags as EvtColl
+EventAlgs            INFO Member list: EvtCollectionWrite/Writer
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+IODataManager        INFO Referring to dataset POOLIO.tags by its file ID:6E670BE8-ADB6-DF11-873A-000423D99AB2
+RootDBase.open    SUCCESS POOLIO.tags File version:52600
+PoolDbDatabaseCnv    INFO Recreate Database file:PFN:POOLIO.tags as /EvtColl
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOLIO.dst'   TYP='POOL_ROOT' OPT='READ'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+RootDBase.open    SUCCESS POOLIO.dst File version:52600
+PoolRootEvtCnvSvc    INFO Records token:[DB=3AAA74A2-ADB6-DF11-822C-000423D99AB2][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000012-00000000]
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+Writer               INFO ================ EVENT:1 RUN:999 ====== N(Track)=39 FAILED selection (<50) ============
+Writer               INFO ================ EVENT:2 RUN:999 ====== N(Track)=56 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:3 RUN:999 ====== N(Track)=20 FAILED selection (<50) ============
+Writer               INFO ================ EVENT:4 RUN:999 ====== N(Track)=78 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:5 RUN:999 ====== N(Track)=68 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:6 RUN:999 ====== N(Track)=87 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:7 RUN:999 ====== N(Track)=77 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:8 RUN:999 ====== N(Track)=56 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:9 RUN:999 ====== N(Track)=4 FAILED selection (<50) ============
+EventSelector     SUCCESS Reading Event record 101. Record number within stream 1: 101
+EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
+EventSelector     SUCCESS Reading Event record 301. Record number within stream 1: 301
+EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
+Writer               INFO ================ EVENT:500 RUN:999 ====== N(Track)=18 FAILED selection (<50) ============
+EventSelector     SUCCESS Reading Event record 501. Record number within stream 1: 501
+EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
+EventSelector     SUCCESS Reading Event record 701. Record number within stream 1: 701
+EventSelector     SUCCESS Reading Event record 801. Record number within stream 1: 801
+EventSelector     SUCCESS Reading Event record 901. Record number within stream 1: 901
+Writer               INFO ================ EVENT:1000 RUN:999 ====== N(Track)=78 PASSED selection (>=50) ============
+EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:POOLIO.mdst'  TYP='POOL_ROOT' OPT='READ'
+RootDBase.open    SUCCESS POOLIO.mdst File version:52600
+PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:84E9D6A2-ADB6-DF11-822C-000423D99AB2
+EventSelector     SUCCESS Reading Event record 1001. Record number within stream 2: 1
+Writer               INFO ================ EVENT:1 RUN:999 ====== N(Track)=39 FAILED selection (<50) ============
+Writer               INFO ================ EVENT:2 RUN:999 ====== N(Track)=56 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:3 RUN:999 ====== N(Track)=20 FAILED selection (<50) ============
+Writer               INFO ================ EVENT:4 RUN:999 ====== N(Track)=78 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:5 RUN:999 ====== N(Track)=68 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:6 RUN:999 ====== N(Track)=87 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:7 RUN:999 ====== N(Track)=77 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:8 RUN:999 ====== N(Track)=56 PASSED selection (>=50) ============
+Writer               INFO ================ EVENT:9 RUN:999 ====== N(Track)=4 FAILED selection (<50) ============
+EventSelector     SUCCESS Reading Event record 1101. Record number within stream 2: 101
+EventSelector     SUCCESS Reading Event record 1201. Record number within stream 2: 201
+EventSelector     SUCCESS Reading Event record 1301. Record number within stream 2: 301
+EventSelector     SUCCESS Reading Event record 1401. Record number within stream 2: 401
+Writer               INFO ================ EVENT:500 RUN:999 ====== N(Track)=18 FAILED selection (<50) ============
+EventSelector     SUCCESS Reading Event record 1501. Record number within stream 2: 501
+EventSelector     SUCCESS Reading Event record 1601. Record number within stream 2: 601
+EventSelector     SUCCESS Reading Event record 1701. Record number within stream 2: 701
+EventSelector     SUCCESS Reading Event record 1801. Record number within stream 2: 801
+EventSelector     SUCCESS Reading Event record 1901. Record number within stream 2: 901
+Writer               INFO ================ EVENT:1000 RUN:999 ====== N(Track)=78 PASSED selection (>=50) ============
+EventLoopMgr         INFO No more events in event selection
+ApplicationMgr       INFO Application Manager Stopped successfully
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+EvtTupleSvc          INFO NTuples saved successfully
+EvtTupleSvc.Evt...   INFO Disconnected data IO:6E670BE8-ADB6-DF11-873A-000423D99AB2[POOLIO.tags]
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootEvtCnvSvc    INFO Disconnected data IO:3AAA74A2-ADB6-DF11-822C-000423D99AB2[POOLIO.dst]
+PoolRootEvtCnvSvc    INFO Disconnected data IO:84E9D6A2-ADB6-DF11-822C-000423D99AB2[POOLIO.mdst]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully
+Number of MyVertex instances:0
+Number of MyTrack instances:0

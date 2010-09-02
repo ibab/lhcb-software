@@ -1,0 +1,190 @@
+Warning in <TClass::TClass>: no dictionary for class DataObject is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Collision is available
+Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyVertex,Containers::KeyedObjectManager<Containers::hashmap> > is available
+Warning in <TClass::TClass>: no dictionary for class ObjectContainerBase is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyVertex is available
+Warning in <TClass::TClass>: no dictionary for class KeyedObject<int> is available
+Warning in <TClass::TClass>: no dictionary for class ContainedObject is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Event> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyTrack> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::MyTrack> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
+Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> > is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyTrack is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyVertex> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::MyVertex> is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::RootObjectRefs is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::RootRef is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Counter is available
+File ROOTIO.merge.dst DOES NOT EXIST!
+File ROOTIO.merge.dst DOES NOT EXIST!
++++ Opened new output file ROOTIO.merge.dst.
+Tree:Event 0
++++ Created new Tree Event.
+Tree:FileRecords 0
++++ Created new Tree FileRecords.
++++ section ['/Event'][0]                                           Start:       0 ...      500 [500 entries]
++++ section ['/Event#R'][0]                                         Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_0'][0]                               Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_0#R'][0]                             Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_0/MyVertices'][0]                    Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_1'][0]                               Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_1#R'][0]                             Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_2'][0]                               Start:       0 ...      500 [500 entries]
++++ section ['/Event/Collision_2#R'][0]                             Start:       0 ...      500 [500 entries]
++++ section ['/Event/Header'][0]                                    Start:       0 ...      500 [500 entries]
++++ section ['/Event/Header#R'][0]                                  Start:       0 ...      500 [500 entries]
++++ section ['/Event/MyTracks'][0]                                  Start:       0 ...      500 [500 entries]
++++ section ['/Event/MyTracks#R'][0]                                Start:       0 ...      500 [500 entries]
++++ section ['/Event/Next'][0]                                      Start:       0 ...      500 [500 entries]
++++ section ['/Event/Next#R'][0]                                    Start:       0 ...      500 [500 entries]
++++ section ['/Event/Next/Header'][0]                               Start:       0 ...      500 [500 entries]
++++ section ['/Event/Next/Header#R'][0]                             Start:       0 ...      500 [500 entries]
++++ section ['/Event/NextNext'][0]                                  Start:       0 ...      500 [500 entries]
++++ section ['/Event/NextNext#R'][0]                                Start:       0 ...      500 [500 entries]
++++ section ['/Event/NextNext/Header'][0]                           Start:       0 ...      500 [500 entries]
++++ section ['/Event/NextNext/Header#R'][0]                         Start:       0 ...      500 [500 entries]
++++ section ['/Event/Prev'][0]                                      Start:       0 ...      500 [500 entries]
++++ section ['/Event/Prev#R'][0]                                    Start:       0 ...      500 [500 entries]
++++ section ['/Event/Prev/Header'][0]                               Start:       0 ...      500 [500 entries]
++++ section ['/Event/Prev/Header#R'][0]                             Start:       0 ...      500 [500 entries]
++++ section ['/Event/PrevPrev'][0]                                  Start:       0 ...      500 [500 entries]
++++ section ['/Event/PrevPrev#R'][0]                                Start:       0 ...      500 [500 entries]
++++ section ['/Event/PrevPrev/Header'][0]                           Start:       0 ...      500 [500 entries]
++++ section ['/FileRecords'][0]                                     Start:       0 ...        1 [1 entries]
++++ section ['/FileRecords#R'][0]                                   Start:       0 ...        1 [1 entries]
++++ section ['/FileRecords/EvtCount'][0]                            Start:       0 ...        1 [1 entries]
++++ section ['/FileRecords/EvtCount#R'][0]                          Start:       0 ...        1 [1 entries]
++++ section ['/FileRecords/SumCount'][0]                            Start:       0 ...        1 [1 entries]
++++ section ['Containers'][0]                                       Start:       0 ...       16 [16 entries]
++++ section ['Databases'][0]                                        Start:       0 ...        1 [1 entries]
++++ section ['Links'][0]                                            Start:       0 ...       18 [18 entries]
++++ Added 38 Sections entries with 1547 bytes in total.
+TFile**		ROOTIO.merge.dst
+ TFile*		ROOTIO.merge.dst
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x48eb2e0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x48ed560
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x4cc4770
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x4e78e60
+  KEY: TTree	Event;2	Root data for Gaudi
+  KEY: TTree	FileRecords;2	Root data for Gaudi
+  KEY: TTree	Refs;2	Root Section data
+  KEY: TTree	Sections;2	Root Section data
+File ROOTIO.merge.dst EXISTS!
+File ROOTIO.merge.dst EXISTS!
++++ Opened new output file ROOTIO.merge.dst.
+Tree:Event 0
++++ Merged tree: Event res=1
+Tree:FileRecords 0
++++ Merged tree: FileRecords res=1
++++ section ['/Event'][0]                                           Start:     500 ...     1000 [500 entries]
++++ section ['/Event#R'][0]                                         Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_0'][0]                               Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_0#R'][0]                             Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_0/MyVertices'][0]                    Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_1'][0]                               Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_1#R'][0]                             Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_2'][0]                               Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Collision_2#R'][0]                             Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Header'][0]                                    Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Header#R'][0]                                  Start:     500 ...     1000 [500 entries]
++++ section ['/Event/MyTracks'][0]                                  Start:     500 ...     1000 [500 entries]
++++ section ['/Event/MyTracks#R'][0]                                Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Next'][0]                                      Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Next#R'][0]                                    Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Next/Header'][0]                               Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Next/Header#R'][0]                             Start:     500 ...     1000 [500 entries]
++++ section ['/Event/NextNext'][0]                                  Start:     500 ...     1000 [500 entries]
++++ section ['/Event/NextNext#R'][0]                                Start:     500 ...     1000 [500 entries]
++++ section ['/Event/NextNext/Header'][0]                           Start:     500 ...     1000 [500 entries]
++++ section ['/Event/NextNext/Header#R'][0]                         Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Prev'][0]                                      Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Prev#R'][0]                                    Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Prev/Header'][0]                               Start:     500 ...     1000 [500 entries]
++++ section ['/Event/Prev/Header#R'][0]                             Start:     500 ...     1000 [500 entries]
++++ section ['/Event/PrevPrev'][0]                                  Start:     500 ...     1000 [500 entries]
++++ section ['/Event/PrevPrev#R'][0]                                Start:     500 ...     1000 [500 entries]
++++ section ['/Event/PrevPrev/Header'][0]                           Start:     500 ...     1000 [500 entries]
++++ section ['/FileRecords'][0]                                     Start:       1 ...        2 [1 entries]
++++ section ['/FileRecords#R'][0]                                   Start:       1 ...        2 [1 entries]
++++ section ['/FileRecords/EvtCount'][0]                            Start:       1 ...        2 [1 entries]
++++ section ['/FileRecords/EvtCount#R'][0]                          Start:       1 ...        2 [1 entries]
++++ section ['/FileRecords/SumCount'][0]                            Start:       1 ...        2 [1 entries]
++++ section ['Containers'][0]                                       Start:      16 ...       32 [16 entries]
++++ section ['Databases'][0]                                        Start:       1 ...        2 [1 entries]
++++ section ['Links'][0]                                            Start:      18 ...       36 [18 entries]
++++ Added 38 Sections entries with 1607 bytes in total.
+TFile**		ROOTIO.merge.dst
+ TFile*		ROOTIO.merge.dst
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x4e34540
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x4ec2cd0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x4eb5ec0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x4f01dd0
+  KEY: TTree	Event;4	Root data for Gaudi
+  KEY: TTree	FileRecords;4	Root data for Gaudi
+  KEY: TTree	Refs;4	Root Section data
+  KEY: TTree	Sections;4	Root Section data
+File ROOTIO.merge.dst EXISTS!
+File ROOTIO.merge.dst EXISTS!
++++ Opened new output file ROOTIO.merge.dst.
+Tree:Event 0
++++ Merged tree: Event res=1
+Tree:FileRecords 0
++++ Merged tree: FileRecords res=1
++++ section ['/Event'][0]                                           Start:    1000 ...     1500 [500 entries]
++++ section ['/Event#R'][0]                                         Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_0'][0]                               Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_0#R'][0]                             Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_0/MyVertices'][0]                    Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_1'][0]                               Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_1#R'][0]                             Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_2'][0]                               Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Collision_2#R'][0]                             Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Header'][0]                                    Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Header#R'][0]                                  Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/MyTracks'][0]                                  Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/MyTracks#R'][0]                                Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Next'][0]                                      Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Next#R'][0]                                    Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Next/Header'][0]                               Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Next/Header#R'][0]                             Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/NextNext'][0]                                  Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/NextNext#R'][0]                                Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/NextNext/Header'][0]                           Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/NextNext/Header#R'][0]                         Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Prev'][0]                                      Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Prev#R'][0]                                    Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Prev/Header'][0]                               Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/Prev/Header#R'][0]                             Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/PrevPrev'][0]                                  Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/PrevPrev#R'][0]                                Start:    1000 ...     1500 [500 entries]
++++ section ['/Event/PrevPrev/Header'][0]                           Start:    1000 ...     1500 [500 entries]
++++ section ['/FileRecords'][0]                                     Start:       2 ...        3 [1 entries]
++++ section ['/FileRecords#R'][0]                                   Start:       2 ...        3 [1 entries]
++++ section ['/FileRecords/EvtCount'][0]                            Start:       2 ...        3 [1 entries]
++++ section ['/FileRecords/EvtCount#R'][0]                          Start:       2 ...        3 [1 entries]
++++ section ['/FileRecords/SumCount'][0]                            Start:       2 ...        3 [1 entries]
++++ section ['Containers'][0]                                       Start:      32 ...       48 [16 entries]
++++ section ['Databases'][0]                                        Start:       2 ...        3 [1 entries]
++++ section ['Links'][0]                                            Start:      36 ...       54 [18 entries]
++++ Added new GUID FID=390843FA-B6AC-11DF-9797-E8058A89BEEF to merge file.
++++ Added 38 Sections entries with 1636 bytes in total.
+TFile**		ROOTIO.merge.dst
+ TFile*		ROOTIO.merge.dst
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x4f0ea90
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x4faa710
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x4fd0800
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x4fd0ab0
+  KEY: TTree	Event;6	Root data for Gaudi
+  KEY: TTree	FileRecords;6	Root data for Gaudi
+  KEY: TTree	Refs;7	Root Section data
+  KEY: TTree	Sections;6	Root Section data
+Number of MyVertex instances:0
+Number of MyTrack instances:0

@@ -1,0 +1,4 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/CRD.opts"
+FileCatalog.Catalogs = {"xmlcatalog_file:POOLIO.xml"};
+EventSelector.Input  = {"DATAFILE='PFN:POOLIO.dst'  SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='PFN:POOLIO.mdst' SVC='Gaudi::RootEvtSelector'"};

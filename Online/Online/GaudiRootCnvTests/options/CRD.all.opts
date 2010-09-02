@@ -1,0 +1,4 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/CRD.opts"
+EventSelector.Input = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:ROOTIO.1.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
+EventSelector.Input+= {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:ROOTIO.2.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
+EventSelector.Input+= {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:ROOTIO.3.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};

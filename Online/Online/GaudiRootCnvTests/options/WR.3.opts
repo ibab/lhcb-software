@@ -1,0 +1,3 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/WR.opts"
+RootDst.Output             = "DATAFILE='PFN:ROOTIO.3.dst'  SVC='RootCnvSvc' OPT='RECREATE'";
+RootMini.Output            = "DATAFILE='PFN:ROOTIO.3.mdst' SVC='RootCnvSvc' OPT='RECREATE'";

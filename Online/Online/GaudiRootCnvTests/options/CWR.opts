@@ -1,0 +1,6 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
+ApplicationMgr.TopAlg = { "EvtCollectionWrite/Writer" };
+ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
+ReadAlg.OutputLevel        = 4;
+Writer.OutputLevel         = 2;
+Writer.NumMcTracks         = 1;

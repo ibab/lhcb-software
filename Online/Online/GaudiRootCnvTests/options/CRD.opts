@@ -1,0 +1,21 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
+ApplicationMgr.TopAlg      = { "ReadAlg"};
+ApplicationMgr.ExtSvc     += { "TagCollectionSvc/EvtTupleSvc" };
+RootCnvSvc.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
+ReadAlg.OutputLevel    = 3;
+
+RootCnvSvc.EnableIncident  = true;
+ApplicationMgr.ExtSvc                += { "FileRecordDataSvc" };
+FileRecordDataSvc.IncidentName        = "NEW_FILE_RECORD";
+FileRecordDataSvc.ForceLeaves         = true;
+FileRecordDataSvc.EnableFaultHandler  = true;
+FileRecordDataSvc.RootCLID            =    1;
+
+ApplicationMgr.ExtSvc                += { "Gaudi::RootCnvSvc/FileRecordCnvSvc" };
+FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+FileRecordCnvSvc.ShareFiles           = "YES";
+FileRecordCnvSvc.OutputLevel          = 1;
+
+ReadAlg.IncidentName = @FileRecordDataSvc.IncidentName;
+

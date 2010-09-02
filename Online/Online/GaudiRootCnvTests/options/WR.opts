@@ -1,0 +1,56 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
+ApplicationMgr.OutStream  += { "Gaudi::RootOutputStream/RootDst","Gaudi::RootOutputStream/RootMini"};
+ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
+EventSelector.PrintFreq    = 1;
+ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
+RootDst.ItemList           = { 
+   "/Event",
+   "/Event/Collision_0",
+   "/Event/Collision_0/MyVertices",
+   "/Event/Collision_1",
+   "/Event/Collision_2",
+   "/Event/Header",
+   "/Event/MyTracks"
+};
+RootDst.OptItemList = { 
+   "/Event/Prev",
+   "/Event/Prev/Header",
+   "/Event/PrevPrev",
+   "/Event/PrevPrev/Header",
+   "/Event/Next",
+   "/Event/Next/Header",
+   "/Event/NextNext",
+   "/Event/NextNext/Header"
+};
+RootMini.ItemList           = { 
+   "/Event",
+   "/Event/Header",
+   "/Event/MyTracks"
+};
+
+ApplicationMgr.EvtMax      = 500;
+RootCnvSvc.OutputLevel     = 3;
+MessageSvc.OutputLevel     = 3;
+ReadAlg.OutputLevel        = 2;
+
+// begin Enable FileRecordSvc
+ApplicationMgr.ExtSvc                += { "Gaudi::RootCnvSvc/FileRecordCnvSvc" };
+FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+FileRecordCnvSvc.ShareFiles           = "YES";
+FileRecordCnvSvc.OutputLevel          = 1;
+
+FileRecordDataSvc.ForceLeaves         = true;
+FileRecordDataSvc.EnableFaultHandler  = true;
+FileRecordDataSvc.RootCLID            = 1;
+
+ApplicationMgr.OutStream             += { "RecordStream/DstRecords" };
+DstRecords.ItemList                   = { "/FileRecords#999" } ;
+DstRecords.Output                     = @RootDst.Output;
+DstRecords.EvtDataSvc                 = "FileRecordDataSvc";
+DstRecords.EvtConversionSvc           = "FileRecordPersistencySvc";
+
+ApplicationMgr.OutStream            += { "RecordStream/MiniRecords" };
+MiniRecords.ItemList                  = { "/FileRecords#999" } ;
+MiniRecords.Output                    = @RootMini.Output;
+MiniRecords.EvtDataSvc                = "FileRecordDataSvc";
+MiniRecords.EvtConversionSvc          = "FileRecordPersistencySvc";

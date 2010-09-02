@@ -1,0 +1,3 @@
+#include "$GAUDIROOTCNVTESTSROOT/options/CRD.opts"
+FileCatalog.Catalogs = {"xmlcatalog_file:POOLIO.xml"};
+EventSelector.Input  = {"COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:POOLIO.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'"};
