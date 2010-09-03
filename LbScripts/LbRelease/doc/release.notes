@@ -2,7 +2,10 @@
 
 	* python/LbRelease/LHCbDoc: Added the possibility of specifying the version
 	of Doxygen to use (requires that the first doxygen in the path is the script
-	in LbScripts)
+	in LbScripts), differentiate between Python and C++ main pages (with links
+	from one to the other), use a custom layout and a custom stylesheet.
+	* python/LbRelease/_LHCbDocResources.py: (new) module used internally by LHCbDoc
+	for the files needed in the Doxygen configuration.
 
 2010-09-03 Joel Closier <joel.closier@cern.ch>
 

@@ -340,6 +340,13 @@ class Doc(object):
         docs.sort()
         return docs
 
+    def _hasCpp(self):
+        """
+        Tell if we have to build the C++ documentation (i.e. if Gaudi is in the
+        dependencies.
+        """
+        return "GAUDI" in self.projects
+
     def getVersion(self, project):
         """
         Return the version of the project contained, or None if the project is
@@ -412,6 +419,7 @@ class Doc(object):
             graph (to give the correct size to the svg image).
         """
         page = "/** \\mainpage LHCb Software Documentation\n" + \
+            "\\htmlonly\n<p class='subtitle'>%(subtitle)s</p>\n\\endhtmlonly\n" + \
             "Documentation for the projects:\n<ul>\n"
         projects = self.projects.keys()
         projects.sort()
@@ -478,6 +486,8 @@ class Doc(object):
 
 
         doxycfg = DoxyFileCfg()
+        # The order of the configuration options matches (more or less) the one
+        # in the manual: http://www.doxygen.org/config.html
         #--- Project related options
         doxycfg["PROJECT_NAME"]        = "LHCb Software"
         doxycfg['OUTPUT_DIRECTORY']    = self.output
@@ -542,9 +552,8 @@ class Doc(object):
                 # FILE_PATTERNS   += *LHCbSys*requirements
                 files.append("*%s*requirements" % d)
         doxycfg["FILE_PATTERNS"] = files
-
-        # Configurations details to generate the main page
-        doxycfg['INPUT'].append("conf/MainPage.doxygen")
+        doxycfg['LAYOUT_FILE'] = os.path.join("conf", "DoxygenLayout.xml")
+        doxycfg['IMAGE_PATH'] = ["conf"]
 
         #--- Source browsing related options
         doxycfg['SOURCE_BROWSER']      = True
@@ -560,7 +569,7 @@ class Doc(object):
         doxycfg['HTML_TIMESTAMP']      = True
         doxycfg['SEARCHENGINE']        = True
         doxycfg['SERVER_BASED_SEARCH'] = True
-        #doxycfg['HTML_STYLESHEET']     = "lhcb_doxygen.css"
+        doxycfg['HTML_STYLESHEET']     = os.path.join("conf", "lhcb_doxygen.css")
         #doxycfg['GENERATE_ECLIPSEHELP']= True
         #doxycfg['ECLIPSE_DOC_ID']      = self.name
 
@@ -611,8 +620,6 @@ class Doc(object):
         doxycfg["DOT_PATH"]            = None
 
 
-        doxycfg['IMAGE_PATH'] = ["conf"]
-
         # Write the output files
         # prepare the directory
         confdir = os.path.join(self.path, "conf")
@@ -622,23 +629,41 @@ class Doc(object):
 
         # Special manipulation required for the C++ and Python versions
         orig = {}
-        for k in ['FILE_PATTERNS', 'WARN_LOGFILE']: # keep a copy
+        for k in ['FILE_PATTERNS', 'WARN_LOGFILE', 'INPUT']: # keep a copy
             orig[k] = doxycfg[k]
 
-        # C++ configuration
-        doxycfg['FILE_PATTERNS'] = [ "*.h", "*.icpp", "*.cpp" ] + orig['FILE_PATTERNS']
-        doxycfg['WARN_LOGFILE'] = orig['WARN_LOGFILE'].replace(".log", "Cpp.log")
-        open(os.path.join(confdir, "DoxyFileCpp.cfg"), "w").write(str(doxycfg))
+        if self._hasCpp():
+            # C++ configuration
+            doxycfg['FILE_PATTERNS'] = [ "*.h", "*.icpp", "*.cpp" ] + orig['FILE_PATTERNS']
+            doxycfg['WARN_LOGFILE'] = orig['WARN_LOGFILE'].replace(".log", "Cpp.log")
+            doxycfg['INPUT'] = orig['INPUT'] + ["conf/MainPageCpp.doxygen"]
+            open(os.path.join(confdir, "DoxyFileCpp.cfg"), "w").write(str(doxycfg))
 
         # Python configuration
         doxycfg['FILE_PATTERNS'] = [ "*.py" ] + orig['FILE_PATTERNS']
         doxycfg['WARN_LOGFILE'] = orig['WARN_LOGFILE'].replace(".log", "Py.log")
-        doxycfg["OPTIMIZE_OUTPUT_JAVA"] = True # see http://www.stack.nl/~dimitri/doxygen/config.html#cfg_optimize_output_java
+        doxycfg['INPUT'] = orig['INPUT'] + ["conf/MainPagePy.doxygen"]
+        doxycfg["OPTIMIZE_OUTPUT_JAVA"] = True # see http://www.doxygen.org/config.html#cfg_optimize_output_java
         open(os.path.join(confdir, "DoxyFilePy.cfg"), "w").write(str(doxycfg))
 
-        # generate the dependency graph
+        # Create the auxiliary files in the conf directory
+        import _LHCbDocResources
+        #  generate the dependency graph
         depgraphsize = self._genDepGraph(confdir)
-        open(os.path.join(confdir, "MainPage.doxygen"), "w").write(self._generateDoxygenMainPage(depgraphsize = depgraphsize))
+        mp_data = self._generateDoxygenMainPage(depgraphsize = depgraphsize)
+        mp_subtitle = '%s Code Version. <a href="%s/index.html">Go to %s</a>'
+        if self._hasCpp():
+            open(os.path.join(confdir, "MainPageCpp.doxygen"), "w").write(mp_data %
+                 {"subtitle": mp_subtitle % ("C++", "py", "Python")})
+            open(os.path.join(confdir, "MainPagePy.doxygen"), "w").write(mp_data %
+                 {"subtitle": mp_subtitle % ("Python", "..", "C++")})
+        else:
+            open(os.path.join(confdir, "MainPagePy.doxygen"), "w").write(mp_data %
+                 {"subtitle": ""}) # {"subtitle": "Python Code"})
+        #  layout file
+        open(os.path.join(confdir, 'DoxygenLayout.xml'), 'w').write(_LHCbDocResources.layout)
+        #  CSS file
+        open(os.path.join(confdir, 'lhcb_doxygen.css'), 'w').write(_LHCbDocResources.stylesheet)
 
     def _projectDeps(self, project, recursive = False):
         """
@@ -788,10 +813,8 @@ class Doc(object):
             else:
                 tempdir = tempfile.mkdtemp("doxygen")
 
-            # Make C++ doc only if we have a dependency on Gaudi
-            has_cpp = "GAUDI" in self.projects
             # use a subdirectory of the tempdir for each of C++ and Python
-            if has_cpp:
+            if self._hasCpp():
                 cpptempdir = os.path.join(tempdir, "cpp")
                 os.makedirs(cpptempdir)
             pytempdir = os.path.join(tempdir, "py")
@@ -803,7 +826,7 @@ class Doc(object):
             self._log.debug(_which("doxygen"))
             # - modify the doxygen file to use a temporary directory
 
-            if has_cpp:
+            if self._hasCpp():
                 self._buildCpp(cpptempdir, doxygen_versions[0])
             self._buildPy(pytempdir, doxygen_versions[1])
 
@@ -821,7 +844,7 @@ class Doc(object):
                     output = Popen(["afs_admin", "sq", self.path, str(reqsize)], stdout = PIPE).wait()
             # copy the documentation from the temporary directory to the final place with a temporary name
             self._log.info("Copy generated files from temporary directory")
-            if has_cpp:
+            if self._hasCpp():
                 # Copy C++ with structure
                 shutil.copytree(cpptempdir, self.output + ".new")
                 # Copy Python html as a directory in the C++ one
@@ -833,7 +856,7 @@ class Doc(object):
             for f in [ f for f in os.listdir(os.path.join(self.path, "conf")) if f.startswith("dependencies.") ]:
                 src = os.path.join(self.path, "conf", f)
                 shutil.copyfile(src, os.path.join(self.output + ".new", "html", f))
-                if has_cpp: # we need to copy the graphs also in the Python directory
+                if self._hasCpp(): # we need to copy the graphs also in the Python directory
                     shutil.copyfile(src, os.path.join(self.output + ".new", "html", "py", f))
             if self.isAfsVolume:
                 # Give read access to everybody
