@@ -7,6 +7,13 @@ Purpose: LHCb reconstruction program
 
 This version requires ParamFiles >= v8r3, Det/DDDB >= v1r34
 
+- NB: This version of Rec and LHCb require new Database tags otherwise processing will fail.
+  DDDB must be >= head-20100826
+	LHCBCOND must be >= head-20100831
+  SIMCOND depends on the data being analysed
+  Consult the defaults in Det/DDDB for more information
+  Det/DDDB has been updated with these new defaults
+
 - Updated references for tests.
 
 - This version pick up the latest geometry and event model changes
