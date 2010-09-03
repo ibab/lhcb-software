@@ -22,11 +22,11 @@ static char Server_name[80];
 
 static FILE* Lun_scr = 0;
 static FILE* Lun_kbd = 0;
-static inline Page* getPage(Menu* m) {  return m ? m->page.cur : 0;  }
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 #ifdef SCREEN
+static inline Page* getPage(Menu* m) {  return m ? m->page.cur : 0;  }
 int upic_mouse_handler (int window, void* display, size_t row, size_t col);
 #endif
 //---------------------------------------------------------------------------
@@ -43,7 +43,6 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
 #endif
   Menu* m;
   Item* i;
-  Param* p;
   int row;
   Page* d;
   
@@ -71,19 +70,21 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
     row = d->cur_line;
   }
 
-  p = 0;
+  Param* p = 0;
   if (i->type == PARAM)  {
     if (param_id)    {
       if (!(p = (Param*) upic_find_param(i->param.first, param_id)))
       return UPI_SS_INVPARAM;
     }
     else    {
+#ifdef SCREEN
       p = i->param.cur;
+#endif
     }
   }
 
 #ifdef SCREEN
-   Menu* cur_menu;
+  Menu* cur_menu;
   if ((cur_menu = Sys.menu.cur) && !m->from.menu && cur_menu != m && mark)  {
     m->from.last = cur_menu->id;
   }

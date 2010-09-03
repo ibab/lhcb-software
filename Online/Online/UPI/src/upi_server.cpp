@@ -2129,7 +2129,7 @@ int server_send_message (const char* source)    {
 //--------------------------------------------------------------------------
 void upper_case (char* name)  {
   if (name)  {
-    for (;*name;name++) *name = toupper(*name);
+    for (;*name;name++) *name = char(::toupper(*name));
   }
 }
 

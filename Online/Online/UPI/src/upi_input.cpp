@@ -481,8 +481,8 @@ int upic_key_action (unsigned int /* event */, void*)
             upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
           }
           if (pos < p->chars)  {
-            *buf = key;
-            scrc_put_char (d->id, key, SCR::INVERSE + SCR::UNDERLINE, row, col);
+            *buf = char(key);
+            scrc_put_char (d->id, char(key), SCR::INVERSE + SCR::UNDERLINE, row, col);
             pos++;
             col++;
           }

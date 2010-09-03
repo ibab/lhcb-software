@@ -11,6 +11,8 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
+#include <limits>
 
 extern System Sys;
  
@@ -240,8 +242,8 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
   }
   case REAL_FMT :    {
     if (def.i) p->val.d = p->def.d = def.d;
-    if (min.d) p->min.d = min.d;
-    if (max.d) p->max.d = max.d;
+    if (min.i) p->min.d = min.d;
+    if (max.i) p->max.d = max.d;
     if (list)   {
       if (p->list) ::free(p->list);
       p->list = ::memcpy(list_malloc(list_size*sizeof(double)),list,list_size*sizeof(double));
@@ -507,7 +509,7 @@ int upic_check_int (int val, int min, int max)  {
 
 //---------------------------------------------------------------------------
 int upic_check_double (double val, double min, double max)  {
-  return ( min == max || ( val >= min && val <= max ) );
+  return ( fabs(min-max)<std::numeric_limits<double>::epsilon() || (val >= min && val <= max) );
 }
 
 //---------------------------------------------------------------------------
@@ -829,7 +831,7 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
   else if (p->type == REAL_FMT)  {
     double* q = (double*)p->list;
     for (int j=0; j<list_size; j++, q++)    {
-      if (*q == p->val.d) return (j);
+      if ( fabs(*q-p->val.d) < std::numeric_limits<double>::epsilon() ) return (j);
     }
   }
   else  {
