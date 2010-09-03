@@ -1,0 +1,13 @@
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.ExtSvc      += { "Gaudi::RootCnvSvc/RootCnvSvc"};
+EventPersistencySvc.CnvServices += { "RootCnvSvc" };
+MessageSvc.OutputLevel     = 3;
+ApplicationMgr.AuditAlgorithms = True ;
+ApplicationMgr.ExtSvc     += { "AuditorSvc"} ;
+ApplicationMgr.EvtMax      = -1;
+AuditorSvc.Auditors       += { "ChronoAuditor" };
+FileCatalog.Catalogs       = { "xmlcatalog_file:ROOTIO.xml" } ;
+EventSelector.PrintFreq    = 500;
+EventDataSvc.RootCLID      = 1;
+ReadAlg.OutputLevel        = 4;
+RootCnvSvc.CacheSize       = 50000000;

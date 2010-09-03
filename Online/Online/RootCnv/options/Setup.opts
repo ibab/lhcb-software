@@ -1,0 +1,3 @@
+ApplicationMgr.ExtSvc      = { "Gaudi::MultiFileCatalog/FileCatalog", 
+                               "Gaudi::IODataManager/IODataManager"};
+#include "$ROOTCNVROOT/options/SetupIO.opts"
