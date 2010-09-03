@@ -1,6 +1,12 @@
+2010-09-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc: Added the possibility of specifying the version
+	of Doxygen to use (requires that the first doxygen in the path is the script
+	in LbScripts)
+
 2010-09-03 Joel Closier <joel.closier@cern.ch>
 
-        * scripts/lhcb_bkk: add -f options for csh
+	* scripts/lhcb_bkk: add -f options for csh
 
 2010-08-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

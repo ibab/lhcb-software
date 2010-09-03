@@ -708,10 +708,14 @@ class Doc(object):
                 height = int(float(height) / 72 * 96)
         return (width, height) # return the size in pixels of the image
 
-    def _buildDox(self, conf, workdir):
+    def _buildDox(self, conf, workdir, version = None):
         """
         Run Doxygen using a configuration file to generate the output into a
         specified directory.
+
+        @param conf: path to the configuration file
+        @param workdir: output directory for Doxygen (override configuration)
+        @param version: version of Doxygen to use
         """
         retcode = 0
         if "LHCBDOC_TESTING" not in os.environ:
@@ -723,8 +727,11 @@ class Doc(object):
                 tmp.write(open(conf).read())
                 tmp.write("\nOUTPUT_DIRECTORY = %s\n" % workdir)
                 tmp.close()
-                proc = Popen(["doxygen", tmpName],
-                             cwd = self.path, stdin = PIPE)
+                doxcmd = ["doxygen"]
+                if version:
+                    doxcmd += ["--doxygen-version", version]
+                doxcmd.append(tmpName)
+                proc = Popen(doxcmd, cwd = self.path, stdin = PIPE)
                 proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
                 retcode = proc.wait()
             finally:
@@ -737,23 +744,29 @@ class Doc(object):
             raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, workdir))
 
 
-    def _buildCpp(self, workdir):
+    def _buildCpp(self, workdir, doxygen_version = None):
         """
         Build the actual doxygen documentation (C++).
-        """
-        self._buildDox(os.path.join(self.path, "conf", "DoxyFileCpp.cfg"), workdir)
 
-    def _buildPy(self, workdir):
+        @param doxygen_version: version of Doxygen to use
+        """
+        self._buildDox(os.path.join(self.path, "conf", "DoxyFileCpp.cfg"), workdir, version = doxygen_version)
+
+    def _buildPy(self, workdir, doxygen_version = None):
         """
         Build the actual doxygen documentation (Python).
-        """
-        self._buildDox(os.path.join(self.path, "conf", "DoxyFilePy.cfg"), workdir)
 
-    def build(self):
+        @param doxygen_version: version of Doxygen to use
+        """
+        self._buildDox(os.path.join(self.path, "conf", "DoxyFilePy.cfg"), workdir, version = doxygen_version)
+
+    def build(self, doxygen_versions = (None, None)):
         """
         Build the doxygen documentation.
         Prepare the infrastructure to build both C++ and Python documentation,
         then call the specific methods.
+
+        @param doxygen_versions: pair of strings defining the version of doxygen to be used for C++ and Python
         """
         if self.locked:
             self._log.warning("Cannot build in a locked directory")
@@ -791,8 +804,8 @@ class Doc(object):
             # - modify the doxygen file to use a temporary directory
 
             if has_cpp:
-                self._buildCpp(cpptempdir)
-            self._buildPy(pytempdir)
+                self._buildCpp(cpptempdir, doxygen_versions[0])
+            self._buildPy(pytempdir, doxygen_versions[1])
 
             if os.path.exists(self.output + ".bk"):
                 # Remove old backups before copying the new documentation
@@ -929,7 +942,13 @@ def updateLatestLinks(root = None):
 
 
 #--- Application logic
-def makeDocs(projects, root = None, no_build = False):
+def makeDocs(projects, root = None, no_build = False, doxygen_versions = (None, None)):
+    """
+    @param projects: list of pairs with (name, version) for each project to use
+    @param root: base directory for the documentation directories
+    @param no_build: flag to prevent the execution of Doxygen (for testing)
+    @param doxygen_versions: pair of strings defining the version of doxygen to be used for C++ and Python
+    """
     if "PWD" in os.environ:
         # This is needed because PWD is not updated by Popen and cmt gets confused
         # if it is set
@@ -995,7 +1014,7 @@ def makeDocs(projects, root = None, no_build = False):
             # and create the fake sym-links
             doc._updateCommonLinks()
         else:
-            doc.build()
+            doc.build(doxygen_versions)
     ## @todo: probably, this step should be done inside the build step
     # Update links pointing to the latest versions
     updateLatestLinks(root)
@@ -1143,6 +1162,15 @@ def main():
                       help = "Delete unused documentations")
     parser.add_option("-x", "--exclude", action = "append",
                       help = "Delete unused documentations")
+    parser.add_option("--doxygen-version", action = "store",
+                      help = "Version of doxygen to use. Note: it works only " +
+                      "when using the LbScript doxygen wrapper and if the " +
+                      "given version exists in the LCG externals")
+    parser.add_option("--doxygen-py-version", action = "store",
+                      help = "Same as --doxygen-version, but allows to " +
+                      "specify a version of doxygen for the Python " +
+                      "documentation (the default is to use the version " +
+                      "specified with --doxygen-version)")
 
     opts, args = parser.parse_args()
 
@@ -1162,13 +1190,19 @@ def main():
     else:
         parser.error("Wrong number of arguments")
 
+    # Ensure that the version of doxygen used for Python is the same as the one
+    # used for C++ unless specified differently.
+    if opts.doxygen_version and not opts.doxygen_py_version:
+        opts.doxygen_py_version = opts.doxygen_version
+
     # Clean-up functions
     if opts.clean_archived:
         cleanArchivedProjects(opts.root)
     if opts.remove_unused:
         removeUnusedDocs(opts.root)
     # Main function
-    makeDocs(projects, opts.root, opts.no_build)
+    makeDocs(projects, opts.root, opts.no_build,
+             doxygen_versions = (opts.doxygen_version, opts.doxygen_py_version))
 
 if __name__ == '__main__':
     main()
