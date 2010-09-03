@@ -3,12 +3,28 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v37r7>2010-08-25 Brunel v37r7</A></H1><PRE>
+</PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
 This version requires ParamFiles >= v8r3, Det/DDDB >= v1r34
 
-- Updated references for tests
+- Updated references for tests.
 
+- This version pick up the latest geometry and event model changes
+  from LHCb and Lbcom. 
+
+- The Luminosity methods have been updated to allow for -log(P), and write those FSRs
+  but this requires a full reprocessing before they can be used
+
+- Tracking and Vertexing have been updated to more appropriate cuts,
+  timing has also been improved slightly
+
+- The DDDB, SIMCOND, LHCBCOND tags required to use this software have been
+  updated. The software is not strictly backward-compatible on the old DB tags.
+  head-20100826 tags should be used. Det/DDDB v1r34 contains the new defaults.
+
+- Det/DDDB v1r34 and Rich/RichRecTrackTools v1r24p1 have been absorbed. 
+  . Rich/RichRecTrackTools v1r24p1 fixes bug #72136.
+  . Det/DDDB v1r34 fixes many backwards-compatibility problems
 
 </PRE><H1><A NAME=v37r6p1>2010-08-04 Brunel v37r6p1</A></H1><PRE>
 
