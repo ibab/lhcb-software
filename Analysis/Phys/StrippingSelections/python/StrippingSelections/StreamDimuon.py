@@ -117,6 +117,6 @@ stream.appendLines ( ThreeMuonLines )
 # Stripping lines for Bs2MuMu
 # attempt to write them in recommended format 
 #
-from StrippingSelections.StrippingBs2MuMuNoMuID import Bs2MuMuNoMuIDConf
-bs2mm = Bs2MuMuNoMuIDConf("Bs2MuMu",Bs2MuMuNoMuIDConf.config_default)
-stream.appendLines(bs2mm.lines)
+#from StrippingSelections.StrippingBs2MuMuNoMuID import Bs2MuMuNoMuIDConf
+#bs2mm = Bs2MuMuNoMuIDConf("Bs2MuMu",Bs2MuMuNoMuIDConf.config_default)
+#stream.appendLines(bs2mm.lines)
