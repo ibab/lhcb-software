@@ -149,22 +149,22 @@ namespace LHCb
       return m_length%sizeof(T)==0 ? m_length : (m_length/sizeof(T)+1)*sizeof(T);
     }
     /// Return bankType of this bank 
-    BankType type() const           {    return BankType(int(m_type));         }
+    BankType type() const           {    return BankType(int(m_type));              }
 
     /// Set the bank type
-    void setType(BankType val)      {    m_type = (int(val)&0xFF);  }
+    void setType(BankType val)      {    m_type = (unsigned char)(char(val)&0xFF);  }
 
     /// Return version of this bank 
-    int version() const             {    return m_version;          }
+    int version() const             {    return m_version;                          }
 
     /// Set the version information of this bank
-    void setVersion(int val)        {    m_version = (val&0xFF);    }
+    void setVersion(int val)        {    m_version = (val&0xFF);                    }
 
     /// Return SourceID of this bank  (TELL1 board ID)
-    int sourceID() const            {    return m_sourceID;         }
+    int sourceID() const            {    return m_sourceID;                         }
 
     /// Set the source ID of this bank (TELL1 board ID)
-    void setSourceID(int val)       {    m_sourceID = (val&0xFFFF); }
+    void setSourceID(int val)       {    m_sourceID = (unsigned short)(val&0xFFFF); }
 
     /// Return pointer to begining of data body of the bank
     unsigned int* data()            {    return &m_data[0];         }

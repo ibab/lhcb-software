@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2010-09-02 - Olivier Deschamps
+ - RawBank.h   Remove icc compiler warnings
+
 !================ DAQEvent v9r1 2010-03-17 ===================================
 ! 2010-03-02 - Olivier Deschamps
  - RawBankReadoutStatus : Add BadMagicPattern status
