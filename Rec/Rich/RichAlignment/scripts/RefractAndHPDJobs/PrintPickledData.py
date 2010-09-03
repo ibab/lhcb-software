@@ -16,11 +16,9 @@ filename = str(args[0])
 file = open(filename,"r")
 
 import pickle
-RunLFNs = pickle.load(file)
+data = pickle.load(file)
  
 file.close()
 
-for run in sorted(RunLFNs.keys()) :
-    lfns = RunLFNs[run]
-    print "Run", run
-    for lfn in lfns : print " ", lfn
+print data
+

@@ -41,8 +41,14 @@ conf.Histograms = "Expert"
 
 importOptions("/usera/jonesc/MyDataOptions/Collisions10/Raw/RUN_75718_RealData_90000000_RAW_PFNs.py")
 
-#from Configurables import CondDB, CondDBAccessSvc
-#CondDB().addLayer(CondDBAccessSvc("RichCKCond",ConnectionString="sqlite_file:NewRichCKRefIndexCalib.db/LHCBCOND",DefaultTAG="HEAD"))
+from Configurables import CondDB, CondDBAccessSvc, LHCbApp
+CondDB().PartitionConnectionString["LHCBCOND"] = "sqlite_file:LHCBCOND_NewRichAlign_head20100730.db/LHCBCOND"
+LHCbApp().CondDBtag = "HEAD"
+CondDB().addLayer(CondDBAccessSvc("TrackAlign-v4.0.VeloYFixed",ConnectionString="sqlite_file:TrackAlign-v4.0.VeloYFixed.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("NewRichCKRefIndexCalib",ConnectionString="sqlite_file:NewRichCKRefIndexCalib.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("NewRichHPDAlignmentsByFill",ConnectionString="sqlite_file:NewRichHPDAlignmentsByFill.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("Rich1MirrorAlignment-v1",ConnectionString="sqlite_file:Rich1MirrorAlignment-v1.db/LHCBCOND",DefaultTAG="HEAD"))
+CondDB().addLayer(CondDBAccessSvc("Rich2MirrorAlignment-v1",ConnectionString="sqlite_file:Rich2MirrorAlignment-v1.db/LHCBCOND",DefaultTAG="HEAD"))
 
 from Configurables import Rich__Mon__RichHPDImageSummary
 imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")

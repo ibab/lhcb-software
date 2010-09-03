@@ -51,11 +51,29 @@ def correctStartTime(run,time):
         retTime = time - startTimeOffset
     return retTime
 
+def pickleDict(filename,data):
+    import pickle, os
+    file = open(filename,"w")
+    pickle.dump(data,file)
+    file.close()
+
+def loadDict(filename):
+    import pickle, os
+    data = { }
+    if os.path.exists(filename) :
+        file = open(filename,"r")
+        data = pickle.load(file)
+        file.close()
+    return data
+
 def fillDB(calibration,db,runsTimes,rad):
 
     # Create DB paths for the conditions
     path = "/Conditions/"+rad+"/Environment/Gas.xml"
     db.createNode(path)
+
+    # Add a null entry covering all periods
+    #db.storeXMLString( path, genXML(1.0,0), cool.ValidityKeyMin, cool.ValidityKeyMax )
 
     # Loop over runs to fill the conditions
     for run in sorted(calibration.keys()):
@@ -88,17 +106,20 @@ def getRunTimes(calibrations):
         for run in sorted(calibration.keys()):
             if run not in runList : runList += [run]
     runList.sort()
-
-    print "Run List =", runList
-
-    # Database API
-    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-    database = BookkeepingClient()
+    
+    # Load the raw cached run data
+    RunCacheName = "RunInfoCache.pck"
+    runTimeCache = loadDict(RunCacheName)
 
     tmpTime = 0
     for run in runList:
         # Get run start and stop times
-        res = database.getRunInformations(int(run))
+        if run in runTimeCache.keys():
+            res = runTimeCache[run]
+        else:
+            from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+            res = BookkeepingClient().getRunInformations(int(run))
+            runTimeCache[run] = res
         if res['OK'] :
             start = res['Value']['RunStart']
             stop  = res['Value']['RunEnd']
@@ -111,6 +132,9 @@ def getRunTimes(calibrations):
         else:
             print "ERROR Getting start/stop times for run", run
             DIRAC.exit(1)
+
+    # Update the saved cache 
+    pickleDict(RunCacheName,runTimeCache)
 
     # Return the Run Time Information
     return times

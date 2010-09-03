@@ -4,6 +4,15 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2010-09-03 - Chris Jones
+ - More improvements to the calibrations scripts
+  + Add pickled run data for all of August
+  + Cache resuts of DB look ups for run information for speed. cache is stored
+    in a pickled python file.
+  + More improvements to the CK theta fit used to extract the n-1 scale factors
+  + Add plots showing the CK theta resolution as a function of run number.
+  + Show the form of the background contribution to the fit in the output PDFs
+
 !========================== RichAlignment v1r0 2010-08-25 ====================
 ! 2010-08-24 - Chris Jones
  - Various improvements to the calibration scripts

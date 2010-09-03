@@ -168,13 +168,21 @@ def submitRecoJobs(pickedRunsList,jobType):
                         extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
                         extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
                         
-                    # For verification jobs, use custom DB Slice
+                    # For verification jobs, use custom DB Slice(s)
                     if jobType == "RefractIndexVerify" :
-                        dbFile = "NewRichCKRefIndexCalib.db"
                         extraopts.write("from Gaudi.Configuration import *\n")
-                        extraopts.write("from Configurables import CondDB, CondDBAccessSvc\n")
-                        extraopts.write("CondDB().addLayer(CondDBAccessSvc(\"RichCKCond\",ConnectionString=\"sqlite_file:"+dbFile+"/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
-                        mySandBox += [dbFile]
+                        extraopts.write("from Configurables import CondDB, CondDBAccessSvc, LHCbApp\n")
+                        # Main DB
+                        mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
+                        extraopts.write("CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n")
+                        extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
+                        mySandBox += [mainLHCbCond]
+                        # Additional DB Slices
+                        #dbFiles = ["NewRichCKRefIndexCalib"]
+                        dbFiles = ["TrackAlign-v4.0.VeloYFixed","NewRichCKRefIndexCalib","NewRichHPDAlignmentsByFill","Rich1MirrorAlignment-v1","Rich2MirrorAlignment-v1"]
+                        for dbFile in dbFiles:
+                            extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
+                            mySandBox += [dbFile+".db"]
 
                     # Close file
                     extraopts.close()
@@ -231,20 +239,25 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # Dictionary to store the calibration data
     calibrations = { }
 
-    # Keep tabs on min and max scale factor (for plots)
+    # Keep tabs on min and max values (for plots)
     minMaxScale = [999.0,-999.0]
+    if 'Rich1Gas' == rad :
+        minMaxCKRes = (0.0013,0.0028)
+    else:
+        minMaxCKRes = (0.00065,0.0009)
 
     # Raw mean and sigma
     ckmeans  = { }
     cksigmas = { }
 
     # Loop over jobs
+    nFailedFits = 0
     for j in jobs :
 
         run = int(getInfoFromJob(j,'Run'))
 
-        print "Fitting job", rad, "Run =", run
-        fitResult = getPeakPosition(j,rad)
+        #print "Fitting job", rad, "Run =", run
+        fitResult = fitCKThetaHistogram(j,rad)
 
         if fitResult['OK'] :
             scale = nScaleFromShift(fitResult,rad)
@@ -254,7 +267,8 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
             ckmeans[run]  = fitResult['Mean']
             cksigmas[run] = fitResult['Sigma']
         else:
-            print " -> Fit failed"
+            nFailedFits += 1
+            print " -> Fit failed -", fitResult['Message']
 
     # Write out calibrations to a pickled python file
     file = open(rad+"-RefIndexCalib.pck","w")
@@ -264,6 +278,10 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # 1D Plot of scale factors
     scaleHist = TH1F( "scaleFactors", rad+" (n-1) Scale Factors",
                       100, 0.999*minMaxScale[0], 1.0001*minMaxScale[1] )
+
+    # 1D Plot of Fitted CK resolutions
+    ckResHist = TH1F( "ckRes", rad+" Delta CK Theta Resolution",
+                      100, 0.99*minMaxCKRes[0], 1.001*minMaxCKRes[1] )
   
     # For plots (manually make sure sorted by run)
     runs      = array('d')
@@ -288,38 +306,52 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         sigmasErr.append(cksigma[1])
         # Fill 1D histo(s)
         scaleHist.Fill(scale[0])
+        ckResHist.Fill(cksigma[0])
 
-    # Fit and Print the histo
-    fitFunc = TF1("Scale"+rad,"gaus",minMaxScale[0],minMaxScale[1])
-    scaleHist.Fit(fitFunc,"QR")
-    scaleHist.Draw('E')
-    printCanvas()
+    # Make the plots
+    if len(runs) > 0 :
 
-    # Make trend plots
+        linearFit = TF1("AverageFit","pol0",runs[0],runs[len(runs)-1])
+        linearFit.SetParName(0,"Mean")
+            
+        meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
+        meanTrend.SetTitle( rad+" <Delta CK Theta> by Run" )
+        meanTrend.GetXaxis().SetTitle("LHCb Run Number")
+        meanTrend.GetYaxis().SetTitle("<Delta CK Theta> / mrad")
+        meanTrend.Draw("ALP")
+        printCanvas()
 
-    meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
-    meanTrend.SetTitle( rad+" <Delta CK Theta> by Run" )
-    meanTrend.GetXaxis().SetTitle("Run Number")
-    meanTrend.GetYaxis().SetTitle("<Delta CK Theta> / mrad")
-    meanTrend.Draw("ALP")
-    printCanvas()
+        ckFitFunc = TF1("CKRes"+rad,"gaus",minMaxCKRes[0],minMaxCKRes[1])
+        ckResHist.Fit(ckFitFunc,"QR")
+        ckResHist.Draw('E')
+        printCanvas()
 
-    sigmaTrend = TGraphErrors( len(runs),runs,sigmas,runsErr,sigmasErr )
-    sigmaTrend.SetTitle( rad+" Delta CK Theta Resolution by Run" )
-    sigmaTrend.GetXaxis().SetTitle("Run Number")
-    sigmaTrend.GetYaxis().SetTitle("Delta CK Theta Resolution / mrad")
-    sigmaTrend.Draw("ALP")
-    printCanvas()
+        sigmaTrend = TGraphErrors( len(runs),runs,sigmas,runsErr,sigmasErr )
+        sigmaTrend.SetTitle( rad+" Delta CK Theta Resolution by Run" )
+        sigmaTrend.GetXaxis().SetTitle("LHCb Run Number")
+        sigmaTrend.GetYaxis().SetTitle("Delta CK Theta Resolution / mrad")
+        sigmaTrend.Fit(linearFit,"QRS")
+        sigmaTrend.Draw("ALP")
+        printCanvas()
 
-    scaleTrend = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
-    scaleTrend.SetTitle( rad+" (n-1) corrections by Run" )
-    scaleTrend.GetXaxis().SetTitle("Run Number")
-    scaleTrend.GetYaxis().SetTitle("(n-1) Scale Factor")
-    scaleTrend.Draw("ALP")
-    printCanvas()
+        fitFunc = TF1("Scale"+rad,"gaus",minMaxScale[0],minMaxScale[1])
+        scaleHist.Fit(fitFunc,"QR")
+        scaleHist.Draw('E')
+        printCanvas()
+
+        scaleTrend = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
+        scaleTrend.SetTitle( rad+" (n-1) corrections by Run" )
+        scaleTrend.GetXaxis().SetTitle("LHCb Run Number")
+        scaleTrend.GetYaxis().SetTitle("(n-1) Scale Factor")
+        #scaleTrend.Fit(linearFit,"QRS")
+        scaleTrend.Draw("ALP")
+        printCanvas()
        
     # Close PDF file
     printCanvas(']')
+
+    if nFailedFits > 0 :
+        print "WARNINIG :", nFailedFits, " histogram fits failed"
     
 def refractiveIndexControl(jobs,rad='Rich1Gas'):
     
@@ -345,13 +377,15 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
         refIndex = getInfoFromJob(j,indexname)
   
         print "Fitting job", rad, "Run =", run, "index =", refIndex
-        fitResult = getPeakPosition(j,rad)
+        fitResult = fitCKThetaHistogram(j,rad)
 
         if fitResult['OK'] :
             x.append(float(refIndex))
             xe.append(0.0)
             y.append(float(fitResult['Mean'][0]))
             ye.append(float(fitResult['Mean'][1]))
+        else:
+            print " -> Fit failed -", fitResult['Message']
 
     graph = TGraphErrors( len(x),x,y,xe,ye )
     graph.SetTitle( rad+" (n-1) Control plot" )
@@ -394,31 +428,32 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
 
         # Load the root file for this job
         rootfile = getRootFile(j)
+        if rootfile != None :
 
-        # Get the histogram
-        histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
-        hist = rootfile.Get(histName)
+            # Get the histogram
+            histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
+            hist = rootfile.Get(histName)
 
-        # Basic check on the histograms before fitting
-        entries = hist.GetEntries()
-        if entries > minEntries :
+            # Basic check on the histograms before fitting
+            entries = hist.GetEntries()
+            if entries > minEntries :
         
-            hist.Draw()
+                hist.Draw()
 
-            # Add Run number to page
-            addRunToPlot(run)
+                # Add Run number to page
+                addRunToPlot(run)
 
-            # Print
-            printCanvas()
+                # Print
+                printCanvas()
         
-            # Mean of the histo
-            mean = hist.GetMean()
-            err  = hist.GetMeanError()
+                # Mean of the histo
+                mean = hist.GetMean()
+                err  = hist.GetMeanError()
 
-            runs.append(float(run))
-            runsErr.append(0.0)
-            exp.append(mean)
-            expErr.append(err)
+                runs.append(float(run))
+                runsErr.append(0.0)
+                exp.append(mean)
+                expErr.append(err)
         
     # Make a plot
     graph = TGraphErrors( len(runs),runs,exp,runsErr,expErr )
@@ -452,14 +487,16 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
         run = int(getInfoFromJob(j,'Run'))
 
         print "Fitting job", rad, "Run =", run
-        fitResult = getPeakPosition(j,rad,'thetaRec')
+        fitResult = fitCKThetaHistogram(j,rad,'thetaRec')
 
         if fitResult['OK'] :
             runs.append(float(run))
             runsErr.append(0.0)
             reco.append(float(fitResult['Mean'][0]))
             recoErr.append(float(fitResult['Mean'][1]))
-                 
+        else:
+            print " -> Fit failed -", fitResult['Message']
+            
     # Make a plot
     graph = TGraphErrors( len(runs),runs,reco,runsErr,recoErr )
     graph.SetTitle( rad+" Peak Reco CK Theta by Run" )
@@ -484,24 +521,27 @@ def getInfoFromJob(j,info='Run'):
         if s[0] == info : run = s[1]
     return run
 
-def getListOfJobs(tag,statuscodes):
+def getListOfJobs(tag,statuscodes,MinRun=0,MaxRun=99999999):
     from Ganga.GPI import Job, jobs
     cJobs = [ ]
+    dict = { }
     for j in jobs :
         if j.status in statuscodes :
             if j.name.split('_')[0] == tag :
-                cJobs += [j]
-                #print "Selected job", j.id, j.name
+                run = int(getInfoFromJob(j,'Run'))
+                if run >= MinRun and run <= MaxRun:
+                    dict[run] = j
+    for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(statuscodes=['completed']):
-    return getListOfJobs('RefractIndexCalib',statuscodes)
+def getCalibrationJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('RefractIndexCalib',statuscodes,MinRun,MaxRun)
 
-def getVerificationJobList(statuscodes=['completed']):
-    return getListOfJobs('RefractIndexVerify',statuscodes)
+def getVerificationJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('RefractIndexVerify',statuscodes,MinRun,MaxRun)
 
-def getControlJobList(statuscodes=['completed']):
-    return getListOfJobs('Control',statuscodes)
+def getControlJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('Control',statuscodes,MinRun,MaxRun)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     slope = 38.2388535346
@@ -535,12 +575,16 @@ def dumpRootFileNamesToText(cjobs,filename='RootFileNames.txt'):
     file.close()
     
 def getRootFile(j):
+    import os
     from ROOT import TFile
     file = None
     filename = getRootFilePath(j)
     if filename != "" :
-        print "Opening ROOT File", filename
-        file = TFile( filename )
+        if os.path.exists(filename):
+            print "Opening ROOT File", filename
+            file = TFile( filename )
+        else:
+            print "ERROR :", filename, "does not exist"
     else:
         print "ERROR Accessing ROOT file for job", j.id
     return file
@@ -564,23 +608,27 @@ def printCanvas(tag=''):
         os.system('ps2pdf '+imageFileName)
         os.remove(imageFileName)  
         
-def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
+def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
 
     from ROOT import TF1, TH1, TText
     #from ROOT import TFitResultPtr, TFitResult
 
     # Parameters
-    minEntries = 100000
+    minEntries = 75000
 
     # Default return result
-    result = { 'OK' : False }
+    result = { 'OK' : False, "Message" : "No Message" }
 
     # Run number
     run = getInfoFromJob(j,'Run')
 
     # Load the root file for this job
     rootfile = getRootFile(j)
-    if rootfile != None :
+    if rootfile == None :
+
+        result['Message'] = "Failed to open ROOT file"
+
+    else:
 
         # Get the histogram
         histName = 'RICH/RiCKResLong/'+rad+'/'+plot
@@ -588,7 +636,15 @@ def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
 
         # Basic check on the histograms before fitting
         entries = hist.GetEntries()
-        if entries > minEntries :
+        if entries < minEntries :
+
+            result['Message'] = "Too few histogram entries"
+
+        else:
+
+            preFitColor  = 12
+            fullFitColor = 2
+            bkgColor     = 4
 
             # Get x value of highest content bin
             # (rough estimate of peak position)
@@ -598,64 +654,118 @@ def getPeakPosition(j,rad='Rich1Gas',plot='ckResAll'):
             delta = 0.0025
             if rad == 'Rich2Gas' : delta = 0.00105
             fitMin = xPeak - delta
-            fitmax = xPeak + delta
+            fitMax = xPeak + delta
 
             # Gaussian function
-            preFitF = TF1(rad+"FitF","gaus",fitMin,fitmax)
-
+            preFitFType = "gaus"
+            preFitF = TF1(rad+"PreFitF",preFitFType,fitMin,fitMax)
+            preFitF.SetLineColor(preFitColor)
+ 
             # Do the pre fit with just a Gaussian
-            hist.Fit(preFitF,"QRS")
-
-            # Draw the histogram
-            hist.Draw()
-            
-            # Add Run number to plot
-            addRunToPlot(run,"Pre Fit")
-            
-            # Print to file
-            printCanvas()
+            hist.Fit(preFitF,"QRS0")
 
             # Full Fitting range
-            delta = 0.0051
-            if rad == 'Rich2Gas' : delta = 0.0023
+            delta = 0.007
+            if rad == 'Rich2Gas' : delta = 0.004
             fitMin = preFitF.GetParameter(1) - delta
-            fitmax = preFitF.GetParameter(1) + delta
+            fitMax = preFitF.GetParameter(1) + delta
+            # Absolute max/min values
+            if  rad == 'Rich1Gas' :
+                if fitMax >  0.0052 : fitMax =  0.0058
+                if fitMin < -0.0052 : fitMin = -0.0058
+            else:
+                if fitMax >  0.0025 : fitMax =  0.0025
+                if fitMin < -0.0029 : fitMin = -0.0029
 
-            # Gaus + pol3
-            bkgFunc = "pol2"
-            fullFitF = TF1(rad+"FitF","gaus(0)+"+bkgFunc+"(3)",fitMin,fitmax)
+            # First Gaus + pol1
+            fbkgFuncType = "pol1"
+            fFuncType = "gaus(0)+"+fbkgFuncType+"(3)"
+            fFitF = TF1(rad+"FFitF",fFuncType,fitMin,fitMax)
+            fFitF.SetParName  (0,"Gaus Constant")
+            fFitF.SetParName  (1,"Gaus Mean")
+            fFitF.SetParName  (2,"Gaus Sigma")
+            fFitF.SetParameter(0,preFitF.GetParameter(0))
+            fFitF.SetParameter(1,preFitF.GetParameter(1))
+            fFitF.SetParameter(2,preFitF.GetParameter(2))
+            fFitF.SetLineColor(fullFitColor)
+
+            # Do the second prefit
+            hist.Fit(fFitF,"QRS0")
+            
+            # Final Gaus + pol2
+            bkgFuncType = "pol2"
+            fullFuncType = "gaus(0)+"+bkgFuncType+"(3)"
+            fullFitF = TF1(rad+"FullFitF",fullFuncType,fitMin,fitMax)
             fullFitF.SetParName  (0,"Gaus Constant")
             fullFitF.SetParName  (1,"Gaus Mean")
             fullFitF.SetParName  (2,"Gaus Sigma")
-            fullFitF.SetParameter(0,preFitF.GetParameter(0))
-            fullFitF.SetParameter(1,preFitF.GetParameter(1))
-            fullFitF.SetParameter(2,preFitF.GetParameter(2))
+            fullFitF.SetParameter(0,fFitF.GetParameter(0))
+            fullFitF.SetParameter(1,fFitF.GetParameter(1))
+            fullFitF.SetParameter(2,fFitF.GetParameter(2))
+            fullFitF.SetParameter(3,fFitF.GetParameter(3))
+            fullFitF.SetParameter(4,fFitF.GetParameter(4))
+            fullFitF.SetLineColor(fullFitColor)
         
             # Do the final fit
-            hist.Fit(fullFitF,"QRSE")
+            hist.Fit(fullFitF,"QRSE0")
 
+            # Fit OK ?
+            maxErrorForOK = 1e-4
+            fitOK = fullFitF.GetParError(1) < maxErrorForOK
+                  
             # Draw the histogram
             hist.Draw()
-            
+                            
+            # Draw the pre fit
+            if not fitOK :
+                fFitF.Draw('SAME')
+                # Background function
+                bkgFunc = TF1( rad+"BkgF", fbkgFuncType, fitMin, fitMax )
+                bkgFunc.SetLineColor(bkgColor)
+                bkgFunc.SetParameter(0,fFitF.GetParameter(3))
+                bkgFunc.SetParameter(1,fFitF.GetParameter(4))
+            else:
+                fullFitF.Draw('SAME')
+                # Background function
+                bkgFunc = TF1( rad+"BkgF", bkgFuncType, fitMin, fitMax )
+                bkgFunc.SetLineColor(bkgColor)
+                bkgFunc.SetParameter(0,fullFitF.GetParameter(3))
+                bkgFunc.SetParameter(1,fullFitF.GetParameter(4))
+                bkgFunc.SetParameter(2,fullFitF.GetParameter(5))
+
+            # Draw the background shape
+            bkgFunc.Draw('SAME')
+                       
             # Add Run number to plot
-            addRunToPlot(run,"Full Fit")
+            addRunToPlot(run,[ ("Full Fit",fullFitColor),("Bkg",bkgColor) ] )
             
             # Print to file
             printCanvas()
+
+            # For debugging. Pause here
+            if not fitOK :
+                raw_input("Press any key to continue ...")
     
             # Results of the fit
-            maxErrorForOK = 1e-4
-            if fullFitF.GetParError(1) < maxErrorForOK :
+            if fitOK :
                 result = { 'OK'    : True,
                            'Mean'  : [fullFitF.GetParameter(1),fullFitF.GetParError(1)],
                            'Sigma' : [fullFitF.GetParameter(2),fullFitF.GetParError(2)]
                            }
             else:
-                if preFitF.GetParError(1) < maxErrorForOK :
+                if fFitF.GetParError(1) < maxErrorForOK :
                     result = { 'OK'    : True,
-                               'Mean'  : [preFitF.GetParameter(1),preFitF.GetParError(1)],
-                               'Sigma' : [preFitF.GetParameter(2),preFitF.GetParError(2)]
+                               'Mean'  : [fFitF.GetParameter(1),fFitF.GetParError(1)],
+                               'Sigma' : [fFitF.GetParameter(2),fFitF.GetParError(2)]
                                }
+                else:
+                    result['Message'] = "Histogram Fit Failed"
+
+            #if result['OK'] :
+            #    if ( (rad == 'Rich1Gas' and result['Sigma'][0] > 0.003) or
+            #         (rad == 'Rich2Gas' and result['Sigma'][0] > 0.001) ) :
+            #        print "Large fitted sigma, please check ? sigma =", result['Sigma'][0]
+            #        raw_input("Press any key to continue ...")
 
         # Close the rootfile
         rootfile.Close()
@@ -695,14 +805,19 @@ def averageCPUTimePerEvent(jobs):
     cpuHist.Draw('E')
     printCanvas()
     
-def addRunToPlot(run,tag=""):
+def addRunToPlot(run,tags=[]):
     from ROOT import TText
     text = TText()
     text.SetNDC()
     text.SetTextSize(0.03)
-    text.DrawText( 0.12, 0.85, "Run "+str(run) )
-    if tag != "":
-        text.DrawText( 0.12, 0.80, tag )
+    x = 0.12
+    y = 0.85
+    text.DrawText( x, y, "Run "+str(run) )
+    for tag in tags:
+        if tag[0] != "":
+            y -= 0.05
+            text.SetTextColor(tag[1])
+            text.DrawText( x, y, tag[0] )
     
 def getRunLFNData(pickedRuns):
     import pickle
@@ -732,8 +847,9 @@ def createTempOptsFile(name):
 
 def rootStyle():
     # make ROOT plots less unpleasant to look at ...
-    
     from ROOT import gROOT, gStyle, kWhite, kBlack
+
+    gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
 
     # Start from a plain default
     gROOT.SetStyle("Plain")
