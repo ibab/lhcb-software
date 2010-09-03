@@ -1,3 +1,7 @@
+2010-09-03 Joel Closier <joel.closier@cern.ch>
+
+        * scripts/lhcb_bkk: add -f options for csh
+
 2010-08-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc: Some clean up and improvements.
