@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.13 2008-10-21 13:53:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.14 2010-09-03 13:57:25 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -37,7 +37,6 @@ static const char* LOG_DIR="/group/online/dataflow/logs/";
 using namespace ROLogger;
 using namespace std;
 
-static const int   s_NumList[]  = {1,10,50,100,200,300,500,1000,5000,10000};
 static const char* s_SevList[]  = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 static const char* s_PartList[] = {
   "TDET",
@@ -91,6 +90,7 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const string
   ::upic_add_comment(CMD_COM2,           "","");
   ::upic_set_param(m_severity, 1,  "A7", m_severity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
   ::upic_add_command(CMD_SEVERITY,       "Severity for messages ^^^^^^^","");
+  // static const int   s_NumList[]  = {1,10,50,100,200,300,500,1000,5000,10000};
   // ::upic_set_param(&m_numMsg,  1,  "I6", m_numMsg,0,0,s_NumList,sizeof(s_NumList)/sizeof(s_NumList[0]),0);
   // ::upic_add_command(CMD_COM3,           "Show             ^^^^^^ Messages","");
   ::upic_set_param(m_node,     1, "A16", m_node,0,0,0,0,0);
@@ -168,10 +168,10 @@ void ErrShowDisplay::processFile(const string& fname, FILE* output) {
     Filter f;
     time_t begin = ::str2time(m_startTime,s_timeFmt);
     time_t end   = ::str2time(m_endTime,  s_timeFmt);
-    f.setNodeMatch      (m_node,     flag);
-    f.setUtgidMatch     (m_process,  flag);
-    f.setComponentMatch (m_component,flag);
-    f.setMessageMatch   (m_message,  flag);
+    f.setNodeMatch      (m_node,     (unsigned char)flag);
+    f.setUtgidMatch     (m_process,  (unsigned char)flag);
+    f.setComponentMatch (m_component,(unsigned char)flag);
+    f.setMessageMatch   (m_message,  (unsigned char)flag);
     ::sprintf(text,"Logger output:%s from %s to %s",fname.c_str(),m_startTime,m_endTime);
     ioc.send(m_msg,CMD_START,new string(text));
     ::memcpy(tim,m_startTime+7,4);

@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.19 2010-04-15 16:04:59 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.20 2010-09-03 13:57:25 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.19 2010-04-15 16:04:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.20 2010-09-03 13:57:25 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstring>
@@ -221,10 +221,10 @@ void MessageLogger::printHistory(const string& pattern) {
   char text[132];
   int  num=200, match = 0, displayed=0;
   size_t numMsg = num;
-
   size_t idq, id1 = pattern.find("#Node:{"), id2 = pattern.find("#Msg:{"), id3 = pattern.find("#Num:{");
-  string node_pattern = "*", msg_pattern = "*", tmp;
+  string node_pattern = "*", msg_pattern = "*";
   vector<const char*> messages;
+
   if ( id1 != string::npos ) {
     idq = pattern.find("}",id1);
     node_pattern = pattern.substr(id1+7,idq-id1-7);
@@ -274,7 +274,7 @@ void MessageLogger::printHistory(const string& pattern) {
       }
     }
   }
-  for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
+  for(size_t e=messages.size(), j=e>numMsg ? e-numMsg : 0; j<e; ++j, ++displayed)  
     printMessage(messages[j], false);
   ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
             match,"messages matched the request:",node_pattern.c_str(),

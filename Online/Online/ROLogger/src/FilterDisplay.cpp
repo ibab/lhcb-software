@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.7 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.8 2010-09-03 13:57:25 frankb Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -150,7 +150,7 @@ unsigned char _matchType(const char* filter, const char* match)  {
   else if ( ::strcmp(s_matchType[1], match) ==0 ) r += Filter::MATCH_INVERSE;
   else if ( ::strcmp(s_matchType[2], match) ==0 ) r += Filter::MATCH_REQUIRE;
   return r;
-};
+}
 
 const char* s_clean(char* str, size_t len) {
   for(char* s=str+len-1;s>str; --s) 
