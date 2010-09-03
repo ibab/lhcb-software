@@ -1,3 +1,8 @@
+2010-09-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/change-svn-wc-format: new file. to fix the working copy with the wrong
+	SVN version.
+
 2010-09-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/volume.py: fixed the escaping of characters in regular expressions.
