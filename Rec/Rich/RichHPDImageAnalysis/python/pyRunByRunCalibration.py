@@ -2,13 +2,23 @@
 # Globals
 imageFileName = ''
 canvas        = None
-tempDir       = "/var/work/jonesc/tmp"
+tempDir       = "/var/work/jonesc/tmp/HPDImageAlign"
 
 def initialise():
-    
-    from Configurables import DDDBConf, CondDB, CondDBAccessSvc, LHCbApp
+
+    # Check temp dir is valid
+    tmpDir = globals()['tempDir']
+    import os
+    if not os.path.exists(tmpDir):
+        os.mkdir(tmpDir)
+    if not os.access(tmpDir,os.W_OK):
+        raise Exception('TempDirNotWritable')
+
+    from ROOT import gROOT
+    gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
     
     # Initialise a few things
+    from Configurables import DDDBConf, CondDB, CondDBAccessSvc, LHCbApp
     DDDBConf(DataType = "2010")
     LHCbApp().DDDBtag   = "head-20100518"
     LHCbApp().CondDBtag = "head-20100730"
@@ -20,7 +30,6 @@ def initialise():
 
 def msgSvc():
     import GaudiPython
-    #GaudiPython.AppMgr().createSvc('MessageSvc')
     return GaudiPython.AppMgr().service('MessageSvc','IMessageSvc')
 
 def iDataSvc():
@@ -34,7 +43,6 @@ def umsSvc():
 
 def iDetDataSvc():
     import GaudiPython
-    #GaudiPython.AppMgr().createSvc('DetectorDataSvc')
     return GaudiPython.AppMgr().service('DetectorDataSvc','IDetDataSvc')
 
 def richSystem():
@@ -167,13 +175,13 @@ def fileMD5(file):
     m.update(content)
     return m.hexdigest()
 
-def pickleData(filename,data):
+def pickleDict(filename,data):
     import pickle, os
     file = open(filename,"w")
     pickle.dump(data,file)
     file.close()
 
-def loadData(filename):
+def loadDict(filename):
     import pickle, os
     data = { }
     if os.path.exists(filename) :
@@ -182,19 +190,18 @@ def loadData(filename):
         file.close()
     return data
 
-def runInfoCache():
-    return loadData("RunInfoCache.pck")
-
-def saveRunInfoCache(data):
-    pickleData("RunInfoCache.pck",data)
-
 def getRunFillData(rootfiles):
+
+    print "Getting Run and Fill time information"
 
     # get file MD5 sum
     md = fileMD5(rootfiles)
 
-    # Cache run data
-    dataCache = runInfoCache()
+    RunFillCacheName = "RunFillInfoCache.pck"
+    RunCacheName     = "RunInfoCache.pck"
+
+    # load cached run/fill info
+    runFillTimeCache = loadDict(RunFillCacheName)
 
     # Initialise return data
     runfilldata = { }
@@ -202,40 +209,48 @@ def getRunFillData(rootfiles):
     runfilldata["FillData"] = { }
     runfilldata["GlobalStopTime"] = None
 
-    # Do we already have results for this
-    if md in dataCache.keys() :
+    # Do we already have results for this run/fill
+    if md in runFillTimeCache.keys() :
 
-        runfilldata = dataCache[md]
+        # Yes, so just return the data
+        runfilldata = runFillTimeCache[md]
 
     else:
 
+        # No, need to build it
         import datetime, time, os
-
-        # Database API
-        from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-        database = BookkeepingClient()
 
         # Load the list of root files
         files = rootFileListFromTextFile(rootfiles)
+
+        # Load the raw cached run data
+        runTimeCache = loadDict(RunCacheName)
 
         # Loop over the sorted run list and get the runfilldata
         tmpTime = 0
         for filename in files:
             run = getIntInfo(filename,'Run')
             # Get run start and stop times
-            res = database.getRunInformations(int(run))
+            if run in runTimeCache.keys():
+                res = runTimeCache[run]
+            else:
+                from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+                res = BookkeepingClient().getRunInformations(int(run))
+                runTimeCache[run] = res
             if res['OK'] :
                 start = res['Value']['RunStart']
                 stop  = res['Value']['RunEnd']
                 fill  = int(res['Value']['FillNumber'])
                 runfilldata["RunData"][run] = { "Start" : start, "Stop" : stop, "Fill" : fill }
                 if fill not in runfilldata["FillData"].keys():
-                    runfilldata["FillData"][fill] = { "Start" : start, "Stop" : stop, "Files" : []  }
+                    runfilldata["FillData"][fill] = { "Start" : start,
+                                                      "Stop"  : stop,
+                                                      "Files" : []  }
                 fillData = runfilldata["FillData"][fill]
                 if fillData["Start"] > start : fillData["Start"] = start
                 if fillData["Stop"] < stop   : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
-                print "Run", run, "is from", start, "to", stop, "Fill", fill
+                print " -> Run", run, "Fill", fill, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
                 if unixEndTime > tmpTime :
                     tmpTime = unixEndTime
@@ -246,8 +261,11 @@ def getRunFillData(rootfiles):
                 DIRAC.exit(1)
 
         # Save the result to the cache
-        dataCache[md] = runfilldata
-        saveRunInfoCache(dataCache)
+        runFillTimeCache[md] = runfilldata
+
+        # Pickle the caches
+        pickleDict(RunFillCacheName,runFillTimeCache)
+        pickleDict(RunCacheName,runTimeCache)
 
     # Return the Run Time Information
     return runfilldata
@@ -289,8 +307,7 @@ def mergeRootFile(fill,infiles):
 def runToFill(run):
     # Database API
     from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-    database = BookkeepingClient()
-    res = database.getRunInformations(int(run))
+    res = BookkeepingClient().getRunInformations(int(run))
     fill = 0
     if res['OK'] :
         fill = res['Value']['FillNumber']
@@ -410,6 +427,10 @@ def calibration(rootfiles,type,fullFit):
         # close the ROOT file
         file.Close()
 
+    # Make plots showing the variations
+    # Also, fit for the average
+    print "Making summary plots"
+
     # Start a PDF file
     globals()["imageFileName"] = "HPDImageCalibrationBy"+type+".ps"
     printCanvas('[')
@@ -417,8 +438,6 @@ def calibration(rootfiles,type,fullFit):
     # Average X and Y values
     averageShifts = { }
 
-    # Make plots showing the variations
-    # Also, fit for the average
     for hpd,data in plotData.iteritems():
 
         # Min max flag values
@@ -466,7 +485,7 @@ def calibration(rootfiles,type,fullFit):
 
             plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
             plotX.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
-            plotX.GetXaxis().SetTitle(type)
+            plotX.GetXaxis().SetTitle(type+" Number")
             plotX.GetYaxis().SetTitle("X Offset / mm" )
             plotX.SetMarkerColor(alignColor)
             plotX.SetLineColor(alignColor)
@@ -482,7 +501,7 @@ def calibration(rootfiles,type,fullFit):
 
             plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
             plotY.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
-            plotY.GetXaxis().SetTitle(type)
+            plotY.GetXaxis().SetTitle(type+" Number")
             plotY.GetYaxis().SetTitle("Y Offset / mm" )
             plotY.SetMarkerColor(alignColor)
             plotY.SetLineColor(alignColor)
@@ -501,7 +520,7 @@ def calibration(rootfiles,type,fullFit):
 
             plotR = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
             plotR.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
-            plotR.GetXaxis().SetTitle(type)
+            plotR.GetXaxis().SetTitle(type+" Number")
             plotR.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
             plotR.SetMarkerColor(alignColor)
             plotR.SetLineColor(alignColor)
@@ -629,9 +648,9 @@ def labelDataDB(dataColor,dbColor):
     text.SetNDC()
     text.SetTextSize(0.03)
     text.SetTextColor(dataColor)
-    text.DrawText( 0.12, 0.85, "From Image Shifts" )
+    text.DrawText( 0.13, 0.85, "Fitted Image Shifts" )
     text.SetTextColor(dbColor)
-    text.DrawText( 0.12, 0.80, "From DB" )
+    text.DrawText( 0.13, 0.81, "LHCbCond" )
     
 def printCanvas(tag=''):
     canvas = rootCanvas()
@@ -641,7 +660,6 @@ def printCanvas(tag=''):
     # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
     if tag == ']' and imageType == 'ps' :
         import os
-        print "Converting", imageFileName, "to PDF"
         os.system('ps2pdf '+imageFileName)
         os.remove(imageFileName)
         

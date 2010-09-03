@@ -4,6 +4,12 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-09-03 - Chris Jones
+ - Various improvements in the image alignment scripts
+  + Cache the results of slow DB queries on immutable information (like run
+    start and stop times) in pickled python files. This means each query is 
+    only ever done once per run, subtancially speeding up the script when it 
+    is rerun on the same data.
 
 !================= Rich/RichHPDImageAnalysis v1r2 2010-08-26 =================
 ! 2010-08-26 - Rob Lambert
@@ -11,16 +17,16 @@
 
 ! 2010-08-24 - Chris Jones
  - Update the monitor again to fill summary historys with 1/error^2 weights,
-   to properly allow the computation of the weight average and error when root
-   files are merged.
+   to properly allow the computation of the weighted average and error when 
+   root files are merged.
  - Add new file pyHPDImageFit.py that performs a fit to the HPD image in python
    using pyminuit2.
  - Update hpdLocalOffset method in pyHistoParsingUtils.py with a fullFit flag
-   to turn on the use of the full fit to the HPD image. Default False uses
+   to turn on the use of the full fit to the HPD image. Default (False) uses
    the summary histograms instead.
 
 ! 2010-08-23 - Chris Jones
- - Update algorithm to store shifts and # entries in seperate plots
+ - Update the algorithm to store shifts and # entries in seperate plots
  - Add new plots for the fitted errors on the shifts.
 
 ! 2010-08-22 - Chris Jones

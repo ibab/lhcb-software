@@ -1,5 +1,3 @@
-from ROOT import TH1D
-
 """
 Utility functions for HPD analysis
 """
