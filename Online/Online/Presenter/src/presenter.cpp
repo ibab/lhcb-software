@@ -1,7 +1,8 @@
-// $Id: presenter.cpp,v 1.80 2010-08-15 09:35:55 robbep Exp $
+// $Id: presenter.cpp,v 1.81 2010-09-03 12:18:35 frankb Exp $
 // STL
 #include <iostream>
 #include <fstream>
+#include <malloc.h>
 
 // ROOT
 #ifdef WIN32
