@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-03 - Sebastian Schleich
+ - updated StreamCalibration for the new InclPhi configurable
+
 ! 2010-09-03 - Rolf Oldeman
  - StrippingB2twobody.py. modified multi-decay channle mechanism: 
    One instance of CommonParticles with 115 decay descriptor instead of

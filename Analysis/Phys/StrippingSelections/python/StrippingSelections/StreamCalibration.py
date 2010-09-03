@@ -13,19 +13,20 @@ from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingLambdaNoPID
 from StrippingSelections import StrippingMuIDCalib
 from StrippingSelections import StrippingHltErrorBits
-from StrippingSelections.StrippingInclPhi import StrippingInclPhiConf
+from StrippingSelections.StrippingInclPhi import InclPhiConf
+
+
 
 stream = StrippingStream("Calibration")
 stream.appendLines( [ 
 		        StrippingMuIDCalib.jp_line, 
 		        StrippingMuIDCalib.b_line, 
 		        StrippingLambdaNoPID.line_lambda_dd, 
-		        StrippingLambdaNoPID.line_lambda_ll,
-                        StrippingInclPhiConf().InclPhiHighPtLine(),
-                        StrippingInclPhiConf().InclPhiLowPtLine(),
-                        StrippingInclPhiConf().InclPhiHighPtPhiLine(),
-                        StrippingInclPhiConf().InclPhiLowPtPhiLine(),
-                        StrippingInclPhiConf().InclPhiLDLine()
+		        StrippingLambdaNoPID.line_lambda_ll
 		    ] )
+
+MyInclPhiConf =  InclPhiConf("InclPhi", InclPhiConf.config_default )
+stream.appendLines( MyInclPhiConf.lines )
+
 
 stream.appendLines (StrippingHltErrorBits.lines)
