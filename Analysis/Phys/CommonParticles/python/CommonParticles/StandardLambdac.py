@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardLambdac.py,v 1.1 2009-12-14 11:45:32 poluekt Exp $ 
+# $Id: StandardLambdac.py,v 1.2 2010-09-03 20:59:11 roldeman Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardDplus.py
 #  configuration file for 'Standard Lambda_c' 
@@ -11,10 +11,13 @@
 Configuration file for 'Standard Lambda_c'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
+
+from CommonParticles.StdLooseLambdac import *
+_locations.update ( locations )
 
 from CommonParticles.StdVeryLooseLambdac import *
 _locations.update ( locations )

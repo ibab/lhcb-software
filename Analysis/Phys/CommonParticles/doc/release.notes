@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.189 2010-09-01 14:16:42 gcowan Exp $
+ )!$Id: release.notes,v 1.190 2010-09-03 20:59:11 roldeman Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-24 Rolf Oldeman
+ - Added new StdLooseLambdac
 
 ! 2010-08-24 Greig Cowan
  - Added new StdMassConstrainedJpsi2MuMu for use by beta_s B2JpsiX selections.
