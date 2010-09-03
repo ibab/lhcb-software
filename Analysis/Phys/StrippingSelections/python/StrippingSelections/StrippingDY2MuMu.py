@@ -19,40 +19,55 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 ## ############################################################
 _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
-mucut = '(PT>1*GeV)'
+
+mucut_1 = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)&(( PIDmu-PIDpi)>-1.0)'
+mucut_1_ps = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+mucut_2 = '(PT>1*GeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+
 
 _DY1 = CombineParticles(name+"1",
                          DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
+                         DaughtersCuts = { 'mu+' : mucut_1 , 
+                                           'mu-' : mucut_1 },
                          MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
                          WriteP2PVRelations = False
                          )
 
+
+
+#pre-scaled line for lowest mass bin
+_DY1_ps = CombineParticles(name+"1_ps",
+                         DecayDescriptor = 'Z0 -> mu+ mu-',
+                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
+                                           'mu-' : mucut_1_ps },
+                         MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
+                         WriteP2PVRelations = False
+                         )
+
+
 _DY2 = CombineParticles(name+"2",
                          DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
+                         DaughtersCuts = { 'mu+' : mucut_2 , 
+                                           'mu-' : mucut_2 },
                          MotherCut = "(MM>5*GeV) &(MM<10*GeV)",
                          WriteP2PVRelations = False
                          )
 
 _DY3 = CombineParticles(name+"3",
                          DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
+                         DaughtersCuts = { 'mu+' : mucut_2 , 
+                                           'mu-' : mucut_2 },
                          MotherCut = "(MM>10*GeV) &(MM<20*GeV ) ",
                          WriteP2PVRelations = False
                          )
 
 _DY4 = CombineParticles(name+"4",
                          DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
+                         DaughtersCuts = { 'mu+' : mucut_2 , 
+                                           'mu-' : mucut_2 },
                          MotherCut = "(MM>20*GeV) &(MM<40*GeV ) ",
                          WriteP2PVRelations = False
                          )
-
 
 
 
@@ -61,6 +76,12 @@ DY1 = Selection( "Sel"+name+"1",
                   Algorithm = _DY1,
                   RequiredSelections = [_muons]
                   )
+
+DY1_ps = Selection( "Sel"+name+"1_ps",
+                  Algorithm = _DY1_ps,
+                  RequiredSelections = [_muons]
+                  )
+
 
 DY2 = Selection( "Sel"+name+"2",
                   Algorithm = _DY2,
@@ -77,10 +98,13 @@ DY4 = Selection( "Sel"+name+"4",
 
 
 
-
 # build the SelectionSequence
 sequence1 = SelectionSequence("Seq"+name+"1",
                              TopSelection = DY1
+                             )
+
+sequence1_ps = SelectionSequence("Seq"+name+"1_ps",
+                             TopSelection = DY1_ps
                              )
 sequence2 = SelectionSequence("Seq"+name+"2",
                              TopSelection = DY2
@@ -97,6 +121,11 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 line1 = StrippingLine('DY2MuMu1'
                            , prescale = 1.
                            , algos = [ sequence1 ]
+                           )
+
+line1_ps = StrippingLine('DY2MuMu1_ps'
+                           , prescale = .1
+                           , algos = [ sequence1_ps ]
                            )
 
 line2 = StrippingLine('DY2MuMu2'

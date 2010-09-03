@@ -17,38 +17,40 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create DY -> ee candidates out of std loose electrons
 ## ############################################################
-_electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
+_electrons =  DataOnDemand(Location = 'Phys/StdTightElectrons')
 
-ecut = '(PT>1*GeV)'
+ecut_1 = '(PT>1*GeV)&(TRPCHI2>0.001)&(PIDe >1)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+ecut_2 = '(PT>2*GeV)&(TRPCHI2>0.001)&(PIDe >1)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+
 
 _DY1 = CombineParticles(name+"1",
                          DecayDescriptor = 'Z0 -> e+ e-',
-                         DaughtersCuts = { 'e+' : ecut , 
-                                           'e-' : ecut },
+                         DaughtersCuts = { 'e+' : ecut_1 , 
+                                           'e-' : ecut_1 },
                          MotherCut = "(MM>2.5*GeV) & (MM<5*GeV ) ",
                          WriteP2PVRelations = False
                          )
 
 _DY2 = CombineParticles(name+"2",
                          DecayDescriptor = 'Z0 -> e+ e-',
-                        DaughtersCuts = {  'e+'  : ecut , 
-                                           'e-'  : ecut },
+                        DaughtersCuts = {  'e+'  : ecut_2 , 
+                                           'e-'  : ecut_2 },
                          MotherCut = "(MM>5*GeV) & (MM<10*GeV ) ",
                          WriteP2PVRelations = False
                          )
 
 _DY3 = CombineParticles(name+"3",
                          DecayDescriptor = 'Z0 -> e+ e-',
-                         DaughtersCuts = { 'e+' : ecut , 
-                                           'e-' : ecut },
+                         DaughtersCuts = { 'e+' : ecut_2 , 
+                                           'e-' : ecut_2 },
                          MotherCut = "(MM>10*GeV) & (MM<20*GeV ) ",
                          WriteP2PVRelations = False
                          )
 
 _DY4 = CombineParticles(name+"4",
                          DecayDescriptor = 'Z0 -> e+ e-',
-                         DaughtersCuts = { 'e+' : ecut , 
-                                           'e-' : ecut },
+                         DaughtersCuts = { 'e+' : ecut_2 , 
+                                           'e-' : ecut_2 },
                          MotherCut = "(MM>20*GeV) &(MM<40*GeV ) ",
                          WriteP2PVRelations = False
                          )
@@ -93,7 +95,7 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 # Define the lines
 ## ############################################################
 line1 = StrippingLine('DY2ee1'
-                           , prescale = 1.
+                           , prescale = .1
                            , algos = [ sequence1 ]
                            )
 

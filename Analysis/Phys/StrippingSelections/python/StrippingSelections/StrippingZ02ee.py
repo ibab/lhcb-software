@@ -17,9 +17,9 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 # Create Z0 -> ee candidates out of std loose electrons
 ## ############################################################
-_electrons =  DataOnDemand(Location = 'Phys/StdLooseElectrons')
+_electrons =  DataOnDemand(Location = 'Phys/StdTightElectrons')
 
-ecut = '(PT>10*GeV) '
+ecut = '(PT>15*GeV) &(TRPCHI2>0.001)&(PIDe >1)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
 
 _Z0 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> e+ e-',

@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2010-09-03 - James Keaveney
+  - Significant tightening of electroweak lines. Some pre-scaled lines
+    added for calibration.
+
 ! 2010-09-03 - Greig Cowan
  - Removed Bs2MuMuNoMuID from DiMuon stream so that nightlies pass. This is just temporary until
    streams are redefined next week.

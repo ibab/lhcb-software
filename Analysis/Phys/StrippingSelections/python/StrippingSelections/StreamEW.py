@@ -1,6 +1,5 @@
 #
 #   Electroweak stripping selections 
-#
 #            
 #
 #   @author J. Keaveney
@@ -27,13 +26,17 @@ stream.appendLines( [
                         StrippingZ02MuMu.lineNoPIDs,
 		        StrippingWMu.line,
                         StrippingWMu.lineloose,
-                        StrippingWMu.lineNoPIDs,  
+                        StrippingWMu.line_ps,
+                        StrippingWMu.lineloose_ps,
+                        StrippingWMu.lineNoPIDs_ps,
 		        StrippingDY2MuMu.line1,
+      		        StrippingDY2MuMu.line1_ps,
                         StrippingDY2MuMu.line2,
 		        StrippingDY2MuMu.line3,
 		        StrippingDY2MuMu.line4,
                         StrippingZ02ee.line,
                         StrippingWe.line,
+                        StrippingWe.line_ps,
                         StrippingDY2ee.line1,
                         StrippingDY2ee.line2,
 		        StrippingDY2ee.line3,

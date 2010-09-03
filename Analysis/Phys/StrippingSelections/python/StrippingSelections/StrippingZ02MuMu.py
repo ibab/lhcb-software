@@ -19,7 +19,8 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 ## ############################################################
 _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
-mucut = '(PT>10*GeV) '
+mucut =  '(PT>15*GeV)&(TRPCHI2>0.0001)'
+
 
 _Z0 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> mu+ mu-',
