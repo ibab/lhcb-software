@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-03 - Francesco Dettori 
+  - Commissioning of StrippingDstarD02xxForCross  a modified version of StrippingDstarD02xx
+    for the stripping of 14 nb for cross-section measurements, to be removed afterward
+
 ! 2010-09-03 - Susan Haines
  - removed StrippingBu2D0K_D02KSPiPi.py and updated StrippingBu2D0h_D02KShh_NoPID.py 
 	with narrower D mass window and 3 decay descriptors for D.	Other changes to cuts to improve timing and retention.

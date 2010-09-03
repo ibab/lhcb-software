@@ -30,6 +30,7 @@ from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarProm
 from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+from StrippingSelections.StrippingDstarD02xxForCross import  StrippingDstarD02xxForCrossConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
 from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
@@ -124,6 +125,7 @@ stream.appendLines( [
 stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 stream.appendLines( StrippingDstarD02xxConf().lines() )
+stream.appendLines( StrippingDstarD02xxForCrossConf().lines() )
 # Charmonium -> p pbar
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 stream.appendLines( [ StrippingCcbar2PpbarConf().Loose_Line() ] )
