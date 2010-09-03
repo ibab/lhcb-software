@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh -f
 #
 # script to start the Bookkeeping graphical interface
 # JC : 15 Jan 2009
