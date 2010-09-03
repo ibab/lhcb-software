@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-04 - Anton Poluektov 
+  - Further tuning of StrippingB2DX.py. Relaxed some D cuts, lifetime cut for B 
+    instead of flight chi2. Total retention is 0.42% with Reco05-Stripping08. 
 
 ! 2010-09-03 - James Keaveney
   - Significant tightening of electroweak lines. Some pre-scaled lines

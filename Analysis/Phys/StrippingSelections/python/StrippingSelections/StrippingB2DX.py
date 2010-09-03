@@ -57,7 +57,7 @@ class B2DXLines(object) :
     def __init__(
 	self, 
         moduleName = "B2DX", 
-	config = {
+        config = {
     	    "KstarCuts" : {
     	      "DauChi2Max"   : 5., 
     	      "DauPtMin"     : 300., 
@@ -96,9 +96,10 @@ class B2DXLines(object) :
     	      "CombDMass"    : 110.,          # MeV
     	      "DMass"        : 100.,          # MeV
     	      "VtxChi2Max"   : 12.,           # D vertex Chi2
-    	      "VDChi2Min"    : 100.,          # Chi2 of D vertex separation from the related PV
-	      "PtMin"        : 1500.,         # MeV
-	      "DIRAMin"	     : 0.99, 
+    	      "VDChi2Min"    : 36.,           # Chi2 of D vertex separation from the related PV
+	      "PtMin"        : 1000.,         # MeV
+	      "MaxDauMIPChi2": 40.,
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,            # mm
 	      "IPChi2Min"    : 0.,
     	    }, 
@@ -110,17 +111,19 @@ class B2DXLines(object) :
     	      "CombDMass"    : 110.,          # MeV
     	      "DMass"        : 100.,          # MeV
     	      "VtxChi2Max"   : 12.,           # D vertex Chi2
-    	      "VDChi2Min"    : 100.,          # Chi2 of D vertex separation from the related PV
+    	      "VDChi2Min"    : 0.,            # Chi2 of D vertex separation from the related PV
 	      "PtMin"        : 1500.,         # MeV
 	      "MaxDauMIPChi2": 40.,
-	      "DIRAMin"	     : 0.99, 
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,            # mm
 	      "IPChi2Min"    : 0.,
     	    }, 
     	    "D2hhhhCuts" : {
     	      "DauChi2Max"   : 5., 
-    	      "DauPtMin"     : 250., 
-    	      "DauPMin"      : 2000., 
+    	      "PionPtMin"    : 150., 
+    	      "PionPMin"     : 2000., 
+    	      "KaonPtMin"    : 250., 
+    	      "KaonPMin"     : 3000., 
     	      "DauMIPChi2Min": 4., 
     	      "CombMassMin"  : 1758.,         # MeV
     	      "CombMassMax"  : 1978.,         # MeV
@@ -131,7 +134,7 @@ class B2DXLines(object) :
 	      "PtMin"        : 2000.,         # MeV
 	      "PMin"         : 2000.,         # MeV
 	      "MaxDauMIPChi2": 40.,
-	      "DIRAMin"	     : 0.99, 
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,            # mm
     	    }, 
     	    "D2KshhCuts" : {
@@ -149,7 +152,7 @@ class B2DXLines(object) :
     	      "VDChi2Min"    : 100.,          # Chi2 of D vertex separation from the related PV
 	      "PtMin"        : 1500.,         # MeV
 	      "PMin"         : 1500.,         # MeV
-	      "DIRAMin"	     : 0.99, 
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,           # mm
 	      "IPChi2Min"    : 0.,
     	    }, 
@@ -158,17 +161,18 @@ class B2DXLines(object) :
     	      "DauPtMin"     : 250., 
     	      "DauPMin"      : 2000., 
     	      "DauMIPChi2Min": 4., 
-    	      "CombMassMin"  : 1758.,         # MeV
-    	      "CombMassMax"  : 1978.,         # MeV
-    	      "MassMin"      : 1768.,         # MeV
-    	      "MassMax"      : 1968.,         # MeV
+    	      "CombMassMin"  : 1708.,         # MeV
+    	      "CombMassMax"  : 2028.,         # MeV
+    	      "MassMin"      : 1718.,         # MeV
+    	      "MassMax"      : 2018.,         # MeV
     	      "VtxChi2Max"   : 10.,           # D vertex Chi2
     	      "VDChi2Min"    : 36.,           # Chi2 of D vertex separation from the related PV
 	      "PtMin"        : 2000.,         # MeV
 	      "PMin"         : 2000.,         # MeV
 	      "Pi0PtMin"     : 600,           # MeV
 	      "Pi0PMin"      : 2000,          # MeV
-	      "DIRAMin"	     : 0.99, 
+	      "MaxDauMIPChi2": 40.,
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,           # mm
     	    }, 
 	    "BCuts" : {
@@ -178,7 +182,7 @@ class B2DXLines(object) :
     	      "BachelorMIPChi2Min" : 16., 
 	      "VtxChi2Max"         : 12.,           # B vertex Chi2
 	      "IPChi2Max"          : 25.,           # chi2 of B impact parameter to the related PV
-	      "VDChi2Min"          : 64.,           # Chi2 of B vertex separation from the related PV
+	      "LTMin"              : 0.2,           # Chi2 of B vertex separation from the related PV
 	      "DIRAMin"            : 0.9998,        # DIRA of the B to the related PV
 	      "CombDMass"          : 500,           # MeV
 	    }, 
@@ -194,18 +198,18 @@ class B2DXLines(object) :
     	      "VtxChi2Max"   : 12.,           # D vertex Chi2
     	      "VDChi2Min"    : 36.,           # Chi2 of D vertex separation from the related PV
 	      "PtMin"        : 1000.,         # MeV
-	      "DIRAMin"	     : 0.99, 
+	      "DIRAMin"	     : 0.9, 
 	      "DOCAMax"      : 1.5,           # mm
 	      "IPChi2Min"    : 0.,
     	    }, 
 	    "LambdaBCuts" : {
     	      "BachelorChi2Max"    : 5., 
-    	      "BachelorPtMin"      : 350., 
-    	      "BachelorPMin"       : 2000., 
+    	      "BachelorPtMin"      : 500., 
+    	      "BachelorPMin"       : 5000., 
     	      "BachelorMIPChi2Min" : 16.,
 	      "VtxChi2Max"         : 12.,           # B vertex Chi2
 	      "IPChi2Max"          : 25.,           # chi2 of B impact parameter to the related PV
-	      "VDChi2Min"          : 49.,           # Chi2 of B vertex separation from the related PV
+	      "LTMin"              : 0.2,           # Chi2 of B vertex separation from the related PV
 	      "DIRAMin"            : 0.9998,        # DIRA of the B to the related PV
 	      "CombMassMin"        : 4800,          # MeV
 	      "CombMassMax"        : 5900,          # MeV
@@ -337,7 +341,7 @@ def makeD2hh(moduleName, config) :
 
     __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min", 
                               "PtMin", "CombDMass", "DMass", "VtxChi2Max", "VDChi2Min", 
-                              "DIRAMin", "DOCAMax", "IPChi2Min")
+                              "DIRAMin", "DOCAMax", "IPChi2Min", "MaxDauMIPChi2")
 
     checkConfig(__configuration_keys__, config)
     	     
@@ -358,6 +362,7 @@ def makeD2hh(moduleName, config) :
 
     D2pipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
+    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) & " \
     "(ADAMASS('D0') < %(CombDMass)s*MeV)" % config
 
     D2pipi.MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
@@ -510,7 +515,7 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Location) :
     __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min", 
                               "PtMin", "CombMassMin", "CombMassMax", "MassMin", "MassMax",
                               "VtxChi2Max", "VDChi2Min", "Pi0PtMin", "Pi0PMin", "PMin",
-                              "DIRAMin", "DOCAMax")
+                              "DIRAMin", "DOCAMax", "MaxDauMIPChi2")
 
     checkConfig(__configuration_keys__, config)
 
@@ -527,6 +532,7 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Location) :
 
     _DCombCut = "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
     "(ADOCA(1,2) < %(DOCAMax)s) & " \
+    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) &" \
     "(APT> %(PtMin)s *MeV)" % config
 
     _DCut = "(M> %(MassMin)s *MeV) & (M< %(MassMax)s *MeV) & " \
@@ -546,7 +552,7 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Location) :
 
 def makeD2hhhh(moduleName, config) : 
 
-    __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min", 
+    __configuration_keys__ = ("DauChi2Max", "PionPtMin", "PionPMin", "KaonPtMin", "KaonPMin", "DauMIPChi2Min", 
                               "PtMin", "CombMassMin", "CombMassMax", "MassMin", "MassMax",
                               "VtxChi2Max", "VDChi2Min", "PMin", "MaxDauMIPChi2", 
                               "DIRAMin", "DOCAMax")
@@ -559,13 +565,17 @@ def makeD2hhhh(moduleName, config) :
 #    StdPi = DataOnDemand(Location = "Phys/StdLoosePions")
 #    StdK  = DataOnDemand(Location = "Phys/StdLooseKaons")
 
-    Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
-    "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
+    DaughtercutPion = "((TRCHI2DOF<%(DauChi2Max)s) & " \
+    "(PT > %(PionPtMin)s*MeV) & (P > %(PionPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(DauMIPChi2Min)s))" % config
+
+    DaughtercutKaon = "((TRCHI2DOF<%(DauChi2Max)s) & " \
+    "(PT > %(KaonPtMin)s*MeV) & (P > %(KaonPMin)s*MeV) & " \
     "(MIPCHI2DV(PRIMARY) > %(DauMIPChi2Min)s))" % config
 
     D2Kpipipi = CombineParticles("D2KpipipiFor" + moduleName)
     D2Kpipipi.DecayDescriptors = [ "[D0 -> K- pi+ pi- pi+]cc" ]
-    D2Kpipipi.DaughtersCuts =  { "pi+"	   : Daughtercut, "K+" : Daughtercut }
+    D2Kpipipi.DaughtersCuts =  { "pi+"	   : DaughtercutPion, "K+" : DaughtercutKaon }
 
     D2Kpipipi.CombinationCut = \
     "(APT>%(PtMin)s*MeV) & " \
@@ -586,6 +596,7 @@ def makeD2hhhh(moduleName, config) :
                            RequiredSelections = [ D2KpipipiSel, D2KKpipiSel ] )
 
     return DSel
+
 
 def makeLambdaC(moduleName, config) :
 
@@ -735,7 +746,7 @@ def makeB2D0Pi(moduleName, DName, D0Sel, config ) :
     B2DPi.CombinationCut = "(ADAMASS('B+') < %(CombDMass)s *MeV)" % config
 
     B2DPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps) & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB2DPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
@@ -757,7 +768,7 @@ def makeB2D0K(moduleName, DName, D0Sel, config) :
     B2DK.CombinationCut = "(ADAMASS('B+') < %(CombDMass)s *MeV)" % config
 
     B2DK.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB2DKWith" + DName + "For" + moduleName, Algorithm = B2DK, 
@@ -778,7 +789,7 @@ def makeB02DPi(moduleName, DName, DSel, config ) :
     B2DPi.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
 
     B2DPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB02DPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
@@ -800,7 +811,7 @@ def makeB02DK(moduleName, DName, DSel, config) :
     B2DK.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
 
     B2DK.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB02DKWith" + DName + "For" + moduleName, Algorithm = B2DK, 
@@ -833,7 +844,7 @@ def makeB02D0Kstar(moduleName, DName, KstarSel, D0Sel, config) :
     _B0.CombinationCut = _BCombCut
 #    _B0.MotherCut = _BCut
     _B0.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB2D0KstarWith" + DName + "For" + moduleName
@@ -867,7 +878,7 @@ def makeB02D0Phi(moduleName, DName, PhiSel, D0Sel, config) :
     _B0.CombinationCut = _BCombCut
 #    _B0.MotherCut = _BCut
     _B0.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB2D0PhiWith" + DName + "For" + moduleName
@@ -901,7 +912,7 @@ def makeB02D0Rho(moduleName, DName, RhoSel, D0Sel, config) :
     _B0.CombinationCut = _BCombCut
 #    _B0.MotherCut = _BCut
     _B0.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelB2D0RhoWith" + DName + "For" + moduleName
@@ -923,7 +934,7 @@ def makeLambdaB2LambdaCPi(moduleName, LambdaCSel, config ) :
     LambdaB2LambdaCPi.CombinationCut = "(in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV))" % config
 
     LambdaB2LambdaCPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps) & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelLambdaB2LambdaCPiFor" + moduleName, Algorithm = LambdaB2LambdaCPi, 
@@ -944,7 +955,7 @@ def makeLambdaB2LambdaCK(moduleName, LambdaCSel, config ) :
     LambdaB2LambdaCK.CombinationCut = "(in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV))" % config
 
     LambdaB2LambdaCK.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
-    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps) & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
 
     return Selection("SelLambdaB2LambdaCKFor" + moduleName, Algorithm = LambdaB2LambdaCK, 
