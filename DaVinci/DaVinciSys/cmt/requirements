@@ -4,11 +4,12 @@ version v25r9
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r8   Phys
+use  DaVinci                 	v25r9   Phys
 use  DaVinciTests               v1r2
 
 # Patches
 use   DDDB                      v1r34   Det
+use   CaloReco                  v5r6p1  Calo
 
 # Declare this as a container package
 apply_pattern container_package
