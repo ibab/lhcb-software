@@ -207,7 +207,8 @@ int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin,
   static struct servent* se = ::getservbyname(NAME_SERVICE_NAME,"udp");
   rin          = m_sinudp;
 #endif
-  rin.sin_port = se==0 ? mode ? htons(port) : htons(port+1) : se->s_port;
+  rin.sin_port = (NetworkChannel::Port)
+    (se==0 ? mode ? htons(port) : htons(port+1) : se->s_port);
   // To use only ONE nameserver and no predefined service 
   // for both allocation and inquire enable this:
   // export TAN_PORT=YES;
@@ -230,21 +231,21 @@ int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
 void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
   int n, s = 0;
   char *p;
-  if ( 0 != (p=strstr(name,"::")) )    {      // DECNET STYLE
+  if ( 0 != (p=::strstr(name,"::")) )    {      // DECNET STYLE
     s = 0;
     if (node != 0)  {
-      strncpy (node, name, n = p - name);
+      ::strncpy (node, name, n = p - name);
       node [n] = 0;
     }
-    if (proc!= 0)  strcpy (proc, p + 2);
+    if (proc!= 0) ::strcpy (proc, p + 2);
   }
   else if ( 0 != (p=strchr(name,'@')) )    {
     s = 1;
     if (node != 0)  {                         // INTERNET STYLE
-      strcpy (node, p + 1);
+      ::strcpy (node, p + 1);
     }
     if (proc!= 0)   {
-      strncpy (proc, name, n = p-name);
+      ::strncpy (proc, name, n = p-name);
       proc [n] = 0;
     }
   }
@@ -252,8 +253,8 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     if (node != 0) strcpy (node, m_pcHostName);
     if (proc != 0) strcpy (proc, name);
   }
-  for(p=node; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
-  for(p=proc; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
+  for(p=node; p && *p; p++) *p = char(s==1 ? ::tolower(*p) : ::toupper(*p));
+  for(p=proc; p && *p; p++) *p = char(s==1 ? ::tolower(*p) : ::toupper(*p));
 }
 // ----------------------------------------------------------------------------
 //  retrieve network address of a task given his name
@@ -323,7 +324,7 @@ int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
             msg.Convert();
             if ( num_byte != int(msg._Length()))return fatalError( errorCode(TAN_SS_ODDRESPONSE) );
             if ( msg.error() != TAN_SS_SUCCESS) return fatalError( errorCode(msg.error()) );
-            m_portAllocated = ntohs(msg.m_sin.sin_port)+1;
+            m_portAllocated = NetworkChannel::Port(ntohs(msg.m_sin.sin_port)+1);
             *port = msg.m_sin.sin_port;         
                                                 return errorCode( TAN_SS_SUCCESS );
           }                                     // receive timeout fired

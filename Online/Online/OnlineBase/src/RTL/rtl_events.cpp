@@ -152,8 +152,10 @@ int lib_rtl_clear_event(lib_rtl_event_t h) {
     {
       return 1;
     }
+#if !defined(USE_PTHREADS)   // Not reachable otherwise
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to clear event flag 0x%08X", h->handle);
     return 0;
+#endif
   }
   return 1;
 }
@@ -185,10 +187,12 @@ int lib_rtl_try_event(lib_rtl_event_t h)    {
 #endif
     {
       return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
-        h->name,h->handle);
+				    h->name,h->handle);
     }
+#if !defined(USE_PTHREADS)  // not reachable
     h->held = 1;
     return 1;
+#endif
   }
   ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
   return 0;

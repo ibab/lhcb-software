@@ -91,7 +91,7 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
         sprintf(e->_Message()._Name(),"MYTASK_%02d_%02d",i,j);
         strcpy(msg._Name(),e->_Message()._Name());
         int status = db.insertAlias (e);
-        NetworkChannel::Port fnd  = db.findPort(msg);
+        fnd  = db.findPort(msg);
         if ( fnd != port ) {
 	  std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
 		    << " found:" << std::hex << fnd 

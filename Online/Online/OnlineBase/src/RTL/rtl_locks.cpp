@@ -130,6 +130,7 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
     }
     else {
       status = ::sem_destroy(h->handle);
+      if ( 0 == status ) {}
     }
 #elif defined(_WIN32)
     if ( ::CloseHandle(h->handle) != 0 ) 

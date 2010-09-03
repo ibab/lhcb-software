@@ -10,14 +10,6 @@
 
 using namespace std;
 
-namespace {
-  template<class T> union func_desc   {
-    void* ptr;
-    T     fun;
-    explicit func_desc(T t) { fun = t; }
-    explicit func_desc(void* t) { ptr = t; }
-  };
-}
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #include <winsock.h>
@@ -63,6 +55,16 @@ namespace RTL  {
 static int exit_status;
 
 #ifdef USE_PTHREADS
+
+namespace {
+  template<class T> union func_desc   {
+    void* ptr;
+    T     fun;
+    explicit func_desc(T t) { fun = t; }
+    explicit func_desc(void* t) { ptr = t; }
+  };
+}
+
 #include <unistd.h>
 #include <signal.h>
 #define ERROR_SUCCESS 0

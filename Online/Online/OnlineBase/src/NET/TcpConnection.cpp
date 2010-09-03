@@ -31,7 +31,7 @@ TcpConnection::TcpConnection ( const char* service )  {
   // ----------------------------------------------------------------------------
   m_status = CONNECTION_ERROR;
   ::strcpy(m_service,service);
-  initialize( servicePort(Service()) );
+  initialize( Port(servicePort(Service())) );
 }
 
 TcpConnection::TcpConnection ( TcpConnection::Port port )  {

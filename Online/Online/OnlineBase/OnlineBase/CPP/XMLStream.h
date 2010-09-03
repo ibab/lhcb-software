@@ -280,7 +280,7 @@ namespace XML  {
   struct Guard : public tag {
     Stream& m_s;
     /// Submit guard, which closes itself on destruction: Constructor
-    explicit Guard(Stream& s, CSTR& t, int i=-1) : tag(t,i), m_s(s)    
+    Guard(Stream& s, CSTR& t, int i=-1) : tag(t,i), m_s(s)    
     {  m_s << start(name, number) << std::endl;                            }
     /// Submit guard, which closes itself on destruction: Destructor
     ~Guard()        {  m_s << end(name, number) << std::endl;              }

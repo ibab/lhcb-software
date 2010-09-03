@@ -27,14 +27,14 @@ struct wt_fac_entry : public qentry  {
   unsigned int facility;
   wt_callback_t rearm;
   wt_callback_t action;
-  explicit wt_fac_entry(unsigned int f, wt_callback_t arm, wt_callback_t act)
+  wt_fac_entry(unsigned int f, wt_callback_t arm, wt_callback_t act)
     : qentry(0,0), facility(f), rearm(arm), action(act) {}
 }; 
 
 struct wt_queue_entry : public qentry  {
   unsigned int  facility;
   void*         userpar1;
-  explicit wt_queue_entry(unsigned int f, void* p1) 
+  wt_queue_entry(unsigned int f, void* p1) 
   : qentry(0,0), facility(f), userpar1(p1) {}
 }; 
 

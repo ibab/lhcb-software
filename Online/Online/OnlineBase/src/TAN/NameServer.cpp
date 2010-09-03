@@ -27,7 +27,7 @@ public:
   explicit Receivehandler ( EventReactor* reactor ) 
     : EventHandler(reactor), _pNetwork(0), _pEntry(0)  {
   }
-  explicit Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
+  Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
     : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
   {
   }
@@ -334,7 +334,7 @@ void UdpNameService::handle ()   {
     handleMessage( ent, req, rep );
 #ifndef SERVICE
     // Swap port to reply connection
-    addr.sin_port = htons(m_port+1);
+    addr.sin_port = NetworkChannel::Port(htons(m_port+1));
 #endif
     //lib_rtl_output(LIB_RTL_DEBUG,"send to port:%04X\n",addr.sin_port);
     status = snd.send(&rep,sizeof(rep),0,0,&addr);
