@@ -26,7 +26,7 @@ use ExampleGaucho     v3r3     Online
 # use FarmMonitor     v1r0     Online
 use Gaucho            v6r28    Online
 use GaudiOnline       v2r44    Online
-use GaudiRootCnvSvcTests v1r0  Online
+use GaudiRootCnvTests v1r0     Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
@@ -44,7 +44,7 @@ use OnlineTasks       v1r33    Online
 use Presenter         v1r7     Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v2r8     Online
-use RootCnvSvc        v1r0     Online
+use RootCnv           v1r0     Online
 use ROMon             v1r25    Online
 use ROLogger          v0r19    Online
 use Trending          v1r1     Online
