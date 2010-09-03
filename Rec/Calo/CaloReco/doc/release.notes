@@ -6,6 +6,11 @@
 
 ! -----------------------------------------------------------------------------
 
+
+! 2010-09-03 - Olivier Deschamps
+ - Configuration.py : fix interference between unpack/calo sequence DoD setting
+ - CaloMergedPi0Alg : paranoid protection against already existing SplitCluster container
+
 ! 2010-08-27 - Olivier Deschamps
  - CaloMergedPi0Alg : add extraDigit tool to both mergedPi0 and splitPhotons + update python/Reconstruction.py (and old style options)
 

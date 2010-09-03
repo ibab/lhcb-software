@@ -76,10 +76,11 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'UseTracksM'          : True       # Use Tracks for MergedPi0s-ID
         , 'CaloStandalone'      : False      # useTrackX = false + usePrs/Spd = true
         , 'NeutralID'           : False      # Apply neutralID (CaloPIDs is in charge + problems with onDemand to be fixed)
-        , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand
+        , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand (only for components on RecList)
         , 'TrackLocations'      : []         # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
         , 'SkipNeutrals'        : False
         , 'SkipCharged'         : False
+        , 'ForceOnDemand'       : False      # force DoD for ALL components (incl. those not in RecList)
         ##
         }
     ## documentation lines 
@@ -102,10 +103,11 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'UseTracksM'         : """ Use Tracks for MergedPi0s-ID """
         , 'CaloStandalone'     : """ UseTrackX = false + usePrs/Spd = true """ 
         , 'NeutralID'          : """ Apply neutralID """ 
-        , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand """ 
+        , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand (for components in RecList) """ 
         , 'TrackLocations'     : """ TrackLocations (Photon/Electron selection)""" 
         , 'SkipNeutrals'       : """ Skip Neutral reco components in RecList""" 
         , 'SkipCharged'        : """ Skip Charged reco components in RecList"""
+        , 'ForceOnDemand'      : """ force DoD for ALL components"""
         ##
     }
     
@@ -264,26 +266,30 @@ class CaloRecoConf(LHCbConfigurableUser):
         _log.info ( self )
 
         recList = self.getProp ( 'RecList') 
-        skipNeutrals = self.getProp('SkipNeutrals')
-        skipCharged  = self.getProp('SkipCharged')
+        skipNeutrals  = self.getProp('SkipNeutrals')
+        skipCharged   = self.getProp('SkipCharged')
+        forceOnDemand = self.getProp('ForceOnDemand') 
 
         seq     = []
 
-        # configure all components by default (DoD)
-        dig = self.digits()
-        clu = self.clusters()
-        pho = self.photons()
-        mer = self.mergedPi0s();
-        ele = self.electrons();
+        # configure all components for DoD
+        if forceOnDemand :
+            _log.info('Force Data-On-Demand for all components')
+            self.setProp ( 'EnableRecoOnDemand', 'True' )
+            self.digits()
+            self.clusters()
+            self.photons()
+            self.mergedPi0s();
+            self.electrons();
 
         # add only the requested components to the sequence
-        if 'Digits'     in recList : addAlgs ( seq , dig ) 
-        if 'Clusters'   in recList : addAlgs ( seq , clu ) 
+        if 'Digits'     in recList : addAlgs ( seq , self.digits() ) 
+        if 'Clusters'   in recList : addAlgs ( seq , self.clusters() ) 
         if not skipNeutrals :
-            if 'Photons'    in recList : addAlgs ( seq , pho )
-            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( seq , mer )
+            if 'Photons'    in recList : addAlgs ( seq , self.photons() )
+            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( seq , self.mergedPi0s() )
         if not skipCharged :
-            if 'Electrons'  in recList : addAlgs ( seq , ele )
+            if 'Electrons'  in recList : addAlgs ( seq , self.electrons() )
         
         setTheProperty ( seq , 'Context'     , self.getProp ( 'Context'     ) )
         setTheProperty ( seq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
@@ -520,20 +526,25 @@ class CaloProcessor( CaloRecoConf ):
 
 
         # configure all components by default (DoD)
-        dig = self.digits()
-        clu = self.clusters()
-        pho = self.photons()
-        mer = self.mergedPi0s();
-        ele = self.electrons();
+        forceOnDemand = self.getProp('ForceOnDemand')
+        if forceOnDemand :
+            self.setProp('EnableOnDemand','True')
+            self.setProp('EnableRecoOnDemand','True')
+            dig=self.digits()
+            clu=self.clusters()
+            pho=self.photons()
+            mer=self.mergedPi0s();
+            ele=self.electrons();
+
 
         #  add only the requested components to the sequence
-	if 'Digits'     in recList : addAlgs ( recoSeq , dig ) 
-        if 'Clusters'   in recList : addAlgs ( recoSeq , clu ) 
+	if 'Digits'     in recList : addAlgs ( recoSeq , self.digits() ) 
+        if 'Clusters'   in recList : addAlgs ( recoSeq , self.clusters() ) 
         if not skipNeutrals :
-            if 'Photons'    in recList : addAlgs ( recoSeq , pho )
-            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( recoSeq , mer )
+            if 'Photons'    in recList : addAlgs ( recoSeq , self.photons() )
+            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( recoSeq , self.mergedPi0s() )
         if not skipCharged :
-            if 'Electrons'  in recList : addAlgs ( recoSeq , ele )
+            if 'Electrons'  in recList : addAlgs ( recoSeq , self.electrons() )
 
         # CaloPIDs sequence
         #        pidSeq = getAlgo( GaudiSequencer , "CaloPIDsSeq" , context ) 

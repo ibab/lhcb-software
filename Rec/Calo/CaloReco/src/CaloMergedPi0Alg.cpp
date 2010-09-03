@@ -385,9 +385,23 @@ StatusCode CaloMergedPi0Alg::execute()
   SmartDataPtr<Clusters>  clusters( eventSvc() , m_inputData );
   if( 0 == clusters ){ return Error("Could not load input data ='"+m_inputData+"'");}
 
-  // create the container of split clusters 
+  // create the container of split clusters (check it does not exist first)
+  bool doSplitC = true;
   LHCb::CaloClusters* clusts = new LHCb::CaloClusters();
-  put( clusts , m_nameOfSplitClusters);  
+  try {
+    put(clusts , m_nameOfSplitClusters);
+  }
+  catch (GaudiException &e) {
+    Warning("Exception is caught",StatusCode::SUCCESS).ignore();
+    doSplitC = false;
+    delete clusts;
+  }
+
+
+
+  //    doSplitC = false;
+  //  delete clusts;
+  //};
 
   // create the containers of pi0s & SPlitPhotons
   LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
@@ -968,8 +982,10 @@ StatusCode CaloMergedPi0Alg::execute()
         debug() << "Store clusters " << endmsg;
       }
 
-      clusts->insert( cl1 ) ;
-      clusts->insert( cl2 ) ;
+      if( doSplitC ){
+        clusts->insert( cl1 ) ;
+        clusts->insert( cl2 ) ;
+      }
       
       
       if(!m_createClusterOnly){
@@ -1074,13 +1090,13 @@ StatusCode CaloMergedPi0Alg::execute()
   if ( msgLevel ( MSG::DEBUG ) ){ 
     debug() << " # of created MergedPi0 Hypos is  " << pi0s -> size() << endmsg ;
     debug() << " # of created Split Photons   is  " << phots -> size() << endmsg ;
-    debug() << " # of created Split Clusters  is  " << clusts -> size() << endmsg ;
+    if(doSplitC)debug() << " # of created Split Clusters  is  " << clusts -> size() << endmsg ;
     debug() << "post-processing cleaning" << endmsg;
   }
 
   counter ( m_inputData + "=>" + m_outputData )         += pi0s   -> size() ;
   counter ( m_inputData + "=>" + m_nameOfSplitPhotons)  += phots  -> size() ;
-  counter ( m_inputData + "=>" + m_nameOfSplitClusters) += clusts -> size() ;
+  if(doSplitC)counter ( m_inputData + "=>" + m_nameOfSplitClusters) += clusts -> size() ;
 
   // delete (empty) container* if not on TES 
   if(m_createClusterOnly){
