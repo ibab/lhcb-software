@@ -54,14 +54,14 @@ namespace LHCb    {
   public:
     typedef MEPFragment    _F;
     typedef RawEventHeader _H;
-    int           m_evType;
+    unsigned int m_evType;
     int          m_PID;
     unsigned int m_TrMask[4];
     int          m_Size;
     char*        m_Ptr;
     char*        m_mepPtr;
     /// Accessor: event type identifier
-    unsigned char eventType() const        { return m_evType;                  }
+    unsigned int eventType() const         { return m_evType;                  }
     /// Update the event type
     void setEventType(unsigned int val)    { m_evType = val;                   }  
     /// Accessor: event size

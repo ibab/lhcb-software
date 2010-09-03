@@ -95,9 +95,9 @@ namespace LHCb    {
         m_trMask[0] = m_trMask[1] = m_trMask[2] = m_trMask[3] = 0;
       }
       /// Accessor: event type identifier
-      unsigned char eventType() const        { return m_evType;                  }
+      unsigned char eventType() const        { return m_evType;                   }
       /// Update the event type
-      void setEventType(unsigned int val)    { m_evType = val;                   }  
+      void setEventType(unsigned int val)    { m_evType = (unsigned char)val;     }  
       /// Accessor: L0 trigger number of the event  
       long long     triggerNumber() const    { return (int_64_t(m_trH)<<32)+m_trL;}
       /// Update the L0 trigger number of the event
@@ -202,18 +202,19 @@ namespace LHCb    {
     /// Accessor: Identifier of the compression method
     unsigned char compression() const      { return m_compression;             }
     /// Update the identifier of the compression method
-    void setCompression(unsigned int val)  { m_compression = val;              }
+    void setCompression(unsigned int val)  { m_compression=(unsigned char)val; }
     /// Accessor: length of the event header
     unsigned int subheaderLength() const   { return (m_hdr&0x0F)*sizeof(int);  }
     /// Update the length of the event header
     void setSubheaderLength(unsigned int l)  {
        l = l%sizeof(int) ? (l/sizeof(int)) + 1 : l/sizeof(int);
-       m_hdr = (0xF0&m_hdr) + (0x0F&l);
+       m_hdr = (unsigned char)((0xF0&m_hdr) + (0x0F&l));
     }
     /// Accessor: version of the event header
     unsigned int  headerVersion() const    { return m_hdr>>4;                  }
     /// Update the version of the event header
-    void setHeaderVersion(unsigned int vsn){ m_hdr = ((vsn<<4)+(m_hdr&0xF))&0xFF;}
+    void setHeaderVersion(unsigned int vsn)
+    {  m_hdr = (unsigned char)(((vsn<<4)+(m_hdr&0xF))&0xFF);                   }
     /// Accessor: hdr field
     unsigned char hdr() const              { return m_hdr;                     }
     /// Update hdr field

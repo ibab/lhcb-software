@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2010-09-02 - Olivier Deschamps
+ - Remove icc compiler warnings
+
 !========================= MDF v3r26 2010-06-17 ==============================
 ! 2010-06-17  Markus Frank
  - Improve printouts at end of file.

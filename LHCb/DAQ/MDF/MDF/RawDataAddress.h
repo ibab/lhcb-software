@@ -76,7 +76,7 @@ namespace LHCb  {
     }
     /// Update file offset
     void setFileOffset(unsigned long long int offset) {
-      char txt[2] = { '0' + int(offset/GIGA_BYTE), 0};
+      char txt[2] = { char('0' + int(offset/GIGA_BYTE)), 0};
       m_ipar[1] = int(offset%GIGA_BYTE);
       m_par[1] = txt;
     }

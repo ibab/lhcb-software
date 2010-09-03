@@ -158,6 +158,10 @@ namespace LHCb  {
     /// Connect the output file to the service with open mode.
     virtual StatusCode connectOutput(CSTR name, CSTR mode);
 
+    /// Connect the output file to the service.
+    virtual StatusCode connectOutput(const std::string& output)  
+    { return this->ConversionSvc::connectOutput(output);        }
+
     /// Connect the input file to the service with READ mode
     virtual StatusCode connectInput(CSTR fname, void*& iodesc);
 
@@ -173,6 +177,14 @@ namespace LHCb  {
     /// Create a Generic address using explicit arguments to identify a single object.
     virtual StatusCode createAddress(long typ, const CLID& clid, const std::string* par, 
                                      const unsigned long* ip, IOpaqueAddress*& refpAddress);
+
+    /// Convert an address in string form to object form
+    virtual StatusCode createAddress( long svc_type,
+				      const CLID& clid,
+				      const std::string& refAddress,
+				      IOpaqueAddress*& refpAddress)
+    { return this->ConversionSvc::createAddress(svc_type,clid,refAddress,refpAddress); }
+
   };
 }      // End namespace LHCb
 #endif // MDF_RAWDATACNVSVC_H

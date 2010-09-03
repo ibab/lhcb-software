@@ -52,10 +52,10 @@ namespace LHCb  {
   public:
     /// Default constructor
     MEPMultiFragment()
-      : m_evID(0), m_numEvt(0), m_size(12), m_partitionID(0) {                }
+    : m_evID(0), m_numEvt(0), m_size(12), m_partitionID(0) {                }
     /// Initializing constructor
     MEPMultiFragment(unsigned int eid, unsigned short siz, int pID, int packing) 
-      : m_evID(eid), m_numEvt(packing), m_size(siz), m_partitionID(pID) {     }
+    : m_evID(eid),m_numEvt((unsigned short)packing),m_size(siz),m_partitionID(pID){}
     /// Default destructor
     ~MEPMultiFragment()                  {                                    }
     /// Access to IP header
@@ -65,9 +65,9 @@ namespace LHCb  {
     /// Set event ID of the fragment
     void setPartitionID(unsigned int val){  m_partitionID = val;              }
     /// Access event ID of the fragment
-    unsigned short       eventID() const {  return m_evID;                    }
+    unsigned int         eventID() const {  return m_evID;                    }
     /// Set event ID of the fragment
-    void setEventID(unsigned short val)  {  m_evID = val;                     }
+    void setEventID(unsigned int val)    {  m_evID = val;                     }
     /// Header size (=12 bytes)
     static size_t hdrSize()              {  return 12;                        }
     /// Length of the fragment       (Note: 12 Bytes mep multifragment header!)
