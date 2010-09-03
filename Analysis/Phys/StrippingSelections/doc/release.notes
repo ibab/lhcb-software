@@ -5,6 +5,23 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2010-09-03 - Rob Lambert
+ - Updated StrippingB0q2DplusMuX.py
+ - New line added 'StrippingB0q2DplusMuXTuned'
+   --------------------------------------------------
+   Rate: ~0.001%, Av CPU: 0.977 ms, Max CPU: 75.4 ms.
+   --------------------------------------------------
+   . It has been known for a while that StrippingB0q2DplusMuXPresel is too
+     loose for the latest data, in terms of both Rate and timing, hence
+     it is by default prescaled by a factor 10.
+   . as discussed in the Semileptonic Taskforce I added an intermediate line.
+     This new line: StrippingB0q2DplusMuXTuned uses the same variables
+     as the two existing lines Presel, MC09, but is tighter than Presel,
+     Looser than MC09, particularly looser in the PID requirements.
+   . The timing and rate of this line are much better than the Presel line
+
+
 ! 2010-09-02 - Anton Poluektov 
  - Updated StrippingB2DX.py. Performance with 20k Reco05-Stripping08 data: 
 
@@ -20,7 +37,6 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
   -- StrippingB2DXWithLambdaSidebandLine             : 0.000550   1.790
 
 
-<<<<<<< release.notes
 ! 2010-09-02 - Sebastian Schleich
  - StrippingInclPhi.py. New configuration mechanism + stricter prescales
 
@@ -63,6 +79,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 
 =======
+>>>>>>> 1.348
 ! 2010-09-01 - Vanya Belyaev
  - update StrippingPromtCharmp.py
 

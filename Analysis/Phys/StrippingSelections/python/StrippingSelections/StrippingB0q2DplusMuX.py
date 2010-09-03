@@ -1,21 +1,28 @@
-# $Id: StrippingB0q2DplusMuX.py,v 1.5 2010-08-26 15:38:37 rlambert Exp $
+# $Id: StrippingB0q2DplusMuX.py,v 1.6 2010-09-03 00:05:35 rlambert Exp $
 '''
 Module for constuction of B0q->DplusMuNuX lines
 
-B0q->DplusMuNuX0 with X0 neutrino, gamma, whatever,
-Dq->KKpi, as required for Afs analysis in semileptonics.
+==== Description of the lines ====
 
-There will be three lines:
+B0q->DplusMuNuX0 with X0 being neutrino, gamma, pi0, whatever,
+Dq->KKpi, as required for Afs analysis in semileptonics.
+(Ds+->KKpi, D+->KKpi)
+
+There are three lines:
 
 A) Presel, sidebands in all variables, to be prescaled as rate increases
 B) MC09, Full MC09-tuned offline selection
-C) Data-tuned stripping selection (to be written)
+C) Tuned stripping selection (tuned on real data)
 
 The Presel is initially scaled to 10%, which should be fine up to 100 pb-1.
 
 The MC09 selection expects 10^7 events in 1 fb-1, and is the hardest selection at the moment.
 
-The Data-tuned-stripping selection will be written to provide 10x or 100x less rate than the Presel.
+The Tuned selection is inbetween Presel and MC09, to give a 10-fold reduction in Presel.
+This was tuned on some early preselected data, where it was found the MC09 cuts on kinematic variables could be applied,
+whereas the PID cuts should be avoided until properly retuned on the data.
+
+==== Description of the configuration ====
 
 The selection cuts are stored in the dictionaries: confdict['Presel'] or 'MC09' or 'Tuned'.
 The cuts are stored only if they are different between the lines, common cuts are hardcoded.
@@ -28,13 +35,34 @@ The lines look basically like this:
 2) Make a D
 3) Make a B
 
+To look at all the configurable cuts, see StrippingB0q2DplusMuX.confdict
+
+==== How to use ====
+
+To configure all lines, just instantiate the class:
+
+all=B0q2DplusMuXAllLinesConf(confdict)
+
+Then to print all cuts do:
+
+all.printCuts()
+
+You can configure one line at a time with the B0q2DplusMuXOneLineConf class:
+
+one=B0q2DplusMuXOneLineConf('Tuned',confdict['Tuned'])
 '''
 __author__ = [ 'Rob Lambert' ]
-__date__ = '2010-07-15'
-__version = '$Revision: 1.5 $'
+__date__ = '2010-08-11'
+__version = '$Revision: 1.6 $'
 
-#### This is the dictionary of all tunable cuts ########
+#### Which VertexFitter to use? ####
+
+#combiner='LoKi::VertexFitter'
+combiner='OfflineVertexFitter'
+
+#### Next is the dictionary of all tunable cuts ########
 #### It is separated into the different lines   ########
+
 
 confdict={
     'Presel' : { 'Prescale'    : 0.1 ,
@@ -64,6 +92,35 @@ confdict={
                  #B-resonance parameters
                  'B_VPCHI2'    : 0.000250,
                  'B_BPVDIRA'   : 0.997
+                 },
+    
+    'Tuned'   : { 'Prescale'    : 1.0 ,
+                 'Postscale'   : 1.0 ,
+                 #muon paramters
+                 'MuPT'        : 600, #MeV
+                 'MuPidPi'     : -3.,
+                 'MuPidK'      : -10,
+                 'MuTrChi2'    : 5,
+                 #kaon parameters
+                 'KPT'         : 400, #MeV
+                 'KPidPi'      : 0,
+                 'KPidMu'      : -10,
+                 'KPidP'       : -10,
+                 'KTrChi2'     : 9,
+                 'KIPChi2'     : 4,
+                 #pion parameters
+                 'PiPidK'      : -20,
+                 'PiPidMu'     : -5,
+                 'PiTrChi2'    : 12,
+                 'PiIPChi2'    : 7,
+                 #D-resonance parameters
+                 'DPT'         : 1500, #MeV
+                 'D_APT'       : 1200, #MeV
+                 'D_VPCHI2'    : 0.0150,
+                 'D_BPVVDCHI2' : 144,
+                 #B-resonance parameters
+                 'B_VPCHI2'    : 0.0150,
+                 'B_BPVDIRA'   : 0.9980
                  },
     
     'MC09'   : { 'Prescale'    : 1.0 ,
@@ -118,7 +175,7 @@ class B0q2DplusMuXAllLinesConf(object):
     
     To only configure/run one line, it's better to use the B0q2DplusMuXOneLineConf class.
     
-    The created lines appear as a list in the Lines object
+    The created lines appear as a list in the Lines object, member variable
     
     To print out all the cuts, use the printCuts method
     """
@@ -128,7 +185,9 @@ class B0q2DplusMuXAllLinesConf(object):
     confObjects={}
     
     def __init__(self, config, offLines=[]):
-        '''In the constructor we make all the lines, and configure them all'''
+        '''In the constructor we make all the lines, and configure them all
+        config is the dictionary of {LineSuffix : configuration}
+        offlines is a list of lines to turn off'''
         for aline in config.keys():
             if aline not in offLines:
                 lineconf=B0q2DplusMuXOneLineConf(aline, config[aline])
@@ -156,7 +215,7 @@ class B0q2DplusMuXOneLineConf(object):
     
     Use conf.printCuts to check the cuts in python
     The selections are available individually as MuSel, DSel and B0Sel
-    The Line object holds the configured line
+    The Line object, a member of this class, holds the configured line
     """
     
     Line=None
@@ -166,7 +225,9 @@ class B0q2DplusMuXOneLineConf(object):
     MuCut=''
     KCut=''
     PiCut=''
+    DCombCut=''
     DCut=''
+    BCombCut=''
     BCut=''
     
     MuSel=None
@@ -224,40 +285,47 @@ class B0q2DplusMuXOneLineConf(object):
         self.MuCut ="((ISMUON) & (HASMUON) & (ISLONG) "\
                 "& (PT >  %(MuPT)s *MeV) & (TRCHI2DOF< %(MuTrChi2)s ) "\
                 "& (PIDmu-PIDpi > %(MuPidPi)s ) & (PIDmu-PIDK > %(MuPidK)s )) "\
-                "& (MIPCHI2DV(PRIMARY) > 2.0) & (MIPDV(PRIMARY) > 0.01)" % config
+                "& (MIPDV(PRIMARY) > 0.01) & (MIPCHI2DV(PRIMARY) > 2.0) " % config
         
         
         self.KCut= "(P > 2.0*GeV)"\
+                   " & (PT>  %(KPT)s*MeV)  & (TRCHI2DOF < %(KTrChi2)s) "\
                    " & (PIDK-PIDpi >  %(KPidPi)s ) & (PIDK-PIDmu  > %(KPidMu)s)  & (PIDK-PIDp  > %(KPidP)s )"\
-                   " & (PT>  %(KPT)s*MeV)  & (TRCHI2DOF < %(KTrChi2)s) &"\
-                   " (MIPDV(PRIMARY) > 0.03) & (MIPCHI2DV(PRIMARY) > %(KIPChi2)s )" % config
+                   " & (MIPDV(PRIMARY) > 0.03) & (MIPCHI2DV(PRIMARY) > %(KIPChi2)s )" % config
         
         self.PiCut="(P > 2.0*GeV) & (PT>300*MeV)"\
+               " & (TRCHI2DOF < %(PiTrChi2)s) "\
                " & (PIDpi-PIDK >  %(PiPidK)s ) & (PIDpi-PIDmu  > %(PiPidMu)s)"\
-               " & (TRCHI2DOF < %(PiTrChi2)s) &"\
-               " (MIPDV(PRIMARY) > 0.01) & (MIPCHI2DV(PRIMARY) > %(PiIPChi2)s )" % config
+               " & (MIPDV(PRIMARY) > 0.01) & (MIPCHI2DV(PRIMARY) > %(PiIPChi2)s )" % config
         
+        
+        #self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (APT>%(D_APT)s *MeV) & (AMAXDOCA('')<0.3*mm)" % config
+        self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (APT>%(D_APT)s *MeV) & (ADOCACUT( 0.3*mm , '' ))" % config
         
         self.DCut="("\
-                  "(VFASPF(VPCHI2) > %(D_VPCHI2)s ) "\
-                  "& (VFASPF(VCHI2/VDOF) < 16.0) "\
-                  "& (M > 1768.*MeV) & (M < 2068.*MeV) "\
+                  "in_range(1768.*MeV, M, 2068.*MeV)"\
                   "& (PT > %(DPT)s *MeV) "\
+                  "& (VFASPF(VPCHI2) > %(D_VPCHI2)s ) "\
                   "& (BPVDIRA > 0.99) "\
                   "& (BPVVDZ  > 1.0*mm) "\
                   "& (BPVVDCHI2 > %(D_BPVVDCHI2)s ) "\
                   ")" % config
 
-        self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (APT>%(D_APT)s *MeV) & (AMAXDOCA('')<0.3*mm)" % config
+                  #"& (VFASPF(VCHI2/VDOF) < 16.0) "\
+                  #"& (M > 1768.*MeV) & (M < 2068.*MeV) "\
+        
+        self.BCombCut="((AM > 2000.*MeV) & (AMAXDOCA('')<0.3*mm))"
         
         self.BCut = "("\
-               "(M < 6300.*MeV) & (M > 2200.*MeV) & (VFASPF(VCHI2/VDOF)<16) & "\
-               "(VFASPF(VPCHI2)> %(B_VPCHI2)s ) & "\
-               "((MINTREE(('D_s+'==ABSID),VFASPF(VZ))-VFASPF(VZ))>0*mm) "\
-               "& (BPVDIRA> %(B_BPVDIRA)s ) "\
-               "& (BPVVDCHI2>1) "\
-               ")"  % config
+                    "in_range(2200.*MeV,M,6300.*MeV) & "\
+                    "(VFASPF(VPCHI2)> %(B_VPCHI2)s ) & "\
+                    "((CHILD(1,VFASPF(VZ))-VFASPF(VZ))>0*mm) "\
+                    "& (BPVDIRA> %(B_BPVDIRA)s ) "\
+                    "& (BPVVDCHI2>1) "\
+                    ")"  % config
         
+                    #"(M < 6300.*MeV) & (M > 2200.*MeV) & "\        
+                    #" & (VFASPF(VCHI2/VDOF)<16) "\
         ### Now make all the selections ###
         
         self.__MakeMuSel__()
@@ -288,6 +356,7 @@ class B0q2DplusMuXOneLineConf(object):
         print 'PiCut', self.PiCut
         print 'DCombCut', self.DCombCut
         print 'DCut', self.DCut
+        print 'BCombCut', self.BCombCut
         print 'BCut', self.BCut
         
     ############ Functions to make Selections #######################
@@ -331,6 +400,10 @@ class B0q2DplusMuXOneLineConf(object):
         Dplus2KKpiForB0q.CombinationCut = self.DCombCut
         Dplus2KKpiForB0q.MotherCut = self.DCut
         
+        Dplus2KKpiForB0q.ParticleCombiners = {
+            ''  : combiner
+            } 
+        
         MyStdLooseKaons = DataOnDemand(Location = 'Phys/StdLooseKaons')
         MyStdLoosePions = DataOnDemand(Location = 'Phys/StdLoosePions')
         
@@ -356,9 +429,13 @@ class B0q2DplusMuXOneLineConf(object):
         
         CombB0q2DplusMuX.DecayDescriptors = ["[B_s0 -> D_s- mu+]cc", "[B_s0 -> D_s+ mu+]cc"] #includes wrong charges
         
-        CombB0q2DplusMuX.CombinationCut = "((AM > 2000.*MeV) & (AMAXDOCA('')<0.3*mm))"
+        CombB0q2DplusMuX.CombinationCut = self.BCombCut
         
         CombB0q2DplusMuX.MotherCut      = self.BCut
+        
+        CombB0q2DplusMuX.ParticleCombiners = {
+            ''  : combiner
+            } 
         
         SelB0q2DplusMuX = Selection("SelB0q2DplusMuX"+self.LineSuffix, Algorithm=CombB0q2DplusMuX,
                                     RequiredSelections = [self.DSel, self.MuSel])
