@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonInfo.cpp,v 1.6 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.6 2010-09-03 14:47:46 frankb Exp $
 
 // Framework include files
 #include "dic.hxx"
@@ -67,9 +67,9 @@ void ROMonInfo::removeHandler(const std::string& node, const std::string& svc) {
 void ROMonInfo::infoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     ROMonInfo* h = *(ROMonInfo**)tag;
-    char c, *msg = (char*)address;
+    char *msg = (char*)address;
     std::string svc, node;
-    switch(c=msg[0]) {
+    switch(msg[0]) {
     case '+':
       h->getServiceNode(++msg,svc,node);
       h->addHandler(node,svc);
@@ -105,9 +105,10 @@ void ROMonInfo::infoHandler(void* tag, void* address, int* size)  {
 }
 
 extern "C" int romon_test_dim_info(int, char**) {
+  bool run = true;
   ROMonInfo info(0);
   DimServer::start(RTL::processName().c_str());
   log() << "Going asleep" << std::endl;
-  while(1) ::lib_rtl_sleep(1000);
+  while(run==true) ::lib_rtl_sleep(1000);
   return 1;
 }

@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.h,v 1.5 2009-04-17 13:16:37 frankb Exp $
+// $Id: MonitoringDisplay.h,v 1.6 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.5 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.6 2010-09-03 14:47:45 frankb Exp $
 #ifndef ROMON_MONITORINGDISPLAY_H
 #define ROMON_MONITORINGDISPLAY_H 1
 
@@ -96,6 +96,9 @@ namespace ROMon {
 
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);
+
+    /// Update display content
+    virtual void updateDisplay(const Node& n) { this->ROMonDisplay::updateDisplay(n); }
   };
   /// Static abstract object creator.
   ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);

@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.5 2009-05-05 18:35:31 frankb Exp $
+// $Id: AlarmDisplay.cpp,v 1.6 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.5 2009-05-05 18:35:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.6 2010-09-03 14:47:45 frankb Exp $
 
 #include "ROMon/AlarmDisplay.h"
 #include "ROMon/FarmMonitor.h"
@@ -85,16 +85,18 @@ void MessageWindow::update(const void* data) {
 	int color = NORMAL;
 	if ( s.nodes.size() < 3 ) {
 	  for(size_t k=0; k<s.nodes.size(); ++k) {
-	    const Alarm* a = s.nodes[k];
-	    color = a->color();
-	    ::sprintf(text,"%-13s %-12s %s %s",a->node.c_str(),a->time().c_str(),a->message(),a->description.c_str());
+	    const Alarm* al = s.nodes[k];
+	    color = al->color();
+	    ::sprintf(text,"%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
+		      al->message(),al->description.c_str());
 	    ::scrc_put_chars(m_display,text,color,++line,1,1);
 	  }
 	}
 	else  {
-	  const Alarm* a = s.nodes[0];
-	  color = a->color();
-	  ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",a->time().c_str(),a->message());
+	  const Alarm* al = s.nodes[0];
+	  color = al->color();
+	  ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
+		    al->time().c_str(),al->message());
 	  set<string> opts;
 	  for(size_t k=0; k<s.nodes.size(); ++k) {
 	    const string& item = s.nodes[k]->node;
@@ -297,12 +299,12 @@ int AlarmDisplay::handleKeyboard(int key)    {
 /// Interactor overload: Display callback handler
 void AlarmDisplay::handle(const Event& ev) {
   int h;
-  const MouseEvent* m = 0;
+  //const MouseEvent* m = 0;
   RTL::Lock lock(screenLock());
 
   switch(ev.eventtype) {
   case ScrMouseEvent:
-    m = ev.get<MouseEvent>();
+    /* m = */ ev.get<MouseEvent>();
     return;
   case TimeEvent:
     return;

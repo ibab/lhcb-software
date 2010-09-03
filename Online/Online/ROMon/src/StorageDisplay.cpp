@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.15 2009-11-04 08:05:50 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.16 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.15 2009-11-04 08:05:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.16 2010-09-03 14:47:46 frankb Exp $
 
 // C++ include files
 #include <ctime>
@@ -52,10 +52,8 @@ namespace ROMon {
 
 using namespace ROMon;
 using namespace std;
-static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
-
+static const char *sstat[17] = {" nl","   ","*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac","SPR","WER","   "};
 static const size_t NUM_STORE_NODES = 4;
-static const size_t NUM_STORE_SERVICES = 9;
 
 namespace {
   struct Stream {
@@ -71,7 +69,7 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef map<string,Stream> Streams;
+typedef map<string,Stream>           Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -232,7 +230,6 @@ std::string StorageDisplay::nodeName(size_t offset) {
   case 3:    return "storestrm02";
   default:   return "";
   }
-  return "";
 }
 
 /// Access Node display

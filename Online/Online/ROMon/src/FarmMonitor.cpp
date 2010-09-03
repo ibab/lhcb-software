@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.8 2009-06-02 16:21:23 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.9 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.8 2009-06-02 16:21:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.9 2010-09-03 14:47:46 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -770,10 +770,10 @@ void FarmMonitor::publishAlarms() {
 
 /// DIM command service callback
 void FarmMonitor::update(const void* address) {
-  char c, *msg = (char*)address;
+  char *msg = (char*)address;
   string svc, node;
   size_t idx, idq;
-  switch(c=msg[0]) {
+  switch(msg[0]) {
   case '+':
     getServiceNode(++msg,svc,node);
     idx = svc.find("/ROpublish");

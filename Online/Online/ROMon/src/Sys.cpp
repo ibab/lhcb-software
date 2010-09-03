@@ -36,22 +36,24 @@ using namespace ROMon;
 
 
 namespace {
-static const char* fn_process_dir(int pid) {
-  static char txt[32];
-  ::sprintf(txt,"/proc/%d",pid);
-  return txt;
-}
-#define _PROCESSFILE(len,name)   \
+#define _PROCESSFILE(len,name)				\
 static const char* fn_process_##name (int pid) {\
   static char txt[len]; \
   sprintf(txt,"/proc/%d/"#name,pid); \
   return txt; \
 }
-  _PROCESSFILE(64,stat);
-  _PROCESSFILE(64,status);
-  _PROCESSFILE(64,cmdline);
-  _PROCESSFILE(64,environ);
-};
+
+  static const char* fn_process_dir(int pid) {
+    static char txt[32];
+    ::sprintf(txt,"/proc/%d",pid);
+    return txt;
+  }
+
+  _PROCESSFILE(64,stat)
+  _PROCESSFILE(64,status)
+  _PROCESSFILE(64,cmdline)
+  _PROCESSFILE(64,environ)
+}
 
 int SysFile::read(char* buf, size_t siz) const  {
   int fd;
@@ -267,7 +269,7 @@ int SysProcess::read(int proc_id) {
   int cnt = SysFile(fn_process_stat(proc_id)).read(buff,sizeof(buff));
   if(cnt>0)  {
     //                       1  2  3  4  5  6  7  8  9   10  1   2   3   4   5   6   7   8   9   20  1   2   3   4   5   6   7   8   9   30  1   2   3   4   5
-    int ret = ::sscanf(buff,"%d %s %c %d %d %d %d %d %lu %lu %lu %lu %lu %lu %lu %lu %lu %ld %ld %ld %lu %lu %lu %lu %ld %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
+    int ret = ::sscanf(buff,"%d %s %c %d %d %d %d %d %lu %lu %lu %lu %lu %lu %lu %lu %lu %ld %ld %ld %lu %lu %lu %ld %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
              &pid,      // 1
              comm,      // 2
              &state,    // 3
@@ -375,7 +377,7 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
   char buff[12*4096], *p, *q, *desc, *item;
   int cnt = SysFile("/proc/cpuinfo").read(buff,sizeof(buff));
   if(cnt>0)  {
-    const char* core_id="";
+    //const char* core_id="";
     CPUset::Cores::iterator corIt = info.cores.reset();
     CPUset::Cores::iterator begin = corIt;
     ro_get_node_name(info.name,sizeof(info.name));
@@ -411,7 +413,7 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
           info.family[sizeof(info.family)-1] = 0;
         }
         else if ( ::strncmp(desc,"core id",sizeof("core id"))==0 ) {
-          core_id = item;
+          //core_id = item;
         }
         /*
           else if ( ::strncmp(desc,"model name",sizeof("model"))==0 ) ;
@@ -586,9 +588,9 @@ int ROMon::read(Procset& procset, size_t max_len) {
                 p.vsize   = (float)status.vmSize;
                 p.rss     = (float)status.vmRSS;
                 p.state   = status.state;
-                p.pid     = status.pid;
-                p.ppid    = status.ppid;
-                p.threads = status.nThreads;
+                p.pid     = (unsigned short)status.pid;
+                p.ppid    = (unsigned short)status.ppid;
+                p.threads = (unsigned short)status.nThreads;
 #if 0
                 log() << "ReadProc:" << (void*)pr << " PID:" << p.pid 
                       << " PPID:" << p.ppid 

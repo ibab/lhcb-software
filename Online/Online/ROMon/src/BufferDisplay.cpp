@@ -1,4 +1,4 @@
-// $Id: BufferDisplay.cpp,v 1.3 2009-11-13 18:56:01 frankb Exp $
+// $Id: BufferDisplay.cpp,v 1.4 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.3 2009-11-13 18:56:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.4 2010-09-03 14:47:45 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmDisplay.h"
@@ -48,7 +48,7 @@ void BufferDisplay::update(const void* data) {
     string nam;
     int line = 0, node = 0;
     char txt[1024], name[128];
-    char *p, *bnam, *cnam;
+    char *p, *cnam;
     Nodes::const_iterator n;
 
     for (n=ns->nodes.begin(), line=1; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
@@ -60,7 +60,7 @@ void BufferDisplay::update(const void* data) {
         ::scrc_set_border(m_display,txt,BLUE|INVERSE);
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Buffers::value_type::Control& c = (*ib).ctrl;
-          bnam = (char*)(*ib).name;
+          const char* bnam = (char*)(*ib).name;
           //if ( ::strlen(bnam)>10 ) {
           //  p = strchr(bnam,'_');
           //  if ( p ) *p = 0;

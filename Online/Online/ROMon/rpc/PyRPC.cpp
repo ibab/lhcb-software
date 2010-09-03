@@ -1,10 +1,12 @@
 #include "PyRPC.h"
 #include "RTL/rtl.h"
 #include <list>
+#include <cmath>
 #include <cerrno>
 #include <sstream>
 #include <cstring>
 #include <iomanip>
+#include <limits>
 #include <stdexcept>
 #include "RTL/time.h"
 #include "NET/defs.h"
@@ -238,8 +240,8 @@ bool Arg::operator==(const Arg& c) const  {
   case CHAR:       return data.character == c.data.character;
   case INT64:      return data.i64val == c.data.i64val;
   case INT:        return data.ival   == c.data.ival;
-  case FLOAT:      return data.fval   == c.data.fval;
-  case DOUBLE:     return data.dval   == c.data.dval;
+  case FLOAT:      return fabs(data.fval-c.data.fval)<std::numeric_limits<float>::epsilon();
+  case DOUBLE:     return fabs(data.dval-c.data.dval)<std::numeric_limits<double>::epsilon();
   case PAIR:       return *data.pair  == *c.data.pair;
   case PARAM:      return *data.param == *c.data.param;
   case TUPLE:      return *data.tuple == *c.data.tuple;
@@ -728,7 +730,7 @@ bool Server::connect(const string& server, int port) {
   if ( h ) {
     ::memcpy (&sin.sin_addr,  h->h_addr, h->h_length);
     ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
-    sin.sin_port = htons(port);
+    sin.sin_port = NetworkChannel::Port(htons(port));
     sin.sin_family = AF_INET;
     m_channel = new TcpNetworkChannel();
     if (m_channel->connect(sin,Connect_TMO) != -1) {

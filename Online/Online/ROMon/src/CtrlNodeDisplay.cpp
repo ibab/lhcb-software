@@ -1,4 +1,4 @@
-// $Id: CtrlNodeDisplay.cpp,v 1.3 2010-02-22 15:03:44 frankb Exp $
+// $Id: CtrlNodeDisplay.cpp,v 1.4 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.3 2010-02-22 15:03:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.4 2010-09-03 14:47:46 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -38,13 +38,13 @@ void CtrlNodeDisplay::update(const void* data) {
   int node=0, cnt=0, line=1;
   Cluster* c = (Cluster*)data;
   if ( c ) {
-    const Cluster::Nodes& n = c->nodes;
+    const Cluster::Nodes& ns = c->nodes;
     //const char* fmt = "  %-24s %12s %17zd / %-5zd     %17zd / %-5zd      %s";
 
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-    for(Cluster::Nodes::const_iterator i=n.begin(); i!=n.end();++i, ++node) {
+    for(Cluster::Nodes::const_iterator i=ns.begin(); i!=ns.end();++i, ++node) {
       if ( node == m_node ) {
         const Cluster::Node& n = (*i).second;
         Cluster::Node::Tasks::const_iterator j;

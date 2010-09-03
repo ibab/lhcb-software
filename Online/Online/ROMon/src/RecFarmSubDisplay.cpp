@@ -40,6 +40,9 @@ namespace ROMon {
     virtual void handle(const Event& ev);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
+    /// Update display content
+    virtual void update(const void* data, size_t len)
+    { this->InternalDisplay::update(data,len); }
   };
 
   InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const std::string& title) {

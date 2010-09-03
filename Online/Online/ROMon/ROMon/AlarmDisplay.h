@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.h,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Id: AlarmDisplay.h,v 1.2 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/AlarmDisplay.h,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/AlarmDisplay.h,v 1.2 2010-09-03 14:47:45 frankb Exp $
 #ifndef ROMON_ALARMDISPLAY_H
 #define ROMON_ALARMDISPLAY_H 1
 
@@ -47,6 +47,8 @@ namespace ROMon {
     virtual ~MessageWindow() {}
     /// Update display content
     virtual void update(const void*);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
 
   /**@class AlarmPrinter ROMon.h GaudiOnline/AlarmPrinter.h
@@ -128,6 +130,9 @@ public:
 
     /// InternalDisplay overload: update method: DIM command service callback
     virtual void update(const void* /* data */ ) {}
+
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
 
     /// DIM command service callback
     static void dataHandler(void* tag, void* address, int* size);

@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.40 2009-05-05 18:35:31 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.41 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.40 2009-05-05 18:35:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.41 2010-09-03 14:47:46 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -54,11 +54,6 @@ typedef vector<string>               StringV;
 
 static FarmDisplay* s_fd = 0;
 
-//static const int   INT_min = numeric_limits<int>::min();
-static const int   INT_max = numeric_limits<int>::max();
-static const float FLT_max = numeric_limits<float>::max();
-
-
 static void help() {
   cout << "  romon_farm -option [-option]" << endl
             << "       -all                         Show all subfarms." << endl
@@ -69,7 +64,7 @@ static void help() {
 
 static string strUpper(const string& src) {
   string r=src;
-  for(size_t i=0;i<r.length();++i)r[i]=::toupper(r[i]);
+  for(size_t i=0;i<r.length();++i)r[i]=char(::toupper(r[i]));
   return r;
 }
 

@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.16 2009-10-13 16:07:03 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.17 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.16 2009-10-13 16:07:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.17 2010-09-03 14:47:46 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -185,7 +185,8 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
   const char* fmt = " %-24s%4s %c%c%c%c%11d %3.0f ";
   sprintf(txt[0],   " %-23s%5s %c%c%c%c%11s %3s ","Monitoring Task","State",'R','e','q','s',"Seen","[%]");
   disp->draw_line_reverse("%-50s%-50s",txt[0],txt[0]);
-  txt[0][0] = txt[1][0] = nTsk = 0;
+  txt[0][0] = txt[1][0] = 0;
+  nTsk = 0;
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
@@ -208,7 +209,8 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
               sprintf(txt[nTsk++],fmt,++typ,sstat[size_t(c.state)],c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],c.events,perc);
               if ( nTsk==2 ) {
                 disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
-                txt[0][0] = txt[1][0] = nTsk = 0;
+                txt[0][0] = txt[1][0] = 0;
+		nTsk = 0;
               }
             }
           }
@@ -243,9 +245,9 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
         for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
           const MBMClient& c = *ic;
           if (strncmp(c.name,part.c_str(),part.length())==0) {
-            char nam[BM_USER_NAME_LEN],*typ,*node=nam+part.length();
+            char nam[BM_USER_NAME_LEN],*node=nam+part.length();
             ::strcpy(nam,c.name);
-            if ( (typ=nullstr(nam,"_RCV")) )  {
+            if ( nullstr(nam,"_RCV") )  {
               disp->draw_line_normal(fmt,node,buff_nam.c_str(),c.events,ctrl.tot_produced,ctrl.i_events,
                                      (ctrl.i_space*ctrl.bytes_p_Bit)/1024,
                                      ctrl.p_emax-ctrl.i_events,ctrl.p_umax-ctrl.i_users);
@@ -330,7 +332,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   nStr = received = sent = 0;
   for (Streams::const_iterator is=streams.begin(); is!=streams.end(); ++is)  {
     const Stream& s = (*is).second;
-    for (Stream::Targets::const_iterator t=s.to.begin(), t1=t; t!=s.to.end(); ++t)  {
+    for (Stream::Targets::const_iterator t=s.to.begin(); t!=s.to.end(); ++t)  {
       if ( is_reco )
 	sprintf(txt[nStr++]," %-14s %-10s %11d%11s",(*is).first.c_str(),(*t).first.c_str(),int((*t).second),"");
       else
@@ -339,7 +341,8 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
       to_nodes.insert((*t).first);
       if ( nStr==2 ) {
         disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
-        txt[0][0] = txt[1][0] = nStr = 0;
+        txt[0][0] = txt[1][0] = 0;
+	nStr = 0;
       }
     }
     received += s.received;

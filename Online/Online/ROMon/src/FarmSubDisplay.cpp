@@ -33,6 +33,9 @@ namespace ROMon {
     void init(bool bad);
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)
+    { this->InternalDisplay::update(data,len); }
     /// Check display for errors
     virtual void check(time_t stamp);
     /// Set the focus to this display

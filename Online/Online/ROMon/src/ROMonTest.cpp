@@ -1,4 +1,4 @@
-// $Id: ROMonTest.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonTest.cpp,v 1.4 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTest.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTest.cpp,v 1.4 2010-09-03 14:47:46 frankb Exp $
 
 // Framework includes
 #define MBM_IMPLEMENTATION
@@ -45,7 +45,7 @@ static MBMBuffer& fill(MBMBuffer* mbm, int partitionID, const char* name) {
     (*it).processID   = 1024+10*i+task_no;
     (*it).events      = 1000*i;
     (*it).type        = types[i%3];
-    (*it).state       = 'a'+i;
+    (*it).state       = char('a'+i);
   }
   return *mbm;
 }

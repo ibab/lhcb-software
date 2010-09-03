@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.19 2010-08-31 14:40:45 frankb Exp $
+// $Id: FarmDisplay.h,v 1.20 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.19 2010-08-31 14:40:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.20 2010-09-03 14:47:45 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -214,6 +214,8 @@ public:
     void connect(const std::vector<std::string>& farms);
     /// DIM command service callback
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
     /// Show context dependent help window
     int showHelpWindow();
     /// Show window with processes on a given node

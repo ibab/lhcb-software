@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.h,v 1.7 2009-04-17 13:16:37 frankb Exp $
+// $Id: SubfarmDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.7 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
 #ifndef ROMON_SUBFARMDISPLAY_H
 #define ROMON_SUBFARMDISPLAY_H 1
 
@@ -83,6 +83,10 @@ namespace ROMon {
 
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);
+
+    /// Update display content
+    virtual void updateDisplay(const Node& n) 
+    { this->ROMonDisplay::updateDisplay(n); }
   };
 
   /// Static abstract object creator.

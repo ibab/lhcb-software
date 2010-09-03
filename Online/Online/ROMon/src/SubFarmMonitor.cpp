@@ -95,7 +95,7 @@ namespace {
     if ( 0 != p ) return ++p;
     return "Unknown";
   }
-};
+}
 
 InternalMonitor* ROMon::createSubfarmMonitor(FarmMonitor* parent, const string& title) {
   InternalMonitor* m = new SubfarmMonitor(parent,title);
@@ -206,14 +206,14 @@ void SubfarmMonitor::extractData(const Nodeset& ns) {
       m->stateSum[(*it).state]    += 1;
       m_stateSummary[(*it).state] += 1;
     }
-    m->sender.state = m->mepRx.state = running ? TASK_FSM_STATE_DEAD : TASK_FSM_STATE_NOT_READY;
+    m->sender.state = m->mepRx.state = char(running ? TASK_FSM_STATE_DEAD : TASK_FSM_STATE_NOT_READY);
   }
 
   for(TaskMap::const_iterator im=m_allTasks.begin(); im!=m_allTasks.end();++im) {
     const char* p = _procNam((*im).first.c_str());
     if ( *p == MOORE_TASK )  {
       const string& node = (*im).second.first;
-      m_nodes[node]->moores[p].state = running ? TASK_FSM_STATE_DEAD : TASK_FSM_STATE_NOT_READY;
+      m_nodes[node]->moores[p].state = char(running ? TASK_FSM_STATE_DEAD : TASK_FSM_STATE_NOT_READY);
     }
   }
 
@@ -285,10 +285,10 @@ void SubfarmMonitor::extractData(const Nodeset& ns) {
         ++m.numClients;
 	int nevt = (*ic).events;
 	int pid  = (*ic).processID;
-	const char* n = (*ic).name;
-        const char* p = _procNam(n);
+	const char* nc = (*ic).name;
+        const char* p  = _procNam(nc);
 	map<int,const FSMTask*>::const_iterator t1 = task_map.find(pid);
-	char state = t1==task_map.end() ? int(TASK_FSM_STATE_DEAD) : (*t1).second->state;
+	char state = char(t1==task_map.end() ? int(TASK_FSM_STATE_DEAD) : (*t1).second->state);
         switch(*p) {
         case BUILDER_TASK:
 	  m.mepRx.input = m.mepRx.output = nevt;

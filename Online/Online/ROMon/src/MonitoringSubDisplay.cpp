@@ -43,6 +43,9 @@ namespace ROMon {
     virtual void handle(const Event& ev);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
+    /// Update display content
+    virtual void update(const void* data, size_t len)
+    { this->InternalDisplay::update(data,len); }
   };
 
   InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const std::string& title) {
@@ -63,17 +66,6 @@ using namespace SCR;
 using namespace std;
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
-
-
-namespace {
-  const char* _procNam(const char* nam) {
-    char* p;
-    if (0 != ::strstr(nam,"MEPRx") ) return nam;
-    p = ::strchr(nam,'_');
-    if ( 0 != p ) return ++p;
-    return "Unknown";
-  }
-}
 
 /// Initializing constructor
 MonitoringSubDisplay::MonitoringSubDisplay(FarmDisplay* parent, const string& title, bool bad) 

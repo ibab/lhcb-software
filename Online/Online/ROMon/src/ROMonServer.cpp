@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.7 2008-11-20 15:43:59 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.8 2010-09-03 14:47:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.7 2008-11-20 15:43:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.8 2010-09-03 14:47:46 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -28,8 +28,9 @@ using namespace ROMon;
 
 /// Start monitoring activity
 int ROMonServer::monitor(void* buff, size_t len) {
+  bool run = true;
   Node* n = (Node*)buff;
-  while(1)    {
+  while(run)    {
     handle(n, len);
     log() << *n << std::endl;
     ::lib_rtl_sleep(2000);
@@ -107,12 +108,12 @@ void ROMonServer::dumpBufferInfo(const char* bm_name, BMID dsc, MBMBuffer* mbm) 
     t->events      = 0;
     if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
       t->type      = 'P';
-      t->state     = us->p_state+1;
+      t->state     = char(us->p_state+1);
       t->events    = us->ev_produced;
     }
     else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
       t->type      = 'C';
-      t->state     = us->c_state+1;
+      t->state     = char(us->c_state+1);
       t->events    = us->ev_seen;
     }
     t = mbm->clients.add(t);

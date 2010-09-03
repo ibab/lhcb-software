@@ -48,9 +48,8 @@ PartitionListener::PartitionListener(Interactor* parent, const string& nam, bool
     }
     for(i=f->begin(); i != f->end(); ++i) {
       string& s = *i;
-      for(size_t j=0; j<s.length(); ++j) {
-	s[j] = ::tolower(s[j]);
-      }
+      for(size_t j=0; j<s.length(); ++j)
+	s[j] = char(::tolower(s[j]));
     }
     IocSensor::instance().send(m_parent,CMD_CONNECT,f.release());
     return;
@@ -81,9 +80,8 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   }
   for(StringV::iterator i=f->begin(); i != f->end(); ++i) {
     string& s = *i;
-    for(size_t j=0; j<s.length(); ++j) {
-      s[j] = ::tolower(s[j]);
-    }
+    for(size_t j=0; j<s.length(); ++j)
+      s[j] = char(::tolower(s[j]));
   }
   IocSensor::instance().send(h->m_parent,CMD_CONNECT,f.release());
 }

@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.7 2009-06-02 16:21:23 frankb Exp $
+// $Id: FarmMonitor.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.7 2009-06-02 16:21:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -245,6 +245,9 @@ public:
 
     /// DIM command service callback
     virtual void update(const void* data);
+
+    /// Update display content
+    virtual void update(const void* data, size_t len)  { this->InternalMonitor::update(data,len); }
 
     /// DIM command service callback
     static void dnsDataHandler(void* tag, void* address, int* size);

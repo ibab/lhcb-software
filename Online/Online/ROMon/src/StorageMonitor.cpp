@@ -94,7 +94,7 @@ namespace {
     }
     return "Unknown";
   }
-};
+}
 
 InternalMonitor* ROMon::createStorageMonitor(FarmMonitor* parent, const string& title) {
   cout << "Connecting to farm " << title << endl;
@@ -269,7 +269,6 @@ void StorageMonitor::extractData(const Nodeset& ns) {
 }
 
 void StorageMonitor::analyzeData() {
-  char txt[128];
   time_t now = time(0); 
   bool    running  = parent()->isRunning();
   NodeMon::Clients::const_iterator ircv, isnd, ih;
@@ -333,7 +332,6 @@ void StorageMonitor::analyzeData() {
       // Remaining alarms may only occur while running
       if ( !running ) continue;
       
-      txt[0] = 0;
       if ( m.slots < SLOTS_MIN ) {
 	if ( m.evtIN == h.evtIN )
 	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when," Events");

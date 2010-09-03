@@ -33,6 +33,9 @@ namespace ROMon {
     void init(bool bad);
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)
+    { this->InternalDisplay::update(data,len); }
     /// Check display for errors
     virtual void check(time_t stamp);
     /// Set the focus to this display
@@ -63,17 +66,6 @@ using namespace SCR;
 using namespace std;
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
-
-
-namespace {
-  const char* _procNam(const char* nam) {
-    char* p;
-    if (0 != ::strstr(nam,"MEPRx") ) return nam;
-    p = ::strchr(nam,'_');
-    if ( 0 != p ) return ++p;
-    return "Unknown";
-  }
-}
 
 /// Initializing constructor
 StorageSubDisplay::StorageSubDisplay(FarmDisplay* parent, const string& title, bool bad) 

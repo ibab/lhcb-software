@@ -39,6 +39,9 @@ namespace ROMon {
     void init(bool bad);
     /// Update display content
     virtual void update(const void* data);
+    /// Update display content
+    virtual void update(const void* data, size_t len)
+    { this->InternalDisplay::update(data,len); }
     /// Command service callback after already parsed data
     void updateContent(XML::TaskSupervisorParser& ts);
     /// Check display for errors

@@ -107,13 +107,13 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
     if ( p ) {
       for(XMLCollection t(child(p,PROJECTNODE), false); t; ++t) {
         node.projects.push_back(Cluster::PVSSProject());
-        Cluster::PVSSProject& p = node.projects.back();
-        p.name     = t.attr(Attr_name);
-        p.eventMgr = t.attr(Attr_eventMgr)=="RUNNING";
-        p.dataMgr  = t.attr(Attr_dataMgr)=="RUNNING";
-        p.distMgr  = t.attr(Attr_distMgr)=="RUNNING";
-        p.devHdlr  = t.attr(Attr_devHdlr)=="RUNNING";
-        p.fsmSrv   = t.attr(Attr_fsmSrv)=="RUNNING";
+        Cluster::PVSSProject& pr = node.projects.back();
+        pr.name     = t.attr(Attr_name);
+        pr.eventMgr = t.attr(Attr_eventMgr)=="RUNNING";
+        pr.dataMgr  = t.attr(Attr_dataMgr)=="RUNNING";
+        pr.distMgr  = t.attr(Attr_distMgr)=="RUNNING";
+        pr.devHdlr  = t.attr(Attr_devHdlr)=="RUNNING";
+        pr.fsmSrv   = t.attr(Attr_fsmSrv)=="RUNNING";
       }
     }
   }
