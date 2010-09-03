@@ -229,6 +229,7 @@ def B2twobodyLine(
     DS.Code = DScut
     DSSel  = Selection("DSSelFor" + moduleName,  Algorithm = DS, RequiredSelections = [ StdDS  ] )
 
+    
     # Define a class that contains all relevant particle properties
     class particle:
         def __init__(self,name,tla,q,b,sel,cut):
@@ -271,9 +272,9 @@ def B2twobodyLine(
     particles.append(particle(        "phi(1020)", "Phi",   0,  0, PhSel, Phcut))
     particles.append(particle(        "K*(892)0",  "KS0",   0,  0, KSSel, KScut))
     particles.append(particles[-1].CP("K*(892)~0", "KSb"))
-    
-    #go through all the relevant combinations
-    BSelections = []
+
+    #go through all twobody combinations
+    descriptors = []
     for i1,p1 in enumerate(particles):
         for i2,p2 in enumerate(particles[i1:]):
             #check for charge and baryon number
@@ -303,22 +304,19 @@ def B2twobodyLine(
             descriptor=mother+" -> "+p1.name+" "+p2.name
             if not CP:descriptor="["+descriptor+"]cc"
             #print "DESCRIPTOR:",descriptor
+            descriptors.append(descriptor)
 
-            #make a selection
-            B=CombineParticles("B2"+p1.tla+p2.tla+"For"+moduleName)
-            B.DecayDescriptors = [ descriptor]
-            B.DaughtersCuts = { p1.name : p1.cut , p2.name : p2.cut }
-            B.CombinationCut = Bcombcut
-            B.MotherCut = Bcut
-            BSel=Selection("SelB2"+p1.tla+p2.tla+"For"+moduleName, Algorithm = B, RequiredSelections = [ p1.sel, p2.sel] )
-            BSelections.append(BSel)
+    #make a merge of the input selections
+    AllSel=[PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,DSSel,JpSel,PhSel,KSSel]
+    InputSel= MergedSelection("InputForB2twobody", RequiredSelections = AllSel )
 
-    #merge the selections
-    BMergedSel= MergedSelection("SelB2twobody", RequiredSelections = BSelections )
-    BSignal = FilterDesktop("BSignal" + moduleName)
-    BSignal.Code = "ALL"
-    BSignalSel = Selection("BSignalSel", Algorithm = BSignal, RequiredSelections = [BMergedSel] )
-    
-    line = StrippingLine("B2twobodyLine",  algos = [BSignalSel] )
+    #make a selection
+    B=CombineParticles("BFor"+moduleName)
+    B.DecayDescriptors = descriptors
+    B.CombinationCut = Bcombcut
+    B.MotherCut = Bcut
+    BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [InputSel] )
+
+    line = StrippingLine("B2twobodyLineOneSel",  algos = [BSel] )
 
     return [line]
