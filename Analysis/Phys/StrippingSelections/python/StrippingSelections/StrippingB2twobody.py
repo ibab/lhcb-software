@@ -317,6 +317,6 @@ def B2twobodyLine(
     B.MotherCut = Bcut
     BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [InputSel] )
 
-    line = StrippingLine("B2twobodyLineOneSel",  algos = [BSel] )
+    line = StrippingLine("B2twobodyLine",  algos = [BSel] )
 
     return [line]
