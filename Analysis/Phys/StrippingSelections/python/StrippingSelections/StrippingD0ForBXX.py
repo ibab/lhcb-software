@@ -1,7 +1,7 @@
-#$Id: StrippingD0ForBXX.py,v 1.3 2010-08-13 20:13:13 lzhang Exp $
+#$Id: StrippingD0ForBXX.py,v 1.4 2010-09-03 02:09:28 lzhang Exp $
 __author__ = ['Liming Zhang']
 __date__ = '20/05/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 """
 D0->Kpi and D0->K3pi selections for bb-x-section
 """
@@ -10,9 +10,9 @@ from LHCbKernel.Configuration import *
 
 class StrippingD0forBXXConf(LHCbConfigurableUser):
     __slots__ = {
-        "PreScale"       : 0.05   # adimensiional
+        "PreScale"       : 0.02   # adimensiional
         ,"MINIPCHI2"     : 9.0   # adimensiional
-        ,"TRCHI2"        : 10.0   # adimensiional
+        ,"TRCHI2"        : 5.0   # adimensiional
         ,"KaonPIDK"      : 4.0   # adimensiional
         ,"KPiPT"         : 300.0  # MeV
         ,"D0DIRA"        : 0.9    # adimensiional

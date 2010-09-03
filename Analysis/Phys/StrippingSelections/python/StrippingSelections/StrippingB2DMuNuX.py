@@ -1,7 +1,7 @@
-# $Id: StrippingB2DMuNuX.py,v 1.2 2010-08-13 20:13:13 lzhang Exp $
+# $Id: StrippingB2DMuNuX.py,v 1.3 2010-09-03 02:09:28 lzhang Exp $
 __author__ = ['Liming Zhang']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 """
 B->DMuNuX inclusive selections
 """
@@ -23,7 +23,8 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
         ,"DsMassWin"     : 100.0  # MeV
         ,"DsAMassWin"    : 120.0  # MeV
         ,"DsIP"          : 7.4    #mm
-        ,"DsVCHI2DOF"    : 10.0  # adimensiional
+        ,"DsVCHI2DOF"    : 6.0   # adimensiional
+        ,"PIDmu"         : -0.0   # adimensiional
         ,"DDocaMax"      : 0.5    #mm
         }
 
@@ -91,7 +92,7 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
     def _muonFilter( self ):
         from Configurables import FilterDesktop
         _mu = FilterDesktop("Mu_forb2DMuX", InputLocations = [ "Phys/StdLooseMuons" ])
-        _mu.Code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s)" %self.getProps()
+        _mu.Code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" %self.getProps()
         return _mu
     
     def _b2D0MuX( self ):
@@ -101,8 +102,8 @@ class StrippingB2DMuNuXConf(LHCbConfigurableUser):
         _B.DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ]
 #        _B.DaughtersCuts = {'mu+': ALL}
         _B.CombinationCut = "(AM<6.2*GeV)" % self.getProps()
-        _B.MotherCut = "  (MM<6.0*GeV) & (MM>2.0*GeV) & (VFASPF(VCHI2/VDOF)<10.0) & (BPVDIRA>0.998)  " \
-                        "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > -1.0*mm ) "  % self.getProps()
+        _B.MotherCut = "  (MM<6.0*GeV) & (MM>2.0*GeV) & (VFASPF(VCHI2/VDOF)<5.0) & (BPVDIRA>0.998)  " \
+                        "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > -0.5*mm ) "  % self.getProps()
 #        _B.ReFitPVs = True
         return _B
     

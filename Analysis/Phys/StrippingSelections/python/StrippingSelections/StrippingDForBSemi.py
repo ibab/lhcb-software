@@ -1,7 +1,7 @@
-# $Id: StrippingDForBSemi.py,v 1.1 2010-08-13 20:13:13 lzhang Exp $
+# $Id: StrippingDForBSemi.py,v 1.2 2010-09-03 02:09:28 lzhang Exp $
 __author__ = ['Liming Zhang']
 __date__ = '10/08/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 """
 D+, Ds, /\c selections as control sample for B->DMuNuX 
 """
@@ -10,18 +10,19 @@ from LHCbKernel.Configuration import *
 
 class StrippingDforBSemiConf(LHCbConfigurableUser):
     __slots__ = {
-        "PreScale"       : 0.1
+        "PreScale"       : 0.02
+        ,"PreScaleLc"    : 0.04
         ,"MINIPCHI2"     : 4.0    # adimensiional
-        ,"TRCHI2"        : 10.0   # adimensiional
-        ,"KaonPIDK"      : 4.0  # adimensiional
+        ,"TRCHI2"        : 5.0   # adimensiional
+        ,"KaonPIDK"      : 4.0    # adimensiional
         ,"PT"            : 300.0  # MeV
         ,"DsDIRA"        : 0.9    # adimensiional
         ,"DsFDCHI2"      : 64.0   # adimensiional
-        ,"DsMassWin"     : 100.0  # MeV
-        ,"DsAMassWin"    : 120.0  # MeV
-        ,"DsIP"          : 7.4    #mm
-        ,"DsVCHI2DOF"    : 10.0
-        ,"DDocaMax"      : 0.5    #mm        
+        ,"DsMassWin"     : 80.0  # MeV
+        ,"DsAMassWin"    : 100.0  # MeV
+        ,"DsIP"          : 7.4    # mm
+        ,"DsVCHI2DOF"    : 6.0    # adimensiional
+        ,"DDocaMax"      : 0.5    # mm        
         }
 
     def _Dp2KPiPiFilter( self ):
@@ -92,7 +93,7 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import DataOnDemand
         props = self.getProps()
         return StrippingLine('DsforBSemiLine'
-                             , prescale =  props['PreScale']
+                             , prescale =  props['PreScaleLc']
                              , algos = [ self._Ds2KKPiFilter()]
                                          
                              )    
@@ -105,7 +106,7 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import DataOnDemand
         props = self.getProps()
         return StrippingLine('LcforBSemiLine'
-                             , prescale =  props['PreScale']
+                             , prescale =  props['PreScaleLc']
                              , algos = [ self._Lc2PKPiFilter() ]
                                          
                              )
