@@ -1,10 +1,10 @@
 JobOptionsSvc        INFO
 //GP:================================================================================
-//GP: include "/afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/Online/GaudiRootCnvTests/options/CRD.pool.opts" (0,0)
-//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/GaudiRootCnvTests/options/CRD.opts" (1,10)
-//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/RootCnv/options/Setup.opts" (1,10)
+//GP: include "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.pool.opts" (0,0)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.opts" (1,10)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts" (1,10)
 ApplicationMgr.ExtSvc =  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" ] ;//GP: (1,1)
-//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/RootCnv/options/SetupIO.opts" (3,10)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts" (3,10)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
 ApplicationMgr.ExtSvc +=  [ "Gaudi::RootCnvSvc/RootCnvSvc" ] ;          //GP: (1,1)
 EventPersistencySvc.CnvServices +=  [ "RootCnvSvc" ] ;                  //GP: (1,1)
@@ -18,8 +18,8 @@ EventSelector.PrintFreq = 500;                                          //GP: (1
 EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
 ReadAlg.OutputLevel = 4;                                                //GP: (1,1)
 RootCnvSvc.CacheSize = 50000000;                                        //GP: (1,1)
-//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/RootCnv/options/SetupIO.opts" (14,1)
-//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/RootCnv/options/Setup.opts" (4,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts" (14,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts" (4,1)
 ApplicationMgr.TopAlg =  [ "ReadAlg" ] ;                                //GP: (1,10)
 ApplicationMgr.ExtSvc +=  [ "TagCollectionSvc/EvtTupleSvc" ] ;          //GP: (1,10)
 RootCnvSvc.OutputLevel = 3;                                             //GP: (1,10)
@@ -36,17 +36,17 @@ FileRecordPersistencySvc.CnvServices +=  [ "FileRecordCnvSvc" ] ;       //GP: (1
 FileRecordCnvSvc.ShareFiles = "YES";                                    //GP: (1,10)
 FileRecordCnvSvc.OutputLevel = 1;                                       //GP: (1,10)
 ReadAlg.IncidentName = @FileRecordDataSvc.IncidentName;                 //GP: (1,10)
-//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Gaudi_v21r10p1/Online/GaudiRootCnvTests/options/CRD.opts" (22,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.opts" (22,1)
 FileCatalog.Catalogs =  [ "xmlcatalog_file:POOLIO.xml" ] ;              //GP: (1,10)
 EventSelector.Input =  [ "COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:POOLIO.tags' SVC='Gaudi::RootCnvSvc' SEL='(Ntrack>10)' FUN='Gaudi::Examples::EvtCollectionSelector'" ] ;//GP: (1,10)
-//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/Online/GaudiRootCnvTests/options/CRD.pool.opts" (4,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.pool.opts" (4,1)
 //GP:================================================================================
 
-JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/Gaudi_v21r10p1/Online/GaudiRootCnvTests/options/CRD.pool.opts
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CRD.pool.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.1 $
-                                          running on lxplus240.cern.ch on Thu Sep  2 18:27:41 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.2 $
+                                          running on lxplus257.cern.ch on Fri Sep  3 11:07:14 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
@@ -63,131 +63,105 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 56
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=14.9037 [1]=16.7944 [2]=17.0709 [3]=17.3469 [4]=17.8929
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=14.9037 [1]=16.7944 [2]=17.0709 [3]=17.3469 [4]=17.8929
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=7.99376 py=9.40345 pz=8.35437
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.1578 py=9.51566 pz=9.19358
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2#EvtCount[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2#SumCount[0]
-ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2
-ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2/EvtCount=1000
-ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/3AAA74A2-ADB6-DF11-822C-000423D99AB2/SumCount=123456
-ReadAlg              INFO ========= EVENT [1]:2 RUN:999 TIME:1283444272.205877 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000002/1000999
-ReadAlg           SUCCESS FileInfo record: 3AAA74A2-ADB6-DF11-822C-000423D99AB2/EvtCount=1000
-ReadAlg           SUCCESS FileInfo record: 3AAA74A2-ADB6-DF11-822C-000423D99AB2/SumCount=123456
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 78
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.0438 [1]=17.7482 [2]=18.5814 [3]=18.8946 [4]=17.4747
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.0438 [1]=17.7482 [2]=18.5814 [3]=18.8946 [4]=17.4747
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.2111 py=9.92121 pz=11.0853
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#EvtCount[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A#SumCount[0]
+ReadAlg           SUCCESS Got incident: NEW_FILE_RECORD Source:/FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
+ReadAlg           SUCCESS Received incident:NEW_FILE_RECORD: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
+ReadAlg           SUCCESS Incident: FileInfo record: /FileRecords/76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
+ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/EvtCount=1000
+ReadAlg           SUCCESS FileInfo record: 76179875-3AB7-DF11-B4AF-001E4F3E563A/SumCount=123456
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [3]:4 RUN:999 TIME:1283444272.218197 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ NEXT:3000004/3000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 68
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3722 [1]=16.9301 [2]=18.1255 [3]=17.5277 [4]=17.1613
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3722 [1]=16.9301 [2]=18.1255 [3]=17.5277 [4]=17.1613
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.12059 py=11.928 pz=9.67333
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [4]:5 RUN:999 TIME:1283444272.225426 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000005/1000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 87
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.9106 [1]=16.0491 [2]=17.9698 [3]=18.0546 [4]=18.4855
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.9106 [1]=16.0491 [2]=17.9698 [3]=18.0546 [4]=18.4855
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=11.7891 py=10.9691 pz=9.91496
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [5]:6 RUN:999 TIME:1283444272.23232 0 (0) 1 (1) 2 (2)
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 77
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=15.7355 [1]=17.3919 [2]=17.6139 [3]=15.3032 [4]=16.1715
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=15.7355 [1]=17.3919 [2]=17.6139 [3]=15.3032 [4]=16.1715
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.59437 py=8.50512 pz=10.07
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [6]:7 RUN:999 TIME:1283444272.239663 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000007/1000999 PREVPREV:2000007/2000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 56
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.5893 [1]=16.1601 [2]=17.3731 [3]=18.1526 [4]=18.7076
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.5893 [1]=16.1601 [2]=17.3731 [3]=18.1526 [4]=18.7076
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.33687 py=9.65508 pz=9.73695
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 55
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7646 py=8.89134 pz=10.2737
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [7]:8 RUN:999 TIME:1283444272.245836 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000008/1000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 78
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3614 [1]=17.4531 [2]=17.4846 [3]=16.5896 [4]=18.3594
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3614 [1]=17.4531 [2]=17.4846 [3]=16.5896 [4]=18.3594
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.0423 py=10.4072 pz=9.60519
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.6809 [1]=14.9037 [2]=16.7944 [3]=17.0709 [4]=17.3469
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.1578 py=9.51566 pz=9.19358
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [999]:1000 RUN:999 TIME:1283444276.432538 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1001000/1000999
-ReadAlg              INFO ================ NEXT:3001000/3000999 NEXTNEXT:4001000/4000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 56
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=14.9037 [1]=16.7944 [2]=17.0709 [3]=17.3469 [4]=17.8929
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=14.9037 [1]=16.7944 [2]=17.0709 [3]=17.3469 [4]=17.8929
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=7.99376 py=9.40345 pz=8.35437
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1283504755.799126 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 76
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.7422 [1]=16.7922 [2]=17.6961 [3]=16.0612 [4]=15.7365
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.4989 py=10.4342 pz=9.78193
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [1]:2 RUN:999 TIME:1283444272.205877 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000002/1000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 78
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.0438 [1]=17.7482 [2]=18.5814 [3]=18.8946 [4]=17.4747
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.0438 [1]=17.7482 [2]=18.5814 [3]=18.8946 [4]=17.4747
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.2111 py=9.92121 pz=11.0853
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1283504755.813439 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 93
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7554 [1]=16.91 [2]=17.424 [3]=17.0529 [4]=16.2021
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.95659 py=9.22111 pz=10.7468
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [3]:4 RUN:999 TIME:1283444272.218197 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ NEXT:3000004/3000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 68
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3722 [1]=16.9301 [2]=18.1255 [3]=17.5277 [4]=17.1613
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3722 [1]=16.9301 [2]=18.1255 [3]=17.5277 [4]=17.1613
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.12059 py=11.928 pz=9.67333
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1283504755.822131 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 54
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.3973 [1]=15.7355 [2]=17.3919 [3]=17.6139 [4]=15.3032
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7592 py=9.68162 pz=11.3563
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [4]:5 RUN:999 TIME:1283444272.225426 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000005/1000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 87
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=18.9106 [1]=16.0491 [2]=17.9698 [3]=18.0546 [4]=18.4855
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=18.9106 [1]=16.0491 [2]=17.9698 [3]=18.0546 [4]=18.4855
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=11.7891 py=10.9691 pz=9.91496
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1283504755.846686 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 52
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.7278 [1]=19.0105 [2]=17.2653 [3]=17.9376 [4]=18.0045
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.79151 py=8.83918 pz=10.2866
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [5]:6 RUN:999 TIME:1283444272.23232 0 (0) 1 (1) 2 (2)
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 77
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=15.7355 [1]=17.3919 [2]=17.6139 [3]=15.3032 [4]=16.1715
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=15.7355 [1]=17.3919 [2]=17.6139 [3]=15.3032 [4]=16.1715
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=8.59437 py=8.50512 pz=10.07
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1283504758.197556 0 (0) 1 (1) 2 (2)
+Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 55
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
+Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3344 [1]=16.8644 [2]=17.1626 [3]=19.4074 [4]=18.0094
+Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.7646 py=8.89134 pz=10.2737
 Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [6]:7 RUN:999 TIME:1283444272.239663 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000007/1000999 PREVPREV:2000007/2000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 56
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=16.5893 [1]=16.1601 [2]=17.3731 [3]=18.1526 [4]=18.7076
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=16.5893 [1]=16.1601 [2]=17.3731 [3]=18.1526 [4]=18.7076
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=9.33687 py=9.65508 pz=9.73695
-Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [7]:8 RUN:999 TIME:1283444272.245836 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1000008/1000999
-Gaudi::Examples::EvtCollectionSelector	 -> #tracks : 78
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Var): [0]=17.3614 [1]=17.4531 [2]=17.4846 [3]=16.5896 [4]=18.3594
-Gaudi::Examples::EvtCollectionSelector	 -> Momenta(Fix): [0]=17.3614 [1]=17.4531 [2]=17.4846 [3]=16.5896 [4]=18.3594
-Gaudi::Examples::EvtCollectionSelector	 -> Track :  px=10.0423 py=10.4072 pz=9.60519
-Gaudi::Examples::EvtCollectionSelector   SELECTED : True
-ReadAlg              INFO ========= EVENT [999]:1000 RUN:999 TIME:1283444276.432538 0 (0) 1 (1) 2 (2)
-ReadAlg              INFO ================ PREV:1001000/1000999
-ReadAlg              INFO ================ NEXT:3001000/3000999 NEXTNEXT:4001000/4000999
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1283504761.090196 0 (0) 1 (1) 2 (2)
 Gaudi::RootNTup...   INFO End of input Ntuple.
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-EvtTupleSvc.Eve...   INFO Disconnected data IO:6E670BE8-ADB6-DF11-873A-000423D99AB2[POOLIO.tags]
-RootCnvSvc           INFO Disconnected data IO:3AAA74A2-ADB6-DF11-822C-000423D99AB2[POOLIO.dst]
-RootCnvSvc           INFO Disconnected data IO:84E9D6A2-ADB6-DF11-822C-000423D99AB2[POOLIO.mdst]
+EvtTupleSvc.Eve...   INFO Disconnected data IO:40F92596-3AB7-DF11-BDE5-001E4F3E563A[POOLIO.tags]
+RootCnvSvc           INFO Disconnected data IO:2A82CE75-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.mdst]
+RootCnvSvc           INFO Disconnected data IO:76179875-3AB7-DF11-B4AF-001E4F3E563A[POOLIO.dst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 ReadAlg:finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
 ReadAlg:initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:execute      INFO Time User   : Tot=   76 [ms] Ave/Min/Max= 5.43(+-  5.6)/    2/   25 [ms] #= 14
-ChronoStatSvc        INFO Time User   : Tot=0.525  [s]                                             #=  1
+ReadAlg:execute      INFO Time User   : Tot=   92 [ms] Ave/Min/Max= 7.67(+- 7.61)/    3/   32 [ms] #= 12
+ChronoStatSvc        INFO Time User   : Tot=0.618  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
