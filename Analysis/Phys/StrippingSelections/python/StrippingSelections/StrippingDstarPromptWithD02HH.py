@@ -1,8 +1,8 @@
-# $Id: StrippingDstarPromptWithD02HH.py,v 1.6 2010-09-03 22:38:21 pxing Exp $
+# $Id: StrippingDstarPromptWithD02HH.py,v 1.7 2010-09-04 22:12:02 pxing Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
 __date__ = '03 September 2010'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 '''
 Configurable for the y_CP analysis selections for D*+ -> pi+ D0(h h'').
@@ -403,8 +403,8 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         from CommonParticles.StdNoPIDsPions import StdNoPIDsPions
         from CommonParticles.StdNoPIDsKaons import StdNoPIDsKaons
 
-        PiCuts = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( 5 < PIDK  - PIDpi )" % self.getProps()
-        KCuts  = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( 5 < PIDpi  - PIDK )" % self.getProps()
+        PiCuts = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDpi - PIDK > 5)" % self.getProps()
+        KCuts  = "(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDK - PIDpi > 8)" % self.getProps()
         combiCut =  "(ADAMASS('D0')<75*MeV)" % self.getProps() ## Hard-code the mass windows for now.
         motherCut =  "(PT>%(D0Pt)s*GeV) & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s) & (BPVVD>%(D0PVDisp)s)" % self.getProps()
 
