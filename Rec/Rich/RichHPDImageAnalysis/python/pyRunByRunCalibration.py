@@ -339,6 +339,11 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     import datetime, time
     from PyCool import cool
     from math import sqrt
+
+    fitType = "CppFit"
+    if fullFit : fitType = "FullFit"
+    avType = "Full"
+    if forceAverages : avType = "Average"
         
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -441,7 +446,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     fileType = ".pdf"
 
     # Start a PDF file
-    globals()["imageFileName"] = "HPDImageCalibrationBy"+type+fileType
+    globals()["imageFileName"] = "HPDAlignBy"+type+"-"+fitType+avType+fileType
     printCanvas('[')
 
     for hpd,data in plotData.iteritems():
@@ -550,10 +555,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             alignData[flag][hpd] = values
 
     # Open new alignment SQL slice(s)
-    if not forceAverages:
-        dbName = "NewFittedHPDAlignmentsBy"+type+".db"
-    else:
-        dbName = "NewAverageHPDAlignmentsBy"+type+".db"
+    dbName = "HPDAlignBy"+type+"-"+fitType+avType+".db"
     db = createDBFile(dbName)
 
     # List of paths already created in the DB

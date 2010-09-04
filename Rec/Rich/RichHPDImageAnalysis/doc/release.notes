@@ -8,6 +8,7 @@
  - Update run by run HPD image alignment python script to allow creation of
    DB slice using only the average image positions, fitted across all 
    considered runs/fills.
+ - Small tweaks to output file names
 
 ! 2010-09-03 - Chris Jones
  - Various improvements in the image alignment scripts
