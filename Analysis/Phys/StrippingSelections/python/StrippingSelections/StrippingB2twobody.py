@@ -98,7 +98,7 @@ def B2twobodyLine(
     StdD0      = DataOnDemand(Location = "Phys/StdLooseD02KPi")
     StdDp      = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
     StdDs      = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
-    StdLc      = DataOnDemand(Location = "Phys/StdVeryLooseLambdac2PKPi")
+    StdLc      = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi")
     StdDS      = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi")
     StdJp      = DataOnDemand(Location = "Phys/StdLooseDiMuon")
     StdPh      = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK")
@@ -232,46 +232,41 @@ def B2twobodyLine(
     
     # Define a class that contains all relevant particle properties
     class particle:
-        def __init__(self,name,tla,q,b,sel,cut):
+        def __init__(self,name,q,b):
             self.name=name
-            self.tla=tla
             self.Q=q
             self.B=b
-            self.sel=sel
-            self.cut=cut
             self.cp=self
-        def CP(self,name,tla):
-            p= particle(name,tla,-self.Q,-self.B,self.sel,self.cut)
+        def CP(self,name):
+            p= particle(name,-self.Q,-self.B)
             p.cp=self
             self.cp=p
             return p
 
 
-    # Define the particles
+    # Define the particles (skip D_s+ since it's called D+)
     particles=[]
-    particles.append(particle(        "pi+",       "Pip",  +1,  0, PiSel, SingleTrackcut))
-    particles.append(particles[-1].CP("pi-",       "Pim"))
-    particles.append(particle(        "K+",        "Kpl",  +1,  0, KSel,  SingleTrackcut))
-    particles.append(particles[-1].CP("K-",        "Kmn"))
-    particles.append(particle(        "p+",        "Prt",  +1, +1, pSel,  SingleTrackcut))
-    particles.append(particles[-1].CP("p~-",       "Pbr"))
-    particles.append(particle(        "KS0",       "Ksh",   0,  0, KsSel, Kscut))
-    particles.append(particle(        "Lambda0",   "Lmz",   0, +1, LmSel, Lmcut))
-    particles.append(particles[-1].CP("Lambda~0",  "Lmb"))
-    particles.append(particle(        "D0",        "Dzr",   0,  0, DzSel, Dzcut))
-    particles.append(particles[-1].CP("D~0",       "Dzb"))
-    particles.append(particle(        "D+",        "Dpl",  +1,  0, DpSel, Dpcut))
-    particles.append(particles[-1].CP("D-",        "Dmn"))
-    particles.append(particle(        "D+",        "Dsp",  +1,  0, DsSel, Dscut))
-    particles.append(particles[-1].CP("D-",        "Dsm"))
-    particles.append(particle(        "Lambda_c+", "Lcp",  +1, +1, LcSel, Lccut))
-    particles.append(particles[-1].CP("Lambda_c~-","Lcm"))
-    particles.append(particle(        "D*(2010)+", "DSp",  +1,  0, DSSel, DScut))
-    particles.append(particles[-1].CP("D*(2010)-", "DSm"))
-    particles.append(particle(        "J/psi(1S)", "Jps",   0,  0, JpSel, Jpcut))
-    particles.append(particle(        "phi(1020)", "Phi",   0,  0, PhSel, Phcut))
-    particles.append(particle(        "K*(892)0",  "KS0",   0,  0, KSSel, KScut))
-    particles.append(particles[-1].CP("K*(892)~0", "KSb"))
+    particles.append(particle(        "pi+"       ,  +1,  0))
+    particles.append(particles[-1].CP("pi-"       ))
+    particles.append(particle(        "K+"        ,  +1,  0))
+    particles.append(particles[-1].CP("K-"        ))
+    particles.append(particle(        "p+"        ,  +1, +1))
+    particles.append(particles[-1].CP("p~-"       ))
+    particles.append(particle(        "KS0"       ,   0,  0))
+    particles.append(particle(        "Lambda0"   ,   0, +1))
+    particles.append(particles[-1].CP("Lambda~0"  ))
+    particles.append(particle(        "D0"        ,   0,  0))
+    particles.append(particles[-1].CP("D~0"       ))
+    particles.append(particle(        "D+"        ,  +1,  0))
+    particles.append(particles[-1].CP("D-"        ))
+    particles.append(particle(        "Lambda_c+" ,  +1, +1))
+    particles.append(particles[-1].CP("Lambda_c~-"))
+    particles.append(particle(        "D*(2010)+" ,  +1,  0))
+    particles.append(particles[-1].CP("D*(2010)-" ))
+    particles.append(particle(        "J/psi(1S)" ,   0,  0))
+    particles.append(particle(        "phi(1020)" ,   0,  0))
+    particles.append(particle(        "K*(892)0"  ,   0,  0))
+    particles.append(particles[-1].CP("K*(892)~0" ))
 
     #go through all twobody combinations
     descriptors = []
@@ -298,7 +293,7 @@ def B2twobodyLine(
             if p1.cp.name==p1.name and p2.cp.name==p2.name:CP=True
 
             #for B0 non-CP combinations come twice. 
-            if mother=="B0" and not CP and p1.tla+p2.tla<p1.cp.tla+p2.cp.tla:continue
+            if mother=="B0" and not CP and p1.name+p2.name<p1.cp.name+p2.cp.name:continue
 
             #build the decay descriptor
             descriptor=mother+" -> "+p1.name+" "+p2.name
