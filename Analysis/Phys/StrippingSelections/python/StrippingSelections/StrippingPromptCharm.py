@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.7 2010-09-01 16:44:39 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.8 2010-09-04 19:50:51 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -45,34 +45,28 @@
 # +-----------------------------------+----------+----------+-------+--------+
 # | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
 # +-----------------------------------+----------+----------+-------+--------+
-# | StrippingGlobal                   | 0.007600 |     760  |       | 3.010  |
-# +-----------------------------------+----------+----------+-------+--------+
-# | StrippingSequenceStream_Vanya     | 0.007600 |     760  |       | 3.004  |
-# | -- StrippingDstarForPromptCharm   | 0.001080 |     108  | 1.426 | 1.541  |
-# | -- StrippingD02HHForPromptCharm   | 0.003590 |     359  | 1.025 | 0.035  |
-# | -- StrippingDsForPromptCharm      | 0.000680 |      68  | 1.147 | 0.224  |
-# | -- StrippingDForPromptCharm       | 0.001520 |     152  | 1.026 | 0.270  |
-# | -- StrippingLambdaCForPromptCharm | 0.001820 |     182  | 1.126 | 0.859  |
+# | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.103  |
+# | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.354  |
+# | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.035  |
+# | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.216  |
+# | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.284  |
+# | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.154  |
 # +-----------------------------------+----------+----------+-------+--------+
 #                                                   Thanks to Anton Poluektov
 #
-# +-------------------------------------------------------------------------------------------------------------+
-# |                              AlgorithmCorrelations                                                          |
-# +-----------------------------------+--------+----------------------------------------------------------------+
-# |   Algorithm                       | Eff.   |   1        2        3        4        5        6        7      |
-# +-----------------------------------+--------+----------------------------------------------------------------+
-# |  1 StrippingGlobal                | 0.760% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% |
-# |  2 StrippingSequenceStream_Vanya  | 0.760% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% |
-# |  3 StrippingDstarForPromptCharm   | 0.108% |  14.211%  14.211%  #######  24.234%   0.000%   0.000%   0.000% |
-# |  4 StrippingD02HHForPromptCharm   | 0.359% |  47.237%  47.237%  80.556%  #######   1.471%   1.974%   1.648% |
-# |  5 StrippingDsForPromptCharm      | 0.068% |   8.947%   8.947%   0.000%   0.279%  #######   1.316%   3.297% |
-# |  6 StrippingDForPromptCharm       | 0.152% |  20.000%  20.000%   0.000%   0.836%   2.941%  #######   4.396% |
-# |  7 StrippingLambdaCForPromptCharm | 0.182% |  23.947%  23.947%   0.000%   0.836%   8.824%   5.263%  ####### |
-# +-----------------------------------+-------------------------------------------------------------------------+
-#                                                                                    Thanks to Patrick Koppenburg
+# Usage:
+#
+# @code
+#
+#  stream = ...
+#
+#  from StrippingSelections.StirppingPromptCharm import Lines as PromptCharmLines
+#  stream.appendLines ( PromptCharmLines )
+#
+# @endcode 
 # 
-# $Revision: 1.7 $
-# Last modification $Date: 2010-09-01 16:44:39 $
+# $Revision: 1.8 $
+# Last modification $Date: 2010-09-04 19:50:51 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -113,43 +107,37 @@ Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 
 The performance with 100k events from Reco05-Stripping08_SDSTs.py:
 
-  +-----------------------------------+----------+----------+-------+--------+
-  | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
-  +-----------------------------------+----------+----------+-------+--------+
-  | StrippingGlobal                   | 0.007600 |     760  |       | 3.010  |
-  +-----------------------------------+----------+----------+-------+--------+
-  | StrippingSequenceStream_Vanya     | 0.007600 |     760  |       | 3.004  |
-  | -- StrippingDstarForPromptCharm   | 0.001080 |     108  | 1.426 | 1.541  |
-  | -- StrippingD02HHForPromptCharm   | 0.003590 |     359  | 1.025 | 0.035  |
-  | -- StrippingDsForPromptCharm      | 0.000680 |      68  | 1.147 | 0.224  |
-  | -- StrippingDForPromptCharm       | 0.001520 |     152  | 1.026 | 0.270  |
-  | -- StrippingLambdaCForPromptCharm | 0.001820 |     182  | 1.126 | 0.859  |
-  +-----------------------------------+----------+----------+-------+--------+
-                                                     Thanks to Anton Poluektov
+ +-----------------------------------+----------+----------+-------+--------+
+ | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
+ +-----------------------------------+----------+----------+-------+--------+
+ | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.103  |
+ | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.354  |
+ | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.035  |
+ | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.216  |
+ | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.284  |
+ | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.154  |
+ +-----------------------------------+----------+----------+-------+--------+
+                                                   Thanks to Anton Poluektov
 
-  +-------------------------------------------------------------------------------------------------------------+
-  |                              AlgorithmCorrelations                                                          |
-  +-----------------------------------+--------+----------------------------------------------------------------+
-  |   Algorithm                       | Eff.   |   1        2        3        4        5        6        7      |
-  +-----------------------------------+--------+----------------------------------------------------------------+
-  |  1 StrippingGlobal                | 0.760% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% |
-  |  2 StrippingSequenceStream_Vanya  | 0.760% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% |
-  |  3 StrippingDstarForPromptCharm   | 0.108% |  14.211%  14.211%  #######  24.234%   0.000%   0.000%   0.000% |
-  |  4 StrippingD02HHForPromptCharm   | 0.359% |  47.237%  47.237%  80.556%  #######   1.471%   1.974%   1.648% |
-  |  5 StrippingDsForPromptCharm      | 0.068% |   8.947%   8.947%   0.000%   0.279%  #######   1.316%   3.297% |
-  |  6 StrippingDForPromptCharm       | 0.152% |  20.000%  20.000%   0.000%   0.836%   2.941%  #######   4.396% |
-  |  7 StrippingLambdaCForPromptCharm | 0.182% |  23.947%  23.947%   0.000%   0.836%   8.824%   5.263%  ####### |
-  +-----------------------------------+-------------------------------------------------------------------------+
-                                                                                    Thanks to Patrick Koppenburg
-                                                                                    
-$Revision: 1.7 $
-Last modification $Date: 2010-09-01 16:44:39 $
+
+  Usage:
+ 
+
+    >>> stream = ...
+
+    >>> from StrippingSelections.StirppingPromptCharm import Lines as PromptCharmLines
+    
+    >>> stream.appendLines ( PromptCharmLines )
+
+
+$Revision: 1.8 $
+Last modification $Date: 2010-09-04 19:50:51 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 # =============================================================================
 __all__ = (
     #
@@ -180,14 +168,18 @@ _Kaons      = AutomaticData ( Location = "Phys/StdLooseKaons"   )
 _Protons    = AutomaticData ( Location = "Phys/StdLooseProtons" )
 _NoPIDPions = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
 
-_kaoncuts       = "(TRCHI2DOF<10) & ( PT > 250 * MeV ) & ( 0 < PIDK  - PIDpi )                       & ( MIPCHI2DV() > 9 ) " 
-_pioncuts       = "(TRCHI2DOF<10) & ( PT > 250 * MeV ) & ( 0 < PIDpi - PIDK  )                       & ( MIPCHI2DV() > 9 ) " 
-_protoncuts     = "(TRCHI2DOF<10) & ( PT > 250 * MeV ) & ( 0 < PIDp  - PIDpi ) & ( 0 < PIDp - PIDK ) & ( MIPCHI2DV() > 9 ) " 
-_slowpioncuts   = " TRCHI2DOF<10 "
+## the common cuts for all basic particles: 
+_trackcuts     = " ( TRCHI2DOF < 10 ) & ( PT > 250 * MeV ) "
+_basiccuts     = _trackcuts + " & ( MIPCHI2DV () > 9  ) "
+_kaoncuts      = _basiccuts + " & ( 0 < PIDK  - PIDpi ) "
+_pioncuts      = _basiccuts + " & ( 0 < PIDpi - PIDK  ) " 
+_protoncuts    = _basiccuts + " & ( 0 < PIDp  - PIDpi ) & ( 0 < PIDp - PIDK ) "
+# slow pion is the special case 
+_slowpioncuts  = "TRCHI2DOF < 10 "
 
-## switch on-off embedded monitoring 
-_monitor        = True 
-_use_mesons     = False
+## switch on/off embedded monitoring 
+_monitor        = False 
+## use intermediate meson-selection
 _use_mesons     = True 
 
 # =============================================================================
@@ -259,7 +251,7 @@ _D0PreCombine = CombineParticles (
     } ,
     ## combination cut : wide mass-cut & PT-cut 
     CombinationCut = """
-    ( ADAMASS('D0') < 80 * MeV ) &
+    ( ADAMASS('D0') < 85 * MeV ) &
     ( APT > 1.4 * MeV          )
     """ ,
     ## mother cut
@@ -338,10 +330,13 @@ _DstarCombine = CombineParticles(
     ##
     DaughtersCuts = {
     'pi+' :  _slowpioncuts ,
-    'D0'  : " switch ( pipi , in_range ( -30 * MeV , DMASS('D0') , 75 * MeV ) , ALL ) "
+    'D0'  : " switch ( pipi , in_range ( -50 * MeV , DMASS('D0') , 75 * MeV ) , ALL ) "
     } ,
     ##
-    CombinationCut = "AM - AM1 < 160 * MeV"  ,
+    CombinationCut = """
+    ( AM       < 2.5 * GeV ) & 
+    ( AM - AM1 < 165 * MeV )
+    """ ,
     ## 
     MotherCut      = """
     ( chi2vx < 64        ) &
@@ -382,8 +377,8 @@ _DsCombine = CombineParticles(
     ##
     Preambulo      = _preambulo  + [
     "aphi  = AM12              < 1050 * MeV " , ## phi-mass window 
-    "admD  = ADAMASS ('D+'  )  <   80 * MeV " , ## D+  mass window for combination cut 
-    "admDs = ADAMASS ('D_s+')  <   80 * MeV " , ## Ds+ mass window for combiantion cut 
+    "admD  = ADAMASS ('D+'  )  <   85 * MeV " , ## D+  mass window for combination cut 
+    "admDs = ADAMASS ('D_s+')  <   85 * MeV " , ## Ds+ mass window for combiantion cut 
     "dmD   = ADMASS  ('D+'  )  <   75 * MeV " , ## D+  mass window 
     "dmDs  = ADMASS  ('D_s+')  <   75 * MeV " , ## Ds+ mass window
     ##
@@ -445,7 +440,7 @@ _DCombine = CombineParticles(
     } ,
     ##                                 
     CombinationCut = """
-    ( ADAMASS('D+') < 55 * MeV ) &
+    ( ADAMASS('D+') < 65 * MeV ) &
     ( APT > 1 * GeV )
     """ , 
     MotherCut      = """
@@ -492,13 +487,13 @@ _LambdaC_Combine = CombineParticles(
     } ,
     ##
     CombinationCut = """
-    ( ADAMASS('Lambda_c+') < 55 * MeV ) &
-    ( APT > 900 * MeV ) 
+    ( ADAMASS('Lambda_c+') < 65 * MeV ) &
+    ( APT > 1.30 * MeV ) 
     """ ,
     ##
     MotherCut      = """
     ( chi2vx  < 25 )                   &
-    ( PT      > 1.0 * GeV            ) & 
+    ( PT      > 1.5 * GeV            ) & 
     ( ADMASS('Lambda_c+') < 50 * MeV ) &
     ( ctau    > 100 * micrometer )
     """ ,

@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-04 - Vanya Belyaev
+ - StrippingPromptCharm.py
+     - polish a bit Lambda_c 
+     - add more comments
+     - update tabel 
+     - add information on usage  
+
 ! 2010-09-04 - Plamen Hopchev
   - Set a prescale for StrippingBeamGas
 
