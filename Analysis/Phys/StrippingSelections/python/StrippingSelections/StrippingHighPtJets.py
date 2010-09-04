@@ -17,13 +17,13 @@ from Configurables import TrackClusterFinder
 from StrippingConf.StrippingLine import StrippingLine
 
 TrkClusterFinder = TrackClusterFinder("TrkClusterFinder")
-TrkClusterFinder.MinWeightSeed = 7
+TrkClusterFinder.MinWeightSeed = 17
 TrkClusterFinder.ConeExtFactor = 4.0
-TrkClusterFinder.MaxDeltaPhi   = 7.0
-TrkClusterFinder.MaxDeltaEta   = 0.1
+TrkClusterFinder.MaxDeltaPhi   = 3.2
+TrkClusterFinder.MaxDeltaEta   = 0.038
 TrkClusterFinder.Min1stJetPt   = 10.0
-TrkClusterFinder.Min2ndJetPt   = 0.0
-TrkClusterFinder.JetMult       = 1
+TrkClusterFinder.Min2ndJetPt   = 7.0
+TrkClusterFinder.JetMult       = 2
 
 # Create line for high-pt jets selection
 line1 = StrippingLine('HighPtJetsSel'
