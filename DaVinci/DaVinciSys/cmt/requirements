@@ -10,6 +10,7 @@ use  DaVinciTests               v1r2
 # Patches
 use   DDDB                      v1r34   Det
 use   CaloReco                  v5r6p1  Calo
+use   PhysConf                  v1r7p1  Phys
 
 # Declare this as a container package
 apply_pattern container_package
