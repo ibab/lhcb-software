@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.444 2010-08-30 16:47:47 ibelyaev Exp $
+! $Id: release.notes,v 1.445 2010-09-04 08:53:36 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-08-30 - Juan Palacios
+ - python/DaVinci/Configuration
+  . Pass EnableUnpack property to PhysConf().
 
 ! 2010-08-30 - Vanya Belyaev
 

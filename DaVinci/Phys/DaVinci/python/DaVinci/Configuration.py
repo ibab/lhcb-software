@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.123 2010-08-30 16:47:47 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.124 2010-09-04 08:53:36 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -418,10 +418,12 @@ class DaVinci(LHCbConfigurableUser) :
         if self.isPropertySet('EnableUnpack') :
             unPack = self.getProp('EnableUnpack')
             DstConf           ( EnableUnpack = unPack )
+            PhysConf ( EnableUnpack = unPack)
         elif inputType!="MDST" and ( self.getProp("DataType") != "DC06"
                                      and inputType != "MDF" ):
             # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
-            DstConf           ( EnableUnpack = True ) 
+            DstConf           ( EnableUnpack = True )
+            PhysConf ( EnableUnpack = True)
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
