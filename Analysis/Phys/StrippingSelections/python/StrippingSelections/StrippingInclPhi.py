@@ -1,4 +1,4 @@
-# $Id: StrippingInclPhi.py,v 1.6 2010-09-02 09:13:26 schleich Exp $
+# $Id: StrippingInclPhi.py,v 1.7 2010-09-04 13:03:54 schleich Exp $
 
 '''
 Inclusive phi -> K+ K- stripping selection(s) for phi cross section measurement and RICH performance studies.
@@ -36,7 +36,7 @@ see: http://indico.cern.ch/conferenceDisplay.py?confId=82203
 
 __author__  = ['Andrew Powell','Sebastian Schleich']
 __date__    = '2010/09/02'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 __all__     = ('InclPhiConf')
 
 from Gaudi.Configuration   import *
@@ -77,6 +77,15 @@ class InclPhiConf(object):
                 , 'LowPtPrescale'       : 0.004    # adimensional
                 , 'LDPrescale'          : 0.0001   # adimensional
         	}
+
+    config_Sept2010={
+                  'KaonPT'              : 500      # MeV
+                , 'KaonDLL'             : 15       # adimensional
+                , 'PhiMassWindow'       : 30       # MeV
+                , 'HighPtPrescale'      : 0.240    # adimensional
+                , 'LowPtPrescale'       : 0.080    # adimensional
+                , 'LDPrescale'          : 0.0012   # adimensional
+                }
 
 
     def __init__(self, name = 'InclPhi', config= None) :
