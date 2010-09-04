@@ -12,9 +12,10 @@ class PhysConf(LHCbConfigurableUser) :
 
     __slots__ = {
         "DataType"          : 'MC09'      # Data type, can be ['DC06','2008']
-     ,  "Simulation"        : True        # set to True to use SimCond
-     ,  "InputType"         : 'DST'       # Hopefully irrelevant
-     ,  "AllowPIDRerunning" : True        # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
+        ,  "Simulation"        : True        # set to True to use SimCond
+        ,  "InputType"         : 'DST'       # Hopefully irrelevant
+        ,  "AllowPIDRerunning" : True        # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
+        ,  "EnableUnpack"      : None# Enable unpacking of DST.
         }
     
     __used_configurables__ = (
@@ -62,13 +63,17 @@ class PhysConf(LHCbConfigurableUser) :
         ## unpack Calo (?)
         from Configurables import CaloDstUnPackConf 
         unpack = CaloDstUnPackConf()
+        if self.getProp('EnableUnpack') :
+            unpack.setProp('Enable', True)
         if unpack.getProp( 'Enable' ) : 
             hypos    = unpack   .getProp( 'Hypos'   )
             reco_old = caloReco .getProp( 'RecList' )
             reco_new = [ h for h in reco_old if h not in hypos ]
             caloReco.RecList = reco_new
             log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
-
+        else :
+            print 'ERROR: Enable unpacking not set'
+            assert(False)
         #
         # ProtoParticle pre-processing
         #
