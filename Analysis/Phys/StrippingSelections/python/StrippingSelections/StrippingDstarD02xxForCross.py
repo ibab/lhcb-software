@@ -1,7 +1,7 @@
 #
 __author__ = ['Francesco Dettori', 'Walter Bonivento']
 __date__ = '2010/04/23'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
   Stripping for D*(2010)+ -> pi+ (D0->xx) selection:
@@ -117,7 +117,7 @@ class StrippingDstarD02xxForCrossConf(LHCbConfigurableUser):
         xxComb = self.combinetwobody(xplus, xminus)
         dstar = self.combineDstar()
         combname = xplus+xminus
-        dstar_box = dstar.clone("Dst2PiD02"+combname+"D0PiComb" )
+        dstar_box = dstar.clone("Dst2PiD02"+combname+"D0PiCombFX" )
         dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", "D02"+combname ]
         seq_box =  bindMembers("seq_"+combname+"_box", algos = [ xxComb, dstar_box])
         pres = "Prescale"+combname+"Box"
