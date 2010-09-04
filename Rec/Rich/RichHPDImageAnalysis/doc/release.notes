@@ -4,6 +4,11 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-09-04 - Chris Jones
+ - Update run by run HPD image alignment python script to allow creation of
+   DB slice using only the average image positions, fitted across all 
+   considered runs/fills.
+
 ! 2010-09-03 - Chris Jones
  - Various improvements in the image alignment scripts
   + Cache the results of slow DB queries on immutable information (like run

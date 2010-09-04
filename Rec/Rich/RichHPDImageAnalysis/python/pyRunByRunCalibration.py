@@ -12,20 +12,26 @@ def initialise():
     if not os.path.exists(tmpDir):
         os.mkdir(tmpDir)
     if not os.access(tmpDir,os.W_OK):
-        raise Exception('TempDirNotWritable')
+        raise Exception('Temp Dir'+tmpDir+'Not Writable')
 
     from ROOT import gROOT
+    # No info messages
     gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
+    # Batch mode (no TCanvas)
+    gROOT.SetBatch(True)
     
     # Initialise a few things
-    from Configurables import DDDBConf, CondDB, CondDBAccessSvc, LHCbApp
+    from Configurables import DDDBConf, CondDB, LHCbApp
     DDDBConf(DataType = "2010")
     LHCbApp().DDDBtag   = "head-20100518"
     LHCbApp().CondDBtag = "head-20100730"
     CondDB()
-    
-    import GaudiPython
+
+    # Set message level to warnings and above only
     msgSvc().setOutputLevel(4)
+
+    # Finally, initialize GaudiPython
+    import GaudiPython
     GaudiPython.AppMgr().initialize()
 
 def msgSvc():
@@ -120,9 +126,8 @@ def xmlHeader(type,flag):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
-
-<!-- HPD Image alignment for """ + str(type) + """ """ + str(flag) + """ -->
 """
+#<!-- HPD Image alignment for """ + str(type) + """ """ + str(flag) + """ -->
 
 def xmlFooter():
     return """
@@ -317,20 +322,21 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def calibrationByRuns(rootfiles='RootFileNames.txt',fullFit=False):
-    return calibration(rootfiles,'Run',fullFit)
+def calibrationByRuns(rootfiles='RootFileNames.txt',
+                      fullFit=False,forceAverages=False):
+    return calibration(rootfiles,'Run',fullFit,forceAverages)
 
-def calibrationByFills(rootfiles='RootFileNames.txt',fullFit=False):
-    return calibration(rootfiles,'Fill',fullFit)
+def calibrationByFills(rootfiles='RootFileNames.txt',
+                       fullFit=False,forceAverages=False):
+    return calibration(rootfiles,'Fill',fullFit,forceAverages)
 
-def calibration(rootfiles,type,fullFit):
+def calibration(rootfiles,type,fullFit,forceAverages):
 
     import pyHistoParsingUtils
     from ROOT import TFile, TGraphErrors, TGraph, TF1
     import GaudiPython
     from GaudiPython import gbl
-    import CondDBUI
-    import datetime, time, os
+    import datetime, time
     from PyCool import cool
     from math import sqrt
         
@@ -378,7 +384,6 @@ def calibration(rootfiles,type,fullFit):
 
         nFile += 1
         print "Processing", type , flag, "( #", nFile, "of", len(filesToLoopOver), ")", filename
-        #print " ->", type, "Start", startTime, "Stop", stopTime
 
         # Set UMS to the start time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
@@ -427,16 +432,17 @@ def calibration(rootfiles,type,fullFit):
         # close the ROOT file
         file.Close()
 
-    # Make plots showing the variations
-    # Also, fit for the average
-    print "Making summary plots"
-
-    # Start a PDF file
-    globals()["imageFileName"] = "HPDImageCalibrationBy"+type+".ps"
-    printCanvas('[')
-
     # Average X and Y values
     averageShifts = { }
+
+    # Make plots showing the variations
+    print "Making summary plots"
+
+    fileType = ".pdf"
+
+    # Start a PDF file
+    globals()["imageFileName"] = "HPDImageCalibrationBy"+type+fileType
+    printCanvas('[')
 
     for hpd,data in plotData.iteritems():
 
@@ -482,7 +488,7 @@ def calibration(rootfiles,type,fullFit):
 
             linearFit = TF1("AverageFit","pol0",minMaxFlag[0],minMaxFlag[1])
             linearFit.SetParName(0,"Fitted Shift")
-
+            
             plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
             plotX.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
             plotX.GetXaxis().SetTitle(type+" Number")
@@ -498,7 +504,7 @@ def calibration(rootfiles,type,fullFit):
             plotXDB.Draw("LP")
             labelDataDB(alignColor,refColor)
             printCanvas()
-
+            
             plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
             plotY.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
             plotY.GetXaxis().SetTitle(type+" Number")
@@ -514,7 +520,7 @@ def calibration(rootfiles,type,fullFit):
             plotYDB.Draw("LP")
             labelDataDB(alignColor,refColor)
             printCanvas()
-
+            
             # Save the fitted averages for this HPD
             averageShifts[hpd] = [avX,avY]
 
@@ -543,14 +549,18 @@ def calibration(rootfiles,type,fullFit):
             if flag not in alignData.keys() : alignData[flag] = { }
             alignData[flag][hpd] = values
 
-    # Open new alignment SQL slice
-    dbFileName = "NewRichHPDAlignmentsBy"+type+".db"
-    print "Creating DB Slice", dbFileName
-    if os.path.exists(dbFileName) : os.remove(dbFileName)
-    db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
-                          create_new_db=True, readOnly=False )
+    # Open new alignment SQL slice(s)
+    if not forceAverages:
+        dbName = "NewFittedHPDAlignmentsBy"+type+".db"
+    else:
+        dbName = "NewAverageHPDAlignmentsBy"+type+".db"
+    db = createDBFile(dbName)
+
     # List of paths already created in the DB
     createdPaths = [ ]
+
+    # Save MD5 sums for each alignment string
+    alignMDsums = { }
 
     # Finally, loop over the data to create DB updates per HPD
     nflag = 0
@@ -583,7 +593,7 @@ def calibration(rootfiles,type,fullFit):
             siAlign = getSiSensorAlignment(copyNumber)
 
             # Get the offsets
-            if values["FitOK"] :
+            if values["FitOK"] and not forceAverages :
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
                 text = "From Fit"
@@ -625,22 +635,39 @@ def calibration(rootfiles,type,fullFit):
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
 
-        # Loop over XML files in the DB
+        # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :
             
             # The XML data
             alignment = alignments[xmlpath]
             # Add the XML footer to the XML data
             alignment += xmlFooter()
-            
+
             # First time, create the paths in the DB
             if xmlpath not in createdPaths:
                 db.createNode(xmlpath)
                 createdPaths += [xmlpath]
-            # Add to the DB
-            db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+
+            # Check MD5
+            mdsum = stringMD5(alignment)
+            if xmlpath not in alignMDsums : alignMDsums[xmlpath] = 0
+
+            # If this alignment is different to the last, update
+            if mdsum != alignMDsums[xmlpath] :
+                db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+                alignMDsums[xmlpath] = mdsum
+            else:
+                print "  -> Alignment for", xmlpath, "same as previous -> No update"
             
     print "Done ..."
+
+def createDBFile(name):
+    import CondDBUI
+    import os
+    print "Creating DB Slice", name
+    if os.path.exists(name) : os.remove(name)
+    return CondDBUI.CondDB( "sqlite_file:"+name+"/LHCBCOND",
+                            create_new_db=True, readOnly=False )
 
 def labelDataDB(dataColor,dbColor):
     from ROOT import TText
@@ -658,10 +685,10 @@ def printCanvas(tag=''):
     imageType = imageFileName.split(".")[1]
     canvas.Print(imageFileName+tag,imageType)
     # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
-    if tag == ']' and imageType == 'ps' :
-        import os
-        os.system('ps2pdf '+imageFileName)
-        os.remove(imageFileName)
+    #if tag == ']' and imageType == 'ps' :
+    #    import os
+    #    os.system('ps2pdf '+imageFileName)
+    #    os.remove(imageFileName)
         
 def rootCanvas():
     from ROOT import TCanvas
