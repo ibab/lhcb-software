@@ -8,7 +8,7 @@ canvas        = None
 # ====================================================================================
 
 ## Submits Control Jobs
-def submitControlJobs(pickedRuns="Run71813-LFNs.pck"):
+def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
     
     import os
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, DiracSplitter, 
@@ -49,7 +49,9 @@ def submitControlJobs(pickedRuns="Run71813-LFNs.pck"):
                 j = Job( application = Brunel( version = 'v37r6p1' ) )
 
                 # name
-                j.name = "RefractIndexControl_Run-"+str(run)+"_R1-"+r1+"_R2-"+r2
+                j.name = "RefractIndexControl"
+                if name != "" : j.name += "-"+name
+                j.name += "_Run-"+str(run)+"_R1-"+r1+"_R2-"+r2
                 print "Submitting Job", j.name
 
                 # Custom options for this job
@@ -89,15 +91,15 @@ def submitControlJobs(pickedRuns="Run71813-LFNs.pck"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(pickedRunsList=["RunLFNs.pck"]):
-    submitRecoJobs(pickedRunsList,"RefractIndexCalib")
+def submitCalibrationJobs(name="",pickedRunsList=["RunLFNs.pck"]):
+    submitRecoJobs(name,pickedRunsList,"RefractIndexCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(pickedRunsList=["RunLFNs.pck"]):
-    submitRecoJobs(pickedRunsList,"RefractIndexVerify")
+def submitVerificationJobs(name="",pickedRunsList=["RunLFNs.pck"]):
+    submitRecoJobs(name,pickedRunsList,"RefractIndexVerify")
 
 ## Real underlying method
-def submitRecoJobs(pickedRunsList,jobType):
+def submitRecoJobs(name,pickedRunsList,jobType):
 
     import os
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, DiracSplitter, 
@@ -131,7 +133,9 @@ def submitRecoJobs(pickedRunsList,jobType):
             if len(lfns)>0 :
 
                 # Construct the job name
-                jobname = jobType+"_Run-"+str(run)
+                jobname = jobType
+                if name != "" : jobname += "-"+name
+                jobname += "_Run-"+str(run)
 
                 # is this job already submitted ?
                 if jobExists(jobname):
@@ -179,7 +183,12 @@ def submitRecoJobs(pickedRunsList,jobType):
                         mySandBox += [mainLHCbCond]
                         # Additional DB Slices
                         #dbFiles = ["NewRichCKRefIndexCalib"]
-                        dbFiles = ["TrackAlign-v4.0.VeloYFixed","NewRichCKRefIndexCalib","NewRichHPDAlignmentsByFill","Rich1MirrorAlignment-v1","Rich2MirrorAlignment-v1"]
+                        dbFiles = [ "TrackAlign-v4.0.VeloYFixed",
+                                    "NewRichCKRefIndexCalib",
+                                    #"NewFittedHPDAlignmentsByFill",
+                                    "NewAverageHPDAlignmentsByFill",
+                                    "Rich1MirrorAlignment-v1",
+                                    "Rich2MirrorAlignment-v1" ]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
                             mySandBox += [dbFile+".db"]
@@ -521,27 +530,30 @@ def getInfoFromJob(j,info='Run'):
         if s[0] == info : run = s[1]
     return run
 
-def getListOfJobs(tag,statuscodes,MinRun=0,MaxRun=99999999):
+def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999):
     from Ganga.GPI import Job, jobs
     cJobs = [ ]
     dict = { }
+    searchString = tag
+    if name != "" : searchString += "-"+name
     for j in jobs :
         if j.status in statuscodes :
-            if j.name.split('_')[0] == tag :
+            if j.name.split('_')[0] == searchString :
                 run = int(getInfoFromJob(j,'Run'))
                 if run >= MinRun and run <= MaxRun:
                     dict[run] = j
+                    print j.name
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('RefractIndexCalib',statuscodes,MinRun,MaxRun)
+def getCalibrationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('RefractIndexCalib',name,statuscodes,MinRun,MaxRun)
 
-def getVerificationJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('RefractIndexVerify',statuscodes,MinRun,MaxRun)
+def getVerificationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('RefractIndexVerify',name,statuscodes,MinRun,MaxRun)
 
-def getControlJobList(statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('Control',statuscodes,MinRun,MaxRun)
+def getControlJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
+    return getListOfJobs('RefractIndexControl',name,statuscodes,MinRun,MaxRun)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     slope = 38.2388535346
@@ -846,10 +858,13 @@ def createTempOptsFile(name):
 #=============================================================================================
 
 def rootStyle():
-    # make ROOT plots less unpleasant to look at ...
     from ROOT import gROOT, gStyle, kWhite, kBlack
-
+    
+    # No info messages
     gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
+
+    # Batch mode (no TCanvas)
+    gROOT.SetBatch(True)
 
     # Start from a plain default
     gROOT.SetStyle("Plain")

@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2010-09-04 - Chris Jones
+ - Update ganga module to allow custom job names
+
 ! 2010-09-03 - Chris Jones
  - More improvements to the calibrations scripts
   + Add pickled run data for all of August
