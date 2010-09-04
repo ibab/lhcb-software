@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-04 - Steve Blusk
+- Further retuining of B-->D+3H lines, dix bug in D*3h modes
+- Add B(s)-->Ds+Ds-, D+D-, D+Ds-, D*-D+ and D*-Ds+ lines
+
 ! 2010-09-04 - Anton Poluektov 
   - Further tuning of StrippingB2DX.py. Relaxed some D cuts, lifetime cut for B 
     instead of flight chi2. Total retention is 0.42% with Reco05-Stripping08. 
