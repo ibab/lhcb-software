@@ -5,6 +5,14 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================== PhysConf v1r7p1 2010-09-07 =================
+
+! 2010-09-04
+ - python/PhysConf/Configuration.py
+  . Added EnableUnpack bool property, which sets CaloDstUnPackConf().Enable.
+ - cmt/requirements
+  . Increase to v1r7p1
+
 !========================== PhysConf v1r7 2009-06-24 ===================
 
 ! 2010-06-20 - Juan Palacios for Vanya Belyaev
