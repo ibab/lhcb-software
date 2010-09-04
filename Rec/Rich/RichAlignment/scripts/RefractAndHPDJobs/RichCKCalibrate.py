@@ -217,12 +217,13 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                     # Optional input files
                     j.inputsandbox = mySandBox
 
-                    # CPU limit for Dirac
-                    maxCPUlimit = 50000
-
                     # Dirac backend
                     j.backend = Dirac()
+                    # maxCPUlimit = 50000
                     # j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
+
+                    # Force jobs to go to CERN only
+                    j.backend.settings['Destination'] = 'LCG.CERN.ch'
 
                     # Submit !!
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
@@ -556,13 +557,20 @@ def getControlJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999
     return getListOfJobs('RefractIndexControl',name,statuscodes,MinRun,MaxRun)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
-    slope = 38.2388535346
-    #if rad == 'Rich2Gas': slope = 69.6869097141
-    #if rad == 'Rich2Gas': slope = 69.4
-    if rad == 'Rich2Gas': slope = 68.2
+    # As of RICH S/W meeting 3/9/2010
+    #slope = 38.2388535346
+    #if rad == 'Rich2Gas': slope = 68.2
+    # Test values
+    slope = 38.25
+    if rad == 'Rich2Gas': slope = 68.18
+    # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
     error  = shift['Mean'][1]*slope
+    # Return the values
     return [result,error]
+
+def getSubJobRootFiles(j):
+    for sj in j.subjobs: print sj
 
 def getRootFilePath(j):
     listofMerged = [ j.outputdir+f for f in j.merger.files ]

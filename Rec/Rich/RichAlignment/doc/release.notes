@@ -6,6 +6,7 @@
 
 ! 2010-09-04 - Chris Jones
  - Update ganga module to allow custom job names
+ - Force all ganga calibration jobs to run at LCG.CERN.ch
 
 ! 2010-09-03 - Chris Jones
  - More improvements to the calibrations scripts
