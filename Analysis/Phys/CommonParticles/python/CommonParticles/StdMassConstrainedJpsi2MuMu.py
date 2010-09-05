@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdMassConstrainedJpsi2MuMu.py,v 1.1 2010-09-01 14:16:42 gcowan Exp $ 
+# $Id: StdMassConstrainedJpsi2MuMu.py,v 1.2 2010-09-05 20:36:44 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdMassConstrainedJpsi2MuMu.py
 #  configuration file for 'Standard mass constrained Jpsi2MuMu'
@@ -28,8 +28,8 @@ StdMassConstrainedJpsi2MuMu.InputLocations =["StdLooseJpsi2MuMu"]
 StdMassConstrainedJpsi2MuMu.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < 5.0)" \
                               	   "& (ADMASS('J/psi(1S)') < 80.*MeV)" \
                               	   "& (VFASPF(VCHI2) < 16.)" \
-			     	   "& (MFIT)" \
-				   "& (INFO( LHCb.Particle.Chi2OfMassConstrainedFit, 100 ) < 25)"
+			     	   "& (MFIT)"
+				   #"& (INFO( LHCb.Particle.Chi2OfMassConstrainedFit, 100 ) < 25)"
                               	   #"& (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
 
 ## configure Data-On-Demand service 
