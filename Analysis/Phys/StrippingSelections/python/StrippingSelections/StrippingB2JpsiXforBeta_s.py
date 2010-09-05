@@ -1,4 +1,4 @@
-# $Id: StrippingB2JpsiXforBeta_s.py,v 1.2 2010-09-05 18:07:51 wouter Exp $
+# $Id: StrippingB2JpsiXforBeta_s.py,v 1.3 2010-09-05 21:31:13 wouter Exp $
 '''
 Module for construction of B->JpsiX roadmap lifetime unbiased 
 stripping Selections and StrippingLine.
@@ -11,7 +11,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '26/08/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 
 # Need __all__ for ???
@@ -49,8 +49,8 @@ def createCombinationSel( OutputList,
                           DecayDescriptor,
                           DaughterLists,
                           DaughterCuts = {} ,
-                          PreVertexCuts = "",
-                          PostVertexCuts = "" ) :
+                          PreVertexCuts = "ALL",
+                          PostVertexCuts = "ALL" ) :
     combinerName = "CombinerParticlesFor" + OutputList
     if allConfigurables.get( combinerName ) :
         raise ValueError, 'CombineParticles instance with name '+ combinerName+' already exists'
@@ -194,8 +194,9 @@ B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKs
 Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc",
                                   DaughterLists  = [ KsList, JpsiList ],
-                                  PreVertexCuts = "ADAMASS('B0') < 300",
-                                  PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 20)" )
+                                  PreVertexCuts = "ADAMASS('B0') < 500",
+                                  PostVertexCuts = "ALL" #"(VFASPF(VCHI2/VDOF) < 20)"
+                                  )
 
 Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 1.00)
 Bd2JpsiKsDetachedLine  = StrippingLine("Bd2JpsiKsDetachedLine",
