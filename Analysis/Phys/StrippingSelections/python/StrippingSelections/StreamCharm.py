@@ -18,6 +18,7 @@ from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstar_D2KPiPi0
 from StrippingSelections import StrippingDstarPromptWithD02HHNoPt
+from StrippingSelections import StrippingD02MuMu
 from StrippingSelections import StrippingDstarD02KKpipiRobust
 from StrippingSelections import StrippingDstarD02KKpipiRegular
 from StrippingSelections import StrippingDstarD02KKmumuRobust
@@ -114,6 +115,11 @@ stream.appendLines( [
         , StrippingDforBSemiConf().LcforBSemiLine()
         , StrippingBd2KstarMuMuConf().line_for_DKpipipi()
         , StrippingDstarPromptWithD02HHNoPt.lineDstarPromptWithD02HHNoPt
+        , StrippingDstarPromptWithD02HHNoPt.lineD02HHPromptNoPt
+        , StrippingD02MuMu.lineD02MuMu
+        , StrippingD02MuMu.lineDstarWithD02MuMu
+        , StrippingD02MuMu.lineD02HHForD02MuMu
+        , StrippingD02MuMu.lineDstarWithD02HHForD02MuMu
 #        , StrippingDstarD02KKpipiRobust.line1
 #        , StrippingDstarD02KKpipiRegular.line1
         , StrippingDstarD02KKmumuRobust.line1
