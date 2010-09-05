@@ -91,19 +91,24 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",pickedRunsList=["RunLFNs.pck"]):
+def submitCalibrationJobs(name="",pickedRunsList=[]):
     submitRecoJobs(name,pickedRunsList,"RefractIndexCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",pickedRunsList=["RunLFNs.pck"]):
+def submitVerificationJobs(name="",pickedRunsList=[]):
     submitRecoJobs(name,pickedRunsList,"RefractIndexVerify")
 
 ## Real underlying method
 def submitRecoJobs(name,pickedRunsList,jobType):
 
-    import os
-    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, DiracSplitter, 
-                            SmartMerger, Dirac )
+    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File,
+                            DiracSplitter, SmartMerger, Dirac )
+
+    # If pickled run data list is empty, create full list
+    if len(pickedRunsList) == 0 :
+        import glob
+        pickedRunsList = glob.glob('RunData/*.pck')
+    print " Submitting jobs for RunData", pickedRunsList
 
     # Number of target events to process
     if jobType == "RefractIndexCalib" :
@@ -180,18 +185,19 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                         mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
                         extraopts.write("CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n")
                         extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
-                        mySandBox += [mainLHCbCond]
+                        mySandBox += ["databases/"+mainLHCbCond]
                         # Additional DB Slices
                         #dbFiles = ["NewRichCKRefIndexCalib"]
                         dbFiles = [ "TrackAlign-v4.0.VeloYFixed",
                                     "NewRichCKRefIndexCalib",
                                     #"NewFittedHPDAlignmentsByFill",
-                                    "NewAverageHPDAlignmentsByFill",
+                                    #"NewAverageHPDAlignmentsByFill",
+                                    "HPDAlignByFill-FullFitAverage",
                                     "Rich1MirrorAlignment-v1",
                                     "Rich2MirrorAlignment-v1" ]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
-                            mySandBox += [dbFile+".db"]
+                            mySandBox += ["databases/"+dbFile+".db"]
 
                     # Close file
                     extraopts.close()
@@ -230,11 +236,6 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                     print " -> Using", nFiles, "data files,", nEventsPerFile, "events per file"
                     j.submit()
 
-def jobExists(jobname):
-    from Ganga.GPI import jobs
-    slice = jobs.select(name=jobname)
-    return len(slice) > 0
-
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     from Ganga.GPI import Job
@@ -242,8 +243,10 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     from array import array
     import pickle
 
+    if len(jobs) == 0 : return
+
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RefIndexCalib.ps"
+    globals()["imageFileName"] = rad+"-RefIndexCalib"+getJobCaliName(jobs[0])+".pdf"
     printCanvas('[')
 
     # Dictionary to store the calibration data
@@ -370,7 +373,7 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
     from array import array
 
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RefIndexControl.ps"
+    globals()["imageFileName"] = rad+"-RefIndexControl.pdf"
     printCanvas('[')
 
     x  = array('d')
@@ -423,7 +426,7 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
     # Parameters
     minEntries = 10000
 
-    globals()["imageFileName"] = rad+"-ExpectCKtheta.ps"
+    globals()["imageFileName"] = rad+"-ExpectCKtheta.pdf"
     printCanvas('[')
 
     runs      = array('d')
@@ -484,7 +487,7 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
     import pickle
 
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RecoCKtheta.ps"
+    globals()["imageFileName"] = rad+"-RecoCKtheta.pdf"
     printCanvas('[')
 
     runs      = array('d')
@@ -520,7 +523,12 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 
 # ====================================================================================
 # Utility Methods
-# ==================================================================================== 
+# ====================================================================================
+
+def jobExists(jobname):
+    from Ganga.GPI import jobs
+    slice = jobs.select(name=jobname)
+    return len(slice) > 0
 
 def getInfoFromJob(j,info='Run'):
     run = 0
@@ -530,6 +538,13 @@ def getInfoFromJob(j,info='Run'):
         s = split.split('-')
         if s[0] == info : run = s[1]
     return run
+
+def getJobCaliName(j):
+    tmpA = j.name.split('_')[0]
+    tmpB = tmpA.split('-')
+    cName = ""
+    if len(tmpB) == 2 : cName = tmpB[1]
+    return cName
 
 def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999):
     from Ganga.GPI import Job, jobs
@@ -543,7 +558,7 @@ def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999):
                 run = int(getInfoFromJob(j,'Run'))
                 if run >= MinRun and run <= MaxRun:
                     dict[run] = j
-                    print j.name
+                    #print j.name
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
@@ -601,13 +616,32 @@ def getRootFile(j):
     filename = getRootFilePath(j)
     if filename != "" :
         if os.path.exists(filename):
-            print "Opening ROOT File", filename
+            #print "Opening ROOT File", filename
             file = TFile( filename )
         else:
             print "ERROR :", filename, "does not exist"
     else:
         print "ERROR Accessing ROOT file for job", j.id
     return file
+
+def removeSubJobOutputData(js=[]):
+    from Ganga.GPI import jobs
+    import os
+    import shutil
+    if js == [] : js = jobs
+    for j in js:
+        if j.status == "completed":
+            rootFile = getRootFile(j)
+            if rootFile != None:
+                rootFile.Close()
+                print "Removing subjob output data for job", j.id
+                for subj in j.subjobs:
+                    if os.path.exists(subj.outputdir):
+                        shutil.rmtree(subj.outputdir)
+            else:
+                print "WARNING : Job", j.id, "completed but root file cannot be opened"
+        else:
+            print "Job", j.id, "is not completed. Nothing removed"
 
 def rootCanvas():
     from ROOT import TCanvas
@@ -620,6 +654,7 @@ def printCanvas(tag=''):
     canvas = rootCanvas()
     canvas.Update()
     imageType = imageFileName.split(".")[1]
+    if tag == "[" : print "Opening file", imageFileName
     canvas.Print(imageFileName+tag,imageType)
     # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
     if tag == ']' and imageType == 'ps' :
