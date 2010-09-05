@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.105 2010-08-27 14:50:27 graven Exp $
+$Id: release.notes,v 1.106 2010-09-05 18:42:43 fsoomro Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+!========================== Hlt2SharedParticles v4r5 2010-09-05 ===================
+!2010-09-05 - F. Soomro
+ - Phi->kk and Kstar->Kpi now use BiKalmanFitted kaons and pions as input
 
 !========================== Hlt2SharedParticles v4r4 2010-08-26 ===================
 ! 2010-08-26 - V. Gligorov

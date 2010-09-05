@@ -11,18 +11,18 @@ from Configurables import CombineParticles
 from Hlt2SharedParticles.GoodParticles import GoodKaons
 from Hlt2SharedParticles.BasicParticles import NoCutsKaons
 from HltLine.HltLine import bindMembers
-
+from Hlt2SharedParticles.TrackFittedBasicParticles import  BiKalmanFittedKaons
 __all__ = ( 'Phi2KK', 'UnbiasedPhi2KK' )
 
 Hlt2SharedPhi2KK = CombineParticles("Hlt2SharedPhi2KK")
-Hlt2SharedPhi2KK.InputLocations = [ GoodKaons.outputSelection() ]
+Hlt2SharedPhi2KK.InputLocations = [ BiKalmanFittedKaons.outputSelection() ]
 Hlt2SharedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 
 Hlt2SharedPhi2KK.DaughtersCuts = { "K+" : "ALL"} 
 Hlt2SharedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<50*MeV)"
 Hlt2SharedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 
-Phi2KK = bindMembers( None, [ GoodKaons, Hlt2SharedPhi2KK ] )
+Phi2KK = bindMembers( None, [ BiKalmanFittedKaons, Hlt2SharedPhi2KK ] )
 
 ### 
 #
