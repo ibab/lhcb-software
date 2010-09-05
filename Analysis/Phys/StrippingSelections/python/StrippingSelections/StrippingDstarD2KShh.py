@@ -1,12 +1,12 @@
-# $Id: StrippingDstarD2KShh.py,v 1.5 2010-07-17 23:02:20 mcharles Exp $
+# $Id: StrippingDstarD2KShh.py,v 1.6 2010-09-05 21:37:41 mcharles Exp $
 
 __author__ = [ 'Mat Charles' ]
 __date__ = '2010-02-05'
-__version = '$Revision: 1.5 $'
+__version = '$Revision: 1.6 $'
 
 # Please contact m.charles1@physics.ox.ac.uk before changing anything. Thanks.
 
-# We have many lines that look very similar, except for differing
+# We have four lines that look very similar, except for differing
 # inputs or cuts. Therefore we try to re-use code as much as possible.
 #
 # All lines look basically like this:
@@ -16,23 +16,12 @@ __version = '$Revision: 1.5 $'
 #   3) For each D0, make a corresponding D0bar.
 #   3) Combine D0/D0bar with a third track to make a D*
 #
-# The main complication is that we have "signal" and "background"
-# lines, which have the same cuts except for the 2D mass windows
-# (signal box vs sidebands).
-
-# 26 Apr 2010:
-#   Loosened some cuts for early data running. This increases
-#   retention rate by about a factor of 10 in a control sample
-#   of L0*HLT1-stripped min-bias MC events. This change is
-#   aimed at getting more statistics in the early running, and
-#   is NOT intended to be kept long-term. The changes made were:
-#     DstarCutPT_pp: 3400.0 --> 2000.0 MeV
-#     DstarCutPT_Kp: 3400.0 --> 2000.0 MeV
-#     DstarCutPT_KK: 3200.0 --> 2000.0 MeV
-#     sidebandPrescale: 0.2 --> 1.0
-#   If the rate starts becoming too high, these changes can be
-#   reversed safely. Please change the sideband prescale first,
-#   and then the PT cuts if further reduction is needed.
+# If you need to reduce rate quickly, the single best thing to do is raise the
+# cut on the PT of the D*+. This is controlled by the variables:
+#    DstarCutPT_pp
+#    DstarCutPT_KK
+# for KSpipi and KSKK, respectively. This will bring down the rate really fast,
+# so a step of 500 MeV/c will probably be plenty.
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -47,44 +36,40 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
     __slots__ = {
         'KSLLCutDIRA'           : 0.9997   ## unitless
         , 'KSDDCutDIRA'         : 0.99995  ## unitless
-        , 'KSLLCutMass'         : 11.4     ## in MeV
-        , 'KSDDCutMass'         : 24.9     ## in MeV
+        , 'KSLLCutMass'         : 11.4     ## in MeV -- correct value 11.4
+        , 'KSDDCutMass'         : 24.9     ## in MeV -- correct value 24.9
         , 'KSLLCutFDChi2'       : 100      ## unitless
         , 'KSDDCutFDChi2'       : 100      ## unitless
         , 'trackFromDCutP'      : 1500.0   ## in MeV
-        , 'trackFromDCutPIDe'   : 15.0     ## unitless
-        , 'trackFromDCutPIDp'   : 20.0     ## unitless
-        , 'pionFromDCutPIDK'    : 10.0     ## unitless
-        , 'kaonFromDCutPIDpi'   : 10.0     ## unitless
-        , 'pionFromDCutTRPCHI2' : 0.00001  ## unitless
-        , 'kaonFromDCutTRPCHI2' : -0.1     ## everything passes
-        , 'DCutDIRA'            : 0.995    ## unitless
+        , 'trackFromDCutPIDe'   : 15.0     ## unitless -- orig value 15, alt value 5
+        , 'trackFromDCutPIDp'   : 20.0     ## unitless -- orig value 20, alt value 5
+        , 'pionFromDCutPIDK'    : 0.0      ## unitless
+        , 'kaonFromDCutPIDpi'   : 0.0      ## unitless
+        , 'pionFromDCutTRCHI2DOF'   : 5.0  ## unitless
+        , 'kaonFromDCutTRCHI2DOF'   : 5.0  ## unitless
+        , 'DCutDIRA'            : 0.0      ## unitless -- remove "backwards-going" D0
+        , 'DCutTau_pp'          : 0.3      ## ps
+        , 'DCutTau_Kp'          : 0.3      ## ps
+        , 'DCutTau_KK'          : 0.3      ## ps
         , 'DCutVtxChi2_pp'      : 13.0     ## unitless
         , 'DCutVtxChi2_Kp'      : 15.0     ## unitless
         , 'DCutVtxChi2_KK'      : 21.0     ## unitless
-        , 'preFitDMassCut_LL'   : 100      ## in MeV
-        , 'preFitDMassCut_DD'   : 200      ## in MeV
-        , 'wideDMassCut_ppLL'   : 82.5     ## in MeV
-        , 'wideDMassCut_KpLL'   : 69.0     ## in MeV
-        , 'wideDMassCut_KKLL'   : 42.9     ## in MeV
-        , 'wideDMassCut_ppDD'   : 105.0    ## in MeV
-        , 'wideDMassCut_KpDD'   : 90.0     ## in MeV
-        , 'wideDMassCut_KKDD'   : 54.0     ## in MeV
-        , 'signalDMassCut_ppLL' : 27.5     ## in MeV
-        , 'signalDMassCut_KpLL' : 23.0     ## in MeV
-        , 'signalDMassCut_KKLL' : 14.3     ## in MeV
-        , 'signalDMassCut_ppDD' : 35.0     ## in MeV
-        , 'signalDMassCut_KpDD' : 30.0     ## in MeV
-        , 'signalDMassCut_KKDD' : 18.0     ## in MeV
+        , 'preFitDCutPT'        : 1500.0   ## in MeV
+        , 'preFitDMassCut_LL'   : 130      ## in MeV
+        , 'preFitDMassCut_DD'   : 270      ## in MeV
+        , 'wideDMassCut_ppLL'   : 110.0    ## in MeV -- orig value 82.5 = 27.5 * 3
+        , 'wideDMassCut_KpLL'   : 92.0     ## in MeV -- orig value 69.0 = 23.0 * 3
+        , 'wideDMassCut_KKLL'   : 57.2     ## in MeV -- orig value 42.9 = 14.3 * 3
+        , 'wideDMassCut_ppDD'   : 140.0    ## in MeV -- orig value 105.0 = 35.0 * 3
+        , 'wideDMassCut_KpDD'   : 120.0    ## in MeV -- orig value 90.0 = 30.0 * 3
+        , 'wideDMassCut_KKDD'   : 72.0     ## in MeV -- orig value 54.0 = 18.0 * 3
         , 'sidebandDMassOverlap' : 2.0     ## in MeV
         , 'preFitDstarMassCut'  : 200.0    ## in MeV; make sure it's well above the largest D mass window
-        , 'signalDMCutLower'    : 3.35     ## in MeV
-        , 'signalDMCutUpper'    : 8.35     ## in MeV
         , 'wideDMCutLower'      : 0.0      ## in MeV
-        , 'wideDMCutUpper'      : 13.35    ## in MeV
-        , 'DstarCutPT_pp'       : 2000.0   ## in MeV
-        , 'DstarCutPT_Kp'       : 2000.0   ## in MeV
-        , 'DstarCutPT_KK'       : 2000.0   ## in MeV
+        , 'wideDMCutUpper'      : 15.0     ## in MeV # was 13.35
+        , 'DstarCutPT_pp'       : 3000.0   ## in MeV
+        , 'DstarCutPT_Kp'       : 3000.0   ## in MeV
+        , 'DstarCutPT_KK'       : 2500.0   ## in MeV
         , 'DstarCutChi2NDOF_pp' : 20.0     ## unitless
         , 'DstarCutChi2NDOF_Kp' : 20.0     ## unitless
         , 'DstarCutChi2NDOF_KK' : 60.0     ## unitless
@@ -95,6 +80,14 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
 
     # Make a complete collection of stripping lines
     def MakeLines(self):
+        # Code taken from the Topo line -- check whether there are fewer than 240 tracks in the event...
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules = CoreFactory('CoreFactory').Modules
+        for i in ['LoKiTrigger.decorators']:
+          if i not in modules : modules.append(i)
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        StrippingKillTooManyKShh = VoidFilter('StrippingKillTooManyKShh', Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )")
+
         # All lines start with one of: KS->LL, KS->DD
         memberKSLL = self.makeKSLL()
         memberKSDD = self.makeKSDD()
@@ -104,8 +97,6 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         # Reconstruct D0 -> KS h+ h- with wide mass window:
         memberD2KSpp_LL_wide = self.makeD2KSpp(self.getProps()['preFitDMassCut_LL'], self.getProps()['wideDMassCut_ppLL'])
         memberD2KSpp_DD_wide = self.makeD2KSpp(self.getProps()['preFitDMassCut_DD'], self.getProps()['wideDMassCut_ppDD'])
-        memberD2KSKp_LL_wide = self.makeD2KSKp(self.getProps()['preFitDMassCut_LL'], self.getProps()['wideDMassCut_KpLL'])
-        memberD2KSKp_DD_wide = self.makeD2KSKp(self.getProps()['preFitDMassCut_DD'], self.getProps()['wideDMassCut_KpDD'])
         memberD2KSKK_LL_wide = self.makeD2KSKK(self.getProps()['preFitDMassCut_LL'], self.getProps()['wideDMassCut_KKLL'])
         memberD2KSKK_DD_wide = self.makeD2KSKK(self.getProps()['preFitDMassCut_DD'], self.getProps()['wideDMassCut_KKDD'])
 
@@ -113,12 +104,10 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         # Add an optional mass window filter here.
         # By default it requires events to lie within a signal box.
         #memberDMassFilter = StrippingMember(FilterDesktop, "FilterD0", InputLocations = [ "%CombineD0" ], Code = "ALL")
-        memberDMass_ppLL = self.makeDSignalFilter(self.getProps()['signalDMassCut_ppLL'])
-        memberDMass_ppDD = self.makeDSignalFilter(self.getProps()['signalDMassCut_ppDD'])
-        memberDMass_KpLL = self.makeDSignalFilter(self.getProps()['signalDMassCut_KpLL'])
-        memberDMass_KpDD = self.makeDSignalFilter(self.getProps()['signalDMassCut_KpDD'])
-        memberDMass_KKLL = self.makeDSignalFilter(self.getProps()['signalDMassCut_KKLL'])
-        memberDMass_KKDD = self.makeDSignalFilter(self.getProps()['signalDMassCut_KKDD'])
+        memberDMass_ppLL = self.makeDSignalFilter(self.getProps()['wideDMassCut_ppLL'])
+        memberDMass_ppDD = self.makeDSignalFilter(self.getProps()['wideDMassCut_ppDD'])
+        memberDMass_KKLL = self.makeDSignalFilter(self.getProps()['wideDMassCut_KKLL'])
+        memberDMass_KKDD = self.makeDSignalFilter(self.getProps()['wideDMassCut_KKDD'])
         
         # Member to make charge-conjugate (very simple & flexible):
         from Configurables import ConjugateNeutralPID
@@ -126,75 +115,26 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
 
         # Reconstruct D*+ -> D0 pi+ (&cc), using a wide mass window:
         memberDstar_pp = self.makeDstar(self.getProps()['DstarCutPT_pp'], self.getProps()['DstarCutChi2NDOF_pp'] )
-        memberDstar_Kp = self.makeDstar(self.getProps()['DstarCutPT_Kp'], self.getProps()['DstarCutChi2NDOF_Kp'] )
         memberDstar_KK = self.makeDstar(self.getProps()['DstarCutPT_KK'], self.getProps()['DstarCutChi2NDOF_KK'] )
 
         # Filter to accept only events in a certain part of (DM vs M) space.
         # By default it requires the events to lie in the signal box of DM:
-        memberDstarMassFilter = self.makeDstarSignalFilter()
+        memberDstarMassFilter = self.makeDstarDeltaMassFilter(self.getProps()['wideDMCutLower'], self.getProps()['wideDMCutUpper'])
         
         # Make lines for signal:
-        lineSig_ppLL = StrippingLine('DstarD2KSPiPi_KSLL', prescale = self.getProps()['signalPrescale'], algos = [ memberKSLL, memberD2KSpp_LL_wide, memberDMass_ppLL, memberConjugate, memberDstar_pp, memberDstarMassFilter ])
-        lineSig_ppDD = StrippingLine('DstarD2KSPiPi_KSDD', prescale = self.getProps()['signalPrescale'], algos = [ memberKSDD, memberD2KSpp_DD_wide, memberDMass_ppDD, memberConjugate, memberDstar_pp, memberDstarMassFilter ])
-        lineSig_KpLL = StrippingLine('DstarD2KSKPi_KSLL',  prescale = self.getProps()['signalPrescale'], algos = [ memberKSLL, memberD2KSKp_LL_wide, memberDMass_KpLL, memberConjugate, memberDstar_Kp, memberDstarMassFilter ])
-        lineSig_KpDD = StrippingLine('DstarD2KSKPi_KSDD',  prescale = self.getProps()['signalPrescale'], algos = [ memberKSDD, memberD2KSKp_DD_wide, memberDMass_KpDD, memberConjugate, memberDstar_Kp, memberDstarMassFilter ])
-        lineSig_KKLL = StrippingLine('DstarD2KSKK_KSLL',   prescale = self.getProps()['signalPrescale'], algos = [ memberKSLL, memberD2KSKK_LL_wide, memberDMass_KKLL, memberConjugate, memberDstar_KK, memberDstarMassFilter ])
-        lineSig_KKDD = StrippingLine('DstarD2KSKK_KSDD',   prescale = self.getProps()['signalPrescale'], algos = [ memberKSDD, memberD2KSKK_DD_wide, memberDMass_KKDD, memberConjugate, memberDstar_KK, memberDstarMassFilter ])
-
-        # Make lines for sidebands. These are obtained by cloning the signal lines,
-        # but applying different mass windows. Specifically:
-        #  * We don't apply a narrow mass window to the D0 candidates. (They've already
-        #    had the wide mass window applied in CombineParticles, so in the end we don't
-        #    need to do anything.)
-        #  * We apply a complicated 2D mass cut to the D* candidates, requiring them to lie
-        #    in the 2D sidebands and NOT in the signalbox (aside from a small overlap for
-        #    book-keeping purposes).
-        
-        # The 2D sideband cut looks like:
-        #    [in wide D mass window AND DM sidebands] OR [in D mass sidebands and wide DM window]
-        # The wide cuts (both on D mass and DM) have already been applied in CombineParticles so
-        # we don't need to redo them explicitly.
-        strCutInDMLowerSideband = '( (MM - CHILD(MM,1) - CHILD(MM,2) > %(wideDMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(signalDMCutLower)s *MeV) )' % self.getProps()
-        strCutInDMUpperSideband = '( (MM - CHILD(MM,1) - CHILD(MM,2) > %(signalDMCutUpper)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(wideDMCutUpper)s *MeV) )' % self.getProps()
-        strCutInDMSidebands = '(' + strCutInDMLowerSideband + ' | ' + strCutInDMUpperSideband + ')'
-        # For the sidebands, expand inwards by 2 MeV to give some overlap.
-        cutMassSidebands_ppLL = self.getProps()['signalDMassCut_ppLL'] - self.getProps()['sidebandDMassOverlap']
-        cutMassSidebands_ppDD = self.getProps()['signalDMassCut_ppDD'] - self.getProps()['sidebandDMassOverlap']
-        cutMassSidebands_KpLL = self.getProps()['signalDMassCut_KpLL'] - self.getProps()['sidebandDMassOverlap']
-        cutMassSidebands_KpDD = self.getProps()['signalDMassCut_KpDD'] - self.getProps()['sidebandDMassOverlap']
-        cutMassSidebands_KKLL = self.getProps()['signalDMassCut_KKLL'] - self.getProps()['sidebandDMassOverlap']
-        cutMassSidebands_KKDD = self.getProps()['signalDMassCut_KKDD'] - self.getProps()['sidebandDMassOverlap']
-        strCutInMassSidebands_ppLL = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_ppLL) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_ppLL)s *MeV) )" % self.getProps()
-        strCutInMassSidebands_ppDD = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_ppDD) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_ppDD)s *MeV) )" % self.getProps()
-        strCutInMassSidebands_KpLL = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_KpLL) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_KpLL)s *MeV) )" % self.getProps()
-        strCutInMassSidebands_KpDD = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_KpDD) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_KpDD)s *MeV) )" % self.getProps()
-        strCutInMassSidebands_KKLL = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_KKLL) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_KKLL)s *MeV) )" % self.getProps()
-        strCutInMassSidebands_KKDD = "( (CHILD(ADMASS('D0'),1) > " + str(cutMassSidebands_KKDD) + "*MeV) & (CHILD(ADMASS('D0'),1) < %(wideDMassCut_KKDD)s *MeV) )" % self.getProps()
-        # Combine to make 2D filter:
-        strCutIn2DSidebands_ppLL = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_ppLL + ')'
-        strCutIn2DSidebands_ppDD = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_ppDD + ')'
-        strCutIn2DSidebands_KpLL = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_KpLL + ')'
-        strCutIn2DSidebands_KpDD = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_KpDD + ')'
-        strCutIn2DSidebands_KKLL = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_KKLL + ')'
-        strCutIn2DSidebands_KKDD = '(' + strCutInDMSidebands + ' | ' + strCutInMassSidebands_KKDD + ')'
-
-        # Make the sideband lines:
-        lineBkg_ppLL = lineSig_ppLL.clone('DstarD2KSPiPi_KSLL_SB', prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_ppLL })
-        lineBkg_ppDD = lineSig_ppDD.clone('DstarD2KSPiPi_KSDD_SB', prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_ppDD })
-        lineBkg_KpLL = lineSig_KpLL.clone('DstarD2KSKPi_KSLL_SB',  prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_KpLL })
-        lineBkg_KpDD = lineSig_KpDD.clone('DstarD2KSKPi_KSDD_SB',  prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_KpDD })
-        lineBkg_KKLL = lineSig_KKLL.clone('DstarD2KSKK_KSLL_SB',   prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_KKLL })
-        lineBkg_KKDD = lineSig_KKDD.clone('DstarD2KSKK_KSDD_SB',   prescale = self.getProps()['sidebandPrescale'], FilterDesktopFilterD0 = { "Code" : "(ALL)" }, FilterDesktopFilterDstar = { "Code" : strCutIn2DSidebands_KKDD })
+        lineSig_ppLL = StrippingLine('DstarD2KSPiPi_KSLL', prescale = self.getProps()['signalPrescale'], algos = [ StrippingKillTooManyKShh, memberKSLL, memberD2KSpp_LL_wide, memberDMass_ppLL, memberConjugate, memberDstar_pp, memberDstarMassFilter ])
+        lineSig_ppDD = StrippingLine('DstarD2KSPiPi_KSDD', prescale = self.getProps()['signalPrescale'], algos = [ StrippingKillTooManyKShh, memberKSDD, memberD2KSpp_DD_wide, memberDMass_ppDD, memberConjugate, memberDstar_pp, memberDstarMassFilter ])
+        lineSig_KKLL = StrippingLine('DstarD2KSKK_KSLL',   prescale = self.getProps()['signalPrescale'], algos = [ StrippingKillTooManyKShh, memberKSLL, memberD2KSKK_LL_wide, memberDMass_KKLL, memberConjugate, memberDstar_KK, memberDstarMassFilter ])
+        lineSig_KKDD = StrippingLine('DstarD2KSKK_KSDD',   prescale = self.getProps()['signalPrescale'], algos = [ StrippingKillTooManyKShh, memberKSDD, memberD2KSKK_DD_wide, memberDMass_KKDD, memberConjugate, memberDstar_KK, memberDstarMassFilter ])
 
         # All done:
-        lineList = [ lineSig_ppLL, lineSig_ppDD, lineSig_KpLL, lineSig_KpDD, lineSig_KKLL, lineSig_KKDD, lineBkg_ppLL, lineBkg_ppDD, lineBkg_KpLL, lineBkg_KpDD, lineBkg_KKLL, lineBkg_KKDD ]
+        lineList = [ lineSig_ppLL, lineSig_ppDD, lineSig_KKLL, lineSig_KKDD ]
         return lineList
 
-    def makeDstarSignalFilter(self):
+    def makeDstarDeltaMassFilter(self, cutLower, cutUpper):
         # Cut on delta mass:
-        strCutDeltaMassLower = "( MM - CHILD(MM,1) - CHILD(MM,2) > %(signalDMCutLower)s *MeV )" % self.getProps()
-        strCutDeltaMassUpper = "( MM - CHILD(MM,1) - CHILD(MM,2) < %(signalDMCutUpper)s *MeV )" % self.getProps()
-        # Combined 2D cut:
+        strCutDeltaMassLower = "( MM - CHILD(MM,1) - CHILD(MM,2) > " + str(cutLower) + "*MeV )"
+        strCutDeltaMassUpper = "( MM - CHILD(MM,1) - CHILD(MM,2) < " + str(cutUpper) + "*MeV )"
         strCut = '(' + strCutDeltaMassLower + ' & ' + strCutDeltaMassUpper + ')'
         # Filter:
         f = StrippingMember(FilterDesktop
@@ -245,7 +185,7 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         strCutPIDe = "(PIDe-PIDpi < %(trackFromDCutPIDe)s )" % self.getProps()
         strCutPIDp = "(PIDp-PIDpi < %(trackFromDCutPIDp)s ) " % self.getProps()
         strCutPIDK = "(PIDK -PIDpi < %(pionFromDCutPIDK)s ) " % self.getProps()
-        strCutChi2 = "(TRPCHI2 > %(pionFromDCutTRPCHI2)s )" % self.getProps()
+        strCutChi2 = "(TRCHI2DOF < %(pionFromDCutTRCHI2DOF)s )" % self.getProps()
         strCuts = '(' + strCutP + '&' + strCutPIDe + '&' + strCutPIDp \
             + '&' + strCutPIDK + '&' + strCutChi2 + ')'
         return strCuts
@@ -257,8 +197,9 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         strCutPIDe = "(PIDe-PIDK < %(trackFromDCutPIDe)s )" % self.getProps()
         strCutPIDp = "(PIDp-PIDK < %(trackFromDCutPIDp)s ) " % self.getProps()
         strCutPIDK = "(PIDpi-PIDK < %(kaonFromDCutPIDpi)s ) " % self.getProps()
+        strCutChi2 = "(TRCHI2DOF < %(kaonFromDCutTRCHI2DOF)s )" % self.getProps()
         strCuts = '(' + strCutP + '&' + strCutPIDe + '&' + strCutPIDp \
-            + '&' + strCutPIDK + ')'
+            + '&' + strCutPIDK + '&' + strCutChi2 + ')'
         return strCuts
 
     # D0 -> KS pi+ pi- (for both KS -> LL and DD)
@@ -269,11 +210,14 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         strCutsPi = self.makePionDaughterCutsForD()
         strCutsCombDauIP = "(AHASCHILD((ABSID=='pi+') & (MIPCHI2DV(PRIMARY)>44.0)))"
         strCutsCombMass  = "(ADAMASS('D0') < " + str(preFitMassCut) + "*MeV)"
-        strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + ')'
+        strCutsCombPT = "(APT > %(preFitDCutPT)s * MeV)" % self.getProps()
+        #strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + '&' + strCutsCombPT + ')'
+        strCutsComb = '(' + strCutsCombMass + '&' + strCutsCombPT + ')'
         strDMotherCut_base  = '(BPVVDZ < 7000.0*mm) & (BPVDIRA > %(DCutDIRA)s )' % self.getProps()
         strDMotherCutpp = strDMotherCut_base + ' & (VFASPF(VCHI2) < %(DCutVtxChi2_pp)s )'  % self.getProps()
         strMassCut = "(ADMASS('D0')<" + str(postFitMassCut) + "*MeV)"
-        strCutsMoth = '(' + strDMotherCutpp + ' & ' + strMassCut + ')'
+        strTestLifetimeCut = "(BPVLTIME()> %(DCutTau_pp)s * ps)" % self.getProps()
+        strCutsMoth = '(' + strDMotherCutpp + ' & ' + strMassCut + '&' + strTestLifetimeCut + ')'
         cp = StrippingMember(CombineParticles
                              , "CombineD0"
                              , InputLocations = [ strInputKS, strInputPi ]
@@ -296,11 +240,14 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         strCutsCombDauIP_K  = "(AHASCHILD((ABSID=='K+') & (MIPCHI2DV(PRIMARY)>20.0)))"
         strCutsCombDauIP = '(' + strCutsCombDauIP_pi + ' | ' + strCutsCombDauIP_K + ')'
         strCutsCombMass  = "(ADAMASS('D0') < " + str(preFitMassCut) + "*MeV)"
-        strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + ')'
+        strCutsCombPT = "(APT > %(preFitDCutPT)s * MeV)" % self.getProps()
+        #strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + '&' + strCutsCombPT + ')'
+        strCutsComb = '(' + strCutsCombMass + '&' + strCutsCombPT + ')'
         strDMotherCut_base  = '(BPVVDZ < 7000.0*mm) & (BPVDIRA > %(DCutDIRA)s )' % self.getProps()
         strDMotherCutKp = strDMotherCut_base + ' & (VFASPF(VCHI2) < %(DCutVtxChi2_Kp)s )'  % self.getProps()
         strMassCut = "(ADMASS('D0')<" + str(postFitMassCut) + "*MeV)"
-        strCutsMoth = '(' + strDMotherCutKp + ' & ' + strMassCut + ')'
+        strTestLifetimeCut = "(BPVLTIME()> %(DCutTau_Kp)s * ps)" % self.getProps()
+        strCutsMoth = '(' + strDMotherCutKp + ' & ' + strMassCut + '&' + strTestLifetimeCut + ')'
         cp = StrippingMember(CombineParticles
                              , "CombineD0"
                              , InputLocations = [ strInputKS, strInputPi, strInputK ]
@@ -319,11 +266,14 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         strCutsK  = self.makeKaonDaughterCutsForD()
         strCutsCombDauIP = "(AHASCHILD((ABSID=='K+') & (MIPCHI2DV(PRIMARY)>14.0)))"
         strCutsCombMass  = "(ADAMASS('D0') < " + str(preFitMassCut) + "*MeV)"
-        strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + ')'
+        strCutsCombPT = "(APT > %(preFitDCutPT)s * MeV)" % self.getProps()
+        #strCutsComb = '(' + strCutsCombDauIP + '&' + strCutsCombMass + '&' + strCutsCombPT + ')'
+        strCutsComb = '(' + strCutsCombMass + '&' + strCutsCombPT + ')'
         strDMotherCut_base  = '(BPVVDZ < 7000.0*mm) & (BPVDIRA > %(DCutDIRA)s )' % self.getProps()
         strDMotherCutKK = strDMotherCut_base + ' & (VFASPF(VCHI2) < %(DCutVtxChi2_KK)s )'  % self.getProps()
         strMassCut = "(ADMASS('D0')<" + str(postFitMassCut) + "*MeV)"
-        strCutsMoth = '(' + strDMotherCutKK + ' & ' + strMassCut + ')'
+        strTestLifetimeCut = "(BPVLTIME()> %(DCutTau_KK)s * ps)" % self.getProps()
+        strCutsMoth = '(' + strDMotherCutKK + ' & ' + strMassCut + '&' + strTestLifetimeCut + ')'
         cp = StrippingMember(CombineParticles
                              , "CombineD0"
                              , InputLocations = [ strInputKS, strInputK ]
