@@ -5,6 +5,23 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-05 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+     - add more comments
+     - update the table with CPU performance  for 100k events 
+     - update the table with rate performance for 100k events 
+
+  Usage:
+
+    >>> stream = ...
+
+    >>> from StrippingSelections.StirppingPromptCharm import Lines as PC_Lines
+    
+    >>> stream.appendLines ( PC_Lines )
+  
+
 ! 2010-09-04 - Rolf Oldeman
  - StrippingB2twobody.py:
 	   - simplified code

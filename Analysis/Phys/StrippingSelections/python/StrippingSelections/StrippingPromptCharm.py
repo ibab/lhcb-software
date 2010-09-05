@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.8 2010-09-04 19:50:51 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.9 2010-09-05 09:28:05 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -45,12 +45,12 @@
 # +-----------------------------------+----------+----------+-------+--------+
 # | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
 # +-----------------------------------+----------+----------+-------+--------+
-# | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.103  |
-# | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.354  |
-# | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.035  |
-# | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.216  |
-# | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.284  |
-# | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.154  |
+# | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.038  |
+# | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.323  |
+# | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.032  |
+# | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.210  |
+# | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.276  |
+# | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.137  |
 # +-----------------------------------+----------+----------+-------+--------+
 #                                                   Thanks to Anton Poluektov
 #
@@ -65,8 +65,8 @@
 #
 # @endcode 
 # 
-# $Revision: 1.8 $
-# Last modification $Date: 2010-09-04 19:50:51 $
+# $Revision: 1.9 $
+# Last modification $Date: 2010-09-05 09:28:05 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -107,18 +107,17 @@ Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 
 The performance with 100k events from Reco05-Stripping08_SDSTs.py:
 
- +-----------------------------------+----------+----------+-------+--------+
- | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
- +-----------------------------------+----------+----------+-------+--------+
- | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.103  |
- | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.354  |
- | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.035  |
- | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.216  |
- | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.284  |
- | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.154  |
- +-----------------------------------+----------+----------+-------+--------+
-                                                   Thanks to Anton Poluektov
-
+  +-----------------------------------+----------+----------+-------+--------+
+  | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
+  +-----------------------------------+----------+----------+-------+--------+
+  | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.038  |
+  | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.323  |
+  | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.032  |
+  | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.210  |
+  | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.276  |
+  | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.137  |
+  +-----------------------------------+----------+----------+-------+--------+
+                                                     Thanks to Anton Poluektov
 
   Usage:
  
@@ -130,14 +129,14 @@ The performance with 100k events from Reco05-Stripping08_SDSTs.py:
     >>> stream.appendLines ( PromptCharmLines )
 
 
-$Revision: 1.8 $
-Last modification $Date: 2010-09-04 19:50:51 $
+$Revision: 1.9 $
+Last modification $Date: 2010-09-05 09:28:05 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.8 $'
+__version__ = '$Revision: 1.9 $'
 # =============================================================================
 __all__ = (
     #
