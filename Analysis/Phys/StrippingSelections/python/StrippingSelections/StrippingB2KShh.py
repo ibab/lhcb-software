@@ -1,7 +1,7 @@
 
 __author__ = 'Jussara Miranda'
 __date__ = '02/04/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Stripping selection for B->KShh' , B==(Bs,Bd); h,h'=(K+-,pi+-) 
@@ -20,26 +20,26 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
            'B_Mlow'          :  200. 
         ,  'B_Mhigh'         :  280.   
         ,  'B_dira'          :  0.999   
-        ,  'B_FDpvsv'        :  0.8   
-        ,  'B_Vchi2'         :  15.   
+        ,  'B_FDpvsv'        :  2.0   
+        ,  'B_Vchi2'         :  10.   
         ,  'B_IPPTmax'       :  0.05   
-        ,  'B_pointpt'       :  0.2   
+        ,  'B_pointpt'       :  0.14   
         ,  'B_IPsumhh'       :  0.08 
-	,  'TrackCHI2DOF'    :  10. 
+	,  'TrackCHI2DOF'    :  5. 
         ,  'DOCAhh'          :  0.3   
         ,  'KS_Mwindow'      :  30.   
-        ,  'B_IP_LL'         :  0.08   
+        ,  'B_IP_LL'         :  0.05   
         ,  'B_PTmed_LL'      :  500.   
-        ,  'B_PTsum_LL'      :  3200.   
-        ,  'B_FDchi2_LL'     :  20.   
-        ,  'KS_FDCHI2opv_LL' :  40.    
+        ,  'B_PTsum_LL'      :  4300.   
+        ,  'B_FDchi2_LL'     :  40.   
+        ,  'KS_FDCHI2opv_LL' :  60.    
         ,  'KS_VCHI2_LL'     :  10.    
-        ,  'B_IP_DD'         :  0.1   
+        ,  'B_IP_DD'         :  0.08   
         ,  'B_PTmed_DD'      :  800.   
-        ,  'B_PTsum_DD'      :  3800.
-        ,  'B_FDchi2_DD'     :  10.   
-        ,  'KS_FDCHI2opv_DD' :  20.   
-        ,  'KS_VCHI2_DD'     :  15.   
+        ,  'B_PTsum_DD'      :  4300.
+        ,  'B_FDchi2_DD'     :  50.   
+        ,  'KS_FDCHI2opv_DD' :  40.   
+        ,  'KS_VCHI2_DD'     :  10.   
         }
 
     _propertyDocDct = {
@@ -167,11 +167,10 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
 		       &(BPVVDCHI2>%(B_FDchi2_LL)s)"% self.getProps()
 
 	B2KSLLhh=CombineParticles("StripB2KSLLhh")
-	B2KSLLhh.InputLocations = [ "StripKSLLforB2KShh","StdLooseKaons","StdLoosePions"]
-	B2KSLLhh.DecayDescriptors = ["B0 ->  pi+ pi+ KS0 ", "B0 -> pi+ pi- KS0 ", "B0 -> pi- pi- KS0 ", \
-	                             "B0 -> K+ K+ KS0 ", "B0 -> K+ K- KS0 ", "B0 -> K- K- KS0  ", \
-				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 ", "B0 -> K+ pi+ KS0 ", \
-				     "B0 -> K- pi- KS0 "]
+	B2KSLLhh.InputLocations = [ "StripKSLLforB2KShh","StdTightKaons","StdLoosePions"]
+	B2KSLLhh.DecayDescriptors = ["B0 -> pi+ pi- KS0 ", \
+	                             "B0 -> K+ K- KS0 ",  \
+				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 "]
 	B2KSLLhh.DaughtersCuts = {"K+":"(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps() ,"pi+": "(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps()}
 	B2KSLLhh.CombinationCut = BLL_CombCuts
 	B2KSLLhh.MotherCut = BLL_MotherCuts
@@ -200,11 +199,10 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
 		       &(BPVVDCHI2>%(B_FDchi2_DD)s)"% self.getProps()
 
 	B2KSDDhh=CombineParticles("StripB2KSDDhh")
-	B2KSDDhh.InputLocations = [ "StripKSDDforB2KShh","StdLooseKaons","StdLoosePions"]
-	B2KSDDhh.DecayDescriptors = ["B0 ->  pi+ pi+ KS0 ", "B0 -> pi+ pi- KS0 ", "B0 -> pi- pi- KS0 ", \
-	                             "B0 -> K+ K+ KS0 ", "B0 -> K+ K- KS0 ", "B0 -> K- K- KS0  ", \
-				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 ", "B0 -> K+ pi+ KS0 ", \
-				     "B0 -> K- pi- KS0 "]
+	B2KSDDhh.InputLocations = [ "StripKSDDforB2KShh","StdTightKaons","StdLoosePions"]
+	B2KSDDhh.DecayDescriptors = ["B0 -> pi+ pi- KS0 ",  \
+	                             "B0 -> K+ K- KS0 ", \
+				     "B0 -> K+ pi- KS0  ","B0 -> pi+ K- KS0 "]
 	B2KSDDhh.DaughtersCuts = {"K+":"(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps() ,"pi+": "(TRCHI2DOF<%(TrackCHI2DOF)s)"% self.getProps()}
 	B2KSDDhh.CombinationCut = BDD_CombCuts
 	B2KSDDhh.MotherCut = BDD_MotherCuts
