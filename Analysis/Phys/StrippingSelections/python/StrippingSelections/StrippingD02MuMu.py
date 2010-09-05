@@ -3,13 +3,12 @@
 __author__ = 'Alexandr Kozlinskiy'
 __email__ = 'akozlins@cern.ch'
 __date__ = '31/08/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 """
 
-This stripping line selects prompt D* and D0 in decay modes
-[D*+ -> (D0 -> mu+ mu-, pi+ pi-, K+ K-, K- pi+, K+ pi-) pi+]cc
-with HLT lines 'Hlt2Charm.*D02MuMuDecision|Hlt1MBMicro.*Decision|Hlt2.*MuonDecision'
+Stripping lines for prompt D* and D0 with D0 -> mu mu.
+Control channels: D0 -> pi+ pi-, K+ K-, K- pi+, K+ pi-
 
 Cuts:
   * Particles input: StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
@@ -22,22 +21,23 @@ Cuts:
   * Track-Chi2/NDOF of the soft pion from D* < 10
   * M(D*) - M(D0) < 155 MeV
   * Chi2 of the D* vertex < 100
+  * HLT = 'Hlt.*(MuMu|MBMicro|Muon).*Decision'
 
 Rates on Reco05-Stripping08_SDSTs:
--------------------------------------------------
-Decision name                     : Rate   Mult.
--------------------------------------------------
-StrippingD02MuMu                  : 0.0%   1.0
-StrippingDstarWithD02MuMu         : 0.0%   ---
-StrippingD02HHForD02MuMu          : 0.3%   2.5    (prescaled by 0.1)
-StrippingDstarWithD02HHForD02MuMu : 0.1%   2.6    (prescaled by 0.1)
--------------------------------------------------
+--------------------------------------------
+Decision name                     : Rate
+--------------------------------------------
+StrippingD02MuMu                  :   0.01%
+StrippingDstarWithD02MuMu         : < 0.01%
+StrippingD02HHForD02MuMu          :   0.13%    (prescale = 0.02)
+StrippingDstarWithD02HHForD02MuMu : < 0.03%    (prescale = 0.02)
+--------------------------------------------
 
 CPU usage on Reco05-Stripping08_SDSTs:
-  StrippingD02MuMu: 1 ms.
-  StrippingDstarWithD02MuMu: 0 ms.
-  StrippingD02HHForD02MuMu: 0 ms.
-  StrippingDstarWithD02HHForD02MuMu: 0 ms.
+  StrippingD02MuMu: 0.7 ms.
+  StrippingDstarWithD02MuMu: 0.1 ms.
+  StrippingD02HHForD02MuMu: 2.2 ms.
+  StrippingDstarWithD02HHForD02MuMu: 1.6 ms.
 
 """
 
@@ -93,27 +93,42 @@ DstarWithD02HHSelection = Selection("SelDstarWithD02HH", Algorithm = DstarCombin
 # D* stripping line
 from StrippingConf.StrippingLine import StrippingLine
 from Configurables import LoKi__VoidFilter
+
 lineD02MuMu = StrippingLine("D02MuMu",
   algos = [ D02MuMuSelection ],
   prescale = 1,
-  HLT = "(HLT_PASS_RE('Hlt2Charm.*D02MuMuDecision|Hlt1MBMicro.*Decision|Hlt2.*MuonDecision'))")
+  HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+
 lineDstarWithD02MuMu = StrippingLine("DstarWithD02MuMu",
   algos = [ DstarWithD02MuMuSelection ],
   prescale = 1,
-  HLT = "(HLT_PASS_RE('Hlt2Charm.*D02MuMuDecision|Hlt1MBMicro.*Decision|Hlt2.*MuonDecision'))")
+  HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+
 lineD02HHForD02MuMu = StrippingLine("D02HHForD02MuMu",
   algos = [ D02HHSelection ],
-  prescale = 0.05,
-  HLT = "(HLT_PASS_RE('Hlt2Charm.*D02MuMuDecision|Hlt1MBMicro.*Decision|Hlt2.*MuonDecision'))")
+  prescale = 0.02,
+  HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+
 lineDstarWithD02HHForD02MuMu = StrippingLine("DstarWithD02HHForD02MuMu",
   algos = [ DstarWithD02HHSelection ],
-  prescale = 0.05,
-  HLT = "(HLT_PASS_RE('Hlt2Charm.*D02MuMuDecision|Hlt1MBMicro.*Decision|Hlt2.*MuonDecision'))")
+  prescale = 0.02,
+  HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
+
+lines = [
+  lineD02MuMu,
+  lineDstarWithD02MuMu,
+  lineD02HHForD02MuMu,
+  lineDstarWithD02HHForD02MuMu
+]
 
 if '__main__' == __name__ :
 
   print __doc__
-  print 'Output location (D0 -> mu+ mu-): ' , lineD02MuMu.outputLocation()
-  print 'Output selection (D0 -> mu+ mu-): ' , lineD02MuMu.outputSelection()
-  print 'Output location (D*): ' , lineDstarWithD02MuMu.outputLocation()
-  print 'Output selection (D*): ' , lineDstarWithD02MuMu.outputSelection()
+  print 'Output location ([D0 -> mu+ mu-]cc): ' , lineD02MuMu.outputLocation()
+  print 'Output selection [(D0 -> mu+ mu-]cc): ' , lineD02MuMu.outputSelection()
+  print 'Output location ([D* -> (D0 -> mu+ mu-) pi+]cc): ' , lineDstarWithD02MuMu.outputLocation()
+  print 'Output selection ([D* -> (D0 -> mu+ mu-) pi+]cc): ' , lineDstarWithD02MuMu.outputSelection()
+  print 'Output location ([D0 -> h h]cc): ' , lineD02HHForD02MuMu.outputLocation()
+  print 'Output selection [(D0 -> h h]cc): ' , lineD02HHForD02MuMu.outputSelection()
+  print 'Output location ([D* -> (D0 -> h h) pi+]cc): ' , lineDstarWithD02HHForD02MuMu.outputLocation()
+  print 'Output selection ([D* -> (D0 -> h h) pi+]cc): ' , lineDstarWithD02HHForD02MuMu.outputSelection()
