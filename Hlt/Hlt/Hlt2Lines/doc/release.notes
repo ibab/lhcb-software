@@ -7,6 +7,10 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+!========================== Hlt2Lines v5r1 2010-09-05 ===================
+!2010-09-05 - F. Soomro
+ - Some modifications to XGamma line cuts. Include a trachchi2/dof <10 cut
+
 !========================== Hlt2Lines v5r0 2010-08-26 ===================
 ! 2010-08-27 - V. Gligorov
  - Allow XGamma, PiPiPi0 lines to be linked to an HLT1 line

@@ -55,7 +55,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.GoodParticles import GoodKaons
 	from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedRichKaons
-
+        
         # Some string definitions... 
         decayDesc = ["phi(1020) -> K+ K-"]
 
