@@ -1,8 +1,8 @@
-# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.3 2010-08-25 10:34:53 gcowan Exp $
+# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.4 2010-09-05 22:01:55 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '18/05/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Prompt Dstar->D0(Kpi)pi stripping selection for studying Dstar in Bd->Dstar mu nu.
@@ -29,7 +29,7 @@ class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
 	DstarSel = self.DstarVeryLooseWithD02HH()
 	DstarSeq = SelectionSequence("SeqDstarVeryLooseWithD02HH", TopSelection = DstarSel)
-	return StrippingLine('DstarVeryLooseWithD02HHLine', prescale = 0.01, algos = [DstarSeq])
+	return StrippingLine('DstarVeryLooseWithD02HHLine', prescale = 0.001, algos = [DstarSeq])
      	
     def DstarVeryLooseWithD02HH( self ):
 	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")

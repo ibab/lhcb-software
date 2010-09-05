@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-05 - Greig Cowan
+ - Updated Bd2DstarMuNu lines.
+ - Modified Bd2JpsiKS and Lambdad2JpsiLambda lines to use mass constrained Jpsi.
+
 ! 2010-09-05 - Mat Charles
  - Updated StrippingDstarD2KShh.py -- reduced lines from 12 to 4; tightened PT cuts; opened mass windows a bit; changed lifetime-biasing cuts to explicit cut on tau
 

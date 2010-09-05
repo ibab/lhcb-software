@@ -1,8 +1,8 @@
-# $Id: StrippingLambdab2JpsiLambda.py,v 1.6 2010-08-28 09:42:13 yamhis Exp $
+# $Id: StrippingLambdab2JpsiLambda.py,v 1.7 2010-09-05 22:01:55 gcowan Exp $
 
 __author__ = ['Yasmine Amhis']
 __date__ = '29/07/2010'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 '''
 StrippingSelections for Lambda_b0-> Jpsi Lambda ( LL and DD )
@@ -107,7 +107,8 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
      
      #---------------------------------------------------------
     def Lambdab2JpsiLambdaLL( self ):
-        Jpsi   = self.Jpsi2MuMu()
+        Jpsi = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
+	#Jpsi   = self.Jpsi2MuMu()
         Lambda = self.Lambda2ppiLL()
         _Lambdab = CombineParticles("Lambdab2JpsiLambdaLL")
         _Lambdab.DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc"
@@ -129,7 +130,8 @@ class StrippingLambdab2JpsiLambdaConf(LHCbConfigurableUser):
         return Lambdab
     #---------------------------------------------------------
     def Lambdab2JpsiLambdaDD ( self ):
-        Jpsi   = self.Jpsi2MuMu()
+        Jpsi = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
+        #Jpsi   = self.Jpsi2MuMu()
         Lambda = self.Lambda2ppiDD()
         _Lambdab = CombineParticles("Lambdab2JpsiLambdaDD")
         _Lambdab.DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc"

@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.8 2010-08-10 15:40:46 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.9 2010-09-05 22:01:54 gcowan Exp $
 
-__author__ = 'Greig Cowan, Marta Calvi'
-__date__ = '10/12/2009'
-__version__ = '$Revision: 1.8 $'
+__author__ = 'Greig Cowan, Marta Calvi, Stefania Vecchi'
+__date__ = '03/09/2010'
+__version__ = '$Revision: 1.9 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -20,16 +20,19 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
     Definition of LOOSE Bd->D*MuNu stripping. 
     """
     __slots__ = { 
-			"MuonTRCHI2"		: 10.0		
-		,	"MuonPT"		: 500.0		*MeV
-		,	"MuonMIPDV"		: 0.04		*mm
+			"MuonTRCHI2DOF"		: 10.0		
+		,	"MuonPT"		: 700.0		*MeV
+		,	"MuonMIPCHI2DV"		: 3
 		,	"D0PT"			: 1600.		*MeV
 		,	"D0BPVVDCHI2"		: 50.		
+		,	"D0massWindow"		: 60            *MeV
+		,	"KaonPID"		: -5
 		,	"KaonPT"		: 350.0		*MeV  
 		,	"PionPT"		: 350.0		*MeV  
 		,	"BdDeltaMassLower"	: -2279.0	*MeV
 		,	"BdDeltaMassUpper"	: 0.0		*MeV
-		,	"BdVCHI2" 		: 10.0	
+		,	"BdVCHI2" 		: 10.0
+                ,       "BdDeltaZVxt"           : -5            *mm 
 		,	"BdDIRA" 		: 0.999	
                 }
     
@@ -44,22 +47,23 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")
 	
 	Bd2DstarMu = CombineParticles("Bd2DstarMuNuLoose")
-	Bd2DstarMu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"] # includes wrong sign
+	Bd2DstarMu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc ", "[B0 -> D*(2010)+ mu+]cc "] # includes wrong sign
 	
 	# D* has the following decay chain:  D*+ -> ( D0 -> K pi ) pi 
 	muonCuts = "  (ISLONG)"\
            	   "& (PT > %(MuonPT)s)"\
-           	   "& (MIPDV(PRIMARY) > %(MuonMIPDV)s)"\
-           	   "& (TRCHI2DOF < %(MuonTRCHI2)s)" % self.getProps()
+           	   "& (TRCHI2DOF < %(MuonTRCHI2DOF)s)" % self.getProps()
+        #   	   "& (MIPCHI2DV(PRIMARY) > %(MuonMIPCHI2DV)s)"\
 
 	DstarCutsD0 = "CHILDCUT("\
-             	      "    (PT > %(D0PT)s)"\
-		      "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
-             	      ",1)" % self.getProps()
-
+                      "    (PT > %(D0PT)s)"\
+                      "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
+                      ",1)" % self.getProps()
+        
 	DstarCutsK = "& CHILDCUT("\
                      "   CHILDCUT("\
                      "       (ISLONG)"\
+                     "     & (PIDK > %(KaonPID)s)"\
                      "     & (PT > %(KaonPT)s)"\
                      "   ,1)"\
                      ",1)" % self.getProps()
@@ -80,6 +84,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
                             	    "& (DAMASS('B0') < %(BdDeltaMassUpper)s)" % self.getProps()
 
 	Bd2DstarMu.MotherCut = "  (BPVDIRA > %(BdDIRA)s)"\
+                               " & (MINTREE(ABSID=='D0', VFASPF(VZ))-VFASPF(VZ) > %(BdDeltaZVxt)s )"\
 			       "& (VFASPF(VCHI2/VDOF) < %(BdVCHI2)s)" % self.getProps()
 	
 	Bd2DstarMuSel = Selection("SelBd2DstarMuNuLoose",
