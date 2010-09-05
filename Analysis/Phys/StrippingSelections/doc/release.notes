@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-05 - Marco Gersabeck
+ - Updated StrippingD2hhNoPIDXsec and removed it from StreamCharm
+
 ! 2010-09-05 - Thomas Blake
  - Updated StrippingMuIDCalib.py
 

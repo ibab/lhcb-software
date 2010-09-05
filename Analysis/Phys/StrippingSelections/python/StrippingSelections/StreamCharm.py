@@ -17,7 +17,6 @@ from StrippingSelections import StrippingD5h
 from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstar_D2KPiPi0
-from StrippingSelections import StrippingD2hhNoPIDXsec
 from StrippingSelections import StrippingDstarPromptWithD02HHNoPt
 from StrippingSelections import StrippingDstarD02KKpipiRobust
 from StrippingSelections import StrippingDstarD02KKpipiRegular
@@ -108,7 +107,6 @@ stream.appendLines( [
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
         , StrippingDstarVeryLooseWithD02HHConf().line()
-        , StrippingD2hhNoPIDXsec.line
         , StrippingD0forBXXConf().D02KPiforBXXLine()
         , StrippingD0forBXXConf().D02K3PiforBXXLine()
         , StrippingDforBSemiConf().DpforBSemiLine()
