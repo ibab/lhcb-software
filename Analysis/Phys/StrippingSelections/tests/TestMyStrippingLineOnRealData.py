@@ -6,11 +6,10 @@ from StrippingConf.Configuration import StrippingConf
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
-from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
-from StrippingSelections import StrippingBd2DstarMuNu
+from StrippingSelections import StrippingDstar_D2KPiPi0
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
-stream.appendLines( [ StrippingBd2DstarMuNu.line, StrippingBd2DstarMuNuLooseConf().line() ] )
+stream.appendLines( [ StrippingDstar_D2KPiPi0.lineRS, StrippingDstar_D2KPiPi0.lineWS ] )
 sc = StrippingConf( Streams = [ stream ] )
 
 from StrippingSelections.StartupOptions import veloNZSKiller, redoPV
@@ -32,7 +31,7 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 100
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000 
+DaVinci().EvtMax = 20000 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().DataType = "2010"

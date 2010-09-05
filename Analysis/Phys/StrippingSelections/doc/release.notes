@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-05 - Andrea Contu
+ - Updated StrippingDstar_D02KPiPi0, added loose PID cut on D0 daughters, looser DIRA cut and other minor changed, added prescaling factor for WS(0.0005) and RS(0.5)
+
 ! 2010-09-05 - Marco Gersabeck
  - Updated StrippingD2hhNoPIDXsec and removed it from StreamCharm
 
