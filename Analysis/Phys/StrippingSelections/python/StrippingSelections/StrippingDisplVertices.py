@@ -5,7 +5,7 @@ The selection of displaced vertices is achieved in 3 steps :
       - Reconstruction of all vertices with >= 4 tracks
         with PatPV3D, with optimized cuts for smaller vertices
         than PV's.
-      - Hlt2PreSelDV loops on all reconstructed vertices.
+      - RecVertices2Particles loops on all reconstructed vertices.
         The one with lowest z (upstream) is not considered
         Vertices with at least one backward track are not considered.
         Vertices close to the beam line removed.
@@ -14,7 +14,7 @@ The selection of displaced vertices is achieved in 3 steps :
         (from Rec/Track/Best) with best PID.
         Vertices that are found to be close to the detector material
         could be possibly eliminated.
-      - Hlt2SelDV : basic cuts on the selected candidates
+      - DisplVertices : basic cuts on the selected candidates
         2 kinds of cuts are applied to the set of displaced vertices :
            >=1 prey passing thighter cuts
                --> when hunting single long-lived particles
@@ -27,7 +27,7 @@ The selection of displaced vertices is achieved in 3 steps :
 
 __author__ = ['Neal Gauvin','Marcin Kucharczyk']
 __date__ = '22/01/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 
 from Gaudi.Configuration import *
@@ -104,8 +104,8 @@ DoubleDV.MinNBCands = 2
 DoubleDV.RCutMethod = RCutMethod
 DoubleDV.RMin = 0.3*mm
 DoubleDV.NbTracks = 4
-DoubleDV.PreyMinMass = 2*GeV
-DoubleDV.PreyMinSumpt = 1.5*GeV
+DoubleDV.PreyMinMass = 3*GeV
+DoubleDV.PreyMinSumpt = 3*GeV
 DoubleDV.RemVtxFromDet = 0
 
 #####################################################################
@@ -127,14 +127,14 @@ IntwMat.RemVtxFromDet = 0
 ################################################################
 # Create line for single DisplVertex selection
 line1 = StrippingLine('SingleDisplVtx'
-                      , prescale = 1.0
+                      , prescale = 0.08
                       , algos = [DisplPatPV3D,PreselDisplVertices,SingleDV]
                       )
 #
 ###############################################################
 # Create line for double DisplVertex selection
 line2 = StrippingLine('DoubleDisplVtx'
-                      , prescale = 1.0
+                      , prescale = 0.05
                       , algos = [DisplPatPV3D,PreselDisplVertices,DoubleDV]
                       )
 
