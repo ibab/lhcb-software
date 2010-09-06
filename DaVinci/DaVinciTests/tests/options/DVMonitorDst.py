@@ -25,7 +25,6 @@ DaVinci().HistogramFile = "DVMonitors.root"
 ##############################################################################
 DaVinci().EvtMax = -1
 DaVinci().DataType = "2010" # Default is "DC06"
-DaVinci().Simulation = True
 DaVinci().InputType = "SDST"
 #EventSelector().Input   = [
 #    "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/Stripping/Brunel-100000ev.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
