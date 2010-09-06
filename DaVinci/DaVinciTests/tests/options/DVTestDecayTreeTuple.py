@@ -41,7 +41,6 @@ tuple.ToolList +=  [
 #    , "TupleToolTISTOS"
      ]
 tuple.InputLocations = [StrippingBd2JpsiKS.line1.outputLocation()]
-#tuple.InputLocations = ["SelBLLBd2JpsiKS"]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
@@ -83,6 +82,7 @@ DaVinci().EvtMax = 1000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
+#DaVinci().CondDBtag = 'MC09-20100827-vc-md100'
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ] # , pmc ] 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
