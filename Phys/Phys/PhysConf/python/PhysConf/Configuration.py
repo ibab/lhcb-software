@@ -63,17 +63,17 @@ class PhysConf(LHCbConfigurableUser) :
         ## unpack Calo (?)
         from Configurables import CaloDstUnPackConf 
         unpack = CaloDstUnPackConf()
+
         if self.getProp('EnableUnpack') :
             unpack.setProp('Enable', True)
+
         if unpack.getProp( 'Enable' ) : 
             hypos    = unpack   .getProp( 'Hypos'   )
             reco_old = caloReco .getProp( 'RecList' )
             reco_new = [ h for h in reco_old if h not in hypos ]
             caloReco.RecList = reco_new
             log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
-        else :
-            print 'ERROR: Enable unpacking not set'
-            assert(False)
+
         #
         # ProtoParticle pre-processing
         #
