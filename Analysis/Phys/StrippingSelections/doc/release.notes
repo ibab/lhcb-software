@@ -6,6 +6,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-09-07 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+       prescale "D02HHForPromptCharm" line with factor 0.20
+       prescale "DForPromptCharm"     line with factor 0.25
+ 
+! 2010-09-07 - Vanya Belyaev
  - 
   - StrippingPromptCharm.py
 

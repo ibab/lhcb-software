@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.13 2010-09-06 22:23:54 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.14 2010-09-06 22:42:46 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -65,8 +65,8 @@
 #
 # @endcode 
 # 
-# $Revision: 1.13 $
-# Last modification $Date: 2010-09-06 22:23:54 $
+# $Revision: 1.14 $
+# Last modification $Date: 2010-09-06 22:42:46 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -129,14 +129,14 @@ The performance with 100k events from Reco05-Stripping08_SDSTs.py:
     >>> stream.appendLines ( PromptCharmLines )
 
 
-$Revision: 1.13 $
-Last modification $Date: 2010-09-06 22:23:54 $
+$Revision: 1.14 $
+Last modification $Date: 2010-09-06 22:42:46 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.13 $'
+__version__ = '$Revision: 1.14 $'
 # =============================================================================
 __all__ = (
     #
@@ -541,7 +541,7 @@ PrimaryVertices = (1,3)
 
 D02HHForPromptCharm_Line   = StrippingLine (
     "D02HHForPromptCharm"      ,
-    prescale = 0.25            ,                ## ATTENTION! Prescale here !!
+    prescale = 0.20            ,                ## ATTENTION! Prescale here !!
     checkPV  = PrimaryVertices ,
     algos    = [ D02HHForPromptCharm_Selection   ]
     )
@@ -560,6 +560,7 @@ DsForPromptCharm_Line       = StrippingLine (
 
 DForPromptCharm_Line       = StrippingLine (
     "DForPromptCharm"         ,
+    prescale = 0.25           ,                ## ATTENTION! Prescale here !!
     checkPV = PrimaryVertices , 
     algos   = [ DForPromptCharm_Selection        ]
     )
