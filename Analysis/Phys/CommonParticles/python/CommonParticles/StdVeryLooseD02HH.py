@@ -3,7 +3,7 @@ Configuration file for 'Standard Very Loose D0 -> HH'
 """
 __author__  = "Liming Zhang"
 __date__ = '09/12/2009'
-__version__ = "version $Revision: 1.1 $"
+__version__ = "version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdVeryLooseD02KPi' ,
@@ -21,14 +21,14 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdVeryLooseD02KPi = CombineParticles ( 'StdVeryLooseD02KPi' )
 
-StdVeryLooseD02KPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
+StdVeryLooseD02KPi.InputLocations = [ "StdLooseKaons", "StdNoPIDsPions" ]
 StdVeryLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
 StdVeryLooseD02KPi.DaughtersCuts = { "K+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)",
                                  "pi+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"} 
 #for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
 #~150 MeV below since the lower mass sideband will be for the crystal ball only. 
-StdVeryLooseD02KPi.CombinationCut = "(APT>1*GeV) & (ADAMASS('D0')<200*MeV)"
+StdVeryLooseD02KPi.CombinationCut = "(APT>1*GeV) & (ADAMASS('D0')<100*MeV)"
 StdVeryLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (M > 1710*MeV)"
 
 ## configure Data-On-Demand service 
@@ -56,7 +56,7 @@ locations = updateDoD ( StdVeryLooseD02KK )
 ## Doubly Cabibbo suppressed
 StdVeryLooseD02KPiDCS = StdVeryLooseD02KPi.clone("StdVeryLooseD02KPiDCS")
 StdVeryLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
-StdVeryLooseD02KPiDCS.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
+StdVeryLooseD02KPiDCS.InputLocations = [ "StdLooseKaons", "StdNoPIDsPions" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseD02KPiDCS )
