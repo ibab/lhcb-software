@@ -1,6 +1,6 @@
 __author__ = ['Phillip Urquijo']
 __date__ = '21/05/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 name = "MuMuSS"
 
@@ -17,14 +17,14 @@ _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 mucut = '(PT>1*GeV)'
 
-_MuMuSS1 = CombineParticles(name,
+_MuMuSS1 = CombineParticles(name+"_1",
                          DecayDescriptor = '[Z0 -> mu- mu-]cc',
                          DaughtersCuts = { 'mu-' : mucut },
                          MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
                          WriteP2PVRelations = False
                          )
 
-_MuMuSS2 = CombineParticles(name,
+_MuMuSS2 = CombineParticles(name+"_2",
                          DecayDescriptor = '[Z0 -> mu- mu-]cc',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
@@ -32,7 +32,7 @@ _MuMuSS2 = CombineParticles(name,
                          WriteP2PVRelations = False
                          )
 
-_MuMuSS3 = CombineParticles(name,
+_MuMuSS3 = CombineParticles(name+"_3",
                          DecayDescriptor = '[Z0 -> mu- mu-]cc',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
@@ -40,7 +40,7 @@ _MuMuSS3 = CombineParticles(name,
                          WriteP2PVRelations = False
                          )
 
-_MuMuSS4 = CombineParticles(name,
+_MuMuSS4 = CombineParticles(name+"_4",
                          DecayDescriptor = '[Z0 -> mu- mu-]cc',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
@@ -90,12 +90,12 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 # Define the lines
 ## ############################################################
 line1 = StrippingLine('MuMuSS1'
-                           , prescale = 1.
+                           , prescale = .1
                            , algos = [ sequence1 ]
                            )
 
 line2 = StrippingLine('MuMuSS2'
-                           , prescale = 1.
+                           , prescale = .1
                            , algos = [ sequence2 ]
                            )
 
