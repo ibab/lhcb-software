@@ -3,7 +3,7 @@ Configuration file for 'Standard Very Loose D0 -> HH'
 """
 __author__  = "Liming Zhang"
 __date__ = '09/12/2009'
-__version__ = "version $Revision: 1.2 $"
+__version__ = "version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdVeryLooseD02KPi' ,
@@ -28,7 +28,7 @@ StdVeryLooseD02KPi.DaughtersCuts = { "K+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>
                                  "pi+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"} 
 #for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
 #~150 MeV below since the lower mass sideband will be for the crystal ball only. 
-StdVeryLooseD02KPi.CombinationCut = "(APT>1*GeV) & (ADAMASS('D0')<100*MeV)"
+StdVeryLooseD02KPi.CombinationCut = " (ADAMASS('D0')<60*MeV) & (APT>1*GeV) "
 StdVeryLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (M > 1710*MeV)"
 
 ## configure Data-On-Demand service 
