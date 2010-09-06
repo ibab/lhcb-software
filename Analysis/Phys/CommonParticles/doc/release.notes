@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.192 2010-09-06 05:49:06 svecchi Exp $
+ )!$Id: release.notes,v 1.193 2010-09-06 21:18:38 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v7r4 2010-09-06 ===================
+
 ! 2010-09-06 Stefania Vecchi
  - Removed StdNoPIDsUpPions from the input container of StdVeryLooseDstarWithD2HH.py
  - Changes in StdVeryLooseD02HH:  Use StdLooseKaons, reduced D0 mass window to 100MeV
