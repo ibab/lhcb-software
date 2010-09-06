@@ -363,7 +363,7 @@ inline unsigned PatSeedTrack::nHoles() const
 
 inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
 {
-  boost::array<unsigned, kNStations> pps = { 0, 0, 0 };
+  boost::array<unsigned, kNStations> pps = { { 0, 0, 0 } };
   for (unsigned i = kNPlanes; i--; )
     if (m_planeList[i]) ++pps[i / kNLayers];
   unsigned minPlanes = pps[0], minsta = 0;

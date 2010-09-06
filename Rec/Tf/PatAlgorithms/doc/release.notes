@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-09-06 - Manuel Tobias Schiller
+ - fix compiler (gcc-4.3 on SLC5) warning in PatSeedTrack.h
+
 ! 2010-09-02 - Manuel Tobias Schiller
  - PatSeedTool: resolve OT ambiguities from pitch residuals by default, old
    default is available as job option (new method is faster and produces fewer
