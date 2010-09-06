@@ -18,7 +18,7 @@ Retention rate
 
 __author__ = ['Hamish  Gordon']
 __date__ = '06/09/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -43,7 +43,7 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
       , 'DaugIPCHI2inc' : 4.0       # track IP chi2 cut for inclusive line
       , 'DaugIPCHI2pid' : 0.0       # Should set looser IPChi2 cut for KKP and KKK (the 'pid' modes)
       
-      , 'KPIDKmin'      : 0.0      # Minimum kaon PIDK (StdTightKaons uses 0.0)
+      , 'KPIDKmin'      : 3.0      # Minimum kaon PIDK (StdTightKaons uses 0.0)
       , 'piPIDKmax'     : 10.0     # Maximum pion PIDK - also need to require hasRich
       
       , 'Daug2IPCHI2'   : 4.0      # Require 2 out of 3 tracks to have IPchi2 greater than this value
@@ -54,7 +54,7 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
       , 'DaugDOCA'      : 0.20     # I don't know how to implement DOCA in FilterDesktop, so we don't have this cut in lines that use StdLooseDplus
       
       , 'DPT'           : 1000.0   # PT of D+
-      , 'DFDCHI2'       : 100.0     # FD chi2 of D+ ,used also for dcaSVPV 
+      , 'DFDCHI2'       : 120.0     # FD chi2 of D+ ,used also for dcaSVPV 
       , 'POINT'         : 0.12     # Pointing variable
       , 'DDIRA'         : 0.9999   # Angle of track to PV
       , 'DVtxCHI2NDOF'  : 7.0     # Vertex chi2/NDOF
