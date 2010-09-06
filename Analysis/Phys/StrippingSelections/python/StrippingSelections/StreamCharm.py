@@ -19,10 +19,15 @@ from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstar_D2KPiPi0
 from StrippingSelections import StrippingDstarPromptWithD02HHNoPt
 from StrippingSelections import StrippingD02MuMu
-from StrippingSelections import StrippingDstarD02KKpipiRobust
-from StrippingSelections import StrippingDstarD02KKpipiRegular
+
+#from StrippingSelections import StrippingDstarD02KKpipiRobust
+#from StrippingSelections import StrippingDstarD02KKpipiRegular
 from StrippingSelections import StrippingDstarD02KKmumuRobust
-from StrippingSelections import StrippingDstarD02KKmumuRegular
+#from StrippingSelections import StrippingDstarD02KKmumuRegular
+
+from StrippingSelections.StrippingDstarD02KKmumuRegular import StrippingDstarD02KKmumuRegularConf
+from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
+
 #from StrippingSelections.StrippingDstarPromptWithD02K3Pi import StrippingDstarPromptWithD02K3PiConf
 #from StrippingSelections.StrippingD02K3PiForCrossSection import StrippingD02K3PiForCrossSectionConf
 
@@ -123,9 +128,14 @@ stream.appendLines( [
 #        , StrippingDstarD02KKpipiRobust.line1
 #        , StrippingDstarD02KKpipiRegular.line1
         , StrippingDstarD02KKmumuRobust.line1
-        , StrippingDstarD02KKmumuRegular.line1
+
+#        , StrippingDstarD02KKmumuRegular.line1
           ,StrippingDs2piPhiConf().line() 
     ] )
+
+stream.appendLines( StrippingDstarD02KKmumuRegularConf().lines )
+stream.appendLines( StrippingDstarD02KKpipiRegularConf().lines )
+
 stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 #stream.appendLines( StrippingDstarD02xxConf().lines() )
