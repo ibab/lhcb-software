@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.10 2010-09-06 18:20:03 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.11 2010-09-06 19:09:33 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -65,8 +65,8 @@
 #
 # @endcode 
 # 
-# $Revision: 1.10 $
-# Last modification $Date: 2010-09-06 18:20:03 $
+# $Revision: 1.11 $
+# Last modification $Date: 2010-09-06 19:09:33 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -129,14 +129,14 @@ The performance with 100k events from Reco05-Stripping08_SDSTs.py:
     >>> stream.appendLines ( PromptCharmLines )
 
 
-$Revision: 1.10 $
-Last modification $Date: 2010-09-06 18:20:03 $
+$Revision: 1.11 $
+Last modification $Date: 2010-09-06 19:09:33 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.10 $'
+__version__ = '$Revision: 1.11 $'
 # =============================================================================
 __all__ = (
     #
@@ -290,7 +290,7 @@ _D0Filter = FilterDesktop (
     ] ,
     ##
     Code      = """
-    ( PT             > 1.5 * GeV  ) & 
+    ( PT             > 2.0 * GeV  ) & 
     ( ADMASS( 'D0' ) < 50  * MeV  ) &
     ( kk | kpi )                    &
     ( ctau > 100 * micrometer )

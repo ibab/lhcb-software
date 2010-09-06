@@ -6,6 +6,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-09-06 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+   commit the correct file :-( 
+
+! 2010-09-06 - Vanya Belyaev
  - StrippingPromptCharm.py
 
        adjust PID cuts ( not so loose ) mainly 
