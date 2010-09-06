@@ -1,8 +1,8 @@
-# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.5 2010-09-06 05:46:42 svecchi Exp $
+# $Id: StrippingDstarVeryLooseWithD02HH.py,v 1.6 2010-09-06 14:26:37 svecchi Exp $
 
-__author__ = 'Greig Cowan, Marta Calvi'
-__date__ = '18/05/2010'
-__version__ = '$Revision: 1.5 $'
+__author__ = 'Greig Cowan, Marta Calvi, Stefania Vecchi'
+__date__ = '06/09/2010'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Prompt Dstar->D0(Kpi)pi stripping selection for studying Dstar in Bd->Dstar mu nu.
@@ -19,7 +19,6 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, M
 class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
     __slots__ = { 
 			"D0PT"			: 1600.*MeV
-                ,       "D0MassWindow"          : 60            *MeV
 		,	"D0BPVVDCHI2"		: 50.
 		,	"D0BPVDIRA"		: 0.9995
 		,	"KaonPT"		: 350.*MeV
@@ -30,7 +29,7 @@ class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
 	DstarSel = self.DstarVeryLooseWithD02HH()
 	DstarSeq = SelectionSequence("SeqDstarVeryLooseWithD02HH", TopSelection = DstarSel)
-	return StrippingLine('DstarVeryLooseWithD02HHLine', prescale = 0.05, algos = [DstarSeq])
+	return StrippingLine('DstarVeryLooseWithD02HHLine', prescale = 0.02, algos = [DstarSeq])
      	
     def DstarVeryLooseWithD02HH( self ):
 	stdVeryLooseDstar = DataOnDemand(Location = "Phys/StdVeryLooseDstarWithD02KPi")
@@ -43,7 +42,6 @@ class StrippingDstarVeryLooseWithD02HHConf(LHCbConfigurableUser):
 	DstarCutsD0 = "CHILDCUT("\
              	      "    (PT > %(D0PT)s)"\
              	      "  & (BPVDIRA > %(D0BPVDIRA)s)"\
-                      "  & (ADMASS('D0') < %(D0MassWindow)s)"\
 		      "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
              	      ",1)" % self.getProps()
 

@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.11 2010-09-06 09:46:51 svecchi Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.12 2010-09-06 14:26:37 svecchi Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi, Stefania Vecchi'
 __date__ = '03/09/2010'
-__version__ = '$Revision: 1.11 $'
+__version__ = '$Revision: 1.12 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -25,14 +25,13 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 		,	"MuonMIPCHI2DV"		: 3
 		,	"D0PT"			: 1600.		*MeV
 		,	"D0BPVVDCHI2"		: 50.
-                ,       "D0MassWindow"          : 60            *MeV
 		,	"KaonPID"		: -5
 		,	"KaonPT"		: 350.0		*MeV  
 		,	"PionPT"		: 350.0		*MeV  
 		,	"BdDeltaMassLower"	: -2279.0	*MeV
 		,	"BdDeltaMassUpper"	: 0.0		*MeV
 		,	"BdVCHI2" 		: 10.0
-                ,       "BdDeltaZVxt"           : -5            *mm 
+                ,       "BdDeltaZVxt"           : -3            *mm 
 		,	"BdDIRA" 		: 0.999	
                 }
     
@@ -56,8 +55,7 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
         #   	   "& (MIPCHI2DV(PRIMARY) > %(MuonMIPCHI2DV)s)"\
 
 	DstarCutsD0 = "CHILDCUT("\
-                      "    (ADMASS('D0') < %(D0MassWindow)s)"\
-                      "  & (PT > %(D0PT)s)"\
+                      "  (PT > %(D0PT)s)"\
                       "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
                       ",1)" % self.getProps()
         
@@ -67,7 +65,6 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
                      "     & (PT > %(KaonPT)s)"\
                      "   ,1)"\
                      ",1)" % self.getProps()
-        #####                     "     & (PIDK > %(KaonPID)s)"\
 
 	DstarCutsPi= "& CHILDCUT("\
                      "   CHILDCUT("\
