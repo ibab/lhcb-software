@@ -5,12 +5,18 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-07 - Vanya Belyaev
+ - 
+  - StrippingPromptCharm.py
+
+       prescale "D02HHForPromptCharm" line with factor 0.25 
+
 ! 2010-09-06 - Mat Charles
  - Tighten PID and FD chi2 cuts in StrippingD2hhh_conf.py
 
 ! 2010-09-06 - Vanya Belyaev
 
- - StrippingPromptCharm.py
+  - StrippingPromptCharm.py
 
        prescale "D02HHForPromptCharm" line with factor 0.5 
 
