@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!======================== StrippngAlgs v1r4 2010-09-06 ========================
+
 ! 2010-08-12 - Anton Poluektov 
  - StrippingReport can show timing information (time/event taken by stripping 
    lines in ms). To enable this, ChronoAuditor has to be turned on, e.g.
