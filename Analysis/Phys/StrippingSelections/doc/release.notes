@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Erica Polycarpo       
+ - Added StrippingD2hhh_conf.py (StrippingD2hhh.py should be removed)
+
 ! 2010-09-06 - Thomas Blake
  - Added StrippingBd2KstarMuMuTriggered.py
 
