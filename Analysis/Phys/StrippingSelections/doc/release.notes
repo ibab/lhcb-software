@@ -5,6 +5,20 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Jibo He
+ - Updated StrippingCcbar2Ppbar, written with the Selection toolkit. 
+ - Updated StrippingDiElectron.
+ - Updated StrippingBs2JpsieePhi, Bs2JpsieePhiLoose prescaled by 0.01. 
+ - Divided StrippingBd2Kstaree to two lines 
+   . StrippingBd2eeKstar for Bd->ee Kstar
+   . StrippingBd2JpsieeKstar for the control channel Bd->Jpsi(ee) Kstar
+   written with the Selection toolkit, to merge to one file 
+   when the stripping settings is ready.
+
+! 2010-09-06 - Jibo He for Benoit Viaud
+ - Updated StrippingDstarD02KKmumuRegular & StrippingDstarD02KKpipiRegular.
+   Written with the Selection toolkit.
+
 ! 2010-09-05 - Greig Cowan
  - Updated Bd2DstarMuNu lines.
  - Modified Bd2JpsiKS and Lambdad2JpsiLambda lines to use mass constrained Jpsi.

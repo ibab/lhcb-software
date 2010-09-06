@@ -1,7 +1,7 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
 __date__ = '2010/07/16'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bs->JpsieePhi stripping selection
@@ -17,14 +17,14 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
     """
     __slots__ = { 
                   'ElectronPTLoose'          :   700.    # MeV
-                , 'JpsiVertexCHI2pDOFLoose'  :    25.    # adimensional
+                , 'JpsiVertexCHI2pDOFLoose'  :    16.    # adimensional
                 , 'JpsiMassMinLoose'         :  2500.    # MeV
                 , 'JpsiMassMaxLoose'         :  3300.    # MeV
                 , 'PhiPTLoose'               :  1000.    # MeV
-                , 'PhiVertexCHI2pDOFLoose'   :    25.    # adimensional
+                , 'PhiVertexCHI2pDOFLoose'   :    16.    # adimensional
                 , 'PhiMassMinLoose'          :   995.    # MeV
                 , 'PhiMassMaxLoose'          :  1045.    # MeV
-                , 'BsVertexCHI2pDOFLoose'    :    25.    # adimensional
+                , 'BsVertexCHI2pDOFLoose'    :    16.    # adimensional
                 , 'BsMassMinLoose'           :  3500.    # MeV
                 , 'BsMassMaxLoose'           :  7000.    # MeV
 
@@ -46,7 +46,7 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
 
     def UnbiasedPT_line( self ) :
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2JpsieePhiLoose', prescale = 1., algos = [ self.Bs2JpsieePhiLoose() ])
+        return StrippingLine('Bs2JpsieePhiLoose', prescale = 0.01, algos = [ self.Bs2JpsieePhiLoose() ])
 
 
     def Signalbox_line( self ) :

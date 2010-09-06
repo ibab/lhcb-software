@@ -1451,4 +1451,11 @@
     <logical/>
   </File>
 
+  <File ID="FE561D8D-47B9-DF11-8FB8-001E4F3E5C33">
+    <physical>
+      <pfn filetype="ROOT_All" name="etc.root"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
