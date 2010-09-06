@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v6r11 2010-09-06 ===================
+
 ! 2010-08-24 - Neal Gauvin
  - Added SumPt cut in RecVertices2Particles before creating the Particles.  
 
