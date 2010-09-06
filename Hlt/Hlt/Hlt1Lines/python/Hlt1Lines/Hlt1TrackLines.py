@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -28,19 +28,18 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {       'RunInParallel' : False
-                    ,   'AllL0_PT'      : 1250.
+    __slots__ = {       'AllL0_PT'      : 1250.
                     ,   'AllL0_P'       : 12500.
                     ,   'AllL0_IP'      : 0.125
-                    ,   'AllL0_IPChi2'  : 50.
+                    ,   'AllL0_IPChi2'  : 50
                     ,   'AllL0_TrChi2'  : 3
-                    ,   'Muon_PT'       : 1000.
-                    ,   'Muon_P'        : 10000.
-                    ,   'Muon_IP'       : 0.08
-                    ,   'Muon_IPChi2'   : 25.
-                    ,   'Muon_TrChi2'   : 10 
-                    ,   'Photon_PT'     : 500
-                    ,   'Photon_P'      : 5000
+                    ,   'Muon_PT'       : 800.
+                    ,   'Muon_P'        : 8000.
+                    ,   'Muon_IP'       : 0.080
+                    ,   'Muon_IPChi2'   : 25
+                    ,   'Muon_TrChi2'   : 10
+                    ,   'Photon_PT'     : 800.
+                    ,   'Photon_P'      : 8000.
                     ,   'Photon_IP'     : 0.125
                     ,   'Photon_IPChi2' : 50
                     ,   'Photon_TrChi2' : 5
@@ -64,10 +63,10 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltConfigurePR import ConfiguredPR
         from Configurables import HltFilterFittedVertices
         
-        def trackprepare(ip,pt,p,pt_reco,p_reco):
+        def trackprepare(ip,pt,p):
             from HltLine.HltDecodeRaw import DecodeIT
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
-            seq =  [Hlt1GEC(),
+            return [ Hlt1GEC(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
                            , InputSelection = 'Velo' 
@@ -81,20 +80,13 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                     Member ( 'TF', 'OTEXH'
                            , FilterDescriptor = [ 'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut')]
                          ),
-                    DecodeIT]
-            if (self.getProp('RunInParallel')): #Running in parallel so run with defaults
-                seq += [Member ( 'TU', 'Forward'
+                    DecodeIT,
+                    Member ( 'TU', 'Forward'
                            , RecoName = 'Forward'
                            , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward") ] )]
-                           )]
-            else :
-                seq += [Member ( 'TU', 'Forward'
-                           , RecoName = 'Forward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward",pt_reco,p_reco) ] )]
-                           )]
-            seq += [Member ( 'TF' , 'OTPT' ,
+                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                           ),
+                    Member ( 'TF' , 'OTPT' ,
                             FilterDescriptor = ['PT,>,%s'%pt]
                             , HistogramUpdatePeriod = 1 
                             , HistoDescriptor  = histosfilter('PT',0.,8000.,200)
@@ -105,7 +97,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                             , HistoDescriptor  = histosfilter('P',0.,80000.,200)
                             )
                    ]
-            return seq
+
 
         def afterburn(chi2,ipchi2):
             return [ PV3D().ignoreOutputSelection()
@@ -181,35 +173,30 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             return after
 
         props = self.getProps()
-
-        minptcut_forreco = -9999. 
-        minpcut_forreco  = -9999. #Turn off and use default in ConfigredPR
-        if not props["RunInParallel"] : #If we don't run in parallel can be more agressive
-            minptcut_forreco = min(props["AllL0_PT"],props["Muon_PT"])
-            minpcut_forreco  = min(props["AllL0_P"],props["Muon_P"])
-
+     
         from Hlt1Lines.HltL0Candidates import L0Channels
-        #Do not run on photon triggers to allow soft track XGamma recovery
         Line ( 'TrackAllL0'
              , prescale = self.prescale
              , postscale = self.postscale
-             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Electron','Muon','DiMuon'] ] ) #"L0_DECISION_PHYSICS" 
-             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"],pt_reco = minptcut_forreco, p_reco = minpcut_forreco) \
-                     + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
+             , L0DU = "L0_DECISION_PHYSICS" 
+             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
+             )
+        Line ( 'TrackNoMu'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Hadron','Electron','Photon'] ] ) 
+             , algos = trackprepare(ip=props["AllL0_IP"],pt=props["AllL0_PT"],p=props["AllL0_P"]) + afterburn(chi2=props["AllL0_TrChi2"],ipchi2=props["AllL0_IPChi2"])
              )
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon','DiMuon'] ] ) 
-             , algos = (trackprepare(ip=props["Muon_IP"],pt=props["Muon_PT"],p=props["Muon_P"],pt_reco = minptcut_forreco, p_reco = minpcut_forreco) \
-                     + muonAfterburn(chi2=props["Muon_TrChi2"],ipchi2=props["Muon_IPChi2"]))
+             , algos =  (trackprepare(ip=props["Muon_IP"],pt=props["Muon_PT"],p=props["Muon_P"]) + muonAfterburn(chi2=props["Muon_TrChi2"],ipchi2=props["Muon_IPChi2"]))
              )
-        #Note: for the photons, nothing runs on these events except this line so can use much softer thresholds to recover as much XGamma as possible.     
         Line ( 'TrackPhoton'
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_CHANNEL('Photon')"
-             , algos = (trackprepare(ip=props["Photon_IP"],pt=props["Photon_PT"],p=props["Photon_P"],pt_reco = props["Photon_PT"],p_reco = props["Photon_P"]) \
-                     + afterburn(chi2=props["Photon_TrChi2"],ipchi2=props["Photon_IPChi2"]))  
+             , algos = (trackprepare(ip=props["Photon_IP"],pt=props["Photon_PT"],p=props["Photon_P"]) + afterburn(chi2=props["Photon_TrChi2"],ipchi2=props["Photon_IPChi2"]))  
              )    
 

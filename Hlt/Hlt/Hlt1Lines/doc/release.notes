@@ -1,15 +1,13 @@
-! $Id: release.notes,v 1.212 2010-09-06 08:05:17 graven Exp $
+! $Id: release.notes,v 1.213 2010-09-06 08:06:42 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+
 ! 2010-09-06 - Gerhard Raven
  - more automated daisy-chaining in Hlt1TrackLines.py
-
-! 2010-09-04 - V. Gligorov
- - Prepare the 1Track lines for the BW division.
 
 ! 2010-09-01 - Johannes Albrecht
  - set seeding internal p cut to 10GeV
