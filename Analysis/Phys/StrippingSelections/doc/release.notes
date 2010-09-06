@@ -5,6 +5,16 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Vanya Belyaev
+ - StrippingPromptCharm.py
+
+       adjust PID cuts ( not so loose ) mainly 
+       to reduce the rate to untagged D0->h1,h2
+
+       the documentation table with eference performance 
+       is not updated yet due to lack of time. to be updated later.
+
+
 ! 2010-09-06 - Jibo He
  - Fixed typos in StrippingBd2JpsieeKstar.py and StrippingBd2eeKstar.py 
  - Changed the sequence in "RequiredSelections" of the Selection to save CPU time 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.9 2010-09-05 09:28:05 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.10 2010-09-06 18:20:03 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -65,8 +65,8 @@
 #
 # @endcode 
 # 
-# $Revision: 1.9 $
-# Last modification $Date: 2010-09-05 09:28:05 $
+# $Revision: 1.10 $
+# Last modification $Date: 2010-09-06 18:20:03 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -129,14 +129,14 @@ The performance with 100k events from Reco05-Stripping08_SDSTs.py:
     >>> stream.appendLines ( PromptCharmLines )
 
 
-$Revision: 1.9 $
-Last modification $Date: 2010-09-05 09:28:05 $
+$Revision: 1.10 $
+Last modification $Date: 2010-09-06 18:20:03 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.9 $'
+__version__ = '$Revision: 1.10 $'
 # =============================================================================
 __all__ = (
     #
@@ -170,9 +170,9 @@ _NoPIDPions = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
 ## the common cuts for all basic particles: 
 _trackcuts     = " ( TRCHI2DOF < 10 ) & ( PT > 250 * MeV ) "
 _basiccuts     = _trackcuts + " & ( MIPCHI2DV () > 9  ) "
-_kaoncuts      = _basiccuts + " & ( 0 < PIDK  - PIDpi ) "
-_pioncuts      = _basiccuts + " & ( 0 < PIDpi - PIDK  ) " 
-_protoncuts    = _basiccuts + " & ( 0 < PIDp  - PIDpi ) & ( 0 < PIDp - PIDK ) "
+_kaoncuts      = _basiccuts + " & ( 2 < PIDK  - PIDpi ) "
+_pioncuts      = _basiccuts + " & ( 2 < PIDpi - PIDK  ) " 
+_protoncuts    = _basiccuts + " & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) "
 # slow pion is the special case 
 _slowpioncuts  = "TRCHI2DOF < 10 "
 
@@ -290,9 +290,9 @@ _D0Filter = FilterDesktop (
     ] ,
     ##
     Code      = """
-    ( PT             > 1.5 * GeV ) & 
-    ( ADMASS( 'D0' ) < 50  * MeV ) &
-    ( kpi | kk  )                  &
+    ( PT             > 1.5 * GeV  ) & 
+    ( ADMASS( 'D0' ) < 50  * MeV  ) &
+    ( kk | kpi )                    &
     ( ctau > 100 * micrometer )
     """ ,
     ##
@@ -397,7 +397,7 @@ _DsCombine = CombineParticles(
     ##
     MotherCut      = """
     ( chi2vx  < 25            ) &
-    ( PT      > 1.0 * GeV     ) & 
+    ( PT      > 1.5 * GeV     ) & 
     ( dmD | dmDs              ) &
     ( ctau > 100 * micrometer )
     """ , 
@@ -434,7 +434,7 @@ _DCombine = CombineParticles(
     ] , 
     ##
     DaughtersCuts = {} if _use_mesons else {
-    'K-'  :  _kaoncuts ,
+    'K-'  :  _kaoncuts , 
     'pi+' :  _pioncuts 
     } ,
     ##                                 
@@ -492,7 +492,7 @@ _LambdaC_Combine = CombineParticles(
     ##
     MotherCut      = """
     ( chi2vx  < 25 )                   &
-    ( PT      > 1.5 * GeV            ) & 
+    ( PT      > 2.0 * GeV            ) & 
     ( ADMASS('Lambda_c+') < 50 * MeV ) &
     ( ctau    > 100 * micrometer )
     """ ,
