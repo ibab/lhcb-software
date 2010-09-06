@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Thomas Blake
+ - Added StrippingBd2KstarMuMuTriggered.py
+
 ! 2010-09-06 - Jibo He
  - Fixed the problem caused by StrippingDstarD02KKmumuRegular in StreamCharm. 
 

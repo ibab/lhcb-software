@@ -120,3 +120,11 @@ stream.appendLines ( ThreeMuonLines )
 #from StrippingSelections.StrippingBs2MuMuNoMuID import Bs2MuMuNoMuIDConf
 #bs2mm = Bs2MuMuNoMuIDConf("Bs2MuMu",Bs2MuMuNoMuIDConf.config_default)
 #stream.appendLines(bs2mm.lines)
+
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import StrippingBd2KstarMuMuConf
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultConfig as Bd2KstarMuMuConfig
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as Bd2KstarMuMuLines
+
+Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config= Bd2KstarMuMuConfig, activeLines=Bd2KstarMuMuLines )
+lines = Bd2KstarMuMuConf.lines()
+stream.appendLines( lines )
