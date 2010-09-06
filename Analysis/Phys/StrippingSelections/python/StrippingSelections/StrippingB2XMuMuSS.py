@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo']
 __date__ = '21/05/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 B->Xu mu mu , Xu=pi/K channels
@@ -118,7 +118,7 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
         _PiMuMu = CombineParticles("B2PiMuMuSS")
         _PiMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/Pi_forB2XMuMu"]
         _PiMuMu.DecayDescriptors = ["[B- -> pi+ mu- mu-]cc"]
-        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV)" % self.getProps()
+        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
                             "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
         _PiMuMu.ReFitPVs = True
@@ -130,7 +130,7 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
         _PiMuMu = CombineParticles("B2PiMuMuOS")
         _PiMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/Pi_forB2XMuMu"]
         _PiMuMu.DecayDescriptors = ["[B+ -> pi+ mu+ mu-]cc"]
-        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV)" % self.getProps()
+        _PiMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
                             "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
         _PiMuMu.ReFitPVs = True
@@ -142,7 +142,7 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
         _KMuMu = CombineParticles("B2KMuMuSS")
         _KMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/K_forB2XMuMu"]
         _KMuMu.DecayDescriptors = ["[B- -> K+ mu- mu-]cc"]
-        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV)" % self.getProps()
+        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B-') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
                           "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
         _KMuMu.ReFitPVs = True
@@ -154,7 +154,7 @@ class StrippingB2XMuMuSSConf(LHCbConfigurableUser):
         _KMuMu = CombineParticles("B2KMuMuOS")
         _KMuMu.InputLocations = ["Phys/Mu_forB2XMuMu","Phys/K_forB2XMuMu"]
         _KMuMu.DecayDescriptors = ["[B+ -> K+ mu+ mu-]cc"]
-        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV)" % self.getProps()
+        _KMuMu.CombinationCut = "(AM>%(BMassLow)s*MeV)  & (ADAMASS('B+') < %(BMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
                           "&(BPVDIRA> %(BDIRA)s )" % self.getProps()
         _KMuMu.ReFitPVs = True
