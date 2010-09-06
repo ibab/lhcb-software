@@ -9,6 +9,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
  - StrippingPromptCharm.py
 
+       prescale "D02HHForPromptCharm" line with factor 0.5 
+
+! 2010-09-06 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
    commit the correct file :-( 
 
 ! 2010-09-06 - Vanya Belyaev

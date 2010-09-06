@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingPromptCharm.py,v 1.11 2010-09-06 19:09:33 ibelyaev Exp $
+# $Id: StrippingPromptCharm.py,v 1.12 2010-09-06 19:21:18 ibelyaev Exp $
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -65,8 +65,8 @@
 #
 # @endcode 
 # 
-# $Revision: 1.11 $
-# Last modification $Date: 2010-09-06 19:09:33 $
+# $Revision: 1.12 $
+# Last modification $Date: 2010-09-06 19:21:18 $
 #                by $Author: ibelyaev $
 # =============================================================================
 """
@@ -129,14 +129,14 @@ The performance with 100k events from Reco05-Stripping08_SDSTs.py:
     >>> stream.appendLines ( PromptCharmLines )
 
 
-$Revision: 1.11 $
-Last modification $Date: 2010-09-06 19:09:33 $
+$Revision: 1.12 $
+Last modification $Date: 2010-09-06 19:21:18 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-03'
-__version__ = '$Revision: 1.11 $'
+__version__ = '$Revision: 1.12 $'
 # =============================================================================
 __all__ = (
     #
@@ -541,7 +541,7 @@ PrimaryVertices = (1,3)
 
 D02HHForPromptCharm_Line   = StrippingLine (
     "D02HHForPromptCharm"      ,
-    prescale = 1.00            ,                ## ATTENTION! Prescale here !!
+    prescale = 0.50            ,                ## ATTENTION! Prescale here !!
     checkPV  = PrimaryVertices ,
     algos    = [ D02HHForPromptCharm_Selection   ]
     )
@@ -560,14 +560,12 @@ DsForPromptCharm_Line       = StrippingLine (
 
 DForPromptCharm_Line       = StrippingLine (
     "DForPromptCharm"         ,
-    prescale = 1.00            ,                ## ATTENTION! Prescale here !!
     checkPV = PrimaryVertices , 
     algos   = [ DForPromptCharm_Selection        ]
     )
 
 LambdaCForPromptCharm_Line = StrippingLine (
     "LambdaCForPromptCharm" ,
-    prescale = 1.00            ,                ## ATTENTION! Prescale here !!
     checkPV = PrimaryVertices , 
     algos   = [ LambdaCForPromptCharm_Selection  ]
     )
