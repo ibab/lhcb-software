@@ -18,7 +18,7 @@ Retention rate
 
 __author__ = ['Hamish  Gordon']
 __date__ = '06/09/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -71,11 +71,11 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
       , 'MaxTracksInEvent'  : 250.0 # this is tight enough to have a significant effect on the rate without killing lines altogether
       , 'CutOnTracksInEvent': True
       
-      , 'prescale_PPP'   : 0.5
-      , 'prescale_KPP'   : 0.5
-      , 'prescale_KPPos' : 0.5
-      , 'prescale_KKP'   : 0.5
-      , 'prescale_KKK'   : 0.5
+      , 'prescale_PPP'   : 0.6
+      , 'prescale_KPP'   : 0.6
+      , 'prescale_KPPos' : 0.6
+      , 'prescale_KKP'   : 0.6
+      , 'prescale_KKK'   : 0.6
       , 'prescale_inc'   : 0.05
       }
    
