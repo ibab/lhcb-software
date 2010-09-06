@@ -19,4 +19,5 @@ stream.appendLines( [
     ,StrippingB2XGammaConf().kstgammaWideBMass()
     ,StrippingB2XGammaConf().kstgammaLooseDira()
     ,StrippingB2XGammaConf().kstgammaWideKstMass()
+    #,StrippingB2XGammaConf().kstgammaWideLine()
     ] )
