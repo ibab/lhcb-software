@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -150,35 +150,34 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             from Configurables import ProtoParticleMUONFilter
 
             charged      = ChargedProtoParticleMaker("Hlt1TrackMuonProtoPMaker")
-            charged.InputTrackLocation  = ["Hlt1/Track/FitTrack"]
+            charged.InputTrackLocation  = [ HltMuonIDAlg.TrackLocation  ]
             charged.OutputProtoParticleLocation = "Hlt1/ProtoP/TrackMuon"
             
             muon                = ChargedProtoParticleAddMuonInfo("Hlt1TrackChargedProtoPAddMuon")
-            muon.ProtoParticleLocation  = "Hlt1/ProtoP/TrackMuon" 
-            muon.InputMuonPIDLocation   = "Hlt1/Track/TrackMuons/MuonID"
+            muon.ProtoParticleLocation  = charged.OutputProtoParticleLocation 
+            muon.InputMuonPIDLocation   = HltMuonIDAlg.MuonIDLocation  
             
             Hlt1Muons = CombinedParticleMaker("Hlt1TrackMuonCPM")
             Hlt1Muons.Particle = "muon" 
-            Hlt1Muons.addTool(ProtoParticleMUONFilter('Muon'))
+            Hlt1Muons.addTool(ProtoParticleMUONFilter,'Muon')
             Hlt1Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
-            Hlt1Muons.Input =  "Hlt1/ProtoP/TrackMuon"
+            Hlt1Muons.Input =  muon.ProtoParticleLocation
             Hlt1Muons.WriteP2PVRelations = False 
 
             after += [charged,muon,Hlt1Muons]
 
             from Configurables import LoKi__VoidFilter as VoidFilter
-            Hlt1MuonFilter = VoidFilter('Hlt1_MuonFilter'
-                                 , Code = " CONTAINS('Phys/Hlt1TrackMuonCPM/Particles') > 0 "
-                                 )  
 
-            after += [    Hlt1MuonFilter,
-                          Member ('HltFilterFittedParticles', 'FFT',
-                          OutputSelection = "%Decision",
-                          InputSelection1 = 'TES:/Event/Phys/Hlt1TrackMuonCPM/Particles', 
-                          InputSelection2 = 'PV3D',
-                          MinIPCHI2 = '%s'%ipchi2
-                         )   
-                ]
+            input = 'Phys/%s/Particles' % Hlt1Muons.getName()
+
+            after += [    VoidFilter('Hlt1_MuonFilter' , Code = " CONTAINS('%s') > 0 "%input)  
+                     ,    Member ('HltFilterFittedParticles', 'FFT'
+                                 , OutputSelection = "%Decision"
+                                 , InputSelection1 = 'TES:/Event/%s' % input
+                                 , InputSelection2 = 'PV3D'
+                                 , MinIPCHI2 = '%s'%ipchi2
+                                 )   
+                     ]
             return after
 
         props = self.getProps()
