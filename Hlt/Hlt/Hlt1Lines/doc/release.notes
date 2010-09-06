@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.213 2010-09-06 08:06:42 graven Exp $
+! $Id: release.notes,v 1.214 2010-09-06 08:08:11 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+
+! 2010-09-06 - Gerhard Raven
+ - undo Vava's changes 
+   do 'cvs update -j 1.5 -j 1.6 python/Hlt1Lines/Hlt1TrackLines.py' to get them back
 
 ! 2010-09-06 - Gerhard Raven
  - more automated daisy-chaining in Hlt1TrackLines.py
