@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2010-09-06 - Chris Jones
+ - Update ganga module to allow jobs to be filtered by 'DataTaking' description
+   e.g. Field Up or Down, beam energy etc.
+
 ! 2010-09-04 - Chris Jones
  - Update ganga module to allow custom job names
  - Force all ganga calibration jobs to run at LCG.CERN.ch

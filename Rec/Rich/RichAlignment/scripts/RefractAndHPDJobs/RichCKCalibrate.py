@@ -2,6 +2,8 @@
 # Globals
 imageFileName = ''
 canvas        = None
+runInfoCacheName = "RunInfoCache.pck"
+runInfoCache  = { }
 
 # ====================================================================================
 # Main Methods
@@ -265,6 +267,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     # Loop over jobs
     nFailedFits = 0
+    print "Looping over the runs ..."
     for j in jobs :
 
         run = int(getInfoFromJob(j,'Run'))
@@ -281,7 +284,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
             cksigmas[run] = fitResult['Sigma']
         else:
             nFailedFits += 1
-            print " -> Fit failed -", fitResult['Message']
+            print "WARNING : Fit failed for run", run, "-", fitResult['Message']
 
     # Write out calibrations to a pickled python file
     file = open(rad+"-RefIndexCalib.pck","w")
@@ -364,7 +367,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     printCanvas(']')
 
     if nFailedFits > 0 :
-        print "WARNINIG :", nFailedFits, " histogram fits failed"
+        print "WARNING :", nFailedFits, " histogram fits failed"
     
 def refractiveIndexControl(jobs,rad='Rich1Gas'):
     
@@ -546,8 +549,59 @@ def getJobCaliName(j):
     if len(tmpB) == 2 : cName = tmpB[1]
     return cName
 
-def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999):
+def loadDict(filename):
+    import pickle, os
+    data = { }
+    if os.path.exists(filename) :
+        file = open(filename,"r")
+        data = pickle.load(file)
+        file.close()
+    return data
+
+def pickleDict(filename,data):
+    import pickle, os
+    file = open(filename,"w")
+    pickle.dump(data,file)
+    file.close()
+
+def loadRunInfoCache():
+    cachename = globals()["runInfoCacheName"]
+    print "Loading Run Info cache -", cachename
+    globals()["runInfoCache"] = loadDict(cachename)
+
+def saveRunInfoCache():
+    cachename = globals()["runInfoCacheName"]
+    print "Saving Run Info cache  -", cachename
+    pickleDict(cachename,globals()["runInfoCache"])
+
+def getRunInformation(run):
+
+    # cached info
+    runInfoCache = globals()["runInfoCache"]
+
+    # If cache has entry for this run use that. Otherwise fill.
+    if run in runInfoCache.keys():
+        res = runInfoCache[run]
+    else:
+        print "Getting information for run", run, "from BK API... Be patient..."
+        from Ganga.GPI import diracAPI
+        cmd = ( "from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
+                "result = BookkeepingClient().getRunInformations("+str(run)+")" )
+        res = diracAPI(cmd)
+        if len(res.keys()) > 0 and res.has_key('OK'):
+            if res['OK']:
+                runInfoCache[run] = res
+
+    # Extra the info
+    info = { }
+    if res['OK'] : info = res['Value']
+
+    # return the result
+    return info
+                        
+def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999,desc=""):
     from Ganga.GPI import Job, jobs
+    cacheLoaded = False
     cJobs = [ ]
     dict = { }
     searchString = tag
@@ -557,27 +611,35 @@ def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999):
             if j.name.split('_')[0] == searchString :
                 run = int(getInfoFromJob(j,'Run'))
                 if run >= MinRun and run <= MaxRun:
-                    dict[run] = j
-                    #print j.name
+                    if desc == "":
+                        dict[run] = j
+                    else:
+                        if not cacheLoaded:
+                            loadRunInfoCache()
+                            cacheLoaded = True
+                        runInfo = getRunInformation(run)
+                        if runInfo['DataTakingDescription'] == desc:
+                            dict[run] = j
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
+    if cacheLoaded : saveRunInfoCache()
     return cJobs
 
-def getCalibrationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('RefractIndexCalib',name,statuscodes,MinRun,MaxRun)
+def getCalibrationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefractIndexCalib',name,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('RefractIndexVerify',name,statuscodes,MinRun,MaxRun)
+def getVerificationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefractIndexVerify',name,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999):
-    return getListOfJobs('RefractIndexControl',name,statuscodes,MinRun,MaxRun)
+def getControlJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefractIndexControl',name,statuscodes,MinRun,MaxRun,desc)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     # As of RICH S/W meeting 3/9/2010
     #slope = 38.2388535346
     #if rad == 'Rich2Gas': slope = 68.2
     # Test values
-    slope = 38.25
-    if rad == 'Rich2Gas': slope = 68.18
+    slope = 38.24
+    if rad == 'Rich2Gas': slope = 68.19
     # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
     error  = shift['Mean'][1]*slope
@@ -616,7 +678,6 @@ def getRootFile(j):
     filename = getRootFilePath(j)
     if filename != "" :
         if os.path.exists(filename):
-            #print "Opening ROOT File", filename
             file = TFile( filename )
         else:
             print "ERROR :", filename, "does not exist"
@@ -652,9 +713,9 @@ def rootCanvas():
 
 def printCanvas(tag=''):
     canvas = rootCanvas()
-    canvas.Update()
     imageType = imageFileName.split(".")[1]
     if tag == "[" : print "Opening file", imageFileName
+    if tag != "[" and tag != "]" : canvas.Update()
     canvas.Print(imageFileName+tag,imageType)
     # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
     if tag == ']' and imageType == 'ps' :

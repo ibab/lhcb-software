@@ -112,6 +112,7 @@ def getRunTimes(calibrations):
     runTimeCache = loadDict(RunCacheName)
 
     tmpTime = 0
+    cacheUpdated = False
     for run in runList:
         # Get run start and stop times
         if run in runTimeCache.keys():
@@ -119,7 +120,10 @@ def getRunTimes(calibrations):
         else:
             from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
             res = BookkeepingClient().getRunInformations(int(run))
-            runTimeCache[run] = res
+            if len(res.keys()) > 0 and res.has_key('OK') :
+                if res['OK']:
+                    runTimeCache[run] = res
+                    cacheUpdated = True
         if res['OK'] :
             start = res['Value']['RunStart']
             stop  = res['Value']['RunEnd']
@@ -134,7 +138,7 @@ def getRunTimes(calibrations):
             DIRAC.exit(1)
 
     # Update the saved cache 
-    pickleDict(RunCacheName,runTimeCache)
+    if cacheUpdated : pickleDict(RunCacheName,runTimeCache)
 
     # Return the Run Time Information
     return times
