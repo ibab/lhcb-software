@@ -3,7 +3,7 @@
 __author__ = 'Alexandr Kozlinskiy'
 __email__ = 'akozlins@cern.ch'
 __date__ = '22/05/2010'
-__version__ = '$Revision: 1.8 $'
+__version__ = '$Revision: 1.9 $'
 
 """
 
@@ -90,11 +90,11 @@ DstarSelection = Selection("SelDstarPromptWithD02HHNoPt", Algorithm = DstarCombi
 from StrippingConf.StrippingLine import StrippingLine
 from Configurables import LoKi__VoidFilter
 lineD02HHPromptNoPt = StrippingLine("D02HHPromptNoPt",
-                                    checkPV = (1, 3),
+#                                    checkPV = (1, 3),
                                     algos = [ D0Selection ],
                                     prescale = 1)
 lineDstarPromptWithD02HHNoPt = StrippingLine("DstarPromptWithD02HHNoPt",
-                                             checkPV = (1, 3),
+#                                             checkPV = (1, 3),
                                              algos = [ DstarSelection ],
                                              prescale = 1)
 
