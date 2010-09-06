@@ -64,8 +64,8 @@ class PhysConf(LHCbConfigurableUser) :
         from Configurables import CaloDstUnPackConf 
         unpack = CaloDstUnPackConf()
 
-        if self.getProp('EnableUnpack') :
-            unpack.setProp('Enable', True)
+        if self.isPropertySet('EnableUnpack') :
+            unpack.setProp('Enable', self.getProp('EnableUnpack') )
 
         if unpack.getProp( 'Enable' ) : 
             hypos    = unpack   .getProp( 'Hypos'   )
