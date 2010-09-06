@@ -17,10 +17,10 @@ from Configurables import TrackClusterFinder
 from StrippingConf.StrippingLine import StrippingLine
 
 TrkClusterFinder = TrackClusterFinder("TrkClusterFinder")
-TrkClusterFinder.MinWeightSeed = 17
+TrkClusterFinder.MinWeightSeed = 9
 TrkClusterFinder.ConeExtFactor = 4.0
-TrkClusterFinder.MaxDeltaPhi   = 3.2
-TrkClusterFinder.MaxDeltaEta   = 0.038
+TrkClusterFinder.MaxDeltaPhi   = 3.4
+TrkClusterFinder.MaxDeltaEta   = 0.06
 TrkClusterFinder.Min1stJetPt   = 10.0
 TrkClusterFinder.Min2ndJetPt   = 7.0
 TrkClusterFinder.JetMult       = 2

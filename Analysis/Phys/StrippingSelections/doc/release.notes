@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Marcin Kucharczyk
+  - New tuning for StrippingHighPtJets line 
+
 ! 2010-09-06 - Mat Charles
  - Adjust prescales in StrippingD2hhh_conf.py (0.5 -> 0.6 for all non-inclusive lines)
 
