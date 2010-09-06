@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.10 2010-09-06 05:46:42 svecchi Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.11 2010-09-06 09:46:51 svecchi Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi, Stefania Vecchi'
 __date__ = '03/09/2010'
-__version__ = '$Revision: 1.10 $'
+__version__ = '$Revision: 1.11 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -56,8 +56,8 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
         #   	   "& (MIPCHI2DV(PRIMARY) > %(MuonMIPCHI2DV)s)"\
 
 	DstarCutsD0 = "CHILDCUT("\
-                      "    (PT > %(D0PT)s)"\
-                      "  & (ADMASS('D0') < %(D0MassWindow)s)"\
+                      "    (ADMASS('D0') < %(D0MassWindow)s)"\
+                      "  & (PT > %(D0PT)s)"\
                       "  & (BPVVDCHI2 > %(D0BPVVDCHI2)s)"\
                       ",1)" % self.getProps()
         
