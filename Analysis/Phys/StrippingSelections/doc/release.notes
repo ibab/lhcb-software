@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-09-06 - Phillip Urquijo
+ - Update to StrippingB2XuMuNu.py, StreamSemileptonic.py
+
 ! 2010-09-06 - Stefania Vecchi
  - Revision of StrippingBd2DstarMuNu.py, StrippingBd2DstarMuNuLoose.py and 
                StrippingDstarVeryLooseWithD02HH.py

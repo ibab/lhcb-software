@@ -1,7 +1,7 @@
 
 __author__ = ['Phillip Urquijo']
 __date__ = '08/05/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
@@ -19,53 +19,53 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
     __slots__ = {
         #Muons
-        "MuonTRCHI2"          : 10.   ,#adimensional
+        "MuonTRCHI2"          : 6.   ,#adimensional
         "MuonP"               : 3000. ,#MeV
         "MuonPT"              : 1000. ,#MeV
-        #        "MuonPIDK"            : 0.    ,#adimensional
-        "MuonPIDmu"           : 0.    ,#adimensional
-        #        "MuonPIDp"            : 0.    ,#adimensional
+        "MuonPIDK"            : 0.    ,#adimensional
+        "MuonPIDmu"           : 3.    ,#adimensional
+        "MuonPIDp"            : 0.    ,#adimensional
         #        "MuonMINIP"           : 0.05  ,#mm
-        "MuonMINIPCHI2"       : 9     ,#adminensional
+        "MuonMINIPCHI2"       : 12     ,#adminensional
         #Xu
         #Pi Channel
-        "PionTRCHI2"          : 10.   ,#adimensional
+        "PionTRCHI2"          : 6.   ,#adimensional
         "PionP"               : 3000. ,#MeV
         "PionPT"              : 800.  ,#MeV
-        "PionPIDK"            : -10.    ,#adimensional
-        #        "PionPIDmu"           : 0.    ,#adimensional
-        #        "PionPIDp"            : 0.    ,#adimensional
+        "PionPIDK"            : 0.    ,#adimensional
+        "PionPIDmu"           : 0.    ,#adimensional
+        "PionPIDp"            : 0.    ,#adimensional
         #        "PionMINIP"           : 0.05  ,#mm
-        "PionMINIPCHI2"       : 9     ,#adminensional
+        "PionMINIPCHI2"       : 16     ,#adminensional
         #K channel
-        "KaonTRCHI2"          : 10.   ,#adimensional
+        "KaonTRCHI2"          : 6.   ,#adimensional
         "KaonP"               : 3000. ,#MeV
         "KaonPT"              : 800.  ,#MeV
-        "KaonPIDK"            : 0.    ,#adimensional
-        #        "KaonPIDmu"           : 0.    ,#adimensional
-        #        "KaonPIDp"            : 0.    ,#adimensional
+        "KaonPIDK"            : 2.    ,#adimensional
+        "KaonPIDmu"           : 0.    ,#adimensional
+        "KaonPIDp"            : 0.    ,#adimensional
         #        "KaonMINIP"          : 0.05  ,#mm
-        "KaonMINIPCHI2"       : 9     ,#adminensional
+        "KaonMINIPCHI2"       : 16     ,#adminensional
         #Rho channel
-        "RhoMassWindow"       : 250.  ,#MeV
-        "RhoVCHI2DOF"         : 10    ,#adimensional
-        "RhoPT"               : 400.  ,#MeV
+        "RhoMassWindow"       : 190.  ,#MeV
+        "RhoVCHI2DOF"         : 6    ,#adimensional
+        "RhoPT"               : 500.  ,#MeV
         "RhoLeadingPionPT"    : 800.  ,#MeV
         #        "RhoMINIP"           : 0.05  ,#mm 
         "RhoMINIPCHI2"        : 4     ,#adimensional
-        "RhoChPionPT"         : 200.  ,#MeV
+        "RhoChPionPT"         : 300.  ,#MeV
         "RhoChPionTRCHI2"     : 10.  ,#MeV
         "RhoChPionPIDK"       : -10.   ,#adminensional
         #        "RhoChPionMINIP"     : 0.05  ,#mm
         "RhoChPionMINIPCHI2"  : 9     ,#adimensional
         #K* channel
         "KSMassWindow"        : 300.  ,#MeV
-        "KSVCHI2DOF"          : 10    ,#adimensional
+        "KSVCHI2DOF"          : 6    ,#adimensional
         "KSPT"                : 400.  ,#MeV
         #        "KSMINIP"             : 0.05  ,#mm 
         "KSMINIPCHI2"         : 4     ,#adimensional
-        "KstarMassWindow"     : 300.  ,#MeV
-        "KstarVCHI2DOF"       : 10    ,#adimensional
+        "KstarMassWindow"     : 100.  ,#MeV
+        "KstarVCHI2DOF"       : 6    ,#adimensional
         "KstarPT"             : 400.  ,#MeV
         #        "KstarMINIP"          : 0.05  ,#mm 
         "KstarMINIPCHI2"      : 4     ,#adimensional
@@ -76,13 +76,14 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         "KstarChPionMINIPCHI2": 9     ,#adimensional
         "KstarLeadingPionPT"  : 800.  ,#MeV
         #Xu
-        "PiMuMassLowLoose"    : 1200. ,#MeV
-        "KMuMassLowTight"     : 1350. ,#MeV
-        "RhoMuMassLowTight"   : 1350. ,#MeV
+        "PiMuMassLowLoose"    : 1230. ,#MeV
+        "KMuMassLowTight"     : 1370. ,#MeV
+        "RhoMuMassLowTight"   : 1360. ,#MeV
         "KstarMuMassLowTight" : 1400. ,#MeV
         #B
         "BVCHI2DOF"           : 4     ,#adminensional
-        #        "BFD"                 : 1.5,   #mm
+        "BFDCHI2LOW"             : 15,   #adimensional
+        "BFDCHI2HIGH"             : 225,   #adimensional
         "XMuMassUpper"        : 5500 # MeV
         }
 
@@ -90,29 +91,35 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     def _NominalMuSelection( self ):
         return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
                "& (PIDmu-PIDpi> %(MuonPIDmu)s )"\
+               "& (PIDmu-PIDp> %(MuonPIDp)s )"\
+               "& (PIDmu-PIDK> %(MuonPIDK)s )"\
                "& (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s )"
     
     def _NominalPiSelection( self ):
         return "(TRCHI2DOF < %(PionTRCHI2)s )&  (P> %(PionP)s *MeV) &  (PT> %(PionPT)s *MeV)"\
-               "& (PIDpi-PIDK> %(PionPIDK)s )"\
+               "& (PIDpi-PIDK> %(PionPIDK)s )& (PIDpi-PIDp> %(PionPIDp)s )& (PIDpi-PIDmu> %(PionPIDmu)s )"\
                "& (MIPCHI2DV(PRIMARY)> %(PionMINIPCHI2)s )"
     
     def _NominalKSelection( self ):
         return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
-               "& (PIDK-PIDpi> %(KaonPIDK)s ) "\
+               "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
     def Pi_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import DataOnDemand
-        return StrippingLine('Bd2PiMuNuLine', prescale = 1.,
+        return StrippingLine('Bd2PiMuNuLine',
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             prescale = 1.,
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
-                                      self._Bd2PiMuNu()])
+                                      self._Bd2PiMuNu()
+                                      ])
     
     def PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bd2PiMuNuSSLine', prescale = 1.,
+        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.5,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
                                       self._Bd2PiMuNuSS()])
@@ -120,20 +127,31 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     def Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bu2RhoMuNuLine', prescale = 1.,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              algos = [self._muonFilter(),
                                       self._Rho02PiPiFilter(),
                                       self._Bu2RhoMuNu()])
         
+    def RhoWS_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        return StrippingLine('Bu2RhoMuNuWSLine', prescale = 0.5,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             algos = [self._muonFilter(),
+                                      self._Rho02PiPiWSFilter(),
+                                      self._Bu2RhoMuNuWS()])
+    
     def K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bs2KMuNuLine', prescale = 1.,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._Bs2KMuNu()])
     
     def KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuSSLine', prescale = 1.,
+        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.5,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._Bs2KMuNuSS()])
@@ -141,10 +159,20 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     def Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bs2KstarMuNuLine', prescale = 1.,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              algos = [self._muonFilter(),
                                       self._KS02PiPiFilter(),
                                       self._Kstar2KSPiFilter(),
                                       self._Bs2KstarMuNu()])
+
+    def KstarSS_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        return StrippingLine('Bs2KstarMuNuSSLine', prescale = 0.5,
+                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             algos = [self._muonFilter(),
+                                      self._KS02PiPiFilter(),
+                                      self._Kstar2KSPiFilter(),
+                                      self._Bs2KstarMuNuSS()])
 
     def _muonFilter( self ):
         from Configurables import FilterDesktop
@@ -171,7 +199,20 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop, CombineParticles
         _rho770 = CombineParticles("Rho02PiPi_forB2XuMuNu")
         _rho770.InputLocations = ["Phys/StdLoosePions"]
-        _rho770.DecayDescriptors = ["[rho(770)0 -> pi- pi+]cc","[rho(770)0 -> pi+ pi+]cc"] 
+        _rho770.DecayDescriptors = ["[rho(770)0 -> pi- pi+]cc"] 
+        _rho770.DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
+                                   "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self.getProps()
+                                   }
+        _rho770.CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self.getProps()
+        _rho770.MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
+                                  "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self.getProps() 
+        return _rho770
+
+    def _Rho02PiPiWSFilter( self ):
+        from Configurables import FilterDesktop, CombineParticles
+        _rho770 = CombineParticles("Rho02PiPiWS_forB2XuMuNu")
+        _rho770.InputLocations = ["Phys/StdLoosePions"]
+        _rho770.DecayDescriptors = ["[rho(770)0 -> pi+ pi+]cc"] 
         _rho770.DaughtersCuts   = {"pi+":"(PT> %(RhoChPionPT)s *MeV) &   (TRCHI2DOF < %(RhoChPionTRCHI2)s )"\
                                    "& (MIPCHI2DV(PRIMARY)> %(RhoChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(RhoChPionPIDK)s )" % self.getProps()
                                    }
@@ -184,7 +225,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop, CombineParticles
         _KS = CombineParticles("KS02PiPi_forB2XuMuNu")
         _KS.InputLocations = ["Phys/StdLoosePions"]
-        _KS.DecayDescriptors = ["[KS0 -> pi- pi+]cc","[KS0 -> pi+ pi+]cc"] 
+        _KS.DecayDescriptors = ["[KS0 -> pi- pi+]cc"] 
         _KS.CombinationCut = "(ADAMASS('KS0')< %(KSMassWindow)s)" % self.getProps()
         _KS.DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
                                    "& (MIPCHI2DV(PRIMARY)> %(KstarChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(KstarChPionPIDK)s )" % self.getProps()
@@ -213,7 +254,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _PiMu.DecayDescriptors = ["[B~0 -> pi+ mu-]cc"]
         _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s)" % self.getProps()
         _PiMu.ReFitPVs = True
         return _PiMu
 
@@ -223,7 +264,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _PiMu.DecayDescriptors = ["[B~0 -> pi- mu-]cc"]
         _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s)" % self.getProps()
         _PiMu.ReFitPVs = True
         return _PiMu
 
@@ -252,7 +293,17 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from Configurables import CombineParticles, OfflineVertexFitter
         _RhoMu = CombineParticles("RhoMu")
         _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPi_forB2XuMuNu"]
-        _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu-]cc"]
+        _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
+        _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
+        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _RhoMu.ReFitPVs = True
+        return _RhoMu
+
+    def _Bu2RhoMuNuWS( self ):
+        from Configurables import CombineParticles, OfflineVertexFitter
+        _RhoMu = CombineParticles("RhoMuWS")
+        _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPiWS_forB2XuMuNu"]
+        _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
         _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
         _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
         _RhoMu.ReFitPVs = True
@@ -261,8 +312,18 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     def _Bs2KstarMuNu( self ):
         from Configurables import CombineParticles, OfflineVertexFitter
         _KstarMu = CombineParticles("KstarMu")
-        _KstarMu.InputLocations=["Phys/Kstar2KSPi_forB2XuMuNu","Phys/StdLoosePions"]
+        _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
         _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu-]cc"]
+        _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
+        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _KstarMu.ReFitPVs = True
+        return _KstarMu
+
+    def _Bs2KstarMuNuSS( self ):
+        from Configurables import CombineParticles, OfflineVertexFitter
+        _KstarMu = CombineParticles("KstarMuSS")
+        _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
+        _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu+]cc"]
         _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
         _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
         _KstarMu.ReFitPVs = True

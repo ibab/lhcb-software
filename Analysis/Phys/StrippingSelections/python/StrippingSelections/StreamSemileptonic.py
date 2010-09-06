@@ -34,9 +34,10 @@ stream.appendLines( [
                         , StrippingB2XuMuNuConf().Pi_line()
                         , StrippingB2XuMuNuConf().PiSS_line()
                         , StrippingB2XuMuNuConf().Rho_line()
+                        , StrippingB2XuMuNuConf().RhoWS_line()
                         , StrippingB2XuMuNuConf().KSS_line()
                         , StrippingB2XuMuNuConf().Kstar_line()
-#                        , StrippingB2XuMuNuConf().KstarSS_line()
+                        , StrippingB2XuMuNuConf().KstarSS_line()
 		    ] )
 
 
