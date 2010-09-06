@@ -1,4 +1,4 @@
-# $Id: StrippingBd2eeKstar.py,v 1.1 2010-09-06 01:04:05 jhe Exp $
+# $Id: StrippingBd2eeKstar.py,v 1.2 2010-09-06 16:30:22 jhe Exp $
 
 '''
 Module for construction of Bd->eeKstar
@@ -6,7 +6,7 @@ Module for construction of Bd->eeKstar
 
 __author__=['Marie-Helene Schune', 'Jibo He']
 __date__ = '02/09/2010'
-__version__= '$Revision: 1.1 $'
+__version__= '$Revision: 1.2 $'
 
 
 __all__ = (
@@ -54,7 +54,7 @@ defaulSettings =  {
         'BVertexCHI2'             :    9.   ,  # /ndf
         'BMassW'                  : 1000.   ,  # MeV  
         'BIPCHI2'                 :   64.   ,  # pointing
-        'BFDCHI2'                 :    1.   , 
+        'BFDCHI2'                 :    9.   , 
         'BDIRA'                   :    0.999, 
         'BIP'                     :    0.05    # mm
         }
@@ -236,7 +236,7 @@ def makeKstar(name,
     
     KstarComCut = "(ADAMASS('K*(892)0')< %(KstarComMassW)s *MeV)" % locals()
     
-    KstarMomCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s)" % locals()
+    KstarMomCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s) & (ADMASS('K*(892)0')< %(KstarMassW)s *MeV)" % locals()
     
     _Kstar = CombineParticles( "_combine" + name,
                                DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
@@ -269,10 +269,10 @@ def makeBd2eeKstar( name,
                     ):
     
     Bd2eeKstarComCut = "(ADAMASS('B0')< %(BComMassW)s *MeV)" % locals()
-    Bd2eeKstarMomCut = "(ADMASS('B0')< %(BMassW)s *MeV) & (VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % locals()
+    Bd2eeKstarMomCut = "(ADMASS('B0')< %(BMassW)s *MeV) & (VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm) & (BPVVDCHI2>%(BFDCHI2)s)" % locals()
 
     eeFinalCut = "(INTREE( (ID=='J/psi(1S)') & (BPVVD>%(eeFD)s*mm) ))" % locals()
-    KstarFinalCut = "(INTREE( (ABSID=='K*(892)0') & (BPVIPCHI2()>%(BIPCHI2)s) & (BPVVDCHI2>%(BFDCHI2)s) ))" % locals()
+    KstarFinalCut = "(INTREE( (ABSID=='K*(892)0') & (BPVIPCHI2()>%(KstarIPCHI2)s) & (BPVVDCHI2>%(KstarFDCHI2)s) ))" % locals()
     
     _Bd2eeKstar = CombineParticles( "_combine" + name,
                                     DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc",
@@ -281,7 +281,7 @@ def makeBd2eeKstar( name,
                                     )
     return Selection( name,
                       Algorithm = _Bd2eeKstar,
-                      RequiredSelections = [ SelEE, SelKstar ]
+                      RequiredSelections = [ SelKstar, SelEE ]
                       )
     
     

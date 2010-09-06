@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.9 2010-08-24 00:35:14 jhe Exp $
+# $Id: StrippingDiMuon.py,v 1.10 2010-09-06 16:30:22 jhe Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -47,7 +47,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
 	JpsiSel = self.JpsiSameSign()
 	JpsiSeq = SelectionSequence("SeqDiMuonSameSign", TopSelection = JpsiSel)
-	return StrippingLine('DiMuonSameSignLine', prescale = 1, algos = [JpsiSeq])   
+	return StrippingLine('DiMuonSameSignLine', prescale = 0.1, algos = [JpsiSeq])   
 
     def Jpsi( self ):
 	_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
@@ -82,20 +82,21 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 	return Jpsi
 
     def JpsiSameSign( self ):
-	_muons =  DataOnDemand(Location = 'Phys/StdVeryLooseMuons')
-	mucut = '(PT > %(MuonPTLoose)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2Loose)s) & (ISLONG)' % self.getProps()
-	_Jpsi = CombineParticles("DiMuonSameSignLoose",
-                         DecayDescriptor = '[J/psi(1S) -> mu+ mu+]cc',
-                         DaughtersCuts = {'mu+': mucut},
-                         CombinationCut = " (AM > %(JpsiAMLoose)s *MeV)" % self.getProps(),
-                         MotherCut = "(VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps(),
-                         WriteP2PVRelations = False
+	_muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
+	mucut = '(PT > %(MuonPT)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2)s) & (ISLONG)' % self.getProps()
+	_Jpsi = CombineParticles("DiMuonSameSign",
+                                 DecayDescriptor = '[J/psi(1S) -> mu+ mu+]cc',
+                                 DaughtersCuts = {'mu+': mucut},
+                                 CombinationCut = " (AM > %(JpsiAM)s *MeV)" % self.getProps(),
+                                 MotherCut = "(VFASPF(VCHI2/VDOF) < %(JpsiVCHI2)s)" % self.getProps(),
+                                 WriteP2PVRelations = False
+                                 )
+	Jpsi = Selection("SelDiMuonSameSign",
+                         Algorithm = _Jpsi,
+                         RequiredSelections = [_muons]
                          )
-	Jpsi = Selection("SelDiMuonSameSignLoose",
-                  Algorithm = _Jpsi,
-                  RequiredSelections = [_muons]
-                  )
 	return Jpsi
+    
 
 #########################################################################################
 # Biased DiMuon adapted from Antonio Perez-Calero, implemented by P. Koppenburg

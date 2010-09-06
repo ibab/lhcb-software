@@ -1,7 +1,7 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
 __date__ = '2010/07/16'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->JpsieePhi stripping selection
@@ -126,7 +126,7 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
                                )
         Bs = Selection("SelBs2JpsieePhiLoose",
                        Algorithm = _Bs,
-                       RequiredSelections = [Jpsi, Phi])
+                       RequiredSelections = [Phi, Jpsi])
         return Bs
     
 
@@ -144,7 +144,7 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
                                )
         Bs = Selection("SelBs2JpsieePhi",
                        Algorithm = _Bs,
-                       RequiredSelections = [Jpsi, Phi])
+                       RequiredSelections = [Phi, Jpsi])
         return Bs
 
 

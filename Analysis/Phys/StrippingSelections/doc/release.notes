@@ -5,6 +5,16 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-06 - Jibo He
+ - Fixed typos in StrippingBd2JpsieeKstar.py and StrippingBd2eeKstar.py 
+ - Changed the sequence in "RequiredSelections" of the Selection to save CPU time 
+   . StrippingBd2JpsieeKstar.py 
+   . StrippingBd2eeKstar.py
+   . StrippingBs2JpsieePhi.py
+   Will go back when the sequence becomes more natural. 
+ - Update selections of same sign line in StrippingDiMuon.py
+   . Use the same selections as the nominal opposite sign line
+     and prescale by 10%. 
 
 ! 2010-09-06 - James Keaveney
  - Bug fix in StrippingMuMuSS.py,two lowest mass lines pre-scaled (.1).
