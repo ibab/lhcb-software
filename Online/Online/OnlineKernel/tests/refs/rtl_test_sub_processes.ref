@@ -8,22 +8,10 @@ Child: Starting process:SLEEPER_2
 Child: Starting process:SLEEPER_4
 Child: Starting process:SLEEPER_6
 Stop process SLEEPER_2
-SLEEPER_2    Process starting...
-SLEEPER_2    arg0:rtl_test_process_sleep
-SLEEPER_2    arg1:5
-SLEEPER_2    Process sleeping for 5 seconds.
 RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Stop process SLEEPER_4
-SLEEPER_4    Process starting...
-SLEEPER_4    arg0:rtl_test_process_sleep
-SLEEPER_4    arg1:7
-SLEEPER_4    Process sleeping for 7 seconds.
 RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Stop process SLEEPER_6
-SLEEPER_6    Process starting...
-SLEEPER_6    arg0:rtl_test_process_sleep
-SLEEPER_6    arg1:9
-SLEEPER_6    Process sleeping for 9 seconds.
 RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Process SLEEPER_1 ended. Status=0 output redirected to:/dev/null
 Process SLEEPER_2 ended. Status=0

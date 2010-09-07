@@ -151,12 +151,12 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
   if ( argc > 1 ) {
     int nsec;
     ::sscanf(argv[1],"%d",&nsec);
-    ::lib_rtl_sleep(100*nsec);
+    //::lib_rtl_sleep(100*nsec);
+    ::lib_rtl_sleep(1000*nsec);
     ::printf("%-12s Process starting...\n",nam);
     ::printf("%-12s arg0:%s\n",nam,argv[0]);
     ::printf("%-12s arg1:%s\n",nam,argv[1]);
     ::printf("%-12s Process sleeping for %d seconds.\n",nam,nsec);
-    ::lib_rtl_sleep(1000*nsec);
     ::printf("%-12s Process exiting....\n",nam);
     return 0;
   }
