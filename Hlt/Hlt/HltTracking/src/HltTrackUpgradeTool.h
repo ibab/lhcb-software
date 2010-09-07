@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.20 2010-08-17 08:41:18 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.21 2010-09-07 12:30:12 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -84,7 +84,6 @@ private:
   
   void recoDone(const LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
 
-  void addIDs(const LHCb::Track& seed, LHCb::Track& track);
 
   void printInfo(const std::string& title, 
                  const std::vector<LHCb::Track*>& con);

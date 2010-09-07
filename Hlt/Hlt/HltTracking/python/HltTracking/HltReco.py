@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.5 2010-07-06 08:37:00 graven Exp $
+# $Id: HltReco.py,v 1.6 2010-09-07 12:30:12 graven Exp $
 # =============================================================================
 ## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -31,7 +31,6 @@
 #
 
 __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
-          , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'MinimalVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
@@ -44,7 +43,6 @@ from Configurables import GaudiSequencer
 from Configurables import PatPV3D
 from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking
 from Configurables import PVOfflineTool
-from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
 
@@ -95,22 +93,16 @@ recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
 recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
 
 ##### Hlt selections
-
-# why does Hlt1PrepareRZVelo::initialize  trigger an init of ToolSvc.OTRawBankDecoder???
-prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
-                              , InputSelection   = "TES:" + patVeloR.OutputTracksName
-                              , RequirePositiveInputs = False
-                              , AddInfo = False
-                              , FilterDescriptor = ["IsBackward,<,0.5"]
-                              , OutputSelection     = "RZVelo" )
-
-
+from Configurables import HltTrackFilter
 prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , InputSelection   = "TES:" + recoVelo.OutputTracksName
                               , RequirePositiveInputs = False
                               , AddInfo = False
                               , FilterDescriptor = ["IsBackward,<,0.5"]
                               , OutputSelection     = "Velo" )
+
+#from Configurables import LoKi__HltUnit
+#prepare3DVelo = LoKi__HltUnit('Hlt1Prepare3DVelo', Code = "TrSOURCE('%s', ~TrBACKWARD) >> TrREGISTER('Velo') >> ~TrEMPTY" % recoVelo.OutputTracksName )
 
 #############################################################################################
 # Define the reconstruction sequence 
@@ -121,11 +113,9 @@ from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
-RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
-
-MinimalVelo = bindMembers( None, [                  MinimalRZVelo , recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
-Velo     = bindMembers( None, [                  MinimalVelo, prepare3DVelo ] )
+MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
+MinimalVelo     = bindMembers( None, [       MinimalRZVelo , recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+Velo            = bindMembers( None, [                    MinimalVelo, prepare3DVelo ] ).setOutputSelection('Velo')
 
 from Configurables import PatSeeding
 from HltLine.HltDecodeRaw import DecodeIT

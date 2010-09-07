@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.41 2010-08-17 08:41:18 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.42 2010-09-07 12:30:12 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -85,13 +85,13 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Velo/TESOutput",std::string("Hlt1/Track/Velo"));
   
   m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
-  m_recoConf.add("VeloTT/Owner",false);
+  m_recoConf.add("VeloTT/Owner",false); // This will not set m_otracks, and hence 'find' will SEGV, and thus iupgrade under certain conditions does as well...
   m_recoConf.add("VeloTT/View",false);
   m_recoConf.add("VeloTT/TransferIDs",true);
   m_recoConf.add("VeloTT/TransferAncestor",true);
   m_recoConf.add("VeloTT/ITrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("VeloTT/OTrackType", (int) LHCb::Track::Upstream);
-  m_recoConf.add("VeloTT/TESOutput", std::string("Hlt1/Track/VeloTT"));
+  m_recoConf.add("VeloTT/TESOutput", std::string("<INVALID>")); // never used if Owner == false!   std::string("Hlt1/Track/VeloTT"));
 
   m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
   m_recoConf.add("Forward/Owner",true);
@@ -346,7 +346,7 @@ void HltTrackUpgradeTool::recoDone(const Track& seed, std::vector<Track*>& track
     Track& track = *(*it);
     track.setType( (LHCb::Track::Types) m_OtrackType );
     if (m_transferAncestor) track.addToAncestors( (Track*) &seed);
-    if (m_transferIDs) addIDs(seed,track);
+    if (m_transferIDs) track.addSortedToLhcbIDs( seed.lhcbIDs() ); // is the seed sorted??? 
     track.addInfo(m_recoID,key);
     if (m_transferExtraInfo) {
       Hlt::MergeInfo(seed,track);
@@ -409,10 +409,4 @@ void HltTrackUpgradeTool::printInfo(const std::string& title,
           << track.slopes()  << " pt " << track.pt() << endreq;
 }
 
-void HltTrackUpgradeTool::addIDs(const Track& seed, Track& track) {
-  const std::vector<LHCbID>& ids = seed.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator it = ids.begin();
-       it != ids.end(); ++it) 
-    track.addToLhcbIDs(*it);
-}
 

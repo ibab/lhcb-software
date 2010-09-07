@@ -1,10 +1,14 @@
-!$Id: release.notes,v 1.143 2010-08-26 09:42:25 graven Exp $
+!$Id: release.notes,v 1.144 2010-09-07 12:30:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-09-07 - Gerhard Raven
+ - add some commments about VeloTT upgrade: it won't work!
+ - speed up addLHCbIDs, HltTrackUpgrade::execute
+ - remove unused prepareRZVelo
 
 !========================== HltTracking v6r3 2010-08-26 ===================
 ! 2010-08-23 - M. Witek

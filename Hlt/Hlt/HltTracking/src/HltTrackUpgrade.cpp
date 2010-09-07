@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.18 2010-08-17 08:41:18 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.19 2010-09-07 12:30:12 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -65,13 +65,12 @@ StatusCode HltTrackUpgrade::initialize() {
 //=============================================================================
 StatusCode HltTrackUpgrade::execute() {
 
-  //@TODO: adapt interface to be more neutral: input a vector<Track*>::const_iterator begin,end, and a back_inserter
+  //@TODO: adapt interface to be more neutral: input a vector<const Track*>::const_iterator begin,end, and a back_inserter
   //       don't rely on tool doing pt ordering...
-  std::vector<const LHCb::Track*> in(m_selections.input<1>()->begin(),m_selections.input<1>()->end());
   assert(m_selections.output()->empty());
   std::vector<LHCb::Track*> out;
-  StatusCode sc = m_tool->upgrade(in,out);
-  m_selections.output()->insert(m_selections.output()->end(),out.begin(),out.end());
+  StatusCode sc = m_tool->upgrade(*m_selections.input<1>(),out);
+  out >> *m_selections.output();
   
   if (msgLevel(MSG::DEBUG)) printInfo(" upgraded tracks ",*m_selections.output());
   
