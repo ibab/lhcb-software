@@ -1,4 +1,4 @@
-# $Id: StreamCharm.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamCharm.py,v 1.2 2010-09-07 16:08:59 gcowan Exp $
 #
 #   Charm stripping selection
 #
@@ -34,6 +34,7 @@ stream.appendLines ( [ StrippingD2hhhConf().stripD2PPP(),
   StrippingD2hhhConf().stripD2KKP(),
   StrippingD2hhhConf().stripD2KPPos(),
   StrippingD2hhhConf().stripD2KKK(),
+  StrippingD2hhhConf().stripD2hhh_inc()
 ])
 
 from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf

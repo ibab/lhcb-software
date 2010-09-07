@@ -1,4 +1,4 @@
-# $Id: StreamEW.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
+# $Id: StreamEW.py,v 1.3 2010-09-07 16:08:59 gcowan Exp $
 #
 #   Electro-weak stripping selection
 #
@@ -59,9 +59,9 @@ stream.appendLines( [ StrippingDiPhotonDiMuon.line ] )
 # Neal Gauvin
 from StrippingSelections.StrippingDisplVertices import line1 as SingleDisplVertexLine
 from StrippingSelections.StrippingDisplVertices import line2 as DoubleDisplVertexLine
-#stream.appendLines( [ SingleDisplVertexLine, DoubleDisplVertexLine ] )
+stream.appendLines( [ SingleDisplVertexLine, DoubleDisplVertexLine ] )
 
 # Marcin Kucharczyk
 from StrippingSelections.StrippingHighPtJets import line1 as HighPtJetsLine
-#stream.appendLines( [ HighPtJetsLine ] )
+stream.appendLines( [ HighPtJetsLine ] )
 

@@ -1,4 +1,4 @@
-# $Id: StreamDielectron.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamDielectron.py,v 1.2 2010-09-07 16:08:59 gcowan Exp $
 #
 #   Dielectron stripping selection
 #
@@ -21,11 +21,10 @@ stream = StrippingStream("Dielectron")
 #
 from StrippingSelections.StrippingDiElectron import StrippingDiElectronConf
 stream.appendLines( [ StrippingDiElectronConf().Jpsi2ee_line() ] )
-# Following lines (not the low mass ones) are taking ~0.2%. This is too high
-#stream.appendLines( [ StrippingDiElectronConf().IncDiElectron_line() ] )
-#stream.appendLines( [ StrippingDiElectronConf().IncDiElectronLowMass_line() ] )
-#stream.appendLines( [ StrippingDiElectronConf().BiasedIncDiElectron_line() ] )
-#stream.appendLines( [ StrippingDiElectronConf().BiasedIncDiElectronLowMass_line() ] )
+stream.appendLines( [ StrippingDiElectronConf().IncDiElectron_line() ] )
+stream.appendLines( [ StrippingDiElectronConf().IncDiElectronLowMass_line() ] )
+stream.appendLines( [ StrippingDiElectronConf().BiasedIncDiElectron_line() ] )
+stream.appendLines( [ StrippingDiElectronConf().BiasedIncDiElectronLowMass_line() ] )
 
 #
 # Lines from beta_s WG

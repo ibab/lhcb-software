@@ -1,4 +1,4 @@
-# $Id: StreamCalibration.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
+# $Id: StreamCalibration.py,v 1.3 2010-09-07 16:08:59 gcowan Exp $
 #
 #   Calibration stripping selections
 #
@@ -14,10 +14,8 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Calibration", AcceptBadEvents = True)
 
 # Andrew Powell
-from StrippingSelections import StrippingLambdaNoPID
-stream.appendLines( [ StrippingLambdaNoPID.line_lambda_dd, StrippingLambdaNoPID.line_lambda_ll ] )
-
-# KS -> pipi ??
+from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf
+stream.appendLines( StrippingV0ForPIDConf().All_Lines() )
 
 # Juan Palacios
 from StrippingSelections import StrippingHltErrorBits
@@ -32,8 +30,11 @@ stream.appendLines( InclPhiConf.lines )
 from StrippingSelections import StrippingMuIDCalib
 stream.appendLines( [ StrippingMuIDCalib.jp_line, StrippingMuIDCalib.b_line ] )
 
-# D*->D(Kpi)pi ??
+# Philip Xing D*->D(Kpi)pi
+from StrippingSelections.StrippingNoPIDDstarWithD02RSKPi import StrippingNoPIDDstarWithD02RSKPiConf
+stream.appendLines( StrippingNoPIDDstarWithD02RSKPiConf().lines() )
 
-# D0 ->Kpipi0 ??
-
+# Regis Lefevre D0 ->Kpipi0 ??
+from StrippingSelections.StrippingD02KPiPi0 import StrippingD02KPiPi0Conf
+stream.appendLines( [ StrippingD02KPiPi0Conf().D02KPiPi0_Merged(), StrippingD02KPiPi0Conf().D02KPiPi0_Resolved() ] )
 
