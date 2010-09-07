@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.7 2010-08-31 16:02:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.8 2010-09-07 13:50:43 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MultiFragmentWindow.cpp,v 1.7 2010-08-31 16:02:34 frankb Exp $
+// $Id: MultiFragmentWindow.cpp,v 1.8 2010-09-07 13:50:43 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -34,7 +34,7 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   ::sprintf(txt,"Multi event fragment with partition ID: %4X",mf->partitionID());
   addComment(C_COM1,txt);
   addComment(C_COM2,"    Size Packing  EidH Start      End");
-  ::sprintf(txt," %7ld %7ld %5d %10p %10p",
+  ::sprintf(txt," %7ld %7ld %5u %10p %10p",
     long(mf->size()),long(mf->packing()),mf->eventID(),mf->start(),mf->end());
   addComment(C_COM2,txt);
   RTL::IPHeader* ip = (RTL::IPHeader*)mf->ipHeader();

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/Requirement.cpp,v 1.6 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/Requirement.cpp,v 1.7 2010-09-07 13:50:43 frankb Exp $
 //  ====================================================================
 //  Requirements.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Requirement.cpp,v 1.6 2009-02-11 16:51:43 frankb Exp $
+// $Id: Requirement.cpp,v 1.7 2010-09-07 13:50:43 frankb Exp $
 // C++ include files
 #include <string>
 
@@ -34,7 +34,7 @@ void Requirement::build(int pg, int menu_id, int cmd_id)   {
   char title[20] = "Requirement no. 1";
   unsigned int* tr = (unsigned int*)m_trMask.bits();
   unsigned int* vt = (unsigned int*)m_veto.bits();
-  title[16] = '1'+pg;
+  title[16] = char('1'+pg);
   openMenu(menu_id,cmd_id,title,"",procName());
   addCommand(C_ADD,"Add Requirement");
   setParam(&m_evType,C_EVT,"%2d",2,0,10,0,0,0);

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BaseMenu.cpp,v 1.4 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BaseMenu.cpp,v 1.5 2010-09-07 13:50:43 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: BaseMenu.cpp,v 1.4 2008-02-12 17:15:24 frankb Exp $
+// $Id: BaseMenu.cpp,v 1.5 2010-09-07 13:50:43 frankb Exp $
 //
 // C++ include files
 #include <map>
@@ -40,8 +40,8 @@ BaseMenu& BaseMenu::parent()  const  {
   throw std::runtime_error("Invalid pointer to parent window");
 }
 int BaseMenu::run()  {
-  int menu_id, command_id, param_id; 
-  while(1)  {
+  int menu_id, command_id, param_id, do_run=1; 
+  while(do_run>0)  {
     ::upic_get_input(&menu_id,&command_id,&param_id);
   }
   return 1;
