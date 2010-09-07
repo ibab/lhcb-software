@@ -27,14 +27,14 @@ namespace {
   struct Summary {
     typedef map<string,USER*> Users;
     Users m_oneTasks;
-    virtual int show();
-    virtual int show(BMDESCRIPT* dsc);
+    virtual int show(bool show_states);
+    virtual int show(BMDESCRIPT* dsc, bool show_states);
     Summary()                           {           }
     virtual ~Summary()                  {           }
   };
 }
 
-int Summary::show() {
+int Summary::show(bool show_states) {
   lib_rtl_gbl_t bm_all;
   int status = ::mbm_map_global_buffer_info(&bm_all,false);
   if(!lib_rtl_is_success(status))   {   
@@ -56,7 +56,7 @@ int Summary::show() {
       bms.setup(buffs->buffers[(*j).second].name);
       int sc = bms.mapMonitorSections();
       if ( !lib_rtl_is_success(sc) ) continue;
-      show(bms.m_bm);
+      show(bms.m_bm,show_states);
       bms.unmapSections();
     }
   }
@@ -68,7 +68,7 @@ int Summary::show() {
   return 1;
 }
 
-int Summary::show(BMDESCRIPT* dsc)   {
+int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
   int j, k;
   static const char* fmt_def  = " %-20s%5x%5s          %40s%5s%7s\n";
   static const char* fmt_prod = " %-20s%5x%5s%6s%11d   %3.0f%32s%7s\n";
@@ -120,7 +120,8 @@ int Summary::show(BMDESCRIPT* dsc)   {
 	::strcpy(prod_one.name,"PROD_ONE");
 	continue;
       }
-      ::printf(fmt_prod,us->name,us->partid,"P",sstat[us->p_state+1],us->ev_produced,
+      const char* st = show_states ? sstat[us->p_state+1] : "";
+      ::printf(fmt_prod,us->name,us->partid,"P",st,us->ev_produced,
 		perc+0.1, spy_val, dsc->bm_name);
     }
     else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
@@ -136,7 +137,8 @@ int Summary::show(BMDESCRIPT* dsc)   {
       if ( ctr->tot_produced>0 ) {
 	perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
       }
-      ::printf(fmt_cons,us->name,us->partid,"C",sstat[us->c_state+1],
+      const char* st = show_states ? sstat[us->c_state+1] : "";
+      ::printf(fmt_cons,us->name,us->partid,"C",st,
 	       us->ev_seen, perc+0.1, spy_val, dsc->bm_name);
     }
     else        {
@@ -159,7 +161,16 @@ int Summary::show(BMDESCRIPT* dsc)   {
   return 1;
 }
 
-extern "C" int mbm_summary(int, char**) {
+namespace {
+  void help()  {
+    ::printf("mbm_summary -opt [-opt]\n");
+    ::printf("    -nostates      Do cnot show client states \n");
+  }
+}
+
+extern "C" int mbm_summary(int argc, char** argv) {
+  RTL::CLI cli(argc,argv,help);
+  bool show_states = cli.getopt("nostates",1) == 0;
   Summary sum;
-  return sum.show();
+  return sum.show(show_states);
 }
