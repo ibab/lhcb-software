@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.207 2010-09-07 08:22:48 jpalac Exp $
+# $Id: requirements,v 1.208 2010-09-07 09:51:27 jpalac Exp $
 package AnalysisSys
 version v4r10
 
@@ -44,12 +44,12 @@ use PyAna                       v1r2     Analysis
 use StrippingAlgs               v1r4   Phys   # Anton Poluektov
 use StrippingConf               v3r7   Phys   # Anton Poluektov
 use StrippingSelections         v1r26  Phys   # Anton Poluektov
-use MvaPreSelB2DH               v1r0   Phys   # Sajan Easo
+use MvaPreSelB2DH               v1r0p1 Phys   # Sajan Easo
 ####################################################################
 use  MicroDSTBase        	v2r0    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r5    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v2r0    MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v4r0    MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	v4r1    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r9    MicroDST          # Juan Palacios
 
 ####################################################################
