@@ -79,6 +79,8 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
     else    {
 #ifdef SCREEN
       p = i->param.cur;
+#else
+      p = 0;
 #endif
     }
   }

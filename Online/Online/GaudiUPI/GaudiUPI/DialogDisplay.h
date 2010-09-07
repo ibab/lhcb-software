@@ -29,7 +29,7 @@ public:
   int endUpdate();
   int beginUpdate();
   int putString (const std::string& text,int video);
-  int init (int num_col,int num_row, AbstractMainDisplay& parent);
+  virtual int init (int num_col,int num_row, AbstractMainDisplay& parent);
 protected:
   DialogSubDisplay (AbstractMainDisplay& source);
   DialogSubMenu  *window() {     return m_window;   }
@@ -62,7 +62,7 @@ public:
   DialogMainDisplay (DialogMenu *parent);
 protected:
   DialogMainDisplay (const AbstractMainDisplay& source);
-  void handle (Event& ev);
+  void handle (const Event& ev);
   DialogMenu* window() {     return m_window;   }
 protected:
   DialogItem *m_par;

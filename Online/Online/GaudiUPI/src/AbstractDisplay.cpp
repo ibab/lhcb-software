@@ -14,6 +14,10 @@ namespace {
   Apply<R (T::*)(),T> apply(R (T::*pmf)()) { return Apply<R (T::*)(),T>(pmf); }
 }
 
+void AbstractDisplayFactory::setInstance(AbstractDisplayFactory* s) {
+  s_instance = s;
+}
+
 AbstractDisplayFactory* AbstractDisplayFactory::instance() {          
   return s_instance;
 }

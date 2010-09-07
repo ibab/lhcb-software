@@ -197,5 +197,6 @@ public:
   virtual AbstractMainDisplay* createMainDisplay (const AbstractDisplay& data) = 0;
   virtual AbstractSubDisplay* createSubDisplay (const AbstractDisplay& data) = 0;
   static  AbstractDisplayFactory* instance();
+  static  void setInstance(AbstractDisplayFactory* s);
 };
 #endif

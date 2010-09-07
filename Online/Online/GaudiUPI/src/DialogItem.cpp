@@ -1,6 +1,8 @@
 #include "GaudiUPI/DialogItem.h"
 #include "RTL/strdef.h"
 #include <cstring>
+#include <limits>
+#include <cmath>
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 
@@ -95,7 +97,8 @@ bool DialogItem::isEqual (DialogItemContainer* it1,DialogItemContainer* it2)  {
   else if ( isInteger() ) 
     return it1->data()->_int[0] == it2->data()->_int[0];
   else if ( isReal()   ) 
-    return it1->data()->_float[0] == it2->data()->_float[0];
+    return ::fabs(it1->data()->_float[0]-it2->data()->_float[0]) < 
+      std::numeric_limits<float>::epsilon();
   return false;
 }
 
@@ -125,7 +128,9 @@ ItemStatus DialogItem::removeList (const void* item)   {
     bool found = 0;
     if ( isString() && strcmp(m_list[i]->data()->_char,(const char*)item) == 0 ) found = 1;
     else if ( isInteger() && m_list[i]->data()->_int[0]   == *(int*)item       ) found = 1;
-    else if ( isReal()    && m_list[i]->data()->_float[0] == *(float*)item     ) found = 1;
+    else if ( isReal()    && 
+	      ::fabs(m_list[i]->data()->_float[0]-*(float*)item)<
+	      std::numeric_limits<float>::epsilon() ) found = 1;
     if ( found )    {
       for ( m_listSize--, j = i; j < m_listSize; j++ ) m_list[j] = m_list[j+1];
       return ITEM_SUCCESS;
@@ -326,7 +331,6 @@ Again:
   }
   if ( i >= m_listSize) return ITEM_SUCCESS;
   goto Again;
-  return ITEM_SUCCESS;
 }
 
 DialogItem& DialogItem::sort()  {

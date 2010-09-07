@@ -222,7 +222,7 @@ int DialogMainDisplay::print (const std::string& printer)  {
 
 //012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678912
 //+--------------------------------------------------------------------------------------------------------------------------------+  
-void DialogMainDisplay::handle (Event& ev) {
+void DialogMainDisplay::handle (const Event& ev) {
   if ( m_actor != 0 && m_handler != 0 && ev.command_id == 1 ) {
     DisplayAstData ast_data;
     ast_data.astparameter = m_actor;

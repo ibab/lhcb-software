@@ -116,7 +116,7 @@ void Gaudi::PropertyEditor::retrieveParams()   {
   std::string w = "", v = "";
   s << *m_property;
   while( s.get() != ':' && !s.fail() ) { }
-  for ( char c=s.get(); !s.fail(); c=s.get() ) {
+  for (int c=s.get(); !s.fail(); c=s.get()) {
     switch(c)  {
       case '|':
       case '[':
@@ -135,7 +135,7 @@ void Gaudi::PropertyEditor::retrieveParams()   {
       case ' ':
         if ( v.empty() ) break;
       default:
-        v += c;
+        v += char(c);
         break;
     }
   }
