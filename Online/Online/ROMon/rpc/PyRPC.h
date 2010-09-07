@@ -429,7 +429,7 @@ namespace PyRPC  {
     /// Check if server is connected
     bool connected() const { return m_channel != 0; }
     /// Connect to server
-    bool connect(const std::string& server, int port);
+    bool connect(const std::string& server, unsigned short port);
     /// Disconnect server
     bool disconnect();
     /// Execute RPC call

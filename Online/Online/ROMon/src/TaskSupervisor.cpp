@@ -54,12 +54,12 @@ namespace {
   };
   string strupper(const string& n) {
     string r=n;
-    for(size_t i=0; i<r.length();++i) r[i]=::toupper(r[i]);
+    for(size_t i=0; i<r.length();++i) r[i]=char(::toupper(r[i]));
     return r;
   }
   string strlower(const string& n) {
     string r=n;
-    for(size_t i=0; i<r.length();++i) r[i]=::tolower(r[i]);
+    for(size_t i=0; i<r.length();++i) r[i]=char(::tolower(r[i]));
     return r;
   }
 }
@@ -235,16 +235,16 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
   Procset::Processes& ps = ns->procs()->processes;
   for(Procset::Processes::iterator pi=ps.begin();pi!=ps.end();pi=ps.next(pi)) {
     //vector<string> res = psItems(ptr);
-    Process& p = (*pi);
-    string utgid = p.utgid;
-    string cmd   = p.cmd;
-    string command = p.cmd;
+    Process& pr = (*pi);
+    string utgid = pr.utgid;
+    string cmd   = pr.cmd;
+    string command = pr.cmd;
     if ( (idx=cmd.find(' ')) != string::npos ) cmd[idx]=0;
     if ( ::strcmp(cmd.c_str(),"init")==0 ) {
-      xml << "\t\t<Boot time=\"" << p.start << "\"/>" << endl;
+      xml << "\t\t<Boot time=\"" << pr.start << "\"/>" << endl;
     }
     if ( cmd.substr(0,6)=="PVSS00" )  {
-      pnam = _P::projectName(p.cmd);
+      pnam = _P::projectName(pr.cmd);
       if ( !pnam.empty() ) {
         pvss[pnam].name=pnam;
         if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
@@ -261,13 +261,13 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
     }
     i=t.find(utgid);
     if ( !utgid.empty() && utgid.substr(0,3)!="N/A" && i != t.end() ) {
-      mem += p.mem;
-      rss += p.rss;
-      cpu += p.cpu;
-      vsize += p.vsize;
-      stack += p.stack;
+      mem += pr.mem;
+      rss += pr.rss;
+      cpu += pr.cpu;
+      vsize += pr.vsize;
+      stack += pr.stack;
       if ( s_debug ) {
-        cout << "Check task: '" << utgid << "' " << p.pid << " " << (void*)&p << endl;
+        cout << "Check task: '" << utgid << "' " << pr.pid << " " << (void*)&pr << endl;
       }
       if ( !(*i).second ) ++good;
       (*i).second = true;

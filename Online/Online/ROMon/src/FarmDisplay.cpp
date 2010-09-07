@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.41 2010-09-03 14:47:46 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.42 2010-09-07 13:42:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.41 2010-09-03 14:47:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.42 2010-09-07 13:42:11 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -305,7 +305,6 @@ int FarmDisplay::showSubfarm()    {
   }
   else if ( (d=currentDisplay()) != 0 ) {
     string dnam = d->name();
-    string title = "Sub farm info:" + dnam;
     string svc = "-servicename=/"+dnam+"/ROpublish";
     string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
@@ -462,10 +461,10 @@ int FarmDisplay::showCpuWindow() {
 
 /// DIM command service callback
 void FarmDisplay::update(const void* address) {
-  char c, *msg = (char*)address;
+  char *msg = (char*)address;
   string svc, node;
   size_t idx, idq;
-  switch(c=msg[0]) {
+  switch(msg[0]) {
   case '+':
     getServiceNode(++msg,svc,node);
     idx = svc.find("/ROpublish");
@@ -707,7 +706,7 @@ void FarmDisplay::handle(const Event& ev) {
       handleKeyboard(int((long)ev.data));
       break;
     case CMD_SHOWSUBFARM: {
-      RTL::Lock lock(screenLock(),true);
+      RTL::Lock unlock(screenLock(),true);
       showSubfarm();
       return;
     }

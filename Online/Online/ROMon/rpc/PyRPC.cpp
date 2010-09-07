@@ -721,7 +721,7 @@ Server::Server() : m_server(), m_port(-1), m_channel(0) { }
 Server::~Server() {  disconnect();   }
 
 /// Connect to server
-bool Server::connect(const string& server, int port) {
+bool Server::connect(const string& server, unsigned short port) {
   NetworkChannel::Address sin;
   struct hostent *h = ::gethostbyname(server.c_str());
   disconnect();

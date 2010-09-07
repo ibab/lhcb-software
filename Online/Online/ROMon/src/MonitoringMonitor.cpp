@@ -91,7 +91,7 @@ namespace {
     }
     return "Unknown";
   }
-};
+}
 
 InternalMonitor* ROMon::createMonitoringMonitor(FarmMonitor* parent, const string& title) {
   cout << "Connecting to farm " << title << endl;

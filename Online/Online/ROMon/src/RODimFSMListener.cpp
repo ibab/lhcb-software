@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.7 2009-05-11 09:42:00 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.8 2010-09-07 13:42:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.7 2009-05-11 09:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.8 2010-09-07 13:42:11 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -118,9 +118,12 @@ void RODimFSMListener::infoHandler(void* tag, void* address, int* size) {
 }
 
 extern "C" int romon_test_fsm_listener(int, char**) {
+  bool do_run = true;
   RODimFSMListener listener;
   log() << "Going asleep" << endl;
-  while(1) ::lib_rtl_sleep(1000);
+  while(do_run) {
+    ::lib_rtl_sleep(1000);
+  }
   return 1;
 }
 

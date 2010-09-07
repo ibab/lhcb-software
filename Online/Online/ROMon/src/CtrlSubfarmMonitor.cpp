@@ -33,8 +33,10 @@ namespace ROMon {
     virtual ~CtrlSubfarmMonitor();
     /// Update display content
     virtual void update(const void* data);
+    /// Update monitor content
+    virtual void update(const void* data, size_t len)  { update(data); }
     /// Command service callback after already parsed data
-    void updateContent(XML::TaskSupervisorParser& ts);
+    virtual void updateTs(XML::TaskSupervisorParser& ts);
   };
   InternalMonitor* createCtrlSubfarmMonitor(FarmMonitor* parent, const string& title) {
     return new CtrlSubfarmMonitor(parent,title);
@@ -63,7 +65,7 @@ void CtrlSubfarmMonitor::update(const void* address) {
   try {
     XML::TaskSupervisorParser ts;
     if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
-      updateContent(ts);
+      updateTs(ts);
     }
   }
   catch(...) {
@@ -71,7 +73,7 @@ void CtrlSubfarmMonitor::update(const void* address) {
 }
 
 /// DIM command service callback
-void CtrlSubfarmMonitor::updateContent(XML::TaskSupervisorParser& ts) {
+void CtrlSubfarmMonitor::updateTs(XML::TaskSupervisorParser& ts) {
   auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
   m_cluster.nodes.clear();
   ts.getClusterNodes(m_cluster);

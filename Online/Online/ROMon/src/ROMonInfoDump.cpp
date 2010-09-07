@@ -1,4 +1,4 @@
-// $Id: ROMonInfoDump.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonInfoDump.cpp,v 1.4 2010-09-07 13:42:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.4 2010-09-07 13:42:11 frankb Exp $
 // C++ include files
 #include <iostream>
 #include <iomanip>
@@ -74,8 +74,9 @@ void ROMonInfoDump::infoHandler() {
 
 extern "C" int romon_info_dump(int argc, char** argv) {
   ROMonInfoDump romon(argc,argv);
+  bool do_run = true;
   print_startup("DUMP");
-  while(1) ::lib_rtl_sleep(1000);
+  while(do_run) ::lib_rtl_sleep(1000);
   return 1;
 }
 

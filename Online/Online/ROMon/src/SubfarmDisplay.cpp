@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.13 2009-04-17 13:16:37 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.14 2010-09-07 13:42:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.13 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.14 2010-09-07 13:42:11 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -33,7 +33,9 @@ namespace {
     size_t st_in, st_out;
     TaskIO() : in(0), out(0), st_in(0), st_out(0) {}
     TaskIO(const TaskIO& m) : in(m.in), out(m.out), st_in(m.st_in), st_out(m.st_out) {}
+#if defined(__GNUC__) || defined(WIN32)
     TaskIO& operator=(const TaskIO& m) { in=m.in; out=m.out; st_in=m.st_in; st_out=m.st_out; return *this;}
+#endif
   };
 }
 typedef Nodeset::Nodes               Nodes;
