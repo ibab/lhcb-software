@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.22 2010-08-11 13:37:52 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.23 2010-09-07 10:28:53 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -149,14 +149,14 @@ namespace MicroDST
         } else {
           if ( msgLevel(MSG::VERBOSE) ) {
             this->Warning("Found no table at "+inputLocation,
-                          StatusCode::FAILURE).ignore();  
+                          StatusCode::FAILURE, 0).ignore();  
           }
         }
         
       } else {
         if ( msgLevel(MSG::VERBOSE) ) {
           this->Warning("Found no table at "+inputLocation,
-                        StatusCode::FAILURE).ignore();
+                        StatusCode::FAILURE, 0).ignore();
         }
       }
 

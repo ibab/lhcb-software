@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.8 2010-08-11 13:37:52 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.9 2010-09-07 10:25:55 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -90,8 +90,8 @@ public:
         copyKeyedContainer<CLONER>(inputLocation, m_cloner      );
 
       if (0==cont) {
-        Warning("Unable clone or get container from "+ inputLocation,
-                StatusCode::FAILURE, 10).ignore();
+        Warning("Unable to clone or get container from "+ inputLocation,
+                StatusCode::FAILURE, 0).ignore();
       }
     }
 
