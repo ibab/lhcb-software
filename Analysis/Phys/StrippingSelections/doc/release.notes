@@ -5,6 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-07 - Philip Hunt
+ - StrippingDstarPromptWithD02K3Pi.py
+   Updated to use "Selection" framework.
+   Robust line has been removed.
+   Cuts revised to satisfy CPU and retention requirements, including loosening
+   the D0/D* mass cut to 2MeV/c^2, and tightening the D0 mass window to 75 MeV/c^2.
+
 ! 2010-09-07 - Thomas Blake
  - Added prescale to MiniBias lines
 

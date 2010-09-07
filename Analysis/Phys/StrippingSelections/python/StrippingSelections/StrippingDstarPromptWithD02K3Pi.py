@@ -1,332 +1,308 @@
-__author__='Philip Hunt'
-__date__='10/5/2010'
-__version__='$Revision: 1.1 $'
+'''
+Module for construction of D0->K3Pi tagged (from prompt D*) and untagged selections.
+Provides functions to build tagged and untagged selections for physics analysis.
+At present, the untagged lines are not included. This may change in the future 
+Provides classes StrippingPromptDstarWithD02K3PiConf, which construct the selections and stripping lines given a configuration dictionary.
+Exported symbols (use python help):
+  - D02K3PiConf
+  - makeD02K3Pi
+  - makePromptDstar
+'''
 
-'''
-D*(2010)+ -> D0(K3Pi) pi+ stripping selection
-'''
+__author__ = ['Philip Hunt']
+__date__ = '03/09/2010'
+__version__ = '$Revision: 1.2 $'
+
+__all__ = ('StrippingDstarPromptWithD02K3PiConf', 'makeD02K3Pi'
+    'makeD02K3PiDCS'
+            'makePromptDstar')
+
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from StrippingConf.StrippingLine import bindMembers, StrippingLine, StrippingMember
-from Configurables import CombineParticles, ConjugateNeutralPID
+from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID
+from PhysSelPython.Wrappers import Selection, DataOnDemand
+from StrippingConf.StrippingLine import StrippingLine
+from StrippingSelections.Utils import checkConfig
 
-class StrippingDstarPromptWithD02K3PiConf(LHCbConfigurableUser):
-  __slots__ = {
-    # prefit cuts 
-    "PreFitDstarMassWindow" : 200 # MeV
-    ,"PreFitDstarPt" : 2.5 # GeV
-    ,"PreFitD0MassWindow" : 120 # MeV
-    ,"PreFitD0Pt" : 2.2 # GeV
+class StrippingDstarPromptWithD02K3PiConf(object):
+  """
+  Constructor of D*->D0(K3Pi)pi stripping selection / stripping line for
+  physics analysis.
+  Selections and StrippingLines created from a configuration dictionary.
+  Usage:
+  >>> config = {...}
+  >>> myConf = StrippingPromptDstarWithD02K3PiConf('PromptDstarWithD02K3Pi',config)
+  >>> myLines = myConf.lines
+  >>> for line in line :
+  >>>  print line.name(), line.outputLocation()
+  The lines can be used directly to build a StrippingStream object.
 
-    # mass windows
-    , "DeltaMass_Lower" : -15 # MeV
-    , "DeltaMass_Upper" : 15 # MeV
-    , "D0MassWindow" : 100 # MeV
+  Exports as instance data members:
+    selD02K3Pi    : nominal D0 -> K3Pi Selection object 
+    selDstar2Dpi   : nominal D*+ -> D0(K-pi+pi-pi+)pi+  Selection object
 
-    # vertex + track chi2 / d.o.f.
-    , "DstarVertexChi2DOF" : 10 # no units
-    , "D0VertexChi2DOF" : 5 # no units
-    , "TrackChi2DOF" : 10 # no units
-    
-    # momentum
-    , "DstarPt" : 3.2# GeV
-    , "SlowPionPt" : 0.19 # GeV
-    , "D0Pt" : 3.1 # GeV
-    , "PionPt" : 0.175 # GeV
-    , "PionP" : 1 # GeV
-    , "KaonPt": 0.55 # GeV
-    , "KaonP": 6 # GeV
-   # , "D0DaughterPiMaxPt" : 0.75 # GeV
+    line_untagged : StrippingLine made out of selD02K3Pi
+    line_tagged : StrippingLine made out of selDstar2Dpi
+    lines                  : List of lines, [line_untagged                                            
+                                            ,line_tagged]
 
-    , "RobustDstarPt" : 3.055 # GeV
-    , "RobustSlowPionPt" : 0.130 #GeV
-    , "RobustD0Pt" : 2.445 # GeV
-    , "RobustPionPt" : 0.175 # GeV
-    , "RobustPionP" : 1 # GeV
-    , "RobustKaonPt" : 0.735 # GeV
-    , "RobustKaonP" : 6 # GeV
-    
-    # "pointing" cuts
-    , "SlowPionIP" : 0.5 # mm
-    , "D0FDChi2PV" : 23 # no units
-    , "D0DIRA" : 0.99987 # cosine of angle (0-1)
-    , "D0MaxIPChi2" : 10 # cut on maximum IP chi2 of the D0 daughters
+    Exports as class data member:
+    StrippingPromptDstarWithD02K3PiConf.__configuration_keys__ : List of required configuration parameters.
+    """
+  __configuration_keys__ = ('D0MassWin'
+                            ,'DMassLower'
+                            ,'DMassUpper'
+                                                    
+                            ,'DstarDOCA'
+                            ,'D0MaxDOCA'
 
-    , "D0MaxDOCA" : 0.214 # mm
-    , "DstarDOCA" : 0.175 # mm
-    , "RobustSlowPionIP" : 0.5 # mm
-    , "D0FDPV" : 2.135 # mm
-    , "RobustD0DIRA" : 0.99989 # cosine of angle (0-1)
-    
-    # cut on number of tracks in event
-    , "CutOnTracksInEvent" : True
-    , "MaxTracksInEvent" : 240
+                            ,'D0DaughterPt'
+                            ,'D0DaughterP'
+                            ,'D0Pt'
+                            ,'DstarPt'
+                            ,'SlowPionPt'
+                            
+                            ,'DstarVtxChi2DOF'
+                            ,'D0VtxChi2DOF'
 
-    , "KaonUseLoosePID" : True
-    , "PionUseLoosePID" : False
+                            ,'D0DaughterIPChi2'
+                            ,'D0FDChi2'
+                            ,'D0IPChi2'
 
-    , "RobustKaonUseLoosePID" : False
-    , "RobustPionUseLoosePID" : False
-    
-    # prescales
-    , "PrescaleFavoured" : 1.
-    , "PrescaleDCS" : 1.
-    , "PrescaleRobustFavoured" : 1.
-    , "PrescaleRobustDCS" : 1.
-    }
-    
-
-  def _kaonLocation(self):
-    if (self.getProp("KaonUseLoosePID")):
-      return "StdLooseKaons"
-    else:
-      return "StdNoPIDsKaons"
-
-  def _pionLocation(self):
-    if (self.getProp("PionUseLoosePID")):
-      return "StdLoosePions"
-    else:
-      return "StdNoPIDsPions"
-
-  def _robustKaonLocation(self):
-    if (self.getProp("RobustKaonUseLoosePID")):
-      return "StdLooseKaons"
-    else:
-      return "StdNoPIDsKaons"
-
-  def _robustPionLocation(self):
-    if (self.getProp("RobustPionUseLoosePID")):
-      return "StdLoosePions"
-    else:
-      return "StdNoPIDsPions"
-    
-  def _kaonCuts(self):
-    trackChi2Cut = "(TRCHI2DOF<%(TrackChi2DOF)s)" %self.getProps()
-    ptCut = "(PT>%(KaonPt)s*GeV)" %self.getProps()
-    momentumCut = "(P>%(KaonP)s*GeV)" % self.getProps()
-    return  ' & '.join( (trackChi2Cut, ptCut, momentumCut) )
-
-  def _pionCuts(self):
-    trackChi2Cut = "(TRCHI2DOF<%(TrackChi2DOF)s)" %self.getProps()
-    ptCut = "(PT>%(PionPt)s*GeV)" %self.getProps()
-    momentumCut = "(P>%(PionP)s*GeV)" % self.getProps()
-    return ' & '.join( (trackChi2Cut, ptCut, momentumCut) )
-
-  def _slowPionCuts(self):
-    trackChi2Cut = "(TRCHI2DOF<%(TrackChi2DOF)s)" %self.getProps()
-    ptCut = "(PT>%(SlowPionPt)s*GeV)" %self.getProps()
-    ipCut = "(BPVIP()<%(SlowPionIP)s*mm)" %self.getProps()
-    return ' & '.join( (trackChi2Cut, ptCut, ipCut) )
-
-  def _d0PreFitCuts(self):
-    d0MassWindow = "(ADAMASS('D0')<%(PreFitD0MassWindow)s*MeV)" %self.getProps()
-    d0Pt = "(APT>%(PreFitD0Pt)s*GeV)" %self.getProps()
-    return ' & '.join( (d0MassWindow, d0Pt) )
+                            ,'D0DIRA'
+                            
+                            ,'TrackChi2DOF'
+                         
+                            ,'Prescale'
+                            ,'Postscale'
+                                
+                            )
   
-  def _d0PostFitCuts(self):
-    d0MassWindowCut = "(ADMASS('D0')<%(D0MassWindow)s*MeV)" %self.getProps()
-    d0PtCut  = "(PT>%(D0Pt)s*GeV)" %self.getProps()
-    d0VertexChi2Cut = "(VFASPF(VCHI2PDOF)<%(D0VertexChi2DOF)s)" %self.getProps()
-    d0DIRACut = "(BPVDIRA>%(D0DIRA)s)" %self.getProps()
-    D0FDChi2Cut = "(BPVVDCHI2>%(D0FDChi2PV)s)" %self.getProps()
-    D0DaughterMaxIPChi2Cut = "(MAXTREE(TRUE, BPVIPCHI2())>%(D0MaxIPChi2)s)" %self.getProps()
-   # D0DaughterMaxPtCut = "(MAXTREE('pi+'==ABSID,PT)>%(D0DaughterPiMaxPt)s)" %self.getProps() 
-    return ' & '.join( (d0MassWindowCut, d0PtCut, #D0DaughterMaxPtCut,
-                        D0DaughterMaxIPChi2Cut, d0VertexChi2Cut, D0FDChi2Cut,
-                        d0DIRACut ) )
+  """Configuration for the cross-section lines. Some cuts, e.g. the mass windows, pt and IP chi2 cuts, are applied to the combinations before the vertex fitting, and again after the fitting. List of cuts used in this configuration:
+   - D0 mass window = 100 MeV/c^2
+  - D0 max DOCA < 0.5 mm
+  - D0 daughter pt > 160 MeV/c
+  - D0 daughter momentum > 3.2 GeV/c
+  - Delta mass window (lower, upper) = -7.5 +15 MeV/c^2
+  - D* DOCA < 0.5 mm
+  - Track vertex chi2 / d.o.f. < 10
+  - D0 daughter kaon DLL(K-pi)>0
+  - D0 daughter pion DLL(K-pi)<0
+  """
+  _default_config = {    
+    'DMassLower'             : -7.5     #MeV
+    ,'DMassUpper'             : 15     #MeV 
+    ,'D0MassWin'              : 75     #MeV
+                            
+    ,'DstarDOCA'                : 0.5    # mm
+    ,'D0MaxDOCA'           : 0.5    # mm
+                            
+    ,'D0DaughterPt'                    : 0.3   # GeV
+    ,'D0DaughterP'                     : 5.0      # GeV
+    ,'D0Pt' : 2.0 # GeV
+    ,'DstarPt' : 2.0 # GeV
+    ,'SlowPionPt' : 0.2 # GeV
 
-  def _dstarPreFitCuts(self):
-      ptCut = "(APT>%(PreFitDstarPt)s*GeV)" %self.getProps()
-      massWindowCut = "(ADAMASS('D*(2010)+')<%(PreFitDstarMassWindow)s*MeV)" %self.getProps()
-      return ' & '.join( (massWindowCut, ptCut) )
+    ,'DstarVtxChi2DOF' : 50
+    ,'D0VtxChi2DOF' : 9
 
-  def _dstarPostFitCuts(self):
-    deltaMass_Upper="(M-MAXTREE('D0'==ABSID,M)-145.5*MeV<%(DeltaMass_Upper)s*MeV)" %self.getProps()
-    deltaMass_Lower="(M-MAXTREE('D0'==ABSID,M)-145.5*MeV>%(DeltaMass_Lower)s*MeV)" %self.getProps()
-    ptCut = "(PT>%(DstarPt)s*GeV)" %self.getProps()
-    vertexChi2Cut = "(VFASPF(VCHI2PDOF)<%(DstarVertexChi2DOF)s)" %self.getProps()
-    return ' & '.join((deltaMass_Upper, deltaMass_Lower, vertexChi2Cut, ptCut))
+    ,'D0DaughterIPChi2' : 0.5 
+    ,'D0FDChi2' : 36
+    ,'D0IPChi2' : 30
+    , 'D0DIRA' : 0.9999
+    ,'TrackChi2DOF'                    : 4
+   
+    ,'Prescale'         : 1
+    ,'Postscale'        : 1
+   }
 
-  def _robustKaonCuts(self):
-    ptCut = "(PT>%(RobustKaonPt)s*GeV)" %self.getProps()
-    momentumCut = "(P>%(RobustKaonP)s*GeV)" % self.getProps()
-    return  ' & '.join( (ptCut, momentumCut) )
+  def __init__(self
+               ,name='DstarPromptWithD02K3Pi'
+               ,config=None):
+    checkConfig(StrippingDstarPromptWithD02K3PiConf.__configuration_keys__
+                , config)
+    self.name=name
+    
+       
+    self.selD02K3Pi = makeD02K3Pi(
+      name+'D0'
+      , massWin= config['D0MassWin']
+      , maxDOCA = config['D0MaxDOCA']
+      , pt = config['D0Pt']
+      , daughterPt = config['D0DaughterPt']
+      , daughterMom = config['D0DaughterP']
+      , vertexChi2DOF = config['D0VtxChi2DOF']
+      , FDChi2 = config['D0FDChi2'] 
+      , IPChi2 = config['D0IPChi2']
+      , daughterIPChi2 = config['D0DaughterIPChi2']
+      , DIRA = config['D0DIRA']
+      , trackChi2DOF = config['TrackChi2DOF']
+      )
 
-  def _robustPionCuts(self):
-    ptCut = "(PT>%(RobustPionPt)s*GeV)" %self.getProps()
-    momentumCut = "(P>%(RobustPionP)s*GeV)" % self.getProps()
-    return  ' & '.join( (ptCut, momentumCut) )
+    self.selD02K3PiDCS = makeD02K3PiDCS(name+'D0DCS', self.selD02K3Pi)
+    
+    # prompt D* 
+    self.selPromptDstar = makePromptDstar(
+      name+'Dstar'
+      , d0Sel = self.selD02K3Pi
+      , d0ConjSel = self.selD02K3PiDCS
+      , DMassLower = config['DMassLower']
+      , DMassUpper = config['DMassUpper']
+      , DOCA = config['DstarDOCA']
+      , vertexChi2DOF = config['DstarVtxChi2DOF']
+      , pt = config['DstarPt']
+      , slowPionPt = config['SlowPionPt']
+      , trackChi2DOF = config['TrackChi2DOF']
+      )
+    
+    self.line_tagged = StrippingLine(
+      name+"Line"
+      ,prescale=config['Prescale']
+      ,postscale=config['Postscale']
+      ,algos=[self.selPromptDstar]
+      )
+   
+    self.lines = [self.line_tagged
+                  ]
 
-  def _robustSlowPionCuts(self):
-    ptCut = "(PT>%(RobustSlowPionPt)s*GeV)" %self.getProps()
-    ipCut = "(BPVIP()<%(RobustSlowPionIP)s*mm)" %self.getProps()
-    return ' & '.join( (ptCut, ipCut) )
+def makeD02K3PiDCS(
+  name
+  ,d0Sel):
+  """Creates the conjugate D0->K3Pi Selection object
+     for physics analysis.
+"""
+  from Configurables import ConjugateNeutralPID
+  _d0Conj=ConjugateNeutralPID('_'+name)
+  return Selection(
+    name
+    ,Algorithm=_d0Conj
+    ,RequiredSelections=[d0Sel]
+    )
+    
   
-  def _robustD0PostFitCuts(self):
-    d0MassWindowCut = "(ADMASS('D0')<%(D0MassWindow)s*MeV)" %self.getProps()
-    d0PtCut  = "(PT>%(RobustD0Pt)s*GeV)" %self.getProps()
-    d0DIRACut = "(BPVDIRA>%(RobustD0DIRA)s)" %self.getProps()
-    d0MAXDOCAcut = "(DOCAMAX<%(D0MaxDOCA)s)" %self.getProps()
-    d0FDcut = "(BPVVD>%(D0FDPV)s)" %self.getProps()
-    #    D0DaughterMaxPtCut = "(MAXTREE('pi+'==ABSID,PT)>%(D0DaughterPiMaxPt)s)" %self.getProps() 
-    return ' & '.join( (d0MassWindowCut, d0PtCut,
-                        d0DIRACut, d0MAXDOCAcut, d0FDcut ) )
+def makeD02K3Pi (
+  name
+  , massWin
+  , maxDOCA
+  , pt
+  , daughterPt
+  , daughterMom
+  , vertexChi2DOF
+  , FDChi2
+  , IPChi2
+  , daughterIPChi2
+  , DIRA
+  , trackChi2DOF
+  ):
+  """Creates a D0->K3Pi Selection object
+, with cuts for physics analysis.
+Uses DataOnDemand objects 'Phys/StdTightKaons'
+and 'Phys/StdTightPions'
+Arguments:
+  -  name : name of Selection
+  - massWin : mass window cut (MeV/c^2)
+  - maxDOCA : maximum DOCA of D0 daughters (mm)
+  - pt : minimum transverse momentum of D0 (GeV/c)
+  - daughterPt : minimum transverse momentum of D0 daughters (GeV/c)
+  - daughterMom : minimum momentum of D0 daughters (GeV/c)
+  - vertexChi2DOF : maximum vertex chi2 / d.o.f.
+  - FDChi2 : minimum vertex chi2
+  - IPChi2 : maximum IP chi2 
+  - daughterIPChi2 : minimum IP chi2 of D0 daughters
+  - DIRA : cosine of angle sustended by momentum and flight direction vectors of D0
+  - trackChi2DOF : maximum track chi2 / d.o.f. of D0 daughters (unitless)
+Note: There is a hard-coded cut on the pion DLL(K-pi) of < 0    
+  """
+  _prefitMassCut = "(ADAMASS('D0')<%(massWin)s*MeV)" %locals()
+  _postfitMassCut = "(ADMASS('D0')<%(massWin)s*MeV)" %locals()
 
-  def _robustDstarPostFitCuts(self):
-    deltaMass_Upper="(M-MAXTREE('D0'==ABSID,M)-145.5*MeV<%(DeltaMass_Upper)s*MeV)" %self.getProps()
-    deltaMass_Lower="(M-MAXTREE('D0'==ABSID,M)-145.5*MeV>%(DeltaMass_Lower)s*MeV)" %self.getProps()
-    ptCut = "(PT>%(RobustDstarPt)s*GeV)" %self.getProps()
-    dstarDOCAcut = "(DOCAMAX<%(DstarDOCA)s)" %self.getProps()
-    return ' & '.join( (deltaMass_Upper, deltaMass_Lower, ptCut, dstarDOCAcut ) )
+  _prefitPtCuts = "(APT>%(pt)s*GeV) & (ANUM(PT>%(daughterPt)s*GeV)==4) & (ANUM(P>%(daughterMom)s*GeV)==4)" %locals()
+ 
+  _prefitCuts = _prefitMassCut + " & (ADOCAMAX('')<%(maxDOCA)s*mm)" %locals()
+  _prefitCuts += " & %s" %(_prefitPtCuts)
 
-  def _makeD0Favoured(self, robustLine=False):
-    combD0=None
-    if not robustLine:      
-      combD0=CombineParticles("D02K3PiFromPromptDstar")
-      combD0.InputLocations = [self._kaonLocation(), self._pionLocation()]
-      combD0.DecayDescriptor = '[D0 -> K- pi+ pi- pi+]cc'
-      combD0.CombinationCut = self._d0PreFitCuts()
-      combD0.MotherCut = self._d0PostFitCuts()
-      combD0.DaughtersCuts = { 'K+': self._kaonCuts(), 'pi+': self._pionCuts() }
-    else:
-      combD0=CombineParticles("RobustD02K3PiFromPromptDstar")
-      combD0.InputLocations = [self._robustKaonLocation(), self._robustPionLocation()]
-      combD0.DecayDescriptor = '[D0 -> K- pi+ pi- pi+]cc'
-      combD0.CombinationCut = self._d0PreFitCuts()
-      combD0.MotherCut = self._robustD0PostFitCuts()
-      combD0.DaughtersCuts = { 'K+': self._robustKaonCuts(), 'pi+': self._robustPionCuts() }
-    return combD0
+  _motherCuts = _postfitMassCut + " & (PT>%(pt)s*GeV) & (BPVDIRA>%(DIRA)s) & (BPVVDCHI2>%(FDChi2)s) & (BPVIPCHI2()<%(IPChi2)s) & (VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s) " %locals()
 
-  def _makeD0Suppressed(self, robustLine=False):
-    combD0=self._makeD0Favoured(robustLine)
-    linePrefix=""
-    if robustLine:
-      linePrefix="Robust"
-    conjD0=ConjugateNeutralPID(linePrefix+"D02K3PiDCSFromPromptDstar")
-    conjD0.InputLocations = [combD0.name()]
-    return conjD0
+  _daughterCuts = "(PT>%(daughterPt)s*GeV) & (P>%(daughterMom)s*GeV) & (BPVIPCHI2()>%(daughterIPChi2)s) & (TRCHI2DOF<%(trackChi2DOF)s)" %locals()
 
-  def _makeDstar(self, favouredLine=True, robustLine=False):
-    combD0=None
-    combDstar=None
-    
-    combName="PromptDstarWithD02K3Pi"
-    if favouredLine:
-      combD0=self._makeD0Favoured(robustLine)
-    else:
-      combD0=self._makeD0Suppressed(robustLine)
-      combName+="DCS"
+  _stdTightKaons = DataOnDemand(Location="Phys/StdTightKaons")
+  _stdTightPions = DataOnDemand(Location="Phys/StdTightPions")
+ 
+  # hard code the DLL cut for the pions
 
-    if not robustLine:
-      combDstar = CombineParticles(combName)
-      combDstar.InputLocations = [ "StdNoPIDsPions", combD0.name()]
-      combDstar.DecayDescriptor = '[D*(2010)+ -> D0 pi+]cc'
-      combDstar.CombinationCut = self._dstarPreFitCuts()
-      combDstar.MotherCut = self._dstarPostFitCuts()
-      combDstar.DaughtersCuts = { 'pi+' : self._slowPionCuts() }
+  _d0 = CombineParticles( '_'+name
+                          ,DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc"
+                          ,CombinationCut = _prefitCuts
+                          ,MotherCut = _motherCuts
+                          ,DaughtersCuts = { "K+" : _daughterCuts
+                                             ,"pi+" : _daughterCuts+" & (PIDK<0)"} )
 
-    else:
-      combDstar = CombineParticles("Robust"+combName)
-      combDstar.InputLocations = [ "StdNoPIDsPions", combD0.name()]
-      combDstar.DecayDescriptor = '[D*(2010)+ -> D0 pi+]cc'
-      combDstar.CombinationCut = self._dstarPreFitCuts()
-      combDstar.MotherCut = self._robustDstarPostFitCuts()
-      combDstar.DaughtersCuts = { 'pi+' : self._robustSlowPionCuts() }
+  return Selection ( name
+                     ,Algorithm = _d0
+                     ,RequiredSelections = [_stdTightKaons, _stdTightPions] )
 
-    return combDstar
+def makePromptDstar(
+  name
+  ,d0Sel
+  ,d0ConjSel
+  ,DMassLower
+  ,DMassUpper
+  ,DOCA
+  ,vertexChi2DOF
+  ,pt
+  ,slowPionPt
+  ,trackChi2DOF
+  ):
+  """Creates a D*->D0pi Selection object
+  , with cuts for physics analysis.
+  Uses DataOnDemand objects 'Phys/StdNoPIDPions and Phys/StdNoPIDsUpPions'
+  Arguments:
+  -  name : name of Selection
+  - d0Sel : D0 Selection object
+  - d0ConjSel : D0 DCS Selection object
+  - DMassLower : lower edge of delta mass window (MeV/c^2)
+  - DMassUpper : upper edge of delta mass window (MeV/c^2)
+  - DOCA : distance of closest approach (mm)
+  - vertexChi2DOF : maximum vertex chi2 / d.o.f
+  - pt : minimum transverse momentum of D* (GeV/c)
+  - slowPionPt : minimum transverse momentum of bachelor pion (GeV/c)
+ - trackChi2DOF : track chi2 / d.o.f. of the bachelor pion (unitless)
+Note that the delta mass is defined here as the difference between the D* and D0 reconstructed masses subtracted from the PDG value for the D* - D0 mass difference.
+  """
+  _prefitMassCut = "(AM-AM1-145.5*MeV>%(DMassLower)s*MeV) & (AM-AM1-145.5*MeV<%(DMassUpper)s*MeV)" %locals()
+  _postfitMassCut = "(M-M1-145.5*MeV>%(DMassLower)s*MeV) & (M-M1-145.5*MeV<%(DMassUpper)s*MeV)" %locals()
+     
+  _prefitCuts = _prefitMassCut + " & (APT>%(pt)s*GeV) & (ADOCAMAX('')<%(DOCA)s*mm)" %locals()
+ 
+  _motherCuts = _postfitMassCut + " & (PT>%(pt)s*GeV) & (VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s)" %locals()
+  _slowPionCuts = "(PT>%(slowPionPt)s) & (TRCHI2DOF<%(trackChi2DOF)s)" %locals()
+
+  # long tracks
+  _stdNoPIDsPions = DataOnDemand(Location="Phys/StdNoPIDsPions")
+  # upstream tracks
+  _stdNoPIDsUpPions = DataOnDemand(Location="Phys/StdNoPIDsUpPions")
   
-  def _makeDstarSequence(self, favouredLine=True, robustLine=False):
-    seqPrefix=""
-    if robustLine:
-      seqPrefix="Robust"
-    seq = None
-    if favouredLine:
-      seq = bindMembers(
-        "Seq"+seqPrefix+"PromptDstarWithD02K3Pi"
-        , [self._makeD0Favoured(robustLine)
-           ,self._makeDstar(favouredLine, robustLine)]
-        )
-    else:
-      seq = bindMembers(
-        "Seq"+seqPrefix+"PromptDstarWithD02K3PiDCS"
-        , [self._makeD0Favoured(robustLine)
-           ,self._makeD0Suppressed(robustLine)
-           ,self._makeDstar(favouredLine, robustLine)]
-        )
-    return seq
-
-  def _filterNTracksInEvent(self):
-    '''
-    Returns a VoidFilter instance to filter on the maximum number of tracks in an event
-    '''
-    if not self.getProp("CutOnTracksInEvent"):
-      return None
-    from Configurables import LoKi__VoidFilter as VoidFilter
-    from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-    modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators']:
-      if i not in modules : modules.append(i)
-
-    filterTooManyIP = VoidFilter(
-      'FilterNTracks'
-      ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTracksInEvent)s )" %self.getProps()
-      )
-
-    return filterTooManyIP
-
-  def makeFavouredLine(self):
-    algos = []
-    if self.getProp("CutOnTracksInEvent"):
-      algos.append(self._filterNTracksInEvent())
-    algos.append(self._makeDstarSequence(True, False))
-    
-    return StrippingLine(
-      "PromptDstarWithD02K3PiLine"
-      , prescale = self.getProp("PrescaleFavoured")
-      , algos = algos
-      )
-
-  def makeDCSLine(self):
-    algos = []
-    if self.getProp("CutOnTracksInEvent"):
-      algos.append(self._filterNTracksInEvent())
-    algos.append(self._makeDstarSequence(False, False))
-    
-    return StrippingLine(
-      "PromptDstarWithD02K3PiDCSLine"
-      , prescale = self.getProp("PrescaleDCS")
-      , algos = algos
-      )
-  def makeRobustFavouredLine(self):
-    algos = []
-    if self.getProp("CutOnTracksInEvent"):
-      algos.append(self._filterNTracksInEvent())
-    algos.append(self._makeDstarSequence(True, True))
-    
-    return StrippingLine(
-      "PromptDstarWithD02K3PiRobustLine"
-      , prescale = self.getProp("PrescaleRobustFavoured")
-      , algos = algos
-      )
-
-  def makeRobustDCSLine(self):
-    algos = []
-    if self.getProp("CutOnTracksInEvent"):
-      algos.append(self._filterNTracksInEvent())
-    algos.append(self._makeDstarSequence(False, True))
-    
-    return StrippingLine(
-      "PromptDstarWithD02K3PiDCSRobustLine"
-      , prescale = self.getProp("PrescaleRobustDCS")
-      , algos = algos
-      )
+  from PhysSelPython.Wrappers import MergedSelection
+  _slowPions = MergedSelection(
+    name+"SlowPions"
+    ,RequiredSelections=[_stdNoPIDsPions, _stdNoPIDsUpPions]
+    )
   
-  def lines(self):
-    return [ self.makeFavouredLine(), self.makeDCSLine()
-             ,self.makeRobustFavouredLine(), self.makeRobustDCSLine()]
+  _dstar = CombineParticles (
+    "_"+name
+    ,DecayDescriptor="[D*(2010)+ -> D0 pi+]cc"
+    ,CombinationCut = _prefitCuts
+    ,MotherCut = _motherCuts
+    ,DaughtersCuts = {"D0":"ALL", "pi+" : _slowPionCuts}
+    )
 
-  def getProps(self):
-    d=dict()
-    for (k,v) in self.getDefaultProperties().iteritems() :
-      d[k] = getattr(self, k) if hasattr(self,k) else v
-    return d
+  _d0s = MergedSelection(
+    name+"D0Merged"
+    ,RequiredSelections=[d0Sel, d0ConjSel]
+    )
+
+  return Selection(
+    name
+    ,Algorithm=_dstar
+    ,RequiredSelections=[_slowPions, _d0s]
+    )
+
