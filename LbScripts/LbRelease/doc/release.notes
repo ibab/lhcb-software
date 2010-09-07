@@ -1,3 +1,9 @@
+2010-09-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: support for Coverity added; Intel compiler support
+	added; some unused code removed; default configuration values for server included;
+	an option to disable slot
+
 2010-09-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc: Added the possibility of specifying the version

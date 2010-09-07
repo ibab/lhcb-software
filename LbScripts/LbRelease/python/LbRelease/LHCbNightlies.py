@@ -1,5 +1,5 @@
 
-import os, sys, random, shutil
+import os, sys, shutil
 import re, pickle, time, datetime
 
 print "#"*60
@@ -89,15 +89,13 @@ class LHCbProjectBuilder(object):
             log = ''
         os.system(cmd + log)
 
-    def cleanReleaseDir(self):
-        if '%CMTCONFIG%' in self.slot._releaseDir:
-            #means that buildDir is per platform so if it already exists, it should be removed and recreated
-            shutil.rmtree(self.slot.releaseDir(), ignore_errors=True)
-            os.mkdir(self.slot.releaseDir())
+    def cleanBuildDir(self, projectName):
+        if '%CMTCONFIG%' in self.slot._buildDir:
+            shutil.rmtree(os.sep.join([self.slot.buildDir(), projectName]), ignore_errors=True)
 
     def buildProject(self):
         print "[LHCb] buildProject: start"
-        self.cleanReleaseDir()
+        self.cleanBuildDir(self.project.getName())
         cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
         if not os.path.exists(cfgFile):
             file(cfgFile, 'w').write(self.configContents)
@@ -107,8 +105,8 @@ class LHCbProjectBuilder(object):
         #TODO: --> reload configuration if it's already in the releaseDir
         self.checkout()
         self.build()
-        self.test()
-        self.docs()
+        if not self.coverityBuild: self.test()
+        if not self.coverityBuild: self.docs()
         self.install()
     # --------------------------------------------------------------------------------
 
@@ -318,6 +316,17 @@ class LHCbProjectBuilder(object):
 
     def build(self):
         print "[LHCb] build"
+        
+        if 'COVERITY' in os.environ.get('CMTEXTRATAGS',''):
+            self.coverityBuild = True
+            newExtraTags = os.environ.get('CMTEXTRATAGS','').replace('COVERITY','').replace(',,', ',')
+            if newExtraTags == ',': newExtraTags = ''
+            os.environ['CMTEXTRATAGS'] = newExtraTags
+            coverityDir = os.sep.join([self.slot.buildDir(), self.projName])
+            derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS', 'derived_models.xmldb'])
+        else:
+            self.coverityBuild = False
+        
         os.environ['CMTCONFIG'] = self.plat
         logdir = os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'logs'])
         if not os.path.exists(logdir):
@@ -326,6 +335,10 @@ class LHCbProjectBuilder(object):
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
+        
+        if '-icc' in os.environ['CMTCONFIG']:
+            self.iccSetup()
+            os.environ['CMTEXTRATAGS'] = os.environ['CMTEXTRATAGS'].replace('use-distcc,','').replace('use-distcc','')
 
         if os.path.exists(os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'build.'+os.environ.get('CMTCONFIG','')+'.done'])):
             print 'Build already done for ' + os.environ.get('CMTCONFIG', '') + '. Skipped.'
@@ -344,7 +357,7 @@ class LHCbProjectBuilder(object):
         os.chdir(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName))
         self.system('echo "' + '*'*80 + '"')
         self.system('echo "'+ time.strftime('%c', time.localtime()) +'"')
-        self.system('echo "LCG Nightlies:    '+os.path.dirname(__file__)+'"')
+        self.system('echo "Nightlies:        '+os.path.dirname(__file__)+'"')
         self.system('echo "SITEROOT:         '+os.environ.get('SITEROOT','')+'"')
         self.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
         self.system('echo "CMTPROJECTPATH:   '+os.environ.get('CMTPROJECTPATH','')+'"')
@@ -368,42 +381,38 @@ class LHCbProjectBuilder(object):
         self.system('printenv | sort')
         self.system('echo "' + '*'*80 + '"')
 
-        if os.path.exists(os.sep.join(['..','..', 'Makefile'])):
-            os.chdir(os.sep.join(['..']*2))
-            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
-                os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
-            else:
-                os.environ['CMTEXTRATAGS'] = 'no-pyzip'
+        os.chdir(os.sep.join(['..']*2))
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
+            os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
+        else:
+            os.environ['CMTEXTRATAGS'] = 'no-pyzip'
+            
+        if self.coverityBuild is True:
+            # http://scan2.coverity.com:7498/doc/prevent_admin.html
+            self.system('cov-build --dir %s make -k Package_failure_policy=ignore logging=enabled > make.%s.log' % (coverityDir, str(os.environ['CMTCONFIG']),) )
+            self.system('cov-analyze --dir %s' % (coverityDir) )
+            self.system('cov-collect-models --dir %s -of %s' % (coverityDir, derivedModelsDir) )
+            #self.system('cov-commit-errors --something')
+        else:
             self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled > make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
-            os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
-            logFiles = []
-            for r, d, f in os.walk("."):
-                if r == ".": continue
-                elif "cmt" in d: d[:] = ["cmt"]
-                else:
-                    if "build.%(CMTCONFIG)s.log" % os.environ in f:
-                        logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
-            logFiles.sort()
+        os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
+        logFiles = []
+        for r, d, f in os.walk("."):
+            if r == ".": continue
+            elif "cmt" in d: d[:] = ["cmt"]
+            else:
+                if "build.%(CMTCONFIG)s.log" % os.environ in f:
+                    logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
+        logFiles.sort()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        for x in logFiles:
+            self.system('echo "' + '-'*80 + '"')
+            self.system('echo "Logfile: ' + x[1] + '"')
+            self.system('echo "' + '-'*80 + '"')
+            self.system('cat ' + x[1])
             sys.stdout.flush()
             sys.stderr.flush()
-            for x in logFiles:
-                self.system('echo "' + '-'*80 + '"')
-                self.system('echo "Logfile: ' + x[1] + '"')
-                self.system('echo "' + '-'*80 + '"')
-                self.system('cat ' + x[1])
-                sys.stdout.flush()
-                sys.stderr.flush()
-        else:
-            makeCmd = '%s make ' % (self.cmtCommand,)
-            if self.slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(self.slot.getQuickMode())  # append
-            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
-                makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
-            else:
-                makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
-            cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
-            fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
-            self.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
-            self.system(fullCmd)
         self.system('echo "' + '*'*80 + '"')
         self.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
 
@@ -628,12 +637,12 @@ class LHCbProjectBuilder(object):
             # <remove>:
             if removes:
                 pac = re.sub('^\s*use\s+([a-zA-Z0-9_-]+).*$', '\\1', line).replace('\n','')
-                if pac in [changedPackageName(x) for x in removes]: continue
+                if pac in [self.changedPackageName(x) for x in removes]: continue
             writer.write(newline)
         # <addon>
         if addons:
             for a in addons.keys():
-                addPackage = changedPackageName(a)
+                addPackage = self.changedPackageName(a)
                 addHat = ''
                 if addPackage != a: addHat = a.replace('/'+addPackage, '')
                 writer.write('use ' + addPackage + ' ' + addons[a][0] + ' ' + addHat + "\n")
@@ -716,9 +725,9 @@ class LHCbProjectBuilder(object):
 
             Sets CMTPROJECTPATH according to the configuration of a given slot, Removes CMTPATH variable if set.
         """
-        cmtProjectPathPreviuos = None
-        if os.environ.has_key('CMTPROJECTPATH'):
-            cmtProjectPathPrevious = os.environ['CMTPROJECTPATH']
+#        cmtProjectPathPreviuos = None
+#        if os.environ.has_key('CMTPROJECTPATH'):
+#            cmtProjectPathPrevious = os.environ['CMTPROJECTPATH']
         cmtProjectPathNew = ''
         cmtProjectPathEntities = []
         cmtProjectPathEntities.append(slot.buildDir())
@@ -787,18 +796,52 @@ class LHCbProjectBuilder(object):
                     else:
                         Lock(commandLinux,str(os.getpid()), commandLinux)
 
+    def iccSetup(self):
+        envChange = {
+                     'CPATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/include:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/include:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/tbb/include',
+                     'DYLD_LIBRARY_PATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/tbb/intel64/cc4.1.0_libc2.4_kernel2.6.16.21/lib',
+                     'FPATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/include',
+                     'icc_c_home' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072',
+                     'icc_f_home' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072',
+                     'INCLUDE' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/include:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/include',
+                     'LD_LIBRARY_PATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//lib/intel64:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/sharedlib:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/lib/em64t:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/tbb/intel64/cc4.1.0_libc2.4_kernel2.6.16.21/lib',
+                     'LIB' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/lib:',
+                     'LIBRARY_PATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//lib/intel64:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/lib:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/lib/em64t:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/tbb/intel64/cc4.1.0_libc2.4_kernel2.6.16.21/lib',
+                     'MANPATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//man/en_US:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/man/en_US',
+                     'MKLROOT' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl',
+                     'NLSPATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//lib/intel64/locale/%l_%t/%N:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t/lib/locale/%l_%t/%N:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//mkl/lib/em64t/locale/%l_%t/%N:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//idb/intel64/locale/%l_%t/%N',
+                     'PATH' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//bin/intel64',
+                     #intel_home=/afs/cern.ch/sw/IntelSoftware/linux
+                     'INTEL_LICENSE_FILE' : '28518@lxlic01.cern.ch:28518@lxlic02.cern.ch:28518@lxlic03.cern.ch:/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072//licenses:/opt/intel/licenses', #:/afs/cern.ch/user/k/kkruzele/intel/licenses
+                     #'intelplat' : 'intel64',
+                     'IPPROOT' : '/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/ipp/em64t',
+                     }
+        for x in envChange:
+            if not x in os.environ:
+                os.environ[x] = envChange[x]
+            else:
+                os.environ[x] = "%s%s%s" % (envChange[x], os.pathsep, os.environ[x])
+            
 
 import BaseServer
 
 class LHCbServer(BaseServer.Server):
     def __init__(self, cfgFile, cfgContents=None):
+        import logging
+        import logging.handlers
         self.unitsTaken = []
-        BaseServer.Server.__init__(self, cfgFile, cfgContents)
+        BaseServer.Server.__init__(self, cfgFile, cfgContents)        
+        logging.basicConfig(level='debug')
+        self._log = logging.getLogger(__name__)
+        self._log.debug('START of LHCb Server Logging')
     def setToday(self):
         "used when reseting server"
         self.unitsTaken = []
         BaseServer.Server.setToday(self)
-    def cmpWorkUnits(self, a, b):
+    def detectDuplicatePriority(self):
+        # do not print warnings if (slot,platform) priorities are duplicated
+        pass
+    def cmpWorkUnits(self, a, b): # a=(slot, platform), b=(slot, platform)  
         #POLICY: slots in order, then platforms in order
         slotOrder = ['lhcb-prerelease','lhcb-head','lhcb-patches','lhcb-branches','lhcb-gaudi-head','lhcb-lcg-head']
         platOrder = ['x86_64-slc5-gcc43-opt','slc4_amd64_gcc34','slc4_ia32_gcc34',
@@ -827,6 +870,7 @@ class LHCbServer(BaseServer.Server):
         self.readConfigurationFile(self.cfgFile, self.cfgContents)
         jobs = []
         for slotObj in self.conf._slotList:
+            if slotObj.getDisabled() is True: continue
             for plObj in slotObj.getPlatforms():
                 #check "waitfor" flag, if False, skip this (slot, platform)
                 plName = plObj.getName()
@@ -850,6 +894,14 @@ class LHCbServer(BaseServer.Server):
         else:
             return ""
 
+class LHCbDefaults(object):
+    @classmethod
+    def serverHost(cls):
+        return 'lxbuild135'
+    @classmethod
+    def serverPort(cls):
+        return '61007' # 61007 for production, 51007 for tests
 
 __lcg_nightlies_extensions__ = {"server": [LHCbServer],
-                                "builder": [LHCbProjectBuilder]}
+                                "builder": [LHCbProjectBuilder],
+                                "defaults": [LHCbDefaults]}
