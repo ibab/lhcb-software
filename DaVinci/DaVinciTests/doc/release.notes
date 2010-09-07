@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r3 2010-09-07 =================
+
 ! 2010-09-07 - Juan Palacios
  - tests/options/DVTestCommonParticles.py
   . Use some Dimuon DSTs instead of RDSTs.
@@ -15,7 +17,8 @@
   . Add (commented out) CondDBtag.
  - cmt/requiremenrs
   . Increase to v1r3.
-!============================== DaVinciTests v1r2 2010-08-17q =================
+
+!============================== DaVinciTests v1r2 2010-08-17 =================
 
 ! 2010-08-17 - Juan Palacios
  - tests/qmtest/davinci.qms/stripping.qms/test_bu2llk_dc06.qmt
