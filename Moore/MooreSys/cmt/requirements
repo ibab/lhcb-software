@@ -10,6 +10,7 @@ use  Moore              v10r0   Hlt
 
 use HltSettings         v3r1    Hlt
 use HltConf             v8r4    Hlt
+use Hlt1Lines           v4r3    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
