@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.206 2010-08-23 11:52:05 jpalac Exp $
+# $Id: requirements,v 1.207 2010-09-07 08:22:48 jpalac Exp $
 package AnalysisSys
-version v4r9
+version v4r10
 
 branches doc cmt
 
@@ -10,17 +10,17 @@ branches doc cmt
 use  GaudiPatches               v1r2
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r10    Phys   # Juan Palacios
+use  DSTWriters                 v1r11    Phys   # Juan Palacios
 use  DSTWriterTests             v1r5     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  CommonParticles            v7r3     Phys   # Patrick Koppenburg, WGs
+use  CommonParticles            v7r4     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v11r3    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r12p1  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r5     Rich   # Chris Jones
-use  KaliCalo                   v4r3     Phys   # Vanya Belyaev
+use  KaliCalo                   v4r4     Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r26    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
@@ -31,7 +31,7 @@ use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
 use  DecayTreeTuple             v3r7     Phys   # Rob Lambert
 use  LoKiJets                   v5r2p2   Phys   # Victor Coco
-use  DisplVertices              v6r10    Phys   # Neal Gueissaz
+use  DisplVertices              v6r11    Phys   # Neal Gueissaz
 use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
 #
@@ -41,7 +41,7 @@ use PyAna                       v1r2     Analysis
 #
 # Stripping
 #
-use StrippingAlgs               v1r3   Phys   # Anton Poluektov
+use StrippingAlgs               v1r4   Phys   # Anton Poluektov
 use StrippingConf               v3r7   Phys   # Anton Poluektov
 use StrippingSelections         v1r26  Phys   # Anton Poluektov
 use MvaPreSelB2DH               v1r0   Phys   # Sajan Easo
