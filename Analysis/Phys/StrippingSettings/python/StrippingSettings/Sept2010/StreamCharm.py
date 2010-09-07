@@ -1,4 +1,4 @@
-# $Id: StreamCharm.py,v 1.2 2010-09-07 16:08:59 gcowan Exp $
+# $Id: StreamCharm.py,v 1.3 2010-09-07 19:25:26 gcowan Exp $
 #
 #   Charm stripping selection
 #
@@ -60,6 +60,6 @@ stream.appendLines( [ lineWS, lineRS ] )
 #
 # Lines from Flavour WG
 # This line is taking ~0.2%. This is too high.
-#from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
-#stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
+from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
+stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
  

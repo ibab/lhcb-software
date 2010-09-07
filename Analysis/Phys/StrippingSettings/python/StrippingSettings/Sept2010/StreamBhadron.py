@@ -1,4 +1,4 @@
-# $Id: StreamBhadron.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
+# $Id: StreamBhadron.py,v 1.3 2010-09-07 19:25:26 gcowan Exp $
 #
 #   Bhadron stripping selection
 #
@@ -49,8 +49,8 @@ from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import _StrippingBu2D0h_D
 stream.appendLines ( [ Bu2D0h_D02KShh_NoPIDConf.Line_LL, Bu2D0h_D02KShh_NoPIDConf.Line_DD ] )
 
 # Steve Blusk - do we need the Signal lines?
-#from StrippingSelections.StrippingB2D3HX import StrippingB2D3HConf
-#stream.appendLines ( StrippingB2D3HConf().lines )
+from StrippingSelections.StrippingB2D3HX import StrippingB2D3HConf
+stream.appendLines ( StrippingB2D3HConf().lines )
 
 #
 # Lines from beta_s WG
