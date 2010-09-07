@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-09-07 - Silvia Miglioranzi
+ - Updated the ref files (platforms: slc4 64,32) for all the QMTests in the 
+   Gauss suite.
+
 !========================= Gauss v38r7 2010-07-26 ============================
 ! 2010-07-26 - Gloria CORTI
  - Use latest SIMCOND tags for DEV for 2010 data
