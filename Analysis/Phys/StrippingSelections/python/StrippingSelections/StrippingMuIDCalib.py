@@ -45,7 +45,7 @@ JpsiCombine = StrippingMember( CombineParticles
 # Define the line
 ## ############################################################
 jp_line = StrippingLine('JpsiNoPID'
-                        , prescale = 1.
+                        , prescale = 0.1
                         , algos = [ JpsiCombine ]
                         )
 
