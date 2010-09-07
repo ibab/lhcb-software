@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-09-07 - Juan Palacios
+ - tests/options/DVTestCommonParticles.py
+  . Use some Dimuon DSTs instead of RDSTs.
+
 ! 2010-09-06 - Juan Palacios
  - tests/options/DVMonitor.py
   . Use SDST instead of RDST.
