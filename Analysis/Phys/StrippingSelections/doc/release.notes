@@ -5,18 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-<<<<<<< release.notes
-! 2010-09-07 - Andrew Powell
- - Added StrippingV0ForPID.py
-
-! 2010-09-07
-=======
 ! 2010-09-07 Greig Cowan
  - Prescaled DiElectron LowMass lines by further factor 2.
  - Removed PVReFit from Jpsi(ee)Phi lines to reduce CPU time.
+ - Bug fixes to PID calibration lines.
+
+! 2010-09-07 - Andrew Powell
+ - Added StrippingV0ForPID.py
 
 ! 2010-09-07 Tom Blake
->>>>>>> 1.398
  - Added StrippingD02KPiPi0.py for ECAL calib.
 
 ! 2010-09-07 - Philip Hunt

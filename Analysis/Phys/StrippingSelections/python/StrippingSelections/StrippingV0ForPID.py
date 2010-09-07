@@ -68,7 +68,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -530,9 +530,9 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
 
         lines = []
 
-        lines.append( self.K0S_LL_Bin1_Line )
-        lines.append( self.K0S_LL_Bin2_Line )
-        lines.append( self.K0S_LL_Bin3_Line )
+        lines.append( self.K0S_LL_Bin1_Line() )
+        lines.append( self.K0S_LL_Bin2_Line() )
+        lines.append( self.K0S_LL_Bin3_Line() )
 
         return lines
 
@@ -540,9 +540,9 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         
         lines = []
 
-        lines.append( self.K0S_DD_Bin1_Line )
-        lines.append( self.K0S_DD_Bin2_Line )
-        lines.append( self.K0S_DD_Bin3_Line )
+        lines.append( self.K0S_DD_Bin1_Line() )
+        lines.append( self.K0S_DD_Bin2_Line() )
+        #lines.append( self.K0S_DD_Bin3_Line() )
 
         return lines
     
@@ -714,9 +714,9 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
 
         lines = []
 
-        lines.append( self.Lam0_LL_Bin1_Line )
-        lines.append( self.Lam0_LL_Bin2_Line )
-        lines.append( self.Lam0_LL_Bin3_Line )
+        lines.append( self.Lam0_LL_Bin1_Line() )
+        lines.append( self.Lam0_LL_Bin2_Line() )
+        lines.append( self.Lam0_LL_Bin3_Line() )
 
         return lines
 
@@ -724,15 +724,20 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         
         lines = []
 
-        lines.append( self.Lam0_DD_Bin1_Line )
-        lines.append( self.Lam0_DD_Bin2_Line )
-        lines.append( self.Lam0_DD_Bin3_Line )
+        lines.append( self.Lam0_DD_Bin1_Line() )
+        lines.append( self.Lam0_DD_Bin2_Line() )
+        #lines.append( self.Lam0_DD_Bin3_Line() )
 
         return lines
 
     def All_Lines ( self ) :
 
-        return self.K0S_LL_Lines() + self.K0S_DD_Lines() + self.Lam0_LL_Lines() + self.Lam0_DD_Lines()
+	allLines = []
+        allLines += self.K0S_LL_Lines()
+	allLines += self.K0S_DD_Lines()
+	allLines += self.Lam0_LL_Lines()
+	allLines += self.Lam0_DD_Lines()
+	return allLines
 
     
     ## define daughter cuts for K0S 
