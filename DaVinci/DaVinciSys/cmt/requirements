@@ -1,10 +1,10 @@
 package DaVinciSys
-version v25r9
+version v26r0
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v25r9   Phys
+use  DaVinci                 	v26r0   Phys
 use  DaVinciTests               v1r3
 
 # Patches
