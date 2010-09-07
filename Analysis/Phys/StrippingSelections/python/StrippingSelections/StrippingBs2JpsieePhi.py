@@ -1,7 +1,7 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
 __date__ = '2010/07/16'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bs->JpsieePhi stripping selection
@@ -121,8 +121,8 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
         _Bs = CombineParticles("Bs2JpsieePhiLoose",
                                DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
-                               MotherCut = MC ,
-                               ReFitPVs = True
+                               MotherCut = MC
+                               #ReFitPVs = True
                                )
         Bs = Selection("SelBs2JpsieePhiLoose",
                        Algorithm = _Bs,
@@ -139,8 +139,8 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
         _Bs = CombineParticles("Bs2JpsieePhi",
                                DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC ,
-                               MotherCut = MC ,
-                               ReFitPVs = True
+                               MotherCut = MC
+                               #ReFitPVs = True
                                )
         Bs = Selection("SelBs2JpsieePhi",
                        Algorithm = _Bs,

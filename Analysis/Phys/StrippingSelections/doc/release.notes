@@ -5,7 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2010-09-07
+! 2010-09-07 Greig Cowan
+ - Prescaled DiElectron LowMass lines by further factor 2.
+ - Removed PVReFit from Jpsi(ee)Phi lines to reduce CPU time.
+
+! 2010-09-07 Tom Blake
  - Added StrippingD02KPiPi0.py for ECAL calib.
 
 ! 2010-09-07 - Philip Hunt
