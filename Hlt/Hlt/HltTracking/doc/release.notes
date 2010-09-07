@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.145 2010-09-07 12:45:04 graven Exp $
+!$Id: release.notes,v 1.146 2010-09-07 12:58:19 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -10,6 +10,8 @@
  - speed up addLHCbIDs, HltTrackUpgrade::execute
  - remove unused prepareRZVelo
  - remove m_owner, VeloTT upgrade from HltTrackUpgradeTool
+ - make   TransferAncestor and TransferIDs properties of HltTrackUpgradeTool
+
 
 !========================== HltTracking v6r3 2010-08-26 ===================
 ! 2010-08-23 - M. Witek
