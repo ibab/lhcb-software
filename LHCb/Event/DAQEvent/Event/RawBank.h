@@ -158,7 +158,7 @@ namespace LHCb
     int version() const             {    return m_version;                          }
 
     /// Set the version information of this bank
-    void setVersion(int val)        {    m_version = (val&0xFF);                    }
+    void setVersion(int val)        {    m_version = (unsigned char)(val&0xFF);     }
 
     /// Return SourceID of this bank  (TELL1 board ID)
     int sourceID() const            {    return m_sourceID;                         }

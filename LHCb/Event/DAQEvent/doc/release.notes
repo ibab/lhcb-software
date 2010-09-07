@@ -4,7 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
-! 2010-09-02 - Olivier Deschamps
+! 2010-09-08 - Markus Frank
  - RawBank.h   Remove icc compiler warnings
 
 !================ DAQEvent v9r1 2010-03-17 ===================================
