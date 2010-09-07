@@ -1,0 +1,33 @@
+#============================================================================
+# Created    : 2010-08-30
+# Maintainer : Philip John Hunt
+#============================================================================
+package           Bu2D0X_D02HHHH
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python jobs options 
+
+# make aliases
+set BU2D0X_D02HHHHOPTS ${BU2D0X_D02HHHHROOT}/options
+set BU2D0X_D02HHHHJOBS ${BU2D0X_D02HHHHROOT}/jobs
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use GaudiPolicy v*
+
+#include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+#library          Bu2D0X_D02HHHH    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+#apply_pattern    component_library library=Bu2D0X_D02HHHH
+apply_pattern 	install_python_modules

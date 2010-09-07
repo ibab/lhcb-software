@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="8218C400-DBB1-DF11-9EA9-001372F9519D">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000023_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000023_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7EA16E60-BAB1-DF11-98CF-0017A4770420">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000020_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000020_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1054C6BF-C3B1-DF11-99EB-0017A4771830">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000022_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000022_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EC5500CC-C7B1-DF11-AEAE-0017A477180C">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000021_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000021_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5EA17F35-BDB1-DF11-A81D-0017A477141C">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000019_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000019_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C4CA509A-2AB1-DF11-B86E-0030487CD686">
+     <physical>
+       <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000018_1.hadronic.dst?svcClass=lhcbmdst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000018_1.hadronic.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>
