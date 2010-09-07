@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.333 2010-08-24 05:29:01 ocallot Exp $
+// $Id: PresenterMainFrame.cpp,v 1.334 2010-09-07 15:49:22 frankb Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -5372,8 +5372,8 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
     }
     theHisto -> refresh() ;
     if (! gROOT->IsInterrupted()) editorCanvas->Update();
+#endif  // end: not _WIN32
   }
-#endif
 }
 
 //============================================================================
