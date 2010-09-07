@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.19 2010-09-07 12:30:12 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.20 2010-09-07 12:45:04 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -45,7 +45,7 @@ StatusCode HltTrackUpgrade::initialize() {
   if (sc.isFailure()) return sc;
 
   m_selections.retrieveSelections();
-  // ownership: see TrackUpgradeTool: it always assumes ownership,
+  // ownership: see TrackUpgradeTool: it _always_ assumes ownership,
   // and then transfers it to the TES...
   m_selections.registerSelection();
 

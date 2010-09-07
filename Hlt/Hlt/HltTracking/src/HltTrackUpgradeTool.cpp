@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.42 2010-09-07 12:30:12 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.43 2010-09-07 12:45:04 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -32,13 +32,13 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : HltBaseTool ( type, name , parent )
+  , m_recoName("<INVALID>")
   , m_timer(0)
   , m_otracks(0)
   , m_tool(0)
 {
   declareInterface<ITrackUpgrade>(this);
 
-  declareProperty("RecoName", m_recoName = "empty");
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   declareProperty("OrderByPt", m_orderByPt = false);
   declareProperty("DoTrackReco",m_doTrackReco = true);
@@ -49,7 +49,6 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
 void HltTrackUpgradeTool::recoConfiguration() {
 
   m_recoConf.add("TMuonConf/Tool",std::string("L0ConfirmWithT/TMuonConf"));
-  m_recoConf.add("TMuonConf/Owner",true);
   m_recoConf.add("TMuonConf/View",true);
   m_recoConf.add("TMuonConf/TransferIDs",true);
   m_recoConf.add("TMuonConf/TransferAncestor",true);
@@ -58,7 +57,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("TMuonConf/TESOutput",std::string("Hlt1/Track/TMuonConf"));
 
   m_recoConf.add("THadronConf/Tool",std::string("L0ConfirmWithT/THadronConf"));
-  m_recoConf.add("THadronConf/Owner",true);
   m_recoConf.add("THadronConf/View",true);
   m_recoConf.add("THadronConf/TransferIDs",true);
   m_recoConf.add("THadronConf/TransferAncestor",true);
@@ -67,7 +65,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("THadronConf/TESOutput",std::string("Hlt1/Track/THadronConf"));
 
   m_recoConf.add("TEleConf/Tool",std::string("L0ConfirmWithT/TEleConf"));
-  m_recoConf.add("TEleConf/Owner",true);
   m_recoConf.add("TEleConf/View",true);
   m_recoConf.add("TEleConf/TransferIDs",true);
   m_recoConf.add("TEleConf/TransferAncestor",true);
@@ -76,7 +73,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("TEleConf/TESOutput",std::string("Hlt1/Track/TEleConf"));  
 
   m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
-  m_recoConf.add("Velo/Owner",true);
   m_recoConf.add("Velo/View",false);
   m_recoConf.add("Velo/TransferIDs",true);
   m_recoConf.add("Velo/TransferAncestor",true);
@@ -84,17 +80,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Velo/OTrackType", (int) LHCb::Track::Velo);
   m_recoConf.add("Velo/TESOutput",std::string("Hlt1/Track/Velo"));
   
-  m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
-  m_recoConf.add("VeloTT/Owner",false); // This will not set m_otracks, and hence 'find' will SEGV, and thus iupgrade under certain conditions does as well...
-  m_recoConf.add("VeloTT/View",false);
-  m_recoConf.add("VeloTT/TransferIDs",true);
-  m_recoConf.add("VeloTT/TransferAncestor",true);
-  m_recoConf.add("VeloTT/ITrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("VeloTT/OTrackType", (int) LHCb::Track::Upstream);
-  m_recoConf.add("VeloTT/TESOutput", std::string("<INVALID>")); // never used if Owner == false!   std::string("Hlt1/Track/VeloTT"));
-
   m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
-  m_recoConf.add("Forward/Owner",true);
   m_recoConf.add("Forward/View",false);
   m_recoConf.add("Forward/TransferIDs",true);
   m_recoConf.add("Forward/TransferAncestor",true);
@@ -103,7 +89,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Forward/TESOutput", std::string("Hlt1/Track/Forward"));
 
   m_recoConf.add("GuidedForward/Tool",std::string("HltGuidedForward"));
-  m_recoConf.add("GuidedForward/Owner",true);
   m_recoConf.add("GuidedForward/View",false);
   m_recoConf.add("GuidedForward/TransferIDs",true);
   m_recoConf.add("GuidedForward/TransferAncestor",true);
@@ -112,7 +97,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("GuidedForward/TESOutput",std::string("Hlt1/Track/GuidedForward"));
 
   m_recoConf.add("FitTrack/Tool",std::string("HltTrackFit"));
-  m_recoConf.add("FitTrack/Owner",true);
   m_recoConf.add("FitTrack/View",false);
   m_recoConf.add("FitTrack/TransferIDs",true);
   m_recoConf.add("FitTrack/TransferAncestor",true);
@@ -121,7 +105,6 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("FitTrack/TESOutput",std::string("Hlt1/Track/FitTrack"));
 
   m_recoConf.add("RadCor/Tool",std::string("HltRadCorTool"));
-  m_recoConf.add("RadCor/Owner",true);
   m_recoConf.add("RadCor/View",false);
   m_recoConf.add("RadCor/TransferIDs",true);
   m_recoConf.add("RadCor/TransferAncestor",true);
@@ -146,8 +129,6 @@ StatusCode HltTrackUpgradeTool::initialize() {
 
   m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
 
-  // sc = setReco(m_recoName);
-  // if ( sc.isFailure() ) return sc;
   return sc;
 };
 
@@ -163,7 +144,6 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   m_recoID   = hltInfoID(toolName);
 
   m_TESOutput = m_recoConf.retrieve<std::string>(m_recoName+"/TESOutput");
-  m_owner = m_recoConf.retrieve<bool>(m_recoName+"/Owner");
   m_ItrackType = m_recoConf.retrieve<int>(m_recoName+"/ITrackType");
   m_OtrackType = m_recoConf.retrieve<int>(m_recoName+"/OTrackType");
   m_transferIDs = m_recoConf.retrieve<bool>(m_recoName+"/TransferIDs");
@@ -178,7 +158,7 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
          << " Output: " << m_TESOutput 
          << " reco ID " << m_recoID << endreq;
 
-  debug()<< " owner " << m_owner << " transfers IDs " << m_transferIDs 
+  debug()<< " transfers IDs " << m_transferIDs 
          << " transfer ancestor " << m_transferAncestor
          << " Input track type " << m_ItrackType 
          << " Output track type " << m_OtrackType << endreq;
@@ -244,7 +224,7 @@ void HltTrackUpgradeTool::toolConfigure()
 //=============================================================================
 
 void HltTrackUpgradeTool::beginExecute() {
-  if (m_owner) m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_TESOutput);
+  m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_TESOutput);
 }
 
 StatusCode HltTrackUpgradeTool::upgrade
@@ -358,10 +338,8 @@ void HltTrackUpgradeTool::recoDone(const Track& seed, std::vector<Track*>& track
   const_cast<LHCb::Track&>(seed).addInfo(m_recoID, (double) tracks.size());
   debug() << " seed " << seed.key() << " n-descendants " 
           << seed.info(m_recoID,-1) << endreq;
-  if (m_owner) {
-    for (std::vector<Track*>::iterator it = tracks.begin(); it != tracks.end(); ++it)
+  for (std::vector<Track*>::iterator it = tracks.begin(); it != tracks.end(); ++it)
       m_otracks->insert(*it); 
-  }  
 }
 
 

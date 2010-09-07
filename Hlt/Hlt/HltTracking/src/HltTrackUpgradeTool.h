@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.21 2010-09-07 12:30:12 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.22 2010-09-07 12:45:04 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -101,7 +101,6 @@ private:
   std::string m_recoName;
   
   int m_recoID;
-  bool m_owner;
   int m_ItrackType;
   int m_OtrackType;
 
