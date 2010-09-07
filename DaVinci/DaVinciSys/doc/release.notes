@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v25r9>2010-09-07 DaVinci v25r9. Version for RecoXX-StrippingYY .</A></H1><PRE>
+
+  * Based on LHCb v31r5 software stack.
+  * Complete revamp of stripping selections
+
 </PRE><H1><A NAME=v25r8>2010-08-16 DaVinci v25r8. Version for Stripping line development and MicroDST production tests.</A></H1><PRE>
 
   * Based on LHCb v31r4 software stack.

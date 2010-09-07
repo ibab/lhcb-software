@@ -5,7 +5,7 @@ branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v25r9   Phys
-use  DaVinciTests               v1r2
+use  DaVinciTests               v1r3
 
 # Patches
 use   DDDB                      v1r34   Det
