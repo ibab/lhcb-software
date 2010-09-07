@@ -42,6 +42,8 @@ if __name__ == '__main__' :
             
     assert(filename != '')
 
+    outputFile = open(output, 'w')
+
     lhcbApp = LHCbApp(DDDBtag = 'default',
                       CondDBtag = 'default')
 
@@ -86,7 +88,7 @@ if __name__ == '__main__' :
                     print 'Particle->PV relations', leaf, 'empty'
 
     print '==================================================================='
-    message = 'Analysed ' + nEvents + ' events in location ' + location
+    message = 'Analysed ' + str(nEvents) + ' events in location ' + location
     outputFile.write(message+'\n')
     print message
     for key, value in p2pvSummaries.iteritems() :

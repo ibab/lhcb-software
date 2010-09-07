@@ -93,7 +93,7 @@ if __name__ == '__main__' :
                         else :
                             print 'Particle->PV relations empty'
     print '==================================================================='
-    message = 'Analysed ' + nEvents + ' in location ' + location
+    message = 'Analysed ' + str(nEvents) + ' in location ' + location
     outputFile.write(message+'\n')
     print message
     for particleloc, value in p2pvSummaries.iteritems() :
