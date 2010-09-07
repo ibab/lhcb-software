@@ -57,7 +57,7 @@ extern "C" int pyhlt_test(int /* ac  */, char** /* av */)  {
 }
 
 static int collect_summary(size_t len,Process* p[], bool run_summary=true) {
-  const char *asum[] ={"libOnlineKernel.so", "mbm_summary",0};
+  const char *asum[] ={"libOnlineKernel.so", "mbm_summary","-nostates",0};
   ::lib_rtl_sleep(4000);
   if ( run_summary ) {
     Process* summary=new Process("MBMsummary_0",command(),asum);

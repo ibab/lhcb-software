@@ -62,6 +62,7 @@ namespace {
     explicit func_desc(T t) { fun = t; }
     explicit func_desc(void* t) { ptr = t; }
   };
+  
   class SignalHandler {
   protected:
     typedef std::map<int,std::pair<std::string, struct sigaction> > SigMap;
@@ -161,7 +162,7 @@ void SignalHandler::handler(int signum, siginfo_t *info, void* ptr) {
   if ( i != smap.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
     func_desc<void (*)(int)> dsc0(old);
-    func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
+    func_desc<void (*)(int,siginfo_t*, void*)> dsc((void*)dsc0.ptr);
     ::lib_rtl_output(LIB_RTL_ERROR,"meplib:Handled signal: %d [%s] Old action:%p\n",
 		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
     if ( old && old != SIG_IGN )  {
