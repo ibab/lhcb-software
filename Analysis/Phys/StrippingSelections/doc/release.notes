@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v2r0 2010-09-07 ===============
+
 ! 2010-09-07 Greig Cowan
  - Prescaled DiElectron LowMass lines by further factor 2.
  - Removed PVReFit from Jpsi(ee)Phi lines to reduce CPU time.
