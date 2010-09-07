@@ -21,7 +21,6 @@ multiSeqC = MultiSelectionSequence('CocktailB', Sequences = [jpsi, pions])
 conf = MicroDSTWriter("MicroDST0")
 conf.OutputFileSuffix = "TestCrossover"
 conf.CopyProtoParticles = False
-conf.OutputPrefix = 'SequenceName'
 #conf.SelectionSequences = [multiSeqA, multiSeqB]
 conf.SelectionSequences = [pions, pions.clone('SeqPions2'), pions.clone('SeqPions3')]
 #conf.SelectionSequences = [pions, muons, kaons, jpsi]

@@ -23,7 +23,6 @@ for sel in sels :
     filterSeqs.append(SelectionSequence('Seq'+selection.name(), TopSelection = selection))
 
 conf = MicroDSTWriter("MicroDST0", 
-                      OutputPrefix = 'SequenceName',
                       OutputFileSuffix = "TestFilterDesktop",
                       SelectionSequences = filterSeqs,
                       CopyBTags = False)

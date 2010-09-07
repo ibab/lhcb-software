@@ -22,7 +22,6 @@ mergeSeq = SelectionSequence('SeqMerge', TopSelection = allSelection )
 multiSeq = MultiSelectionSequence('CocktailB', Sequences = [kaonSeq, pionSeq, muonSeq, jpsiSeq, mergeSeq])
 
 conf = MicroDSTWriter("MicroDST0", 
-                      OutputPrefix = 'SequenceName',
                       OutputFileSuffix = "Test",
                       SelectionSequences = [multiSeq],
                       CopyFlavourTags = False)

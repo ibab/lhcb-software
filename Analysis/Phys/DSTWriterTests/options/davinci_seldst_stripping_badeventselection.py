@@ -16,7 +16,6 @@ streamYBadEvent = StrippingStream("StreamPionYBadEvent", Lines = [lineY], BadEve
 sc = StrippingConf( Streams = [streamX, streamYBadEvent, streamXBadEvent] ) 
 
 dstWriter = SelDSTWriter("SelDST0", 
-                         OutputPrefix = 'SequenceName',
                          OutputFileSuffix = "Test3",
                          SelectionSequences = sc.activeStreams())
 

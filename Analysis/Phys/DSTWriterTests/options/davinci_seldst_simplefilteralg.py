@@ -19,7 +19,7 @@ from Configurables import CheckPV
 checkPV = EventSelection(CheckPV('TwoPV', MinPVs=1))
 seqCheckPV =  SelectionSequence('SeqPV', checkPV)
 
-conf = SelDSTWriter("SelDST", OutputPrefix = 'SequenceName', SaveCandidates = True)
+conf = SelDSTWriter("SelDST")
 conf.OutputFileSuffix = "TestSimpleAlg"
 conf.SelectionSequences = [seqCheckPV]
 conf.ExtraItems = ['/Event/DAQ/RawEvent#1']

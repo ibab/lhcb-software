@@ -7,11 +7,10 @@ sc = StrippingConf( Streams = [StreamDimuon.stream] )
 
 dstWriter = SelDSTWriter("MyDSTWriter",
                          SelectionSequences = sc.activeStreams(),
-                         OutputPrefix = 'SequenceName',
                          OutputFileSuffix = 'TestDiMuon',
                          CopyPVRelations = {"Particle2VertexRelations":True}
                          )
-
+dstWriter.ExtraItems += ['/Event/Strip/Phys/DecReports#1']
 dv = DaVinci()
 dv.DataType = 'MC09'
 dv.Simulation = True
