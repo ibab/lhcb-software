@@ -4,6 +4,15 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+
+! 2010-09-07 - Juan Palacios
+ - options/*.py
+  . Remove obsolete OutputPrefix='SequenceName' from DST writers.
+ - scripts/*.py
+  . Bug fixes.
+ - cmt/requirements
+  . Increase to v1r6.
+
 ! ========================== DstwriterTests v1r5 2010-08-20 ==================
 
 ! 2010-08-16 - Juan Palacios
