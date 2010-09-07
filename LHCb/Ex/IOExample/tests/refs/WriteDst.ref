@@ -1,11 +1,11 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+# --> Including file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 # ApplicationMgr.HistogramPersistency = "NONE";
 # ApplicationMgr.EvtMax = 5;
 # EventSelector.PrintFreq = 1;
 # ApplicationMgr.TopAlg = { "DumpTracks" };
 # DumpTracks.OutputLevel = 2;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -26,17 +26,17 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
-# EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r10/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# EventSelector.Input   = {  "DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
 # ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.11 $
-                                          running on lxbuild156.cern.ch on Wed Jan 13 11:15:57 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus206.cern.ch on Tue Sep  7 15:35:00 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -83,14 +83,14 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
-RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
-RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
+RootDBase.open    SUCCESS root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst?svcClass=default File version:51400
+RootDBase.open    SUCCESS root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst?svcClass=default File version:51400
 PoolRootTreeEvt...   INFO No Records /FileRecords present in:CAA89D27-E42D-DC11-B844-003048836626
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
@@ -280,7 +280,8 @@ DumpTracks          DEBUG *** Track ***
    1.93804e-06-1.76318e-06-5.40157e-10-1.63494e-09 4.09036e-09 ]
 
 
-RootDBase.open    SUCCESS PoolDst.root File version:52400
+IODataManager        INFO Referring to dataset PoolDst.root by its file ID:2EE5EDBA-84BA-DF11-8610-000423D675CA
+RootDBase.open    SUCCESS PoolDst.root File version:52600
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 102 tracks in Rec/Track/Best
@@ -1042,7 +1043,7 @@ InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootTreeEvt...   INFO Disconnected data IO:CAA89D27-E42D-DC11-B844-003048836626[rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst]
-PoolRootTreeEvt...   INFO Disconnected data IO:F637D574-8DFB-DE11-AA2A-001E4F3E5979[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:2EE5EDBA-84BA-DF11-8610-000423D675CA[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:CAA89D27-E42D-DC11-B844-003048836626[root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst?svcClass=default]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

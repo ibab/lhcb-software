@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
 
+! 2010-09-07 - Marco Cattaneo
+ - Test rfio protocol when reading sim file, rootd protocol when reading digi 
+   file, and xrootd when reading dst file
+
 !====================== IOExample v3r4 2010-01-20 ==============================
 ! 2010-01-13 - Marco Cattaneo
  - Update QMTest references for AlgContextSvc changes (patch 3478) in Gaudi v12r7
