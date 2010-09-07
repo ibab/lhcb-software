@@ -22,14 +22,14 @@ for i in [ 'LoKiTrigger.decorators' ] :
 MBMicroBiasRateLimitedLine  = StrippingLine( "MBMicroBiasRateLimited"
                                              , HLT = "HLT_PASS_RE('Hlt1MBMicro.*RateLimitedDecision')"
                                              , checkPV = False
-                                             , prescale = 1
+                                             , prescale = 0.01
                                              , postscale = 1)
 
 
 MBMicroBiasNotRateLimitedLine  = StrippingLine( "MBMicroBiasNotRateLimited"
                                                 , HLT = "HLT_PASS_RE('Hlt1MBMicro.*(?<!RateLimited)Decision')"
                                                 , checkPV = False
-                                                , prescale = 1
+                                                , prescale = 0.01
                                                 , postscale = 1)
 
 
@@ -40,7 +40,7 @@ MBMicroBiasNotRateLimitedLine  = StrippingLine( "MBMicroBiasNotRateLimited"
 MBNoBiasLine  = StrippingLine( "MBNoBias"
                                , HLT = "HLT_PASS('Hlt1MBNoBiasDecision')"
                                , checkPV = False
-                               , prescale = 1
+                               , prescale = 0.01
                                , postscale = 1)
 
 #-----------------------------------------------------------------
@@ -49,7 +49,7 @@ MBNoBiasLine  = StrippingLine( "MBNoBias"
 MBMiniBiasLine  = StrippingLine( "Hlt1L0Any"
                                  , HLT = "(HLT_PASS_RE('Hlt1L0Any.*Decision'))" 
                                  , checkPV = False
-                                 , prescale = 1
+                                 , prescale = 0.01
                                  , postscale = 1)
 
 
