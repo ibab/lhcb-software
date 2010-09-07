@@ -3,6 +3,14 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r10>2010-09-07 Analysis v4r10 </A></H1><PRE>
+
+ *** New version for RecoXX-StrippingYY.
+
+ * Some new/modified CommonParticles
+ * Re-vamped Stripping Selections
+ * Various minor bug fixes.
+
 </PRE><H1><A NAME=v4r9>2010-08-20 Analysis v4r9 </A></H1><PRE>
 
  *** MicroDST production and stripping line development version ***
