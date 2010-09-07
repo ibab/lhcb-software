@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-07 - Thomas Blake
+ - Added StrippingBd2KstarMuMuLT.py and updated StrippingBu2LLK.py
+
 ! 2010-09-07 - Vanya Belyaev
 
  - StrippingPromptCharm.py
