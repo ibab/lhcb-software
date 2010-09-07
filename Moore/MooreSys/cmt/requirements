@@ -12,6 +12,7 @@ use HltSettings         v3r1    Hlt
 use HltConf             v8r4    Hlt
 use Hlt1Lines           v4r3    Hlt
 use Hlt2Lines           v5r2    Hlt
+use Hlt2SharedParticles v4r5    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
