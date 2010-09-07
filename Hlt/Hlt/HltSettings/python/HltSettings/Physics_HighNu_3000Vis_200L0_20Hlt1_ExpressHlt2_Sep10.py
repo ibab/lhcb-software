@@ -137,7 +137,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                                       }
                                                     }
                        
-                       , Hlt1BeamGasLinesConf : { 'ForcedInputRateLimit'  : 10000
+                       , Hlt1BeamGasLinesConf : { 'ForcedInputRateLimit'  :  5000
                                                   , 'Prescale' :  { 'Hlt1BeamGasBeam1' :                1.0
                                                                     , 'Hlt1BeamGasBeam2' :                1.0
                                                                     , 'Hlt1BeamGasCrossing' :             1.0
