@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.463 2010-08-26 09:51:34 jpalac Exp $
+# $Id: requirements,v 1.464 2010-09-07 15:53:14 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v25r9
+version           v26r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -24,7 +24,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v*    Det            -no_auto_imports
-use ParamFiles         v8r2                 -no_auto_imports
+use ParamFiles         v8r3                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 use AppConfig          v3r*                 -no_auto_imports
 use HltTCK             v1r*  TCK            -no_auto_imports
