@@ -347,7 +347,7 @@ class DstConf(LHCbConfigurableUser):
 
         caloUnpack = CaloDstUnPackConf ()
         if not caloUnpack.isPropertySet('Enable') :
-            log.debug( "Setting caloUnpack.Enable = True"
+            log.debug( "Setting caloUnpack.Enable = True" )
             caloUnpack.Enable = True
         else :
             log.debug( "Not setting caloUnpack.Enable. Current value = %s", caloUnpack.Enable )
