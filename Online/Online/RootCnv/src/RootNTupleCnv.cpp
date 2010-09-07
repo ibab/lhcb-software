@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.8 2010-09-02 11:59:57 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.9 2010-09-07 15:37:29 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -243,6 +243,7 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	  log() << MSG::DEBUG << "Created N-tuple with description:"
 		<< par_val << endl;
 	  ((unsigned long*)rpA->ipar())[0] = (unsigned long)con;
+	  ((unsigned long*)rpA->ipar())[1] = -1UL;
 	  rpA->section = tree;
 	  refpObject  = nt;
 	}
@@ -287,6 +288,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
   typedef INTuple::ItemContainer Cont;
   const string*   par = rpA->par();
   unsigned long* ipar = const_cast<unsigned long*>(rpA->ipar());
+  ++ipar[1];
   if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
     GenericAddress* pA = 0;
     Cont& it = tupl->items();
@@ -307,7 +309,6 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 
     ULong64_t last = (ULong64_t)tree->GetEntries();
     ISelectStatement* sel = tupl->selector();
-    ++ipar[1];
     if ( sel ) {
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
 	? sel->criteria() : string("");
@@ -725,6 +726,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
   typedef INTuple::ItemContainer Cont;
   const string*   par = rpA->par();
   unsigned long* ipar = const_cast<unsigned long*>(rpA->ipar());
+  ++ipar[1];
   if ( Long64_t(ipar[1]) <= tree->GetEntries() ) {
     Cont& it = tupl->items();
     size_t k, n = it.size();
@@ -745,7 +747,6 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
     }
     ULong64_t last = (ULong64_t)tree->GetEntries();
     ISelectStatement* sel = tupl->selector();
-    ++ipar[1];
     if ( sel ) {
       string criteria = (sel && (sel->type() & ISelectStatement::STRING))
 	? sel->criteria() : string("");

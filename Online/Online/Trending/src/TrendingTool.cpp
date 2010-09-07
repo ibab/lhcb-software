@@ -1,4 +1,4 @@
-// $Id: TrendingTool.cpp,v 1.4 2010-07-23 15:03:45 ocallot Exp $
+// $Id: TrendingTool.cpp,v 1.5 2010-09-07 15:41:28 frankb Exp $
 // Include files
 #include <ctime>
 
@@ -69,7 +69,7 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
     }
   }
   if ( isBad ) return true;
-  unsigned int maxSize = 0.1 * DATA_SIZE;
+  unsigned int maxSize = (unsigned int)(0.1 * DATA_SIZE);
   if ( maxSize < tags.size() ) {
     error() << "Requested to store " << tags.size() << " tags, maximum allowed " << maxSize << endmsg;
     return false;

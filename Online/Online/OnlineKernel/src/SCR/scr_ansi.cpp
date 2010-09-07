@@ -808,7 +808,7 @@ int scrc_wait (Display *disp)   {
 
 //----------------------------------------------------------------------------
 int scrc_read_keyboard (Display * /*disp */, int wait)  {
-  int status, sub_status;
+  int status = -1, sub_status;
   unsigned int event;
   void* dummy;  
   if (wait) status = ::wtc_wait(&event,&dummy,&sub_status);

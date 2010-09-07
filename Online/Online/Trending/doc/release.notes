@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2010-09-08 - Markus Frank
+ - Fix compile warning in TrendingTool.cpp
+
 !============================== 2010-07-30 v1r1 ==============================
 ! 2010-07-23 - Olivier Callot
  - Initialize the directory buffer when reading the file
