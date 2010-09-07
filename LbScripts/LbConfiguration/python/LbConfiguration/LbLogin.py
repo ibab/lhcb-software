@@ -679,7 +679,7 @@ class LbLoginScript(SourceScript):
             if isBinaryDbg(opts.cmtconfig) :
                 debug = True
         else :
-            supconf = self._nativemachine.CMTSupportedConfig(debug=debug)
+            supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
             if supconf :
                 theconf = supconf[0]
             else :
@@ -754,7 +754,7 @@ class LbLoginScript(SourceScript):
             if compat_dir :
                 lastver = None
                 if (not opts.compat_version) or opts.compat_version == "v*" :
-                    compat_lst = [x for x in os.listdir(compat_dir) if x.startswith("COMPAT_") ]
+                    compat_lst = [ x for x in os.listdir(compat_dir) if x.startswith("COMPAT_") ]
                     if compat_lst :
                         lastver = sortStrings(compat_lst, safe=True)[-1]
                 else :

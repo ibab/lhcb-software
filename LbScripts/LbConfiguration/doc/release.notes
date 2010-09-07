@@ -1,3 +1,8 @@
+2010-09-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: changed the detected CMTCONFIGs from CMTSupportedConfig to 
+	CMTCompatibleConfig. This will allow native slc5 32 bits machines to run properly.
+
 2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the "--dev" option. It allows to use the LHCBDEV area for
