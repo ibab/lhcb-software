@@ -3,11 +3,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-! 2010-08-30 - Vanya Belyaev
- - Enable calodst unpacking only if the 
-   property have not been set explicitly. 
-   It is useful to force calormeetr reconstruction on-flight 
+! 2010-09-07 - Marco Cattaneo
+ - Remove prints from previous commit, use log.debug instead.
 
+! 2010-08-30 - Vanya Belyaev
+ - Enable calodst unpacking only if the property has not been set explicitly. 
+   It is useful to force calorimeter reconstruction on-flight 
 
 !======================== GaudiConf v13r5 2010-04-26 ========================
 ! 2010-04-21 - Marco Cattaneo

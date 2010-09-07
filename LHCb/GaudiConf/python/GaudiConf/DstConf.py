@@ -343,14 +343,14 @@ class DstConf(LHCbConfigurableUser):
         unpackVertex       = UnpackRecVertex()
         unpackV0           = UnpackTwoProngVertex()
 
-        print " I AM UNPACK "
+        log.debug("In DstConf._doUnpack")
 
         caloUnpack = CaloDstUnPackConf ()
         if not caloUnpack.isPropertySet('Enable') :
-            print " I'll     SET UNPACK to TRUE " 
+            log.debug( "Setting caloUnpack.Enable = True"
             caloUnpack.Enable = True
-        else : 
-            print " I'll NOT SET UNPACK to TRUE ", caloUnpack.Enable  
+        else :
+            log.debug( "Not setting caloUnpack.Enable. Current value = %s", caloUnpack.Enable )
 
         unpackCharged  = UnpackProtoParticle(name       = "UnpackCharged",
                                              OutputName = "/Event/Rec/ProtoP/Charged",
@@ -384,8 +384,6 @@ class DstConf(LHCbConfigurableUser):
     def __apply_configuration__(self):
 
         log.info(self)
-
-        print ' I AM DSTCONF '
         
         sType = self.getProp( "SimType" ).capitalize()
         if sType not in self.KnownSimTypes:
