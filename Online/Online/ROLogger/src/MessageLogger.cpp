@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.20 2010-09-03 13:57:25 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.21 2010-09-07 13:07:55 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.20 2010-09-03 13:57:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.21 2010-09-07 13:07:55 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstring>
@@ -294,8 +294,8 @@ void MessageLogger::summarizeHistory() {
     if ( !m.empty() ) {
       string src = msg_src(m);
       if ( !src.empty() ) {
-        DataMap::iterator i = data.find(src);
-        if ( i==data.end() ) data[src].resize(MessageLine::Msg_Always+1);
+        DataMap::iterator di = data.find(src);
+        if ( di==data.end() ) data[src].resize(MessageLine::Msg_Always+1);
         sev = MessageLine::msgSeverity(m.c_str());
         data[src][sev]++;
         num_msg++;

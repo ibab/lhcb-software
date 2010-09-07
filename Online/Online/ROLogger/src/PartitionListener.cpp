@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.21 2010-09-03 13:57:25 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.22 2010-09-07 13:07:55 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.21 2010-09-03 13:57:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.22 2010-09-07 13:07:55 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -84,7 +84,7 @@ PartitionListener::~PartitionListener() {
 void PartitionListener::runnoHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   if(*size > 0)  {
-    int value = *(int*)address;
+    long value = *(int*)address;
     if ( value > 0 ) {
       IocSensor::instance().send(h->m_parent,CMD_UPDATE_RUNNUMBER,(void*)value);
     }
