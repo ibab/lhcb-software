@@ -101,5 +101,4 @@ std::string RawEventPrintout::bankType(int i)  {
     default: return "UNKNOWN";
 #undef PRINT
   }
-  return "UNKNOWN";
 }

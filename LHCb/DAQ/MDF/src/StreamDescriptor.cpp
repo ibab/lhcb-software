@@ -282,7 +282,7 @@ void LHCb::StreamDescriptor::getInetConnection( const std::string& con,
   ip->s_addr = port = 0;
   if ( idx != std::string::npos )  {
     std::string prt = host.substr(idx+1);
-    ::sscanf(prt.c_str(),"%hd",&port);
+    ::sscanf(prt.c_str(),"%hu",&port);
 #ifdef ntohs
     port = ntohs(port);
 #else
@@ -307,7 +307,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
   Access result;
   std::string file, proto;
   Networking::sockaddr_in sin;
-  result.type = ::toupper(specs[0]);
+  result.type = char(::toupper(specs[0]));
   switch(result.type) {
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       /*
@@ -339,7 +339,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
     default:           //  DATA='rfio:/castor/cern.ch/......
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-        result.type = ::toupper(proto[0]); 
+        result.type = char(::toupper(proto[0]));
         if ( result.type == 'F' ) {
           result.ioDesc     = file_open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
           result.m_write    = file_write;
@@ -375,7 +375,7 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   Access result;
   std::string file, proto;
   Networking::sockaddr_in sin;
-  result.type = ::toupper(specs[0]);
+  result.type = char(::toupper(specs[0]));
   switch(result.type) {
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
@@ -401,7 +401,7 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
     default:
       getFileConnection(specs, file, proto);
       if ( !proto.empty() )  {
-	result.type = ::toupper(proto[0]); 
+	result.type = char(::toupper(proto[0]));
 	if ( result.type == 'F' ) {
 	  result.ioDesc  = file_open(file.c_str(), O_RDONLY|O_BINARY );
 	  result.m_write = file_write;
@@ -451,7 +451,6 @@ int LHCb::StreamDescriptor::close(Access& c) {
     default:
       return dsc > 0 && c.ioFuncs != 0 && c.ioFuncs->close != 0 ? c.ioFuncs->close(dsc) : 0;
   }
-  return false;
 }
 
 Access LHCb::StreamDescriptor::accept(const Access& specs)  {

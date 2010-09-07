@@ -218,7 +218,7 @@ static unsigned short crc16Checksum (const char *data, size_t len) {
     while (len--)  {
       nTemp = *data++ ^ wCRCWord;
       wCRCWord >>= 8;
-      wCRCWord ^= wCRCTable[nTemp];
+      wCRCWord = (unsigned short)(wCRCWord^wCRCTable[nTemp]);
     }
     return wCRCWord;
 }
@@ -543,7 +543,7 @@ bool LHCb::checkMultiFragment(const MEPMultiFragment* mf, bool exc, bool prt)  {
     return true;
   }
 Error:  // Anyhow only end up here if no exception was thrown...
-  ::sprintf(txt,"%s MEP multi fragment error at %p: EID_l:%d Size:%ld %ld",
+  ::sprintf(txt,"%s MEP multi fragment error at %p: EID_l:%u Size:%ld %ld",
             s_checkLabel,mf,mf->eventID(),long(siz),long(s-e));
   if ( prt ) std::cout << txt << std::endl;
   if ( exc ) throw std::runtime_error(txt);
@@ -575,12 +575,12 @@ bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)   
     char txt[255];
     const char *start, *end;
     if ( h->size0() != h->size1() || h->size0() != h->size2() )  {
-      ::sprintf(txt,"%s Inconsistent MDF header size: %d <-> %d <-> %d at %p",
+      ::sprintf(txt,"%s Inconsistent MDF header size: %u <-> %u <-> %u at %p",
 		s_checkLabel,h->size0(),h->size1(),h->size2(),h);
       goto Error;
     }
     if ( opt_len != ~0x0 && size_t(opt_len) != h->size0() )  {
-      ::sprintf(txt,"%s Wrong MDF header size: %d <-> %d at %p",
+      ::sprintf(txt,"%s Wrong MDF header size: %u <-> %d at %p",
 		s_checkLabel,h->size0(),opt_len,h);
       goto Error;
     }
@@ -805,7 +805,7 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
     evtlen += (*j).second.size()*MEPFragment::sizeOf();
   }
   void* memory = (*alloc)(alloc_ctxt, evtlen);
-  int packing = events.size();
+  unsigned short packing = (unsigned short)events.size();
   MEPEvent* me = new(memory) MEPEvent(0);
   MEPMultiFragment* mf = me->first();
   for(BankMap2::iterator j=m.begin(); j != m.end(); ++j, mf = me->next(mf)) {
@@ -821,7 +821,7 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
 	mf->setEventID(eid);
 	first = false;
       }
-      f->setEventID(eid&0xFFFF);
+      f->setEventID((unsigned short)(eid&0xFFFF));
       f->setSize(0);
       encodeFragment((*l).second, f);
       mf->setSize(mf->size()+f->size()+f->sizeOf());

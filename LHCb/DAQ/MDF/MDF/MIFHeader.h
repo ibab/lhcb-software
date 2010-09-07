@@ -105,7 +105,7 @@ namespace LHCb    {
     /// Accessor: File identifier
     unsigned int fid() const               { return m_fid;                     }
     /// Update MIF data size
-    void setSize(unsigned int val)         { m_size = val;                     }
+    void setSize(unsigned int val)         { m_size = (unsigned char)val;      }
     size_t totalSize()  const              { return m_size+sizeof(MIFHeader)-sizeof(m_data); }
     template<class T> T* data() const  {  return (T*)m_data; }
   };
