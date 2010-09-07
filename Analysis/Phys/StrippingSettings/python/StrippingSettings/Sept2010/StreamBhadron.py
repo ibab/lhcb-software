@@ -1,4 +1,4 @@
-# $Id: StreamBhadron.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamBhadron.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
 #
 #   Bhadron stripping selection
 #
@@ -20,7 +20,7 @@ stream = StrippingStream("Bhadron")
 # Rolf Olderman
 #
 from StrippingSelections.StrippingB2twobody import B2twobodyLine
-stream.appendLines( [ B2twobodyLine() ] )
+stream.appendLines( B2twobodyLine() )
 
 #
 # Lines from Gamma from loops WG
@@ -45,9 +45,8 @@ stream.appendLines ( [ StrippingB2HHPi0Conf().B2HHPi0_Resolved(), StrippingB2HHP
 from StrippingSelections.StrippingB2DX import B2DXLines
 stream.appendLines ( B2DXLines().lines )
 
-from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import StrippingBu2D0h_D02KShh_NoPIDConf
-Bu2D0h_D02KShh_NoPIDConf = StrippingBu2D0h_D02KShh_NoPIDConf()
-stream.appendLines ( [ Bu2D0h_D02KShh_NoPIDConf.LL_line, Bu2D0h_D02KShh_NoPIDConf.DD_line ] )
+from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import _StrippingBu2D0h_D02KShh_NoPIDConf as Bu2D0h_D02KShh_NoPIDConf
+stream.appendLines ( [ Bu2D0h_D02KShh_NoPIDConf.Line_LL, Bu2D0h_D02KShh_NoPIDConf.Line_DD ] )
 
 # Steve Blusk - do we need the Signal lines?
 #from StrippingSelections.StrippingB2D3HX import StrippingB2D3HConf

@@ -1,4 +1,4 @@
-# $Id: StreamEW.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamEW.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
 #
 #   Electro-weak stripping selection
 #
@@ -17,7 +17,7 @@ stream = StrippingStream("EW")
 # Lines from EW subgroup of flavour WG
 # Tara Shears, James Keaveney
 #
-from StrippingSelections import StrippingWMu, StrippingZ02MuMu, StrippingDY2MuMu,
+from StrippingSelections import StrippingWMu, StrippingZ02MuMu, StrippingDY2MuMu
 from StrippingSelections import StrippingWe, StrippingZ02ee, StrippingDY2ee
 from StrippingSelections import StrippingMuMuSS
 

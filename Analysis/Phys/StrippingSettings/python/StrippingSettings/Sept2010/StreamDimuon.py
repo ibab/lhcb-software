@@ -1,4 +1,4 @@
-# $Id: StreamDimuon.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamDimuon.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
 #
 #   Dimuon stripping selection
 #
@@ -54,26 +54,40 @@ stream.appendLines( Bu2LLKConf.lines() )
 
 # Liming Zhang
 from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
-stream.append( [ StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine() ] )
-stream.append( [ StrippingBs2PhiMuMuConf().Bs2f0MuMuLine() ] )
+stream.appendLines( [ StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine() ] )
+stream.appendLines( [ StrippingBs2PhiMuMuConf().Bs2f0MuMuLine() ] )
 
 # Vanya Belayev
 from StrippingSelections.StrippingTriMuons import Lines as ThreeMuonLines
-stream.appendLines ( ThreeMuonLines )
+stream.appendLines( ThreeMuonLines )
+
+# Phillip Urquijo
+from StrippingSelections.StrippingB2XMuMuSS import StrippingB2XMuMuSSConf
+stream.appendLines( [ StrippingB2XMuMuSSConf().PiSS_line() ] )
+stream.appendLines( [ StrippingB2XMuMuSSConf().PiOS_line() ] )
+stream.appendLines( [ StrippingB2XMuMuSSConf().KSS_line() ] )
+stream.appendLines( [ StrippingB2XMuMuSSConf().KOS_line() ] )
+
+from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
+stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line() ] )
+stream.appendLines( [ StrippingD2XMuMuSSConf().PiOS_line() ] )
+stream.appendLines( [ StrippingD2XMuMuSSConf().KSS_line() ] )
+stream.appendLines( [ StrippingD2XMuMuSSConf().KOS_line() ] )
 
 #
 # Lines from Bs2mumu WG
 # Johannes Albrecht
 #
 from StrippingSelections.StrippingBs2MuMuLines import Bs2MuMuLinesConf
-stream.appendLines( Bs2MuMuLinesConf().lines )
+bs2mm = Bs2MuMuLinesConf("Bs2MuMu", Bs2MuMuLinesConf.config_default )
+stream.appendLines( bs2mm.lines )
 
 #
 # Lines from Charm RD WG
 # Walter Bonivento
 #
 from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
-stream.append( [ D02MuMuLines ] )
+stream.appendLines( D02MuMuLines )
 
 #
 # Lines from Flavour WG
@@ -90,10 +104,10 @@ stream.appendLines( [ StrippingBu2KJpsiPiPiConf().X3872_line() ] )
 stream.appendLines( [ StrippingBu2KJpsiPiPiConf().Psi2S_line() ] )
 
 # Jibo He
-from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
+from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetachedConf
 stream.appendLines( [ StrippingBc2JpsiHDetachedConf().MuMu() ] )
 
-from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetachedConf
+from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
 stream.appendLines( [ StrippingBc2JpsiHConf().MuMu() ] )
 
 from StrippingSelections.StrippingBc2JpsiMuX import StrippingBc2JpsiMuXConf

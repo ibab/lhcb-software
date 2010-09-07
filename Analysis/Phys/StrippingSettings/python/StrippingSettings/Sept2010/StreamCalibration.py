@@ -1,4 +1,4 @@
-# $Id: StreamCalibration.py,v 1.1 2010-09-07 11:57:00 gcowan Exp $
+# $Id: StreamCalibration.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
 #
 #   Calibration stripping selections
 #
@@ -26,7 +26,7 @@ stream.appendLines( StrippingHltErrorBits.lines )
 # Sebastian Schleich
 from StrippingSelections.StrippingInclPhi import InclPhiConf
 InclPhiConf = InclPhiConf("InclPhi", InclPhiConf.config_Sept2010 )
-stream.appendLines( MyInclPhiConf.lines )
+stream.appendLines( InclPhiConf.lines )
 
 # Gaia Lanfranchi
 from StrippingSelections import StrippingMuIDCalib
