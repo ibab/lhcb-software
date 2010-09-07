@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -21,7 +21,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     __slots__ = { 'L0ChannelBeam1'          : "B1gas"
+                , 'RateLimitBeam1'          :  5000.
                 , 'L0ChannelBeam2'          : "B2gas"
+                , 'RateLimitBeam2'          :  5000.
                 , 'L0ChannelBXLonelyBeam1'  : "B1gas"
                 , 'L0ChannelBXLonelyBeam2'  : "B2gas"
                 # , 'L0FilterBeamCrossing'    : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['SPD','PU'] ] )
@@ -35,9 +37,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'MaxBinValueCut'          :     5
                 , 'HistoBinWidth'           :    12
                 , 'ForcedInputRateLimit'    :  1000.
-                , 'BXLonelyBeam1RateLimit'  : 50000.
-                , 'BXLonelyBeam2RateLimit'  : 10000.
-
+                , 'BXLonelyBeam1RateLimit'  :  5000.
+                , 'BXLonelyBeam2RateLimit'  :  5000.
                 , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
                                               , 'Hlt1BeamGasBeam2' :                1.0
                                               , 'Hlt1BeamGasCrossing' :             1.0
@@ -91,15 +92,17 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltDecodeRaw import DecodeVELO
 
         channel = self.getProp('L0Channel' + whichBeam)
+        ratelimit = self.getProp('RateLimit'+whichBeam)
         ##  Only create an Hlt1 line if the corresponding L0 channel exists...
         from Hlt1Lines.HltL0Candidates import L0Channels
         if channel not in L0Channels() : return None
         from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
         mask = L0Mask(channel)
+        l0du = "L0_CHANNEL('%s')" % channel
         lineBeamEmptyBX =  Line( name
                                , prescale = self.prescale
                                , ODIN  = L0Mask2ODINPredicate(mask) 
-                               , L0DU  = "L0_CHANNEL('%s')" % channel
+                               , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, ratelimit) if ratelimit else l0du
                                , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                                , postscale = self.postscale
                                )

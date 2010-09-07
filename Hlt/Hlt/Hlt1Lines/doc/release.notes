@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.215 2010-09-07 07:32:46 graven Exp $
+! $Id: release.notes,v 1.216 2010-09-07 11:51:38 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v4r3   2010-09-07 ===================
+
+! 2010-09-07 - Gerhard Raven
+ - ratelimit beamgas (almost) everywhere
 
 ! 2010-09-06 - Gerhard Raven
  - undo Vava's changes for now as they break independence
