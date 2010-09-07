@@ -4,6 +4,7 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v1r6 2010-09-07 ==================
 
 ! 2010-09-07 - Juan Palacios
  - options/*.py
