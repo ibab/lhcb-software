@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-09-07 - Marco Cattaneo
+ - Remove unused variable from previous commit
+
 ! 2010-08-30 - Wouter Hulsbergen
  - Added several histograms to TrackFitMatchMonitor
 

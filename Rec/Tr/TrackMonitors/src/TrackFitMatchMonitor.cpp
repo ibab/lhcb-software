@@ -387,7 +387,7 @@ void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
 	if( 1/std::abs(qop) > 5*Gaudi::Units::GeV ) {
 	  double zkick = ( stateVeloTT.z()*stateVeloTT.tx() - stateVeloTT.x() + stateT.x() - stateT.z()*stateT.tx() ) / ( stateVeloTT.tx() - stateT.tx() ) ;
 	  double xkick = stateT.x() + (zkick - stateT.z()) * stateT.tx() ;
-	  double xkickprime = stateVeloTT.x() + (zkick - stateVeloTT.z()) * stateVeloTT.tx() ;
+    //	  double xkickprime = stateVeloTT.x() + (zkick - stateVeloTT.z()) * stateVeloTT.tx() ;
 	  m_kickZH1->fill( zkick) ;
 	  if( 5000*Gaudi::Units::mm < zkick && zkick < 5300*Gaudi::Units::mm ) 
 	    m_kickZVsXPr->fill(xkick,zkick) ;
