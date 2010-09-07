@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.209 2010-09-07 10:30:02 jpalac Exp $
+# $Id: requirements,v 1.210 2010-09-07 11:29:02 jpalac Exp $
 package AnalysisSys
 version v4r10
 
@@ -7,11 +7,11 @@ branches doc cmt
 
 ####################################################################
 # Temporary patches
-use  GaudiPatches               v1r2
+#use  GaudiPatches               v1r2
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
 use  DSTWriters                 v1r11    Phys   # Juan Palacios
-use  DSTWriterTests             v1r5     Phys   # Juan Palacios
+use  DSTWriterTests             v1r6     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
