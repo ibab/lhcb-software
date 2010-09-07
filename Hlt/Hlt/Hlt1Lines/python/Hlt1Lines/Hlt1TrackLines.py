@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -117,38 +117,37 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
 
         def muonAfterburn(chi2,ipchi2) :
             from Configurables import MuonRec, MuonIDAlg
+            from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName, HltAllMuonTracksName, HltMuonIDSuffix
             from MuonID import ConfiguredMuonIDs
             cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="2010")
             HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1TrackMuonIDAlg")
-            HltMuonIDAlg.TrackLocation          = "Hlt1/Track/FitTrack"
-            HltMuonIDAlg.MuonIDLocation         = "Hlt1/Track/TrackMuons/MuonID"
-            HltMuonIDAlg.MuonTrackLocation      = "Hlt1/Track/TrackMuons/Muon"
-            HltMuonIDAlg.MuonTrackLocationAll   = "Hlt1/Track/TrackMuons/AllMuon"
+            HltMuonIDAlg.TrackLocation          = "Hlt1/Track/FitTrack" # hardwired in $HLTTRACKINGROOT/src/HltTrackUpgradeTool, under reconame 'FitTrack' 
+            location = lambda x : '/'.join( [ 'Hlt1','Track','TrackMuon', HltSharedPIDPrefix, x ] ) 
+            HltMuonIDAlg.MuonIDLocation         = location( HltMuonIDSuffix )
+            HltMuonIDAlg.MuonTrackLocation      = location( HltMuonTracksName )
+            HltMuonIDAlg.MuonTrackLocationAll   = location( HltAllMuonTracksName )
             HltMuonIDAlg.FindQuality            = False
             after = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , 'TrkChi2'
-                           , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
-                           HistogramUpdatePeriod = 1,
-                           HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
-                           )
+                         , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2]
+                         , HistogramUpdatePeriod = 1
+                         , HistoDescriptor  = histosfilter('FitChi2OverNdf',0.,100.,100)
+                         )
                 , MuonRec() 
-                , HltMuonIDAlg]
+                , HltMuonIDAlg ]
 
-            from Configurables import ChargedProtoParticleAddMuonInfo
-            from Configurables import ChargedProtoCombineDLLsAlg
             from Configurables import ChargedProtoParticleMaker
-            from Configurables import CombinedParticleMaker
-            from Configurables import ProtoParticleMUONFilter
-
             charged      = ChargedProtoParticleMaker("Hlt1TrackMuonProtoPMaker")
             charged.InputTrackLocation  = [ HltMuonIDAlg.TrackLocation  ]
             charged.OutputProtoParticleLocation = "Hlt1/ProtoP/TrackMuon"
             
+            from Configurables import ChargedProtoParticleAddMuonInfo
             muon                = ChargedProtoParticleAddMuonInfo("Hlt1TrackChargedProtoPAddMuon")
             muon.ProtoParticleLocation  = charged.OutputProtoParticleLocation 
             muon.InputMuonPIDLocation   = HltMuonIDAlg.MuonIDLocation  
             
+            from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter
             Hlt1Muons = CombinedParticleMaker("Hlt1TrackMuonCPM")
             Hlt1Muons.Particle = "muon" 
             Hlt1Muons.addTool(ProtoParticleMUONFilter,'Muon')

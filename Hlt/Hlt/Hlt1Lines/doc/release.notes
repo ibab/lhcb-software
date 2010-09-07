@@ -1,13 +1,14 @@
-! $Id: release.notes,v 1.214 2010-09-06 08:08:11 graven Exp $
+! $Id: release.notes,v 1.215 2010-09-07 07:32:46 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v4r3   2010-09-07 ===================
 
 ! 2010-09-06 - Gerhard Raven
- - undo Vava's changes 
+ - undo Vava's changes for now as they break independence
    do 'cvs update -j 1.5 -j 1.6 python/Hlt1Lines/Hlt1TrackLines.py' to get them back
 
 ! 2010-09-06 - Gerhard Raven
