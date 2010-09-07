@@ -46,10 +46,10 @@ int upic_done()    {
 void upic_disable_input()   {
 #ifdef SCREEN
   s_upic_done = 0;
-#ifdef VAX
-#elif _OSK
-  _ss_rel (0);
-#endif
+  //#ifdef VAX
+  //#elif _OSK
+  //  _ss_rel (0);
+  //#endif
 #else
 #endif
 }

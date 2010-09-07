@@ -467,7 +467,7 @@ int upic_key_action (unsigned int /* event */, void*)
               else key = 'F';
             }
           }
-          if (type != ASC_FMT && !upic_valid_numeric (type, key))
+          if (type != ASC_FMT && !upic_valid_numeric(type,char(key)))
           {
             scrc_ring_bell (d->id);
             break;

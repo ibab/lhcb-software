@@ -205,7 +205,7 @@ extern "C" int scr_ascii(int /* argc */, char** /* argv */) {
   ::scrc_fflush (pb);
   ::scrc_begin_pasteboard_update (pb);
   for (char j=0, v='0', vv='0'; j < 100; ++j)  {
-    vv = '0'+(j/10);
+    vv = char('0'+(j/10));
     if ( vv != v ) {
       v = vv;
       ::scrc_put_char(display,char('0'+(j/10)),NORMAL,2,2+j);

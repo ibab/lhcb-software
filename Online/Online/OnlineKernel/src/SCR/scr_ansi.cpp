@@ -93,13 +93,13 @@ int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */);
 int scrc_rearm_keyboard (unsigned int /* fac */, void* par)   {
   if (Armed) return 0;
   Armed = 1;  
-#if _OSK
+#if 0 // _OSK
   if (!Insignal)  {
     Insignal = sig_book_signal();
     sig_declare_signal(Insignal, scrc_ast );
   }
   _ss_ssig(0,Insignal);
-#else 
+#else
   typedef int (*_F)(void*);
   IOPortManager(0).addEx(0, ::fileno(stdin), scrc_ast_keyboard, par);
 #endif
@@ -899,6 +899,11 @@ void scrc_handle_mouse(Pasteboard* pb, char key)  {
 //---------------------------------------------------------------------------
 void scrc_set_configure_handler (Pasteboard* /* pb */, int (*handler)(int,int))  {
   User_configure_handler = handler;
+}
+//---------------------------------------------------------------------------
+int scrc_execute_configure_handler(Pasteboard* /* pb */)  {
+  if ( User_configure_handler ) return (*User_configure_handler)(0,0);
+  return 0;
 }
 //---------------------------------------------------------------------------
 void scrc_iconify_display (Display* /* d */)    {

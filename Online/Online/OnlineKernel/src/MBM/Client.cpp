@@ -72,7 +72,8 @@ void MBM::Client::setBlocking() {
 
 // Run the application
 int MBM::Client::run() {
-  for(;;)  {
+  bool do_run = true;
+  for( ; do_run; )  {
     int sc = (m_blocking) ? runSynchronous() : runAsynchronous();
     if ( sc != MBM_NORMAL ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"Error executing MBM client sc=%d\n",sc);
