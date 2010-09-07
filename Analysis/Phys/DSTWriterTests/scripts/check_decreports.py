@@ -74,7 +74,7 @@ if __name__ == '__main__' :
     print 'Found', nDecReports, 'DecReports in', nEvents, 'events'
     print '======================================================================================'
     for decs in decReportSummary.iteritems() :
-        message = decs[0] + " : " + decs[1]
+        message = str(decs[0]) + " : " + str(decs[1])
         print message
         outputFile.write(message+'\n')
     print '======================================================================================'
