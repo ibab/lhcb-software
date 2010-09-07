@@ -3,6 +3,11 @@
 ! Responsible : Sajan EASO
 ! Purpose     : Selection of events using multivariate methods
 !-----------------------------------------------------------------------------
+!============================== v1r0 07-09-2010 ==============================
+
+! 2010-09-07 - Diego Martinez Santos
+ - Make version v1r0
+
 !2010-06-14 - Sajan Easo
   Removed all the CVS subdir since it is now in SVN.
 !2010-06-10- Sajan Easo
