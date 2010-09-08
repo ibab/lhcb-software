@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -88,6 +88,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
         from HltTracking.Hlt1TrackUpgradeConf  import FitTrack, GuidedForward, Forward
+        from HltTracking.Hlt1TrackMatchConf import MatchCallback
         from Configurables import HltFilterFittedVertices
         
         # confirmed track
@@ -116,7 +117,8 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                     Member ( 'TM' , 'VeloCalo'
                             , InputSelection1 = 'Velo'
                             , InputSelection2 = '%s' %OutputOfL0
-                            , MatchName = 'VeloCalo' , MaxQuality = 9., MaxQuality2 = 9.
+                            , MaxQuality = 9., MaxQuality2 = 9.
+                            , callback = MatchCallback('VeloCalo') 
                            )
                    ]
 

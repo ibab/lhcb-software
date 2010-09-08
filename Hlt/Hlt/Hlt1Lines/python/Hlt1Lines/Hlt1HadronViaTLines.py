@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -52,8 +52,6 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import hlt1Lines  
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
-
-        from Configurables import HltTrackUpgradeTool, PatForwardTool
         from HltTracking.Hlt1TrackUpgradeConf import THadronConf, Forward
 
         ## alias to get the slot associated to a name
@@ -77,7 +75,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
             #conf = [convertL0Candidates(candidates)]
             from HltLine.HltDecodeRaw import DecodeIT,DecodeTT
-            from Configurables import PatConfirmTool, PatSeedingTool,L0ConfirmWithT,HltTrackUpgradeTool
+            from HltTracking.Hlt1TrackMatchConf import MatchCallback
 
             l0 = bindMembers(prefix, [ convertL0Candidates(candidates)
                                      , Member('TF','L0HadronViaT'
@@ -100,7 +98,8 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                     , Member ( 'TM' , 'VeloT'
                                , InputSelection1 = '%TFVelo3DIP'
                                , InputSelection2 = '%TFTConf'
-                               , MatchName = 'VeloT' , MaxQuality = 2.
+                               , MaxQuality = 2.
+                               , callback = MatchCallback('VeloT')
                                )
                     ]
             return bindMembers(prefix,conf)

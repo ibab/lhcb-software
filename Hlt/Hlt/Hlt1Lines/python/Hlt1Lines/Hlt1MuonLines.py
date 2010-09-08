@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.29 2010-09-08 09:23:05 graven Exp $
+# $Id: Hlt1MuonLines.py,v 1.30 2010-09-08 12:57:13 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
 # =============================================================================
 
 
@@ -104,6 +104,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool, L0ConfirmWithT, PatConfirmTool
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
         from HltTracking.Hlt1TrackUpgradeConf import TMuonConf, Forward, FitTrack
+        from HltTracking.Hlt1TrackMatchConf import MatchCallback
 
         def MatchT(name='Muon') :
             return [ DecodeIT
@@ -120,7 +121,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                     , Member ('TM', 'VeloT'
                               , InputSelection1 = "Velo"
                               , InputSelection2 = '%TFDeltaP'
-                              , MatchName = 'VeloT'
+                              , callback = MatchCallback('VeloT')
                               , tools = [ Tool( PatMatchTool, maxMatchChi2 = self.getProp( 'Muon_3DVeloTMatchCut') ) ]
                               #,OutputLevel=2
                               , HistoDescriptor = { 'chi2_PatMatch': ( 'Match 3dVelo-T (PatMatch)',0.,9.,100),

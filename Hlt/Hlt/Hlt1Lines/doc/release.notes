@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.217 2010-09-08 09:23:05 graven Exp $
+! $Id: release.notes,v 1.218 2010-09-08 12:57:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,9 @@
     common upgrades share now a common tool, centralizing the configuration
     in HltTracking instead of distributing amongst the lines (and then pray
     things are consistent!)
+ - follow changes to TrackMatch code in HltTracking v7r0
+    instead of MatchName which switches a bunch of settings in C++, this is
+    now done explicitly in python
 
 !========================== Hlt1Lines v4r3   2010-09-07 ===================
 

@@ -32,6 +32,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         from Configurables import HltTrackUpgradeTool
         from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack, RadCor
+        from HltTracking.Hlt1TrackMatchConf import MatchCallback
               
 
 
@@ -41,7 +42,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
                                   , Velo, PV3D().ignoreOutputSelection()
                                   , DecodeTT
-                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
+                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , callback = MatchCallback('VeloT'))
                                   , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
@@ -74,7 +75,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
                                   , Velo, PV3D().ignoreOutputSelection()
                                   , DecodeTT
-                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
+                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , callback = MatchCallback('VeloT'))
                                   ]
 
         companionTrackNoIP    = [ Velo

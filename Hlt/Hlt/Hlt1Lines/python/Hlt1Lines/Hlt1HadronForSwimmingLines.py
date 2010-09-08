@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -68,7 +68,8 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import RZVelo
         from HltTracking.HltPVs  import PV2D
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR, GuidedForward, Velo, FitTrack
+        from HltTracking.Hlt1TrackUpgradeConf import  GuidedForward, Velo, FitTrack
+        from HltTracking.Hlt1TrackMatchConf import MatchCallback
         
         # confirmed track
         #------------------------
@@ -112,7 +113,8 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                                     , Member ( 'TM' , 'VeloCalo'
                                              , InputSelection1 = '%TF2Velo'
                                              , InputSelection2 = l0.outputSelection()
-                                             , MatchName = 'VeloCalo' , MaxQuality = 4.
+                                             , MaxQuality = 4.
+                                             , callback = MatchCallback('VeloCalo')
                                              )
                                     , DecodeIT
                                     , Member ( 'TU', 'GuidedForward' , RecoName = GuidedForward.splitName()[-1] 
