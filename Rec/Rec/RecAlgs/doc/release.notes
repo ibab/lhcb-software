@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-09-08 - Johan Blouw
+ - Histogram is now booked at initialization time (so that for OnlineBrunel
+   this histograms is visible as well.)
+
 !========================== RecAlgs v1r10 2010-08-25 ==========================
 ! 2010-08-19 - Chris Jones
  - Adapt TimingTuple to new RICH interfrace that directly gives the number

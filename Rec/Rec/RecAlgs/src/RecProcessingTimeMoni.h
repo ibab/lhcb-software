@@ -6,6 +6,9 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
 
+// from Aida
+#include "AIDA/IHistogram1D.h"
+
 /** @class RecProcessingTimeMoni RecProcessingTimeMoni.h
  *  
  *  Simple monitor making basic processing time plots for the Reconstruction
@@ -34,6 +37,7 @@ private:
   typedef std::vector<std::string> AlgorithmNames;
   AlgorithmNames m_algNames; ///< List of algorithm(s) to include in timing
 
+  AIDA::IHistogram1D* hist; ///< pointer to processing time histogram 
   double m_logMaxTime; ///< Job Option for log10(maximum overall processing time) for plots
   double m_logMinTime; ///< Job Option for log10(minimum overall processing time) for plots
 

@@ -40,6 +40,8 @@ StatusCode RecProcessingTimeMoni::initialize()
   // are we properly configured
   if ( m_algNames.empty() ) { sc = Warning( "No algorithms to time !"); }
 
+  // book the histogram at initialization time
+  hist = book("overallTime", "log10(Event Processing Time / ms)",100,m_logMinTime,m_logMaxTime);
   return sc;
 }
 
@@ -63,9 +65,8 @@ StatusCode RecProcessingTimeMoni::execute()
 
     // Take the base 10 log of the time (helps show the large tails)
     const double logtime = std::log10(time);
-    
-    plot1D( logtime, "overallTime", "log10(Event Processing Time / ms)", 
-            m_logMinTime, m_logMaxTime, 100 );
+    double weight = 1.0;
+    fill( hist, logtime, weight );
  
   }
  
