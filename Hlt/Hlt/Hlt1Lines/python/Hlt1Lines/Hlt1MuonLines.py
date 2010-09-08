@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.30 2010-09-08 12:57:13 graven Exp $
+# $Id: Hlt1MuonLines.py,v 1.31 2010-09-08 13:14:13 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
 # =============================================================================
 
 
@@ -80,6 +80,11 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'MuTrackDimuMass4JPsiHigh' : 0.
         ,'MuTrackMuChi24JPsi'       : 4.
         ,'MuTrackTrChi24JPsi'       : 8.
+        ,'bmm_IP'                   : 0.05
+        ,'bmm_MuChi2'               : 16
+        ,'bmm_fitChi2'              : 10
+        ,'bmm_IPS'                  : 36
+        ,'bmm_pt'                   : 1500
         }
     
 
@@ -413,6 +418,70 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                ] + FastFitVtxNoIP
                                    , postscale = self.postscale
                                    )
+
+        #--------------------------------------------------------------------
+        # DiMuon without IP cut from L0DiMuon for B2MuMu - cut at < 4000 Velo tracks
+        #--------------------------------------------------------------------
+        FastFitBmm = [ PV3D().ignoreOutputSelection()
+                       , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit
+                                  , HistoDescriptor = { 'FitTrackQuality': ( 'Track Fit Chi2 / ndf',0.,50.,100),
+                                                        'FitTrackQualityBest': ( 'lowest track Fit Chi2 / ndf',0.,50.,100) }  
+                                  )
+                          , Member ( 'TF' , 'IP'
+                                     ,  FilterDescriptor = ['FitIP_PV3D,||>,%(bmm_IP)s'%self.getProps()]
+                                     , HistoDescriptor = {'FitIP_PV3D': ( 'muon IP to PV3D',0.,0.3,50),
+                                                          'FitIP_PV3DBest': ( 'muon highest IP to PV3D',0.,0.3,50)}
+                                     )
+                       , Member ( 'TF' , 'Chi2Mu'
+                                  , FilterDescriptor = ['FitMuChi2,<,%(bmm_MuChi2)s'%self.getProps()]
+                                  , HistoDescriptor = { 'FitMuChi2': ( 'muon contribution to track fit chi2 / ndf',0.,100.,100),
+                                                        'FitMuChi2Best': ( 'lowest muon contribution to track fit chi2 / ndf',0.,100.,100) } 
+                                  )
+                       , Member ( 'TF' , 'Chi2OverN'
+                                  #, OutputSelection = '%Decision'
+                                  , FilterDescriptor = ['FitChi2OverNdf,<,%(bmm_fitChi2)s'%self.getProps()]
+                                     , HistoDescriptor = { 'FitChi2OverNdf': ( 'track fit chi2 / ndf',0.,75.,100),
+                                                           'FitChi2OverNdfBest': ( 'lowest track fit chi2 / ndf',0.,75.,100) } 
+                                  )
+                       , Member ('HltFilterFittedTracks', 'FFT',
+                          OutputSelection = "%Decision",
+                          InputSelection1 = '%TFChi2OverN', 
+                          InputSelection2 = 'PV3D',
+                          MinIPCHI2 = self.getProps()["bmm_IPS"]
+                         )
+
+
+                       
+                       ]
+        
+        if self.getProp('L0SingleMuon') in L0Channels() :
+            SingleMuon4BsMuMu = Line( 'SingleMuon4BsMuMu'
+                                    , prescale = self.prescale
+                                    , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
+                                    , algos = [ Hlt1GEC(True, 4000),MuonPrep
+                                                , PV3D().ignoreOutputSelection()
+                                                , Member ( 'TF', 'PT'
+                                                           , FilterDescriptor = ['PT,>,%(bmm_pt)s'%self.getProps()]
+                                                           , HistoDescriptor = { 'PT': ( 'Pt',0.,7000.,100), 'PTBest': ( 'Pt Best',0.,7000.,100)}
+							   )
+                                                ] + FastFitBmm 
+                                    , postscale = self.postscale
+                                    )
+            
+
+        if self.getProp('L0DiMuon') in L0Channels() :
+            DiMuon4BsMuMu = Line( 'DiMuon4BsMuMu'
+                                  , prescale = self.prescale
+                                  , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
+                                  , algos = [ Hlt1GEC(True, 4000),DiMuonPrep ]
+                                  + [ Member( 'VF','Mass'
+                                              , FilterDescriptor = [ 'VertexDimuonMass,>,4700' ]
+                                              , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',4000.,10000,200),
+				                         'VertexDimuonMassBest': ('Di Muon Invariant Mass - Best',4000.,10000,200) }
+			           ) ]
+                                  + FastFitVtxNoIP#FastFitVtxWithIP
+                                  , postscale = self.postscale
+                                  )
         #--------------------------------------------------------------------
         # DiMuon from L0 without Velo
         #--------------------------------------------------------------------
@@ -541,6 +610,8 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                   , algos = [ Hlt1GEC(),DiMuonPrep ] + FastFitVtxWithIP
                                   , postscale = self.postscale
                                   )
+
+      
         #--------------------------------------------------------------------
         # DiMuon with IP cut from 2 L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
