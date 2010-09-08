@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 !========================== Hlt2Lines v5r1 2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - IncDiProton: replace void filter on SPD mult (which is not independent!) with an 
+   L0 filter on the L0 recorded SPD mult (which is faster as well)
+
 ! 2010-09-08 - Johannes Albrecht
  - add Hlt2MuonFromHLT1Bs2MuMu
 
