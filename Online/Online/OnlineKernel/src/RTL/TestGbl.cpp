@@ -10,13 +10,14 @@ extern "C" int rtl_test_gbl(int argc, char** argv) {
   lib_rtl_lock_t id;
   char txt[132];
   int turns = 20;
-  const char* name = "GBL_test"; // argv[1];
   std::string proc = argc>1 ? std::string(argv[1]) : RTL::processName();
-  ::unlink("/dev/shm/sem.GBL_test");
-  ::unlink("/dev/shm/MyMemory");
-  int status = RTL::Lock::create(name, id);
+  ::sprintf(txt,"GBL_test_0x%08X",lib_rtl_pid());
+  std::string name = txt;
+  ::unlink(("/dev/shm/sem."+name).c_str());
+  ::unlink(("/dev/shm/"+name).c_str());
+  int status = RTL::Lock::create(name.c_str(), id);
   if ( lib_rtl_is_success(status) )  {
-    RTL::GlobalSection gbl("MyMemory",512, true);
+    RTL::GlobalSection gbl(name,512, true);
     if ( gbl )  {
       char* buff = gbl.buffer();
       for( int i=0; i <turns; ++i )  {
@@ -28,7 +29,7 @@ extern "C" int rtl_test_gbl(int argc, char** argv) {
             ::printf("Found changed shared memory.....\n");
           }
         }
-        ::sprintf(txt,"%s (%s):%3d",name,proc.c_str(),i);
+        ::sprintf(txt,"%s (%s):%3d",name.c_str(),proc.c_str(),i);
         ::strcpy(buff,txt);
         {
           ::printf("%4d[%s] >> Wrote to shared memory:  %s\n",i,proc.c_str(),buff);
