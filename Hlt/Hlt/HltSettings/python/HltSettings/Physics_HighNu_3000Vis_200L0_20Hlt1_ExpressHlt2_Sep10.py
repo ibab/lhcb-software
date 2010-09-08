@@ -206,6 +206,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                  , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
                  , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
                  , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+                 , 'Hlt1SingleMuon4BsMuMu', 'Hlt1DiMuon4BsMuMu'
                  , 'Hlt1MuTrack'
                  , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
                  , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
