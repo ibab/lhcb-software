@@ -8,7 +8,7 @@ use Hlt2Lines           v5r1    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerha
 use Hlt2SharedParticles v4r5    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v10r1   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v2r3p1  Hlt   # Plamen Hopchev    ##### still TODO: use HltSelectionContainer!!!
-use HltCommon           v7r0    Hlt   # Gerhard Raven
+use HltCommon           v7r0p1  Hlt   # Gerhard Raven
 use HltConf             v8r3p1  Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v2r5    Hlt   # Neil Gauvin
