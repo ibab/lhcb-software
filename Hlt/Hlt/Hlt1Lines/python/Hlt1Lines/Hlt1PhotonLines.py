@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $'
 # =============================================================================
 
 
@@ -41,21 +41,9 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
         from Configurables import PatConfirmTool
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
+        from HltTracking.Hlt1TrackUpgradeConf import Forward,FitTrack, ConfiguredPatSeeding
         from HltLine.HltDecodeRaw import DecodeIT, DecodeECAL
-        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-
-        from Configurables import HltTrackUpgradeTool, PatForwardTool
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
               
-
-        ####
-        #from Configurables import L0Calo2CaloTool
-        #l0c2c = L0Calo2CaloTool()
-        #l0c2c.DuplicateClustersOnTES = True
-        ####
-
-
-
 
         commonSeq1 =  [ Member ('TF', 'L0ET' , FilterDescriptor = ['L0ET,>,'+str(self.getProp('Pho_EtCut'))]) 
                       , DecodeIT
@@ -63,7 +51,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , tools = [ Tool( HltTrackFunctionFactory,
                                  tools = [ Tool( HltAntiEleConf, 
                                  tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
-                                 tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10, tools = [ConfiguredPR( "PatSeeding" )]
+                                 tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10, tools = [ConfiguredPatSeeding( )]
                                                  )])])])]
                                )
                       , DecodeECAL
@@ -78,9 +66,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
                       , Member ('TU' ,'FirstForward'
-                                , RecoName = 'Forward'
-                                , tools = [ Tool( HltTrackUpgradeTool
-                                                  ,tools = [ConfiguredPR( "Forward" )] )]
+                                , RecoName = Forward.splitName()[-1]
                                 ) 
                       ]
         commonSeq2 =  [ Member ('TF', 'FirstForward'
@@ -93,10 +79,8 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
                       , Member ('TU' ,'SecondForward'
-                                , RecoName = 'Forward'
-                                , tools = [ Tool( HltTrackUpgradeTool
-                                                  ,tools = [ConfiguredPR( "Forward" )] )]
-                                )
+                               , RecoName = Forward.splitName()[-1]
+                               )
                       , Member ('TF', 'SecondForward'
                                , FilterDescriptor = ['PT,>,'+str(self.getProp('DiTrack_PtCut'))]
                                , HistogramUpdatePeriod = 0
@@ -113,7 +97,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , FilterDescriptor = [ 'VertexDz_PV3D,>,0.']
                                , HistoDescriptor = { 'VertexDz_PV3D':('VertexDz_PV3D',-3.,3.,100), 'VertexDz_PV3DBest':('VertexDz_PV3D',-3.,3.,100) }
                                )
-                      , Member ('VU', 'FitTrack',  RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                      , Member ('VU', 'FitTrack',  RecoName = FitTrack.splitName()[-1] )
                       , Member ('VF', 'FitTrack'
                                , FilterDescriptor = [ 'FitVertexMinIP_PV3D,||>,'+str(self.getProp('Track_IPCut'))]
                                , HistoDescriptor = { 'FitVertexMinIP_PV3D':('FitVertexMinIP_PV3D',-3.,3.,100), 'FitVertexMinIP_PV3DBest':('FitVertexMinIP_PV3D',-3.,3.,100) }
@@ -132,7 +116,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
                                      )
-                            , Member ( 'TU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                            , Member ( 'TU', 'FitTrack', RecoName = FitTrack.splitName()[-1] )
                             , Member ( 'TF', 'FitTrack'
                                      , FilterDescriptor = ['FitIP_PV3D,||>,'+str(self.getProp('Track_IPCut'))]
                                      )  
@@ -154,7 +138,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                      , HistogramUpdatePeriod = 0
                                      , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
                                      )
-                            , Member ( 'TU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                            , Member ( 'TU', 'FitTrack', RecoName = FitTrack.splitName()[-1] )
                             , Member ( 'TF', 'FitTrack'
                                      , FilterDescriptor = ['FitIP_PV3D,||>,'+str(self.getProp('Track_IPCut'))]
                                      )

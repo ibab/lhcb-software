@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -85,11 +85,9 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
-        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
-        from Configurables import HltTrackUpgradeTool, HltVeloTCaloMatch, PatForwardTool, HltGuidedForward
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+        from HltTracking.Hlt1TrackUpgradeConf  import FitTrack, GuidedForward, Forward
         from Configurables import HltFilterFittedVertices
         
         # confirmed track
@@ -129,14 +127,12 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             
             prefix = 'HadronConfTrackMatch'+type
             from HltLine.HltDecodeRaw import DecodeIT
+            from HltTracking.Hlt1TrackUpgradeConf import GuidedForward
             conf =                  [ DecodeIT
                                     , Member ( 'TU', 'GuidedForward'
                                              , InputSelection = '%s' %OutputOfVeloMatch
-                                             , RecoName = 'GuidedForward'
-                                             , tools = [ Tool( HltTrackUpgradeTool
-                                                               , tools = [ Tool( HltGuidedForward
-                                                                                 ,tools = [ConfiguredPR( "Forward" )] )] )]
-                                               , HistogramUpdatePeriod = 1
+                                             , RecoName = GuidedForward.splitName()[-1]
+                                              , HistogramUpdatePeriod = 1
                                              )         
                                     ]
             return bindMembers(prefix, conf)
@@ -186,6 +182,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
             OutputOfCompanion    = companion(type).outputSelection() 
             
             from HltLine.HltDecodeRaw import DecodeIT
+            from HltTracking.Hlt1TrackUpgradeConf import Forward
             dih = [ PV3D().ignoreOutputSelection()
                 , Member ( 'TF' , 'ConfPT', InputSelection = '%s' %OutputOfConfirmation, 
                            FilterDescriptor = ['PT,>,%(HadCompanion_PTCut)s'%self.getProps()],
@@ -209,11 +206,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                            , HistoDescriptor  = histosfilter('DiVtxIP',0.,400.,100)
                          )   
                 , DecodeIT
-                , Member ( 'VU', 'Forward'
-                           , RecoName = 'Forward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
-                           )
+                , Member ( 'VU', 'Forward' , RecoName = Forward.splitName()[-1])
                 , Member ( 'VF', 'DiHadronPT1', 
                            FilterDescriptor = [ 'VertexMaxPT,>,%s'%self.getProp("HadMain_PTCut")],
                            HistogramUpdatePeriod = 1,
@@ -236,7 +229,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------
         def afterburn():
             after = [ PV3D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
+                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'TF' , '2FitTrack'
                            , FilterDescriptor = ["FitChi2OverNdf,<,%s"%self.getProp('HadMain_TrackFitChi2Cut')],
                            HistogramUpdatePeriod = 1,
@@ -258,7 +251,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
 
             vafter =  [ PV3D().ignoreOutputSelection()
                 , Member ( 'VU', 'FitTrack', InputSelection='%s' %OutputOfDiHadron
-                           , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                           , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'VF', '2FitTrack'
                            , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,%s'%self.getProp('HadMain_TrackFitChi2Cut')]
                            , HistogramUpdatePeriod = 1
@@ -284,15 +277,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 return [Member('TF','MonConf',OutputSelection = "%Decision", FilterDescriptor = ['IsBackward,<,0.5'])]
             elif type.find('Comp') > -1 :
                 from HltLine.HltDecodeRaw import DecodeIT
-                return [ DecodeIT
-                       , Member( 'TU',
-                                'MonForward',
-                                RecoName = 'Forward',
-                                tools = [ Tool( HltTrackUpgradeTool,
-                                                tools = [ConfiguredPR( "Forward" )]
-                                              )
-                                        ]
-                              )
+                return [ DecodeIT , Member( 'TU', 'MonForward', RecoName = Forward.splitName()[-1])
                        ]+mondecision('Conf')
             else                :
                 return None # Not an allowed type
@@ -332,8 +317,7 @@ class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VF', 'Mass',
                             FilterDescriptor = [ 'VertexDikaonMass,[],'+MassMinCut+','+MassMaxCut]
                            )          
-                , Member ( 'VU', 'FitTrack' 
-                           , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                , Member ( 'VU', 'FitTrack' , RecoName = FitTrack.splitName()[-1])
                 , Member ( 'VF', '2FitTrack' 
                            , OutputSelection = "%Decision"
                            , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,%s'%self.getProp('HadMain_TrackFitChi2Cut')]

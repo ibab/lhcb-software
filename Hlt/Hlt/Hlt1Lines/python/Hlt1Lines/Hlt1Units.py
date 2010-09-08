@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hlt1Units.py,v 1.3 2010-08-17 14:09:21 graven Exp $ 
+# $Id: Hlt1Units.py,v 1.4 2010-09-08 09:23:05 graven Exp $ 
 # =============================================================================
 ## @file HltConf/Hlt1Units.py
 #  Collection of utilities for dealing with Hlt1 "units"
@@ -26,7 +26,7 @@ See:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
@@ -44,7 +44,6 @@ __all__ = (
     'VeloTDist'      , ## the 'track-match'-configuration   for VeloTDist
     'VeloT'          , ## the 'track-match'-configuration   for VeloT
     ## bi-functions
-    'RZVeloTMatch'   , ## track-bi-function configuration for RZVeloTMatch
     'Calo3DChi2'     , ## track-bi-function configuration for Calo3DChi2 
     'Ecal3DChi2'     , ## track-bi-function configuration for Ecal3DChi2
     ## track functions
@@ -59,18 +58,14 @@ __all__ = (
     'trUpgrader'     , ## get Track Upgrade by name
     'trFun2s'        , ## get Track Bi-function by name 
     'trFun2s'        , ## get Track function by name
-    ## various predefined functions 
-    'rzVeloTMatch'     ## create rzVeloTMatch   track-function 
     )
 
 from LoKiTrigger.decorators import LoKi , LHCb 
-from LoKiTrigger.decorators import ( bindAbsMin  ,
-                                     TrINPUT     ,
+from LoKiTrigger.decorators import ( TrINPUT     ,
                                      TrSELECTION ,
                                      TTrFUN      ,
                                      TTrFUN2     ,
                                      TrUPGRADE   ,
-                                     TrMATCH     ,
                                      TrMATCH     ) 
 
 ## @todo to be done in LoKiTrigger:
@@ -82,21 +77,6 @@ LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString
 LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString 
 LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString 
 LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString 
-
-
-# ==========================================================================
-## Create the upgrade streamer 
-def __tr_upgrade__ ( self , output ) :
-    """
-    Create the upgrade functor:
-
-    >>> upgrader = ...                             ## get the upgrader
-    >>> streamer = upgrader ( 'OutputSelection' )  ## get the streamer 
-    
-    """
-    return TrUPGRADE ( output , self )
-
-LoKi.Hlt1.UpgradeConf. __call__ = __tr_upgrade__
 
 
 # ==========================================================================
@@ -141,7 +121,7 @@ def __tr_func__ ( self ) :
     """
     Create the function/tool from the descriptor
 
-    >>> fun  = ..                  ## get the function coffiguration
+    >>> fun  = ..                  ## get the function configuration
     >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
     
     """
@@ -156,7 +136,7 @@ def __tr_fun2__ ( self ) :
     """
     Create the function/tool from the descriptor
 
-    >>> fun  = ..                  ## get the function coffiguration
+    >>> fun  = ..                  ## get the function configuration
     >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
     
     """
@@ -364,10 +344,6 @@ def trMatcher ( name ) :
 # =============================================================================
 ## ITrackBiFunctionTool interface                     @see ITrackBiFunctionTool
 # =============================================================================
-RZVeloTMatch  = LoKi.Hlt1.TrackBiFunction (
-    "HltMatchTVeloTracks/RZVeloTMatch",                       ## tool type-name 
-    False                                                     ##   public tool?
-    )
 Calo3DChi2    = LoKi.Hlt1.TrackBiFunction (
     "HltVeloTCaloMatch/Calo3DChi2"    ,                       ## tool type-name
     False                                                     ##   public tool?
@@ -378,7 +354,6 @@ Ecal3DChi2    = LoKi.Hlt1.TrackBiFunction (
     )
 
 _trFun2s = {}
-_trFun2s [ 'RZVeloTMatch' ] = RZVeloTMatch
 _trFun2s [ 'Calo3DChi2'   ] = Calo3DChi2
 _trFun2s [ 'Ecal3DChi2'   ] = Ecal3DChi2
 
@@ -447,29 +422,6 @@ def trFuns ( name ) :
 # =============================================================================
 # High-level embedded stuff
 # =============================================================================
-def rzVeloTMatch ( source  , input = False ) :
-    """
-    Create the helper object for 'the second' selectiion:
-    
-    >>> func = rzVeloTMatch ( 'TheSecondSelection' )  ## create the function
-    >>> fltr = func < 0.15                            ## create the filter 
-
-    The selection can be the 'source' or 'string'.
-    
-    >>> func = rzVeloTMatch ( TrINPUT('selection' ) )  ## create the function
-    >>> fltr = func < 0.15                             ## create the filter 
-    
-    >>> func = rzVeloTMatch ( TrSELECTION('selection' ) )  ## create the function
-    >>> fltr = func < 0.15                             ## create the filter 
-    
-    """
-    # selection is string?
-    if str == type(source) :        
-        source = TrINPUT ( source ) if input else TrSELECTION ( source )
-    # generic action: 
-    return bindAbsMin ( TTrFUN2 ( RZVeloTMatch ) , source )
-    
-
 # =============================================================================
 ## some embedded action
 if '__main__' == __name__ :

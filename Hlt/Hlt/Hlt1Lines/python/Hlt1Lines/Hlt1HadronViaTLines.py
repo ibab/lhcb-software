@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -50,12 +50,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
-        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
 
         from Configurables import HltTrackUpgradeTool, PatForwardTool
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+        from HltTracking.Hlt1TrackUpgradeConf import THadronConf, Forward
 
         ## alias to get the slot associated to a name
         _cut = lambda x: str(self.getProp(x))
@@ -88,32 +87,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
 	
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
-            Hlt1HadronViaTTUTConf = Member ( 'TU', 'TConf', RecoName = 'THadronConf' 
-                                             , tools = [Tool( type = HltTrackUpgradeTool
-                                               , name = 'HltTrackUpgradeTool'
-                                               , tools=[Tool( type = L0ConfirmWithT
-                                                 , name='THadronConf'
-                                                 , particleType = 1
-                                                 , trackingTool='PatConfirmTool'
-                                                 , tools = [ Tool( type = PatConfirmTool
-                                                   , name = 'PatConfirmTool'
-                                                   , nSigmaX = 4
-                                                   , nSigmaY = 4
-                                                   , nSigmaTx = 4
-                                                   , nSigmaTy = 4
-                                                   , restrictSearch = True
-                                                   , debugMode = False 
-                                                   , tools = [ConfiguredPR( "PatSeeding" )]
-#                                                                  [ Tool( type = PatSeedingTool
-
-#                                                    , name = 'PatSeedingTool'
-#                                                    , zMagnet = 0
-#                                                                    )]
-                                                                )]
-                                                              )]
-                                                            )]
-                                               
-                                           )
+            Hlt1HadronViaTTUTConf = Member ( 'TU', 'TConf', RecoName = THadronConf.splitName()[-1] )
 
             conf = l0.members()  + [ DecodeIT 
                     , Hlt1HadronViaTTUTConf
@@ -179,11 +153,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VF', 'UVelo'
                            , FilterDescriptor = [ 'VertexDz_PV3D,>,'+_cut('HadViaTCompanion_DZCut')]
                            )
-                , Member ( 'VU', 'Forward'
-                           , RecoName = 'Forward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
-                           )
+                , Member ( 'VU', 'Forward' , RecoName = Forward.splitName()[-1])
                 , Member ( 'VF', '1Forward',
                            FilterDescriptor = [ 'VertexMinPT,>,'+PT2Cut]
                            )

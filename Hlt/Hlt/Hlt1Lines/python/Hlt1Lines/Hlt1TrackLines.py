@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -56,16 +56,15 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
-        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
         from Configurables import HltTrackUpgradeTool, PatForwardTool
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
         from Configurables import HltFilterFittedVertices
         
         def trackprepare(ip,pt,p):
             from HltLine.HltDecodeRaw import DecodeIT
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
+            from HltTracking.Hlt1TrackUpgradeConf import Forward
             return [ Hlt1GEC(),
                     Velo,PV3D().ignoreOutputSelection(),
                     Member ( 'TF', 'OTIP'
@@ -82,9 +81,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                          ),
                     DecodeIT,
                     Member ( 'TU', 'Forward'
-                           , RecoName = 'Forward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
+                           , RecoName = Forward.splitName()[-1]
                            ),
                     Member ( 'TF' , 'OTPT' ,
                             FilterDescriptor = ['PT,>,%s'%pt]
@@ -100,8 +97,9 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
 
 
         def afterburn(chi2,ipchi2):
+            from HltTracking.Hlt1TrackUpgradeConf import FitTrack
             return [ PV3D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
+                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'TF' , 'TrkChi2'
                            , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2],
                            HistogramUpdatePeriod = 1,
@@ -113,22 +111,26 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                           InputSelection2 = 'PV3D',
                           MinIPCHI2 = ipchi2
                          )
+                #, Member ('TF','FFT'
+                #         , OutputSelection = "%Decision",
+                #         , FilterDescriptor = [ "FitIPS_PV3D,>,%s"%ipchi2 ] )
                 ]
 
         def muonAfterburn(chi2,ipchi2) :
             from Configurables import MuonRec, MuonIDAlg
             from HltTracking.HltTrackNames import HltSharedPIDPrefix, HltMuonTracksName, HltAllMuonTracksName, HltMuonIDSuffix
             from MuonID import ConfiguredMuonIDs
+            from HltTracking.Hlt1TrackUpgradeConf import FitTrack
             cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="2010")
             HltMuonIDAlg        = cm.configureMuonIDAlg("Hlt1TrackMuonIDAlg")
-            HltMuonIDAlg.TrackLocation          = "Hlt1/Track/FitTrack" # hardwired in $HLTTRACKINGROOT/src/HltTrackUpgradeTool, under reconame 'FitTrack' 
+            HltMuonIDAlg.TrackLocation          = FitTrack.TESOutput # "Hlt1/Track/FitTrack" # hardwired in $HLTTRACKINGROOT/src/HltTrackUpgradeTool, under reconame 'FitTrack' 
             location = lambda x : '/'.join( [ 'Hlt1','Track','TrackMuon', HltSharedPIDPrefix, x ] ) 
             HltMuonIDAlg.MuonIDLocation         = location( HltMuonIDSuffix )
             HltMuonIDAlg.MuonTrackLocation      = location( HltMuonTracksName )
             HltMuonIDAlg.MuonTrackLocationAll   = location( HltAllMuonTracksName )
             HltMuonIDAlg.FindQuality            = False
             after = [ PV3D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
+                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'TF' , 'TrkChi2'
                          , FilterDescriptor = ["FitChi2OverNdf,<,%s"%chi2]
                          , HistogramUpdatePeriod = 1

@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -68,8 +68,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltTracking.HltReco import RZVelo
         from HltTracking.HltPVs  import PV2D
-        from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+        from Hlt1Lines.HltConfigurePR import ConfiguredPR, GuidedForward, Velo, FitTrack
         
         # confirmed track
         #------------------------
@@ -99,7 +98,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                                              , HistogramUpdatePeriod = 1
                                              , HistoDescriptor  = histosfilter('Calo2DChi2_'+l0.outputSelection(),0.,10.,200)
                                              )
-                                    , Member ( 'TU', 'Velo',  RecoName = 'Velo')
+                                    , Member ( 'TU', 'Velo',  RecoName = Velo.splitName()[-1])
                                     , Member ( 'TF', '1Velo'
                                              , FilterDescriptor = [ 'Calo3DChi2_%s,<,4'%l0.outputSelection() ]
                                              , HistogramUpdatePeriod = 1
@@ -116,11 +115,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                                              , MatchName = 'VeloCalo' , MaxQuality = 4.
                                              )
                                     , DecodeIT
-                                    , Member ( 'TU', 'GuidedForward'
-                                             , RecoName = 'GuidedForward'
-                                             , tools = [ Tool( HltTrackUpgradeTool
-                                                               , tools = [ Tool( HltGuidedForward
-                                                                                 ,tools = [ConfiguredPR( "Forward" )] )] )]
+                                    , Member ( 'TU', 'GuidedForward' , RecoName = GuidedForward.splitName()[-1] 
                                              , HistogramUpdatePeriod = 1
                                              )
                                     , Member ( 'TF' , 'Confirmed'
@@ -153,7 +148,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         def companion(type=""):
             OutputOfConfirmation = confirmation(type).outputSelection()
             comp = [ RZVelo , PV2D().ignoreOutputSelection()
-                , Member ( 'TU', 'UVelo' , InputSelection = 'RZVeloSW', RecoName = 'Velo')
+                , Member ( 'TU', 'UVelo' , InputSelection = 'RZVeloSW', RecoName = Velo.splitName()[-1])
                 , Member ( 'TF', '1UVelo'
                            , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
                            , HistogramUpdatePeriod = 1
@@ -190,11 +185,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('VertexDx_PV2DSW',1.,12.,200)                       
                            )
-                , Member ( 'VU', 'Forward'
-                           , RecoName = 'Forward'
-                           , tools = [ Tool( HltTrackUpgradeTool
-                                             ,tools = [ConfiguredPR( "Forward" )] )]
-                           )
+                , Member ( 'VU', 'Forward' , RecoName = Forward.splitName()[-1] )
                 , Member ( 'VF', '1Forward',
                            FilterDescriptor = [ 'VertexMinPT,>,%s'%self.getProp("HadCompanion_PTCut")],
                            HistogramUpdatePeriod = 1,
@@ -212,7 +203,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         #--------------------------------
         def afterburn():
             after = [ PV2D().ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
+                , Member ( 'TU' , 'FitTrack' , RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'TF' , '1FitTrack' ,
                            FilterDescriptor = ["FitIP_PV2DSW,||>,%s"%self.getProp('HadSingle_IPCut')],
                            HistogramUpdatePeriod = 1,
@@ -231,7 +222,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         #-------------------
         def vafterburn(type=""):
             vafter =  [ PV2D().ignoreOutputSelection()
-                , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                , Member ( 'VU', 'FitTrack',   RecoName = FitTrack.splitName()[-1] )
                 , Member ( 'VF', '1FitTrack',
                            FilterDescriptor = [ 'FitVertexMinIP_PV2DSW,||>,%s'%self.getProp(type+'HadDi_IPCut')],
                            HistogramUpdatePeriod = 1,

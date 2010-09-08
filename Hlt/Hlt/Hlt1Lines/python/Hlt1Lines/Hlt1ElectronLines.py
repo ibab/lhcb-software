@@ -19,46 +19,26 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                 , 'DiEle_PtCut'            :  2500.    # pt cut for di-electron
                 }
 
-#
+    #
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt1Line   as Line
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import bindMembers
         from HltLine.HltLine import Hlt1Tool   as Tool
         from Hlt1Lines.HltL0Candidates import convertL0Candidates
-        from Configurables import HltTrackUpgradeTool
-        from Configurables import L0ConfirmWithT
-        from HltTracking.HltReco import RZVelo, Velo
+        from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
+        from HltTracking.Hlt1TrackUpgradeConf  import TEleConf
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
-        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from Configurables import HltTrackUpgradeTool, PatForwardTool, HltGuidedForward, PatConfirmTool
-        from Hlt1Lines.HltConfigurePR import ConfiguredPR
+        from Configurables import HltTrackUpgradeTool
+        from HltTracking.Hlt1TrackUpgradeConf import Forward, FitTrack, RadCor
               
 
-        ####
-        #from Configurables import L0Calo2CaloTool
-        #l0c2c = L0Calo2CaloTool()
-        #l0c2c.DuplicateClustersOnTES = True
-        ####
-        
-        
-    
 
         ##### common bodies IP
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
-                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf'
-                                             , tools = [ Tool( HltTrackUpgradeTool
-                                               , tools = [ Tool( L0ConfirmWithT
-                                                 , 'TEleConf'
-                                                 , particleType = 2
-                                                 , tools = [ Tool( PatConfirmTool
-                                                   , tools = [ConfiguredPR( "PatSeeding" )]
-                                                                   )]
-                                                                 )]
-                                                               )]
-                                             )
+                                  , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
                                   , Velo, PV3D().ignoreOutputSelection()
                                   , DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
@@ -75,9 +55,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
                                   , Member ( 'TU', 'CompanionForward'
-                                             , RecoName = 'Forward'
-                                             , tools = [ Tool( HltTrackUpgradeTool
-                                                               ,tools = [ConfiguredPR( "Forward" )] )]
+                                             , RecoName = Forward.splitName()[-1]
                                              )
                                   , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('EleIPCompanion_PtCut'))]
                                             , HistogramUpdatePeriod = 0
@@ -93,17 +71,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         ##### common bodies no IP
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
-                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
-                                             tools = [ Tool( HltTrackUpgradeTool
-                                             , tools = [ Tool( L0ConfirmWithT
-                                             , 'TEleConf'
-                                             ,  particleType = 2
-                                             , tools = [ Tool( PatConfirmTool
-                                               , tools = [ConfiguredPR( "PatSeeding" )]
-                                                               )]
-                                                            )]
-                                                          )]
-                                             )
+                                  , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
                                   , Velo, PV3D().ignoreOutputSelection()
                                   , DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
@@ -112,11 +80,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         companionTrackNoIP    = [ Velo
                                 , Member ( 'TF', 'CompanionVelo', 
                                            FilterDescriptor = [ 'DOCA_%TMVeloT,<,0.15' ])
-                                , Member ( 'TU', 'CompanionForward'
-                                           , RecoName = 'Forward'
-                                           , tools = [ Tool( HltTrackUpgradeTool
-                                                             ,tools = [ConfiguredPR( "Forward" )] )]
-                                           )
+                                , Member ( 'TU', 'CompanionForward' , RecoName = Forward.splitName()[-1])
                                 , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('EleCompanion_PtCut'))]
                                           , HistogramUpdatePeriod = 0
                                           , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
@@ -141,7 +105,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                         , HistogramUpdatePeriod = 0
                                         , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
                                         )
-                               , Member ( 'TU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                               , Member ( 'TU', 'FitTrack', RecoName = FitTrack.splitName()[-1] )
                                , Member ( 'TF', 'Decision'
                                         , FilterDescriptor = ['FitIP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                         , OutputSelection = '%Decision'
@@ -172,7 +136,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                          + [ Member ( 'VF', 'VertexCut'
                                     , FilterDescriptor = [ 'VertexPointing_PV3D,<,0.5', 'VertexDz_PV3D,>,0.' ]
                                     )
-                           , Member ( 'VU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                           , Member ( 'VU', 'FitTrack', RecoName = FitTrack.splitName()[-1] )
                            , Member ( 'VF', 'FitTrack'
                                     , FilterDescriptor =  [ 'FitVertexMinIP_PV3D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                     , OutputSelection = '%Decision'
@@ -186,7 +150,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                  , L0DU = "L0_CHANNEL('Electron')"
                  , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
                          + [ DecodeECAL
-                           , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
+                           , Member ( 'VU', 'RadCor' , RecoName = RadCor.splitName()[-1]  )
                            , Member ( 'VF', 'VertexPT', FilterDescriptor = [ 'VertexPT,>,'+str(self.getProp('DiEle_PtCut')) ] )
                            , Member ( 'VF', 'MassCut'
                                     , FilterDescriptor = [ 'VertexDiElectronMass,>,%s'%self.getProp('DiEle_LowMassCut') ] + (
