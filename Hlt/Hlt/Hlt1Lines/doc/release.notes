@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.220 2010-09-08 14:55:23 graven Exp $
+! $Id: release.notes,v 1.221 2010-09-08 14:55:56 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v5r0   2010-09-08 ===================
 ! 2010-09-08 Gerhard Raven
  - make changes below compatible with TrackUpgrade changes
 ! 2010-09-08 Johannes Albrecht
  - add two muon lines with Velo GEC at 4000 for B2mm 
 
-!========================== Hlt1Lines v5r0   2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
  - follow changes to TrackUpgrade code in HltTracking v7r0: 
     common upgrades share now a common tool, centralizing the configuration
     in HltTracking instead of distributing amongst the lines (and then pray
