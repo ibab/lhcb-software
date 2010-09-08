@@ -679,7 +679,12 @@ class LbLoginScript(SourceScript):
             if isBinaryDbg(opts.cmtconfig) :
                 debug = True
         else :
-            supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
+            if opts.cmtsite == "CERN" :
+                # every platform with a descent python at CERN
+                supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
+            else :
+                # restriction on supported CONFIG for LOCAL use
+                supconf = self._nativemachine.CMTSupportedConfig(debug=debug)
             if supconf :
                 theconf = supconf[0]
             else :
