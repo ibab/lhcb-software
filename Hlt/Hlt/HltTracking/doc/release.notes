@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.147 2010-09-08 09:18:23 graven Exp $
+!$Id: release.notes,v 1.148 2010-09-08 12:55:25 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -9,6 +9,7 @@
 ! 2010-09-08 - Gerhard Raven
  - change upgrade such that there is one public (common!) tool
    per output location to insure that the caching is consistent
+ - change matching such that there are no 'hidden' properties
 
 ! 2010-09-07 - Gerhard Raven
  - add some commments about VeloTT upgrade: it won't work!
