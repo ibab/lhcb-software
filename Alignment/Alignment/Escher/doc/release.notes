@@ -3,6 +3,11 @@ Package : Escher
 Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+
+
+! 2010-09-08
+ - add gaudivelosens.py: scripts to run VELO AlignSensors
+
 ! 2010-06-04 - Stefania Vecchi
 -  added 2010-Collisions-Muon.py as an example script to run Muon Global
 alignment of HalfStations respect the tracking
