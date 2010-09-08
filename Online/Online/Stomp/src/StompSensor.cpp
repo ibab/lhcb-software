@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.3 2009-11-27 16:39:46 frankb Exp $
+// $Id: StompSensor.cpp,v 1.4 2010-09-08 17:45:56 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.3 2009-11-27 16:39:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.4 2010-09-08 17:45:56 frankb Exp $
 
 #include "Stomp/StompSensor.h"
 #include "Stomp/stomp.h"
@@ -120,7 +120,8 @@ int StompSensor::_command(const string& cmd, const string& channel, const void* 
   }
   else  {
     frame.headers = ::apr_hash_make(spool);
-    ::apr_hash_set(frame.headers,"destination",APR_HASH_KEY_STRING,channel.c_str());      
+    ::apr_hash_set(frame.headers,"destination",APR_HASH_KEY_STRING,channel.c_str());
+    //cout << cmd << ": [" << channel << "]" << endl;
   }
   frame.body_length = len;
   frame.body = (char*)body;
@@ -183,7 +184,9 @@ int StompSensor::unsubscribe(const string& channel)   {
 
 /// Send data to the stomp service (push)
 int StompSensor::send(const string& destination, const void* data, size_t len)  {
-  return _command("SEND",destination,data,int(len));
+  if ( destination.substr(0,7)=="/topic/" )
+    return  _command("SEND",destination,data,int(len));
+  return _command("SEND","/topic/"+destination,data,int(len));
 }
 
 /// Read pending data from channel
