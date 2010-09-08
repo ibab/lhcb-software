@@ -17,11 +17,12 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
     
-    __slots__ = { 'Prescale'   : { 'Hlt2MuonFromHLT1'       : 1.0   
-                                   ,'Hlt2SingleMuon'        : 1.0
-                                   ,'Hlt2SingleHighPTMuon'  : 1.0
-                                   ,'Hlt2IncMuTrack'        : 1.0
-                                   ,'Hlt2IncMuTrackNoIP'    : 1.0
+    __slots__ = { 'Prescale'   : { 'Hlt2MuonFromHLT1        '       : 1.0
+                                   ,'Hlt2MuonFromHLT1Bs2MuMu'      : 1.0   
+                                   ,'Hlt2SingleMuon'                : 1.0
+                                   ,'Hlt2SingleHighPTMuon'          : 1.0
+                                   ,'Hlt2IncMuTrack'                : 1.0
+                                   ,'Hlt2IncMuTrackNoIP'            : 1.0
                                    }
                   
                   ,'SingleMuonPt'        : 1000      # MeV
@@ -81,7 +82,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Decision" : 50190 } )        
         
         #--------------------------------------------
+
+        line = Hlt2Line('Hlt2MuonFromHLT1Bs2MuMu'
+                        , prescale = self.prescale
+                        , HLT = "HLT_PASS_RE('Hlt1.*4BsMuMu.*Decision')"
+                        , VoidFilter = '' # explicitly require NO pile up filter... 
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuonFromHLT1Bs2MuMuDecision" : 50193 } )        
         
+        #--------------------------------------------
         Hlt2SelSingleMuon= Hlt2Member( FilterDesktop
                                        , "Filter"
                                        , InputLocations  = [BiKalmanFittedMuons]
