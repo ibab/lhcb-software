@@ -12,9 +12,9 @@ VAlign().OutputLevel = 3
 
 NTupleSvc.Output = ["FILE1 DATAFILE='VeloAlign.root' OPT='NEW' TYP='ROOT'"]
 
-VAlign().Monitor_Constants  = False   #  Alignment constants at different stages 
-VAlign().Monitor_PV         = False   #  Primary vertex information
-VAlign().Monitor_Overlaps   = False   #  Overlap tracks information
-VAlign().Monitor_Tracks     = False   #  Track info (params, residuals,...)
+VAlign().Monitor_Constants  = True   #  Alignment constants at different stages 
+VAlign().Monitor_PV         = True   #  Primary vertex information
+VAlign().Monitor_Overlaps   = True   #  Overlap tracks information
+VAlign().Monitor_Tracks     = True   #  Track info (params, residuals,...)
 VAlign().Monitor_Tracks_num = 0     #  How many track in the TrackInfo sample ?
-VAlign().Monitor_Events     = False
+VAlign().Monitor_Events     = True

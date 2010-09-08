@@ -257,6 +257,11 @@ StatusCode VAlign::execute() {
     float adcpertrack=0.;
 
     for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter){
+      if (!iter->isVelo()){
+        verbose()<<"No Velo Cluster"<<endmsg;
+        continue;
+      }
+      verbose()<<"Velo Cluster"<<endmsg;
       LHCb::VeloCluster *cluster;
       cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (iter)->channelID() ); 
       adcpertrack+=cluster->totalCharge();

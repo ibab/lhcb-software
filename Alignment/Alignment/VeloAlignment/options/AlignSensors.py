@@ -6,17 +6,16 @@ from Configurables import (AlignSensors, TrackMasterFitter, TrackMasterExtrapola
 
 AlignSensors("AlignSensors").OutputLevel	  = 3
 AlignSensors("AlignSensors").MinModule          = 5
-AlignSensors("AlignSensors").TrackLocation      ="Rec/Track/Velo"
-AlignSensors("AlignSensors").PrintInfo		=False
-AlignSensors("AlignSensors").SelectedEvent 	  = 1 #Choose event number to display
-AlignSensors("AlignSensors").OutputNtuple	  = False
-AlignSensors("AlignSensors").MinNResiduals	  = 200
+AlignSensors("AlignSensors").TrackLocation      = "Rec/Track/Best" #"Rec/Track/Velo"
+AlignSensors("AlignSensors").PrintInfo		= False
+AlignSensors("AlignSensors").SelectedEvent 	= 1 #Choose event number to display
+AlignSensors("AlignSensors").OutputNtuple	= False
+AlignSensors("AlignSensors").MinNResiduals	= 200
 AlignSensors("AlignSensors").KalmanResidual     = False
-AlignSensors("AlignSensors").ACDC               = False
+AlignSensors("AlignSensors").ACDC               = True
 AlignSensors("AlignSensors").MinDeltaSig        = 1 # minimal significance of alignment delta required for update
 
 AlignSensors("AlignSensors").addTool(TrackMasterFitter, name="Fitter")
-AlignSensors("AlignSensors").Fitter.ZPositions          = []
 AlignSensors("AlignSensors").Fitter.NumberFitIterations = 1
 AlignSensors("AlignSensors").Fitter.addTool(TrackMasterExtrapolator, "Extrapolator")
 AlignSensors("AlignSensors").Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"

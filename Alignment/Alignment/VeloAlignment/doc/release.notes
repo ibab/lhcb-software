@@ -2,6 +2,33 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+
+! 08/09/2010 - Silvia Borghi  
+  - VAlign.cpp : add check if Velo cluster exists
+  - AlignSensors.cpp: update residual evaluation (to consider the z position
+                      of the strip, instead the one of the sensor)
+                      Use phi in half frame instead of global frame in 
+	                    kalman method
+                      Use the errors stored in cluster tool instead of
+                      pitch /sqrt(12)
+  - VeloAlignMonitor.py: change the default of the options
+  - AlignSensors.py: delete obsolete option
+  - options/plotVeloSensPosition.py Draw the position in the global frame 
+    of the point (xpos,ypos,0) in local frame for each sensor using the 
+    alignment defined in the option file
+  - scripts directory contains some python scripts to compare or combine
+    Velo alignment constants in Detectors.xml and Modules. xml
+    - CompareDetectorXml.py compare the alignment constants in 2 xml file 
+                            in Detectors.xml
+    - CompareModuleXml.py compare the alignment constants in 2 xml file 
+                          in Modules.xml
+    - CombineDetectorXml.py combine the alignment constants of 2 xml file 
+                            in Detectors.xml
+    - CombineModuleXml.py combine the alignment constants of 2 xml file 
+                          in Modules.xml
+    - generateMisalignDetectorXml.py add random misalignment to the constants
+                                     of Detectors.xml
+
 !========================== VeloAlign v4r9 2010-05-04 ========================
 ! 03/05/2010 - Wouter Hulsbergen
   - resolved compilor warning

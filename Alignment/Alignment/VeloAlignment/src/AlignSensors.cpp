@@ -66,7 +66,7 @@ AlignSensors::AlignSensors( const std::string& name,ISvcLocator* pSvcLocator)
   declareProperty( "MinModule", m_minModule = 4 );
   declareProperty( "KalmanResidual", m_kalmanResidual = false );
   declareProperty( "MinNResiduals", m_minNResiduals = 0 );
-  declareProperty( "ACDC", m_ACDC = false );
+  declareProperty( "ACDC", m_ACDC = true );
   declareProperty( "MinDeltaSig", m_minDeltaSig = 1 );
 }
 //=============================================================================
@@ -89,9 +89,6 @@ StatusCode AlignSensors::initialize() {
   
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
   
-//  m_measurementprovider  = tool<IMeasurementProvider>( "MeasurementProvider",
-//						       "MeasProvider", this );
-
   m_trackInterpolator = tool<ITrackInterpolator>( "TrackInterpolator" );
 
   m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector",
@@ -197,20 +194,20 @@ StatusCode AlignSensors::getClusterContainer()
 
   debug()<< "==> getClusterContainer() " <<endmsg;
 
-    verbose() << "Retrieving " << m_clusterCont << endmsg;
-    if ( !exist<LHCb::VeloClusters>(m_clusterCont ) ) {
-      debug() << " ----  No VeloClusters container retrieved --- "
+  verbose() << "Retrieving " << m_clusterCont << endmsg;
+  if ( !exist<LHCb::VeloClusters>(m_clusterCont ) ) {
+    debug() << " ----  No VeloClusters container retrieved --- "
+            << endmsg;
+    return (StatusCode::FAILURE);
+  }else{
+    m_clusters=get<LHCb::VeloClusters>(m_clusterCont );
+    verbose() << "---- VeloCluster Container retrieved from default location ----"
               << endmsg;
-      return (StatusCode::FAILURE);
-    }else{
-      m_clusters=get<LHCb::VeloClusters>(m_clusterCont );
-      verbose() << "---- VeloCluster Container retrieved from default location ----"
-              << endmsg;
-      if(m_printInfo){
-        verbose()<< "Number of clusters with connected sensors found in TES: "
+    if(m_printInfo){
+      verbose()<< "Number of clusters with connected sensors found in TES: "
                << m_clusters->size() <<endmsg;
-      }
     }
+  }
   return (StatusCode::SUCCESS);
 }
 
@@ -232,8 +229,6 @@ StatusCode AlignSensors::trackMonitor()
             << endmsg;
     return StatusCode::FAILURE;
   }
-//  debug() << "Track Container has non-zero size, load measurement provider" << endmsg;
-//  m_measurementprovider->load();
 
   LHCb::Tracks::const_iterator itTrg;
 
@@ -266,191 +261,162 @@ StatusCode AlignSensors::trackMonitor()
 StatusCode AlignSensors::makeKalmanPlots( LHCb::Track* track ) 
 {
     
-    // count R and Phi hits
-    // produce list of modules
-    const std::vector< LHCb::LHCbID >& trackIDs = track->lhcbIDs();
-    int n_r = 0;
-    int n_phi = 0;
-    std::vector< LHCb::LHCbID >::const_iterator it;
-    bool modules[ 42 ];
-    for ( int i = 0; i < 42; i++ ) {
-      modules[ i ] = false;
+  // count R and Phi hits
+  // produce list of modules
+  const std::vector< LHCb::LHCbID >& trackIDs = track->lhcbIDs();
+  int n_r = 0;
+  int n_phi = 0;
+  std::vector< LHCb::LHCbID >::const_iterator it;
+  bool modules[ 42 ];
+  for ( int i = 0; i < 42; i++ ) {
+    modules[ i ] = false;
+  }
+  for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
+    if ( it->isVeloR() ) {
+      n_r++;
+      modules[ it->veloID().sensor() ] = true;
     }
+    if ( it->isVeloPhi() ) {
+      n_phi++;
+      modules[ it->veloID().sensor() - 64 ] = true;
+    }
+  }
+  plot1D( n_r, "RSenPerTrack", "R sensors per track", -0.5, 50.5, 51 );
+  plot1D( n_phi, "PhiSenPerTrack", "Phi sensors per track", -0.5, 50.5, 51 );
+  if ( ( n_r < m_minSenR ) || ( n_phi < m_minSenPhi ) ) {
+    debug() << "Track does not have enough R and/or Phi hits. Continuing with next track." << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // fill general track histograms
+  plot1D(track->flag(),"ErrorFlags","Error flags",-0.5,1.5,2);
+  plot1D(track->type(),"TrackType","Track type",-0.5,7.5,8);
+  
+  plot1D(track->chi2PerDoF(),"Chi2_nDoF","Chi2/DoF per Track",-0.1,4.1,75);      
+
+  // get state parameters
+  if (m_printInfo) {             
+    Gaudi::XYZPoint m_coord = track->position();
+    Gaudi::XYZVector m_slopes = track->slopes();
+    verbose()  << "Track# : " 	<< track->key()+1
+               << " Chi2 : " 	<< track->chi2()
+               << " DoF : "      << track->nDoF()
+               << " Charge : " 	<< track->charge() 
+               << " p : " 	<< track->p()      
+               << " pt : " 	<< track->pt()     
+               << " x : " 	<< m_coord.x()
+               << " y : " 	<< m_coord.y()
+               << " z : " 	<< m_coord.z()
+               << " dx/dz : "	<< m_slopes.x()
+               << " dy/dz : "    << m_slopes.y()
+               << " dz/dz : "    << m_slopes.z()
+               << endmsg;
+  }
+
+  //   // set q/p and error in all of the existing states
+  //   const std::vector< LHCb::State * > states = track->states();
+  //   std::vector< LHCb::State * >::const_iterator iState;
+  //   for ( iState = states.begin() ; iState != states.end() ; ++iState ) {
+  //     (*iState)->setQOverP( 1. / 1e6 );  // 1 TeV tracks
+  //   }
+ 
+  // loop over modules with hits
+  std::vector< LHCb::LHCbID > moduleIDs;
+  for ( unsigned int i = 0; i < 42; i++ ) {
+    if ( !modules[ i ] ) {
+      verbose() << "Module " << i << " has no hits." << endmsg;
+      continue;
+    }
+    // clone track and remove LHCbID corresponding to current module
+    // while filling vector of LHCbIDs for current module
+    LHCb::Track* tr_clone = track->cloneWithKey();
+    moduleIDs.clear();
     for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
       if ( it->isVeloR() ) {
-        n_r++;
-        modules[ it->veloID().sensor() ] = true;
+        if ( it->veloID().sensor() == i ) {
+          tr_clone->removeFromLhcbIDs( *it );
+          moduleIDs.push_back( *it );
+        }
       }
       if ( it->isVeloPhi() ) {
-        n_phi++;
-        modules[ it->veloID().sensor() - 64 ] = true;
-      }
-    }
-    plot1D( n_r, "RSenPerTrack", "R sensors per track", -0.5, 50.5, 51 );
-    plot1D( n_phi, "PhiSenPerTrack", "Phi sensors per track", -0.5, 50.5, 51 );
-    if ( ( n_r < m_minSenR ) || ( n_phi < m_minSenPhi ) ) {
-      debug() << "Track does not have enough R and/or Phi hits. Continuing with next track." << endmsg;
-      return StatusCode::FAILURE;
-    }
-
-    // fill general track histograms
-    plot1D(track->flag(),"ErrorFlags","Error flags",-0.5,1.5,2);
-    plot1D(track->type(),"TrackType","Track type",-0.5,7.5,8);
-  
-    plot1D(track->chi2PerDoF(),"Chi2_nDoF","Chi2/DoF per Track",-0.1,4.1,75);      
-
-    // get state parameters
-    if (m_printInfo) {             
-      Gaudi::XYZPoint m_coord = track->position();
-      Gaudi::XYZVector m_slopes = track->slopes();
-      verbose()  << "Track# : " 	<< track->key()+1
-                 << " Chi2 : " 	<< track->chi2()
-                 << " DoF : "      << track->nDoF()
-                 << " Charge : " 	<< track->charge() 
-                 << " p : " 	<< track->p()      
-                 << " pt : " 	<< track->pt()     
-                 << " x : " 	<< m_coord.x()
-                 << " y : " 	<< m_coord.y()
-                 << " z : " 	<< m_coord.z()
-                 << " dx/dz : "	<< m_slopes.x()
-                 << " dy/dz : "    << m_slopes.y()
-                 << " dz/dz : "    << m_slopes.z()
-                 << endmsg;
-    }
-
-    // set q/p and error in all of the existing states
-    const std::vector< LHCb::State * > states = track->states();
-    std::vector< LHCb::State * >::const_iterator iState;
-    for ( iState = states.begin() ; iState != states.end() ; ++iState ) {
-      (*iState)->setQOverP( 1. / 1e6 );  // 1 TeV tracks
-    }
- 
-    // loop over modules with hits
-    std::vector< LHCb::LHCbID > moduleIDs;
-    for ( unsigned int i = 0; i < 42; i++ ) {
-      if ( !modules[ i ] ) {
-        verbose() << "Module " << i << " has no hits." << endmsg;
-        continue;
-      }
-      // clone track and remove LHCbID corresponding to current module
-      // while filling vector of LHCbIDs for current module
-      LHCb::Track* tr_clone = track->cloneWithKey();
-      moduleIDs.clear();
-      for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
-        if ( it->isVeloR() ) {
-          if ( it->veloID().sensor() == i ) {
-            tr_clone->removeFromLhcbIDs( *it );
-            moduleIDs.push_back( *it );
-          }
-        }
-        if ( it->isVeloPhi() ) {
-          if ( ( it->veloID().sensor() - 64 ) == i ) {
-            tr_clone->removeFromLhcbIDs( *it );
-            moduleIDs.push_back( *it );
-          }
+        if ( ( it->veloID().sensor() - 64 ) == i ) {
+          tr_clone->removeFromLhcbIDs( *it );
+          moduleIDs.push_back( *it );
         }
       }
+    }
 
-      // fit the remaining track
-      StatusCode sc = m_tracksFitter -> fit( *tr_clone );
+    // fit the remaining track
+    StatusCode sc = m_tracksFitter -> fit( *tr_clone );
 
-      if ( !sc.isSuccess() ) {
-        debug() << "Track fit failed. Continuing with next track." << endmsg;
-        continue;
-      }
+    if ( !sc.isSuccess() ) {
+      debug() << "Track fit failed. Continuing with next track." << endmsg;
+      continue;
+    }
     
-      plot1D( tr_clone->chi2PerDoF(), "TrackChi2pDOF", "Track Chi2 per DOF", 0, 50, 500 );
+    plot1D( tr_clone->chi2PerDoF(), "TrackChi2pDOF", "Track Chi2 per DOF", 0, 50, 500 );
       
-      // loop over LHCbIDs of current module and plot residuals
-      double residual, residual_err;
-      for ( it = moduleIDs.begin(); it != moduleIDs.end(); it++ ) {
-        const int sensorNumber = it->veloID().sensor();
-        const DeVeloSensor* sensor = m_veloDet->sensor( sensorNumber );
-        const double sensor_z = sensor->z();
-        LHCb::State tr_state = LHCb::State();
-        m_trackInterpolator->interpolate( *tr_clone, sensor_z, tr_state );
-
-//        LHCb::Measurement& meas = tr_clone->measurement( *it );
-//        LHCb::Measurement* meas = m_measurementProvider->measurement( *it );
-//        double interStripFr;
-//        if ( it->isVeloR() ) {
-//          interStripFr = dynamic_cast<LHCb::VeloRMeasurement*>(&meas)->cluster()->interStripFraction();
-//        }
-        const LHCb::VeloChannelID vcID = it->veloID();
-        LHCb::VeloCluster *cluster = m_clusters->object( vcID );
-        double interStripFr = cluster->interStripFraction();
-//        if ( m_kalmanResidual ) { 
-//          // project the state into the measurement
-//          ITrackProjector *projector = m_projectorSelector->projector( meas );
-//          if ( projector == 0 ) {
-//            debug() << "Could not get projector for measurement" << endmsg;
-//            continue;
-//          }
-//          StatusCode sc = projector->project( *tr_state, meas );
-//          if ( sc.isFailure() ) {
-//            debug() << "Unable to project a state into a measurement" << endmsg;
-//            continue;
-//          }
-//  
-//          // retrieve residual and its error
-//          residual = projector->residual();
-//          residual_err = projector->errResidual();
-//        }
-//        else { // no Kalman residual
-          const Gaudi::XYZPoint trackInterceptGlobal = tr_state.position();
-          sensor->residual( trackInterceptGlobal, vcID, interStripFr, residual, residual_err );
-//        }
-
-        // plot residual vs phi state
-//        double phi_state = trackInterceptGlobal.Phi()*180./TMath::Pi();
-        double phi_state = 0;
-        if ( it->isVeloR() ) {
-//          const DeVeloRType* rSensor = m_veloDet->rSensor( sensorNumber );
-//          Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;
-//          trackInterceptLocal = rSensor->globalToLocal( trackInterceptGlobal );
-//          phi_state = trackInterceptLocal.Phi() / degree;
-          phi_state = trackInterceptGlobal.Phi() / degree;
-          verbose() << "Phi state is " << phi_state << endmsg;
-          verbose() << "X,Y state is " << trackInterceptGlobal.X() << ", " << trackInterceptGlobal.Y() << endmsg;
-          ( m_h_res_2d[ sensorNumber ] )->Fill( phi_state, residual/um );
+    // loop over LHCbIDs of current module and plot residuals
+    double residual, residual_err;
+    for ( it = moduleIDs.begin(); it != moduleIDs.end(); it++ ) {
+      const int sensorNumber = it->veloID().sensor();
+      const DeVeloSensor* sensor = m_veloDet->sensor( sensorNumber );
+      const double sensor_z = sensor->z();
+      LHCb::State tr_state = LHCb::State();
+      m_trackInterpolator->interpolate( *tr_clone, sensor_z, tr_state );
+      const LHCb::VeloChannelID vcID = it->veloID();
+      LHCb::VeloCluster *cluster = m_clusters->object( vcID );
+      double interStripFr = cluster->interStripFraction();
+      const Gaudi::XYZPoint trackInterceptGlobal = tr_state.position();
+      sensor->residual( trackInterceptGlobal,tr_clone->slopes(), vcID, interStripFr, residual, residual_err );
+      // plot residual vs phi state
+      double phi_state = 0;
+      if ( it->isVeloR() ) {
+        const DeVeloRType* rSensor = m_veloDet->rSensor( sensorNumber );
+        Gaudi::XYZPoint trackInterceptHalf = rSensor->globalToVeloHalfBox ( trackInterceptGlobal );
+        phi_state = trackInterceptHalf.Phi() / degree;
+        verbose() << "Phi state is " << phi_state << endmsg;
+        verbose() << "X,Y state is " << trackInterceptGlobal.X() << ", " << trackInterceptGlobal.Y() << endmsg;
+        ( m_h_res_2d[ sensorNumber ] )->Fill( phi_state, residual/um );
+      }
+      else { // is Phi sensor
+        const DeVeloPhiType* phiSensor = m_veloDet->phiSensor( sensorNumber );
+        int stereo_sign;
+        if ( m_ACDC ) {
+          stereo_sign = -1;
         }
-        else { // is Phi sensor
-          const DeVeloPhiType* phiSensor = m_veloDet->phiSensor( sensorNumber );
-          int stereo_sign;
-          if ( m_ACDC ) {
-            stereo_sign = -1;
-          }
-          else {
-            stereo_sign = 1;
-          }
-          if ( phiSensor->zoneOfStrip( vcID.strip() ) == 0 ) { // inner
-            phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
-            phi_state += stereo_sign * -20.04251;                                 // stereo angle for inner strips
-          }
-          else {                                      // outer
-            phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
-            phi_state += stereo_sign * 10.35288;                       // stereo angle for outer strips
-          }
-          // transform to global phi state
-          verbose() << "Phi phi local is " << phi_state * degree << endmsg;
-          Gaudi::RhoZPhiPoint phiStateLoc;
-          phiStateLoc.SetRho( 1. );
-          phiStateLoc.SetPhi( phi_state * degree );
-          phiStateLoc.SetZ( 0. );
-          Gaudi::XYZPoint phiStateLocal;
-          phiStateLocal.SetX( phiStateLoc.X() );
-          phiStateLocal.SetY( phiStateLoc.Y() );
-          phiStateLocal.SetZ( phiStateLoc.Z() );
-          Gaudi::XYZPoint phiStateGlobal( 0., 0., 0. );
-          phiStateGlobal = phiSensor->localToGlobal( phiStateLocal );
-          phi_state = phiStateGlobal.Phi() / degree;
-          verbose() << "Phi phi global is " << phi_state << endmsg;
-          ( m_h_res_2d[ sensorNumber - 64 + 42 ] )->Fill( phi_state, residual/um );
+        else {
+          stereo_sign = 1;
         }
+        if ( phiSensor->zoneOfStrip( vcID.strip() ) == 0 ) { // inner
+          phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
+          phi_state += stereo_sign * -20.04251;                                 // stereo angle for inner strips
+        }
+        else {                                      // outer
+          phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
+          phi_state += stereo_sign * 10.35288;                       // stereo angle for outer strips
+        }
+        // transform to global phi state
+        verbose() << "Phi phi local is " << phi_state * degree << endmsg;
+        Gaudi::RhoZPhiPoint phiStateLoc;
+        phiStateLoc.SetRho( 1. );
+        phiStateLoc.SetPhi( phi_state * degree );
+        phiStateLoc.SetZ( 0. );
+        Gaudi::XYZPoint phiStateLocal;
+        phiStateLocal.SetX( phiStateLoc.X() );
+        phiStateLocal.SetY( phiStateLoc.Y() );
+        phiStateLocal.SetZ( phiStateLoc.Z() );
+        Gaudi::XYZPoint phiStateGlobal( 0., 0., 0. );
+        //phi state is in half frame
+        Gaudi::XYZPoint phiStateHalf = phiSensor->localToVeloHalfBox( phiStateLocal );
+        phi_state = phiStateHalf.Phi() / degree;
+        verbose() << "Phi phi global is " << phi_state << endmsg;
+        ( m_h_res_2d[ sensorNumber - 64 + 42 ] )->Fill( phi_state, residual/um );
+      }
 
-      } // end loop over module hits
-      delete tr_clone;
-    } // end loop over modules
+    } // end loop over module hits
+    delete tr_clone;
+  } // end loop over modules
   
   return StatusCode::SUCCESS;
 }
@@ -487,8 +453,10 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   int hits[42];
   int nStrips[84];
   double r[42];
+  double r_e[42];
   double r_s[84];
   double phi[42];
+  double phi_e[42];
   double phi_s[84];
   double x_meas[42];
   double y_meas[42];
@@ -511,7 +479,9 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     r_s[2*j]        = 0.0;
     phi_s[2*j]      = 0.0;
     r_s[2*j+1]      = 0.0;
+    r_e[2*j]        = 0.0;
     phi_s[2*j+1]    = 0.0;
+    phi_e[2*j]      = 0.0;
     x_meas[j]       = 0.0;
     y_meas[j]       = 0.0;
     z_meas[j]       = 0.0;
@@ -522,20 +492,14 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   }
 
   // check which modules have hits on both sensors and store track states at every sensor as well as cluster positions
-  for(itClus=cluster_container.begin();
-      itClus!=cluster_container.end();
-      ++itClus) {
-                                                                                                                                        
+  for(itClus=cluster_container.begin(); itClus!=cluster_container.end();++itClus) {
     LHCb::VeloCluster *cluster=(*itClus);
     LHCb::VeloChannelID vcID = cluster->channelID();
-                                                                                                                                        
     station = vcID.sensor();
-                                                                                                                                        
     const DeVeloSensor* sns = m_veloDet->sensor(station);
     Gaudi::XYZPoint trackInterceptGlobal= extrapolateToZ(track, sns->z());
     Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;
     trackInterceptLocal = sns->globalToLocal( trackInterceptGlobal );
-                                                                                                                                        
     double rstate   = trackInterceptLocal.Rho();
     double phistate = trackInterceptLocal.Phi();
 
@@ -543,8 +507,6 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     toolInfo=m_clusterTool->position(cluster);
     double interStripFr = toolInfo.fractionalPosition;
     vcID =toolInfo.strip;
-    // double interStripFr = cluster->interStripFraction(); // obsolete, use ClusterPositionTool now
-                                                                                                                                        
     // Here we need to compute the correct cluster position
     if(rstate != 0.) {
      
@@ -552,26 +514,26 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
       verbose() << "Track state (in local frame) at z  = " << sns->z() << " :" << endmsg;
       verbose() << "-->  Extrapolated phi              = " << phistate << endmsg;
       verbose() << "-->  Extrapolated r                = " << rstate << endmsg;
-                                                                                                                                        
       // Compute the cluster position
 
       unsigned int cl_str = vcID.strip();
-                                                                                                                                        
       if (vcID.type() == LHCb::VeloChannelID::RType) {
         const DeVeloRType *rDet = m_veloDet->rSensor(cluster->channelID().sensor());
 
         hits[station]      += 1;
         r[station]          = rDet->rOfStrip( cl_str ) + interStripFr * ( rDet->rPitch( cl_str ) );	  
+        r_e[station]        =  rDet -> rPitch(  cl_str  ) * toolInfo.fractionalError ;
         phi_s[2*station]    = phistate;
         r_s[2*station]      = rstate;
         nStrips[2*station]  = cluster->size();
-      }                                                                                                                                  
+      } 
       else if (vcID.type() == LHCb::VeloChannelID::PhiType) {
         const DeVeloPhiType *phiDet = m_veloDet->phiSensor( vcID.sensor() );
 
         station = station-64;  // Phi stations are numbered from 64 to 95
         hits[station]      += 10;
         phi[station]          = phiDet->phiOfStrip(cl_str,interStripFr,rstate);	  
+        phi_e[station+1]      =  phiDet -> phiPitch( rstate ) * toolInfo.fractionalError;
         phi_s[2*station+1]    = phistate;
         r_s[2*station+1]      = rstate;
         nStrips[2*station+1]  = cluster->size();
@@ -580,7 +542,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
 
   } // end loop on clusters
 
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
   // compute spacepoints at R sensor position
 
@@ -590,49 +552,53 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
      
     error_r = 0.;
     error_p = 0.;
-                                                                                                                                      
+                      
     // Left sensor have even number, right have odd ones
-                                                                                                                                      
+                      
     if ( hits[ n_stat ] != 11 ) continue;  // Only carry on if both sensors have hits
-                                                                                                                                      
+                      
     // The space-point (local frame so be careful with the phi's)
     // In fact it appears that local Phi of R sensor is inverted (ACDC geom)
     // They are in the same frame in DC06
-                                                                                
-    // correct phi measurement for difference in phi states between R and Phi sensor                                                    
+          
+    // correct phi measurement for difference in phi states between R and Phi sensor          
     double correct_phi = 0;
     if ( m_ACDC ) {  // ACDC geometry
       correct_phi = -phi[n_stat]+phi_s[2*n_stat]+phi_s[2*n_stat+1];
-      plot1D( phi_s[2*n_stat]+phi_s[2*n_stat+1], "phi_state_corr","phi state correction",-0.5,0.5,100);
+      plot1D( phi_s[2*n_stat]+phi_s[2*n_stat+1], "phi_state_corr",
+              "phi state correction",-0.5,0.5,100);
     }
     else {           // DC06 geometry
       correct_phi = phi[n_stat]+phi_s[2*n_stat]-phi_s[2*n_stat+1];
-      plot1D( phi_s[2*n_stat]-phi_s[2*n_stat+1], "phi_state_corr","phi state correction",-0.5,0.5,100);
+      plot1D( phi_s[2*n_stat]-phi_s[2*n_stat+1], "phi_state_corr",
+              "phi state correction",-0.5,0.5,100);
     }
 
     const DeVeloSensor* sns = m_veloDet->sensor(n_stat); // this is the R sensor
-                                                                                    
-    // get space point in local frame                                                
+              
+    // get space point in local frame      
     double x = r[n_stat]*cos(correct_phi);
     double y = r[n_stat]*sin(correct_phi);
-                                                                                                                                    
+                    
     // Space-point is now expressed in the global frame
-                                                                                                                                    
+                    
     Gaudi::XYZPoint pointLocal(x, y,0);
     Gaudi::XYZPoint pointGlobal(0,0,0) ;
-                                                                                                                                    
+                    
     pointGlobal = sns->localToGlobal( pointLocal );
-                                                                                                                                    
-    // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05)
-                                                                                                                                    
-    error_r = (40+(101.6-40.0)*(r[n_stat]-8.19)/(41.95-8.19))/3464.;
-                                                                                                                                    
-    if (r[n_stat] <= 17.2)
-      error_p = (35.5+(78.3-35.5)*(r[n_stat]-8.19)/(17.2-8.19))/3464.;
-    if (r[n_stat] > 17.2)
-      error_p = (39.3+(96.6-39.3)*(r[n_stat]-17.2)/(41.95-17.2))/3464.;
-                                     
-    // store measurements and errors as well as module number                                                                                               
+                    
+    //     // Errors are calculated as (pitch/sqrt(12)) for the moment (SV 08/07/05) 
+    //     error_r = (40+(101.6-40.0)*(r[n_stat]-8.19)/(41.95-8.19))/3464.;
+    //     if (r[n_stat] <= 17.2)
+    //       error_p = (35.5+(78.3-35.5)*(r[n_stat]-8.19)/(17.2-8.19))/3464.;
+    //     if (r[n_stat] > 17.2)
+    //       error_p = (39.3+(96.6-39.3)*(r[n_stat]-17.2)/(41.95-17.2))/3464.;
+         
+    //Error defined in cluster tool
+    error_r = r_e[n_stat];
+    error_p = phi_e[n_stat];
+
+    // store measurements and errors as well as module number
     x_meas[n_stat] = pointGlobal.x();
     y_meas[n_stat] = pointGlobal.y();
     z_meas[n_stat] = pointGlobal.z();
@@ -640,7 +606,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     y_err[n_stat]  = sqrt(pow(y*error_r,2)+pow(x*error_p,2))/r[n_stat];
     z_err[n_stat]  = 11;
     active[++last_active] = n_stat;
-                                                                                                                                    
+                    
     verbose() << "" << endmsg;
     verbose() << "-> Global coordinates for sensor " << n_stat << endmsg;
     verbose() << "x_spacepoint  = " << x_meas[n_stat] << endmsg;
@@ -649,7 +615,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
 
   } // end loop over modules
 
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
   // now get unbiased track fit, compute and plot residuals
 
@@ -657,12 +623,12 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   double local_matx[2][2];
   double local_vecy[2];
   double local_maty[2][2];
-                                                                                                                                        
+          
   double wghtx, rmeasx, detx;
   double wghty, rmeasy, dety;
   double z_cor;
   double slope_x, slope_y, x0_x, y0_y, z0_z;
-                                                                                                                                        
+          
   plot1D( last_active + 1, "fewSpacepoints", "Number of spacepoints per track", -0.5, 49.5, 50 );
 
   // at least m_minModule active modules for unbiased residual plots
@@ -675,7 +641,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   for ( int res_mod = 0; res_mod <= last_active; res_mod++ ) {
 
     if ( ( ( res_mod >= 16 ) && ( ( last_active + 1 ) < 6 ) ) 
-       || ( ( res_mod >= 32 ) && ( ( last_active + 1 ) < 8 ) ) ) {
+         || ( ( res_mod >= 32 ) && ( ( last_active + 1 ) < 8 ) ) ) {
       debug() << "Not enough spacepoints on track" << endmsg;
       return StatusCode::FAILURE;
     }
@@ -683,7 +649,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     
       local_vecx[i] = 0.0;
       local_vecy[i] = 0.0;
-                                                                                                                                      
+                      
       for (int j=0; j<2; j++) {
         local_matx[i][j] = 0.0;
         local_maty[i][j] = 0.0;
@@ -700,12 +666,12 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
       rmeasx = x_meas[active[act_mod]];
       wghty = y_err[active[act_mod]];
       rmeasy = y_meas[active[act_mod]];
-                                                                                                                                        
+          
       local_vecx[0] += wghtx*rmeasx;
       local_vecx[1] += wghtx*rmeasx*z_cor;
       local_vecy[0] += wghty*rmeasy;
       local_vecy[1] += wghty*rmeasy*z_cor;
-                                                                                                                                    
+                    
       local_matx[0][0] += wghtx;
       local_matx[1][0] += wghtx*z_cor;
       local_matx[1][1] += wghtx*z_cor*z_cor;
@@ -717,15 +683,15 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
     // invert the matrix and compute track parameters
     detx = 0.;
     dety = 0.;
-                                                                                                                                        
+          
     detx = local_matx[0][0] *local_matx[1][1] - local_matx[1][0] * local_matx[1][0];
     dety = local_maty[0][0] * local_maty[1][1] - local_maty[1][0] * local_maty[1][0];
-                                                                                                                                        
+          
     if (detx == 0. || dety == 0.) continue; // track fit failed
-                                                                                                                                        
+          
     slope_x = ( local_vecx[1] * local_matx[0][0] - local_vecx[0] * local_matx[1][0] ) / detx;
     slope_y = ( local_vecy[1] * local_maty[0][0] - local_vecy[0] * local_maty[1][0] ) / dety;
-                                                                                                                                        
+          
     x0_x = ( local_vecx[0] * local_matx[1][1] - local_vecx[1] * local_matx[1][0] ) / detx;
     y0_y = ( local_vecy[0] * local_maty[1][1] - local_vecy[1] * local_maty[1][0] ) / dety;
     z0_z = 0.;
@@ -751,7 +717,8 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
       // check whether cluster belongs to correct sensor
       LHCb::VeloChannelID vcID = (*itClus)->channelID();
       int cl_sns = vcID.sensor();
-      if ( ( cl_sns != module ) && ( cl_sns != ( module + 64 ) ) ) continue; // cluster doesn't belong to module under study
+      // cluster doesn't belong to module under study
+      if ( ( cl_sns != module ) && ( cl_sns != ( module + 64 ) ) ) continue; 
 
       debug() << "Sensor " << cl_sns << endmsg;
 
@@ -761,15 +728,19 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
       double interStripFr = (*itClus)->interStripFraction();
       const DeVeloSensor* sns = m_veloDet->sensor( cl_sns );
       double z_sen = sns->z();
-      Gaudi::XYZPoint trackInterceptGlobal( x0_x + slope_x * ( z_sen - z0_z ), y0_y + slope_y * ( z_sen - z0_z ), z_sen) ;
+      Gaudi::XYZPoint trackInterceptGlobal( x0_x + slope_x * ( z_sen - z0_z ), 
+                y0_y + slope_y * ( z_sen - z0_z ), z_sen) ;
       Gaudi::XYZPoint trackInterceptHalf = sns->globalToVeloHalfBox ( trackInterceptGlobal );
-      plot2D( trackInterceptGlobal.Rho() / mm, trackInterceptGlobal.Phi() / degree, "track_position_rphi", "Track position r/phi", -50, 50, -200, 200, 100, 200 );
-      plot2D( trackInterceptHalf.Rho() / mm, trackInterceptHalf.Phi() / degree, "track_position_rphi_half", "Track position r/phi in VELO half", -50, 50, -200, 200, 100, 200 );
+      plot2D( trackInterceptGlobal.Rho() / mm, trackInterceptGlobal.Phi() / degree, 
+              "track_position_rphi", "Track position r/phi", -50, 50, -200, 200, 100, 200 );
+      plot2D( trackInterceptHalf.Rho() / mm, trackInterceptHalf.Phi() / degree, 
+              "track_position_rphi_half", "Track position r/phi in VELO half", -50, 50, -200, 200, 100, 200 );
       r_state = trackInterceptHalf.Rho() / mm;
       debug() << "R state is " << r_state / um << endmsg;
 
       // calculate the residual
-      sns->residual( trackInterceptGlobal, vcID, interStripFr, residual, chi2 );
+      Gaudi::XYZVector track_dir( slope_x , slope_y ,1.);
+      sns->residual( trackInterceptGlobal,track_dir, vcID, interStripFr, residual, chi2 );
 
       if ( cl_sns == module ) { // R sensor cluster
         if ( sns->isR() ) {     // make really sure
@@ -795,13 +766,13 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
             sprintf( htit, "Unbiased R residual (um) for module %d vs R", module );
             plot2D( r_state, residual/um, hname, htit, 0, 50, -100, 100, 100, 25 );
 
- 	    // distinguish between different readout directions, border is roughly at r=14mm
-	    if ( r_state < 14 ) {
+            // distinguish between different readout directions, border is roughly at r=14mm
+            if ( r_state < 14 ) {
               sprintf( hname, "unbiasedResRBeetle1_%d", module );
               sprintf( htit, "Unbiased R residual (um) for Beetle 1 of module %d vs Phi", module );
               plot2D( phi_state, residual/um, hname, htit, -210, 210, -100, 100, 42, 100 );
             }
-	    else {
+            else {
               sprintf( hname, "unbiasedResRBeetle234_%d", module );
               sprintf( htit, "Unbiased R residual (um) for Beetles 234 of module %d vs Phi", module );
               plot2D( phi_state, residual/um, hname, htit, -210, 210, -100, 100, 42, 100 );
@@ -827,11 +798,11 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
         }
         if ( phiSensor->zoneOfStrip( vcID.strip() ) == 0 ) { // inner
           phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
-          phi_state += stereo_sign * -20.04251;                                 // stereo angle for inner strips
+          phi_state += stereo_sign * -20.04251;     // stereo angle for inner strips
         }
-        else {                                               // outer
+        else {     // outer
           phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
-          phi_state += stereo_sign * 10.35288;                                // stereo angle for outer strips
+          phi_state += stereo_sign * 10.35288;    // stereo angle for outer strips
         }
 
         // transform to VELO half phi state
@@ -869,7 +840,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
             sprintf( htit, "Unbiased Phi residual (um) for module %d vs Phi", module );
             plot2D( phi_state, residual/um, hname, htit, -210, 210, -100, 100, 42, 200 );
           }
-          else {                                      // outer
+          else {          // outer
             sprintf( hname, "unbiasedResPhiOuter_%d", module );
             sprintf( htit, "Unbiased Phi residual (um) for module %d vs Phi", module );
             plot2D( phi_state, residual/um, hname, htit, -210, 210, -100, 100, 42, 200 );
@@ -973,8 +944,8 @@ StatusCode AlignSensors::cleanHisto( TH2 *hist ) {
 // Fits sensor residuals.
 //=============================================================================
 StatusCode AlignSensors::fitSensorResiduals() {
-
-  verbose() << "Starting fit iteration " << m_iteration << endmsg;
+  
+  info() << "Starting fit iteration " << m_iteration << endmsg;
 
   // iteration counter used for plotting and triggering some stuff at first iteration
   m_iteration++;
@@ -983,8 +954,8 @@ StatusCode AlignSensors::fitSensorResiduals() {
   double dy_R[42], dy_Phi[42];    // y fit results
   double dx[42], dy[42], dg[42];  // x/y deltas and gamma fit results
   double dxe[42], dye[42];        // x/y fit errors on deltas
-  double par[3];                  // parameters of fit function
-  double *parerr;                 // errors of fit function
+  double par[3];    // parameters of fit function
+  double *parerr;   // errors of fit function
   bool   rFitted[42];             // mark sations with R sensor fit
 
   // cleaning of histos
@@ -1013,8 +984,10 @@ StatusCode AlignSensors::fitSensorResiduals() {
     verbose() << "Retrieving fit results." << endmsg;
     m_fit_func->GetParameters( &par[0] );
     parerr = m_fit_func->GetParErrors();
-    debug() << "Fit result for R sensor of module " << i << ": " << par[0] << ", " << par[1] << ", " << par[2] << endmsg;
-    debug() << "Fit errors for R sensor of module " << i << ": " << parerr[0] << ", " << parerr[1] << ", " << parerr[2] << endmsg;
+    debug() << "Fit result for R sensor of module " << i << ": " << par[0] 
+            << ", " << par[1] << ", " << par[2] << endmsg;
+    debug() << "Fit errors for R sensor of module " << i << ": " << parerr[0] 
+            << ", " << parerr[1] << ", " << parerr[2] << endmsg;
     plot1D( fabs(par[0])/parerr[0] + fabs(par[1])/parerr[1], "parsigR", "parsigR", 0, 100, 200);
     dx_R[ i ] = - par[ 1 ] / 1000.; // um to mm
     dy_R[ i ] = - par[ 0 ] / 1000.;
@@ -1043,9 +1016,10 @@ StatusCode AlignSensors::fitSensorResiduals() {
       oldTrans.GetDecomposition( rot, trans );
       double rotation[3][3];
       rot.GetComponents( rotation[0][0], rotation[0][1], rotation[0][2],  
-                         rotation[1][0], rotation[1][1], rotation[1][2],   
-                         rotation[2][0], rotation[2][1], rotation[2][2] );
-      debug() << "Old localDelta, station " << i << ", x = " << trans.X() << ", y = " << trans.Y() << ", gamma = " << rotation[0][1] << endmsg;
+           rotation[1][0], rotation[1][1], rotation[1][2],   
+           rotation[2][0], rotation[2][1], rotation[2][2] );
+      debug() << "Old localDelta, station " << i << ", x = " << trans.X() << ", y = " << trans.Y() 
+              << ", gamma = " << rotation[0][1] << endmsg;
       plot1D( trans.X()/um, "Misal_x_before", "Initial x misalignment", -100, 100, 200 );
       plot1D( trans.Y()/um, "Misal_y_before", "Initial y misalignment", -100, 100, 200 );
 
@@ -1074,8 +1048,10 @@ StatusCode AlignSensors::fitSensorResiduals() {
     verbose() << "Retrieving fit results." << endmsg;
     m_fit_func->GetParameters( &par[0] );
     parerr = m_fit_func->GetParErrors();
-    debug() << "Fit result for Phi sensor of module " << i << ": " << par[0] << ", " << par[1] << ", " << par[2] << endmsg;
-    debug() << "Fit errors for Phi sensor of module " << i << ": " << parerr[0] << ", " << parerr[1] << ", " << parerr[2] << endmsg;
+    debug() << "Fit result for Phi sensor of module " << i << ": " << par[0] << ", " 
+            << par[1] << ", " << par[2] << endmsg;
+    debug() << "Fit errors for Phi sensor of module " << i << ": " << parerr[0] << ", " 
+            << parerr[1] << ", " << parerr[2] << endmsg;
     plot1D( fabs(par[0])/parerr[0] + fabs(par[1])/parerr[1], "parsigPhi", "parsigPhi", 0, 100, 200);
     plot2D( m_iteration, m_fit_func->GetChisquare(), "SensorFitChi2", "Sensor fit chi2", 0.5, 20.5, 100, 0, 20, 1000);
     dx_Phi[ i ] = - par[ 0 ] / 1000.; // sign changed
@@ -1109,7 +1085,7 @@ StatusCode AlignSensors::fitSensorResiduals() {
     plot1D( fabs( dx[ i ] ) / dxe[ i ], "deltaSig", "deltaSig", 0, 50, 1000);
     plot1D( fabs( dy[ i ] ) / dye[ i ], "deltaSig", "deltaSig", 0, 50, 1000);
     if ( ( ( fabs( dx[ i ] ) / dxe[ i ] ) < m_minDeltaSig )
-       && ( ( fabs( dy[ i ] ) / dye[ i ] ) < m_minDeltaSig ) ) {
+         && ( ( fabs( dy[ i ] ) / dye[ i ] ) < m_minDeltaSig ) ) {
       debug() << "No significant delta measured for module " << i << endmsg;
       debug() << "x: " << dx[ i ] << "+/-" << dxe[ i ] << ", y: " << dy[ i ] << "+/-" << dye[ i ] << endmsg;
       continue;
@@ -1136,10 +1112,10 @@ StatusCode AlignSensors::fitSensorResiduals() {
     // ...and transform the global into a local transformation 
     const DeVeloPhiType* phiSensor = m_veloDet->phiSensor( i + 64 ); // Phi sensor numbering offset
     const Gaudi::Transform3D frame = phiSensor->geometry()->parentIGeometryInfo()
-							  ->parentIGeometryInfo()
-							  ->parentIGeometryInfo()->toLocalMatrix() 
-				     * phiSensor->geometry()->toGlobalMatrix();
-				     // frame = sensorToHalf = VELO_half->toLocal * sensor->toGlobal 	
+      ->parentIGeometryInfo()
+      ->parentIGeometryInfo()->toLocalMatrix() 
+      * phiSensor->geometry()->toGlobalMatrix();
+    // frame = sensorToHalf = VELO_half->toLocal * sensor->toGlobal 	
     const Gaudi::Transform3D localDelta = DetDesc::localDeltaFromAnyFrameDelta( frame, phiSensor->geometry(), halfDelta );
 
     // now store the new alignment constants
@@ -1151,15 +1127,15 @@ StatusCode AlignSensors::fitSensorResiduals() {
     updMgrSvc()->invalidate(myCond);
     nModulesChanged++;
 
-    // make sure that R sensor constants are set to 0
-    if ( 1 == m_iteration ) {
-      const DeVeloRType* rSensor = m_veloDet->rSensor( i );
-      std::string path = rSensor->geometry()->alignmentCondition()->registry()->identifier();
-      AlignmentCondition *myCond = getDet<AlignmentCondition>( path );
-      debug() << "Setting R sensor transformation to identity" << endmsg;
-      myCond->offNominalMatrix( Gaudi::Transform3D() );  // was matrix(...)
-      updMgrSvc()->invalidate(myCond);
-    } 
+    //     // make sure that R sensor constants are set to 0
+    //     if ( 1 == m_iteration ) {
+    //       const DeVeloRType* rSensor = m_veloDet->rSensor( i );
+    //       std::string path = rSensor->geometry()->alignmentCondition()->registry()->identifier();
+    //       AlignmentCondition *myCond = getDet<AlignmentCondition>( path );
+    //       debug() << "Setting R sensor transformation to identity" << endmsg;
+    //       myCond->offNominalMatrix( Gaudi::Transform3D() );  // was matrix(...)
+    //       updMgrSvc()->invalidate(myCond);
+    //     } 
 
     // get the decomposition of the transformation for monitoring
     Gaudi::Rotation3D rot;
@@ -1167,9 +1143,10 @@ StatusCode AlignSensors::fitSensorResiduals() {
     localDelta.GetDecomposition( rot, trans );
     double rotation[3][3];
     rot.GetComponents( rotation[0][0], rotation[0][1], rotation[0][2],
-                       rotation[1][0], rotation[1][1], rotation[1][2],
-                       rotation[2][0], rotation[2][1], rotation[2][2] );
-    info() << "New localDelta, station " << i << ", x = " << trans.X() << ", y = " << trans.Y() << ", gamma = " << rotation[0][1] << endmsg;
+         rotation[1][0], rotation[1][1], rotation[1][2],
+         rotation[2][0], rotation[2][1], rotation[2][2] );
+    info() << "New localDelta, station " << i << ", x = " << trans.X() 
+           << ", y = " << trans.Y() << ", gamma = " << rotation[0][1] << endmsg;
 
     // safe constants in ntuple
     Tuple tuple = nTuple( "SensorAlignment", "SensorAlignment" );
@@ -1224,7 +1201,8 @@ StatusCode AlignSensors::fitSensorResiduals() {
   } // end of Phi sensor loop
 
   info() << nModulesChanged << " modules' constants updated." << endmsg;
-  plot2D( m_iteration, nModulesChanged, "nModulesChanged", "Number of modules with changed constants vs iteration", 0, 20, 0, 50, 20, 50 );
+  plot2D( m_iteration, nModulesChanged, "nModulesChanged", 
+          "Number of modules with changed constants vs iteration", 0, 20, 0, 50, 20, 50 );
 
   return StatusCode::SUCCESS;
 }
@@ -1246,8 +1224,8 @@ Gaudi::XYZPoint AlignSensors::extrapolateToZ(LHCb::Track *track, double toZ)
   
   //extrapolate
   result.SetXYZ(coord.x()+slope.x()*deltaZ,
-                coord.y()+slope.y()*deltaZ,
-                toZ);
+  coord.y()+slope.y()*deltaZ,
+  toZ);
   
   if (m_printInfo) {             
     debug() << "Track# : " 	<< track->key()+1
