@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-09-08 - Silvia Miglioranzi
+ - Updated ref files (platforms slc5, slc5 dbg, slc4 64 dbg,slc4 32 dbg) for  
+   all the QMTests in the Gauss suite.
+
 ! 2010-09-07 - Silvia Miglioranzi
  - Updated the ref files (platforms: slc4 64,32) for all the QMTests in the 
    Gauss suite.
