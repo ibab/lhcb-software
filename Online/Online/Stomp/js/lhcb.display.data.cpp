@@ -413,8 +413,11 @@ var DataProvider = function(logger)  {
       this.items[item].push(callback);
     this.logger.debug('DataProvider: Subscribed to data item:'+item+'   '+stomp);
     if ( _dataProvider.isConnected )   {
-      var msg = 'SUBSCRIBE:'+this.calls[len];
-      this.service.subscribe(this.calls[len],{exchange:''});
+      var svc = this.calls[len];
+      var msg = 'SUBSCRIBE:'+svc;
+      if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
+      this.logger.info('Subscribe STOMP service:'+svc);
+      this.service.subscribe(svc,{exchange:''});
       this.service.send(msg,this.topic,{exchange:''});
     }
     return this;
@@ -475,8 +478,14 @@ var DataProvider = function(logger)  {
   /// Connect to item topics and force first update
   this.connect = function()  {
     this.logger.info("Connecting all pending data leaves to services ..");
-    for (var i=0; i < this.calls.length; ++i)
-      this.service.subscribe(this.calls[i],{exchange:''});
+    for (var i=0; i < this.calls.length; ++i) {
+      var svc = this.calls[i];
+      var msg = 'SUBSCRIBE:'+svc;
+      if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
+      this.logger.info('Subscribe STOMP service:'+svc);
+      this.service.subscribe(svc,{exchange:''});
+      //this.service.subscribe(this.calls[i],{exchange:''});
+    }
     this.update();
   };
 

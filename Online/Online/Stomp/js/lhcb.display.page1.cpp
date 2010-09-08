@@ -127,7 +127,7 @@ var Page1 = function(msg, sys)   {
     tr.appendChild(td);
 
     td = document.createElement('td');
-    this.LHCb_summary = lhcb.widgets.Det_Run_Summary(this.system);
+    this.LHCb_summary = lhcb.widgets.Det_Run_Summary({system:this.system,logger:this.logger});
     this.LHCb_summary.height = '230px';
     td.appendChild(this.LHCb_summary);
     td.onclick     = function() { document.location = lhcb.constants.urls.lhcb.detstatus.src;};

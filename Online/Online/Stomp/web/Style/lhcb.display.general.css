@@ -87,15 +87,37 @@
 /* Generic LHCb Monitoring display styles.                                         */
 /*                                                                                 */
 /***********************************************************************************/
-.MonitorPage  {
+.MonitorOuterFrame {
     background-color: #CCCCCC;
     color:            #000000;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
+    border-style:     outset;
+    border-width:     2px;
+    border-color:     #AAAAAA;
+    border-top-color: #222222;
+    border-left-color:#222222;
     font-family:      Arial, Helvetica, sans-serif;
     font-size:        100%;
     font-weight:      bold;
+    text-decoration:  none;
+    width:            100%;
+    padding:          0px;
+}
+
+.MonitorInnerFrame {
+    background-color: #CCCCCC;
+    color:            #000000;
+    font:             bold 100% Arial,Helvetica,sans-serif;
+    border:           none 1px #000000;
+    text-decoration:  none;
+    width:            100%;
+    padding:          0px;
+}
+
+.MonitorPage {
+    background-color: #CCCCCC;
+    color:            #000000;
+    border:           ridge 2px #BBBBBB;
+    font:             bold 95% Arial,Helvetica,sans-serif;
     text-decoration:  none;
     width:            100%;
 }
@@ -103,10 +125,7 @@
 .MonitorData  {
     background-color: #EEEEEE;
     color:            #000000;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        100%;
-    font-weight:      bold;
+    font:             bold 100% Arial,Helvetica,sans-serif;
     text-align:       left;
     text-decoration:  none;
     border:           none;
@@ -138,6 +157,7 @@
     font-weight:      bold;
     border:           solid;
     border-width:     1px;
+    width:            100%;
 }
 
 .MonitorDataHeader  {
@@ -160,35 +180,28 @@
 
 .MonitorDataHeaderRED  {
     background-color: #FFBBBB;
+    border:           solid 1px black;
     text-align:       left;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
 }
 
 .MonitorDataHeaderCenter  {
     background-color: #DDDDDD;
+    border:           solid 1px black;
     text-align:       center;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
 }
 
 .MonitorDataHeaderRight  {
     background-color: #DDDDDD;
+    border:           solid 1px black;
     text-align:       right;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
 }
 
 .MonitorSubHeader  {
     background-color: #00BBFF;
     text-align:       center;
     font-size:        130%;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
+    border:           solid 1px black;
+    width:            100%;
 }
 
 .MonitorTinyHeader  {

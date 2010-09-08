@@ -10,8 +10,9 @@ function _loadWidgets() {
 
   lhcb.widgets.lumiConvert = function(data) {
     val = parseFloat(data);
-    if      ( val > 2e6 ) return [val/1e6,'fb<sup>-1</sup>'];
-    else if ( val > 2e3 ) return [val/1e3,'nb<sup>-1</sup>'];
+    if      ( val > 1e10) return [val/1e9,'fb<sup>-1</sup>'];
+    else if ( val > 1e7 ) return [val/1e6,'pb<sup>-1</sup>'];
+    else if ( val > 1e4 ) return [val/1e3,'nb<sup>-1</sup>'];
     return [data,'&mu;b<sup>-1</sup>'];
   };
 
@@ -55,7 +56,6 @@ function _loadWidgets() {
 	t.nowTime.innerHTML  = v[1].substr(v[1].indexOf('-')+1);
 	t.nowIntB1.innerHTML = sprintf('%7.2e',parseFloat(v[9]));
 	t.nowIntB2.innerHTML = sprintf('%7.2e',parseFloat(v[10]));
-
       }
     };
     tab.currFillStart.parent = tab;
@@ -76,7 +76,9 @@ function _loadWidgets() {
       else {
 	var fillNo = parseInt(v[0]);
 	t.rampedTime.colSpan = 3;
-	t.rampedTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never ramped';
+	t.rampedIntB1.innerHTML = '';
+	t.rampedIntB2.innerHTML = '';
+	t.rampedTime.innerHTML  = ' Fill '+t.currFill.fillNo+' was never ramped';
       }
     };
     tab.currFillSqueeze.parent = tab;
@@ -84,7 +86,7 @@ function _loadWidgets() {
       var v = data[1].split('/',20);
       var t = this.parent;
       if ( v.length>9 ) {
-	t.squeezeTime.colSpan = 1;
+	t.squeezeTime.colSpan    = 1;
 	t.squeezeTime.innerHTML  = v[1].substr(v[1].indexOf('-')+1);
 	t.squeezeIntB1.innerHTML = sprintf('%7.2e',parseFloat(v[9]));
 	t.squeezeIntB2.innerHTML = sprintf('%7.2e',parseFloat(v[10]));
@@ -92,6 +94,8 @@ function _loadWidgets() {
       else {
 	var fillNo = parseInt(v[0]);
 	t.squeezeTime.colSpan = 3;
+	t.squeezeIntB1.innerHTML = '';
+	t.squeezeIntB2.innerHTML = '';
 	t.squeezeTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never squeezed';
       }
     };
@@ -100,16 +104,17 @@ function _loadWidgets() {
       var v = data[1].split('/',20);
       var t = this.parent;
       if ( v.length>9 ) {
-	t.stableTime.colSpan = 1;
+	t.stableTime.colSpan    = 1;
 	t.stableTime.innerHTML  = v[1].substr(v[1].indexOf('-')+1);
 	t.stableIntB1.innerHTML = sprintf('%7.2e',parseFloat(v[9]));
 	t.stableIntB2.innerHTML = sprintf('%7.2e',parseFloat(v[10]));
       }
       else {
 	var fillNo = parseInt(v[0]);
-	t.stableTime.colSpan = 3;
-	t.stableTime.innerHTML = ' Fill '+t.currFill.fillNo+' was never stable';
-	t.stableIntB1.innerHTML= '';
+	t.stableTime.colSpan    = 3;
+	t.stableIntB1.innerHTML = '';
+	t.stableIntB2.innerHTML = '';
+	t.stableTime.innerHTML  = ' Fill '+t.currFill.fillNo+' was never stable';
       }
     };
 
@@ -126,12 +131,17 @@ function _loadWidgets() {
       else {
 	var fillNo = parseInt(v[0]);
 	t.endedTime.colSpan = 3;
-	if ( fillNo < t.currFill.fillNo )
+	if ( fillNo < t.currFill.fillNo ) {
   	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' in preparation';
-	else if ( t.stableIntB1.innerHTML=='' )
+	}
+	else if ( t.stableIntB1.innerHTML=='' ) {
   	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' in preparation';
-	else
+	}
+	else {
 	  t.endedTime.innerHTML = ' Fill '+t.currFill.fillNo+' still running';
+	}
+	t.endedIntB1.innerHTML = '';
+	t.endedIntB2.innerHTML = '';
       }
     };
     tr.appendChild(Cell('Start', null,'MonitorDataHeader'));
@@ -224,8 +234,8 @@ function _loadWidgets() {
     tab.lumiNOW     = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP','Text-Right','%9.3f');
     tab.neventsRec  = StyledItem('lbWeb.LHCb_RunInfo.HLTFarm.hltNTriggers','Text-Right',null);
     tab.neventsIn   = StyledItem('lbWeb.LHCb_RunInfo.TFC.nTriggers','Text-Right',null);
-    tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500','Text-Right',"%9.0f");
-    tab.lumiYearRec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500','Text-Right',"%9.0f");
+    tab.lumiYearDel = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500','Text-Right',"%9.2f");
+    tab.lumiYearRec = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500','Text-Right',"%9.2f");
 
     tab.lumi = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
@@ -316,14 +326,25 @@ function _loadWidgets() {
     tab.className = tb.className = 'MonitorPage';
 
     tab.fillNo = -1;
-    tab.lumiCalo   = StyledItem('', 'Text-Right','%7.3f');
-    tab.lumiBLSA   = StyledItem('', 'Text-Right','%7.3f');
-    tab.lumiBLSC   = StyledItem('', 'Text-Right','%7.3f');
+    tab.lumiCalo   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
+    tab.lumiBLSA   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
+    tab.lumiBLSC   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
     tab.lumiBRAN4L8= StyledItem('', 'Text-Right','%7.3e');
     tab.lumiBRAN4R8= StyledItem('', 'Text-Right','%7.3e');
     //tab.lumiIdeal  = StyledItem('', 'Text-Right','%7.3f');
-    tab.lumiGP     = StyledItem('', 'Text-Right','%7.3f');
-    tab.lumiRate   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP','Text-Right','%7.1f');
+    tab.lumiGP     = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
+    tab.physRateEx = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right','%7.0f Hz(Exc)');
+    tab.physRateIn = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right','%7.0f Hz(Inc)');
+    tab.minbRateEx = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right','%7.0f Hz(Exc)');
+    tab.minbRateIn = StyledItem('lbWeb.LHCB_STATS.MBiasIn',  'Text-Right','%7.0f Hz(Inc)');
+    tab.LumiEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right','%7.0f Hz(Exc)');
+    tab.LumiIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right','%7.0f Hz(Inc)');
+    tab.BeamGasEx  = StyledItem('lbWeb.LHCB_STATS.BeamGasEx','Text-Right','%7.0f Hz(Exc)');
+    tab.BeamGasIn  = StyledItem('lbWeb.LHCB_STATS.BeamGasIn','Text-Right','%7.0f Hz(Inc)');
+    tab.RandEx     = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right','%7.0f Hz(Exc)');
+    tab.RandIn     = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right','%7.0f Hz(Inc)');
+
+    tab.lumiRate   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP','Text-Right','%7.0f Hz');
     tab.lumi       = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
     tab.lumi.parent = tab;
     tab.lumi.display = function(data) {
@@ -333,8 +354,8 @@ function _loadWidgets() {
       t.lumiCalo.display(     [22,v[2]]);
       t.lumiBLSA.display(   [22,v[3]]);
       t.lumiBLSC.display(   [22,v[4]]);
-      t.lumiBRAN4L8.display([22,v[5]]);
-      t.lumiBRAN4R8.display([22,v[6]]);
+      //t.lumiBRAN4L8.display([22,v[5]]);
+      //t.lumiBRAN4R8.display([22,v[6]]);
       //t.lumiIdeal.display(  [22,v[7]]);
       t.lumiGP.display(     [22,v[8]]);
     };
@@ -342,26 +363,20 @@ function _loadWidgets() {
     if ( options.fontSize )
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     if ( options.style )
-      tr.appendChild(Cell('Instantaneous Luminosity Measurements',3,options.style));
+      tr.appendChild(Cell('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Instantaneous Luminosity Measurements&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',3,options.style));
     else
       tr.appendChild(Cell('',3,null));
     tb.appendChild(tr);
 
     tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('Calo', null,'MonitorDataHeader'));
-    tr.appendChild(tab.lumiCalo);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-
-    tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('BLS A', null,'MonitorDataHeader'));
+    tr.appendChild(cell=Cell('BLS A/C', null,'MonitorDataHeader'));
+    //cell.style.width = '30%';
     tr.appendChild(tab.lumiBLSA);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
-
-    tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('BLS C', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiBLSC);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
+    tab.lumiBLSA.style.width = '30%';
+    tab.lumiBLSC.style.width = '30%';
 
+    /*
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('BRAN 4R8', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiBRAN4R8);
@@ -371,25 +386,61 @@ function _loadWidgets() {
     tr.appendChild(Cell('BRAN 4L8', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiBRAN4L8);
     tr.appendChild(Cell('no units', null,'Text-Right'));
-    /*
+
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Ideal', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiIdeal);
     tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
     */
+
     tb.appendChild(tr = document.createElement('tr'));
-    tr.appendChild(Cell('Best Estimate', null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Calo/Best', null,'MonitorDataHeader'));
+    tr.appendChild(tab.lumiCalo);
     tr.appendChild(tab.lumiGP);
-    tr.appendChild(Cell('&mu;b<sup>-1</sup>/s', null,'Text-Right'));
 
     tb.appendChild(tr = document.createElement('tr'));
     tr.appendChild(Cell('Interaction rate', null,'MonitorDataHeader'));
     tr.appendChild(tab.lumiRate);
-    tr.appendChild(Cell('Hz', null,'Text-Right'));
+    tr.appendChild(Cell('', null,'Text-Right'));
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Physics rate', null,'MonitorDataHeader'));
+    tr.appendChild(tab.physRateEx);
+    tr.appendChild(tab.physRateIn);
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Min.Bias rate', null,'MonitorDataHeader'));
+    tr.appendChild(tab.minbRateEx);
+    tr.appendChild(tab.minbRateIn);
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Lumi rate', null,'MonitorDataHeader'));
+    tr.appendChild(tab.LumiEx);
+    tr.appendChild(tab.LumiIn);
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Beam gas rate', null,'MonitorDataHeader'));
+    tr.appendChild(tab.BeamGasEx);
+    tr.appendChild(tab.BeamGasIn);
+
+    tb.appendChild(tr = document.createElement('tr'));
+    tr.appendChild(Cell('Others', null,'MonitorDataHeader'));
+    tr.appendChild(tab.RandEx);
+    tr.appendChild(tab.RandIn);
 
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
+      provider.subscribeItem(this.physRateEx);    
+      provider.subscribeItem(this.physRateIn);    
+      provider.subscribeItem(this.minbRateEx);    
+      provider.subscribeItem(this.minbRateIn);    
+      provider.subscribeItem(this.LumiEx);    
+      provider.subscribeItem(this.LumiIn);    
+      provider.subscribeItem(this.BeamGasEx);    
+      provider.subscribeItem(this.BeamGasIn);    
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
       provider.subscribeItem(this.lumi);    
       provider.subscribeItem(this.lumiRate);
     };
@@ -408,13 +459,13 @@ function _loadWidgets() {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
 
-    tab.lumiGPrec  = StyledItem('','Text-Right','%7.3f');
-    tab.lumiGPdel  = StyledItem('','Text-Right','%7.3f');
+    tab.lumiGPrec  = StyledItem('','Text-Right','%7.0f');
+    tab.lumiGPdel  = StyledItem('','Text-Right','%7.0f');
     tab.eff_HV     = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.HV','Text-Right','%7.2f %%');
     tab.eff_VELO   = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.VELO','Text-Right','%7.2f %%');
     tab.eff_DAQ    = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.DAQ','Text-Right','%7.2f %%');
     tab.eff_DEAD   = StyledItem('lbWeb.LHCbEfficiency.ResultsLumi.DAQLiveTime','Text-Right','%7.2f %%');
-    tab.lumi = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
+    tab.lumi       = StyledItem('lbWeb.LHCbPerformance.CurrentLuminosities',null,null);
 
     tab.update_lumi2 = function(data) {
       var v = data[1].split('/',20);
@@ -740,9 +791,11 @@ function _loadWidgets() {
 		 parseFloat(v[4]),
 		 parseFloat(v[5]),
 		 parseFloat(v[6])];
-	d[4] *= d[3]/d[2];
-	d[5] *= d[4]/d[2];
-	d[6] *= d[5]/d[2];
+	if ( d[2]>1e-9 ) {
+	  d[4] *= d[3]/d[2];
+	  d[5] *= d[4]/d[2];
+	  d[6] *= d[5]/d[2];
+	}
 	q = d[0]+'/'+d[1]+'/'+d[2]+'/'+d[3]+'/'+d[4]+'/'+d[5]+'/'+d[6];
       }
       this.parent.setLine(this.parent.currRow,q);
@@ -865,7 +918,7 @@ var bigbrother_unload = function() { lhcb.widgets.SubdetectorPage.stop();  };
 var bigbrother_body = function()   { 
   var siz              = the_displayObject['size'];
   var ret = lhcb.widgets.SubdetectorPage.start(BigBrother); 
-  if ( null == siz && screen.width>1500 ) siz = 3;
+  //if ( null == siz && screen.width>1500 ) siz = 3;
   if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
   if ( siz != null ) zoom_changeFontSizeEx(siz);
   return ret;

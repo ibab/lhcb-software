@@ -281,7 +281,10 @@ var FSMItem = function(item_name, logger, is_child)  {
       }
     }
     this.label.innerHTML = v[0];
-    this.innerHTML = v[1];
+    if ( this.format != null )
+      this.innerHTML = sprintf(this.format,v[1]);
+    else
+      this.innerHTML = v[1];
     this._logger.debug('FSMItem['+this.name+'].display: '+data+' '+this.childState+' update Done.');
     return this;
   };
