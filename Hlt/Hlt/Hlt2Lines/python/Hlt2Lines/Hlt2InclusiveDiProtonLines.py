@@ -25,7 +25,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                            ,'Hlt2IncDiProtonTrackFitted'  : 1.  
                                             }
 
-                  , 'SpdMult'          :   600.
+                  , 'SpdMult'          :   600
                   , 'ProtonPT'         :  1800.   # MeV
                   , 'CombUpperMass'    :  4000.   # MeV, before Vtx fit
                   , 'CombLowerMass'    :  2800.   # MeV, before Vtx fit
