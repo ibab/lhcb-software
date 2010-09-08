@@ -10,9 +10,9 @@ extern "C" int rtl_test_gbl(int argc, char** argv) {
   lib_rtl_lock_t id;
   char txt[132];
   int turns = 20;
-  const char* name = "Sem_test"; // argv[1];
+  const char* name = "GBL_test"; // argv[1];
   std::string proc = argc>1 ? std::string(argv[1]) : RTL::processName();
-  ::unlink("/dev/shm/sem.Sem_test");
+  ::unlink("/dev/shm/sem.GBL_test");
   ::unlink("/dev/shm/MyMemory");
   int status = RTL::Lock::create(name, id);
   if ( lib_rtl_is_success(status) )  {
