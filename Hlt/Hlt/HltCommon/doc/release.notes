@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v7r0p1 2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - streamline functions
+
 !========================== HltCommon v7r0 2010-08-26 ===================
 ! 2010-08-28 - V. Gligorov
  - New functor to cut on the total number of hits on a track.
