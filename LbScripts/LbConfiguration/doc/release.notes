@@ -1,8 +1,11 @@
 2010-09-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: tuned previous fix. Use CMTCompatibleConfig only for CERN. When 
-	CMTSITE is set to something different then CMTSupportedConfig is used. This ensure that desktop slc5 
-	ia32 machine would work.
+	* python/LbConfiguration/LbLogin.py: 
+	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to 
+	something different then CMTSupportedConfig is used. This ensure that desktop slc5 
+	ia32 machine would work. 
+	- added warnings when the selected config is in the compatible ones but not in the supported
+	ones.
 
 2010-09-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
