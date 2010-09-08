@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v10r1 2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - remove setReco from the ITrackUpgrade interface
 
 ! 2010-08-30 - Alexander Mazurov
  - cmt/requirements 

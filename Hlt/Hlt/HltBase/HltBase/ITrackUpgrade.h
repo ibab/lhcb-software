@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.10 2010-08-17 08:49:18 graven Exp $
+// $Id: ITrackUpgrade.h,v 1.11 2010-09-08 09:15:49 graven Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -18,7 +18,7 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 2 , 1 );
+static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 3 , 0 );
 
 /** @class ITrackUpgrade ITrackUpgrade.h HltBase/ITrackUpgrade.h
  *
@@ -39,7 +39,7 @@ public:
   //      i.e. remove this, and provide what you want when you do 
   //           tool<ITrackUpgrade>( reconame, ... )
   /// set this reconstruction as the default one
-  virtual StatusCode setReco(const std::string& name) = 0;
+  //virtual StatusCode setReco(const std::string& name) = 0;
   
 
 
