@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-08 - Jibo He
+ - Change Jpsi Vertex fit chi2 cut in inclusive DiMuon lines back to 20. 
+
 
 !========================== StrippingSelections v2r0 2010-09-08 ===============
 
