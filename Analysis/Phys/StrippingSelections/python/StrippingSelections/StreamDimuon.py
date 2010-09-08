@@ -28,7 +28,7 @@ from StrippingSelections.StrippingBu2JpsiK import StrippingBu2JpsiKConf
 from StrippingSelections import StrippingBu2JpsiKDetached
 from StrippingSelections import StrippingBs2JpsiPhiForBs2MuMu
 from StrippingSelections import StrippingBu2JpsiKDetachedR
-from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
+#from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 from StrippingSelections.StrippingBc2JpsiMuX import StrippingBc2JpsiMuXConf
 from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
@@ -80,7 +80,7 @@ stream.appendLines( [
 		        StrippingBu2JpsiKDetached.line,  
 		        StrippingBu2JpsiKDetachedR.line,
                         StrippingBs2JpsiPhiForBs2MuMu.line,
-		        StrippingBu2LLKConf().mmK(),
+                        #  StrippingBu2LLKConf().mmK(),
                         StrippingBc2JpsiMuXConf().MuMu(),
                         StrippingBc2JpsiHConf().MuMu(),
                         StrippingBc2JpsiHDetachedConf().MuMu(),
