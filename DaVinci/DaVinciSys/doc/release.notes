@@ -3,10 +3,12 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v26r0>2010-09-07 DaVinci v26r0. Version for Reco06-Stripping10 .</A></H1><PRE>
+</PRE><H1><A NAME=v26r0>2010-09-08 DaVinci v26r0. Version for Reco06-Stripping10 .</A></H1><PRE>
 
   * Based on LHCb v31r5 software stack.
-  * Complete revamp of stripping selections
+  * To be used for Reco06-Stripping10 processing.
+  * Complete revamp of stripping selections. See
+    https://twiki.cern.ch/twiki/bin/view/LHCb/StrippingStatisticsSept2010
 
 </PRE><H1><A NAME=v25r8>2010-08-16 DaVinci v25r8. Version for Stripping line development and MicroDST production tests.</A></H1><PRE>
 
