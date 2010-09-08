@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 !========================== HltSettings v3r2  2010-09-08 ===================
+! 2010-09-08 - Johannes Albrecht
+ - add Hlt1SingleMuon4BsMuMu, Hlt1DiMuon4BsMuMu to Sep10 settings
+
 ! 2010-09-08 - Gerhard Raven
  - remove setting of TConf windows to adapt to HltTracking v7r0 and
    Hlt1Lines v5r0
