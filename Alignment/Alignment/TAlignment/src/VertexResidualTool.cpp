@@ -49,8 +49,10 @@ namespace Al
     double m_chiSquarePerDofCut ;
     bool   m_computeCorrelations ;
     size_t m_maxHitsPerTrackForCorrelations ;
-    double m_muonmass ;
-    double m_jpsimass ;
+    std::string m_parentName;
+    std::vector<std::string> m_daughterNames;
+    std::vector<double> m_daughterMass;
+    double m_parentMass ;
     typedef std::vector<const Al::MultiTrackResiduals*> ResidualContainer ;
     mutable ResidualContainer m_residuals ;
   } ;
@@ -91,6 +93,8 @@ namespace Al
     declareProperty("TrackResidualTool",m_trackresidualtool) ;
     declareProperty("Extrapolator",m_extrapolator) ;
     declareProperty("MaxHitsPerTrackForCorrelations", m_maxHitsPerTrackForCorrelations) ;
+    declareProperty("parentName", m_parentName = "J/psi(1S)");
+    declareProperty("daughterNames",  m_daughterNames = boost::assign::list_of("mu+")("mu+") );
   }
   
   StatusCode VertexResidualTool::initialize()
@@ -104,9 +108,13 @@ namespace Al
     incSvc()->addListener(this, IncidentType::EndEvent);
     
     IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
-    m_muonmass = propertysvc->find( "mu+" )->mass() ;
-    m_jpsimass = propertysvc->find( "J/psi(1S)" )->mass() ;
-    info() << "muon, psi mass: " << m_muonmass << ", " << m_jpsimass << endreq ;
+    for (std::vector<std::string>::const_iterator iterS = m_daughterNames.begin(); iterS != m_daughterNames.end() ; ++iterS){
+      const double tmass = propertysvc->find(*iterS)->mass() ;
+      m_daughterMass.push_back(tmass);
+      info() << "Adding daughter " << *iterS <<  " with mass " <<  tmass << endreq;
+    }
+    m_parentMass = propertysvc->find(m_parentName)->mass() ;
+    info() << "parent mass " << m_parentMass << endreq ;
     return sc ;
   }
 
@@ -142,9 +150,9 @@ namespace Al
       }
     }
       
-    // for now, any twoprong vertex is a jpsi !
-    bool constrainDiMuonMass = dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ;
-    rc = compute( trackresiduals, vertex.position(), constrainDiMuonMass ) ;
+
+    bool constrainMass = dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ;
+    rc = compute( trackresiduals, vertex.position(), constrainMass ) ;
     if(rc) m_residuals.push_back(rc) ;
 
     return rc ;
@@ -163,7 +171,7 @@ namespace Al
 
   const Al::MultiTrackResiduals* VertexResidualTool::compute(const TrackResidualContainer& tracks,
 							     const Gaudi::XYZPoint& vertexestimate,
-							     bool constrainDiMuonMass) const
+							     bool constrainMass) const
   {
     Al::MultiTrackResiduals* rc(0) ;
     bool success = true ;
@@ -210,15 +218,15 @@ namespace Al
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
       double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
       
-      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainDiMuonMass ) {
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainMass ) {
 	assert( nacceptedtracks == 2 ) ;
-	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
-	debug() << "mass before psi constraint: "
-		<< vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	//	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
+	debug() << "mass before constraint: "
+		<< vertex.mass(m_daughterMass) << " +/- " << vertex.massErr(m_daughterMass) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
-	fitstatus = vertex.constrainMass( masshypos, m_jpsimass ) ;	
-	debug() << "mass after psi constraint: "
-		<< vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	fitstatus = vertex.constrainMass( m_daughterMass, m_parentMass ) ;	
+	debug() << "mass afterconstraint: "
+		<< vertex.mass(m_daughterMass) << " +/- " << vertex.massErr(m_daughterMass) << endreq ;
 	debug() << "error on qop of first track, original, after vertex fit, after mass fit: "
 		<< std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
 		<< qopbefore << " "
@@ -365,7 +373,7 @@ namespace Al
 	} 
       } else {
 	warning() << "rejected vertex with chisqu/dof: "
-		  << vchi2 / vertex.nDoF() << " isdimuon= " << constrainDiMuonMass << endreq ;
+		  << vchi2 / vertex.nDoF() << " isConstrained = " << constrainMass << endreq ;
       } 
     } else {
 	warning() << "not enough tracks for vertex anymore" << endreq ;
