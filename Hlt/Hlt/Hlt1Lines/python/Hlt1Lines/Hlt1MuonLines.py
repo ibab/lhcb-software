@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.32 2010-09-08 13:39:09 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.33 2010-09-08 14:09:34 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
 # =============================================================================
 
 
@@ -458,7 +458,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             SingleMuon4BsMuMu = Line( 'SingleMuon4BsMuMu'
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
-                                    , algos = [ Hlt1GEC(True, 4000),MuonPrep
+                                    , algos = [ MuonPrep
                                                 , PV3D().ignoreOutputSelection()
                                                 , Member ( 'TF', 'PT'
                                                            , FilterDescriptor = ['PT,>,%(bmm_pt)s'%self.getProps()]
@@ -473,7 +473,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
             DiMuon4BsMuMu = Line( 'DiMuon4BsMuMu'
                                   , prescale = self.prescale
                                   , L0DU = "L0_CHANNEL('"+str(self.getProp('L0DiMuon'))+"')"
-                                  , algos = [ Hlt1GEC(True, 4000),DiMuonPrep ]
+                                  , algos = [ DiMuonPrep ]
                                   + [ Member( 'VF','Mass'
                                               , FilterDescriptor = [ 'VertexDimuonMass,>,4700' ]
                                               , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',4000.,10000,200),
