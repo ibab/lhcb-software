@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.111 2010-09-08 14:55:54 albrecht Exp $
+! $Id: release.notes,v 1.112 2010-09-08 17:59:20 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v4r5p1  2010-09-08 ===================
 !2010-09-08 - Johannes Albrecht
  - add Hlt2..4BsMuMu lines (which have no GEC) to default HLT2 veto
 
