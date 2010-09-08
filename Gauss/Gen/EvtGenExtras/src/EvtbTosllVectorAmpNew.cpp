@@ -195,52 +195,53 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
                                Relambda_qu,Imlambda_qu);
   EvtComplex c10a  =  WilsCoeff->GetC10Eff(mt, Mw);
 
-  report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllVectorAmpNew::CalcAmp(...) passed."
-      << "\n Particle masses:"
-      << "\n B - meson mass M1 = " << M1
-      << "\n V - meson mass M2 = " << M2
-      << "\n leptonic mass  ml = " << ml
-      << "\n light quark mass  = " << ms
-      << "\n c - quark mass mc = " << mc
-      << "\n b - quark mass mb = " << mb
-      << "\n t - quark mass mt = " << mt
-      << "\n W - boson mass Mw = " << Mw
-      << "\n ============================================================================"
-      << "\n Input parameters:"
-      << "\n scale parameter        mu = " << mu
-      << "\n number of flavors      Nf = " << Nf
-      << "\n resonant switching        = " << res_swch
-      << "\n parameter for alpha_s(M_Z) = " << ias      
-      << "\n ============================================================================"
-      << "\n Vector form-factors at q^2 = " << q2 
-      << "   for B -> V transition:"
-      << "\n v  = " << v
-      << "\n a0 = " << a0 
-      << "\n a1 = " << a1 
-      << "\n a2 = " << a2 
-      << "\n t1 = " << t1 
-      << "\n t2 = " << t2  
-      << "\n t3 = " << t3  
-      << "\n ============================================================================"
-      << "\n Wilson Coefficients:"
-      << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
-      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
-        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
-      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
-        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
-      << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
-      << std::endl;
+//  report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllVectorAmpNew::CalcAmp(...) passed."
+//      << "\n Particle masses:"
+//      << "\n B - meson mass M1 = " << M1
+//      << "\n V - meson mass M2 = " << M2
+//      << "\n leptonic mass  ml = " << ml
+//      << "\n light quark mass  = " << ms
+//      << "\n c - quark mass mc = " << mc
+//      << "\n b - quark mass mb = " << mb
+//      << "\n t - quark mass mt = " << mt
+//      << "\n W - boson mass Mw = " << Mw
+//      << "\n ============================================================================"
+//      << "\n Input parameters:"
+//      << "\n scale parameter        mu = " << mu
+//      << "\n number of flavors      Nf = " << Nf
+//      << "\n resonant switching        = " << res_swch
+//      << "\n parameter for alpha_s(M_Z) = " << ias      
+//      << "\n ============================================================================"
+//      << "\n Vector form-factors at q^2 = " << q2 
+//      << "   for B -> V transition:"
+//      << "\n v  = " << v
+//      << "\n a0 = " << a0 
+//      << "\n a1 = " << a1 
+//      << "\n a2 = " << a2 
+//      << "\n t1 = " << t1 
+//      << "\n t2 = " << t2  
+//      << "\n t3 = " << t3  
+//      << "\n ============================================================================"
+//      << "\n Wilson Coefficients:"
+//      << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
+//      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
+//        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
+//      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
+//        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
+//      << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
+//      << std::endl;
 
-      mytest = fopen("output.txt","a");
-      if(mytest != NULL){									
-	fprintf(mytest,"%lf\n",q2);	
-	fclose(mytest);						
-      } 
-      else{
-         report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
-         << std::endl;
-	 return;					
-      }
+  mytest = fopen("output.txt","a");
+
+  if(mytest != NULL){									
+     fprintf(mytest,"%lf\n",q2);	
+     fclose(mytest);						
+  } 
+  else{
+     report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
+     << std::endl;
+     return;					
+  }
 
 
 
@@ -529,32 +530,32 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
      k2.set(El2, modl2*cosVellminus, -modl2*sqrt(1.0-pow(cosVellminus,2.0)), 0.0);
      k1=p1-p2-k2;
 
-     report(DEBUG,"EvtGen") 
-         << "\n Debug in the function EvtbTosllVectorAmpNew::CalcMaxProb(...):"
-         << "\n mu =" << mu << " Nf =" << Nf 
-         << " res_swch =" << res_swch 
-         << " ias =" << ias 
-         << "\n CKM_A      = " << CKM_A
-         << " CKM_lambda = " << CKM_lambda
-         << "\n CKM_barrho = " << CKM_barrho
-         << " CKM_bareta = " << CKM_bareta
-         << "\n M1 = " << M1
-         << "\n M2 = " << M2
-         << "\n ml = " << ml
-         << "\n s_min   = " << s_min
-         << "\n t_for_s = " << t_for_s
-         << "\n EV      = " << EV
-         << "\n El1     = " << El1
-         << "\n El2     = " << El2
-         << "\n modV    = " << modV
-         << "\n modl1   = " << modl1
-         << "\n modl2   = " << modl2
-         << "\n cos(theta) = " << cosVellminus 
-         << "\n p1 =" << p1
-         << "\n p2 =" << p2
-         << "\n k1 =" << k1
-         << "\n k2 =" << k2
-         << std::endl;
+//     report(DEBUG,"EvtGen") 
+//         << "\n Debug in the function EvtbTosllVectorAmpNew::CalcMaxProb(...):"
+//         << "\n mu =" << mu << " Nf =" << Nf 
+//         << " res_swch =" << res_swch 
+//         << " ias =" << ias 
+//         << "\n CKM_A      = " << CKM_A
+//         << " CKM_lambda = " << CKM_lambda
+//         << "\n CKM_barrho = " << CKM_barrho
+//         << " CKM_bareta = " << CKM_bareta
+//         << "\n M1 = " << M1
+//         << "\n M2 = " << M2
+//         << "\n ml = " << ml
+//         << "\n s_min   = " << s_min
+//         << "\n t_for_s = " << t_for_s
+//         << "\n EV      = " << EV
+//         << "\n El1     = " << El1
+//         << "\n El2     = " << El2
+//         << "\n modV    = " << modV
+//         << "\n modl1   = " << modl1
+//         << "\n modl2   = " << modl2
+//         << "\n cos(theta) = " << cosVellminus 
+//         << "\n p1 =" << p1
+//         << "\n p2 =" << p2
+//         << "\n k1 =" << k1
+//         << "\n k2 =" << k2
+//         << std::endl;
 
 
      // B-meson state preparation at the rest frame of B-meson
@@ -692,32 +693,32 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        k2.set(El2, modl2*cosVellminus, -modl2*sqrt(1.0-pow(cosVellminus,2.0)), 0.0);
        k1=p1-p2-k2;
 
-       report(DEBUG,"EvtGen") 
-           << "\n Debug in the function EvtbTosllVectorAmpNew::CalcMaxProb(...):"
-           << "\n mu =" << mu << " Nf =" << Nf 
-           << " res_swch =" << res_swch 
-           << " ias =" << ias 
-           << "\n CKM_A      = " << CKM_A
-           << " CKM_lambda = " << CKM_lambda
-           << "\n CKM_barrho = " << CKM_barrho
-           << " CKM_bareta = " << CKM_bareta
-           << "\n M1 = " << M1
-           << "\n M2 = " << M2
-           << "\n ml = " << ml
-           << "\n s  = " << s
-           << "\n t_for_s = " << t_for_s
-           << "\n EV      = " << EV
-           << "\n El1     = " << El1
-           << "\n El2     = " << El2
-           << "\n modV    = " << modV
-           << "\n modl1   = " << modl1
-           << "\n modl2   = " << modl2
-           << "\n cos(theta) = " << cosVellminus 
-           << "\n p1 =" << p1
-           << "\n p2 =" << p2
-           << "\n k1 =" << k1
-           << "\n k2 =" << k2
-           << std::endl;
+//       report(DEBUG,"EvtGen") 
+//           << "\n Debug in the function EvtbTosllVectorAmpNew::CalcMaxProb(...):"
+//           << "\n mu =" << mu << " Nf =" << Nf 
+//           << " res_swch =" << res_swch 
+//           << " ias =" << ias 
+//           << "\n CKM_A      = " << CKM_A
+//           << " CKM_lambda = " << CKM_lambda
+//           << "\n CKM_barrho = " << CKM_barrho
+//           << " CKM_bareta = " << CKM_bareta
+//           << "\n M1 = " << M1
+//           << "\n M2 = " << M2
+//           << "\n ml = " << ml
+//           << "\n s  = " << s
+//           << "\n t_for_s = " << t_for_s
+//           << "\n EV      = " << EV
+//           << "\n El1     = " << El1
+//           << "\n El2     = " << El2
+//           << "\n modV    = " << modV
+//           << "\n modl1   = " << modl1
+//           << "\n modl2   = " << modl2
+//           << "\n cos(theta) = " << cosVellminus 
+//           << "\n p1 =" << p1
+//           << "\n p2 =" << p2
+//           << "\n k1 =" << k1
+//           << "\n k2 =" << k2
+//           << std::endl;
 
 
        // B-meson state preparation at the rest frame of B-meson
@@ -795,20 +796,20 @@ double EvtbTosllVectorAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
   maxfoundprob *=1.01;
 
-  report(NOTICE,"EvtGen") 
-         << "\n ***************************************************************************"
-         << "\n The function EvtbTosllVectorAmpNew::CalcMaxProb(...) passed with arguments:"
-         << "\n mu =" << mu << " Nf =" << Nf 
-         << " res_swch =" << res_swch 
-         << " ias =" << ias 
-         << "\n CKM_A      = " << CKM_A
-         << " CKM_lambda = " << CKM_lambda
-         << "\n CKM_barrho = " << CKM_barrho
-         << " CKM_bareta = " << CKM_bareta
-         << "\n The distribution maximum maxfoundprob =" << maxfoundprob
-         << "\n k = " << katmax
-         << "\n ***************************************************************************" 
-         << std::endl;
+//  report(NOTICE,"EvtGen") 
+//         << "\n ***************************************************************************"
+//         << "\n The function EvtbTosllVectorAmpNew::CalcMaxProb(...) passed with arguments:"
+//         << "\n mu =" << mu << " Nf =" << Nf 
+//         << " res_swch =" << res_swch 
+//         << " ias =" << ias 
+//         << "\n CKM_A      = " << CKM_A
+//         << " CKM_lambda = " << CKM_lambda
+//         << "\n CKM_barrho = " << CKM_barrho
+//         << " CKM_bareta = " << CKM_bareta
+//         << "\n The distribution maximum maxfoundprob =" << maxfoundprob
+//         << "\n k = " << katmax
+//         << "\n ***************************************************************************" 
+//         << std::endl;
 
   return maxfoundprob;
 

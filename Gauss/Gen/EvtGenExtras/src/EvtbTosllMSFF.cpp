@@ -93,9 +93,9 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n B -> K transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n B -> K transition form factors"
+//     << std::endl;          
   }
 
   // B -> \pi transition form factors
@@ -120,9 +120,9 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n B -> pi transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n B -> pi transition form factors"
+//     << std::endl;          
   }
 
   // B_d -> \eta transition form factors
@@ -146,9 +146,9 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n Bd -> eta transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n Bd -> eta transition form factors"
+//     << std::endl;          
   }
 
 
@@ -170,9 +170,9 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n Bd -> eta transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n Bd -> eta transition form factors"
+//     << std::endl;          
   }
 
 
@@ -194,9 +194,9 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n Bs -> eta transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n Bs -> eta transition form factors"
+//     << std::endl;          
   }
 
 
@@ -218,18 +218,18 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n Bs -> eta transition form factors"
-     << std::endl;          
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n Bs -> eta transition form factors"
+//     << std::endl;          
   }
 
 
-  report(NOTICE,"EvtGen") << "\n models_counter  = " << models_counter
-      << "\n Scalar form-factors at q^2 = " << t 
-      << "   for B -> P transition:"
-      << "\n fp = " << fp
-      << "\n f0 = " << f0 
-      << "\n ft = " << ft << std::endl;
+//  report(NOTICE,"EvtGen") << "\n models_counter  = " << models_counter
+//      << "\n Scalar form-factors at q^2 = " << t 
+//      << "   for B -> P transition:"
+//      << "\n fp = " << fp
+//      << "\n f0 = " << f0 
+//      << "\n ft = " << ft << std::endl;
 
 
   if(models_counter!=1){
@@ -280,9 +280,9 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n barB -> barK* transition form factors"
-     << std::endl;     
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barB -> barK* transition form factors"
+//     << std::endl;     
   }
 
 
@@ -313,9 +313,9 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n barB -> bar rho transition form factors"
-     << std::endl;     
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barB -> bar rho transition form factors"
+//     << std::endl;     
   }
 
 
@@ -342,9 +342,9 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n barBs -> phi transition form factors"
-     << std::endl;     
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barBs -> phi transition form factors"
+//     << std::endl;     
   }
 
   // \bar Bs -> K* (without \bar !) transition form factors
@@ -370,22 +370,22 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
      models_counter=models_counter+1;
 
-     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
-     << "\n barBs -> K* transition form factors"
-     << std::endl;     
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barBs -> K* transition form factors"
+//     << std::endl;     
   }
 
 
-  report(NOTICE,"EvtGen") << "\n models_counter  = " << models_counter
-      << "\n Vector form-factors at q^2 = " << t 
-      << "   for B -> V transition:"
-      << "\n v  = " << v
-      << "\n a0 = " << a0 
-      << "\n a1 = " << a1 
-      << "\n a2 = " << a2 
-      << "\n t1 = " << t1 
-      << "\n t2 = " << t2  
-      << "\n t3 = " << t3 << std::endl;
+//  report(NOTICE,"EvtGen") << "\n models_counter  = " << models_counter
+//      << "\n Vector form-factors at q^2 = " << t 
+//      << "   for B -> V transition:"
+//      << "\n v  = " << v
+//      << "\n a0 = " << a0 
+//      << "\n a1 = " << a1 
+//      << "\n a2 = " << a2 
+//      << "\n t1 = " << t1 
+//      << "\n t2 = " << t2  
+//      << "\n t3 = " << t3 << std::endl;
 
 
   if(models_counter!=1){

@@ -197,37 +197,37 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
                                Relambda_qu,Imlambda_qu);
   EvtComplex c10a  =  WilsCoeff->GetC10Eff(mt, Mw);
 
-  report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllScalarAmpNew::CalcAmp(...) passed."
-      << "\n Particle masses:"
-      << "\n B - meson mass M1 = " << M1
-      << "\n P - meson mass M2 = " << M2
-      << "\n leptonic mass  ml = " << ml
-      << "\n light quark mass  = " << ms
-      << "\n c - quark mass mc = " << mc
-      << "\n b - quark mass mb = " << mb
-      << "\n t - quark mass mt = " << mt
-      << "\n W - boson mass Mw = " << Mw
-      << "\n ============================================================================"
-      << "\n Input parameters:"
-      << "\n scale parameter        mu = " << mu
-      << "\n number of flavors      Nf = " << Nf
-      << "\n resonant switching        = " << res_swch
-      << "\n parameter for alpha_s(M_Z) = " << ias      
-      << "\n ============================================================================"
-      << "\n Vector form-factors at q^2 = " << q2 
-      << "   for B -> P transition:"
-      << "\n fp = " << fp
-      << "\n f0 = " << f0 
-      << "\n ft = " << ft 
-      << "\n ============================================================================"
-      << "\n Wilson Coefficients:"
-      << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
-      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
-        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
-      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
-        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
-      << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
-      << std::endl;
+//  report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllScalarAmpNew::CalcAmp(...) passed."
+//      << "\n Particle masses:"
+//      << "\n B - meson mass M1 = " << M1
+//      << "\n P - meson mass M2 = " << M2
+//      << "\n leptonic mass  ml = " << ml
+//      << "\n light quark mass  = " << ms
+//      << "\n c - quark mass mc = " << mc
+//      << "\n b - quark mass mb = " << mb
+//      << "\n t - quark mass mt = " << mt
+//      << "\n W - boson mass Mw = " << Mw
+//      << "\n ============================================================================"
+//      << "\n Input parameters:"
+//      << "\n scale parameter        mu = " << mu
+//      << "\n number of flavors      Nf = " << Nf
+//      << "\n resonant switching        = " << res_swch
+//      << "\n parameter for alpha_s(M_Z) = " << ias      
+//      << "\n ============================================================================"
+//      << "\n Vector form-factors at q^2 = " << q2 
+//      << "   for B -> P transition:"
+//      << "\n fp = " << fp
+//      << "\n f0 = " << f0 
+//      << "\n ft = " << ft 
+//      << "\n ============================================================================"
+//      << "\n Wilson Coefficients:"
+//      << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
+//      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
+//        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
+//      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
+//        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
+//      << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
+//      << std::endl;
 
 //      mytest = fopen("scalaroutput.txt","a");
 //      if(mytest != NULL){									
@@ -415,12 +415,14 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
      double t_plus, t_minus; // t-variable boundaries for current s-variable
      double ds, dt;
      int j, k;
+     int max_j, max_k;
      double s_at_max, t_at_max;
 
      s_min = 4.0*pow(ml,2.0);   // minimum value of s-variable
      s_max = pow((M1-M2),2.0);  // maximum value of s-variable
 
-     ds = (s_max-s_min)/1000.0;
+     max_j=1000;
+     ds = (s_max-s_min)/((double) max_j);
      if(ds < 0.0){
         report(ERROR,"EvtGen") 
             << "\n\n In the function EvtbTosllScalarAmpNew::CalcScalarMaxProb(...)"
@@ -436,7 +438,7 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
 
      // The maximum probability calculation
      // from s_min to s_max
-     for(j=0; j<=100; j++){ 
+     for(j=0; j<=max_j; j++){ 
 
         s = s_min +ds*((double)j);
 
@@ -448,7 +450,8 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
         t_minus = t_minus - sqrt(1.0-4.0*pow(ml,2.0)/s)*sqrt(lambda(s,pow(M1,2.0),pow(M2,2.0)));
         t_minus *=0.5;
 
-        dt = (t_plus-t_minus)/1000.0;
+        max_k=1000;
+        dt = (t_plus-t_minus)/((double) max_k);
         if(fabs(dt)<0.00001) dt=0.0;
         
         if(dt <= (-0.00001)){
@@ -470,7 +473,7 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
         }
 
         // from t_minus to t_plus
-        for(k=0; k<=100; k++){ 
+        for(k=0; k<=max_k; k++){ 
 
           t_for_s = t_minus + dt*((double) k);
 
@@ -539,28 +542,28 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
           k2.set(El2, modl2*cosVellminus, -modl2*sqrt(1.0-pow(cosVellminus,2.0)), 0.0);
           k1=p1-p2-k2;
 
-          report(NOTICE,"EvtGen") 
-              << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
-              << "\n mu =" << mu << " Nf =" << Nf 
-              << " res_swch =" << res_swch 
-              << " ias =" << ias 
-              << "\n M1 = " << M1
-              << "\n M2 = " << M2
-              << "\n ml = " << ml
-              << "\n s  = " << s
-              << "\n t_for_s = " << t_for_s
-              << "\n EV      = " << EV
-              << "\n El1     = " << El1
-              << "\n El2     = " << El2
-              << "\n modV    = " << modV
-              << "\n modl1   = " << modl1
-              << "\n modl2   = " << modl2
-              << "\n cos(theta) = " << cosVellminus 
-              << "\n p1 =" << p1
-              << "\n p2 =" << p2
-              << "\n k1 =" << k1
-              << "\n k2 =" << k2
-              << std::endl;
+//          report(NOTICE,"EvtGen") 
+//              << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//              << "\n mu =" << mu << " Nf =" << Nf 
+//              << " res_swch =" << res_swch 
+//              << " ias =" << ias 
+//              << "\n M1 = " << M1
+//              << "\n M2 = " << M2
+//              << "\n ml = " << ml
+//              << "\n s  = " << s
+//              << "\n t_for_s = " << t_for_s
+//              << "\n EV      = " << EV
+//              << "\n El1     = " << El1
+//              << "\n El2     = " << El2
+//              << "\n modV    = " << modV
+//              << "\n modl1   = " << modl1
+//              << "\n modl2   = " << modl2
+//              << "\n cos(theta) = " << cosVellminus 
+//              << "\n p1 =" << p1
+//              << "\n p2 =" << p2
+//              << "\n k1 =" << k1
+//              << "\n k2 =" << k2
+//              << std::endl;
 
 
           // B-meson state preparation at the rest frame of B-meson
@@ -623,8 +626,8 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
                     << std::endl;
           }
 
-        } // for(k=0; k<=1000; k++)
-     } // for(j=0; j<=1000; j++)
+        } // for(k=0; k<=max_k; k++)
+     } // for(j=0; j<=max_j; j++)
     
   } // if(res_swch==0)
 
@@ -718,28 +721,28 @@ double EvtbTosllScalarAmpNew::CalcMaxProb(EvtId parnum, EvtId mesnum,
        k2.set(El2, modl2*cosVellminus, -modl2*sqrt(1.0-pow(cosVellminus,2.0)), 0.0);
        k1=p1-p2-k2;
 
-       report(NOTICE,"EvtGen") 
-           << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
-           << "\n mu =" << mu << " Nf =" << Nf 
-           << " res_swch =" << res_swch 
-           << " ias =" << ias 
-           << "\n M1 = " << M1
-           << "\n M2 = " << M2
-           << "\n ml = " << ml
-           << "\n s  = " << s
-           << "\n t_for_s = " << t_for_s
-           << "\n EV      = " << EV
-           << "\n El1     = " << El1
-           << "\n El2     = " << El2
-           << "\n modV    = " << modV
-           << "\n modl1   = " << modl1
-           << "\n modl2   = " << modl2
-           << "\n cos(theta) = " << cosVellminus 
-           << "\n p1 =" << p1
-           << "\n p2 =" << p2
-           << "\n k1 =" << k1
-           << "\n k2 =" << k2
-           << std::endl;
+//       report(NOTICE,"EvtGen") 
+//           << "\n Debug in the function EvtbTosllScalarAmpNew::CalcMaxProb(...):"
+//           << "\n mu =" << mu << " Nf =" << Nf 
+//           << " res_swch =" << res_swch 
+//           << " ias =" << ias 
+//           << "\n M1 = " << M1
+//           << "\n M2 = " << M2
+//           << "\n ml = " << ml
+//           << "\n s  = " << s
+//           << "\n t_for_s = " << t_for_s
+//           << "\n EV      = " << EV
+//           << "\n El1     = " << El1
+//           << "\n El2     = " << El2
+//           << "\n modV    = " << modV
+//           << "\n modl1   = " << modl1
+//           << "\n modl2   = " << modl2
+//           << "\n cos(theta) = " << cosVellminus 
+//           << "\n p1 =" << p1
+//           << "\n p2 =" << p2
+//           << "\n k1 =" << k1
+//           << "\n k2 =" << k2
+//           << std::endl;
 
 
        // B-meson state preparation at the rest frame of B-meson

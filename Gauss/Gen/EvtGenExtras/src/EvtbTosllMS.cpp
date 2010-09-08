@@ -174,14 +174,14 @@ void EvtbTosllMS::decay( EvtParticle *p ){
   _calcamp->CalcAmp(p,_amp2,_msffmodel, _wilscoeff, mu, Nf, res_swch, ias, 
                                    CKM_A,CKM_lambda,CKM_barrho,CKM_bareta);
 
-  report(NOTICE,"EvtGen") << "\n The function EvtbTosllMS::decay(...) passed with arguments:"
-                        << "\n mu = " << mu << " Nf =" << Nf 
-                        << " res_swch = " << res_swch 
-                        << " ias = " << ias 
-                        << " CKM_A = " << CKM_A
-                        << " CKM_lambda = " << CKM_lambda
-                        << " CKM_barrho = " << CKM_barrho
-                        << " CKM_bareta = " << CKM_bareta << std::endl;
+//  report(NOTICE,"EvtGen") << "\n The function EvtbTosllMS::decay(...) passed with arguments:"
+//                        << "\n mu = " << mu << " Nf =" << Nf 
+//                        << " res_swch = " << res_swch 
+//                        << " ias = " << ias 
+//                        << " CKM_A = " << CKM_A
+//                        << " CKM_lambda = " << CKM_lambda
+//                        << " CKM_barrho = " << CKM_barrho
+//                        << " CKM_bareta = " << CKM_bareta << std::endl;
 
 }
 
