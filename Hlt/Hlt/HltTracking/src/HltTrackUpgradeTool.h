@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.23 2010-09-08 09:18:24 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.24 2010-09-08 13:58:08 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -35,13 +35,7 @@ public:
 
   virtual ~HltTrackUpgradeTool( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-
-  StatusCode setReco(const std::string& name);
-
-  std::string reco() 
-  {return name();}
-  
+  virtual StatusCode initialize();    ///< Tool initialization
 
   // this method is save, it takes care of the memory
   StatusCode upgrade

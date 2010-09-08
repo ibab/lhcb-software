@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.45 2010-09-08 09:18:24 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.46 2010-09-08 13:58:08 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -91,14 +91,6 @@ StatusCode HltTrackUpgradeTool::initialize() {
 
   return sc;
 };
-
-
-StatusCode HltTrackUpgradeTool::setReco(const std::string& ) 
-{
-    Assert(1==0, "Obsolete Method -- do not call, will be removed ASAP!!");
-    assert(1==0);
-    return StatusCode::FAILURE;
-}
 
 
 //=============================================================================
