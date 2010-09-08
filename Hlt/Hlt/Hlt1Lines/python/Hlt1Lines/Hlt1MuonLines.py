@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.31 2010-09-08 13:14:13 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.32 2010-09-08 13:39:09 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
 # =============================================================================
 
 
@@ -83,7 +83,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'bmm_IP'                   : 0.05
         ,'bmm_MuChi2'               : 16
         ,'bmm_fitChi2'              : 10
-        ,'bmm_IPS'                  : 36
+        ,'bmm_IPS'                  : 49
         ,'bmm_pt'                   : 1500
         }
     
