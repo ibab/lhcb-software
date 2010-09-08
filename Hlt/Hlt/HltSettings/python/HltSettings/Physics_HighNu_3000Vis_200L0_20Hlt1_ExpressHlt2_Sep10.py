@@ -70,14 +70,6 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                  }
                        , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' : 1600.0
                                               , 'Muon_DeltaPCut'               :    0
-                                              , 'Muon_TConfNSigmaX'            :    5
-                                              , 'Muon_TConfNSigmaY'            :    5 
-                                              , 'Muon_TConfNSigmaTx'           :    5
-                                              , 'Muon_TConfNSigmaTy'           :    5
-                                              , 'MSeg_TConfNSigmaX'            :    4
-                                              , 'MSeg_TConfNSigmaY'            :    4 
-                                              , 'MSeg_TConfNSigmaTx'           :    4
-                                              , 'MSeg_TConfNSigmaTy'           :    4
                                               , 'Muon_PtCut' : 1350
                                               , 'MuonIP_PtCut' : 850
                                               , 'Muon_IPMinCut' : 0.09
@@ -200,11 +192,6 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
         """
         lines = [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error'
                  , 'Hlt1L0Any'
-                 #, 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
-                 #, 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
-                 #, 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
-                 #, 'Hlt1L0B1gas', 'Hlt1L0B2gas'
-                 #, 'Hlt1VeloASide', 'Hlt1VeloCSide'
                  , 'Hlt1Lumi'
                  , 'Hlt1LumiMidBeamCrossing'
                  , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'

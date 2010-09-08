@@ -3,6 +3,12 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+!========================== HltSettings v3r2  2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - remove setting of TConf windows to adapt to HltTracking v7r0 and
+   Hlt1Lines v5r0
+ 
+
 !========================== HltSettings v3r1  2010-09-02 ===================
 ! 2010-09-02 - Gerhard Raven
  - rename Physics_HighNu_1000Vis... into Physics_HighNu_3000Vis... as
