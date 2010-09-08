@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.20 2010-09-07 12:45:04 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.21 2010-09-08 09:18:24 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -29,7 +29,7 @@ HltTrackUpgrade::HltTrackUpgrade( const std::string& name,
   , m_qualityHisto(0)
   , m_qualityHistoBest(0)
 {
-  declareProperty("RecoName", m_recoName = "<UNKNOWN>");  
+  declareProperty("RecoName", m_recoName = "<INVALID>");  
   m_selections.declareProperties();
 };
 //=============================================================================
@@ -49,8 +49,7 @@ StatusCode HltTrackUpgrade::initialize() {
   // and then transfers it to the TES...
   m_selections.registerSelection();
 
-  m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool",this);
-  sc = m_tool->setReco(m_recoName);
+  m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool/"+m_recoName);
   if (sc.isFailure()) return sc;
   
   if (produceHistos()){

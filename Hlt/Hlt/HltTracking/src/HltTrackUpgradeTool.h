@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.22 2010-09-07 12:45:04 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.23 2010-09-08 09:18:24 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -10,7 +10,6 @@
 #include "HltBase/ITrackView.h"
 #include "HltBase/HltBaseTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
-#include "EDictionary.h"
 
 /** @class HltTrackUpgradeTool HltTrackUpgradeTool.h
  *  
@@ -41,9 +40,8 @@ public:
   StatusCode setReco(const std::string& name);
 
   std::string reco() 
-  {return m_recoName;}
+  {return name();}
   
-  void beginExecute();
 
   // this method is save, it takes care of the memory
   StatusCode upgrade
@@ -54,9 +52,6 @@ public:
   StatusCode upgrade(const LHCb::Track& seed,
                      std::vector<LHCb::Track*>& track);
 
-  // this method is unsave, it does not take care of the memory
-  StatusCode iupgrade(const LHCb::Track& seed,
-                      std::vector<LHCb::Track*>& track);
   
   std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed)
   {
@@ -72,9 +67,11 @@ public:
 
 private:
 
-  void recoConfiguration();
+  void beginExecute();
 
-  void toolConfigure();
+  // this method is unsave, it does not take care of the memory
+  StatusCode iupgrade(const LHCb::Track& seed,
+                      std::vector<LHCb::Track*>& track);
 
   bool isReco(const LHCb::Track& track);
 
@@ -90,15 +87,9 @@ private:
 
   void printInfo(const std::string& title, const LHCb::Track& track);
 
-  template <class T>
-  void recoregister(const std::string& name, const std::string& prop,
-                    const T& t) {
-    std::string key = name+"/"+prop;m_recoConf.add(key,t);
-    info() << " reco ["<<key<<"] = " << t <<endreq;
-  }
 
   std::string m_TESOutput;
-  std::string m_recoName;
+  std::string m_toolName;
   
   int m_recoID;
   int m_ItrackType;
@@ -109,10 +100,10 @@ private:
   bool m_transferAncestor;
   bool m_orderByPt;
   bool m_doTrackReco;
+  bool m_hasView;
 
   ISequencerTimerTool* m_timer;
   int m_timerTool;
-  zen::dictionary m_recoConf;
 
   LHCb::Tracks* m_otracks;
 

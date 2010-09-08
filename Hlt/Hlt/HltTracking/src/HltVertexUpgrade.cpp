@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.24 2010-08-17 11:00:35 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.25 2010-09-08 09:18:24 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -31,7 +31,7 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
   , m_quality1HistoBest(0)  
   , m_quality2HistoBest(0)
 {
-  declareProperty("RecoName", m_recoName = "empty");
+  declareProperty("RecoName", m_recoName = "<INVALID>");
   
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   
@@ -55,9 +55,7 @@ StatusCode HltVertexUpgrade::initialize() {
   m_selections.retrieveSelections();
   m_selections.registerSelection();
   
-  m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool",this);
-  if (!m_tool) fatal() << " not able to retrieve upgrade track tool " << endmsg;
-  sc = m_tool->setReco(m_recoName);
+  m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool/"+m_recoName );
   
  if (produceHistos()){
     m_quality1Histo = initializeHisto(m_recoName+"1Quality",0,50,200);

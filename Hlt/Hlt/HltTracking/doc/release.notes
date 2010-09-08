@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.146 2010-09-07 12:58:19 graven Exp $
+!$Id: release.notes,v 1.147 2010-09-08 09:18:23 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+!========================== HltTracking v7r0 2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - change upgrade such that there is one public (common!) tool
+   per output location to insure that the caching is consistent
 
 ! 2010-09-07 - Gerhard Raven
  - add some commments about VeloTT upgrade: it won't work!

@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.44 2010-09-07 12:58:19 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.45 2010-09-08 09:18:24 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -6,11 +6,6 @@
 #include "HltTrackUpgradeTool.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/HltTrackMerge.h"
-#include "EDictionary.h"
-#include "boost/algorithm/string/split.hpp"
-#include "boost/algorithm/string/classification.hpp"
-#include "GaudiKernel/IJobOptionsSvc.h"
-#include "GaudiKernel/Property.h"
 
 using namespace LHCb;
  
@@ -32,7 +27,6 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : HltBaseTool ( type, name , parent )
-  , m_recoName("<INVALID>")
   , m_timer(0)
   , m_otracks(0)
   , m_tool(0)
@@ -45,60 +39,14 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
   declareProperty("OrderByPt", m_orderByPt = false);
   declareProperty("DoTrackReco",m_doTrackReco = true);
 
+  declareProperty( "TESOutput", m_TESOutput ); // force it to be set to nonzero value ... 
+  declareProperty( "ITrackType", m_ItrackType = -1 ); // force it to be set ...
+  declareProperty( "OTrackType", m_OtrackType = -1 ); // force it to be set ...
+  declareProperty( "Tool" , m_toolName ); // force it to be set...
+  declareProperty( "View" , m_hasView = false );
 };
 
 
-void HltTrackUpgradeTool::recoConfiguration() {
-
-  m_recoConf.add("TMuonConf/Tool",std::string("L0ConfirmWithT/TMuonConf"));
-  m_recoConf.add("TMuonConf/View",true);
-  m_recoConf.add("TMuonConf/ITrackType", (int) LHCb::Track::Muon);
-  m_recoConf.add("TMuonConf/OTrackType", (int) LHCb::Track::Ttrack);
-  m_recoConf.add("TMuonConf/TESOutput",std::string("Hlt1/Track/TMuonConf"));
-
-  m_recoConf.add("THadronConf/Tool",std::string("L0ConfirmWithT/THadronConf"));
-  m_recoConf.add("THadronConf/View",true);
-  m_recoConf.add("THadronConf/ITrackType", (int) LHCb::Track::TypeUnknown);
-  m_recoConf.add("THadronConf/OTrackType", (int) LHCb::Track::Ttrack);
-  m_recoConf.add("THadronConf/TESOutput",std::string("Hlt1/Track/THadronConf"));
-
-  m_recoConf.add("TEleConf/Tool",std::string("L0ConfirmWithT/TEleConf"));
-  m_recoConf.add("TEleConf/View",true);
-  m_recoConf.add("TEleConf/ITrackType", (int) LHCb::Track::TypeUnknown);
-  m_recoConf.add("TEleConf/OTrackType", (int) LHCb::Track::Ttrack);
-  m_recoConf.add("TEleConf/TESOutput",std::string("Hlt1/Track/TEleConf"));  
-
-  m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
-  m_recoConf.add("Velo/View",false);
-  m_recoConf.add("Velo/ITrackType", (int) LHCb::Track::VeloR);
-  m_recoConf.add("Velo/OTrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("Velo/TESOutput",std::string("Hlt1/Track/Velo"));
-  
-  m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
-  m_recoConf.add("Forward/View",false);
-  m_recoConf.add("Forward/ITrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("Forward/OTrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("Forward/TESOutput", std::string("Hlt1/Track/Forward"));
-
-  m_recoConf.add("GuidedForward/Tool",std::string("HltGuidedForward"));
-  m_recoConf.add("GuidedForward/View",false);
-  m_recoConf.add("GuidedForward/ITrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("GuidedForward/OTrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("GuidedForward/TESOutput",std::string("Hlt1/Track/GuidedForward"));
-
-  m_recoConf.add("FitTrack/Tool",std::string("HltTrackFit"));
-  m_recoConf.add("FitTrack/View",false);
-  m_recoConf.add("FitTrack/ITrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("FitTrack/OTrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("FitTrack/TESOutput",std::string("Hlt1/Track/FitTrack"));
-
-  m_recoConf.add("RadCor/Tool",std::string("HltRadCorTool"));
-  m_recoConf.add("RadCor/View",false);
-  m_recoConf.add("RadCor/ITrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("RadCor/OTrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("RadCor/TESOutput",std::string("Hlt1/Track/RadCor"));
-
-}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -111,34 +59,14 @@ StatusCode HltTrackUpgradeTool::initialize() {
   StatusCode sc = HltBaseTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  recoConfiguration();
-
   m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
 
-  return sc;
-};
-
-
-StatusCode HltTrackUpgradeTool::setReco(const std::string& key) 
-{
-  m_recoName = key;
   debug() << " InitReco " << endreq;
-  bool ok = m_recoConf.has_key(m_recoName+"/Tool");
-  Assert(ok," no reconstruction with name "+m_recoName);
 
-  std::string toolName = m_recoConf.retrieve<std::string>(m_recoName+"/Tool");
-  m_recoID   = hltInfoID(toolName);
+  m_recoID   = hltInfoID(m_toolName);
 
-  m_TESOutput = m_recoConf.retrieve<std::string>(m_recoName+"/TESOutput");
-  m_ItrackType = m_recoConf.retrieve<int>(m_recoName+"/ITrackType");
-  m_OtrackType = m_recoConf.retrieve<int>(m_recoName+"/OTrackType");
- 
-  // by default, m_orderByPt is already false... so this only overrules
-  // the case where someone overruled it to be true...
-  // if (m_recoID <= hltInfoID( HltEnums::VeloKey) m_orderByPt = false;
-
-  info() << " Reco: " << m_recoName 
-         << " Tool: " << toolName
+  info() << " Reco: " << name() 
+         << " Tool: " << m_toolName
          << " Output: " << m_TESOutput 
          << " reco ID " << m_recoID << endreq;
 
@@ -146,60 +74,30 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
          << " transfer ancestor " << m_transferAncestor
          << " Input track type " << m_ItrackType 
          << " Output track type " << m_OtrackType << endreq;
+
+  Assert(!m_TESOutput.empty(), " No TES output location defined! " );
+  Assert(!m_toolName.empty(), " No Tool name defined! " );
   
+  m_tool = tool<ITracksFromTrack>(m_toolName,this);
+  m_viewTool = m_hasView ? tool<ITrackView>(m_toolName,this) : 0 ;
+    
   
-  m_tool = 0;
-  bool hasView = m_recoConf.retrieve<bool>(m_recoName+"/View");
-  m_viewTool = 0;
-  if (m_toolsmap.find(key) != m_toolsmap.end()) {
-    m_tool = m_toolsmap[key];
-    if (hasView) m_viewTool = m_viewsmap[key];
-  } else {
-    toolConfigure();
-    m_tool = tool<ITracksFromTrack>(toolName,this);
-    m_toolsmap[key] = m_tool;
-    if (hasView) {
-      m_viewTool = tool<ITrackView>(toolName,this);
-      m_viewsmap[key] = m_viewTool;
-    }
-  }
-  
-  Assert(m_tool!=0," setReco() failed to create tool "+toolName);
+  Assert(m_tool!=0," setReco() failed to create tool "+m_toolName);
 
   // m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
   m_timer->increaseIndent();
-  m_timerTool = m_timer->addTimer(toolName);
+  m_timerTool = m_timer->addTimer(m_toolName);
   m_timer->decreaseIndent();
 
-  return StatusCode::SUCCESS;
-}
+  return sc;
+};
 
-void HltTrackUpgradeTool::toolConfigure() 
+
+StatusCode HltTrackUpgradeTool::setReco(const std::string& ) 
 {
-  IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
-  std::string toolname = 
-    m_recoConf.retrieve<std::string>(m_recoName+"/Tool");
-  std::vector<std::string> cromos;
-  boost::algorithm::split(cromos,toolname,boost::algorithm::is_any_of("/"));
-  if (cromos.size() != 2) return;
-  std::string root = name()+"."+cromos[1];
-  if (m_recoName == "TMuonConf") {
-    SimpleProperty<int> pp = SimpleProperty<int>("particleType",0);
-    optSvc->addPropertyToCatalogue(root,pp);
-    debug() << " setting property " << root << pp << endreq;
-  } else if (m_recoName == "THadronConf") {
-    SimpleProperty<std::string> pp0 = SimpleProperty<std::string>("trackingTool","PatConfirmTool");
-    optSvc->addPropertyToCatalogue(root,pp0);
-    SimpleProperty<int> pp1 = SimpleProperty<int>("particleType",1);
-    optSvc->addPropertyToCatalogue(root,pp1);
-    debug() << " setting property " << root << pp0 << endreq;
-    debug() << " setting property " << root << pp1 << endreq;
-  } else if (m_recoName == "TEleConf") {
-    SimpleProperty<int> pp = SimpleProperty<int>("particleType",2);
-    optSvc->addPropertyToCatalogue(root,pp);
-    debug() << " setting property " << root << pp << endreq;
-  }
-  release(optSvc);
+    Assert(1==0, "Obsolete Method -- do not call, will be removed ASAP!!");
+    assert(1==0);
+    return StatusCode::FAILURE;
 }
 
 
