@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.43 2010-09-08 14:54:47 albrecht Exp $ 
+# $Id: HltLine.py,v 1.44 2010-09-08 17:57:10 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1336,8 +1336,8 @@ class Hlt2Line(object):
             #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
             #  VELO on the other hand is dangerous during 'velo open' running...
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
-            #  add 4BsMuMu to ignore the non GEC Bs2MuMu lines
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!SingleMuon4BsMuMu)(?!DiMuon4BsMuMu).*Decision')"
+            #  add 4BsMuMu to ignore the non GEC Hlt1XYZ4BsMuMu lines
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!.*4BsMuMu).*Decision')"
 
 
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
