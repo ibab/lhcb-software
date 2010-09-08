@@ -1,4 +1,4 @@
-# $Id: StreamDimuon.py,v 1.2 2010-09-07 13:49:53 gcowan Exp $
+# $Id: StreamDimuon.py,v 1.3 2010-09-08 09:05:18 gcowan Exp $
 #
 #   Dimuon stripping selection
 #
@@ -47,10 +47,11 @@ from StrippingSelections.StrippingBd2KstarMuMuLT import defaultConfig as Bd2Ksta
 Bd2KstarMuMuLTConf = StrippingBd2KstarMuMuLTConf( config = Bd2KstarMuMuLTConfig )
 stream.appendLines( Bd2KstarMuMuLTConf.lines() )
 
+# Patrick Koppenburg
 from StrippingSelections.StrippingBu2LLK import StrippingBu2LLKConf
 from StrippingSelections.StrippingBu2LLK import defaultConfig as Bu2LLKConfig
-Bu2LLKConf = StrippingBu2LLKConf( config = Bu2LLKConfig )
-stream.appendLines( Bu2LLKConf.lines() )
+Bu2LLKConf = StrippingBu2LLKConf( "Bu2mmK", config = Bu2LLKConfig )
+stream.appendLines( [ Bu2LLKConf._mmKLine() ] )
 
 # Liming Zhang
 from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf

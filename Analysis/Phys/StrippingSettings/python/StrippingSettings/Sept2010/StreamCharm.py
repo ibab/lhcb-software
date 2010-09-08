@@ -1,4 +1,4 @@
-# $Id: StreamCharm.py,v 1.3 2010-09-07 19:25:26 gcowan Exp $
+# $Id: StreamCharm.py,v 1.4 2010-09-08 09:05:18 gcowan Exp $
 #
 #   Charm stripping selection
 #
@@ -62,4 +62,21 @@ stream.appendLines( [ lineWS, lineRS ] )
 # This line is taking ~0.2%. This is too high.
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
- 
+
+#
+# Lines from Semileptonic group
+# Rob Lambert
+#
+# Marta Calvi, Stefania Vecchi
+from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
+stream.appendLines( [ StrippingDstarVeryLooseWithD02HHConf().line() ] )
+
+# Liming Zhang
+from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
+stream.appendLines( [ StrippingD0forBXXConf().D02KPiforBXXLine()
+		    , StrippingD0forBXXConf().D02K3PiforBXXLine() ] )
+from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
+stream.appendLines( [ StrippingDforBSemiConf().DpforBSemiLine()
+		    , StrippingDforBSemiConf().DsforBSemiLine()
+        	    , StrippingDforBSemiConf().LcforBSemiLine() ] )
+

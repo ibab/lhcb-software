@@ -1,4 +1,4 @@
-# $Id: StreamDielectron.py,v 1.2 2010-09-07 16:08:59 gcowan Exp $
+# $Id: StreamDielectron.py,v 1.3 2010-09-08 09:05:18 gcowan Exp $
 #
 #   Dielectron stripping selection
 #
@@ -42,4 +42,10 @@ from StrippingSelections.StrippingBd2eeKstar import Bd2eeKstarConf
 stream.appendLines( [ Bd2eeKstarConf().line ] )
 
 from StrippingSelections.StrippingBd2JpsieeKstar import Bd2JpsieeKstarConf
-stream.appendLines( [ Bd2JpsieeKstarConf().line ])
+stream.appendLines( [ Bd2JpsieeKstarConf().line ] )
+
+# Patrick Koppenburg
+from StrippingSelections.StrippingBu2LLK import StrippingBu2LLKConf
+from StrippingSelections.StrippingBu2LLK import defaultConfig as Bu2LLKConfig
+Bu2LLKConf = StrippingBu2LLKConf( "Bu2eeK", config = Bu2LLKConfig )
+stream.appendLines( [ Bu2LLKConf._eeKLine() ] )
