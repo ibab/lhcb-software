@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
     bool fixup = ((i+1)==input.size());
     int result = merge(output.c_str(),in.c_str(),fixup,dbg);
     if ( result == MERGE_ERROR ) {
-      printf("\nERROR: File merge failed after %ld files.\n\n",i+1);
+      printf("\nERROR: File merge failed after %ld files.\n\n",long(i+1));
       return 1;
     }
   }

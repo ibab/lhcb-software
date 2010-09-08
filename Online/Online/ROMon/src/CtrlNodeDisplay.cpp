@@ -1,4 +1,4 @@
-// $Id: CtrlNodeDisplay.cpp,v 1.5 2010-09-07 13:42:11 frankb Exp $
+// $Id: CtrlNodeDisplay.cpp,v 1.6 2010-09-08 07:42:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.5 2010-09-07 13:42:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.6 2010-09-08 07:42:18 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -61,7 +61,7 @@ void CtrlNodeDisplay::update(const void* data) {
         ::sprintf(txt," %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %s",
                   "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time");
         ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-        ::sprintf(txt," %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %s",
+        ::sprintf(txt," %-12s %8s %5d/%-7d %5d/%-7d %6d %6d %6d %6d %3.0f %3.0f %s",
                   n.name.c_str(),n.status.c_str(),
                   int(n.taskCount),int(n.missTaskCount),int(n.connCount),int(n.missConnCount),
                   int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),

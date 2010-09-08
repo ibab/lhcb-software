@@ -34,7 +34,7 @@ namespace ROMon {
     /// Update display content
     virtual void update(const void* data);
     /// Update monitor content
-    virtual void update(const void* data, size_t len)  { update(data); }
+    virtual void update(const void* data, size_t)  { update(data); }
     /// Command service callback after already parsed data
     virtual void updateTs(XML::TaskSupervisorParser& ts);
   };
