@@ -59,7 +59,7 @@ void MonH2D::load(boost::archive::binary_iarchive  & ar, const unsigned int vers
   load2(ar, version);
 }
   
-void MonH2D::load2(boost::archive::binary_iarchive  & ar, const unsigned int version){
+void MonH2D::load2(boost::archive::binary_iarchive  & ar, const unsigned int /* version */ ){
   
   ar & nbinsx;
   ar & nbinsy;

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.21 2010-07-07 15:09:55 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.22 2010-09-08 08:01:27 frankb Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -20,7 +20,7 @@ MonObject::~MonObject(){
 
 }
 
-void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int /* version */){
   m_version = 1;
 
   ar & m_typeName;
@@ -29,7 +29,7 @@ void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int ve
   ar & m_endOfRun;
 }
 
-void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int version){
+void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int /* version */){
  // if (version != m_version) m_version = version;
   ar & m_typeName;
   ar & m_version;
