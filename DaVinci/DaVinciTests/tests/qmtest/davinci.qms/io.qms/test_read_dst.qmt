@@ -6,6 +6,9 @@
 <argument name="args"><set>
   <text>../options/DVTestReadDst.py</text>
 </set></argument>
+<argument name="prerequisites"><set>
+  <tuple><text>davinci.io.test_write_dst</text><enumeral>PASS</enumeral></tuple>
+</set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 PrintJpsi_2600_3200                                         SUCCESS Number of counters : 1
