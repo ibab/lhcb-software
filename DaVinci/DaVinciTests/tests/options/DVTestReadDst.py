@@ -22,10 +22,8 @@ for i in MassRanges :
     hn = str(i[1])
     name = ln+"_"+hn
     location = "/Event/SeqJpsi_" + name + "/Phys/SelJpsi_" + name
-    print "XXX Setting InputLocations to", location
     pJpsi = PrintDecayTree('PrintJpsi_'+name,
-                           InputLocations = [ location  ],
-                           OutputLevel=1)
+                           InputLocations = [ location  ])
     DaVinci().UserAlgorithms += [ pJpsi ]
     f = FilterDesktop('Filter_'+name,
                       InputLocations = [ location  ],
