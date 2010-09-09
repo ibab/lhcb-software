@@ -3,6 +3,15 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v10r1>2010-09-09 Moore v10r1</A></H1><PRE>
+based on HLT_v11r1
+
+</PRE><H1><A NAME=v10r0>2010-09-02 Moore v10r0</A></H1><PRE>
+based on HLT_v11r0
+
+</PRE><H1><A NAME=v9r4>2010-07-21 Moore v9r4</A></H1><PRE>
+based on Hlt v10r5
+
 </PRE><H1><A NAME=v9r3>2010-07-02 Moore v9r3</A></H1><PRE>
 Patches on top of v9r2, but given that there is eg. now 
 (the possibility of adding) a global pile-up veto in Hlt2, 

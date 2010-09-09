@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.141 2010-08-31 11:05:32 graven Exp $
+# $Id: requirements,v 1.142 2010-09-09 11:36:32 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v10r0
+version v10r1
 
 branches doc cmt options python
 
@@ -50,7 +50,7 @@ use HltSys              v*                  -no_auto_imports
 use PhysSys             v*                  -no_auto_imports
 
 #-- Online ??
-#use OnlineSys           v*                  -no_auto_imports
+use OnlineSys           v*                  -no_auto_imports
 
 #============================================================================
 #set CORAL_SQLITE_TEMP_STORE_MEMORY yes
@@ -77,8 +77,8 @@ macro Install_TCK_Manifest_output  "$(CMTINSTALLAREA)/TCK/manifest"
 macro Install_TCK_Manifest_command "python ../scripts/install_TCK_manifest.py $(HLTTCKROOT)/manifest/MOORE_$(version) $(Install_TCK_Manifest_output)"
 apply_pattern CallCommand  target=Install_TCK_Manifest
 
-#macro_remove cmt_actions_constituents 'runMakeOptions' 
-#macro_remove cmt_actions_constituents 'WriteOptions'
+macro_remove cmt_actions_constituents 'runMakeOptions' 
+macro_remove cmt_actions_constituents 'WriteOptions'
 
 
 apply_pattern QMTest

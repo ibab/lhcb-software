@@ -2,6 +2,8 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v10r1 2010-09-09 ===================
+!========================== Moore v10r0 2010-09-02 ===================
 ! 2010-08-23 - Roel Aaij
  - Fix indentation error in Configuration.py
 
