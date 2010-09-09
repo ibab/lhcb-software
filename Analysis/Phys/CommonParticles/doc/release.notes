@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.193 2010-09-06 21:18:38 jpalac Exp $
+ )!$Id: release.notes,v 1.194 2010-09-09 08:44:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,13 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-09-09 - Juan Palacios
+ - python/CommonParticles/StdLooseDplus.py
+  . Attempt to fix buggy StdLooseDplus2hhh.CombinationCut.
+  . NEEDS TO BE CONFIRMED BY VAVA!
+ - cmt/requirements
+  . Increase to v7r4p1
 
 !========================== CommonParticles v7r4 2010-09-06 ===================
 
