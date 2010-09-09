@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-09-09 - Juan Palacios
+ - Split CommonParticles test into Basic and Intermediate. 
+   Move to davinci.commonparticles test suite.
+
 !============================== DaVinciTests v1r3 2010-09-07 =================
 
 ! 2010-09-07 - Juan Palacios
