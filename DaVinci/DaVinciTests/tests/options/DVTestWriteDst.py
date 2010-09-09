@@ -74,7 +74,7 @@ DaVinci().UserAlgorithms = [ seq ]
 
 ##############################################################################
 DaVinci().EvtMax = 100
-DaVinci().PrintFreq = 1 
+DaVinci().PrintFreq = 10 
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" 
 # DaVinci().Simulation   = False

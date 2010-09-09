@@ -10,17 +10,17 @@
 findReferenceBlock("""
 PrintJpsi_2600_3200                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       135 |         61 |(  45.1852 +- 4.28332  )%|   -------   |   -------   |
+ |*"#accept"                                       |        69 |         16 |(  23.1884 +- 5.08071  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "2600")
 findReferenceBlock("""
 PrintJpsi_3000_3500                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       135 |         27 |(  20.0000 +- 3.44265  )%|   -------   |   -------   |
+ |*"#accept"                                       |        69 |         10 |(  14.4928 +- 4.23792  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "3000")
 findReferenceBlock("""
 PrintJpsi_3050_3150                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       135 |         88 |(  65.1852 +- 4.10005  )%|   -------   |   -------   |
+ |*"#accept"                                       |        69 |         62 |(  89.8551 +- 3.63472  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "3050")
 </text></argument>
 </extension>
