@@ -10,7 +10,7 @@
 findReferenceBlock("""
 PrintJpsi_2600_3200                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        69 |         16 |(  23.1884 +- 5.08071  )%|   -------   |   -------   |
+ |*"#accept"                                       |        69 |          9 |(  13.0435 +- 4.05437  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "2600")
 findReferenceBlock("""
 PrintJpsi_3000_3500                                         SUCCESS Number of counters : 1

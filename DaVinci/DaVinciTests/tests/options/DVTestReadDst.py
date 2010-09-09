@@ -2,7 +2,7 @@
 #
 # $Id: DVTestReadDst.py,v 1.11 2009/11/30 10:57:40 jpalac Exp $
 #
-# Options for a typical DaVinci job creating DSTs
+# Options for a typical DaVinci job reading DSTs with saved candidates.
 #
 # @author Patrick Koppenburg
 # @date 2009-02-04
@@ -21,12 +21,14 @@ for i in MassRanges :
     ln = str(i[0])
     hn = str(i[1])
     name = ln+"_"+hn
-
-    pJpsi = PrintDecayTree('PrintJpsi_'+name
-                         , InputLocations = [ "/Event/Sel/Phys/SelJpsi_"+name  ])
+    location = "/Event/SeqJpsi_" + name + "/Phys/SelJpsi_" + name
+    print "XXX Setting InputLocations to", location
+    pJpsi = PrintDecayTree('PrintJpsi_'+name,
+                           InputLocations = [ location  ],
+                           OutputLevel=1)
     DaVinci().UserAlgorithms += [ pJpsi ]
     f = FilterDesktop('Filter_'+name,
-                      InputLocations = [ "/Event/Sel/Phys/SelJpsi_"+name  ],
+                      InputLocations = [ location  ],
                       Code = "(MIPCHI2DV(PRIMARY) > 2)")
     DaVinci().UserAlgorithms += [ f ]
     
