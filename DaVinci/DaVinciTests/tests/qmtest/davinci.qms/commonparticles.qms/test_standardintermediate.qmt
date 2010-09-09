@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>../options/CommonParticles/DVTestStandardintermediate.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+CountParticles                                              SUCCESS Number of counters : 30
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |      1000 |       1000 |(  100.000 +- 0.100000 )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
