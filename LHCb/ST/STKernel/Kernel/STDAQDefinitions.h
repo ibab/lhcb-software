@@ -71,6 +71,6 @@ namespace STDAQ{
   /// max sixr of error bank
   const unsigned int maxErrorBankWords = 56u;
 
-};
+}
 
 #endif // _STDAQDefinitions_H

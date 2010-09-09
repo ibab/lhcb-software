@@ -15,7 +15,7 @@ class DeSTSector;
 
 namespace LHCb{
  class STChannelID;
-};
+}
 
 /** @class ISTReadoutTool ISTReadoutTool.h  STDAQ/ISTReadoutTool
 *
@@ -74,6 +74,9 @@ public:
 
   /// printout
   virtual void printMapping() const = 0;
+
+  /// write an xml file
+  virtual StatusCode writeMappingToXML() const = 0;
 
   /// list of the readout sector ids on the board in a board
   virtual std::vector<LHCb::STChannelID> sectorIDs(const STTell1ID board) const = 0;

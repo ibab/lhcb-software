@@ -3,6 +3,10 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2010-09-09 M Needham
+ - Fix warnings from the INTEL compiler
+ - Add writeMappingToXML to ISTReadoutTool interface
+
 !====================== STKernel v2r3 2010-08-25 ============================
 ! 2010-20-07 
   - Change procStatus method to new syntax

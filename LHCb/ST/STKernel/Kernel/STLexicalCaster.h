@@ -25,7 +25,7 @@ namespace ST{
         result = "0" + result;
     }
     return result;
-  };
+  }
 
   /**
    * Template converter from string to any numeric type.
@@ -50,7 +50,7 @@ namespace ST{
       std::cerr << "ERROR " << e.what() << "** " << mystring << " **" << std::endl;
     } // catch
     return ok;
-  };
+  }
 }
 
 #endif //ST_STLEXICALCASTER_H
