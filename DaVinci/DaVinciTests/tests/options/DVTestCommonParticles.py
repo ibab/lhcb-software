@@ -37,7 +37,7 @@ DaVinci().HistogramFile = "DVMonitors.root"
 ##############################################################################
 # DaVinci().UserAlgorithms = List   # explicitly run them
 DaVinci().UserAlgorithms = [ CP ]   # count them all
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 500
 DaVinci().DataType = "2010" # Default is "DC06"
 DaVinci().Simulation = False
 DaVinci().InputType = "DST"
