@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.h,v 1.6 2010-08-19 11:15:57 pkoppenb Exp $
+// $Id: TupleToolRecoStats.h,v 1.7 2010-09-09 12:22:42 pkoppenb Exp $
 #ifndef TUPLETOOLRECOSTATS_H 
 #define TUPLETOOLRECOSTATS_H 1
 
@@ -48,9 +48,7 @@ protected:
   
   // velo count from Matthew David Needham
   inline bool inCloneContainer(const std::vector<LHCb::Track*>& keepCont, 
-                      const std::vector<LHCb::LHCbID>& vids) {
-
-    
+                      const std::vector<LHCb::LHCbID>& vids) {    
     bool keep = true;
     std::vector<LHCb::Track*>::const_iterator iter = keepCont.begin();
     for (;iter != keepCont.end(); ++iter ){

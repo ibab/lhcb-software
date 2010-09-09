@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-09-09 - Patrick Koppenburg
+ - Add VeloLiteClusters to TupleToolRecoStats
+
 !========================== DecayTreeTuple v3r7 2010-08-20 ==================
 
 ! 2010-08-19 - Patrick Koppenburg

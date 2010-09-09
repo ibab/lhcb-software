@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.cpp,v 1.5 2010-08-19 11:15:57 pkoppenb Exp $
+// $Id: TupleToolRecoStats.cpp,v 1.6 2010-09-09 12:22:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,7 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolRecoStats
@@ -72,7 +73,9 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
 
   if (isVerbose()){
     test &= tup->column(prefix+"MuonTracks",number<LHCb::Tracks>(LHCb::TrackLocation::Muon));
-    test &= tup->column(prefix+"ITClusters",number<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters));  
+    test &= tup->column(prefix+"ITClusters",number<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters));
+    test &= tup->column(prefix+"VeloLiteClusters",
+                        number<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default));  
     const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
     test &= tup->column(prefix+"OTClusters", nHitsInOT);
     
