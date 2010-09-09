@@ -48,11 +48,12 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v37r6p1' ) )
+                j = Job( application = Brunel( version = 'v37r7' ) )
 
                 # name
-                j.name = "RefractIndexControl"
+                j.name = "RefInControl"
                 if name != "" : j.name += "-"+name
+                j.name += "_BR-"+BrunelVer
                 j.name += "_Run-"+str(run)+"_R1-"+r1+"_R2-"+r2
                 print "Submitting Job", j.name
 
@@ -93,15 +94,15 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",pickedRunsList=[]):
-    submitRecoJobs(name,pickedRunsList,"RefractIndexCalib")
+def submitCalibrationJobs(name="",BrunelVer="v37r7",pickedRunsList=[]):
+    submitRecoJobs(name,BrunelVer,pickedRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",pickedRunsList=[]):
-    submitRecoJobs(name,pickedRunsList,"RefractIndexVerify")
+def submitVerificationJobs(name="",BrunelVer="v37r7",pickedRunsList=[]):
+    submitRecoJobs(name,BrunelVer,pickedRunsList,"RefInVerify")
 
 ## Real underlying method
-def submitRecoJobs(name,pickedRunsList,jobType):
+def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
 
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File,
                             DiracSplitter, SmartMerger, Dirac )
@@ -113,7 +114,7 @@ def submitRecoJobs(name,pickedRunsList,jobType):
     print " Submitting jobs for RunData", pickedRunsList
 
     # Number of target events to process
-    if jobType == "RefractIndexCalib" :
+    if jobType == "RefInCalib" :
         nEventsTotal = 500000
         nFilesMax    = 150
     else:
@@ -142,7 +143,7 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                 # Construct the job name
                 jobname = jobType
                 if name != "" : jobname += "-"+name
-                jobname += "_Run-"+str(run)
+                jobname += "_BR-"+BrunelVer + "_Run-"+str(run)
 
                 # is this job already submitted ?
                 if jobExists(jobname):
@@ -157,7 +158,7 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                     nEventsPerFile = nEventsTotal / nFiles
           
                     # Make a job object
-                    j = Job( application = Brunel( version = 'v37r6p1' ), name = jobname )
+                    j = Job( application = Brunel( version = BrunelVer ), name = jobname )
 
                     # Custom options for this job
                     tmpOptsFile = createTempOptsFile(j.name)
@@ -173,14 +174,14 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                     extraopts.write("Brunel().EvtMax = "+str(nEventsPerFile)+"\n")
 
                     # Only for Calibration jobs
-                    if jobType == "RefractIndexCalib" :
+                    if jobType == "RefInCalib" :
                         extraopts.write("from Configurables import UpdateManagerSvc\n")
                         extraopts.write("ums = UpdateManagerSvc()\n")
                         extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
                         extraopts.write("ums.ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n")
                         
                     # For verification jobs, use custom DB Slice(s)
-                    if jobType == "RefractIndexVerify" :
+                    if jobType == "RefInVerify" :
                         extraopts.write("from Gaudi.Configuration import *\n")
                         extraopts.write("from Configurables import CondDB, CondDBAccessSvc, LHCbApp\n")
                         # Main DB
@@ -189,14 +190,14 @@ def submitRecoJobs(name,pickedRunsList,jobType):
                         extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
                         mySandBox += ["databases/"+mainLHCbCond]
                         # Additional DB Slices
-                        #dbFiles = ["NewRichCKRefIndexCalib"]
-                        dbFiles = [ "TrackAlign-v4.0.VeloYFixed",
-                                    "NewRichCKRefIndexCalib",
-                                    #"NewFittedHPDAlignmentsByFill",
-                                    #"NewAverageHPDAlignmentsByFill",
-                                    "HPDAlignByFill-FullFitAverage",
-                                    "Rich1MirrorAlignment-v1",
-                                    "Rich2MirrorAlignment-v1" ]
+                        dbFiles = ["NewRichCKRefIndexCalib"]
+                        #dbFiles = [ "TrackAlign-v4.0.VeloYFixed",
+                        #            "NewRichCKRefIndexCalib",
+                        #            "NewFittedHPDAlignmentsByFill",
+                        #            "NewAverageHPDAlignmentsByFill",
+                        #            "HPDAlignByFill-FullFitAverage",
+                        #            "Rich1MirrorAlignment-v1",
+                        #            "Rich2MirrorAlignment-v1" ]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
                             mySandBox += ["databases/"+dbFile+".db"]
@@ -592,14 +593,12 @@ def getRunInformation(run):
             if res['OK']:
                 runInfoCache[run] = res
 
-    # Extra the info
+    # return the result
     info = { }
     if res['OK'] : info = res['Value']
-
-    # return the result
     return info
                         
-def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999,desc=""):
+def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc=""):
     from Ganga.GPI import Job, jobs
     cacheLoaded = False
     cJobs = [ ]
@@ -608,30 +607,35 @@ def getListOfJobs(tag,name,statuscodes,MinRun=0,MaxRun=99999999,desc=""):
     if name != "" : searchString += "-"+name
     for j in jobs :
         if j.status in statuscodes :
-            if j.name.split('_')[0] == searchString :
-                run = int(getInfoFromJob(j,'Run'))
-                if run >= MinRun and run <= MaxRun:
-                    if desc == "":
-                        dict[run] = j
-                    else:
-                        if not cacheLoaded:
-                            loadRunInfoCache()
-                            cacheLoaded = True
-                        runInfo = getRunInformation(run)
-                        if runInfo['DataTakingDescription'] == desc:
+            namesplit = j.name.split('_')
+            if namesplit[0] == searchString :
+                if BrunelVer == '' or namesplit[1] == "BR-"+BrunelVer :
+                    run = int(getInfoFromJob(j,'Run'))
+                    if run >= MinRun and run <= MaxRun:
+                        if desc == "":
                             dict[run] = j
+                        else:
+                            if not cacheLoaded:
+                                loadRunInfoCache()
+                                cacheLoaded = True
+                            runInfo = getRunInformation(run)
+                            if runInfo['DataTakingDescription'] == desc:
+                                dict[run] = j
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     if cacheLoaded : saveRunInfoCache()
     return cJobs
 
-def getCalibrationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
-    return getListOfJobs('RefractIndexCalib',name,statuscodes,MinRun,MaxRun,desc)
+def getCalibrationJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+                          MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
-    return getListOfJobs('RefractIndexVerify',name,statuscodes,MinRun,MaxRun,desc)
+def getVerificationJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+                           MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",statuscodes=['completed'],MinRun=0,MaxRun=99999999,desc=""):
-    return getListOfJobs('RefractIndexControl',name,statuscodes,MinRun,MaxRun,desc)
+def getControlJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+                      MinRun=0,MaxRun=99999999,desc=""):
+    return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     # As of RICH S/W meeting 3/9/2010
@@ -645,9 +649,6 @@ def nScaleFromShift(shift,rad='Rich1Gas'):
     error  = shift['Mean'][1]*slope
     # Return the values
     return [result,error]
-
-def getSubJobRootFiles(j):
-    for sj in j.subjobs: print sj
 
 def getRootFilePath(j):
     listofMerged = [ j.outputdir+f for f in j.merger.files ]
@@ -707,7 +708,8 @@ def removeSubJobOutputData(js=[]):
 def rootCanvas():
     from ROOT import TCanvas
     if globals()["canvas"] == None :
-        rootStyle()
+        import RootStyle
+        RootStyle.rootStyle()
         globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",1000,750)
     return globals()["canvas"]
 
@@ -960,99 +962,3 @@ def createTempOptsFile(name):
     return tempFullPath+"/"+name+"_"+dateTimeString()+".py"
 
 #=============================================================================================
-
-def rootStyle():
-    from ROOT import gROOT, gStyle, kWhite, kBlack
-    
-    # No info messages
-    gROOT.ProcessLine("gErrorIgnoreLevel = kWarning;")
-
-    # Batch mode (no TCanvas)
-    gROOT.SetBatch(True)
-
-    # Start from a plain default
-    gROOT.SetStyle("Plain")
-
-    lhcbMarkerType    = 8
-    lhcbMarkerSize    = 0.8
-    lhcbFont          = 62
-    lhcbStatFontSize  = 0.02
-    lhcbStatBoxWidth  = 0.12
-    lhcbStatBoxHeight = 0.12
-    lhcbWidth         = 1
-    lhcbTextSize      = 0.05
-    lhcbLabelSize     = 0.035
-    lhcbAxisLabelSize = 0.035
-    lhcbForeColour = kBlack
-
-    gStyle.SetFrameBorderMode(0)
-    gStyle.SetPadBorderMode(0)
-
-    # canvas options
-    gStyle.SetCanvasBorderSize(0)
-    gStyle.SetCanvasBorderMode(0)
-
-    # fonts
-    gStyle.SetTextFont(lhcbFont)
-    gStyle.SetTextSize(lhcbTextSize)
-    gStyle.SetLabelFont(lhcbFont,"x")
-    gStyle.SetLabelFont(lhcbFont,"y")
-    gStyle.SetLabelFont(lhcbFont,"z")
-    gStyle.SetLabelSize(lhcbLabelSize,"x")
-    gStyle.SetLabelSize(lhcbLabelSize,"y")
-    gStyle.SetLabelSize(lhcbLabelSize,"z")
-    gStyle.SetTitleFont(lhcbFont)
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"x")
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"y")
-    gStyle.SetTitleSize(lhcbAxisLabelSize,"z")
-    gStyle.SetTitleColor(kWhite)
-    gStyle.SetTitleFillColor(kWhite)
-    gStyle.SetTitleColor(kBlack)
-    gStyle.SetTitleBorderSize(0)
-    gStyle.SetTitleTextColor(kBlack)
-
-    # set title position
-    gStyle.SetTitleX(0.15)
-    gStyle.SetTitleY(0.97)
-    # turn off Title box
-    gStyle.SetTitleBorderSize(0)
-    gStyle.SetTitleTextColor(lhcbForeColour)
-    gStyle.SetTitleColor(lhcbForeColour)
-
-    # use bold lines and markers
-    gStyle.SetLineWidth(lhcbWidth)
-    gStyle.SetFrameLineWidth(lhcbWidth)
-    gStyle.SetHistLineWidth(lhcbWidth)
-    gStyle.SetFuncWidth(lhcbWidth)
-    gStyle.SetGridWidth(lhcbWidth)
-    gStyle.SetLineStyleString(2,"[12 12]")
-    gStyle.SetMarkerStyle(lhcbMarkerType)
-    gStyle.SetMarkerSize(lhcbMarkerSize)
-
-    # label offsets
-    gStyle.SetLabelOffset(0.015)
-
-    # by default, do not display histogram decorations:
-    gStyle.SetOptStat(1111)
-    # show probability, parameters and errors
-    gStyle.SetOptFit(1011)
-
-    # look of the statistics box:
-    gStyle.SetStatBorderSize(1)
-    gStyle.SetStatFont(lhcbFont)
-    gStyle.SetStatFontSize(lhcbStatFontSize)
-    gStyle.SetStatX(0.9)
-    gStyle.SetStatY(0.9)
-    gStyle.SetStatW(lhcbStatBoxWidth)
-    gStyle.SetStatH(lhcbStatBoxHeight)
-
-    # put tick marks on top and RHS of plots
-    gStyle.SetPadTickX(1)
-    gStyle.SetPadTickY(1)
-
-    # histogram divisions
-    gStyle.SetNdivisions(505,"x")
-    gStyle.SetNdivisions(510,"y")
-
-    # Force the style
-    gROOT.ForceStyle()
