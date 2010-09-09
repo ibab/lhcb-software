@@ -34,6 +34,8 @@ MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu')
 #
 MassRanges = [ [ 2600, 3200 ], [ 3050, 3150 ],  [ 3000, 3500 ] ]
 
+selections = []
+
 for i in MassRanges :
     lm = i[0]
     hm = i[1]
@@ -58,14 +60,17 @@ for i in MassRanges :
                                 , TopSelection = SelJpsi
                                 , EventPreSelector = [ prescale ]
                                 , PostSelectionAlgs = [ printer ])
-    
-    dstWriter = SelDSTWriter("JpsiDSTWriter_"+name,
-                             SelectionSequences = [SeqJpsi],
-                             SaveCandidates = True,
-                             CopyMCTruth = True)
-    seq = dstWriter.sequence()
 
-    DaVinci().UserAlgorithms += [ seq ]
+    selections += [SeqJpsi]
+    
+dstWriter = SelDSTWriter("JpsiDSTWriter_"+name,
+                         SelectionSequences = selections,
+                         SaveCandidates = True,
+                         CopyMCTruth = True)
+
+seq = dstWriter.sequence()
+
+DaVinci().UserAlgorithms = [ seq ]
 
 ##############################################################################
 DaVinci().EvtMax = 100
