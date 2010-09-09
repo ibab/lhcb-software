@@ -62,7 +62,7 @@ LoKi::L0::L0CaloCut::L0CaloCut
 // ============================================================================
 LoKi::L0::L0CaloCut::L0CaloCut () 
   : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
-  , m_type         (       )
+  // , m_type         (       ) Visual C++ does not like this line...
   , m_hasThreshold ( false )
   , m_threshold    ( -1    ) 
 {}

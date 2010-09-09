@@ -4,6 +4,11 @@
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiTrigger v11r0p1 2010-09-09 ===================
+! 2010-09-09 - Gerhard Raven
+ - work around some Visual C++ confusion (see https://savannah.cern.ch/task/index.php?17256)
+
 ! 2010-08-31 - Gerhard Raven
  - in HltUnit, explicitly call HltSelection::setDecision on the output selections
 
