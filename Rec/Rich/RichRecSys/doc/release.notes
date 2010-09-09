@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-09-09 - Chris Jones
+ - Add new "Wide" photon selection, that enlarges the selection a bit, in 
+   order to get more of the tails. The idea is it provides a loose enough 
+   selection to give enough of the sidebands to understand the background
+   shape, not not as loose as the "Loose" selection.
+
 !====================== RichRecSys v3r31 2010-07-26 ==========================
 ! 2010-07-26 - Chris Jones
  - Tighten up the search windows for Aerogel photons, to match the improved
