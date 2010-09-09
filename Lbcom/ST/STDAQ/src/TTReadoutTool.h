@@ -42,7 +42,6 @@ private:
 
   StatusCode createBoards();
 
-  std::string m_conditionLocation;
 
   unsigned int m_nRegionA;
   unsigned int m_firstStation;

@@ -4,6 +4,8 @@
 
 // STL
 #include <vector>
+#include <fstream>
+#include <string>
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -95,13 +97,24 @@ public:
   virtual unsigned int TELLNumberToSourceID(unsigned int TELL) const; 
 
   /// print mapping
-  void printMapping() const;
+  virtual void printMapping() const;
+
+  /// write out the mapping as xml 
+  virtual StatusCode writeMappingToXML() const;
+
+  StatusCode validate() const;
+
+  /// finalize
+  StatusCode finalize(); 
 
 protected:
 
   void clear();
 
-  StatusCode validate() const;
+  std::string footer() const;
+  std::string header(const std::string& conString) const;
+  std::string strip(const std::string& conString) const;
+ 
 
   unsigned int m_hybridsPerBoard;
   unsigned int m_nBoard;
@@ -112,8 +125,25 @@ protected:
 
   bool m_printMapping;
   DeSTDetector* m_tracker;
-  std::string m_detType;
+  std::string m_detType; 
+  std::string m_conditionLocation;
+
+private:
+
+  bool m_writeXML;
+  std::string m_footer;
+  std::string m_startTag;
+  std::string m_outputFileName;
+  std::ofstream m_outputFile;
+  std::string m_author;
+  std::string m_tag;
+  std::string m_desc;
+  bool m_removeCondb;
+  unsigned int m_precision;
+  unsigned int m_depth;
 
 };
+
+
 
 #endif // _STReadoutTool_H

@@ -21,6 +21,9 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 
+// STKernel
+#include "Kernel/STXMLUtils.h"
+
 /** @file DeSTSector.cpp
 *
 *  Implementation of class :  DeSTSector
@@ -40,6 +43,16 @@ STReadoutTool::STReadoutTool(const std::string& type,
 {
   // constructer
   declareProperty("printMapping", m_printMapping = false );
+  declareProperty("writeMappingToXML", m_writeXML = false );
+  declareProperty("footer", m_footer = "</DDDB>");
+  declareProperty("startTag", m_startTag = "<condition");
+  declareProperty("outputFile",m_outputFileName = "ReadoutMap.xml");
+  declareProperty("depths", m_depth = 3u );
+  declareProperty("precision", m_precision = 16u);
+  declareProperty("removeCondb", m_removeCondb = false);
+  declareProperty("author", m_author = "Joe Bloggs");
+  declareProperty("tag", m_tag = "None");
+  declareProperty("description", m_desc = "BlahBlahBlah"); 
 
   m_boards.reserve(100); // about correct
 }
@@ -74,6 +87,42 @@ StatusCode STReadoutTool::initialize() {
 
   // tracker
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode STReadoutTool::finalize()  {
+
+  if (m_writeXML){
+    writeMappingToXML();
+  }
+
+  return GaudiTool::finalize();
+}
+
+StatusCode STReadoutTool::writeMappingToXML() const {
+
+  // load conditions
+  Condition* rInfo = getDet<Condition>(m_conditionLocation);
+
+  std::ofstream outputFile(m_outputFileName.c_str());
+  if (outputFile.fail() ){
+    return Warning("Failed to open output file",StatusCode::FAILURE);
+  }
+
+  // write the xml headers 
+  outputFile << header(rInfo->toXml("", true, m_precision))<< std::endl;
+
+  // add comments
+  std::ostringstream comment;
+  ST::XMLUtils::fullComment(comment, m_author, m_tag, m_desc);
+  outputFile << comment.str() << std::endl; 
+
+  std::string temp = strip(rInfo->toXml("", false, m_precision));
+  outputFile << temp << "\n"  << std::endl; 
+
+  // footer 
+  outputFile << footer() << std::endl;
 
   return StatusCode::SUCCESS;
 }
@@ -287,6 +336,39 @@ const std::vector<std::string>& STReadoutTool::serviceBoxes() const{
   return m_serviceBoxes;
 }
 
+std::string STReadoutTool::footer() const
+{
+  std::string temp = m_footer;
+  temp.insert(0, "</catalog>" );
+  return temp;
+} 
+
+std::string STReadoutTool::header(const std::string& conString) const
+{
+  // get the header
+  std::string::size_type startpos = conString.find(m_startTag);
+  std::string temp = conString.substr(0,startpos);
+  temp.insert(startpos, "<catalog name=\"ReadoutSectors\">" );
+
+  // correct the location of the DTD
+  if( m_removeCondb ) {
+    ST::XMLUtils::replace(temp,"conddb:", "");
+    std::string location;
+    for (unsigned int i = 0;  i< m_depth; ++i) location += "../";
+    std::string::size_type pos = temp.find("/DTD/");
+    temp.insert(pos,location);
+    ST::XMLUtils::replace(temp,"//", "/");
+  }
+
+  return temp;
+} 
+
+std::string STReadoutTool::strip(const std::string& conString) const
+{
+  std::string::size_type startpos = conString.find(m_startTag);
+  std::string::size_type endpos = conString.find(m_footer);
+  return conString.substr(startpos, endpos - startpos);
+} 
 
 
 

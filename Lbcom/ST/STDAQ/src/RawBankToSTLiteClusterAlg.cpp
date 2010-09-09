@@ -52,7 +52,7 @@ STDecodingBaseAlg (name , pSvcLocator){
 
 RawBankToSTLiteClusterAlg::~RawBankToSTLiteClusterAlg() {
   // Destructor
-};
+}
 
 StatusCode RawBankToSTLiteClusterAlg::initialize() {
 
@@ -86,7 +86,7 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
   }
 
   return sc;
-};
+}
 
 
 StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster::STLiteClusters* fCont) const{
@@ -142,9 +142,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     if (decoder.hasError() == true && !m_skipErrors){
    
       if (!recoverMode()){
-        std::string errorBank = "bank has errors, skip sourceID " +
+        std::string errorBankMsg = "bank has errors, skip sourceID " +
           boost::lexical_cast<std::string>((*iterBank)->sourceID());
-        Warning(errorBank, StatusCode::SUCCESS, 2).ignore();
+        Warning(errorBankMsg, StatusCode::SUCCESS, 2).ignore();
         ++counter("skipped Banks");
         continue;
       }
@@ -164,10 +164,10 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     if (errorBank == 0) {
       const unsigned bankpcn = decoder.header().pcn();
       if (pcn != bankpcn && !m_skipErrors){
-        std::string errorBank = "PCNs out of sync sourceID "+
+        std::string errorBankMsg = "PCNs out of sync sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
         debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
-        Warning(errorBank, StatusCode::SUCCESS,2);
+        Warning(errorBankMsg, StatusCode::SUCCESS,2);
         ++counter("skipped Banks");
         continue; 
       }

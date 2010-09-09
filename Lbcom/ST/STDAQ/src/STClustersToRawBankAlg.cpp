@@ -77,7 +77,7 @@ StatusCode STClustersToRawBankAlg::finalize() {
   } // iClusVector
 
   return StatusCode::SUCCESS;
-};
+}
 
 // Initialisation.
 StatusCode STClustersToRawBankAlg::initialize() {
@@ -107,7 +107,7 @@ StatusCode STClustersToRawBankAlg::initialize() {
   } // iVal
 
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode STClustersToRawBankAlg::configureBankType(){
 
@@ -143,14 +143,14 @@ StatusCode STClustersToRawBankAlg::execute() {
   for (unsigned int iBoard = 0u; iBoard < nBoard; ++iBoard){   
     // get the data ....
     const STTell1ID aBoardID = m_bankMapping->findBoard(iBoard);
-    STClustersOnBoard::ClusterVector clusCont = m_clusVectors[iBoard]->clusters();
+    STClustersOnBoard::ClusterVector boardClusCont = m_clusVectors[iBoard]->clusters();
 
     if ( m_clusVectors[iBoard]->inOverflow() == true) ++m_overflow;
 
     // make the a bankwriter....
-    BankWriter bWriter(bankSize(clusCont)); 
+    BankWriter bWriter(bankSize(boardClusCont)); 
 
-    writeBank(clusCont,bWriter,aBoardID);
+    writeBank(boardClusCont,bWriter,aBoardID);
 
    
     RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),
@@ -169,7 +169,7 @@ StatusCode STClustersToRawBankAlg::execute() {
 
   return StatusCode::SUCCESS;
 
-};
+}
 
 void STClustersToRawBankAlg::initEvent(){
 
@@ -198,7 +198,6 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
        iterClus != clusCont->end(); ++iterClus ){
 
     // find the online channel and board
-    const STChannelID chan = (*iterClus)->channelID();
     ClusterMap::iterator iterMap = m_clusMap.find(STTell1ID((*iterClus)->sourceID()));
     if (iterMap != m_clusMap.end() ){
       STClustersOnBoard* tVec = iterMap->second;

@@ -45,7 +45,7 @@ ST::AlgBase (name , pSvcLocator)
 
 STDigitsToSTTELL1Data::~STDigitsToSTTELL1Data() {
   // Destructor
-};
+}
     
 StatusCode STDigitsToSTTELL1Data::execute() {
 
@@ -62,7 +62,7 @@ StatusCode STDigitsToSTTELL1Data::execute() {
 
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 StatusCode STDigitsToSTTELL1Data::createTell1Data(const STDigits* digits, STTELL1Datas* outCont) const {
