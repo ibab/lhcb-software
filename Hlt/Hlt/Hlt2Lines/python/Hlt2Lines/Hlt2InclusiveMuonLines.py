@@ -99,7 +99,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                        )
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
-                        , algos = [ BiKalmanFittedMuons, PV3D(), Hlt2SelSingleMuon ]
+                        , algos = [ PV3D(), BiKalmanFittedMuons, Hlt2SelSingleMuon ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50191 } )
@@ -135,7 +135,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                               )
         line = Hlt2Line('MuTrack'
                         , prescale = self.prescale 
-                        , algos = [BiKalmanFittedMuons, BiKalmanFittedPions, PV3D(), combine]
+                        , algos = [ PV3D(), BiKalmanFittedMuons, BiKalmanFittedPions, combine]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackDecision" : 50400 } )

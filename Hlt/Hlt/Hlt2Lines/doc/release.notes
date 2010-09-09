@@ -7,6 +7,10 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-09-09 - Gerhard Raven
+ - if PV3D present in line, move it to the front
+ - if BiKalman kaons,pions,muons requested, first do muons, then kaons, then pions
+
 !========================== Hlt2Lines v5r1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
  - IncDiProton: replace void filter on SPD mult (which is not independent!) with an 

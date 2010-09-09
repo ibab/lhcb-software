@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.24 2010-08-22 09:42:47 jhe Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.25 2010-09-09 15:20:09 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -233,7 +233,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2JpsiPhiPrescaled'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, PV3D(), BsCombine]
+                        , algos = [PV3D(), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                         )
 
         # Now do the detached 
@@ -241,7 +241,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, PV3D(), BsCombine]
+                   , algos = [PV3D(), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCuts + "& (BPVLTIME()>%(BsLifetimeCut)s*ps)"%self.getProps() }
                    )
 
@@ -384,7 +384,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         line.clone('Bs2JpsieePhiSignal'
                    , prescale = self.prescale
-                   , algos = [ Bs2JpsieePhiUnbiased, PV3D(), FilterBs2JpsieePhi ]
+                   , algos = [ PV3D(), Bs2JpsieePhiUnbiased, FilterBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
 
@@ -480,7 +480,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('TFBs2JpsieePhiSignal'
                    , prescale = self.prescale
                    , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
-                   , algos = [ TFBs2JpsieePhiUnbiased, PV3D(), FilterTFBs2JpsieePhi ]
+                   , algos = [ PV3D(), TFBs2JpsieePhiUnbiased, FilterTFBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
 
@@ -614,7 +614,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
 		        , prescale = self.prescale
                    	, postscale = self.postscale	
-                        , algos = [   Jpsi2MuMu, PV3D(), filterJpsi
+                        , algos = [  PV3D(),  Jpsi2MuMu, filterJpsi
                                        , KsLL,      filterKS
                                        , combineB
                                        ]
@@ -694,7 +694,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
                         , prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu , PV3D(), filterJpsi
+                        ,  algos = [   PV3D(), Jpsi2MuMu , filterJpsi
                                        , KsDD
                                        , combineB
                                        ]
@@ -738,7 +738,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
                    	, prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu, PV3D(), filterJpsi
+                        ,  algos = [   PV3D(), Jpsi2MuMu, filterJpsi
                                        , KsDD, filterKS
                                        , combineB
                                        ]
@@ -1006,9 +1006,9 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line_Detached = Hlt2Line('Bc2JpsiHDetached'
                                  , prescale = self.prescale
-                                 , algos = [ Bc2JpsiHPDLoose
-                                             , PV3D()
-                                             , FilterBc2JpsiHPD ]
+                                 , algos = [ PV3D()
+                                           , Bc2JpsiHPDLoose
+                                           , FilterBc2JpsiHPD ]
                                  , postscale = self.postscale
                                  )        
 

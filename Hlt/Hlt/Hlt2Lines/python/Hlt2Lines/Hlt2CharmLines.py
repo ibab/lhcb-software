@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.21 2010-08-22 22:46:02 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.22 2010-09-09 15:20:09 graven Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-08-22 22:46:02 $'
-__version__ = '$Revision: 1.21 $'
+__date__    = '$Date: 2010-09-09 15:20:09 $'
+__version__ = '$Revision: 1.22 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -1000,7 +1000,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                      )
 
         from HltTracking.HltPVs import PV3D
-        charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [lclKshhTFInputKaons, lclKshhTFInputPions, PV3D(), combineKshhTF2Body ] )
+        charmKshhTF2Body = bindMembers( 'CharmKshhTF2Body',  [PV3D(), lclKshhTFInputKaons, lclKshhTFInputPions, combineKshhTF2Body ] )
 
 
         ## Ks reconstruction
@@ -1022,7 +1022,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                       , MotherCut       = KshhKsLLparentcuts
                                       , InputLocations  = [ BiKalmanFittedPions ]
                                       )
-        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ BiKalmanFittedPions, PV3D(), combineKshhTFKsLL ] )
+        charmKshhTFKsLL = bindMembers( "CharmKshhTFKsLL", [ PV3D(), BiKalmanFittedPions, combineKshhTFKsLL ] )
 
 
         ## Repeat for KsDD with independent cuts.
@@ -1045,7 +1045,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                       , MotherCut       = KshhKsDDparentcuts
                                       , InputLocations  = [ BiKalmanFittedDownPions ]
                                       )
-        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ BiKalmanFittedDownPions, PV3D(), combineKshhTFKsDD ] )
+        charmKshhTFKsDD = bindMembers( "CharmKshhTFKsDD", [ PV3D(), BiKalmanFittedDownPions, combineKshhTFKsDD ] )
 
 
         ## D0 -> K_S K* construction sequences.

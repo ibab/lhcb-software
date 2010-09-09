@@ -142,9 +142,9 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                           , prescale = self.prescale
                           , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
 # OLD                         ,  algos = [ DiElectron, GoodKaons , combineB ]
-                          ,  algos = [ DiElectron,
+                          ,  algos = [ PV3D(), 
+                                       DiElectron,
                                        BiKalmanFittedElectrons,
-                                       PV3D(),
                                        combineEE,
                                        BiKalmanFittedKaons,
                                        combineB ]
@@ -202,24 +202,24 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_M._algos[-1] ]  # 'Bu' ]
+                     , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_M._algos[-1] ]  # 'Bu' ]
                      , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
-                     , algos = [ DiMuon, BiKalmanFittedMuons,PV3D(), combineMM, BiKalmanFittedKaons, line_S._algos[-1] ] # 'Bu' ]
+                     , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons,combineMM, BiKalmanFittedKaons, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
                      , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_J._algos[-1] ]# 'Bu' ]
+                     , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
                      , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_H._algos[-1] ]# 'Bu' ]
+                     , algos = [ PV3D(), DiMuon, BiKalmanFittedMuons, combineMM, BiKalmanFittedKaons, line_H._algos[-1] ]# 'Bu' ]
                      , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         

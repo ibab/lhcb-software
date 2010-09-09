@@ -81,7 +81,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                   , MotherCut = hhmothercuts
                                   , InputLocations = [BiKalmanFittedKaons,BiKalmanFittedPions ]
                                      )
-        B2KsHHTFHH = bindMembers( 'B2KsHHTFhh',  [BiKalmanFittedKaons, BiKalmanFittedPions, PV3D(), hhforB2KsHH ] )
+        B2KsHHTFHH = bindMembers( 'B2KsHHTFhh',  [PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, hhforB2KsHH ] )
 
 
         ########
@@ -97,7 +97,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                , Code =KSLL_FilterCuts
                                , InputLocations = [KsLLTF]
                       )
-        B2KsHHKsLL = bindMembers( "B2KsHHKsLL", [ KsLLTF, PV3D(), KSLLforB2KsHH ] )
+        B2KsHHKsLL = bindMembers( "B2KsHHKsLL", [ PV3D(), KsLLTF, KSLLforB2KsHH ] )
 
 
         ########
@@ -112,7 +112,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
                                , Code = KSDD_FilterCuts
                                , InputLocations = [KsDD]
                       )
-        B2KsHHKsDD = bindMembers( "B2KsHHKsDD", [ KsDD, PV3D(), KSDDforB2KsHH ] )
+        B2KsHHKsDD = bindMembers( "B2KsHHKsDD", [ PV3D(), KsDD, KSDDforB2KsHH ] )
 
         ########
         # B2KsLLhh  
@@ -152,7 +152,7 @@ class Hlt2B2KsHHLinesConf(HltLinesConfigurableUser) :
 
        ###########################################################################
        # Define the Hlt2 Lines
-#                        , algos = [BiKalmanFittedKaons,BiKalmanFittedPions, PV3D(), HHforB2KsHH,KsLL, KSLLforB2KsHH,B2KsLLhh]
+#                        , algos = [PV3D(), BiKalmanFittedKaons,BiKalmanFittedPions, HHforB2KsHH,KsLL, KSLLforB2KsHH,B2KsLLhh]
        #
         line = Hlt2Line('B2KsHHTFKsLL'
                     , prescale = self.prescale
