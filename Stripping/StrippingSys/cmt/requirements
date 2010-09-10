@@ -1,0 +1,34 @@
+package StrippingSys
+version v1r0
+
+branches doc cmt
+
+
+####################################################################
+# Framework
+use  CommonParticles             v7r3     Phys   # Patrick Koppenburg, WGs
+use  PhysSelPython               v5r6     PhysSel
+
+####################################################################
+# Selections
+use  MvaPreSelB2DH               v1r0     Phys   # Sajan Easo
+use  StrippingAlgs               v1r3     Phys   # Anton Poluektov
+use  StrippingConf               v3r7     Phys   # Anton Poluektov
+use  StrippingSelections         v1r26    Phys   # Anton Poluektov
+
+####################################################################
+# Output
+use  MicroDSTBase        	 v2r0     MicroDST          # Juan Palacios
+use  MicroDSTInterfaces   	 v1r5     MicroDST          # Juan Palacios
+use  MicroDSTTools      	 v2r0     MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	 v4r0     MicroDST          # Juan Palacios
+use  MicroDSTConf                v2r9     MicroDST          # Juan Palacios
+use  MicroDSTExample             v2r13p2  Ex                # Juan Palacios
+use  DSTWriters                  v1r10    Phys   # Juan Palacios
+use  DSTWriterTests              v1r5     Phys   # Juan Palacios
+
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
