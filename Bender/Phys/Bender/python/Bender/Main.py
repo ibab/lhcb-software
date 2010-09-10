@@ -40,7 +40,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $' 
 # =============================================================================
 
 import os 
@@ -205,12 +205,32 @@ def appMgr( *varg , **kwarg ) :
 ## define "easy"-function to browse TES
 def ls  ( *args ) :
     """
-    Browse the Transient Store 
+    Browse the Transient Store
+
+    >>> run(1)
+    >>> ls()
+
+    >>> ls('/Event/Strip')
+    
     """
     _g  = appMgr()
     _es = _g.evtSvc()
     return _es.ls ( *args ) 
 
+# =============================================================================
+## define "easy-get"-function to get data for TES 
+def get  ( path ) :
+    """
+    Get object from  the Transient Store
+
+    >>> run(1)
+
+    >>> o = get('/Event/Strip')
+    
+    """
+    _g  = appMgr()
+    _es = _g.evtSvc()
+    return _es[ path ] 
 
 ## massive imports of everything 
 from LoKiCore.decorators          import *
