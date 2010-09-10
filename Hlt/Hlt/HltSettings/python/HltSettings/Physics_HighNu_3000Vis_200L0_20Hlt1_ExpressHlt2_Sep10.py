@@ -110,7 +110,13 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                               , 'MuTrackDimuMass' : 1000
                                               , 'MuTrackPoint' : 0.4
                                               , 'MuTrackTrChi2' : 16
-                                              , 'MuTrackMuChi2' : 16#@JA 50
+                                              , 'MuTrackMuChi2' : 16
+                                              , 'bmm_IP'        : 0.2
+                                              , 'bmm_MuChi2'    : 16
+                                              , 'bmm_fitChi2'   : 5
+                                              , 'bmm_IPS'       : 81
+                                              , 'bmm_pt'        :3000
+                                                
                                                 }
 
                        , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
