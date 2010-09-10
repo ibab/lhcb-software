@@ -1,8 +1,8 @@
-# $Id: project.cmt,v 1.31 2010-08-26 09:37:16 ibelyaev Exp $ 
+# $Id: project.cmt,v 1.32 2010-09-10 13:13:08 ibelyaev Exp $ 
 # =============================================================================
 project BENDER
 
-use DAVINCI	DAVINCI_v25r8
+use DAVINCI	DAVINCI_v26r0
 
 container       BenderSys
 build_strategy	with_installarea
