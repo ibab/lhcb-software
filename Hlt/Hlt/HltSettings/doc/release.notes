@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-09-10 - Johannes Albrecht
+ - tightenBs2mm cuts
+
 !========================== HltSettings v3r3  2010-09-10 ===================
 ! 2010-09-10 - Gerhard Raven
  - update Sep10 with latest bandwidth division result
