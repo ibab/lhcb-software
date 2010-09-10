@@ -1,57 +1,105 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic.py,v 1.13 2009-11-16 16:38:26 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.14 2010-09-10 09:33:32 ibelyaev Exp $
 # =============================================================================
-"""
-This is the simplest  Bender module to run the analysis job
-using '*'.opts configuration
-"""
+# $URL$
 # =============================================================================
-## @file
-#  Simple script to run 'DaVinci' job in Bender environment 
+## @file solutions/Minimalictic.py
+#
+#  The most trivial ``Bender-based'' module:
+#      Essentially it is DaVinci + GaudiPython
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @date 2006-11-16
+#  @date 2006-10-12
+#
+#  Last modification $Date: 2010-09-10 09:33:32 $
+#                 by $Author: ibelyaev $
 # =============================================================================
-__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+"""
+
+The most trivial ``Bender-based'' module:
+          Essentially it is DaVinci + GaudiPython
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+Last modification $Date: 2010-09-10 09:33:32 $
+               by $Author: ibelyaev $
+"""
 # =============================================================================
-## get EVERYTHING from Bender
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__date__    = " 2006-10-12 " 
+__version__ = " Version $Revision: 1.14 $ "
+# =============================================================================
+## import everything from bender 
 from Bender.Main import *
 # =============================================================================
-## Job configuration 
-def configure() :
+## Job configuration:
+def configure ( inputdata , catalogs = [] ) :
     """
-    The  basic configuration method
+    This is the configuration method for module Minimalistic_1.py
+
+    The method conforms Ganga's expectations
+    
     """
     
     from Configurables import DaVinci
     
-    DaVinci (
-        DataType   = 'DC06' , # default  
-        Simulation = True   ) 
+    DaVinci ( DataType   = '2010' )
+    
+    setData ( inputdata , catalogs )
     
     ## get/create application manager
     gaudi = appMgr() 
     
-    ## redefine input files 
-    evtSel = gaudi.evtSel()
-    import LoKiExample.Bs2Jpsiphi_mm_data as data 
-    evtSel.open( data.Files ) 
-        
-    return SUCCESS 
-# =============================================================================
-
+    
+    return SUCCESS
 
 # =============================================================================
-## Job steering :
+## Job steering 
 if __name__ == '__main__' :
-
+    
     ## job configuration
-    configure()
-
+    inputdata = [
+        '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_00000001_1.V0.dst' ,
+        '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_00000002_1.V0.dst' 
+        ]
+    
+    configure( inputdata )
+    
     ## event loop 
-    run(100)
+    run(10)
 
+    ls('/Event/Strip/Phys')
+
+    run(10)
+    
+    
 # =============================================================================
-# The END
+# The END 
 # =============================================================================

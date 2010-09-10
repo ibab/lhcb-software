@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: DataAccess.py,v 1.15 2010-09-10 09:33:32 ibelyaev Exp $ 
+# $Id: SelectK0S_2.py,v 1.1 2010-09-10 09:33:33 ibelyaev Exp $ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
-## @file solutions/DataAccess.py
+## @file solutions/SelectK0S_2.py
 #
-#  Simple example that illustrates the access to data (tracks) and loop
-#
+#  Simple example that illustrates the selection of K0S from stripped DSTs
+#  The example reuses the same algorithm, applies EventPreFilters and
+#  extends the main method 'analyse'
+#   
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
 #  <b>``Python-based Interactive Environment for Smart and Friendly 
 #   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
-#  Pere MATO and Andrey TSAREGORODTSEV. 
-#  And it is based on the 
+#  Pere MATO and Andrey TSAREGORODTSEV. And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
@@ -26,64 +27,68 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-12
 #
-#  Last modification $Date: 2010-09-10 09:33:32 $
+#  Last modification $Date: 2010-09-10 09:33:33 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
-Simple example that illustrates the access to data (tracks) and loop
+Simple example that illustrates the selection of K0S from stripped DSTs
+The example reuses the same algorithm, applies EventPreFilters and
+extends the main method 'analyse'
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
 The project has been designed with the kind help from
-Pere MATO and Andrey TSAREGORODTSEV. 
-
-And it is based on the 
-LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+Pere MATO and Andrey TSAREGORODTSEV. And it is based on the LoKi project:
+``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-09-10 09:33:32 $
+Last modification $Date: 2010-09-10 09:33:33 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision: 1.15 $ "
+__version__ = " Version $Revision: 1.1 $ "
 # =============================================================================
 ## import everything from BENDER
-from Bender.Main import *
+from Bender.Main                   import *
+from GaudiKernel.PhysicalConstants import c_light 
 # =============================================================================
-## @class GetData
-#  Simple algorithm to access the data 
-class GetData(Algo):
 
-    # =========================================================================
-    ## the main method: analyse the event
-    def analyse( self ) :
-        """
-        the main method: analyse the event
-        """
-        
-        ## get and print the event number 
-        hdr  = self.get( 'Header' )
-        if hdr :
-            print ' Event/Run #%d/%d ' % ( hdr.evtNum() , hdr.runNum() )
-            
-        ## get tracks 
-        tracks = self.get ( 'Rec/Track/Best' )
-        print ' # of tracks : ' , tracks.size() 
-            
-        ## for the first five  tracks print PT 
-        i = 0
-        for track in tracks :
-            if i >= 5 : break
-            print ' Track, pt: ', track.pt() 
-            
-        return SUCCESS
+
+from SelectK0S import SelectKs
+
 # =============================================================================
+## code new 'analyse' method 
+def _analyse_ ( self ) :
+    """
+    New 'analyse' method 
+    """
+    
+    # select from input particles according PID and kinematical criteria
+    k0s = self.select ( 'k0' ,
+                        ( 'KS0' == ID )                 &
+                        ( abs ( LV01 )     < 0.9      ) &
+                        ( ADMASS ( 'KS0' ) < 50 * MeV ) &
+                        ( MINTREE ( 'pi+' == ABSID , TRCHI2DOF   ) < 10 ) &
+                        ( MINTREE ( 'pi+' == ABSID , PIDpi-PIDK  ) >  0 ) &
+                        ( MINTREE ( 'pi+' == ABSID , BPVIPCHI2() ) > 25 ) ) 
+    
+    # loop over selected particles:
+    for k0 in k0s :
+        
+        # fill the histogram
+        self.plot ( M ( k0 ) , 'mass K0S' , 450 , 550 )
+
+
+    return SUCCESS
+
+# substitute the method!!!
+SelectKs.analyse = _analyse_
 
 # =============================================================================
 ## The configuration of the job
@@ -91,27 +96,45 @@ def configure( inputdata , catalogs = [] ) :
     """
     The configuration of the job
     """
-    from Configurables import DaVinci
-    DaVinci ( DataType   = '2010' ,
-              Lumi       = False  )
-
+    
+    ## define event-levele filters:
+    from PhysConf.Filters import LoKi_Filters
+    fltrs = LoKi_Filters (
+        HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
+        STRIP_Code = " HLT_PASS('StrippingK0SLineDecision') " ,
+        VOID_Code  = " EXISTS ('/Event/V0') " 
+        )
+    
+    from Configurables import DaVinci , GaudiSequencer 
+    DaVinci ( DataType        = '2010' ,
+              EventPreFilters = fltrs.filters ('Filters') ,
+              Lumi            = False  )
+    
+    from Configurables import CondDB
+    CondDB  ( IgnoreHeartBeat = True )
+    
+    setData ( inputdata , catalogs )
+    
     ## get/create Application Manager
     gaudi = appMgr()
-
-    setData ( inputdata , catalogs )
     
     # modify/update the configuration:
     
     ## create the algorithm
-    alg = GetData( 'GetData' )
-    
-    ## replace the list of top level algorithms by
-    #  new list, which contains only *THIS* algorithm
-    gaudi.setAlgorithms( [ alg ] )
+    alg = SelectKs (
+        'SelectKs'                         ,
+        RootInTES      = '/Event/V0'       ,
+        InputLocations = [ 'StrippingK0S'  ] 
+        )
+
+    ## add algorithm into main DaVinci sequence
+    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciMainSequence' , True )
+    dvMain.Members += [ alg.name() ]
     
     return SUCCESS 
 # =============================================================================
-    
+
+
 # =============================================================================
 ## Job steering 
 if __name__ == '__main__' :
@@ -123,22 +146,15 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120
     
-    
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/data/2010/DST/00005848/0000/00005848_00000001_1.V0.dst' ,
-        '/castor/cern.ch/grid/lhcb/data/200/DST/00005848/0000/00005848_00000002_1.V0.dst' 
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007577/0000/00007577_000000%02d_1.v0.dst' % n for n in range ( 4 , 15 ) 
         ]
     
     configure( inputdata )
     
     ## event loop 
-    run(10)
-
-    tracks = get('/Event/Rec/Track/Best')
-    print '# TRACKS : ', tracks.size() 
-
-    
+    run(500)
     
 # =============================================================================
 # The END

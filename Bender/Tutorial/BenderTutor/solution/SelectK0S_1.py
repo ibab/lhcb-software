@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic_1.py,v 1.12 2010-09-10 09:33:33 ibelyaev Exp $
+# $Id: SelectK0S_1.py,v 1.1 2010-09-10 09:33:33 ibelyaev Exp $ 
 # =============================================================================
-# $URL$
+# $URL$ 
 # =============================================================================
-## @file solutions/Minimalictic_1.py
+## @file solutions/SelectK0S_1.py
 #
-#  The most trivial ``Bender-based'' module:
-#      Essentially it is DaVinci + GaudiPython
-#
+#  Simple example that illustrates the selection of K0S from stripped DSTs
+#  The example reuses the same algorithm, but apply EventPreFilters
+#   
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
 #  <b>``Python-based Interactive Environment for Smart and Friendly 
@@ -31,9 +31,8 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
-
-The most trivial ``Bender-based'' module:
-          Essentially it is DaVinci + GaudiPython
+Simple example that illustrates the selection of K0S from stripped DSTs
+The example reuses the same algorithm, but apply EventPreFilters
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -54,36 +53,63 @@ Last modification $Date: 2010-09-10 09:33:33 $
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision: 1.12 $ "
+__version__ = " Version $Revision: 1.1 $ "
 # =============================================================================
-## import everything from bender 
+## import everything from BENDER
 from Bender.Main import *
 # =============================================================================
-## Job configuration:
-def configure ( inputdata , catalogs = [] ) :
-    """
-    This is the configuration method for module Minimalistic_1.py
 
-    The method conforms Ganga's expectations
-    
+
+from SelectK0S import SelectKs
+
+## The configuration of the job
+def configure( inputdata , catalogs = [] ) :
+    """
+    The configuration of the job
     """
     
-    from Configurables import DaVinci
+    ## define event-levele filters:
+    from PhysConf.Filters import LoKi_Filters
+    fltrs = LoKi_Filters (
+        HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
+        STRIP_Code = " HLT_PASS('StrippingK0SLineDecision') " ,
+        VOID_Code  = " EXISTS ('/Event/V0') " 
+        )
     
-    DaVinci ( DataType   = '2010' )
+    from Configurables import DaVinci , GaudiSequencer 
+    DaVinci ( DataType        = '2010' ,
+              EventPreFilters = fltrs.filters ('Filters') ,
+              Lumi            = False  )
+    
+    from Configurables import CondDB
+    CondDB  ( IgnoreHeartBeat = True )
     
     setData ( inputdata , catalogs )
     
-    ## get/create application manager
-    gaudi = appMgr() 
+    ## get/create Application Manager
+    gaudi = appMgr()
     
+    # modify/update the configuration:
     
-    return SUCCESS
+    ## create the algorithm
+    alg = SelectKs (
+        'SelectKs'                         ,
+        RootInTES      = '/Event/V0'       ,
+        InputLocations = [ 'StrippingK0S'  ] 
+        )
+
+    ## add algorithm into main DaVinci sequence
+    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciMainSequence' , True )
+    dvMain.Members += [ alg.name() ]
+    
+    return SUCCESS 
+# =============================================================================
+
 
 # =============================================================================
 ## Job steering 
 if __name__ == '__main__' :
-
+    
     print '*'*120
     print                      __doc__
     print ' Author  : %s ' %   __author__    
@@ -91,24 +117,16 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120
     
-    
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_00000001_1.V0.dst' ,
-        '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_00000002_1.V0.dst' 
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007577/0000/00007577_000000%02d_1.v0.dst' % n for n in range ( 4 , 15 ) 
         ]
     
     configure( inputdata )
     
     ## event loop 
-    run(10)
-
-    ls ( '/Event/Strip/Phys' )
-
-    
-    run(10)
-    
+    run(500)
     
 # =============================================================================
-# The END 
+# The END
 # =============================================================================
