@@ -16,8 +16,8 @@ def start() :
 
     ### default database setup
     Moore().Simulation = False
-    Moore().DDDBtag    = 'hlt-20100826'
-    Moore().CondDBtag  = 'hlt-20100831'
+    Moore().DDDBtag    = 'hlt-20100906'
+    Moore().CondDBtag  = 'hlt-20100906'
 
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
