@@ -25,7 +25,7 @@ application   mbm_remove              ../main/mbm_remove.cpp
 macro_append  test_dependencies       " OnlineKernel "
 macro_append  gentest_dependencies    " OnlineKernel "
 macro_append  mbm_remove_dependencies " OnlineKernel "
-macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include/OnlineKernel" '
+macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/OnlineKernel" '
 macro_append  use_linkopts            ' -ldl ' WIN32 ''
 path_remove PYTHONPATH                '/OnlineKernel/'    WIN32 '\OnlineKernel\'
 path_append PYTHONPATH                $(ONLINEKERNELROOT)/python

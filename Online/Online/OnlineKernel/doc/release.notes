@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2010-09-10 Marco Clemencic
+ - Fixed a problem when disabling the shared directories in Gaudi.
+
 ! 2009-04-19 Markus Frank
  - Fix bug in buffer manager and prevent writing to not mapped memory area.
 

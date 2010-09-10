@@ -26,7 +26,7 @@ pattern dim_exe \
 
 apply_pattern install_more_includes more=dim 
 
-macro_append  use_includes ' $(ppcmd)"$(DIM_cmtpath)/$(cmt_installarea_prefix)/include/dim" '
+macro_append  use_includes ' $(ppcmd)"$(DIM_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/dim" '
 # ==================== component libraries ==================================
 library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             dtq.c hash.c open_dns.c sll.c swap.c tcpip.c \

@@ -4,6 +4,9 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+! 2010-09-10 - Marco Clemencic
+ - Fixed a problem when disabling the shared directories in Gaudi.
+
 !=========================== DIM v17r11  2008-09-08 ============================
  - reimport DIM from Clara
 
