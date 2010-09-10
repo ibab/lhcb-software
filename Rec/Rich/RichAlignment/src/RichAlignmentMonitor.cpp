@@ -238,7 +238,7 @@ StatusCode AlignmentMonitor::execute()
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
 
-    if ( m_histoOutputLevel > 1 ) plot( sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV,
+    if ( m_histoOutputLevel > 1 ) plot( std::sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV,
                                         "momentum", "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
 
     double thetaExpTrue(0.0), thetaExpected(0.0);
@@ -251,7 +251,7 @@ StatusCode AlignmentMonitor::execute()
       m_pTypes[mcType]++;
 
       const double beta =
-        m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
+        m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
       plot1D(beta, "beta", "Beta of the track (MC)", 0.9, 1.0);
 
       // Expected Cherenkov theta angle for true particle type
@@ -458,7 +458,7 @@ StatusCode AlignmentMonitor::execute()
           myTuple->column( "secMirror" , flatMirNum );
           myTuple->column( "hpd"       , Rich::DAQ::HPDIdentifier(gPhoton.smartID()).number() );
           myTuple->column( "quarter"   , quarter    );
-          myTuple->column( "momentum"  ,sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV );
+          myTuple->column( "momentum"  , std::sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV );
           myTuple->write();
         }
 
