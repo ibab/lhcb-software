@@ -22,7 +22,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
 
     
     def L0TCK(self) :
-        return '0x0027'
+        return '0x0028'
 
     def HltType(self) :
         self.verifyType( Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
