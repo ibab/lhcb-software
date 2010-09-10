@@ -1,3 +1,8 @@
+2010-09-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: fixed stupid syntax error while escaping characters
+	in regular expressions.
+
 2010-09-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/change-svn-wc-format: new file. to fix the working copy with the wrong

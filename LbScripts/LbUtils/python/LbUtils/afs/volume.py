@@ -78,7 +78,7 @@ class Volume(object):
     def usedSpace(self, display_size=None):
         log = logging.getLogger()
         used_size = 0
-        exp = re.compile("%s\s+\d+\s+(\d+)\s+" % re.escape(self._name.replace))
+        exp = re.compile("%s\s+\d+\s+(\d+)\s+" % re.escape(self._name))
         p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             m = exp.match(line[:-1])
@@ -96,7 +96,7 @@ class Volume(object):
     def quota(self, display_size=None):
         log = logging.getLogger()
         quota_size = 0
-        exp = re.compile("%s\s+(\d+)\s+\d+\s+" % re.escape(self._name.replace))
+        exp = re.compile("%s\s+(\d+)\s+\d+\s+" % re.escape(self._name))
         p = Popen(["fs", "listquota", self._mtpoints[0].name()], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             m = exp.match(line[:-1])
