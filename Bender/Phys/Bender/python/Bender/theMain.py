@@ -41,7 +41,7 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 __date__    = "2004-07-11"
 # =============================================================================
 
@@ -61,7 +61,6 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
 
 # =============================================================================
