@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.445 2010-09-04 08:53:36 jpalac Exp $
+! $Id: release.notes,v 1.446 2010-09-10 11:31:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-09-10 - Juan Palacios
+ - python/DaVinci/Configuration
+  . More useful information when CondDBtag == "". 
+
+!========================== DaVinci v25r9 2010-09-08 =======================
 
 ! 2010-08-30 - Juan Palacios
  - python/DaVinci/Configuration

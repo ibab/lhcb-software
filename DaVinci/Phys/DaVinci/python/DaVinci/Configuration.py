@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.124 2010-09-04 08:53:36 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.125 2010-09-10 11:31:19 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -431,11 +431,12 @@ class DaVinci(LHCbConfigurableUser) :
     def _hltCondDBHack(self) :
         cdb = self.getProp("CondDBtag")
         if not isNewCondDBTag(cdb) :
-            log.warning('CondDB tag '+cdb+' considered old. Setting HltReferenceRateSvc().UseCondDB = False')
+            if cdb = '' : cdb = 'default'
+            log.warning('CondDB '+ cdb + ' tag considered old. Setting HltReferenceRateSvc().UseCondDB = False')
             from Configurables import HltReferenceRateSvc
             HltReferenceRateSvc().UseCondDB = False
         else :
-            log.info('CondDB tag '+cdb+' considered NEW.')
+            log.info('CondDB ' + cdb + ' tag considered NEW.')
 ################################################################################
 # Ntuple files
 #
