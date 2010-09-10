@@ -6,8 +6,6 @@ importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 importOptions("$APPCONFIGOPTS/UseOracle.py")
 
-#LHCbApp().DDDBtag   = "head-20100518"
-#LHCbApp().CondDBtag = "head-20100730"
 LHCbApp().DDDBtag   = "head-20100906"
 LHCbApp().CondDBtag = "head-20100906"
 

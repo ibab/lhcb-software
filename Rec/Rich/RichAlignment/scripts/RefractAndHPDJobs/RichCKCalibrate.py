@@ -121,6 +121,11 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
         nEventsTotal = 250000
         nFilesMax    = 100
 
+    # Base Job Name
+    basejobname = jobType
+    if name != "" : basejobname += "-"+name
+    basejobname += "_BR-"+BrunelVer
+
     # Loop over the list of pickled run data files
     for pickedRuns in pickedRunsList:
 
@@ -141,9 +146,7 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
             if len(lfns)>0 :
 
                 # Construct the job name
-                jobname = jobType
-                if name != "" : jobname += "-"+name
-                jobname += "_BR-"+BrunelVer + "_Run-"+str(run)
+                jobname = basejobname + "_Run-"+str(run)
 
                 # is this job already submitted ?
                 if jobExists(jobname):
@@ -234,10 +237,14 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
                     # Force jobs to go to CERN only
                     j.backend.settings['Destination'] = 'LCG.CERN.ch'
 
+                    # Add to jobtree
+                    addToJobTree(j,basejobname)
+
                     # Submit !!
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
                     print " -> Using", nFiles, "data files,", nEventsPerFile, "events per file"
                     j.submit()
+
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
@@ -249,7 +256,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     if len(jobs) == 0 : return
 
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RefIndexCalib"+getJobCaliName(jobs[0])+".pdf"
+    globals()["imageFileName"] = rad+"_"+getJobCaliName(jobs[0])+".pdf"
     printCanvas('[')
 
     # Dictionary to store the calibration data
@@ -288,7 +295,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
             print "WARNING : Fit failed for run", run, "-", fitResult['Message']
 
     # Write out calibrations to a pickled python file
-    file = open(rad+"-RefIndexCalib.pck","w")
+    file = open(rad+"_"+getJobCaliName(jobs[0])+".pck","w")
     pickle.dump(calibrations,file)
     file.close()
 
@@ -529,6 +536,13 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 # Utility Methods
 # ====================================================================================
 
+def addToJobTree(j,dir):
+    from Ganga.GPI import jobtree
+    fulldir = "/RichCalibration/"+dir
+    if not jobtree.exists(fulldir) : jobtree.mkdir(fulldir)
+    jobtree.cd(fulldir)
+    jobtree.add(j)
+    
 def jobExists(jobname):
     from Ganga.GPI import jobs
     slice = jobs.select(name=jobname)
@@ -544,10 +558,9 @@ def getInfoFromJob(j,info='Run'):
     return run
 
 def getJobCaliName(j):
-    tmpA = j.name.split('_')[0]
-    tmpB = tmpA.split('-')
-    cName = ""
-    if len(tmpB) == 2 : cName = tmpB[1]
+    splits = j.name.split('_')
+    cName = splits[0]
+    if len(splits) == 3 : cName += "_"+splits[1]
     return cName
 
 def loadDict(filename):
@@ -789,11 +802,11 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
             fitMax = preFitF.GetParameter(1) + delta
             # Absolute max/min values
             if  rad == 'Rich1Gas' :
-                if fitMax >  0.0052 : fitMax =  0.0058
-                if fitMin < -0.0052 : fitMin = -0.0058
+                if fitMax >  0.0052 : fitMax =  0.0065
+                if fitMin < -0.0052 : fitMin = -0.008
             else:
-                if fitMax >  0.0025 : fitMax =  0.0025
-                if fitMin < -0.0029 : fitMin = -0.0029
+                if fitMax >  0.0025 : fitMax =  0.0035
+                if fitMin < -0.0029 : fitMin = -0.0044
 
             # First Gaus + pol1
             fbkgFuncType = "pol1"
