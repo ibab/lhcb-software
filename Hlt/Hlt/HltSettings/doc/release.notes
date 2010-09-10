@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+!========================== HltSettings v3r3  2010-09-10 ===================
+! 2010-09-10 - Gerhard Raven
+ - update Sep10 with latest bandwidth division result
+
 !========================== HltSettings v3r2  2010-09-08 ===================
 ! 2010-09-08 - Johannes Albrecht
  - add Hlt1SingleMuon4BsMuMu, Hlt1DiMuon4BsMuMu to Sep10 settings

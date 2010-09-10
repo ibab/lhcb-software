@@ -22,7 +22,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
 
     
     def L0TCK(self) :
-        return '0x0025'
+        return '0x0027'
 
     def HltType(self) :
         self.verifyType( Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
@@ -34,6 +34,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
         """
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
+        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
@@ -45,7 +46,28 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Configurables import Hlt2ExpressLinesConf
 
-        thresholds = { Hlt1HadronLinesConf : { 'SingleHadron_PTCut'        : 2150
+        thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
+                                            ,   'AllL0_P'       : 13300
+                                            ,   'AllL0_IP'      : 0.09
+                                            ,   'AllL0_IPChi2'  : 34
+                                            ,   'AllL0_TrChi2'  : 3
+                                            ,   'Muon_PT'       : 800 
+                                            ,   'Muon_P'        : 8000 
+                                            ,   'Muon_IP'       : 0.08
+                                            ,   'Muon_IPChi2'   : 25
+                                            ,   'Muon_TrChi2'   : 10                    
+                                            ,   'Photon_PT'     : 800
+                                            ,   'Photon_P'      : 8000
+                                            ,   'Photon_IP'     : 0.13
+                                            ,   'Photon_IPChi2' : 50
+                                            ,   'Photon_TrChi2' : 5
+                                            ,   'Velo_NHits'    : 9 # Minimum number of hits on a Velo track - 1
+                                            ,   'Velo_Qcut'     : 3 # This - 1 is the maximum allowed difference between
+                                         # the number of hits on a velo track and the
+                                         # expected number of hits from the track's angle
+                                         # and first measured point on the track                      
+                                         } 
+                     , Hlt1HadronLinesConf : { 'SingleHadron_PTCut'      : 2150
                                              , 'HadSingle_IPChi2Cut'     : 29.0
                                              , 'HadMain_PTCut'           : 1200
                                              , 'HadCompanion_DZCut'      : 2.0
@@ -68,17 +90,17 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                  , 'EleCompanion_PtCut'     : 1000
                                                  , 'DiEle_HighMassCut'      : -1 # only applied if >0
                                                  }
-                       , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' : 1600.0
-                                              , 'Muon_DeltaPCut'               :    0
-                                              , 'Muon_PtCut' : 1350
-                                              , 'MuonIP_PtCut' : 850
-                                              , 'Muon_IPMinCut' : 0.09
-                                              , 'DiMuon_DOCACut' : 1.5
-                                              , 'DiMuon_MassCut' : 2500
-                                              , 'DiMuonIP_MassCut' : 750
-                                              , 'DiMuon_IPCut' : 0.0
-                                              , 'Muon_FitChiCut' :  10.#50
-                                              , 'Muon_FitMuChi2Cut' : 16.#100
+                       , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' :  560.0
+                                              , 'Muon_DeltaPCut'  :    0  
+                                              , 'Muon_PtCut' : 1800
+                                              , 'MuonIP_PtCut' : 850  
+                                              , 'Muon_IPMinCut' : 0.09       
+                                              , 'DiMuon_DOCACut' : 0.2
+                                              , 'DiMuon_MassCut' : 2500     
+                                              , 'DiMuonIP_MassCut' : 750    
+                                              , 'DiMuon_IPCut' : 0.0        
+                                              , 'Muon_FitChiCut' :  10.#50    
+                                              , 'Muon_FitMuChi2Cut' : 16.#100  
                                               , 'MuTrackMuPt' : 800
                                               , 'MuTrackMuIP' : 0.05
                                               , 'MuTrackTrPt' : 600
@@ -190,32 +212,24 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
         """
         Returns a list of active lines
         """
-        lines = [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error'
-                 , 'Hlt1L0Any'
-                 , 'Hlt1Lumi'
-                 , 'Hlt1LumiMidBeamCrossing'
-                 , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
-                 , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
-                 , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
-                 , 'Hlt1MBNoBias'
-                 , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
-                 , 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton' #Add one track lines!
-                 , 'Hlt1SingleHadron'
-                 , 'Hlt1DiHadron', 'Hlt1DiHadronLTUnbiased'
-                 , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
-                 , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
-                 , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
-                 , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
-                 , 'Hlt1SingleMuon4BsMuMu', 'Hlt1DiMuon4BsMuMu'
-                 , 'Hlt1MuTrack'
-                 , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
-                 , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
-                 , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
-                 , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
-                 , 'Hlt1Incident'
-                 , 'Hlt1ErrorEvent'
-                 , 'Hlt1NZSVelo'
-                 ]
+        lines = [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1Incident' , 'Hlt1ErrorEvent' , 'Hlt1NZSVelo'
+                , 'Hlt1L0Any'
+                , 'Hlt1Lumi' , 'Hlt1LumiMidBeamCrossing', 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
+                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco' , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
+                , 'Hlt1MBNoBias' , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
+                , 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton' # Add one track lines!
+                , 'Hlt1SingleHadron'
+                , 'Hlt1DiHadron' # , 'Hlt1DiHadronLTUnbiased'
+                , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
+                , 'Hlt1SingleMuon4BsMuMu', 'Hlt1DiMuon4BsMuMu'
+                , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
+                , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
+                , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+                , 'Hlt1MuTrack'
+                , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
+                , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
+                , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle' , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
+                ]
 
         lines += [ i + 'RateLimited' for i in lines 
                                      if i.startswith('Hlt1MBMicroBias') 
