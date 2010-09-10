@@ -74,7 +74,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                              , 'HadDi_VDChi2Cut'         : 55.0
                                              , 'HadCompanion_PTCut'      : 500
                                              , 'HadCompanion_PointingCut': 0.5
-                                             , 'HadMain_TrackFitChi2Cut' : 16.
+                                             , 'HadMain_TrackFitChi2Cut' : 5. # 16.
                                              , 'HadDi_IP' : 0.07
                                              }
                        , Hlt1PhotonLinesConf : { 'Pho_EtCut'        : 4400.0
