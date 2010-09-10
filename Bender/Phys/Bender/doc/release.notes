@@ -1,13 +1,50 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.62 2010-08-28 13:44:28 ibelyaev Exp $
+! $Id: release.notes,v 1.63 2010-09-10 13:11:31 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.62 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.63 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! 2010-09-10 - Vanya Belyaev
+
+ - prepare for Bender v15r0 
+
+ - python/Bender/DstExplorer.py 
+ 
+     trivial script to expore any DST. 
+
+ - scripts/dst_explorer 
+
+     the script to run DstExplorer
+
+ The usage is fairly trivial:
+
+# dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
+#
+#     >>> ls('/Event')
+#
+#     >>> ls('/Event/MicroDST')
+#
+#     >>> ls('/Event/MicroDST/Dimuon')
+#
+#     >>> ls('/Event/MicroDST/Dimuon/Phys')
+#
+#     >>> ls('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU')
+#
+#     >>> bs = get('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU/Particles')
+#
+#     >>> for b in bs : print b.decay()
+#
+#     >>> run(1)
+#
+#     >>> ls('/Event') 
+
+Note-1: the files could be files on castor
+Note-2: it is not tested on Windows platform yet 
 
 ! ==================== Phys/Bender v14r5p1 2010-08-28 =========================
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.84 2010-08-28 13:44:28 ibelyaev Exp $ 
+# $Id: requirements,v 1.85 2010-09-10 13:11:31 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2002-11-02
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,7 +7,7 @@ package           Bender
 version           v14r5p1
 
 # ============================================================================
-branches          cmt doc python
+branches          cmt doc python scripts 
 
 # =============== dependencies ================================================
 use               DaVinci        v*  Phys
@@ -16,6 +16,12 @@ use               GaudiPython    v*
 
 # =============== standard patterns ===========================================
 apply_pattern install_python_modules 
+apply_pattern install_scripts
+
+alias dstExplorer  "dst_explorer"
+alias dst_Explorer "dst_explorer"
+alias Dst_Explorer "dst_explorer"
+alias Dst_explorer "dst_explorer"
 
 # =============================================================================
 # The END
