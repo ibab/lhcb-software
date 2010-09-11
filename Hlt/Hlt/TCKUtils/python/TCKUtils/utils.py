@@ -177,7 +177,7 @@ def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
     return ret
 
 
-def _updateL0TCK( id, l0tck, label, cas ) :
+def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
     if not label : 
         print 'please provide a reasonable label for the new configuration'
         return None
@@ -223,6 +223,12 @@ def _updateL0TCK( id, l0tck, label, cas ) :
                     raise KeyError('Specified property %s not in store'%k)
                 print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
                 mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
+    if extras :
+        for algname,props in extras.iteritems() :
+            for k,v in props.iteritems() : 
+                item = algname + '.' + k + ':' + v
+                print 'updating: ' + item
+                mods.push_back( item )
 
     print 'requested update: %s ' % mods
     newId = cte.updateAndWrite(id,mods,label)
@@ -616,7 +622,7 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
           tempstr = tempstr + s + (80-len(s))*' ' + str(i.leaf.digest) + '\n'
     return tempstr
 
-def dump( id, properties = None,  cas = ConfigAccessSvc() ) :
+def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
     if not properties : 
         properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
                      , 'Code', 'InputLocations'
@@ -627,17 +633,22 @@ def dump( id, properties = None,  cas = ConfigAccessSvc() ) :
         _i = line.rfind('\n')
         return len(line) if _i<0 else len(line)-(_i+1)
 
+    import re
+    show = not lines
     for i in tree :
-       if i.leaf and i.leaf.kind =='IAlgorithm':
-            _tab = 50
-            line =  i.depth * '   ' + i.leaf.name
-            if len1(line)>( _tab-1): line +=  '\n'+ _tab*' '
-            else :                   line +=  (_tab-len1(line))*' '
-            line +=  '%-25.25s'%i.leaf.type
-            for k,v in [ (k,v) for k,v in i.leaf.props.iteritems() if k in properties and v ]:
-                if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
-                line += '%-15s : %s' % ( k, v)
-            print line
+       if not i.leaf or i.leaf.kind != 'IAlgorithm' : continue
+       if lines and i.leaf.type in [ 'Hlt::Line', 'HltLine' ] :
+           show =  re.match(lines,i.leaf.name) 
+       if not show : continue
+       _tab = 50
+       line =  i.depth * '   ' + i.leaf.name
+       if len1(line)>( _tab-1): line +=  '\n'+ _tab*' '
+       else :                   line +=  (_tab-len1(line))*' '
+       line +=  '%-25.25s'%i.leaf.type
+       for k,v in [ (k,v) for k,v in i.leaf.props.iteritems() if k in properties and v ]:
+           if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
+           line += '%-15s : %s' % ( k, v)
+       print line
 
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
