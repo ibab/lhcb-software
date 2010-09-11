@@ -217,7 +217,7 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
                         j.inputdata = LHCbDataset(lfns)
                     else:
                         import random
-                        j.inputdata = LHCbDataset( random.sample(lfns,nFiles) )
+                        j.inputdata = LHCbDataset(random.sample(lfns,nFiles))
 
                     # Split job into 1 file per subjob
                     j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = nFiles )
@@ -727,14 +727,16 @@ def rootCanvas():
     return globals()["canvas"]
 
 def printCanvas(tag=''):
+    import os
     canvas = rootCanvas()
     imageType = imageFileName.split(".")[1]
-    if tag == "[" : print "Opening file", imageFileName
+    if tag == "[" :
+        if os.path.exists(imageFileName) : os.remove(imageFileName)
+        print "Opening file", imageFileName
     if tag != "[" and tag != "]" : canvas.Update()
     canvas.Print(imageFileName+tag,imageType)
     # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
     if tag == ']' and imageType == 'ps' :
-        import os
         print "Converting", imageFileName, "to PDF"
         os.system('ps2pdf '+imageFileName)
         os.remove(imageFileName)  
@@ -804,99 +806,69 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
             if  rad == 'Rich1Gas' :
                 if fitMax >  0.0052 : fitMax =  0.0065
                 if fitMin < -0.0052 : fitMin = -0.008
+                nPolFull = 3
             else:
                 if fitMax >  0.0025 : fitMax =  0.0035
                 if fitMin < -0.0029 : fitMin = -0.0044
+                nPolFull = 3
 
-            # First Gaus + pol1
-            fbkgFuncType = "pol1"
-            fFuncType = "gaus(0)+"+fbkgFuncType+"(3)"
-            fFitF = TF1(rad+"FFitF",fFuncType,fitMin,fitMax)
-            fFitF.SetParName  (0,"Gaus Constant")
-            fFitF.SetParName  (1,"Gaus Mean")
-            fFitF.SetParName  (2,"Gaus Sigma")
-            fFitF.SetParameter(0,preFitF.GetParameter(0))
-            fFitF.SetParameter(1,preFitF.GetParameter(1))
-            fFitF.SetParameter(2,preFitF.GetParameter(2))
-            fFitF.SetLineColor(fullFitColor)
-
-            # Do the second prefit
-            hist.Fit(fFitF,"QRS0")
-            
-            # Final Gaus + pol2
-            bkgFuncType = "pol2"
-            fullFuncType = "gaus(0)+"+bkgFuncType+"(3)"
-            fullFitF = TF1(rad+"FullFitF",fullFuncType,fitMin,fitMax)
-            fullFitF.SetParName  (0,"Gaus Constant")
-            fullFitF.SetParName  (1,"Gaus Mean")
-            fullFitF.SetParName  (2,"Gaus Sigma")
-            fullFitF.SetParameter(0,fFitF.GetParameter(0))
-            fullFitF.SetParameter(1,fFitF.GetParameter(1))
-            fullFitF.SetParameter(2,fFitF.GetParameter(2))
-            fullFitF.SetParameter(3,fFitF.GetParameter(3))
-            fullFitF.SetParameter(4,fFitF.GetParameter(4))
-            fullFitF.SetLineColor(fullFitColor)
-        
-            # Do the final fit
-            hist.Fit(fullFitF,"QRSE0")
-
-            # Fit OK ?
-            maxErrorForOK = 1e-4
-            fitOK = fullFitF.GetParError(1) < maxErrorForOK
+            # Loop over pol fits up to the final
+            lastFitF = preFitF
+            bestFitF = preFitF
+            bestNPol = nPolFull
+            for nPol in range(1,nPolFull+1):
+                fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
+                fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
+                fFitF.SetLineColor(fullFitColor)
+                fFitF.SetParName(0,"Gaus Constant")
+                fFitF.SetParName(1,"Gaus Mean")
+                fFitF.SetParName(2,"Gaus Sigma")
+                nParamsToSet = 3
+                in nPol != 1 : nParamsToSet = 3+nPol
+                for p in range(0,nParamsToSet) :
+                    fFitF.SetParameter(p,lastFitF.GetParameter(p))
+                hist.Fit(fFitF,"QRSE0")
+                lastFitF = fFitF
+                # Fit OK ?
+                maxErrorForOK = 1e-4
+                fitOK = fFitF.GetParError(1) < maxErrorForOK
+                if fitOK :
+                    bestFitF = fFitF
+                    bestNPol = nPol
+                # For debugging. Pause here
+                # if not fitOK :
+                #    raw_input("Press any key to continue ...")
                   
             # Draw the histogram
             hist.Draw()
-                            
-            # Draw the pre fit
-            if not fitOK :
-                fFitF.Draw('SAME')
-                # Background function
-                bkgFunc = TF1( rad+"BkgF", fbkgFuncType, fitMin, fitMax )
-                bkgFunc.SetLineColor(bkgColor)
-                bkgFunc.SetParameter(0,fFitF.GetParameter(3))
-                bkgFunc.SetParameter(1,fFitF.GetParameter(4))
-            else:
-                fullFitF.Draw('SAME')
-                # Background function
-                bkgFunc = TF1( rad+"BkgF", bkgFuncType, fitMin, fitMax )
-                bkgFunc.SetLineColor(bkgColor)
-                bkgFunc.SetParameter(0,fullFitF.GetParameter(3))
-                bkgFunc.SetParameter(1,fullFitF.GetParameter(4))
-                bkgFunc.SetParameter(2,fullFitF.GetParameter(5))
+
+            # Draw the full fit
+            bestFitF.Draw('SAME')
+                
+            # Background function
+            bkgFunc = TF1( rad+"BkgF", "pol"+str(bestNPol), fitMin, fitMax )
+            bkgFunc.SetLineColor(bkgColor)
+            for n in range(0,bestNPol+1):
+                bkgFunc.SetParameter(n,bestFitF.GetParameter(n+3))
 
             # Draw the background shape
             bkgFunc.Draw('SAME')
                        
             # Add Run number to plot
-            addRunToPlot(run,[ ("Full Fit",fullFitColor),("Bkg",bkgColor) ] )
+            addRunToPlot(run,[ ("Signal+Bkg Fit",fullFitColor),
+                               ("Bkg pol"+str(bestNPol),bkgColor) ] )
             
             # Print to file
             printCanvas()
-
-            # For debugging. Pause here
-            if not fitOK :
-                raw_input("Press any key to continue ...")
     
             # Results of the fit
             if fitOK :
                 result = { 'OK'    : True,
-                           'Mean'  : [fullFitF.GetParameter(1),fullFitF.GetParError(1)],
-                           'Sigma' : [fullFitF.GetParameter(2),fullFitF.GetParError(2)]
+                           'Mean'  : [bestFitF.GetParameter(1),bestFitF.GetParError(1)],
+                           'Sigma' : [bestFitF.GetParameter(2),bestFitF.GetParError(2)]
                            }
             else:
-                if fFitF.GetParError(1) < maxErrorForOK :
-                    result = { 'OK'    : True,
-                               'Mean'  : [fFitF.GetParameter(1),fFitF.GetParError(1)],
-                               'Sigma' : [fFitF.GetParameter(2),fFitF.GetParError(2)]
-                               }
-                else:
-                    result['Message'] = "Histogram Fit Failed"
-
-            #if result['OK'] :
-            #    if ( (rad == 'Rich1Gas' and result['Sigma'][0] > 0.003) or
-            #         (rad == 'Rich2Gas' and result['Sigma'][0] > 0.001) ) :
-            #        print "Large fitted sigma, please check ? sigma =", result['Sigma'][0]
-            #        raw_input("Press any key to continue ...")
+                result['Message'] = "Histogram Fit Failed"
 
         # Close the rootfile
         rootfile.Close()
