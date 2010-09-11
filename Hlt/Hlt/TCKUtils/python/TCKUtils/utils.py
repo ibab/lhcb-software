@@ -219,18 +219,14 @@ def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
                 raise KeyError("Can only update configuration which use L0DUConfigProvider, not  %s" % cfg.type )
             #  check that all specified properties exist in cfg
             for (k,v) in l0config.iteritems() :
-                if k not in cfg.props :
-                    raise KeyError('Specified property %s not in store'%k)
-                print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
+                if k not in cfg.props : raise KeyError('Specified property %s not in store'%k)
+                #print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
                 mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
-    if extras :
-        for algname,props in extras.iteritems() :
+    if extra :
+        for algname,props in extra.iteritems() :
             for k,v in props.iteritems() : 
-                item = algname + '.' + k + ':' + v
-                print 'updating: ' + item
-                mods.push_back( item )
-
-    print 'requested update: %s ' % mods
+                mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
+    print 'updates: %s ' % mods
     newId = cte.updateAndWrite(id,mods,label)
     noderef = cas.readConfigTreeNode( newId )
     if not noderef : print 'oops, could not find node for %s ' % newId
@@ -501,8 +497,8 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
 
 def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
-def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc() ) :
-    return execInSandbox( _updateL0TCK, id, l0tck, label, cas )
+def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc(), extra = None ) :
+    return execInSandbox( _updateL0TCK, id, l0tck, label, cas = cas, extra = extra)
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
