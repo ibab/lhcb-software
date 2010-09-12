@@ -32,14 +32,14 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
                   
                   ,'SingleElectron_L0Req'   :  "L0_CHANNEL('Electron')"
-                  ,'SingleElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"   
+                  ,'SingleElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
                   ,'SingleElectron_PT'      :  3000.    # MeV
                   ,'SingleElectron_IP'      :     0.2   # mm
                   ,'SingleElectron_PIDe'    :     4.  
                   ,'SingleElectron_IPCHI2'  :    -1.    
 
                   ,'ElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
-                  ,'ElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"          
+                  ,'ElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"          
                   ,'ElectronPlusTrack_ElecPT'       : 1500.   # MeV
                   ,'ElectronPlusTrack_ElecIP'       :    0.2  # mm
                   ,'ElectronPlusTrack_ElecPIDe'     :    4. 
@@ -51,14 +51,14 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
                   
                   ,'SingleTFElectron_L0Req'   :  "L0_CHANNEL('Electron')"
-                  ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"   
+                  ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"   
                   ,'SingleTFElectron_PT'      :  3000.    # MeV
                   ,'SingleTFElectron_IP'      :     0.2   # mm
                   ,'SingleTFElectron_PIDe'    :     4.  
                   ,'SingleTFElectron_IPCHI2'  :    -1.    
 
                   ,'TFElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
-                  ,'TFElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"                     
+                  ,'TFElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"                     
                   ,'TFElectronPlusTrack_ElecPT'       : 1500.   # MeV
                   ,'TFElectronPlusTrack_ElecIP'       :    0.2  # mm
                   ,'TFElectronPlusTrack_ElecIPCHI2'   :   -1.
@@ -120,7 +120,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     )
         line = Hlt2Line( 'SingleHighPTElectron'
                          , prescale = self.prescale
-                         , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                         , L0DU = "L0_CHANNEL('Electron')"
+                         , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                          , algos = [ BiKalmanFittedElectrons, Hlt2SelSingleHighPTElectron]
                          , postscale = self.postscale
                          )
@@ -143,7 +144,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   )
         line1 = Hlt2Line( 'DYeh1'
                           , prescale = self.prescale
-                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                          , L0DU = "L0_CHANNEL('Electron')"
+                          , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                           , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY1]
                           , postscale = self.postscale
                           )
@@ -161,7 +163,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                   )
         line2 = Hlt2Line( 'DYeh2'
                           , prescale = self.prescale
-                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                          , L0DU = "L0_CHANNEL('Electron')"
+                          , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                           , algos = [BiKalmanFittedElectrons, NoCutsPions, combine_DY2]
                           , postscale = self.postscale
                           )

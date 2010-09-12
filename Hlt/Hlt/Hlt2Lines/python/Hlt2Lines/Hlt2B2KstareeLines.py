@@ -38,7 +38,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                 # L0 && Hlt1 requiremnets
                 #----------------------------
                 , 'L0Requirement'   :  "L0_CHANNEL('Electron')"
-                , 'Hlt1Requirement' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"
+                , 'Hlt1Requirement' :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
         
                 #----------------------------
                 # cuts for track unfitted
@@ -208,8 +208,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                   BiKalmanFittedPions,
                                   FittedKstar,
                                   CombineB ] 
-		      , postscale = self.postscale
-                      )
+                  , postscale = self.postscale
+                  )
 
         #----------------------------
         # Filtering signal
@@ -351,7 +351,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                   BiKalmanFittedPions,
                                   FittedKstar,
                                   CombineB ] 
-		      , postscale = self.postscale
+                 , postscale = self.postscale
  	             )
         
 

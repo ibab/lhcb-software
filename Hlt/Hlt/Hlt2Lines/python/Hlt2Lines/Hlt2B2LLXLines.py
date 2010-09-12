@@ -140,7 +140,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         line_M = Hlt2Line('Bu2eeK'
                           , prescale = self.prescale
-                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                          , L0DU = "L0_CHANNEL('Electron')"
+                          , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
 # OLD                         ,  algos = [ DiElectron, GoodKaons , combineB ]
                           ,  algos = [ PV3D(), 
                                        DiElectron,
@@ -158,7 +159,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         line_S = line_M.clone(   'Bu2eeKSignal'
                                  , prescale = self.prescale
-                                 , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                 , L0DU = "L0_CHANNEL('Electron')"
+                                 , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
 #                                 , EE = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites)
                                  , EE = { "CombinationCut" : "(AM<4*GeV)" } # don't change that (tightens combcut and hence overwrites)
                                  , Bu = { "CombinationCut" : combcut+" & (AM< %(SignalBUpperMass)s *MeV)" % self.getProps() }
@@ -172,7 +174,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         line_J = line_M.clone(   'Bu2eeKJpsi'
                                  , prescale = self.prescale
-                                 , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                 , L0DU = "L0_CHANNEL('Electron')"
+                                 , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                  , EE = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
                                  )
         ###########################################################################
@@ -183,7 +186,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         line_H = line_M.clone(   'Bu2eeKHighMass'
                                  , prescale = self.prescale
-                                 , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                 , L0DU = "L0_CHANNEL('Electron')"
+                                 , HLT = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                  , Bu = { "CombinationCut":"(AM> %(HighMassBLowerMass)s *MeV)" % self.getProps() }
                                  )
         ###########################################################################

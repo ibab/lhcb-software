@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-12 - Gerhard Raven
+ - replace TrackAllL0 with Track in patch below -- which, given that
+   there is an L0 filter in front, does the same thing
+ - make the same change to all other lines which has Hlt1.*Electron.*
+
 ! 2010-09-12 - Jibo He
  - Hlt2 electron lines 
    . Require 
@@ -15,7 +20,7 @@
      HLT  = "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"
      instead of 
      HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
-   . Put these requreiemtns in slots
+   . Put these requirements in slots
 
 !========================== Hlt2Lines v5r1p1 2010-09-10 ===================
 ! 2010-09-09 - Gerhard Raven

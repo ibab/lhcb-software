@@ -113,7 +113,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
                  # Bs->Jpsi(ee)Phi
                  , 'Bs2JpsieePhi_L0Req'               :  "L0_CHANNEL('Electron')"
-                 , 'Bs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
+                 , 'Bs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')" 
                  
                  , 'Bs2JpsieePhi_ElectronPT'          :  500.     # MeV
                  , 'Bs2JpsieePhi_ElectronMIPCHI2'     :    2.25   # adimensional
@@ -165,7 +165,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
                  # TrackFitted Bs->Jpsi(ee)Phi
                  , 'TFBs2JpsieePhi_L0Req'               :  "L0_CHANNEL('Electron')"
-                 , 'TFBs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
+                 , 'TFBs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')" 
 
                  , 'TFBs2JpsieePhi_ElectronPT'          :  500.      # MeV
                  , 'TFBs2JpsieePhi_ElectronMIPCHI2'     :    2.25    # adimensional

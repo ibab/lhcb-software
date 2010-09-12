@@ -65,7 +65,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    # Track un-fitted 
                    #-----------------
                    ,'UnbiasedDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
-                   ,'UnbiasedDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+                   ,'UnbiasedDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"  
 
                    # Di-Electron 
                    ,'UnbiasedDiElectron_MinMass'    : 2000.      # MeV
@@ -117,7 +117,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    # Track fitted 
                    #-----------------
                    ,'UnbiasedTFDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
-                   ,'UnbiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+                   ,'UnbiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"  
                    
                    # Di-Electron                   
                    ,'UnbiasedTFDiElectron_MinMass'    : 2000.      # MeV
@@ -169,7 +169,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    # Biased
                    #------------------
                    ,'BiasedDiElectron_L0Req'       :  "L0_CHANNEL('Electron')"
-                   ,'BiasedDiElectron_Hlt1Req'     :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
+                   ,'BiasedDiElectron_Hlt1Req'     :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')" 
                    ,'BiasedDiElectron_MinMass'     : 2000.      # MeV
                    ,'BiasedDiElectron_VtxCHI2'     :   25.
                    ,'BiasedDiElectron_PT'          : -999.      # MeV
@@ -231,7 +231,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    # Biased, Track fitted 
                    #------------------
                    ,'BiasedTFDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
-                   ,'BiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+                   ,'BiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"  
                    
                    ,'BiasedTFDiElectron_MinMass'     : 2000.      # MeV
                    ,'BiasedTFDiElectron_VtxCHI2'     :   25.
