@@ -110,7 +110,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'Bc2JpsiHPD_JpsiIPCHI2'          :   -1.   # adimentional, choose one  
                  , 'Bc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
                  , 'Bc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
+
                  # Bs->Jpsi(ee)Phi
+                 , 'Bs2JpsieePhi_L0Req'               :  "L0_CHANNEL('Electron')"
+                 , 'Bs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
+                 
                  , 'Bs2JpsieePhi_ElectronPT'          :  500.     # MeV
                  , 'Bs2JpsieePhi_ElectronMIPCHI2'     :    2.25   # adimensional
                  , 'Bs2JpsieePhi_JpsiVertexCHI2pDOF'  :   25.     # adimensional
@@ -158,7 +162,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'TFBc2JpsiHPD_JpsiIPCHI2'          :   -1.   # adimentional, choose one  
                  , 'TFBc2JpsiHPD_MuonIPCHI2'          :   -1.   # adimentional, choose one 
                  , 'TFBc2JpsiHPD_BcIPCHI2'            :   25.   # adimentional
+
                  # TrackFitted Bs->Jpsi(ee)Phi
+                 , 'TFBs2JpsieePhi_L0Req'               :  "L0_CHANNEL('Electron')"
+                 , 'TFBs2JpsieePhi_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
+
                  , 'TFBs2JpsieePhi_ElectronPT'          :  500.      # MeV
                  , 'TFBs2JpsieePhi_ElectronMIPCHI2'     :    2.25    # adimensional
                  , 'TFBs2JpsieePhi_JpsiVertexCHI2pDOF'  :   25.      # adimensional
@@ -316,6 +324,22 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsieePhiUnbiasedPTDecision" : self.getProp('HltANNSvcID')['Bs2JpsieePhiUnbiasedPT'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsieePhiSignalDecision" : self.getProp('HltANNSvcID')['Bs2JpsieePhiSignal'] } )
+
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req  = self.getProp("Bs2JpsieePhi_L0Req")
+        Hlt1Req = self.getProp("Bs2JpsieePhi_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None
+            
         
         # Electron Cuts
         ElCuts = "(PT > %(Bs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
@@ -365,6 +389,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         # Final Wide Selection
         line = Hlt2Line('Bs2JpsieePhiUnbiasedPT'
+                        , L0DU = L0Req
+                        , HLT  = Hlt1Req
                         , prescale = self.prescale
                         , algos = [Electrons, JpsiCombine, NoCutsKaons, PhiCombine, BsCombine]
                         , postscale = self.postscale
@@ -384,6 +410,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         line.clone('Bs2JpsieePhiSignal'
                    , prescale = self.prescale
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req
                    , algos = [ PV3D(), Bs2JpsieePhiUnbiased, FilterBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
@@ -411,6 +439,20 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFBs2JpsieePhiUnbiasedPTDecision" : self.getProp('HltANNSvcID')['TFBs2JpsieePhiUnbiasedPT'] } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFBs2JpsieePhiSignalDecision" : self.getProp('HltANNSvcID')['TFBs2JpsieePhiSignal'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("TFBs2JpsieePhi_L0Req")
+        Hlt1Req = self.getProp("TFBs2JpsieePhi_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None
 
         # Electron Cuts
         ElCuts = "(PT > %(TFBs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
@@ -459,7 +501,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # Final Wide Selection
         line = Hlt2Line('TFBs2JpsieePhiUnbiasedPT'
                         , prescale = self.prescale
-                        , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                        , L0DU = L0Req
+                        , HLT  = Hlt1Req
                         , algos = [BiKalmanFittedElectrons, JpsiCombine, BiKalmanFittedKaons, PhiCombine, BsCombine]
                         , postscale = self.postscale
                         )
@@ -479,7 +522,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line.clone('TFBs2JpsieePhiSignal'
                    , prescale = self.prescale
-                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req
                    , algos = [ PV3D(), TFBs2JpsieePhiUnbiased, FilterTFBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    

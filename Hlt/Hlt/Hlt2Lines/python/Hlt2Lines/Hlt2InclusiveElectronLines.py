@@ -30,11 +30,16 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'DYehDphiMin'             :     0      # radian                 
                   ,'DYehVertexChi2'          :    20      #
 
+                  
+                  ,'SingleElectron_L0Req'   :  "L0_CHANNEL('Electron')"
+                  ,'SingleElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"   
                   ,'SingleElectron_PT'      :  3000.    # MeV
                   ,'SingleElectron_IP'      :     0.2   # mm
                   ,'SingleElectron_PIDe'    :     4.  
                   ,'SingleElectron_IPCHI2'  :    -1.    
 
+                  ,'ElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
+                  ,'ElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"          
                   ,'ElectronPlusTrack_ElecPT'       : 1500.   # MeV
                   ,'ElectronPlusTrack_ElecIP'       :    0.2  # mm
                   ,'ElectronPlusTrack_ElecPIDe'     :    4. 
@@ -43,12 +48,17 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                   ,'ElectronPlusTrack_TrackIP'      :    0.2  # mm
                   ,'ElectronPlusTrack_TrackIPCHI2'  :   -1.
                   ,'ElectronPlusTrack_VtxCHI2'      :   25.
+
                   
+                  ,'SingleTFElectron_L0Req'   :  "L0_CHANNEL('Electron')"
+                  ,'SingleTFElectron_Hlt1Req' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"   
                   ,'SingleTFElectron_PT'      :  3000.    # MeV
                   ,'SingleTFElectron_IP'      :     0.2   # mm
                   ,'SingleTFElectron_PIDe'    :     4.  
                   ,'SingleTFElectron_IPCHI2'  :    -1.    
 
+                  ,'TFElectronPlusTrack_L0Req'        :  "L0_CHANNEL('Electron')"
+                  ,'TFElectronPlusTrack_Hlt1Req'      :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"                     
                   ,'TFElectronPlusTrack_ElecPT'       : 1500.   # MeV
                   ,'TFElectronPlusTrack_ElecIP'       :    0.2  # mm
                   ,'TFElectronPlusTrack_ElecIPCHI2'   :   -1.
@@ -235,7 +245,22 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
 
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleElectronDecision" :
-                                              self.getProp('HltANNSvcID')['SingleElectron'] } ) 
+                                              self.getProp('HltANNSvcID')['SingleElectron'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("SingleElectron_L0Req")
+        Hlt1Req = self.getProp("SingleElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None
+
 
 
         FilterSingleElectron = Hlt2Member( FilterDesktop # type
@@ -249,7 +274,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         SingleElectronLine = Hlt2Line("SingleElectron"
                                       , prescale = self.prescale
-                                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')" 
+                                      , L0DU = L0Req
+                                      , HLT  = Hlt1Req
                                       , algos = [ PV3D()
                                                   , Electrons
                                                   , FilterSingleElectron ]
@@ -274,7 +300,22 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
 
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2ElectronPlusTrackDecision" :
-                                              self.getProp('HltANNSvcID')['ElectronPlusTrack'] } ) 
+                                              self.getProp('HltANNSvcID')['ElectronPlusTrack'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("ElectronPlusTrack_L0Req")
+        Hlt1Req = self.getProp("ElectronPlusTrack_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None 
+        
         
         ElectronCut = "(PT > %(ElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(ElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(ElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(ElectronPlusTrack_ElecIPCHI2)s )" %self.getProps()
         
@@ -297,6 +338,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         ElectronPlusTrackLine = Hlt2Line("ElectronPlusTrack"
                                          , prescale = self.prescale
+                                         , L0DU = L0Req
+                                         , HLT  = Hlt1Req
                                          , algos = [ PV3D()
                                                      , Electrons
                                                      , NoCutsKaons
@@ -323,6 +366,21 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleTFElectronDecision" :
                                               self.getProp('HltANNSvcID')['SingleTFElectron'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("SingleTFElectron_L0Req")
+        Hlt1Req = self.getProp("SingleTFElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None 
+        
         
         FilterSingleTFElectron = Hlt2Member( FilterDesktop # type
                                              , "FilterSingleTFElectron" 
@@ -335,7 +393,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         SingleTFElectronLine = Hlt2Line("SingleTFElectron"
                                         , prescale = self.prescale
-                                        , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                        , L0DU = L0Req
+                                        , HLT = Hlt1Req
                                         , algos = [ PV3D()
                                                     , BiKalmanFittedElectrons
                                                     , FilterSingleTFElectron ]
@@ -360,7 +419,22 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
 
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFElectronPlusTrackDecision" :
-                                              self.getProp('HltANNSvcID')['TFElectronPlusTrack'] } ) 
+                                              self.getProp('HltANNSvcID')['TFElectronPlusTrack'] } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("TFElectronPlusTrack_L0Req")
+        Hlt1Req = self.getProp("TFElectronPlusTrack_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None 
+        
 
         ElectronCut = "(PT > %(TFElectronPlusTrack_ElecPT)s *MeV) & (PIDe > %(TFElectronPlusTrack_ElecPIDe)s ) & (MIPDV(PRIMARY) > %(TFElectronPlusTrack_ElecIP)s *mm) & (MIPCHI2DV(PRIMARY) > %(TFElectronPlusTrack_ElecIPCHI2)s )" %self.getProps()
         
@@ -383,7 +457,8 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         TFElectronPlusTrackLine = Hlt2Line("TFElectronPlusTrack"
                                            , prescale = self.prescale
-                                           , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                           , L0DU = L0Req
+                                           , HLT  = Hlt1Req 
                                            , algos = [ PV3D()
                                                        , BiKalmanFittedElectrons
                                                        , BiKalmanFittedKaons

@@ -32,7 +32,13 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                   ,'Hlt2B2KstareeFittedLargeBMassWindow'                 : 1.
                                   ,'Hlt2B2KstareeFittedLargeBMassWindowSignal'           : 1.                                     
 
-                                  }        
+                                  }
+                
+                #----------------------------
+                # L0 && Hlt1 requiremnets
+                #----------------------------
+                , 'L0Requirement'   :  "L0_CHANNEL('Electron')"
+                , 'Hlt1Requirement' :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"
         
                 #----------------------------
                 # cuts for track unfitted
@@ -98,7 +104,23 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedDecision"       : 55320 } )
   	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedSignalDecision" : 55321 } )
 	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowDecision"       : 55330 } )
-  	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignalDecision" : 55331 } )        
+  	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignalDecision" : 55331 } )
+
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req  = self.getProp("L0Requirement")
+        Hlt1Req = self.getProp("Hlt1Requirement")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None
+            
 	
 	##########################
 	
@@ -172,7 +194,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	#define the line
 	line=Hlt2Line('B2KstareeRobustAndFittedLargeBMassWindow'
 	              , prescale = self.prescale
-                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                      , L0DU = L0Req
+                      , HLT  = Hlt1Req
 		      , algos = [ Electrons,
                                   LowPtDiElectron,
                                   BiKalmanFittedElectrons,
@@ -201,7 +224,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeRobustAndFittedLargeBMassWindowSignal'
                    , prescale = self.prescale
-                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req
                    , algos = [ B2KstareeRobustAndFittedAll, FilterSignal ]
                    , postscale = self.postscale )  
 
@@ -219,7 +243,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone( 'B2KstareeRobustAndFitted'
                     , prescale = self.prescale
-                    , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                    , L0DU = L0Req
+                    , HLT  = Hlt1Req
                     , algos = [ B2KstareeRobustAndFittedAll, FilterB ]
                     , postscale = self.postscale )
 
@@ -235,7 +260,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeRobustAndFittedSignal'
                    , prescale = self.prescale
-                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req
                    , algos = [ B2KstareeRobustAndFittedAll, FilterSignalAndB ]
                    , postscale = self.postscale )
         
@@ -255,6 +281,21 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedSignalDecision"  : 55301 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedLargeBMassWindowDecision"        : 55310 } )  
 	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedLargeBMassWindowSignalDecision"  : 55311 } )
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req  = self.getProp("L0Requirement")
+        Hlt1Req = self.getProp("Hlt1Requirement")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None
+            
 	
 	##########################
 
@@ -300,7 +341,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	##########################
 	#define the line
 	line=Hlt2Line('B2KstareeFittedLargeBMassWindow'
-                      , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                      , L0DU = L0Req
+                      , HLT  = Hlt1Req
 	              , prescale = self.prescale
 		      , algos = [ BiKalmanFittedElectrons,
                                   PV3D(),
@@ -326,7 +368,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
         
         line.clone('B2KstareeFittedLargeBMassWindowSignal'
                    , prescale = self.prescale
-                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req
                    , algos = [ B2KstareeFittedAll, FilterSignal ]
                    , postscale = self.postscale )
 
@@ -344,7 +387,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone( 'B2KstareeFitted'
                     , prescale = self.prescale
-                    , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                    , L0DU = L0Req
+                    , HLT  = Hlt1Req 
                     , algos = [ B2KstareeFittedAll, FilterB ]
                     , postscale = self.postscale )
 
@@ -360,7 +404,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
         line.clone('B2KstareeFittedSignal'
                    , prescale = self.prescale
-                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                   , L0DU = L0Req
+                   , HLT  = Hlt1Req 
                    , algos = [ B2KstareeFittedAll, FilterSignalAndB ]
                    , postscale = self.postscale )
 	

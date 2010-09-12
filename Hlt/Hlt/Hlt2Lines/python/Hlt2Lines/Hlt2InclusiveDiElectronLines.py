@@ -64,6 +64,9 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    #-----------------
                    # Track un-fitted 
                    #-----------------
+                   ,'UnbiasedDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
+                   ,'UnbiasedDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+
                    # Di-Electron 
                    ,'UnbiasedDiElectron_MinMass'    : 2000.      # MeV
                    ,'UnbiasedDiElectron_VtxCHI2'    :   25.
@@ -113,7 +116,10 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    #-----------------
                    # Track fitted 
                    #-----------------
-                   # Di-Electron 
+                   ,'UnbiasedTFDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
+                   ,'UnbiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+                   
+                   # Di-Electron                   
                    ,'UnbiasedTFDiElectron_MinMass'    : 2000.      # MeV
                    ,'UnbiasedTFDiElectron_VtxCHI2'    :   25.
                    ,'UnbiasedTFDiElectron_PT'         : -999.      # MeV
@@ -162,6 +168,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    #------------------
                    # Biased
                    #------------------
+                   ,'BiasedDiElectron_L0Req'       :  "L0_CHANNEL('Electron')"
+                   ,'BiasedDiElectron_Hlt1Req'     :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')" 
                    ,'BiasedDiElectron_MinMass'     : 2000.      # MeV
                    ,'BiasedDiElectron_VtxCHI2'     :   25.
                    ,'BiasedDiElectron_PT'          : -999.      # MeV
@@ -222,6 +230,9 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                    #------------------
                    # Biased, Track fitted 
                    #------------------
+                   ,'BiasedTFDiElectron_L0Req'               :  "L0_CHANNEL('Electron')"
+                   ,'BiasedTFDiElectron_Hlt1Req'             :  "HLT_PASS_RE('Hlt1(TrackAllL0|.*Electron).*Decision')"  
+                   
                    ,'BiasedTFDiElectron_MinMass'     : 2000.      # MeV
                    ,'BiasedTFDiElectron_VtxCHI2'     :   25.
                    ,'BiasedTFDiElectron_PT'          : -999.      # MeV
@@ -555,6 +566,20 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.DiElectron import DiElectron
+
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("UnbiasedDiElectron_L0Req")
+        Hlt1Req = self.getProp("UnbiasedDiElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None
         
         #--------------------------------------------
         # Filter DiElectron
@@ -578,6 +603,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine = Hlt2Line("UnbiasedDiElectron"
                                           , prescale = self.prescale
+                                          , L0DU = L0Req
+                                          , HLT  = Hlt1Req
                                           , algos = [ DiElectron, FilterDiElectron ]
                                           , postscale = self.postscale
                                           )
@@ -589,6 +616,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedDiElectronLowMass"
                                      , prescale = self.prescale
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowMass_ElecPT)s *MeV)"\
@@ -608,6 +637,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedDiElectronLowPID"
                                      , prescale = self.prescale
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowPID_ElecPT)s *MeV)"\
@@ -626,6 +657,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedJpsi2ee"
                                      , prescale = self.prescale
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedJpsi2ee_ElecPT)s *MeV)"\
@@ -646,6 +679,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedPsi2ee"
                                      , prescale = self.prescale
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedPsi2ee_ElecPT)s *MeV)"\
@@ -667,6 +702,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedDiElectronLine.clone("UnbiasedB2ee"
                                      , prescale = self.prescale
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ DiElectron, FilterDiElectron ]
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedB2ee_ElecPT)s *MeV)"\
@@ -708,6 +745,21 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
 
 
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("UnbiasedTFDiElectron_L0Req")
+        Hlt1Req = self.getProp("UnbiasedTFDiElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None
+
+
         #--------------------------------------------
         # Filter TFDiElectron
         #--------------------------------------------
@@ -730,7 +782,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine = Hlt2Line("UnbiasedTFDiElectron"
                                             , prescale = self.prescale
-                                            , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                            , L0DU = L0Req
+                                            , HLT  = Hlt1Req
                                             , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                             , postscale = self.postscale
                                             )
@@ -743,7 +796,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine.clone("UnbiasedTFDiElectronLowMass"
                                        , prescale = self.prescale
-                                       , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                       , L0DU = L0Req
+                                       , HLT  = Hlt1Req
                                        , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowMass_ElecPT)s *MeV)"\
@@ -763,7 +817,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine.clone("UnbiasedTFDiElectronLowPID"
                                        , prescale = self.prescale
-                                       , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                       , L0DU = L0Req
+                                       , HLT  = Hlt1Req
                                        , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowPID_ElecPT)s *MeV)"\
@@ -783,7 +838,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine.clone("UnbiasedTFJpsi2ee"
                                        , prescale = self.prescale
-                                       , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                       , L0DU = L0Req
+                                       , HLT  = Hlt1Req
                                        , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFJpsi2ee_ElecPT)s *MeV)"\
@@ -804,7 +860,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine.clone("UnbiasedTFPsi2ee"
                                        , prescale = self.prescale
-                                       , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                       , L0DU = L0Req
+                                       , HLT  = Hlt1Req                                       
                                        , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFPsi2ee_ElecPT)s *MeV)"\
@@ -826,7 +883,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         UnbiasedTFDiElectronLine.clone("UnbiasedTFB2ee"
                                        , prescale = self.prescale
-                                       , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                       , L0DU = L0Req
+                                       , HLT  = Hlt1Req        
                                        , algos = [ TrackFittedDiElectron, FilterTFDiElectron ]
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFB2ee_ElecPT)s *MeV)"\
@@ -866,6 +924,22 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.DiElectron import DiElectron
         from HltTracking.HltPVs import PV3D
+
+        
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("BiasedDiElectron_L0Req")
+        Hlt1Req = self.getProp("BiasedDiElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+            
+        if not Hlt1Req:
+            Hlt1Req= None
+
         
         #--------------------------------------------
         # Filter Baised DiElectron
@@ -888,7 +962,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedDiElectronLine = Hlt2Line("BiasedDiElectron"
                                         , prescale = self.prescale
-                                        , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                        , L0DU = L0Req
+                                        , HLT  = Hlt1Req
                                         , algos = [ PV3D()
                                                     , DiElectron
                                                     , FilterBiasedDiElectron ]
@@ -902,7 +977,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedDiElectronLine.clone("BiasedDiElectronLowMass"
                                    , prescale = self.prescale
-                                   , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                   , L0DU = L0Req
+                                   , HLT  = Hlt1Req
                                    , algos = [ PV3D()
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
@@ -926,7 +1002,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------        
         BiasedDiElectronLine.clone("BiasedDiElectronLowPID"
                                    , prescale = self.prescale
-                                   
+                                   , L0DU = L0Req
+                                   , HLT  = Hlt1Req                                   
                                    , algos = [ PV3D()
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
@@ -949,6 +1026,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedDiElectronLine.clone("BiasedJpsi2ee"
                                    , prescale = self.prescale
+                                   , L0DU = L0Req
+                                   , HLT  = Hlt1Req                                           
                                    , algos = [ PV3D()
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
@@ -973,6 +1052,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedDiElectronLine.clone("BiasedPsi2ee"
                                    , prescale = self.prescale
+                                   , L0DU = L0Req
+                                   , HLT  = Hlt1Req        
                                    , algos = [ PV3D()
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
@@ -997,6 +1078,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedDiElectronLine.clone("BiasedB2ee"
                                    , prescale = self.prescale
+                                   , L0DU = L0Req
+                                   , HLT  = Hlt1Req        
                                    , algos = [ PV3D()
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
@@ -1040,6 +1123,21 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
         from HltTracking.HltPVs import PV3D
 
+        """
+        #------------------------
+        # L0 & Hlt1 Requirements
+        #------------------------ 
+        """
+        L0Req   = self.getProp("BiasedTFDiElectron_L0Req")
+        Hlt1Req = self.getProp("BiasedTFDiElectron_Hlt1Req")
+        
+        if not L0Req:
+            L0Req = None
+
+        if not Hlt1Req:
+            Hlt1Req= None
+
+
         #--------------------------------------------
         # Filter baised track fitted DiElectron
         #--------------------------------------------
@@ -1061,7 +1159,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine = Hlt2Line("BiasedTFDiElectron"
                                           , prescale = self.prescale
-                                          , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                          , L0DU = L0Req
+                                          , HLT  = Hlt1Req
                                           , algos = [ PV3D()
                                                       , TrackFittedDiElectron
                                                       , FilterBiasedTFDiElectron ]
@@ -1075,7 +1174,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine.clone("BiasedTFDiElectronLowMass"
                                      , prescale = self.prescale
-                                     , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ PV3D()
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
@@ -1099,7 +1199,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine.clone("BiasedTFDiElectronLowPID"
                                      , prescale = self.prescale
-                                     , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ PV3D()
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
@@ -1123,7 +1224,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine.clone("BiasedTFJpsi2ee"
                                      , prescale = self.prescale
-                                     , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ PV3D()
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
@@ -1148,7 +1250,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine.clone("BiasedTFPsi2ee"
                                      , prescale = self.prescale
-                                     , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ PV3D()
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
@@ -1173,7 +1276,8 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         BiasedTFDiElectronLine.clone("BiasedTFB2ee"
                                      , prescale = self.prescale
-                                     , HLT = "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                                     , L0DU = L0Req
+                                     , HLT  = Hlt1Req
                                      , algos = [ PV3D()
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
