@@ -53,7 +53,7 @@ class Summary(VTree):
     #__count_dict__={}
     #a dictionary of name:object
     #__file_dict__={}
-    def __init__ ( self, schemafile=__default_schema__ ) :
+    def __init__ ( self, schemafile=__default_schema__, construct_default=True ) :
         """ Constructor. Variables in schemafile are expanded """
         if 'Schema' not in str(type(schemafile)):
             #print str(type(schemafile))
@@ -61,14 +61,17 @@ class Summary(VTree):
             self.__schema__=Schema(schemafile)
         else:
             self.__schema__=schemafile
-        self.__element__=self.__schema__.create_default(self.__schema__.root()).__element__
+        if construct_default:
+            self.__element__=self.__schema__.create_default(self.__schema__.root()).__element__
+        else:
+            self.__element__=None
         self.__count_dict__={}
         for mother in self.__schema__.Tag_mothers(__count_tag__):
             self.__count_dict__[mother]={}
         self.__file_dict__={}
         for mother in self.__schema__.Tag_mothers(__file_tag__):
             self.__file_dict__[mother]={}
-        VTree.__init__(self,self.__element__,self.__schema__,False)
+        VTree.__init__(self,element=self.__element__,schema=self.__schema__,mother=None,check=False)
 
     def __file_exists__(self, GUID, filename, isOutput=False):
         '''internal method, return the file if it already exists'''
@@ -78,9 +81,9 @@ class Summary(VTree):
         if isOutput: mother=mothers[1]
         
         #if it exists, return it
-        if (GUID is not None) and (GUID in self.__file_dict__[mother].keys()):
+        if (GUID is not None) and (GUID in self.__file_dict__[mother]):
             return self.__file_dict__[mother][GUID]
-        elif (filename is not None) and (filename in self.__file_dict__[mother].keys()):
+        elif (filename is not None) and (filename in self.__file_dict__[mother]):
             return self.__file_dict__[mother][filename]
         
         return None
@@ -298,7 +301,7 @@ class Summary(VTree):
         #check if it exists. If not, just add it
         #print self.__count_dict__
         #print self.__count_dict__[mother]
-        if name not in self.__count_dict__[mother].keys():
+        if name not in self.__count_dict__[mother]:
             counters=VTree([bt for bt in self.__element__.getchildren() if mother in bt.tag][0],self.__schema__,self,False)
             #counter=counter.clone()
             counters.__append_element__(counter)
@@ -395,9 +398,11 @@ def Merge(summaries, schema=__default_schema__):
         raise TypeError, 'you should send a list into the merger, I got a ' + str(type(summaries)) + ' object instead'
     sum_objects=[]
     if type("")==type(summaries[0]):
+        if type("")==type(schema):
+            schema=Schema(schema)
         for asummary in summaries:
             #print asummary
-            sum_object=Summary(schema)
+            sum_object=Summary(schema,construct_default=False)
             sum_object.parse(asummary)
             #print sum_object
             sum_objects.append(sum_object)
@@ -464,22 +469,22 @@ def Merge(summaries, schema=__default_schema__):
             #print 'counter'
             #print cnt
             name=cnt.__element__.attrib['name']
-            if name not in counters.keys():
+            if name not in counters:
                 counters[name]=int(cnt.__element__.text)
             else:
                 counters[name]=(counters[name]+int(cnt.__element__.text))
-            #if name not in merged.__count_dict__['counters'].keys():
+            #if name not in merged.__count_dict__['counters']:
             #    cnt=cnt.clone()
             #merged.fill_VTree_counter(cnt)
         #merge counters
         #print 'lumiCounters'
         for cnt in asummary.children('lumiCounters')[0].children(__count_tag__):
             name=cnt.__element__.attrib['name']
-            if name not in merged.__count_dict__['lumiCounters'].keys():
+            if name not in merged.__count_dict__['lumiCounters']:
                 cnt=cnt.clone()
             merged.fill_VTree_counter(cnt,isLumi=True)
     #merge collected counters
-    for c in counters.keys():
+    for c in counters:
         merged.fill_counter(c,counters[c])
     #print 'merge statCounters'
     for asummary in sum_objects:

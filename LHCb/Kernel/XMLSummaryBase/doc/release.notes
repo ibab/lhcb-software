@@ -4,7 +4,11 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
-
+! 2010-09-12 - Rob Lambert
+ - Stop constructing lists of keys from dictionaries, where for i in dict
+   works just as well
+ - Only parse the schema once in the merging step
+ - benchmark 60 files with 3000 counters constructs in 12s, merge in 3s
 
 ! 2010-08-02 - Nicolas Cousin
  - Added __insert_element__ and __remove_element__ methods
