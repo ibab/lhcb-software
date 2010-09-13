@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r8 2010-09-13 ============================
+! 2010-09-13 - Gloria CORTI
+ - Use latest SIMCOND tags for DEV for 2010 data
+   . options/Gauss-DEV.py
+ - Use latest ParamFiles v8r3
+ - Increase major version of DecFiles (v22r*) as to take latest features
+   automatically
+
 ! 2010-09-08 - Silvia Miglioranzi
  - Updated ref files (platforms slc5, slc5 dbg, slc4 64 dbg,slc4 32 dbg) for  
    all the QMTests in the Gauss suite.
