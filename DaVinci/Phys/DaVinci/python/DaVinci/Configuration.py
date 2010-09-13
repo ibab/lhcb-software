@@ -431,8 +431,8 @@ class DaVinci(LHCbConfigurableUser) :
     def _hltCondDBHack(self) :
         cdb = self.getProp("CondDBtag")
         if not isNewCondDBTag(cdb) :
-            if cdb = '' : cdb = 'default'
-            log.warning('CondDB '+ cdb + ' tag considered old. Setting HltReferenceRateSvc().UseCondDB = False')
+            if cdb == '' : cdb = 'default'
+            log.info('CondDB '+ cdb + ' tag considered old. Setting HltReferenceRateSvc().UseCondDB = False')
             from Configurables import HltReferenceRateSvc
             HltReferenceRateSvc().UseCondDB = False
         else :
