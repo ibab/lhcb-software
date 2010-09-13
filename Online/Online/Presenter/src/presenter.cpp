@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.81 2010-09-03 12:18:35 frankb Exp $
+// $Id: presenter.cpp,v 1.82 2010-09-13 22:01:25 robbep Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -155,6 +155,8 @@ int main(int argc, char* argv[]) {
       ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
       ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
+      // To open a ROOT file at startup. Set also mode to history to load histo
+      // from files.
       ("saveset-file,f", value<std::string>()->default_value("") , "saveset file to open" )
       ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
       ("databases,d", value<std::string>()->default_value(s_histdb),"known databases")
@@ -363,6 +365,9 @@ int main(int argc, char* argv[]) {
 
     if ( savesetFile != "" ) {
       presenterMainFrame.setSavesetFileName( savesetFile ) ;
+      std::vector<std::string> startupHistograms ;
+      startupHistograms.push_back( savesetFile ) ;
+      presenterMainFrame.setStartupHistograms( startupHistograms ) ;
       presenterMainFrame.refreshHistogramSvcList( pres::s_withTree ) ;
     } 
 
@@ -372,7 +377,6 @@ int main(int argc, char* argv[]) {
 						 savesetFile ) ;
     }
     
-
     if (startupSettings.count("image-path")) {
       if (!exists(path( startupSettings["image-path"].as<std::string>() ))) {
         std::cout << "error: image-path doesn't exist" << std::endl;

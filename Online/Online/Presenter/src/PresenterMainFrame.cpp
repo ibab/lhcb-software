@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.335 2010-09-13 16:49:20 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.336 2010-09-13 22:01:25 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1508,13 +1508,12 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case M_LoadPage_COMMAND:
   case M_LAST_1_HOURS:
   case M_LAST_8_HOURS:
-  case M_Last_File: {
+  case M_Last_File: 
     m_previousIntervalButton->SetState(kButtonDisabled);
     m_nextIntervalButton->SetState(kButtonDisabled);
     m_currentPageName = selectedPageFromDbTree();
     if (!m_currentPageName.empty() && ( ! m_loadingPage ) ) 
-      loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
-  }
+      loadSelectedPageFromDB( m_currentPageName , pres::s_startupFile , m_savesetFileName ) ;
     break;
   case M_File_Picker: {
     TGFileInfo fileInfo;
@@ -1929,31 +1928,32 @@ void PresenterMainFrame::reportToLog() {
     }
     remove( pageName.Data() ); // delete temporary file.
   }
-  if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }
-
+  if ( m_resumePageRefreshAfterLoading ) startPageRefresh() ;
 }
 
+//==========================================================================================
 // below is either HISTO DIM sevices, or a ROOT filename
-void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & histogramList) {
-  std::vector<std::string>::const_iterator histogramListIt;
-  histogramListIt = histogramList.begin();
-  while (histogramListIt != histogramList.end()) {
-    TString inputParamTS = TString(*histogramListIt);
-    if (inputParamTS.EndsWith( pres::s_rootFileExtension.c_str())) {
-      m_savesetFileName = *histogramListIt;
-      setStatusBarText(m_savesetFileName.c_str(),2);
-      m_historyIntervalComboBox->Select(M_Last_File, false);
-
+// Open ROOT file at startup
+//==========================================================================================
+void PresenterMainFrame::setStartupHistograms(const std::vector< std::string > & 
+					      histogramList) {
+  std::vector< std::string >::const_iterator histogramListIt ;
+  
+  for ( histogramListIt = histogramList.begin() ; 
+	histogramListIt != histogramList.end() ; ++histogramListIt ) {
+    TString inputParamTS = TString( *histogramListIt ) ;
+    if ( inputParamTS.EndsWith( pres::s_rootFileExtension.c_str() ) ) {
+      m_savesetFileName = *histogramListIt ;
+      setStatusBarText( m_savesetFileName.c_str() , 2 ) ;
+      m_historyIntervalComboBox -> Select( M_Last_File , false ) ;
     } else {
-      HistogramIdentifier histogram = HistogramIdentifier(*histogramListIt);
-      if (histogram.isDimFormat()) {
+      HistogramIdentifier histogram = HistogramIdentifier( *histogramListIt ) ;
+      if (histogram.isDimFormat()) 
         addHistoToPage(*histogramListIt, pres::separate);
-      }
     }
-    histogramListIt++;
   }
 
-  if ( pres::Batch != presenterMode()) autoCanvasLayout();
+  if ( pres::Batch != presenterMode() ) autoCanvasLayout();
 }
 
 //==========================================================================================
@@ -2399,13 +2399,10 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
                                        m_histogramIdItem->GetName()))) {
           m_histogramNode = listView->FindChildByName(m_histogramNode,
                                                       m_histogramIdItem->GetName());
-        } else {
-
-
-
+        } else 
           m_histogramNode = listView->AddItem(m_histogramNode,
                                               m_histogramIdItem->GetName());
-        }
+
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
         m_histogramNode->SetUserData(0);
@@ -3410,39 +3407,51 @@ void PresenterMainFrame::clickedHistoDBTreeItem(TGListTreeItem* node,
 //============================================================================================
 // call back function when page tree clicked
 //============================================================================================
-void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
-                                             EMouseButton btn, int x, int y) {
-  if ((0 != node) && (kButton3 == btn)) m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
-  else if ( ( kButton1 == btn) && (0 != node) && ( 0 == node->GetFirstChild()) &&
+void PresenterMainFrame::clickedPageTreeItem( TGListTreeItem* node,
+                                              EMouseButton btn , int x , 
+					      int y ) {
+  if ( ( 0 != node ) && ( kButton3 == btn ) ) 
+    m_pagesContextMenu -> PlaceMenu( x , y , 1 , 1 ) ;
+  else if ( ( kButton1 == btn ) && ( 0 != node ) && 
+	    ( 0 == node->GetFirstChild()) &&
 	    ( (pres::EditorOnline != presenterMode() ) || 
 	      (pres::EditorOffline != presenterMode() ) ) ) {
     m_currentPageName = selectedPageFromDbTree();
-    if (!m_currentPageName.empty() && (! m_loadingPage)) {
-      loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
-
+    if ( !m_currentPageName.empty() && ( ! m_loadingPage ) ) {
+      fillGroupPages( node ) ;
+      loadSelectedPageFromDB( m_currentPageName, pres::s_startupFile , 
+			      m_savesetFileName ) ;
+      
       //== Store the siblings to have group navigation by prev/next pages
       m_alarmPages.clear();
-      m_groupPages.clear();
-      TGListTreeItem* temp = node;
-      while ( 0 != temp->GetPrevSibling() ) temp = temp->GetPrevSibling();
-      while ( 0 != temp ) {
-        if ( 0 == temp->GetFirstChild() ) {  //== pages without children only!
-          TString newPageName  = (*static_cast<TObjString*>(temp->GetUserData())).GetString();
-          if (newPageName.BeginsWith( pres::s_FILE_URI ) )
-	    newPageName.Remove(0, pres::s_FILE_URI.length( ) ) ;
-          std::string name( newPageName );
-          m_groupPages.push_back( name );
-        }
-        temp = temp->GetNextSibling();
-      }
-      //== get iterator to point to the current page
-      m_groupPagesIt = m_groupPages.begin();
-      while ( m_groupPagesIt != m_groupPages.end() &&
-              *m_groupPagesIt != m_currentPageName ) {
-        m_groupPagesIt++;
-      }
     }
   }
+}
+
+//============================================================================================
+// Fill vector of group pages for page navigation
+//============================================================================================
+void PresenterMainFrame::fillGroupPages( TGListTreeItem * node ) {
+  m_groupPages.clear();
+  TGListTreeItem* temp = node;
+  while ( 0 != temp -> GetPrevSibling() ) temp = temp -> GetPrevSibling() ;
+  while ( 0 != temp ) {
+    //== pages without children only!
+    if ( 0 == temp->GetFirstChild() ) {  
+      TString newPageName = 
+	(*static_cast< TObjString* >( temp->GetUserData() )).GetString();
+      if (newPageName.BeginsWith( pres::s_FILE_URI ) )
+	newPageName.Remove( 0 , pres::s_FILE_URI.length( ) ) ;
+      std::string name( newPageName );
+      m_groupPages.push_back( name );
+    }
+    temp = temp->GetNextSibling();
+  }
+
+  //== get iterator to point to the current page
+  for ( m_groupPagesIt = m_groupPages.begin() ; 
+	m_groupPagesIt != m_groupPages.end() ; ++m_groupPagesIt )
+    if ( *m_groupPagesIt == m_currentPageName ) break ;
 }
 
 //============================================================================================
@@ -4124,20 +4133,21 @@ void PresenterMainFrame::loadPreviousPage() {
 // Load next page -- handle click on "next page" button
 //=====================================================================================
 void PresenterMainFrame::loadNextPage() {
-  if ( ! m_loadingPage) {
-    if ( ! m_groupPages.empty() ) {
-      m_groupPagesIt++;
-      if ( m_groupPagesIt == m_groupPages.end() ) m_groupPagesIt = m_groupPages.begin();
-      if ( ! (*m_groupPagesIt).empty() ) {
-        m_currentPageName = *m_groupPagesIt;
-	openHistogramTreeAt( m_currentPageName ) ;
-        loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
-      }
-    } else if ( ! m_alarmPages.empty() ) {
-      m_alarmPagesIt++;
-      if ( m_alarmPagesIt == m_alarmPages.end() )  m_alarmPagesIt = m_alarmPages.begin();
-      if ( m_alarmDisplay ) m_alarmDisplay->loadSelectedAlarmFromDB( *m_alarmPagesIt );
+  if ( m_loadingPage ) return ;
+
+  if ( ! m_groupPages.empty() ) {
+    m_groupPagesIt++;
+    if ( m_groupPagesIt == m_groupPages.end() ) m_groupPagesIt = m_groupPages.begin();
+    if ( ! (*m_groupPagesIt).empty() ) {
+      m_currentPageName = *m_groupPagesIt;
+      openHistogramTreeAt( m_currentPageName ) ;
+      loadSelectedPageFromDB( m_currentPageName , pres::s_startupFile , 
+			      m_savesetFileName ) ;
     }
+  } else if ( ! m_alarmPages.empty() ) {
+    m_alarmPagesIt++;
+    if ( m_alarmPagesIt == m_alarmPages.end() )  m_alarmPagesIt = m_alarmPages.begin();
+    if ( m_alarmDisplay ) m_alarmDisplay->loadSelectedAlarmFromDB( *m_alarmPagesIt );
   }
 }
 
@@ -4148,7 +4158,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
                                                 const std::string & pastDuration ) {
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
-    openHistogramTreeAt( pageName ) ;
+    TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
+    if ( m_groupPages.empty() ) fillGroupPages( node ) ;
     m_loadingPage = true;
     gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     if (m_refreshingPage) {
@@ -5276,7 +5287,7 @@ void PresenterMainFrame::switchToRunNavigation( bool ok ) {
 // Name in the tree would be: /HISTDB/L0DU/BCId
 // if pageName is empty, only open first level "HISTDB"
 //===========================================================================
-void PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
+TGListTreeItem * PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
   TGListTreeItem * node = 0 ;
 
   std::string path = "/HISTDB" ;
@@ -5307,6 +5318,8 @@ void PresenterMainFrame::openHistogramTreeAt( const std::string & pageName ) {
 
   m_pagesFromHistoDBListTree -> Resize() ;
   DoRedraw() ;
+
+  return node ;
 }
 
 //===========================================================================

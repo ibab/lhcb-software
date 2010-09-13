@@ -717,7 +717,7 @@ public:
   void switchToRunNavigation( bool on ) ;
 
   /// Open and select the given page in the histogram tree
-  void openHistogramTreeAt( const std::string & pageName ) ; 
+  TGListTreeItem * openHistogramTreeAt( const std::string & pageName ) ; 
 
   /// Delete the node and all its children
   void deleteTreeChildrenItemsUserData(TGListTreeItem* node);
@@ -725,6 +725,8 @@ public:
   /// Delete recursively the children of this node
   void deleteTreeChildrenItemsUserDataChildren(TGListTreeItem* node);
 
+  /// Fill vector of page names for page navigation
+  void fillGroupPages( TGListTreeItem * node ) ;
 
   /// is in batch mode
   bool isBatch( ) const { return ( pres::Batch == presenterMode() ) ; } ;
