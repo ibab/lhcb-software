@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v26r1>2010-09-13 DaVinci v26r1. Version with latest HLT. Equivalent to Reco06-Strippins10 version.</A></H1><PRE>
+
+  * Identical to v26r0 but uses HLT v11r1.
+
 </PRE><H1><A NAME=v26r0>2010-09-08 DaVinci v26r0. Version for Reco06-Stripping10 .</A></H1><PRE>
 
   * Based on LHCb v31r5 software stack.
