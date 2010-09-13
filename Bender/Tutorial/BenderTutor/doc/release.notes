@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.15 2009-11-16 16:38:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2010-09-13 13:24:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,11 @@
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Start-Up tutorial for Bender 
 ! -----------------------------------------------------------------------------
+
+
+
+! 2010-09-13 - Vanya Belyaev
+ - update for Bender v15r0 
 
 
 ! ======================== BenderTutor v12r4 2009-11-16 =======================
@@ -100,6 +105,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2009/11/16 16:38:26  ibelyaev
+!   update for v14r4
+!
 ! Revision 1.14  2009/06/18 12:46:20  ibelyaev
 !  v12r1
 !

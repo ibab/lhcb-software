@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.22 2009-11-16 16:38:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2010-09-13 13:24:03 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2004-10-11	
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           BenderTutor
-version           v12r4
+version           v15r0
 
 # =============== structure ==================================================
 branches          cmt doc python solution 
