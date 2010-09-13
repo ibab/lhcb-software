@@ -100,8 +100,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
 
-        if selMode == "Wide" :
-            
+        elif selMode == "Wide" :
+
             # ================================================================
             # Photon Predictor cuts
             # ================================================================
@@ -125,7 +125,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # ================================================================
         
         elif selMode == "Loose" :
-            
+
             # ================================================================
             # Photon Predictor cuts
             # ================================================================
