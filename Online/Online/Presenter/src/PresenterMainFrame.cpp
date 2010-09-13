@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.336 2010-09-13 22:01:25 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.337 2010-09-13 22:32:23 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -5247,17 +5247,18 @@ void PresenterMainFrame::displayStatusAndComments( const std::string & pageName 
   if ( ! isBatch() )
     // UPdate the page name in the status bar.
     m_statusBarTop -> SetText( pageName.c_str(), 1 ) ;
-  
-  // Load first description
+
+  // Reload page in db in case of automatic changes (in the comments for 
+  // example)
+  page -> load() ;
   m_pageDescriptionView->Clear();
-  m_pageDescription = page->doc();
   
   // If this is a Shift page, prepend to the page description
   // the related list of problems from the ProblemDB
   if ( "/Shift" == page -> folder() )
     m_pageDescriptionView -> retrieveListOfProblems( page -> name() ) ;
   
-  m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
+  m_pageDescriptionView->LoadBuffer( page->doc().c_str());
   m_pageDescriptionView->DataChanged() ;
 }
 

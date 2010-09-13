@@ -495,7 +495,6 @@ public:
 
   std::string  m_currentPageHistogramHelp;
   PageDescriptionTextView*  m_pageDescriptionView;
-  std::string  m_pageDescription;
 
   // File menu
   TGToolBar*    m_toolBar;
