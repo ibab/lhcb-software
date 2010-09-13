@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-09-13 - Patrick Robbe
+ - PresenterMainFrame.cpp: change "DataQuality" to "OfflineDataQuality" for
+   folder name for data quality logbook entries.
+
 ! 2010-08-23 - Olivier Callot
  - Add the crypto.c code of Elog (with minor changes to allow silent compilation)
    into Elog.cpp to cope with Elog 2.8 to be released soon.

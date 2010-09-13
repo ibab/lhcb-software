@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.334 2010-09-07 15:49:22 frankb Exp $
+// $Id: PresenterMainFrame.cpp,v 1.335 2010-09-13 16:49:20 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1865,9 +1865,9 @@ void PresenterMainFrame::reportToLog() {
       if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
         system   = m_currentPageName.substr( 7 );
         system   = system.substr( 0, system.find( ':' ));
-      } else if ( "/DataQuality/" == m_currentPageName.substr(0, 13) ) {
+      } else if ( "/OfflineDataQuality/" == m_currentPageName.substr(0, 20) ) {
         username =  shiftdb.getDQPiquet().c_str();
-        system   = m_currentPageName.substr( 13 );
+        system   = m_currentPageName.substr( 20 );
         system   = system.substr( 0, system.find( ':' ));
       }
       subject = "-none-";
