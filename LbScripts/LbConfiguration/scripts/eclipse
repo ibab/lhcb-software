@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ECLIPSE_VERSION="v3r6"
+ECLIPSE_VERSION="prod"
 #ECLIPSE_VERSION="-v $(getExtVersion eclipse)"
 
 while [ $# -ne 0 ] ; do
