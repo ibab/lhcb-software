@@ -71,7 +71,8 @@ double L0CondDBProvider::scale(unsigned int base ){
   if( L0DUBase::Type::Digit   == base)return 1;
   if( L0DUBase::Type::CaloEt  == base)return caloEtScale();
   if( L0DUBase::Type::MuonPt  == base)return muonPtScale();
-  error() << "No defined type for " << base << endmsg;
+  Error("Unknown scale type", StatusCode::SUCCESS).ignore();
+  counter("Unknown scale type")+=1;
   return 0.;
 }
 
@@ -80,13 +81,15 @@ double L0CondDBProvider::caloEtScale(){
   m_gain = m_ecal->condition( "Gain" );
   double caloEtScale = 0.0;
   if ( 0 == m_gain ){
-    error() << "Condition 'Gain' not found in Ecal"  << endmsg;
+    Error("Condition 'Gain' not found in Ecal",StatusCode::SUCCESS).ignore();
+    counter("'Gain' condition not found for Ecal")+=1;
     return 0.0;
   }
   if ( m_gain->exists( "L0EtBin" ) ) {
     caloEtScale = m_gain->paramAsDouble( "L0EtBin" ) ;
   } else {
-    error() << "Parameter 'L0EtBin' not found in Ecal 'Gain'" << endmsg;
+    Error("Parameter 'L0EtBin' not found in Ecal 'Gain'",StatusCode::SUCCESS).ignore();
+    counter("'L0EtBin' parameter not found in 'Gain' condition")+=1;
   }
   debug() << "CaloEt scale set to " << caloEtScale << " MeV" << endmsg;
   return caloEtScale;

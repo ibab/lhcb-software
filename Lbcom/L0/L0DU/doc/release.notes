@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2010-09-13 Olivier Deschamps
+  - L0CondDBProvider : reduced verbosity
+
 !========================== L0DU v10r8 2010-06-21 =========================
 ! 2010-05-26 Olivier Deschamps
   - L0Filter : fix doxygen documentation
