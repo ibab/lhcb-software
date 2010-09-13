@@ -33,4 +33,5 @@ apply_pattern QMTestSummarize
 # ==================== private test application =============================
 application  Gaudi              "../main/*.cpp"
 macro_append Gaudi_dependencies " GaudiOnline "
+macro_append Gaudi_use_linkopts "" target-icc " -Wl,--no-as-needed "
 apply_pattern application_path
