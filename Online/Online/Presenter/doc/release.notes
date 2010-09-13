@@ -10,6 +10,8 @@
        quality logbook entries.
      * open saveset-file in history mode at startup when option is given in 
        option file
+     * reload page from hist db each time a page is displayed. This will allow
+       to have automatically updated comments for example.
 
 ! 2010-08-23 - Olivier Callot
  - Add the crypto.c code of Elog (with minor changes to allow silent compilation)
