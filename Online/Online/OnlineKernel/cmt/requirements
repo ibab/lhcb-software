@@ -52,3 +52,7 @@ macro_append  cppflags     " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-lon
 
 macro_append  cppflags     "" \
 	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
+
+macro_append test_use_linkopts           "" target-icc " -Wl,--no-as-needed "
+macro_append gentest_use_linkopts        "" target-icc " -Wl,--no-as-needed "
+macro_append mbm_remove_use_linkopts     "" target-icc " -Wl,--no-as-needed "
