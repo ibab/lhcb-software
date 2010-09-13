@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.132 2010-09-13 13:40:25 ibelyaev Exp $ 
+# $Id: requirements,v 1.133 2010-09-13 13:44:11 ibelyaev Exp $ 
 # =============================================================================
 # $URL 
 # =============================================================================
@@ -7,7 +7,7 @@
 #
 #                 LHCb Physics Analysis with Python  
 #
-# Last modification $Date: 2010-09-13 13:40:25 $
+# Last modification $Date: 2010-09-13 13:44:11 $
 #                by $Author: ibelyaev $
 # =============================================================================
 package       BenderSys
@@ -16,7 +16,7 @@ version       v15r0
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v15r9  Phys 
+use           Bender         v15r0  Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v15r0  Ex
@@ -25,7 +25,7 @@ use           BenderExample  v15r0  Ex
 use           BenderTutor    v15r0  Tutorial
 
 # =========== template of user module/scriot ==================================
-use           BenderUser     v15p0  Phys 
+use           BenderUser     v15r0  Phys 
 
 # Declare this as a container package
 apply_pattern container_package
