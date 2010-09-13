@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: SelectK0S_1.py,v 1.1 2010-09-10 09:33:33 ibelyaev Exp $ 
+# $Id: SelectK0S_1.py,v 1.2 2010-09-13 13:24:05 ibelyaev Exp $ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
-## @file solutions/SelectK0S_1.py
+## @file solution/SelectK0S_1.py
 #
 #  Simple example that illustrates the selection of K0S from stripped DSTs
 #  The example reuses the same algorithm, but apply EventPreFilters
@@ -27,7 +27,7 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-12
 #
-#  Last modification $Date: 2010-09-10 09:33:33 $
+#  Last modification $Date: 2010-09-13 13:24:05 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
@@ -35,25 +35,24 @@ Simple example that illustrates the selection of K0S from stripped DSTs
 The example reuses the same algorithm, but apply EventPreFilters
 
 This file is a part of BENDER project:
-``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+    ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
-The project has been designed with the kind help from
-Pere MATO and Andrey TSAREGORODTSEV. 
+The project has been designed with the kind help from Pere MATO and Andrey TSAREGORODTSEV. 
 
-And it is based on the 
-LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+And it is based on the LoKi project:
+    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
 with the campain of Dr.O.Callot et al.: 
-``No Vanya's lines are allowed in LHCb/Gaudi software.''
+    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-09-10 09:33:33 $
+Last modification $Date: 2010-09-13 13:24:05 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision: 1.1 $ "
+__version__ = " Version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
@@ -119,9 +118,10 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007577/0000/00007577_000000%02d_1.v0.dst' % n for n in range ( 4 , 15 ) 
+        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/V0.DST
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007551/0000/00007551_00000%03d_1.v0.dst' % i for i in range ( 1 , 691 )
         ]
-    
+        
     configure( inputdata )
     
     ## event loop 

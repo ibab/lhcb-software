@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.5 2010-03-14 17:34:34 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.6 2010-09-13 13:27:52 ibelyaev Exp $ 
+# =============================================================================
+# $URL$ 
 # =============================================================================
 ## @file
 #  This a template file for the Bender-based scriopt/module
@@ -21,9 +23,11 @@
 #  with the campain of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
-#
 #  @author ...
 #  @date   ...
+#
+#  Last modified $Date: 2010-09-13 13:27:52 $
+#             by $Author: ibelyaev $
 # =============================================================================
 """
 This a template file for the Bender-based scriopt/module
@@ -41,16 +45,20 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+  Last modified $Date: 2010-09-13 13:27:52 $
+             by $Author: ibelyaev $
 """
 # =============================================================================
-__author__  = " Do not forget your name here "
-__date__    = " 20??-??-?? " 
-__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $"
+__author__  = "Do not forget your name here"
+__date__    = "20??-??-?? " 
+__verison__ = "Verison $Revision: 1.6 $"
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
 # =============================================================================
 ## @class Template
+#  @author The Author 
+#  @date   ????-??-??
 class Tempate(AlgoMC) :
     """
     This is the template algorithm 
@@ -77,15 +85,9 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     DaVinci (
-        DataType   = '2009' , 
+        DataType   = '2010' , 
         Simulation = False  ) 
     
-    from Gaudi.Configuration import HistogramPersistencySvc
-    HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
-    
-    from Gaudi.Configuration import NTupleSvc
-    NTupleSvc ( Output = [ "FILE1 DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
-   
 
     ## define/set the input data 
     setData ( datafiles , catalogs )
@@ -117,14 +119,13 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120
     
     ## configure the job:
     # configure ( ... )
     
     ## run the job
-    run(1000)
+    run(100)
 
 # =============================================================================
 # The END 

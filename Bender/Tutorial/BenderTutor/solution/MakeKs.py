@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MakeKs.py,v 1.1 2010-09-10 09:33:32 ibelyaev Exp $ 
+# $Id: MakeKs.py,v 1.2 2010-09-13 13:24:04 ibelyaev Exp $ 
 # =============================================================================
 # $URL$ 
 # =============================================================================
-## @file solutions/MakeKs.py
+## @file solution/MakeKs.py
 #
 #  Simple example that illustrates Ks-making
 #
@@ -25,30 +25,30 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-12
 #
-#  Last modification $Date: 2010-09-10 09:33:32 $
+#  Last modification $Date: 2010-09-13 13:24:04 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
 Simple example that illustrates Ks-making
 
 This file is a part of BENDER project:
-``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+   ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
 The project has been designed with the kind help from
 Pere MATO and Andrey TSAREGORODTSEV. And it is based on the LoKi project:
-``C++ ToolKit for Smart and Friendly Physics Analysis''
+   ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
 with the campain of Dr.O.Callot et al.: 
-``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-09-10 09:33:32 $
+Last modification $Date: 2010-09-13 13:24:04 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision: 1.1 $ "
+__version__ = " Version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main                   import *
@@ -140,10 +140,9 @@ class MakeKs(Algo):
         """
         Finalize & print histos         
         """
-        histos = self.Histos()
-        for key in histos :
-            h = histos[key]
-            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        ##
+        self.dumpHistos( 50 , 30 , True )
+        ##
         return Algo.finalize ( self )
     
 # =============================================================================
@@ -196,7 +195,8 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_000000%02d_1.minibias.dst' % n for n in range ( 11 , 42 ) 
+        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/MINIBIAS.DST
+        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00007548/0000/00007548_0000%04d_1.minibias.dst' % i for i in range ( 1 , 1400 )
         ]
     
     configure( inputdata )
