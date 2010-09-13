@@ -4,8 +4,14 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2010-09-13 - Rob Lambert
+ - Switch to cElementTree, faster implimentation
+ - Stop validating every summary file before merging, now only do it if there's a problem
+ - benchmark 60 files with 3000 counters constructs in 10s, merge in -5 s
+   (i.e. merging is now faster than constructing all the summaries)
+
 ! 2010-09-12 - Rob Lambert
- - Stop constructing lists of keys from dictionaries, where for i in dict
+ - Stop constructing lists of keys from dictionaries, where "for i in dict"
    works just as well
  - Only parse the schema once in the merging step
  - benchmark 60 files with 3000 counters constructs in 12s, merge in 3s

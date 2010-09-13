@@ -48,13 +48,17 @@ __date__ = id.split()[3]
 __version__ = id.split()[2]
 
 try:
-    from xml.etree import ElementTree as __ElementTree__
+    from xml.etree import cElementTree as __ElementTree__
 except ImportError:
     try:
-        from etree import ElementTree as __ElementTree__
+        from xml.etree import ElementTree as __ElementTree__
     except ImportError:
+        try:
+            from etree import ElementTree as __ElementTree__
+        except ImportError:
             import ElementTree as __ElementTree__
             #finally fail here if module cannot be found!
+
 import os as __os__
 
 
@@ -557,20 +561,32 @@ class Schema(object):
         self.__ns__=ns+':'
         self.__uri__="{http://www.w3.org/2001/XMLSchema}"
         #all known tags
-        self.__tags__=[]
+        self.__tags__=set()
         self.__tagelement__={}
         #all known types
-        self.__basetypes__=["integer",
+        self.__basetypes__=set(["integer",
                         "long",
                         "unsignedLong",
                         "double",
                         "string",
                         "normalizedString",
-                        "boolean"]
-        self.__types__=[]
+                        "boolean"])
+        #types I can cast into
+        self.__cast_types__=set([t.lower() for t in self.__basetypes__ ])
+        #dictionary to remove namespace without string manipulation
+        self.__type_remove_namespace__={}
+        self.__func_cast__={
+            'n' : lambda x: str(x),   #normalizedString
+            's' : lambda x: str(x),   #string
+            'f' : lambda x: float(x), #float
+            'l' : lambda x: long(x),  #long
+            'i' : lambda x: int(x),   #integer
+            'd' : lambda x: float(x)  #double
+            }
+        self.__types__=set()
         self.__typelement__={}
         #all known attributes
-        self.__attribs__=[ ]
+        self.__attribs__=set()
         #type of that attribute
         self.__attribelement__={}
         #self.__attrib_rules__=[
@@ -588,9 +604,9 @@ class Schema(object):
             pf.close()
             self.__parseschema__(self.__schemafile_long__)
             self.__isconsistent__()
-            if self.__root__=='' and len(self.__tags__)>0:
-                self.__root__=self.__tags__[0]
-            elif self.__root__ not in self.__tags__:
+            #if self.__root__=='' and len(self.__tags__)>0:
+            #    self.__root__=self.__tags__[0]
+            if self.__root__ not in self.__tags__:
                 raise TypeError, 'root of schema not found '+self.__root__
                 return self.__init__()
             self.__rootattribs__[
@@ -626,7 +642,7 @@ class Schema(object):
                     raise ValueError, 'element '+ element.tag+ ' has the wrong entry type for the schema'
                     return False
         #check attribs
-        for att in element.attrib:
+        for att,val in element.items():
             #check the root attributes
             #if self.Tag_isRoot(element.tag):
             #    for att in self.__rootattribs__.keys():
@@ -643,14 +659,14 @@ class Schema(object):
                 if element.attrib[att].split('/')[-1]!=self.__schemafile_long__.split('/')[-1]:
                     raise AttributeError, ('root element '+ element.tag+
                                            ' must be from the same schema!! '+
-                                            ' attribute '+att +' is '+ element.attrib[att]+
+                                            ' attribute '+att +' is '+ val+
                                             ' versus '+self.__schemafile_long__
                                             )
                     return False
-            elif not self.Tag_canHaveValue(att, element.attrib[att]):
+            elif not self.Tag_canHaveValue(att, val):
                 raise AttributeError, ('element '+ element.tag + 
                                        ' cannot have attribute ' + att +
-                                       ' with value '+ element.attrib[att]+
+                                       ' with value '+ val+
                                        ' in the schema'
                                        )
                 return False
@@ -715,37 +731,43 @@ class Schema(object):
             rt=self.__tree__.getroot()
             if rt:
                 self.__uri__=rt.tag[:rt.tag.find('schema')]
-                l=len(self.__basetypes__)
-                for i in range(l):
+                for i in list(self.__basetypes__):
                     #add namespace to basic types
-                    self.__basetypes__.append(
-                        self.__ns__+self.__basetypes__[i])
-                    self.__basetypes__[i]=self.__uri__+self.__basetypes__[i]
+                    self.__basetypes__.add(
+                        self.__ns__+i)
+                    self.__basetypes__.add(self.__uri__+i)
+                    self.__basetypes__.remove(i)
+                    self.__type_remove_namespace__[self.__uri__+i]=i.lower()
+                    self.__type_remove_namespace__[self.__ns__+i]=i.lower()
+                    
                     
                 for e in rt.getiterator( self.__uri__+"element"):
                     try:
-                        self.__tags__.append( e.attrib['name'])
+                        self.__tags__.add( e.attrib['name'])
                         #print 'adding tagelement'
                         self.__tagelement__[e.attrib['name']]=e
                         #print 'added tagelement'
+                        #root by default is the first thing in the list
+                        if self.__root__=='':
+                            self.__root__=e.attrib['name']
                     except KeyError: pass
                 for e in rt.getiterator( self.__uri__+"simpleType"):
                     try:
-                        self.__types__.append( e.attrib['name'])
+                        self.__types__.add( e.attrib['name'])
                         #print 'adding typelement'
                         self.__typelement__[e.attrib['name']]=e
                         #print 'added typelement'
                     except KeyError: pass
                 for e in rt.getiterator( self.__uri__+"complexType"):
                     try:
-                        self.__types__.append( e.attrib['name'])
+                        self.__types__.add( e.attrib['name'])
                         #print 'adding typelement'
                         self.__typelement__[e.attrib['name']]=e
                         #print 'added typelement'
                     except KeyError: pass
                 for e in rt.getiterator( self.__uri__+"attribute"):
                     try:
-                        self.__attribs__.append( e.attrib['name'])
+                        self.__attribs__.add( e.attrib['name'])
                         #print 'adding attribelement'
                         self.__attribelement__[e.attrib['name']]=e
                         #print 'added attribelement'
@@ -853,52 +875,38 @@ class Schema(object):
     def __cast__(self, atype,test):
         '''internal method cast to the type of the tag'''
         #print 'cast of', test ,'to', atype
-        if 'string' in atype:
-            return str(test)
-        if 'normalizedString' in atype:
-            return str(test)
+        btype=atype
+        if btype in self.__type_remove_namespace__:
+            btype=self.__type_remove_namespace__[atype]
+        else:
+            btype=btype.lower()
+        
+        #print 'moving to', btype
+        
         a=False
-        if 'unsigned' in atype: a=True
+        #should I make it absolute?
+        if 'unsigned'==btype[:8]:
+            a=True
+            btype=btype[8:]
         
-        if 'double' in atype.lower():
-            #print 'checking double'
-            if a:
-                return abs(float(test))
-            else:
-                return float(test)
-        
-        elif 'float' in atype.lower():
-            #print 'checking float'
-            if a:
-                return abs(float(test))
-            else:
-                return float(test)
+        if btype in self.__cast_types__:
             
-        elif 'long' in atype.lower():
-            #print 'checking long'
-            if a:
-                return abs(long(test))
+            if 'b'==btype[0]:
+                #print 'checking bool'
+                if type('')==type(test):
+                    if test.lower()=='true':
+                        return True
+                    elif test.lower()=='false':
+                        return False
+                    return bool(float(test))
+                return bool(float(test)!=0)
             else:
-                return long(test)
-            
-        elif 'integer' in atype.lower():
-            #print 'checking integer'
-            if a:
-                return abs(int(test))
-            else:
-                return int(test)
-                
-        elif 'boolean' in atype.lower():
-            #print 'checking bool'
-            if type('')==type(test):
-                if test.lower()=='true':
-                    return True
-                elif test.lower()=='false':
-                    return False
-                return bool(float(test))
-            return bool(float(test)!=0)
+                v=self.__func_cast__[btype[0]](test)
+                if a:
+                    v=abs(v)
+                return v
         
-        raise TypeError, 'do not no how to convert to type', atype
+        raise TypeError, ('do not no how to convert to type '+ atype)
         return None
     
     def __list2str__(self,list):
@@ -969,7 +977,9 @@ class Schema(object):
             if tag in self.__basetypes__:
                 return False
             raise NameError, str(tag)+' tag is not in the schema' 
-        if len(ele.getiterator(self.__ns__+compound)) or len(ele.getiterator(self.__uri__+compound)):
+        for e in ele.getiterator(self.__ns__+compound):
+            return True
+        for e in ele.getiterator(self.__uri__+compound):
             #print 'iterated'
             return True
         for atype in self.__types__:
@@ -993,9 +1003,9 @@ class Schema(object):
             if self.__etype__(ele)==atype:#ele.attrib['type']==atype:
                 return self.__hasConstraint__(atype,constr)
         return False
-    
-    def parse(self,xmlfile):
-        '''parse an xml document and validate against this schema'''
+
+    def __fast_parse__(self,xmlfile):
+        '''Parse without checking'''
         xmlfile=__os__.path.expanduser(__os__.path.expandvars(xmlfile))
         if not __os__.path.exists(xmlfile):
             raise IOError, 'file does not exist '+str(xmlfile)
@@ -1006,13 +1016,17 @@ class Schema(object):
         if not rt or not self.Tag_isRoot(rt.tag):
             raise TypeError, 'This file does not have the root of the schema'
             return None
-        if not self.__check__(rt):
+        return VTree(rt,self,None,False)
+                                                                                                
+    def parse(self,xmlfile):
+        '''parse an xml document and validate against this schema'''
+        thetree=self.__fast_parse__(xmlfile)
+        if not self.__check__(thetree.__element__):
             raise TypeError, 'This file could not be validated against the schema'
             return None
         #print 'file', xmlfile, 'sucessfully validated against the schema'
-        return VTree(rt,self,None,False)
-
-
+        return thetree
+    
     def validate(self,xmlfile):
         '''parse an xml document and validate against this schema'''
         return self.parse(xmlfile)
@@ -1109,13 +1123,13 @@ class Schema(object):
                       self.__schemafile_long__,self.__schemafile_short__)
     def types(self):
         '''list of defined types'''
-        return self.__types__[:]
+        return set(self.__types__)
     def attribs(self):
         '''list of defined attributes'''
-        return self.__attribs__[:]
+        return set(self.__attribs__)
     def tags(self):
         '''list of defined tags'''
-        return self.__tags__[:]
+        return set(self.__tags__)
     def Tag_isRoot(self,tag):
         '''return true if the tag is the xml root'''
         return tag==self.__root__
@@ -1175,7 +1189,7 @@ class Schema(object):
                 types=types[0]
             nval=[]
             #print 'casting', val, 'type', str(type(val))
-            if 'str' in str(type(val)):
+            if type('')==type(val):
                 #print 'splitting'
                 nval=val.split(' ')
             elif type(val)==type([]):
@@ -1213,7 +1227,7 @@ class Schema(object):
     def Tag_castValue(self, tag,val):
         '''can I set this value to the tag?'''
         ret=self.__cast_from_tag__(tag,val)
-
+        
         f=self.Tag_fixed(tag)
         if f is not None:
             #print 'recognised fixed'
@@ -1480,31 +1494,32 @@ class Schema(object):
         '''list all possible children for the tag'''
         if tag in self.__child_cache__:
             return self.__child_cache__[tag]
-        
+
+        #if not a sequence there are no children
         if not self.Tag_isSequence(tag):
             self.__child_cache__[tag]=[]
             return []
+        #retreive the element based on the tag
         ele=self.__getele__(tag,True,False,True)
         if ele is None:
             self.__child_cache__[tag]=[]
             return []
         child=[]
+        #I iterate over everything looking for elements
         for pref in [self.__ns__,self.__uri__]:
             for ec in ele.getiterator(pref+'element'):
-                try:
+                if 'name' in ec.attrib:
                     if ec.attrib['name']==tag:
                         continue
-                except KeyError: pass
-                try:
-                    #print 'trying', ec.attrib['name']
                     child.append(ec.attrib['name'])
-                except KeyError: continue
             if len(child):
                 self.__child_cache__[tag]=child
                 return child
-        for atype in self.__types__:
-            if self.__etype__(ele)==atype:#ele.attrib['type']==atype:
-                return self.Tag_children(atype)
+        #then I go to the type if the tag doesn't define it
+        et=self.__etype__(ele)
+        if et in self.__types__:
+            return self.Tag_children(et)
+        
         self.__child_cache__[tag]=child
         return child
         
