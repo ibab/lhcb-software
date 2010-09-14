@@ -1,5 +1,5 @@
 <PRE>
-! $Id: release.notes,v 1.48 2010-09-13 13:40:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2010-09-14 10:51:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
@@ -8,11 +8,11 @@
 </PRE>
 
 <H1>
-<A NAME=v15r0>2010-09-13 Bender v15r0 based on the DaVinci v26r0</A>
+<A NAME=v15r0>2010-09-13 Bender v15r0 based on the DaVinci v26r1</A>
 </H1>	
 
 <PRE>		
-The version is based on DaVinci v26r0 and in comes with new Bender Tutorial.
+The version is based on DaVinci v26r1 and in comes with new Bender Tutorial.
 A lot of new functionality for interactive works is for free..
 </PRE>
 
