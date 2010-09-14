@@ -85,9 +85,9 @@ namespace LHCb  {
               info << "Bank:  [" << RawEventPrintout::bankHeader(r) << "] " << endmsg;
             }
             if( ful ) {
-              int cnt = 0;
+              cnt = 0;
               std::stringstream s;
-              for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  {
+              for(p=r->begin<int>(); p != r->end<int>(); ++p)  {
                 s << std::hex << std::setw(8) << std::hex << *p << " ";
                 if ( ++cnt == 10 ) {
                   info << "  Data:" << s.str() << endmsg;

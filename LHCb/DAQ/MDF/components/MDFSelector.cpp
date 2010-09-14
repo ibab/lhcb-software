@@ -111,7 +111,7 @@ namespace LHCb  {
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createContext(Context*& refpCtxt) const {
-      char c = ::toupper(m_ignoreChecksum[0]);
+      int c = ::toupper(m_ignoreChecksum[0]);
       refpCtxt = new MDFContext(this,c=='Y'||c=='T'); // YES or TRUE
       if ( !m_input.empty() )  {
 	StatusCode sc = resetCriteria(m_input,*refpCtxt);
@@ -134,4 +134,4 @@ namespace LHCb  {
 }
 
 #include "GaudiKernel/SvcFactory.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MDFSelector);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MDFSelector)

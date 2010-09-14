@@ -149,7 +149,7 @@ StatusCode MIFContext::receiveData(IMessageSvc* msg)  {
 Next:
     if ( m_ioMgr->read(c,hdr,sizeof(int)+2*sizeof(char)).isSuccess() )  {
       if ( m_ioMgr->read(c,buff+sizeof(int)+2*sizeof(char),hdr->size()).isSuccess() )  {
-        FidMap::iterator i = m_fidMap.find(hdr->fid());
+        i = m_fidMap.find(hdr->fid());
         if ( i == m_fidMap.end() )  {
           if ( hdr->type() == MIFHeader::MIF_FID )  {
             int id = m_mifFID;  // need to save MIF FID - will be overwritten in connect()
@@ -187,4 +187,4 @@ StatusCode MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
 }
 
 #include "GaudiKernel/SvcFactory.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MIFSelector);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MIFSelector)

@@ -172,7 +172,7 @@ RawDataFile* RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit) 
       filePath.replace(idx,4,txt);
       idx = filePath.find("%FNO");
     }
-    sprintf(txt,"Run%08d",run_no);
+    sprintf(txt,"Run%08d",int(run_no));
     idx = filePath.find("%RNO");
     while ( idx != std::string::npos )  {
       filePath.replace(idx,4,txt);
