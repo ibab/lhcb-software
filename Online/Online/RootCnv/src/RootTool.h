@@ -231,7 +231,6 @@ namespace Gaudi {
     }
     /// Save/update reference tables
     StatusCode saveRefs() {
-      RootDataConnection* c = c;
       if ( refs() ) {
 	if ( !saveBranch("Databases", dbs(),   &RootTool::getEntry).isSuccess() )
 	  return StatusCode::FAILURE;
