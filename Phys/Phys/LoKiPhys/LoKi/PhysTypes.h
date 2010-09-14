@@ -1,4 +1,4 @@
-// $Id: PhysTypes.h,v 1.12 2009-11-17 12:39:02 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1

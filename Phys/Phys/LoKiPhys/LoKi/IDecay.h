@@ -1,4 +1,4 @@
-// $Id: IDecay.h,v 1.3 2009-08-12 09:50:29 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IDECAY_H 
 #define LOKI_IDECAY_H 1

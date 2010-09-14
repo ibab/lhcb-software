@@ -1,4 +1,4 @@
-// $Id: ATypes.h,v 1.2 2010-04-06 20:17:18 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ATYPES_H 
 #define LOKI_ATYPES_H 1

@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.27 2010-06-02 15:52:39 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1

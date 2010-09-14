@@ -1,4 +1,4 @@
-// $Id: Decays.h,v 1.8 2009-05-23 15:59:51 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_DECAYS_H 
 #define LOKI_DECAYS_H 1

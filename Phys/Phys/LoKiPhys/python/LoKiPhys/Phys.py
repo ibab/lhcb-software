@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: 
+# $Id$
+# =============================================================================
+# $URL$
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
@@ -14,7 +16,10 @@
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @date 2007-08-11 
+#  @date 2007-08-11
+#
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Collection of utilities for useful 'decoration' of Phys-objects
@@ -27,11 +32,14 @@ Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
 
+Last modification $Date$
+               by $Author$
+
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = '2007-08-11'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $'
+__version__ = 'Version $Revision$'
 # =============================================================================
 
 from   LoKiPhys.functions   import LoKi,LHCb,cpp
@@ -154,9 +162,12 @@ if not hasattr ( LHCb.Particle , '__getParticles__' ) :
     LHCb.Particle . __getParticles__ =  particles 
 if not hasattr ( LHCb.Particle ,   'extract'        ) :
     LHCb.Particle .   extract        = particles 
-if not hasattr ( LHCb.Particle , '__extract__'      ) :
+if not hasattr ( LHCb.Particle ,   '__extract__'    ) :
     LHCb.Particle . __extract__      =  particles 
-
+if not hasattr ( LHCb.Particle ,   'vertex'         ) :
+    LHCb.Particle .   vertex         =  LHCb.Particle . endVertex   
+if not hasattr ( LHCb.Particle ,   'decayVertex'    ) :
+    LHCb.Particle .   decayVertex    =  LHCb.Particle . endVertex   
 
 
 # =============================================================================

@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.44 2010-06-03 11:41:36 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1

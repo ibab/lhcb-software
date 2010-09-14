@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.10 2010-06-03 11:41:36 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1

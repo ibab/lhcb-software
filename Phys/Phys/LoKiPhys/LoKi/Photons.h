@@ -1,4 +1,4 @@
-// $Id: Photons.h,v 1.1 2009/11/28 19:29:45 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHOTONS_H 
 #define LOKI_PHOTONS_H 1

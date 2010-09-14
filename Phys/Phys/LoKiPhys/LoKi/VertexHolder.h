@@ -1,4 +1,4 @@
-// $Id: VertexHolder.h,v 1.6 2007-07-23 17:35:49 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTEXHOLDER_H 
 #define LOKI_VERTEXHOLDER_H 1

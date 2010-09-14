@@ -1,4 +1,4 @@
-// $Id: AuxDTFBase.h,v 1.2 2010-06-08 17:59:03 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_AUXDTFBASE_H 
 #define LOKI_AUXDTFBASE_H 1

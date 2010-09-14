@@ -1,4 +1,4 @@
-// $Id: GetPhysDesktop.h,v 1.4 2010-05-14 15:28:33 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GETPHYSDESKTOP_H 
 #define LOKI_GETPHYSDESKTOP_H 1

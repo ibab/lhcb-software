@@ -1,4 +1,4 @@
-// $Id: VertexContextCuts.h,v 1.1 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTEXCONTEXTCUTS_H 
 #define LOKI_VERTEXCONTEXTCUTS_H 1

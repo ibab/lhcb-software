@@ -1,4 +1,4 @@
-// $Id: ChildSelector.h,v 1.3 2010-05-31 20:36:13 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_CHILDSELECTOR_H 
 #define LOKI_CHILDSELECTOR_H 1

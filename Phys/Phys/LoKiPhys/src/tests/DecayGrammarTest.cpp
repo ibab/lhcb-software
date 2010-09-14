@@ -1,6 +1,6 @@
-// $Id: DecayGrammarTest.cpp,v 1.1 2009-05-23 15:59:51 ibelyaev Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files 
 // ============================================================================

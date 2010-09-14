@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // STD
 #include <cmath>
 

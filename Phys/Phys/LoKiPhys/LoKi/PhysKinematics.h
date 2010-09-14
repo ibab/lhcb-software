@@ -1,4 +1,4 @@
-// $Id: PhysKinematics.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSKINEMATICS_H 
 #define LOKI_PHYSKINEMATICS_H 1

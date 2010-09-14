@@ -1,4 +1,4 @@
-// $Id: PhysSources.h,v 1.6 2010-05-14 15:28:33 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSSOURCES_H 
 #define LOKI_PHYSSOURCES_H 1

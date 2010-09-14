@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.11 2010-06-11 14:01:55 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1

@@ -1,4 +1,4 @@
-// $Id: PhysRangeTypes.h,v 1.9 2010-04-06 20:17:18 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSRANGETYPES_H 
 #define LOKI_PHYSRANGETYPES_H 1

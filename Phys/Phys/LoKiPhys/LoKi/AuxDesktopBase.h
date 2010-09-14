@@ -1,4 +1,4 @@
-// $Id: AuxDesktopBase.h,v 1.4 2010-05-14 15:28:33 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_AUXDESKTOPBASE_H 
 #define LOKI_AUXDESKTOPBASE_H 1

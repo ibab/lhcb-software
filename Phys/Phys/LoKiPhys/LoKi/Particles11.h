@@ -1,4 +1,4 @@
-// $Id: Particles11.h,v 1.8 2008-06-03 15:47:08 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PARTICLES11_H 
 #define LOKI_PARTICLES11_H 1

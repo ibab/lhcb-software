@@ -1,4 +1,4 @@
-// $Id: PhysMoniDicts.h,v 1.2 2007-08-12 18:55:52 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSMONIDICTS_H 
 #define LOKI_PHYSMONIDICTS_H 1

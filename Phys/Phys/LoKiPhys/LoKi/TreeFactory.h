@@ -1,9 +1,9 @@
-// $Id: TreeFactory.h,v 1.2 2009-05-23 15:59:51 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TREEFACTORY_H 
 #define LOKI_TREEFACTORY_H 1
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS Tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: Sections.h,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_SECTIONS_H 
 #define LOKI_SECTIONS_H 1

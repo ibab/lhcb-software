@@ -1,4 +1,4 @@
-// $Id: ImpParBase.h,v 1.6 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IMPPARBASE_H 
 #define LOKI_IMPPARBASE_H 1

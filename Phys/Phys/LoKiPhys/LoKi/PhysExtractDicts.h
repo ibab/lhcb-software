@@ -1,4 +1,4 @@
-// $Id: PhysExtractDicts.h,v 1.1 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSEXTRACTDICTS_H 
 #define LOKI_PHYSEXTRACTDICTS_H 1

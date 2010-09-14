@@ -1,4 +1,4 @@
-// $Id: VertexCuts.h,v 1.12 2009-03-11 17:24:13 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1

@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 #ifndef FUNCTORS_H 
 #define FUNCTORS_H 1
 

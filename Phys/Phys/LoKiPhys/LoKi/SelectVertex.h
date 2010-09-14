@@ -1,4 +1,4 @@
-// $Id: SelectVertex.h,v 1.1 2007-08-17 15:22:29 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTEXSELECT_H 
 #define LOKI_VERTEXSELECT_H 1

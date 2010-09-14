@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.2 2007-12-02 14:17:50 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file  LoKiPhys/__init__.py
 #  Helper file to manage LoKiPhys package

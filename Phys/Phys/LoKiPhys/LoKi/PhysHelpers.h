@@ -1,4 +1,4 @@
-// $Id: PhysHelpers.h,v 1.7 2009-05-09 19:24:13 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSHELPERS_H 
 #define LOKI_PHYSHELPERS_H 1

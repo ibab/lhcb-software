@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.152 2010-06-11 14:01:55 ibelyaev Exp $ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-09-14 - Vanya Belyaev
+
+ - Phys.py:
+
+     add functions  
+
+      p.vertex      () : alias for p.endVertex () 
+      p.decayVertex () : alias for p.endVertex () 
+
+
+ - functions.py
+
+     fix the typos (cut-n-paste) for PFUNA and PFUNV 
+
+ - cmt/requirements 
+ 
+     version increment to v9r4
 
 ! 2010-08-31 - Vanya Belyaev
 

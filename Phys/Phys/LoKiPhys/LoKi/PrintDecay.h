@@ -1,4 +1,4 @@
-// $Id: PrintDecay.h,v 1.6 2007-08-16 13:52:08 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PRINTDECAY_H 
 #define LOKI_PRINTDECAY_H 1

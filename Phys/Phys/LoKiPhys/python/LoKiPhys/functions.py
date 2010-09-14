@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id:$ 
+# =============================================================================
+# $URL$
+# =============================================================================
 ## @file functions.py LoKiPhys/functions.py
 #  The set of basic decorator for objects from LoKiPhys library
 #  The file is a part of LoKi and Bender projects
@@ -13,6 +17,9 @@
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The set of basic decorators for obejcts from LoKiPhys library
@@ -24,9 +31,15 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+Last modification $Date$
+               by $Author$
+
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
+__date__    = "????-??-??"
+__version__ = "Version $Revision$"
 # =============================================================================
 
 import LoKiCore.decorators    as      _LoKiCore
@@ -868,9 +881,9 @@ PCUTA   = LoKi.Particles.PCutA
 ## @see LoKi::Cuts::PCUTV
 PCUTV   = LoKi.Particles.PCutV
 ## @see LoKi::Cuts::PFUNA 
-PFUNA   = LoKi.Particles.PCutA
+PFUNA   = LoKi.Particles.PFunA
 ## @see LoKi::Cuts::PFUNV
-PFUNV   = LoKi.Particles.PCutV
+PFUNV   = LoKi.Particles.PFunV
 ## @see LoKi::Cuts::PPFUN
 PPFUN   = LoKi.Particles.ProtoPFun
 ## @see LoKi::Cuts::PPCUT
@@ -889,7 +902,14 @@ BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
 
 # =============================================================================
 if '__main__' == __name__ :
-    for o in dir() : print o        
+
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    for i in dir() : print i 
 
 # =============================================================================
 # The END 

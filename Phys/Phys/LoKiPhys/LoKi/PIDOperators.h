@@ -1,4 +1,4 @@
-// $Id: PIDOperators.h,v 1.7 2010-04-06 20:17:18 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PIDOPERATORS_H 
 #define LOKI_PIDOPERATORS_H 1

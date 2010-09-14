@@ -1,4 +1,4 @@
-// $Id: Vertices5.h,v 1.3 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTICES5_H 
 #define LOKI_VERTICES5_H 1

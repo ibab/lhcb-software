@@ -1,4 +1,4 @@
-// $Id: Particles16.h,v 1.7 2009-03-10 22:49:57 spradlin Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1

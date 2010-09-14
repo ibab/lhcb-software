@@ -1,4 +1,4 @@
-// $Id: CompareParticles.h,v 1.2 2009-05-09 19:24:13 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_COMPAREPARTICLES_H 
 #define LOKI_COMPAREPARTICLES_H 1

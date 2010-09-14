@@ -1,4 +1,4 @@
-// $Id: PhysAlgs.h,v 1.8 2010-05-30 17:11:02 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSALGS_H 
 #define LOKI_PHYSALGS_H 1

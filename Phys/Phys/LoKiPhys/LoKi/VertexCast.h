@@ -1,4 +1,4 @@
-// $Id: VertexCast.h,v 1.4 2007-07-23 17:35:49 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_VERTEXCAST_H 
 #define LOKI_VERTEXCAST_H 1
