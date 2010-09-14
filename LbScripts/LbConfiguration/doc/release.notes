@@ -1,7 +1,8 @@
 2010-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/generateLogin: fixed usage of MYSITEROOT when it is built with several path
-	entries.
+	* scripts/generateLogin: 
+	- fixed usage of MYSITEROOT when it is built with several path entries.
+	- created function for the update above.
 
 2010-09-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

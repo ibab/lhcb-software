@@ -20,6 +20,7 @@ from LbConfiguration.LbLogin import getLoginCacheName, getLbLoginEnv
 from LbConfiguration.SetupProject import SetupProject
 from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from LbConfiguration.Tools import genProjectSetup
+from LbUtils.Path import multiPathJoin
 from optparse import OptionParser
 
 
@@ -859,6 +860,16 @@ def generateLogins(version, targetlocation=None, scripts=None,
         for u in shells :
             generateMainWrapper(targetlocation, u, version, mysiteroot, building)
 
+def updateLHCbProjectPath(mysiteroot):
+    cmtprojpathlist = multiPathJoin(mysiteroot, "lhcb").split(os.pathsep)
+    cmtprojpathlist += multiPathJoin(mysiteroot, os.path.join("lcg","external")).split(os.pathsep)
+    if os.environ.has_key("LHCBPROJECTPATH") :
+        cmtprojpathlist += os.environ["LHCBPROJECTPATH"].split(os.pathsep)
+    finalcmtlist = []
+    for d in cmtprojpathlist :
+        if d not in finalcmtlist :
+            finalcmtlist.append(d)
+    os.environ["LHCBPROJECTPATH"] = os.pathsep.join(finalcmtlist)
 
 if __name__ == '__main__':
 
@@ -894,14 +905,7 @@ if __name__ == '__main__':
     opts, args = parser.parse_args()
 
     if opts.mysiteroot is not None:
-        cmtprojpathlist = []
-        if os.environ.has_key("LHCBPROJECTPATH") :
-            cmtprojpathlist = os.environ["LHCBPROJECTPATH"].split(os.pathsep)
-        thismysiteroot = opts.mysiteroot.split(os.pathsep)[0]
-        cmtprojpathlist.insert(0, os.path.join(thismysiteroot, "lcg", "external"))
-        cmtprojpathlist.insert(0, os.path.join(thismysiteroot, "lhcb"))
-        os.environ["LHCBPROJECTPATH"] = os.pathsep.join(cmtprojpathlist)
-
+        updateLHCbProjectPath(opts.mysiteroot)
 
     version = opts.login_version
     if len(args) > 0 :
