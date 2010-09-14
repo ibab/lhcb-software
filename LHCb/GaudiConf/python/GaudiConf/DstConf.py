@@ -225,7 +225,7 @@ class DstConf(LHCbConfigurableUser):
         caloPack = CaloDstPackConf ()
         if not caloPack.isPropertySet('Enable') :
             CaloDstPackConf ( Enable = True )
-        caloPack.Sequence     = caloPackSeq ,
+        caloPack.Sequence     = caloPackSeq
         caloPack.AlwaysCreate = alwaysCreate
 
 

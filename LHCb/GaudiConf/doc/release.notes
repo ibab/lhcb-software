@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-09-14 - Vanya Belyaev
+ - fix the typo: remove extra comma 
+
 ! 2010-09-07 - Marco Cattaneo
  - Remove prints from previous commit, use log.debug instead.
 
