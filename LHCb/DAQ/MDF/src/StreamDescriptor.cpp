@@ -176,7 +176,7 @@ namespace {
     typedef std::map<std::string,LHCb::PosixIO*> _M;
     static _M modules;
     std::string mod = "MDF_"+proto;
-    for(size_t i=0; i<mod.length();++i) mod[i] = ::toupper(mod[i]);
+    for(size_t i=0; i<mod.length();++i) mod[i] = char(::toupper(mod[i]));
     _M::const_iterator itmod = modules.find(mod);
     LHCb::PosixIO* io = 0;
     if ( itmod == modules.end() )  {
@@ -259,16 +259,10 @@ void LHCb::StreamDescriptor::getFileConnection(const std::string& con,
     //std::cout << "getFileConnection(4)>> " << proto << "  -> " << file << " " << idx0 << std::endl;
     return;
   }
-  else {
-    // No protocol given: assume file protocol
-    file = con;
-    proto = "file";
-    //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
-    return;
-  }
-  proto = "";
-  file = "";
-  //std::cout << "ERROR: getFileConnection>> " << proto << "  -> " << file << std::endl;
+  // No protocol given: assume file protocol
+  file = con;
+  proto = "file";
+  //std::cout << "getFileConnection>> " << proto << "  -> " << file << std::endl;
 }
 
 void LHCb::StreamDescriptor::getInetConnection( const std::string& con, 
