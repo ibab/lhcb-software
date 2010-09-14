@@ -897,8 +897,9 @@ if __name__ == '__main__':
         cmtprojpathlist = []
         if os.environ.has_key("LHCBPROJECTPATH") :
             cmtprojpathlist = os.environ["LHCBPROJECTPATH"].split(os.pathsep)
-        cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lcg", "external"))
-        cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lhcb"))
+        thismysiteroot = opts.mysiteroot.split(os.pathsep)[0]
+        cmtprojpathlist.insert(0, os.path.join(thismysiteroot, "lcg", "external"))
+        cmtprojpathlist.insert(0, os.path.join(thismysiteroot, "lhcb"))
         os.environ["LHCBPROJECTPATH"] = os.pathsep.join(cmtprojpathlist)
 
 
