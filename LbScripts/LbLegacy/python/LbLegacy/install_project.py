@@ -969,6 +969,18 @@ def checkInstalledProjects(project_list):
     sys.exit()
 #----------------------------------------------------------------------------------
 
+def updateLHCbProjectPath(mysiteroot):
+    cmtprojpathlist = _multiPathJoin(mysiteroot, "lhcb").split(os.pathsep)
+    cmtprojpathlist += _multiPathJoin(mysiteroot, os.path.join("lcg","external")).split(os.pathsep)
+    if os.environ.has_key("LHCBPROJECTPATH") :
+        cmtprojpathlist += os.environ["LHCBPROJECTPATH"].split(os.pathsep)
+    finalcmtlist = []
+    for d in cmtprojpathlist :
+        if d not in finalcmtlist :
+            finalcmtlist.append(d)
+    os.environ["LHCBPROJECTPATH"] = os.pathsep.join(finalcmtlist)
+
+
 #
 #  download project tar files ================================================
 #
@@ -1111,12 +1123,11 @@ def getProjectTar(tar_list, already_present_list=None):
                 except ProjectConfException:
                     pass
                 if pack_ver[0] == "LBSCRIPTS" :
+                    updateLHCbProjectPath(os.environ["MYSITEROOT"])
+                    log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
                     log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                    os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
-                    log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                    registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
                         if os.path.exists(prodlink) :
@@ -1142,18 +1153,15 @@ def getProjectTar(tar_list, already_present_list=None):
                                     sourcef = sourcef[1:]
                                 os.symlink(sourcef, targetf)
                                 log.debug("linking %s to %s" % (sourcef, targetf))
-
+            prj = pack_ver[0]
+            if isProjectRegistered(prj) :
+                callPostInstallCommand(prj)
 
             setInstalled(fname)
         else :
             log.info('%s already installed' % fname)
             if already_present_list != None:
                 already_present_list.append(tar_list[fname])
-    for fname in tar_list.keys():
-        pack_ver = getPackVer(fname)
-        prj = pack_ver[0]
-        if isProjectRegistered(prj) :
-            callPostInstallCommand(prj)
 
     os.chdir(here)
 

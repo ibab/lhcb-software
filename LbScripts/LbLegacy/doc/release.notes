@@ -1,3 +1,10 @@
+2010-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: 
+	- fixed the usage of MYSITEROOT for the update of LHCBPROJECTPATH.
+	- call the post-install command after each installation and not at the global end
+	of the installation procedure.
+
 2010-08-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: added support for i686-winxp.
