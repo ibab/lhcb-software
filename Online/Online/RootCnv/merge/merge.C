@@ -98,7 +98,7 @@ using namespace std;
 namespace {
 
   static bool s_dbg = true;
-
+#if 0
   const char* getLinkContainer(char* txt) {
     char* p = ::strstr(txt,"[CNT=");
     if ( p ) {
@@ -115,6 +115,7 @@ namespace {
     }
     return r;
   }
+#endif
 }
 
 /// Standard constructor

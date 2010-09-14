@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.9 2010-09-07 15:37:29 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.10 2010-09-14 06:11:46 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -29,6 +29,7 @@
 #include "TBranch.h"
 #include "Reflex/Reflex.h"
 
+#include <limits>
 #include <memory>
 
 #define S_OK   StatusCode::SUCCESS
@@ -42,14 +43,17 @@ static inline istream& loadLong(istream& is)    {
   is >> i;
   return is;
 }
+static inline istream& operator>>(istream& is, IOpaqueAddress*& /*pObj*/)
+{  return loadLong(is);          }
+
+#if 0
 static inline istream& operator>>(istream& is, SmartRef<DataObject>& /*pObj*/)   
 {  return loadLong(is);          }
 static inline istream& operator>>(istream& is, SmartRef<ContainedObject>& /*pObj*/)   
 {  return loadLong(is);          }
-static inline istream& operator>>(istream& is, IOpaqueAddress*& /*pObj*/)
-{  return loadLong(is);          }
 static inline istream& operator>>(istream& is, string& /*pObj*/)   
 {  return loadLong(is);          }
+#endif
 
 template<class TYP> static
 StatusCode createItem ( TTree* tree, INTuple* tuple, istream& is,const string& name,bool add,const TYP& null)  {
@@ -321,7 +325,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
 	for( ; ipar[1] < last; ++ipar[1]) {	// loop on all selected entries
 	  tree->LoadTree(ipar[1]);
 	  rpA->select->GetNdata();
-	  if ( rpA->select->EvalInstance(0) != 0 ) {
+	  if ( fabs(rpA->select->EvalInstance(0)) > std::numeric_limits<float>::epsilon() ) {
 	    break;
 	  }
 	  log() << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;
@@ -760,7 +764,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
 	for( ; ipar[1] < last; ++ipar[1]) {
 	  tree->LoadTree(ipar[1]);
 	  rpA->select->GetNdata();
-	  if ( rpA->select->EvalInstance(0) != 0 ) {
+	  if ( fabs(rpA->select->EvalInstance(0)) > std::numeric_limits<float>::epsilon() ) {
 	    break;
 	  }
 	  log() << MSG::DEBUG << par[0] << "/" << par[1] << " SKIP Entry: " << ipar[1] << endmsg;

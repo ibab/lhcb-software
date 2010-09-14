@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.9 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.10 2010-09-14 06:11:46 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -43,7 +43,7 @@ using namespace std;
 using namespace Gaudi;
 typedef const string& CSTR;
 
-DECLARE_SERVICE_FACTORY(RootCnvSvc);
+DECLARE_SERVICE_FACTORY(RootCnvSvc)
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
@@ -223,17 +223,16 @@ StatusCode RootCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
 // Connect the output file to the service with open mode.
 StatusCode RootCnvSvc::connectOutput(CSTR dsn, CSTR openMode)   {
   StatusCode sc = S_FAIL;
-  int mode = 0;
   m_current = 0;
   m_currSection = "";
   if ( ::strncasecmp(openMode.c_str(),"RECREATE",3)==0 )
-    sc = connectDatabase(dsn, mode=IDataConnection::RECREATE, &m_current);
+    sc = connectDatabase(dsn, IDataConnection::RECREATE, &m_current);
   else if ( ::strncasecmp(openMode.c_str(),"NEW",1)==0 )
-    sc = connectDatabase(dsn, mode=IDataConnection::CREATE, &m_current);
+    sc = connectDatabase(dsn, IDataConnection::CREATE, &m_current);
   else if ( ::strncasecmp(openMode.c_str(),"CREATE",1)==0 )
-    sc = connectDatabase(dsn, mode=IDataConnection::CREATE, &m_current);
+    sc = connectDatabase(dsn, IDataConnection::CREATE, &m_current);
   else if ( ::strncasecmp(openMode.c_str(),"UPDATE",1)==0 )
-    sc = connectDatabase(dsn, mode=IDataConnection::UPDATE, &m_current);
+    sc = connectDatabase(dsn, IDataConnection::UPDATE, &m_current);
   if ( sc.isSuccess() && m_current && m_current->isConnected() )  {
     return S_OK;
   }
@@ -249,7 +248,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
   try {
     IDataConnection* c = m_ioMgr->connection(dataset);
     bool fire_incident = false;
-    bool enable_stats = false;
+    //bool enable_stats = false;
     if ( !c )  {
       auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
       StatusCode sc = (mode != IDataConnection::READ)
@@ -258,7 +257,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
 	fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
-	enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
+	//enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
 	connection.release();
       }
       else  {

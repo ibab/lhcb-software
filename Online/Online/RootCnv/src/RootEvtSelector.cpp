@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.8 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.9 2010-09-14 06:11:46 frankb Exp $
 //====================================================================
 //	RootSelector.cpp
 //--------------------------------------------------------------------
@@ -343,4 +343,4 @@ RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
 }
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector);
+DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector)
