@@ -99,6 +99,28 @@ def multiPathJoin(path, subdir):
         pathlist.append(os.path.join(d,subdir))
     return os.pathsep.join(pathlist)
 
+def multiPathUpdate(path, dirlist, interleaved=False):
+    """ update the path with the list of subdirectories
+    @param path: original path
+    @param dirlist: list of subdirectories to be collated to each entry of
+                    path
+    @param interleaved: 
+      - False : path=pth1:pth2 and dirlist=[dir1,dir2] -> pth1/dir1:pth2/dir1:pth1/dir2:pth2/dir2
+      - True  : path=pth1:pth2 and dirlist=[dir1,dir2] -> pth1/dir1:pth1/dir2:pth2/dir2:pth2/dir2
+    @return: the updated path
+    """
+    pathlist = []
+    if not interleaved :
+        for d in dirlist :
+            pathlist += multiPathJoin(path, d).split(os.pathsep)
+    else :
+        for p in path.split(os.pathsep) :
+            for d in dirlist :
+                pathlist.append(os.path.join(p, d))
+
+    return os.pathsep.join(pathlist)
+
+
 def multiPathGetFirst(path, subdir, default=None):
     """ Quick way to find a file or dir in a series of paths """
     result = default

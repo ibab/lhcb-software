@@ -1,3 +1,9 @@
+2010-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* tests/PathTest.py: New file.
+	* python/LbUtils/Path.py: new function multiPathUpdate. This is to add a set of subdirectories to
+	a path collection (each entry separated with os.pathsep)
+
 2010-09-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/volume.py: fixed stupid syntax error while escaping characters
