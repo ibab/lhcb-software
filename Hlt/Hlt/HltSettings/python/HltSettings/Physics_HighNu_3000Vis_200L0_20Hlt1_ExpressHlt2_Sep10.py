@@ -93,14 +93,15 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                        , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' :  560.0
                                               , 'Muon_DeltaPCut'  :    0  
                                               , 'Muon_PtCut' : 1800
+                                              , 'Muon_highPtCut':5000#new line, cut sensible?
                                               , 'MuonIP_PtCut' : 850  
                                               , 'Muon_IPMinCut' : 0.09       
                                               , 'DiMuon_DOCACut' : 0.2
                                               , 'DiMuon_MassCut' : 2500     
                                               , 'DiMuonIP_MassCut' : 750    
                                               , 'DiMuon_IPCut' : 0.0        
-                                              , 'Muon_FitChiCut' :  10.#50    
-                                              , 'Muon_FitMuChi2Cut' : 16.#100  
+                                              , 'Muon_FitChiCut' :  10.
+                                              , 'Muon_FitMuChi2Cut' : 16.
                                               , 'MuTrackMuPt' : 800
                                               , 'MuTrackMuIP' : 0.05
                                               , 'MuTrackTrPt' : 600
@@ -116,6 +117,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                               , 'bmm_fitChi2'   : 5
                                               , 'bmm_IPS'       : 81
                                               , 'bmm_pt'        :3000
+                                                
                                                 
                                                 }
 
@@ -227,6 +229,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                 , 'Hlt1SingleHadron'
                 , 'Hlt1DiHadron' # , 'Hlt1DiHadronLTUnbiased'
                 , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
+                , 'Hlt1SingleMuonNoIPL0HighPT'  
                 , 'Hlt1SingleMuon4BsMuMu', 'Hlt1DiMuon4BsMuMu'
                 , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
                 , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
