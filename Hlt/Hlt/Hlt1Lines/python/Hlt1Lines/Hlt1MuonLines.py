@@ -46,6 +46,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'Muon_FitChiCut'           :   50.
         ,'Muon_FitMuChi2Cut'        :   75.
         ,'Muon_PtCut'               : 6000.
+        ,'Muon_highPtCut'           : 5000.
         ,'MuonTS_PtCut'             :  600.
         ,'MuonIP_PtCut'             : 1300. 
         ,'Muon_IPMinCut'            :    0.08
@@ -85,6 +86,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'bmm_fitChi2'              : 10
         ,'bmm_IPS'                  : 49
         ,'bmm_pt'                   : 1500
+        ,'bmm_dimuonMass'           : 4700
         }
     
 
@@ -338,6 +340,23 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                  ] + FastFitNoIP 
                                      , postscale = self.postscale
                                      )
+
+        #--------------------------------------------------------------------
+        # Single Muon high PT without IP cut from L0Muon (MuonNoGlob)
+        #--------------------------------------------------------------------
+        from Hlt1Lines.Hlt1GECs import Hlt1GEC
+        if self.getProp('L0SingleMuon') in L0Channels() :
+            SingleMuonNoIPL0HighPT = Line( 'SingleMuonNoIPL0HighPT'
+                                     , prescale = self.prescale
+                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
+                                     , algos = [ Hlt1GEC(),MuonPrep 
+                                                 , Member( 'TF', 'PT' 
+                                                           , FilterDescriptor = ['PT,>,%(Muon_highPtCut)s'%self.getProps()] 
+                                                           , HistoDescriptor = { 'PT': ( 'Pt',0.,7000.,100), 'PTBest': ( 'Pt Best',0.,7000.,100)}
+                                                         ) 
+                                                 ] + FastFitNoIP 
+                                     , postscale = self.postscale
+                                     )
         #--------------------------------------------------------------------
         # Single Muon without  Velo
         #--------------------------------------------------------------------
@@ -474,7 +493,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                   , L0DU = "L0_CHANNEL('%(L0DiMuon)s')"%self.getProps()
                                   , algos = [ DiMuonPrep ]
                                   + [ Member( 'VF','Mass'
-                                              , FilterDescriptor = [ 'VertexDimuonMass,>,4700' ]
+                                              , FilterDescriptor = [ 'VertexDimuonMass,>,%(bmm_dimuonMass)s'%self.getProps() ]
                                               , HistoDescriptor = { 'VertexDimuonMass': ('Di Muon Invariant Mass',4000.,10000,200),
 				                         'VertexDimuonMassBest': ('Di Muon Invariant Mass - Best',4000.,10000,200) }
 			           ) ]
