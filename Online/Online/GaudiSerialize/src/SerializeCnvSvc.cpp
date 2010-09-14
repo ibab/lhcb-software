@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.10 2009-08-27 20:50:33 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.11 2010-09-14 06:48:54 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -12,7 +12,6 @@
 
 // Framework include files
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -41,8 +40,6 @@ using ROOT::Reflex::PluginService;
 using namespace std;
 using namespace LHCb;
 typedef const std::string& CSTR;
-
-DECLARE_SERVICE_FACTORY(SerializeCnvSvc);
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
@@ -145,7 +142,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     for ( unsigned int i = 0; i < sizeof(gen_clids)/sizeof(gen_clids[0]); i++ ) {
       if ( (wanted>>16) == (gen_clids[i]>>16) )  {
         ConverterID cnvid(SERIALIZE_StorageType, gen_clids[i]);  
-        pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
+        pConverter = PluginService::CreateWithId<IConverter*>(cnvid,typ,wanted,serviceLocator().get());
         if ( 0 != pConverter ) {
           return pConverter;
         }
@@ -153,8 +150,8 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     }
     // Check if a converter using object update is needed
     if ( (wanted>>24) != 0 )  {
-      ConverterID cnvid(SERIALIZE_StorageType, CLID_Any | 1<<31);  
-      pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
+      ConverterID cnvid_obj(SERIALIZE_StorageType, CLID_Any | 1<<31);  
+      pConverter = PluginService::CreateWithId<IConverter*>(cnvid_obj,typ,wanted,serviceLocator().get());
       if ( 0 != pConverter ) {
         return pConverter;
       }
@@ -162,10 +159,9 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     // If we do not have found any suitable container after searching
     // for standard containers, we will use the "ANY" converter 
     // ... and pray for everything will go well.
-    ConverterID cnvid(SERIALIZE_StorageType, CLID_Any);  
-    pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
+    ConverterID cnvid_any(SERIALIZE_StorageType, CLID_Any);  
+    pConverter = PluginService::CreateWithId<IConverter*>(cnvid_any,typ,wanted,serviceLocator().get());
     if ( 0 != pConverter ) {
-      MsgStream log(msgSvc(), name());
       log << MSG::INFO << "Using \"Any\" converter for objects of type " 
 	  << showbase << hex << wanted << endmsg;
     }
@@ -463,3 +459,6 @@ StatusCode SerializeCnvSvc::error(CSTR msg)  {
   log << MSG::ERROR << "Error: " << msg << endmsg;
   return S_FAIL;
 }
+
+#include "GaudiKernel/SvcFactory.h"
+DECLARE_SERVICE_FACTORY(SerializeCnvSvc)

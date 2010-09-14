@@ -1,4 +1,4 @@
-// $Id: SerializeEvtSelector.cpp,v 1.1 2008-06-17 13:23:14 frankb Exp $
+// $Id: SerializeEvtSelector.cpp,v 1.2 2010-09-14 06:48:55 frankb Exp $
 //====================================================================
 //	SerializeSelector.cpp
 //--------------------------------------------------------------------
@@ -127,4 +127,4 @@ namespace LHCb  {
 }
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SerializeSelector);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SerializeSelector)

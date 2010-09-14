@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.h,v 1.2 2008-09-23 13:03:23 frankb Exp $
+// $Id: SerializeCnvSvc.h,v 1.3 2010-09-14 06:48:54 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef SERIALIZE_SERIALIZECNVSVC_H
 #define SERIALIZE_SERIALIZECNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiSerialize/GaudiSerialize/SerializeCnvSvc.h,v 1.2 2008-09-23 13:03:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiSerialize/GaudiSerialize/SerializeCnvSvc.h,v 1.3 2010-09-14 06:48:54 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -136,6 +136,22 @@ public:
                                     const unsigned long* ip,
                                     IOpaqueAddress*&     refpAddress);
   
+  /** IAddressCreator implementation: Creates an address in string form to object form
+   *  @param      svc_type    Technology identifier encapsulated
+   *                          in this address.
+   *  @param      clid        Class identifier of the DataObject
+   *                          represented by the opaque address
+   *  @param      address     Input address.
+   *  @param      refpAddress Output address in string form.
+   *  @return     Status code indicating success or failure.
+   */
+  virtual StatusCode createAddress( long svc_type,
+				    const CLID& clid,
+				    const std::string& refAddress,
+				    IOpaqueAddress*& refpAddress) {
+    return this->ConversionSvc::createAddress(svc_type,clid,refAddress,refpAddress);
+  }
+
   /// Mark an object for write given an object reference
   virtual StatusCode writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr);
 
