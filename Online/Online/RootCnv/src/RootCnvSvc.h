@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.h,v 1.6 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.7 2010-09-14 06:01:12 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef GAUDIROOTCNV_GAUDIROOTCNVSVC_H
 #define GAUDIROOTCNV_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.6 2010-09-01 18:52:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.7 2010-09-14 06:01:12 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -175,12 +175,12 @@ namespace Gaudi {
      * Create an address using the link infotmation together with
      * the triple (database name/container name/object name).
      * 
-     * @param refLink        Reference to abstract link information
-     * @param dbName         Database name
-     * @param containerName  Object container name
-     * @param refpAddress    Opaque address information to retrieve object
+     * @param refLink           Reference to abstract link information
+     * @param dbName            Database name
+     * @param containerName     Object container name
+     * @param refpAddress       Opaque address information to retrieve object
      *
-     * @return               StatusCode indicating SUCCESS or failure
+     * @return                  StatusCode indicating SUCCESS or failure
      */
     virtual StatusCode createAddress( long                 svc_type,
 				      const CLID&          clid,
@@ -188,6 +188,22 @@ namespace Gaudi {
 				      const unsigned long* ip,
 				      IOpaqueAddress*&     refpAddress);
   
+    /** IAddressCreator implementation: Creates an address in string form to object form
+     *  @param      svc_type    Technology identifier encapsulated
+     *                          in this address.
+     *  @param      clid        Class identifier of the DataObject
+     *                          represented by the opaque address
+     *  @param      address     Input address.
+     *  @param      refpAddress Output address in string form.
+     *  @return     Status code indicating success or failure.
+     */
+    virtual StatusCode createAddress( long svc_type,
+				      const CLID& clid,
+				      const std::string& refAddress,
+				      IOpaqueAddress*& refpAddress) {
+      return this->ConversionSvc::createAddress(svc_type,clid,refAddress,refpAddress);
+    }
+
     /** Insert null marker for not existent transient object
      *
      * @param    path     [IN]   Path to the (null-)object
