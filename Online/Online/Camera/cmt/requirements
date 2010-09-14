@@ -69,30 +69,39 @@ apply_pattern component_library library=Camera
 
 application  CameraSwitch camswitch.C
 macro_append CameraSwitch_dependencies " CameraLib "
+macro_append CameraSwitch_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 application  CameraCommand sendcmd.C
 macro_append CameraCommand_dependencies " CameraLib "
+macro_append CameraCommand_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 application  CameraTest testwarn.C
 macro_append CameraTest_dependencies " CameraLib "
+macro_append CameraTest_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 application  CameraServer sserver.C getnsave.C
 macro_append CameraServer_dependencies " CameraLib "
+macro_append CameraServer_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 application  CameraWebServer webserver.C
 macro_append CameraWebServer_dependencies " CameraLib "
+macro_append CameraWebServer_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 application  CameraGui MessagePresenter.C $(CAMERAROOT)/$(tag)/dict/*.cpp
 macro_append CameraGui_dependencies " MessagePresenter CameraLib "
+macro_append CameraGui_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 #application  CameraSend sendone.C
 #macro_append CameraSend_dependencies " CameraLib "
+#macro_append CameraSend_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 #application  CameraWebGet get.C
 #macro_append CameraWebGet_dependencies " CameraLib "
+#macro_append CameraWebGet_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 #application  CameraViewContainer ViewCont.C $(CAMERAROOT)/$(tag)/dict/*.cpp
 #macro_append CameraViewContainer_dependencies " MessagePresenter CameraLib "
+#macro_append CameraViewContainer_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
 apply_pattern application_path
 
