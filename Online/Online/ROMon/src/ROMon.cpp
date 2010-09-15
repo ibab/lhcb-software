@@ -9,6 +9,7 @@
 #include <winsock2.h>
 #endif
 using namespace ROMon;
+using namespace std;
 
 void ROMon::ro_get_node_name(char* name, size_t len) {
   ::strncpy(name,RTL::nodeNameShort().c_str(),len);
@@ -104,12 +105,32 @@ FSMTask& FSMTask::operator=(const FSMTask& copy) {
 }
 //==============================================================================
 
-std::ostream& ROMon::log() {
-  return std::cout << ::lib_rtl_timestr() << " ";
+ostream& ROMon::log() {
+  return cout << ::lib_rtl_timestr() << " ";
 }
 
 void ROMon::print_startup(const char* msg) {
   log() << ::lib_rtl_timestr() << "> Readout monitor " << msg << " started on " 
-        << RTL::nodeNameShort() << " as " << RTL::processName() << std::endl;
+        << RTL::nodeNameShort() << " as " << RTL::processName() << endl;
 }
 
+size_t ROMon::ro_rtl_print(void*,int,const char* fmt,va_list args) {
+  size_t result;
+  string format = fmt;
+  format += "\n";
+  result = ::vfprintf(stdout, format.c_str(), args);
+  ::fflush(stdout);
+  return result;
+}
+
+string ROMon::strupper(const string& n) {
+  string r=n;
+  for(size_t i=0; i<r.length();++i) r[i]=char(::toupper(r[i]));
+  return r;
+}
+
+string ROMon::strlower(const string& n) {
+  string r=n;
+  for(size_t i=0; i<r.length();++i) r[i]=char(::tolower(r[i]));
+  return r;
+}

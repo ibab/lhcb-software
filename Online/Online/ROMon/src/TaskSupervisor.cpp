@@ -5,6 +5,7 @@
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
+#include "ROMonDefs.h"
 
 #include <iomanip>
 #include <stdexcept>
@@ -52,16 +53,6 @@ namespace {
     bool operator()(NodeTaskMon* mon);
     int check(bool throw_if_error=true);
   };
-  string strupper(const string& n) {
-    string r=n;
-    for(size_t i=0; i<r.length();++i) r[i]=char(::toupper(r[i]));
-    return r;
-  }
-  string strlower(const string& n) {
-    string r=n;
-    for(size_t i=0; i<r.length();++i) r[i]=char(::tolower(r[i]));
-    return r;
-  }
 }
 
 string ManipTaskMon::error() const {
@@ -190,7 +181,7 @@ ostream& Inventory::print(ostream& os)   const  {
 
 /// Initializing constructor
 NodeTaskMon::NodeTaskMon(Interactor* parent, const string& nam, const string& typ, Inventory* inv) 
-  : InventoryClient(nam,inv), m_parent(parent), m_type(typ), m_id(0), 
+  : InventoryClient(nam,inv), m_parent(parent), m_type(typ), m_infoId(0), 
     m_changed(true), m_taskUpdate(0), m_connUpdate(0)
 {
 }
@@ -212,6 +203,37 @@ void NodeTaskMon::infoHandler(void* tag, void* address, int* size) {
       cout << "UNKNOWN exception in DIM callback processing." << endl;
     }
   }
+}
+
+/// DimInfo overload to process messages
+void NodeTaskMon::pingHandler(void* tag, void* address, int* size) {
+  if ( address && tag && size ) {
+    try {
+      NodeTaskMon* it = *(NodeTaskMon**)tag;
+      it->updatePingInfo((char*)address,*size);
+    }
+    catch(const exception& e) {
+      cout << "Exception in DIM callback processing:" << e.what() << endl;
+    }
+    catch(...) {
+      cout << "UNKNOWN exception in DIM callback processing." << endl;
+    }
+  }
+}
+
+/// Update task information
+void NodeTaskMon::updatePingInfo(const char* ptr, size_t len) {
+  if ( len > 0 ) {
+    const Connectionset* cs = (Connectionset*)ptr;
+    const Connectionset::Connections& c=cs->connections;
+    for(Connectionset::Connections::const_iterator ic=c.begin(); ic!=c.end();++ic)   {
+      m_connections[(*ic).node] = (*ic).status>0 ? 0 : 5;
+    }
+    return;
+  }
+  cout << "Mark connections list of " << name() << " as BAD." << endl;
+  for(ItemsI::iterator j=m_connections.begin(); j != m_connections.end(); ++j)
+    (*j).second = 5;
 }
 
 /// Update task information
@@ -362,8 +384,11 @@ int NodeTaskMon::start()   {
       if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
       m_connections[n] = 0;
     }
-    cout << "Subscribed to service:" << nam << endl;
-    m_id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
+    ::lib_rtl_output(LIB_RTL_INFO,"Subscribing to service:%s.",nam.c_str());
+    m_infoId = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
+    nam = "/"+nodL+"/PingSrv";
+    ::lib_rtl_output(LIB_RTL_INFO,"Subscribing to service:%s.",nam.c_str());
+    m_infoId = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,pingHandler,(long)this,0,0);
     TimeSensor::instance().add(this,10,(void*)CMD_DATA);
     return 1;
   }
@@ -373,11 +398,15 @@ int NodeTaskMon::start()   {
  
 /// Stop the monitoring object
 int NodeTaskMon::stop()   {
-  if ( m_id ) {
-    ::dic_release_service(m_id);
-    m_id = 0;
-    TimeSensor::instance().remove(this);
+  if ( m_pingId ) {
+    ::dic_release_service(m_pingId);
+    m_pingId = 0;
   }
+  if ( m_infoId ) {
+    ::dic_release_service(m_infoId);
+    m_infoId = 0;
+  }
+  TimeSensor::instance().remove(this);
   return 1;
 }
  
@@ -389,12 +418,17 @@ const string& NodeTaskMon::updateConnections() {
   time_t now = time(0);
   bool   recheck = false;
   bool   force = now-m_connUpdate > CONNECTION_UPDATE_TIMEDIFF;
+  
+  recheck = true;
 
+#if 0
   for(j=m_connections.begin(); j != m_connections.end(); ++j)
     if ( (*j).second > 0 ) recheck = true;
-
+#endif
   if ( recheck || force ) {
     // cout << "Updating connection status of " << name() << endl;
+
+#if 0
     for(j=m_connections.begin(); j != m_connections.end(); ++j) {
       if ( force || (*j).second > 0 ) {
 	MethodCall c("ping",Args((*j).first,2,9000));
@@ -416,7 +450,10 @@ const string& NodeTaskMon::updateConnections() {
     }
     for(j=m_connections.begin(); j != m_connections.end(); ++j) 
       (*j).second<5 ? ++good : ++bad;
-    xml << "\t\t<Connections count=\"" << good
+#endif
+    for(j=m_connections.begin(); j != m_connections.end(); ++j) 
+      (*j).second==0 ? ++good : ++bad; 
+   xml << "\t\t<Connections count=\"" << good
         << "\" ok=\"" << good
         << "\" missing=\"" << bad
         << "\">" << endl;
@@ -588,34 +625,27 @@ static void help_TaskSupervisor() {
   ::exit(0);
 }
 
-static size_t prt(void*,int,const char* fmt,va_list args) {
-  size_t result;
-  string format = fmt;
-  format += "\n";
-  result = ::vfprintf(stdout, format.c_str(), args);
-  ::fflush(stdout);
-  return result;
-}
 
 #include "TaskSupervisorParser.h"
 extern "C" int run_tasksupervisor(int argc, char** argv) {
   ROMon::Inventory inv;
   string server, fname, inventory, node = RTL::nodeNameShort();
-  RTL::CLI cli(argc,argv,help_TaskSupervisor);
-  cli.getopt("inventory",3,inventory);
-  cli.getopt("input",3,fname);
-  cli.getopt("node",1,node);
-  cli.getopt("dns",2,PUBLISHING_NODE);
-  if ( cli.getopt("debug",2) ) s_debug = true;
-  if ( fname.empty() ) help_TaskSupervisor();
-  ::lib_rtl_install_printer(prt,0);
-  node = ::strupper(node);
-  XML::TaskSupervisorParser ts;
-  ts.parseFile(inventory);
-  ts.getInventory(inv);
-  ts.parseFile(fname);
-  ts.getInventory(inv);
-
+  {
+    RTL::CLI cli(argc,argv,help_TaskSupervisor);
+    cli.getopt("inventory",3,inventory);
+    cli.getopt("input",3,fname);
+    cli.getopt("node",1,node);
+    cli.getopt("dns",2,PUBLISHING_NODE);
+    if ( cli.getopt("debug",2) ) s_debug = true;
+    if ( fname.empty() ) help_TaskSupervisor();
+    ::lib_rtl_install_printer(ro_rtl_print,0);
+    node = strupper(node);
+    XML::TaskSupervisorParser ts;
+    ts.parseFile(inventory);
+    ts.getInventory(inv);
+    ts.parseFile(fname);
+    ts.getInventory(inv);
+  }
   if ( s_debug ) {
     cout << "Input file is:" << fname << " Node:" << node << endl;  
     cout << inv << endl;

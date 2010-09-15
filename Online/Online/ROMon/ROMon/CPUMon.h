@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.9 2008-11-11 18:31:09 frankb Exp $
+// $Id: CPUMon.h,v 1.10 2010-09-15 17:11:36 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.9 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.10 2010-09-15 17:11:36 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -323,6 +323,52 @@ namespace ROMon {
     int length()  const {  return totalSize; }
   };
 
+  /**@class Connectionset ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents a single outgoing Connection from node
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) Connection {
+  public:
+    char node[32];
+    int  last;
+    int  status;
+    /// Standard constructor
+    Connection();
+    /// Reset data structure content
+    Connection* reset();
+  };
+
+  /**@class Connectionset ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents all outgoing ping-Connections of a single node
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) Connectionset {
+  public:
+    enum { TYPE = 7 };
+    typedef FixItems<Connection> Connections;
+    /// First word: Data type descriptor (MUST always be 6)
+    int  type;
+    /// Node name
+    char   name[32];
+    /// Time stamp of last information update
+    int time;
+    /// Time stamp of the monitor snapshot [milli seconds]
+    unsigned int millitm;
+    /// Variable size array of node items
+    Connections connections;
+    /// Default constructor
+    Connectionset();
+    /// Reset object structure
+    Connectionset* reset();
+    /// Length of the object in bytes
+    int length()  const {  return sizeof(Connectionset)+connections.data_length(); }
+  };
+
+
   std::vector<std::string> psItems(const char*& ptr);
   std::vector<std::string> psLabels();
   enum PsDataItems {
@@ -362,15 +408,16 @@ namespace ROMon {
     CMDLINE
   };
   union CPUMonData {
-    char*      str;
-    void*      ptr;
-    CPU*       cpu;
-    CPUset*    cpuSet;
-    CPUfarm*   farm;
-    Process*   proc;
-    Procset*   processes;
-    ProcFarm*  procFarm;
-    NodeStats* node;
+    char*            str;
+    void*            ptr;
+    CPU*             cpu;
+    CPUset*          cpuSet;
+    CPUfarm*         farm;
+    Process*         proc;
+    Procset*         processes;
+    Connectionset*   connections;
+    ProcFarm*        procFarm;
+    NodeStats*       node;
     CPUMonData(void* buffer) { ptr=buffer; }
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };

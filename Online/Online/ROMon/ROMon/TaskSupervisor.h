@@ -9,21 +9,23 @@
 #include <map>
 
 /*
-  <Cluster name="HLTD01" status="ALIVE">
-  <Node name="hltd0104" status="ALIVE"><Found_Tasks count="16"/></Node>
-  <Node name="hltd01" status="ALIVE">
-  <Missing_Tasks  count="1">
-  <Task name="LogGaudiSumSrvaaaa"/>
-  </Missing_Tasks>
-  <Found_Tasks count="22"/>
-  </Node>
-  <Node name="hltd0101" status="ALIVE"><Found_Tasks count="16"/></Node>
-  <Node name="hltd0103" status="ALIVE"><Found_Tasks count="16"/></Node>
-  <Node name="hltd0102" status="ALIVE"><Found_Tasks count="16"/></Node>
-  </Cluster>
-*/
+ *   ROMon namespace declaration
+ */
 namespace ROMon {
+
+  /* @class Cluster TaskSupervisor.h ROMon/TaskSupervisor.h
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
   struct Cluster {
+
+
+    /* @class Cluster::Project TaskSupervisor.h ROMon/TaskSupervisor.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct PVSSProject {
       std::string name;
       bool   eventMgr;
@@ -45,12 +47,17 @@ namespace ROMon {
       static std::string projectName(const std::string& n);
     };
     typedef std::vector<PVSSProject> Projects;
+
+    /* @class Cluster::Node TaskSupervisor.h ROMon/TaskSupervisor.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct Node {
-      typedef std::pair<std::string,bool> Item;
-      //typedef std::pair<std::string,int>  ItemI;
-      typedef std::vector<Item>          Tasks;
-      typedef std::vector<Item>          Connections;
-      typedef std::vector<PVSSProject>    Projects;
+      typedef std::pair<std::string,bool>    Item;
+      typedef std::vector<Item>              Tasks;
+      typedef std::vector<Item>              Connections;
+      typedef std::vector<PVSSProject>       Projects;
       std::string name, status, time, boot;
     
       Tasks        tasks;
@@ -101,8 +108,19 @@ namespace ROMon {
     Cluster(const Cluster& n) : name(n.name), status(n.status), nodes(n.nodes) {}
 
   };
+
+  /* @class Inventory TaskSupervisor.h ROMon/TaskSupervisor.h
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
   class Inventory {
   public:
+    /* @class Inventory::Task TaskSupervisor.h ROMon/TaskSupervisor.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     class Task {
     public:
       std::string name;
@@ -135,6 +153,11 @@ namespace ROMon {
     typedef std::vector<std::string>             ConnectionList;
     typedef std::map<std::string,ConnectionList> ConnectionListMap;
 
+    /* @class Inventory::NodeType TaskSupervisor.h ROMon/TaskSupervisor.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     class NodeType {
     public:
       std::string    name;
@@ -152,6 +175,11 @@ namespace ROMon {
       NodeType& operator=(const NodeType& c) { _cpy(c); return *this; }
     };
 
+    /* @class Inventory::NodeCollection TaskSupervisor.h ROMon/TaskSupervisor.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     class NodeCollection {
     public:
       typedef std::map<std::string,std::string> NodeList;
@@ -218,7 +246,9 @@ namespace ROMon {
     /// List of connections present
     ItemsI              m_connections;
     /// DIM service ID with subscribed information
-    int                 m_id;
+    int                 m_infoId;
+    /// DIM service ID with subscribed information
+    int                 m_pingId;
     /// Flag to indicate information update
     bool                m_changed;
     /// Time stamp of last update
@@ -237,6 +267,8 @@ namespace ROMon {
     virtual ~NodeTaskMon();
     /// DimInfo overload to process messages
     static void infoHandler(void* tag, void* address, int* size);
+    /// DimInfo overload to process messages
+    static void pingHandler(void* tag, void* address, int* size);
     /// Access node type
     const std::string& type() const            {  return m_type;        }
     /// Access error information
@@ -265,6 +297,8 @@ namespace ROMon {
     virtual void handle(const Event& ev);
     /// Update task information
     void updateTaskInfo(const char* ptr, size_t len);
+    /// Update connection information
+    void updatePingInfo(const char* ptr, size_t len);
   };
 
   class SubfarmTaskMon : public InventoryClient, public Interactor  {

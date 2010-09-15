@@ -204,3 +204,28 @@ void NodeStats::fixup() {
   procSize = procs()->length();
   totalSize = cpuSize + procSize + sizeof(NodeStats);
 }
+
+/// Standard constructor
+Connection::Connection() {
+  reset();
+}
+
+/// Reset data structure content
+Connection* Connection::reset() {
+  ::memset(node,0,sizeof(node));
+  last = 0;
+  status = -1;
+  return this;
+}
+
+/// Standard constructor
+Connectionset::Connectionset() {
+  reset();
+}
+
+/// Reset object structure
+Connectionset* Connectionset::reset() {
+  ::memset(this,0,sizeof(Connectionset));
+  type = TYPE;
+  return this;
+}
