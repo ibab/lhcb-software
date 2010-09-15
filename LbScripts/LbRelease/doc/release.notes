@@ -1,3 +1,10 @@
+2010-09-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc: Generate a DB with the reference doc files of the
+	classes and add a small PHP script that can be used as uniform URL for the classes.
+	E.g. : http://example.com/path/to/doxygen/class.php?n=MyClass
+	* python/LbRelease/_LHCbDocResources.py: added the content of "class.php".
+
 2010-09-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: support for Coverity added; Intel compiler support

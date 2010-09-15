@@ -175,6 +175,72 @@ class DoxyFileCfg(object):
         return "".join(["%s = %s\n" % (k, self._convertValue(self[k]))
                         for k in self])
 
+def doxyTagsToDBM(tag, output, overwrite = False, python = False):
+    """
+    Extract the file paths of the reference documentation page of the classes
+    from a Doxygen tag file and stores them in a DBM file.
+
+    @param tag: path to the tag file
+    @param output: path to the DBM file.
+    @param overwrite: if set to True, force the creation of a new DB (default is append)
+    @param python: if set to True, modify the class names to use '.' instead of '::'
+    """
+    import anydbm, xml.parsers.expat
+    _log = logging.getLogger("doxyTagsToDBM")
+    # Open (and create) the database
+    db = anydbm.open(output, overwrite and "n" or "c")
+    # Prepare the XML parser
+    p = xml.parsers.expat.ParserCreate()
+    # We need to analyse structures like:
+    # <compound kind="class">
+    #   <name>MyClass</name>
+    #   <filename>d1/d70/class_my_class.html</filename>
+    #   <member kind="variable" protection="private">
+    #     <type>string</type>
+    #     <name>m_data</name>
+    #     <anchorfile>...</anchorfile>
+    #     <anchor>...</anchor>
+    #     <arglist></arglist>
+    #   </member>
+    # </compound>
+    #
+    _path = [] # path in the XML tree
+    _data = {} # cache for the data to add
+    # XML event handlers
+    def start_element(name, attrs):
+        # keep track of the path of elements (with the optional attibute 'kind')
+        _path.append( (name, attrs.get("kind")) )
+        if name == "compound":
+            _data = {}
+    def char_data(data):
+        if len(_path) >= 2:
+            # we must be in a child of <compound kind="class">
+            if _path[-2] == ("compound", "class"):
+                current = _path[-1][0]
+                # of type <name> or <filename>
+                if current in [ "name", "filename" ]:
+                    _data[current] = data #store the data in the cache
+    def end_element(name):
+        # keep track of the path
+        elem = _path.pop()
+        # if we are exiting from a <compound kind="class">
+        # and we collected some data
+        if elem == ("compound", "class") and _data:
+            try: # store the data in the database
+                name = str(_data["name"])
+                if python:
+                    # Use Python scope notation
+                    name = name.replace('::', '.')
+                db[name] = str(_data["filename"])
+            except Exception, x:
+                # safety net for inconsistent XML
+                _log.warning(x)
+    p.StartElementHandler = start_element
+    p.EndElementHandler = end_element
+    p.CharacterDataHandler = char_data
+    p.ParseFile(open(tag))
+    db.close()
+
 #--- CMT Interfaces
 def _projRoot(proj, version):
     """
@@ -589,7 +655,7 @@ class Doc(object):
         doxycfg['SKIP_FUNCTION_MACROS'] = True
 
         #--- External reference options
-        doxycfg['GENERATE_TAGFILE']    = 'LHCbSoft.tag'
+        # doxycfg['GENERATE_TAGFILE'] # set to the temporary directory
         doxycfg["TAGFILES"] = []
         # libstdc++
         tagline = os.path.join(os.environ["LCG_release_area"],
@@ -664,6 +730,8 @@ class Doc(object):
         open(os.path.join(confdir, 'DoxygenLayout.xml'), 'w').write(_LHCbDocResources.layout)
         #  CSS file
         open(os.path.join(confdir, 'lhcb_doxygen.css'), 'w').write(_LHCbDocResources.stylesheet)
+        #  class locator PHP script
+        open(os.path.join(confdir, 'class.php'), 'w').write(_LHCbDocResources.class_php)
 
     def _projectDeps(self, project, recursive = False):
         """
@@ -751,6 +819,7 @@ class Doc(object):
                 tmp = os.fdopen(tmpFd, "w")
                 tmp.write(open(conf).read())
                 tmp.write("\nOUTPUT_DIRECTORY = %s\n" % workdir)
+                tmp.write("\nGENERATE_TAGFILE = %s\n" % os.path.join(workdir, "html", "doxygen.tag"))
                 tmp.close()
                 doxcmd = ["doxygen"]
                 if version:
@@ -765,6 +834,7 @@ class Doc(object):
             # Fake execution for testing
             os.mkdir(os.path.join(workdir, "html"))
             open(os.path.join(workdir, "html", "index.html"), "w").write("testing\n")
+
         if retcode != 0:
             raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, workdir))
 
@@ -776,6 +846,9 @@ class Doc(object):
         @param doxygen_version: version of Doxygen to use
         """
         self._buildDox(os.path.join(self.path, "conf", "DoxyFileCpp.cfg"), workdir, version = doxygen_version)
+        self._log.info("Generate the database of classes from tags")
+        doxyTagsToDBM(os.path.join(workdir, "html", "doxygen.tag"),
+                      os.path.join(workdir, "html", "classes.db"))
 
     def _buildPy(self, workdir, doxygen_version = None):
         """
@@ -784,6 +857,9 @@ class Doc(object):
         @param doxygen_version: version of Doxygen to use
         """
         self._buildDox(os.path.join(self.path, "conf", "DoxyFilePy.cfg"), workdir, version = doxygen_version)
+        self._log.info("Generate the database of classes from tags")
+        doxyTagsToDBM(os.path.join(workdir, "html", "doxygen.tag"),
+                      os.path.join(workdir, "html", "classes.db"), python = True)
 
     def build(self, doxygen_versions = (None, None)):
         """
@@ -852,8 +928,9 @@ class Doc(object):
             else:
                 # Copy Python with structure
                 shutil.copytree(pytempdir, self.output + ".new")
-            # copy the dependency graph to the doxygen directory
-            for f in [ f for f in os.listdir(os.path.join(self.path, "conf")) if f.startswith("dependencies.") ]:
+            # copy files to the doxygen directory (dependency graph, class.php)
+            for f in [ f for f in os.listdir(os.path.join(self.path, "conf"))
+                         if f.startswith("dependencies.") or f in ["class.php"]]:
                 src = os.path.join(self.path, "conf", f)
                 shutil.copyfile(src, os.path.join(self.output + ".new", "html", f))
                 if self._hasCpp(): # we need to copy the graphs also in the Python directory
