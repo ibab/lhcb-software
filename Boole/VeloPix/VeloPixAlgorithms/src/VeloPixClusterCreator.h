@@ -1,4 +1,4 @@
-#// $Id: VeloPixClusterCreator.h,v 1.2 2010-01-06 14:08:46 marcin Exp $
+// $Id: VeloPixClusterCreator.h,v 1.2 2010-01-06 14:08:46 marcin Exp $
 #ifndef VELOPIXCLUSTERCREATOR_H
 #define VELOPIXCLUSTERCREATOR_H 1
 // Include files
@@ -37,7 +37,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalise
 
-  class pixDigit {
+  class PixDigit {
   public:
     LHCb::VeloPixChannelID key;
     int tot;
@@ -51,17 +51,17 @@ private:
   StatusCode createClusters(LHCb::VeloPixDigits* digitCont,
              LHCb::VeloPixClusters* clusterCont,
              LHCb::VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont);
-  void baryCenter(std::vector<pixDigit> activePixels,
+  void baryCenter(std::vector<PixDigit> activePixels,
                   LHCb::VeloPixChannelID& baryCenterChID,
                   std::pair<double,double>& xyFraction,
                   bool& isLong);
   std::pair<unsigned int,unsigned int> scaleFrac(
                                        std::pair<double,double> xyFraction);
   unsigned int scaleToT(int totSum);
-  bool maxCentral(pixDigit dgt,std::vector<pixDigit> activePixels);
   std::string m_inputLocation;
   std::string m_outputLocation;
   std::string m_outputLocationLite;
+  bool m_saveAllClusters;  
   bool m_isDebug; 
   bool m_isVerbose;
   double m_scaleFactor;

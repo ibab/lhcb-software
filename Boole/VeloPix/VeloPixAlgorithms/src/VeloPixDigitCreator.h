@@ -40,9 +40,5 @@ private:
   std::vector<std::string> m_outPaths;
   bool m_isDebug; 
   bool m_isVerbose;
-  double m_conversion;
-  double m_threshold;
-  int m_nBits;
-  double m_maxCharge;
 };
 #endif // VeloPixDigitCreator_H

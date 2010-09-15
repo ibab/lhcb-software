@@ -67,8 +67,6 @@ VeloPixMCDepositCreator::VeloPixMCDepositCreator(const std::string& name,
   declareProperty("kT", m_kT = 0.025);
   declareProperty("BiasVoltage", m_biasVoltage = 105.0);
   declareProperty("UseDepTool", m_useDepTool = true);
-  Rndm::Numbers m_gaussDist;
-  Rndm::Numbers m_uniformDist;
 }
 
 //=============================================================================

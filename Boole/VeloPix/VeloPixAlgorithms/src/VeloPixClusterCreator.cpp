@@ -53,8 +53,13 @@ VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name,
                   "VeloPix/Clusters");
   declareProperty("OutputLocationLite", m_outputLocationLite = 
                   "VeloPix/LiteClusters");
-  declareProperty("scaleFactor", m_scaleFactor = 2.0);
-  declareProperty("nBits",m_nBits = 2u); // 3 bits
+  // ToT sum in cluster divided by this number before saving in Lite cluster
+  declareProperty("scaleFactorForToTSum", m_scaleFactor = 2.0);
+  // number of bits to be used for saving Fractional positions and totSum in Lite cluster
+  declareProperty("NumberOfBitsInLiteCluster",m_nBits = 3); // 3 bits
+
+  // if false then only clusters in which seed was a local maximum are saved
+  declareProperty("SaveAllClusters",m_saveAllClusters = true);  
 }
 
 //=============================================================================
@@ -68,7 +73,7 @@ VeloPixClusterCreator::~VeloPixClusterCreator(){};
 StatusCode VeloPixClusterCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
-  m_maxValue = double(2 << m_nBits) - 1;
+  m_maxValue = double(2 << (m_nBits-1) ) - 1;
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
@@ -109,19 +114,19 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
   std::stable_sort(digitCont->begin(),digitCont->end(),
               VeloPixDataFunctor::Greater_by_totValue<const VeloPixDigit*>());
   // Prepare temporary digits
-  std::vector<pixDigit> pixDigits;
+  std::vector<PixDigit> pixDigits;
   for(VeloPixDigits::const_iterator ipd = digitCont->begin(); 
       ipd != digitCont->end(); ipd++) {
-    pixDigit tmpDigit;
+    PixDigit tmpDigit;
     tmpDigit.key = (*ipd)->channelID();
     tmpDigit.tot = (*ipd)->ToTValue();
     tmpDigit.isUsed = 0;
     pixDigits.push_back(tmpDigit);
   }
   // Find clusters
-  for(std::vector<pixDigit>::iterator id = pixDigits.begin();
+  for(std::vector<PixDigit>::iterator id = pixDigits.begin();
       id != pixDigits.end(); id++) {
-    pixDigit dgt = *id;
+    PixDigit & dgt = *id;
     if(dgt.isUsed == 0) {
       // Get 8 neighbour pixels
       const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(dgt.key);
@@ -134,30 +139,34 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
 	      // Sort by channelID
         std::sort(neighbsVec.begin(),neighbsVec.end(),sortByChannel);
         // Find active pixels
-        std::vector<pixDigit> activePixels; activePixels.clear();
+        std::vector<PixDigit> activePixels; activePixels.clear();
         int totSum = 0;
 	      std::vector< std::pair<LHCb::VeloPixChannelID,int> > totVec;
         totVec.clear();
-        for(std::vector<pixDigit>::iterator idi = pixDigits.begin();
+        bool isMax=true;        
+        for(std::vector<PixDigit>::iterator idi = pixDigits.begin();
             idi != pixDigits.end(); idi++) {
-          pixDigit digit = *idi;
+          PixDigit & digit = *idi;
           for(std::vector<LHCb::VeloPixChannelID>::iterator 
               inc = neighbsVec.begin(); inc != neighbsVec.end(); ++inc) {
             LHCb::VeloPixChannelID nChannel = *inc;
-            if((digit.key == nChannel) && (digit.isUsed == 0)) {
-              activePixels.push_back(digit);
-              totSum = totSum + digit.tot;
-              std::pair<LHCb::VeloPixChannelID,int> totPair;
-              totPair.first = digit.key;
-	            totPair.second = digit.tot;
-              totVec.push_back(totPair);
-              digit.isUsed = 1;
-	          }
+            if( digit.key == nChannel ){
+              if( digit.tot > dgt.tot ) isMax=false;
+              if( digit.isUsed == 0 ){
+                activePixels.push_back(digit);
+                totSum += digit.tot;
+                std::pair<LHCb::VeloPixChannelID,int> totPair;
+                totPair.first = digit.key;
+                totPair.second = digit.tot;
+                totVec.push_back(totPair);
+                digit.isUsed = 1;
+              }
+            }
 	        }
         }
         // Check if central pixel contains max ToT
-        bool isMax = maxCentral(dgt,activePixels);
-        if(isMax) {
+        //        bool isMax = maxCentral(dgt,activePixels);
+        if( m_saveAllClusters || isMax) {
           // Make VeloPixLiteCluster & VeloPixCluster
           LHCb::VeloPixChannelID baryCenterChID;
           std::pair<double,double> xyFraction;
@@ -177,7 +186,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           VeloPixCluster* newCluster = 
                           new VeloPixCluster(newLiteCluster,totVec);
           clusterCont->insert(newCluster,dgt.key);
-      	}
+      	} 
       } else {
         Warning("channelToNeighbours failure");
       }   
@@ -190,7 +199,7 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
 //============================================================================
 // Calculate barycenter of the cluster
 //============================================================================
-void VeloPixClusterCreator::baryCenter(std::vector<pixDigit> activePixels,
+void VeloPixClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
                                        LHCb::VeloPixChannelID& baryCenterChID,
                                        std::pair<double,double>& xyFraction,
                                        bool& isLong)
@@ -199,9 +208,9 @@ void VeloPixClusterCreator::baryCenter(std::vector<pixDigit> activePixels,
   double sumYW = 0.0;
   double sumZW = 0.0;
   double sumWeight = 0.0;
-  for(std::vector<pixDigit>::iterator ipc = activePixels.begin();
+  for(std::vector<PixDigit>::iterator ipc = activePixels.begin();
       ipc != activePixels.end(); ipc++) {
-    pixDigit dgt = *ipc;
+    PixDigit dgt = *ipc;
     const DeVeloPixSensor* sensor = 
                            m_veloPixelDet->sensor(dgt.key);
     Gaudi::XYZPoint midPoint(0.0,0.0,0.0);
@@ -254,23 +263,6 @@ unsigned int VeloPixClusterCreator::scaleToT(int totSum)
   return scaledToT;
 }
 
-
-//============================================================================
-// Check if central pixel has maximum ToT
-//============================================================================
-bool VeloPixClusterCreator::maxCentral(pixDigit dgt,
-                                       std::vector<pixDigit> activePixels)
-{
-  bool isMax = true;
-  for(std::vector<pixDigit>::iterator ipd = activePixels.begin();
-      ipd != activePixels.end(); ipd++) {
-    pixDigit pixDgt = *ipd;
-    if(dgt.key != pixDgt.key) {
-      if(dgt.tot <= pixDgt.tot) isMax = false;
-    }
-  }
-  return isMax;
-}
 
 
 //============================================================================

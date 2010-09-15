@@ -42,14 +42,11 @@ VeloPixDigitCreator::VeloPixDigitCreator(const std::string& name,
   declareProperty("InputLocation", m_inputLocation = 
                   "MC/VeloPix/Digits");
   declareProperty("OutputLocation", m_outputLocation = 
-                  "VeloPix/Digits");
+                  "VeloPix/PreDigits");
   declareProperty("SamplesVector", m_sampleNames = 
          boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("SpillVector", m_spillNames = 
          boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
-  declareProperty("Threshold", m_threshold = 1000.0);  // Si thickness = 150um
-  declareProperty("Conversion", m_conversion = 0.00048);
-  declareProperty("nBits",m_nBits = 3u); // 4 bits
 }
 
 //=============================================================================
@@ -63,7 +60,6 @@ VeloPixDigitCreator::~VeloPixDigitCreator(){};
 StatusCode VeloPixDigitCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
-  m_maxCharge = double(2 << m_nBits) - 1;
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
@@ -121,8 +117,8 @@ void VeloPixDigitCreator::createDigits(const MCVeloPixDigits* digitsMC,
     double totCharge = std::accumulate(depositsCont.begin(),
                                        depositsCont.end(), 0.0,
            VeloPixDataFunctor::Accumulate_Charge<const MCVeloPixDeposit*>());
-    if(totCharge > m_threshold) {
-      int tot = convertToTDC(totCharge);
+    if(totCharge > 0.0 ) {
+      int tot = int( ceil(totCharge) );
       int timeStamp = 0; // temporary assumption
       LHCb::VeloPixDigit* newDigit =
                           new LHCb::VeloPixDigit(tot,timeStamp);
@@ -131,16 +127,6 @@ void VeloPixDigitCreator::createDigits(const MCVeloPixDigits* digitsMC,
   }
 }
 
-
-//============================================================================
-// Convert to TDC
-//============================================================================
-int VeloPixDigitCreator::convertToTDC(double charge)
-{
-  int tot = int(ceil(charge * m_conversion));
-  if(tot > int(m_maxCharge)) tot = int(m_maxCharge);
-  return tot;
-}
 
 
 //============================================================================
