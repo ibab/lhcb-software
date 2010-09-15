@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configurable:
+   . Upgrade VeloPix MC: add VeloPixDigitsCreator with deadtime, time walk
+    , ToT nonlinearity and electronic noise simulation. 
 
 </PRE><H1><A NAME=v21r7>2010-08-26 Boole v21r7</A></H1><PRE>
 This version uses projects LCGCMT 58e, Gaudi v21r10p1, LHCb v31r5, Lbcom v9r6

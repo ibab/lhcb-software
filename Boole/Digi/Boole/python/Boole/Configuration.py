@@ -312,11 +312,11 @@ class Boole(LHCbConfigurableUser):
         #        VeloPix digitisation and clustering
         if tae == "":
             from Configurables import (VeloPixMCDepositCreator,VeloPixMCDigitCreator,VeloPixDigitCreator,
-                                       VeloPixSpilloverSubtraction,VeloPixClusterCreator,PrepareVeloPixRawBank)
+                                       VeloPixDigitsCreator,VeloPixClusterCreator,PrepareVeloPixRawBank)
             seq.Members += [VeloPixMCDepositCreator("VeloPixMCDepositCreator") ]
             seq.Members += [VeloPixMCDigitCreator("VeloPixMCDigitCreator") ]
             seq.Members += [VeloPixDigitCreator("VeloPixDigitCreator") ]
-            seq.Members += [VeloPixSpilloverSubtraction("VeloPixSpilloverSubtraction") ]
+            seq.Members += [VeloPixDigitsCreator("VeloPixDigitsCreator") ]
             seq.Members += [VeloPixClusterCreator("VeloPixClusterCreator") ]
             seq.Members += [PrepareVeloPixRawBank("PrepareVeloPixRawBank") ]
         else:
