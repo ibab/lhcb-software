@@ -349,7 +349,6 @@ double VeloPixDigitsCreator::convertToTime(int bunchCrossingNumberDifference) {
 
 // linear conversion from charge in electrons to ToT counts
 int VeloPixDigitsCreator::convertToTDC(double charge) {
-  if( charge<= 0.0 )return 0;  
   int tot = int(ceil(charge * m_conversion));
   if( tot > m_maxToT ) tot = m_maxToT;
   if( tot <  1 )tot = 1;  
