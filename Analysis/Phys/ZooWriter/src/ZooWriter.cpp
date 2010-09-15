@@ -544,13 +544,16 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
     if (ch.empty()) {
     
       // stable particle
-      
+     if(0 != p->charge()) 
       zp->AddInfo<ZooStable>(*objman(),
 			     ZooStable(refittedTrack(p->proto()->track())->type(), p->charge()));
+     else 
+      zp->AddInfo<ZooStable>(*objman(),
+			     ZooStable(0, p->charge()));
      
-      if ( m_writeTrackInfo || !m_packedStatesList.empty()
+      if ( (0 != p->charge()) && (m_writeTrackInfo || !m_packedStatesList.empty()
 	   || m_writeHitPattern || m_writeExpectedHitPattern ||
-	   m_writeCollectedHitPattern || !m_extraInfoList.empty())
+	   m_writeCollectedHitPattern || !m_extraInfoList.empty()))
 	writeTrackInfo(zp,p);
           
       if (m_writeDLL) writeDLL(zp,p);

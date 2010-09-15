@@ -944,6 +944,12 @@ class ZooEv : public TObject
 	template<typename DEC> bool getTriggerDec() const
 	{ return m_triggerDecisions[DEC::word] & DEC::mask; }
 
+	const UInt_t getTriggerWord(unsigned int i) const
+	{ 
+		assert(i < TriggerDecisions::NTriggerDecisionWords); 
+		return m_triggerDecisions[i]; 
+	}
+
 	unsigned NP() const { return GetP().size(); } 
 	unsigned NMCP() const { return GetMCP().size(); }
 	const ZooObjClonesArray& GetP() const

@@ -3,6 +3,14 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2010-09-15 - Georg Alexander Krocker
+ - Included update from Christoph for Hlt line names
+ - Included new member function for ZooEv from Christoph to get whole trigger
+   decision word.
+ - Included patch that prevents acessing of tracks from neutral stable
+   particles.
+
+!============================ Zoo v11r2 2010-09-15 ===========================
 ! 2010-08-13 - Georg Alexander Krocker
  - Included Patch from Christoph that fixed compilation issue with DaVinci =>
    v25r6. Results in incompatibility with older Versions.
