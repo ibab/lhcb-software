@@ -4,6 +4,13 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2010-09-15 - Chris Jones
+ - Add a first try at full implementations of the packers for Particles and
+   Vertices, for use in the stripping. The packing is not 100% ideal yet, the
+   MomCov matrix in the Particle class has room for improvement I think and 
+   should be improved before this is put into production, but what is there 
+   is OK and enough to start testing against.
+
 !======================= PackedEvent v4r2 2010-07-19 =========================
 ! 2010-05-18 - Chris Jones
  - Add (empty) implementations of the Packers for Particles and Vertices.

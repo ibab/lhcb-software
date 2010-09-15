@@ -37,6 +37,9 @@ namespace LHCb
     // packed data members
     int technique;
 
+    // outgoing particles
+    std::vector<int> outgoingParticles;
+
   };
 
   // -----------------------------------------------------------------------

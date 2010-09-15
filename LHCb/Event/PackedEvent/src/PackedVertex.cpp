@@ -21,10 +21,29 @@ void VertexPacker::pack( const DataVector & verts,
           iD != verts.end(); ++iD )
     {
       Data & vert = **iD;
+
+      // new packed data object
       pverts.data().push_back( PackedData() );
       PackedData & pvert = pverts.data().back();
+
       // fill pvert from vert
+
+      // technique
       pvert.technique = static_cast<int>(vert.technique());
+
+      // outgoing particles
+      pvert.outgoingParticles.reserve( vert.outgoingParticles().size() );
+      for ( SmartRefVector<LHCb::Particle>::const_iterator iP = vert.outgoingParticles().begin();
+            iP != vert.outgoingParticles().end(); ++iP )
+      {
+        if ( NULL != *iP )
+        {
+          pvert.outgoingParticles.push_back( m_pack.reference( &pverts,
+                                                               (*iP)->parent(),
+                                                               (*iP)->key() ) );
+        }
+      }
+
     }
   }
   else
@@ -45,11 +64,26 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
           iD != pverts.data().end(); ++iD )
     {
       const PackedData & pvert = *iD;
+
       // make and save new pid in container
       Data * vert = new Data();
       verts.add( vert );
+
       // Fill data from packed object
+
+      // technique
       vert->setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );
+
+      // outgoing particles
+      for ( std::vector<int>::const_iterator iP = pvert.outgoingParticles.begin();
+            iP != pvert.outgoingParticles.end(); ++iP )
+      {
+        int hintID(0), key(0);
+        m_pack.hintAndKey( *iP, &pverts, &verts, hintID, key );
+        SmartRef<LHCb::Particle> ref(&verts,hintID,key);
+        vert->addToOutgoingParticles( ref );
+      }
+
     }
   }
   else
@@ -77,6 +111,8 @@ StatusCode VertexPacker::check( const DataVector & dataA,
     bool ok = true;
 
     // checks here
+
+    // technique
     ok &= (*iA)->technique() == (*iB)->technique();
 
     // force printout for tests

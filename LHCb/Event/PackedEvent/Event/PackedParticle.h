@@ -31,11 +31,63 @@ namespace LHCb
   {
     /// Default constructor
     PackedParticle()
-      : particleID(0)
+      : particleID(0),
+        measMass(0), measMassErr(0),
+        lv_px(0),lv_py(0),lv_pz(0),lv_mass(0),
+        refx(0),refy(0),refz(0),
+        momCov00(0),momCov11(0),momCov22(0),momCov33(0),
+        momCov10(0),
+        momCov20(0),momCov21(0),
+        momCov30(0),momCov31(0),momCov32(0),
+        posCov00(0),posCov11(0),posCov22(0), 
+        posCov10(0),
+        posCov20(0),posCov21(0),
+        pmCov00(0),pmCov01(0),pmCov02(0),
+        pmCov10(0),pmCov11(0),pmCov12(0),
+        pmCov20(0),pmCov21(0),pmCov22(0),
+        pmCov30(0),pmCov31(0),pmCov32(0),
+        firstExtra(0), lastExtra(0),
+        vertex(-1),
+        proto(-1)
     {}
 
     // packed data members
-    int particleID; ///< PID Code
+
+    int particleID;        ///< PID Code
+    int measMass;          ///< Measured mass
+    int measMassErr;       ///< Error on the measured mass
+    int lv_px,lv_py,lv_pz; ///< 3D Momemtum part of Lorentz vector
+    float lv_mass;         ///< Mass part of Lorentz vector 
+    int refx,refy,refz;    ///< reference point
+
+    // Momentum Cov matrix
+    int momCov00,momCov11,momCov22,momCov33; 
+    short int momCov10;
+    short int momCov20,momCov21;
+    short int momCov30,momCov31,momCov32;
+
+    // Position Cov matrix
+    int posCov00,posCov11,posCov22; 
+    short int posCov10;
+    short int posCov20,posCov21;
+
+    // PosMom Cov matrix
+    int pmCov00,pmCov01,pmCov02;
+    int pmCov10,pmCov11,pmCov12;
+    int pmCov20,pmCov21,pmCov22;
+    int pmCov30,pmCov31,pmCov32;
+
+    // Extra info
+    unsigned short int firstExtra, lastExtra;
+
+    // End Vertex
+    int vertex;  
+
+    // ProtoParticle
+    int proto;
+
+    // daugthers
+    std::vector<int> daughters;
 
   };
 
@@ -63,6 +115,12 @@ namespace LHCb
 
     /// Vector of packed objects
     typedef std::vector<LHCb::PackedParticle> Vector;
+
+    /// Extra info pair
+    typedef std::pair<int,int> PackedExtraInfo;
+
+    /// Extra info vector
+    typedef std::vector<PackedExtraInfo> PackedExtraInfoVector;
 
   public:
 
@@ -92,6 +150,12 @@ namespace LHCb
     /// Access the packing version
     char packingVersion() const { return m_packingVersion; }
 
+    /// Write access to the extra info
+    PackedExtraInfoVector & extra()             { return m_extra; }
+
+    /// Read access to the extra info
+    const PackedExtraInfoVector & extra() const { return m_extra; }
+
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
@@ -99,6 +163,9 @@ namespace LHCb
 
     /// The packed data objects
     Vector m_vect;
+
+    /// The extra info 
+    PackedExtraInfoVector m_extra;
 
   };
 

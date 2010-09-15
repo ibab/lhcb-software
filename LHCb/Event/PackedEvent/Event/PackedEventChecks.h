@@ -4,10 +4,12 @@
 
 // STL
 #include <cmath>
+#include <sstream>
 
 // Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -39,11 +41,44 @@ namespace DataPacking
 
   public:
 
+    /// Compare two Matrices
+    template < class TYPE, unsigned int N, unsigned int M >
+    inline bool compareMatrices(  const std::string & name,
+                                  const TYPE & a,
+                                  const TYPE & b,
+                                  const double tol = 5.0e-3 ) const
+    {
+      bool ok = true;
+      for ( unsigned int n = 0; n<N; ++n )
+      {
+        for ( unsigned int m = 0; m<M; ++m )
+        {
+          std::ostringstream text;
+          text << name << ":" << n << m;
+          ok &= compareDoubles( text.str(), a(n,m), b(n,m), tol );
+        }
+      }
+      return ok;
+    }
+
+    /// Compare two Lorentz vector
+    inline bool compareLorentzVectors( const std::string & name,
+                                       const Gaudi::LorentzVector & a,
+                                       const Gaudi::LorentzVector & b,
+                                       const double tol = 5.0e-3 ) const
+    {
+      const Gaudi::XYZVector av(a.x(),a.y(),a.z());
+      const Gaudi::XYZVector bv(b.x(),b.y(),b.z());
+      const bool vOK = compareVectors( name+":Vect", av, bv, tol );
+      const bool mOK = compareDoubles( name+":mass", a.M(), b.M(), tol );
+      return vOK && mOK;
+    }
+
     /// Compare two points to within the given tolerance
-    inline bool comparePoints(  const std::string & name,
-                                const Gaudi::XYZPoint & a,
-                                const Gaudi::XYZPoint & b,
-                                const double tol = 1.0e-4 ) const
+    inline bool comparePoints( const std::string & name,
+                               const Gaudi::XYZPoint & a,
+                               const Gaudi::XYZPoint & b,
+                               const double tol = 1.0e-4 ) const
     {
       const bool ok = ( std::fabs( a.x() - b.x() ) < tol &&
                         std::fabs( a.y() - b.y() ) < tol &&
@@ -164,6 +199,21 @@ namespace DataPacking
                                  const double tol = 5.0e-3 ) const
     {
       return compareVectors( name, a, b, tol );
+    }
+
+    template < class TYPE >
+    inline bool comparePointers( const std::string & name,
+                                 const TYPE * a,
+                                 const TYPE * b ) const
+    {
+      const bool ok = ( a == b );
+      if (!ok)
+      {
+        parent->warning() << name << " comparison failed :-" << endmsg
+                          << " Original = " << a << endmsg
+                          << " Unpacked = " << b << endmsg;
+      }
+      return ok;
     }
 
   private:
