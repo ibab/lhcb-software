@@ -1220,24 +1220,28 @@ def getBootScripts():
         sys.path.insert(0, os.path.join(that_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
         log.debug("sys.path is %s" % os.pathsep.join(sys.path))
     else :
-        log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
-        getFile(url_dist + 'LBSCRIPTS/', scripttar)
-        this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
-        this_targz_dir = targz_dir.split(os.pathsep)[0]
-        if not os.path.isdir(this_bootscripts_dir) :
-            os.mkdir(this_bootscripts_dir)
-        checkWriteAccess(this_bootscripts_dir)
-        os.chdir(this_bootscripts_dir)
-        rc = unTarFileInTmp(os.path.join(this_targz_dir, scripttar), os.getcwd(), overwrite=True)
-        os.chdir(here)
-        if rc != 0 :
-            removeAll(this_bootscripts_dir)
-            sys.exit('getBootScripts: Exiting ...')
+        if not check_only :
+            log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
+            getFile(url_dist + 'LBSCRIPTS/', scripttar)
+            this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
+            this_targz_dir = targz_dir.split(os.pathsep)[0]
+            if not os.path.isdir(this_bootscripts_dir) :
+                os.mkdir(this_bootscripts_dir)
+            checkWriteAccess(this_bootscripts_dir)
+            os.chdir(this_bootscripts_dir)
+            rc = unTarFileInTmp(os.path.join(this_targz_dir, scripttar), os.getcwd(), overwrite=True)
+            os.chdir(here)
+            if rc != 0 :
+                removeAll(this_bootscripts_dir)
+                sys.exit('getBootScripts: Exiting ...')
+            else :
+                if fix_perm :
+                    changePermissions(this_bootscripts_dir, recursive=True)
+                sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
+                log.debug("sys.path is %s" % os.pathsep.join(sys.path))
         else :
-            if fix_perm :
-                changePermissions(this_bootscripts_dir, recursive=True)
-            sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
-            log.debug("sys.path is %s" % os.pathsep.join(sys.path))
+            log.critical("LbScripts %s is not installed and cannot be installed in check mode" % lbscripts_version)
+            sys.exit(2)
     import LbLegacy as lbl
     LbLegacy = lbl
     import LbConfiguration as lbconf
@@ -2190,6 +2194,7 @@ def main():
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
     thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120))
+    thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
 
     if not os.environ.has_key("MYSITEROOT") :
