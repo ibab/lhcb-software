@@ -1,4 +1,4 @@
-// $Id: Saveset2HistDB.cpp,v 1.9 2010-09-02 09:57:20 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.10 2010-09-15 07:53:45 ggiacomo Exp $
 #include <iostream>
 #ifndef _WIN32
 #include <stdlib.h>
@@ -94,19 +94,17 @@ int main(int narg,char **argv ) {
   
   // connect to DB
   if(DBpw == "") {
-   char  *pass;
 #ifdef _WIN32
-   pass << std::cin; 
-   cout << "Enter the " << DBuser <<" password on "<<DB<<":";
-   std::cin >> DBpw;
-   std::cout<<endl;
+    cout << "Enter the " << DBuser <<" password on "<<DB<<":";
+    std::cin >> DBpw;
+    std::cout<<endl;
 #else
-   pass=getpass("Enter your password:");   
+    char* pass =getpass("Enter your password:");   
+    DBpw=pass;
 #endif
-   DBpw=pass;
   }
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
-
+  
   if (!HistDB) {
     cout << "ERROR: failed to connect to HistDB" << endl;
     return 1;

@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.15 2010-06-17 10:46:00 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.16 2010-09-15 07:53:45 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -23,7 +23,7 @@ public:
   virtual ~AnalysisTask( );
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute();    ///< Algorithm execution
+  virtual StatusCode execute();       ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   /// performs the analysis on the ROOT file in path Saveset for the given Task

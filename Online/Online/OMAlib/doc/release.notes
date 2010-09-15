@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.57 2010-08-31 16:54:11 ggiacomo Exp $
+! $Id: release.notes,v 1.58 2010-09-15 07:53:45 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
 ! ======== v3r2 ===============
 
-! 20100831 GG
- - fix compilation error on windoz
+! 20100915 GG
+ - fix compilation errors on windoz
 
 ! 20100819 GG
  - add support for declaration of trending histograms to Saveset2HistDB
