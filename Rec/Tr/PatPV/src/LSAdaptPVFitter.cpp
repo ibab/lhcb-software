@@ -43,8 +43,6 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
   declareProperty("maxDeltaChi2NDoF", m_maxDeltaChi2NDoF = 0.002);
   // Value of the Tukey's weight to accept a track
   declareProperty("acceptTrack", m_minTrackWeight = 0.00000001);
-  // Maximmum z spread of tracks
-  declareProperty("zMaxSpread", m_zMaxSpread = 30.0 * Gaudi::Units::mm);
   // Max chi2 track to accept track in PV fit
   declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
   // Max chi2 tracks to be removed from next PV search
@@ -331,29 +329,15 @@ void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "initVertex method" << endmsg;
   }
-  double zseed = seedPoint.z();
-  double startzs = zseed - m_zMaxSpread;
-  double endzs   = zseed + m_zMaxSpread;
-  int nTracks = 0;
   PVTracks::iterator pvTrack;
   for(pvTrack = pvTracks.begin(); pvTracks.end() != pvTrack; pvTrack++) {
-    if(pvTrack->isUsed != true) {
-      if((pvTrack->zClose() >= startzs) && (pvTrack->zClose() <= endzs)) {
-         nTracks++;
          pvVtx.pvTracks.push_back(&(*pvTrack));
          pvVtx.primVtx.addToTracks(pvTrack->refTrack);
-      } else {
-        continue;
-      }
-    } else {
-      continue;
-    }
-    
   }
   
+  int nTracks = pvTracks.size();
   if(msgLevel(MSG::DEBUG)) {
-    debug() << " Collected " << nTracks << " tracks out of " << pvTracks.size()
-            << " for this vtx search" << endmsg;
+    debug() << " Collected " << nTracks << " for this vtx search" << endmsg;
   }
   pvVtx.primVtx.setPosition(seedPoint);
   pvVtx.primVtx.setNDoF(2 * nTracks - 3);

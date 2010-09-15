@@ -36,7 +36,6 @@ private:
   double m_maxDeltaZ;     // Fit convergence condition
   double m_maxDeltaChi2NDoF;     // Additional fit convergence condition if DeltaZ fails
   double m_minTrackWeight;   // Value of the Tukey's weight to accept a track
-  double m_zMaxSpread;    // Maximmum z spread of tracks
   double m_trackMaxChi2;  // maximum chi2 track to accept track in PV fit
   double m_trackMaxChi2Remove; // Max chi2 tracks to be removed from next PV search
   double m_trackChi;      // sqrt of m_trackMaxChi2
