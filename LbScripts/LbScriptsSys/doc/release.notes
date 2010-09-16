@@ -1,3 +1,76 @@
+2010-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r5
+
+	* scripts/generateLogin: 
+	- fixed usage of MYSITEROOT when it is built with several path entries.
+	- created function for the update above.
+	* scripts/eclipse: use version 'prod' (symlink to the latest version) (Marco Cl.)
+	* python/LbConfiguration/LbLogin.py: 
+	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to 
+	something different then CMTSupportedConfig is used. This ensure that desktop slc5 
+	ia32 machine would work. 
+	- added warnings when the selected config is in the compatible ones but not in the supported
+	ones.
+	* python/LbConfiguration/LbLogin.py: added the "--dev" option. It allows to use the LHCBDEV area for
+	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in 
+	the shell wrappers (LbLogin.{sh,csh,bat}) do not match.
+	* python/LbConfiguration/SetupProject.py: Ignore projects that are being released
+	(checks if there is a file called "NOT_READY" in the project directory) (Marco Cl.)
+	* python/LbConfiguration/Version.py: added LCGVersion class
+
+	* python/LbRelease/LHCbDoc.py: exclude hidden files when scanning existing DOC directories (Marco Cl.)
+	* python/LbRelease/LHCbDoc: Generate a DB with the reference doc files of the
+	classes and add a small PHP script that can be used as uniform URL for the classes.
+	E.g. : http://example.com/path/to/doxygen/class.php?n=MyClass (Marco Cl.)
+	* python/LbRelease/_LHCbDocResources.py: added the content of "class.php" (Marco Cl.).
+	* python/LbRelease/LHCbNightlies.py: support for Coverity added; Intel compiler support
+	added; some unused code removed; default configuration values for server included;
+	an option to disable slot (Karol)
+	* python/LbRelease/LHCbDoc: Added the possibility of specifying the version
+	of Doxygen to use (requires that the first doxygen in the path is the script
+	in LbScripts), differentiate between Python and C++ main pages (with links
+	from one to the other), use a custom layout and a custom stylesheet. (Marco Cl.)
+	* python/LbRelease/_LHCbDocResources.py: (new) module used internally by LHCbDoc
+	for the files needed in the Doxygen configuration. (Marco Cl.)
+	* scripts/lhcb_bkk: add -f options for csh (Joel)
+	* python/LbRelease/LHCbDoc: separated C++ and Python documentation, added correct handling
+	of projects without dependencies (e.g. LbScripts), ignores project "NOT_READY" and exclude COMPAT (Marco Cl.)
+	* scripts/copyLCG: (new) script to copy AFS LCG software into a local installation
+
+	* python/LbLegacy/install_project.py: added error message in case of requested installation
+	of LbScripts in check mode. This is impossible. 
+	* python/LbLegacy/install_project.py: 
+	- fixed the usage of MYSITEROOT for the update of LHCBPROJECTPATH.
+	- call the post-install command after each installation and not at the global end
+	of the installation procedure.
+	* scripts/mkLHCbtar: added support for i686-winxp.
+	* python/LbLegacy/install_project.py: added "retrieve" message in non debug mode.
+	* scripts/mkLHCbtar: exclude the "NOT_READY" from the tarball creation.
+	* scripts/mkproject: creates a "NOT_READY" file at the start to prevent its
+	usage by SetupProject. This file is removed when using the "K" (locK) action.
+	* scripts/mkLCGCMTtar: added the generation of the html file for LCGCMT like tarballs
+	* python/LbLegacy/install_project.py: 
+	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments 
+	  any more on the command line.
+	- allows the listing of LCGCMT like tarballs
+	- fixed the binary of LCGCMT like tarballs: it is always optimized.
+	* python/LbLegacy/install_project.py: get now the html dependencies recursively.
+	* python/LbLegacy/install_project.py: fixed dependency bug when using --check. The html dependency
+	file is only present for the explicitly installed project. For the intermediate ones installed as
+	dependencies, the html file is opened on the fly (requires network access).
+
+	* python/LbUtils/Path.py: new function multiPathUpdate. This is to add a set of subdirectories to
+	a path collection (each entry separated with os.pathsep)
+	* python/LbUtils/afs/volume.py: fixed stupid syntax error while escaping characters
+	in regular expressions.
+	* scripts/change-svn-wc-format: new file. to fix the working copy with the wrong
+	SVN version.
+	* python/LbUtils/afs/directory.py: fixed the problem of special characters in filenames
+	* python/LbUtils/Tar.py: fixed dangerous argument passing.
+	* python/LbUtils/File.py: added genTemplateFile function to generate a file from a template file
+	with a string dictionary.
+
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r4p1
