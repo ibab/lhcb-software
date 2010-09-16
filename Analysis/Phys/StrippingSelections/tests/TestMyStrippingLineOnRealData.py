@@ -1,4 +1,5 @@
-# Test single line of the stripping
+# $Id: $
+# Test your line(s) of the stripping
 
 from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
@@ -10,17 +11,11 @@ from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNu
 from StrippingSelections import StrippingBd2DstarMuNu
 from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 
-
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 stream.appendLines( [ StrippingDstarVeryLooseWithD02HHConf().line()] )
 stream.appendLines( [ StrippingBd2DstarMuNu.line, StrippingBd2DstarMuNuLooseConf().line() ] )
 sc = StrippingConf( Streams = [ stream ] )
-
-from StrippingSelections.StartupOptions import veloNZSKiller, redoPV
-dvinit = GaudiSequencer("DaVinciInitSeq")
-dvinit.Members.insert(0, redoPV() )
-dvinit.Members.insert(0, veloNZSKiller() )
 
 # Configure StrippingReport - an algorithm that shows selection statistics
 # ChronoAuditor is use by StrippingReport to show the timing. 
@@ -36,10 +31,9 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 500
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 8000
+DaVinci().EvtMax = 800
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco04-Stripping07-SDSTs.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco05-Stripping08_SDSTs.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco05-Stripping09_SDSTs.py")

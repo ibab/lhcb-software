@@ -5,6 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-16 - Greig Cowan
+ - Added new test sample.
+   	Events: 0.51M
+	Run: 78147
+	mu: ~1.5
+	TCK: 0x00190024
+	Magnet: Up
+	http://lbrundb.cern.ch/rundb/run/78147/
+
 ! 2010-09-08 - Jibo He
  - Change Jpsi Vertex fit chi2 cut in inclusive DiMuon lines back to 20. 
 
