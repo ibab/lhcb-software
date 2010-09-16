@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v5r0p1  2010-09-16 ===================
 ! 2010-09-16 Gerhard Raven
  - update the assumed L0-Odin mask: add empty to beam1, and beam2
    In practice, this will make the beam1 and beam2 beamgas lines also
