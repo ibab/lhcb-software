@@ -27,8 +27,10 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use Hlt2Lines           v5r1p1  Hlt
-use HltSettings         v3r3    Hlt
+use Hlt1Lines           v5r0p1  Hlt
+use Hlt2Lines           v5r1p2  Hlt
+use HltSettings         v3r4    Hlt
+use TCKUtils            v1r6p8  Hlt
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
