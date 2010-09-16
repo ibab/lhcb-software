@@ -122,15 +122,15 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                 }
 
                        , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
+                                                          , 'Hlt1L0(?!Any).*'      : 0.000001
                                                           , 'Hlt1L0AnyRateLimited' : 1 }
-                                            , 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001
-                                                            , 'Hlt1L0Any'            :  1
-                                                            , 'Hlt1L0.*RateLimited' : 'RATE(10)' }
-                                            # WARNING: key MUST match the one in Hlt1L0LinesConf
+                                            , 'Postscale' : { 'Hlt1L0(?!Any).*'    : 1
+                                                            , 'Hlt1L0Any'          : 1
+                                                            , 'Hlt1L0.*RateLimited': 'RATE(10)' }
+                                            # WARNING: keys MUST match the ones in Hlt1L0LinesConf
                                             
                                            }
-                       , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBias.*' : 1.
-                                                            ,'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.0001 
+                       , Hlt1MBLinesConf : { 'Prescale' : {  'Hlt1MBMicroBias.*(?<!RateLimited)$' : 0.0001 
                                                             , 'Hlt1MBMicroBias.*RateLimited'       : 0.01} 
                                              , 'Postscale': { 'Hlt1MBMicroBias.*' : 1.
                                                               ,'Hlt1MBMicroBias.*(?<!RateLimited)$' : 1
@@ -140,9 +140,9 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                               }
                                              }
                        , Hlt1VeloLinesConf :    { 'ODIN'     : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' 
-                                                  , 'L0DU'     : "( L0_CHANNEL('CALO') )"
-                                                  , 'Prescale' : { 'Hlt1Velo.*' : 0. }       # To be modified during clone
-                                                  }
+                                                , 'L0DU'     : "( L0_CHANNEL('CALO') )"
+                                                , 'Prescale' : { 'Hlt1Velo.*' : 0. }       # To be modified during clone
+                                                }
                        , Hlt1CommissioningLinesConf : { 'Prescale' :   { 'Hlt1ODINPhysics'    : 1
                                                                          , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
                                                                          , 'Hlt1Tell1Error'     : 1
@@ -150,8 +150,8 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                         , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                       }
                        , Hlt1LumiLinesConf :     {  'Prescale'  : { 'Hlt1LumiLow.*(?<!RateLimited)$'   : 0.01  # assume remainder done in L0 -- above L0 does 1/1000
-                                                                    , 'Hlt1LumiMid.*(?<!RateLimited)$' : 0.1 # assume remainder done in L0 -- above L0 does 1/1000
-                                                                    }
+                                                                  , 'Hlt1LumiMid.*(?<!RateLimited)$' : 0.1 # assume remainder done in L0 -- above L0 does 1/1000
+                                                                  }
                                                     , 'Postscale' : { 'Hlt1LumiLowNoBeamRateLimited'   : 'RATE(5)' 
                                                                       , 'Hlt1LumiLowBeam2RateLimited'  : 'RATE(10)' 
                                                                       , 'Hlt1LumiLowBeam1RateLimited'  : 'RATE(15)' 
