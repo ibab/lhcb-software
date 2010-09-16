@@ -7,6 +7,7 @@
 ! 2010-09-16 - Chris Jones
  - Change default track selection chi^2 cuts for charged ProtoParticles to
    <10 (previously <50)
+ - Remove "earlyData" tuning ...
 
 ! 2010-09-02 - Olivier Deschamps
  - ChargedProtoParticleAddEcal : add new additional info (CaloEoverP)

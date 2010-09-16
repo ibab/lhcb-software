@@ -67,11 +67,6 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                     DelegatingTrackSelector )
         cseq = GaudiSequencer("ChargedProtoParticles")
         seq.Members += [cseq]
-
-        # Adapt cuts for early data. N.B. this should be changed to allow overriding of options
-        if "earlyData" in self.getProp("SpecialData"):
-          self.setProp("TrackTypes", [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ])
-          self.setProp("TrackCuts", { })
         
         # Make Charged ProtoParticles
         charged = ChargedProtoParticleMaker("ChargedProtoPMaker")
