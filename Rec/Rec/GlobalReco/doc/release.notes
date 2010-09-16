@@ -4,11 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-09-16 - Chris Jones
+ - Change default track selection chi^2 cuts for charged ProtoParticles to
+   <10 (previously <50)
+
 ! 2010-09-02 - Olivier Deschamps
-  - ChargedProtoParticleAddEcal : add new additional info (CaloEoverP)
+ - ChargedProtoParticleAddEcal : add new additional info (CaloEoverP)
 
 ! 2010-08-27 - Olivier Deschamps
-  - NeutralProtoPAlg/ChargedProtoPAlg : use new CaloHypoEstimator tool + add new additional info
+ - NeutralProtoPAlg/ChargedProtoPAlg : use new CaloHypoEstimator tool + add new additional info
 
 !========================== GlobalReco v6r32p2 2010-06-21 =====================
 ! 2010-06-10 - V. Gligorov

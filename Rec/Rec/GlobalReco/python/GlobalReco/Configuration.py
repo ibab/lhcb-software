@@ -23,10 +23,11 @@ class GlobalRecoConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to add the ProtoParticle reconstruction algorithms to
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"TrackTypes"  : [ "Long", "Upstream", "Downstream" ]
-                  ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,50] }
-                                     ,"Upstream"   : { "Chi2Cut" : [0,50] }
-                                     ,"Downstream" : { "Chi2Cut" : [0,50] }
+                  ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,10] }
+                                     ,"Upstream"   : { "Chi2Cut" : [0,10] }
+                                     ,"Downstream" : { "Chi2Cut" : [0,10] }
                                    }
+                  ,"AddANNPIDInfo" : True
                   }
 
     ## Configure a track selector with the given name
@@ -92,12 +93,6 @@ class GlobalRecoConf(LHCbConfigurableUser):
         # Fill the sequence
         cseq.Members += [ charged,ecal,brem,hcal,prs,spd,velo ]
         cseq.Members += [ rich,muon,combine ]
-
-        # Test NNs
-        #from Configurables import ChargedProtoANNPIDAlg
-        #electronNN = ChargedProtoANNPIDAlg("ElectronNNPID")
-        #electronNN.Configuration = "GlobalPID_electron_ANN.txt"
-        #cseq.Members += [electronNN]
         
         # Neutrals
         from Configurables import NeutralProtoPAlg
@@ -115,11 +110,26 @@ class GlobalRecoConf(LHCbConfigurableUser):
             ecal.OutputLevel = level
             brem.OutputLevel = level
             hcal.OutputLevel = level
-            prs.OutputLevel = level
-            spd.OutputLevel = level
+            prs.OutputLevel  = level
+            spd.OutputLevel  = level
             velo.OutputLevel = level
             combine.OutputLevel = level
             neutral.OutputLevel = level
+
+        # DEV stuff
+        if self.getProp("AddANNPIDInfo") :
+            from Configurables import ChargedProtoANNPIDAlg
+            trackTypes = ["Long","Downstream","Upstream"]
+            pidTypes   = ["Electron","Muon","Pion","Kaon","Proton"]
+            nnpidseq = GaudiSequencer("ANNGPIDSeq")
+            cseq.Members += [nnpidseq]
+            for track in trackTypes :
+                for pid in pidTypes :
+                    nn = ChargedProtoANNPIDAlg("ANNGPID"+track+pid)
+                    nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"
+                    if self.isPropertySet("OutputLevel") :
+                        nn.OutputLevel = self.getProp("OutputLevel")
+                    nnpidseq.Members += [nn]
 
 ## @class GlobalRecoChecks
 #  Configurable for the Global PID reconstruction MC based checking
