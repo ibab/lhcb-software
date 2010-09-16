@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.194 2010-09-09 08:44:10 jpalac Exp $
+!$Id: release.notes,v 1.194 2010-09-09 08:44:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,16 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-09-16 - Chris Jones
+ - Update the default tracking cuts as applied to all common particles, via
+   the DefaultTrackingCuts Configurable in Utils.py
+   Previously the default was for no additional track selection cuts to be 
+   applied when creating Particles from ProtoParticles. Now the default cut
+   is chi^2 < 5
+ - I also removed the method useCutSet, which is really redundant as the default
+   cuts can just be set directly. Also, doing this should really be 
+   discouraged and removing the method does this ...
 
 ! 2010-09-09 - Juan Palacios
  - python/CommonParticles/StdLooseDplus.py

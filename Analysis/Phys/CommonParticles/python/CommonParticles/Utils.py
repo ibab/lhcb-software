@@ -35,24 +35,10 @@ _particles = {}
 ## @class DefaultTrackingCuts
 #  Little class to hold default track selection criteria
 class DefaultTrackingCuts(LHCbConfigurableUser) :
-
     ## Configuration slots
-    __slots__ = { "Cuts"  :  { },      ## The cuts to apply
+    __slots__ = { "Cuts"  :  { "Chi2Cut" : [ 0, 5 ] }, ## The cuts to apply
                   "Types" :  ["Long"]  ## The track types to include
                   }
-    ## Set the default cuts to a predefined set
-    def useCutSet(self,cutset) :
-        if   cutset == "NULL"  :
-            self.setProp("Cuts",{})
-        elif cutset == "Loose" :
-            self.setProp("Cuts", { "Chi2Cut"       : [  0,    10    ]
-                                  ,"LikelihoodCut" : [ -100,  9e40  ]
-                                  ,"CloneDistCut"  : [ -1e10, 9e40  ]
-                                  ,"GhostProbCut"  : [ -1,    0.99  ]
-                                   })
-        else :
-            raise RuntimeError("ERROR : Unknown Cut Set '%s'"%cutset)
-
 
 # =============================================================================
 ## Return the locations known for data-on-demand service 
