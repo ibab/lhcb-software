@@ -27,7 +27,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                      ,"Upstream"   : { "Chi2Cut" : [0,10] }
                                      ,"Downstream" : { "Chi2Cut" : [0,10] }
                                    }
-                  ,"AddANNPIDInfo" : True
+                  ,"AddANNPIDInfo" : False
                   }
 
     ## Configure a track selector with the given name
