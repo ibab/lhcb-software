@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+!========================== HltSettings v3r4  2010-09-16 ===================
+! 2010-09-14 - Johannes Albrecht
+ - add Hlt1SingleMuonNoIPL0HighPT to Sep10 configuration
+
 !========================== HltSettings v3r3  2010-09-10 ===================
 ! 2010-09-10 - Johannes Albrecht
  - tightenBs2mm cuts
