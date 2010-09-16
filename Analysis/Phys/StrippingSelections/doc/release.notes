@@ -13,6 +13,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 	TCK: 0x00190024
 	Magnet: Up
 	http://lbrundb.cern.ch/rundb/run/78147/
+ - Updated B2JpsiX lines to use the resonance vertex in CombineParticles.
 
 ! 2010-09-08 - Jibo He
  - Change Jpsi Vertex fit chi2 cut in inclusive DiMuon lines back to 20. 

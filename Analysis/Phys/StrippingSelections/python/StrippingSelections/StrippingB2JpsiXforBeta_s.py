@@ -62,7 +62,7 @@ def createCombinationSel( OutputList,
                                  ReFitPVs = True)
     combiner.addTool( OfflineVertexFitter() )
     combiner.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    combiner.OfflineVertexFitter.useResonanceVertex = False
+    combiner.OfflineVertexFitter.useResonanceVertex = True # the default is actually true
     return Selection ( OutputList,
                        Algorithm = combiner,
                        RequiredSelections = DaughterLists)
