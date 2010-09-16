@@ -1,8 +1,12 @@
-!-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 ! Package     : Tr/TrackTools
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2010-09-15 - Michel De Cian
+ - added MuonTTTrack.cpp/h to make tracks with Muon and TT station, added
+   MuonInterfaces to used packages in the requirements file.
 
 !======================== TrackTools v3r34p2 2010-08-03 =======================
 ! 2010-08-13 - Wouter Hulsbergen

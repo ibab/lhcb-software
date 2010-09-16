@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackTools
-version           v3r34p2
+version           v3r35
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -35,6 +35,8 @@ use   MuonDet         v*     Det
 use   CaloUtils       v*     Calo
 
 use   OTDAQ           v*     OT
+
+use   MuonInterfaces  v*     Muon
 
 # Component library building rule
 #============================================================================
