@@ -477,6 +477,24 @@ void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list arg
   s_rtl_printer_arg = param;
 }
 
+/// Creates a pipe and executes a command.
+FILE* lib_rtl_pipe_open(const char* command, const char* mode) {
+#ifdef _WIN32
+  return ::_popen(command, mode);
+#else
+  return ::popen(command, mode);
+#endif
+}
+
+/// Waits for new command processor and closes stream on associated pipe.
+int lib_rtl_pipe_close(FILE* stream) {
+#ifdef _WIN32
+  return ::_pclose(stream);
+#else
+  return ::pclose(stream);
+#endif  
+}
+
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
   cout << "Executing empty test action ..... finished ......" << endl;
   return 1;

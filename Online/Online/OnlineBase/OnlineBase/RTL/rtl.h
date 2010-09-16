@@ -8,23 +8,24 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 }
 
 #ifdef __cplusplus
-#include <cstdlib>
-#include <cstdarg>
-#include <ctime>
-#ifndef _WIN32
-#include <semaphore.h>
-#endif
-#ifndef __CXX_CONST
-#define __CXX_CONST const
-#endif
-namespace RTL {}
-extern "C" {
+  #include <cstdlib>
+  #include <cstdarg>
+  #include <cstdio>
+  #include <ctime>
+  #ifndef _WIN32
+    #include <semaphore.h>
+  #endif
+  #ifndef __CXX_CONST
+    #define __CXX_CONST const
+  #endif
+  namespace RTL {}
+  extern "C" {
 #else
-#include <stdio.h>
-#include <time.h>
-#ifndef __CXX_CONST
-#define __CXX_CONST
-#endif
+  #include <stdio.h>
+  #include <time.h>
+  #ifndef __CXX_CONST
+    #define __CXX_CONST
+  #endif
 #endif
   struct _IOSB {
     unsigned short condition;
@@ -183,6 +184,12 @@ extern "C" {
   int lib_rtl_unmap_section(lib_rtl_gbl_t handle);
   /// Flush global section to disk file
   int lib_rtl_flush_section(lib_rtl_gbl_t handle);
+
+
+  /// Creates a pipe and executes a command.
+  FILE* lib_rtl_pipe_open(__CXX_CONST char* command, __CXX_CONST char* mode);
+  /// Waits for new command processor and closes stream on associated pipe.
+  int lib_rtl_pipe_close(FILE* stream);
 
   /// Time callback signature
   typedef int (*lib_rtl_timer_routine_t)(void*);

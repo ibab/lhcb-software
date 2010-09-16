@@ -153,7 +153,7 @@ int NodePinger::runThread(void* arg) {
       cmd = "/bin/ping -c 1 -w 1 ";
       cmd += (*i).node;
       //::lib_rtl_output(LIB_RTL_DEBUG,"Executing command:%s",cmd.c_str());
-      FILE* f = ::popen(cmd.c_str(),"r");
+      FILE* f = ::lib_rtl_pipe_open(cmd.c_str(),"r");
       if ( f ) {
 	int nb = ::fread(text,1,sizeof(text)-1,f);
 	if ( nb > 0 ) {
@@ -167,7 +167,7 @@ int NodePinger::runThread(void* arg) {
 	else {
 	  ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,::lib_rtl_error_message(::lib_rtl_get_error()));
 	}
-	::pclose(f);
+	::lib_rtl_pipe_close(f);
       }
       else {
 	::lib_rtl_output(LIB_RTL_ERROR,"Error:%s.",::lib_rtl_error_message(::lib_rtl_get_error()));
