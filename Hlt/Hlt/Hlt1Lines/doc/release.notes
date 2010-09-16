@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-09-16 Gerhard Raven
+ - update the assumed L0-Odin mask: add empty to beam1, and beam2
+   In practice, this will make the beam1 and beam2 beamgas lines also
+   run on empty crossing (once they get accepted by Odin!)
+
 !========================== Hlt1Lines v5r0   2010-09-08 ===================
 ! 2010-09-08 Gerhard Raven
  - make changes below compatible with TrackUpgrade changes

@@ -197,11 +197,11 @@ def L0Mask( channel ) :
 def L0Mask2ODINPredicate( mask ) :
     _predicate = { 'Disable'              : 'ODIN_NONE'
                  , 'Physics'              : 'ODIN_ALL'
-                 , 'Beam1'                : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )'
+                 , 'Beam1'                : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )|( ODIN_BXTYP == LHCb.ODIN.NoBeam )'
                  , 'Physics+Beam1'        : 'ODIN_ALL'
-                 , 'Beam2'                : '( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
+                 , 'Beam2'                : '( ODIN_BXTYP == LHCb.ODIN.Beam2 )|( ODIN_BXTYP == LHCb.ODIN.NoBeam )'
                  , 'Physics+Beam2'        : 'ODIN_ALL'
-                 , 'Beam1+Beam2'          : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )|( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
+                 , 'Beam1+Beam2'          : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )|( ODIN_BXTYP == LHCb.ODIN.Beam2 )| ( ODIN_BXTYP == LHCb.ODIN.NoBeam )'
                  , 'Physics+Beam1+Beam2'  : 'ODIN_ALL'
                  }
     return _predicate[mask]
