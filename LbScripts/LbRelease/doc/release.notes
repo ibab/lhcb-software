@@ -1,3 +1,7 @@
+2010-09-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: exclude hidden files when scanning existing DOC directories
+
 2010-09-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc: Generate a DB with the reference doc files of the

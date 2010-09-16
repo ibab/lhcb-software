@@ -372,7 +372,7 @@ class Doc(object):
             self.isAfsVolume = _makedocdir(self.path)
         else:
             self._log.debug("Listing projects in %s", self.path)
-            for l in os.listdir(self.path):
+            for l in filter(lambda s: not s.startswith('.'), os.listdir(self.path)):
                 if os.path.islink(os.path.join(self.path, l)):
                     p, v = l.split("_")
                     self.projects[p.upper()] = v # ensure that we use upper case names
