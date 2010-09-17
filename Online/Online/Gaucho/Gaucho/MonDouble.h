@@ -15,7 +15,7 @@ public:
   virtual ~MonDouble();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar);
 
   void setValue(const double& d){m_double = const_cast<double *>(&d);}
   double value(){return (*m_double);}

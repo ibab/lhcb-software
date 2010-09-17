@@ -103,6 +103,7 @@ public:
   //bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
   
   std::string serviceOwner() {return m_serviceOwner;}
+  void reset();
   
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS, const int maxNbOfServers=999);

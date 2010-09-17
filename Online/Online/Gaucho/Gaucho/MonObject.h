@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.19 2010-07-07 15:09:55 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.20 2010-09-17 07:52:07 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -18,7 +18,7 @@
 // #include <boost/serialization/list.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/string.hpp>
-#include <boost/serialization/version.hpp>
+//#include <boost/serialization/version.hpp>
 #include <boost/serialization/split_member.hpp>
 // #include <boost/serialization/list.hpp>
 #include "GaudiKernel/IMessageSvc.h"
@@ -98,7 +98,7 @@ public:
     ar & m_version;
   }  
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive & ar);
 
   std::string comments(){return m_comments;}
   void setComments(std::string comm){m_comments = comm;}

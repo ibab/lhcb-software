@@ -24,7 +24,7 @@ public:
   virtual ~MonStatEntity();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive & ar);
 
   void save2(boost::archive::binary_oarchive  & ar);
   void load2(boost::archive::binary_iarchive  & ar);

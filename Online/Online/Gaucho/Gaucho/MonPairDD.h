@@ -15,7 +15,7 @@ public:
   virtual ~MonPairDD();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar);
 
   void setValue(const std::pair<double,double>& p){m_pair = const_cast<std::pair<double,double> *>(&p);}
   std::pair<double,double> value(){return (*m_pair);}

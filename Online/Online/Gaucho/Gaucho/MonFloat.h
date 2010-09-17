@@ -15,7 +15,7 @@ public:
   virtual ~MonFloat();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar);
 
   void setValue(const float& f){m_float = const_cast<float *>(&f);}
   float value(){return (*m_float);}

@@ -15,7 +15,7 @@ public:
   virtual ~MonBool();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar);
 
   void setValue(const bool& b){m_bool = const_cast<bool *>(&b);}
   bool value(){return (*m_bool);}

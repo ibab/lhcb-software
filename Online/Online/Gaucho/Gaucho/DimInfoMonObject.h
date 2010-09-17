@@ -41,6 +41,7 @@ public :
   DimInfo*  dimInfo(){ return m_dimInfo;};
   int stringSize() const { return m_StringSize;};
   std::string svcName() const {return m_svcName;};
+  void reset();
 };  
 #endif    // DimInfoMonObject_H
 
