@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-09-16 - Paul Seyfert
+ - added VeloMuonBuilder.cpp/h and VeloCaloBuilder.cpp/h to make tracks with
+   Velo and Ecal / Muon respectively.
 
 ! 2010-09-15 - Michel De Cian
  - added MuonTTTrack.cpp/h to make tracks with Muon and TT station, added
