@@ -73,8 +73,8 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
   Param* p = 0;
   if (i->type == PARAM)  {
     if (param_id)    {
-      if (!(p = (Param*) upic_find_param(i->param.first, param_id)))
-      return UPI_SS_INVPARAM;
+      if (!(p = (Param*)upic_find_param(i->param.first, param_id)))
+	return UPI_SS_INVPARAM;
     }
     else    {
 #ifdef SCREEN
@@ -98,7 +98,7 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
   upic_move_cursor (m, d, i, row);
   upic_draw_cursor (ON);
 #else
-  upir_set_cursor (menu_id, item_id, param_id);
+    upir_set_cursor (menu_id, item_id, p ? param_id : param_id);
 #endif
   return UPI_SS_NORMAL;
 }

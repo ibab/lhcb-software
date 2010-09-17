@@ -12,6 +12,7 @@
 #include "CPP/Event.h"
 
 #include <list>
+using namespace std;
 
 /// Initializing constructor
 Gaudi::AlgorithmMenu::AlgorithmMenu(ISvcLocator* svc, Interactor* par) 
@@ -19,15 +20,15 @@ Gaudi::AlgorithmMenu::AlgorithmMenu(ISvcLocator* svc, Interactor* par)
 {
   SmartIF<IAlgManager> mgr(svc);
   if ( mgr )  {
-    const std::list<IAlgorithm*>& algs = mgr->getAlgorithms();
+    const list<IAlgorithm*>& algs = mgr->getAlgorithms();
     if ( !algs.empty() )  {
       const char* fmt = "%-32s %-32s  %-5s%-5s%-5s";
       int cmd = CMD_SHOW;
       m_window->addCOM(cmd, fmt, "Name","Type","Init","Fini","Exec");
-      for(std::list<IAlgorithm*>::const_iterator i=algs.begin(); i != algs.end(); ++i )  {
+      for(list<IAlgorithm*>::const_iterator i=algs.begin(); i != algs.end(); ++i )  {
         const IAlgorithm* ia = *i;
-        std::string typ = System::typeinfoName(typeid(*ia));
-        m_lines.insert(std::make_pair(++cmd,const_cast<IAlgorithm*>(ia)));
+        string typ = System::typeinfoName(typeid(*ia));
+        m_lines.insert(make_pair(++cmd,const_cast<IAlgorithm*>(ia)));
         m_window->addCMD(cmd, fmt,ia->name().c_str(),typ.c_str(),
           ia->isInitialized() ? "YES" : "NO",
           ia->isFinalized()   ? "YES" : "NO",

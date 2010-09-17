@@ -14,6 +14,7 @@
 #include "RTL/rtl.h"
 
 #include <list>
+using namespace std;
 
 namespace {
   static const char* serviceState(const IService* is)  {
@@ -31,15 +32,15 @@ namespace {
 /// Initializing constructor
 Gaudi::ServiceMenu::ServiceMenu(ISvcLocator* svc, Interactor* par) 
 : SubMenu("Hit return on service for properties",par), m_svcLoc(svc)  {
-  const std::list<IService*>& svcs = m_svcLoc->getServices();
+  const list<IService*>& svcs = m_svcLoc->getServices();
   if ( !svcs.empty() )  {
     int cmd = CMD_SHOW;
     const char* fmt = "%-32s %-32s  %s";
     m_window->addCOM(cmd, fmt, "Name", "Type", "State");
-    for(std::list<IService*>::const_iterator i=svcs.begin(); i != svcs.end(); ++i )  {
+    for(list<IService*>::const_iterator i=svcs.begin(); i != svcs.end(); ++i )  {
       const IService* is = *i;
-      std::string typ = System::typeinfoName(typeid(*is));
-      m_lines.insert(std::make_pair(++cmd,const_cast<IService*>(is)));
+      string typ = System::typeinfoName(typeid(*is));
+      m_lines.insert(make_pair(++cmd,const_cast<IService*>(is)));
       m_window->addCMD(cmd, fmt, is->name().c_str(),typ.c_str(),serviceState(is));
     }
   }

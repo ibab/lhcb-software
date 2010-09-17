@@ -2,6 +2,7 @@
 #include "GaudiUPI/AbstractDisplay.h"
 #include "GaudiUPI/DisplayFactory.h"
 #include <algorithm>
+using namespace std;
 
 namespace {
   static AbstractDisplayFactory* s_instance = 0;
@@ -43,7 +44,7 @@ int AbstractSubDisplay::close() {
 }
 
 int AbstractSubDisplay::flush() {
-  std::string text(width(),' ');
+  string text(width(),' ');
   while ( m_currLine < height() ) putString(text, DISPLAY_NORMAL);
   return DISPLAY_SUCCESS;
 }
@@ -63,40 +64,40 @@ int AbstractSubDisplay::beginUpdate() {
   return DISPLAY_SUCCESS;
 }
 
-int AbstractSubDisplay::label (const std::string& text,int where,int flag) {
-  std::string label(text.substr(0,width()));
+int AbstractSubDisplay::label (const string& text,int where,int flag) {
+  string label(text.substr(0,width()));
   label.insert(label.length(),width()-label.length(),' ');
   m_label.Set(label,flag,where);
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::close() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::close));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::close));
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::flush() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::flush));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::flush));
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::map() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::map));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::map));
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::beginUpdate() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::beginUpdate));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::beginUpdate));
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::endUpdate() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::endUpdate));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::endUpdate));
   return DISPLAY_SUCCESS;
 }
 
 int AbstractMainDisplay::repaint() {
-  std::for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::repaint));
+  for_each(children().begin(),children().end(),apply(&AbstractSubDisplay::repaint));
   return DISPLAY_SUCCESS;
 }
 
@@ -120,7 +121,7 @@ DisplayText& DisplayText::pad(const char c) {
   return *this;
 }
 
-DisplayText& DisplayText::set(const std::string& txt) {
+DisplayText& DisplayText::set(const string& txt) {
   m_board = txt;
   return *this;
 }
@@ -136,7 +137,7 @@ DisplayBoard::DisplayBoard ( const DisplayBoard& cpy )
 
 DisplayBoard::~DisplayBoard() {
 }
-DisplayBoard& DisplayBoard::set(const std::string& txt, int video) {
+DisplayBoard& DisplayBoard::set(const string& txt, int video) {
   m_video = video;
   if ( txt == m_board ) return *this;
   DisplayText::set(txt);

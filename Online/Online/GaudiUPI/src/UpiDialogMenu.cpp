@@ -3,6 +3,7 @@
 #include "RTL/rtl.h"
 #include <cstdarg>
 
+using namespace std;
 #define __START_PARSER(x)                   \
   char buffer[512];                         \
   {                                         \
@@ -54,7 +55,7 @@ UpiDialogMenu::~UpiDialogMenu() {
   UpiDialogMenu::destroy();
 }
 
-DialogMenu* UpiDialogMenu::create (const std::string& title,const std::string& utit,const std::string& ltit,int cmd,int father)
+DialogMenu* UpiDialogMenu::create (const string& title,const string& utit,const string& ltit,int cmd,int father)
 {
   m_state=DIALOG_DISP_OPEN;
   upic_open_menu(m_id = __absID++,father,cmd,title.c_str(),utit.c_str(),ltit.c_str());
@@ -62,9 +63,9 @@ DialogMenu* UpiDialogMenu::create (const std::string& title,const std::string& u
   return this;
 }
 
-DialogMenu* UpiDialogMenu::createDetached (const std::string& title,
-                                           const std::string& utit,
-                                           const std::string& ltit,
+DialogMenu* UpiDialogMenu::createDetached (const string& title,
+                                           const string& utit,
+                                           const string& ltit,
                                            int /* cmd */, int /* father */ )
 {
   upic_open_detached_menu(m_id = __absID++,0,0,title.c_str(),utit.c_str(),ltit.c_str());
@@ -72,7 +73,7 @@ DialogMenu* UpiDialogMenu::createDetached (const std::string& title,
   return this;
 }
 
-DialogMenu* UpiDialogMenu::createSubMenu (const std::string& title,const std::string& utit) {
+DialogMenu* UpiDialogMenu::createSubMenu (const string& title,const string& utit) {
   return create("", title, utit);
 }
 
@@ -109,7 +110,7 @@ int UpiDialogMenu::id() {
   return m_id;
 }
 
-DialogStatus UpiDialogMenu::replaceTitle (const std::string& a,const std::string& b,const std::string& c)  {
+DialogStatus UpiDialogMenu::replaceTitle (const string& a,const string& b,const string& c)  {
   int status = DIALOG_ERROR;
   if ( m_id > 0 ) status = upic_change_titles(m_id,a.c_str(), b.c_str(), c.c_str());
   return ::lib_rtl_is_success(status) ? DIALOG_SUCCESS : DIALOG_ERROR;
@@ -240,7 +241,7 @@ DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem* p)    {
 
 DialogStatus UpiDialogMenu::addPAR (int cmd,DialogItem** p)  {
   char* c = 0;
-  std::string text;
+  string text;
   for ( int i = 0; p[i] != NULL; i++ )  {
     upic_set_param (p[i]->buffer(),
       i+1,
@@ -274,7 +275,7 @@ DialogStatus UpiDialogMenu::replace (DialogItem* p)  {
 }
 
 DialogStatus UpiDialogMenu::replace (DialogItem** p)  {
-  std::string text;
+  string text;
   for ( int i = 0; p[i]; i++ )  {
     upic_set_param (p[i]->buffer(),
       i+1,

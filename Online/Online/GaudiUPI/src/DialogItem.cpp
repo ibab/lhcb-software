@@ -4,6 +4,8 @@
 #include <limits>
 #include <cmath>
 
+using namespace std;
+
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 
 namespace {
@@ -20,20 +22,21 @@ namespace {
 
 static inline ClientData _cnv(int i)    { return _CNV(&i).cdata(); }
 static inline ClientData _cnv(float f)  { return _CNV(&f).cdata(); }
+static inline ClientData _cnv(const string& s)  { return _CNV((void*)&s).ptr; }
 
-DialogItem::DialogItem (const std::string& fmt,const std::string& text,const std::string& def,const std::string& lo,const std::string& hi,bool list_only)  {
-  init(fmt,text,(const ClientData)&def,(const ClientData)&lo,(const ClientData)&hi,list_only);
-}
-
-DialogItem::DialogItem (const std::string& fmt,const std::string& text,int def,int lo,int hi,bool list_only)  {
+DialogItem::DialogItem (const string& fmt,const string& text,const string& def,const string& lo,const string& hi,bool list_only)  {
   init(fmt,text,_cnv(def),_cnv(lo),_cnv(hi),list_only);
 }
 
-DialogItem::DialogItem (const std::string& fmt,const std::string& text,float def,float lo,float hi,bool list_only)  {
+DialogItem::DialogItem (const string& fmt,const string& text,int def,int lo,int hi,bool list_only)  {
   init(fmt,text,_cnv(def),_cnv(lo),_cnv(hi),list_only);
 }
 
-void DialogItem::init (const std::string& fmt,const std::string& text,const ClientData def,
+DialogItem::DialogItem (const string& fmt,const string& text,float def,float lo,float hi,bool list_only)  {
+  init(fmt,text,_cnv(def),_cnv(lo),_cnv(hi),list_only);
+}
+
+void DialogItem::init (const string& fmt,const string& text,const ClientData def,
                        const ClientData lo,const ClientData hi,bool list_only)
 {
   setText(text);
@@ -98,7 +101,7 @@ bool DialogItem::isEqual (DialogItemContainer* it1,DialogItemContainer* it2)  {
     return it1->data()->_int[0] == it2->data()->_int[0];
   else if ( isReal()   ) 
     return ::fabs(it1->data()->_float[0]-it2->data()->_float[0]) < 
-      std::numeric_limits<float>::epsilon();
+      numeric_limits<float>::epsilon();
   return false;
 }
 
@@ -130,7 +133,7 @@ ItemStatus DialogItem::removeList (const void* item)   {
     else if ( isInteger() && m_list[i]->data()->_int[0]   == *(int*)item       ) found = 1;
     else if ( isReal()    && 
 	      ::fabs(m_list[i]->data()->_float[0]-*(float*)item)<
-	      std::numeric_limits<float>::epsilon() ) found = 1;
+	      numeric_limits<float>::epsilon() ) found = 1;
     if ( found )    {
       for ( m_listSize--, j = i; j < m_listSize; j++ ) m_list[j] = m_list[j+1];
       return ITEM_SUCCESS;
@@ -217,8 +220,8 @@ DialogItemContainer* DialogItem::find (const void* entry)  {
 DialogItemContainer DialogItem::create (const void* item)   {
   DialogItemContainer it;
   if      ( isString()  )    {
-    const std::string* val = (const std::string*)item;
-    char *tar   = it.data()->_char;
+    const string* val = (const string*)item;
+    char *tar  = it.data()->_char;
     size_t len = std::min(sizeof(display_container)-1,val->length());
     strncpy(tar,val->c_str(),len);
     tar[len] = 0;
@@ -247,7 +250,7 @@ DialogItem::operator char*()  {
   return &v[0];
 }
 
-DialogItem::operator std::string()   {
+DialogItem::operator string()   {
   static char v[64];
   if      ( isString()  )   {
     size_t siz = sizeof(m_def.data()->_char);
@@ -364,7 +367,7 @@ int DialogItem::cmpFloat (const void* a,const void* b)  {
   return d1->data()->_float[0] > d2->data()->_float[0];
 }
 
-DialogItem& DialogItem::setText (const std::string& text)   {
+DialogItem& DialogItem::setText (const string& text)   {
   m_text = text;
   return *this;
 }

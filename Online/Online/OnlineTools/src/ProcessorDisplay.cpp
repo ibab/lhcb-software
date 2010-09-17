@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.3 2008-10-21 13:53:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.4 2010-09-17 10:05:18 frankb Exp $
 
 // Framework include files
 #include "OnlineTools/ProcessorDisplay.h"
@@ -63,7 +63,7 @@ ProcessorDisplay::ProcessorDisplay(Interactor* par, Interactor* msg, NodeManipul
   ::upic_add_comment(CMD_COM2,         "-----------","");
   for(NodeManipulator::Children::iterator i=c.begin();i!=c.end();++i) {
     if ( (*i)->numChildren()>0 ) {
-      ::sprintf(txt,"%s [%zd]",(*i)->name().c_str(),(*i)->numChildren());
+      ::sprintf(txt,"%s [%ld]",(*i)->name().c_str(),long((*i)->numChildren()));
       ::upic_add_param_line(++count,setupParams(txt,(*i)->hasChildren()).c_str(),"");
     }
     else {
@@ -144,7 +144,6 @@ void ProcessorDisplay::handle(const Event& ev) {
 	  return;
 	}
       }
-      return;
     }
     return;
   default:  // Fall through: Handle request by client

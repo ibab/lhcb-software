@@ -12,6 +12,7 @@
 #include <sstream>
 #include <cstring>
 
+using namespace std;
 static int s_lineNo = Gaudi::SubMenu::CMD_CLOSE+1000;
 
 static const char* s_normalize[][2] =  {
@@ -41,17 +42,17 @@ static const char* s_normalize[][2] =  {
   ,{",allocator<double> ",""}
 };
 
-static std::string type_name(const std::string& full_nam)  {
+static string type_name(const string& full_nam)  {
   size_t occ;
-  std::string nam = full_nam; //(full) ? full_nam : cl->Name();
-  std::string s = (nam.substr(0,2) == "::") ? nam.substr(2) : nam;
+  string nam = full_nam; //(full) ? full_nam : cl->Name();
+  string s = (nam.substr(0,2) == "::") ? nam.substr(2) : nam;
 
   /// Completely ignore namespace std
-  while ( (occ=s.find("std::")) != std::string::npos )    {
+  while ( (occ=s.find("")) != string::npos )    {
     s.replace(occ, 5, "");
   }
   /// Completely ignore namespace std
-  while ( (occ=s.find(", ")) != std::string::npos )    {
+  while ( (occ=s.find(", ")) != string::npos )    {
     s.replace(occ, 2, ",");
   }
 
@@ -64,32 +65,32 @@ static std::string type_name(const std::string& full_nam)  {
   //
   for(size_t i=0; i<sizeof(s_normalize)/sizeof(s_normalize[0]); ++i) {
     /// Normalize names
-    while ( (occ=s.find(s_normalize[i][0])) != std::string::npos )    {
+    while ( (occ=s.find(s_normalize[i][0])) != string::npos )    {
       s.replace(occ, strlen(s_normalize[i][0]), s_normalize[i][1]);
     }
   }
-  if ( s.find('[') != std::string::npos ) {
+  if ( s.find('[') != string::npos ) {
     s = s.substr(0, s.find('['));
   }
   return s;
 }
 
 
-static std::string cleanType(const std::type_info* t)  {
-  std::string s = type_name(System::typeinfoName(*t));
+static string cleanType(const type_info* t)  {
+  string s = type_name(System::typeinfoName(*t));
   return s;
 }
 
 template<class T> inline const char* yesno(T o)  {  return o ? "YES" : "NO"; }
 
 /// Initializing constructor
-Gaudi::PropertyEditor::PropertyEditor(const std::string& nam, Property* prop, Interactor* parent)
+Gaudi::PropertyEditor::PropertyEditor(const string& nam, Property* prop, Interactor* parent)
 : SubMenu("Property "+prop->name()+" of:"+nam, parent), m_property(prop), m_isVector(false),
   m_isString(false)
 {
-  std::string typ = cleanType(m_property->type_info());
-  m_isVector = typ.find("vector<") != std::string::npos;
-  m_isString = typ.find("string")  != std::string::npos;
+  string typ = cleanType(m_property->type_info());
+  m_isVector = typ.find("vector<") != string::npos;
+  m_isString = typ.find("string")  != string::npos;
 
   if ( m_isVector )
     m_command = new DialogItem("%24s","Add new Value: ^^^^^^^^^^^^^^^^^^^^^^^^","","","",false);
@@ -112,8 +113,8 @@ Gaudi::PropertyEditor::PropertyEditor(const std::string& nam, Property* prop, In
 }
 
 void Gaudi::PropertyEditor::retrieveParams()   {
-  std::stringstream s;
-  std::string w = "", v = "";
+  stringstream s;
+  string w = "", v = "";
   s << *m_property;
   while( s.get() != ':' && !s.fail() ) { }
   for (int c=s.get(); !s.fail(); c=s.get()) {
@@ -123,7 +124,7 @@ void Gaudi::PropertyEditor::retrieveParams()   {
         v = "";
         break;
       case ',':
-        m_lines.insert(std::make_pair(s_lineNo++,v));
+        m_lines.insert(make_pair(s_lineNo++,v));
         v = "";
         break;
       case '"':
@@ -141,11 +142,11 @@ void Gaudi::PropertyEditor::retrieveParams()   {
   }
 Done:
   if ( !v.empty() && m_isVector )  {
-    m_lines.insert(std::make_pair(s_lineNo++,v));
+    m_lines.insert(make_pair(s_lineNo++,v));
   }
   if ( !m_isVector )  {
     m_lines.clear();
-    m_lines.insert(std::make_pair(s_lineNo++,v));
+    m_lines.insert(make_pair(s_lineNo++,v));
     m_command->setCurrent((ClientData)v.c_str());
   }
   m_defaults = m_lines;
@@ -183,7 +184,7 @@ void Gaudi::PropertyEditor::updateParams()   {
 }
 
 void Gaudi::PropertyEditor::setProperties()  {
-  std::string value;
+  string value;
   if ( m_isVector )  {
     value = "[";
     for(Lines::const_iterator i=m_lines.begin(); i != m_lines.end(); ++i) {

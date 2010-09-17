@@ -12,6 +12,7 @@
 #include "CPP/Event.h"
 #include <cstring>
 
+using namespace std;
 static const char* s_normalize[][2] =  {
     {"  ",                     " " }
   ,{", ",                     "," }
@@ -39,17 +40,17 @@ static const char* s_normalize[][2] =  {
   ,{",allocator<double> ",""}
 };
 
-static std::string type_name(const std::string& full_nam)  {
+static string type_name(const string& full_nam)  {
   size_t occ;
-  std::string nam = full_nam; //(full) ? full_nam : cl->Name();
-  std::string s = (nam.substr(0,2) == "::") ? nam.substr(2) : nam;
+  string nam = full_nam; //(full) ? full_nam : cl->Name();
+  string s = (nam.substr(0,2) == "::") ? nam.substr(2) : nam;
 
   /// Completely ignore namespace std
-  while ( (occ=s.find("std::")) != std::string::npos )    {
+  while ( (occ=s.find("")) != string::npos )    {
     s.replace(occ, 5, "");
   }
   /// Completely ignore namespace std
-  while ( (occ=s.find(", ")) != std::string::npos )    {
+  while ( (occ=s.find(", ")) != string::npos )    {
     s.replace(occ, 2, ",");
   }
 
@@ -62,37 +63,37 @@ static std::string type_name(const std::string& full_nam)  {
   //
   for(size_t i=0; i<sizeof(s_normalize)/sizeof(s_normalize[0]); ++i) {
     /// Normalize names
-    while ( (occ=s.find(s_normalize[i][0])) != std::string::npos )    {
+    while ( (occ=s.find(s_normalize[i][0])) != string::npos )    {
       s.replace(occ, strlen(s_normalize[i][0]), s_normalize[i][1]);
     }
   }
-  if ( s.find('[') != std::string::npos ) {
+  if ( s.find('[') != string::npos ) {
     s = s.substr(0, s.find('['));
   }
   return s;
 }
 
 
-static std::string cleanType(const std::type_info* t)  {
-  std::string s = type_name(System::typeinfoName(*t));
+static string cleanType(const type_info* t)  {
+  string s = type_name(System::typeinfoName(*t));
   return s;
 }
 
 template<class T> inline const char* yesno(T o)  {  return o ? "YES" : "NO"; }
 
 /// Initializing constructor
-Gaudi::PropertyMenu::PropertyMenu(const std::string& nam, IInterface* iface, Interactor* parent)
+Gaudi::PropertyMenu::PropertyMenu(const string& nam, IInterface* iface, Interactor* parent)
 : SubMenu("Properties of:"+nam, parent), m_name(nam), m_property(0)
 {
   SmartIF<IProperty> iprp(iface);
   if ( iprp.isValid() )  {
     m_property = iprp;
     char fmt[128];
-    const std::vector<Property*>& prps = m_property->getProperties();
+    const vector<Property*>& prps = m_property->getProperties();
     size_t nlen = 0, tlen = 0, vlen = 0;
-    for(std::vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
+    for(vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
       const Property* p = (*i);
-      std::string val, type = cleanType(p->type_info());
+      string val, type = cleanType(p->type_info());
       m_property->getProperty(p->name(),val);
       if ( val.length()  > vlen ) vlen = val.length();
       if ( type.length() > tlen ) tlen = type.length();
@@ -102,12 +103,12 @@ Gaudi::PropertyMenu::PropertyMenu(const std::string& nam, IInterface* iface, Int
     if ( vlen > 32 ) vlen = 32;
     sprintf(fmt,"%%-%lds%%-%lds%%-%lds %%-3s %%-3s",long(nlen+2),long(tlen+2),long(vlen+2));
     m_window->addCOM(cmd,fmt,"Property Name","Type","Value","CBR","CBU");
-    for(std::vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
+    for(vector<Property*>::const_iterator i=prps.begin(); i != prps.end(); ++i)  {
       const Property* p = (*i);
-      std::string val, type = cleanType(p->type_info());
+      string val, type = cleanType(p->type_info());
       m_property->getProperty(p->name(),val);
       if ( val.length()>33 ) val = val.substr(0,31)+"...";
-      m_lines.insert(std::make_pair(++cmd,p));
+      m_lines.insert(make_pair(++cmd,p));
       m_window->addCMD(cmd,  fmt, p->name().c_str(), type.c_str(), val.c_str(),
         yesno(p->readCallBack()),yesno(p->updateCallBack()));
     }

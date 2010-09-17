@@ -8,10 +8,11 @@
 #include "RTL/rtl.h"
 #include <cstdarg>
 
+using namespace std;
 extern "C" void upic_write_message(const char*, const char*);
 
 /// Initializing constructor
-Gaudi::SubMenu::SubMenu(const std::string& title, Interactor* parent)
+Gaudi::SubMenu::SubMenu(const string& title, Interactor* parent)
 : m_window(0), m_parent(parent), m_child(0)
 {
   DialogMenuCreator win(this);

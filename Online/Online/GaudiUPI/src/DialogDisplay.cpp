@@ -4,6 +4,7 @@
 #include "GaudiUPI/DialogMenu.h"
 #include "GaudiUPI/DialogDisplay.h"
 #include "GaudiUPI/DialogDisplayFactory.h"
+using namespace std;
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 
@@ -29,7 +30,7 @@ DialogSubDisplay::~DialogSubDisplay()   {
   delete m_window;
 }
 
-int DialogSubDisplay::putString (const std::string& text,int video)   {
+int DialogSubDisplay::putString (const string& text,int video)   {
   if ( currentLine() >= height() )    {
     m_currLine++;
     return DISPLAY_ERROR;
@@ -41,7 +42,7 @@ int DialogSubDisplay::putString (const std::string& text,int video)   {
 }
 
 int DialogSubDisplay::init (int num_col,int num_row,AbstractMainDisplay& refpar)    {
-  std::string pad(width(),' ');
+  string pad(width(),' ');
   AbstractSubDisplay::init(num_col, num_row, refpar);
   DialogMainDisplay *par = (DialogMainDisplay*)parent();
   DialogSubMenuCreator win(refpar.actor(),par->window(),this);
@@ -55,7 +56,7 @@ int DialogSubDisplay::init (int num_col,int num_row,AbstractMainDisplay& refpar)
     m_window = win->createSubMenu ( "", "" );
 
   for (size_t line=0; line < height(); line++ ) {
-    const std::string& s = buffer(line).resetChange().pad('-');
+    const string& s = buffer(line).resetChange().pad('-');
     win->addCOM ( line+1, s.c_str() );
     //win->disableCMD ( line+1 );
   }
@@ -70,13 +71,13 @@ int DialogSubDisplay::beginUpdate()    {
 
 int DialogSubDisplay::endUpdate()  {
   bool change_label = false;
-  std::string text;
+  string text;
   // if ( height() > 0 ) window()->enableCMD( 1 );
   for ( size_t line=0; line < height(); line++ ) {
     text = buffer(line);
     if ( !buffer(line).changed() ) continue;
     int lin = line+1;
-    const std::string& s = buffer(line).resetChange().pad();
+    const string& s = buffer(line).resetChange().pad();
     window()->replCOM ( lin, s.c_str() );
   }
   text = Overflow();
@@ -131,7 +132,7 @@ DialogMainDisplay::DialogMainDisplay (const AbstractMainDisplay& source)
   DialogMenuCreator win ( this );
   char txt[64];
   lib_rtl_get_node_name(txt,sizeof(txt));
-  std::string title = txt;
+  string title = txt;
   title += "::";
   lib_rtl_get_process_name(txt,sizeof(txt));
   title += txt;
@@ -160,7 +161,7 @@ DialogMainDisplay::~DialogMainDisplay()
   release(m_window);
 }
 
-int DialogMainDisplay::print (const std::string& printer)  {
+int DialogMainDisplay::print (const string& printer)  {
   char TheFile[132];
   char *text = new char[width()], *label = new char[width()];
   FILE *destination = stdout;
@@ -178,7 +179,7 @@ int DialogMainDisplay::print (const std::string& printer)  {
       size_t ypos = child.y() + 1;
       size_t high = child.height();
       size_t wid  = child.width();
-      const std::string& l = child.label();
+      const string& l = child.label();
       strcpy(label,l.c_str());
       if ( bord & DISPLAY_BORDER_LINE ) {
         wid -= 2;
@@ -190,18 +191,18 @@ int DialogMainDisplay::print (const std::string& printer)  {
             text[xpos-1] = text[xpos+wid] = '+';
           }
           if ( bord & DISPLAY_BOTTOM_BORDER && line == ypos+high )
-            memcpy(&text[xpos],label,std::min(strlen(label),wid+1));
+            memcpy(&text[xpos],label,min(strlen(label),wid+1));
           else if ( bord & DISPLAY_TOP_BORDER && line == ypos )
-            memcpy(&text[xpos],label,std::min(strlen(label),wid+1));
+            memcpy(&text[xpos],label,min(strlen(label),wid+1));
         }
         else if ( line > ypos && line <= ypos + high )  {
-          const std::string& s = child.buffer(line-ypos-1);
+          const string& s = child.buffer(line-ypos-1);
           memcpy(&text[xpos-1],s.c_str(),wid+1);
           text[xpos-1] = text[xpos+wid] = '|';
         }
       }
       else if ( line >= ypos && line < ypos + high ) {
-        const std::string& s = child.buffer(line-ypos);
+        const string& s = child.buffer(line-ypos);
         memcpy(&text[xpos-1],s.c_str(),wid);
       }
     }
@@ -210,7 +211,7 @@ int DialogMainDisplay::print (const std::string& printer)  {
     fprintf(destination,"\n");
   }
   if ( destination != stdout ) {
-    std::string ThePrinterQueue(printer.empty() ? "LWACR$TEXT_132" : printer);
+    string ThePrinterQueue(printer.empty() ? "LWACR$TEXT_132" : printer);
     fclose(destination);
     if ( !ThePrinterQueue.empty() ) {
       //int status = utl_print_file ( TheFile, ThePrinterQueue );

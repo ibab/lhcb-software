@@ -1,6 +1,7 @@
 #include "GaudiUPI/DialogMenu.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
+using namespace std;
 
 static DialogFactory* s_dlgFactory;
 
@@ -35,11 +36,11 @@ long DialogMenu::backSpaceCallBack (int menu,int /* cmd */,int par,ClientData pa
   return 1;
 }
 
-DialogStatus DialogMenu::accumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)  {
+DialogStatus DialogMenu::accumulateComment (int pos_id,int& com_id,int max_lines,char* def_text,string& display_text)  {
   int status = DIALOG_SUCCESS;
   size_t width = 25;
   if ( display_text.length() > width )  {
-    std::string def(def_text);
+    string def(def_text);
     def += display_text;
     status = (com_id < max_lines) ? replCOM(com_id++,def.c_str()) : insertCOM(pos_id,com_id++,def.c_str());
     display_text = "";
@@ -47,12 +48,12 @@ DialogStatus DialogMenu::accumulateComment (int pos_id,int& com_id,int max_lines
   return ::lib_rtl_is_success(status) ? DIALOG_SUCCESS : DIALOG_ERROR;
 }
 
-DialogStatus DialogMenu::flushComment (int pos_id,int& com_id,int max_lines,char* def_text,std::string& display_text)
+DialogStatus DialogMenu::flushComment (int pos_id,int& com_id,int max_lines,char* def_text,string& display_text)
 {
   int status = DIALOG_SUCCESS;  
   size_t width = 25;
   if ( display_text.length() > width )  {
-    std::string def(def_text);
+    string def(def_text);
     def += display_text;
     status = (com_id < max_lines) ? replCOM(com_id++,def.c_str()) : insertCOM(pos_id,com_id++,def.c_str());
     display_text = "";

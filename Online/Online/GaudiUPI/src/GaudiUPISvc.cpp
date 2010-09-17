@@ -21,6 +21,7 @@
 #include <cstdarg>
 #include <sstream>
 
+using namespace std;
 using namespace Gaudi::StateMachine;
 
 extern "C" void upic_write_message(const char*, const char*);
@@ -44,7 +45,7 @@ enum TopMenuItems {
 
 
 /// Standard Constructor.
-Gaudi::UPIService::UPIService( const std::string& nam, ISvcLocator* svc )
+Gaudi::UPIService::UPIService( const string& nam, ISvcLocator* svc )
 : Service(nam, svc), m_window(0), m_child(0), m_appMgr(0)
 {
   if ( svc && nam != "DefaultName" ) {  // Does not work with genconf
@@ -141,7 +142,7 @@ void Gaudi::UPIService::print(const char* fmt, ...)   {
 /// Interactor overload: handle menu interupts
 void Gaudi::UPIService::handle (const Event& event)   {
   StatusCode sc = StatusCode::SUCCESS;
-  std::string to;
+  string to;
   Gaudi::StateMachine::State state = m_appMgr->FSMState();
   if ( event.eventtype == UpiEvent )  {
     switch ( event.eventtype )    
@@ -161,8 +162,8 @@ void Gaudi::UPIService::handle (const Event& event)   {
         else if ( state == OFFLINE )
           IOCSENSOR.send(this, CMD_TERMINATE);
         if ( !sc.isSuccess() )  {
-	  std::stringstream str;
-	  str << "Failed to initiate application manager transition from " << state << " to " << to << std::endl;
+	  stringstream str;
+	  str << "Failed to initiate application manager transition from " << state << " to " << to << endl;
           print(str.str().c_str());
         }
         IOCSENSOR.send(this, CMD_UPDATE_STATE);
@@ -170,8 +171,8 @@ void Gaudi::UPIService::handle (const Event& event)   {
       case CMD_APPMGR_TERMINATE:
         sc = m_appMgr->terminate(), to = "Offline";
         if ( !sc.isSuccess() )  {
-	  std::stringstream str;
-	  str << "Failed to initiate application manager transition from " << state << " to " << to << std::endl;
+	  stringstream str;
+	  str << "Failed to initiate application manager transition from " << state << " to " << to << endl;
           print(str.str().c_str());
         }
         IOCSENSOR.send(this, CMD_TERMINATE);
