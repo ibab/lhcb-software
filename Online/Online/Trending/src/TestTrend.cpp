@@ -1,4 +1,4 @@
-// $Id: TestTrend.cpp,v 1.2 2010-09-17 09:00:00 frankb Exp $
+// $Id: TestTrend.cpp,v 1.3 2010-09-17 09:23:13 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestTrend );
+DECLARE_ALGORITHM_FACTORY( TestTrend )
 
 
 //=============================================================================

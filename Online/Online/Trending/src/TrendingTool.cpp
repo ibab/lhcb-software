@@ -1,4 +1,4 @@
-// $Id: TrendingTool.cpp,v 1.5 2010-09-07 15:41:28 frankb Exp $
+// $Id: TrendingTool.cpp,v 1.6 2010-09-17 09:23:13 frankb Exp $
 // Include files
 #include <ctime>
 
@@ -15,8 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrendingTool );
-
+DECLARE_TOOL_FACTORY( TrendingTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -125,7 +124,7 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
   fseek( m_file, 0, SEEK_END );
   long newAddress = ftell( m_file );
   m_tagHeader.type    = TYPE_TAG;
-  m_tagHeader.version = version;
+  m_tagHeader.version = short(version);
   m_tagHeader.nextAddress = 0L;
 
   //== Compute the length of the tag strings, and copy them in a temp buffer
