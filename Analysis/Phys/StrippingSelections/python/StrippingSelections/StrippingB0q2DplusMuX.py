@@ -18,9 +18,9 @@ The Presel is initially scaled to 10%, which should be fine up to 100 pb-1.
 
 The MC09 selection expects 10^7 events in 1 fb-1, and is the hardest selection at the moment.
 
-The Tuned selection is inbetween Presel and MC09, to give a 10-fold reduction in Presel.
-This was tuned on some early preselected data, where it was found the MC09 cuts on kinematic variables could be applied,
-whereas the PID cuts should be avoided until properly retuned on the data.
+The Tuned selection is inbetween Presel and MC09, to achieve the target retention ~0.01%  and timing of <0.4 ms/event
+In the first stage, this was tuned on some early preselected data, where it was found the MC09 cuts on kinematic variables could be applied.
+The PID and tracking cuts were optimised on the data itself, and a slightly looser version of the optimal selection is now used here.
 
 ==== Description of the configuration ====
 
@@ -65,7 +65,7 @@ combiner='OfflineVertexFitter'
 
 
 confdict={
-    'Presel' : { 'Prescale'    : 0.1 ,
+    'Presel' : { 'Prescale'    : 0.02 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
@@ -74,6 +74,7 @@ confdict={
                  'MuTrChi2'    : 9,
                  #kaon parameters
                  'KPT'         : 300, #MeV
+                 'KIP'         : 0.03, #mm
                  'KPidPi'      : -5,
                  'KPidMu'      : -40,
                  'KPidP'       : -40,
@@ -81,6 +82,7 @@ confdict={
                  'KIPChi2'     : 4,
                  #pion parameters
                  'PiPidK'      : -40,
+                 'PiIP'        : 0.01, #mm
                  'PiPidMu'     : -5,
                  'PiTrChi2'    : 16,
                  'PiIPChi2'    : 4,
@@ -97,22 +99,24 @@ confdict={
     'Tuned'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
-                 'MuPT'        : 600, #MeV
-                 'MuPidPi'     : -3.,
-                 'MuPidK'      : -10,
+                 'MuPT'        : 700, #MeV
+                 'MuPidPi'     : -1.,
+                 'MuPidK'      : 0,
                  'MuTrChi2'    : 5,
                  #kaon parameters
                  'KPT'         : 400, #MeV
+                 'KIP'         : 0.04, #mm
                  'KPidPi'      : 0,
-                 'KPidMu'      : -10,
+                 'KPidMu'      : 5,
                  'KPidP'       : -10,
-                 'KTrChi2'     : 9,
+                 'KTrChi2'     : 5,
                  'KIPChi2'     : 4,
                  #pion parameters
-                 'PiPidK'      : -20,
+                 'PiPidK'      : -10,
+                 'PiIP'        : 0.04, #mm
                  'PiPidMu'     : -5,
-                 'PiTrChi2'    : 12,
-                 'PiIPChi2'    : 7,
+                 'PiTrChi2'    : 10,
+                 'PiIPChi2'    : 16,
                  #D-resonance parameters
                  'DPT'         : 1500, #MeV
                  'D_APT'       : 1200, #MeV
@@ -132,6 +136,7 @@ confdict={
                  'MuTrChi2'    : 2,
                  #kaon parameters
                  'KPT'         : 400, #MeV
+                 'KIP'         : 0.03, #mm
                  'KPidPi'      : 7,
                  'KPidMu'      : 10,
                  'KPidP'       : -10,
@@ -139,6 +144,7 @@ confdict={
                  'KIPChi2'     : 4,
                  #pion parameters
                  'PiPidK'      : -5,
+                 'PiIP'        : 0.01, #mm
                  'PiPidMu'     : -2,
                  'PiTrChi2'    : 9,
                  'PiIPChi2'    : 7,
@@ -246,6 +252,7 @@ class B0q2DplusMuXOneLineConf(object):
         'MuTrChi2',
         #kaon parameters
         'KPT',
+        'KIP',
         'KPidPi',
         'KPidMu',
         'KPidP',
@@ -253,6 +260,7 @@ class B0q2DplusMuXOneLineConf(object):
         'KIPChi2',
         #pion parameters
         'PiPidK',
+        'PiIP',
         'PiPidMu',
         'PiTrChi2',
         'PiIPChi2',
@@ -291,16 +299,16 @@ class B0q2DplusMuXOneLineConf(object):
         self.KCut= "(P > 2.0*GeV)"\
                    " & (PT>  %(KPT)s*MeV)  & (TRCHI2DOF < %(KTrChi2)s) "\
                    " & (PIDK-PIDpi >  %(KPidPi)s ) & (PIDK-PIDmu  > %(KPidMu)s)  & (PIDK-PIDp  > %(KPidP)s )"\
-                   " & (MIPDV(PRIMARY) > 0.03) & (MIPCHI2DV(PRIMARY) > %(KIPChi2)s )" % config
+                   " & (MIPDV(PRIMARY) > %(KIP)s) & (MIPCHI2DV(PRIMARY) > %(KIPChi2)s )" % config
         
         self.PiCut="(P > 2.0*GeV) & (PT>300*MeV)"\
                " & (TRCHI2DOF < %(PiTrChi2)s) "\
                " & (PIDpi-PIDK >  %(PiPidK)s ) & (PIDpi-PIDmu  > %(PiPidMu)s)"\
-               " & (MIPDV(PRIMARY) > 0.01) & (MIPCHI2DV(PRIMARY) > %(PiIPChi2)s )" % config
+               " & (MIPDV(PRIMARY) > %(PiIP)s ) & (MIPCHI2DV(PRIMARY) > %(PiIPChi2)s )" % config
         
         
         #self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (APT>%(D_APT)s *MeV) & (AMAXDOCA('')<0.3*mm)" % config
-        self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (APT>%(D_APT)s *MeV) & (ADOCACUT( 0.3*mm , '' ))" % config
+        self.DCombCut="(ADAMASS('D_s-')<210*MeV) & (DAMASS('D_s-')<120*MeV) & (APT> %(D_APT)s *MeV) & (ADOCACUT( 0.3*mm , '' ))" % config # & ( ACUTDOCACHI2(20,''))" % config
         
         self.DCut="("\
                   "in_range(1768.*MeV, M, 2068.*MeV)"\

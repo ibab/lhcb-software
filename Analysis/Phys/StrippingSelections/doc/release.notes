@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-17 - Rob Lambert
+ - Updated StrippingB0q2DstarMuX.py:
+	 . Retuned tuned selection on data
+   . 0.01% retention and 0.239ms timing on the new events
+   . Prescale on Presel line improved, now at 0.02, which also retains 0.01%.
+
 ! 2010-09-17 - Juan Palacios
  - python/StrippingSelections/StrippingV0.py
   . Remove tracking cuts.
