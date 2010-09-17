@@ -1,11 +1,11 @@
-// $Id: RootDataConnection.cpp,v 1.14 2010-09-17 09:00:12 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.15 2010-09-17 09:40:02 frankb Exp $
 //====================================================================
 //	RootDataConnection.cpp
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.14 2010-09-17 09:00:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.15 2010-09-17 09:40:02 frankb Exp $
 
 // Framework include files
 #include "RootDataConnection.h"
@@ -46,7 +46,7 @@ static bool match_wild(const char *str, const char *pat)    {
   const char *s, *p;
   bool star = false;
   if ( first ) {
-    for (int i = 0; i < 256; ++i) table[i] = i;
+    for (int i = 0; i < 256; ++i) table[i] = char(i);
     first = false;
   }
  loopStart:

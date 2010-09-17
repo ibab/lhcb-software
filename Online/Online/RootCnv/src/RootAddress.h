@@ -1,21 +1,22 @@
-// $Id: RootAddress.h,v 1.7 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootAddress.h,v 1.8 2010-09-17 09:40:02 frankb Exp $
 //====================================================================
 //	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.7 2010-09-01 18:52:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.8 2010-09-17 09:40:02 frankb Exp $
 #ifndef GAUDIROOTCNV_ROOTADDRESS_H
 #define GAUDIROOTCNV_ROOTADDRESS_H
 
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
-#include "RootSelect.h"
+#include "TTreeFormula.h"
 #include "RootUtils.h"
 
 // Forward declaration
 class TTree;
+class TTreeFormula;
 
 /*
  * Gaudi namespace declaration
@@ -38,7 +39,7 @@ namespace Gaudi {
   class GAUDI_API RootAddress : virtual public GenericAddress {
   public:
     /// Pointer to ROOT select statement (filled for N-tuples only)
-    RootSelect*         select;
+    TTreeFormula*       select;
     /// Pointer to ROOT TTree (filled for N-tuples only)
     TTree*              section;
 

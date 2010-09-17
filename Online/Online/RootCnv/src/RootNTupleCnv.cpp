@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.11 2010-09-17 09:00:12 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.12 2010-09-17 09:40:02 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -320,7 +320,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
 	  log() << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
-	  rpA->select = new RootSelect(criteria.c_str(), tree);
+	  rpA->select = new TTreeFormula(tree->GetName(),criteria.c_str(), tree);
 	}
 	rpA->select->SetTree(tree);
 	for( ; ipar[1] < last; ++ipar[1]) {	// loop on all selected entries
@@ -758,7 +758,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
       if ( !(criteria.length() == 0 || criteria == "*") )  {
 	if ( rpA->select == 0 ) {
 	  log() << MSG::DEBUG << "Selection criteria: " << criteria << "  "  << ipar[1] << endmsg;
-	  rpA->select = new RootSelect(criteria.c_str(), tree);
+	  rpA->select = new TTreeFormula(tree->GetName(),criteria.c_str(), tree);
 	}
 	rpA->select->SetTree(tree);
 	// loop on all selected entries

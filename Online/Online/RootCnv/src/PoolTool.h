@@ -32,11 +32,9 @@ namespace Gaudi {
 
     /// Load references object from file
     virtual int loadRefs(CSTR /* section */, CSTR cnt, unsigned long entry, RootObjectRefs& refs)   {
-      string tname = _treeName(cnt);
       TTree* t = sections()[cnt];
       if ( !t ) {
-	string tname = _treeName(cnt);
-	t = (TTree*)c->file()->Get(tname.c_str());
+	t = (TTree*)c->file()->Get(_treeName(cnt).c_str());
       }
       if ( t ) {
 	TBranch* b1 = t->GetBranch("Links");
@@ -80,7 +78,8 @@ namespace Gaudi {
 	    return nb1 + nb2;
 	  }
 	}
-	msg << MSG::ERROR << "Failed to access POOL Ref/Link branches:" << cnt << " [" << tname << "]" << endmsg;
+	msg << MSG::ERROR << "Failed to access POOL Ref/Link branches:" << cnt
+	    << " [" << _treeName(cnt) << "]" << endmsg;
 	t->Print();
       }
       return -1;

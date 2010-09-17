@@ -1,6 +1,6 @@
-// $Id: RootEvtSelector.cpp,v 1.9 2010-09-14 06:11:46 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.10 2010-09-17 09:40:02 frankb Exp $
 //====================================================================
-//	RootSelector.cpp
+//	RootEvtSelector.cpp
 //--------------------------------------------------------------------
 //
 //	Package    : RootCnv
