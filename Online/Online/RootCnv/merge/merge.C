@@ -344,7 +344,7 @@ MergeStatus RootDatabaseMerger::copyBranch(TTree* src_tree,TTree* out_tree,const
   if ( s && o ) {
     s->SetAddress(text);
     o->SetAddress(text);
-    for(int i=0, n=s->GetEntries(); i<n; ++i) {
+    for(Long64_t i=0, n=s->GetEntries(); i<n; ++i) {
       s->GetEntry(i);
       o->Fill();
     }

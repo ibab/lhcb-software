@@ -1,4 +1,4 @@
-// $Id: RootDirectoryCnv.cpp,v 1.6 2010-09-07 15:37:29 frankb Exp $
+// $Id: RootDirectoryCnv.cpp,v 1.7 2010-09-17 09:00:12 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDirectoryCnv
@@ -130,7 +130,7 @@ RootDirectoryCnv::updateObjRefs(IOpaqueAddress* pAddr,
                      ref->clid == CLID_ColumnWiseTuple      )
                 {
                   string spar[]   = { fname, ref->container};
-                  unsigned long ipar[] = { -1UL, -1UL };
+                  unsigned long ipar[] = { ~0x0UL, ~0x0UL };
                   status = m_dbMgr->createAddress(repSvcType(),
                                                   ref->clid,
                                                   spar,

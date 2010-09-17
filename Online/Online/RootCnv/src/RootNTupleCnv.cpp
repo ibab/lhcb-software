@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.10 2010-09-14 06:11:46 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.11 2010-09-17 09:00:12 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -244,10 +244,11 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	  }
 	}
 	if ( status.isSuccess() )  {
+	  unsigned long* ipar = const_cast<unsigned long*>(rpA->ipar());
 	  log() << MSG::DEBUG << "Created N-tuple with description:"
 		<< par_val << endl;
-	  ((unsigned long*)rpA->ipar())[0] = (unsigned long)con;
-	  ((unsigned long*)rpA->ipar())[1] = -1UL;
+	  ipar[0] = (unsigned long)con;
+	  ipar[1] = ~0x0UL;
 	  rpA->section = tree;
 	  refpObject  = nt;
 	}

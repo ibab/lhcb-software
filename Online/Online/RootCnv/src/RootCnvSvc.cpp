@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.10 2010-09-14 06:11:46 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.11 2010-09-17 09:00:12 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -280,7 +280,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
 	log() << MSG::VERBOSE;
 	if ( b ) {
 	  const string par[2] = { fid, m_recordName };
-	  unsigned long ipar[2] = { (unsigned long)(*con), b->GetEntries()-1 };
+	  unsigned long ipar[2] = { (unsigned long)(*con), (unsigned long)b->GetEntries()-1 };
 	  for(int i=0; i<b->GetEntries(); ++i) {
 	    ipar[1] = i;
 	    if ( !pc->mergeFIDs().empty() )
@@ -325,7 +325,7 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
     string section = m_currSection.substr(1,len==string::npos ? string::npos : len-1);
     TBranch* b = m_current->getBranch(section, m_currSection);
     if ( b ) {
-      long evt = b->GetEntries();
+      Long64_t evt = b->GetEntries();
       b->GetTree()->SetEntries(evt);
       if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
 	if ( evt == m_setup->autoFlush ) {
@@ -337,7 +337,7 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
 	}
       }
       log() << MSG::DEBUG << "Set section entries of " << m_currSection
-	    << " to " << evt << " entries." << endmsg;
+	    << " to " << long(evt) << " entries." << endmsg;
     }
     else {
       return error("commitOutput> Failed to update entry numbers on "+dsn);

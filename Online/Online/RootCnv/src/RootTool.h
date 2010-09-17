@@ -219,7 +219,7 @@ namespace Gaudi {
       TBranch* b = refs()->GetBranch(nam);
       if ( !b ) b = refs()->Branch(nam,0,(typ+"/C").c_str());
       if ( b ) {
-	for(i=b->GetEntries(), n=v.size(); i<n; ++i) {
+	for(i=b->GetEntries(), n=Long64_t(v.size()); i<n; ++i) {
 	  val = (this->*pmf)(v[i]);
 	  b->SetAddress((char*)val.c_str());
 	  msgSvc() << MSG::VERBOSE << "Save Value[" << b->GetName() << "]:" << val << endmsg;

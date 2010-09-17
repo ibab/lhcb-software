@@ -1,11 +1,11 @@
-// $Id: RootDataConnection.cpp,v 1.13 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.14 2010-09-17 09:00:12 frankb Exp $
 //====================================================================
 //	RootDataConnection.cpp
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.13 2010-09-01 18:52:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.14 2010-09-17 09:00:12 frankb Exp $
 
 // Framework include files
 #include "RootDataConnection.h"
@@ -397,16 +397,17 @@ pair<int,unsigned long>
 RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fill_missing) {
   TBranch* b = getBranch(section, cnt, cl);
   if ( b ) {
-    long evt = b->GetEntries();
+    Long64_t evt = b->GetEntries();
     if ( 0 == evt && fill_missing ) {
-      long nevt = b->GetTree()->GetEntries();
+      Long64_t nevt = b->GetTree()->GetEntries();
       if ( nevt > evt ) {
 	void* p = 0;
 	b->SetAddress(&p);
-	for(int i=0; i<nevt; ++i) {
+	for(Long64_t i=0; i<nevt; ++i) {
 	  b->Fill();
 	}
-	msgSvc() << MSG::INFO << "Added " << b->GetEntries() << " NULL entries to:" << cnt << endmsg;
+	msgSvc() << MSG::INFO << "Added " << long(b->GetEntries()) 
+		 << " NULL entries to:" << cnt << endmsg;
       }
     }
     b->SetAddress(&pObj);

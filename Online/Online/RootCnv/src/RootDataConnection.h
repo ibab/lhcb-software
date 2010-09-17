@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.h,v 1.8 2010-09-01 18:52:48 frankb Exp $
+// $Id: RootDataConnection.h,v 1.9 2010-09-17 09:00:12 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
@@ -26,11 +26,6 @@ class DataObject;
  *  Gaudi namespace declaration
  */
 namespace Gaudi  {
-
-  // Forward declarations
-  class RootRef;
-  class RootObjectRefs;
-
 
   /** @class RootConnectionSet RootDataConnection.h GaudiRootCnv/RootDataConnection.h
     *
