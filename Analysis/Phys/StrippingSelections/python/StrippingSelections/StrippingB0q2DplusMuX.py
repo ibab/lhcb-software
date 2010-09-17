@@ -101,7 +101,7 @@ confdict={
                  #muon paramters
                  'MuPT'        : 700, #MeV
                  'MuPidPi'     : -1.,
-                 'MuPidK'      : 0,
+                 'MuPidK'      : -5,
                  'MuTrChi2'    : 5,
                  #kaon parameters
                  'KPT'         : 400, #MeV
