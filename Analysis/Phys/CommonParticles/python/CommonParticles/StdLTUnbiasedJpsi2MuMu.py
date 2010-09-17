@@ -26,12 +26,11 @@ from CommonParticles.Utils import *
 StdLTUnbiasedJpsi2MuMu = FilterDesktop("StdLTUnbiasedJpsi2MuMu")
 StdLTUnbiasedJpsi2MuMu.InputLocations =["StdLooseJpsi2MuMu"]
 StdLTUnbiasedJpsi2MuMu.Code = "  (MINTREE('mu+'==ABSID, PT) > 500.*MeV)" \
-                              "& (MAXTREE('mu+'==ABSID, TRCHI2DOF) < 10.0)" \
                               "& (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
                               "& (MAXTREE('mu+'==ABSID, PIDK) < 10.0)" \
                               "& (ADMASS('J/psi(1S)') < 50.*MeV)" \
                               "& (PT > 1000.*MeV)" \
-                              "& (VFASPF(VCHI2/VDOF) < 6.0)"
+                              "& (VFASPF(VCHI2) < 6.0)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLTUnbiasedJpsi2MuMu )

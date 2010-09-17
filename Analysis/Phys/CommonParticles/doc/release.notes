@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-17 - Greig Cowan
+ - Added ADOCACHI2 cuts to most of the common particles to speed up their 
+   creation. Also removed TRCHI2NDOF cuts since defaults are now set to <5.
+
 ! 2010-09-16 - Chris Jones
  - Update the default tracking cuts as applied to all common particles, via
    the DefaultTrackingCuts Configurable in Utils.py

@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 StdLoosePhi2KK = CombineParticles("StdLoosePhi2KK")
 StdLoosePhi2KK.InputLocations = ["StdLooseKaons"]
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
-StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV)"
+StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV) & (ADOCACHI2('') < 30.)"
 StdLoosePhi2KK.MotherCut = "(VFASPF(VCHI2) < 25.0)"
 
 ## configure Data-On-Demand service 

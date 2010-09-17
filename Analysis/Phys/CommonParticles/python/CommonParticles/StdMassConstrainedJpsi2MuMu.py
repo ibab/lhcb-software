@@ -25,8 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 StdMassConstrainedJpsi2MuMu = FilterDesktop("StdMassConstrainedJpsi2MuMu")
 StdMassConstrainedJpsi2MuMu.InputLocations =["StdLooseJpsi2MuMu"]
-StdMassConstrainedJpsi2MuMu.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < 5.0)" \
-                              	   "& (ADMASS('J/psi(1S)') < 80.*MeV)" \
+StdMassConstrainedJpsi2MuMu.Code = "  (ADMASS('J/psi(1S)') < 80.*MeV)" \
                               	   "& (VFASPF(VCHI2) < 16.)" \
 			     	   "& (MFIT)"
 				   #"& (INFO( LHCb.Particle.Chi2OfMassConstrainedFit, 100 ) < 25)"

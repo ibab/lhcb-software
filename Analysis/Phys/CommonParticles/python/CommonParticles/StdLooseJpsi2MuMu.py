@@ -27,8 +27,8 @@ from CommonParticles.Utils import *
 StdLooseJpsi2MuMu = CombineParticles ("StdLooseJpsi2MuMu")
 StdLooseJpsi2MuMu.InputLocations = ["StdLooseMuons"]
 StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
-StdLooseJpsi2MuMu.CombinationCut = "ADAMASS('J/psi(1S)')<100*MeV"
-StdLooseJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 25.0)"
+StdLooseJpsi2MuMu.CombinationCut = "ADAMASS('J/psi(1S)') < 100.*MeV & (ADOCACHI2('') < 30.)"
+StdLooseJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseJpsi2MuMu    )

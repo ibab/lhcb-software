@@ -28,8 +28,8 @@ from CommonParticles.Utils import *
 StdLooseKstar2Kpi = CombineParticles ("StdLooseKstar2Kpi")
 StdLooseKstar2Kpi.InputLocations = ["StdLooseKaons", "StdLoosePions"]
 StdLooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-StdLooseKstar2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 300.*MeV)"
-StdLooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF) < 25.) & (PT > 500.*MeV)"
+StdLooseKstar2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 300.*MeV) & (ADOCACHI2('') < 30.)"
+StdLooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2) < 25.) & (PT > 500.*MeV)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseKstar2Kpi )
