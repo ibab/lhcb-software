@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Id: StorageDisplay.h,v 1.9 2010-09-17 09:47:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.9 2010-09-17 09:47:12 frankb Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
@@ -59,6 +59,22 @@ namespace ROMon {
 
     /// Store node services
     DataWriterInfo* m_wrInfo;
+
+    struct Stream {
+      std::string node, source;
+      int sent, written, received;
+      Stream() : sent(0), written(0), received(0) {}
+      Stream(const Stream& s) 
+	: node(s.node), source(s.source), sent(s.sent), written(s.written), received(s.received) {}
+      Stream& operator=(const Stream& s) { 
+	node     = s.node; 
+	source   = s.source;
+	sent     = s.sent;
+	written  = s.written;
+	received = s.received;
+	return *this;
+      }
+  };
 
   public:
     /// Standard constructor

@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Id: SubfarmDisplay.h,v 1.9 2010-09-17 09:47:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.9 2010-09-17 09:47:12 frankb Exp $
 #ifndef ROMON_SUBFARMDISPLAY_H
 #define ROMON_SUBFARMDISPLAY_H 1
 
@@ -50,6 +50,15 @@ namespace ROMon {
 
     /// Initialize window
     void init(int argc, char** arv);
+
+    struct TaskIO {
+      int in, out;
+      size_t st_in, st_out;
+      TaskIO() : in(0), out(0), st_in(0), st_out(0) {}
+      TaskIO(const TaskIO& m) : in(m.in), out(m.out), st_in(m.st_in), st_out(m.st_out) {}
+      TaskIO& operator=(const TaskIO& m) { in=m.in; out=m.out; st_in=m.st_in; st_out=m.st_out; return *this;}
+    };
+
   public:
     /// Initializing constructor
     SubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);

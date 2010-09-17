@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.17 2010-09-03 14:47:46 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.18 2010-09-17 09:47:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.17 2010-09-03 14:47:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.18 2010-09-17 09:47:12 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -31,23 +31,10 @@ using namespace std;
 
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
-namespace {
-  struct Stream {
-    typedef map<string,int> Targets;
-    int received;
-    Targets to;
-    const MBMBuffer* buffer;
-    Stream() : received(0), buffer(0) {}
-    Stream(const Stream& s) : received(s.received), to(s.to), buffer(s.buffer) {}
-    Stream& operator=(const Stream& s) { received=s.received; to = s.to; buffer = s.buffer; return *this;}
-  };
-}
-
 typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef map<string,Stream>           Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -275,7 +262,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   char txt[2][256];
   int received = 0, sent = 0, nlines = 0;
   Stream all;
-  Streams streams;
+  map<string,Stream> streams;
   MonitorDisplay* disp = m_relay;
   string part = m_partName + "_";
   string part2 = "_" + m_partName;
@@ -330,9 +317,9 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   disp->draw_line_reverse("%-50s%-50s",txt[0],txt[0]);
   txt[0][0] = txt[1][0] = 0;
   nStr = received = sent = 0;
-  for (Streams::const_iterator is=streams.begin(); is!=streams.end(); ++is)  {
+  for (map<string,Stream>::const_iterator is=streams.begin(); is!=streams.end(); ++is)  {
     const Stream& s = (*is).second;
-    for (Stream::Targets::const_iterator t=s.to.begin(); t!=s.to.end(); ++t)  {
+    for( map<string,int>::const_iterator t=s.to.begin(); t!=s.to.end(); ++t)  {
       if ( is_reco )
 	sprintf(txt[nStr++]," %-14s %-10s %11d%11s",(*is).first.c_str(),(*t).first.c_str(),int((*t).second),"");
       else

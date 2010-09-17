@@ -712,7 +712,7 @@ ostream& operator<<(ostream& os, const MethodCall& c)  {  return os << c.str(); 
 #define Connect_TMO 0
 
 /// Initializing constructor: sets up the connection
-Server::Server(const string& server, int port) : m_channel(0) {  connect(server,port); }
+Server::Server(const string& server, unsigned short port) : m_channel(0) {  connect(server,port); }
 
 /// Default constructor without explicit connection
 Server::Server() : m_server(), m_port(-1), m_channel(0) { }

@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.16 2010-09-03 14:47:46 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.17 2010-09-17 09:47:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.16 2010-09-03 14:47:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.17 2010-09-17 09:47:12 frankb Exp $
 
 // C++ include files
 #include <ctime>
@@ -55,21 +55,10 @@ using namespace std;
 static const char *sstat[17] = {" nl","   ","*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac","SPR","WER","   "};
 static const size_t NUM_STORE_NODES = 4;
 
-namespace {
-  struct Stream {
-    string node, source;
-    int sent, written, received;
-    Stream() : sent(0), written(0), received(0) {}
-    Stream(const Stream& s) : node(s.node), source(s.source), sent(s.sent), written(s.written), received(s.received) {}
-    Stream& operator=(const Stream& s) { node = s.node; source = s.source; sent=s.sent; written=s.written; received=s.received; return *this;}
-  };
-}
-
 typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef map<string,Stream>           Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -285,7 +274,7 @@ void StorageDisplay::showFiles() {
 
 /// Display the Stream information
 void StorageDisplay::showStreams(const Nodeset& ns) {
-  Streams streams;
+  map<string,StorageDisplay::Stream> streams;
   MonitorDisplay* disp = m_streams;
   string part = m_partName + "_";
   disp->draw_line_reverse("Stream         Source       Target              Sent    Received     Written   ");

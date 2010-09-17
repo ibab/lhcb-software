@@ -421,7 +421,7 @@ namespace PyRPC  {
 
   public:
     /// Initializing constructor: sets up the connection
-    Server(const std::string& server, int port);
+    Server(const std::string& server, unsigned short port);
     /// Default constructor without explicit connection
     Server();
     /// Default destructor

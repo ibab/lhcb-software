@@ -235,9 +235,9 @@ extern "C" int run_node_ping(int argc, char** argv) {
     Inventory::NodeCollectionMap::const_iterator ni=inv.nodecollections.find(dns);
     if ( ni != inv.nodecollections.end() ) {
       const Inventory::NodeCollection::NodeList& nl = (*ni).second.nodes;
-      Inventory::NodeCollection::NodeList::const_iterator n = nl.find(node);
-      if ( n != nl.end() ) {
-	const string& typ = (*n).second;
+      Inventory::NodeCollection::NodeList::const_iterator niter = nl.find(node);
+      if ( niter != nl.end() ) {
+	const string& typ = (*niter).second;
 	const Inventory::NodeTypeMap::iterator j = inv.nodetypes.find(typ);
 	if ( j != inv.nodetypes.end() ) {
 	  size_t idx;

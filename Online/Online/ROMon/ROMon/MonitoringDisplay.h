@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.h,v 1.6 2010-09-03 14:47:45 frankb Exp $
+// $Id: MonitoringDisplay.h,v 1.7 2010-09-17 09:47:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,17 +12,23 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.6 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/MonitoringDisplay.h,v 1.7 2010-09-17 09:47:12 frankb Exp $
 #ifndef ROMON_MONITORINGDISPLAY_H
 #define ROMON_MONITORINGDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/ClusterDisplay.h"
 
+// C++ include files
+#include <map>
+
 /*
  *   ROMon namespace declaration
  */
 namespace ROMon {
+
+  // Forward declarations
+  class MBMBuffer;
 
   /**@class MonitoringDisplay ROMon.h GaudiOnline/MonitoringDisplay.h
    *
@@ -52,6 +58,15 @@ namespace ROMon {
     std::string              m_relayNode;
 
   public:
+    struct Stream {
+      int received;
+      std::map<std::string,int> to;
+      const MBMBuffer* buffer;
+      Stream() : received(0), buffer(0) {}
+      Stream(const Stream& s) : received(s.received), to(s.to), buffer(s.buffer) {}
+      Stream& operator=(const Stream& s) { received=s.received; to = s.to; buffer = s.buffer; return *this;}
+    };
+
     /// Standard constructor
     MonitoringDisplay(int argc, char** argv);
 
