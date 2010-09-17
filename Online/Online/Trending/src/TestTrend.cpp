@@ -1,4 +1,4 @@
-// $Id: TestTrend.cpp,v 1.1.1.1 2010-06-11 09:58:56 ocallot Exp $
+// $Id: TestTrend.cpp,v 1.2 2010-09-17 09:00:00 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -89,11 +89,11 @@ StatusCode TestTrend::initialize() {
   info() << "openWrite returned " << status << endmsg;
   if ( !status ) return StatusCode::FAILURE;
 
-  std::vector<float> threshold( 41, 0.5 );
+  std::vector<float> threshold( 41, 0.5f );
   status = m_trend->setThresholds( threshold );
   if ( !status ) return StatusCode::FAILURE;
   
-  status = m_trend->setThreshold( "Var_21", .2 );
+  status = m_trend->setThreshold( "Var_21", 0.2f );
   if ( !status ) return StatusCode::FAILURE;
 
   m_event = 0;
@@ -111,7 +111,7 @@ StatusCode TestTrend::execute() {
   m_event++;
   std::vector<float> data;
   for ( unsigned int kk=0 ; 41 > kk ; ++kk ) {
-    data.push_back( ( .1 + .001 * kk ) * float( m_event ) );
+    data.push_back( ( 0.1f + 0.001f * kk ) * float( m_event ) );
   }
   int time = 1200000000 + m_event;
   int status = m_trend->write( data, time );
