@@ -4,6 +4,21 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-09-17 - Gloria CORTI
+ - requirements: increase version of pythia6 to 423.2 to allow to check it
+   against 421.2
+ - Noticed that the new version of hijing is calling "rlu_hijing" instead or
+   "rlu". Modified name of function in file in src/hijing/rlu.F. Function 
+   "ran" instead does not seem to be called, so do not touch it.
+
+! 2010-09-14 - Gloria CORTI
+ - requirements: use hijing 1.36.a.2 newly installed in LCG MCGenerators. 
+   This version is orginally from Alice.  
+   Routines and common blocks from pythia and jetset are renamed:
+   "_hijing" added to the names. This way hijing hopefully can be used
+   together with pythia.
+   NMXHEP for HEPEVT is 10000, PHEP and VHEP in double precision.
+
 !========================== GENSER v7r0 2010-07-09 ===========================
 ! 2010-06-21 - Patrick Robbe
  - requirements: use Photos 215.4 to have HEPEVT common block size set to
