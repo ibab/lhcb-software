@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Utils.py,v 1.1 2010-09-13 13:30:36 ibelyaev Exp $ 
+# $Id: Utils.py,v 1.2 2010-09-17 17:56:12 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -26,7 +26,7 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-09-13 13:30:36 $
+#  Last modification $Date: 2010-09-17 17:56:12 $
 #                 by $Author: ibelyaev $ 
 # =============================================================================
 """
@@ -44,13 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-  Last modification $Date: 2010-09-13 13:30:36 $
+  Last modification $Date: 2010-09-17 17:56:12 $
                  by $Author: ibelyaev $  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-00-12"
-__version__ = 'Version $Revision: 1.1 $'
+__version__ = 'Version $Revision: 1.2 $'
 __all__     = (
     ##
     'run'               , 
@@ -171,8 +171,10 @@ def setData ( files , catalogs = [] ) :
         
         if files :
             
-            from Bender.DataUtils import extendfile
-            files = [ extendfile ( f ) for f in files ]
+            from Bender.DataUtils import extendfile2
+            files = [ extendfile2 ( f ) for f in files ]
+
+            print 'I AM FILES' , files
             
             from Gaudi.Configuration import EventSelector
             EventSelector ( Input = files )
@@ -186,7 +188,11 @@ def setData ( files , catalogs = [] ) :
             
     else :                        ## here we deal with the actual components
         
-        if files : 
+        if files :
+            
+            from Bender.DataUtils import extendfile1
+            files = [ extendfile1 ( f ) for f in files ]
+        
             _e = _gaudi.evtSel()
             _e.open ( files )
         if catalogs :
@@ -342,9 +348,7 @@ def seekStripDecision ( expr                                 ,
     
 # =============================================================================
 ## skip the events 
-def skip ( nEvents            ,
-           postAction  = None ,
-           preAction   = None ) :
+def skip ( nEvents ) : 
     """
     Skip events
     
@@ -357,7 +361,7 @@ def skip ( nEvents            ,
     _disabled = _g.disableAllAlgs()
 
     try:
-        st = run ( nEvent )
+        st = run ( nEvents )
     finally:
         for _a in _disabled :
             _a.setEnabled ( True )

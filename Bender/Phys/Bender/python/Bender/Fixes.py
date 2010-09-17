@@ -41,7 +41,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $'
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $'
 __all__     = ()
 # =============================================================================
 
@@ -298,7 +298,7 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
         """        
         Disable all algorithms
         """
-        _tops      = self.allAlgorithms()
+        _tops      = self.allAlgs()
         _disabled = []
         for _a in _tops :
             if _a.isEnabled() :

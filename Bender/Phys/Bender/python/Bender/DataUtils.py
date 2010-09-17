@@ -42,27 +42,62 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-02-12"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
-__all__     = ( 'externdfile' , )
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__all__     = ( 'extendfile1' ,
+                'extendfile2' ,
+                'extendfile'  ,
+                )
 # =============================================================================
 ## Helper function to 'extend' the short file name
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
-def extendfile ( filename ) :
+def extendfile1 ( filename ) :
     """
     Helper function to 'extend' the short file name 
     """
     if 0 <= filename.find(' ') : return filename
-    ## 
-    if 0 == filename.find (  '/castor'   ) : filename = 'castor:' + filename
-    if 0 == filename.find ( '//castor'   ) : filename = 'castor:' + filename
-    if 0 == filename.find ( '/lhcb/data' ) : filename = 'LFN:'    + filename
     ##
+    import os 
+    ## 
+    if   0 == filename.find ( '/castor/cern.ch/grid/lhcb/user/' ) :
+        filename = 'castor://castorlhcb.cern.ch:9002/%s?svcClass=lhcbuser' % filename
+    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/'      ) :
+        filename = 'castor://castorlhcb.cern.ch:9002/%s'                   % filename
+    elif 0 == filename.find ( '/castor/cern.ch'                 ) :
+        filename = 'castor:' + filename
+    elif 0 == filename.find ( '//castor'    ) : return extendfile1 ( filename[1:] ) ## recursion  
+    elif os.path.exists ( filename )          : filename = 'PFN:' + filename 
+    elif 0 == filename.find ( '/lhcb/data/' ) or \
+         0 == filename.find ( '/lhcb/MC/'   ) or \
+         0 == filename.find ( '/lhcb/user/' ) : filename = 'LFN:' + filename 
+    ##
+    return filename 
+
+# =============================================================================
+## Helper function to 'extend' the short file name
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2010-02-12
+def extendfile2 ( filename ) :
+    """
+    Helper function to 'extend' the short file name 
+    """
+    if 0 <= filename.find(' ') : return filename
+    ##
+    filename = extendfile1 ( filename ) 
+    ## 
     pattern = "DATAFILE='%s' %s OPT='READ'"
     typ     = "TYPE='POOL_ROOTTREE'"
+    #
     if 0 <= filename.find ( '.mdf' ) : typ = "SVC='LHCb::MDFSelector'"
     if 0 <= filename.find ( '.raw' ) : typ = "SVC='LHCb::MDFSelector'"
+    #
     return pattern %  ( filename , typ )
+
+# =============================================================================
+## Helper function to 'extend' the short file name
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2010-02-12
+extendfile  = extendfile2
 
 # =============================================================================
 if __name__ == '__main__' :

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.87 2010-09-10 14:06:03 ibelyaev Exp $ 
+# $Id: requirements,v 1.88 2010-09-17 17:56:12 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2002-11-02
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package             Bender
-version             v15r0
+version             v15r1
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -23,6 +23,7 @@ apply_pattern       install_scripts
 # ================= aliases ===================================================
 alias bender_mc    "benderMc"
 alias bender_MC    "benderMc"
+alias dst-explorer "dst_explorer"
 alias dstExplorer  "dst_explorer"
 alias dst_Explorer "dst_explorer"
 alias Dst_Explorer "dst_explorer"

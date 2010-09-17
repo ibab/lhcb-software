@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: DstExplorer.py,v 1.1 2010-09-10 13:11:31 ibelyaev Exp $ 
+# $Id: DstExplorer.py,v 1.2 2010-09-17 17:56:12 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -43,7 +43,7 @@
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-09-10 13:11:31 $
+#  Last modification $Date: 2010-09-17 17:56:12 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
@@ -77,14 +77,14 @@ Usage:
        >>> run(1)
        >>> ls('/Event') 
 
-Last modification $Date: 2010-09-10 13:11:31 $
+Last modification $Date: 2010-09-17 17:56:12 $
                by $Author: ibelyaev $
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
@@ -111,7 +111,7 @@ if '__main__' == __name__ :
         '--simulation'                ,
         action  = "store_true"        ,
         dest    = 'Simulation'        ,
-        help    = "``Simulation''  flag to be propagated to DaVicnci" ,
+        help    = "``Simulation''  flag to be propagated to DaVinci" ,
         default = False   
         )
     ## 
@@ -122,6 +122,14 @@ if '__main__' == __name__ :
         dest    = 'OutputLevel'       ,
         help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %default]" ,
         default = 3                  
+        )
+    ## 
+    parser.add_option (
+        '-x'                          ,
+        '--xml'                        ,
+        dest    = 'XmlCatalogue'       ,
+        help    = "``XmlCatalog'' to be transferred to setData-function [default : %default]" ,
+        default = ''                  
         )
     ## 
     parser.add_option (
@@ -197,14 +205,16 @@ if '__main__' == __name__ :
     ## instantiate the application manager 
     gaudi=appMgr()
 
-    ## set input data 
-    setData ( arguments , [] )
-
+    ## get xml-catalogs (if specified) 
+    catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
+    
+    ## set input data
+    setData ( arguments , catalogs  )
+    
     ## initialize and read the first event
     gaudi.run(1)
 
-    
-    
+        
 # =============================================================================
 # The END 
 # =============================================================================
