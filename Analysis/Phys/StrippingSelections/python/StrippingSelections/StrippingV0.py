@@ -116,7 +116,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'SameSignPrescale'     : 0.10               ## Prescale same-sign combinations
         , 'K0S_DDPrescale'       : 0.04               ## Prescale K0S DD-combinations
         , 'Lambda0_DDPrescale'   : 0.20               ## Prescale Lambda0 DD-combinations
-        , 'TrackCutSet'          : "NULL"             ## TrackCutsSet to be used
         , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
         , 'VertexChi2'           :  25                ## Cut on Vertex chi2-quality
         , 'DeltaMassK0S'         :  50 * MeV          ## Mass-window (half)-width for K0S 
@@ -140,7 +139,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         'Use_Geo_K0S'             : """ Use 'Geometrical' selection of K0S ?       """
         , 'Use_Geo_Lambda'        : """ Use 'Geometrical' selection of Lambda0 ? """ 
         , 'SameSignPrescale'      : """ Prescale same-sign combinations          """
-        , 'TrackCutSet'           : """ 'TrackCutsSet' to be used                """
         , 'TrackQuality'          : """ Track quality selection                  """ 
         , 'VertexChi2'            : """ Cut on Vertex chi2-quality               """ 
         , 'DeltaMassK0S'          : """ Mass-window (half)width for K0S          """ 
@@ -173,7 +171,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         """
         
         from CommonParticles.Utils import DefaultTrackingCuts
-        DefaultTrackingCuts().useCutSet( self.getProp( 'TrackCutSet' ) )
         
         from Configurables import CombineParticles
         
@@ -289,7 +286,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         """
         
         from CommonParticles.Utils import DefaultTrackingCuts
-        DefaultTrackingCuts().useCutSet ( self.getProp ( 'TrackCutSet' ) )
         
         from Configurables import CombineParticles
         
