@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v5r1   2010-09-16 ===================
+! 2010-09-16 Gerhard Raven
+ - allow to give seperate Et cut for SingleElectronNoIP
+ - run some muon lines on a new HighPt L0 muon channel
 
 !========================== Hlt1Lines v5r0p1  2010-09-16 ===================
 ! 2010-09-16 Gerhard Raven

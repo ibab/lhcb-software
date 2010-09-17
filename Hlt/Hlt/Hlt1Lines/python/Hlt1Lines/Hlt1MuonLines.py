@@ -27,16 +27,17 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 
         #  Muon Lines
         'Prescale'                  : {  'Hlt1SingleMuonNoVeloL0'      :  0.00001
-                                         ,'Hlt1DiMuonNoVeloL0'         :  0.00001
-                                         }
+                                      ,  'Hlt1DiMuonNoVeloL0'          :  0.00001
+                                      }
         ,'L0SingleMuon'             :"Muon"
-        ,'L0SingleMuonGEC'          :"Muon" ### is that correct?
+        ,'L0SingleMuonGEC'          :"Muon"
         ,'L0SingleMuonNoPV'         :"Muon,lowMult"
+        ,'L0SingleMuon4BsMuMu'      :"MuonHigh"
+        ,'L0SingleMuonHigh'         :"MuonHigh"
         ,'L0DiMuonNoPV'             :"DiMuon,lowMult"
+        ,'L0DiMuon'                 :"DiMuon"
         ,'L0MuonNoVelo'             :"MUON,minbias"
         ,'DiMuon_SumPtCut'          : 1000.
-        # DC09 and DC06
-        ,'L0DiMuon'                 :"DiMuon"
         ,'L0AllMuon_PtCut'          :   80.
         ,'L0MuonNoPV_PtCut'         :  800.
         ,'Muon_DeltaPCut'           :    0.
@@ -344,10 +345,10 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         # Single Muon high PT without IP cut from L0Muon (MuonNoGlob)
         #--------------------------------------------------------------------
         from Hlt1Lines.Hlt1GECs import Hlt1GEC
-        if self.getProp('L0SingleMuon') in L0Channels() :
+        if self.getProp('L0SingleMuonHigh') in L0Channels() :
             SingleMuonNoIPL0HighPT = Line( 'SingleMuonNoIPL0HighPT'
                                      , prescale = self.prescale
-                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
+                                     , L0DU = "L0_CHANNEL('%(L0SingleMuonHigh)s')"%self.getProps()
                                      , algos = [ Hlt1GEC(),MuonPrep 
                                                  , Member( 'TF', 'PT' 
                                                            , FilterDescriptor = ['PT,>,%(Muon_highPtCut)s'%self.getProps()] 
@@ -471,10 +472,10 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                        
                        ]
         
-        if self.getProp('L0SingleMuon') in L0Channels() :
+        if self.getProp('L0SingleMuon4BsMuMu') in L0Channels() :
             SingleMuon4BsMuMu = Line( 'SingleMuon4BsMuMu'
                                     , prescale = self.prescale
-                                    , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
+                                    , L0DU = "L0_CHANNEL('%(L0SingleMuon4BsMuMu)s')"%self.getProps()
                                     , algos = [ MuonPrep
                                                 , PV3D().ignoreOutputSelection()
                                                 , Member ( 'TF', 'PT'

@@ -9,6 +9,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     __slots__ = { 'Ele_EtCut'              :  2600.    # L0 ET cut
+                , 'Ele_EtCutSingleNoIP'    :  5000.
                 , 'EleIP_IPCut'            :  0.1      # single electron with IP cut
                 , 'EleIP_PtCut'            :  3000.    
                 , 'Ele_PtCut'              :  10000.   # single electron without IP cut
@@ -70,6 +71,14 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   ]
         
         ##### common bodies no IP
+        prepareSingleElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCutSingleNoIP')) ] )
+                                  , DecodeIT
+                                  , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
+                                  , Velo, PV3D().ignoreOutputSelection()
+                                  , DecodeTT
+                                  , Member ( 'TM', 'VeloT', InputSelection1 = 'Velo' , InputSelection2 = '%TUTConf' , callback = MatchCallback('VeloT'))
+                                  ]
+
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = TEleConf.splitName()[-1] )
@@ -119,7 +128,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
             Line ('SingleElectronNoIP'
                      , prescale = self.prescale
                      , L0DU = "L0_CHANNEL('Electron')"
-                     , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareElectronNoIP
+                     , algos = [ Hlt1GEC(),convertL0Candidates('Electron') ] + prepareSingleElectronNoIP
                              + [ Member ( 'TF','PTCut'
                                         , FilterDescriptor = ['PT,>,'+str(self.getProp('Ele_PtCut'))]
                                         , HistogramUpdatePeriod = 0
