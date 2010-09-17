@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-09-17 - Johannes Albrecht
+ - add setting for van der meer scan
+
 !========================== HltSettings v3r5  2010-09-17 ===================
 ! 2010-09-16 - Gerhard Raven
  - increase TrackAllL0,TrackMuon IP to 110 um,  update default L0TCK to 0x30
