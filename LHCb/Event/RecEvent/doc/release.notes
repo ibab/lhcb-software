@@ -5,6 +5,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-09-17 - Marco Cattaneo
+ - RecHeader.xml: new gpsTime() member, same content as in ODIN
+
 ! 2010-09-02 - Olivier Deschamps
   - ProtoParticle.xml : new calo-related additional info (CaloEoverP)
 

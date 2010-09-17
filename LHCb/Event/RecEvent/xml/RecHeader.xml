@@ -25,9 +25,16 @@
         type="longlong"
         init="0"
        />
+       <attribute
+        name="gpsTime"
+        desc="GPS Time (same as in ODIN, microseconds)"
+        type="ulonglong"
+        init="0"
+       />
+
        <constructor 
 		desc     = "Copy constructor. Creates a new RecHeader with the same information." 
-		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber())">
+		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber()), m_gpsTime(head.gpsTime())">
                 <arg const="TRUE" name="head" type="LHCb::RecHeader"/>
                 <code/>
        </constructor>
