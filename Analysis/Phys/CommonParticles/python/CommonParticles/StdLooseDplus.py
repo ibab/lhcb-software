@@ -32,10 +32,15 @@ StdLooseDplus2KPiPi = CombineParticles ( 'StdLooseDplus2KPiPi' )
 
 StdLooseDplus2KPiPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
 StdLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
-StdLooseDplus2KPiPi.DaughtersCuts = { "K+"  : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))", "pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))" }
+StdLooseDplus2KPiPi.DaughtersCuts = {
+    "K+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))",
+    "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
+    }
+
 #Need an upper mass window of 100 MeV for background estimation
 #and a lower mass window of 200 to catch the D+ and Ds
-StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV)"
+
+StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV) & (ADOCACHI2('')<100)"
 StdLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 ) & (M < 2070.*MeV) " 
 
 ## configure Data-On-Demand service 
@@ -67,13 +72,16 @@ locations = updateDoD ( StdLooseDplus2KPiPiOppSignPi )
 StdLooseDplus2hhh = CombineParticles ( 'StdLooseDplus2hhh') 
 StdLooseDplus2hhh.InputLocations = [ "StdNoPIDsPions" ]
 StdLooseDplus2hhh.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
-StdLooseDplus2hhh.DaughtersCuts = {"pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))" }
+StdLooseDplus2hhh.DaughtersCuts = {
+    "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
+    }
+
 StdLooseDplus2hhh.CombinationCut = """(
                                       in_range(1769*MeV, mpipipi    , 2069 * MeV) | 
                                       in_range(1769*MeV, mKpipi     , 2069 * MeV) | 
                                       in_range(1769*MeV, mKKpi      , 2069 * MeV) | 
                                       in_range(1769*MeV, mKpipiDCS  , 2069 * MeV)
-                                      ) & (APT>1.*GeV)
+                                      ) & (APT>1.*GeV) & (ADOCACHI2('') < 100)
                                     """
 StdLooseDplus2hhh.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 )"
 StdLooseDplus2hhh.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+' , 'pi+' ) " ,

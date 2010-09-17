@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-17 - Thomas Blake
+ - Updated trackSelector cuts for StdNoPIDsDowns{Pions/Protons} to 
+   Chi2Cut < 10
+ - Added ADOCACHI2 cuts to numerous common particles and removed
+   explicit track chi2 requirements.
+
 ! 2010-09-17 - Greig Cowan
  - Added ADOCACHI2 cuts to most of the common particles to speed up their 
    creation. Also removed TRCHI2NDOF cuts since defaults are now set to <5.

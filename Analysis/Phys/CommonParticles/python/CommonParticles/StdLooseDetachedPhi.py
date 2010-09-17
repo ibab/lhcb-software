@@ -28,7 +28,7 @@ StdLooseDetachedPhi2KK = CombineParticles ("StdLooseDetachedPhi2KK")
 StdLooseDetachedPhi2KK.InputLocations = ["StdLooseKaons"]
 StdLooseDetachedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 StdLooseDetachedPhi2KK.DaughtersCuts = {"K+": "(MIPCHI2DV(PRIMARY) > 4.)"} 
-StdLooseDetachedPhi2KK.CombinationCut = "(AM < 1100.*MeV)"
+StdLooseDetachedPhi2KK.CombinationCut = "(AM < 1100.*MeV) & (ADOCACHI2('') < 30)"
 StdLooseDetachedPhi2KK.MotherCut = "(VFASPF(VCHI2) < 25.0)"
 
 ## configure Data-On-Demand service 

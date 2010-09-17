@@ -24,12 +24,15 @@ StdVeryLooseD02KPi = CombineParticles ( 'StdVeryLooseD02KPi' )
 StdVeryLooseD02KPi.InputLocations = [ "StdLooseKaons", "StdNoPIDsPions" ]
 StdVeryLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
-StdVeryLooseD02KPi.DaughtersCuts = { "K+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)",
-                                 "pi+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"} 
+StdVeryLooseD02KPi.DaughtersCuts = {
+    "K+" : "(PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)",
+    "pi+" : "(PT>250*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"
+    } 
+
 #for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
 #~150 MeV below since the lower mass sideband will be for the crystal ball only. 
-StdVeryLooseD02KPi.CombinationCut = " (ADAMASS('D0')<60*MeV) & (APT>1*GeV) "
-StdVeryLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (M > 1710*MeV)"
+StdVeryLooseD02KPi.CombinationCut = " (ADAMASS('D0')<60*MeV) & (APT>1*GeV) & (ADOCACHI2('')<30)"
+StdVeryLooseD02KPi.MotherCut = "(VFASPF(VCHI2)<10) & (M > 1710*MeV)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseD02KPi )

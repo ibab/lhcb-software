@@ -23,10 +23,14 @@ StdVeryLooseDplus2KPiPi = CombineParticles ( 'StdVeryLooseDplus2KPiPi' )
 
 StdVeryLooseDplus2KPiPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
 StdVeryLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
-StdVeryLooseDplus2KPiPi.DaughtersCuts = { "K+"  : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))", "pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))" }
+StdVeryLooseDplus2KPiPi.DaughtersCuts = {
+    "K+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))",
+    "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))"
+    }
+
 #Need an upper mass window of 150 MeV for background estimation
 #and a lower mass window of 250 to catch the D+ and Ds
-StdVeryLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<250*MeV) & (APT>1.*GeV)"
+StdVeryLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<250*MeV) & (APT>1.*GeV) & (ADOCACHI2('')<100)"
 StdVeryLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 ) & (M < 2120.*MeV) " 
 
 ## configure Data-On-Demand service 

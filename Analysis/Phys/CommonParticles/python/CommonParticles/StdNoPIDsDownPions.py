@@ -29,7 +29,7 @@ algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownPions'          ,
                                 Particle = 'pion' )
 
 # configure the track selector
-selector = trackSelector ( algorithm, trackTypes = ['Downstream'] )
+selector = trackSelector ( algorithm, trackTypes = ['Downstream'], cuts = { "Chi2Cut" : [0,10] } )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

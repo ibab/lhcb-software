@@ -31,8 +31,8 @@ StdLooseKsLL.InputLocations = [ "StdLoosePions" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsLL.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 9.)" } 
-StdLooseKsLL.CombinationCut = "(ADAMASS('KS0') < 50.*MeV) & (ADOCACHI2('') < 40."
-StdLooseKsLL.MotherCut = "(ADMASS('KS0') < 35.*MeV) & (VFASPF(VCHI2) < 30.)"
+StdLooseKsLL.CombinationCut = "(ADAMASS('KS0') < 50.*MeV) & (ADOCACHI2('') < 30.)"
+StdLooseKsLL.MotherCut = "(ADMASS('KS0') < 35.*MeV) & (VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseKsLL )
@@ -48,8 +48,8 @@ StdLooseKsDD.InputLocations = [ "StdNoPIDsDownPions" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)" } 
-StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV) & (ADOCACHI2('') < 40."
-StdLooseKsDD.MotherCut = "(ADMASS('KS0') < 64.*MeV) & (VFASPF(VCHI2/VDOF) < 30.)"
+StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV) & (ADOCACHI2('') < 30.)"
+StdLooseKsDD.MotherCut = "(ADMASS('KS0') < 64.*MeV) & (VFASPF(VCHI2/VDOF) < 25.)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseKsDD )

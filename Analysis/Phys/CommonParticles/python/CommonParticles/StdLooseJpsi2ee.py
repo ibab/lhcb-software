@@ -28,8 +28,8 @@ StdLooseJpsi2ee = CombineParticles ( 'StdLooseJpsi2ee' )
 StdLooseJpsi2ee.InputLocations = [ "StdLooseElectrons" ]
 StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-" 
 
-StdLooseJpsi2ee.CombinationCut = "(AM>2000*MeV) & (AM<3800*MeV)"
-StdLooseJpsi2ee.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+StdLooseJpsi2ee.CombinationCut = "(AM>2000*MeV) & (AM<3800*MeV) & (ADOCACHI2('') < 30)"
+StdLooseJpsi2ee.MotherCut = "(VFASPF(VCHI2)<25)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseJpsi2ee )

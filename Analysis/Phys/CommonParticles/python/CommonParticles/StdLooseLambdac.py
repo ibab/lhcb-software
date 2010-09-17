@@ -18,13 +18,16 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseLambdac2PKPi = CombineParticles ( 'StdLooseLambdac2PKPi' )
 
-StdLooseLambdac2PKPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions", "StdNoPIDsProtons" ]
+StdLooseLambdac2PKPi.InputLocations = [ "StdLooseKaons", "StdLoosePions", "StdLooseProtons" ]
+
 StdLooseLambdac2PKPi.DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc" 
-StdLooseLambdac2PKPi.DaughtersCuts = { "K+"  : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))", 
-                                           "pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))",
-                                           "p+"  : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
-                                          }
-StdLooseLambdac2PKPi.CombinationCut = "(ADAMASS('Lambda_c+')<150*MeV) & (APT>1.*GeV)"
+StdLooseLambdac2PKPi.DaughtersCuts = {
+    "K+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))", 
+    "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))",
+    "p+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
+    }
+
+StdLooseLambdac2PKPi.CombinationCut = "(ADAMASS('Lambda_c+')<150*MeV) & (APT>1.*GeV) & (ADOCACHI2('')<100)"
 StdLooseLambdac2PKPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 )" 
 
 ## configure Data-On-Demand service 

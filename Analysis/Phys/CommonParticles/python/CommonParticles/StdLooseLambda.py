@@ -30,10 +30,13 @@ StdLooseLambdaLL = CombineParticles ( 'StdLooseLambdaLL' )
 StdLooseLambdaLL.InputLocations = [ "StdLoosePions", "StdLooseProtons" ]
 StdLooseLambdaLL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc" 
 
-StdLooseLambdaLL.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<10)",
-                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<10)" } 
-StdLooseLambdaLL.CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
-StdLooseLambdaLL.MotherCut = "(ADMASS('Lambda0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+StdLooseLambdaLL.DaughtersCuts = {
+    "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)",
+    "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)"
+    } 
+
+StdLooseLambdaLL.CombinationCut = "(ADAMASS('Lambda0')<50*MeV) & (ADOCACHI2('')<30)"
+StdLooseLambdaLL.MotherCut = "(ADMASS('Lambda0')<35*MeV) & (VFASPF(VCHI2)<30)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseLambdaLL )
@@ -47,10 +50,13 @@ StdLooseLambdaDD = StdLooseLambdaLL.clone( 'StdLooseLambdaDD' )
 
 StdLooseLambdaDD.InputLocations = [ "StdNoPIDsDownPions", "StdNoPIDsDownProtons" ]
 
-StdLooseLambdaDD.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<10)",
-                                   "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<10)" } 
-StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV)"
-StdLooseLambdaDD.MotherCut = "(ADMASS('Lambda0')<64*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+StdLooseLambdaDD.DaughtersCuts = {
+    "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
+    "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"
+    } 
+
+StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV) & (ADOCACHI2('')<30)"
+StdLooseLambdaDD.MotherCut = "(ADMASS('Lambda0')<64*MeV) & (VFASPF(VCHI2)<25)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseLambdaDD )
