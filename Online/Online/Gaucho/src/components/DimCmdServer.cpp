@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.25 2010-07-07 15:09:55 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.26 2010-09-17 07:56:35 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"

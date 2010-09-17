@@ -118,12 +118,12 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   }
 }
 
-void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonRate::load(boost::archive::binary_iarchive  & ar)
 {
   MsgStream msg = createMsgStream();
   isServer = false;
-  MonObject::load(ar, version);
-  MonProfile::load(ar, version);
+  MonObject::load(ar);
+  MonProfile::load(ar);
   ar & m_numCounters;
   
 /*  m_profile = profile();
@@ -190,4 +190,4 @@ void MonRate::print(){
    msgStream << MSG::INFO << "*************************************"<<endreq;
 }
 
-BOOST_CLASS_VERSION(MonRate, 1)
+//BOOST_CLASS_VERSION(MonRate, 1)

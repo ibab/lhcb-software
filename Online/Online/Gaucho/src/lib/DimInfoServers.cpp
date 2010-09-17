@@ -33,8 +33,8 @@ void DimInfoServers::infoHandler() {
     }
   }
   else {
+    //this can crash; does it need to stop & restart the timer?
     IocSensor::instance().send(m_processMgr->service(), s_stopTimer, (void *) m_processMgr); //stop Timer*/
-    //IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) &m_serverMap);
     IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) m_processMgr);
     IocSensor::instance().send(m_processMgr->service(), s_startTimer, (void *) m_processMgr); //start Timer*/
   }

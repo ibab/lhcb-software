@@ -21,7 +21,8 @@ std::vector<std::string>  Misc::splitString(const std::string &str, const char *
   while (true){
     std::size_t end = str.find(s, begin);
     if (std::string::npos == end) break;
-    
+    //could crash here?
+    if (end <= begin) break;
     found.push_back(str.substr(begin, end - begin));
     begin = end + 1;
   }

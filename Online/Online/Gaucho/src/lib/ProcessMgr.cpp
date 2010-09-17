@@ -84,6 +84,7 @@ bool ProcessMgr::timerHandler(){
     //endofrun=false;
   }
   else if (m_serviceOwner.compare(s_Saver) == 0) { 
+   // m_serviceMap->printMap();
     endofrun=write();
   }
   return endofrun;
@@ -97,6 +98,9 @@ bool ProcessMgr::write(){
   return endofrun;
 }
 
+void ProcessMgr::reset(){
+  m_serviceMap->reset();
+}  
 
 int ProcessMgr::getrunNumber(bool change){
   MsgStream msg(msgSvc(), "ProcessMgr");

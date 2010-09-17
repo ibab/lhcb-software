@@ -23,9 +23,9 @@ void MonVectorD::save(boost::archive::binary_oarchive & ar, const unsigned int v
   }
 }
 
-void MonVectorD::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonVectorD::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   int size = 0;
   double val = 0.00;
   ar & size;

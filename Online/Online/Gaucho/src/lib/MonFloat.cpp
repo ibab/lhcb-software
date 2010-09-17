@@ -16,9 +16,9 @@ void MonFloat::save(boost::archive::binary_oarchive & ar, const unsigned int ver
   ar & (*m_float);
 }
 
-void MonFloat::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonFloat::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   ar & (*m_float);
 }
 

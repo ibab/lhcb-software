@@ -17,9 +17,9 @@ void MonPair::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   ar & m_pair.second;
 }
 
-void MonPair::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonPair::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   ar & m_pair.first;
   ar & m_pair.second;
 }
@@ -67,6 +67,4 @@ void MonPair::print(){
   msgStream << MSG::INFO << "   first =  "<<m_pair.first << endreq;
   msgStream << MSG::INFO << "   second =  "<<m_pair.second << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  
-
 }

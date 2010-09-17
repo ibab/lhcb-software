@@ -16,9 +16,9 @@ void MonLong::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   ar & (*m_long);
 }
 
-void MonLong::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonLong::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   ar & (*m_long);
 }
 

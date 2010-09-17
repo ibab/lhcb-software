@@ -45,7 +45,7 @@ AdderSvc::~AdderSvc() {}
 StatusCode AdderSvc::initialize() {
   StatusCode sc = Service::initialize(); // must be executed first
   MsgStream msg(msgSvc(), name());
-  dim_set_write_timeout(20);
+  dim_set_write_timeout(15);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
     return StatusCode::FAILURE;
@@ -173,7 +173,7 @@ StatusCode AdderSvc::start() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG  << "Adder starting."<< endreq;
   if (m_firststart) {
-     lib_rtl_sleep(5000);    
+     lib_rtl_sleep(6000);    
      m_utgid = RTL::processName();
      std::size_t first_us = m_utgid.find("_");
      std::size_t second_us = m_utgid.find("_", first_us + 1);
@@ -194,10 +194,10 @@ StatusCode AdderSvc::start() {
      }
     if (m_nodeName.size() == 8) m_adderType = 1; 
     else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) {
-       lib_rtl_sleep(12000);
+       lib_rtl_sleep(13000);
        m_adderType = 2; }
     else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) {
-       lib_rtl_sleep(22000);
+       lib_rtl_sleep(24000);
        m_adderType = 3; }
 
      m_processMgr = new ProcessMgr (s_Adder, msgSvc(), this, m_refreshTime);
@@ -223,6 +223,7 @@ StatusCode AdderSvc::start() {
 StatusCode AdderSvc::stop() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Adder stopping." << endreq;
+  m_processMgr->reset();
  return StatusCode::SUCCESS;
  }
 

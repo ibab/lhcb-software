@@ -22,7 +22,7 @@ void DimInfoRunNb::infoHandler()
   m_data = getInt();
   if (m_data !=0) {
      if ((m_data!=m_runNumber)&&(m_data!=-1)) {
-       // std::cout << "DimInfoRun new runnumber " << m_data << std::endl;
+       // std::cout << "DimInfoRun runnumber " << m_data << std::endl;
         std::string saversvc=m_slice+"_Saver_1/";
         if (m_runNumber !=0) {
         //  std::cout << "run change old runNumber= " << m_runNumber << std::endl;  

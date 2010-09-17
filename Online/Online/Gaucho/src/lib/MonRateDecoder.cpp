@@ -350,11 +350,11 @@ std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterI
     name = nameHeader + "/" + name;
   }
 
-  if (name.length()> 120) {
+  if (name.length()> 110) {
      MsgStream msg(m_msgSvc, "MonRateDecoder");
-     msg << MSG::INFO << "Name "<< name << "too long "<< name.length() << endreq;
-     name=name.substr(0,120)+countertype; 
-     msg << MSG::INFO << "New name "<< name <<  endreq;
+     msg << MSG::DEBUG << "Name "<< name << "too long "<< name.length() << endreq;
+     name=name.substr(0,110)+countertype; 
+     msg << MSG::DEBUG << "New name "<< name <<  endreq;
   }
 
 

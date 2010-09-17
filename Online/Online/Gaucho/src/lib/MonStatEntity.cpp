@@ -32,9 +32,9 @@ void MonStatEntity::save(boost::archive::binary_oarchive & ar, const unsigned in
 }
 
 
-void MonStatEntity::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonStatEntity::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   load2(ar);
 }
 

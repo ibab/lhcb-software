@@ -17,6 +17,9 @@ static const std::string s_statusUpdated("UPDATED");
 
 class IRegistry;
 
+class IIncidentSvc;
+
+
 class UpdateAndReset : public GaudiAlgorithm, public DimTimer {
 public:
    /// Constructor of this form must be provided
@@ -111,6 +114,9 @@ private:
   int m_resetHistosAfterSave;
 
   DimService* m_dimSvcSaveSetLoc;
+  
+protected:
+   IIncidentSvc* m_incidentSvc;  
   
 };
 

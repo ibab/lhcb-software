@@ -17,9 +17,9 @@ void MonInt::save(boost::archive::binary_oarchive & ar, const unsigned int versi
   ar & val;
 }
 
-void MonInt::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonInt::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   int val;
   ar & val;
   (*m_int) = val;

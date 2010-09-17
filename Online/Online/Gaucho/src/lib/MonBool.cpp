@@ -16,9 +16,9 @@ void MonBool::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   ar & (*m_bool);
 }
 
-void MonBool::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonBool::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   ar & (*m_bool);
 }
 

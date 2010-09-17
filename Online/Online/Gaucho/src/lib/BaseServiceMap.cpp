@@ -127,9 +127,9 @@ void BaseServiceMap::printMap() {
   std::map<std::string, DimInfoMonObject*>::iterator it; 
   
   for (m_dimInfoIt = m_dimInfo.begin(); m_dimInfoIt != m_dimInfo.end(); ++m_dimInfoIt){
- //   msg << MSG::DEBUG << "Grupo: " << m_dimInfoIt->first  << endreq;
+    msg << MSG::INFO << "Grupo: " << m_dimInfoIt->first  << endreq;
     for (it = m_dimInfoIt->second.begin(); it != m_dimInfoIt->second.end(); ++it) {
- //     msg << MSG::DEBUG << "         Elemento: " << it->first << endreq;
+      msg << MSG::INFO << "         Elemento: " << it->first << endreq;
     }
   }
 }
@@ -475,8 +475,6 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   std::vector<std::string> savedirParts = Misc::splitString(saveDir, "/");
   std::string tmpPart=savedirParts[savedirParts.size()-1];
 
-
-  //msg << MSG::INFO << " runnumber " << runNumber << endreq;
   std::string runNumberstr;
   std::stringstream outstr;
   outstr << runNumber;
@@ -504,7 +502,13 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   secs=timeInfo->tm_sec;
   if (((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<31))save=true;
   bool endofrun=false;
-  
+
+  for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
+  {   
+     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+        it->second->loadMonObject();
+     }
+  }
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {   
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
@@ -525,7 +529,7 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
         save=true;
      }
      else m_saved=false;   
-     if ((save==true)&&(m_saved==false)) {
+     if ((save==true)&&(m_saved==false)) {         
         std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + eorstring + ".root";
         fileName.replace(0, fileName.length(), tmpfile);
         std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
@@ -535,56 +539,70 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
         }
 
         f = new TFile(fileName.c_str(),"create");
-
-            
+	
+        std::vector<TDirectory*> dirs;
+	dirs.clear();   
         for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
            std::string serverName = Misc::splitString(it->first, "/")[1];
            if(0 == it->second->monObject()) continue;
-           std::string type = it->second->monObject()->typeName();
-           std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");       
+           std::string type = it->second->monObject()->typeName();	   
+           std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");    
            if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-              TDirectory *dir=0; 
               it->second->loadMonObject();
               it->second->monObject()->loadObject();
+	      std::string histdir=fileName+":";
+	      int previous=0;
 	      for (int i=3;i<(int)HistoFullName.size()-1;i++) {
-	         //recreate the directory structure inside the root file before saving
-                 //HistoDirName keeps track of the directory names, to avoid rewriting them
+	      	 TDirectory *dir=0; 
+	         histdir=histdir+"/"+HistoFullName[i];
 	         if (i>3) {   
-		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
-		       dir->cd(HistoFullName[i].c_str());}
-		    else {
-		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subsubdir %02d",i)); 
+		    bool dirfound=false;
+                    for (int j5=0;j5<(int)dirs.size();j5++){
+		       if (!strcmp(dirs[j5]->GetPath(),histdir.c_str())){ 		          
+		         dirs[j5]->GetDirectory(histdir.c_str());
+			 dirs[j5]->cd();
+			 dirfound=true;
+			 previous=j5;
+		       }
+		    }
+		    if (!dirfound) {
+		       dir=dirs[previous]->mkdir(HistoFullName[i].c_str()); 
 		       dir->cd();
-		    }   	
-	       }   		    		 
-	       else {
-	          if (dir) {
-		     dir=f->GetDirectory(HistoFullName[i].c_str());
-		     dir->cd(HistoFullName[i].c_str());		       
-		  }    
-		  else { 
-		     if (!(dir=f->GetDirectory(HistoFullName[i].c_str()))) {
-		        dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
-		     }
-		  }   
-	       }
-            }   
-	    if (dir) { 	  
-	       dir->cd();	 
-	    }	
-	    else {	  
-	       f->cd();
-	    }
-            it->second->monObject()->write();
-         }
-         else {
+		       dirs.push_back(dir);
+		       previous=dirs.size()-1;
+		    } 	
+	         }   		    		 
+	         else {
+		    bool dirfound=false;
+	            if (dirs.size()>0) {		     
+                       for (int j6=0;j6<(int)dirs.size();j6++){
+			 if (!strcmp(dirs[j6]->GetPath(),histdir.c_str())){ 
+		           dirs[j6]->GetDirectory(histdir.c_str());
+			   dirs[j6]->cd();
+			   dirfound=true;
+			   previous=j6;
+			 }
+		       }      
+		    }    
+		    if (!dirfound) {
+		      dir=f->mkdir(HistoFullName[i].c_str());
+		      dirs.push_back(dir);
+		      previous=dirs.size()-1;
+		      dir->cd();	      
+		    }   
+	         }
+              }   
+              it->second->monObject()->write();
+           }
+           else {
             msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
-         }
-      } 
-      f->Close();
-      delete f;f=0;
-      if (endofrun) m_saved=true;
-    }  
+           }
+	   HistoFullName.clear();
+        } 
+        f->Close();
+        delete f;f=0;
+        if (endofrun) m_saved=true;
+     }  
   }
   return endofrun;
 }
@@ -718,3 +736,26 @@ bool BaseServiceMap::add() {
 
 }
 
+void BaseServiceMap::reset() {
+  MsgStream msg(msgSvc(), name());
+  std::map<std::string, DimInfoMonObject*>::iterator it;
+  for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
+  {
+     m_dimSrv[m_dimInfoIt->first].second->reset();     
+     try {
+       for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+          bool isLoaded = it->second->loadMonObject();
+          if (!isLoaded){
+             continue;
+          }
+          it->second->reset();
+       }
+    }
+    catch (const std::exception &ex){
+       msg << MSG::INFO << "std::exception: " << ex.what() << endreq;
+    }  
+    catch (...){
+       msg << MSG::INFO << "unrecognized exception. "<< endreq;
+    } 
+  }
+}

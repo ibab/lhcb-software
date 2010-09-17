@@ -15,6 +15,7 @@ DimInfoMonObject::DimInfoMonObject(std::string svcName, int refreshTime):
   m_svcName(svcName),
   m_source("UndefinedSource"),
   m_noValidMonObject("No valid MonObject"),
+  //used to be m_monObject(0)
   m_monObject(0),
   m_msgSvc(0),
   m_StringSize(-1)
@@ -83,7 +84,7 @@ bool DimInfoMonObject::createMonObject() {
     //msg << MSG::DEBUG << "creating iarchive 2" << endreq;  
     boost::archive::binary_iarchive ia(is);
    // msg << MSG::INFO << "monobjectbase load" << endreq;  
-    monObjectBase->load(ia, 1);
+    monObjectBase->load(ia);
     //msg << MSG::DEBUG << "after MonObject base Load" << endreq;  
     std::string monObjectTypeName  = monObjectBase->typeName();
     //msg << MSG::DEBUG << "creating MonObject" << endreq;
@@ -92,7 +93,7 @@ bool DimInfoMonObject::createMonObject() {
     is2.rdbuf()->pubsetbuf(c, m_StringSize);
     boost::archive::binary_iarchive ia2(is2);
  //   msg << MSG::INFO << "loading MonObject (create monobject)" << endreq;
-    m_monObject->load(ia2, 1);
+    m_monObject->load(ia2);
     //msg << MSG::DEBUG << "deleting " << endreq;
     if (monObjectBase) {delete monObjectBase; monObjectBase = 0;}
   }
@@ -110,6 +111,7 @@ bool DimInfoMonObject::createMonObject() {
 }
 
 bool DimInfoMonObject::loadMonObject(){
+  //it crashes here
   MsgStream msg(msgSvc(), name());
   
   if (!m_dimInfo) {
@@ -154,7 +156,7 @@ bool DimInfoMonObject::loadMonObject(){
     is.rdbuf()->pubsetbuf(c, m_StringSize);
     boost::archive::binary_iarchive ia(is);
   //  msg << MSG::INFO << " loading MonObject "<< endreq;
-    if (m_monObject!=0) m_monObject->load(ia, 1);
+    if (m_monObject!=0) m_monObject->load(ia);
     else return false;
     //msg << MSG::DEBUG << " setServiceActive "<< endreq;
     if (!m_monObject->serviceActive ()) m_monObject->setServiceActive (true);
@@ -172,7 +174,13 @@ bool DimInfoMonObject::loadMonObject(){
     
 }
 
+void DimInfoMonObject::reset() {
+  if (m_monObject) m_monObject->reset();
+}
+
+
 MonObject *DimInfoMonObject::monObject() {
+  //this crashes 
   return m_monObject;
 }
 

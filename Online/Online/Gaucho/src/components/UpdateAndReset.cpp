@@ -25,11 +25,15 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
-#include "AIDA/IHistogram.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "TH2.h"
 #include "TProfile.h"
 #include "TDirectory.h"
 #include "TROOT.h"
@@ -58,7 +62,7 @@ DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
 // Constructor
 //------------------------------------------------------------------------------
 UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
-  : GaudiAlgorithm(name, ploc)
+  : GaudiAlgorithm(name, ploc), m_incidentSvc(0)
 {
   declareProperty("disableMonRate", m_disableMonRate = 0);
   declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 20);
@@ -89,7 +93,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_offsetTimeLastEvInCycle=0;
   m_gpsTimeLastEvInCycle=0;
   m_offsetGpsTimeLastEvInCycle=0;
-  m_desiredDeltaTCycle = 30;
+  m_desiredDeltaTCycle = 20;
 }
 
 
@@ -180,6 +184,17 @@ StatusCode UpdateAndReset::initialize() {
   m_cycleStatus = s_statusNoUpdated;
 
   if (0==m_disableMonRate)  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
+
+  sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true );
+  if( sc.isSuccess() )   {
+    msg << MSG::DEBUG << "Found the Incident interface" << endreq;
+  }
+  else {
+    msg << MSG::WARNING << "Unable to locate the Incident interface." 
+        << endreq;
+  }   
+   
+   
    return StatusCode::SUCCESS;
 }
 
@@ -220,6 +235,7 @@ StatusCode UpdateAndReset::execute() {
 
   m_countExecutes++;
  // msg << MSG::INFO << "m_countExecutes " << m_countExecutes << endreq;
+
  
   if (0 == m_disableChekInExecute){
     m_triggerConfigurationKey = currentTCK();
@@ -282,7 +298,7 @@ void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be cal
 StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "finalizing...." << endreq;
+//  msg << MSG::INFO << "finalizing...." << endreq;
   if ( 1 == m_saveHistograms ) {
      //calling finalize - don't need to reset, they probably don't exist anymore
      //reset, as jobs in EFF are kept alive
@@ -295,7 +311,7 @@ StatusCode UpdateAndReset::finalize() {
   DimTimer::stop();
 
   if (m_dimSvcSaveSetLoc !=0 ) {delete m_dimSvcSaveSetLoc; m_dimSvcSaveSetLoc=0;}
-
+  m_firstExecute=true;
   return StatusCode::SUCCESS;
 }
 
@@ -471,35 +487,27 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
 //  msg << MSG::INFO << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
  
   if (isRunNumberChanged) {
+    bool eorsetexists=false;
     if (0 == m_disableUpdateData) {
         msg << MSG::DEBUG << "updating dim services (runnumber changed) m_eorNumber " << m_eorNumber << endreq;  
-         char timestr[64];
-        char year[5];
-        char month[3];
-        char day[3];
-        time_t rawTime=time(NULL);
-        struct tm* timeInfo = localtime(&rawTime);
-        ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
-        ::strftime(year, sizeof(year),"%Y", timeInfo);
-        ::strftime(month, sizeof(month),"%m", timeInfo);  
-        ::strftime(day, sizeof(day),"%d", timeInfo);  	
 	std::stringstream endofrunnumber;
 	endofrunnumber  << m_eorNumber;
 	std::string endofrunnumberstr = endofrunnumber.str();
-	std::string command="/bin/ls ";
-	std::string commandstr = command+m_saveSetDir+"/"+year+ "/"+"*"+"/" + taskName +"/"+month+"/"+day+"/"+"*"+endofrunnumberstr+"*-EOR.root > /dev/null 2>&1  ";
-	std::stringstream outputstream;
-	outputstream << system(commandstr.c_str());
-	std::string outputstring;
-	outputstring = outputstream.str();
-      //  msg << MSG::INFO << "output from ls command " << commandstr << " is " << outputstring << endreq;  	
-        if (outputstring==0) m_pGauchoMonitorSvc->updateAll(true); //fast run change!    
+
+	//if the EOR file already exists, the endofrunnumberstr should be contained in m_infoFileStatus
+	std::size_t eorfound = m_infoFileStatus.find("-EOR.root");
+        if (eorfound != std::string::npos ) {
+	   //now search for the runnnumber
+	   std::size_t runnbfound = m_infoFileStatus.find(endofrunnumberstr);
+	   if (runnbfound != std::string::npos) eorsetexists=true;
+	}   
+        if (!eorsetexists) m_pGauchoMonitorSvc->updateAll(true); //file does not exist, so fast run change!    
       }
  //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
     //     msg << MSG::INFO << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
-         manageTESHistos(false, true, true, true);
+           if (!eorsetexists) manageTESHistos(false, true, true, true);
       }
       else manageTESHistos(false, true, false, true);
     }
@@ -536,7 +544,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   std::vector<std::string> idList;
   msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
-  m_infoFileStatus = "......this is the file name were we will save histograms...........";
+  m_infoFileStatus = "......this is the file name were we will save histograms..............";
   char timestr[64];
   char year[5];
   char month[3];
@@ -555,6 +563,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
      std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName + "/" + month + "/" + day;  
      void *dir = gSystem->OpenDirectory(dirName.c_str());
      if ((dir == 0) && (save)) {
+     msg << MSG::WARNING << "Making directory." << endreq;       
      gSystem->mkdir(dirName.c_str(),true);
     }
     std::string tmpfile="";
@@ -574,17 +583,25 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     }	 
    // std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
    // if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
-      msg << MSG::DEBUG << "updating infofile status" << endreq;
-    m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
+   //   msg << MSG::DEBUG << "updating infofile status" << endreq;
+      m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
    
 
- //   msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
+ //   msg << MSG::WARNING << "We will save histograms in file " << m_infoFileStatus << endreq;
+   /*  if (gSystem->AccessPathName(m_infoFileStatus.c_str())) {
+    
+      msg << MSG::WARNING << "Saveset already exists. returning. " << endreq;
+      //file already exists so save was done earlier. quit
+      gSystem->FreeDirectory(dir);
+      return;
+    }*/
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
   if (f!=0) {
     if(! f->IsZombie()) {
       histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);   
       if (save) {
+       msg << MSG::WARNING << "Closing root file." << endreq;  
         f->Close();
         delete f;f=0;
       }    
@@ -598,12 +615,24 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
       delete f;f=0;
     }
     m_dimSvcSaveSetLoc->updateService((char*)m_infoFileStatus.c_str());
+  //  msg << MSG::WARNING << "Firing incidents "  << endreq;
+    if ( m_incidentSvc ) {
+       Incident incident("UpdateAndReset","histos_saved");
+       Incident incident2("UpdateAndReset","histos_reset");
+       if (save) m_incidentSvc->fireIncident(incident);
+       if (reset) m_incidentSvc->fireIncident(incident2);
+    }
   }
   else {
+    msg << MSG::INFO << "File=0. "  << endreq;  
      //f=0 because should also be able to reset without saving
-     histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);     
+     histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);  
+  //   msg << MSG::WARNING << "Firing reset incident "  << endreq;  
+     if ( m_incidentSvc ) {
+       Incident incident2("UpdateAndReset","histos_reset");
+       if (reset) m_incidentSvc->fireIncident(incident2);
+    } 
   }
-  
 }
 
 void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,
@@ -612,7 +641,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
   std::vector<IRegistry*> leaves;
   std::vector<IRegistry*>::const_iterator  it;
   try {
-//     msg << MSG::INFO << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
+ //    msg << MSG::WARNING << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
      SmartIF<IDataManagerSvc> dataManagerSvc(m_histogramSvc);
      if (!dataManagerSvc) {
 //       msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
@@ -626,63 +655,116 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
      }   
       
     for ( it=leaves.begin(); it != leaves.end(); it++ ) {
+       IRegistry* pReg = (*it);
        const std::string& id = (*it)->identifier();
        if (rootdir !=0) rootdir->cd();
-//       msg << MSG::DEBUG << "    Object found: " << id << endreq;
-    
-       DataObject* dataObject;
+    //   msg << MSG::WARNING << "    Object found: " << id << endreq;
+       DataObject* dataObject = 0;
        sc = m_histogramSvc->retrieveObject(id, dataObject);
        if (sc.isFailure()) {
-//         msg << MSG::WARNING << "Could not retrieve object from TES " << endreq;
+           msg << MSG::WARNING << "Could not retrieve object from TES " << endreq;
          continue;
        }
-
-       IHistogram* histogram = dynamic_cast<AIDA::IHistogram*> (dataObject);
-       if ( 0 != histogram) {
+       IHistogram1D* histogram1d = dynamic_cast<AIDA::IHistogram1D*> (dataObject);
+      // msg << MSG::WARNING << "checking data object" << endreq;
+       if ( 0 != histogram1d) {
+       	 if ( pReg->address() ) continue;
          if (save) {
-           TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
+	 //  msg << MSG::WARNING << "its a 1d histogram, getting root object" << endreq;
+           TH1D* hRoot = (TH1D*) Gaudi::Utils::Aida2ROOT::aida2root(histogram1d);
+	   if (!hRoot)  {
+	      msg << MSG::WARNING << "Could not get root object, skipping this histogram."<< endreq;	   
+	      continue;
+	   }
+	//   msg << MSG::WARNING << "splitting the name " << hRoot->GetName() << endreq;
            std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
+	//   msg << MSG::WARNING << "writing" << endreq;
 	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
-  //         msg << MSG::INFO << ", saving name=" << hRoot->GetName() << " directory="
-  //          << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
+       //    msg << MSG::WARNING << ", saving name=" << hRoot->GetName() << " directory="
+       //     << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
 	  // should we reset on the root level?
 	  // if (reset) hRoot->Reset();
          }
-        // msg << MSG::DEBUG << "Resetting histogram" << endreq;
+       //  msg << MSG::WARNING << "Resetting histogram" << endreq;
          if (reset) {
-	   // msg << MSG::INFO << "Resetting histogram" << endreq;
-	    histogram->reset();
+	//    msg << MSG::WARNING << "Resetting histogram" << endreq;
+	    histogram1d->reset();
 	    m_countExecutes=0;
 	    }
          idList.push_back(id);
          continue;
        }
-       IProfile1D* profile = dynamic_cast<AIDA::IProfile1D*> (dataObject);
-       if (0 != profile) {
+       IHistogram2D* histogram2d = dynamic_cast<AIDA::IHistogram2D*> (dataObject);
+     //  msg << MSG::WARNING << "checking data object" << endreq;
+       if ( 0 != histogram2d) {
+	 if ( pReg->address() ) continue;
+         if (save) {
+	//   msg << MSG::WARNING << "its a 2d histogram, getting root object" << endreq;
+           TH2D* h2Root = (TH2D*) Gaudi::Utils::Aida2ROOT::aida2root(histogram2d);
+	   if (!h2Root)  {
+	//      msg << MSG::WARNING << "Could not get root object, skipping this histogram."<< endreq;	   
+	      continue;
+	   }
+	//   msg << MSG::WARNING << "splitting the name " << h2Root->GetName() << endreq;
+           std::vector<std::string> HistoFullName = Misc::splitString(h2Root->GetName(), "/");
+	//   msg << MSG::WARNING << "writing" << endreq;
+	   h2Root->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+        //   msg << MSG::WARNING << ", saving name=" << h2Root->GetName() << " directory="
+        //    << (h2Root->GetDirectory() ? h2Root->GetDirectory()->GetName() : "none") <<endreq;
+	  // should we reset on the root level?
+	  // if (reset) hRoot->Reset();
+         }
+       //  msg << MSG::WARNING << "Resetting histogram" << endreq;
+         if (reset) {
+	//    msg << MSG::WARNING << "Resetting histogram" << endreq;
+	    histogram2d->reset();
+	    m_countExecutes=0;
+	    }
+         idList.push_back(id);
+         continue;
+       }
+       IProfile1D* profile1d = dynamic_cast<AIDA::IProfile1D*> (dataObject);
+       if (0 != profile1d) {
+       	 if ( pReg->address() ) continue;
          if (save)  {
-           TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
-           std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
-	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+           TProfile* hpRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile1d);
+           std::vector<std::string> HistoFullName = Misc::splitString(hpRoot->GetName(), "/");
+	   hpRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
 	   //should we reset at the root level?
 	   //if (reset) hRoot->Reset();
          }
          if (reset){
 	// msg << MSG::DEBUG << "Resetting profile" << endreq;
-	    profile->reset();
+	    profile1d->reset();
 	    }
          idList.push_back(id);
          continue;
        }
-    
+      // msg << MSG::WARNING << "Object is not a histogram or profile" <<  endreq;
        // not an histogram: must be a directory: create corresponding TDirectory
-       std::vector<std::string> rootDirs = Misc::splitString(id, "/");
+       //remove /stat/
+       std::size_t statfound = id.find("/stat/", 0);
+       std::string newid;
+       if (statfound != std::string::npos) {
+       //   msg << MSG::WARNING << " /stat/ found: " << statfound << endreq;
+          newid=id.substr(6);
+	  //level=0;
+       }	  
+       else newid=id;
+       if (newid=="/stat/") continue;
+       std::vector<std::string> rootDirs = Misc::splitString(newid, "/");
+     //  msg << MSG::WARNING << " rootDirs.size() = " << rootDirs.size() << " newid " << newid << " rootdir " << rootdir << endreq;
+       //if it starts with a "/" ignore it
+       //if ((rootDirs.size()==1)&& (id.find("/",0)==0)) continue;
        TDirectory* newdir = rootdir;
        if(NULL != newdir) {
+    //     msg << MSG::WARNING << "making new directory rootDirs = " << rootDirs[rootDirs.size()-1] << endreq;
          newdir = rootdir->mkdir(rootDirs[rootDirs.size()-1].c_str());
          newdir->cd();
        }
        int newLevel = level + 1;
        if (newLevel >= 10) continue;
+   //    msg << MSG::WARNING << " Calling histogramIdentifier "  << endreq;
        histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
      }
    }

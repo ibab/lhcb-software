@@ -47,7 +47,7 @@ StatusCode SaverSvc::initialize() {
     msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
     return StatusCode::FAILURE;
   }
-     dim_set_write_timeout(20);
+     dim_set_write_timeout(15);
    sc = service("IncidentSvc",m_incidentSvc,true);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot access incident service." << endmsg;
@@ -120,7 +120,7 @@ void SaverSvc::handle(const Event&  ev) {
     std::set<std::string> serviceSet = processMgr->dimInfoServices()->serviceSet();
     processMgr->serviceMap()->setServiceSet(serviceSet);
     processMgr->updateMap();
-    processMgr->serviceMap()->printMap();
+   // processMgr->serviceMap()->printMap();
 
   }
   
@@ -131,6 +131,7 @@ void SaverSvc::handle(const Event&  ev) {
 void SaverSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << "Incident " << inc.type() << " occured " << endreq;
  
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
@@ -142,7 +143,7 @@ void SaverSvc::handle(const Incident& inc) {
 
 StatusCode SaverSvc::start() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG  << "SaverSvc is starting." << endreq;
+  msg << MSG::INFO  << "SaverSvc is starting." << endreq;
   m_utgid = RTL::processName();  
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
 
@@ -205,17 +206,24 @@ StatusCode SaverSvc::start() {
         std::string serviceName="";
         if (utgidParts[1]=="MONA0901") {
            processMgr->setFarm("MF");
+	  // serviceName = m_tmpPart+"_MONA0901_RecAdder_1/Brunel/MonitorSvc/monRate/RunNumber"; 
         }
         else {
            processMgr->setFarm("EFF");
+	 //  serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
         }
-        serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
+	serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
+ 
+       // msg << MSG::INFO << "Subscribing to runnumber svc" << endreq;
+	//DimClient::setDnsNode("HLT01");
+
         m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);  
         processMgr->setrunNumber(m_runNbSvc);       
         std::string *fileName = processMgr->fileNamePointer();
         std::string name;
         name=*fileName;    
         std::string infoName = m_tmpPart+"/SaverSvc/SAVESETLOCATION";
+        //DimClient::setDnsNode(m_dimClientDns.c_str());
         m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char *) name.c_str());
 
      }  
@@ -229,7 +237,8 @@ StatusCode SaverSvc::start() {
     // Save histos
   //  IocSensor::instance().send(this, s_startTimer, *itpmgr); //start Timer*/
     i++;
-  }   
+  }  
+  msg << MSG::INFO  << "SaverSvc has started." << endreq; 
   return StatusCode::SUCCESS;
 }
 

@@ -53,13 +53,13 @@ void MonH2D::save(boost::archive::binary_oarchive & ar, const unsigned int versi
   save2(ar);
 }
 
-void MonH2D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonH2D::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
-  load2(ar, version);
+  MonObject::load(ar);
+  load2(ar);
 }
   
-void MonH2D::load2(boost::archive::binary_iarchive  & ar, const unsigned int /* version */ ){
+void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   
   ar & nbinsx;
   ar & nbinsy;

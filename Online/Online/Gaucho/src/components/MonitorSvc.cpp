@@ -102,7 +102,7 @@ StatusCode MonitorSvc::initialize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
   //to reduce Write timeout messages which create havoc in the Adders
-  dim_set_write_timeout(20);
+  dim_set_write_timeout(15);
  // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
   msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
 
@@ -527,7 +527,25 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
  // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
-
+ // in case there are only histograms declared, set up the monrate so we get the runnumber
+  if ( 0 == m_disableMonRate) {
+     if (!m_monRateDeclared) {
+        msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
+	//if (!registerName("monRate", owner)) return;
+        if (!registerName("monRate", this)) return;
+        msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
+        m_monRate->setComments("MonRate... !!");
+        msg << MSG::DEBUG << "Registering MonRate " << endreq; 
+        std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
+        if (dimSvcName.second.compare("") == 0) return;
+        msg << MSG::DEBUG << "Printing MonRate " << endreq;
+        m_monRate->print();
+        msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
+        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+        m_monRateDeclared = true;
+      }
+   }
+  
   if (0 != m_disableDeclareInfoHistos) return;
 
   MonObject *monObject=0;
@@ -591,15 +609,10 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   std::string ownerName = infoOwnerName(owner);
   std::string dimName = name;
   if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
+
   if (isComment) dimName = dimName + "/gauchocomment";
-  std::pair<DimServiceMapIt,bool> p = m_dimSrv.insert(DimServiceMap::value_type(dimName, 0));
+  
 
-
-
-  if (!p.second) {
-    msg << MSG::ERROR << "Already existing " + dimName << endreq;
-    return std::pair<std::string, std::string> ("", "");
-  }
   //when in monitoring farm, we replace the nodename in the utgid by x if dimPrefix=='' (counters only)
   //this is so that the trendtool stay subscribed to the same dimservice
   std::string dimSvcName ="";
@@ -628,7 +641,21 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   } 
   
   //msg << MSG::INFO << " register========>dimSvcName="<< dimSvcName << endreq;
+  //I am not sure you can do this:
 
+  
+  if (dimSvcName.size() > 130) {
+    msg << MSG::WARNING << "Dim servicename too long " + dimSvcName << ". This object will not be published. " << endreq;
+    return std::pair<std::string, std::string> ("", "");
+  }
+     
+  std::pair<DimServiceMapIt,bool> p = m_dimSrv.insert(DimServiceMap::value_type(dimName, 0));
+
+  if (!p.second) {
+    msg << MSG::ERROR << "Already existing " + dimName << endreq;
+    return std::pair<std::string, std::string> ("", "");
+  }
+     
   return std::pair<std::string, std::string> (dimName, dimSvcName);
 }
 

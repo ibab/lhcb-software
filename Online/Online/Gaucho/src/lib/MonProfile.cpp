@@ -38,9 +38,9 @@ void MonProfile::save(boost::archive::binary_oarchive & ar, const unsigned int v
   save2(ar);
 }
 
-void MonProfile::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonProfile::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   load2(ar);
 }
 

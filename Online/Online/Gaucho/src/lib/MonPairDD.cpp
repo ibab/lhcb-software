@@ -17,9 +17,9 @@ void MonPairDD::save(boost::archive::binary_oarchive & ar, const unsigned int ve
   ar & (*m_pair).second;
 }
 
-void MonPairDD::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonPairDD::load(boost::archive::binary_iarchive  & ar)
 {
-  MonObject::load(ar, version);
+  MonObject::load(ar);
   ar & (*m_pair).first;
   ar & (*m_pair).second;
 }
