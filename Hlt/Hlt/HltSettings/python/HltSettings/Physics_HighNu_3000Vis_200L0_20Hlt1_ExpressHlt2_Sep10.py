@@ -22,7 +22,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
 
     
     def L0TCK(self) :
-        return '0x0028'
+        return '0x0030'
 
     def HltType(self) :
         self.verifyType( Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 )
@@ -48,12 +48,12 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1450
                                             ,   'AllL0_P'       : 13300
-                                            ,   'AllL0_IP'      : 0.09
+                                            ,   'AllL0_IP'      : 0.110
                                             ,   'AllL0_IPChi2'  : 34
                                             ,   'AllL0_TrChi2'  : 3
                                             ,   'Muon_PT'       : 800 
                                             ,   'Muon_P'        : 8000 
-                                            ,   'Muon_IP'       : 0.08
+                                            ,   'Muon_IP'       : 0.110
                                             ,   'Muon_IPChi2'   : 25
                                             ,   'Muon_TrChi2'   : 10                    
                                             ,   'Photon_PT'     : 800
@@ -84,6 +84,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                                , 'DiTrack_PtCut'    : 500
                                                }
                        , Hlt1ElectronLinesConf : { 'Ele_EtCut'              : 3000
+                                                 , 'Ele_EtCutSingleNoIP'    : 5000
                                                  , 'EleIP_PtCut'            : 1400
                                                  , 'EleIP_IPCut'            : 0.09
                                                  , 'EleIPCompanion_PtCut'   : 1000
@@ -117,9 +118,7 @@ class Physics_HighNu_3000Vis_200L0_20Hlt1_ExpressHlt2_Sep10 :
                                               , 'bmm_fitChi2'   : 5
                                               , 'bmm_IPS'       : 81
                                               , 'bmm_pt'        :3000
-                                                
-                                                
-                                                }
+                                              }
 
                        , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
                                                           , 'Hlt1L0(?!Any).*'      : 0.000001
