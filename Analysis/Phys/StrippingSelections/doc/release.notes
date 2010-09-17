@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-17 - Juan Palacios
+ - python/StrippingSelections/StrippingV0.py
+  . Remove tracking cuts.
+ - cmt/requirements
+  . Increase to v2r1.
+
 ! 2010-09-16 - Greig Cowan
  - Added new test sample.
    	Events: 0.51M
