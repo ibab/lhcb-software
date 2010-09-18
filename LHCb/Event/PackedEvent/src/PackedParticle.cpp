@@ -96,12 +96,13 @@ void ParticlePacker::pack( const DataVector & parts,
       for ( LHCb::Particle::ExtraInfo::const_iterator iE = part.extraInfo().begin();
             iE != part.extraInfo().end(); ++iE )
       {
-        pparts.extra().push_back( PackedDataVector::PackedExtraInfo(iE->first,m_pack.fltPacked(iE->second)) );
+        pparts.extra().push_back( PackedDataVector::PackedExtraInfo(iE->first,
+                                                                    m_pack.fltPacked(iE->second)) );
       }
       ppart.lastExtra = pparts.extra().size();
 
       // end vertex
-      if ( NULL != part.endVertex() )
+      if ( part.endVertex() )
       {
         ppart.vertex = m_pack.reference( &pparts,
                                          part.endVertex()->parent(),
@@ -109,7 +110,7 @@ void ParticlePacker::pack( const DataVector & parts,
       }
 
       // protoparticle
-      if ( NULL != part.proto() )
+      if ( part.proto() )
       {
         ppart.proto = m_pack.reference( &pparts,
                                         part.proto()->parent(),
@@ -121,11 +122,12 @@ void ParticlePacker::pack( const DataVector & parts,
       for ( SmartRefVector<LHCb::Particle>::const_iterator iD = part.daughters().begin();
             iD != part.daughters().end(); ++iD )
       {
-        if ( NULL != *iD )
+        const LHCb::Particle * mcP = *iD;
+        if ( mcP )
         {
           ppart.daughters.push_back( m_pack.reference( &pparts,
-                                                       (*iD)->parent(),
-                                                       (*iD)->key() ) );
+                                                       mcP->parent(),
+                                                       mcP->key() ) );
         }
       }
 

@@ -46,7 +46,7 @@ namespace LHCb
         pmCov10(0),pmCov11(0),pmCov12(0),
         pmCov20(0),pmCov21(0),pmCov22(0),
         pmCov30(0),pmCov31(0),pmCov32(0),
-        firstExtra(0), lastExtra(0),
+        firstExtra(0),lastExtra(0),
         vertex(-1),
         proto(-1)
     {}
@@ -86,7 +86,7 @@ namespace LHCb
     // ProtoParticle
     int proto;
 
-    // daugthers
+    // daughters
     std::vector<int> daughters;
 
   };

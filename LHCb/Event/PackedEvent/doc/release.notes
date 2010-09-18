@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2010-09-18 - Chris Jones
+ - Fix some compilation warnings from the Particle and Vertex packers on 
+   gcc 3.4
+
 ! 2010-09-15 - Chris Jones
  - Add a first try at full implementations of the packers for Particles and
    Vertices, for use in the stripping. The packing is not 100% ideal yet, the

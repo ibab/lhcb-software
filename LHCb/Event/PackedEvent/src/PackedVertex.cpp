@@ -36,11 +36,12 @@ void VertexPacker::pack( const DataVector & verts,
       for ( SmartRefVector<LHCb::Particle>::const_iterator iP = vert.outgoingParticles().begin();
             iP != vert.outgoingParticles().end(); ++iP )
       {
-        if ( NULL != *iP )
+        const LHCb::Particle * mcP = *iP;
+        if ( mcP )
         {
           pvert.outgoingParticles.push_back( m_pack.reference( &pverts,
-                                                               (*iP)->parent(),
-                                                               (*iP)->key() ) );
+                                                               mcP->parent(),
+                                                               mcP->key() ) );
         }
       }
 
