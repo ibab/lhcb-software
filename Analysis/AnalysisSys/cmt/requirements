@@ -15,7 +15,6 @@ use  DSTWriterTests             v1r6     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  CommonParticles            v7r4     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v11r3    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r12p1  Phys   # Patrick Koppenburg
@@ -31,21 +30,26 @@ use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
 use  DecayTreeTuple             v3r7     Phys   # Rob Lambert
 use  LoKiJets                   v5r2p2   Phys   # Victor Coco
-use  DisplVertices              v6r11    Phys   # Neal Gueissaz
-use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
 ####################################################################
 #
-use PhysSelPython               v5r6     PhysSel
 use AnalysisPython              v1r6     Phys
 use PyAna                       v1r2     Analysis
 #
+# now in Stripping project
+#use PhysSelPython               v5r6     PhysSel
+#use  DisplVertices              v6r11    Phys   # Neal Gueissaz
+#use  HighPtJets                 v1r1     Phys   # Marcin Kucharczyk
+#use  CommonParticles            v7r4     Phys   # Patrick Koppenburg, WGs
+#
 # Stripping
 #
-use StrippingAlgs               v1r4   Phys   # Anton Poluektov
-use StrippingConf               v3r7   Phys   # Anton Poluektov
-use StrippingSelections         v2r0   Phys   # Anton Poluektov
-use StrippingSettings           v1r1   Phys   # Anton Poluektov
-use MvaPreSelB2DH               v1r0p1 Phys   # Sajan Easo
+# Now has its own project
+#
+#use StrippingAlgs               v1r4   Phys   # Anton Poluektov
+#use StrippingConf               v3r7   Phys   # Anton Poluektov
+#use StrippingSelections         v2r0   Phys   # Anton Poluektov
+#use StrippingSettings           v1r1   Phys   # Anton Poluektov
+#use MvaPreSelB2DH               v1r0p1 Phys   # Sajan Easo
 ####################################################################
 use  MicroDSTBase        	v2r0p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r5    MicroDST          # Juan Palacios
