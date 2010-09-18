@@ -8,14 +8,14 @@ parsed example xml OK
   <usage>
   	<stat unit="b" useOf="MemoryMaximum">1024.0</stat>
   </usage>
-  
+
   <input>
   	<file GUID="0000-0000-0000-0000" name="PFN:/path/inputfile.dst" status="full">500</file>
   </input>
   <output>
   	<file GUID="" name="PFN:/path/outputfile.dst" status="part">500</file>
   </output>
-  
+
   <counters>
   	<counter name="UserAlg/UserEventCounter">500</counter>
   	<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">500.0 500 500.0</statEntity>
@@ -24,7 +24,7 @@ parsed example xml OK
   	<counter name="LumiAlg/EmptyEvents">1000000</counter>
   	<statEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">40050.0 500 2500001.0</statEntity>
   </lumiCounters>
-  
+
 </summary>
 extra methods tested
 <?xml version="1.0" encoding="UTF-8"?>
@@ -60,6 +60,7 @@ merge OK
 	</input>
 	<output>
 		<file GUID="" name="PFN:/path/outputfile.dst" status="part">1000</file>
+		<file GUID="" name="PFN:test/testoutput2.dst" status="none">200</file>
 	</output>
 	<counters>
 		<counter name="UserAlg/UserEventCounter">1000</counter>

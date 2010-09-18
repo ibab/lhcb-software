@@ -45,6 +45,7 @@ sum1.fill_input('test/test.dst',addevents=1)
 sum1.fill_output('test/testoutput.dst',addevents=1)
 sum1.fill_output('test/testoutput.dst',addevents=1)
 
+
 print 'extra methods tested'
 sum1.dump()
 sum1.write('testtest.xml')
@@ -54,6 +55,7 @@ print 'printing/writing tested'
 #test I can merge different files
 merge1=summary.Merge([topdir+xmlfile1,topdir+xmlfile2])
 merge2=summary.Merge([topdir+xmlfile2,topdir+xmlfile2])
+sum.fill_output('test/testoutput2.dst',addevents=100)
 merge3=summary.Merge([sum,sum])
 print 'merge OK'
 merge3.dump()

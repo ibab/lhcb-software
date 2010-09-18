@@ -4,6 +4,10 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2010-09-18 - Rob Lambert
+ - Fix bug with merging input/output to the same filename
+ - Added test of this functionality in test_parse_summary.py
+
 ! 2010-09-13 - Rob Lambert
  - Switch to cElementTree, faster implimentation
  - Stop validating every summary file before merging, now only do it if there's a problem

@@ -403,14 +403,16 @@ class Summary(VTree):
 def Merge(summaries, schema=__default_schema__):
     '''Merge a list of summaries, return a new summary
     summaries can be a list of xml files to be parsed, or a list of summary objects'''
+    if type("")==type(schema):
+        schema=Schema(schema)
     if type([]) != type(summaries): 
         raise TypeError, 'you should send a list into the merger, I got a ' + str(type(summaries)) + ' object instead'
     sum_objects=[]
 
-    if type("")==type(summaries[0]) and str(type(Summary()))== str(type(summaries[0])):
+    if type("")==type(summaries[0]) and str(type(Summary(schemafile=schema)))== str(type(summaries[0])):
         raise TypeError, 'you should send strings or Summaries into the merger, I got a ' + str(type(summaries[0])) + ' object instead'
     
-    if str(type(Summary()))== str(type(summaries[0])):
+    if str(type(Summary(schemafile=schema)))== str(type(summaries[0])):
         sum_objects=summaries
         #check they all have the same schema
         schema=sum_objects[0].__schema__.__schemafile_short__
@@ -423,8 +425,6 @@ def Merge(summaries, schema=__default_schema__):
     try:
         
         if type("")==type(summaries[0]):
-            if type("")==type(schema):
-                schema=Schema(schema)
             for asummary in summaries:
                 #print asummary
                 sum_object=Summary(schema,construct_default=False)
@@ -474,18 +474,18 @@ def Merge(summaries, schema=__default_schema__):
                 merged.fill_memory(stat.value(),stat.__element__.attrib['unit'])
             #print 'input'
             for file in asummary.children('input')[0].children():
-                merged.fill_VTree_file(file,False)
-                #merged.fill_input(file.__element__.attrib['name'],
-                #                  file.__element__.attrib['GUID'],
-                #                  file.__element__.attrib['status'],
-                #                  int(file.__element__.text))
+                #merged.fill_VTree_file(file,False)
+                merged.fill_input(file.__element__.attrib['name'],
+                                  file.__element__.attrib['GUID'],
+                                  file.__element__.attrib['status'],
+                                  int(file.__element__.text))
             #print 'output'
             for file in asummary.children('output')[0].children():
-                merged.fill_VTree_file(file,True)
-                #merged.fill_output(file.__element__.attrib['name'],
-                #                  file.__element__.attrib['GUID'],
-                #                  file.__element__.attrib['status'],
-                #                  int(file.__element__.text))
+                #merged.fill_VTree_file(file,True)
+                merged.fill_output(file.__element__.attrib['name'],
+                                  file.__element__.attrib['GUID'],
+                                  file.__element__.attrib['status'],
+                                  int(file.__element__.text))
             #merge counters
             #print 'counters'
             for cnt in asummary.children('counters')[0].children(__count_tag__):
