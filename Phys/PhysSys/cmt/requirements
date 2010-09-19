@@ -1,6 +1,6 @@
 #$Id: requirements,v 1.243 2010-08-27 13:49:59 jpalac Exp $
 package PhysSys
-version v9r10
+version v9r11
 
 branches doc cmt
 
@@ -10,6 +10,7 @@ use  DaVinciMaps                v1r1     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
 use  SelPy                      v1r3     Phys    # Juan Palacios
+use  PhysSelPython               v5r6    PhysSel  Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r7     Phys    # Patrick Koppenburg, Juan Palacios
