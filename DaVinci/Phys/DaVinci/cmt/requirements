@@ -5,7 +5,7 @@
 
 #============================================================================
 package           DaVinci
-version           v26r1
+version           v26r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,7 +47,7 @@ use HltSys      v*
 #-- Lbcom
 use LbcomSys    v*
 
-#-- Rec =========================================================================
+#-- Rec 
 use RecSys      v*
 
 # Allow the generation of QMTest summary 
@@ -55,6 +55,9 @@ apply_pattern QMTestSummarize
 
 #-- Phys
 use PhysSys     v*
+
+#-- Stripping
+use StrippingSys v*
 
 #-- Analysis
 use AnalysisSys v*
