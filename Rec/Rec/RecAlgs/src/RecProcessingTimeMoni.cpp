@@ -17,11 +17,12 @@ DECLARE_ALGORITHM_FACTORY( RecProcessingTimeMoni );
 //=============================================================================
 RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator ),
+    m_hist        ( NULL )
 {
   declareProperty( "Algorithms",   m_algNames );
-  declareProperty( "LogMinEventTime", m_logMinTime = -2 );
-  declareProperty( "LogMaxEventTime", m_logMaxTime =  8 );
+  declareProperty( "LogMinEventTime", m_logMinTime = -2.0 );
+  declareProperty( "LogMaxEventTime", m_logMaxTime =  8.0 );
 }
 
 //=============================================================================
@@ -41,7 +42,10 @@ StatusCode RecProcessingTimeMoni::initialize()
   if ( m_algNames.empty() ) { sc = Warning( "No algorithms to time !"); }
 
   // book the histogram at initialization time
-  hist = book("overallTime", "log10(Event Processing Time / ms)",100,m_logMinTime,m_logMaxTime);
+  m_hist = book( "overallTime", "log10(Event Processing Time / ms)", 
+                 m_logMinTime, m_logMaxTime, 100 );
+
+  // return
   return sc;
 }
 
@@ -62,12 +66,8 @@ StatusCode RecProcessingTimeMoni::execute()
   // only fill if algorithm(s) ran (time>0)
   if ( time > 0 )
   {
-
     // Take the base 10 log of the time (helps show the large tails)
-    const double logtime = std::log10(time);
-    double weight = 1.0;
-    fill( hist, logtime, weight );
- 
+    fill( m_hist, std::log10(time), 1.0 );
   }
  
   return StatusCode::SUCCESS;

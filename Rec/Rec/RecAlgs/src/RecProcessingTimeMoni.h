@@ -35,9 +35,11 @@ private:
 
   /// Definition of algorithm name list
   typedef std::vector<std::string> AlgorithmNames;
+
   AlgorithmNames m_algNames; ///< List of algorithm(s) to include in timing
 
-  AIDA::IHistogram1D* hist; ///< pointer to processing time histogram 
+  AIDA::IHistogram1D* m_hist; ///< Pointer to processing time histogram
+
   double m_logMaxTime; ///< Job Option for log10(maximum overall processing time) for plots
   double m_logMinTime; ///< Job Option for log10(minimum overall processing time) for plots
 
