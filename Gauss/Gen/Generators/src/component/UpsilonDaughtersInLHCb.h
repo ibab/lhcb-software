@@ -1,4 +1,4 @@
-// $Id: UpsilonDaughtersInLHCb.h,v 1.1 2009-02-26 14:54:22 robbep Exp $
+// $Id: UpsilonDaughtersInLHCb.h,v 1.2 2010-09-19 09:03:47 robbep Exp $
 #ifndef GENERATORS_UPSILONDAUGHTERSINLHCB_H 
 #define GENERATORS_UPSILONDAUGHTERSINLHCB_H 1
 
@@ -78,6 +78,7 @@ private:
   /// Name of the decay tool to use
   std::string m_decayToolName ;
 
-  int  m_sigUpsilonPID        ;  ///< PDG Id of the Upsilon to consider (set by options)
+  int     m_sigUpsilonPID        ;  ///< PDG Id of the Upsilon to consider (set by options)
+  mutable int  m_nUpsilonBeforeCut    ;  ///< Counter of generated upsilon
 };
 #endif // GENERATORS_BCDAUGHTERSINLHCB_H

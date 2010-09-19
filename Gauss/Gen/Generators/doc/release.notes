@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.166 2010-08-01 11:18:45 ibelyaev Exp $
+! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2010-09-19 - Patrick Robbe
+ - UpsilonInAcceptance.h/.cpp: add and print counter to be able to 
+   determine generator level efficiencies for Upsilon productions.
 
 ! 2010-08-01 - Vanya Belyaev
 

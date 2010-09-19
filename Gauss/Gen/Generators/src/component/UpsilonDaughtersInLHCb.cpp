@@ -1,4 +1,4 @@
-// $Id: UpsilonDaughtersInLHCb.cpp,v 1.3 2009-10-02 13:17:02 jhe Exp $
+// $Id: UpsilonDaughtersInLHCb.cpp,v 1.4 2010-09-19 09:03:47 robbep Exp $
 // Include files 
 
 // local
@@ -39,7 +39,7 @@ UpsilonDaughtersInLHCb::UpsilonDaughtersInLHCb( const std::string& type,
 						const std::string& name,
 						const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_decayTool( 0 ) {
+    m_decayTool( 0 ) , m_nUpsilonBeforeCut( 0 ) {
   declareInterface< IGenCutTool >( this ) ;
   declareProperty( "ChargedThetaMin" , m_chargedThetaMin = 10 * Gaudi::Units::mrad ) ;
   declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * Gaudi::Units::mrad ) ;
@@ -83,6 +83,11 @@ StatusCode UpsilonDaughtersInLHCb::finalize( ) {
 
   if ( 0 != m_decayTool ) release( m_decayTool );
 
+  info() << "*****************************************" << std::endl 
+         << "************** Upsilon Counters *********" << std::endl 
+         << "Number of generated signal Upsilon = " 
+         << m_nUpsilonBeforeCut << endmsg ;
+
   return GaudiTool::finalize();
 
 }
@@ -92,8 +97,7 @@ StatusCode UpsilonDaughtersInLHCb::finalize( ) {
 //=============================================================================
 bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 				       const HepMC::GenEvent * theEvent  ,
-				       const LHCb::GenCollision */* theHardInfo */ )
-  const {
+                                       const LHCb::GenCollision */* theHardInfo */ ) const {
   
   // First decay all particles heavier than the Upsilon
   m_decayTool -> disableFlip() ;
@@ -126,6 +130,8 @@ bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 	     HepMCUtils::compareHepMCParticles ) ;
   
   if ( theParticleVector.empty() ) return false ;
+
+  m_nUpsilonBeforeCut++ ;
 
   // To decay the signal particle
   //--------------------------------------------------------------------  
