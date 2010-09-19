@@ -1,4 +1,4 @@
-// $Id: presenter.cpp,v 1.82 2010-09-13 22:01:25 robbep Exp $
+// $Id: presenter.cpp,v 1.83 2010-09-19 20:31:12 robbep Exp $
 // STL
 #include <iostream>
 #include <fstream>
@@ -92,8 +92,9 @@ int main(int argc, char* argv[]) {
   iface -> getService( "ToolSvc" , isvc ) ;
   const IInterface * a3( isvc ) ;
   const std::string & name( "TrendingTool" ) ;
-  IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name , 
-								      name , a3 ) ;
+  IAlgTool * intf = 
+    ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name , 
+                                                      name , a3 ) ;
   PresenterGaudi::trendingTool = dynamic_cast< ITrendingTool * >( intf ) ;
 
   // ROOT startup
