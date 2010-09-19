@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -94,18 +94,18 @@ VCut  = LoKi.FunctorFromFunctor     ( _RCV ,  bool    )
 ## @see LoKi::Cuts::ARMENTEROS 
 ARMENTEROS = LoKi.Particles.ArmenterosPodolanski ()
 
-## @see LoKi::Cuts::TRUE
-TRUE     = LoKi.Constant( _RCP , bool )(True)
-## @see LoKi::Cuts::FALSE
-FALSE    = LoKi.Constant( _RCP , bool )(False)
 ## @see LoKi::Cuts::ALL
-ALL      = TRUE
+ALL      = LoKi.Constant( _RCP , bool ) ( True  )
 ## @see LoKi::Cuts::NONE
-NONE     = FALSE
+NONE     = LoKi.Constant( _RCP , bool ) ( False )
+## @see LoKi::Cuts::PALL
+PALL     = LoKi.Constant( _RCP , bool ) ( True  )
+## @see LoKi::Cuts::PNONE
+PNONE    = LoKi.Constant( _RCP , bool ) ( False )
 ## @see LoKi::Cuts::ONE
-ONE      = LoKi.Constant     ( _RCP , 'double' )(1.0)
+ONE      = LoKi.Constant     ( _RCP , 'double' ) ( 1.0 )
 ## @see LoKi::Cuts::ZERO
-ZERO     = LoKi.Constant     ( _RCP , 'double' )(0.0)
+ZERO     = LoKi.Constant     ( _RCP , 'double' ) ( 0.0 )
 ## @see LoKi::Cuts::VALID
 VALID    = LoKi.Valid        ( _RCP )()
 ## @see LoKi::Cuts::SAME

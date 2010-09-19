@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-19 - Vanya Belyaev
+ - fix ALL/PALL/TRUE/FALSE problem
+
 ! 2010-09-14 - Vanya Belyaev
 
  - Phys.py:
