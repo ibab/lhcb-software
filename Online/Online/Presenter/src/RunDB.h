@@ -1,10 +1,17 @@
-// $Id: RunDB.h,v 1.1 2010-05-15 16:07:03 robbep Exp $
+// $Id: RunDB.h,v 1.2 2010-09-19 18:49:53 robbep Exp $
 #ifndef PRESENTER_RUNDB_H 
 #define PRESENTER_RUNDB_H 1
 
 // Include files
 #include <string>
 #include <vector>
+
+// forward declarations
+namespace boost {
+  namespace posix_time {
+    class ptime ;
+  };
+};
 
 /** @class RunDB RunDB.h
  *  
@@ -34,6 +41,9 @@ public:
 
   /// Get current run's start time
   std::string getCurrentStartTime( ) { return m_currentRunStartTime ; } ;
+
+  /// Get current run's end time
+  std::string getCurrentEndTime( ) { return m_currentRunEndTime ; } ;
   
   /// Get current run's duration
   std::string getCurrentRunDuration( ) { return m_currentRunDuration ; } ;
@@ -79,6 +89,9 @@ private:
 
   /// Destination
   std::string m_destination ;
+
+  /// Convert to convenient string format
+  std::string convertRunTimeToString( boost::posix_time::ptime * st ) const ;
 
 };
 #endif // PRESENTER_RUNDB_H

@@ -1,5 +1,5 @@
 
-// $Id: PageDescriptionTextView.h,v 1.3 2010-05-16 18:08:41 robbep Exp $
+// $Id: PageDescriptionTextView.h,v 1.4 2010-09-19 18:49:53 robbep Exp $
 #ifndef PRESENTER_PAGEDESCRIPTIONTEXTVIEW_H
 #define PRESENTER_PAGEDESCRIPTIONTEXTVIEW_H 1
 
@@ -30,7 +30,8 @@ class PageDescriptionTextView: public TGHtml {
   virtual ~PageDescriptionTextView( ); ///< Destructor
 
   /// Retrieve list of problems from problemDB and put them in display
-  bool retrieveListOfProblems( const std::string& pageName ) ;
+  bool retrieveListOfProblems( const std::string& pageName , 
+			       const std::string& fileName ) ;
 
   /// Add text to display (but does not erase previous text)
   virtual Bool_t LoadBuffer(const char *txtbuf) ;

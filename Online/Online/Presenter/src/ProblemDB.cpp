@@ -1,20 +1,22 @@
-// $Id: ProblemDB.cpp,v 1.5 2010-05-16 18:10:09 robbep Exp $
+// $Id: ProblemDB.cpp,v 1.6 2010-09-19 18:49:53 robbep Exp $
 
 // Include files 
+// This file
+#include "ProblemDB.h"
 
 // STL
 #include <iostream>
 
 // Boost
 #include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/gregorian/formatters.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-// local
-#include "ProblemDB.h"
+// Presenter
+#include "RunDB.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ProblemDB
@@ -115,31 +117,48 @@ std::string  ProblemDB::urlEncode ( std::string src) {
 //=============================================================================
 //
 //=============================================================================
-void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string > > & 
-					 problems ,
-					 const std::string & systemName ) {
+void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &problems ,
+				   const std::string & systemName , 
+				   int runNumber ) {
   problems.clear() ;
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
+  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+  
   if ( ! webStream ) {
     std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
     return ;
   }
-
-  // Take date of tomorrow to have list of opened problems
-  boost::posix_time::ptime now =
-    boost::posix_time::second_clock::local_time() ;
-  boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
-
-
-  // Send HTTP request to web server
+  
+  
   webStream << "GET /api/search/?_inline=True&system_visible=True" ;
-  //  if ( system_name != "" ) webStream << "&system_name=" << systemName ;
-  //  webStream << "&sort_field=started_at" ;
-  webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
-	    << " HTTP/1.0\r\n"
-	    << "Host:" << m_address << "\r\n"
-	    << "\r\n" << std::flush ;
+
+  if ( 0 == runNumber ) {
+    // Take date of tomorrow to have list of opened problems
+    boost::posix_time::ptime now =
+      boost::posix_time::second_clock::local_time() ;
+    boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
+    
+    webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
+ 	      << " HTTP/1.0\r\n"
+  	      << "Host:" << m_address << "\r\n"
+  	      << "\r\n" << std::flush ;
+  } else {
+    RunDB runDb( "lbrundb.cern.ch" ) ;
+    if ( ! runDb.checkRun( runNumber ) ) {
+      std::cerr << "Run number " << runNumber << "was not found in db" 
+		<< std::endl ;
+      return ;
+    }
+    std::string st( runDb.getCurrentStartTime() ) ;
+    std::string et( runDb.getCurrentEndTime() ) ;
+    boost::algorithm::erase_all( st , " " ) ; 
+    boost::algorithm::erase_all( et , " " ) ;
+    webStream << "&open_or_closed_gte=" << st
+      	      << "&started_lte=" << et
+	      << " HTTP/1.0\r\n"
+	      << "Host:" << m_address << "\r\n"
+	      << "\r\n" << std::flush ;
+  }
 
   std::string line ;
 
@@ -160,7 +179,7 @@ void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string >
 
   std::vector< std::string > single_line ;
   boost::property_tree::ptree problem_tree ;
-
+  
   while ( std::getline( webStream , line ) ) {
     // Check that the answer has the correct format (JSON format)
     if ( boost::regex_match( line , e ) ) {
@@ -176,7 +195,7 @@ void ProblemDB::getListOfOpenedProblems( std::vector< std::vector< std::string >
 	  single_line.clear() ;
 	  std::string systn = v.second.get< std::string >( "system" ) ;
 	  if ( "" != systemName ) 
-	    if ( systemName != systn ) 
+	    if ( systemName.find( systn ) == std::string::npos ) 
 	      continue ;
 	  single_line.push_back( systn ) ;
 	  single_line.push_back( v.second.get< std::string >( "severity" ) ) ;

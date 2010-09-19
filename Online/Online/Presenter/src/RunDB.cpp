@@ -1,4 +1,4 @@
-// $Id: RunDB.cpp,v 1.2 2010-05-16 18:10:09 robbep Exp $
+// $Id: RunDB.cpp,v 1.3 2010-09-19 18:49:53 robbep Exp $
 // local 
 #include "RunDB.h"
 
@@ -24,6 +24,7 @@
 RunDB::RunDB( std::string address ) : 
   m_currentRunNumber( 0 ) , 
   m_currentRunStartTime( "" ) , 
+  m_currentRunEndTime( "" ) , 
   m_currentRunDuration( "" ) ,
   m_partition( "LHCb" ) ,
   m_destination( "OFFLINE" ) 
@@ -98,9 +99,9 @@ int RunDB::getLastRun( ) {
 	  boost::algorithm::erase_all( end , "-" ) ;
 	  boost::algorithm::erase_all( end , ":" ) ;
 	  boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-	  m_currentRunStartTime = boost::posix_time::to_simple_string( st ) ;
+	  m_currentRunStartTime = convertRunTimeToString( &st ) ;
 	  boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-	  m_currentRunEndTime = boost::posix_time::to_simple_string ( et ) ;
+	  m_currentRunEndTime = convertRunTimeToString( &et ) ;
 	  
 	  boost::posix_time::time_duration dur = et - st ;
 	  m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
@@ -235,9 +236,9 @@ int RunDB::getNextRun( ) {
 	  boost::algorithm::erase_all( end , "-" ) ;
 	  boost::algorithm::erase_all( end , ":" ) ;
 	  boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-	  m_currentRunStartTime = boost::posix_time::to_simple_string( st ) ;
+	  m_currentRunStartTime = convertRunTimeToString( &st ) ;
 	  boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-	  m_currentRunEndTime = boost::posix_time::to_simple_string( et ) ;
+	  m_currentRunEndTime = convertRunTimeToString( &et ) ;
 
 	  boost::posix_time::time_duration dur = et - st ;
 	  m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
@@ -320,9 +321,9 @@ int RunDB::getPreviousRun( ) {
 	  boost::algorithm::erase_all( end , "-" ) ;
 	  boost::algorithm::erase_all( end , ":" ) ;
 	  boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-	  m_currentRunStartTime = boost::posix_time::to_simple_string( st ) ;
+	  m_currentRunStartTime = convertRunTimeToString( &st ) ;
 	  boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-	  m_currentRunEndTime   = boost::posix_time::to_simple_string( et ) ;
+	  m_currentRunEndTime   = convertRunTimeToString( &et ) ;
 
 	  boost::posix_time::time_duration dur = et - st ;
 	  m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
@@ -404,9 +405,9 @@ bool RunDB::checkRun( int runNumber ) {
 	boost::algorithm::erase_all( end , "-" ) ;
 	boost::algorithm::erase_all( end , ":" ) ;
 	boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-	m_currentRunStartTime = boost::posix_time::to_simple_string( st ) ;
+	m_currentRunStartTime = convertRunTimeToString( &st ) ;
 	boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-	m_currentRunEndTime = boost::posix_time::to_simple_string( et ) ;
+	m_currentRunEndTime = convertRunTimeToString( &et ) ;
 
 	boost::posix_time::time_duration dur = et - st ;
 	m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
@@ -424,4 +425,19 @@ bool RunDB::checkRun( int runNumber ) {
   }  
   
   return false ;
+}
+
+//============================================================================
+// Convert to usable time format
+//============================================================================
+std::string RunDB::convertRunTimeToString( boost::posix_time::ptime * st ) 
+  const {
+  boost::posix_time::time_facet * outputFacet = new boost::posix_time::time_facet();
+  outputFacet->format("%Y-%m-%d %H:%M:%S");
+  std::stringstream ss;
+  ss.imbue(std::locale(std::locale::classic(), outputFacet));
+  
+  ss << (*st) ;
+  
+  return ss.str();
 }

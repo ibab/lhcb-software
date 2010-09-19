@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.8 2010-05-19 21:01:34 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.9 2010-09-19 18:49:53 robbep Exp $
 // Include files
 
 // local
@@ -7,11 +7,13 @@
 // boost
 #include <boost/xpressive/xpressive.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 // STL
 #include <iostream>
 
 // from Presenter
+#include "presenter.h"
 #include "ProblemDB.h"
 
 //-----------------------------------------------------------------------------
@@ -38,13 +40,36 @@ PageDescriptionTextView::~PageDescriptionTextView() { }
 //=============================================================================
 // Retrieve current problems in problem DB
 //=============================================================================
-bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageName ) {
+bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageName ,
+						      const std::string& fileName ) {
+
+  int runNumber = 0 ;
+
+  if ( ! fileName.empty() ) {
+    boost::filesystem::path fp( fileName ) ;
+    boost::xpressive::mark_tag rn( 1 ) ;
+    boost::xpressive::sregex rnbrx = 
+      ( "Brunel"|boost::xpressive::as_xpr("DaVinci")|
+	boost::xpressive::as_xpr("Boole")|
+	boost::xpressive::as_xpr("Gauss") ) 
+      >> +boost::xpressive::_w >> "_" 
+      >> (rn=+boost::xpressive::_d) >> "_"
+      >> +boost::xpressive::_w >> ".root" ;
+    boost::xpressive::smatch whrn ;
+    if ( boost::xpressive::regex_search( fp.filename() , whrn , rnbrx ) ) {
+      std::stringstream ss( whrn[ rn ] ) ;
+      ss >> runNumber ;
+    }
+  }
+
   // Get system name from page name
   // but first erase all spaces
   std::string pname( pageName ) ;
   boost::algorithm::erase_all(pname , " "); 
   boost::xpressive::mark_tag system( 1 ) ;
-  boost::xpressive::sregex pb = "/Shift/" 
+
+  boost::xpressive::sregex pb = 
+    ("/OfflineDataQuality/"|boost::xpressive::as_xpr("/Shift/"))
     >> (system=*~(boost::xpressive::set =':')) >> ":"  ;
   boost::xpressive::smatch what ;
   std::string systemName ;
@@ -52,11 +77,20 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
     systemName = what[ system ] ;
     if ( systemName.find( "L0" ) != std::string::npos ) 
       systemName = "L0" ; 
+    else if ( systemName.find( "ALIGNMENT" ) != std::string::npos ) 
+      systemName = "Alignment" ;
+    else if ( systemName.find( "CALO" ) != std::string::npos ) 
+      systemName = "ECAL HCAL PRS SPD" ;
+    else if ( systemName.find( "RICH1" ) != std::string::npos ||
+	      systemName.find( "RICH2" ) != std::string::npos )
+      systemName = systemName ;
+    else if ( systemName.find( "RICH" ) != std::string::npos )
+      systemName = "RICH1 RICH2" ;
   } else return false ;
   
   ProblemDB pbdb( m_problemDbServerAddress ) ;
   std::vector< std::vector< std::string > > problems ;
-  pbdb.getListOfOpenedProblems( problems , systemName ) ;
+  pbdb.getListOfProblems( problems , systemName , runNumber ) ;
 
   if ( problems.empty() ) return false ;
 

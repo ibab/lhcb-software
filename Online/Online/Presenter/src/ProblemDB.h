@@ -1,9 +1,10 @@
-// $Id: ProblemDB.h,v 1.3 2010-04-25 17:56:00 robbep Exp $
+// $Id: ProblemDB.h,v 1.4 2010-09-19 18:49:53 robbep Exp $
 #ifndef PROBLEMDB_H 
 #define PROBLEMDB_H 1
 
 // Include files
 #include <string>
+#include <vector>
 
 /** @class ProblemDB ProblemDB.h
  *  
@@ -21,9 +22,10 @@ public:
   int post( std::string system, std::string username, std::string title, std::string message, std::string logReference );
   std::string getReference() const { return m_reference; }
 
-  /// get list of currently open problems in database
-  void getListOfOpenedProblems( std::vector< std::vector< std::string > > & problems , 
-				const std::string & system ) ;
+  /// get list of problems in database, if run number set to 0, give list of opened problems
+  void getListOfProblems( std::vector< std::vector< std::string > > & problems , 
+			  const std::string & system ,
+			  int runNumber ) ;
   
 protected:
   std::string urlEncode( std::string src );

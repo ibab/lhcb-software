@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.337 2010-09-13 22:32:23 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.338 2010-09-19 18:49:53 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1661,6 +1661,7 @@ void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
     gStyle->SetOptStat(0);
     break;
   case pres::Online:
+    m_savesetFileName = "" ;
     m_prevPresenterMode = presenterMode();
     m_presenterInfo.setPresenterMode( pres::Online ) ;
     break;
@@ -3250,7 +3251,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
             TObjArray* fileNameMatchGroup = 0;
 
             fileNameMatchGroup = pres::s_fileDateRegexp.MatchS(rootFile.GetName());
-            if (false == fileNameMatchGroup->IsEmpty()) {
+            if ( ! fileNameMatchGroup->IsEmpty()) {
               savesetType = pres::OnlineFile;
               if (fileNameMatchGroup) {
                 fileNameMatchGroup->Delete();
@@ -3264,7 +3265,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
                 fileNameMatchGroup = 0;
               }
               fileNameMatchGroup = pres::s_offlineJobRegexp.MatchS(rootFile.GetName());
-              if (false == fileNameMatchGroup->IsEmpty()) {
+              if ( ! fileNameMatchGroup->IsEmpty()) {
                 savesetType = pres::OfflineFile;
                 if (fileNameMatchGroup) {
                   fileNameMatchGroup->Delete();
@@ -5255,8 +5256,10 @@ void PresenterMainFrame::displayStatusAndComments( const std::string & pageName 
   
   // If this is a Shift page, prepend to the page description
   // the related list of problems from the ProblemDB
-  if ( "/Shift" == page -> folder() )
-    m_pageDescriptionView -> retrieveListOfProblems( page -> name() ) ;
+  if ( ( "/Shift" == page -> folder() ) || 
+       ( "/OfflineDataQuality" == page -> folder() ) )
+    m_pageDescriptionView -> retrieveListOfProblems( page -> name() ,
+						     m_savesetFileName ) ;
   
   m_pageDescriptionView->LoadBuffer( page->doc().c_str());
   m_pageDescriptionView->DataChanged() ;

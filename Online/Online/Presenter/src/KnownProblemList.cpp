@@ -1,4 +1,4 @@
-// $Id: KnownProblemList.cpp,v 1.2 2010-04-25 18:08:44 robbep Exp $
+// $Id: KnownProblemList.cpp,v 1.3 2010-09-19 18:49:53 robbep Exp $
 // Include files
 
 // local
@@ -35,7 +35,7 @@ KnownProblemList::~KnownProblemList() { }
 bool KnownProblemList::retrieveListOfProblems( const std::string& system ) {
   ProblemDB pbdb( m_problemDbServerAddress ) ;
   std::vector< std::vector< std::string > > problems ;
-  pbdb.getListOfOpenedProblems( problems , system ) ;
+  pbdb.getListOfProblems( problems , system , 0 ) ;
 
   if ( problems.empty() ) return false ;
 

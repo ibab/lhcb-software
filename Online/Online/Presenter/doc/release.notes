@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-09-19 - Patrick Robbe
+ - ProblemDB.cpp: add check of problem database for OfflineDataQuality. The
+   problem db is searched for problems affecting the run corresponding to the
+   file opened in history mode. The run number is extracted from the file name.
+
 ! 2010-09-13 - Patrick Robbe
  - PresenterMainFrame.cpp: 
      * change "DataQuality" to "OfflineDataQuality" for folder name for data 
