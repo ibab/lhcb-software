@@ -7,7 +7,6 @@ branches doc cmt tests
 ####################################################################
 # Framework
 use  CommonParticles             v7r3     Phys   # Patrick Koppenburg, WGs
-use  PhysSelPython               v5r6     PhysSel
 
 ####################################################################
 # Selections
