@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.52 2010-08-19 16:12:58 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.53 2010-09-20 18:48:34 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -23,7 +23,7 @@ namespace OnlineHistDBEnv_constants {
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="reader";
   static const unsigned int DBschema = 16;
-  static const std::string version = "v7r2";
+  static const std::string version = "v7r3";
 
   static const int NHTYPES=7;
   static const char HistTypeName[][4] = {

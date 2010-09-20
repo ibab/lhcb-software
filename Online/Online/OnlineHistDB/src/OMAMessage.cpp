@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.21 2010-09-20 15:04:04 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.22 2010-09-20 18:48:35 ggiacomo Exp $
 #include <time.h>
 #include <sstream>
 #include <cstring>
@@ -38,7 +38,7 @@ OMAMessage::OMAMessage( std::string& HistName,
       setText(Text);
     }
   }
-  strcpy((char*)m_sysName,"");
+  m_sysName="";
 }
 
 // constructor from OMAlib (no HistDB)
@@ -338,21 +338,11 @@ void OMAMessage::updateEnv(OnlineHistDB* newSession) {
 
 const char*  OMAMessage::concernedSystem(int level) {
   if (m_dbsession && !m_hassysname) {
-    std::string subsys = (level == 3) ? "SUBSYS3" : 
-      ((level == 2) ? "SUBSYS2" : "SUBSYS1");
-    
-    OCIStmt *stmt=NULL;
-    m_StmtMethod = "OMAMessage::concernedSystem";
-    std::stringstream command;
-    command << "SELECT " << subsys << " FROM TASK WHERE TASKNAME='" <<
-      m_taskName<<"'";
-    if ( OCI_SUCCESS == prepareOCIStatement(stmt, command.str().data()) ) {
-      myOCIDefineString(stmt, 1, m_sysName , VSIZE_SSNAME);
-      if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-        m_hassysname = true;
-      }
+    m_sysName = "";
+    if (! m_taskName.empty()) {
+      OnlineHistTask* task = m_dbsession->getTask(m_taskName);
+      if (task) m_sysName=task->det(level-1);
     }
-    releaseOCIStatement(stmt);
   }
-  return (const char *) m_sysName;
+  return m_sysName.c_str();
 }

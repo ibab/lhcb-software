@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.59 2010-08-19 16:12:58 ggiacomo Exp $
+! $Id: release.notes,v 1.60 2010-09-20 18:48:35 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20100920
+- fix some problems with loading non-standard messages
 
 ! 20100803 v7r2
 - add function to declare trending histograms

@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.12 2010-09-20 15:04:03 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.13 2010-09-20 18:48:34 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -143,6 +143,6 @@ private:
   bool m_confirmed;
   bool m_dbsync;
   bool m_hassysname;
-  unsigned char m_sysName[OnlineHistDBEnv_constants::VSIZE_SSNAME];
+  std::string m_sysName;
 };
 #endif // OMALIB_OMAMESSAGE_H
