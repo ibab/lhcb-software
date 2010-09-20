@@ -7,7 +7,8 @@
 ! 2010-09-19 - Patrick Robbe
  - ProblemDB.cpp: add check of problem database for OfflineDataQuality. The
    problem db is searched for problems affecting the run corresponding to the
-   file opened in history mode. The run number is extracted from the file name.
+   file opened in history mode. The run number is extracted from the file name,
+   which is very sensitive to the naming convention used for analysed files.
 
 ! 2010-09-13 - Patrick Robbe
  - PresenterMainFrame.cpp: 

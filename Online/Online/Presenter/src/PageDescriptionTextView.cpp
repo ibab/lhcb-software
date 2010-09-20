@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.9 2010-09-19 18:49:53 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.10 2010-09-20 05:56:54 robbep Exp $
 // Include files
 
 // local
@@ -43,13 +43,17 @@ PageDescriptionTextView::~PageDescriptionTextView() { }
 bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageName ,
 						      const std::string& fileName ) {
 
+  // Extract the run number from the file name, where the convention is
+  // FILENAME = TaksName_RandomText_RunNumber_RandomText.root
+
   int runNumber = 0 ;
 
   if ( ! fileName.empty() ) {
     boost::filesystem::path fp( fileName ) ;
     boost::xpressive::mark_tag rn( 1 ) ;
     boost::xpressive::sregex rnbrx = 
-      ( "Brunel"|boost::xpressive::as_xpr("DaVinci")|
+      ( boost::xpressive::as_xpr("Brunel")|
+	boost::xpressive::as_xpr("DaVinci")|
 	boost::xpressive::as_xpr("Boole")|
 	boost::xpressive::as_xpr("Gauss") ) 
       >> +boost::xpressive::_w >> "_" 
@@ -69,7 +73,8 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
   boost::xpressive::mark_tag system( 1 ) ;
 
   boost::xpressive::sregex pb = 
-    ("/OfflineDataQuality/"|boost::xpressive::as_xpr("/Shift/"))
+    (boost::xpressive::as_xpr("/OfflineDataQuality/")|
+     boost::xpressive::as_xpr("/Shift/"))
     >> (system=*~(boost::xpressive::set =':')) >> ":"  ;
   boost::xpressive::smatch what ;
   std::string systemName ;
@@ -99,8 +104,13 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
 
   std::ostringstream theStr ;
 
-  theStr << "Problems reported in the problem database for the " << systemName
-	 << " subsystem: <br />" << std::endl ;
+  if ( 0 == runNumber ) 
+    theStr << "Open problems reported in the problem database for the " << systemName
+	   << " subsystem: <br />" << std::endl ;
+  else 
+    theStr << "Problems reported in the problem database for the " << systemName
+	   << " subsystem and run " << runNumber << ": <br />" << std::endl ;
+
   theStr << "<table border=0 cellspacing=0 width=100%>" << std::endl ;
   for ( std::vector< std::vector< std::string > >::iterator it = problems.begin() ;
 	it != problems.end() ; ++it ) {
