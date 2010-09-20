@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Thomas Blake
+ - Updated to use ADCOACHI2CUT instead of ADOCACHI2
 
 ! 2010-09-17 - Thomas Blake
  - Updated trackSelector cuts for StdNoPIDsDowns{Pions/Protons} to 

@@ -34,7 +34,7 @@ StdVeryLooseDstarWithD02KPi = CombineParticles ( 'StdVeryLooseDstarWithD02KPi' )
 StdVeryLooseDstarWithD02KPi.InputLocations = [ "StdNoPIDsPions", "StdVeryLooseD02KPi" ]
 StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc" 
 
-StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<80*MeV) & (APT>1250*MeV) & (ADOCACHI2('') < 30.)"
+StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<80*MeV) & (APT>1250*MeV)"
 StdVeryLooseDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
 StdVeryLooseDstarWithD02KPi.DaughtersCuts = {"pi+" : "(PT>110*MeV) & (MIPDV(PRIMARY)>0.04*mm)"}
 

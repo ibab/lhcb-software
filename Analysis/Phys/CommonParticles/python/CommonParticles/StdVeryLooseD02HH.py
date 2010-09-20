@@ -31,7 +31,7 @@ StdVeryLooseD02KPi.DaughtersCuts = {
 
 #for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
 #~150 MeV below since the lower mass sideband will be for the crystal ball only. 
-StdVeryLooseD02KPi.CombinationCut = " (ADAMASS('D0')<60*MeV) & (APT>1*GeV) & (ADOCACHI2('')<30)"
+StdVeryLooseD02KPi.CombinationCut = " (ADAMASS('D0')<60*MeV) & (APT>1*GeV) & (ADOCACHI2CUT('',20))"
 StdVeryLooseD02KPi.MotherCut = "(VFASPF(VCHI2)<10) & (M > 1710*MeV)"
 
 ## configure Data-On-Demand service 
