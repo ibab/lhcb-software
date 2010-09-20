@@ -6,6 +6,10 @@
 <argument name="args"><set>
   <text>../options/CommonParticles/DVTestStandardIntermediate.py</text>
 </set></argument>
+<argument name="prerequisites"><set>
+  <tuple><text>davinci.commonparticles.test_standardbasic_init</text><enumeral>PASS</enumeral></tuple>
+  <tuple><text>davinci.commonparticles.test_standardintermediate_init</text><enumeral>PASS</enumeral></tuple>
+</set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 CountParticles                                              SUCCESS Number of counters : 17
