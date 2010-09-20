@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Mariusz Witek
+- fix PVConf problem after removal of zMaxSpread parameter from LSAdaptPVFitter
+
 ! 2010-09-15 - Mariusz Witek
 - Removed obsolete cut of collecting tracks for PV fit in LSAdaptPVFitter
 
