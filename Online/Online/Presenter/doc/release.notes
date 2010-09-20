@@ -4,6 +4,7 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v2r2 2010-09-20 =============
 ! 2010-09-20 - Patrick Robbe
  - Archive.cpp: allow possibility to read ROOT files directly from Castor.
    In this case, the name of the file has to be entered completly, starting
