@@ -439,7 +439,6 @@ class Moore(LHCbConfigurableUser):
         # TODO: make sure we are the first one...
         ApplicationMgr().ExtSvc.append(cfg.getFullName())
         # configure services...
-        HistogramDataSvc().Input = ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"];
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
@@ -466,7 +465,7 @@ class Moore(LHCbConfigurableUser):
             self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
-            self.setProp('DataType','2009' )
+            self.setProp('DataType','2010' )
             ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
             ## in case of LHCb or FEST, _REQUIRE_ it exists...
             if hasattr(OnlineEnv,'InitialTCK') :
