@@ -8,7 +8,6 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS ==================================================================
 DaVinciInit                                                 SUCCESS 1 events processed
 DaVinciInit                                                 SUCCESS ==================================================================
 """, stdout, result, causes, signature_offset = 0)
