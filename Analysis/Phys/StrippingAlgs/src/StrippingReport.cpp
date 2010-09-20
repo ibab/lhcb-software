@@ -84,9 +84,13 @@ void StrippingReport::report(bool onlyPositive) {
 
   std::vector<ReportStat>::iterator i;
 
-  LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_hdrLocation);
+  LHCb::HltDecReports* reports = get<LHCb::HltDecReports>(m_hdrLocation);
 
   char str[128];
+  
+  if (reports) {
+    info() << "Configured TCK: " << reports->configuredTCK() << endmsg;
+  }
 
   sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s %7.7s %5.5s %5.5s %5.5s", "Decision name", "Rate", "Accepted", "Mult.","<T>,ms","Errs","Incds","Slow");
 

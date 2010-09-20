@@ -6,6 +6,12 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-09-20 - Anton Poluektov 
+ - StrippingTCK algorithm to set the TCK field in stripping DecReports structure. 
+   The integer TCK is given as a property. Example: 
+     stck = StrippingTCK(HDRLocation = "/Event/Strip/Phys/DecReports", TCK=12345)
+     DaVinci().appendToMainSequence( [ stck ] )
+
+! 2010-09-20 - Anton Poluektov 
  - Added information about # of errors, incidents and slow events in StrippingReport. 
    Look at the number of incidents to see how many events exceed combinatorics limit
    (either by MaxCombinations or by MaxCandidates). 
