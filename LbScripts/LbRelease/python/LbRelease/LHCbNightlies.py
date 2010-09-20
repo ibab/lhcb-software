@@ -830,7 +830,8 @@ class LHCbServer(BaseServer.Server):
         import logging
         import logging.handlers
         self.unitsTaken = []
-        BaseServer.Server.__init__(self, cfgFile, cfgContents)        
+        BaseServer.Server.__init__(self, cfgFile, cfgContents)
+        import logging
         logging.basicConfig(level='debug')
         self._log = logging.getLogger(__name__)
         self._log.debug('START of LHCb Server Logging')
@@ -841,13 +842,15 @@ class LHCbServer(BaseServer.Server):
     def detectDuplicatePriority(self):
         # do not print warnings if (slot,platform) priorities are duplicated
         pass
-    def cmpWorkUnits(self, a, b): # a=(slot, platform), b=(slot, platform)  
+    def cmpWorkUnits(self, a, b): # a=(slot, platform), b=(slot, platform)
         #POLICY: slots in order, then platforms in order
         slotOrder = ['lhcb-prerelease','lhcb-head','lhcb-patches','lhcb-branches','lhcb-gaudi-head','lhcb-lcg-head']
         platOrder = ['x86_64-slc5-gcc43-opt','slc4_amd64_gcc34','slc4_ia32_gcc34',
                      'x86_64-slc5-gcc43-dbg','slc4_amd64_gcc34_dbg','slc4_ia32_gcc34_dbg',
                      'win32_vc71_dbg']
         # compare slot names
+        self._log.debug('cmtWorkUnits: %s %s' %(str(a), str(b)))
+
         if a[0] in slotOrder and b[0] not in slotOrder: return -1
         elif b[0] in slotOrder and a[0] not in slotOrder: return 1
         elif a[0] in slotOrder and b[0] in slotOrder:
@@ -883,8 +886,12 @@ class LHCbServer(BaseServer.Server):
         jobs.sort(self.cmpWorkUnits)
         print jobs
         platformType = LbConfiguration.Platform.getPlatformType(configuration)
-        #slc5 on slc5, slc4 on slc4, etc... and only if not already taken
-        toBeTaken = map(lambda x:platformType==LbConfiguration.Platform.getPlatformType(x[1]) and x not in self.unitsTaken, jobs)
+        architecture = LbConfiguration.Platform.getArchitecture(configuration)
+        # (1) checks platform type only: slc5 on slc5, slc4 on slc4
+        #toBeTaken = map(lambda x:platformType==LbConfiguration.Platform.getPlatformType(x[1]) and x not in self.unitsTaken, jobs)
+        # (2) strict maching - both platform type and architecture (ia32 only on ia32 for example)
+        toBeTaken = map(lambda x:platformType==LbConfiguration.Platform.getPlatformType(x[1]) and architecture==LbConfiguration.Platform.getArchitecture(x[1]) and x not in self.unitsTaken, jobs)
+
         print toBeTaken
         #return the first one from the list, if any
         if True in toBeTaken:
