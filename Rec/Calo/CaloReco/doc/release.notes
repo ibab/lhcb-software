@@ -6,6 +6,8 @@
 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-20 - Olivier Deschamps
+  - CaloMergedPi0Alg : fix window compilation warning
 
 ! 2010-09-03 - Olivier Deschamps
  - Configuration.py : fix interference between unpack/calo sequence DoD setting

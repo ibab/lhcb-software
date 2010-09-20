@@ -391,8 +391,10 @@ StatusCode CaloMergedPi0Alg::execute()
   try {
     put(clusts , m_nameOfSplitClusters);
   }
-  catch (GaudiException &e) {
-    Warning("Exception is caught",StatusCode::SUCCESS).ignore();
+  catch (GaudiException &exc) {
+    std::ostringstream o("");
+    o<< "Exception is caught " << exc;
+    Warning( o.str() ,StatusCode::SUCCESS).ignore();
     doSplitC = false;
     delete clusts;
   }
