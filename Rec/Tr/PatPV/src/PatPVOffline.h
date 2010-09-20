@@ -20,6 +20,7 @@ public:
   virtual StatusCode finalize();      // Algorithm finalization
 private:
   std::string m_outputVertices;
+  std::string m_outputWeights;
   // Tools
   IPVOfflineTool* m_pvsfit;    // PV fitting tool
 

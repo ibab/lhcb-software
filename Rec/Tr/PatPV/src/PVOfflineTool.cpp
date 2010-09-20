@@ -82,9 +82,11 @@ StatusCode PVOfflineTool::reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 {
   std::vector<const LHCb::Track*> tracks2remove;
   std::vector<const LHCb::Track*> rtracks;
+  std::vector<double> weights;
+  
   readTracks(rtracks); 
 
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, tracks2remove );
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, weights, tracks2remove );
   return scvfit;
 }
 //=============================================================================
@@ -95,7 +97,8 @@ StatusCode PVOfflineTool::reconstructSinglePVFromTracks(const Gaudi::XYZPoint xy
                                                         LHCb::RecVertex& outvtx)  
 {
   std::vector<const LHCb::Track*> tracks2remove;
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, tracks2use, outvtx, tracks2remove );
+  std::vector<double> weights;
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, tracks2use, outvtx, weights, tracks2remove );
   return scvfit;
 }
 
@@ -113,7 +116,8 @@ StatusCode PVOfflineTool::reDoSinglePV(const Gaudi::XYZPoint xyzseed,
     removeTracksByLHCbIDs(rtracks, tracks2exclude);
   }
   std::vector<const LHCb::Track*> tracks2remove;
-  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, tracks2remove );
+  std::vector<double> weights;
+  StatusCode scvfit = m_pvfit->fitVertex( xyzseed, rtracks, outvtx, weights, tracks2remove );
   return scvfit;
 
 }
@@ -127,7 +131,6 @@ StatusCode PVOfflineTool::reDoMultiPV(const LHCb::RecVertex& invtx,
                                       LHCb::RecVertex& outvtx)
 {
   std::vector<LHCb::RecVertex> outvtxVec;
-
   std::vector<const LHCb::Track*> rtracks;
   readTracks(rtracks); 
 
@@ -150,7 +153,20 @@ StatusCode PVOfflineTool::reconstructMultiPV(std::vector<LHCb::RecVertex>& outvt
 {
   std::vector<const LHCb::Track*> rtracks;
   readTracks(rtracks); 
-  StatusCode scvfit = reconstructMultiPVFromTracks(rtracks,outvtxvec); 
+  std::vector<std::vector<double> > weightsvec;
+  StatusCode scvfit = reconstructMultiPVWithWeightsFromTracks(rtracks, outvtxvec, weightsvec); 
+  return scvfit;
+}
+
+//=============================================================================
+// multi vtx search and fit with tracks from default location
+//=============================================================================
+StatusCode PVOfflineTool::reconstructMultiPVWithWeights(std::vector<LHCb::RecVertex>& outvtxvec, 
+                                             std::vector<std::vector<double> >& weightsvec)  
+{
+  std::vector<const LHCb::Track*> rtracks;
+  readTracks(rtracks); 
+  StatusCode scvfit = reconstructMultiPVWithWeightsFromTracks(rtracks, outvtxvec, weightsvec); 
   return scvfit;
 }
 
@@ -158,7 +174,20 @@ StatusCode PVOfflineTool::reconstructMultiPV(std::vector<LHCb::RecVertex>& outvt
 // multi vtx search and fit with tracks specified
 //=============================================================================
 StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
-                                                       std::vector<LHCb::RecVertex>& outvtxvec)  
+                                                       std::vector<LHCb::RecVertex>& outvtxvec)
+{
+  std::vector<std::vector<double> > weightsvec;
+  StatusCode scvfit = reconstructMultiPVWithWeightsFromTracks(tracks2use, outvtxvec, weightsvec);  
+  return scvfit;
+}
+
+
+//=============================================================================
+// multi vtx search and fit with tracks specified
+//=============================================================================
+StatusCode PVOfflineTool::reconstructMultiPVWithWeightsFromTracks(std::vector<const LHCb::Track*>& tracks2use,
+                                                       std::vector<LHCb::RecVertex>& outvtxvec,
+                                                       std::vector<std::vector<double> >& weightsvec)  
 {
 
   std::vector<const LHCb::Track*> rtracks;
@@ -208,13 +237,16 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::T
       //}
       
       std::vector<const LHCb::Track*> tracks2remove;
-      StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx, tracks2remove );
+      std::vector<double> weights;
+      StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx, weights, tracks2remove );
       removeTracks(rtracks, tracks2remove);
       
       if(scvfit == StatusCode::SUCCESS) {
         bool isSepar = separatedVertex(recvtx,outvtxvec);
         if ( isSepar ) {
           outvtxvec.push_back(recvtx);
+          weightsvec.push_back(weights);
+          
         }
       }
     }//iterate on seeds

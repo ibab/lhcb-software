@@ -78,11 +78,13 @@ LSAdaptPV3DFitter::~LSAdaptPV3DFitter() {}
 //=============================================================================
 StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                         std::vector<const LHCb::Track*>& rTracks,
-                                        LHCb::RecVertex& vtx, 
+                                        LHCb::RecVertex& vtx, std::vector<double>& weights,
                                         std::vector<const LHCb::Track*>& tracks2remove)
 {
   if(msgLevel(MSG::DEBUG)) debug() << "================Test==================" << endmsg;
- 
+  // to get rid of unused parameter compilation warning
+  if(msgLevel(MSG::DEBUG)) debug() << weights.size() << endmsg; 
+
   tracks2remove.clear();
   
   Gaudi::XYZPoint xyzvtx = seedPoint;

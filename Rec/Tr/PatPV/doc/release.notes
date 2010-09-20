@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-09-20 - Mariusz Witek
+- lots of modifications to store track weights
+- removal of obsolete PV algorithms and fitting tools
+
+! 2010-09-20 - Mariusz Witek
 - fix PVConf problem after removal of zMaxSpread parameter from LSAdaptPVFitter
 
 ! 2010-09-15 - Mariusz Witek

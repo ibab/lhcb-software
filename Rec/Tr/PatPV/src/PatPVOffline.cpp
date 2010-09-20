@@ -6,6 +6,7 @@
 // from Event
 #include "Event/Track.h"
 #include "Event/State.h"
+#include "Event/WeightsVector.h"
 #include "Event/RecVertex.h"
 // Local
 #include "PatPVOffline.h"
@@ -20,6 +21,9 @@ PatPVOffline::PatPVOffline(const std::string& name,
   : GaudiAlgorithm(name,pSvcLocator) {
   declareProperty("OutputVertices",m_outputVertices = 
                                    LHCb::RecVertexLocation::Primary);
+  declareProperty("OutputWeights",m_outputWeights = 
+                                   LHCb::WeightsVectorLocation::Default);
+
 }
 
 //=============================================================================
@@ -53,17 +57,55 @@ StatusCode PatPVOffline::execute() {
   LHCb::RecVertices* v2tes = new LHCb::RecVertices();
   put(v2tes,m_outputVertices);  
 
+  LHCb::WeightsVectors* weightsContainer = new LHCb::WeightsVectors();
+  put(weightsContainer, m_outputWeights);
+
   std::vector<LHCb::RecVertex> rvts;
-  StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
+  std::vector<std::vector<double> > weightsvec;
+  StatusCode scfit = m_pvsfit->reconstructMultiPVWithWeights(rvts, weightsvec);
   if (scfit != StatusCode::SUCCESS) {
     return StatusCode::SUCCESS;
   }
+  // check consistency
+  if (rvts.size() != weightsvec.size() ) {
+    return StatusCode::FAILURE;
+  }  
+  for(unsigned int iv = 0; iv < rvts.size(); iv++) {  
+    if ( (rvts[iv]).tracks().size() != weightsvec[iv].size() ) {
+      return StatusCode::FAILURE;    
+    }
+  }
+  // end check consistency  
 
-  for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
+  for(unsigned int iv = 0; iv < rvts.size(); iv++) {
     LHCb::RecVertex* vertex = new LHCb::RecVertex();
-    *vertex = *iv;
+    *vertex = rvts[iv];
     vertex->setTechnique(LHCb::RecVertex::Primary);
     v2tes->insert(vertex);
+  }
+
+  LHCb::RecVertices* recoVertices = get<LHCb::RecVertices>( m_outputVertices );
+  for(unsigned int iv = 0; iv < recoVertices->size(); iv++) {
+    // comm
+    //    SmartRefVector< LHCb::Track >  vtx_tracks = ( *( recoVertices->begin() ) )->tracks();
+    SmartRefVector< LHCb::Track >  vtx_tracks = (*recoVertices)(iv)->tracks();
+    std::vector<double> weights;
+    weights = weightsvec[iv];
+    LHCb::WeightsVector* theWeights = new LHCb::WeightsVector();
+    std::vector<std::pair<int,double> > the_weights;
+    
+    for ( unsigned int it = 0; it < vtx_tracks.size(); it++) {
+
+      if(msgLevel(MSG::DEBUG)) { 
+        debug() << " the weights " << vtx_tracks[it]->key() << " " << weights[it] << endmsg;
+      }
+      
+      std::pair<int,double> weight( (vtx_tracks[it])->key(), weights[it] );
+      the_weights.push_back(weight);
+    }
+    
+    theWeights->setWeights( the_weights );
+    weightsContainer->insert(theWeights, (*recoVertices)(iv)->key() );    
   }
  
 

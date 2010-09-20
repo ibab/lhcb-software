@@ -42,9 +42,14 @@ public:
   StatusCode reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
 					  std::vector<LHCb::RecVertex>& outvtxVec);
 
-
+  StatusCode reconstructMultiPVWithWeightsFromTracks(std::vector<const LHCb::Track*>& tracks2use,
+                                          std::vector<LHCb::RecVertex>& outvtxVec,
+                                          std::vector< std::vector<double> >& weightsvec); 
 
   StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec); 
+
+  StatusCode reconstructMultiPVWithWeights(std::vector<LHCb::RecVertex>& outvtxVec, 
+                                std::vector< std::vector<double> >& weightsvec); 
 
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			         LHCb::RecVertex& outvtx);
