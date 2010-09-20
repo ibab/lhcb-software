@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Marco Cattaneo
+ - Add WeightsVector.xml, temporary class for storing primary vertex track
+   weights, pending redesign of RecVertex
+
 ! 2010-09-17 - Marco Cattaneo
  - RecHeader.xml: new gpsTime() member, same content as in ODIN
 
