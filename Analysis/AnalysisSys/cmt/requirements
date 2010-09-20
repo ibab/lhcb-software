@@ -28,6 +28,7 @@ use  VertexFitCheck             v1r6     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r4p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
+use  DisplVerticesMC            v1r0     Phys   # Neal Gueissaz
 use  DecayTreeTuple             v3r7     Phys   # Rob Lambert
 use  LoKiJets                   v5r2p2   Phys   # Victor Coco
 ####################################################################
