@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Juan Palacios
+ - Add davinci.commonparticles.test_standatdbasic_init and 
+   davinci.commonparticles.test_standardintermediate_init
+  . Initialize algorithms. Badly defined LoKi cuts should result in initialize()
+    failure. Run over one event. Tests fail at first misconfigured algorithm 
+    and abort.
+
 !============================== DaVinciTests v1r4 2010-09-13 =================
 
 ! 2010-09-09 - Juan Palacios
