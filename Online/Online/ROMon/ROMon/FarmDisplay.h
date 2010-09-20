@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.20 2010-09-03 14:47:45 frankb Exp $
+// $Id: FarmDisplay.h,v 1.21 2010-09-20 18:59:49 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.20 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.21 2010-09-20 18:59:49 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/PartitionListener.h"
 #include "ROMon/InternalDisplay.h"
+#include "ROMon/HelpDisplay.h"
 #include "ROMon/ClusterDisplay.h"
 #include "ROMon/Constants.h"
 #include "CPP/Interactor.h"
@@ -45,24 +46,6 @@ namespace ROMon {
   class ProcFarm;
   class CPUfarm;
 
-  /**@class HelpDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Help display. Dislay shows up on CTRL-h
-   *   Help content is in $ROMONROOT/doc/farmMon.hlp
-   *
-   *   @author M.Frank
-   */
-  class HelpDisplay : public InternalDisplay {
-  public:
-    /// Initializing constructor
-    HelpDisplay(FarmDisplay* parent, const std::string& title, const std::string& tag);
-    /// Standard destructor
-    virtual ~HelpDisplay() {}
-    /// Update display content
-    virtual void update(const void*) {}
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-  };
 
   /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *

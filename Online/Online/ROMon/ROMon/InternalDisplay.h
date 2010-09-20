@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.h,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Id: InternalDisplay.h,v 1.2 2010-09-20 18:59:49 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.1 2009-02-24 10:38:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.2 2010-09-20 18:59:49 frankb Exp $
 #ifndef ROMON_INTERNALDISPLAY_H
 #define ROMON_INTERNALDISPLAY_H 1
 
@@ -57,7 +57,7 @@ namespace ROMon {
     /// Access to SCR display structure
     SCR::Display* display() const       { return m_display;    }
     /// Access to parent to send interrupts
-    InternalDisplay* parent() const         { return m_parent;     }
+    InternalDisplay* parent() const     { return m_parent;     }
     /// Access subfarm name
     const std::string& name() const     { return m_name;       }
     /// Access title string

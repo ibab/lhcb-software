@@ -114,13 +114,21 @@ void ROMon::print_startup(const char* msg) {
         << RTL::nodeNameShort() << " as " << RTL::processName() << endl;
 }
 
-size_t ROMon::ro_rtl_print(void*,int,const char* fmt,va_list args) {
-  size_t result;
-  string format = fmt;
-  format += "\n";
-  result = ::vfprintf(stdout, format.c_str(), args);
-  ::fflush(stdout);
-  return result;
+static int s_print_level = -1;
+void ROMon::ro_trl_set_print_level(int lvl) {
+  s_print_level = lvl;
+}
+
+size_t ROMon::ro_rtl_print(void*,int lvl,const char* fmt,va_list args) {
+  if ( lvl >= s_print_level ) {
+    size_t result;
+    string format = fmt;
+    format += "\n";
+    result = ::vfprintf(stdout, format.c_str(), args);
+    ::fflush(stdout);
+    return result;
+  }
+  return 1;
 }
 
 string ROMon::strupper(const string& n) {

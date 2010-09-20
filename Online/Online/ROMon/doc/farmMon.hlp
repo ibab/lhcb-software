@@ -38,6 +38,17 @@ If any of the node names is in red, either tasks are missing or the connection s
 
 </farm>
 
+<boot-display>
+BOOT monitor display
+
+Display to visualize the boot status of known subfarms.
+
+</boot-display>
+
+<boot-subfarm>
+Subfarm BOOT display
+</boot-subfarm>
+
 <subfarm>
 Extended subfarm display
 

@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.11 2010-09-20 09:24:52 frankb Exp $
+// $Id: CPUMon.h,v 1.12 2010-09-20 18:59:49 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.11 2010-09-20 09:24:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.12 2010-09-20 18:59:49 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -30,7 +30,7 @@ namespace ROMon {
 
   void ro_get_node_name(char* name, size_t len);
 
-  /**@class Memory CPUInfo.h ROMon/CPUInfo.h
+  /**@class Memory CPUMon.h ROMon/CPUMon.h
    *
    * Class which represents the memory information of a single node.
    * Note: All numbers are in KB!
@@ -71,7 +71,7 @@ namespace ROMon {
     long   sizeOf() const {  return sizeof(Memory); }
   };
 
-  /**@class CPU CPUInfo.h ROMon/CPUInfo.h
+  /**@class CPU CPUMon.h ROMon/CPUMon.h
    *
    * Class which represents a CPU core in a single node
    *
@@ -179,7 +179,7 @@ namespace ROMon {
     TimeStamp lastUpdate() const;
   };
 
-  /**@class Process CPUInfo.h ROMon/CPUInfo.h
+  /**@class Process CPUMon.h ROMon/CPUMon.h
    *
    * Class which represents a single Process (task)
    *

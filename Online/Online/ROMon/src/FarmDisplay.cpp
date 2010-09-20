@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.42 2010-09-07 13:42:11 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.43 2010-09-20 18:59:49 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.42 2010-09-07 13:42:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.43 2010-09-20 18:59:49 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -25,6 +25,7 @@
 #include "RTL/strdef.h"
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
+#include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
@@ -62,12 +63,6 @@ static void help() {
             << endl;
 }
 
-static string strUpper(const string& src) {
-  string r=src;
-  for(size_t i=0;i<r.length();++i)r[i]=char(::toupper(r[i]));
-  return r;
-}
-
 namespace ROMon {
   InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const string& title);
@@ -99,36 +94,6 @@ namespace {
     svc = s;
     node = at+1;
   }
-}
-
-HelpDisplay::HelpDisplay(FarmDisplay* parent, const string& title, const string& tag) 
-: InternalDisplay(parent,title)
-{
-  bool use = false, isHeader=false;
-  string s, input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
-  string start="<"+tag+">", stop = "</"+tag+">";
-  string fin = input+"/doc/farmMon.hlp";
-  string head = m_title + ": " + fin;
-  ifstream in(fin.c_str());
-
-  ::scrc_create_display(&m_display,55,132,NORMAL,ON,head.c_str());
-  ::scrc_put_chars(m_display,"Hit CTRL-H to hide the display",BOLD,2,2,1);
-  for(int line=3; in.good(); ) {
-    getline(in,s);
-    if ( !use && (s.find(start) != string::npos || s.find("<common>") != string::npos) ) {
-      isHeader = true;
-      use = true;
-      continue;
-    }
-    if ( use && (s.find(stop) != string::npos || s.find("</common>") != string::npos) ) {
-      use = false;
-    }
-    if ( use ) {
-      ::scrc_put_chars(m_display,s.c_str(),isHeader ? BOLD: NORMAL,++line,2,1);
-      isHeader = false;
-    }
-  }
-  ::scrc_set_border(m_display,head.c_str(),INVERSE|BLUE);
 }
 
 /// Standard constructor
@@ -308,7 +273,7 @@ int FarmDisplay::showSubfarm()    {
     string svc = "-servicename=/"+dnam+"/ROpublish";
     string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
-      svc = "-servicename=/"+strUpper(dnam)+"/TaskSupervisor/Status";
+      svc = "-servicename=/"+strupper(dnam)+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
