@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Patrick Robbe
+ - Archive.cpp: allow possibility to read ROOT files directly from Castor.
+   In this case, the name of the file has to be entered completly, starting
+   with "castor:/", eg "castor:/castor/cern.ch/lhcb/.....root"
+
 ! 2010-09-19 - Patrick Robbe
  - ProblemDB.cpp: add check of problem database for OfflineDataQuality. The
    problem db is searched for problems affecting the run corresponding to the

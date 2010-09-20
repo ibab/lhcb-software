@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.10 2010-09-20 05:56:54 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.11 2010-09-20 18:41:27 robbep Exp $
 // Include files
 
 // local
@@ -40,8 +40,10 @@ PageDescriptionTextView::~PageDescriptionTextView() { }
 //=============================================================================
 // Retrieve current problems in problem DB
 //=============================================================================
-bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageName ,
-						      const std::string& fileName ) {
+bool PageDescriptionTextView::retrieveListOfProblems( const std::string& 
+                                                      pageName ,
+                                                      const std::string& 
+                                                      fileName ) {
 
   // Extract the run number from the file name, where the convention is
   // FILENAME = TaksName_RandomText_RunNumber_RandomText.root
@@ -105,15 +107,15 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
   std::ostringstream theStr ;
 
   if ( 0 == runNumber ) 
-    theStr << "Open problems reported in the problem database for the " << systemName
-	   << " subsystem: <br />" << std::endl ;
+    theStr << "Open problems reported in the problem database for the " 
+           << systemName << " subsystem: <br />" << std::endl ;
   else 
     theStr << "Problems reported in the problem database for the " << systemName
 	   << " subsystem and run " << runNumber << ": <br />" << std::endl ;
 
   theStr << "<table border=0 cellspacing=0 width=100%>" << std::endl ;
-  for ( std::vector< std::vector< std::string > >::iterator it = problems.begin() ;
-	it != problems.end() ; ++it ) {
+  for ( std::vector< std::vector< std::string > >::iterator 
+          it = problems.begin() ; it != problems.end() ; ++it ) {
     std::vector< std::string > vec = (*it) ;
     id = atoi( vec[ 3 ].c_str() ) ;
 
@@ -128,19 +130,18 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string& pageNam
       cellColor = "white" ;
     
     theStr << "<tr><td class=\"links\" bgcolor=\"" << cellColor << "\">" 
-	   << "<a href=\"http://problems/problems/" << vec[ 3 ] << "/\" STYLE=\"text-decoration: none\">"
-	   << "<font color=\"#000000\">" 
-	   << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
-	   << "</font>"
-	   << "</a>"
-	   << "</td></tr>" << std::endl ;
+           << "<a href=\"http://" << m_problemDbServerAddress 
+           << "/problems/" << vec[ 3 ] << "/\" STYLE=\"text-decoration: none\">"
+           << "<font color=\"#000000\">" 
+           << ( ( vec[ 0 ] + ": " + vec[ 4 ] ).c_str() ) 
+           << "</font>" << "</a>" << "</td></tr>" << std::endl ;
   }
   theStr << "</table>" << std::endl ;
   theStr << "<hr>" << std::endl ;
 
   ParseText( const_cast< char * >( theStr.str().c_str() ) ) ;
 
-  return true ;
+  return true ; 
 }
 
 //=============================================================================
@@ -156,7 +157,8 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
 
   // Replace html links with corresponding HTML code
   boost::xpressive::mark_tag link( 1 ) ;
-  boost::xpressive::sregex html = "http://" >> ( link = *~boost::xpressive::_s ) ;
+  boost::xpressive::sregex html = "http://" >> 
+    ( link = *~boost::xpressive::_s ) ;
   boost::xpressive::smatch what ;
   std::string linkName ;
   if ( boost::xpressive::regex_search( theBuffer , what , html ) ) {
@@ -168,7 +170,8 @@ Bool_t PageDescriptionTextView::LoadBuffer(const char *txtbuf) {
   boost::algorithm::replace_all( linkNameOnline , "lbtwiki.cern.ch" , 
 				 "twiki.lbdaq.cern.ch" ) ;
 
-  std::string newLink = "<a href=\"" + linkNameOnline + "\">" + linkName + "</a>" ; 
+  std::string 
+    newLink = "<a href=\"" + linkNameOnline + "\">" + linkName + "</a>" ; 
   boost::algorithm::replace_all( theBuffer , linkName , newLink ) ;
 
   boost::algorithm::replace_all( theBuffer , "\n" , "<br />\n" ) ;

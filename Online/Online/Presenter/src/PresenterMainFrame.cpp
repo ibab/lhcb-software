@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.339 2010-09-19 20:31:12 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.340 2010-09-20 18:41:27 robbep Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -1574,18 +1574,23 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     fileInfo.fFileTypes = fileTypes;
     fileInfo.fIniDir = StrDup(m_savesetPath.c_str());
     fileInfo.SetMultipleSelection(false);
-    // if (true == fileInfo.fMultipleSelection) { TList 1st element};
+
     new TGFileDialog(fClient->GetRoot(),this,kFDOpen,&fileInfo);
     if (0 != fileInfo.fFilename) {
       m_savesetFileName = std::string(fileInfo.fFilename);
+      std::size_t pos = m_savesetFileName.find( "castor:/" ) ;
+      if ( std::string::npos != pos ) 
+        // file is in Castor, change path to reflect this
+        m_savesetFileName.erase( 0 , pos ) ;
+
       if(false == m_savesetFileName.empty()) {
         if (pres::EditorOffline == presenterMode() )
-	  refreshHistogramSvcList(pres::s_withTree);
-    
+          refreshHistogramSvcList(pres::s_withTree);
+        
         m_previousIntervalButton->SetState(kButtonDisabled);
         m_nextIntervalButton->SetState(kButtonDisabled);
         m_currentPageName = selectedPageFromDbTree();
-
+        
         if (!m_currentPageName.empty() && (false == m_loadingPage)) 
           loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, 
                                  m_savesetFileName) ;
@@ -3367,7 +3372,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
 
         deleteTreeChildrenItemsUserData(node);
         m_histoSvcListTree->DeleteChildren(node);
-
+        
         TFile rootFile(m_savesetFileName.c_str());
 
         if (rootFile.IsZombie() && ( ! isBatch() ) ) 
