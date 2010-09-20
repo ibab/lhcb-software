@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2010-09-20 - Marco Cattaneo
+ - Add Simulation slot to RecMoniConf
+ - Do not run Hlt monitoring on DataTypes without HltDecReports or on simulation
+
 ! 2010-08-28 - Roel Aaij
  - Add HltMonitors to the default monitoring
 

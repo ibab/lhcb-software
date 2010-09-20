@@ -193,6 +193,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,"OutputLevel"  : INFO 
        ,"Context"      : "Offline"
        ,"DataType"     : ""
+       ,"Simulation"   : False         # Simulated data
         }
 
     _propertyDocDct = { 
@@ -202,6 +203,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'DataType'     : """ Data type, propagated from the application """
+       ,'Simulation'   : """ Is it simulated data? """
        }
 
     ## Known monitoring sequences, all run by default
@@ -324,8 +326,10 @@ class RecMoniConf(LHCbConfigurableUser):
             GaudiKernel.ProcessJobOptions.PrintOff()
         
         if "Hlt" in moniSeq :
-            from HltMonitors.ConfiguredHltMonitors import ConfiguredHltMonitorSequence
-            ConfiguredHltMonitorSequence(Name='MoniHltSeq')
+            # Do not run Hlt monitoring on DataTypes without HltDecReports 
+            if self.getProp("DataType") not in ["2008","DC06","MC09"] and not self.getProp("Simulation") :
+                from HltMonitors.ConfiguredHltMonitors import ConfiguredHltMonitorSequence
+                ConfiguredHltMonitorSequence(Name='MoniHltSeq')
 
         # Expert histograms
         if self.expertHistos():
