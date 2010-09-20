@@ -39,11 +39,16 @@ private:
    std::string m_runParameterLocation;
 
    Condition* m_runParameters;
+   long long unsigned int m_startOfRun;
+   unsigned int m_runNumber;
    
    bool m_disabled;
    bool m_forceEnable;
 
    unsigned int m_secondsPerBin;
+
+   /// Helper method to manage our condtion
+   StatusCode i_updateConditions();
 
 };
 #endif // HLTRATEMONITOR_H

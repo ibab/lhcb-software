@@ -4,6 +4,9 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Roel Aaij
+ - Use UpdateManagerSvc in HltRateMonitor
+
 ! 2010-09-02 - Roel Aaij
  - initial version, two algorithms are provided
  - HltRateMonitor monitors rates of specified algorithms.

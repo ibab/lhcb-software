@@ -14,6 +14,7 @@
 // from Gaudi
 #include <GaudiKernel/AlgFactory.h>
 #include <GaudiKernel/SystemOfUnits.h>
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // Condition
 #include "DetDesc/Condition.h"
@@ -48,7 +49,8 @@ namespace {
 //=============================================================================
 HltRateMonitor::HltRateMonitor( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-   : HltMonitorBase ( name , pSvcLocator ), m_runParameters( 0 )
+   : HltMonitorBase ( name , pSvcLocator ), m_runParameters( 0 ),
+     m_startOfRun( 0 ), m_runNumber( 0 )
 {
    declareProperty( "HltDecReportsLocation", m_decReportsLocation =
                     HltDecReportsLocation::Default );
@@ -79,7 +81,14 @@ StatusCode HltRateMonitor::initialize() {
    // If it is not available, disable all functionality.
    if ( existDet< DataObject >( detSvc(), m_runParameterLocation ) ) {
       // Register condition and read parameters values
-      registerCondition< HltRateMonitor >( m_runParameterLocation, m_runParameters );
+      IUpdateManagerSvc* updMgrSvc = svc< IUpdateManagerSvc >( "UpdateManagerSvc" );
+      updMgrSvc->registerCondition( this, m_runParameterLocation,
+                                    &HltRateMonitor::i_updateConditions, m_runParameters );
+      sc = updMgrSvc->update( this );
+      if( !sc.isSuccess() ) {
+         error() << "Could not update UpdateManagerSvc" << endmsg;
+         return sc;
+      }
    } else {
       m_disabled = true;
    }
@@ -113,17 +122,15 @@ StatusCode HltRateMonitor::execute() {
 
    if ( !m_filledDecisions ) fillDecisions( decReports );
 
-   int startOfRun = m_runParameters->param< int >( "RunStartTime" );
-   unsigned int runNumber = numeric_cast< unsigned int >
-      ( m_runParameters->param< int >( "RunNumber" ) );
-
    const ODIN* odin = get< ODIN >( m_ODINLocation );
-   if ( runNumber != odin->runNumber() ) {
-      Error( "Run number from database and ODIN do not match", StatusCode::FAILURE );
+   if ( m_runNumber != odin->runNumber() ) {
+      if ( msgLevel(MSG::DEBUG) )
+         debug() << "Run number from database and ODIN do not match: " 
+                 << m_runNumber << " " << odin->runNumber() << ", skipping event" << endmsg;
+      return StatusCode::SUCCESS;
    }
 
-   double time = double( odin->gpsTime() - startOfRun * 1e6 ) / 1e6;
-
+   double time = double( odin->gpsTime() - m_startOfRun ) / 1e6;
    // Loop over the configured regexes and check if any match has a positive decision.
    const decByRegex_t& dbr = m_decisions.get< regexTag >();
    index_iterator< decMap_t, regexTag >::type it, end;
@@ -162,3 +169,26 @@ StatusCode HltRateMonitor::finalize() {
 
 }
 
+//=============================================================================
+StatusCode HltRateMonitor::i_updateConditions()
+{
+   if ( m_runParameters == 0 ) { 
+      error() << "Could not obtain Condition for run parameters from conditions DB" << endmsg;
+      return StatusCode::FAILURE;
+   }
+   if ( !m_runParameters->exists( "RunStartTime" ) ) {
+      error() << "Condition does not contain RunStartTime " << endmsg;
+      return StatusCode::FAILURE;
+   }
+   if ( !m_runParameters->exists( "RunNumber" ) ) {
+      error() << "Condition does not contain RunNumber " << endmsg;
+      return StatusCode::FAILURE;
+   }
+ 
+   m_startOfRun = 1e6 * numeric_cast< long long unsigned int >
+      ( m_runParameters->param< int >( "RunStartTime" ) );
+   m_runNumber = numeric_cast< unsigned int >
+      ( m_runParameters->param< int >( "RunNumber" ) );
+
+   return StatusCode::SUCCESS;
+}
