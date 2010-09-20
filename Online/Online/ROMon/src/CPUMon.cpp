@@ -229,3 +229,33 @@ Connectionset* Connectionset::reset() {
   type = TYPE;
   return this;
 }
+
+/// Standard constructor
+NodeSummary::NodeSummary(const std::string& n) {
+  reset();
+  ::strncpy(name,n.c_str(),sizeof(name));
+}
+
+/// Reset data structure content
+NodeSummary* NodeSummary::reset() {
+  ::memset(this,0,sizeof(Procset));
+  state = DEAD;
+  status = BAD;
+  return this;
+}
+
+/// Default constructor
+SubfarmSummary::SubfarmSummary(const std::string& n) {
+  reset();
+  ::strncpy(name,n.c_str(),sizeof(name));
+  name[sizeof(name)-1] = 0;
+}
+
+/// Reset object structure
+SubfarmSummary* SubfarmSummary::reset() {
+  ::memset(this,0,sizeof(SubfarmSummary));
+  type = TYPE;
+  return this;
+}
+
+

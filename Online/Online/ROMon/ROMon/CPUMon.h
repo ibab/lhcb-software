@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.10 2010-09-15 17:11:36 frankb Exp $
+// $Id: CPUMon.h,v 1.11 2010-09-20 09:24:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.10 2010-09-15 17:11:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.11 2010-09-20 09:24:52 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -323,7 +323,7 @@ namespace ROMon {
     int length()  const {  return totalSize; }
   };
 
-  /**@class Connectionset ROMon.h ROMon/ROMon.h
+  /**@class Connection ROMon.h ROMon/ROMon.h
    *
    * Class which represents a single outgoing Connection from node
    *
@@ -367,6 +367,63 @@ namespace ROMon {
     /// Length of the object in bytes
     int length()  const {  return sizeof(Connectionset)+connections.data_length(); }
   };
+
+
+  /**@class NodeSummary ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents the summary imformation from a single node
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) NodeSummary {
+  public:
+    enum { BAD=1, OK, ALIVE, DEAD };
+    /// Node name
+    char name[32];
+    /// Update time stamp
+    int  time;
+    /// Overall Status
+    int  state;
+    /// Alive state
+    int  status;
+    /// Number of bad processes in this node
+    int  numBadTasks;
+    /// Number of bad connections from this node    
+    int  numBadConnections;
+    /// Standard constructor
+    NodeSummary(const std::string& n);
+    /// Reset data structure content
+    NodeSummary* reset();
+  };
+
+  /**@class SubfarmSummary ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents all outgoing ping-Connections of a single node
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) SubfarmSummary {
+  public:
+    enum { TYPE = 9 };
+    typedef FixItems<NodeSummary> Nodes;
+    /// First word: Data type descriptor (MUST always be 9)
+    int  type;
+    /// Node name
+    char   name[32];
+    /// Time stamp of last information update
+    int time;
+    /// Time stamp of the monitor snapshot [milli seconds]
+    unsigned int millitm;
+    /// Variable size array of node items
+    Nodes nodes;
+    /// Default constructor
+    SubfarmSummary(const std::string& n);
+    /// Reset object structure
+    SubfarmSummary* reset();
+    /// Length of the object in bytes
+    int length()  const {  return sizeof(SubfarmSummary)+nodes.data_length(); }
+  };
+
 
 
   std::vector<std::string> psItems(const char*& ptr);
@@ -416,6 +473,7 @@ namespace ROMon {
     Process*         proc;
     Procset*         processes;
     Connectionset*   connections;
+    SubfarmSummary*  subfarmSummary;
     ProcFarm*        procFarm;
     NodeStats*       node;
     CPUMonData(void* buffer) { ptr=buffer; }

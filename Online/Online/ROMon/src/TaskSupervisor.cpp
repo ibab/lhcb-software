@@ -182,7 +182,7 @@ ostream& Inventory::print(ostream& os)   const  {
 /// Initializing constructor
 NodeTaskMon::NodeTaskMon(Interactor* parent, const string& nam, const string& typ, Inventory* inv) 
   : InventoryClient(nam,inv), m_parent(parent), m_type(typ), m_infoId(0), 
-    m_changed(true), m_taskUpdate(0), m_connUpdate(0)
+    m_changed(true), m_taskUpdate(0), m_connUpdate(0), m_numBadTasks(1), m_numBadConnections(1)
 {
 }
 
@@ -255,6 +255,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
 
   NodeStats* ns = (NodeStats*)ptr;
   Procset::Processes& ps = ns->procs()->processes;
+  m_numBadTasks = 0;
   for(Procset::Processes::iterator pi=ps.begin();pi!=ps.end();pi=ps.next(pi)) {
     //vector<string> res = psItems(ptr);
     Process& pr = (*pi);
@@ -296,6 +297,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
     }
   }
   bad = t.size()-good;
+  m_numBadTasks = bad;
   xml << "\t\t<System perc_cpu=\"" << cpu 
       << "\" perc_mem=\"" << mem 
       << "\" vsize=\"" << vsize 
@@ -388,7 +390,7 @@ int NodeTaskMon::start()   {
     m_infoId = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
     nam = "/"+nodL+"/PingSrv";
     ::lib_rtl_output(LIB_RTL_INFO,"Subscribing to service:%s.",nam.c_str());
-    m_infoId = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,pingHandler,(long)this,0,0);
+    m_pingId = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,pingHandler,(long)this,0,0);
     TimeSensor::instance().add(this,10,(void*)CMD_DATA);
     return 1;
   }
@@ -419,8 +421,9 @@ const string& NodeTaskMon::updateConnections() {
   bool   recheck = false;
   bool   force = now-m_connUpdate > CONNECTION_UPDATE_TIMEDIFF;
   
+  m_numBadConnections = 0;
   recheck = true;
-
+  
 #if 0
   for(j=m_connections.begin(); j != m_connections.end(); ++j)
     if ( (*j).second > 0 ) recheck = true;
@@ -452,8 +455,9 @@ const string& NodeTaskMon::updateConnections() {
       (*j).second<5 ? ++good : ++bad;
 #endif
     for(j=m_connections.begin(); j != m_connections.end(); ++j) 
-      (*j).second==0 ? ++good : ++bad; 
-   xml << "\t\t<Connections count=\"" << good
+      (*j).second==0 ? ++good : ++bad;
+    m_numBadConnections = bad;
+    xml << "\t\t<Connections count=\"" << good
         << "\" ok=\"" << good
         << "\" missing=\"" << bad
         << "\">" << endl;
@@ -496,7 +500,8 @@ void NodeTaskMon::handle(const Event& ev) {
 
 /// Initializing constructor
 SubfarmTaskMon::SubfarmTaskMon(const string& nam, Inventory* inv)
-: InventoryClient(nam,inv), m_serviceID(0)  {
+  : InventoryClient(nam,inv), m_serviceID(0), m_summaryID(0), m_summary(0)
+{
   Inventory::NodeCollectionMap::const_iterator i = inventory()->nodecollections.find(name());
   if ( i != inv->nodecollections.end() ) {    
     m_nodeList = (*i).second.nodes;
@@ -511,8 +516,17 @@ SubfarmTaskMon::SubfarmTaskMon(const string& nam, Inventory* inv)
 int SubfarmTaskMon::start() {
   string svc = "/"+strupper(name())+"/TaskSupervisor/Status";
   ::dic_set_dns_node((char*)name().c_str());
-  for(NodeList::const_iterator j=m_nodeList.begin(); j != m_nodeList.end(); ++j)
+
+  m_summary = (SubfarmSummary*)(new char[sizeof(SubfarmSummary)+(m_nodeList.size()+1)*sizeof(NodeSummary)]);
+  m_summary = new(m_summary) SubfarmSummary(name());
+
+  SubfarmSummary::Nodes::iterator ni=m_summary->nodes.begin();
+  for(NodeList::const_iterator j=m_nodeList.begin(); j != m_nodeList.end(); ++j) {
     m_nodes.insert(make_pair((*j).first,new NodeTaskMon(this,(*j).first,(*j).second,inventory())));
+    ni = ::new(ni) NodeSummary((*j).first);
+    ni = m_summary->nodes.add(ni);
+  }
+
   ManipTaskMon m("Failed to start node monitor",&NodeTaskMon::start);
   for_each(m_nodes.begin(),m_nodes.end(),m);
   if ( 0 != m_serviceID ) ::dis_remove_service(m_serviceID);
@@ -520,14 +534,20 @@ int SubfarmTaskMon::start() {
   m_serviceID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
   cout << "Service " << svc << " [" << PUBLISHING_NODE 
        << "] with monitoring information of " << name() << " started." << endl;
+  svc = "/"+strupper(name())+"/TaskSupervisor/Summary";
+  m_summaryID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedSummary,(long)this);
   return m.check();
 }
 
 /// Stop the monitoring object
 int SubfarmTaskMon::stop() {
   if ( 0 != m_serviceID ) ::dis_remove_service(m_serviceID);
+  if ( 0 != m_summaryID ) ::dis_remove_service(m_summaryID);
   ManipTaskMon m("Failed to stop node monitor",&NodeTaskMon::stop);
   m_serviceID = 0;
+  m_summaryID = 0;
+  if ( m_summary ) delete [] (char*)m_summary;
+  m_summary = 0;
   for_each(m_nodes.begin(),m_nodes.end(),m);
   int res = m.check(false);
   clear(m_nodes);
@@ -541,6 +561,7 @@ int SubfarmTaskMon::publish() {
     stringstream xml;
     size_t good=0, bad=0;
     Monitors::const_iterator i;
+    SubfarmSummary::Nodes::iterator ni;
     string status="DEAD", txt = ::lib_rtl_timestr(TIME_FORMAT);
 
     for(i=m_nodes.begin(); i!=m_nodes.end(); ++i)
@@ -555,7 +576,8 @@ int SubfarmTaskMon::publish() {
         << "\">" << endl;
 
     ::dim_lock();
-    for(i=m_nodes.begin(); i!=m_nodes.end(); ++i) {
+    m_summary->time = ::time(0);
+    for(i=m_nodes.begin(), ni=m_summary->nodes.begin(); i!=m_nodes.end(); ++i, ni=m_summary->nodes.next(ni)) {
       NodeTaskMon* n=(*i).second;
       n->publish();
       ::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
@@ -566,7 +588,18 @@ int SubfarmTaskMon::publish() {
       if ( n->state() == NodeTaskMon::ALIVE ) {
         xml << n->taskStatus() << endl
             << n->connectionStatus() << endl;
+	(*ni).state = NodeSummary::ALIVE;
+	(*ni).numBadTasks = n->numBadTasks();
+	(*ni).numBadConnections = n->numBadConnections();
+	(*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
       }
+      else {
+	(*ni).state = NodeSummary::DEAD;
+	(*ni).status = NodeSummary::BAD;
+	(*ni).numBadTasks = 1;
+	(*ni).numBadConnections = 1;
+      }
+      (*ni).time = n->taskUpdate();
       xml << "\t</Node>\n";
     }
     xml << "</Cluster>\n";
@@ -578,6 +611,9 @@ int SubfarmTaskMon::publish() {
     }
     ::dis_update_service(m_serviceID);
   }
+  if ( m_summaryID ) {
+    ::dis_update_service(m_summaryID);
+  }
   return 1;
 }
 
@@ -586,7 +622,14 @@ void SubfarmTaskMon::feedData(void* tag, void** buf, int* size, int* first) {
   SubfarmTaskMon* h = *(SubfarmTaskMon**)tag;
   *size = *first ? 0 : h->m_data.length()+1;
   *buf = (void*)h->m_data.c_str();
-  // cout << "It's publishing time ....." << endl << h->m_data << endl;
+}
+
+/// DIM callback on dis_update_service
+void SubfarmTaskMon::feedSummary(void* tag, void** buf, int* size, int* first) {
+  SubfarmTaskMon* h = *(SubfarmTaskMon**)tag;
+  ro_gettime(&h->m_summary->time,(unsigned int*)&h->m_summary->millitm);
+  *size = *first ? 0 : h->m_summary->length()+1;
+  *buf = (void*)h->m_summary;
 }
 
 /// Handle interaction event

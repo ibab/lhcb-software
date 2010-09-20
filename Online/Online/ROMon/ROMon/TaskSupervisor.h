@@ -13,6 +13,9 @@
  */
 namespace ROMon {
 
+  // Forward declarations
+  class SubfarmSummary;
+
   /* @class Cluster TaskSupervisor.h ROMon/TaskSupervisor.h
    *
    * @author  M.Frank
@@ -259,6 +262,10 @@ namespace ROMon {
     std::string         m_connStatus;
     /// Node status
     State               m_state;
+    /// Number of bad connections
+    int                 m_numBadTasks;
+    /// Number of bad tasks
+    int                 m_numBadConnections;
 
   public:
     /// Initializing constructor
@@ -270,21 +277,25 @@ namespace ROMon {
     /// DimInfo overload to process messages
     static void pingHandler(void* tag, void* address, int* size);
     /// Access node type
-    const std::string& type() const            {  return m_type;        }
-    /// Access error information
-    const std::string& error() const           {  return m_error;       }
+    const std::string& type() const            {  return m_type;              }
+    /// Access error information 
+    const std::string& error() const           {  return m_error;             }
     /// Set error information
-    void setError(const std::string& e)        {  m_error = e;          }
+    void setError(const std::string& e)        {  m_error = e;                }
     /// Parent interactor object
-    Interactor* parent() const                 {  return m_parent;      }
+    Interactor* parent() const                 {  return m_parent;            }
     /// Last task update
-    const time_t& taskUpdate() const           {  return m_taskUpdate;  }
+    const time_t& taskUpdate() const           {  return m_taskUpdate;        }
     /// Encode connection status information in XML
-    const std::string& connectionStatus() const{  return m_connStatus;  }
+    const std::string& connectionStatus() const{  return m_connStatus;        }
     /// Encode task information in XML
-    const std::string& taskStatus() const      {  return m_taskStatus;  }
+    const std::string& taskStatus() const      {  return m_taskStatus;        }
+    /// Access the number of bad tasks 
+    int numBadTasks() const                    {  return m_numBadTasks;       }
+    /// Access the number of bad connections
+    int numBadConnections() const              {  return m_numBadConnections; }
     /// Access to node state
-    State state() const                        {  return m_state;       }
+    State state() const                        {  return m_state;             }
     /// Start monitoring activity of this object
     virtual int start();
     /// Start monitoring activity of this object
@@ -306,13 +317,18 @@ namespace ROMon {
     typedef std::map<std::string,NodeTaskMon*> Monitors;
     typedef Inventory::NodeCollection::NodeList NodeList;
     /// List of individual node monitors known to this sub-farm
-    Monitors m_nodes;
+    Monitors        m_nodes;
     /// Node list of this subfarm
-    NodeList m_nodeList;
+    NodeList        m_nodeList;
     /// DIM Service identifier
-    int m_serviceID;
+    int             m_serviceID;
+    /// DIM service identifier for summary data
+    int             m_summaryID;
     /// Buffer for publishing data
-    std::string m_data;
+    std::string     m_data;
+    /// Buffer with subfarm summary information
+    SubfarmSummary* m_summary;
+
   public:
     /// Initializing constructor
     SubfarmTaskMon(const std::string& nam, Inventory* inv);
@@ -328,6 +344,8 @@ namespace ROMon {
     virtual void handle(const Event& ev);
     /// DIM callback on dis_update_service
     static void feedData(void* tag, void** buf, int* size, int* first);
+    /// DIM callback on dis_update_service
+    static void feedSummary(void* tag, void** buf, int* size, int* first);
   };
 
 }
