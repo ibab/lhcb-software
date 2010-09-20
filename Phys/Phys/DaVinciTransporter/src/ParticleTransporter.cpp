@@ -91,7 +91,7 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
       verbose() << "Using DaVinci::Transporter::transportComposite" << endmsg;
     sc = DaVinci::Transporter::transportComposite(P, zNew, transParticle);
     if (!sc) return sc;
-  } else if (P->charge()==0. ) {
+  } else if (P->charge()==0 ) {
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "Using DaVinci::Transporter::transportNeutralBasic" << endmsg;
     sc = DaVinci::Transporter::transportNeutralBasic(P, zNew, transParticle);
@@ -120,7 +120,7 @@ StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P,
                                                zNew, 
                                                transParticle);
     if (!sc) return sc;
-  } else if (P->charge()==0. ) {
+  } else if (P->charge()==0 ) {
     sc = DaVinci::Transporter::transportAndProjectNeutralBasic(P, 
                                                   zNew, 
                                                   transParticle);
@@ -221,7 +221,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
       }
       sc = m_particle2State->particle2State(*P,s);
     } else if (m_eID==P->particleID().abspid()){
-      // Electrons. We don't want to lose Bremsstrahlung correction
+      // Electrons. We don't want to loose Bremsstrahlung correction
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Special treatment for electrons" << endmsg ;
       sc = m_particle2State->particle2State(*P,s);

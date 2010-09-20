@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2010-09-20 - Patrick Koppenburg
+ - Remove obsolete _dll file
+ - Replace charge()==0. by charge()==0 (it's an int)
+
 !====================== DaVinciTransporter v3r9p1 2009-09-24 ==================
 
 ! 2009-09-10 - Chris Jones
