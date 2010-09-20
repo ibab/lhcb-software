@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.11 2010-06-10 16:57:50 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.12 2010-09-20 15:04:03 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -119,6 +119,7 @@ private:
   std::string m_histo;
   sb2 m_histo_null;
   std::string m_saveSet;
+  sb2 m_saveset_null;
   std::string m_taskName;
   sb2 m_taskName_null;
   std::string m_anaTaskName;
@@ -127,6 +128,7 @@ private:
   sb2 m_msgtext_null;
   OMAMsgLevel m_level;
   int m_anaid;
+  sb2 m_anaid_null;
   std::string m_ananame;
   sb2 m_ananame_null;
   int m_time;

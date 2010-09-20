@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.20 2010-06-10 16:57:50 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.21 2010-09-20 15:04:04 ggiacomo Exp $
 #include <time.h>
 #include <sstream>
 #include <cstring>
@@ -115,13 +115,13 @@ void OMAMessage::load() {
 
     myOCIBindInt   (stmt,":id", m_ID); 
     myOCIBindString(stmt,":hn", HNAME, VSIZE_NAME, &m_histo_null);
-    myOCIBindString(stmt,":ss", SAVESET, VSIZE_SAVESET);
+    myOCIBindString(stmt,":ss", SAVESET, VSIZE_SAVESET, &m_saveset_null);
     myOCIBindString(stmt,":tk", TASK, VSIZE_HSTASK, &m_taskName_null);
     myOCIBindString(stmt,":atk", ANATASK, VSIZE_HSTASK, &m_anaTaskName_null);
     myOCIBindString(stmt,":lev", LEVEL, VSIZE_ALEVEL);
     myOCIBindString(stmt,":msg", MESSAGE, VSIZE_MESSAGE, &m_msgtext_null);
     myOCIBindString(stmt,":anm", ANANAME, VSIZE_ANANAME, &m_ananame_null);
-    myOCIBindInt   (stmt,":aid", m_anaid);
+    myOCIBindInt   (stmt,":aid", m_anaid, &m_anaid_null);
     myOCIBindInt   (stmt,":tim", m_time);
     myOCIBindInt   (stmt,":lti", m_lastTime);
     myOCIBindInt   (stmt,":noc", m_noccur);
@@ -134,7 +134,7 @@ void OMAMessage::load() {
       }
       else {
         m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
-        m_saveSet= std::string((const char *) SAVESET);
+        m_saveSet= m_saveset_null ? "" : std::string((const char *) SAVESET);
         m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
         m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
         m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
@@ -143,7 +143,8 @@ void OMAMessage::load() {
         m_active = (bool) isactive;
         m_dbsync=true;
         m_isAbort=false;
-        getAnaComment(m_anaid);
+        if (!m_anaid_null)
+          getAnaComment(m_anaid);
       }
     }
     releaseOCITaggedStatement(stmt, "MSGLOAD");
