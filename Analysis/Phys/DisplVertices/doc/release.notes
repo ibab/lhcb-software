@@ -5,6 +5,15 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Neal Gauvin
+ - The DisplVertices package is being moved from project Analysis to Stripping
+   ( task #17349 ). MC-dependent code has been put in the newly created 
+   DisplVerticesMC packages. In more details :
+	 * SaveParticlesFrom : moved to Phys/DisplVerticesMC
+   * DisplVertices : MC-dependent code moved to Phys/DisplVerticesMC under 
+                     the name MCDisplVertices.
+   The phyisics remains unaffected.
+
 !========================== DisplVertices v6r11 2010-09-06 ===================
 
 ! 2010-08-24 - Neal Gauvin

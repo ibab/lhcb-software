@@ -3,7 +3,7 @@
 # Maintainer : Neal Gauvin 
 # ============================================================================
 package           DisplVertices
-version           v6r11
+version           v7r0
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -14,14 +14,6 @@ branches          cmt src options doc
 # Used packages.
 # ============================================================================
 use DaVinciKernel       v* Phys
-
-use HepMC              v*    LCG_Interfaces -no_auto_imports
-use GenEvent     v*    Event
-
-use MCEvent       v* Event
-use DaVinciMCKernel v* Phys
-
-use TrackInterfaces v* Tr
 
 use CaloDet             v* Det
 
