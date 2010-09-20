@@ -39,9 +39,10 @@
  * - MC: To enable MC association.
  * - FillMuonStubInfo: Fill parameters of muon stub in info fields of track;
  * - OutputLocation: The location the tracks should be written to.
+ * - MinNTTHits: Minimal number of TT hits that need to be added to save the track.
  *
  *  @author Michel De Cian
- *  @date   2010-09-14
+ *  @date   2010-09-20
  */
 
 class MuonTTTrack : public GaudiAlgorithm {
@@ -73,6 +74,7 @@ private:
   bool m_addTTHits;
   bool m_fillMuonStubInfo;
   std::string m_trackToolName;
+  unsigned int m_minNumberTTHits;
   const LHCb::MuonPIDs* m_muonPids;
   std::map<const LHCb::Track*, const LHCb::Track*> m_muonMap;
 

@@ -29,7 +29,8 @@ MuonTTTrack::MuonTTTrack( const std::string& name,
   declareProperty( "MC"      , m_MC      = false      );
   declareProperty( "AddTTHits"      , m_addTTHits      = true      );
   declareProperty( "FillMuonStubInfo"      , m_fillMuonStubInfo      = false      );
-  declareProperty( "OutputLocation"      , m_outputLoc      = "Rec/Track/MuonTTTracks"      );
+  declareProperty( "OutputLocation"      , m_outputLoc      = "Rec/Track/MuonStandalone"      );
+  declareProperty( "MinNTTHits", m_minNumberTTHits = 2 );
 }
 //=============================================================================
 // Destructor
@@ -142,6 +143,9 @@ StatusCode MuonTTTrack::execute() {
       if(!sc && msgLevel(MSG::INFO)) info() << "Could not find TT hits" << endmsg;
       if(msgLevel(MSG::DEBUG) ) debug() << "Found " << ttHits.size() << " TT hits to add" << endmsg;
       
+      // -- Skip if not enough TT hits were found
+      if( ttHits.size() < m_minNumberTTHits ) continue;
+
       // -- Add the TT hits
       for(PatTTHits::iterator itHit = ttHits.begin(); itHit != ttHits.end(); ++itHit){
 	
