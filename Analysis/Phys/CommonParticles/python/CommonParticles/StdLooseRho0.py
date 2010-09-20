@@ -28,7 +28,6 @@ StdLooseRho0 = CombineParticles ( 'StdLooseRho0' )
 
 StdLooseRho0.InputLocations  = [ "StdLoosePions" ]
 StdLooseRho0.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc"
-StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }
 StdLooseRho0.CombinationCut = "(ADAMASS('rho(770)0')<100*MeV) & (ADOCACHI2('') < 30)"
 StdLooseRho0.MotherCut = "(BPVVDZ>0) & (VFASPF(VCHI2)<9) & (BPVDIRA>0.95) & (BPVVDCHI2>25)"
 
