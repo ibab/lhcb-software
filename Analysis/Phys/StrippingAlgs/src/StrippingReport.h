@@ -24,7 +24,10 @@ class ReportStat {
     std::string name;      /// Selection name
     int decisions;         /// Number of selected events 
     int candidates;        /// Number of candidates
-    double avgtime;
+    double avgtime;        /// Average time per event
+    int errors;            /// Number of errors produced by the line 
+    int incidents;         /// Number of incidents produced by the line (usually, too many candidates per event)
+    int slow_events;       /// Number of slow events
 }; 
 
 

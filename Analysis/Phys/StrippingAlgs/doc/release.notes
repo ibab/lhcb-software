@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-09-20 - Anton Poluektov 
+ - Added information about # of errors, incidents and slow events in StrippingReport. 
+   Look at the number of incidents to see how many events exceed combinatorics limit
+   (either by MaxCombinations or by MaxCandidates). 
+
 !======================== StrippngAlgs v1r4 2010-09-06 ========================
 
 ! 2010-08-12 - Anton Poluektov 

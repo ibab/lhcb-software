@@ -6,6 +6,7 @@
 //#include "GaudiAlg/GaudiTuples.h" 
 
 #include "Event/HltDecReports.h"
+#include "Event/HltDecReport.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/ChronoEntity.h"
@@ -65,6 +66,9 @@ StatusCode StrippingReport::initialize() {
     stat.name = *i;
     stat.candidates = 0;
     stat.decisions = 0;
+    stat.errors = 0;
+    stat.incidents = 0;
+    stat.slow_events = 0;
     m_stat.push_back(stat);
   }
   
@@ -80,15 +84,32 @@ void StrippingReport::report(bool onlyPositive) {
 
   std::vector<ReportStat>::iterator i;
 
+  LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_hdrLocation);
+
   char str[128];
 
-  sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s %7.7s", "Decision name", "Rate", "Accepted", "Mult.","<T>,ms");
+  sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s %7.7s %5.5s %5.5s %5.5s", "Decision name", "Rate", "Accepted", "Mult.","<T>,ms","Errs","Incds","Slow");
 
-  info() << "--------------------------------------------------------------------------------------------" << endmsg;
+  info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
   info() << str << endmsg;
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
     std::string strippedName = i->name;
+
+    const LHCb::HltDecReport* report = 0;
+    if (reports) { 
+      report = reports->decReport(i->name + "Decision");
+      verbose() << "HDRs found at " << m_hdrLocation << endmsg;
+    }
+    
+    if (report) {
+      if (report->errorBits() & 0x01) i->errors++;
+      if (report->errorBits() & 0x02) i->incidents++;
+      if (report->errorBits() & 0x04) i->slow_events++;
+      verbose() << "HDR " << i->name << " found" << endmsg;
+    } else {
+      verbose() << "HDR " << i->name << " NOT found" << endmsg;    
+    }
 
     double rate = 0.;
     if (m_event > 0) rate = (double)i->decisions/(double)m_event;
@@ -98,9 +119,11 @@ void StrippingReport::report(bool onlyPositive) {
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %7.3f", strippedName.data(), rate, i->decisions, mult, i->avgtime);
+          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %7.3f %5d %5d %5d", strippedName.data(), 
+                  rate, i->decisions, mult, i->avgtime, i->errors, i->incidents, i->slow_events);
         else 
-          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f", strippedName.data(), rate, i->decisions, mult);
+          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %5d %5d %5d", strippedName.data(), 
+                  rate, i->decisions, mult, i->errors, i->incidents, i->slow_events);
         info() << str << endmsg;
       }
     } else if (i->decisions > 0 || !onlyPositive) {
@@ -109,12 +132,12 @@ void StrippingReport::report(bool onlyPositive) {
         sprintf(str,"%-51.51s: %8.6f %10.1d         %7.3f", strippedName.data(), rate, i->decisions, i->avgtime);
       else 
         sprintf(str,"%-51.51s: %8.6f %10.1d         ", strippedName.data(), rate, i->decisions);
-      info() << "--------------------------------------------------------------------------------------------" << endmsg;
+      info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
       info() << str << endmsg;
     }
       
   }
-  info() << "--------------------------------------------------------------------------------------------" << endmsg;
+  info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
 
 }
 
