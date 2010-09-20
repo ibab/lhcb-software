@@ -261,6 +261,7 @@ StatusCode HltGlobalMonitor::initialize() {
   long priority = std::numeric_limits<long>::max();
   incidentSvc->addListener(this,IncidentType::BeginEvent, priority ) ;
   incidentSvc->addListener(this,IncidentType::BeginRun, 0 ) ;
+  incidentSvc->addListener(this,"RunChange", 0 ) ;
 
   // start by kicking ourselves in action -- just in case we don't get one otherwise...
   this->handle(Incident(name(), IncidentType::BeginRun ));
@@ -270,7 +271,7 @@ StatusCode HltGlobalMonitor::initialize() {
 
 void HltGlobalMonitor::handle ( const Incident& incident ) {
   m_startEvent = System::currentTime( System::microSec );
-  if (m_startClock == 0 || incident.type() == IncidentType::BeginRun) m_startClock = m_startEvent;
+  if (m_startClock == 0 || incident.type() == IncidentType::BeginRun || incident.type() == "RunChange") m_startClock = m_startEvent;
   m_currentTime = double(m_startEvent-m_startClock)/1000000 ;  // seconds
 }
 
@@ -375,6 +376,7 @@ void HltGlobalMonitor::monitorTrends() {
   double t =  elapsedTime/1000; // convert to ms
 
   double when = m_currentTime / 60;
+
   m_hltEventsTime->fill(when, t);
 
 

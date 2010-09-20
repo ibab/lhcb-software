@@ -3,6 +3,8 @@ Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2010-09-20 - Gerhard Raven
+ - reset trend plots on runChange incident, and not just beginRun...
 
 !========================== HltGlobalMonitor v3r6p3 2010-08-26 ===================
 ! 2010-08-26 - Gerhard Raven
