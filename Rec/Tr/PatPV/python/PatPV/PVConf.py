@@ -45,7 +45,6 @@ class VLoosePV(object):
         PVTool.LSAdaptPVFitter.MinTracks    = 3
         PVTool.LSAdaptPVFitter.acceptTrack  = 0.000000000001
         PVTool.LSAdaptPVFitter.trackMaxChi2 = 25.
-        PVTool.LSAdaptPVFitter.zMaxSpread   = 1000.
         PVTool.LSAdaptPVFitter.minIter      = 3
         
 
