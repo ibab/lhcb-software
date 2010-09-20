@@ -1,3 +1,7 @@
+2010-09-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: fixed the location of the initialisation of the not_ready_file variable.
+
 2010-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r5

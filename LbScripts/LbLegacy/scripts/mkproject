@@ -230,6 +230,8 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         CMTPATH = ''
         os.environ['CMTPATH'] = CMTPATH
         log.info('CMTPATH = %s, tbroadcast= %s' % (os.environ['CMTPATH'], tbroadcast))
+        
+    not_ready_file = os.path.join(rel_dir, PACK, PACK + "_" + pversion, "NOT_READY")
 
 #========================== action : new ================================================
     if new :
@@ -246,7 +248,6 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         if not os.path.exists(PACK): os.mkdir(PACK)
         if not os.path.exists(os.path.join(PACK, PACK + '_' + pversion)): os.mkdir(os.path.join(PACK, PACK + '_' + pversion))
 
-        not_ready_file = os.path.join(rel_dir, PACK, PACK + "_" + pversion, "NOT_READY")
         if not os.path.exists(not_ready_file) :
             fd = open(not_ready_file, "w")
             fd.write("This project is not ready and cannot be used by SetupProject\n")
