@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-20 - Juan Palacios
+ - python/CommonParticles/StdLooseRho0.py
+  . Remove StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }. This cut is 
+    unnecessary and doesn't work anyway.
+
 ! 2010-09-20 - Thomas Blake
  - Updated to use ADCOACHI2CUT instead of ADOCACHI2
 
