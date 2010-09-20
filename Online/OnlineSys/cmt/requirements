@@ -36,12 +36,12 @@ use InsertDB          v1r9     Online
 use MBMDump           v1r14    Online
 use OMAlib            v3r1     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v7r1     Online
+use OnlineHistDB      v7r2     Online
 use OnlineBase        v1r3     Online
 use OnlineKernel      v2r3     Online
 use OnlineTools       v1r2     Online
 use OnlineTasks       v1r33    Online
-use Presenter         v1r7     Online
+use Presenter         v2r1     Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v2r8     Online
 use RootCnv           v1r0     Online
