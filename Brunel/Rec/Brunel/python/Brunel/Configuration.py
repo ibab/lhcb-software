@@ -577,7 +577,7 @@ class Brunel(LHCbConfigurableUser):
         self.defineMonitors()
         self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
                                          "OutputType","DataType","Simulation"])
-        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType"])
+        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation"])
         self.setOtherProps(TrackSys(),["DataType"])
         
         if self.isPropertySet("RecoSequence") :
