@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DisplVerticesMC
+! Responsible : Neal Gauvin
+! Purpose     : Offline algorithms and tools for the selection
+!               of events with exotic displaced vertices (MC-dependent code)
+!-----------------------------------------------------------------------------
+
+! 2010-09-20 - Neal Gauvin
+ - MC-dependent code of the Phys/DisplVertices v6r11 has been moved here.
+	Please refer to the releases.notes of this package for details about 
+	prior versions.
+ - MCDisplVertices essentially loops on the candidates Particle and 
+	applies cuts.
+     * Successful candidates can be saved in TES.
+     * Basic properties of successful candidates can be saved in a tuple.
+     * Provide "purity" infos of the candidate.
