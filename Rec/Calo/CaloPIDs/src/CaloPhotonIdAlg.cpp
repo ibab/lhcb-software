@@ -180,7 +180,7 @@ StatusCode CaloPhotonIdAlg::initialize() {
   m_estimator->hypo2Calo()->_setProperty("AddNeighbors", neig).ignore();
   m_estimator->_setProperty("SkipNeutralID","true").ignore(); // avoid recursive loop
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
