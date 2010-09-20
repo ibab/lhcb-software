@@ -60,7 +60,7 @@ class VeloMuonBuilder : public GaudiTupleAlg {
   float m_fieldfactor;
   bool m_chamberhit;
   double m_zmagnet;
-  double m_zmatch;
+  float m_zmatch;
   double m_chiweight;
   double m_distancecut;
   double m_xscale;

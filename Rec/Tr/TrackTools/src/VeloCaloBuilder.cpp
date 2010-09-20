@@ -69,7 +69,7 @@ using namespace LHCb;
 //=============================================================================
 StatusCode VeloCaloBuilder::execute()
 {
-  m_field = - (m_magFieldSvc->signedRelativeCurrent()); // -- get field polarity
+  m_field = - (float)(m_magFieldSvc->signedRelativeCurrent()); // -- get field polarity
   if (true)  { // debuging purpose
     LHCb::Tracks* velotracks = get<LHCb::Tracks>(m_veloTracksName);
 
@@ -101,11 +101,11 @@ StatusCode VeloCaloBuilder::execute()
 	  // -- apply IP, z, type cuts
 	  {
 	    float x,y,tx,ty,z,norm,IP;
-	    x = (*veloIt)->firstState().x();
-	    y = (*veloIt)->firstState().y();
-	    tx = (*veloIt)->firstState().tx();
-	    ty = (*veloIt)->firstState().ty();
-	    z = (*veloIt)->firstState().z();
+	    x = (float)(*veloIt)->firstState().x();
+	    y = (float)(*veloIt)->firstState().y();
+	    tx = (float)(*veloIt)->firstState().tx();
+	    ty = (float)(*veloIt)->firstState().ty();
+	    z = (float)(*veloIt)->firstState().z();
 	    norm = sqrt(tx*tx+ty*ty);
 	    IP = (fabs(x*ty-y*tx)/norm);
 	    if (IP<m_ipcut) continue;
@@ -119,13 +119,13 @@ StatusCode VeloCaloBuilder::execute()
 	  LHCb::Track* calotrack = new LHCb::Track(thecluster->key());
 	  calotrack->setType(LHCb::Track::Calo);
 	  const std::vector<LHCb::CaloClusterEntry> caloentries = thecluster->entries();
-	  float caloarea;
+          // unsigned int caloarea; // not needed in the current version.
 	  for (std::vector<LHCb::CaloClusterEntry>::const_iterator itter = caloentries.begin(); itter!=caloentries.end() ;++itter) {
 	    LHCb::CaloClusterEntry theentry = *itter;
 	    SmartRef<LHCb::CaloDigit> reffer = theentry.digit();
 	    LHCb::CaloDigit diggy = *reffer;
 	    LHCbID iddy = LHCbID(diggy.cellID());
-	    caloarea = diggy.cellID().area();
+	    // caloarea = diggy.cellID().area();
 	    calotrack->addToLhcbIDs(iddy);
 	  }
 
@@ -151,10 +151,10 @@ StatusCode VeloCaloBuilder::execute()
 	  // -- if the chi^2 cut is passed ...
 	  if (quality < m_qualimodi ) {
 	    // ... the momentum is calculated
-	    float kick = mytrack->firstState().x() + mytrack->firstState().tx() * (calotrack->firstState().z() - mytrack->firstState().z()) - calotrack->firstState().x();
-	    float qp = -kick/9950000 * m_field; // m_field corrects up/down field configuration
-	    float corrtx = calotrack->firstState().x()-mytrack->firstState().x()-mytrack->firstState().tx()*(10*m_zKick - mytrack->firstState().z());
-	    corrtx = corrtx / (calotrack->firstState().z() - m_zKick*10);
+	    float kick = float(mytrack->firstState().x() + mytrack->firstState().tx() * (calotrack->firstState().z() - mytrack->firstState().z()) - calotrack->firstState().x());
+	    float qp = -kick/9950000. * m_field; // m_field corrects up/down field configuration
+	    float corrtx = float(calotrack->firstState().x()-mytrack->firstState().x()-mytrack->firstState().tx()*(10*m_zKick - mytrack->firstState().z()));
+	    corrtx = corrtx / (float(calotrack->firstState().z()) - m_zKick*10);
 	   
 	    // -- using upstream instead of velo tracks, a momentum cut can purify the VeloCalo tracks here
 	    if (true) {
@@ -259,12 +259,12 @@ float VeloCaloBuilder::matchchi(LHCb::Track* velo, LHCb::Track* calo) {
   }
   
   const LHCb::State& state = calo->firstState();
-  float x      = state.x()/Gaudi::Units::cm;
-  float y      = state.y()/Gaudi::Units::cm;
-  float z      = state.z()/Gaudi::Units::cm;   // Shower Max
-  float ex     = 2.*cell_size/Gaudi::Units::cm;
+  float x      = (float)state.x()/Gaudi::Units::cm;
+  float y      = (float)state.y()/Gaudi::Units::cm;
+  float z      = (float)state.z()/Gaudi::Units::cm;   // Shower Max
+  float ex     = (float)2.*cell_size/Gaudi::Units::cm;
   float ey     = ex;
-  float e      = calo->pt()/Gaudi::Units::GeV;
+  float e      = (float)calo->pt()/Gaudi::Units::GeV;
 
   e *= m_eCorrect;
  
@@ -295,7 +295,7 @@ float VeloCaloBuilder::matchchi(LHCb::Track* velo, LHCb::Track* calo) {
   // -- calculate chi2 
   double deltaX = (dxdz - trackDxDz)/edxdz;
   double deltaY = (dydz/fabs(dydz))*(dydz - trackDyDz)/edydz;
-  double chi2 = deltaX*deltaX + deltaY*deltaY;
+  float chi2 = (float)(deltaX*deltaX + deltaY*deltaY);
   
   return chi2;
 }

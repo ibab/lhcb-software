@@ -69,10 +69,10 @@ class VeloCaloBuilder : public GaudiTupleAlg {
   ICaloGetterTool* getter;
 
   // -- variables from HltVeloEcalMatch
-  double 	m_ptkickConstant;
-  double 	m_zKick;
-  double 	m_eres [2];
-  double 	m_eCorrect;
+  float 	m_ptkickConstant;
+  float 	m_zKick;
+  float 	m_eres [2];
+  float 	m_eCorrect;
 
 };
 #endif

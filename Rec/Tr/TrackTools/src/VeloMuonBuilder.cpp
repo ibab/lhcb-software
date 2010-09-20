@@ -57,7 +57,7 @@ StatusCode VeloMuonBuilder::initialize() {
   m_tracksFitter = tool<ITrackFitter>( "TrackMasterFitter");
 
   ILHCbMagnetSvc* m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-  m_fieldfactor = - (m_magFieldSvc->signedRelativeCurrent());
+  m_fieldfactor = - (float)(m_magFieldSvc->signedRelativeCurrent());
 
   return StatusCode::SUCCESS;
 }
@@ -204,7 +204,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
       // now calculate distance
 
-      float weighteddistance = (velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale+(1-m_xscale)*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y());
+      float weighteddistance = float((velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale+(1-m_xscale)*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y()));
 
       // -- hard coded after determination on private ntuple
       if (reg == 0)
@@ -224,9 +224,9 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       {
 
 	State* monitorstate = ((*veloIter)->firstState()).clone();
-	float xkick = chamber.x() - monitorstate->x();//jstefaniak used interpolated value here
+	float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
 	float m_ptkickConstant = 1265;
-	float qp = xkick / m_ptkickConstant / (chamber.z() - m_zmagnet);
+	float qp = xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet);
 	qp = -qp * m_fieldfactor;
 	aCopy = new LHCb::Track();
 	aCopy->addToAncestors(*veloIter);
@@ -287,13 +287,13 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	aCopy->addToAncestors(*muonIter);
       }
 
-      float weight = weighteddistance * (1-m_chiweight) + m_chiweight * aCopy->chi2();
+      float weight = float(weighteddistance * (1-m_chiweight) + m_chiweight * aCopy->chi2());
       if (weight<minweight) {
 	// -- if we created a Track and want to use another one. then we should delete the old one
 	if (goodCopy) delete goodCopy;                        
 	minweight=weight;
 	mindist = weighteddistance;
-	minchi2 = aCopy->chi2();
+	minchi2 = float(aCopy->chi2());
 	goodCopy=aCopy;
 	
       }
