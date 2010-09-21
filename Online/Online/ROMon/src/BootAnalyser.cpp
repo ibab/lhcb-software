@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -151,8 +151,9 @@ using namespace std;
 
 #define MIN_LINE_LENGTH 15
 #define CMD_DATA                   12345
-#define SCAN_TIMEDIFF              10
-#define PUBLISH_TIMEDIFF           10
+#define SCAN_TIMEDIFF              15
+#define PUBLISH_TIMEDIFF           15
+#define DHCP_BOOT_DIFF            200
 
 static bool s_use_ts = true;
 
@@ -306,6 +307,9 @@ SubfarmBootStatus::~SubfarmBootStatus() {
   m_status = 0;
 }
 
+static void error_user_routine (int severity, int error_code, char* message) {
+  ::lib_rtl_output(LIB_RTL_ERROR,"Error handler called: %d %d %s.",severity,error_code,message);
+}
 // Start the sub-farm monitor
 int SubfarmBootStatus::start() {
   ROMon::Inventory inv;
@@ -327,6 +331,7 @@ int SubfarmBootStatus::start() {
     string svc_name = "/"+strupper(name())+"/TaskSupervisor/Summary";
     if ( s_use_ts ) {
       m_tsID = ::dic_info_service((char*)svc_name.c_str(),TIMED,15,0,0,summaryHandler,(long)this,0,0);
+      dic_add_error_handler(error_user_routine);
     }
 
     BootNodeStatus* n = new(m_status->nodes.begin()) BootNodeStatus();
@@ -421,6 +426,45 @@ int SubfarmBootStatus::check() {
     if ( m_file.migrated() ) {
       m_file.close();
       res = m_file.scan(proc);
+    }
+    // Those who clain all is fine, but FMC does not start, may have crashed and wait for boot
+    // If these nodes cannot be ping'ed they are bad!
+    for(Nodes::iterator i=m_nodes.begin(); i!=m_nodes.end();++i) {
+      BootNodeStatus* n = (*i).second;
+      if ( n->status&BootNodeStatus::MOUNT_REQUESTED ) {
+	if ( n->status&BootNodeStatus::DHCP_REQUESTED ) {
+	  if ( n->status&BootNodeStatus::TCP_STARTED ) {
+	    if ( 0 == (n->status&BootNodeStatus::FMC_STARTED) ) {
+	      //if ( abs(time(0)-n->dhcpReq) > DHCP_BOOT_DIFF ) {
+		string cmd = "/bin/ping -c 1 -w 1 -s 2 ";
+		cmd += n->name;
+		::lib_rtl_output(LIB_RTL_ERROR,"Executing command:%s",cmd.c_str());
+		FILE* f = ::lib_rtl_pipe_open(cmd.c_str(),"r");
+		if ( f ) {
+		  char text[2048];
+		  //memset(text,0,sizeof(text));
+		  int nb = ::fread(text,1,sizeof(text)-1,f);
+		  //::lib_rtl_output(LIB_RTL_ERROR,text);
+		  if ( nb > 0 ) {
+		    text[nb] = 0;
+		    if ( ::strstr(text," 0% packet loss") == 0 ) {
+		      n->status = 0;
+		      ::lib_rtl_output(LIB_RTL_ERROR,"Reset node status of %s to %08X",n->name,n->status);
+		    }
+		  }
+		  else {
+		    ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,::lib_rtl_error_message(::lib_rtl_get_error()));
+		  }
+		  ::lib_rtl_pipe_close(f);
+		}
+		else {
+		  ::lib_rtl_output(LIB_RTL_ERROR,"Error:%s.",::lib_rtl_error_message(::lib_rtl_get_error()));
+		}
+	      }
+	    //}
+	  }
+	}
+      }
     }
   }
   ::dis_update_service(m_id);

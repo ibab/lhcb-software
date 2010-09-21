@@ -1,0 +1,74 @@
+<farmMon>
+
+<common>
+Note: Help is context sensitive
+
+You receive different help content depending on the current window:
+-- Help on boot summary window
+-- Help on expanded subfarm boot summary
+
+</common>
+
+<boot-display>
+BOOT monitor display
+
+Display to visualize the boot status of known subfarms.
+Each known processor cluster is listed to the left.
+On the right (in color) all nodes which belong to this 
+cluster are listed.
+
+GREEN nodes have successfully booted.
+RED BLINKING nodes have a problem.
+Any other color indicates that the boot process is ongoing.
+At the top of the display a color code legend is given.
+
+You can select a cluster using the keyboard arrow keys UP/DOWN
+or by clicking the mouse.
+On ENTER (or MOUSE-LEFT double-click) more detailed information
+is accessible for each processing cluster.
+
+</boot-display>
+
+<boot-subfarm>
+Cluster BOOT monitor display
+
+Display to visualize the boot status of a single subfarms/processing cluster.
+All nodes, which belong to the cluster are listed vertically.
+The different columns of the display show:
+DHCP:    OK if a DHCP request was seen in the cluster log file
+Mount:   OK if a disk mount request was seen in the cluster log file
+CPU:     OK if a CPU#0 start request was seen in the cluster log file
+PCI:     OK if the PCI interface start command was seen in the cluster log file
+ETH0/1:  OK if the ethernet interface startup was seen in the cluster log file
+TCP:     OK if TCP was started
+FMC:     OK if the FMC tools were started
+
+GREEN nodes have successfully booted.
+RED BLINKING nodes have a problem.
+Any other color indicates that the boot process is ongoing.
+At the top of the display a color code legend is given.
+
+You can close the cluster display with ENTER (or MOUSE-LEFT double-click).
+
+</boot-subfarm>
+
+
+<common>
+Common keyboard commands:
+
+-- To select a subfarm use the arrow keys UP and DOWN
+-- To invoke/hide the help display type CTRL-H or h or H.
+-- To exit the application         type CTRL-E or E
+-- To show/hide the subfarm menu   type ENTER or KPD-ENTER
+
+</common>
+<common>
+Mouse commands:
+
+Double-click MOUSE-LEFT:    show/hide the subfarm menu
+Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
+Single-click MOUSE-RIGHT    show/hide this help window
+
+</common>
+
+</farmMon>

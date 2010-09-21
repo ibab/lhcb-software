@@ -1,4 +1,4 @@
-// $Id: BootDisplay.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
+// $Id: BootDisplay.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootMon.h"
@@ -148,9 +148,10 @@ using namespace std;
 typedef vector<string>               StringV;
 
 // Max. 15 seconds without update allowed
-#define UPDATE_TIME_MAX 15
-#define BOOTLINE_START    3
-#define BOOTLINE_FIRSTPOS 9
+#define UPDATE_TIME_MAX    15
+#define BOOTLINE_START      3
+#define BOOTLINE_FIRSTPOS   9
+#define MAX_BOOT_TIME     600
 
 static BootDisplay* s_fd = 0;
 
@@ -311,6 +312,7 @@ BootDisplay::~BootDisplay()  {
 
 // Display cluster information in line form
 void BootDisplay::display(const BootClusterLine* line) {
+  time_t now = ::time(0);
   size_t pos = line->position();
   const BootNodeStatusset* c = line->cluster();
   const BootNodeStatusset::Nodes& nodes = c->nodes;
@@ -327,15 +329,18 @@ void BootDisplay::display(const BootClusterLine* line) {
     int col = RED|INVERSE;
     int st  = (*ci).status;
     const char* n = (*ci).name;
-    if      ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
+    if (      abs(now-(*ci).dhcpReq)>MAX_BOOT_TIME && 
+	      0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
+	      0 == (st&BootNodeStatus::FMC_STARTED)     ) col = RED|INVERSE|BOLD|FLASH;
+    else if ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::TCP_STARTED)     ) col = GREEN|BOLD;
     else if ( 0 != (st&BootNodeStatus::ETH1_STARTED)    ) col = BLUE|INVERSE|BOLD;
     else if ( 0 != (st&BootNodeStatus::ETH0_STARTED)    ) col = BLUE|BOLD;
     else if ( 0 != (st&BootNodeStatus::PCI_STARTED)     ) col = CYAN|INVERSE|BOLD;
     else if ( 0 != (st&BootNodeStatus::CPU_STARTED)     ) col = CYAN|BOLD;
-    else if ( 0 != (st&BootNodeStatus::MOUNT_REQUESTED) ) col = MAGENTA|BOLD;
-    else if ( 0 != (st&BootNodeStatus::DHCP_REQUESTED)  ) col = MAGENTA|INVERSE|BOLD;
-    else col = RED|INVERSE|BOLD;
+    else if ( 0 != (st&BootNodeStatus::MOUNT_REQUESTED) ) col = MAGENTA|BOLD|FLASH;
+    else if ( 0 != (st&BootNodeStatus::DHCP_REQUESTED)  ) col = MAGENTA|INVERSE|BOLD|FLASH;
+    else                                                  col = RED|INVERSE|BOLD;
     txt[1] = n[0];
     txt[2] = n[1];
     if ( ::strncmp(n,c->name,strlen(c->name)+2) == 0 )
@@ -396,7 +401,10 @@ int BootDisplay::showHelpWindow() {
     m_helpDisplay = auto_ptr<HelpDisplay>(0);
   }
   else {
-    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","boot-display"));
+    string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
+    string fin = input+"/doc/bootMon.hlp";
+    string tag = m_clusterDisplay.get() ? "boot-subfarm" : "boot-display";
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window",tag,fin));
     if ( m_helpDisplay.get() ) {
       m_helpDisplay->show(m_anchorY,m_anchorX);
       MouseSensor::instance().add(this,m_helpDisplay->display());

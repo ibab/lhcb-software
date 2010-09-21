@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.2 2010-09-21 18:17:55 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.2 2010-09-21 18:17:55 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
@@ -31,6 +31,7 @@ const char* _flg(int v, int msk)  {  return (v&msk)==msk ? "OK" : "--"; }
 }
 #define _F(x)   _flg(n.status,BootNodeStatus::x)
 #define _BAD(x) _ok(n.status,BootNodeStatus::x)
+#define MAX_BOOT_TIME   600
 
 BootClusterDisplay::BootClusterDisplay(InternalDisplay* parent, const string& title, int height, int width)
   : InternalDisplay(parent, title), m_name(title)
@@ -49,7 +50,7 @@ void BootClusterDisplay::update(const void* data) {
   const BootNodeStatusset& ns = *(const BootNodeStatusset*)data;
   typedef BootNodeStatusset::Nodes _N;
   char txt[255], text1[64], text2[64], text3[64];
-  time_t t1 = ns.time;
+  time_t t1 = ns.time, now = ::time(0);
   int line = 1;
 
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE|BOLD);
@@ -118,18 +119,25 @@ void BootClusterDisplay::update(const void* data) {
       strcat(txt," --> Boot in progress.");
     else if ( (col&(GREEN+INVERSE)) == (GREEN+INVERSE)) 
       strcat(txt," --> Booted OK.");
-    else if ( (col&GREEN) == GREEN ) 
+    else if ( abs(now-n.dhcpReq)<MAX_BOOT_TIME && (col&GREEN) == GREEN )
       strcat(txt," --> Nearly Booted.");
+    else if ( abs(now-n.dhcpReq)>MAX_BOOT_TIME && 
+	      0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
+	      0 == (st&BootNodeStatus::FMC_STARTED) ) {
+      strcat(txt," --> Something is WRONG.");
+      col = RED|BOLD|FLASH;
+    }
     ::scrc_put_chars(m_display,txt,col,++line,3,1);
   }
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   
   if ( 0 == ns.nodes.size() ) {
-    t1 = ::time(0);
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-    ::strftime(txt,sizeof(txt),"   No Node information found.         %H:%M:%S",::localtime(&t1));
+    ::strftime(txt,sizeof(txt),"   No Node information found.         %H:%M:%S",::localtime(&now));
     ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,5,1);
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
   }
+  while (line+3 < m_display->height ) 
+    ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 }
