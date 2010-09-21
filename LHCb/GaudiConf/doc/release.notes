@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-09-21 - Chris Jones
+ - Extend the data unpacking data-on-demand options to include some additional
+   algorithms, that previously where run by default in PhysConf. This change
+   means they are now only run when really needed, on demand.
+
 !======================== GaudiConf v13r6 2010-09-21 ========================
 ! 2010-09-14 - Vanya Belyaev
  - fix the typo: remove extra comma 
