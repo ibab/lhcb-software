@@ -319,41 +319,32 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
                                                std::pair <double, double>& fraction) const
 {
   //MsgStream msg(msgSvc(), "DeVeloPixSquareType");
-  //msg()<<MSG::INFO<<"Global: "<<point<<endreq;
   
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  //msg()<<MSG::INFO<<"Local: "<<localPoint<<endreq;
 
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
   
-  //msg()<<MSG::INFO<<"In active area?: "<<sc<<endreq;
   if(!sc.isSuccess())return sc;
   unsigned int sensor=sensorNumber();
-  
-  
-  //msg()<<MSG::INFO<<"Sensor: "<<sensor<<endreq;
   // Create the associated VeloPixChannelID
   channel.setSensor(sensor);
   // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(localPoint);
-  //msg()<<MSG::INFO<<"Ladder: "<<ladderIndex<<endreq;
   // Get the chip number in which the point is
   int chipIndex = WhichChip(localPoint,ladderIndex);
-  //msg()<<MSG::INFO<<"Chip: "<<chipIndex<<endreq;
   // Compute the proper chip number for VeloPixChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
     prop_chipIndex += m_ladders[ilad].nChip();
   }
   // Set the chip number in the VeloPixChannelID
-  //msg()<<MSG::INFO<<"ChipFull: "<<prop_chipIndex<<endreq;
   channel.setChip(prop_chipIndex);  
   // Get the pixel position in which the point is
   std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
-  
-  //msg()<<MSG::INFO<<"Pixel: "<<pixelPos.first<<" "<<pixelPos.second<<" frac: "<<fraction.first<<" "<<fraction.second<<endreq;
+
   if( pixelPos.first < 0. || pixelPos.second < 0. ){
+    msg()<<MSG::INFO<<"Which Pixelfunction does not find the pixels..."<<endreq;
     return StatusCode::FAILURE;
   }
   // Set the pixel position in the VeloPixChannelID
@@ -522,8 +513,6 @@ int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 {
   for ( int index = 0 ; index <(int) m_ladders.size() ; index++){
     const Gaudi::XYZPoint pointRef = m_ladders[index].ReferencePoint();
-    // msg() << MSG::INFO<<"Ladder number: "<< index<<endmsg;
-    // msg() << MSG::INFO<<"XY : "<<point.x()<<" ; "<<pointRef.y()<<" DeltaX: "<<point.x()-pointRef.x()<<"DeltaY: "<<point.y()-pointRef.y()<<" z:"<<(fabs(point.z()-pointRef.z())<6*siliconThickness()/10)<<endmsg;
     if ( 
         ( 
          m_ladders[index].isHorizontal() && (
@@ -764,10 +753,6 @@ StatusCode DeVeloPixSquareType::calcPixelsParam()
     msg() << MSG::DEBUG << "Position of first chip is " << m_xyChips[0]
           << " last chip is " << m_xyChips[m_xyChips.size()-1] << endmsg;
   }
-  //for ( int i = 0 ; i < m_xyChips.size() ; i++ ){
-  //   msg() << MSG::INFO << "XY of chip num "<< i <<" : " << m_xyChips[i].first <<" "<< m_xyChips[i].second << endreq;
-  //  msg() << MSG::INFO << "First size "<< m_ChipFirstPixelSize[i] <<" last size: " << m_ChipLastPixelSize[i] << endreq;
-  // }
   
   return StatusCode::SUCCESS;
 }
