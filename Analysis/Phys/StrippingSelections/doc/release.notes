@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-21 - Ulrich Kerzel
+- introduce cut on lifetime cTau in B2hh lifetime-unbiased stripping line 
+  to reduce rate. pre-scale loose line without this cut
 
 ! 2010-09-17 - Rob Lambert
  - Updated StrippingB0q2DstarMuX.py:
