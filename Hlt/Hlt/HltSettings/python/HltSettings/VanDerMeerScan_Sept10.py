@@ -44,7 +44,7 @@ class VanDerMeerScan_Sept10 :
                                               , 'Postscale' : { 'Hlt1Lumi' :  1. }
             }
 
-                       , Hlt1BeamGasLinesConf : { 'ForcedInputRateLimit'  :  100000
+                       , Hlt1BeamGasLinesConf : { 'ForcedInputRateLimit'  :  5000
                                                   , 'Prescale' :  { 'Hlt1BeamGasBeam1' :                1.0
                                                                     , 'Hlt1BeamGasBeam2' :                1.0
                                                                     , 'Hlt1BeamGasCrossing' :             1.0
@@ -70,7 +70,6 @@ class VanDerMeerScan_Sept10 :
                   , 'Hlt1BeamGasBeam1'
                   , 'Hlt1BeamGasBeam2'
                   , 'Hlt1BeamGasCrossingForcedRZReco'
-                  #, 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
                  ]              
         return lines 
 
