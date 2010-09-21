@@ -6,6 +6,14 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Juan Palacios
+ - src/RecVertexClonerFunctors.h
+  . Use MicroDST::DeReference functor to ensure valid SmartRefs to Tracks are
+    stored.
+    Requires MicroDSTBase v2r1 or higher.
+ - cmt/requirements
+  . Increase to v2r1.
+
 !======================= MicroDSTTools v2r0 2010-08-20 =======================
 
 ! 2010-08-20 - Juan Palacios
