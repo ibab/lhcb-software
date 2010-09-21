@@ -6,7 +6,7 @@
 #include <MicroDST/Functors.hpp>
 #include <Event/RecVertex.h>
 #include <Event/Track.h>
-#include <functional>
+
 /** @namespace MicroDST RecVertexClonerFunctors.h
  *  
  *
@@ -16,32 +16,6 @@
 namespace MicroDST {
 
   typedef BasicItemCloner<LHCb::RecVertex> BasicRecVertexCloner;
-
-
-  /**
-   * Functor that simply calls the target() method
-   * of an object. Necessary for copying of SmartRefs.
-   *
-   * @author Juan Palacios palacios@physik.uzh.ch
-   * 
-   * Example:
-   *
-   * @code
-   *
-   * const SmartRefVector< T >& smartRefs = x->refs();
-   * std::for_each(smartRefs.begin(), smartRefs.end(), CallTarget<T>());
-   * T* y = x->clone();
-   *
-   * @endcode
-   *
-   *
-   */
-
-  template <class T>
-  struct DeReference : public std::unary_function<const SmartRef<T>&,void>
-  {
-    inline void operator()(const SmartRef<T>& obj) { obj.target(); }
-  };
 
   /**
    * Functor to custom-clone an LHCb::RecVertex object.
@@ -59,7 +33,7 @@ namespace MicroDST {
     static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
     {
       const SmartRefVector< LHCb::Track >& tracks = pv->tracks();
-      std::for_each(tracks.begin(), tracks.end(), DeReference< LHCb::Track >());
+      std::for_each(tracks.begin(), tracks.end(), MicroDST::DeReference());
       LHCb::RecVertex* item = pv->clone();
       return item;
     }
