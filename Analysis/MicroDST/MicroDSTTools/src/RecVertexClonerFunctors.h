@@ -6,6 +6,7 @@
 #include <MicroDST/Functors.hpp>
 #include <Event/RecVertex.h>
 #include <Event/Track.h>
+#include <functional>
 /** @namespace MicroDST RecVertexClonerFunctors.h
  *  
  *
@@ -16,13 +17,39 @@ namespace MicroDST {
 
   typedef BasicItemCloner<LHCb::RecVertex> BasicRecVertexCloner;
 
+
   /**
-   * Functor to custom-clone an LHCb::Vertex object.
-   * Does something what BasicItemCloner does, plus
-   * take the SmartRefVector<LHCb::Track> and copy only SmartRefs
-   * to the tracks.
+   * Functor that simply calls the target() method
+   * of an object. Necessary for copying of SmartRefs.
    *
-   * @author Juan Palacios juanch@nikhef.nl
+   * @author Juan Palacios palacios@physik.uzh.ch
+   * 
+   * Example:
+   *
+   * @code
+   *
+   * const SmartRefVector< T >& smartRefs = x->refs();
+   * std::for_each(smartRefs.begin(), smartRefs.end(), CallTarget<T>());
+   * T* y = x->clone();
+   *
+   * @endcode
+   *
+   *
+   */
+
+  template <class T>
+  struct DeReference : public std::unary_function<const SmartRef<T>&,void>
+  {
+    inline void operator()(const SmartRef<T>& obj) { obj.target(); }
+  };
+
+  /**
+   * Functor to custom-clone an LHCb::RecVertex object.
+   * Takes care that the RecVertex's track SmartRefs are
+   * de-referenced before cloning the action. This ensures
+   * that they are valid.
+   *
+   * @author Juan Palacios juancho@nikhef.nl
    * @date 16-10-2007
    */
   struct RecVertexClonerShallowTracks
@@ -31,22 +58,10 @@ namespace MicroDST {
   public:
     static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
     {
-      LHCb::RecVertex* item = pv->clone();
       const SmartRefVector< LHCb::Track >& tracks = pv->tracks();
-      storeVertexTracks(item, tracks);
+      std::for_each(tracks.begin(), tracks.end(), DeReference< LHCb::Track >());
+      LHCb::RecVertex* item = pv->clone();
       return item;
-    }
-  private:
-    static void storeVertexTracks(LHCb::RecVertex* pv, 
-                                  const SmartRefVector<LHCb::Track>& tracks) 
-    {
-      pv->clearTracks();
-      typedef SmartRefVector<LHCb::Track>::const_iterator tk_iterator;
-      for (tk_iterator iTrack = tracks.begin(); 
-           iTrack != tracks.end();
-           iTrack++) {
-        pv->addToTracks(*iTrack);      
-      }
     }
     
   };
