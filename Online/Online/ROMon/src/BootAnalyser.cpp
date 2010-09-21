@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -313,6 +313,8 @@ int SubfarmBootStatus::start() {
   string fname = "file://" + root + "/" + strupper(name()) + ".xml";
   string nam = strupper(name());
   XML::TaskSupervisorParser ts;
+  //::lib_rtl_output(LIB_RTL_ALWAYS,"Parsing file %s with DOM.",fname.c_str());
+
   ts.parseFile(fname);
   ts.getInventory(inv);
   Inventory::NodeCollectionMap::const_iterator ni=inv.nodecollections.find(nam);

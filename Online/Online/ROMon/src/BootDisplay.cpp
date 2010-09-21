@@ -1,4 +1,4 @@
-// $Id: BootDisplay.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: BootDisplay.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.2 2010-09-21 10:11:12 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootMon.h"
@@ -93,8 +93,6 @@ public:
 
     const BootClusterLine* currentLine() const       { return m_currLine; }
     void setCurrentLine(const BootClusterLine* line) { m_currLine = line; }
-    /// Set cursor to position
-    virtual void set_cursor();
     /// Set cursor to position
     virtual void set_cursor(InternalDisplay* disp);
     /// Set cursor to line position
@@ -187,13 +185,6 @@ namespace {
       if ( m_flush ) ::scrc_fflush(m_pb);
     }
   };
-  /// Extract node/service name from DNS info
-  void getServiceNode(char* s, string& svc, string& node) {
-    char* at = strchr(s,'@');
-    *at = 0;
-    svc = s;
-    node = at+1;
-  }
 }
 
 
@@ -212,7 +203,6 @@ BootClusterLine::~BootClusterLine() {
   }
 }
 
-
 /// DIM command service callback
 void BootClusterLine::dataHandler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
@@ -226,8 +216,6 @@ void BootClusterLine::dataHandler(void* tag, void* address, int* size) {
     l->m_parent->display(l);
   }
 }
-
-
 
 /// Standard constructor
 BootDisplay::BootDisplay(int argc, char** argv)
@@ -251,9 +239,7 @@ BootDisplay::BootDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
-
   ::lib_rtl_install_printer(do_output,0);
-
   s_fd = this;
   m_title = " BOOT monitor display";
   ::scrc_create_pasteboard (&m_pasteboard, 0, &m_height, &m_width);
@@ -332,15 +318,9 @@ void BootDisplay::display(const BootClusterLine* line) {
 
   RTL::Lock lock(screenLock());
   Pasteboard* pb = pasteboard();
-  ::scrc_cursor_off(pb);
+  //::scrc_cursor_off(pb);
   ::scrc_begin_pasteboard_update (pb);
-  if ( pos == m_posCursor ) {
-    ::scrc_put_chars(m_display,c->name,BLUE|BOLD|INVERSE,pos,BOOTLINE_START,0);
-    ::scrc_set_cursor(m_display,line->position(),BOOTLINE_START);
-  }
-  else  {
-    ::scrc_put_chars(m_display,c->name,NORMAL|BOLD,pos,BOOTLINE_START,0);
-  }
+  ::scrc_put_chars(m_display,c->name,(pos==m_posCursor?BLUE|INVERSE:NORMAL)|BOLD,pos,BOOTLINE_START,0);
   int xp = 11+BOOTLINE_START;
   for(; ci != nodes.end(); ci = nodes.next(ci) ) {
     char txt[64];
@@ -366,12 +346,15 @@ void BootDisplay::display(const BootClusterLine* line) {
     xp += strlen(txt)+1;
   }
   ::scrc_put_chars(m_display," ",NORMAL,pos,xp,1);
+  ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+  if ( pos == m_posCursor ) {
+    ::scrc_set_cursor(m_display,pos,2);
+  }
   if ( m_clusterDisplay.get() && m_clusterDisplay->name() == c->name )  {
     m_clusterDisplay->update(c);
   }
-  ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
   ::scrc_end_pasteboard_update(pb);
-  ::scrc_cursor_on(pb);
+  //::scrc_cursor_on(pb);
 }
 
 /// Keyboard rearm action
@@ -401,13 +384,8 @@ void BootDisplay::set_cursor(const BootClusterLine* line) {
   setCurrentLine(line);
   if ( line ) {
     ::scrc_put_chars(m_display,line->name().c_str(),BLUE|BOLD|INVERSE,line->position(),BOOTLINE_START,0);
-    ::scrc_set_cursor(m_display,line->position(),BOOTLINE_START);
+    ::scrc_set_cursor(m_display,line->position(),2);
   }
-  set_cursor();
-}
-
-/// Set cursor to position
-void BootDisplay::set_cursor() {
 }
 
 /// Show context dependent help window
@@ -481,7 +459,6 @@ int BootDisplay::handleKeyboard(int key)    {
   }
   catch(...) {
   }
-  set_cursor();
   return WT_SUCCESS;
 }
 
@@ -514,9 +491,6 @@ void BootDisplay::handle(const Event& ev) {
       update(ptr + sizeof(int), *(int*)ptr);
       break;
     }
-    case CMD_SETCURSOR:
-      set_cursor();
-      break;
     case CMD_HANDLE_KEY:
       handleKeyboard(int((long)ev.data));
       break;
