@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-09-21 - Marco Cattaneo
+ - Add Rec/Vertex/Weights to DST. For the time being without packing, as no
+   packer exists.
+
 ! 2010-09-21 - Chris Jones
  - Extend the data unpacking data-on-demand options to include some additional
    algorithms, that previously where run by default in PhysConf. This change

@@ -115,6 +115,7 @@ class DstConf(LHCbConfigurableUser):
                              , "/Event/" + recDir + "/ProtoP/Charged"    + depth
                              , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
                              , "/Event/" + recDir + "/Vertex/Primary"    + depth
+                             , "/Event/Rec/Vertex/Weights"               + depth 
                              , "/Event/" + recDir + "/Vertex/V0"         + depth ]
 
         # Copy of HLT results, only on RDST
