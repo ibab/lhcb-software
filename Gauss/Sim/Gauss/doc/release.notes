@@ -7,6 +7,8 @@
 ! 2010-09-21 - Silvia Miglioranzi
  - Corrected the QMTest gauss-dev.qmt to pick up the $GAUSSOPTS/Gauss-DEV.py 
    (latest tags).
+ - removed wrong options:
+   $GAUSSROOT/test/options/Gauss-DEV.py
 
 !========================= Gauss v38r8 2010-09-13 ============================
 ! 2010-09-13 - Gloria CORTI
