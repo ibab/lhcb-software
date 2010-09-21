@@ -269,6 +269,13 @@ namespace RTL  {
   lib_rtl_lock_map_t&   allLocks();
 #endif
 
+  template<class T> union func_cast   {
+    void* ptr;
+    T     fun;
+    explicit func_cast(T t) { fun = t; }
+    explicit func_cast(void* t) { ptr = t; }
+  };
+
   /// Process name (UTGID)
   const std::string& processName();
   /// Fully qualified node name

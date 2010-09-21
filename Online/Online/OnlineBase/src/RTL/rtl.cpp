@@ -55,16 +55,6 @@ namespace RTL  {
 static int exit_status;
 
 #ifdef USE_PTHREADS
-
-namespace {
-  template<class T> union func_desc   {
-    void* ptr;
-    T     fun;
-    explicit func_desc(T t) { fun = t; }
-    explicit func_desc(void* t) { ptr = t; }
-  };
-}
-
 #include <unistd.h>
 #include <signal.h>
 #define ERROR_SUCCESS 0
@@ -145,8 +135,8 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
   SigMap::iterator i=m.find(signum);
   if ( i != m.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
-    func_desc<void (*)(int)> dsc0(old);
-    func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
+    func_cast<void (*)(int)> dsc0(old);
+    func_cast<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
     if ( s_RTL_exit_handler_print ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
 		       info->si_signo,(*i).second.first.c_str(),dsc.ptr);
