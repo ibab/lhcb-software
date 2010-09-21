@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Victor Coco
+ - Add VeloPix case to the IDs count in PatVeloTT.cpp
+
 !========================== PatVeloTT v3r14 2010-06-21 ======================
 ! 2010-06-21 - Stephanie Hansmann-Menzemer
  - Add switch for timing measurements
