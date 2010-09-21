@@ -11,11 +11,11 @@ import GaudiKernel.ProcessJobOptions
 class PhysConf(LHCbConfigurableUser) :
 
     __slots__ = {
-        "DataType"          : 'MC09'      # Data type, can be ['DC06','2008']
-        ,  "Simulation"        : True        # set to True to use SimCond
-        ,  "InputType"         : 'DST'       # Hopefully irrelevant
-        ,  "AllowPIDRerunning" : True        # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
-        ,  "EnableUnpack"      : None# Enable unpacking of DST.
+           "DataType"          : 'MC09'     # Data type, can be ['DC06','2008']
+        ,  "Simulation"        : True    # set to True to use SimCond
+        ,  "InputType"         : 'DST'   # Data type
+        ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
+        ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         }
     
     __used_configurables__ = (
@@ -31,7 +31,7 @@ class PhysConf(LHCbConfigurableUser) :
         """
         Init Sequence. Called by master application.
         """
-        # only one initialisiation do far
+        # only one initialisiation so far
         from Configurables import GaudiSequencer
         init = GaudiSequencer("PhysInitSeq")
         self.configureReco(init)
@@ -59,6 +59,11 @@ class PhysConf(LHCbConfigurableUser) :
         caloReco = OffLineCaloRecoConf (
             EnableRecoOnDemand = True     ## enable Reco-On-Demand
             )
+
+        ## General unpacking
+        from Configurables import DstConf
+        if self.isPropertySet('EnableUnpack') :
+            DstConf().setProp('EnableUnpack',self.getProp('EnableUnpack')) 
         
         ## unpack Calo (?)
         from Configurables import CaloDstUnPackConf 
@@ -74,65 +79,35 @@ class PhysConf(LHCbConfigurableUser) :
             caloReco.RecList = reco_new
             log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
 
-        #
-        # ProtoParticle pre-processing
-        #
-        inputtype =  self.getProp('InputType').upper()
-        if inputtype != 'MDST'  :
+        # For backwards compatibility with MC09/DC06, we need the following to rerun
+        # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
+        # is no longer needed
+        inputtype = self.getProp('InputType').upper()
+        if inputtype != 'MDST' and self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
             
-            from Configurables import ( GaudiSequencer, TESCheck,
-                                        MuonPIDsFromProtoParticlesAlg, RichPIDsFromProtoParticlesAlg,
-                                        ChargedProtoParticleAddRichInfo, ChargedProtoParticleAddMuonInfo,
-                                        ChargedProtoCombineDLLsAlg, DataObjectVersionFilter )
-
-            # Print out TES contents at the start of each event
-            #from Configurables import StoreExplorerAlg
-            #init.Members += [ StoreExplorerAlg() ]
+            from Configurables import DataObjectVersionFilter, MuonRec, TESCheck
+            from MuonID import ConfiguredMuonIDs
             
-            # Test protos are available
-            protoPartPreProcess = GaudiSequencer("ProtoParticlePreProcessing")
-            init.Members += [ protoPartPreProcess ]
-
-            # Run alg to check in ProtoParticles are available
-            protoPartPreProcess.Members += [ TESCheck( "TESCheckProtoParticles", Inputs = ["Rec/ProtoP"], Stop = False ) ]
-
-            # Check PID info
-            pidseq = GaudiSequencer("CheckPID")
-            pidseq.IgnoreFilterPassed = True
-            protoPartPreProcess.Members += [ pidseq ]
-
-            # Check MuonPIDs
-            mseq = GaudiSequencer("CheckMuonSeq")
-            pidseq.Members += [ mseq ]
-            mseq.Members += [ MuonPIDsFromProtoParticlesAlg("CheckMuonPIDs") ]
-            if self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
-                # Optionally rerun MuonPID here. Eventually this really should not be done in DV
-                # but still needed for DC06/MC09 compatibility for a while ...
-                mseq.Members += [ DataObjectVersionFilter( "MuonPIDVersionCheck",
-                                                           DataObjectLocation = "Rec/Muon/MuonPID",
-                                                           MaxVersion = 0 ) ]
-                # Check raw event is available
-                mseq.Members += [ TESCheck( "TESCheckRawEvent", Inputs = ["DAQ/RawEvent"], Stop = False ) ]
-                # Run Muon PID
-                from MuonID import ConfiguredMuonIDs
-                from Configurables import MuonRec
-                cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-                mseq.Members += [ MuonRec(), cm.getMuonIDSeq() ]
+            rerunPIDSeq = GaudiSequencer("ReRunMuonPID")
+            init.Members += [rerunPIDSeq]
             
-            # Check RichPIDs
-            rseq = GaudiSequencer("CheckRichSeq")
-            pidseq.Members += [ rseq ]
-            rseq.Members += [ RichPIDsFromProtoParticlesAlg("CheckRichPIDs") ]           
+            # Check data version, to see if this is needed or not
+            rerunPIDSeq.Members += [ DataObjectVersionFilter( "MuonPIDVersionCheck",
+                                                              DataObjectLocation = "/Event/Rec/Muon/MuonPID",
+                                                              MaxVersion = 0 ) ]
+            # Check raw event is available
+            rerunPIDSeq.Members += [ TESCheck( "TESCheckRawEvent",
+                                               Inputs = ["DAQ/RawEvent"],
+                                               Stop = False ) ]
+            # Run Muon PID
+            cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+            rerunPIDSeq.Members += [ MuonRec(), cm.getMuonIDSeq() ]
 
-            # Do Combined
-            recalib = GaudiSequencer("ProtoParticleCombDLLs")
-            recalib.IgnoreFilterPassed = True 
-            protoPartPreProcess.Members += [ recalib ]
-            # Add Rich and Muon PID results to protoparticles
-            recalib.Members += [ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")]
-            recalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
-            # Combined DLLs
-            recalib.Members += [ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL")]
+            # If muon PID has rerun, need to re make the Combined DLLS...
+            from Configurables import ( ChargedProtoParticleAddMuonInfo,
+                                        ChargedProtoCombineDLLsAlg )
+            rerunPIDSeq.Members += [ ChargedProtoParticleAddMuonInfo("CProtoPAddNewMuon"),
+                                     ChargedProtoCombineDLLsAlg("CProtoPCombDLLNewMuon") ]
 
 #
 # Data on demand

@@ -5,6 +5,15 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Chris Jones
+ - Updates to the PhysConf configurable, to move some of the initialisation
+   algorithms to GaudiConf where they are run as needed via the data on 
+   demand service, as part of the data unpacking. All that remains is the
+   options that rerun the MuonPID on old data (MC09 or older). These should
+   be removed as soon as backwards compatibility can be broken.
+
+!========================== PhysConf v1r7p2 2010-09-21 =================
+
 ! 2010-09-21 - Rob Lambert
  - Added explicit use statements for everything which is used by PhysConf
    . use 	  GaudiConf   v*
