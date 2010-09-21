@@ -60,5 +60,31 @@ namespace MicroDST {
   //===========================================================================
 
 
+  /**
+   * Functor that simply calls the target() method
+   * of an object. Necessary for copying of SmartRefs.
+   *
+   * @author Juan Palacios palacios@physik.uzh.ch
+   * 
+   * Example:
+   *
+   * @code
+   *
+   * const SmartRefVector< T >& smartRefs = x->refs();
+   * std::for_each(smartRefs.begin(), smartRefs.end(), DeReference());
+   * T* y = x->clone();
+   *
+   * @endcode
+   *
+   *
+   */
+  struct DeReference
+  {
+    template <class T>
+    inline void operator()(const T& obj) { 
+      obj.target(); 
+    }
+  };
+
 }
 #endif // MICRODST_FUNCTORS_HPP
