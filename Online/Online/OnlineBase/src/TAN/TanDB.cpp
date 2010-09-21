@@ -11,7 +11,7 @@
 #include <sg_codes.h>
 #include <INET/sg_pcodes.h>
 #include <INET/tcp.h>
-#elif defined(_VMS)
+#elif _VMS
 #include    <vms.h>
 #include <unistd.h>
 #endif
@@ -36,7 +36,7 @@ typedef void IOSB;
 #define _INSQTI(x,y)      insqti ( (qentry_t*)x, (head_t*)y    )
 #define _REMQHI(x,y)      remqhi ( (head_t*)  x, (qentry_t**)y )
 #define _REMQTI(x,y)      remqti ( (head_t*)  x, (qentry_t**)y )
-#elif defined(_VMS)
+#elif _VMS
 #define _PreviousEntry(x) (qentry_t*)((char*)(x) + (int)(x)->prev)
 #define _NextEntry(x)     (qentry_t*)((char*)(x) + (int)(x)->next)
 #define _INSQHI(x,y)      lib$insqhi((void*)x,(void*)y)
