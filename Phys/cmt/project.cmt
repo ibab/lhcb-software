@@ -1,6 +1,6 @@
 project PHYS
 
-use LHCB	LHCB_v31r5
+use REC	REC_v10r4
 
 container      PhysSys
 build_strategy	with_installarea
