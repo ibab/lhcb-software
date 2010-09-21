@@ -144,7 +144,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "MC09-20090602")
-        self.__set_tag__(["SIMCOND"], "MC09-20100827-vc-md100")
+        self.__set_tag__(["SIMCOND"], "MC09-20100921-vc-md100")
     
     def __Upgrade_conf__(self):
         """
