@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Rob Lambert
+ - Made CommonParticles depend on Tr/TrackTools, now that Phys depends on Rec.
+
 ! 2010-09-21 - Greig Cowan
  - Added ADOCACHI2 cuts to numerous common particles and removed
    explicit track chi2 requirements.
