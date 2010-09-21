@@ -17,7 +17,7 @@
 
 
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc)
 
 /*****************************************************************************/
 /// Constructor
@@ -291,7 +291,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
 }
 /*****************************************************************************/
 /// Dispatch a message to the relevant streams.
-void LHCb::FmcMessageSvc::reportMessage(const Message& msg)  {
+void LHCb::FmcMessageSvc::i_reportMessageEx(const Message& msg,int /*typ*/)  {
   int typ = msg.getType();
   bool report_always = m_printAlways;
   if ( typ==MSG::ALWAYS && !report_always) return;

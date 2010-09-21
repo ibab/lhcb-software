@@ -102,6 +102,8 @@ int ErrorFile::analyze() {
 	     << RawEventPrintout::bankHeader(b) << endl;
       }
       last_bank = b;
+      if ( last_bank ) {
+      }
       q += b->totalSize();
       ++m_numBank;
       ++num_bank;

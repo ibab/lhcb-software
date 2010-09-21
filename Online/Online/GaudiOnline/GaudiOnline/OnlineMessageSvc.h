@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.8 2008-10-21 16:15:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.9 2010-09-21 14:28:25 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -127,8 +127,13 @@ namespace LHCb {
     virtual int messageCount( MSG::Level level ) const;
 
   protected:
+
     virtual bool i_reportMessage( const Message& message );
+    /// Implementation of the message reporting
+    virtual void i_reportMessageEx(const Message& msg, int lvl);
+
     static void setErrorLogger(IErrorLogger* logger);
+    static IErrorLogger* getErrorLogger();
     void setupLimits(Property& prop);
     void setupThreshold(Property& prop);
 

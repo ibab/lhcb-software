@@ -129,7 +129,7 @@ namespace LHCb  {
     /// Declare FSM sub-state
     StatusCode declareSubState(SubState state);
     /// Set transition target state
-    void setTargetState(State target) { m_monitor.targetState = target; }
+    void setTargetState(State target) { m_monitor.targetState = char(target); }
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
     /// Translate integer state to string name

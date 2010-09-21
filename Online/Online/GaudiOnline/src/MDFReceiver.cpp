@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.9 2008-10-21 16:15:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.10 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  MDFReceiver.cpp
 //  --------------------------------------------------------------------
@@ -10,7 +10,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include <cstring>
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver)
 
 using namespace LHCb;
 

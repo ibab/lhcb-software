@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.24 2009-04-24 08:06:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.25 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -64,7 +64,7 @@ StatusCode MEPManager::initializeBuffers()  {
   MsgStream log(msgSvc(), name());
   if ( !m_initFlags.empty() )  {
     size_t ikey = 0;
-    char *p, *items[64], txt[32];
+    char *items[64], txt[32];
     string tmp = m_initFlags;
     for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
       if ( m_partitionBuffers && ::toupper(tok[1]) == 'I' )  {
@@ -75,11 +75,11 @@ StatusCode MEPManager::initializeBuffers()  {
 	    bm_name += _itoa(m_partitionID,txt,16);
 	  else
 	    bm_name += m_partitionName;
-          items[ikey++] = strcpy(p=new char[bm_name.length()+1],bm_name.c_str());
+          items[ikey++] = strcpy(new char[bm_name.length()+1],bm_name.c_str());
           continue;
         }
       }
-      items[ikey++] = strcpy(p=new char[strlen(tok)+1],tok);
+      items[ikey++] = strcpy(new char[strlen(tok)+1],tok);
     }
     for(size_t i=0; i<ikey; ++i)  {
       if ( ::strchr(items[i],' ') != 0 ) {

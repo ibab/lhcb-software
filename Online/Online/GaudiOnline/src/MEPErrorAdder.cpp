@@ -41,7 +41,7 @@ template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t le
   }
 }
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPErrorAdder);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPErrorAdder)
 
 using namespace LHCb;
 
@@ -494,16 +494,14 @@ StatusCode MEPErrorAdder::run() {
     default: continue;
     }
   }
-
-  for (;;) {
+  bool run = true;
+  while (run) {
     if (m_svcState != RUNNING) {
-      //Do something here?
-      
+      //Do something here?      
       return StatusCode::SUCCESS;
     }
     MEPRxSys::microsleep(100000); // 100 ms
   }
-
   return 1;
 }
 

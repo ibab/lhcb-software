@@ -25,7 +25,7 @@ namespace MBM  {
   class Producer;
   class Consumer;
   class EventDesc;
-};
+}
 
 /*
  *  LHCb namespace declaration

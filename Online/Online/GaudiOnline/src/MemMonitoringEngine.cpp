@@ -49,7 +49,7 @@ namespace LHCb {
     /// Standard destructor
     virtual ~MemMonitoringEngine()  {}
     /// Publish single monitoring item identified by owner and name
-    virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var);
+    virtual void i_publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var);
     /// Unpublish single monitoring item identified by owner and name
     virtual void revokeItem(CSTR owner_name, CSTR nam);
     /// Allocate and initialize publishing area
@@ -106,7 +106,7 @@ MemMonitoringEngine::Slot* MemMonitoringEngine::allocateSlot(size_t len)  {
 }
 
 /// Publish single monitoring item identified by owner and name
-void MemMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
+void MemMonitoringEngine::i_publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
   Slot* s = 0;
   DataPoint p(var);
   string n = owner_name+"/"+nam;
@@ -221,5 +221,5 @@ StatusCode SharedMemMonitoringEngine::deallocatePubarea()   {
 }
 
 // Factory for instantiation of service objects
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitoringEngine);
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SharedMemMonitoringEngine);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitoringEngine)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SharedMemMonitoringEngine)

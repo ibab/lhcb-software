@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.9 2009-01-23 15:03:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.10 2010-09-21 14:28:25 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -18,7 +18,7 @@
 
 namespace MBM {
   class Producer;
-};
+}
 
 // Declaration of the interface ID. 
 static const InterfaceID IID_IMEPManager("IMEPManager", 0, 0); 

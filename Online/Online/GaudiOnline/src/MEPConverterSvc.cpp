@@ -420,7 +420,7 @@ StatusCode MEPConverterSvc::saveMEP(void* data, size_t length,const unsigned int
       e.len = target - (char*)e.data;
       // Update header with proper size
       hdr->setSize(e.len-hdrSize);
-      int ret = m_errProd->sendEvent();
+      ret = m_errProd->sendEvent();
       if ( MBM_NORMAL == ret )   {
 	return StatusCode::SUCCESS;
       }

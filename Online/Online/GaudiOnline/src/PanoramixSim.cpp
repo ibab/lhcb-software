@@ -1,4 +1,4 @@
-// $Id: PanoramixSim.cpp,v 1.1 2009-01-12 16:31:00 frankb Exp $
+// $Id: PanoramixSim.cpp,v 1.2 2010-09-21 14:28:26 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -43,7 +43,7 @@ int PanoramixSim::prompt() {
   cout << "Reinitialize the event selector: R" << endl;
   cout << "Execut next event:               N" << endl;
   cin >> c;
-  c = ::toupper(c);
+  c = char(::toupper(c));
   switch(c) {
   case 'N':
     return 1;
@@ -53,16 +53,14 @@ int PanoramixSim::prompt() {
   default:
     return 0;
   }
-  return 0;
 }
 
 /// IRunable implementation : Run the class implementation
 StatusCode PanoramixSim::run()   {
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
-    int key;
     m_receiveEvts = true;
-    while ( (key=prompt()) > 0 )   {
+    while ( prompt() > 0 )   {
       // loop over the events
       DataObject* pObj = 0;
       StatusCode sc = ui->nextEvent(1);

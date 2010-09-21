@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.3 2007-06-01 13:49:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.4 2010-09-21 14:28:24 frankb Exp $
 #ifndef GAUDIONLINE_DIMMESSAGESVC_H
 #define GAUDIONLINE_DIMMESSAGESVC_H
 
@@ -59,10 +59,12 @@ namespace LHCb  {
     virtual StatusCode initialize();
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
-    /// Implementation of IMessageSvc::reportMessage()
-    virtual void reportMessage(const Message& message);
     /// Error logger implementation: report message
     virtual void report(int typ, const std::string& src, const std::string& msg);
+
+  protected:
+    /// Implementation of IMessageSvc::reportMessage()
+    virtual void i_reportMessageEx(const Message& message, int lvl);
 
   private:
     /// Pointer to DIM service to pass messages

@@ -21,7 +21,7 @@ class IIncidentSvc;
 namespace MBM  {  
   class Consumer;
   class Producer;
-};
+}
 
 /*
  *  LHCb namespace declaration

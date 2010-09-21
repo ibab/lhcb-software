@@ -11,12 +11,8 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IRegistry.h" 
 
-#include "GaudiKernel/AlgFactory.h" 
 using namespace LHCb;
 using namespace std;
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(FIDManipAlg);
 
 /// Standard constructor
 FIDManipAlg::FIDManipAlg(const string& nam, ISvcLocator* pSvc) 
@@ -124,7 +120,13 @@ StatusCode FIDManipAlg::execute() {
 	return manip.print();
       }
       return StatusCode::SUCCESS;
-    default:       return StatusCode::FAILURE;
+    default:
+      return StatusCode::FAILURE;
   }
-  return StatusCode::FAILURE;
 }
+
+
+#include "GaudiKernel/AlgFactory.h" 
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY(FIDManipAlg)
+

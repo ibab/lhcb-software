@@ -2,7 +2,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "CPP/IocSensor.h"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task);
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task)
 
 using namespace LHCb;
 namespace {

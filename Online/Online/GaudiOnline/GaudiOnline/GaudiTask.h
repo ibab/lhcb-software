@@ -95,6 +95,10 @@ namespace LHCb  {
     GaudiTask(IInterface* svc);
     /// Default destructor
     virtual ~GaudiTask();
+
+    /// Interactor overload: handle Sensor stimuli
+    virtual void handle(const Event& ev)  { this->DimTaskFSM::handle(ev); }
+
     /// Incident handler implemenentation: Inform that a new incident has occured
     virtual void handle(const Incident& incident);
 

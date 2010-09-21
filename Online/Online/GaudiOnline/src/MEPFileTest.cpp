@@ -89,7 +89,8 @@ namespace  {
     int run()  {
       unsigned int pid = 0;
       size_t evtLen = 0;
-      while(1) {
+      bool stop = false;
+      while( stop == false ) {
         int status = readEvent(evtLen);
         if ( status == MBM_NORMAL )  {
           SubEvents events;

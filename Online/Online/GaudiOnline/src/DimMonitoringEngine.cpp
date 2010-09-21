@@ -12,13 +12,14 @@ namespace LHCb {
     typedef std::map<std::string,Item> Services;
     Services                           m_services;
     void revoke(Services::iterator i);
+  protected:
+    /// Publish single monitoring item identified by owner and name
+    virtual void i_publishItem(CSTR owner_name,CSTR nam,CSTR dsc,int typ,const void* var);
   public:
     /// Service constructor
     DimMonitoringEngine(CSTR nam,ISvcLocator* svc) : MonitoringEngine(nam,svc) {}
     /// Standard destructor
     virtual ~DimMonitoringEngine()  {}
-    /// Publish single monitoring item identified by owner and name
-    virtual void publishItem(CSTR owner_name,CSTR nam,CSTR dsc,int typ,const void* var);
     /// Unpublish single monitoring item identified by owner and name
     virtual void revokeItem(CSTR owner_name,CSTR nam);
   };
@@ -53,7 +54,7 @@ void DimMonitoringEngine::revoke(Services::iterator i)  {
   }
 }
 
-void DimMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
+void DimMonitoringEngine::i_publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var)  {
   DataPoint p(var);
   std::string m;
   std::string n = owner_name+"/"+nam;

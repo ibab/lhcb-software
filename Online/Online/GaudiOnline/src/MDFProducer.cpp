@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.4 2008-10-21 16:15:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.5 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -43,7 +43,7 @@ again:
         goto again;
       }
       evtLen = h->recordSize()+8;
-      LHCb::RawBank* b = (LHCb::RawBank*)data;
+      b = (LHCb::RawBank*)data;
       b->setMagic();
       b->setType(LHCb::RawBank::DAQ);
       b->setSize(LHCb::MDFHeader::sizeOf(3));

@@ -32,7 +32,7 @@ int gauditask_task_lock() {
   return ::lib_rtl_lock(s_lock);
 }
 int gauditask_task_trylock() {
-#if _WIN32
+#ifdef _WIN32
   return ::lib_rtl_lock(s_lock);
 #else
   return ::lib_rtl_trylock(s_lock);
@@ -302,7 +302,6 @@ int GaudiTask::initApplication()  {
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
-    return 0;
   }
   return 0;
 }
@@ -356,7 +355,6 @@ int GaudiTask::startApplication()  {
   }
   else  {
     log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
-    return 0;
   }
   return 0;
 }

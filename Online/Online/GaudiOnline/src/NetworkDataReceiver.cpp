@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.23 2009-03-26 16:44:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.24 2010-09-21 14:28:26 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -159,7 +159,6 @@ NetworkDataReceiver::handleSourceRequest(int clientID,
   catch(...)   {
     return error("Unknown exception during data source request.");
   }
-  return StatusCode::FAILURE;
 }
 
 // Producer implementation: Request event from data source
@@ -213,7 +212,6 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
   catch(...)   {
     return error("Unknown exception during event receive request.");
   }
-  return StatusCode::FAILURE;
 }
 
 // Reset event request and insert entry into data queue of the buffer manager
@@ -249,8 +247,6 @@ NetworkDataReceiver::handleEventData(const RecvEntry& entry,void* buf,size_t len
     ++m_recvError;
     return error("Unknown exception during event receive request.");
   }
-  ++m_recvError;
-  return StatusCode::FAILURE;
 }
 
 // Copy event data into buffer manager

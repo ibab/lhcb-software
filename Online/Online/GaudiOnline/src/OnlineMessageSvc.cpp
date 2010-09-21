@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.17 2009-12-08 14:27:13 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.18 2010-09-21 14:28:26 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -8,14 +8,19 @@
 
 //DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineMessageSvc);
 using namespace std;
+using namespace LHCb;
 
 static IErrorLogger* s_logger = 0;
-void LHCb::OnlineMessageSvc::setErrorLogger(IErrorLogger* logger)  {
+void OnlineMessageSvc::setErrorLogger(IErrorLogger* logger)  {
   s_logger = logger;
 }
 
+IErrorLogger* OnlineMessageSvc::getErrorLogger() {
+  return s_logger;
+}
+
 // Constructor
-LHCb::OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svcloc )
+OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svcloc )
 : Service( name, svcloc ) 
 {
   m_defaultStream = &cout;
@@ -51,7 +56,7 @@ LHCb::OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svclo
 
 
 /// Initialize Service 
-StatusCode LHCb::OnlineMessageSvc::initialize() {
+StatusCode OnlineMessageSvc::initialize() {
   StatusCode sc = Service::initialize();
   if( sc.isFailure() ) return sc;
   // Release pointer to myself done in Service base class
@@ -75,7 +80,7 @@ StatusCode LHCb::OnlineMessageSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
-void LHCb::OnlineMessageSvc::setupLimits(Property& prop) {
+void OnlineMessageSvc::setupLimits(Property& prop) {
   int ic = 0;
   if (prop.name() == "fatalLimit") {
     ic = MSG::FATAL;
@@ -107,10 +112,10 @@ void LHCb::OnlineMessageSvc::setupLimits(Property& prop) {
          << prop.name() << endl;
     return;
   }
-
+  if ( ic ) {}
 }
 
-void LHCb::OnlineMessageSvc::setupThreshold(Property& prop) {
+void OnlineMessageSvc::setupThreshold(Property& prop) {
   int ic = 0;
   if (prop.name() == "setFatal") {
     ic = MSG::FATAL;
@@ -149,11 +154,11 @@ void LHCb::OnlineMessageSvc::setupThreshold(Property& prop) {
 }
 
 /// Finalize Service
-StatusCode LHCb::OnlineMessageSvc::finalize() {
+StatusCode OnlineMessageSvc::finalize() {
   return StatusCode::SUCCESS;
 }
 
-bool LHCb::OnlineMessageSvc::i_reportMessage(const Message& msg)  {
+bool OnlineMessageSvc::i_reportMessage(const Message& msg)  {
   bool reported = false;
   int key = msg.getType();
   StreamMap::const_iterator first = m_streamMap.lower_bound( key );
@@ -179,7 +184,12 @@ bool LHCb::OnlineMessageSvc::i_reportMessage(const Message& msg)  {
 }
 
 /// Implementation of IMessageSvc::reportMessage()
-void LHCb::OnlineMessageSvc::reportMessage(const Message& msg, int lvl) {  
+void OnlineMessageSvc::reportMessage(const Message& msg, int lvl) {
+  return i_reportMessageEx(msg,lvl);
+}
+
+/// Implementation of the message reporting
+void OnlineMessageSvc::i_reportMessageEx(const Message& msg, int lvl) {
   bool report_always = m_printAlways;
   bool reported = i_reportMessage(msg);
   if ( lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
@@ -189,23 +199,24 @@ void LHCb::OnlineMessageSvc::reportMessage(const Message& msg, int lvl) {
     this->report(lvl, msg.getSource(), msg.getMessage());
 }
 
+
 /// Dispatch a message to the relevant streams.
-void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
+void OnlineMessageSvc::reportMessage(const Message& msg)  {
   reportMessage(msg,msg.getType());
 }
 
 /// Dispatch a message to the relevant streams.
-void LHCb::OnlineMessageSvc::reportMessage(const char* src, int type, const char* msg)  {
+void OnlineMessageSvc::reportMessage(const char* src, int type, const char* msg)  {
   reportMessage( Message( src, type, msg) );
 }
 
 /// Dispatch a message to the relevant streams.
-void LHCb::OnlineMessageSvc::reportMessage(const string& src, int type, const string& msg) {
+void OnlineMessageSvc::reportMessage(const string& src, int type, const string& msg) {
   reportMessage( Message( src, type, msg) );
 }
 
 /// Find a message for a given status code and dispatch it
-void LHCb::OnlineMessageSvc::reportMessage(const StatusCode& key, const string& source)  {  
+void OnlineMessageSvc::reportMessage(const StatusCode& key, const string& source)  {  
   MessageMap::const_iterator first = m_messageMap.lower_bound( key );
   if ( first != m_messageMap.end() ) {
     MessageMap::const_iterator last = m_messageMap.upper_bound( key );
@@ -232,7 +243,7 @@ void LHCb::OnlineMessageSvc::reportMessage(const StatusCode& key, const string& 
 }
 
 /// Insert a stream for a message type.
-void LHCb::OnlineMessageSvc::insertStream (int key,
+void OnlineMessageSvc::insertStream (int key,
                                      const string& name,
                                      ostream *stream)
 {
@@ -241,17 +252,17 @@ void LHCb::OnlineMessageSvc::insertStream (int key,
 }
 
 /// Erase all the streams for all the message types.
-void LHCb::OnlineMessageSvc::eraseStream()  {
+void OnlineMessageSvc::eraseStream()  {
   m_streamMap.erase( m_streamMap.begin(), m_streamMap.end() );
 }
 
 /// Erase all the streams for a message type.
-void LHCb::OnlineMessageSvc::eraseStream( int message_type )  {
+void OnlineMessageSvc::eraseStream( int message_type )  {
   m_streamMap.erase( message_type );
 }
 
 /// Erase one stream for a message type.
-void LHCb::OnlineMessageSvc::eraseStream( int key, ostream* stream )   {
+void OnlineMessageSvc::eraseStream( int key, ostream* stream )   {
   if ( 0 != stream )    {
     bool changed = true;
     while( changed ) {
@@ -270,7 +281,7 @@ void LHCb::OnlineMessageSvc::eraseStream( int key, ostream* stream )   {
 }
 
 /// Erase one stream for all message types.
-void LHCb::OnlineMessageSvc::eraseStream( ostream* stream )    {
+void OnlineMessageSvc::eraseStream( ostream* stream )    {
   if ( 0 != stream )    {
     bool changed = true;
     while( changed ) {
@@ -288,22 +299,22 @@ void LHCb::OnlineMessageSvc::eraseStream( ostream* stream )    {
 }
 
 /// Insert a message for a status code.
-void LHCb::OnlineMessageSvc::insertMessage( const StatusCode& key, const Message& msg ) {
+void OnlineMessageSvc::insertMessage( const StatusCode& key, const Message& msg ) {
   m_messageMap.insert( MessageMap::value_type( key, msg ) );
 }
 
 /// Erase all the messages for all the status codes.
-void LHCb::OnlineMessageSvc::eraseMessage() {
+void OnlineMessageSvc::eraseMessage() {
   m_messageMap.erase( m_messageMap.begin(), m_messageMap.end() );
 }
 
 /// Erase all the messages for a status codes.
-void LHCb::OnlineMessageSvc::eraseMessage( const StatusCode& key )  {
+void OnlineMessageSvc::eraseMessage( const StatusCode& key )  {
   m_messageMap.erase( key );
 }
 
 /// Erase one message for a status codes.
-void LHCb::OnlineMessageSvc::eraseMessage( const StatusCode& key, const Message& msg )  {
+void OnlineMessageSvc::eraseMessage( const StatusCode& key, const Message& msg )  {
   bool changed = true;
   while( changed ) {
     changed = false;
@@ -321,7 +332,7 @@ void LHCb::OnlineMessageSvc::eraseMessage( const StatusCode& key, const Message&
 }
 
 // ---------------------------------------------------------------------------
-StatusCode LHCb::OnlineMessageSvc::queryInterface(const InterfaceID& riid, void** ppvInterface) {
+StatusCode OnlineMessageSvc::queryInterface(const InterfaceID& riid, void** ppvInterface) {
   if ( IMessageSvc::interfaceID() == riid )  {
     *ppvInterface = (IMessageSvc*)this;
     addRef();
@@ -331,23 +342,23 @@ StatusCode LHCb::OnlineMessageSvc::queryInterface(const InterfaceID& riid, void*
 }
 
 // ---------------------------------------------------------------------------
-int LHCb::OnlineMessageSvc::outputLevel()   const {
+int OnlineMessageSvc::outputLevel()   const {
   return m_outputLevel;
 }
 
 // ---------------------------------------------------------------------------
-int LHCb::OnlineMessageSvc::outputLevel( const string& source )   const {
+int OnlineMessageSvc::outputLevel( const string& source )   const {
   ThresholdMap::const_iterator it = m_thresholdMap.find( source );
   return it == m_thresholdMap.end() ? int(m_outputLevel) : (*it).second;
 }
 
 // ---------------------------------------------------------------------------
-void LHCb::OnlineMessageSvc::setOutputLevel(int new_level)    {
+void OnlineMessageSvc::setOutputLevel(int new_level)    {
   m_outputLevel = new_level;
 }
 
 // ---------------------------------------------------------------------------
-void LHCb::OnlineMessageSvc::setOutputLevel(const string& source, int level)    {
+void OnlineMessageSvc::setOutputLevel(const string& source, int level)    {
   pair<ThresholdMap::iterator, bool> p;
   p = m_thresholdMap.insert(ThresholdMap::value_type( source, level) );
   if( p.second == false ) {
@@ -358,6 +369,6 @@ void LHCb::OnlineMessageSvc::setOutputLevel(const string& source, int level)    
 }
 
 // ---------------------------------------------------------------------------
-int LHCb::OnlineMessageSvc::messageCount( MSG::Level lvl ) const  {
+int OnlineMessageSvc::messageCount( MSG::Level lvl ) const  {
   return (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ? m_msgCount[lvl] : -1;
 }

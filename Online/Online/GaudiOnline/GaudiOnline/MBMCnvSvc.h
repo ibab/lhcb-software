@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.5 2006-12-07 09:36:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMCnvSvc.h,v 1.6 2010-09-21 14:28:24 frankb Exp $
 //	====================================================================
 //  MBMCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -58,6 +58,11 @@ namespace LHCb    {
 
     /// Read raw banks
     virtual StatusCode readRawBanks(void* ioDesc, std::vector<RawBank*>& banks, long long& offset);
+
+    /// RawDataCnvSvc overload: Read raw banks
+    virtual StatusCode readRawBanks(RawDataAddress* pAddr,MDFDescriptor& data)
+    {  return this->RawDataCnvSvc::readRawBanks(pAddr,data);                      }
+
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_MBMCNVSVC_H

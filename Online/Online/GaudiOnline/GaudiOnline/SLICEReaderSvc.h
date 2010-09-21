@@ -152,7 +152,7 @@ namespace LHCb  {
 
   private:
   };
-};      // End namespace LHCb
+}      // End namespace LHCb
 
 #endif //  GAUDIONLINE_SLICEREADERSVC_H
 

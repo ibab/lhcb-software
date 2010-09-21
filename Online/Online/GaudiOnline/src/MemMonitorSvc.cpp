@@ -18,7 +18,7 @@ using namespace std;
 enum { OFLW = IAxis::OVERFLOW_BIN, UFLW = IAxis::UNDERFLOW_BIN };
 
 // Factory for instantiation of service objects
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitorSvc);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitorSvc)
 
 MonitoringEngine::Histogram::Histogram(const string& nam,IMessageSvc* msg,IHistogram* h)
 : m_messageSvc(msg), m_hist(h)
@@ -83,7 +83,7 @@ void MonitoringEngine::Histogram::fill_2d()  {
   *p++ = Buffer::value_type(h2->binHeight(UFLW,OFLW));
   for(i=0; i<nx; i++) {
     *p++ = Buffer::value_type(h2->binHeight(i,UFLW));
-    for (int j=0; j<ny; j++) 
+    for (j=0; j<ny; j++) 
       *p++= Buffer::value_type(h2->binHeight(i,i));
     *p++= Buffer::value_type(h2->binHeight(i,OFLW));
   }

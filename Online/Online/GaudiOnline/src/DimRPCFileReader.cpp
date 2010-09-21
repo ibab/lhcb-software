@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.28 2010-02-18 18:20:22 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.29 2010-09-21 14:28:25 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -20,7 +20,7 @@ extern "C" {
 }
 
 // Instantiation of a static factory class used by clients to create instances of this service
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimRPCFileReader);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimRPCFileReader)
 
 using namespace LHCb;
 

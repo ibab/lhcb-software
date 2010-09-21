@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.5 2007-10-29 14:33:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.6 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  MDFSender.cpp
 //  --------------------------------------------------------------------
@@ -14,9 +14,6 @@
 #include "WT/wtdef.h"
 
 #include <cmath>
-
-#include "GaudiKernel/AlgFactory.h"
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFSender);
 
 /// Standard algorithm constructor
 LHCb::MDFSender::MDFSender(const std::string& nam, ISvcLocator* pSvc)
@@ -102,3 +99,7 @@ StatusCode LHCb::MDFSender::writeBuffer(void* const /* ioDesc */, const void* da
   }
   return StatusCode::SUCCESS;
 }
+
+#include "GaudiKernel/AlgFactory.h"
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFSender)
+

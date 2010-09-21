@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.8 2009-03-03 12:04:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.9 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  MBMMonitorSvc.cpp
 //  --------------------------------------------------------------------
@@ -82,12 +82,12 @@ void LHCb::MBMMonitorSvc::Client::read(MBMDescriptor* /* dsc */ , const USER& us
   partid      = us.partid;
   if ( us.ev_produced>0 || us.get_sp_calls>0 )   {
     proc.type  = 1<<0;
-    proc.state = us.p_state;
+    proc.state = char(us.p_state);
     events     = us.ev_produced;
   }
   else if ( us.ev_actual>0 || us.get_ev_calls>0 || us.n_req>0 ) {
     proc.type  = 1<<1;
-    proc.state = us.c_state;
+    proc.state = char(us.c_state);
     events = us.ev_seen;
     for (int k=0; k<us.n_req; ++k )  {
       if      ( us.req[k].user_type == BM_REQ_ONE  ) proc.reqs |= 1<<0;

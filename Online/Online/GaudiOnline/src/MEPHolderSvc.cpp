@@ -247,7 +247,7 @@ StatusCode MEPHolderSvc::saveMEP(void* data, size_t length) {
       e.len = target - (char*)e.data;
       // Update header with proper size
       hdr->setSize(e.len-hdrSize);
-      int ret = m_producer->sendEvent();
+      ret = m_producer->sendEvent();
       if ( MBM_NORMAL == ret )   {
 	return StatusCode::SUCCESS;
       }
@@ -373,7 +373,6 @@ StatusCode MEPHolderSvc::run()  {
   }
   catch(const exception& e)  {
     return error("Exception during event processing:"+string(e.what()));
-    return StatusCode::FAILURE;
   }
   catch(...)  {
     return error("Unknown exception during event processing.");

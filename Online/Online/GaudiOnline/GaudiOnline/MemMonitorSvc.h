@@ -90,7 +90,7 @@ namespace LHCb  {
     static const InterfaceID& interfaceID() { return IID_IMonitoringEngine; }
   protected:
     /// Publish single monitoring item identified by owner and name
-    virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var) = 0;
+    virtual void i_publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int typ, const void* var) = 0;
     /// Allocate and initialize publishing area
     virtual StatusCode allocatePubarea()    {  return StatusCode::SUCCESS; }
     /// Deallocate and release publishing area
@@ -114,23 +114,23 @@ namespace LHCb  {
       return Service::queryInterface(riid, ppvIF);
     }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const bool& var)
-    {  publishItem(owner_name,nam,dsc,BOOLEAN,&var);                         }
+    {  i_publishItem(owner_name,nam,dsc,BOOLEAN,&var);                         }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const int& var)
-    {  publishItem(owner_name,nam,dsc,INTEGER,&var);                         }
+    {  i_publishItem(owner_name,nam,dsc,INTEGER,&var);                         }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const long& var)
-    {  publishItem(owner_name,nam,dsc,LONG_INTEGER,&var);                    }
+    {  i_publishItem(owner_name,nam,dsc,LONG_INTEGER,&var);                    }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const float& var)
-    {  publishItem(owner_name,nam,dsc,FLOAT,&var);                           }
+    {  i_publishItem(owner_name,nam,dsc,FLOAT,&var);                           }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const double& var)
-    {  publishItem(owner_name,nam,dsc,DOUBLE,&var);                          }
+    {  i_publishItem(owner_name,nam,dsc,DOUBLE,&var);                          }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const char* var)
-    {  publishItem(owner_name,nam,dsc,NTSTRING,var);                         }
+    {  i_publishItem(owner_name,nam,dsc,NTSTRING,var);                         }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const std::string& var)
-    {  publishItem(owner_name,nam,dsc,STRING,&var);                          }
+    {  i_publishItem(owner_name,nam,dsc,STRING,&var);                          }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const std::pair<double,double>& var)
-    {  publishItem(owner_name,nam,dsc,DOUBLE_PAIR,&var);                     }
+    {  i_publishItem(owner_name,nam,dsc,DOUBLE_PAIR,&var);                     }
     virtual void publishItem(CSTR owner_name, CSTR nam, CSTR dsc, const AIDA::IHistogram* var)
-    {  publishItem(owner_name,nam,dsc,HISTOGRAM,&var);                       }
+    {  i_publishItem(owner_name,nam,dsc,HISTOGRAM,&var);                       }
     /// Unpublish single monitoring item identified by owner and name
     virtual void revokeItem(CSTR owner_name, CSTR nam) = 0;
   };

@@ -19,7 +19,7 @@
 #define ST_NAME_STOPPED     "READY"
 #define ST_NAME_RUNNING     "RUNNING"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM);
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
 
 using namespace LHCb;
 
@@ -145,9 +145,7 @@ StatusCode DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf) {
     return cast_success<DimTaskFSM,IAppMgrUI>(this,ppvIf);
   else if ( iid == IProperty::interfaceID() )
     return m_propertyMgr->queryInterface(iid, ppvIf);
-  else
-    return StatusCode::FAILURE;
-  return StatusCode::SUCCESS;
+  return StatusCode::FAILURE;
 }
 
 StatusCode DimTaskFSM::run()  {
@@ -211,7 +209,7 @@ StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
 }
 
 StatusCode DimTaskFSM::declareState(State new_state)  {
-  m_monitor.state = new_state;
+  m_monitor.state = char(new_state);
   switch(new_state)   {
     case ERROR:
     case ST_ERROR:
@@ -233,7 +231,7 @@ StatusCode DimTaskFSM::declareState(State new_state)  {
 
 /// Declare FSM sub-state
 StatusCode DimTaskFSM::declareSubState(SubState new_state)  {
-  m_monitor.metaState = new_state;
+  m_monitor.metaState = char(new_state);
   switch(new_state)   {
     case SUCCESS_ACTION:
       m_monitor.doneCmd = time(0);

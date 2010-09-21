@@ -40,7 +40,7 @@ namespace LHCb  {
         SocketDataReceiver* p = (SocketDataReceiver*)param;
         std::string source(hdr.name);
         char buff[256];
-        int sc = net_receive(p->m_netPlug,e,buff);
+        sc = net_receive(p->m_netPlug,e,buff);
         if ( sc == NET_SUCCESS )  {
           p->handleSourceRequest(p->receivers().size(),source,source);
         }
@@ -57,17 +57,17 @@ namespace LHCb  {
         SocketDataReceiver* p = (SocketDataReceiver*)param;
         std::string source(hdr.name);
         char* buff = new char[hdr.size];
-        int sc = net_receive(p->m_netPlug,e,buff);
+        sc = net_receive(p->m_netPlug,e,buff);
         if ( sc == NET_SUCCESS )  {
-          RecvEntry* e = p->receiver(source);
-          if ( !e ) {
+          RecvEntry* ent = p->receiver(source);
+          if ( !ent ) {
             // In case the sender did not send the source request: 
             // add data source on the fly....
             p->handleSourceRequest(p->receivers().size(),source,source);
-            e = p->receiver(source);
+            ent = p->receiver(source);
           }
-          if ( e ) {
-            if ( p->handleEventData(*e,buff,hdr.size).isSuccess() ) {
+          if ( ent ) {
+            if ( p->handleEventData(*ent,buff,hdr.size).isSuccess() ) {
               gauditask_task_unlock();
               return;
             }
@@ -125,4 +125,4 @@ namespace LHCb  {
     }
   };
 }
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SocketDataReceiver);
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SocketDataReceiver)

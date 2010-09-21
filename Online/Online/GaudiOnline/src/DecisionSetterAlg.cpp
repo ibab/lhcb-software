@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.17 2008-10-21 16:15:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.18 2010-09-21 14:28:25 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -102,4 +102,4 @@ namespace LHCb  {
 }
 
 #include "GaudiKernel/AlgFactory.h"
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,DecisionSetterAlg);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,DecisionSetterAlg)

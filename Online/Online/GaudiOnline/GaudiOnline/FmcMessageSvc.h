@@ -9,8 +9,7 @@
 namespace LHCb 
 {
   /***************************************************************************/
-  class FmcMessageSvc:public OnlineMessageSvc,virtual public IErrorLogger
-  {
+  class FmcMessageSvc : public OnlineMessageSvc, virtual public IErrorLogger  {
   public:
     /// Default constructor.
     FmcMessageSvc(const std::string& name, ISvcLocator* svcloc);
@@ -22,14 +21,17 @@ namespace LHCb
     virtual StatusCode initialize();
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
-    /// Implementation of IMessageSvc::reportMessage()
-    virtual void reportMessage(const Message& message);
     /// Error logger implementation: report message
     virtual void report(int typ,const std::string& src,const std::string& msg);
     /// Number of dropped messages (in congestion-proof mode)
     virtual int getDroppedN();
     /// True if last messages was dropped (in congestion-proof mode)
     virtual bool isDropped();
+
+  protected:
+    /// Implementation of IMessageSvc::reportMessage()
+    virtual void i_reportMessageEx(const Message& message,int lvl);
+
   private:
     bool m_noDrop;
     StringProperty m_fifoPath;

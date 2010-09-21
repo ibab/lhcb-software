@@ -102,4 +102,5 @@ namespace LHCb  {
     }
   };
 }
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimDataReceiver);
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimDataReceiver)

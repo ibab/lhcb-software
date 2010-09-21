@@ -1,4 +1,4 @@
-// $Id: DimMessageSvc.cpp,v 1.8 2009-03-05 10:22:12 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.9 2010-09-21 14:28:25 frankb Exp $
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
@@ -86,7 +86,7 @@ void LHCb::DimMessageSvc::report(int typ, const std::string& src, const std::str
 }
 
 /// Dispatch a message to the relevant streams.
-void LHCb::DimMessageSvc::reportMessage( const Message& msg )    {
+void LHCb::DimMessageSvc::i_reportMessageEx(const Message& msg, int )    {
   i_reportMessage(msg);
   report(msg.getType(), msg.getSource(), msg.getMessage());
 }
