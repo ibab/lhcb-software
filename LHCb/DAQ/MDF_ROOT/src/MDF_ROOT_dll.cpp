@@ -27,7 +27,9 @@ static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #include <map>
 #include <iostream>
 namespace {
+#if 0
 
+  /// This is no longer needed, since now these TFile properties are accessible
   struct MyFile : public TFile {
     Long64_t offset() const { 
       const TFile* f = this;
@@ -40,7 +42,7 @@ namespace {
     }
     Long64_t aoffset() const { return this->fArchiveOffset; }
   };
-
+#endif
   typedef std::map<int,TFile*> FileMap;
   FileMap& fileMap() {
     static FileMap s_fileMap;
