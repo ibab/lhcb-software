@@ -40,8 +40,8 @@ StdLooseDplus2KPiPi.DaughtersCuts = {
 #Need an upper mass window of 100 MeV for background estimation
 #and a lower mass window of 200 to catch the D+ and Ds
 
-StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV) & (ADOCACHI2('')<100)"
-StdLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 ) & (M < 2070.*MeV) " 
+StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV) & (ADOCACHI2CUT(50, ''))"
+StdLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2) < 30 ) & (M < 2070.*MeV) " 
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDplus2KPiPi )
@@ -81,9 +81,9 @@ StdLooseDplus2hhh.CombinationCut = """(
                                       in_range(1769*MeV, mKpipi     , 2069 * MeV) | 
                                       in_range(1769*MeV, mKKpi      , 2069 * MeV) | 
                                       in_range(1769*MeV, mKpipiDCS  , 2069 * MeV)
-                                      ) & (APT>1.*GeV) & (ADOCACHI2('') < 100)
+                                      ) & (APT>1.*GeV) & (ADOCACHI2CUT(50, ''))
                                     """
-StdLooseDplus2hhh.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 )"
+StdLooseDplus2hhh.MotherCut = "(VFASPF(VCHI2) < 30 )"
 StdLooseDplus2hhh.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+' , 'pi+' ) " ,
                                   "mKpipi  = AWM ('K-'   , 'pi+', 'pi+' ) " , 
                                   "mKKpi   = AWM ('K-'   , 'K+' , 'pi+'  ) " , 

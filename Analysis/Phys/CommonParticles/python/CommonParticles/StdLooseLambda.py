@@ -35,7 +35,7 @@ StdLooseLambdaLL.DaughtersCuts = {
     "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)"
     } 
 
-StdLooseLambdaLL.CombinationCut = "(ADAMASS('Lambda0')<50*MeV) & (ADOCACHI2('')<30)"
+StdLooseLambdaLL.CombinationCut = "(ADAMASS('Lambda0')<50*MeV) & (ADOCACHI2CUT(40, ''))"
 StdLooseLambdaLL.MotherCut = "(ADMASS('Lambda0')<35*MeV) & (VFASPF(VCHI2)<30)"
 
 ## configure Data-On-Demand service 
@@ -55,7 +55,7 @@ StdLooseLambdaDD.DaughtersCuts = {
     "p+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"
     } 
 
-StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV) & (ADOCACHI2('')<30)"
+StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV) & (ADOCACHI2CUT(30, ''))"
 StdLooseLambdaDD.MotherCut = "(ADMASS('Lambda0')<64*MeV) & (VFASPF(VCHI2)<25)"
 
 ## configure Data-On-Demand service 
