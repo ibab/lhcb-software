@@ -2,7 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$GAUSSROOT/tests/options/Gauss-DEV.py</text>
+    <text>$GAUSSOPTS/Gauss-DEV.py</text>
     <text>$DECFILESROOT/options/30000000.opts</text>
     <text>$LBPYTHIAROOT/options/Pythia.opts</text>	
     <text>$GAUSSOPTS/Gauss-Job.py</text>

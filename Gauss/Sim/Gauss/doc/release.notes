@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Silvia Miglioranzi
+ - Corrected the QMTest gauss-dev.qmt to pick up the $GAUSSOPTS/Gauss-DEV.py 
+   (latest tags).
+
 !========================= Gauss v38r8 2010-09-13 ============================
 ! 2010-09-13 - Gloria CORTI
  - Use latest SIMCOND tags for DEV for 2010 data
