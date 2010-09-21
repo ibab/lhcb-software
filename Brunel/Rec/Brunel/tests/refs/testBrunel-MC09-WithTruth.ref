@@ -68,6 +68,7 @@
 # |-DataType     = 'MC09'  (default: '')
 # |-Histograms   = 'Expert'  (default: 'OfflineFull')
 # |-OutputLevel  = 3
+# |-Simulation   = True  (default: False)
 # |-Context      = 'Offline'
 # |-MoniSequence = None
 # |-CheckEnabled = True  (default: False)
@@ -81,8 +82,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v37r3
-                                          running on volhcb27.cern.ch on Mon Sep 20 10:41:51 2010
+                                                   Welcome to Brunel version v37r7
+                                          running on volhcb27.cern.ch on Tue Sep 21 17:04:27 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -895,8 +896,8 @@ CaloPIDsChecker      INFO Member list: CaloPIDsChecker/PIDeEcalChecker, CaloPIDs
 CaloPhotonChecker    INFO Photon/Pi0 particle properties locatlized.
 CheckPROTOSeq        INFO Member list: ChargedProtoParticleTupleAlg/ChargedProtoTuple, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
-OutputDSTSeq         INFO Member list: TrackToDST, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, GaudiSequencer/PackDST, with context 'Offline'
-PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuonTracks, GaudiSequencer/PackingChecks, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller, with context 'Offline'
+OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST, with context 'Offline'
+PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuonTracks, GaudiSequencer/PackingChecks, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller, with context 'Offline'
 PackRichPIDs         INFO Input 'Rec/Rich/PIDs' Output 'pRec/Rich/PIDs'
 PackMuonPIDs         INFO Input 'Rec/Muon/MuonPID' Output 'pRec/Muon/MuonPID'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
@@ -1414,7 +1415,7 @@ BrunelInit.Brun...SUCCESS Booked 4 Histogram(s) : 1D=4
 BrunelInit.Brun...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Delta Memory/MB"                               |         9 |      0.604 |   0.067111 |    0.14141 |      0.0000 |     0.44000 |
- | "Total Memory/MB"                               |        10 |   10370.38 |     1037.0 |    0.17710 |      1036.6 |      1037.2 |
+ | "Total Memory/MB"                               |        10 |   11023.34 |     1102.3 |    0.17710 |      1101.9 |      1102.5 |
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0xDC09------------------
 ToolSvc.L0DUCon...WARNING The configuration 0xDC09 DOES NOT match the hardware limitations
 ToolSvc.L0DUCon...   INFO - Usage : Channels [28.1% ]  |  Conditions [7.8% ]; max/type [25.0% ]; order : SWAP (forced) ; reported  : 10/10
@@ -1427,38 +1428,38 @@ TimingAuditor.T...   INFO ------------------------------------------------------
 TimingAuditor.T...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |    12.998 |    18.970 |    3.964     110.6 |      10 |     0.190 |
-TimingAuditor.T...   INFO  BrunelSequencer              |     3.699 |     4.682 |    2.264      21.9 |      10 |     0.047 |
-TimingAuditor.T...   INFO   Init                        |     0.400 |     0.483 |    0.205       2.4 |      10 |     0.005 |
-TimingAuditor.T...   INFO    InitReprocSeq              |     0.000 |     0.012 |    0.007       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO    InitBrunelSeq              |     0.300 |     0.439 |    0.176       2.3 |      10 |     0.004 |
-TimingAuditor.T...   INFO     BrunelInit                |     0.300 |     0.376 |    0.126       2.1 |      10 |     0.004 |
-TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.010 |    0.008       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO     BrunelBankKiller          |     0.000 |     0.018 |    0.010       0.1 |      10 |     0.000 |
-TimingAuditor.T...   INFO   PhysicsSeq                  |     3.299 |     4.160 |    2.017      19.3 |      10 |     0.042 |
-TimingAuditor.T...   INFO    CaloBanksHandler           |     2.200 |     2.538 |    1.760       5.8 |      10 |     0.025 |
-TimingAuditor.T...   INFO     PrsBanksHandler           |     0.900 |     1.003 |    0.547       3.8 |      10 |     0.010 |
-TimingAuditor.T...   INFO      PrsCheckBanks            |     0.100 |     0.028 |    0.013       0.1 |      10 |     0.000 |
-TimingAuditor.T...   INFO      PrsADCs                  |     0.200 |     0.449 |    0.156       2.6 |      10 |     0.004 |
-TimingAuditor.T...   INFO      PrsL0Bit                 |     0.200 |     0.156 |    0.125       0.3 |      10 |     0.002 |
-TimingAuditor.T...   INFO      SpdL0Bit                 |     0.200 |     0.155 |    0.121       0.2 |      10 |     0.002 |
-TimingAuditor.T...   INFO      PrsSpdFillRawBuffer      |     0.100 |     0.112 |    0.049       0.5 |      10 |     0.001 |
-TimingAuditor.T...   INFO      RemovePrsPackedBanks     |     0.000 |     0.036 |    0.021       0.1 |      10 |     0.000 |
-TimingAuditor.T...   INFO     EcalBanksHandler          |     1.000 |     1.072 |    0.787       1.5 |      10 |     0.011 |
-TimingAuditor.T...   INFO      EcalCheckBanks           |     0.000 |     0.016 |    0.013       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO      EcalADCs                 |     0.500 |     0.604 |    0.442       0.9 |      10 |     0.006 |
-TimingAuditor.T...   INFO      EcalTrigFromRaw          |     0.400 |     0.324 |    0.213       0.5 |      10 |     0.003 |
-TimingAuditor.T...   INFO      EcalFillRawBuffer        |     0.000 |     0.042 |    0.021       0.2 |      10 |     0.000 |
-TimingAuditor.T...   INFO      RemoveEcalPackedBanks    |     0.000 |     0.032 |    0.029       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO     HcalBanksHandler          |     0.200 |     0.432 |    0.361       0.6 |      10 |     0.004 |
-TimingAuditor.T...   INFO      HcalCheckBanks           |     0.000 |     0.015 |    0.013       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO      HcalADCs                 |     0.100 |     0.181 |    0.146       0.3 |      10 |     0.002 |
-TimingAuditor.T...   INFO      HcalTrigFromRaw          |     0.000 |     0.131 |    0.107       0.2 |      10 |     0.001 |
-TimingAuditor.T...   INFO      HcalFillRawBuffer        |     0.100 |     0.028 |    0.020       0.1 |      10 |     0.000 |
-TimingAuditor.T...   INFO      RemoveHcalPackedBanks    |     0.000 |     0.022 |    0.020       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO    L0TriggerSeq               |     1.100 |     1.599 |    0.236      13.5 |      10 |     0.016 |
-TimingAuditor.T...   INFO     L0DUFromRaw               |     1.000 |     1.528 |    0.189      13.3 |      10 |     0.015 |
-TimingAuditor.T...   INFO     L0Filter                  |     0.000 |     0.041 |    0.021       0.2 |      10 |     0.000 |
+TimingAuditor.T...   INFO EVENT LOOP                    |    13.598 |    19.824 |    4.664     124.0 |      10 |     0.198 |
+TimingAuditor.T...   INFO  BrunelSequencer              |     3.999 |     5.940 |    2.554      32.7 |      10 |     0.059 |
+TimingAuditor.T...   INFO   Init                        |     0.500 |     0.488 |    0.245       2.3 |      10 |     0.005 |
+TimingAuditor.T...   INFO    InitReprocSeq              |     0.000 |     0.012 |    0.009       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO    InitBrunelSeq              |     0.300 |     0.444 |    0.210       2.2 |      10 |     0.004 |
+TimingAuditor.T...   INFO     BrunelInit                |     0.300 |     0.377 |    0.149       2.1 |      10 |     0.004 |
+TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.010 |    0.009       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO     BrunelBankKiller          |     0.000 |     0.019 |    0.012       0.1 |      10 |     0.000 |
+TimingAuditor.T...   INFO   PhysicsSeq                  |     3.499 |     5.413 |    2.275      30.2 |      10 |     0.054 |
+TimingAuditor.T...   INFO    CaloBanksHandler           |     2.499 |     2.515 |    1.971       4.1 |      10 |     0.025 |
+TimingAuditor.T...   INFO     PrsBanksHandler           |     0.800 |     0.889 |    0.632       2.2 |      10 |     0.009 |
+TimingAuditor.T...   INFO      PrsCheckBanks            |     0.000 |     0.028 |    0.015       0.1 |      10 |     0.000 |
+TimingAuditor.T...   INFO      PrsADCs                  |     0.200 |     0.306 |    0.180       1.0 |      10 |     0.003 |
+TimingAuditor.T...   INFO      PrsL0Bit                 |     0.300 |     0.167 |    0.144       0.2 |      10 |     0.002 |
+TimingAuditor.T...   INFO      SpdL0Bit                 |     0.200 |     0.174 |    0.147       0.2 |      10 |     0.002 |
+TimingAuditor.T...   INFO      PrsSpdFillRawBuffer      |     0.100 |     0.106 |    0.050       0.4 |      10 |     0.001 |
+TimingAuditor.T...   INFO      RemovePrsPackedBanks     |     0.000 |     0.036 |    0.024       0.1 |      10 |     0.000 |
+TimingAuditor.T...   INFO     EcalBanksHandler          |     1.100 |     1.129 |    0.881       1.4 |      10 |     0.011 |
+TimingAuditor.T...   INFO      EcalCheckBanks           |     0.000 |     0.016 |    0.014       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO      EcalADCs                 |     0.600 |     0.623 |    0.500       0.8 |      10 |     0.006 |
+TimingAuditor.T...   INFO      EcalTrigFromRaw          |     0.300 |     0.353 |    0.252       0.4 |      10 |     0.004 |
+TimingAuditor.T...   INFO      EcalFillRawBuffer        |     0.000 |     0.042 |    0.022       0.1 |      10 |     0.000 |
+TimingAuditor.T...   INFO      RemoveEcalPackedBanks    |     0.000 |     0.035 |    0.033       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO     HcalBanksHandler          |     0.600 |     0.463 |    0.417       0.6 |      10 |     0.005 |
+TimingAuditor.T...   INFO      HcalCheckBanks           |     0.000 |     0.017 |    0.015       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO      HcalADCs                 |     0.100 |     0.189 |    0.169       0.2 |      10 |     0.002 |
+TimingAuditor.T...   INFO      HcalTrigFromRaw          |     0.200 |     0.146 |    0.114       0.2 |      10 |     0.001 |
+TimingAuditor.T...   INFO      HcalFillRawBuffer        |     0.000 |     0.027 |    0.024       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO      RemoveHcalPackedBanks    |     0.100 |     0.025 |    0.024       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO    L0TriggerSeq               |     1.000 |     2.872 |    0.273      26.1 |      10 |     0.029 |
+TimingAuditor.T...   INFO     L0DUFromRaw               |     1.000 |     2.802 |    0.220      25.9 |      10 |     0.028 |
+TimingAuditor.T...   INFO     L0Filter                  |     0.000 |     0.038 |    0.024       0.2 |      10 |     0.000 |
 TimingAuditor.T...   INFO    Reco                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoDecodingSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      DecodeVeloClusters       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1884,7 +1885,6 @@ TimingAuditor.T...   INFO      ChargedProtoTuple        |     0.000 |     0.000 
 TimingAuditor.T...   INFO   Output                      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    OutputDSTSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackToDST                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ProtoParticlePIDClean     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     PackDST                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTracks               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackRichPIDs             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1894,6 +1894,7 @@ TimingAuditor.T...   INFO       PackPhotons             |     0.000 |     0.000 
 TimingAuditor.T...   INFO       PackElectrons           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PackMergedPi0s          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       PackSplitPhotons        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ProtoParticlePIDClean    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackChargedProtos        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackNeutralProtos        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1918,8 +1919,8 @@ TimingAuditor.T...   INFO       UnpackMuonTracksTest    |     0.000 |     0.000 
 TimingAuditor.T...   INFO       CheckPackedMuonTracks   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      MCRichDigitSummaryPacker |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      MCRichNodeKiller         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.009 |    0.007       0.0 |      10 |     0.000 |
-TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.011 |    0.007       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.009 |    0.008       0.0 |      10 |     0.000 |
+TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.011 |    0.008       0.0 |      10 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/40(Alg/Node/Total).
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
