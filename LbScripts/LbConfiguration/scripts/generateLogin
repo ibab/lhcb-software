@@ -770,7 +770,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
                                     prodlocation=prodlocation,
                                     offset=1)
         content += """
-  if [[ -o login || -n "$LB_BANNER" ]]; then"""
+  if shopt -q login_shell || [[-n "$LB_BANNER" ]]; then"""
         content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
