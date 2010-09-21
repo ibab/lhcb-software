@@ -4,18 +4,17 @@
 #============================================================================
 package           DaVinciUtils
 version           v1r0
-
-#============================================================================
-# Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc DaVinciUtils
+#============================================================================
+use GaudiPolicy v*
 #============================================================================
 apply_pattern install_more_includes more=DaVinciUtils
 #============================================================================
 # Component library building rule
 #============================================================================
-library          DaVinciUtils    ../src/*.cpp 
+#library          DaVinciUtils    ../src/*.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern linker_library    library=DaVinciKernelLib
+#apply_pattern linker_library    library=DaVinciUtilsLib

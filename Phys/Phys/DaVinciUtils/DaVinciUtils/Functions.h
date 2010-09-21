@@ -20,7 +20,7 @@ namespace Utils
   ///  Is obj in TES
   template <class T>
   inline bool inTES(const T* obj) {
-    return ( 0!=oby && 0!=obj->parent()) ;
+    return ( 0!=obj && 0!=obj->parent()) ;
   }
 
 } // namespace Utils

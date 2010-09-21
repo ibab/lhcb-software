@@ -1,6 +1,9 @@
 #ifndef DAVINCIUTILS_GUARDS_H 
 #define DAVINCIUTILS_GUARDS_H 1
 
+#include "GaudiKernel/DataObject.h"
+#include "DaVinciUtils/Functions.h"
+
 /** @namespace DaVinci::Utils DaVinciUtils/Guards.h
  *  
  *  General helper functions and classes for use in DaVinci.
@@ -88,12 +91,46 @@ namespace Utils
 
     }
   private:
-    OrphanPointerContainerGuard();
+    OrphanPointerContainerGuard()
+    {
+    }
 
   private:
     
     T& m_container;
   };
+
+
+  class DataObjectGuard
+  {
+  public :
+    explicit DataObjectGuard(const DataObject* ptr)
+    :
+      m_ptr(ptr)
+    {
+    }
+
+    ~DataObjectGuard( ) 
+    {
+      if (0==m_ptr->registry() ) {
+        delete m_ptr;
+        m_ptr = 0;
+      }
+
+    }
+
+  
+  private :
+    DataObjectGuard() 
+    {
+    }
+
+  private:
+    const DataObject* m_ptr;
+    
+  };
+  
+    
  
 } // namespace Utils
   
