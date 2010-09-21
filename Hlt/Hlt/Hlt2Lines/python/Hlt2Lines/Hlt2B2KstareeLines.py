@@ -130,7 +130,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                     , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                     , InputLocations = [Electrons]
                                     , DaughtersCuts = {"e+" : "(PT> %(RobustElectronPT)s *MeV) & (PIDe>%(RobustElectronPIDe)s)" % self.getProps()}
-                                    , MotherCut = "(VFASPF(VCHI2/VDOF)< %(RobusteeVertexCHI2)s)" % self.getProps()
+                                    , MotherCut = "(VFASPF(VCHI2PDOF)< %(RobusteeVertexCHI2)s)" % self.getProps()
                                     , InputPrimaryVertices = "None"
                                     , UseP2PVRelations = False
                                     )	
@@ -141,7 +141,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                      , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                      , InputLocations = [BiKalmanFittedElectrons]
                                      , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
-                                     , MotherCut = "(VFASPF(VCHI2/VDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
+                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
                                      )
 	
 	#Make Kstar
@@ -152,7 +152,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                           , DaughtersCuts = {"K+" : "(PT> %(RobustKaonPT)s *MeV) & (BPVIPCHI2()> %(RobustKaonIPCHI2)s )" % self.getProps()
                                             ,"pi-": "(PT> %(RobustPionPT)s *MeV) & (BPVIPCHI2()> %(RobustPionIPCHI2)s )" % self.getProps()}
                           , CombinationCut =  "(ADAMASS('K*(892)0')< %(RobustKstarMassWindow)s *MeV)" % self.getProps()
-                          , MotherCut = "(VFASPF(VCHI2/VDOF)< %(RobustKstarVertexCHI2)s) & (BPVIPCHI2()> %(RobustKstarIPCHI2)s )" % self.getProps()
+                          , MotherCut = "(VFASPF(VCHI2PDOF)< %(RobustKstarVertexCHI2)s) & (BPVIPCHI2()> %(RobustKstarIPCHI2)s )" % self.getProps()
                           )	
 	
 	
@@ -164,7 +164,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = {"K+" : "(PT> %(KaonPT)s *MeV) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s)" % self.getProps()
                                                   ,"pi-": "(PT> %(PionPT)s *MeV) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s)" % self.getProps()}
                                 , CombinationCut =  "(ADAMASS('K*(892)0')< %(KstarMassWindow)s *MeV)" % self.getProps()
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s) & (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
+                                , MotherCut = "(VFASPF(VCHI2PDOF)< %(KstarVertexCHI2)s) & (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
                                 )	
 	
 	
@@ -173,7 +173,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                              , "CombineB"
                              , DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
                              , CombinationCut = "(ADAMASS('B0')< %(BLargeMassWindow)s *MeV)" % self.getProps()
-                             , MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
+                             , MotherCut = "(VFASPF(VCHI2PDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
                              , InputLocations = [FittedDiElectron, FittedKstar]
                              )
         
@@ -305,7 +305,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                      , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                      , InputLocations = [BiKalmanFittedElectrons]
                                      , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
-                                     , MotherCut = "(VFASPF(VCHI2/VDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
+                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
                                      )
         
 	#Make fitted Kstar
@@ -316,7 +316,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = {"K+" : "(PT> %(KaonPT)s *MeV) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s)" % self.getProps()
                                                   ,"pi-": "(PT> %(PionPT)s *MeV) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s)" % self.getProps()}
                                 , CombinationCut =  "(ADAMASS('K*(892)0')< %(KstarMassWindow)s *MeV)" % self.getProps()
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVertexCHI2)s) &  (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
+                                , MotherCut = "(VFASPF(VCHI2PDOF)< %(KstarVertexCHI2)s) &  (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
                                 )	
 	
 		
@@ -325,7 +325,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 				  , "CombineB"
 				  , DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
                                   , CombinationCut = "(ADAMASS('B0')< %(BLargeMassWindow)s *MeV)" % self.getProps()
-                                  , MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
+                                  , MotherCut = "(VFASPF(VCHI2PDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
 				  , InputLocations = [FittedDiElectron, FittedKstar]
 	)
 

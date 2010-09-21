@@ -365,7 +365,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY1MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY1MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY1MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ BiKalmanFittedElectrons ]
@@ -388,7 +388,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY2MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY2MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY2MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ BiKalmanFittedElectrons ]
@@ -411,7 +411,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY3MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY3MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY3MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ BiKalmanFittedElectrons ]
@@ -433,7 +433,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "Z0 -> e+ e-"
                                , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('ZeePt'))+"*MeV)" + TKQuality ,
                                                    "e-" : "(PT>"+str(self.getProp('ZeePt'))+"*MeV)" + TKQuality }
-                               , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                               , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                , CombinationCut = "(AM>"+str(self.getProp('ZeeMinMass'))+"*MeV) & "\
                                                   "(abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                , InputLocations  = [ BiKalmanFittedElectrons ]
@@ -461,7 +461,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY1MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY1MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY1MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ Electrons ]
@@ -484,7 +484,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY2MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY2MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY2MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ Electrons ]
@@ -507,7 +507,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "Z0 -> e+ e-"
                                  , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('DY3MinPt'))+"*MeV)" + TKQuality ,
                                                      "e-" : "(PT>"+str(self.getProp('DY3MinPt'))+"*MeV)" + TKQuality }
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                  , CombinationCut = "(AM>"+str(self.getProp('DY3MinMass'))+"*MeV)"\
                                                  " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                  , InputLocations  = [ Electrons ]
@@ -529,7 +529,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "Z0 -> e+ e-"
                                , DaughtersCuts = { "e+" : "(PT>"+str(self.getProp('ZeePt'))+"*MeV)" + TKQuality ,
                                                    "e-" : "(PT>"+str(self.getProp('ZeePt'))+"*MeV)" + TKQuality }
-                               , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
+                               , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DiElectronVertexChi2'))+")"
                                , CombinationCut = "(AM>"+str(self.getProp('ZeeMinMass'))+"*MeV) & "\
                                                   "(abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DiElectronDphiMin'))+")"
                                , InputLocations  = [ Electrons ]
@@ -590,7 +590,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectron_ElecPT)s *MeV)"\
                                        " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectron_ElecPIDe)s)"\
                                        " & (MM > %(UnbiasedDiElectron_MinMass)s *MeV)"\
-                                       " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectron_VtxCHI2)s)"\
+                                       " & (VFASPF(VCHI2PDOF) < %(UnbiasedDiElectron_VtxCHI2)s)"\
                                        " & (PT > %(UnbiasedDiElectron_PT)s *MeV)" %self.getProps() 
                                        , InputLocations = [ DiElectron ]
                                        , InputPrimaryVertices = "None"
@@ -623,7 +623,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowMass_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectronLowMass_ElecPIDe)s)"\
                                       " & (MM > %(UnbiasedDiElectronLowMass_MinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronLowMass_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(UnbiasedDiElectronLowMass_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -644,7 +644,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedDiElectronLowPID_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedDiElectronLowPID_ElecPIDe)s)"\
                                       " & (MM > %(UnbiasedDiElectronLowPID_MinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedDiElectronLowPID_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(UnbiasedDiElectronLowPID_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedDiElectronLowPID_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -665,7 +665,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedJpsi2ee_ElecPIDe)s)"\
                                       " & (MM > %(UnbiasedJpsi2ee_MinMass)s *MeV)"\
                                       " & (MM < %(UnbiasedJpsi2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedJpsi2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(UnbiasedJpsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -687,7 +687,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedPsi2ee_ElecPIDe)s)"\
                                       " & (MM > %(UnbiasedPsi2ee_MinMass)s *MeV)"\
                                       " & (MM < %(UnbiasedPsi2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedPsi2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(UnbiasedPsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -710,7 +710,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedB2ee_ElecPIDe)s)"\
                                       " & (MM > %(UnbiasedB2ee_MinMass)s *MeV)"\
                                       " & (MM < %(UnbiasedB2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(UnbiasedB2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(UnbiasedB2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedB2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -769,7 +769,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                          , Code ="(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectron_ElecPT)s *MeV)"\
                                          " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectron_ElecPIDe)s)"\
                                          " & (MM > %(UnbiasedTFDiElectron_MinMass)s *MeV)"\
-                                         " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectron_VtxCHI2)s)"\
+                                         " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectron_VtxCHI2)s)"\
                                          " & (PT > %(UnbiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
                                          , InputLocations = [ TrackFittedDiElectron ]
                                          , InputPrimaryVertices = "None"
@@ -803,7 +803,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowMass_ElecPT)s *MeV)"\
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectronLowMass_ElecPIDe)s)"\
                                         " & (MM > %(UnbiasedTFDiElectronLowMass_MinMass)s *MeV)"\
-                                        " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronLowMass_VtxCHI2)s)"\
+                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectronLowMass_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                         }
                                        , postscale = self.postscale
@@ -824,7 +824,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFDiElectronLowPID_ElecPT)s *MeV)"\
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFDiElectronLowPID_ElecPIDe)s)"\
                                         " & (MM > %(UnbiasedTFDiElectronLowPID_MinMass)s *MeV)"\
-                                        " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFDiElectronLowPID_VtxCHI2)s)"\
+                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFDiElectronLowPID_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFDiElectronLowPID_PT)s *MeV)" %self.getProps() 
                                         }
                                        , postscale = self.postscale
@@ -846,7 +846,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFJpsi2ee_ElecPIDe)s)"\
                                         " & (MM > %(UnbiasedTFJpsi2ee_MinMass)s *MeV)"\
                                         " & (MM < %(UnbiasedTFJpsi2ee_MaxMass)s *MeV)"\
-                                        " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFJpsi2ee_VtxCHI2)s)"\
+                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFJpsi2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
                                         }
                                        , postscale = self.postscale
@@ -868,7 +868,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFPsi2ee_ElecPIDe)s)"\
                                         " & (MM > %(UnbiasedTFPsi2ee_MinMass)s *MeV)"\
                                         " & (MM < %(UnbiasedTFPsi2ee_MaxMass)s *MeV)"\
-                                        " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFPsi2ee_VtxCHI2)s)"\
+                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFPsi2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
                                         }
                                        , postscale = self.postscale
@@ -891,7 +891,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFB2ee_ElecPIDe)s)"\
                                         " & (MM > %(UnbiasedTFB2ee_MinMass)s *MeV)"\
                                         " & (MM < %(UnbiasedTFB2ee_MaxMass)s *MeV)"\
-                                        " & (VFASPF(VCHI2/VDOF) < %(UnbiasedTFB2ee_VtxCHI2)s)"\
+                                        " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFB2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFB2ee_PT)s *MeV)" %self.getProps() 
                                         }
                                        , postscale = self.postscale
@@ -952,7 +952,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                              " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectron_ElecIP)s *mm)"\
                                              " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectron_ElecIPCHI2)s *mm)"\
                                              " & (MM > %(BiasedDiElectron_MinMass)s *MeV)"\
-                                             " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectron_VtxCHI2)s)"\
+                                             " & (VFASPF(VCHI2PDOF) < %(BiasedDiElectron_VtxCHI2)s)"\
                                              " & (PT > %(BiasedDiElectron_PT)s *MeV)" %self.getProps() 
                                              , InputLocations = [ DiElectron ]
                                              )
@@ -988,7 +988,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectronLowMass_ElecIP)s *mm)"\
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectronLowMass_ElecIPCHI2)s *mm)"\
                                     " & (MM > %(BiasedDiElectronLowMass_MinMass)s *MeV)"\
-                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectronLowMass_VtxCHI2)s)"\
+                                    " & (VFASPF(VCHI2PDOF) < %(BiasedDiElectronLowMass_VtxCHI2)s)"\
                                     " & (PT > %(BiasedDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                     }
                                    , postscale = self.postscale
@@ -1013,7 +1013,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedDiElectronLowPID_ElecIP)s *mm)"\
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedDiElectronLowPID_ElecIPCHI2)s *mm)"\
                                     " & (MM > %(BiasedDiElectronLowPID_MinMass)s *MeV)"\
-                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedDiElectronLowPID_VtxCHI2)s)"\
+                                    " & (VFASPF(VCHI2PDOF) < %(BiasedDiElectronLowPID_VtxCHI2)s)"\
                                     " & (PT > %(BiasedDiElectronLowPID_PT)s *MeV)" %self.getProps() 
                                     }
                                    , postscale = self.postscale
@@ -1038,7 +1038,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedJpsi2ee_ElecIPCHI2)s *mm)"\
                                     " & (MM > %(BiasedJpsi2ee_MinMass)s *MeV)"\
                                     " & (MM < %(BiasedJpsi2ee_MaxMass)s *MeV)"\
-                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedJpsi2ee_VtxCHI2)s)"\
+                                    " & (VFASPF(VCHI2PDOF) < %(BiasedJpsi2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
                                     }
                                    , postscale = self.postscale
@@ -1064,7 +1064,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedPsi2ee_ElecIPCHI2)s *mm)"\
                                     " & (MM > %(BiasedPsi2ee_MinMass)s *MeV)"\
                                     " & (MM < %(BiasedPsi2ee_MaxMass)s *MeV)"\
-                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedPsi2ee_VtxCHI2)s)"\
+                                    " & (VFASPF(VCHI2PDOF) < %(BiasedPsi2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedPsi2ee_PT)s *MeV)" %self.getProps() 
                                     }
                                    , postscale = self.postscale
@@ -1090,7 +1090,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedB2ee_ElecIPCHI2)s *mm)"\
                                     " & (MM > %(BiasedB2ee_MinMass)s *MeV)"\
                                     " & (MM < %(BiasedB2ee_MaxMass)s *MeV)"\
-                                    " & (VFASPF(VCHI2/VDOF) < %(BiasedB2ee_VtxCHI2)s)"\
+                                    " & (VFASPF(VCHI2PDOF) < %(BiasedB2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedB2ee_PT)s *MeV)" %self.getProps() 
                                     }
                                    , postscale = self.postscale
@@ -1149,7 +1149,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectron_ElecIP)s *mm)"\
                                                " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectron_ElecIPCHI2)s *mm)"\
                                                " & (MM > %(BiasedTFDiElectron_MinMass)s *MeV)"\
-                                               " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectron_VtxCHI2)s)"\
+                                               " & (VFASPF(VCHI2PDOF) < %(BiasedTFDiElectron_VtxCHI2)s)"\
                                                " & (PT > %(BiasedTFDiElectron_PT)s *MeV)" %self.getProps() 
                                                , InputLocations = [ TrackFittedDiElectron ]
                                                )
@@ -1185,7 +1185,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectronLowMass_ElecIP)s *mm)"\
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectronLowMass_ElecIPCHI2)s *mm)"\
                                       " & (MM > %(BiasedTFDiElectronLowMass_MinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectronLowMass_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(BiasedTFDiElectronLowMass_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFDiElectronLowMass_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -1210,7 +1210,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFDiElectronLowPID_ElecIP)s *mm)"\
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFDiElectronLowPID_ElecIPCHI2)s *mm)"\
                                       " & (MM > %(BiasedTFDiElectronLowPID_MinMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFDiElectronLowPID_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(BiasedTFDiElectronLowPID_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFDiElectronLowPID_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -1236,7 +1236,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFJpsi2ee_ElecIPCHI2)s *mm)"\
                                       " & (MM > %(BiasedTFJpsi2ee_MinMass)s *MeV)"\
                                       " & (MM < %(BiasedTFJpsi2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFJpsi2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(BiasedTFJpsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -1262,7 +1262,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFPsi2ee_ElecIPCHI2)s *mm)"\
                                       " & (MM > %(BiasedTFPsi2ee_MinMass)s *MeV)"\
                                       " & (MM < %(BiasedTFPsi2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFPsi2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(BiasedTFPsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale
@@ -1288,7 +1288,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFB2ee_ElecIPCHI2)s *mm)"\
                                       " & (MM > %(BiasedTFB2ee_MinMass)s *MeV)"\
                                       " & (MM < %(BiasedTFB2ee_MaxMass)s *MeV)"\
-                                      " & (VFASPF(VCHI2/VDOF) < %(BiasedTFB2ee_VtxCHI2)s)"\
+                                      " & (VFASPF(VCHI2PDOF) < %(BiasedTFB2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFB2ee_PT)s *MeV)" %self.getProps() 
                                       }
                                      , postscale = self.postscale

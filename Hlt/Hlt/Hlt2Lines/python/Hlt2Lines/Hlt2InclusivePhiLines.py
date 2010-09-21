@@ -95,7 +95,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>%(TFKaonIPS)s)"%self.getProps()
         TfPhiMassCut = "(ADAMASS('phi(1020)')<%(TFPhiMassWin)s*MeV)"%self.getProps()
         TfPhiMassCutSB = "(ADAMASS('phi(1020)')<%(TFPhiMassWinSB)s*MeV)"%self.getProps()
-        TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<%(TFPhiVCHI2)s)"%self.getProps()
+        TfPhiVchi2Cut = "(VFASPF(VCHI2PDOF)<%(TFPhiVCHI2)s)"%self.getProps()
         TfPhiPtCut = "(PT>%(TFPhiPT)s*MeV)"%self.getProps()
         Hlt2InclusivePhiTF = Hlt2Member( CombineParticles
                                          , "TFCombine"

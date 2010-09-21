@@ -64,7 +64,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         ProtonCut = "(PT> %(ProtonPT)s *MeV)" % self.getProps()
         CombCut = "(%(CombLowerMass)s *MeV < AM) & (AM < %(CombUpperMass)s *MeV)" % self.getProps()
-        MomCut = "(VFASPF(VCHI2/VDOF)< %(VtxCHI2)s) & (%(LowerMass)s *MeV < MM) & (MM < %(UpperMass)s *MeV)" % self.getProps()
+        MomCut = "(VFASPF(VCHI2PDOF)< %(VtxCHI2)s) & (%(LowerMass)s *MeV < MM) & (MM < %(UpperMass)s *MeV)" % self.getProps()
 
         from Hlt2SharedParticles.BasicParticles import NoCutsProtons
         Combine = Hlt2Member( CombineParticles
@@ -83,7 +83,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         TFProtonCut = "(PT> %(TFProtonPT)s *MeV) & (TRCHI2DOF < %(TFProtonTrkChi2)s)" % self.getProps()
         TFCombCut = "(%(TFCombLowerMass)s *MeV < AM) & (AM < %(TFCombUpperMass)s *MeV)" % self.getProps()
-        TFMomCut = "(VFASPF(VCHI2/VDOF)< %(TFVtxCHI2)s) & (%(TFLowerMass)s *MeV < MM) & (MM < %(TFUpperMass)s *MeV)" % self.getProps()
+        TFMomCut = "(VFASPF(VCHI2PDOF)< %(TFVtxCHI2)s) & (%(TFLowerMass)s *MeV < MM) & (MM < %(TFUpperMass)s *MeV)" % self.getProps()
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons
         TFCombine = Hlt2Member( CombineParticles

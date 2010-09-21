@@ -77,14 +77,14 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         ### dilepton mass cut 
         llcombcut   = "(AM < %(SignalBUpperMass)s *MeV) & (APT > %(DiLeptonPT)s)" % self.getProps()
         #
-        ### dilepton cut (VFASPF(VCHI2/VDOF)<9)
-        llcut   = "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s ) & (BPVIPCHI2() > %(DiLeptonIPCHI2)s )"  % self.getProps()
+        ### dilepton cut (VFASPF(VCHI2PDOF)<9)
+        llcut   = "(VFASPF(VCHI2PDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s ) & (BPVIPCHI2() > %(DiLeptonIPCHI2)s )"  % self.getProps()
         # 
         ### B mass cuts : Hard-coded as we _need_ the full B mass window for the final fit. Nobody dare touch that!
         combcut = "(ADAMASS('B0')<600*MeV)"
         # 
-        ### B candidate cuts : ((VFASPF(VCHI2/VDOF)<3) & (BPVIPCHI2()<25) & (BPVDIRA>0.9998) & (BPVVDCHI2>50))
-        bcut   = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2> %(BFlightCHI2)s ))" % self.getProps()
+        ### B candidate cuts : ((VFASPF(VCHI2PDOF)<3) & (BPVIPCHI2()<25) & (BPVDIRA>0.9998) & (BPVVDCHI2>50))
+        bcut   = "((VFASPF(VCHI2PDOF)< %(BVertexCHI2)s ) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2> %(BFlightCHI2)s ))" % self.getProps()
 
         ###################################################################
         #

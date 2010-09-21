@@ -139,7 +139,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                       "pi-" : "(PT>"+str(self.getProp('DYeh1trPt'))+"*MeV)" + TKQuality }
                                   , CombinationCut = "(AM >"+str(self.getProp('DYeh1MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
-                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
+                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
                                   , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line1 = Hlt2Line( 'DYeh1'
@@ -158,7 +158,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                       "pi-" : "(PT>"+str(self.getProp('DYeh2trPt'))+"*MeV)" + TKQuality }
                                   , CombinationCut = "(AM>"+str(self.getProp('DYeh2MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
-                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
+                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
                                   , InputLocations  = [ BiKalmanFittedElectrons , NoCutsPions ]
                                   )
         line2 = Hlt2Line( 'DYeh2'
@@ -203,7 +203,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                       "pi-" : "(PT>"+str(self.getProp('DYeh1trPt'))+"*MeV)" + TKQuality }
                                   , CombinationCut = "(AM >"+str(self.getProp('DYeh1MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
-                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
+                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
                                   , InputLocations  = [ Electrons , NoCutsPions ]
                                   )
         line1U = Hlt2Line( 'DYeh1Unfitted'
@@ -220,7 +220,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                       "pi-" : "(PT>"+str(self.getProp('DYeh2trPt'))+"*MeV)" + TKQuality }
                                   , CombinationCut = "(AM>"+str(self.getProp('DYeh2MinMass'))+"*MeV)"\
                                   " & (abs(ACHILD(PHI,1)-ACHILD(PHI,2))>"+str(self.getProp('DYehDphiMin'))+")"
-                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
+                                  , MotherCut = "(VFASPF(VCHI2PDOF)<"+str(self.getProp('DYehVertexChi2'))+")"
                                   , InputLocations  = [ Electrons , NoCutsPions ]
                                   )
         line2U = Hlt2Line( 'DYeh2Unfitted'
@@ -326,7 +326,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
         CombCut = "AALL"
         
-        MomCut = "(VFASPF(VCHI2/VDOF)< %(ElectronPlusTrack_VtxCHI2)s )" %self.getProps()
+        MomCut = "(VFASPF(VCHI2PDOF)< %(ElectronPlusTrack_VtxCHI2)s )" %self.getProps()
         
         CombineElectronTrack = Hlt2Member( CombineParticles # type
                                            , "CombineElectronTrack"
@@ -445,7 +445,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         CombCut = "AALL"
         
-        MomCut = "(VFASPF(VCHI2/VDOF)< %(TFElectronPlusTrack_VtxCHI2)s )" %self.getProps()
+        MomCut = "(VFASPF(VCHI2PDOF)< %(TFElectronPlusTrack_VtxCHI2)s )" %self.getProps()
         
         CombineTFElectronTrack = Hlt2Member( CombineParticles # type
                                              , "CombineTFElectronTrack"

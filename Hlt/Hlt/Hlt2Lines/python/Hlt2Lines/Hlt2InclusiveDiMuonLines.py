@@ -117,7 +117,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                    
                                    , CombinationCut = "(AM>%(UnbiasedDiMuonMinMass)s*MeV)"%  self.getProps()  
                                    , MotherCut = "(PT>%(UnbiasedDiMuonPt)s*MeV)"\
-                                   "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps()
+                                   "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps()
                                    , InputPrimaryVertices = "None"
                                    , UseP2PVRelations = False
                                    , InputLocations  = [ BiKalmanFittedMuons ]
@@ -136,7 +136,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                , Code = "(MM>%(UnbiasedDiMuonMinMass)s*MeV)"\
                                " & (PT>%(UnbiasedDiMuonPt)s*MeV)"\
                                " & (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonMuPt)s*MeV) "\
-                               "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps() 
+                               "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonVertexChi2)s )" %  self.getProps() 
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
                                , InputLocations  = [ TrackFittedDiMuon ]
@@ -164,7 +164,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(MM>%(UnbiasedDiMuonLowMinMass)s*MeV)"\
                                  "& (PT>%(UnbiasedDiMuonLowPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonLowMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonLowChi2)s )"%  self.getProps()
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedDiMuonLowChi2)s )"%  self.getProps()
                                  }
                     , postscale = self.postscale
                     )
@@ -178,13 +178,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps()
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps()
                                  , 'PreMonitor' : Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
                                  , 'PostMonitor' :  
                                  Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
                                  +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
-                                 +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","VFASPF(VCHI2/VDOF)",0,25,'JPsiVeterxChi2_out',nbins=100)                           
+                                 +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2PDOF)","VFASPF(VCHI2PDOF)",0,25,'JPsiVeterxChi2_out',nbins=100)                           
             
                                  }
                     , postscale = self.postscale
@@ -203,7 +203,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<%(UnbiasedPsi2SMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedPsi2SPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedPsi2SMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() }
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedPsi2SDecision": 50202 } )
@@ -215,7 +215,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonUnbiasedBmm'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedBmmMinMass)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedBmmVertexChi2)s )"  %  self.getProps() }
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedBmmVertexChi2)s )"  %  self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedBmmDecision":   50203 } )
@@ -229,7 +229,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(UnbiasedJPsiVertexChi2)s )"% self.getProps() }
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"% self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiLowDecision":  50204 } )
@@ -333,7 +333,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTimeT)s*ps)" % self.getProps()
         IPChi2Cut  = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPChi2)s)" % self.getProps()
         TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPTChi2)s)" % self.getProps()
-        VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<%(BiasedVertexChi2)s)" % self.getProps()
+        VertexChi2Cut = "(VFASPF(VCHI2PDOF)<%(BiasedVertexChi2)s)" % self.getProps()
         PVDistChi2Cut  = "(BPVVDCHI2>%(BiasedPVDistanceChi2)s)" % self.getProps()
         PVDistTChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceTChi2)s)" % self.getProps()
         '''
@@ -362,12 +362,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                     , Code = IPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistChi2Cut
                                     , PreMonitor = 
                                     Hlt2MonitorMinMax( "MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))","#chi^{2}(IP#mu)",0,200,'IP_Chi2_in',nbins=100)
-                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_in',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2PDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_in',nbins=100)
                                     +" & "+Hlt2MonitorMinMax( "BPVVDCHI2","#chi^{2}(Dist)",0,500,'Flight_DistanceChi2_in',nbins=100)
                                     , PostMonitor =  
                                     Hlt2MonitorMinMax( "M","M(#mu#mu)",0,6000,'M_out',nbins=25) 
                                     +" & "+Hlt2MonitorMinMax( "MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))","#chi^{2}(#muIP)",0,200,'IP_Chi2_out',nbins=100)
-                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2/VDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_out',nbins=100)
+                                    +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2PDOF)","#chi^{2}/DoF(Vertex)",0,25,'Veter_Chi2_out',nbins=100)
                                     +" & "+Hlt2MonitorMinMax( "BPVVDCHI2","#chi^{2}(Dist)",0,500,'Flight_DistanceChi2_out',nbins=100)
 
                                   )

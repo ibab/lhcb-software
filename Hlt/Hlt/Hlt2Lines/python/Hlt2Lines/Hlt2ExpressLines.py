@@ -196,7 +196,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                                     'pi-' : cocut }
                                 , CombinationCut = "(ADAMASS('J/psi(1S)')<%(ExJPsiTPMassWindow)s*MeV)"%  self.getProps()
                                 , MotherCut = "( " + child1cuts + " | " + child2cuts + " ) "\
-                                " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)s)"%  self.getProps()
+                                " & (VFASPF(VCHI2PDOF)<%(ExJPsiTPVChi2)s)"%  self.getProps()
                                 )
 
       line = Hlt2Line('ExpressJPsiTagProbe'
@@ -357,7 +357,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   , InputLocations = [BiKalmanFittedKaons, BiKalmanFittedPions]
                                   , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)s*MeV)"\
-                                  " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)s)"\
+                                  " & (VFASPF(VCHI2PDOF) < %(ExD0VCHI2)s)"\
                                   " & (PT > %(ExD0Pt)s*MeV)"\
                                   " & (BPVDIRA > %(ExD0BPVDIRA)s)"\
                                   " & (BPVVDCHI2 > %(ExD0BPVVDCHI2)s)"%  self.getProps()
@@ -378,7 +378,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                  , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)s*MeV)"%  self.getProps()
                                  , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)s*MeV)"\
                                  " & (PT > %(ExDStarPt)s*MeV)"\
-                                 " & (VFASPF(VCHI2/VDOF) < %(ExDStarVCHI2)s)"\
+                                 " & (VFASPF(VCHI2PDOF) < %(ExDStarVCHI2)s)"\
                                  " & (M-MAXTREE('D0'==ABSID,M)< %(ExDStarMassDiff)s)"%  self.getProps()
                                  , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)s*MeV)"\
                                                     " & (MIPCHI2DV(PRIMARY)>%(ExDStarPiIPChi2)s) "%  self.getProps()

@@ -226,7 +226,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , InputLocations = [NoCutsKaons]
-                                 , MotherCut = "(M<1100*MeV) & (PT>500*MeV) & (VFASPF(VCHI2/VDOF)<25)"
+                                 , MotherCut = "(M<1100*MeV) & (PT>500*MeV) & (VFASPF(VCHI2PDOF)<25)"
                                  )
         
         # Make the Bs
@@ -277,7 +277,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , InputLocations = [NoCutsKaons]
                                  , CombinationCut = "(AM<1045*MeV) & (APT>1000*MeV)"
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                  )
 
         # Make the Bs
@@ -286,7 +286,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"
                                 , InputLocations  = [HighPtJpsi2MuMu, PhiCombine]
                                 , CombinationCut = "(ADAMASS('B_s0')<300*MeV)"
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)<6)"
+                                , MotherCut = "(VFASPF(VCHI2PDOF)<6)"
                                 )
         
         line = Hlt2Line('Bs2JpsiPhiWide'
@@ -345,7 +345,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         ElCuts = "(PT > %(Bs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
 
         # Jpsi Cuts
-        JpsiCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(Bs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(Bs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
 
         # Make the Jpsiee
         JpsiCombine = Hlt2Member( CombineParticles
@@ -359,7 +359,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                   )
         
         # Phi Cuts
-        PhiCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(Bs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(Bs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+        PhiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(Bs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(Bs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
         
         # Make the phi
         PhiCombine = Hlt2Member( CombineParticles
@@ -372,7 +372,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  )
         
         # Bs Cuts
-        BsCuts = "(VFASPF(VCHI2/VDOF) < %(Bs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(Bs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(Bs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+        BsCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(Bs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(Bs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
 
         # Make the Bs
         BsCombine = Hlt2Member( CombineParticles
@@ -458,7 +458,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         ElCuts = "(PT > %(TFBs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
 
         # Jpsi Cuts
-        JpsiCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(TFBs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(TFBs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
 
         # Make the Jpsiee
         JpsiCombine = Hlt2Member( CombineParticles
@@ -472,7 +472,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                   )
 
         # Phi Cuts
-        PhiCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(TFBs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(TFBs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+        PhiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(TFBs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(TFBs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
 
         # Make the phi
         PhiCombine = Hlt2Member( CombineParticles
@@ -484,7 +484,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  , UseP2PVRelations = False
                                  )
         # Bs Cuts
-        BsCuts = "(VFASPF(VCHI2/VDOF) < %(TFBs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(TFBs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(TFBs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+        BsCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(TFBs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(TFBs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
         
         # Make the Bs
         BsCombine = Hlt2Member( CombineParticles
@@ -555,7 +555,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    , DecayDescriptor = "K*(892)0 -> K+ pi-"
                                    , InputLocations = [NoCutsKaons, NoCutsPions]
                                    , CombinationCut = "(ADAMASS('K*(892)0')<120*MeV) & (APT>1000*MeV)"
-                                   , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                                   , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                    )
         
         # Make the Bd
@@ -564,7 +564,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , DecayDescriptor = "B0 -> J/psi(1S) K*(892)0"
                                 , InputLocations  = [HighPtJpsi2MuMu, KstarCombine]
                                 , CombinationCut = "(ADAMASS('B0')<300*MeV)"
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)<6) & (PT>2000*MeV)"
+                                , MotherCut = "(VFASPF(VCHI2PDOF)<6) & (PT>2000*MeV)"
                                 )
         
         line = Hlt2Line('Bd2JpsiKstarWide'
@@ -603,7 +603,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
                                 , InputLocations  = [HighPtJpsi2MuMu, NoCutsKaons]
                                 , CombinationCut = "(ADAMASS('B+')<300*MeV)"
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)<6)"
+                                , MotherCut = "(VFASPF(VCHI2PDOF)<6)"
                                 , DaughtersCuts = {"K+" : "(PT>1300*MeV)"}
                                 )
         
@@ -643,7 +643,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
-                               , Code = "VFASPF(VCHI2/VDOF)<16 "
+                               , Code = "VFASPF(VCHI2PDOF)<16 "
                                , InputLocations = [ KsLL ]
                                )
 
@@ -651,7 +651,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
-                               , MotherCut = "(VFASPF(VCHI2/VDOF)<55) & (BPVIPCHI2()< 50) "
+                               , MotherCut = "(VFASPF(VCHI2PDOF)<55) & (BPVIPCHI2()< 50) "
                                , InputLocations = ['%FilterJpsi','%FilterKS' ]
                                )
 
@@ -694,7 +694,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
-                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2/VDOF)<25)"
+                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2PDOF)<25)"
                                , InputLocations = ['%FilterJpsi','%FilterKS' ]
                                )
         
@@ -732,7 +732,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
-                               , MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (BPVIPCHI2()< 45)"
+                               , MotherCut = "(VFASPF(VCHI2PDOF)<25) & (BPVIPCHI2()< 45)"
                                , InputLocations = ['%FilterJpsi',KsDD ]
                                )
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
@@ -775,7 +775,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , DecayDescriptor = "B0 -> J/psi(1S) KS0"
                                , CombinationCut = "(ADAMASS('B0')<300*MeV)"
-                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2/VDOF)<20) & (BPVIPCHI2()< 30)"
+                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2PDOF)<20) & (BPVIPCHI2()< 30)"
                                , InputLocations = [filterJpsi,filterKS ]
                                )
 
@@ -826,7 +826,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bc2JpsiMuXSignalDecision" : self.getProp('HltANNSvcID')['Bc2JpsiMuXSignal'] } )  # Signal box
 
         #Jpsi Cut
-        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiMuX_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiMuX_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(Bc2JpsiMuX_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiMuX_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiMuX_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(Bc2JpsiMuX_JpsiVtxCHI2)s)" % self.getProps()
 
         # MuBc Cut
         MuonBcCut = "(PT > %(Bc2JpsiMuX_MuonBcPT)s *MeV)" % self.getProps()
@@ -835,7 +835,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combCut = "(%(Bc2JpsiMuX_BcLowerMass)s *MeV < AM) & (AM < %(Bc2JpsiMuX_BcUpperMass)s *MeV)" % self.getProps()
 
         # Bc Cut
-        BcCut = "(VFASPF(VCHI2/VDOF)< %(Bc2JpsiMuX_BcVtxCHI2)s ) & (PT > %(Bc2JpsiMuX_BcPT)s *MeV)" % self.getProps()
+        BcCut = "(VFASPF(VCHI2PDOF)< %(Bc2JpsiMuX_BcVtxCHI2)s ) & (PT > %(Bc2JpsiMuX_BcPT)s *MeV)" % self.getProps()
 
         #Jpsi Tight Cut for signal
         JpsiTightCut = "(INTREE((ID=='J/psi(1S)') & (ADMASS('J/psi(1S)') < %(Bc2JpsiMuX_JpsiTightMassWindow)s *MeV)))" % self.getProps()
@@ -913,7 +913,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         # Jpsi Cut
         # Which is faster, INTREE or CHILDCUT?
-        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiH_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiH_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(Bc2JpsiH_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiH_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiH_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(Bc2JpsiH_JpsiVtxCHI2)s)" % self.getProps()
                 
         # MuBc Cut
         PionCut = "(PT > %(Bc2JpsiH_PionPT)s *MeV)" % self.getProps()
@@ -922,7 +922,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combCut = "(ADAMASS('B_c+') < %(Bc2JpsiH_BcMassWindow)s *MeV)" % self.getProps()
         
         # Bc Cut
-        BcCut = "(VFASPF(VCHI2/VDOF)< %(Bc2JpsiH_BcVtxCHI2)s ) & (PT > %(Bc2JpsiH_BcPT)s *MeV)" % self.getProps()
+        BcCut = "(VFASPF(VCHI2PDOF)< %(Bc2JpsiH_BcVtxCHI2)s ) & (PT > %(Bc2JpsiH_BcPT)s *MeV)" % self.getProps()
 
 
         #---------------------------
@@ -979,7 +979,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # Loose cuts
         #---------------------------
         #Jpsi Cut
-        JpsiPDCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiHPD_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiHPD_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(Bc2JpsiHPD_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiPDCut = "(MINTREE('mu+'==ABSID,PT) > %(Bc2JpsiHPD_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(Bc2JpsiHPD_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(Bc2JpsiHPD_JpsiVtxCHI2)s)" % self.getProps()
         
         
         # Pion Bc Cut
@@ -989,7 +989,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combPDCut = "(ADAMASS('B_c+') < %(Bc2JpsiHPD_BcMassWindow)s *MeV)" % self.getProps()
         
         # Bc Cut
-        BcPDCut = "(VFASPF(VCHI2/VDOF)< %(Bc2JpsiHPD_BcVtxCHI2)s ) & (PT > %(Bc2JpsiHPD_BcPT)s *MeV)" % self.getProps()
+        BcPDCut = "(VFASPF(VCHI2PDOF)< %(Bc2JpsiHPD_BcVtxCHI2)s ) & (PT > %(Bc2JpsiHPD_BcPT)s *MeV)" % self.getProps()
 
         # Lifetime biased cut
         LifetimeBiasedCut = "(MINTREE('pi+'==ABSID,BPVIPCHI2()) > %(Bc2JpsiHPD_PionIPCHI2)s) & (MINTREE('mu+'==ABSID,BPVIPCHI2()) > %(Bc2JpsiHPD_MuonIPCHI2)s) & (MINTREE('J/psi(1S)'==ABSID,BPVIPCHI2()) > %(Bc2JpsiHPD_JpsiIPCHI2)s) & (BPVIPCHI2() < %(Bc2JpsiHPD_BcIPCHI2)s)" % self.getProps()
@@ -1072,7 +1072,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TFBc2JpsiMuXSignalDecision" : self.getProp('HltANNSvcID')['TFBc2JpsiMuXSignal'] } )  # Signal box
 
         #Jpsi Cut
-        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiMuX_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiMuX_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(TFBc2JpsiMuX_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiMuX_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiMuX_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(TFBc2JpsiMuX_JpsiVtxCHI2)s)" % self.getProps()
 
         # MuBc Cut
         MuonBcCut = "(PT > %(TFBc2JpsiMuX_MuonBcPT)s *MeV)" % self.getProps()
@@ -1081,7 +1081,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combCut = "(%(TFBc2JpsiMuX_BcLowerMass)s *MeV < AM) & (AM < %(TFBc2JpsiMuX_BcUpperMass)s *MeV)" % self.getProps()
 
         # Bc Cut
-        BcCut = "(VFASPF(VCHI2/VDOF)< %(TFBc2JpsiMuX_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiMuX_BcPT)s *MeV)" % self.getProps()
+        BcCut = "(VFASPF(VCHI2PDOF)< %(TFBc2JpsiMuX_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiMuX_BcPT)s *MeV)" % self.getProps()
 
         #Jpsi Tight Cut for signal
         JpsiTightCut = "(INTREE((ID=='J/psi(1S)') & (ADMASS('J/psi(1S)') < %(TFBc2JpsiMuX_JpsiTightMassWindow)s *MeV)))" % self.getProps()
@@ -1159,7 +1159,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
         # Jpsi Cut
         # Which is faster, INTREE or CHILDCUT?
-        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiH_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiH_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(TFBc2JpsiH_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiH_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiH_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(TFBc2JpsiH_JpsiVtxCHI2)s)" % self.getProps()
                 
         # MuBc Cut
         PionCut = "(PT > %(TFBc2JpsiH_PionPT)s *MeV)" % self.getProps()
@@ -1168,7 +1168,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combCut = "(ADAMASS('B_c+') < %(TFBc2JpsiH_BcMassWindow)s *MeV)" % self.getProps()
         
         # Bc Cut
-        BcCut = "(VFASPF(VCHI2/VDOF)< %(TFBc2JpsiH_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiH_BcPT)s *MeV)" % self.getProps()
+        BcCut = "(VFASPF(VCHI2PDOF)< %(TFBc2JpsiH_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiH_BcPT)s *MeV)" % self.getProps()
 
 
         #---------------------------
@@ -1225,7 +1225,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         # Loose cuts
         #---------------------------
         #Jpsi Cut
-        JpsiPDCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiHPD_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiHPD_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2/VDOF) < %(TFBc2JpsiHPD_JpsiVtxCHI2)s)" % self.getProps()
+        JpsiPDCut = "(MINTREE('mu+'==ABSID,PT) > %(TFBc2JpsiHPD_MuonJpsiPT)s *MeV) & (ADMASS('J/psi(1S)') < %(TFBc2JpsiHPD_JpsiMassWindow)s *MeV) & (VFASPF(VCHI2PDOF) < %(TFBc2JpsiHPD_JpsiVtxCHI2)s)" % self.getProps()
         
         
         # Pion Bc Cut
@@ -1235,7 +1235,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         combPDCut = "(ADAMASS('B_c+') < %(TFBc2JpsiHPD_BcMassWindow)s *MeV)" % self.getProps()
         
         # Bc Cut
-        BcPDCut = "(VFASPF(VCHI2/VDOF)< %(TFBc2JpsiHPD_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiHPD_BcPT)s *MeV)" % self.getProps()
+        BcPDCut = "(VFASPF(VCHI2PDOF)< %(TFBc2JpsiHPD_BcVtxCHI2)s ) & (PT > %(TFBc2JpsiHPD_BcPT)s *MeV)" % self.getProps()
 
         # Lifetime biased cut
         LifetimeBiasedCut = "(MINTREE('pi+'==ABSID,BPVIPCHI2()) > %(TFBc2JpsiHPD_PionIPCHI2)s) & (MINTREE('mu+'==ABSID,BPVIPCHI2()) > %(TFBc2JpsiHPD_MuonIPCHI2)s) & (MINTREE('J/psi(1S)'==ABSID,BPVIPCHI2()) > %(TFBc2JpsiHPD_JpsiIPCHI2)s) & (BPVIPCHI2() < %(TFBc2JpsiHPD_BcIPCHI2)s)" % self.getProps()

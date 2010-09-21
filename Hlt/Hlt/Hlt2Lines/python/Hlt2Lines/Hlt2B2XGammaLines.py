@@ -234,7 +234,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    , algos = [ PV3D(), Kstar2KPi, Kst4KstGammaFilter,  Photons,  Hlt2BdtoKstGamma] 
                    , FilterKstar2KPi = {"Code" : " (MINTREE ( Q != 0 , MIPCHI2DV(PRIMARY) ) > "+str(self.getProp('TrIPchi2Kst'))+
                                         ") & (INTREE ( (ABSID=='K*(892)0') & (ADMASS('K*(892)0')< "+str(self.getProp('KstMassWinL'))+
-                                        "))) & (INTREE ( (ABSID=='K*(892)0') & (VFASPF(VCHI2/VDOF)< "+str(self.getProp('KstVCHI2'))+")))" }
+                                        "))) & (INTREE ( (ABSID=='K*(892)0') & (VFASPF(VCHI2PDOF)< "+str(self.getProp('KstVCHI2'))+")))" }
                    #, CombineKstar = {"MotherCut" : "(VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+") & (ADMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"}
                    , postscale = self.postscale
                    )
