@@ -1,5 +1,6 @@
-// $Id: DumpOMAlarms.cpp,v 1.7 2010-06-11 16:35:53 ggiacomo Exp $
+// $Id: DumpOMAlarms.cpp,v 1.8 2010-09-21 10:39:50 ggiacomo Exp $
 #include <iostream>
+#include <map>
 #include <cstdlib>
 
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -10,11 +11,13 @@ using namespace std;
 std::string AnaTask = "any";
 std::string System = "any";
 int Anaid = -1;
+int Msgid = -1;
 std::string DB = OnlineHistDBEnv_constants::DB;
 std::string DBuser = "HIST_READER";
 std::string DBpw = "READER";
 bool clear=false;
 bool AllAlarms=false;
+std::map<int, bool> msgFilter;
 
 OnlineHistDB *HistDB= NULL;
 
@@ -46,7 +49,7 @@ int main(int narg,char **argv ) {
   }
   
   if(clear && DBuser == "HIST_READER") {
-    DBuser ="HIST_READER";
+    DBuser ="HIST_WRITER";
     cout << "Enter the " << DBuser <<" password on "<<DB<<" for clearing alarms:";
     cin >> DBpw;
     cout<<endl;
@@ -70,32 +73,43 @@ int main(int narg,char **argv ) {
   else 
     std::cout << "Analysis "<< AnaTask;
   std::cout <<std::endl<<std::endl;
-  
+
+  int nFltMsg=0;
   for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
     OMAMessage* message = new OMAMessage(*im, *HistDB);
     bool dump=true;
     if ( !message->isactive() && !AllAlarms) dump=false;
     if ( Anaid >0 && (int) message->anaId() != Anaid) dump=false;
+    if ( Msgid >0 && (int) message->id() != Msgid) dump=false;
     if ( System != "any" && std::string(message->concernedSystem()) != System) dump=false;
-    if (dump) message->dump(&(std::cout));
+    msgFilter[*im]=dump;
+    if (dump) {
+      message->dump(&(std::cout));
+      nFltMsg++;
+    }
     delete message;
   }
-
-  if (clear) {
+  std::cout <<" There are "<< nFltMsg  <<" messages filtered according to your request" <<std::endl;
+  if (clear && nFltMsg ) {
     std::string answer;
     cout << "Are you sure you want to clear these alarms? (Y/N)";
     cin >> answer;
+    int nClrMsg=0;
     if (answer == "Y") {
       for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
-        OMAMessage* message = new OMAMessage(*im, *HistDB);
-        message->remove();
-        delete message;
+        if (msgFilter[*im]) {
+          OMAMessage* message = new OMAMessage(*im, *HistDB);
+          cout << "removing message "<< *im <<endl;
+          nClrMsg++;
+          message->remove();
+          delete message;
+        }
       }
-      cout << messID.size() << " messages have been cleared"<<endl;
+      cout << nClrMsg << " messages have been cleared"<<endl;
       HistDB->commit();
     }
     else {
-      cout << "Message NOT cleared"<<endl;
+      cout << "Messages NOT cleared"<<endl;
     }
   }
 
@@ -123,6 +137,9 @@ void setoption(char opt, char* value)
   case 'i':
     Anaid = atoi(value);
     break;
+  case 'm':
+    Msgid = atoi(value);
+    break;
   case 's':
     System = value;
     break;
@@ -137,6 +154,7 @@ void usage()
   cout << "      -t  <AnalysisTaskName> \t to filter by analysys task name (default is 'any') " <<endl;
   cout << "      -c          \t\t to clear the filtered alarms " <<endl;
   cout << "      -a          \t\t to show also archived (inactive) messages " <<endl;
+  cout << "      -m  <mID>   \t\t filter messages by message ID" <<endl;
   cout << "      -i  <anaID> \t\t filter messages by analysis ID" <<endl;
   cout << "      -s  <system>\t\t filter messages by concerned system (in uppercase, e.g. BEAM, DAQ, HLT, CALO, RICH ...)" <<endl;
   cout << "      -d  <DB>    \t\t choose database (default is the production DB at the pit)" <<endl;

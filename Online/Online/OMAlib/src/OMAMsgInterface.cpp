@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.38 2010-08-18 13:42:06 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.39 2010-09-21 10:39:50 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
 #include <time.h>
@@ -169,6 +169,7 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
       else {
         if(level > OMAMessage::INFO ) {
           send = true; // was disabled: retrigger alarm
+          msg->confirm();
           msg->enable();
         }
       }

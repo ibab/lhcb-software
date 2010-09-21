@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.58 2010-09-15 07:53:45 ggiacomo Exp $
+! $Id: release.notes,v 1.59 2010-09-21 10:39:50 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! ======== v3r3 ===============
+
+! 20100921 GG
+ - add -m option to DumpOMAalarms to select single (and possibly remove) single messages
+ - fix small bug in OMAMsgInterface (uncorrect raising down of alrms in some cases)
 
 ! ======== v3r2 ===============
 
