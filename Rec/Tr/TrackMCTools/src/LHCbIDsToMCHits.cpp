@@ -176,8 +176,7 @@ void LHCbIDsToMCHits::linkVeloPix(const LHCbID& lhcbid, LinkMap& output) const{
 
   if (!m_configuredVeloPix){
     m_configuredVeloPix = true;
-    //m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),LHCb::VeloPixClusterLocation::VeloPixClusterLocation+m_endString);
-    m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),"VeloPix/Clusters"+m_endString);
+    m_veloPixLinks = VeloPixLinks( evtSvc(), msgSvc(),LHCb::VeloPixClusterLocation::VeloPixClusterLocation+m_endString);
     if (m_veloPixLinks.notFound()) {
       throw GaudiException("no veloPixLinker", "LHCbIDsToMCHits" ,
                            StatusCode::FAILURE);
