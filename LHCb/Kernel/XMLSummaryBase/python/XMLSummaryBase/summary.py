@@ -30,13 +30,35 @@ __author__ = 'Rob Lambert Rob.Lambert@cern.ch'
 # =============================================================================
 
 import os as __os__
+#print __file__
+__schema__= None
+
+try:
+    import imp as __imp__
+    __schema__=__imp__.load_source('schema',__os__.sep.join(__file__.split(__os__.sep)[:-1]+['schema.py']))
+    #print 'loaded from file'
+except (ImportError, IOError):
+    try:
+        from XMLSummaryBase import schema as __schema__
+    except ImportError:
+        import schema as __schema__
+
 
 #import the schema-handling
-try:
-    from XMLSummaryBase.schema import *
-except ImportError:
-    from schema import *
+#def cleverImport(path=None):
+#    global __schema__
+#    if __schema__ is not None:
+#        return
+#    if path is None:
+#try:
+#    from XMLSummaryBase import schema as __schema__
+#except ImportError:
+#    import schema as __schema__
     #finally fail here if module cannot be found!
+    
+#    import imp
+#    __schema__=imp.load_module('schema',__os__.path.expanduser(__os__.path.expandvars(path)))
+#    return
 
 #from __schema_module__ import *
 
@@ -47,7 +69,7 @@ __count_tag__= 'counter'
 # =============================================================================
 # Simple algorithm which manipulates with counters 
 # =============================================================================
-class Summary(VTree):
+class Summary(__schema__.VTree):
     """ Simple helper functions for writing the xml summary in python
     This class inherits from the VTree object, and has some hard coded element names
     merging might also be done here"""
@@ -56,11 +78,14 @@ class Summary(VTree):
     #a dictionary of name:object
     #__file_dict__={}
     def __init__ ( self, schemafile=__default_schema__, construct_default=True ) :
-        """ Constructor. Variables in schemafile are expanded """
+        """ Constructor. Variables in schemafile are expanded.
+        construct_default should always be left true unless you wish to parse a file straight away.
+        module path optionally imports the schema module from a different path if it isn't already here"""
+        #print 'crap'
         if 'Schema' not in str(type(schemafile)):
             #print str(type(schemafile))
             #print "I think it's a string"
-            self.__schema__=Schema(schemafile)
+            self.__schema__=__schema__.Schema(schemafile)
         else:
             self.__schema__=schemafile
         if construct_default:
@@ -73,7 +98,7 @@ class Summary(VTree):
         self.__file_dict__={}
         for mother in self.__schema__.Tag_mothers(__file_tag__):
             self.__file_dict__[mother]={}
-        VTree.__init__(self,element=self.__element__,schema=self.__schema__,mother=None,check=False)
+        super(Summary,self).__init__(element=self.__element__,schema=self.__schema__,mother=None,check=False)
         
     
     def __file_exists__(self, GUID, filename, isOutput=False):
@@ -310,7 +335,7 @@ class Summary(VTree):
         #print self.__count_dict__
         #print self.__count_dict__[mother]
         if name not in self.__count_dict__[mother]:
-            counters=VTree([bt for bt in self.__element__.getchildren() if mother in bt.tag][0],self.__schema__,self,False)
+            counters=__schema__.VTree([bt for bt in self.__element__.getchildren() if mother in bt.tag][0],self.__schema__,self,False)
             #counter=counter.clone()
             counters.__append_element__(counter)
             self.__count_dict__[mother][name]=counter
@@ -400,19 +425,19 @@ class Summary(VTree):
         return self.__file_dict__
 
     
-def Merge(summaries, schema=__default_schema__):
+def Merge(summaries, schemafile=__default_schema__):
     '''Merge a list of summaries, return a new summary
     summaries can be a list of xml files to be parsed, or a list of summary objects'''
-    if type("")==type(schema):
-        schema=Schema(schema)
+    if type("")==type(schemafile):
+        schemafile=__schema__.Schema(schemafile)
     if type([]) != type(summaries): 
         raise TypeError, 'you should send a list into the merger, I got a ' + str(type(summaries)) + ' object instead'
     sum_objects=[]
 
-    if type("")==type(summaries[0]) and str(type(Summary(schemafile=schema)))== str(type(summaries[0])):
+    if type("")==type(summaries[0]) and str(type(Summary(schemafile=schemafile)))== str(type(summaries[0])):
         raise TypeError, 'you should send strings or Summaries into the merger, I got a ' + str(type(summaries[0])) + ' object instead'
     
-    if str(type(Summary(schemafile=schema)))== str(type(summaries[0])):
+    if str(type(Summary(schemafile=schemafile)))== str(type(summaries[0])):
         sum_objects=summaries
         #check they all have the same schema
         schema=sum_objects[0].__schema__.__schemafile_short__
@@ -427,13 +452,13 @@ def Merge(summaries, schema=__default_schema__):
         if type("")==type(summaries[0]):
             for asummary in summaries:
                 #print asummary
-                sum_object=Summary(schema,construct_default=False)
+                sum_object=Summary(schemafile,construct_default=False)
                 #don't check every summary, unless the merging fails
                 #sum_object.parse(asummary)
                 asummary=__os__.path.expanduser(__os__.path.expandvars(asummary))
                 if not __os__.path.exists(asummary):
                     raise IOError, 'file does not exist '+str(asummary)
-                sum_object.__element__=schema.__fast_parse__(asummary).__element__
+                sum_object.__element__=schemafile.__fast_parse__(asummary).__element__
                 sum_object.__recache__()
                 #print sum_object
                 sum_objects.append(sum_object)

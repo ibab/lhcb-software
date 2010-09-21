@@ -4,6 +4,10 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Rob Lambert
+ - Changes to allow the summary class to be imported using imp
+   imp.load_source('summary_application_version',<path>)
+
 ! 2010-09-18 - Rob Lambert
  - Fix bug with merging input/output to the same filename
  - Added test of this functionality in test_parse_summary.py
