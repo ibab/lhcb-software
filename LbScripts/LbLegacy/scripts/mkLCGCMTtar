@@ -237,6 +237,8 @@ def get_native_versions(native_version, binary):
             print "%s has no version. Removing it from the list" % pak
             del packages_versions[pak]
 
+    os.chdir(here)
+
     return packages_versions
 
 #
@@ -324,6 +326,8 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
             print ' get_tar_files for PLUGINS %s '%(binary_dir)
 
     lcg_tar_dir = os.path.join(lcg_ext_dir,'distribution')
+
+    here = os.getcwd()
 
     os.chdir('/tmp')
 
@@ -446,6 +450,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 
         logfile.write('missing tar files= %s'%(missing)+'\n')
         logfile.write('wrong tar files = %s'%(tarko)+'\n')
+    os.chdir(here)
 
 def genHTMLfile(native_version, packages_versions,binary_dir, output_file):
     

@@ -1,3 +1,8 @@
+2010-09-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the 
+	HTML file. At that moment it didn't exist anymore and os.getcwd() was crashing.
+
 2010-09-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: fixed the location of the initialisation of the not_ready_file variable.
