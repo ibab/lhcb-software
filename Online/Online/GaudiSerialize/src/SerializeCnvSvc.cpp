@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.11 2010-09-14 06:48:54 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.12 2010-09-21 12:41:27 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -126,8 +126,8 @@ IConverter*
 SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
 {
   IConverter* pConverter;
-  ConverterID cnvid(SERIALIZE_StorageType, wanted);  
-  pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
+  ConverterID cnvid0(SERIALIZE_StorageType, wanted);  
+  pConverter = PluginService::CreateWithId<IConverter*>(cnvid0, typ, wanted, serviceLocator().get());
   MsgStream log(msgSvc(), name());
 
   if ( 0 == pConverter )  {

@@ -1,4 +1,4 @@
-// $Id: SerializeBaseCnv.cpp,v 1.2 2010-09-14 06:48:54 frankb Exp $
+// $Id: SerializeBaseCnv.cpp,v 1.3 2010-09-21 12:41:27 frankb Exp $
 //====================================================================
 //	SerializeBaseCnv implementation
 //--------------------------------------------------------------------
@@ -33,7 +33,7 @@ namespace {
       return StatusCode::FAILURE;
     }
   };
-};
+}
 
 /// Standard Constructor
 SerializeBaseCnv::SerializeBaseCnv(long typ, const CLID& clid, ISvcLocator* svc)
