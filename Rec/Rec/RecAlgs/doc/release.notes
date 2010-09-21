@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Marco Cattaneo
+ - In RecInit.cpp: Copy gpsTime to RecHeader from ODIN Raw bank
+
 ! 2010-09-19 - Chris Jones
  - Fix the bug in the histogram booking, introduced below, where the arguments 
    are passed in the wrong order ...

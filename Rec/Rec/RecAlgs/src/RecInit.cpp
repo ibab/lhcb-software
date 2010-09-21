@@ -112,6 +112,7 @@ StatusCode RecInit::execute()
   header->setEvtNumber( evtNumber );
   header->setRandomSeeds( seeds );
   header->setCondDBTags( this->condDBTags() );
+  header->setGpsTime( odin->gpsTime() );
   put( header, LHCb::RecHeaderLocation::Default );
 
   // Create a ProcStatus if it does not already exist
