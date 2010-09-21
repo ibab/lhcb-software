@@ -101,6 +101,7 @@ private :
   ToolHandle< ITrackExtrapolator > m_extrapolator ;
   ToolHandle< ITrackInterpolator > m_interpolator ;
   bool m_applyMaterialCorrections ;
+  double m_linearPropagationTolerance ;
 };
 
 
@@ -159,14 +160,14 @@ namespace {
     // return the states (work around keyword protected)
     StateContainer& states() { return refStates() ; }
     
+    // return number of owned states
+    size_t numOwnedStates() const { return m_ownedstates.size() ;}
   } ;
 
   /// return the closest ref state to a certain z-position
   const LHCb::State* TrackCache::closestState( double z ) const 
   {
-    // we use 'min_element' even though this does not exploit that
-    // states are sorted.  the nicest would be to use
-    // lowerbound. 
+    // we'll use lowerbound to find the almost closest state.
     const StateContainer& refstates = refStates() ;
     static LHCb::State tmpstate ;
     tmpstate.setZ( z ) ;
@@ -175,14 +176,10 @@ namespace {
     if( it == refstates.end() ) --it ;
     else if( it != refstates.begin() ) {
       StateContainer::const_iterator prev = it ; --prev ;
+      //assert( z - (*prev)->z()>=0) ;
+      //assert( (*it)->z() - z>=0) ;
       if( z - (*prev)->z() < (*it)->z() - z ) it = prev ;
-      assert( z - (*prev)->z()>=0) ;
-      assert( (*it)->z() - z>=0) ;
     }
-    
-    //StateContainer::const_iterator it =
-    //std::min_element( refStates().begin(),refStates().end(),
-    //                  TrackFunctor::distanceAlongZ<LHCb::State>(z) );
     return *it;
   }
 
@@ -193,40 +190,28 @@ namespace {
     m_ownedstates.push_back(state) ;
 
     // get the vector with states
-    StateContainer refstates = refStates() ;
+    StateContainer& refstates = refStates() ;
 
     // temporary logic test
-    if( refstates.size()>0) {
-      if(pos == refstates.end() ) {
-	assert( refstates.back()->z() < state->z() ) ;
-      } else if ( pos == refstates.begin() ) {
-	assert( refstates.front()->z() > state->z() ) ;
-      } else {
-	StateContainer::iterator prev = pos ; --prev ;
-	assert( (*prev)->z() < state->z() && state->z() < (*pos)->z() ) ;
-      }
-    }
+    // if( refstates.size()>0) {
+    //       if(pos == refstates.end() ) {   
+    // 	assert( refstates.back()->z() < state->z() ) ;
+    //       } else if ( pos == refstates.begin() ) {
+    // 	assert( refstates.front()->z() > state->z() ) ;
+    //       } else {	
+    // 	StateContainer::iterator prev = pos ; --prev ;
+    // 	assert( (*prev)->z() < state->z() && state->z() < (*pos)->z() ) ;
+    //       }
+    //     }
     
     // insert the state
     refstates.insert(pos, state) ;
-    
+
     // update the range of the trajectory
     Trajectory::setRange( refstates.front()->z(), refstates.back()->z() ) ;
     
     // invalidate the cache
     TrackTraj::invalidateCache() ;
-  }
-
-  double closestToBeamLine( const LHCb::State& state )
-  {
-    const Gaudi::TrackVector& vec = state.stateVector();
-    double z = state.z();
-    // check on division by zero (track parallel to beam line!)
-    if ( vec[2] != 0 || vec[3] != 0 ) {
-      z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
-    } 
-    // don't go outside the sensible volume
-    return std::min(std::max(z,-100*Gaudi::Units::cm), StateParameters::ZBegRich2 ) ;
   }
 }
 
@@ -245,7 +230,8 @@ TrackStateProvider::TrackStateProvider( const std::string& type,
   declareInterface<ITrackStateProvider>(this);
   declareProperty("Extrapolator",m_extrapolator) ;
   declareProperty("Interpolator",m_interpolator) ;
-  declareProperty("ApplyMaterialCorrections",m_applyMaterialCorrections) ;
+  declareProperty("ApplyMaterialCorrections",m_applyMaterialCorrections = true) ;
+  declareProperty("LinearPropagationTolerance", m_linearPropagationTolerance = 1.0*Gaudi::Units::mm) ;
 }
 
 //=============================================================================
@@ -282,11 +268,21 @@ StatusCode TrackStateProvider::finalize()
 //=============================================================================
 // Incident handle
 //=============================================================================
+
 void TrackStateProvider::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) m_trackcache.clear() ;
+  if ( IncidentType::BeginEvent == incident.type() ) {
+    // fill some counters
+    counter("Number of tracks seen") += m_trackcache.size()  ;
+    for(TrackCacheMap::iterator it = m_trackcache.begin() ; 
+	it != m_trackcache.end(); ++it) {
+      counter("Number of states added") += it->second->numOwnedStates() ;
+      delete it->second ;
+    }
+    m_trackcache.clear() ;
+  }
 }
-
+  
 //=============================================================================
 // get a state at a particular z position, within given tolerance
 //=============================================================================
@@ -299,12 +295,26 @@ StatusCode TrackStateProvider::state( LHCb::State& thestate,
   StatusCode sc = StatusCode::SUCCESS ;
   TrackCache* tc = cache( track ) ;
   const LHCb::State* state = tc->closestState( z ) ;
-  if( std::abs( z - state->z() ) > ztolerance ) {
-    state = addState( *tc, z ) ;
-    if( state == 0 ) {
-      sc = StatusCode::FAILURE ; 
+  double absdz = std::abs( z - state->z() ) ;
+  if( absdz > std::max(ztolerance,TrackParameters::propagationTolerance) ) {
+    if( absdz > m_linearPropagationTolerance ) {
+      state = addState( *tc, z ) ;
+      if( state == 0 ) {
+	sc = StatusCode::FAILURE ; 
+      } else {
+	thestate = *state ;
+      }
     } else {
+      // if we are really close, we'll just use linear extrapolation and do not cache the state.
+      // do we take the hit of 2 virtual function calls, or do we implement this ourselves:-)
       thestate = *state ;
+      double dz =  z - state->z() ;
+      static Gaudi::TrackMatrix transmat = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+      transmat(0,2) = transmat(1,3) = dz ;
+      thestate.stateVector()(0) += dz * thestate.stateVector()(2)  ;
+      thestate.stateVector()(1) += dz * thestate.stateVector()(3)  ;
+      thestate.setCovariance( ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>
+			      ( transmat, state->covariance() ) );
     }
   } else {
     thestate = *state ;
@@ -323,6 +333,7 @@ const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z) const
   LHCb::TrackTraj::StateContainer& refstates = tc.states() ;
   LHCb::TrackTraj::StateContainer::iterator it = 
     std::lower_bound( refstates.begin(),refstates.end(),state, compareStateZ ) ;
+
   // in brunel, we simply use the interpolator. in davinci, we use the
   // extrapolator, and we take some control over material corrections.
   const LHCb::Track& track = tc.track() ;
@@ -335,14 +346,19 @@ const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z) const
       *state = *refstates.back() ;
     } else if( it == refstates.begin() || z < tc.zFirstMeasurement() ) {
       *state = **it ;
-      applyMaterialCorrections = m_applyMaterialCorrections ;
+      // if we extrapolate from ClosestToBeam, we don't apply mat corrections.
+      applyMaterialCorrections = state->location() != LHCb::State::ClosestToBeam && m_applyMaterialCorrections ;
     } else {
-      // take the closest state. forget
+      // take the closest state.
       LHCb::TrackTraj::StateContainer::iterator prev = it ;
       --prev ;
       *state = std::abs( (**it).z() - z ) < std::abs( (**prev).z() - z ) ? **it : **prev ;
     }
-    state->setLocation( LHCb::State::Vertex ) ;
+
+    // for all states, except those extrapolated from ClosestToBeam,
+    // we'll use 'Vertex'
+    if( state->location() != LHCb::State::ClosestToBeam) state->setLocation( LHCb::State::Vertex ) ;
+    
     if( applyMaterialCorrections ) {
       sc = m_extrapolator->propagate( *state, z ) ;
     } else {
@@ -354,12 +370,11 @@ const LHCb::State* TrackStateProvider::addState( TrackCache& tc, double z) const
 			    ( transmat, state->covariance() ) );
     }
   }
-
   if( sc.isFailure() ) {
     delete state ;
     state = 0 ;
   } else {
-    refstates.insert( it, state ) ;    
+    tc.insertState( it, state ) ;
   }
   return state ;
 }
@@ -374,15 +389,30 @@ TrackCache* TrackStateProvider::cache( const LHCb::Track& track ) const
   size_t key = TrackCache::trackID(track) ;
   TrackCacheMap::iterator it = m_trackcache.find( key ) ;
   if( it == m_trackcache.end() ) {
+    // create a new entry in the cache
     tc = new TrackCache( track ) ;
     m_trackcache[key] = tc ;
-    // make sure Downstream tracks get assigned a state at the beamline
+    // make sure all tracks (incl. Downstream) get assigned a state at
+    // the beamline. this is useful for the trajectory approximation.
     if( (track.hasVelo() || track.hasTT() ) &&
-	!track.firstState().location() == LHCb::State::ClosestToBeam &&
+	track.firstState().location() != LHCb::State::ClosestToBeam &&
 	track.stateAt( LHCb::State::ClosestToBeam ) == 0 ) {
-      // compute poca of first state with z-axis
-      double z = closestToBeamLine( track.firstState() ) ;
-      addState( *tc, z ) ;
+      // compute poca of first state with z-axis 
+      const Gaudi::TrackVector& vec = track.firstState().stateVector();
+      // check on division by zero (track parallel to beam line!)
+      double t2 = vec[2]*vec[2] + vec[3]*vec[3] ;
+      if ( t2 > 1e-12 ) {
+	double dz = - ( vec[0]*vec[2] + vec[1]*vec[3] ) / t2 ;
+	// don't add the state if it is too close
+	if( dz < -10*Gaudi::Units::cm ) {
+	  double z = track.firstState().z() + dz ;
+	  if(z > -100*Gaudi::Units::cm ) { // beginning of velo
+	    const LHCb::State* stateatbeam = addState( *tc, z ) ;
+	    if( stateatbeam )
+	      const_cast< LHCb::State*>(stateatbeam)->setLocation( LHCb::State::ClosestToBeam ) ;
+	  }
+	} 
+      }
     }
   } else {
     tc = it->second ;
