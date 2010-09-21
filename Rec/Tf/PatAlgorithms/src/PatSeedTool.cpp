@@ -495,7 +495,7 @@ bool PatSeedTool::refitStub(PatSeedTrack& track, double dRatio, double arrow) co
       const double z = hit->z();
       const double w = hit->hit()->weight();
       const double dz = 1e-3 * (z - z0);
-      const double dx = hit->x() - track.xAtZ(z);
+      const double dx = track.distanceForFit(hit);
       const double eta = - hit->hit()->dxDy() * z / z0;
       rhs[0] += w * eta * dx;
       rhs[1] += w * dx;

@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Manuel Tobias Schiller
+ - make the fit in PatSeedFit more similar to what is done in PatSeeding
+   also clean up code somewhat (remove unused/superfluous members)
+   (this piece of code is used in TrackStateInitTool)
+ - PatSeedTool: minor change in refitStub() to make the method safer for
+   usage in PatSeedFit
+
 ! 2010-09-06 - Manuel Tobias Schiller
  - fix compiler (gcc-4.3 on SLC5) warning in PatSeedTrack.h
 
