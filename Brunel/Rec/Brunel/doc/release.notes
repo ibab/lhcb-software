@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2010-09-21 - Chris Jones
+ - Remove the ProtoParticle PID cleaning algorithm, that removes Rich and Muon
+   information prior to DST writting. This is now done when needed, via the 
+   DstConf Configurable in GaudiConf.
+
 - Changes to Configurable:
   . Propagate value of Simulation slot to RecMoniConf
 

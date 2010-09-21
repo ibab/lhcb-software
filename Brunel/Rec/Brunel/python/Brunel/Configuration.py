@@ -435,11 +435,6 @@ class Brunel(LHCbConfigurableUser):
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
-            # Remove some PID information from ProtoParticles
-            from Configurables import ChargedProtoParticleRemovePIDInfo
-            protoPidClean = ChargedProtoParticleRemovePIDInfo("ProtoParticlePIDClean")
-            GaudiSequencer("OutputDSTSeq").Members += [ protoPidClean ]
-
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
