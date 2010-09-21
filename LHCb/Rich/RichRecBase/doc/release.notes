@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Victor Coco
+ - Add VeloPix track to the track algorithm types in RichTrackID.h
+
 !===================== RichRecBase v4r0 2010-07-26 ==========================
 ! 2010-07-26 - Chris Jones
  - Add anew data member to RichRecPixel to store the occupancy of the HPD
