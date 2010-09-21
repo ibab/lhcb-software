@@ -6,6 +6,16 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Juan Palacios
+ - MicroDST/Functors.hpp
+  . Add MicroDST::DeReference functor. Used for de-referencing SmartRefs
+    before copying:
+       const SmartRefVector< T >& smartRefs = x->refs();
+       std::for_each(smartRefs.begin(), smartRefs.end(), DeReference());
+       T* y = x->clone();
+ - cmt/requirements
+  . Increase version to v2r1.
+
 !====================== MicroDSTBase v2r0p1 2010-09-07 =======================
 
 ! 2010-09-07 - Juan Palacios
