@@ -5,6 +5,17 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2010-09-21 - Rob Lambert
+ - Added explicit use statements for everything which is used by PhysConf
+   . use 	  GaudiConf   v*
+   . use       CaloReco    v* Calo
+   . use       CaloPIDs    v* Calo
+   . use       GlobalReco  v* Rec
+   . use       LHCbAlgs    v* Kernel
+   . use       MuonDAQ     v* Muon
+   . use       MuonID      v* Muon
+   . use       LoKiCore    v* Phys
+
 !========================== PhysConf v1r7p1 2010-09-07 =================
 
 ! 2010-09-04
