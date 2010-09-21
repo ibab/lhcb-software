@@ -28,8 +28,8 @@ public:
   int repaint();
   int endUpdate();
   int beginUpdate();
-  int putString (const std::string& text,int video);
-  virtual int init (int num_col,int num_row, AbstractMainDisplay& parent);
+  int putString(const std::string& text,int video);
+  virtual int init(size_t num_col,size_t num_row, AbstractMainDisplay& parent);
 protected:
   DialogSubDisplay (AbstractMainDisplay& source);
   DialogSubMenu  *window() {     return m_window;   }

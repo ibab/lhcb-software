@@ -41,7 +41,7 @@ int DialogSubDisplay::putString (const string& text,int video)   {
   }
 }
 
-int DialogSubDisplay::init (int num_col,int num_row,AbstractMainDisplay& refpar)    {
+int DialogSubDisplay::init (size_t num_col,size_t num_row,AbstractMainDisplay& refpar)    {
   string pad(width(),' ');
   AbstractSubDisplay::init(num_col, num_row, refpar);
   DialogMainDisplay *par = (DialogMainDisplay*)parent();

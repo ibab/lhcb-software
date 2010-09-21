@@ -123,10 +123,10 @@ public:
   virtual ~AbstractDisplay() {}
   //  Standard destructor
   //      Arguments: None
-  virtual int id() const  {              return m_id;     }
-  size_t height() const      {       return m_height;        }
-  size_t width() const       {        return m_width;        }
-  bool ok() const         {    return ::lib_rtl_is_success(m_status);  }
+  virtual int id() const     {    return m_id;                            }
+  size_t height() const      {    return m_height;                        }
+  size_t width() const       {    return m_width;                         }
+  bool ok() const            {    return ::lib_rtl_is_success(m_status);  }
   //  Ok:
   //      Indication of success (used mainly for test of the constructor
   //      Checking the return values of the constructor and the 
@@ -134,7 +134,7 @@ public:
   //      error cannot be detected otherwise.
   //      Return Value:  1     :  everything OK
   //                     0    :  failure
-  int Status() const      {  return m_status;             }
+  int Status() const         {    return m_status;                        }
 protected:
   size_t m_height;
   size_t m_width;

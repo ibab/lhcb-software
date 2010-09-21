@@ -18,7 +18,7 @@ namespace {
     float f() { return *_f; }
     void* cdata() { return *(void**)ptr; }
   };
-};
+}
 
 static inline ClientData _cnv(int i)    { return _CNV(&i).cdata(); }
 static inline ClientData _cnv(float f)  { return _CNV(&f).cdata(); }
@@ -168,8 +168,10 @@ ClientData DialogItem::value (const DialogItemContainer* cont) const  {
   if      ( isString()  )      {
     char *ptr = (char*)container->data()->_char;
     size_t siz = sizeof(display_container) - 1;
+    int num = 0;
     // First do some Cleanup before actually returning the pointer
-    ::sscanf(m_fmt.c_str(),"%%%zdd",&siz);
+    ::sscanf(m_fmt.c_str(),"%%%dd",&num);
+    siz = num;
     ptr[std::min(siz,strlen(ptr))] = 0;
     str_trim(ptr,ptr,&siz);
     return (ClientData)ptr;

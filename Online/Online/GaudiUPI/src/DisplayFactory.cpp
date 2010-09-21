@@ -6,7 +6,7 @@
 
 DisplayFactory::DisplayFactory (const std::string& type) {
   if ( AbstractDisplayFactory::instance() == 0 ) {
-    AbstractDisplayFactory* fac = 0;
+    static AbstractDisplayFactory* fac = 0;
     if ( type.substr(0,2) == "UP" ) {
       UpiFactory::instance();
       fac = new DialogDisplayFactory();
@@ -17,16 +17,14 @@ DisplayFactory::DisplayFactory (const std::string& type) {
     }
   }
 }
-static DialogDisplayFactory* s_instance = 0;
 
 AbstractDisplayFactory* DisplayFactory::factory() {
   return AbstractDisplayFactory::instance();
 }
 
 DialogDisplayFactory::DialogDisplayFactory() {
-  s_instance = this;
 }
+
 DialogDisplayFactory::~DialogDisplayFactory() {
-  s_instance = 0;
 }
 
