@@ -11,6 +11,8 @@
 #include "MicroDST/MicroDSTAlgorithm.h"
 #include "MicroDST/Defaults.h"
 #include "MicroDST/RelTableFunctors.h"
+// From DaVinci
+#include "DaVinciUtils/Guards.h"
 // from Boost
 #include <boost/type_traits/remove_pointer.hpp>
 /** @class RelationsFromClonerAlg RelationsFromClonerAlg.h MicroDST/RelationsFromClonerAlg.h
@@ -118,6 +120,7 @@ namespace MicroDST
                       << " entries!" << endmsg;
           }
           TABLE* cloneTable = m_tableCloner(table);
+          DaVinci::Utils::DataObjectGuard guard(cloneTable);
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "Going to store relations table from " 
                       << inputLocation

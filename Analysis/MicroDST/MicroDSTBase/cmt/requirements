@@ -15,6 +15,7 @@ branches MicroDST src cmt doc
 # =============== dependencies ================================================
 use GaudiKernel        v*
 use GaudiAlg           v*
+use DaVinciUtils       v*  Phys
 # =============== include directories =========================================
 apply_pattern install_more_includes more=MicroDST
 
