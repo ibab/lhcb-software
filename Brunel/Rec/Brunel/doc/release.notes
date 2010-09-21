@@ -3,12 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-09-21 - Chris Jones
- - Remove the ProtoParticle PID cleaning algorithm, that removes Rich and Muon
-   information prior to DST writting. This is now done when needed, via the 
-   DstConf Configurable in GaudiConf.
-
 - Changes to Configurable:
+  . Remove the ProtoParticle PID cleaning algorithm, that removes Rich and Muon
+    information prior to DST writting. This is now done when needed, via the 
+    DstConf Configurable in GaudiConf.
   . Propagate value of Simulation slot to RecMoniConf
 
 - Changes to references to reflect changes in Brunel v37r8 output
@@ -17,6 +15,7 @@ Purpose: LHCb reconstruction program
   . #62241: Add Hlt monitoring sequence
   . Added several histograms to TrackFitMatchMonitor
   . Fixed untested StatusCode in CaloPhotonIDAlg
+  . #82690: Change track selection chi2 for charged ProtoParticles to < 10
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
