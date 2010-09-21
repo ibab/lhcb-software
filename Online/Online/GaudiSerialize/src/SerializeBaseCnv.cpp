@@ -1,4 +1,4 @@
-// $Id: SerializeBaseCnv.cpp,v 1.3 2010-09-21 12:41:27 frankb Exp $
+// $Id: SerializeBaseCnv.cpp,v 1.4 2010-09-21 12:51:30 frankb Exp $
 //====================================================================
 //	SerializeBaseCnv implementation
 //--------------------------------------------------------------------
@@ -107,24 +107,24 @@ StatusCode SerializeBaseCnv::updateObjRefs(IOpaqueAddress* /* pA */, DataObject*
 }
 
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any)),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any+CLID_ObjectList),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any+CLID_ObjectList)),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any+CLID_ObjectVector),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any+CLID_ObjectVector)),
                            IConverter*(long, CLID, ISvcLocator*) )
 
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00030000),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any + CLID_ObjectVector+0x00030000)),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00040000),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any + CLID_ObjectVector+0x00040000)),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00050000),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any + CLID_ObjectVector+0x00050000)),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any | (1<<31)),
+                           ConverterID(long(SERIALIZE_StorageType),CLID(CLID_Any | (1<<31))),
                            IConverter*(long, CLID, ISvcLocator*) )
