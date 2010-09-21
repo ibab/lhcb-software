@@ -1,0 +1,1926 @@
+Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingSelections
+! Responsible : Anton Poluektov
+! Purpose     : Stripping selections
+! -----------------------------------------------------------------------------
+! 2010-10-21 - Ulrich Kerzel
+- introduce cut on lifetime cTau in B2hh lifetime-unbiased stripping line 
+  to reduce rate. pre-scale loose line without this cut
+
+! 2010-09-17 - Rob Lambert
+ - Updated StrippingB0q2DstarMuX.py:
+	 . Retuned tuned selection on data
+   . 0.01% retention and 0.239ms timing on the new events
+   . Prescale on Presel line improved, now at 0.02, which also retains 0.01%.
+
+! 2010-09-17 - Juan Palacios
+ - python/StrippingSelections/StrippingV0.py
+  . Remove tracking cuts.
+ - cmt/requirements
+  . Increase to v2r1.
+
+! 2010-09-16 - Greig Cowan
+ - Added new test sample.
+   	Events: 0.51M
+	Run: 78147
+	mu: ~1.5
+	TCK: 0x00190024
+	Magnet: Up
+	http://lbrundb.cern.ch/rundb/run/78147/
+ - Updated B2JpsiX lines to use the resonance vertex in CombineParticles.
+
+! 2010-09-08 - Jibo He
+ - Change Jpsi Vertex fit chi2 cut in inclusive DiMuon lines back to 20. 
+
+
+!========================== StrippingSelections v2r0 2010-09-08 ===============
+
+! 2010-09-08 Thomas Blake
+ - Fixed problem with StreamDielectron and StreamDimuon
+
+! 2010-09-07 Greig Cowan
+ - Prescaled DiElectron LowMass lines by further factor 2.
+ - Removed PVReFit from Jpsi(ee)Phi lines to reduce CPU time.
+ - Bug fixes to PID calibration lines.
+
+! 2010-09-07 - Andrew Powell
+ - Added StrippingV0ForPID.py
+
+! 2010-09-07 Tom Blake
+ - Added StrippingD02KPiPi0.py for ECAL calib.
+
+! 2010-09-07 - Philip Hunt
+ - StrippingDstarPromptWithD02K3Pi.py
+   Updated to use "Selection" framework.
+   Robust line has been removed.
+   Cuts revised to satisfy CPU and retention requirements, including loosening
+   the D0/D* mass cut to 2MeV/c^2, and tightening the D0 mass window to 75 MeV/c^2.
+
+! 2010-09-07 - Thomas Blake
+ - Added prescale to MiniBias lines
+
+! 2010-09-07 - Thomas Blake
+ - Added StrippingBd2KstarMuMuLT.py and updated StrippingBu2LLK.py
+
+! 2010-09-07 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+       prescale "D02HHForPromptCharm" line with factor 0.20
+       prescale "DForPromptCharm"     line with factor 0.25
+ 
+! 2010-09-07 - Vanya Belyaev
+ - 
+  - StrippingPromptCharm.py
+
+       prescale "D02HHForPromptCharm" line with factor 0.25 
+
+! 2010-09-06 - Mat Charles
+ - Tighten PID and FD chi2 cuts in StrippingD2hhh_conf.py
+
+! 2010-09-06 - Vanya Belyaev
+
+  - StrippingPromptCharm.py
+
+       prescale "D02HHForPromptCharm" line with factor 0.5 
+
+! 2010-09-06 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+   commit the correct file :-( 
+
+! 2010-09-06 - Vanya Belyaev
+ - StrippingPromptCharm.py
+
+       adjust PID cuts ( not so loose ) mainly 
+       to reduce the rate to untagged D0->h1,h2
+
+       the documentation table with eference performance 
+       is not updated yet due to lack of time. to be updated later.
+
+
+! 2010-09-06 - Jibo He
+ - Fixed typos in StrippingBd2JpsieeKstar.py and StrippingBd2eeKstar.py 
+ - Changed the sequence in "RequiredSelections" of the Selection to save CPU time 
+   . StrippingBd2JpsieeKstar.py 
+   . StrippingBd2eeKstar.py
+   . StrippingBs2JpsieePhi.py
+   Will go back when the sequence becomes more natural. 
+ - Update selections of same sign line in StrippingDiMuon.py
+   . Use the same selections as the nominal opposite sign line
+     and prescale by 10%. 
+
+! 2010-09-06 - James Keaveney
+ - Bug fix in StrippingMuMuSS.py,two lowest mass lines pre-scaled (.1).
+
+! 2010-09-06 - Neal Gauvin
+ - StrippingDisplVertices pre-scaled.
+
+! 2010-09-06 - Marcin Kucharczyk
+  - New tuning for StrippingHighPtJets line 
+
+! 2010-09-06 - Mat Charles
+ - Adjust prescales in StrippingD2hhh_conf.py (0.5 -> 0.6 for all non-inclusive lines)
+
+! 2010-09-06 - Erica Polycarpo       
+ - Added StrippingD2hhh_conf.py (StrippingD2hhh.py should be removed)
+
+
+! 2010-09-06 - Thomas Blake
+ - Added StrippingBd2KstarMuMuTriggered.py
+
+! 2010-09-06 - Jibo He
+ - Fixed the problem caused by StrippingDstarD02KKmumuRegular in StreamCharm. 
+
+! 2010-09-06 - Phillip Urquijo
+ - Update to StrippingB2XuMuNu.py, StreamSemileptonic.py
+
+! 2010-09-06 - Stefania Vecchi
+ - Revision of StrippingBd2DstarMuNu.py, StrippingBd2DstarMuNuLoose.py and 
+               StrippingDstarVeryLooseWithD02HH.py
+
+! 2010-09-06 - Jibo He
+ - Updated StrippingCcbar2Ppbar, written with the Selection toolkit. 
+ - Updated StrippingDiElectron.
+ - Updated StrippingBs2JpsieePhi, Bs2JpsieePhiLoose prescaled by 0.01. 
+ - Divided StrippingBd2Kstaree to two lines 
+   . StrippingBd2eeKstar for Bd->ee Kstar
+   . StrippingBd2JpsieeKstar for the control channel Bd->Jpsi(ee) Kstar
+   written with the Selection toolkit, to merge to one file 
+   when the stripping settings is ready.
+
+! 2010-09-06 - Jibo He for Benoit Viaud
+ - Updated StrippingDstarD02KKmumuRegular & StrippingDstarD02KKpipiRegular.
+   Written with the Selection toolkit.
+
+! 2010-09-05 - Greig Cowan
+ - Updated Bd2DstarMuNu lines.
+ - Modified Bd2JpsiKS and Lambdad2JpsiLambda lines to use mass constrained Jpsi.
+
+! 2010-09-05 - Mat Charles
+ - Updated StrippingDstarD2KShh.py -- reduced lines from 12 to 4; tightened PT cuts; opened mass windows a bit; changed lifetime-biasing cuts to explicit cut on tau
+
+! 2010-09-05 - Andrea Contu
+ - Updated StrippingDstar_D02KPiPi0, added loose PID cut on D0 daughters, looser DIRA cut and other minor changed, added prescaling factor for WS(0.0005) and RS(0.5)
+
+! 2010-09-05 - Marco Gersabeck
+ - Updated StrippingD2hhNoPIDXsec and removed it from StreamCharm
+
+! 2010-09-05 - Thomas Blake
+ - Updated StrippingMuIDCalib.py
+
+! 2010-09-05 - Alexandr Kozlinskiy
+ - updated StrippingDstarPromptWithD02HHNoPt.py for charm restripping
+ - added StrippingD02MuMu.py with stripping of tagged and untegged D0 -> mu+ mu-
+
+! 2010-09-05 - Sebastian Schleich
+ - Updated StrippingBs2PhiPhi.py for September-stripping
+
+! 2010-09-05 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+     - add more comments
+     - update the table with CPU performance  for 100k events 
+     - update the table with rate performance for 100k events 
+
+  Usage:
+
+    >>> stream = ...
+
+    >>> from StrippingSelections.StirppingPromptCharm import Lines as PC_Lines
+    
+    >>> stream.appendLines ( PC_Lines )
+  
+
+! 2010-09-04 - Rolf Oldeman
+ - StrippingB2twobody.py:
+	   - simplified code
+     - avoid Ds/D+ duplicate candidates
+     - use new StdLooseLambdac instead of StdVeryLooseLambdac
+
+! 2010-09-04 - Vanya Belyaev
+ - StrippingPromptCharm.py
+     - polish a bit Lambda_c 
+     - add more comments
+     - update tabel 
+     - add information on usage  
+
+! 2010-09-04 - Plamen Hopchev
+  - Set a prescale for StrippingBeamGas
+
+! 2010-09-04 - Stefano Perazzini
+  - StrippingB2Charged2Body tuning for better CPU consuming
+
+! 2010-09-04 - Marcin Kucharczyk
+  - StrippingHighPtJets line tuning wrt new data
+
+! 2010-09-04 - Sebastian Schleich
+ - Added config_Sept2010 to StrippingInclPhi for 1/1k
+
+! 2010-09-04 - Greig Cowan
+ - Removed StrippingDstarD02xx from definition of Charm stream to fix nightlies.
+
+! 2010-09-04 - Steve Blusk
+- Further retuining of B-->D+3H lines, dix bug in D*3h modes
+- Add B(s)-->Ds+Ds-, D+D-, D+Ds-, D*-D+ and D*-Ds+ lines
+
+! 2010-09-04 - Anton Poluektov 
+  - Further tuning of StrippingB2DX.py. Relaxed some D cuts, lifetime cut for B 
+    instead of flight chi2. Total retention is 0.42% with Reco05-Stripping08. 
+
+! 2010-09-03 - James Keaveney
+  - Significant tightening of electroweak lines. Some pre-scaled lines
+    added for calibration.
+
+! 2010-09-03 - Greig Cowan
+ - Removed Bs2MuMuNoMuID from DiMuon stream so that nightlies pass. This is just temporary until
+   streams are redefined next week.
+
+! 2010-09-03 - Francesco Dettori 
+  - Commissioning of StrippingDstarD02xxForCross  a modified version of StrippingDstarD02xx
+    for the stripping of 14 nb for cross-section measurements, to be removed afterward
+
+! 2010-09-03 - Susan Haines
+ - removed StrippingBu2D0K_D02KSPiPi.py and updated StrippingBu2D0h_D02KShh_NoPID.py 
+	with narrower D mass window and 3 decay descriptors for D.	Other changes to cuts to improve timing and retention.
+
+! 2010-09-03 - Sebastian Schleich
+ - updated StreamCalibration for the new InclPhi configurable
+
+! 2010-09-03 - Rolf Oldeman
+ - StrippingB2twobody.py. modified multi-decay channle mechanism: 
+   One instance of CommonParticles with 115 decay descriptor instead of
+   115 instances of CommonParticles. Speed improvement 22ms->1ms
+
+! 2010-09-03 - Johannes Albrecht
+ - remove obsolete StrippingBs2MuMuNoMuID.
+
+! 2010-09-03 - Liming Zhang
+ - Updated StrippingB2DMuNuX.py StrippingD0ForBXX.py and StrippingDForBSemi.py
+Line                         time[ms]       retention rate
+--------------------------------------------------------------------
+Strippingb2D0MuXLine             0.983         0.059%
+Strippingb2DpMuXLine             0.838         0.073%
+Strippingb2DsMuXLine             0.769          0.066%
+Strippingb2LcMuXLine             0.720          0.021%
+--------------------------------------------------------------------
+StrippingD02KPiforBXXLine        0.170         0.065%
+StrippingD02K3PiforBXXLine       0.390         0.016%
+StrippingDpforBSemiLine          0.094         0.049%
+StrippingDsforBSemiLine          0.198         0.052%
+StrippingLcforBSemiLine          0.160         0.021%
+--------------------------------------------------------------------
+
+
+
+! 2010-09-03 - Rob Lambert
+ - Updated StrippingB0q2DplusMuX.py
+ - New line added 'StrippingB0q2DplusMuXTuned'
+   --------------------------------------------------
+   Rate: ~0.001%, Av CPU: 0.977 ms, Max CPU: 75.4 ms.
+   --------------------------------------------------
+   . It has been known for a while that StrippingB0q2DplusMuXPresel is too
+     loose for the latest data, in terms of both Rate and timing, hence
+     it is by default prescaled by a factor 10.
+   . as discussed in the Semileptonic Taskforce I added an intermediate line.
+     This new line: StrippingB0q2DplusMuXTuned uses the same variables
+     as the two existing lines Presel, MC09, but is tighter than Presel,
+     Looser than MC09, particularly looser in the PID requirements.
+   . The timing and rate of this line are much better than the Presel line
+
+
+! 2010-09-02 - Anton Poluektov 
+ - Updated StrippingB2DX.py. Performance with 20k Reco05-Stripping08 data: 
+
+  Decision name                                      :     Rate  <T>,ms
+  -------------------------------------------------------------------------
+  StrippingSequenceStreamTest                        : 0.003200  20.888
+  -- StrippingB2DXWithD2KPiPi0MergedSidebandLine     : 0.000000   5.626
+  -- StrippingB2DXWithD2KshhSidebandLine             : 0.000550   2.326
+  -- StrippingB2DXWithD2hhhSidebandLine              : 0.000400   3.557
+  -- StrippingB2DXWithD2hhhhSidebandLine             : 0.000150   2.950
+  -- StrippingB2DXWithD2hhSidebandLine               : 0.001350   1.651
+  -- StrippingB2DXWithD2KPiPi0ResolvedSidebandLine   : 0.001100   2.933
+  -- StrippingB2DXWithLambdaSidebandLine             : 0.000550   1.790
+
+
+! 2010-09-02 - Sebastian Schleich
+ - StrippingInclPhi.py. New configuration mechanism + stricter prescales
+
+! 2010-09-02 - Harry Cliff
+ - update StrippingD2hh.py
+
+! 2010-09-01 - Vanya Belyaev
+ - update StrippingPromtCharmp.py
+
+#  The performance with 100k events from Reco05-Stripping08_SDSTs.py:
+#
+# +-----------------------------------+----------+----------+-------+--------+
+# | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
+# +-----------------------------------+----------+----------+-------+--------+
+# | StrippingGlobal                   | 0.007600 |     760  |       | 3.010  |
+# +-----------------------------------+----------+----------+-------+--------+
+# | StrippingSequenceStream_Vanya     | 0.007600 |     760  |       | 3.004  |
+# | -- StrippingDstarForPromptCharm   | 0.001080 |     108  | 1.426 | 1.541  |
+# | -- StrippingD02HHForPromptCharm   | 0.003590 |     359  | 1.025 | 0.035  |
+# | -- StrippingDsForPromptCharm      | 0.000680 |      68  | 1.147 | 0.224  |
+# | -- StrippingDForPromptCharm       | 0.001520 |     152  | 1.026 | 0.270  |
+# | -- StrippingLambdaCForPromptCharm | 0.001820 |     182  | 1.126 | 0.859  |
+# +-----------------------------------+----------+----------+-------+--------+
+#                                                   Thanks to Anton Poluektov
+#
+# +-------------------------------------------------------------------------------------------------------------+
+# |                              AlgorithmCorrelations                                                          |
+# +-----------------------------------+--------+----------------------------------------------------------------+
+# |   Algorithm                       | Eff.   |   1        2        3        4        5        6        7      |
+# +-----------------------------------+--------+----------------------------------------------------------------+
+# |  1 StrippingGlobal                | 0.760% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% |
+# |  2 StrippingSequenceStream_Vanya  | 0.760% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% |
+# |  3 StrippingDstarForPromptCharm   | 0.108% |  14.211%  14.211%  #######  24.234%   0.000%   0.000%   0.000% |
+# |  4 StrippingD02HHForPromptCharm   | 0.359% |  47.237%  47.237%  80.556%  #######   1.471%   1.974%   1.648% |
+# |  5 StrippingDsForPromptCharm      | 0.068% |   8.947%   8.947%   0.000%   0.279%  #######   1.316%   3.297% |
+# |  6 StrippingDForPromptCharm       | 0.152% |  20.000%  20.000%   0.000%   0.836%   2.941%  #######   4.396% |
+# |  7 StrippingLambdaCForPromptCharm | 0.182% |  23.947%  23.947%   0.000%   0.836%   8.824%   5.263%  ####### |
+# +-----------------------------------+-------------------------------------------------------------------------+
+#                                                                                    Thanks to Patrick Koppenburg
+
+
+
+
+! 2010-09-01 - Greig Cowan
+ - Added StrippingB2JpsiXforBeta_s.py. This contains all (well, it will eventually)
+   JpsiX lines associated to the beta_s group. This uses the new "selection
+   configurables" framework. There is a new inclusive Jpsi line which writes out
+   the StdMassConstrainedJpsi2MuMu particles. All of the inclusive lines are 
+   subsets of this line. Rates are 0.2% on my test data sample for the inclusive line
+   and <0.06% for the exclusive lines. All lines take <1ms/event on average. 
+
+! 2010-09-01 - Rolf Oldeman
+ - added StrippingB2twobody.py
+
+! 2010-09-01 - Johannes Albrecht
+ - adapt detached JPsi selection in StrippingBs2MuMuLines.py
+
+! 2010-08-30 - Liming Zhang
+ - Modify StrippingBs2Jpsif0.py and StrippingBs2PhiMuMu.py: tighten cuts
+   and remove loose line in Bs->Jpsif0
+
+! 2010-08-28 - Yasmine Amhis 
+  - Modify Lambdab2JpsiLambda lines 
+  . release Lambda mass cut. 
+! 2010-08-26 - Rob Lambert
+ - Prescaled StrippingB02DplusMuXPresel to 10%, as agreed earlier
+   by the taskforce.
+
+! 2010-08-26 - Nicola Mangiafave
+ - Tightened Bu2KJpsiPiPiLooseLine to reach 0.1% retention.
+
+! 2010-08-25
+ - Harder cuts in StrippingD2hh.py D2hhPIDLine.
+
+! 2010-08-25 - Anton Poluektov 
+ - Tightened StrippingB2DX selections: introduced DIRA, DOCA for D candidates, 
+   minimum PV separation for at least one of daughters for D->hh, D->hhh, 
+   cut on the number of tracks in the event. 
+   Default set of cuts gives 1.6% total retention for all B2DX lines. 
+
+! 2010-08-25 - Greig Cowan
+ - Set prescale of StrippingDstarVeryLooseWithD02HH to 0.01 as it was taking too much rate.
+   Should now be ~0.06% retention.
+
+! 2010-08-24 - Yasmine Amhis
+ - Tightened  track cuts for StrippingLambdab2JpsiLambda lines.
+    	 
+! 2010-08-24 - Vanya Belyaev
+
+ - StrippingPromptCharm.py  
+   StrippingTriMuons.py     
+
+      Improve documentations, add the table with 
+      test results with Reco05-Stripping08 
+
+
+! 2010-08-24 - Jibo He
+ - Lifetime unbiased inclusive dimuon lines tightened, as agreed by Gaia. 
+
+! 2010-08-23 - Yasmine Amhis
+  -Change the cuts in Lambdab2JpsiLambdaLL/DD lines 
+
+!========================== StrippingSelections v1r26 2010-08-20 ==============
+
+! 2010-08-20 - Patrick Spradlin
+  - Removed from StreamCharm.py the untagged D0 lines defined in
+    StrippingDstarPromptWithD02HH.py (StripDstarPromptD02xxAloneLine lines).
+    The tagged lines are still included.
+
+! 2010-08-18 - Hamish Gordon
+  - Commented out remaining D->3h cross section lines in StreamCharm
+  - Removed vertex chi2 cut from these cross section lines
+
+! 2010-08-15 - Anton Poluektov 
+ - Modified StrippingB2DX: 
+    * Changes in the code structure
+    * Added LambdaB->LambdaC pi/K by Rudolf Oldeman
+    * Modified D->KPiPi0 and D->hhhh selections (use cuts by Aurelien Martens)
+    * Removed Ds mass window for neutral D combinations
+    * Prescaling instead of postscaling
+    * Get rid of 'signal' lines: instead, can duplicate lines with tighter cuts. 
+      Should be faster than filtering and postscaling. 
+
+! 2010-08-13 - Marco Gersabeck 
+ - Included StrippingD2hh to StreamCharm and removed StrippingD2hhNoPID, StrippingD2Kh, StrippingD2KhLoose
+
+! 2010-08-13 - Steve Blusk
+
+ - Relax cut on number of tracks from 150 to 200
+ - Tighten some other cuts, PTmin, TrackChisq
+ - Average CPU/line less than 1 ms/event for Reco05-Stripping08
+ - Retention at 0.002 level on Reco05-Stripping08
+
+! 2010-08-13 - Liming Zhang
+ - StrippingB2DMuNuX.py: updated by adding DOCA, tightening PID 
+      and removing ReFitPVs. CPU times gained by factor 3
+ - StrippingD0ForBXX.py: updated and prescaled by 1/20 and resume 
+      D0->K3pi line
+ - StrippingDForBSemi.py: new lines added to reconstruct D+, Ds 
+      and /\c for B0->DMuNuX study. Prescaled by 1/10. CPU time 
+      0.2-0.3 ms/event for each line, retention rate 0.05%-0.3% 
+ - for details see http://indico.cern.ch/getFile.py/access?contribId=5&sessionId=1&resId=1&materialId=slides&confId=103204
+
+! 2010-13-10 - Francesco Dettori 
+  - Modified StrippingDstarD02xx.py to require correspondent HLT2 for each line
+  - Tightened cuts for StrippingLambdac.py
+
+! 2010-08-13 - Marco Gersabeck 
+ - Added StrippingD2hh to replace existing D0->hh lines, changed StrippingD2hhNoPIDXsec (relaxed cuts, added prescale)
+
+! 2010-08-13 - Anton Poluektov 
+ - Added StrippingReport to TestMyStrippingLineOnRealData.py
+   Shows accept rate, time/event for benchmarking. 
+
+! 2010-08-13 - Neal Gauvin
+ - The DisplVertices lines don't depend anymore on BestPIDParticleMaker. Gain in CPU time by a factor 2.
+   Physics remains unchanged.
+
+! 2010-08-11 - Vanya Belyaev
+
+ - add StrippingTriMuons.py 
+      and include it into StreamDimuon.py
+
+! 2010-08-10 - Greig Cowan
+ - Added new Reco05-Stripping08 data sample and restructured tests directory.
+   The sample comes from run 77222 which is from fill 1266 with TCK 0x0019001F
+   (Hlt in rejection mode). The mu for this fill was 1.1 -> 0.98.
+ - Reco04-Stripping07 data has new POOL XML catalog.
+ - Tightened up cuts for Bd2DstarMuNuLoose line. Retention on Reco05-Stripping08 is 0.3%.
+   Timing is ~7ms/event but this involves building D0 and Dstar CommonParticles which are used
+   elsewhere. I have added the line back into the semileptonic stream definition.
+
+! 2010-08-09 - Steve Blusk
+
+ - Modified StrippingB2D3H: make D mesons with StdLooseKaons, and add some prescale/postscales if needed.
+ - If prescales needed, there is an ordered list of preferred ways to do this in StrippingB2D3HConf()
+   
+! 2010-08-08 - Vanya Belyaev
+
+ - small fix in SrippingPromptCharm
+   
+
+! 2010-08-07 - Vanya Belyaev
+
+ - tiny fix, use updated DECTREE functor and new semantics of BPVLTIME() functor
+
+
+! 2010-08-06 - Vanya Belyaev
+ - tiny fix 
+
+! 2010-08-05 - Vanya Belyaev
+
+ - PromptCharm
+
+    make use of new CheckPV syntax by Anton 
+
+! 2010-08-05 - Nicola Mangiafave
+ - Added to StreamDimuon 3 new lines:
+ - Bu2KJpsiPiPiLooseLine = loose line for B+ -> K+ X(3872)(->J/psi(mumu)rho(pipi)) 
+   and  B+ -> K+ Psi(2S)(->J/psi(mumu)pi+pi-). 
+ - Bu2KX3872Line = tight line for B+ -> K+ X(3872)(->J/psi(mumu)rho(pi+pi-)). 
+ - Bu2KPsi2SLine = tight line for B+ -> K+ Psi(2S)(->J/psi(mumu)pi+pi-). 
+
+! 2010-08-05 - Alexandr Kozlinskiy
+ - updated DstarPromptWithD02HHNoPt: added PID cuts on kaon and pion from D0.
+
+! 2010-08-03 - Vanya Belyaev
+
+ - StrippingPromptCharm.py
+
+! 2010-07-29 -Yasmine Amhis 
+    -Change a cut (LambdabVCHI2) in StrippingLambdab2JpsiLambda
+
+! 2010-07-29 - Philip Hunt
+  - Added new stripping lines for D0 -> K3Pi and D*+ -> (D0 -> K3Pi) pi+ for
+    the cross-section measurement (StrippingD02K3Pi.py).
+    These are based on the "Selection" framework requirement, and will replace
+    the previous lines found in StrippingD02K3PiForXSection.py.
+    The lines now take about ~2ns per event on average on the previous test
+    data, and ~17ns per event on average for the Reco04-Stripping07 high pileup
+    data
+  - The physics line for D*+ -> (D0 -> K3Pi) pi+ , found in
+    StrippingDstarPromptWithD02K3Pi.py will be left disabled until these lines 
+    have been optimised for the current run conditions
+
+! 2010-07-29 -Yasmine Amhis
+  - Update  StrippingLambdab2JpsiLambda.py
+    . Version  added on the same day was  WRONG ! 
+
+! 2010-07-29 - Greig Cowan 
+  - Added list of Reco04-Stripping07 LFNs to tests directory. Updated the test
+    script to use them. This data is more representative of current running
+    conditions and corresponds to:
+	
+	RunID	FillID	TCK		
+	75414	1224	0x0013001F
+
+  - Modified StrippingBd2JpsiKstar.py tight and loose lines so that Jpsi comes
+    first in the sequence, before the Kstar is filtered. This speeds up the line.
+  - As above but for Bs2JpsiPhi.
+
+! 2010-07-29 - Yasmie Amhis 
+  - Add  new stripping lines for Lambda_b -> Jpsi Lambda 
+   StrippingLambdab2JpsiLambda (LL and DD lines)
+  - Added to StreamDimuon   
+
+!========================== StrippingSelections v1r25 2010-07-27 ==============
+
+! 2010-07-27 - Greig Cowan
+ - Prescaled three V0 and three V0Geo lines by a further factor 5 to get retention
+   rate down to something acceptable (<1%).
+  StrippingK0SLine
+  StrippingK0S_DDLine
+  StrippingKSAllGeoLine
+  StrippingLambda0Line
+  StrippingLambda0_DDLine
+  StrippingLambdaAllGeoLine
+
+ - Altered cuts in B2KShh line on behalf of Jussara.
+ - Removed StrippingB2D3Pi.py on request of Steve Blusk since it is no longer used.
+ 
+! 2010-07-27 - Thomas BLAKE
+ - Updated stream Bhadron to add B2D3H lines from S. Blusk
+ - Added StrippingB2D3H.py
+
+! 2010-07-26 - Jibo He
+ - StrippingCcbar2Ppbar.py
+   . Ccbar2PpbarLoose prescaled by 100
+
+! 2010-07-26 - Jibo He
+ - StrippingDiElectron.py
+   . LooseJpsi2ee pre-scaled by 1000
+   . BiasedIncDiElectronLowMass prescaled further, now by 100
+   . IncDiElectronLowMass prescaled further, now by 100
+   . Jpsi2ee: PIDe>2 added, PT cut increasd to 850
+   . IncDiElectron: PIDe>2 added, PT cut increased to 1 GeV
+   . BiasedIncDiElectron: PIDe>2 added, PT cut increased to 500 MeV
+
+! 2010-07-26 - Anton Poluektov 
+ - updated StrippingB02D0Kstar_D02KPiPi0.py and added a new 
+   StrippingB02D0Kstar_D02K3Pi.py lines by Aurelien Martens
+
+! 2010-07-26 - Phillip Urquijo
+ - updates to StrippingB2XMuMuSS.py, StrippingB2XuMuNu.py, StrippingD2XuMuMu.py, StreamSemileptonic.py
+ - timing improvements (by reordering reconstruction order) and cut updates for data.
+
+! 2010-07-26 - Thomas BLAKE
+ - Fix for broken nightlies
+ - Updated FD cut in Bd -> K* mu mu signal lines
+
+
+
+! 2010-07-26 - Juan Palacios
+ - Fix broken nightlies.
+
+! 2010-07-25 - Hamish Gordon
+- Tightened cuts on D->3h B lines for CP and XS measurements.
+- Uncommented StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS and StrippingD2hhhXS.lineD2KKP_B_LoosePID_BkgXS in StreamCharm.py
+
+
+! 2010-07-24 - Francesco Dettori 
+ - Tightened cuts on StrippingDstarD02xx.py and StrippingLambdac.py 
+
+! 2010-07-23 - Greig Cowan
+ - Added Ds line to Charm stream.
+ - Fixed bugs in Bd2DstarMuNuLoose and DstarVeryLoose lines caused by change in
+   DataOnDemand service. Now using MergedSelection to allow for logical OR of
+   two inputs. Also using StdLooseMuons rather than StdVeryLooseMuons.
+
+! 2010-07-23 - Liming Zhang
+ - Update inclusive B->DMuNuX lines by changing Mu and D reconstruction order and
+   tightening cuts. The timing is 0.6ms/event. Removed old lines in Strippingb2DMuX.py, 
+   added new lines in StrippingB2DMuNuXConf
+
+! 2010-07-23 - Sam GREGSON
+ - Updated D2KS0h_KS02PiPi stripping line to reduce timing and retention rate on min bias data
+
+! 2010-07-23 - Marcin Kucharczyk
+ - New tuning for StrippingHighPtJets line wrt higher luminosity
+
+! 2010-07-22 - Thomas BLAKE
+ - Updated Stream leptonic to fix lines breaking the stripping
+
+! 2010-07-22 - Thomas BLAKE
+ - Updated charm stream to reflect reco-04-stripping-07
+
+
+! 2010-07-22 - Thomas BLAKE
+ - Removed B2Charged2Body1000 and B2Charged2Body4000 from the BHadron stream
+
+
+! 2010-07-22 - Thomas BLAKE
+ - Removed early dimuon line from Stream Dimuon
+
+
+! 2010-07-21 - O. Deschamps for R. Lefevre
+ - new stripping options for B->HHPi0 (StrippingB2HHPi0.py)
+
+! 2010-07-20 - Juan Palacios
+ - python/StrippingSelections/StreamSemileptonic.py
+  . Remove lines that were breaking stripping.
+
+! 2010-07-20 - Johannes Albrecht
+ - rewrote Bs2MuMuNoMuID in enwly recommended format
+ - add loose Bs2MuMu stripping line
+
+! 2010-07-20 - Patrick Koppenburg
+ - Update Simple DiMuon line.
+
+! 2010-07-19 - Patrick Koppenburg
+ - Better MuuK* simple LT line : cut at 0.001 and J/psi PT>1GeV
+
+! 2010-07-18 - Jibo He
+ - StrippingDiElectron.py
+   BiasedIncDiElectronLowMass prescaled by a factor of 10
+   IncDiElectronLowMass       prescaled by a factor of 10
+
+! 2010-07-18 - Jibo He for Artur Ukleja
+ - StrippingBs2JpsieePhi.py
+   Use common particles instead of making own Jpsi, Phi to reduce CPU time
+   Removed unnecessary SelectionSequence  
+
+! 2010-07-18 - Jibo He
+ - StrippingDiElectron.py, StrippingBc2JpsiH.py, StrippingBc2JpsiHDetached.py, 
+   StrippingBc2JpsiMuX.py
+   Removed unnecessary SelectionSequence
+
+! 2010-07-17 - Alexandr Kozlinskiy
+ - updated cuts and added some documentation to StrippingDstarPromptWithD02HHNoPt
+
+! 2010-07-16
+ - Added python/StrippingSelections/StrippingLambdac.py for Lambda_c -> K p pi
+   already tested on MinBias and Signal MC samples, to be presented soon. 
+ - Slight modifications in StrippingDstD02xx.py (input locations change for muons
+   and electrons)
+ - Removal of unneeded StrippingDstarD02PipiMuMuPiMuKPiKmu.py in agreement with
+   Walter Bonivento
+
+! 2010-07-16 - Susan Haines
+	- Modified Bu2D0K_D02KsPiPi and Bu2D0h_D02Kshh_NoPID lines for improved CPU time (cuts added/removed/reordered/values changed)
+
+! 2010-07-16 - Patrick Koppenburg
+ - Remove B2MuMuKstar FD line
+ - Tighten T line by a factor 1000
+
+! 2010-07-16- Sam Gregson
+  - Added D2KS0Pi_KS02PiPi stripping line 
+
+! 2010-07-16- Yasmine Amhis
+  - Modified StrippingMiniBias
+    * Adapt the MiniBias lines to the rate limited triggers. 		
+
+! 2010-07-15 - Rob Lambert
+ - Modified B0q2DplusMuX lines
+   * Tails are reduced by a factor of 10
+   * The loose 'Presel' line is prescaled by a factor 10 as default
+   * Juan's new framework is used
+   * Timing is now well within budget (0.15 ms av, 20 ms max)
+
+! 2010-07-15 - Thomas BLAKE
+ - Updated StrippingBd2KstarMuMu D to K3Pi line.
+ - Added D+ to K- Pi+ Mu+ line for calibration
+
+
+! 2010-07-14 - Anton Poluektov 
+ - Updated StrippingB2DX lines: 
+   * Now there are 10 lines, with D->hh, D->hhh, D->hhhh, D->Kshh and D->hhpi0, 
+     each with wide and signal D mass window. 
+   * Speed improved by using AM cut before D vertex fit (now ~10 ms/event with benchmark data)
+   * Wide D mass lines are not prescaled by default
+
+! 2010-07-14 - Sebastian Schleich
+ - removed PV requirement in InclPhiStripping, adjusted Mass/Pt windows and prescales
+
+! 2010-07-12 - Greig Cowan
+ - Added options for benchmarking stripping lines.
+
+! 2010-07-13 - Ulrich Kerzel
+- update cuts in B2hhLTUnbiased: approach rate of 10^-4 for nominal line,
+   prescale loose line(doesn't work?) and did not succeed to make line
+   requiring HLT1 work 
+
+!========================== StrippingSelections v1r24 2010-07-08 ==============
+
+! 2010-07-05
+ - Update cuts in line StrippingDstarPromptWithD02HHNoPt
+
+! 2010-06-30 - Juan Palacios
+ - python/StrippingSelections/StrippingBd2KstarMuMu.py
+  . Remove some unnecessary SelectionSequences.
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
+  . New configurable module for prescaled and detatched Bs->J/Psi (MuMu) Phi (KK) selections.     
+   Should eventually replace StrippingBs2JpsiPhiPrescaled.py and StrippingBs2JpsiPhiDetatched.py.
+
+ - python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
+  . Builder class name changed from StrippingBs2JpsiPhiConf to Bs2JpsiPhiConf
+  . Use Utils.checkConfig instead of member function.
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaled.py
+  . Add selection builder class Bs2JpsiPhiPrescaledConf. Takes configuration
+    dictionary to make all that is needed.
+ - Added python/StrippingSelectios/Utils.py
+  . Helpers for stripping selection and line building.
+
+! 2010-06-29 - Juan Palacios
+ - python/StrippingSelections/StrippingBs2JpsiPhi.py
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaled.py
+ - python/StrippingSelections/StrippingBs2JpsiPhiDetatched.py
+  . Remove unnecessry SelectionSequences.
+
+ - python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
+  . Make Selections, StrippingLines "public" in StrippingBs2JpsiPhiConf.
+  . Add required boolean parameter 'BsReFitPV' to StrippingBs2JpsiPhiConf.
+    Controls whether PV re-fitting is performed for the Bs PV-related cuts.
+  . Improve documentation.
+
+! 2010-06-28 - Juan Palacios
+ - Add python/StrippingSelections/StrippingBs2JpsiPhi_dev.py
+  . Experimantal module to try out new way of configuring and building lines.
+ - Add tests/test_bs2jpsiphi.py to play with the above module.
+
+! 2010-06-27 - Anton Poluektov
+ - Added StrippingB2DX - the implementation of congigurable 
+   (but not LHCbConfigurable) B->DX lines using particle selection framework. 
+
+! 2010-06-27 - Anton Poluektov 
+ - Added B02D0Kstar_D02KPiPi0 line (to Bhadron stream) by Aurelien Martens
+
+!========================== StrippingSelections v1r23 2010-06-24 ==============
+
+! 2010-06-24 - Juan Palacios
+ - tests/test_stream_output_locations.py
+  . Test if more than one line in allStreams writes to the same location.
+ - python/StrippingSelections/StrippingDstarPromptWithD02HH.py
+  . outputSelection() -> outputLocation()
+
+! 2010-06-17 - Alexandr Kozlinskiy
+ - Loosened cuts on D0 vertex chi2 and life time fit chi2 and D* vertex chi2
+   in line StrippingDstarPromptWithD02HHNoPt
+
+! 2010-06-16 - Greig Cowan
+ - Loosened D0 and D* PT cuts in Bd2DstarMuNu line. Modified B VCHI2 cut in 
+   Bd2DstarMuNuLoose line.
+
+! 2010-06-16 - Marco Gersabeck
+- loosen D0 IPCHI2 cut in D2hhNoPID(Xsec) to allow better prompt-secondary distinction
+
+! 2010-06-14 - Ulrich Kerzel
+- remove muon veto in B2HH lifetime unbiased
+- add 3rd stripping line to B2HH lifetime unbiased: very loose but require HLT1 
+  (not added to the list of active streams)
+
+! 2010-06-14 - Johannes Albrecht
+ - change DiMuon track chi2 cut
+
+! 2010-Jun-11 - Spradlin
+ - StrippingDstarPromptWithD02HH.py
+   . Added lines to monitor the D0 selections without the D* reconstruction.
+
+! 2010-06-11 - Liming Zhang
+ - fix bug in python/StrippingSelections/StrippingD0ForBXX.py
+ - Tight DIRA cut in D0->K3Pi in python/StrippingSelections/StrippingD0ForBXX.py
+
+! 2010-06-04 - Juan Palacios
+ - python/StrippingSelections/StrippingB2XMuMuSS.py
+ - python/StrippingSelections/StrippingD2XMuMuSS.py
+  . Fix DataOnDemand instantiaitons.
+
+! 2010-06-04 - Ulrich Kerzel
+ - added lines for lifetime unbiased B->hh (both regular and loose)
+
+! 2010-06-04 - Thomas Blake
+ - Bug fix for StrippingBd2KstarMuMu DK3pi line  
+
+! 2010-06-04 - Jacopo Nardulli
+ - Added files: 
+    python/StrippingSelections/StrippingB2DPiChi2LifeT.py
+    python/StrippingSelections/StrippingB2DPiChi2NOMWPres.py
+    python/StrippingSelections/StrippingB2DPiChi2NOMWPresLoose.py
+  I also modified the B-Hadron stream file  
+  The LifeTime selection is not added in the B-hadron stream
+  For details see my talk at the GWT CP meeting on the 3rd of June
+
+! 2010-06-01 - Greig Cowan on behalf of Dimitry and Osvaldo
+ - Tightened cuts on V0Geo line. Prescale now at 0.5.
+
+! 2010-06-01 - Juan Palacios
+ - De-activate hack. Possibly fixes in Phys/LoKiArrayFunctors.
+
+! 2010-06-01 - Juan Palacios
+ - Add python/StrippingSelections/__init__.py file loading Gaudi C++ namespace.
+   Temporary hack.
+
+! 2010-05-29 - Juan Palacios
+ - Add test for getting output locations for every stream in StrippingSelections.Streams.allStreams.
+ - Increase to v1r23.
+
+!========================== StrippingSelections v1r22 2010-05-27 ==============
+
+! 2010-05-27 - Greig Cowan
+ - Pre-scale of BiasedIncDiElectronLowMassDecision has been temporarily set back to 100% on
+   request of Jibo.
+
+! 2010-05-26 - Thomas Blake
+ - Pre-scale of BiasedIncDiElectronLowMassDecision has been set to 50%
+
+! 2010-05-26 - Thomas Blake
+ - Pre-scale of V0Geo lines has been set to 5%
+
+! 2010-05-26 - Thomas Blake
+ - Disabled DCS untagged lines in StrippingD02K3PiForCrossSection.py and set default pre-scale to 10%
+
+! 2010-05-26 - Juan Palacios
+ - Remove unnecessary AutomaticData names.
+
+! 2010-05-25 - Juan Palacios for Plamen Hopchev
+ - Add Hlt error bit lines to Calibration stream.
+ - cmt/requirements
+  . v1r22
+
+!========================== StrippingSelections v1r21 2010-05-24 ==============
+
+! 2010-05-24 - Philip Hunt
+ - Added standard and robust lines for D*->(D0->K3Pi)pi:
+   StrippingDstarPromptWithD02K3Pi.py
+ - Added standard and robust lines for tagged and untagged D0->K3Pi
+   for cross-section measurements:
+   StrippingD02K3PiForCrossSection.py
+    
+! 2010-05-24 - Jibo He
+ - StrippingBs2JpsieePhi.py
+   + Added new stripping line for Bs->Jpsi(ee)Phi
+   to StreamDielectron
+
+! 2010-05-24 - Jibo He
+ - StrippingBd2Kstaree.py
+   Go back to making own Jpsi->ee, no lower mass cuts. 
+
+! 2010-05-24 - Jibo He
+ - StrippingJpsi2ee.py renamed as StrippingDiElectron.py
+   + Added Jpsi2ee, IncDiElectron, IncDiElectronLowMass, 
+   BiasedIncDiElectron, BiasedIncDiElectronLowMass lines
+   to StreamDielectron
+
+! 2010-05-24 - Thomas BLAKE
+ - Added  StrippingB2XuMuNuConf().K_line() to semileptonic stream
+
+! 2010-05-24 - Jibo He for Benoit Viaud
+ - First stripping lines for the D*->D0(K+K-mumu) pi_sl and D*->D0(K+K-pi+pi-) pi_sl
+   and added them in StreamCharm:
+   StrippingDstarD02KKpipiRobust.py
+   StrippingDstarD02KKpipiRegular.py
+   StrippingDstarD02KKmumuRobust.py
+   StrippingDstarD02KKmumuRegular.py
+   
+! 2010-05-24 - James Keaveney
+ - added Z and W lines  based on StdVeryLooseMuons and StdNoPIDsMuons.
+
+! 2010-05-23 - Angelo Carbone
+- update StrippingB2Charged2Body with two new lines with looser cuts
+  and larger mass window: >1000 MeV and > 4000 MeV.  
+- add to StreamBhadron.py stream the 2 new lines
+
+!========================== StrippingSelections v1r20p1 2010-05-15 ============
+! 2010-05-23 - Alexandr Kozlinskiy
+ - Add StrippingDstarPromptWithD02HHNoPt (no Pt cuts) and add it to Charm stream
+
+! 2010-05-23 - Thomas BLAKE
+ - Added same sign dimuon line to the EW stream, see StrippingMuMuSS 
+
+! 2010-05-23 - Thomas BLAKE
+ - Added B and D same sign lines to the dimuon stream, see StrippingB2XMuMuSS and StrippingD2XMuMuSS
+
+! 2010-05-23 - Thomas BLAKE
+ - Added semileptonic lines for for Vub (StrippingB2XuMuNu)
+
+! 2010-05-23 - Thomas BLAKE
+ - Added D->Kpipipi stripping line for calibration of Bd->K*mumu
+
+
+! 2010-05-23 - Sebastian Schleich
+ - Modified python/StrippingSelections/StrippingInclPhi.py and StreamCalibration.py
+   added new line for low pt.
+   introduced prescale to trim total rate to 4%
+
+! 2010-05-21 - Liming Zhang
+ - D0->KPi and K3Pi added for early b & c cross-section measurements "StrippingD0forBXX.py"
+
+! 2010-05-20 Hamish Gordon
+ - 16 New D2hhh lines for cross-section measurements "StrippingD2hhhXS.py"
+ - 8 New D->hhhhh lines
+ - Updated cuts for D2hhh lines and changed prescales in "StrippingD2hhh.py"
+ - Appropriate update to StreamCharm
+
+! 2010-05-20 - Patrick Koppenburg
+ - New J/psi->ee line
+
+! 2010-05-20 - Marcin Kucharczyk
+ - minor modifications to python/StrippingSelections/StrippingHighPtJets.py
+ - added new property
+
+! 2010-05-20 - Marco Gersabeck
+ - minor modifications to python/StrippingSelections/StrippingD2hhNoPID.py
+ - added python/StrippingSelections/StrippingD2hhNoPIDXsec.py for x-section measurements
+ - added StrippingD2hhNoPIDXsec line to python/StrippingSelections/StreamCharm.py
+
+! 2010-05-20 - Vanya Belyaev
+ - StrippingV0.py
+    fix last-minute typo...
+
+
+! 2010-05-20 - Greig Cowan
+ - Fixed StreamCharm to include StrippingDstarVeryLooseWithD02HH properly.
+
+! 2010-05-20 - Juan Palacios
+ - python/StrippingSelections/StreamCharm.py
+   . Remove StrippingDstarVeryLooseWithD02HH. It is breaking the stripping initialization.
+
+! 2010-05-19 - Vanya Belyaev
+
+ - StrippingV0.py
+
+   prescale K0S-DD-case,the fianl rate for 10k minibias stream is 6%: 
+
+   2: Stream                StrippingStreamV0: 601
+     3: Line                 StrippingK0SLine: 392
+     4: Line              StrippingK0S_wsLine: 5
+     5: Line              StrippingK0S_DDLine: 39
+     6: Line            StrippingK0S_DDwsLine: 1
+     7: Line             StrippingLambda0Line: 237
+     8: Line          StrippingLambda0_wsLine: 5
+     9: Line          StrippingLambda0_DDLine: 150
+    10: Line        StrippingLambda0_DDwsLine: 5
+========================== SUMMARY ================================
+Global decision:           StrippingGlobal: 601
+Stream                   StrippingStreamV0: 601
+-------------------------------------------------------------------
+
+! 2010-05-19 - Mat Charles
+ - Bugfix to StrippingDstarD2KShh.py : was excluding upper DM sideband before by mistake.
+
+! 2010-05-19 - Greig Cowan
+ - Added StrippingDstarVeryLooseWithD02HH.py for studying Dstar for Bd2DstarMuNu lines.
+
+! 2010-05-19 - Alessio Sarti
+ - StreamDimuon.py
+	Added the same sign line
+ - StrippingDiMuon.py
+	Lowered IM cut (2.5 GeV instead of 2.7 GeV)
+	Added same sign lines (to study comb. background)
+ - StrippingMuIdCalib.py
+	Loosened Jpsi Calibration cuts for this '2010 running' scenario
+	Removed PT cut @ 1.5 on tag mu (waiting to see what cut is placed on HLT1), loosened pT and chi2trk cuts + released probe CALO cuts
+
+! 2010-05-18 - Vanya Belyaev
+
+ - StrippingV0.py
+
+    - remove (already disabled) "*_noPV" lines 
+    - use tight cuts 
+    - add HLT-selection
+    - use prescaler for "wrong-sign" lines
+
+   with these changes, it selects 10% (instead of 30%) from Mini*.dst ("Geo" is not taken into account!)
+
+   with (untouched)"Geo", it select 23% instead of 50%
+
+
+! 2010-05-17 - Patrick Koppenburg
+ - Fix dimuon PT cut in simple B->MuMuK* line. Spotted by Jeroen van Leerdam
+
+! 2010-05-12 - Rob Lambert
+ - Adapt to changes in Rec for PVLoose in StartupOptions.py
+
+! 2010-05-11 - Sebastian Schleich
+ - adapt InclPhi Stripping: Tag&probe for pt. Smaller mass range
+
+! 2010-05-11 - James Keaveney
+ - bug fixes to muon and electron Drell-Yan lines
+ - W->e line included. 
+
+! 2010-05-10 - Juan Palacios
+ - StrippingBd2DstarMuNuLoose.py
+ - StrippingBd2JpsiKstar.py
+ - StrippingBs2JpsiPhi.py
+ - StrippingBs2JpsiPhiPrescaled.py
+ - StrippingBu2JpsiK.py
+ - StrippingDiMuon.py
+ - StrippingB0q2DplusMuX.py
+ - StrippingBs2ChicPhi.py
+ - StrippingBs2EtacPhi.py
+ - StrippingBs2Jpsif0.py
+ - StrippingBs2Kst0Kst0.py
+ - StrippingBs2PhiKst0.py
+  . Use strictly correct syntax for DataOnDemand Selection objects.
+
+! 2010-05-10 - Anton Poluektov 
+ - python/StrippingSelections/StrippingDstarPromptWithD02HH.py
+ - python/StrippingSelections/StrippingDstarD02xx.py
+     Fixed selections create multiple lines with the same name. 
+
+! 2010-05-10 - Marcin Kucharczyk
+- Tunning of the StrippingHighPtJets line wrt 2010 data
+
+! 2010-05-09 - Plamen Hopchev
+ - Created StrippingBeamGas.py and inluded it in the lines of StreamMiniBias
+
+! 2010-05-08 - Harry Cliff
+ - python/StrippingSelections/StreamCharm.py
+  . Add back a fixed version of StrippingD2KhLoose
+ - python/StrippingSelections/StrippingD2KhLoose.py
+  . Changed the name of the line in StrippingD2KhLoose to avoid problems.
+
+! 2010-05-08 - Juan Palacios
+ - python/StrippingSelections/StreamCharm.py
+  . Remove StrippingD2KhLoose, which is breaking the stripping.
+ - cmt/requirements
+  . Increase version to v1r21
+
+!========================== StrippingSelections v1r20 2010-04-30 ==============
+
+! 2010-04-30 - Marcin Kucharczyk
+- Activate StrippingHighPtJets line
+
+! 2010-04-30 - Marcin Kucharczyk
+- Add StrippingHighPtJets line
+
+! 2010-04-28 Sebastian Schleich
+ - Update InclPhi stripping (configurable DLL)
+
+! 2010-04-27 Sebastian Schleich
+ - Add InclPhi stripping (to Calibration stream)
+
+! 2010-04-27 Jacopo Nardulli
+ - Fix a problem related to the equal names in the B2DX selections
+
+! 2010-04-27 Jacopo Nardulli
+ - Fix a probleam in the Hadron stream created with my previous commit.
+
+! 2010-04-26 - Jibo He
+ - StrippingCcbar2Ppbar.py
+   A loose line added for Charmunion -> ppbar, using the same selection as the 1st stage of Hlt2:
+   http://indico.cern.ch/getFile.py/access?contribId=2&resId=2&materialId=slides&confId=82199
+
+! 2010-04-26 - Jacopo Nardulli
+ - Add StrippingB2DPiChi2 and StrippingB2DPiChi2Loose selections in CVS and in the Hadron Stream
+
+! 2010-04-26 - Hamish Gordon
+ - StrippingD2hhh and StreamCharm updated to include new lines for Ds+->K+pi-pi+ (SCS) and D+->K+pi-pi+ (DCS) modes.
+
+!2010-04-26 - Mat Charles
+ - Loosened cuts in StrippingDstarD2KShh.py
+
+! 2010-04-26 - Celestino Rodriguez Cobo
+ - cleaned some  comments in StrippingBs2Kst0Kst0.
+ - added StrippingBs2PhiKst0 loose and nominal lines.
+
+! 2010-04-25 - Liming Zhang
+ - loosened cuts in Strippingb2DMuXRB and Strippingb2DMuX lines.
+ - added wrong-sign combination in Strippingb2DMuX line.
+
+! 2010-04-23 - Greig Cowan 
+ - Loosened cuts in StrippingBd2DstarMuNuLoose line. See
+http://indico.cern.ch/getFile.py/access?contribId=7&resId=1&materialId=slides&confId=77073
+
+! 2010-04-23 - Francesco Dettori 
+ - Added StrippingDstarD02xx.py which contains various stripping lines 
+   for Rare Charm studies.
+ - Added StrippingDstarD02xxConf to StreamCharm
+
+! 2010-04-23 - Rob Lambert
+ - Replace BsDsMu line with new B0q2DplusMuX, now "turned on"
+
+! 2010-04-21 - Rob Lambert
+ - Added B0q2DplusMuX, which is not used anywhere yet, but defines some lines
+
+! 2010-04-21 - Patrick Koppenburg
+ - Fix B->MuuK* configurable.
+
+! 2010-04-21 - Juan Palacios
+ - Add QMTests to package.
+ - Add strippingselections.test_allstreams_instantiation test. Checks that
+   StrippingSelections.Streams.allStreams can be instantiated.
+ - cmt/requirements
+  . Increase version to v1r20.
+
+! 2010-04-21 - Greig Cowan
+ - Fixed StrippingBd2DstarMuNu.py. Removed reference to DC06 particles.
+
+! 2010-04-20 - Jacopo Nardulli
+ - Add The B2DX Loose selection in the Hadron stream
+
+! 2010-04-20 - Patrick Koppenburg
+ - Add the 2 simple B->MuMuK* lines 
+
+! 2010-04-16 - Anton Poluektov
+ - Fixed Bd2KstarMuMu line: duplicate creation of three identical StrippingLines fixed. 
+   Got rid of "Line declared but not appended" warning. 
+
+! 2010-04-15 - Jibo He
+ - Stripping for Charmonium -> p pbar added and put in Charm stream.
+   StrippingCcbar2Ppbar.py
+
+! 2010-04-15 - Anton Poluektov
+ - Fixed Bs2PhiPhi line: duplicate creation of two identical StrippingLines fixed. 
+   Got rid of "Line Bs2PhiPhi declared but not appended" warning. 
+
+
+!========================== StrippingSelections v1r19 2010-04-08 ===================
+
+
+! 2010-04-08 - Patrick Koppenburg
+ - StreamEW : no W->e until tests are done
+
+! 2010-04-08 - Anton Poluektov 
+ - StrippingB2KSKK_KSpipi is replaced by StrippingB2KShh.py (Jussara Miranda). 
+   B->KSKPi mode added to it. 
+
+! 2010-03-31 - Anton Poluektov
+ - Added StrippingBs2PhiMuMu.py and updated StrippingBs2Jpsif0.py by Liming Zhang
+
+! 2010-03-29 - Anton Poluektov 
+ - Added StrippingB2KSKK_KSpipi.py lines by Jussara Miranda
+
+! 2010-03-29 - Anton Poluektov 
+ - Updated test script tests/TestStrippingETC.py - added StrippingReport algorithms 
+   for monitoring of selections. 
+ - Added tests/TestSingleLine.py - an example of testing single selection line
+   Also uses StrippingReport for monitoring
+
+! 2010-03-26 - Mat Charles
+ - Rewrite of StrippingDstarD2KShh: it is now a Configurable and uses
+   StrippingMembers to make lines. The cuts themselves should be
+   essentially unchanged.
+
+! 2010-03-26 - Jacopo Nardulli
+ - Adding wrong charge combinations in the D->hh selection in the B2DX lines
+
+! 2010-03-18 - Jacopo Nardulli
+ - Adding a Loose B2DX selection
+
+! 2010-03-18 - Patrick Koppenburg
+ - Restore DisplVertices lines
+
+!========================== StrippingSelections v1r18 2010-03-17 ===================
+! 2010-03-18 - Patrick Koppenburg
+ - Remove DaVinci inclusion in V0Geo. Fixes #64503
+
+! 2010-03-17 - Patrick Koppenburg
+ - Remove DisplVertices. See bug #64490
+
+! 2010-03-17 - Patrick Koppenburg
+ - Add DisplVertices to StreamEW
+ - Add lineD2KKP_A_NoPID_Sig and lineD2KKP_A_NoPID_Bkg to stream Charm
+
+! 2010-03-16 - Patrick Koppenburg
+ - Adapt MB lines to 2010 Hlt1 settings
+
+! 2010-03-15 - Neal Gauvin
+ - Adapt StrippingDisplVertices to bug-fixed DisplVertices.cpp
+
+! 2010-03-15 - Patrick Koppenburg
+ - Added SimpleBd2KstarMuMu Line to Bd2KstaMuMu
+ - v1r18
+
+!==================== StrippingSelections v1r17 2010-03-08 ====================
+
+! 2010-03-08 - Jacopo Nardulli
+- Change names in the B2DXStripping NoErrors file: python/StrippingSelections/StrippingB2DPiNoErrors.py 
+  They were conflicting with the names in the python/StrippingSelections/StrippingB2DPi.py file	  
+
+! 2010-03-02 - Jacopo Nardulli
+- Tighter cuts for the D->4h combinations in the B2DX stripping.
+  Response to https://savannah.cern.ch/bugs/?63702
+
+!==================== StrippingSelections v1r16 2010-02-22 ====================
+
+! 2010-02-23 - Marcin Kucharczyk
+- Add StrippingDisplVertices line
+
+! 2010-02-22 - Juan PALACIOS
+ - python/StrippingSelections/StrippingB2XGamma.py
+  . Quick fix for incompatible InputLocations problem.
+
+! 2010-02-19 - Vanya Belyaev
+
+ - StrippingV0.py 
+
+     - suppress "no-PV" line in the default configuration 
+
+   StrippingV0Geo.py 
+
+      couple of fixes & improvements from Mathias & Raluca 
+
+
+! 2010-02-19 - Juan Palacios
+
+ - Fix a few selections that were unnecessarily setting InputLocations.
+
+! 2010-02-18 - Patrick Koppenburg
+ - Replaced 2008-MinimumBiasDst with MC09-MB-L0Hlt1-PFN.
+ - New line in StrippingBd2KstarMuMu : Only the dimuon with standard cuts
+   . This line will need serious prescaling as soon as we have some lumi.
+     (now 13% on L0xHlt1)
+ - New line in StrippingDiMuon : B2Dimuon 
+
+! 2010-02-11 - Vanya Belyaev
+
+ - StrippingV0.py:
+
+     set the track-chi2/nDoF < 25 according to decision of V0-analysis group.
+
+! 2010-02-10 - Susan Haines
+
+- StrippingBu2D0h_D02KShh_NoPIDNoErrors.py removed
+- StrippingBu2D0h_D02KShh_NoPID.py added (inclusive selection with faster CPU time)
+
+! 2010-02-09 - Vanya Belyaev
+
+ - StreamWithPV.py, StrippingPV.py
+
+    	new stream&line for "WithPV"-(pseudo)selection
+
+ - StrippingV0.py    
+
+	   update monitoring: add "almost-final-cuts" histograms, usefull 
+                        to see the clear peaks 
+
+ - StrippingV0Geo.py 
+
+     update the stripping cuts
+
+ - cmt/requirements 
+
+    version increment to v1r16 
+
+!==================== StrippingSelections v1r15 2010-02-02 ====================
+
+! 2010-02-02 - Greig Cowan
+ - Removed PT cuts on muons and kaons (from phi and Kstar) in the lifetime
+   unbiased B2JpsiX lines. Both loose and nominal changed. Leads to tiny 
+   rate increase.
+ - Added WS decay to Bd2DstarMuNu loose line. <2 times rate increase.
+
+! 2010-02-02 - Greig Cowan for Liming Zhang
+ - Fixed Bs2Jpsif0 line to prevent duplication of some methods
+   when building the lines.
+
+! 2010-02-01 - Anton Poluektov
+ - Fixed duplicate names of Selections in Kst0Kst0 line
+ - Timing information in tests/TestStripping.C
+
+! 2010-01-29 - Greig Cowan
+ - Removed IPVIPCHI2 cuts from B in Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK
+   nominal stripping selections.
+
+! 2010-01-29 - Greig Cowan for Liming Zhang
+ - Converted Bs2Jpsif0 selections to configurables, and added a loose
+ selection for early data. Updated StrippingDimuon.py for Bs2Jpsif0.
+
+! 2010-01-29 - Anton Poluektov 
+ - Added StrippingB2D3Pi lines by Steven Blusk
+
+!========================== StrippingSelections v1r14 2010-01-26 ==============
+
+! 2010-01-26
+ - Modified StrippingDstar_D2KPiPi0.py: changed sequencers name to less common ones
+
+! 2010-01-26 - Marco Gersabeck
+ - Modified StrippingD2hhNoPID.py to remove global event cuts.
+
+! 2010-01-26 - Marco Gersabeck and Patrick Spradlin
+ - Modified StreamCharm.py to include the inclusive StrippingD2hhNoPID line.
+
+! 2010-01-26 - Patrick Koppenburg
+ - Use VeryLooseMuons in MuMuK*
+
+! 2010-01-26 - Andrea Contu 
+ Updated stripping lines for D*+ -> D0(K pi pi0) pi+
+ - StrippingDstar_D2KPiPi0.py:  Now complex conjugate D0s are selected
+
+! 2010-01-25 - Greig Cowan
+ - Added loose DiMuon selection as a configurable along with the nominal
+   DiMuon in StrippingDiMuon.py
+
+! 2010-01-25 - Patrick Spradlin for Andrea Contu
+ - New stripping lines for D*+ -> D0(K pi pi0) pi+
+   + StrippingDstar_D2KPiPi0.py:  New file with line definitions
+   - StreamCharm.py: edited to include the new lines.
+
+! 2010-01-25 - Patrick Koppenburg
+ - Remove EW lines : they are too buggy
+
+! 2010-01-25 - Anton Poluektov 
+  Bug fixes to StreamEW (correct line names) and Bd2KstarMuMu line (indentation)
+
+! 2010-01-25 - Patrick Koppenburg
+ - Fix the bugs in electroweak lines
+
+! 2010-01-25 - Patrick Koppenburg
+ - Bd2MuMuK* bug fixes: NoMuIDDiMuonForBd2KstarMuMu and MuonEleForBd2KstarMuMu
+	 have chi2 of 36. All contol lines ahve tight mother cuts
+  
+! 2010-01-25 - Celestino Rodriguez
+- Converted BsKst0Kst0 to configurable. Added BsKst0Kst0Loose line.
+  BsKst0Kst0Conf controls both nominal and loose selection for early data.
+- Changed StreamBHadron to include both lines.
+
+! 2010-01-25 - Jibo He
+ - Added three new lines (configurable): Bc2JpsiMuX, Bc2JpsiH, Bc2JpsiHDetached  
+   and put them in StreamDimuon.
+
+! 2010-01-25 - Greig Cowan
+ - Converted Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK lifetime unbiased selections
+   to configurables. Bs2JpsiPhiConf controls both the nominal stripping
+   selection and the loose selection for early data. Similarly for the other
+   two channels.
+ - Converted Bd2DstarMuNuLoose to configurable. ToDo: combine this with the
+   nominal selection for this channel.
+
+! 2010-01-23 - Fatima Soomro
+ - Added the Bs2PhiGamma and Bd2KstGamma stripping selections (configubale: Stripping B2XGamma) according to what was presented at the stripping workshop on 17Dec2009.
+ - Created a separate stream,'StreamRadiative' for these selections, and added the stream to Streams.py
+
+! 2010-01-22 - Patrick Koppenburg
+ - More lines in MuMuK*. Requires pkoppenb_20100122 of Phys/CommonParticles
+
+! 2010-01-22 - Sebastian Schleich
+ - Bs->PhiPhi : remove Bs-DOCA cut
+
+! 2010-01-23 - Susan Haines
+- Added new inclusive B->D(Kshh)h lines (configurable)
+- Replaced exclusive B->D(KsPiPi)K lines to match new MC09 offline selection (configurable)
+
+! 2010-01-21 - Anton Poluektov
+ - Added streams descriptions in the comments for StreamXXX.py
+
+! 2010-01-21 - Patrick Koppenburg
+ - Biased bs->J/psi Phi : rename too generic Phi2KK, JpsiFilter 
+ - Bd2MuMuK* : Make it configurable, add first of 4 lines.
+
+! 2010-01-21 - Jacopo Nardulli
+ - Add python/StrippingSelections/StrippingB2DPiNoErrors.py
+ - M python/StrippingSelections/StrippingB2DPi.py
+   B->DX selection modified as described in talks given on 17/12/2009
+
+! 2010-01-21 - Anton Poluektov
+ - Rearranged streams for MC09 restripping
+
+! 2010-01-19 - Anton Poluektov
+ - TestStrippingDST.py: Added StrippingConf sequencer before DSTwriter sequencer
+   (to fix problems with inter-stream correlations). 
+
+!===================== StrippingSelections v1r13 2010-01-19 ===================
+! 2010-01-18 - Anton Poluektov
+ - Typo in StrippingV0 corrected
+
+! 2010-01-18 - Mat Charles
+ - Added StreamDplus.py and inserted the stream into Streams.py
+
+! 2010-01-18 - Greig Cowan
+ - Added Loose strippings for Bs2JpsiPhi, Bd2JpsiKstar, Bu2JpsiK and
+   Bd2DstarMuNu.
+
+! 2010-01-18 - Anton Poluektov
+ - Added python/StrippingSelections/StartupOptions.py
+   Includes options needed to kill VELO non-zero-suppressed data and to redo PV. 
+
+! 2010-01-18 - Patrick Koppenburg
+ - Task #12929 : Removed DC06-Stripping.opts
+
+! 2010-01-17 - Vanya Belyaev
+
+ - StrippingV0.py
+   StrippingV0Geo.py
+ 
+     few minor fixed in names 
+     enlarge mass window fo L0-Geo 
+     add monitoring for V0-Geo lines 
+
+ - StreamV0.py 
+  
+     remove line duplication 
+
+! 2010-01-16 - Anton Poluektov 
+ - Added stream "V0" with the selections from StrippingV0 and StrippingV0Geo. 
+
+! 2010-01-15 - Vanya Belyaev
+
+ - new version of StrippingV0Geo from Mathias, with few obvious fixes the performance now is:
+
+  Test1: The full stripping test with 100k 2009-events (without re-recontruction of PV), including empty&lumi events  
+
+  Test2: The test with 50k events from Juan' datset (at least one re-recontructed "loose" PV)
+
+ ======================================================================
+     Line         |          Name                   | Test1  | Test2  
+ =================+=================================+========+=========
+       1a         |  StrippingK0SLine               |  346   |  4884      
+       1b         |  StrippingK0S_ssLine            |  269   |  3622    
+       1c         |  StrippingK0S_noPVLine          | 1133   |   -      
+       1d         |  StrippingK0S_noPV_ssLine       | 1053   |   -    
+       3          |  StrippingKSAllGeo              | 1867   | 28595       
+       2a         |  StrippingLambda0Line           |  615   |  9001    
+       2b         |  StrippingLambda0_ssLine        |  565   |  7949      
+       2c         |  StrippingLambda0_noPVLine      |  944   |   -      
+       2d         |  StrippingLambda0_noPV_ssLine   |  864   |   -   
+       4          |  StrippingLambdaAllGeo          |  748   | 11562      
+ =================+========= SUMMARY ===============+========+========
+  Global decision |  StrippingGlobal                | 3679   |  ???
+ =====================================================================
+
+Note: "Geo" selection defines rather tight mass-window for Lambda: +-20 MeV 
+
+
+
+
+! 2010-01-15 - Vanya Belyaev
+
+ - StrippingV0.py, StrippingV0Geo.py
+
+   The "main" configurable  resides in StrippingV0 and has the name 
+   StrippingV0Conf (and it includes "Geo"-lines!)
+ 
+
+Following V0-lines are implemented:
+
+   1. "Conventional" K0S 
+   2. "Conventional" Lambda0
+   3. "Geometry"     K0S 
+   4. "Geometry"     Lambda0
+
+The lines 1&2 are subdivided into 4 lines each:    
+
+     a.  PV  
+     b.  PV    & wrong-sign
+     c.  no-PV  
+     d.  no-PV & wrong-sign
+
+In total we have 10 stripping lines.
+
+For 3&4 I've used the preliminary version of Mathias' code.
+As soon as I'll get the updated version, I'll insert it into 
+V0-configurable.
+
+
+The table below contains the results of two tests
+
+  Test1: The full stripping test with 100k 2009-events (without re-recontruction of PV), including empty&lumi events  
+
+  Test2: The test with 10k events from with Juan' datset (at least one re-recontructed "loose" PV)
+
+
+===================================================================
+     Line       |          Name                   | Test1  | Test2  
+================+=================================+========+=======
+     1a         |  StrippingK0SLine               |  346   |  970      
+     1b         |  StrippingK0S_ssLine            |  269   |  741     
+     1c         |  StrippingK0S_noPVLine          | 1133   |   -      
+     1d         |  StrippingK0S_noPV_ssLine       | 2912   |   -    
+     3          |  StrippingKSAllGeo              | 2208   | 6989       
+     2a         |  StrippingLambda0Line           |  615   | 1771     
+     2b         |  StrippingLambda0_ssLine        |  565   | 1588      
+     2c         |  StrippingLambda0_noPVLine      |  944   |   -      
+     2d         |  StrippingLambda0_noPV_ssLine   | 2353   |   -   
+     4          |  StrippingLambdaAllGeo          |  965   | 2975       
+================+========= SUMMARY ===============+========+=======
+Global decision |  StrippingGlobal                | 4150   |
+===================================================================
+
+No "PV-redo" has been used for this data.
+
+Let me remind the cuts for "Conventional" selection:
+
+    - Track selection:  P > 1.5 GeV , chi2(Track)/nDof < 10 
+    
+    - V0 selection : 
+
+        -- |M-M0|  < 100 * MeV
+        -- chi2_VX <  25  
+        -- chi2_LT < 100 
+        -- c*tau > 10 mm for DD case else  c*tau > 1 mm 
+
+    For "no-PV" case, there are no cuts on chi2_LT and c*tau 
+
+
+Note that the numebrs for Mathias' selction are very preliminary and 
+probably will be different as soon as preselection will be ready
+
+
+
+! 2010-01-13 - Mat Charles
+ - Added StrippingD2hhh.py
+
+! 2010-01-06 - Patrick Koppenburg
+ - Removed default tracking cuts from line StrippingDstarD02PipiMuMuPiMuKPiKmu
+   . See bug report #61127
+
+! 2010-01-05 - Patrick Spradlin
+ - Replaced StrippingDstarNoPID.py with StrippingDstarPromptWithD02HH.py.
+   The former was installed for RICH PID calibration, the latter will be used
+   both for RICH PID calibration and for charm physics.
+   - Removed StrippingDstarNoPID.py
+   + Added StrippingDstarPromptWithD02HH.py
+   . Modified StreamDstar.py to remove the old line and add the new lines.
+
+! 2009-12-23 - Sebastian Schleich
+ - Bs->PhiPhi for 1E-3 reduction on MB / no PID
+ - made Bs->PhiPhi configurable. Adapted hadron stream definition accordingly.
+
+! 2009-12-22 - Anton Poluektov
+ - Removed StreamMinBias.py (replaced by StreamMiniBias.py)
+ - Added StrippingDstarD02PipiMuMuPiMuKPiKmu.py (Walter Bonivento)
+
+! 2009-12-19  Yasmine Amhis
+ - Add StreamMiniBias.py 
+ - Update StrippingNoBias.py (use lumi trigger), StrippingMiniBias.py (separate
+   track line and vertex line)
+ 
+! 2009-12-18 - Anton Poluektov
+ - Modified StrippingBd2JpsiKS selection (Fernando Rodrigues). 
+   Now defines two lines, with KS->LL and KS->DD. 
+   StrippingBd2JpsiKSBiased became obsolete and is removed. 
+
+! 2009-12-18 - Anton Poluektov
+ - added StrippingPass - the pass-through lines (all events and all non-lumi events) 
+   with configurable prescales. Both are in MinBias stream. 
+
+! 2009-12-17 - Patrick Koppenburg
+ - StrippingBu2LLK : fix typo in MuMuK Line
+
+! 2009-12-14 - Anton Poluektov
+ - StrippingBu2hhh line modified (1e3 rejection), and the new StrippingBu2hhh_1e4 
+   line (1e4 rejection) submitted by Alvaro Neto
+
+! 2009-12-14 - Anton Poluektov
+ - Strippingb2DMuX line modified to use StdVeryLoose selections (Liming Zhang)
+
+!===================== StrippingSelections v1r12 2009-12-16 ===================
+! 2009-12-09 - Patrick Koppenburg
+ - Added Bu->eeK and Bu->mumuK selections
+   . Added to StreamBmuon (mumu case)
+   . Added to StreamBelectron (ee case)
+   . Note that this is a configurable !
+ - StrippingBd2Kstaree.py : Use new Standard Di-Electron
+ - StrippingTopo.py : Don't prepend Phys/
+ - StrippingBd2JpsiKstarDetached.py : Don't include StdLooseDetachedKstar
+
+! 2009-12-07 - Anton Poluektov
+  - Added Strippingb2DMuX line by Liming Zhang (in Dstar stream for now) 
+
+! 2009-12-07 - Anton Poluektov 
+  - Actually added StrippingBsDsMuNu line (forgot to "cvs add" previously)
+
+! 2009-12-04 - Anton Poluektov 
+  - Added StrippingBsDsMuNu line by Kim Vervink. In Dstar stream for now. 
+  - Added StreamMinBias and StreamBelectron streams to allStreams
+
+! 2009-12-02  Yasmine Amhis
+  - Add StreamMinBias.py
+  - Add StrippingMiniBias.py  
+  - Add StrippingNoBias.py
+
+!===================== StrippingSelections v1r11 2009-12-01 ===================
+
+! 2009-12-01 - Anton POLUEKTOV 
+ - Added DstarD2Kshh selections to Dstar stream
+ - List of all streams (allStreams) in python/StrippingSelections/Streams.py
+
+! 2009-11-30 - Mat Charles
+ - Added two new files in python/StrippingSelections/ :
+     StrippingDstarD2KShh.py
+     StrippingDstarD2KShhRobust.py
+   These contain regular and "robust" (no PID / error info) versions of
+   selections for final states of the form D*+ -> D0 pi+, D0 -> KS h+ h'-
+   with 12 separate stripping lines in each file. More details in the code.
+
+! 2009-11-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r11
+ - python/StrippingSelections/StreamJpsi.py
+  . Use StrippingDiMuon instead of StrippingJpsiInc.
+
+! 2009-11-30 - Anton Poluektov
+ - Added roots scripts to show correlations between the lines and streams. 
+
+! 2009-11-26 - Marco Gersabeck
+ - Updated un-tagged prompt charm selection. Tightened and added cuts to improve retention.
+
+! 2009-11-25 - Alessio sarti
+ - Updated di-muon selection. Lowered IM cut, changed stream line name
+
+! 2009-11-22 - Greig Cowan
+ - Removed unneccesary cc from some stripping line DecayDescriptors (JpsiKS,
+   PhiPhi).
+
+!===================== StrippingSelections v1r10 2009-11-19 ===================
+
+
+
+! 2009-11-18 - Anton Poluektov 
+ - Modified TestStripping.C root macro (summary of selection results based on ETC file). 
+ - Added Bs2Kst0Kst0 line to stream Hadron
+
+! 2009-11-13 - Marco Gersabeck
+ - Modified StrippingD2hhNoPID.py
+
+! 2009-11-06 - Juan Palacios
+ - python/StrippingSelections/StrippingJpsiInc.py
+  . Re-written with selection "framework" classes.
+
+! 2009-11-06 - Anton Poluektov
+ - Fixed StrippingBd2Kstaree.py (sequencer was missing in the line)
+
+! 2009-11-03 - Marco Gersabeck
+ - Added StrippingD2hhNoPID.py
+
+! 2009-11-03 - Celestino Rodriguez
+ - Added StrippingBs2Kst0Kst0.py
+
+!===================== StrippingSelections v1r9 2009-10-30 ====================
+
+! 2009-10-30 - Anton Poluektov
+ - Removed StrippingRICHLambdaNoPid.py from cvs (outdated)
+ - Modified Lambda and Jpsi streams (new lines)
+
+! 2009-10-30 - Alessio sarti
+ - Removed Lambda selection from StrippingMuIdCalib.py
+ - Addes StrippingLambdaNoPid.py
+	- includes a common Rich + Muon LL and DD selection prescaled 
+	with 0.05 and 0.004 respectively.
+
+! 2009-10-30 - Anton Poluektov
+ - Removed __apply_configuration() call for selections using SelectionSequence
+
+! 2009-10-29 - Andrew Powell and Patrick Spradlin
+ - Maintenance of stripping selections for RICH PID calibration:
+   . python/StrippingRICHLambdaNoPID.py
+       Fixed bug and incorporated KS0 veto (+/- 15 MeV)
+
+!===================== StrippingSelections v1r8 2009-10-28 ====================
+
+! 2009-10-28
+ - python/StrippingSelections/StrippingTopo.py
+ - python/StrippingSelections/StreamHadron.py
+  . Split the 2 body and 3 body topological lines. 
+
+! 2009-10-27 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r8
+
+! 2009-10-08 - Alessio sarti
+ - Refined the Jpsi Inclusive selection
+   - Removed the mip cut while waiting for the ismuonloose filtering [reappeared!]
+   - Changed mass window: now Mass>2.9 GeV
+
+! 2009-10-15 - Patrick Koppenburg
+ - Topo : remove big commented out block
+
+! 2009-10-12 - Anton Poluektov
+ - Moved selections from options/ to python/ to reflect changes in StrippingConf. 
+ - Added stream definitions in python/ 
+ - Added Bd2Kstaree selection by Marie-Helene Schune. 
+ - New test jobs: TestStrippingETC.py, TestStrippingDST.py, TestStrippingSETC.py
+ - Root macro TestStripping.C to print summary of ETC selections. 
+
+! 2009-10-08 - Alessio sarti
+ - Refined the Jpsi Inclusive selection
+   - Removed the mip cut while waiting for the ismuonloose filtering
+   - Added 200 MeV windows around the Bs, uspsilon 2s and uspsilon 3s masses.
+
+! 2009-10-06 - Alessio sarti
+ - Refined the Jpsi and Lambda selections.
+   - Implemented the 'or-tag' for the muon candidates
+   - Added the Jpsi detached selection
+   - Refined the Lambda DD and LL selections
+
+!===================== StrippingSelections v1r7 2009-10-02 ====================
+
+! 2009-10-01 J. Nardulli
+ - options/StrippingB2DPi.py
+   Removed the Phi Mass window. This is for consistency since the K* Mass Window 
+   has already been removed.
+
+! 2009-10-01 - Juan PALACIOS
+ - python/StrippingSelections/Bs2JpsiPhiPrescaledAndDetached.py
+  . Removed and replaced by Bs2JpsiPhiDetached.py, Bs2JpsiPhiPrescaled.py
+ - options/StrippingBs2JpsiPhi.py
+ - options/StrippingBs2JpsiPhiPrescaledAndDetached.py
+  . Use new python SelectionSequence modules.
+
+! 2009-09-25 - Juan PALACIOS
+ - python/StrippingSelections/Bs2JpsiPhi*.py
+  . Fix some bugs, apply configuration of the Selections and SelectionSequences
+    so that everything works nicely.
+
+! 2009-09-23 - Juan PALACIOS
+ - cmt/requirements
+  . Add PhysSel/PhysSelPython
+  . Install python modules
+  . Increase version to v1r7
+ - Added Bs2JpsiPhi and Bs2JpsiPhiPrescaledAndDetached to StrippingSelections
+   python module
+
+!===================== StrippingSelections v1r6 2009-09-08 ====================
+
+! 2009-09-08 - Juan Palacios for Alessio Sarti
+ - options/StrippingMuIDCalib.py
+  . Fixed typo in LL lambda selection
+
+! 2009-09-04 - Anton Poluektov
+ - Modifications for MC09 processing
+   * Rearranged streams (currently 5 streams: Hadron, Bmuon, Jpsi, Dstar, Lambda)
+   * 0.1 prescale factor for topo selection
+   * tests/TestStrippingDST.py - job for DST writing
+
+! 2009-09-04 - Alessio sarti
+ - Added Inclusive Jpsi selection presented by b G.Lanfranchi last stripping meeting.
+
+! 2009-09-01 - Anton Poluektov
+ - Added StrippingBu2hhh selection by Jussara Miranda and StrippingBd2JpsiKSBiased
+   by Fernando Rodrigues
+
+! 2009-08-27 V Gligorov
+ - Rewrote the topological stripping selection to avoid clashes with the trigger code.
+   The topological stripping is now detached from the trigger; it will be reattached once
+   the common parts of the Hlt/Stripping line code are merged.  
+
+! 2009-08-27 Alessio Sarti
+ - Added the Lambda LL line + modified some cuts (accordingly to new
+   optimization). Prescaling now set to 1 (easy to change once strategy is finalized)
+   still missing Ks veto and M2 hit filtering
+
+!===================== StrippingSelections v1r5 2009-08-27 ====================
+
+! 2009-08-21 - Rob Lambert
+ - Fixed a bug in the BsKstarMuMu Stripping selection.
+
+! 2009-08-17 - Anton Poluektov
+ - Added Bs2PhiPhi line by Sebastian Schleich
+
+!===================== StrippingSelections v1r4 2009-08-11 ====================
+
+! 2009-August-05 - Patrick Spradlin and Andrew Powell
+ - Maintenance of stripping selections for RICH PID calibration:
+   . options/StrippingDstarNoPID.py
+       Improved selection cuts
+   + options/StrippingRICHLambdaNoPID.py
+       Defines a new stripping line for selecting Lambda decays for RICH
+       calibration.
+   . options/StrippingSelections.py
+       Updated to import the new RICHLambda line.
+
+! 2009-07-26 - Anton Poluektov 
+ - Added LiMing's B->Jpsi f0 selection
+
+! 2009-06-30 - Greig Cowan
+ - Altered some cuts in Bd2DstarMuNu line.
+
+! 2009-06-30 - Greig Cowan
+ - Added stripping line for Bd2DstatMuNu.
+
+!===================== StrippingSelections v1r3 2009-07-24 ====================
+
+! 2009-07-30 Alessio Sarti
+ - Add Stripping selection stream for muon ID calibration: Jpsi and 
+   Lambdas, without PID cuts.	
+
+! 2009-07-17 Basem Khanji
+ - Add Biased stripping selection for Bs2JpsiPhi channel.
+
+!===================== StrippingSelections v1r2 2009-07-16 ====================
+
+! 2009-07-10 - Rob Lambert
+ - Changed Bd2K*MuMu selection to use FilterDesktop instances, 
+     not StrippingMembers.
+
+! 2009-07-09 - V.Gligorov
+ - Updated the StrippingTopo selection. The major changes are the addition of the
+   "robust" stage and the prescaling of the 4-body topological line (10%).
+
+! 2009-07-09 - V.Gligorov
+ - Updated the StrippingB2DPi selection. The major changes are documented
+   at the start of the file itself. Note that despite its name this selection
+   selects B->DX with D=D0,D+,Ds and X=pi,K,K*,phi. More details on what is and
+   is not selected are given in the options file itself. 
+
+! 2009-07-09 - Rob Lambert
+ - InputLocation fix in MuMuK* selection
+
+! 2009-07-09 - Patrick Koppenburg
+ - Typo fix in MuMuK8 selection
+
+! 2009-07-07 - Anton Poluektov
+ - Modified tests/StrippingSTEP09.py to demonstrate the new StreamFile option
+   in StrippingConf
+
+! 2009-07-07 - Rob Lambert
+ - Updated the StrippingBd2KstarMuMu
+    - Added the 1Hz, "NoChi2" selection
+    - Updated inputlocations to new CommonParticles
+    - Simplified structure with new CombineParticles
+ - There are now three lines:
+		- Strip_Bd2KstarMuMu_10Hz
+    - Strip_Bd2KstarMuMu_2Hz
+    - Strip_Bd2KstarMuMu_1Hz
+
+!===================== StrippingSelections v1r1 2009-07-02 ====================
+
+! 2009-06-29 - Greig Cowan
+ - Updated the InputLocations for Bd2JpsiKstar.
+
+! 2009-June-25 - Patrick Spradlin and Andrew Powell
+ - Added a stripping selection for D*+ -> D0(K pi) pi without PID information
+   for RICH calibration.
+
+! 2009-06-24 - Greig Cowan
+ - Added an exclusive "presclaed and detached" selection for Bs->JpsiPhi.
+ - Updated Bs2JpsiPhi and Bd2JpsiKstar strippings to use the new Phi and Kstar
+   CommonParticles as have recently been defined. 
+
+!===================== StrippingSelections v1r0p1 2009-06-23 ====================
+! 2009-06-23 - Patrick Koppenburg
+ - Fix DC06 options
+
+!===================== StrippingSelections v1r0 2009-06-03 ====================
+
+! 2009-06-02 - Anton Poluektov
+ - Added selections and test job for STEP09.
+
+! 2009-05-31 - V. Gligorov
+ - Fixed stupid bug introduced when removing the K* mass cuts. 
+
+! 2009-05-29 - V. Gligorov
+ - Added a stripping line for the topological trigger.
+
+! 2009-05-29 - V. Gligorov
+ - Removed the K* mass cuts in the B2DPi stripping file for the B->DKpi Dalitz
+   analysis.
+
+! 2009-05-24 - V. Gligorov
+ - Updated the B2DPi stripping file to select all B2DX combinations where
+   X = {K*,phi,pi,K}. Eventually the file will be renamed but first it needs
+   to be rewritten in terms of StrippingMembers and otherwise cleaned up.
+
+! 2009-05-29 - Greig Cowan
+ - Updated beta_s channel strippings to use BPVIPCHI2 rather than 
+   MIPCHI2DV(PRIMARY) so that PV refitting is done.
+
+! 2009-05-22 - Anton Poluektov
+ - Included Greig's selections into StrippingSelections.py
+ - Made a DaVinci test file (TestGreig.py) to test Bs2JpsiPhi selection.
+
+! 2009-05-21 - Greig Cowan
+ - Updated the beta_s channels to use the new StdLTUnbiasedJpsi CommonParticles.
+
+! 2009-05-21 - Patrick Koppenburg
+ - Bd2KstarMuMu_10Hz line : added the 'd'
+
+! 2009-05-20 - Patrick Koppenburg
+ - Moved to here legacy DC06 stripping options
+ - Moved python options to options
+ - Added options/Stripping.py file that can be included trivially from any main file.
+
+! 2009-05-15  Anton Poluektov
+
+  Initial release. Content of this package: 
+    * tests/StrippingDummy.py --- Dummy stripping selection, 
+                                  example of StrippingMember features
+                            
+    * tests/TestStrippingDummy.py  --- DaVinci test job
+    
+    * python/Stripping*.py   --- here the actial selections should go
+    * tests/TestStripping.py --- run all stripping selections from python/
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

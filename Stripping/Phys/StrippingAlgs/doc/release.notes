@@ -1,0 +1,73 @@
+!$Id: $
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingAlgs
+! Responsible : Anton Poluektov
+! Purpose     : Stripping framework c++ component algorithms
+! -----------------------------------------------------------------------------
+
+! 2010-09-20 - Anton Poluektov 
+ - StrippingTCK algorithm to set the TCK field in stripping DecReports structure. 
+   The integer TCK is given as a property. Example: 
+     stck = StrippingTCK(HDRLocation = "/Event/Strip/Phys/DecReports", TCK=12345)
+     DaVinci().appendToMainSequence( [ stck ] )
+
+! 2010-09-20 - Anton Poluektov 
+ - Added information about # of errors, incidents and slow events in StrippingReport. 
+   Look at the number of incidents to see how many events exceed combinatorics limit
+   (either by MaxCombinations or by MaxCandidates). 
+
+!======================== StrippngAlgs v1r4 2010-09-06 ========================
+
+! 2010-08-12 - Anton Poluektov 
+ - StrippingReport can show timing information (time/event taken by stripping 
+   lines in ms). To enable this, ChronoAuditor has to be turned on, e.g.
+
+      from Configurables import AuditorSvc, ChronoAuditor
+      AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
+
+   in the job script.
+
+!======================== StrippngAlgs v1r3 2010-07-08 ========================
+
+! 2010-06-27 - Anton Poluektov 
+ - ProcStatusCheck looks for ProcStatus->aborted() rather than counting 
+   the number of entries in ProcStatus. 
+
+! 2010-06-24 - Anton Poluektov
+ - Added ProcStatusCheck algorithm: A simple algorithm that checks for 
+   the events aborted by reconstruction algorithms. 
+   Accepts for the events where at least one record is present in ProcStatus 
+   structure. 
+   If OutputLevel == DEBUG, prints out the names and status of the failed 
+   algorithms 
+
+! 2010-06-21 - Anton Poluektov 
+ - Corrected (hopefully) a bug that caused a segfault in StrippingReport output. 
+   String length for the formatted output was insufficient. 
+
+!======================== StrippngAlgs v1r2 2010-05-24 ========================
+
+! 2010-05-24 - Anton Poluektov 
+ - Get rid of warning messages about number of candidates and missing 
+   particles. 
+
+! 2010-05-21 - Anton Poluektov 
+ - Fixed calculation of the number of candidates in StrippingAlg and StrippingCheck. 
+   Particles in both KeyedContainer and SharedObjectContainer are now counted
+   (previously only KeyedContained worked)
+
+!======================== StrippngAlgs v1r1 2010-04-08 ========================
+
+! 2010-03-19 - Anton Poluektov
+ - Released StrippingReport algorithm to show the statistics of stripping selections. 
+
+!======================== StrippngAlgs v1r0 2010-02-22 ========================
+
+! 2010-02-19 - Juan Palacios
+ - src/StrippingAlg.cpp
+  . Remove source of compilation warning: unused parameter as argument to
+    empty function.
+
+! 2010-02-18 - Juan Palacios
+ - Imported StrippingAlg and StrippingCheck from Phys/StrippingConf
+
