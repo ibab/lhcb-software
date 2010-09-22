@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.12 2010-09-21 12:41:27 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.13 2010-09-22 13:27:57 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -150,7 +150,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     }
     // Check if a converter using object update is needed
     if ( (wanted>>24) != 0 )  {
-      ConverterID cnvid_obj(SERIALIZE_StorageType, CLID_Any | 1<<31);  
+      ConverterID cnvid_obj(SERIALIZE_StorageType,CLID_Any + (1<<31));
       pConverter = PluginService::CreateWithId<IConverter*>(cnvid_obj,typ,wanted,serviceLocator().get());
       if ( 0 != pConverter ) {
         return pConverter;
