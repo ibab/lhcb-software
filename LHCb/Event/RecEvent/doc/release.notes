@@ -7,6 +7,7 @@
 
 ! 2010-09-22 - Marco Cattaneo
  - Change WeightsVector to store weights as float (was double)
+ - Add dictionary for std::vector<std::pair<int,float>> to dict/lcgDict.h 
 
 ! 2010-09-20 - Marco Cattaneo
  - Add WeightsVector.xml, temporary class for storing primary vertex track
