@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - Canceled previous modification since VeloPix track type is being suppress 
+   from the Track class.
+
 ! 2010-09-21 - Victor Coco
  - Add VeloPix track to the track algorithm types in RichTrackID.h
 

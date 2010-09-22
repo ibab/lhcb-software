@@ -60,8 +60,7 @@ namespace Rich
           KsTrack     =  5, ///< Track algorithm type is KsTrack
           Velo        =  6, ///< Track algorithm type is Velo
           Trigger     =  7, ///< Track algorithm type Trigger track
-          MCRichTrack =  8, ///< MCRichTrack track
-          VeloPix     =  9  ///< Track algorithm type is VeloPix
+          MCRichTrack =  8  ///< MCRichTrack track
         };
 
       /** Access the enumerated type for given Track
