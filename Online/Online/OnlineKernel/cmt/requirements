@@ -33,11 +33,12 @@ path_append PYTHONPATH                $(ONLINEKERNELROOT)/python
 ###  macro cpp 'gcc32 -m32 '
 ###  macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
 
-#apply_pattern reflex_dictionary dictionary=OnlineKernel \
-#                                headerfiles=$(ONLINEKERNELROOT)/dict/dictionary.h \
-#                                selectionfile=$(ONLINEKERNELROOT)/dict/dictionary.xml \
-#                                imports=Python
-macro_append OnlineKernel_reflex_options " -D__GCCXML"
+apply_pattern reflex_dictionary dictionary=OnlineKernel \
+                                headerfiles=$(ONLINEKERNELROOT)/dict/dictionary.h \
+                                selectionfile=$(ONLINEKERNELROOT)/dict/dictionary.xml \
+                                imports=Python
+macro_append OnlineKernel_reflex_options    " -D__GCCXML"
+macro_append OnlineKernelDict_dependencies  " OnlineKernel " 
 
 # Gnerate dictionary rootmap file
 #apply_pattern generate_rootmap library=OnlineKernelDict
