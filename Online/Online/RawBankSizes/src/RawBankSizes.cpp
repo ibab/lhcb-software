@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.15 2010-09-22 13:43:14 frankb Exp $
+// $Id: RawBankSizes.cpp,v 1.16 2010-09-22 17:30:29 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ RawBankSizes::RawBankSizes( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
-//	memset(m_hparams,0,sizeof(m_hparams));
+//  memset(m_hparams,0,sizeof(m_hparams));
    m_DetectorNames.push_back("L0");
    m_DetectorNames.push_back("PRS");
    m_DetectorNames.push_back("ECal");
@@ -132,12 +132,12 @@ RawBankSizes::~RawBankSizes()
 //    }
 //    for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
 //    {
-// 	  int idx;
-// 	  idx = i;
-// 	  if (Banks[i].isError)
-// 	  {
-// 		  idx = Banks[i].rootbankidx;
-// 	  }
+//     int idx;
+//     idx = i;
+//     if (Banks[i].isError)
+//     {
+//       idx = Banks[i].rootbankidx;
+//     }
 //     if (!Banks[i].nohist)
 //     {
 //        double binw = (m_hparams[i].xmax - m_hparams[i].xmin)/m_hparams[i].n_bin;
@@ -150,11 +150,11 @@ RawBankSizes::~RawBankSizes()
 //        }
 //        Banks[i].nbin = m_hparams[i].n_bin;
 //        
-//        Banks[i].h[0]	= histoSvc()->book( Banks[i].h_name[0],Banks[i].name+" Size in Bytes (all Triggers)",m_hparams[i].n_bin+2,
-//     		m_hparams[i].xmin-binw,m_hparams[i].xmax+binw);
+//        Banks[i].h[0]  = histoSvc()->book( Banks[i].h_name[0],Banks[i].name+" Size in Bytes (all Triggers)",m_hparams[i].n_bin+2,
+//         m_hparams[i].xmin-binw,m_hparams[i].xmax+binw);
 //        declareInfo(Banks[i].h_name[0], Banks[i].h[0],Banks[i].name+" Size in Bytes (all Triggers)");
-//        Banks[i].h[1]	= histoSvc()->book( Banks[i].h_name[1],Banks[i].name+" Size in Bytes (nonLumi)",m_hparams[i].n_bin+2,
-//     		m_hparams[i].xmin-binw,m_hparams[i].xmax+binw);
+//        Banks[i].h[1]  = histoSvc()->book( Banks[i].h_name[1],Banks[i].name+" Size in Bytes (nonLumi)",m_hparams[i].n_bin+2,
+//         m_hparams[i].xmin-binw,m_hparams[i].xmax+binw);
 //        declareInfo(Banks[i].h_name[1], Banks[i].h[1],Banks[i].name+" Size in Bytes (nonLumi)");
 //     }
 //     else
@@ -163,13 +163,13 @@ RawBankSizes::~RawBankSizes()
 //     }
 //     if (!Banks[i].noprofile)
 //     {
-//        Banks[i].p[0]	= histoSvc()->bookProf( Banks[i].p_name[0],Banks[i].name+" Size vs. SourceID (all Triggers)",
-//     		m_hparams[idx].s_max-m_hparams[idx].s_min+1,
-//     		(float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
+//        Banks[i].p[0]  = histoSvc()->bookProf( Banks[i].p_name[0],Banks[i].name+" Size vs. SourceID (all Triggers)",
+//         m_hparams[idx].s_max-m_hparams[idx].s_min+1,
+//         (float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
 //        declareInfo(Banks[i].p_name[0], Banks[i].p[0],Banks[i].name+" Size vs. SourceID (all Triggers)");
-//        Banks[i].p[1]	= histoSvc()->bookProf( Banks[i].p_name[1],Banks[i].name+" Size vs. SourceID (nonLumi)",
-//     		m_hparams[idx].s_max-m_hparams[idx].s_min+1,
-//     		(float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
+//        Banks[i].p[1]  = histoSvc()->bookProf( Banks[i].p_name[1],Banks[i].name+" Size vs. SourceID (nonLumi)",
+//         m_hparams[idx].s_max-m_hparams[idx].s_min+1,
+//         (float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
 //        declareInfo(Banks[i].p_name[1], Banks[i].p[1],Banks[i].name+" Size vs. SourceID (nonLumi)");
 //     }
 //     else
@@ -186,16 +186,16 @@ RawBankSizes::~RawBankSizes()
 //     printf("Binwidth for %s not a multiple of 4. %f\n",Banks[i].name.c_str(),totsize.binw);
 //    }
 //    h_totev[0] = histoSvc()->book( "TotSize(all)","Total Event Size in Bytes (all Triggers)",m_totevpar.n_bin+2,
-// 		   m_totevpar.xmin-totsize.binw,m_totevpar.xmax+totsize.binw);
+//        m_totevpar.xmin-totsize.binw,m_totevpar.xmax+totsize.binw);
 //    declareInfo("TotSize(all)", h_totev[0],"Total Event Size in Bytes (all Triggers)");
 //    h_totev[1] = histoSvc()->book( "TotSize(nonLumi)","Total Event Size in Bytes (NonLumi)",m_totevpar.n_bin+2,
-// 		   m_totevpar.xmin-totsize.binw,m_totevpar.xmax+totsize.binw);
+//        m_totevpar.xmin-totsize.binw,m_totevpar.xmax+totsize.binw);
 //    declareInfo("TotSize(nonLumi)", h_totev[1],"Total Event Size in Bytes (nonLumi)");
 //    p_banks[0] = histoSvc()->bookProf( "Banksp(all)","Bank Size vs. Bank Number (all Triggers)",
-//     		 LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
+//          LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
 //    declareInfo("Banksp(all)",p_banks[0],"Bank Size vs. Bank Number (all Triggers)");
 //    p_banks[1] = histoSvc()->bookProf( "Banksp(nonLumi)","Bank Size vs. Bank Number (nonLumi)",
-//     		 LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
+//          LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
 //    declareInfo("Banksp(nonLumi)",p_banks[1],"Bank Size vs. Bank Number (nonLumi)");
 //    for (dethmiter j=m_dethparams.begin();j!=m_dethparams.end();j++)
 //    {
@@ -262,12 +262,12 @@ StatusCode RawBankSizes::initialize()
    }
    for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
    {
-	  int idx;
-	  idx = i;
-	  if (Banks[i].isError)
-	  {
-		  idx = Banks[i].rootbankidx;
-	  }
+    int idx;
+    idx = i;
+    if (Banks[i].isError)
+    {
+      idx = Banks[i].rootbankidx;
+    }
     if (!Banks[i].nohist)
     {
        double binw = (m_hparams[i].xmax - m_hparams[i].xmin)/m_hparams[i].n_bin;
@@ -281,8 +281,8 @@ StatusCode RawBankSizes::initialize()
        Banks[i].nbin = m_hparams[i].n_bin;
        for (hindx = 0; hindx < HISTPERHIST;hindx++)
        {
-         Banks[i].h[hindx]	= histoSvc()->book( Banks[i].h_name[hindx],Banks[i].name+" Size in Bytes"+titqual[hindx],m_hparams[i].n_bin,
-    		  m_hparams[i].xmin,m_hparams[i].xmax);
+         Banks[i].h[hindx]  = histoSvc()->book( Banks[i].h_name[hindx],Banks[i].name+" Size in Bytes"+titqual[hindx],m_hparams[i].n_bin,
+          m_hparams[i].xmin,m_hparams[i].xmax);
          declareInfo(Banks[i].h_name[hindx], Banks[i].h[hindx],Banks[i].name+" Size in Bytes"+titqual[hindx]);
        }
     }
@@ -294,9 +294,9 @@ StatusCode RawBankSizes::initialize()
     {
       for (hindx=0;hindx<HISTPERHIST;hindx++)
       {
-        Banks[i].p[hindx]	= histoSvc()->bookProf( Banks[i].p_name[hindx],Banks[i].name+" Size vs. SourceID"+titqual[hindx],
-    		 m_hparams[idx].s_max-m_hparams[idx].s_min+1,
-    		 (float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
+        Banks[i].p[hindx]  = histoSvc()->bookProf( Banks[i].p_name[hindx],Banks[i].name+" Size vs. SourceID"+titqual[hindx],
+         m_hparams[idx].s_max-m_hparams[idx].s_min+1,
+         (float)m_hparams[idx].s_min,(float)m_hparams[idx].s_max);
         declareInfo(Banks[i].p_name[hindx], Banks[i].p[hindx],Banks[i].name+" Size vs. SourceID"+titqual[hindx]);
       }
     }
@@ -316,13 +316,13 @@ StatusCode RawBankSizes::initialize()
    for (hindx=0;hindx<HISTPERHIST;hindx++)
    {
      h_totev[hindx] = histoSvc()->book( "TotSize"+namqual[hindx],"Total Event Size in Bytes"+titqual[hindx],m_totevpar.n_bin,
-		     m_totevpar.xmin,m_totevpar.xmax);
+         m_totevpar.xmin,m_totevpar.xmax);
      declareInfo("TotSize"+namqual[hindx], h_totev[hindx],"Total Event Size in Bytes"+titqual[hindx]);
      h_HLTratio[hindx] = histoSvc()->book( "HLTRatio"+namqual[hindx],"Ratio HLT Total Size"+titqual[hindx],m_HLTratiopar.n_bin,
-		     m_HLTratiopar.xmin,m_HLTratiopar.xmax);
+         m_HLTratiopar.xmin,m_HLTratiopar.xmax);
      declareInfo("HLTRatio"+namqual[hindx], h_HLTratio[hindx],"Ratio HLT Total Size"+titqual[hindx]);
      p_banks[hindx] = histoSvc()->bookProf("Banksp"+namqual[hindx],"Bank Size vs. Bank Number"+titqual[hindx],
-    		   LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
+					   LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
      declareInfo("Banksp"+namqual[hindx],p_banks[hindx],"Bank Size vs. Bank Number"+titqual[hindx]);
    }
    for (dethmiter j=m_dethparams.begin();j!=m_dethparams.end();j++)
@@ -383,13 +383,13 @@ StatusCode RawBankSizes::execute()
 //    std::string bname = LHCb::RawBank::typeName( *it );
     Banks[*it].siz = 0.0;
   }
-  const std::vector<LHCb::RawBank*> &banks= m_rawEvt->banks( RawBank::DAQ);
+  const std::vector<LHCb::RawBank*>& daq_banks= m_rawEvt->banks(RawBank::DAQ);
   nolumi = true;
-	for(std::vector<LHCb::RawBank*>::const_iterator ib = banks.begin();ib!=banks.end();ib++)
-	{
+  for(std::vector<LHCb::RawBank*>::const_iterator ib = daq_banks.begin();ib!=daq_banks.end();ib++)
+  {
     RawBank *b = *ib;
-		if (b->version() == DAQ_STATUS_BANK)
-		{
+    if (b->version() == DAQ_STATUS_BANK)
+    {
       MDFHeader *h = b->begin<MDFHeader>();
       const unsigned int *trMask=h->subHeader().H1->triggerMask();
 //      printf("Trigger Mask %0x %0x %0x %0x\n",trMask[0],trMask[1],trMask[2],trMask[3]);
@@ -398,19 +398,19 @@ StatusCode RawBankSizes::execute()
         nolumi = false;
       }
       break;
-		}
-	}
+    }
+  }
   
   for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
   {
     const std::vector<LHCb::RawBank*>* banks= &m_rawEvt->banks(  *it );
-	  for(std::vector<LHCb::RawBank*>::const_iterator ib = banks->begin();ib!=banks->end();ib++)
-	  {
-	    bnkid = (*ib)->type();
-		  int  id;
-		  id = bnkid;
-		  tots += (*ib)->size();
-		  Banks[id].siz += (*ib)->size();
+    for(std::vector<LHCb::RawBank*>::const_iterator ib = banks->begin();ib!=banks->end();ib++)
+    {
+      bnkid = (*ib)->type();
+      int  id;
+      id = bnkid;
+      tots += (*ib)->size();
+      Banks[id].siz += (*ib)->size();
       if (!Banks[id].noprofile)
       {
         Banks[id].p[0]->fill( (double) (*ib)->sourceID() , (double) (*ib)->size());
@@ -423,10 +423,10 @@ StatusCode RawBankSizes::execute()
          Banks[id].p[2]->fill( (double) (*ib)->sourceID() , (double) (*ib)->size());
         }
       }
-	  }
+    }
 
-	  if (Banks[*it].siz > 0.0)
-	  {
+    if (Banks[*it].siz > 0.0)
+    {
       double x = Banks[*it].siz;
       if (!Banks[*it].nohist)
       {
@@ -460,7 +460,7 @@ StatusCode RawBankSizes::execute()
         p_banks[2]->fill((double)(*it),Banks[*it].siz);
       }
 
-	  }
+    }
   }
   for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
   {
@@ -483,14 +483,14 @@ StatusCode RawBankSizes::execute()
         x = j->second->xmax-j->second->binw/2.0;
       }
 */
-		  j->second->h[0]->fill(x);
+      j->second->h[0]->fill(x);
       if (nolumi)
       {
-		    j->second->h[1]->fill(x);
+        j->second->h[1]->fill(x);
       }
       else
       {
-		    j->second->h[2]->fill(x);
+        j->second->h[2]->fill(x);
       }
     }
   }
@@ -501,16 +501,16 @@ StatusCode RawBankSizes::execute()
   {
     detbmiter j = m_detectors.find("HLT");
     double rat = j->second->sum/total;
-	  h_totev[0]->fill(total);
+    h_totev[0]->fill(total);
     h_HLTratio[0]->fill(rat);
     if (nolumi)
     {
-	    h_totev[1]->fill(total);
+      h_totev[1]->fill(total);
       h_HLTratio[1]->fill(rat);
     }
     else
     {
-	    h_totev[2]->fill(total);
+      h_totev[2]->fill(total);
       h_HLTratio[2]->fill(rat);
     }
   }

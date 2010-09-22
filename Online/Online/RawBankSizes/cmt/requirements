@@ -2,15 +2,16 @@ package RawBankSizes
 version v2r8
 branches cmt doc src
 use GaudiKernel v*
-use GaudiSvc v*
+use AIDA v* LCG_Interfaces
 use GaudiAlg v*
 use DAQEvent v* Event
-use OnlineKernel v* Online
-use Gaucho v* Online
 use MDF    v* DAQ
-use Gaucho v* Online
-use GaudiSvc v*
-use GaudiOnline v* Online
+#
+# Only for testing:
+#use GaudiSvc v*
+#use OnlineKernel v* Online
+#use Gaucho v* Online
+#use GaudiOnline v* Online
 
 include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
 #SRC = "$(RAWBANKSIZESROOT)/src"
