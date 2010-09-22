@@ -1,0 +1,22 @@
+#============================================================================
+# Created    : 2010-09-22
+# Maintainer : Chris Jones
+#============================================================================
+package           RecreatePIDTools
+version           v1r0
+
+branches          cmt doc src
+include_path      none
+
+# used packages
+#============================================================================
+use GaudiAlg v*
+use RecEvent v* Event
+
+# Component library building rule
+#============================================================================
+library          RecreatePIDTools    ../src/*.cpp 
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=RecreatePIDTools
