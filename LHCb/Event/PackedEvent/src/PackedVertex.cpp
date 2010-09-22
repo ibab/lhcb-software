@@ -20,7 +20,7 @@ void VertexPacker::pack( const DataVector & verts,
     for ( DataVector::const_iterator iD = verts.begin();
           iD != verts.end(); ++iD )
     {
-      Data & vert = **iD;
+      const Data & vert = **iD;
 
       // new packed data object
       pverts.data().push_back( PackedData() );

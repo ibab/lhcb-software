@@ -20,7 +20,7 @@ void ParticlePacker::pack( const DataVector & parts,
     for ( DataVector::const_iterator iD = parts.begin();
           iD != parts.end(); ++iD )
     {
-      Data & part = **iD;
+      const Data & part = **iD;
 
       // Make a new packed data object and save
       pparts.data().push_back( PackedData() );
@@ -118,18 +118,19 @@ void ParticlePacker::pack( const DataVector & parts,
       }
 
       // daughters
-      ppart.daughters.reserve( part.daughters().size() );
+      ppart.firstDaughter = pparts.daughters().size();
       for ( SmartRefVector<LHCb::Particle>::const_iterator iD = part.daughters().begin();
             iD != part.daughters().end(); ++iD )
       {
         const LHCb::Particle * mcP = *iD;
         if ( mcP )
         {
-          ppart.daughters.push_back( m_pack.reference( &pparts,
-                                                       mcP->parent(),
-                                                       mcP->key() ) );
+          pparts.daughters().push_back( m_pack.reference( &pparts,
+                                                          mcP->parent(),
+                                                          mcP->key() ) );
         }
       }
+      ppart.lastDaughter = pparts.daughters().size();
 
     } // loop over parts
   }
@@ -248,11 +249,12 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
       }
 
       // daughters
-      for ( std::vector<int>::const_iterator iD = ppart.daughters.begin();
-            iD != ppart.daughters.end(); ++iD )
+      
+      for ( int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
       {
+        const int & iD = pparts.daughters()[iiD];
         int hintID(0), key(0);
-        m_pack.hintAndKey( *iD, &pparts, &parts, hintID, key );
+        m_pack.hintAndKey( iD, &pparts, &parts, hintID, key );
         SmartRef<LHCb::Particle> ref(&parts,hintID,key);
         part->addToDaughters( ref );
       }

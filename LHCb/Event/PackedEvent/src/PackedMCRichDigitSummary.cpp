@@ -20,7 +20,7 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
     for ( DataVector::const_iterator iD = sums.begin();
           iD != sums.end(); ++iD )
     {
-      Data & sum = **iD;
+      const Data & sum = **iD;
       // make new packed data
       psums.data().push_back( PackedData() );
       PackedData & psum = psums.data().back();

@@ -48,7 +48,8 @@ namespace LHCb
         pmCov30(0),pmCov31(0),pmCov32(0),
         firstExtra(0),lastExtra(0),
         vertex(-1),
-        proto(-1)
+        proto(-1),
+        firstDaughter(0), lastDaughter(0)
     {}
 
     // packed data members
@@ -87,7 +88,7 @@ namespace LHCb
     int proto;
 
     // daughters
-    std::vector<int> daughters;
+    unsigned short int firstDaughter, lastDaughter;  
 
   };
 
@@ -121,6 +122,9 @@ namespace LHCb
 
     /// Extra info vector
     typedef std::vector<PackedExtraInfo> PackedExtraInfoVector;
+
+    /// Daughters
+    typedef std::vector<int> Daughters;
 
   public:
 
@@ -156,6 +160,12 @@ namespace LHCb
     /// Read access to the extra info
     const PackedExtraInfoVector & extra() const { return m_extra; }
 
+    /// Write access to the daughters
+    Daughters & daughters()             { return m_daughters; }
+
+    /// Read access to the extra info
+    const Daughters & daughters() const { return m_daughters; }
+
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
@@ -166,6 +176,9 @@ namespace LHCb
 
     /// The extra info 
     PackedExtraInfoVector m_extra;
+
+    /// Vector of packed daughter smartrefs
+    Daughters m_daughters;
 
   };
 

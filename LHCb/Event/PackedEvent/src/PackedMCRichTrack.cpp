@@ -21,7 +21,7 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
     for ( DataVector::const_iterator iD = tracks.begin();
           iD != tracks.end(); ++iD )
     {
-      Data & track = **iD;
+      const Data & track = **iD;
       ptracks.data().push_back( PackedData() );
       PackedData & ptrack = ptracks.data().back();
 

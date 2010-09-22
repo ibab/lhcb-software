@@ -20,7 +20,7 @@ void MCRichHitPacker::pack( const DataVector  & hits,
     for ( DataVector::const_iterator iD = hits.begin();
           iD != hits.end(); ++iD )
     {
-      Data & hit = **iD;
+      const Data & hit = **iD;
       phits.data().push_back( PackedData() );
       PackedData & phit = phits.data().back();
       phit.x          = m_pack.position ( hit.entry().x() );

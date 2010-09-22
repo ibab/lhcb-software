@@ -21,5 +21,6 @@
 #include "Event/PackedMuonPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
+#include "Event/PackedWeightsVector.h"
 
 #endif // DICT_PACKEDEVENTDICT_H

@@ -78,4 +78,10 @@
   <class name="std::vector<LHCb::PackedVertex>" />
   <class name="LHCb::PackedVertices" id="0000062E-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedWeight" />
+  <class name="std::vector<LHCb::PackedWeight>" />
+  <class name="LHCb::PackedWeights" />
+  <class name="std::vector<LHCb::PackedWeights>" />
+  <class name="LHCb::PackedWeightsVector" id="00000613-0000-0000-0000-000000000000" />
+
 </lcgdict>

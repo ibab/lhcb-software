@@ -4,6 +4,13 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Chris Jones
+ - Add packed data classes for LHCb::WeightsVector class.
+ - Fix a bug in the PackedParticle class, where the daughters where stored in 
+   a way that would break things for WritePackedDst and ReadPackedDst in
+   Event/EventPacker
+ - Add a few additional const statements here and there.
+
 ! 2010-09-18 - Chris Jones
  - Fix some compilation warnings from the Particle and Vertex packers on 
    gcc 3.4

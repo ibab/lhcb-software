@@ -20,7 +20,7 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
     for ( DataVector::const_iterator iD = phots.begin();
           iD != phots.end(); ++iD )
     {
-      Data & phot = **iD;
+      const Data & phot = **iD;
 
       pphots.data().push_back( PackedData() );
       PackedData & pphot = pphots.data().back();

@@ -21,7 +21,7 @@ void MCRichSegmentPacker::pack( const DataVector       & segs,
     for ( DataVector::const_iterator iD = segs.begin();
           iD != segs.end(); ++iD )
     {
-      Data & seg = **iD;
+      const Data & seg = **iD;
       psegs.data().push_back( PackedData() );
       PackedData & pseg = psegs.data().back();
 

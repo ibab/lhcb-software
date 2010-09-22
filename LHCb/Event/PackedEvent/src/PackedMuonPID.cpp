@@ -20,7 +20,7 @@ void MuonPIDPacker::pack( const DataVector & pids,
     for ( DataVector::const_iterator iD = pids.begin();
           iD != pids.end(); ++iD )
     {
-      Data & pid = **iD;
+      const Data & pid = **iD;
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill data

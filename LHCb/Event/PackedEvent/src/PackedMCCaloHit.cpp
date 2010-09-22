@@ -21,7 +21,7 @@ void MCCaloHitPacker::pack( const DataVector & hits,
     for ( DataVector::const_iterator iD = hits.begin();
           iD != hits.end(); ++iD )
     {
-      Data & hit = **iD;
+      const Data & hit = **iD;
       phits.data().push_back( PackedData() );
       PackedData & phit = phits.data().back();
       phit.activeE      = m_pack.energy   ( hit.activeE() * m_energyScale );
