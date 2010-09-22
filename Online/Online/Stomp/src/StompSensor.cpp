@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.4 2010-09-08 17:45:56 frankb Exp $
+// $Id: StompSensor.cpp,v 1.5 2010-09-22 13:06:48 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,12 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.4 2010-09-08 17:45:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.5 2010-09-22 13:06:48 frankb Exp $
 
+//#include <cstdint>
+#define INT64_C(c)      c ## L
+#include "apr_poll.h"
+#include "apr_time.h"
 #include "Stomp/StompSensor.h"
 #include "Stomp/stomp.h"
 #include "WT/wt_facilities.h"
-#include "apr_poll.h"
 #include "CPP/Event.h"
 #include "WT/wtdef.h"
 #include "CPP/Interactor.h"
@@ -53,9 +56,9 @@ const char* StompSensor::Message::channel() const  {
 static int report(int exitCode, const char *message, apr_status_t reason) {
   char msgbuf[80];
   ::apr_strerror(reason, msgbuf, sizeof(msgbuf));
-  ::fprintf(stderr, "%s: %s (%d)\n", message, msgbuf, reason);
+  ::lib_rtl_output(LIB_RTL_FATAL,"StompSensor> %s: %s (%d)\n", message, msgbuf, reason);
   ::exit(exitCode);
-	return reason;
+  return reason;
 }
 
 /// Initializing constructor
@@ -76,6 +79,10 @@ StompSensor::StompSensor(const string& nam, const string& host, int port)
   if ( rc != APR_SUCCESS )  {
     report(-2, "StompSensor> Could not connect", rc);
   }
+  rc = ::apr_socket_timeout_set(m_con->socket,apr_time_make(10,0));
+  if ( rc != APR_SUCCESS )  {
+    report(-2, "StompSensor> Could not set timeout", rc);
+  }
 }
 
 /// Standad destructor
@@ -91,6 +98,10 @@ int StompSensor::connectServer()   {
   if ( rc != APR_SUCCESS )  {
     report(-2, "StompSensor> Could not connect", rc);
     return 0;
+  }
+  rc = apr_socket_timeout_set(m_con->socket,apr_time_make(10,0));
+  if ( rc != APR_SUCCESS )  {
+    report(-2, "StompSensor> Could not set timeout", rc);
   }
   return 1;
 }
@@ -121,7 +132,7 @@ int StompSensor::_command(const string& cmd, const string& channel, const void* 
   else  {
     frame.headers = ::apr_hash_make(spool);
     ::apr_hash_set(frame.headers,"destination",APR_HASH_KEY_STRING,channel.c_str());
-    //cout << cmd << ": [" << channel << "]" << endl;
+    ::lib_rtl_output(LIB_RTL_DEBUG,"%s : [%s]",cmd.c_str(),channel.c_str());
   }
   frame.body_length = len;
   frame.body = (char*)body;
@@ -153,7 +164,7 @@ int StompSensor::connect()   {
     report(-2, "StompSensor> Could not read frame", rc);
     return 0;
   }
-  //::fprintf(stdout, "StompSensor> Response: %s, %s\n", pframe->command, pframe->body);
+  ::lib_rtl_output(LIB_RTL_VERBOSE,"StompSensor> Response: %s, %s\n", pframe->command, pframe->body);
   return 1;
 }
 
@@ -184,6 +195,8 @@ int StompSensor::unsubscribe(const string& channel)   {
 
 /// Send data to the stomp service (push)
 int StompSensor::send(const string& destination, const void* data, size_t len)  {
+  ::lib_rtl_output(LIB_RTL_VERBOSE,"Stomp> Send message: %s -> %s",
+		   destination.c_str(),(const char*)data);
   if ( destination.substr(0,7)=="/topic/" )
     return  _command("SEND",destination,data,int(len));
   return _command("SEND","/topic/"+destination,data,int(len));
@@ -224,7 +237,7 @@ void StompSensor::add( Interactor* client, void* topic)  {
   if ( client && channel && isascii(channel[0]) )  {
     InteractorTable::iterator i = m_clients.find(channel);
     if ( i == m_clients.end() )  {
-      cout << "+++  Subscribed to channel: " << channel << endl;
+      lib_rtl_output(LIB_RTL_INFO,"+++  Subscribed to channel: %s.",channel ==0 ? "???" : channel);
       subscribe(channel);
     }
     m_clients[channel].push_back(client);

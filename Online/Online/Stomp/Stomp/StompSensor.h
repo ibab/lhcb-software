@@ -1,4 +1,4 @@
-// $Id: StompSensor.h,v 1.2 2009-11-27 16:39:42 frankb Exp $
+// $Id: StompSensor.h,v 1.3 2010-09-22 13:06:48 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.2 2009-11-27 16:39:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.3 2010-09-22 13:06:48 frankb Exp $
 #ifndef STOMP_STOMSERVICE_H
 #define STOMP_STOMSERVICE_H
 
@@ -60,13 +60,21 @@ namespace Stomp  {
     typedef std::vector<Interactor*> Clients;
     typedef std::map<std::string, Clients >  InteractorTable;
   protected:
+    /// Service name
     std::string m_name;
+    /// Host name of the stomp data sink connection
     std::string m_host;
+    /// Stomp port number for data sink connection
     int         m_port;
+    /// Flag to be set when stopping the service
     bool        m_stop;
+    /// APR memory pool
     apr_pool_t *m_pool;
+    /// Reference to the stomp data sink connection
     stomp_connection *m_con;
+    /// Client table
     InteractorTable   m_clients;
+    /// Thread handle
     lib_rtl_thread_t  m_thread;
 
     /// Send command to stomp server
