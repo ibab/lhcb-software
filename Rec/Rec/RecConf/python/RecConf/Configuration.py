@@ -15,7 +15,7 @@ from GlobalReco.Configuration import *
 from CaloReco.Configuration   import OffLineCaloRecoConf 
 from CaloPIDs.Configuration   import OffLineCaloPIDsConf
 
-from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecMonitors, MuonTrackMonitorConf
+from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecMonitors, MuonTrackMonitorConf, MuonIDAlg
 
 ## @class RecSysConf
 #  Configurable for LHCb reconstruction
@@ -41,7 +41,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData", "microBiasTrigger" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData", "microBiasTrigger","upgrade" ]
     
     ## Steering options
     __slots__ = {
@@ -98,6 +98,13 @@ class RecSysConf(LHCbConfigurableUser):
             # the TrackV0Finder use simplified material for extra/interpolation
             trackV0Finder.Extrapolator.MaterialLocator='SimplifiedMaterialLocator'
             trackV0Finder.Interpolator.Extrapolator.MaterialLocator='SimplifiedMaterialLocator'
+
+        ## Upgrade type?
+        if self.getProp("DataType") == 'Upgrade' :
+             specialDataList = self.getProp("SpecialData")
+             specialDataList.append("upgrade")
+             self.setProp("SpecialData",specialDataList)
+
 
         # Tracking (Should make it more fine grained ??)
         DoTracking = False
@@ -160,6 +167,11 @@ class RecSysConf(LHCbConfigurableUser):
             cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"),specialData=self.getProp("SpecialData"))
             MuonIDSeq=cm.getMuonIDSeq()
             GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec", MuonIDSeq ]
+            
+            if self.getProp("DataType") == 'Upgrade' and "VELOPIX" in recoSeq:
+                from RecoUpgrade import RecoTrackingUpgrade
+                RecoTrackingUpgrade.ConfigVeloPixProvider( MuonIDAlg().myMuIDTool.fitter )
+
 
         # PROTO
         if "PROTO" in recoSeq:
