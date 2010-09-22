@@ -1,4 +1,4 @@
-// $Id: Connector.cpp,v 1.3 2009-08-07 20:27:56 frankb Exp $
+// $Id: Connector.cpp,v 1.4 2010-09-22 18:42:29 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.3 2009-08-07 20:27:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.4 2010-09-22 18:42:29 frankb Exp $
 
 #include "Stomp/Commands.h"
 #include "Stomp/Connector.h"
@@ -50,7 +50,7 @@ Connector::~Connector()  {
 }
 
 /// Set data item
-void Connector::set(int typ, const char* ptr, size_t siz)   {
+void Connector::set(int typ, const char* ptr, size_t /* siz */)   {
   char text[256];
   m_data.time = ::time(0);
   switch (typ)  {
