@@ -6,9 +6,9 @@
 
 ! 2010-09-22 - Chris Jones
  - Add packed data classes for LHCb::WeightsVector class.
- - Fix a bug in the PackedParticle class, where the daughters where stored in 
-   a way that would break things for WritePackedDst and ReadPackedDst in
-   Event/EventPacker
+ - Fix bugs in the PackedParticle and PackedVertex class, where some smartrefs 
+   were stored in a way that would break things for WritePackedDst and 
+   ReadPackedDst in Event/EventPacker
  - Add a few additional const statements here and there.
 
 ! 2010-09-18 - Chris Jones

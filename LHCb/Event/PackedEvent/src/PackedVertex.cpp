@@ -32,18 +32,19 @@ void VertexPacker::pack( const DataVector & verts,
       pvert.technique = static_cast<int>(vert.technique());
 
       // outgoing particles
-      pvert.outgoingParticles.reserve( vert.outgoingParticles().size() );
+      pvert.firstOutgoingPart = pverts.outgoingParticles().size();
       for ( SmartRefVector<LHCb::Particle>::const_iterator iP = vert.outgoingParticles().begin();
             iP != vert.outgoingParticles().end(); ++iP )
       {
         const LHCb::Particle * mcP = *iP;
         if ( mcP )
         {
-          pvert.outgoingParticles.push_back( m_pack.reference( &pverts,
-                                                               mcP->parent(),
-                                                               mcP->key() ) );
+          pverts.outgoingParticles().push_back( m_pack.reference( &pverts,
+                                                                  mcP->parent(),
+                                                                  mcP->key() ) );
         }
       }
+      pvert.lastOutgoingPart = pverts.outgoingParticles().size();
 
     }
   }
@@ -76,11 +77,11 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
       vert->setTechnique( static_cast<Vertex::CreationMethod>(pvert.technique) );
 
       // outgoing particles
-      for ( std::vector<int>::const_iterator iP = pvert.outgoingParticles.begin();
-            iP != pvert.outgoingParticles.end(); ++iP )
+      for ( unsigned short int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
       {
+        const int & iP = pverts.outgoingParticles()[iiP];
         int hintID(0), key(0);
-        m_pack.hintAndKey( *iP, &pverts, &verts, hintID, key );
+        m_pack.hintAndKey( iP, &pverts, &verts, hintID, key );
         SmartRef<LHCb::Particle> ref(&verts,hintID,key);
         vert->addToOutgoingParticles( ref );
       }

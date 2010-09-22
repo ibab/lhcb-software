@@ -250,7 +250,7 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
 
       // daughters
       
-      for ( int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
+      for ( unsigned short int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
       {
         const int & iD = pparts.daughters()[iiD];
         int hintID(0), key(0);

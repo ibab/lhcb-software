@@ -31,14 +31,15 @@ namespace LHCb
   {
     /// Default constructor
     PackedVertex()
-      : technique(0)
+      : technique(0),
+        firstOutgoingPart(0), lastOutgoingPart(0)
     {}
     
     // packed data members
     int technique;
 
     // outgoing particles
-    std::vector<int> outgoingParticles;
+    unsigned short int firstOutgoingPart, lastOutgoingPart;
 
   };
 
@@ -67,6 +68,9 @@ namespace LHCb
     /// Vector of packed objects
     typedef std::vector<LHCb::PackedVertex> Vector;
 
+    /// Outgoing Particles
+    typedef std::vector<int> OutgoingParticles;
+
   public:
 
     /// Standard constructor
@@ -89,6 +93,12 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+    /// Write access to the data vector
+    OutgoingParticles & outgoingParticles()             { return m_parts; }
+
+    /// Read access to the data vector
+    const OutgoingParticles & outgoingParticles() const { return m_parts; }
+
     /// Set the packing version
     void setPackingVersion( const char ver ) { m_packingVersion = ver; }
 
@@ -102,6 +112,9 @@ namespace LHCb
 
     /// The packed data objects
     Vector m_vect;
+
+    /// Outgoing Particles
+    OutgoingParticles m_parts;
 
   };
 
