@@ -34,6 +34,10 @@ using namespace Gaudi::Utils;
 using namespace Gaudi::Units;
 using namespace std ;
 
+#ifdef _WIN32 
+#pragma warning ( disable : 4244 ) // Conversion of double to float, done in Root 
+#endif 
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloIPResolutionMonitor
 //
