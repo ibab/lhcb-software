@@ -8,8 +8,8 @@
 #include "GaudiKernel/ToolHandle.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
+#include "TrackInterfaces/IMaterialLocator.h"
 
 #include <Event/RecVertex.h>
 
@@ -119,8 +119,8 @@ namespace Velo
     TProfile* m_p_3DetaResiduals;
   
     ITrackExtrapolator* m_trackExtrapolator;
-    ToolHandle<ITrackVertexer> m_vertexer;
     IPVOfflineTool* m_pvtool;
+    IMaterialLocator* m_materialLocator ;
   
     Tuple m_tuple;
     bool m_writeTuple;
@@ -128,7 +128,8 @@ namespace Velo
     Gaudi::XYZPoint extrapolateToZ(const LHCb::Track*, double );
     Gaudi::XYZPoint extrapolateToPOCA(const LHCb::Track*, Gaudi::XYZPoint );    
 
-    StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, double&, double&, double&, double&, double&, double& );
+    StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, 
+                             double&, double&, double&, double&, double&, double&, LHCb::State&, LHCb::State& );
     StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
 
     StatusCode fillHistos(double&, double&, double&, double&);

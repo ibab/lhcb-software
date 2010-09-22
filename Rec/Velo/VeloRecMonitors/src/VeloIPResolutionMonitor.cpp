@@ -24,6 +24,7 @@
 
 #include <VeloDet/DeVeloPhiType.h>
 #include <VeloDet/DeVeloRType.h>
+#include <DetDesc/Material.h>
 
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
@@ -32,10 +33,6 @@ using namespace LHCb;
 using namespace Gaudi::Utils;
 using namespace Gaudi::Units;
 using namespace std ;
-
-#ifdef _WIN32
-#pragma warning ( disable : 4244 ) // Conversion of double to float, done in Root
-#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloIPResolutionMonitor
@@ -56,7 +53,6 @@ namespace Velo
 Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const string& name,
                                                         ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_vertexer("TrackVertexer"),
     m_tuple(0)
 {
 
@@ -122,11 +118,13 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   setHistoTopDir( "Velo/" );
 
   // Get vertexer if required
-  if( m_refitPVs ) sc = m_vertexer.retrieve();
-  m_pvtool =tool<IPVOfflineTool>( "PVOfflineTool" );
+  if( m_refitPVs ) m_pvtool = tool<IPVOfflineTool>( "PVOfflineTool" );
 
   // get the track extrapolator used in calculating the IPs
   m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
+
+  // get the material locator
+  m_materialLocator = tool<IMaterialLocator>("DetailedMaterialLocator","MaterialLocator",this) ;
 
   // if useVariableBins=false (default) and no bin values have been defined in the options file, 
   // m_nBins equal sized bins between m_InversePTMin and m_InversePTMax are used
@@ -444,8 +442,9 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
           m_pv = newVertex ;
       }        
       
-      double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma;
-      calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma );
+      double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma ;
+      State POCAtoPVstate, stateAtPVZ ;
+      calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma, stateAtPVZ, POCAtoPVstate );
 
       // only make histos for Long tracks in given PT range
       if( inversePT < *(m_bins.rbegin()) && *(m_bins.begin()) < inversePT && m_track->type() == Track::Long )
@@ -517,6 +516,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         vector<unsigned int> stationNos;
         vector<bool> isR;
         vector<unsigned int> sensorNos;
+
         for( Track::ConstNodeRange::const_iterator inode = m_track->nodes().begin();
              inode != m_track->nodes().end(); ++inode){
             
@@ -539,12 +539,16 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
             }
           }
         }
+
+        State firstHitState = statesZ.size() != 0 ? m_track->closestState( *(statesZ.rbegin()) ) : m_track->firstState() ;
+
         m_tuple->farray( "VeloStates_X", statesX, "nMeasurements", 42 );
         m_tuple->farray( "VeloStates_Y", statesY, "nMeasurements", 42 );
         m_tuple->farray( "VeloStates_Z", statesZ, "nMeasurements", 42 );
         m_tuple->farray( "MeasStationNos", stationNos, "nMeasurements", 42 );
         m_tuple->farray( "MeasSensorNos", sensorNos, "nMeasurements", 42 );
         m_tuple->farray( "MeasIsR", isR, "nMeasurements", 42 );
+        m_tuple->column( "firstState_Z", firstHitState.z() ) ;
 
         vector< unsigned int > rSens ;
         vector< unsigned int > pSens ;
@@ -556,6 +560,40 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->farray( "rHitSensors", rSens, "nVeloRIDs", 23 ) ;
         m_tuple->farray( "phiHitSensors", pSens, "nVeloPhiIDs", 21 ) ;
 
+        IMaterialLocator::Intersections intersections ;
+        const StateVector stateVectorAtPVZ( stateAtPVZ.stateVector(), stateAtPVZ.z() ) ;
+        const StateVector stateVectorAtFirstHit( firstHitState.stateVector(), firstHitState.z() ) ;
+        
+        m_materialLocator->intersect( stateVectorAtPVZ, stateVectorAtFirstHit, intersections ) ;
+        int nIntersections = (int)intersections.size() ;
+        
+        double xOverX0 = 0. ;
+        vector<double> distances ;
+        vector<double> X0s ;
+        vector<string> names ;
+        vector<double> z1s ;
+        vector<double> z2s ;
+        
+        for( IMaterialLocator::Intersections::iterator intersectionIt = intersections.begin() ;
+             intersectionIt != intersections.end() ; ++ intersectionIt ){
+          double deltaZ = intersectionIt->z2 - intersectionIt->z1 ;
+          double distance = sqrt( pow( deltaZ, 2 ) + pow( intersectionIt->ty*deltaZ, 2 ) + pow( intersectionIt->tx*deltaZ, 2 ) ) ;
+          xOverX0 += distance/intersectionIt->material->radiationLength() ;
+          distances.push_back( distance ) ;
+          X0s.push_back( intersectionIt->material->radiationLength() ) ;
+          names.push_back( intersectionIt->material->name() ) ;
+          z1s.push_back( intersectionIt->z1 ) ;
+          z2s.push_back( intersectionIt->z2 ) ;
+          
+        }
+        m_tuple->column( "xOverX0", xOverX0 ) ;
+        m_tuple->column( "nIntersections", nIntersections ) ;
+        m_tuple->farray( "materialDistances", distances, "dummyNIntersections", 100 ) ;
+        m_tuple->farray( "materialX0s", X0s, "dummyNIntersections", 100 ) ;
+        //m_tuple->farray( "materialNames", names, "dummyNIntersections", 100 ) ;
+        m_tuple->farray( "materialZ1s", z1s, "dummyNIntersections", 100 ) ;
+        m_tuple->farray( "materialZ2s", z2s, "dummyNIntersections", 100 ) ;
+
         if( m_withMC ){
           MCVertex* mcpv = new MCVertex();
           mcpv->setPosition( Gaudi::XYZPoint( -999, -999, -999 ) );
@@ -565,8 +603,9 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
           RecVertex dummyPV = RecVertex( mcpv->position() );
           vector<float> matrixValues( 6, 0. );
           dummyPV.setCovMatrix( Gaudi::SymMatrix3x3( matrixValues.begin(), matrixValues.end() ) );
-          double mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma;
-          calculateIPs( (const RecVertex*)(&dummyPV), m_track, mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma );
+          double mcip3d, mcip3dsigma, mcipx, mcipxsigma, mcipy, mcipysigma ;
+          calculateIPs( (const RecVertex*)(&dummyPV), m_track, mcip3d, mcip3dsigma, mcipx, mcipxsigma, 
+                                   mcipy, mcipysigma, stateAtPVZ, POCAtoPVstate );
 
           m_tuple->column( "MCType", mctype );
           m_tuple->column( "MCIPRes3D", mcip3d );
@@ -655,8 +694,6 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
       delete m_IPres_unsigned3D_histos[i];
     }
   }
-
-  if( m_refitPVs ) sc = m_vertexer.release();
   
   return sc && GaudiTupleAlg::finalize();  // must be called after all other actions
 }
@@ -667,19 +704,18 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
 
 StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, const Track* track, 
                                                         double& ip3d, double& ip3dsigma, double& ipx, double& ipxsigma,
-                                                        double& ipy, double& ipysigma ){
+                                                        double& ipy, double& ipysigma, State& stateAtPVZ, State& POCAtoPVstate ){
   
   StatusCode isSuccess;
 
   // extrapolate the current track to its point of closest approach to the PV 
   // to get the 3D IP
-  State POCAtoPVstate;
   isSuccess = m_trackExtrapolator->propagate( *track, pv->position(), POCAtoPVstate );
   //State POCAtoPVstate( StateVector( extrapolateToPOCA( track, pv->position() ), track->slopes() ) ) ;
   isSuccess = distance( pv, POCAtoPVstate, ip3d, ip3dsigma, 0 );
   
   // extrapolate the current track to the same Z position as the PV to get X & Y IP
-  State stateAtPVZ = track->firstState();
+  stateAtPVZ = track->firstState();
   isSuccess = m_trackExtrapolator->propagate( stateAtPVZ, pv->position().z() );
   //State stateAtPVZ( StateVector( extrapolateToZ( track, pv->position().z() ), track->slopes() ) ) ; 
 
@@ -702,13 +738,15 @@ StatusCode Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& 
                                                     double& dist, double& sigma, int type=0 )
 {
   const Gaudi::XYZVector delta ( pv->position() - state.position() ) ;
+  double theta = state.slopes().theta()/rad ;
   
   Gaudi::SymMatrix3x3 covpv ( pv->covMatrix() ) ;
   const Gaudi::SymMatrix3x3 covpos( state.errPosition() );
   
   if( type==0 ){
     dist = sqrt( delta.mag2() );
-    sigma = sqrt( covpv(0,0) + covpos(0,0) + covpv(1,1) + covpos(1,1) + covpv(2,2) + covpos(2,2) );
+    sigma = sqrt( pow( cos(theta), 2 )*( covpv(0,0) + covpos(0,0) + covpv(1,1) + covpos(1,1) ) + 
+                  pow( sin(theta), 2 )*( covpv(2,2) + covpos(2,2) ) );
   }
   else if( type==1 ){ 
     dist = delta.x();
@@ -1082,7 +1120,8 @@ std::pair< pair< Double_t, Double_t >, pair< Double_t, Double_t > > Velo::VeloIP
 		TF1 gaus = TF1("gaus","gausn") ;
 		gaus.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS() ) ;
 		//h->Fit( &gaus, "QN" ) ;
-		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , h->GetMean(), h->GetRMS(), h->GetEntries()/1000. ) ;
+		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , 
+                       h->GetMean(), h->GetRMS(), h->GetEntries()/1000. ) ;
 		fun.SetParLimits( 0, 0, 2.*h->GetEntries() ) ;
 		fun.SetParLimits( 2, 0, 2.*h->GetRMS() ) ;
 		fun.SetParLimits( 3, 0, 2.*h->GetEntries() ) ;
@@ -1112,7 +1151,8 @@ std::pair< pair< Double_t, Double_t >, pair< Double_t, Double_t > > Velo::VeloIP
 		TF1 gaus = TF1("gaus","gausn") ;
 		gaus.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS() ) ;
 		//h->Fit( &gaus, "QN" ) ;
-		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , h->GetMean(), h->GetRMS(), h->GetEntries()/1000. ) ;
+		fun.SetParameters( h->GetEntries(), h->GetMean(), h->GetRMS()*0.1, h->GetEntries()/20. , h->GetMean(), 
+    h->GetRMS(), h->GetEntries()/1000. ) ;
 		fun.SetParLimits( 0, 0, 2.*h->GetEntries() ) ;
 		fun.SetParLimits( 2, 0, 2.*h->GetRMS() ) ;
 		fun.SetParLimits( 3, 0, 2.*h->GetEntries() ) ;
@@ -1199,8 +1239,8 @@ void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string 
 	int nbins = h->GetNbinsX() ;
 
 	for( int i=0 ; i<nbins ; ++i ){
-		float low = h->GetXaxis()->GetBinLowEdge( i+1 ) ;
-		float high = h->GetXaxis()->GetBinUpEdge( i+1 ) ;
+		double low = h->GetXaxis()->GetBinLowEdge( i+1 ) ;
+		double high = h->GetXaxis()->GetBinUpEdge( i+1 ) ;
 		ostringstream idX ;
 		idX << id << "_" << low << "to" << high ;
 		out[i] = h->ProjectionY( idX.str().c_str(), i+1, i+1 ) ;
