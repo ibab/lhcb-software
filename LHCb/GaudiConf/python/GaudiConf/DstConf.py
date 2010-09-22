@@ -115,7 +115,7 @@ class DstConf(LHCbConfigurableUser):
                              , "/Event/" + recDir + "/ProtoP/Charged"    + depth
                              , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
                              , "/Event/" + recDir + "/Vertex/Primary"    + depth
-                             , "/Event/Rec/Vertex/Weights"               + depth 
+                             , "/Event/" + recDir + "/Vertex/Weights"    + depth 
                              , "/Event/" + recDir + "/Vertex/V0"         + depth ]
 
         # Copy of HLT results, only on RDST
@@ -208,6 +208,7 @@ class DstConf(LHCbConfigurableUser):
 
         from Configurables import ( PackTrack, PackCaloHypo, PackProtoParticle,
                                     PackRecVertex, PackTwoProngVertex,
+                                    DataPacking__Pack_LHCb__WeightsVectorPacker_,
                                     DataPacking__Pack_LHCb__RichPIDPacker_,
                                     DataPacking__Pack_LHCb__MuonPIDPacker_,
                                     ChargedProtoParticleRemovePIDInfo )
@@ -250,9 +251,11 @@ class DstConf(LHCbConfigurableUser):
                                            OutputName         = "/Event/pRec/ProtoP/Neutrals" )
         packDST.Members += [packNeutralPs]
 
-        # Pack Vertices
+        # Pack Vertices (and weights)
         packDST.Members += [
             PackRecVertex(AlwaysCreateOutput = alwaysCreate),
+            DataPacking__Pack_LHCb__WeightsVectorPacker_( name = "PackPVWeights",
+                                                          AlwaysCreateOutput = alwaysCreate ),
             PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
             ]
         
@@ -284,13 +287,15 @@ class DstConf(LHCbConfigurableUser):
 
         from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
                                     UnpackRecVertex, UnpackTwoProngVertex )
-        from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_
-        from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_
+        from Configurables import ( DataPacking__Unpack_LHCb__RichPIDPacker_,
+                                    DataPacking__Unpack_LHCb__MuonPIDPacker_,
+                                    DataPacking__Unpack_LHCb__WeightsVectorPacker_ )
         
         from Configurables import ( CompareTrack, CompareRecVertex, CompareTwoProngVertex,
                                     CompareProtoParticle )
-        from Configurables import DataPacking__Check_LHCb__RichPIDPacker_
-        from Configurables import DataPacking__Check_LHCb__MuonPIDPacker_
+        from Configurables import ( DataPacking__Check_LHCb__RichPIDPacker_,
+                                    DataPacking__Check_LHCb__MuonPIDPacker_,
+                                    DataPacking__Check_LHCb__WeightsVectorPacker_ )
 
         # Unpack to temporary locations
         tempLoc = "Test"
@@ -301,9 +306,11 @@ class DstConf(LHCbConfigurableUser):
         unpackNeutralPs    = UnpackProtoParticle("UnpackNeutralProtosTest")
         unpackVertex       = UnpackRecVertex("UnpackVertexTest")
         unpackV0           = UnpackTwoProngVertex("UnpackV0Test")
+        unpackPVweights    = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeightsTest")
         unpackTracks.OutputName = unpackTracks.getProp("OutputName")+tempLoc
         unpackVertex.OutputName = unpackVertex.getProp("OutputName")+tempLoc
         unpackV0.OutputName     = unpackV0.getProp("OutputName")+tempLoc
+        unpackPVweights.OutputName = unpackPVweights.getProp("OutputName")+tempLoc
         unpackRichPIDs.OutputName = unpackRichPIDs.getProp("OutputName")+tempLoc     
         unpackMuonPIDs.OutputName = unpackMuonPIDs.getProp("OutputName")+tempLoc
         unpackChargedPs.InputName  = "/Event/pRec/ProtoP/Charged"
@@ -312,12 +319,14 @@ class DstConf(LHCbConfigurableUser):
         unpackNeutralPs.OutputName = "/Event/Rec/ProtoP/Neutrals"+tempLoc
 
         checks.Members += [ unpackTracks, unpackRichPIDs, unpackMuonPIDs,
-                            unpackChargedPs, unpackNeutralPs, unpackVertex, unpackV0 ]
+                            unpackChargedPs, unpackNeutralPs, unpackVertex,
+                            unpackV0, unpackPVweights ]
         
         # Comparisons
         checkTracks    = CompareTrack("CheckPackedTracks")
         checkVertex    = CompareRecVertex("CheckPackedVertices")
         checkV0        = CompareTwoProngVertex("CheckPackedV0s")
+        checkPVweights = DataPacking__Check_LHCb__WeightsVectorPacker_("CheckPackedPVWeights")
         checkRichPID   = DataPacking__Check_LHCb__RichPIDPacker_("CheckPackedRichPIDs")
         checkMuonPID   = DataPacking__Check_LHCb__MuonPIDPacker_("CheckPackedMuonPIDs")
         checkChargedPs = CompareProtoParticle("CheckChargedProtos")
@@ -328,7 +337,8 @@ class DstConf(LHCbConfigurableUser):
         checkNeutralPs.TestName  = unpackNeutralPs.OutputName
         
         checks.Members += [ checkTracks, checkRichPID, checkMuonPID,
-                            checkChargedPs, checkNeutralPs, checkVertex, checkV0 ]
+                            checkChargedPs, checkNeutralPs, checkVertex,
+                            checkV0, checkPVweights ]
 
         if self.getProp( "DstType" ).upper() != "RDST" :
 
@@ -347,7 +357,8 @@ class DstConf(LHCbConfigurableUser):
         Set up DataOnDemandSvc to unpack a packed (r)DST
         """
         from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
-                                    UnpackRecVertex, UnpackTwoProngVertex )
+                                    UnpackRecVertex, UnpackTwoProngVertex,
+                                    DataPacking__Unpack_LHCb__WeightsVectorPacker_ )
 
         log.debug("In DstConf._doUnpack")
 
@@ -361,6 +372,8 @@ class DstConf(LHCbConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]     = UnpackTrack()
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]      = UnpackTwoProngVertex()
+        pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
 
         # RichPIDs
         self._unpackRichPIDs()
