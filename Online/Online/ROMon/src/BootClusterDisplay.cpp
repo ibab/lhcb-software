@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.2 2010-09-21 18:17:55 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.3 2010-09-22 14:04:14 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.2 2010-09-21 18:17:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.3 2010-09-22 14:04:14 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
@@ -25,12 +25,11 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-namespace {
-const char* _flg(int v, int msk)  {  return (v&msk)==msk ? "OK" : "--"; }
-  bool _ok(int v, int msk)        { return (v&msk)==msk; }
-}
+namespace { const char* _flg(int v, int msk)  {  return (v&msk)==msk ? "OK" : "--"; } }
 #define _F(x)   _flg(n.status,BootNodeStatus::x)
-#define _BAD(x) _ok(n.status,BootNodeStatus::x)
+//namespace { bool _ok(int v, int msk)        { return (v&msk)==msk; }  }
+//#define _BAD(x) _ok(n.status,BootNodeStatus::x)
+
 #define MAX_BOOT_TIME   600
 
 BootClusterDisplay::BootClusterDisplay(InternalDisplay* parent, const string& title, int height, int width)

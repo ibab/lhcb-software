@@ -33,8 +33,8 @@ static bool s_debug = false;
 
 namespace {
   template <class T> struct _Delete { void operator()(T*& p) { if ( p ) delete p; } };
-  template <class K, class T> struct _DeleteMap : public _Delete<T> {
-    void operator()(T*& p) { if ( p ) delete p; } 
+  template <class K, class T> struct _DeleteMap {
+    void operator()(T*& p) { if ( p ) delete p; }
     void operator()(pair<const K,T*>& p) { this->operator()(p.second); }
   };
   template <class K, class T> void clear(vector<K,T*>& m) {   for_each(m.begin(),m.end(),_Delete<T>()); m.clear(); }
