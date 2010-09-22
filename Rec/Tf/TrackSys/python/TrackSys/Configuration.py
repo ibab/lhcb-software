@@ -77,6 +77,9 @@ class TrackSys(LHCbConfigurableUser):
     def noMaterialCorrections(self) : return "noMaterialCorrections" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the timing option
     def timing(self) : return "timing" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the upgrade option
+    def upgrade(self): return "upgrade" in self.getProp("SpecialData")
+
     
 
     ## @brief Option to enable setting the special data options easily
@@ -91,6 +94,9 @@ class TrackSys(LHCbConfigurableUser):
         if self.getProp( "FilterBeforeFit" ) :
             from TrackSys import RecoTracking
             RecoTracking.RecoTracking()
+            if self.upgrade():
+                from RecoUpgrade import RecoTrackingUpgrade
+                RecoTrackingUpgrade.RecoTrackingUpgrade()
         else :
             from TrackSys import RecoTrackingOld
             RecoTrackingOld.RecoTracking()
@@ -98,4 +104,7 @@ class TrackSys(LHCbConfigurableUser):
         if self.getProp( "WithMC" ):
             from TrackSys import PatChecking
             PatChecking.PatChecking()
-   
+            if self.upgrade():
+                from RecoUpgrade import PatCheckingUpgrade
+                PatCheckingUpgrade.PatCheckingUpgrade()
+

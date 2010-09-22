@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - add a call to the upgrade configurables for reconstruction and Pat checking
+   when there is the special type "upgrade"
+
 !============================ TrackSys v4r37 2010-08-04 ======================
 ! 2010-08-04 - Stephanie Hansmann-Menzemer
  - add a extra copy step to the best track container, to remove tracks with
