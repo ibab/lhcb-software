@@ -2,20 +2,18 @@
 #include "Stomp/DeliveryHandler.h"
 #include "Stomp/SubscribeHandler.h"
 #include "RTL/rtl.h"
-#include <iostream>
 using namespace Stomp;
 using namespace std;
 
 static void help()  {
-  cout << "  stomp_service -option [-option]" << endl
-       << "       -n[ode]=<name>        Hostname where Stomp sevice is running." << endl
-       << "       -p[ort]=<number>      Port of the Stomp service (default:61613)." << endl
-       << "       -s[ervice]=<name>     Stomp service name (unused)." << endl
-       << "       -t[opic]=<name>       Topic name to listen for additional services." << endl
-       << "       -i[ni]=<name>         Initialization file for default services." << endl
-       << "       -d[ebug]              Start debugger." << endl
-       << "       -p[rint]=<value       Set print level." << endl
-       << endl;
+  ::printf("  stomp_service -option [-option]\n" \
+           "       -n[ode]=<name>        Hostname where Stomp sevice is running.\n" \
+           "       -p[ort]=<number>      Port of the Stomp service (default:61613).\n" \
+           "       -s[ervice]=<name>     Stomp service name (unused).\n" \
+           "       -t[opic]=<name>       Topic name to listen for additional services.\n" \
+           "       -i[ni]=<name>         Initialization file for default services.\n" \
+           "       -d[ebug]              Start debugger.\n" \
+	   "       -p[rint]=<value       Set print level.\n");
 }
 
 static size_t stomp_rtl_print(void* param,int lvl,const char* fmt,va_list args) {
@@ -49,8 +47,10 @@ extern "C" int stomp_service(int argc, char *argv[])    {
   }
   ::lib_rtl_install_printer(stomp_rtl_print,(void*)prt);
 
-  cout << "+++  Listening to stomp port:" << port << " on " << host << endl;
-  cout << "+++  Setting incoming subscribe topic to:" << topic << endl;
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"+++  Listening to stomp port: %d on host %s",
+		   port,host.c_str());
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"+++  Setting incoming subscribe topic to:%s.",
+		   topic.c_str());
 
   StompSensor sensor(service,host, port);
   DeliveryHandler  delivery(&sensor);

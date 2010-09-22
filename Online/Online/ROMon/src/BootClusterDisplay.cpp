@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.3 2010-09-22 14:04:14 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.4 2010-09-22 18:11:24 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.3 2010-09-22 14:04:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.4 2010-09-22 18:11:24 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
@@ -57,6 +57,8 @@ void BootClusterDisplay::update(const void* data) {
   ::sprintf(txt,"      Boot status of farm:%s %s  [%d nodes]",ns.name,text1,ns.nodes.size());
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
+  ::sprintf(txt,"      <CTRL-H for Help>, <CTRL-E to exit>");
+  ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,"Color Legend:",NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,"  ",GREEN|INVERSE,++line,3,0);
@@ -86,7 +88,7 @@ void BootClusterDisplay::update(const void* data) {
 
   //                       1         2         3         4         5         6         7         8
   //             012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-  ::sprintf(txt,"  Node       DHCP Mount  CPU  PCI ETH0 ETH1  TCP  FMC Flag Times:DHCP     MOUNT       FMC");
+  ::sprintf(txt,"  Node       DHCP Mount  CPU ETH0 ETH1  PCI  TCP  FMC Flag Times:DHCP     MOUNT       FMC");
   ::scrc_put_chars(m_display,txt,YELLOW|MAGENTA,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   for(_N::const_iterator i=ns.nodes.begin(); i!=ns.nodes.end(); i=ns.nodes.next(i)) {
@@ -99,8 +101,8 @@ void BootClusterDisplay::update(const void* data) {
     if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%H:%M:%S",::localtime(&n.fmcStart));
     else                ::strcpy(text3,"<Unknown>");
     ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s   %02X %10s%10s%10s",
-	      n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(PCI_STARTED),_F(ETH0_STARTED),
-	      _F(ETH1_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),st,text1,text2,text3);
+	      n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(ETH0_STARTED),_F(ETH1_STARTED),
+	      _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),st,text1,text2,text3);
     if      ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::TCP_STARTED)     ) col = GREEN|BOLD;
     else if ( 0 != (st&BootNodeStatus::ETH1_STARTED)    ) col = BLUE|INVERSE;

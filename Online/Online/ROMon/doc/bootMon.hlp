@@ -17,8 +17,9 @@ Each known processor cluster is listed to the left.
 On the right (in color) all nodes which belong to this 
 cluster are listed.
 
-GREEN nodes have successfully booted.
+GREEN        nodes have successfully booted.
 RED BLINKING nodes have a problem.
+MAGENTA:     Boot started
 Any other color indicates that the boot process is ongoing.
 At the top of the display a color code legend is given.
 
@@ -43,8 +44,16 @@ ETH0/1:  OK if the ethernet interface startup was seen in the cluster log file
 TCP:     OK if TCP was started
 FMC:     OK if the FMC tools were started
 
-GREEN nodes have successfully booted.
+Times: The time stamps, when the different transitions were seen by the monitor.
+If all timestamps show the same value, then no information could be extracted
+from the log file - the time shown is the time the TaskSupervisor summary
+was accessible by the BootMonSrv. BootMonSrv is a task running on ECS03.
+
+
+GREEN        nodes have successfully booted.
 RED BLINKING nodes have a problem.
+MAGENTA:     Boot started
+
 Any other color indicates that the boot process is ongoing.
 At the top of the display a color code legend is given.
 
