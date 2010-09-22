@@ -79,7 +79,7 @@ public:
 
 
 typedef struct {
-  PyObject_HEAD;
+  PyObject_HEAD
   DimRpcWrapper *cpp_dimRpc;
   char *format_in;
   char *format_out;
@@ -353,7 +353,8 @@ static PyTypeObject DimRpc_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpc_dealloc  /* tp_del */
+  (destructor)DimRpc_dealloc, /* tp_del */
+  0                           /* tp_version_tag */
 };
 
 
@@ -419,7 +420,7 @@ public:
 }; //end DimRpcInfoWrapper
 
 typedef struct {
-  PyObject_HEAD;
+  PyObject_HEAD
   DimRpcInfoWrapper *cpp_dimRpcInfo;
   char *format_in;
   char *format_out;
@@ -785,7 +786,8 @@ static PyTypeObject DimRpcInfo_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpcInfo_dealloc  /* tp_del */
+  (destructor)DimRpcInfo_dealloc,  /* tp_del */
+  0                           /* tp_version_tag */
 };
 
 /**@}
