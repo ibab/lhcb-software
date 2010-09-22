@@ -104,7 +104,6 @@
         <enumval name = "Muon"        desc="muon track"/>
         <enumval name = "Calo"        desc="calo cosmics track"/>
         <enumval name = "TT"          desc="TT track"/>
-        <enumval name = "VeloPix"     desc="VELO PIXEL track"/>
       </enum>
 
       <enum
@@ -960,20 +959,6 @@
           || type() == Track::Upstream 
           || type() == Track::Long) hasVPart = true;
           return hasVPart;
-        </code>
-      </method>
-
-      <method
-        type    = 'bool'
-        name    = 'hasVeloPix'
-        desc    = 'Check if track is of a type that goes thro VeloPix'
-        const   = 'TRUE'>
-        <code>
-          bool hasVPPart = false;
-          if (type() == Track::VeloPix 
-          || type() == Track::Upstream 
-          || type() == Track::Long) hasVPPart = true;
-          return hasVPPart;
         </code>
       </method>
 
