@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<success>True</success>
+	<success>False</success>
 	<step>finalize</step>
 	<usage>
-		<stat unit="KB" useOf="MemoryMaximum">231312.0</stat>
+		<stat unit="KB" useOf="MemoryMaximum">540644.0</stat>
 	</usage>
 	<input>
-		<file GUID="" name="PFN:YouCannotOpenMe.dst" status="fail">0</file>
 		<file GUID="CAA89D27-E42D-DC11-B844-003048836626" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">4</file>
 	</input>
 	<output>
-		<file GUID="56608552-3F92-DF11-9213-000423D675CA" name="PFN:PoolDst.root" status="full">4</file>
+		<file GUID="96E7B1D9-9AC5-DF11-96BF-003048673256" name="PFN:PoolDst.root" status="full">4</file>
 	</output>
 	<counters>
 		<counter name="Counter/executed">4</counter>
-		<counter name="CounterSummarySvc/handled">14</counter>
+		<counter name="CounterSummarySvc/handled">10</counter>
 	</counters>
 	<lumiCounters />
 </summary>

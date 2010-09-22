@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<success>False</success>
+	<step>finalize</step>
+	<usage>
+		<stat unit="KB" useOf="MemoryMaximum">359660.0</stat>
+	</usage>
+	<input>
+		<file GUID="" name="PFN:YouCannotOpenMe.dst" status="fail">0</file>
+	</input>
+	<output>
+		<file GUID="" name="PFN:PoolDst.root" status="full">0</file>
+	</output>
+	<counters>
+		<counter name="CounterSummarySvc/handled">5</counter>
+		<statEntity format="Flag Entries Flag2" max="0.0" min="0.0" name="TestCounter/efficiency">0.0 0.0 0.0</statEntity>
+	</counters>
+	<lumiCounters />
+</summary>

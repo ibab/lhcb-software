@@ -4,17 +4,16 @@
 	<success>True</success>
 	<step>finalize</step>
 	<usage>
-		<stat unit="KB" useOf="MemoryMaximum">213616.0</stat>
+		<stat unit="KB" useOf="MemoryMaximum">516972.0</stat>
 	</usage>
 	<input>
-		<file GUID="" name="PFN:YouCannotOpenMe.dst" status="fail">0</file>
 		<file GUID="" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">0</file>
 	</input>
 	<output>
 		<file GUID="" name="PFN:PoolDst.root" status="fail">0</file>
 	</output>
 	<counters>
-		<counter name="CounterSummarySvc/handled">7</counter>
+		<counter name="CounterSummarySvc/handled">3</counter>
 		<statEntity format="Flag Entries Flag2" max="1.0" min="0.0" name="TestCounter/efficiency">1.0 1.0 1.0</statEntity>
 	</counters>
 	<lumiCounters />

@@ -26,7 +26,7 @@ ApplicationMgr().OutStream += ["InputCopyStream/InputCopyStream"]
 importOptions( "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts" )
 
 #Define the input file
-importOptions( "$XMLSUMMARYKERNELROOT/options/PoolDst.opts")
+importOptions( "$XMLSUMMARYKERNELROOT/options/PoolDst.py")
 
 #---------------------------------------------------------------------------
 # Add a counting algorithm
