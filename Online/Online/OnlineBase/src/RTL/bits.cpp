@@ -197,7 +197,7 @@ int BF_set(char* base, int pos, int len)   {
     msk = bit_mask+bit;
     j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
     for ( k=bit; k<j; ++k, ++msk)
-      *base |= *msk;
+      *base = char(*base|*msk);
     len -= j-bit;
     ++base;
   }
@@ -208,7 +208,7 @@ int BF_set(char* base, int pos, int len)   {
     base += j;
   }
   for ( k=0, msk=bit_mask; k<len; ++k,++msk )
-    *base |= *msk;
+    *base = char(*base|*msk);
   return 1;
 }
 
@@ -220,7 +220,7 @@ int BF_free(char* base,int pos, int len) {
     msk = inv_mask+bit;
     j=(len>=BITS_PER_BYTE-bit) ? BITS_PER_BYTE : len+bit;
     for(k=bit; k<j; ++k, ++msk)  {
-      *base &= *msk;
+      *base = char(*base&*msk);
     }
     len -= j-bit;
     ++base;
@@ -232,7 +232,7 @@ int BF_free(char* base,int pos, int len) {
     base += j;
   }
   for(k=0, msk = inv_mask; k<len; ++k,++msk)  {
-    *base &= *msk;
+    *base = char(*base&*msk);
   }
   return 1;
 }

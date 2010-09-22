@@ -11,7 +11,7 @@
 #include <sg_codes.h>
 #include <INET/sg_pcodes.h>
 #include <INET/tcp.h>
-#elif _VMS
+#elif defined(_VMS)
 #include    <vms.h>
 #include <unistd.h>
 #endif
@@ -36,7 +36,7 @@ typedef void IOSB;
 #define _INSQTI(x,y)      insqti ( (qentry_t*)x, (head_t*)y    )
 #define _REMQHI(x,y)      remqhi ( (head_t*)  x, (qentry_t**)y )
 #define _REMQTI(x,y)      remqti ( (head_t*)  x, (qentry_t**)y )
-#elif _VMS
+#elif defined(_VMS)
 #define _PreviousEntry(x) (qentry_t*)((char*)(x) + (int)(x)->prev)
 #define _NextEntry(x)     (qentry_t*)((char*)(x) + (int)(x)->next)
 #define _INSQHI(x,y)      lib$insqhi((void*)x,(void*)y)
@@ -423,7 +423,7 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
         e->im_osb._lPort = peer.sin_port;
       else
         ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine sock of socket %d\n", e->chan);
-#elif _VMS
+#elif defined(_VMS)
       e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
 #else

@@ -334,7 +334,7 @@ void UdpNameService::handle ()   {
     handleMessage( ent, req, rep );
 #ifndef SERVICE
     // Swap port to reply connection
-    addr.sin_port = NetworkChannel::Port(htons((NetworkChannel::Port)m_port+1));
+    addr.sin_port = NetworkChannel::Port(htons((NetworkChannel::Port)(m_port+1)));
 #endif
     //lib_rtl_output(LIB_RTL_DEBUG,"send to port:%04X\n",addr.sin_port);
     status = snd.send(&rep,sizeof(rep),0,0,&addr);

@@ -5,8 +5,8 @@
 #define __QUE_H__
 #include "RTL/Pack.h"
 struct qentry {
-	struct qentry *next;
-	struct qentry *prev;
+  qentry *next;
+  qentry *prev;
 #ifdef __cplusplus
   qentry() : next(0), prev(0) {}
   qentry(qentry* n, qentry* p) : next(n), prev(p) {}

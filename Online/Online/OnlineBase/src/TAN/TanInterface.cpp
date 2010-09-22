@@ -208,7 +208,7 @@ int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin,
   rin          = m_sinudp;
 #endif
   rin.sin_port = (NetworkChannel::Port)
-    (se==0 ? mode ? htons(port) : htons((NetworkChannel::Port)port+1) : se->s_port);
+    (se==0 ? mode ? htons(port) : htons((NetworkChannel::Port)(port+1)) : se->s_port);
   // To use only ONE nameserver and no predefined service 
   // for both allocation and inquire enable this:
   // export TAN_PORT=YES;
