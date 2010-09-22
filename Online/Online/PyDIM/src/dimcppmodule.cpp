@@ -353,8 +353,10 @@ static PyTypeObject DimRpc_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpc_dealloc, /* tp_del */
-  0                           /* tp_version_tag */
+  (destructor)DimRpc_dealloc  /* tp_del */
+#if PY_MAJOR_VERSION>=2 && PY_MINOR_VERSION>=6
+  ,0                          /* tp_version_tag */
+#endif
 };
 
 
@@ -786,8 +788,10 @@ static PyTypeObject DimRpcInfo_Type = {
   0,                          /* tp_cache */
   0,                          /* tp_subclasses */
   0,                          /* tp_weaklist */
-  (destructor)DimRpcInfo_dealloc,  /* tp_del */
-  0                           /* tp_version_tag */
+  (destructor)DimRpcInfo_dealloc  /* tp_del */
+#if PY_MAJOR_VERSION>=2 && PY_MINOR_VERSION>=6
+  ,0                          /* tp_version_tag */
+#endif
 };
 
 /**@}
