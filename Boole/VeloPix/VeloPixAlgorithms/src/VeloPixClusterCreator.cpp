@@ -48,9 +48,9 @@ VeloPixClusterCreator::VeloPixClusterCreator(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("InputLocation", m_inputLocation = 
-                  "VeloPix/Digits");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
   declareProperty("OutputLocation", m_outputLocation = 
-                  "VeloPix/Clusters");
+                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
   declareProperty("OutputLocationLite", m_outputLocationLite = 
                   "VeloPix/LiteClusters");
   // ToT sum in cluster divided by this number before saving in Lite cluster

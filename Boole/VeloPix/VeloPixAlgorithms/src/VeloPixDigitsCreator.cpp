@@ -28,7 +28,7 @@ VeloPixDigitsCreator::VeloPixDigitsCreator( const std::string& name,
 {
   declareProperty("SpillVector", m_spillNames = boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/"));
   declareProperty("InputLocation", m_inputLocation =  "VeloPix/PreDigits");
-  declareProperty("OutputLocation", m_outputLocation ="/Event/VeloPix/Digits");
+  declareProperty("OutputLocation", m_outputLocation ="/Event/"+LHCb::VeloPixDigitLocation::VeloPixDigitLocation );
 
   // discrimination threshold in electrons
   declareProperty("ChargeThreshold", m_Qthresh = 1000.0);  // Si thickness = 150um

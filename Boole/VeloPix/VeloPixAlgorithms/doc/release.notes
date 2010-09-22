@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki, Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - Replace hardcoded container location by prpoer location definition
+
 ! 2010-09-15 - Tomasz Skwarnicki, Thomas Britton
  - Add VeloPixDigitsCreator to deal with deadtime (VeloPixSpilloverSubtraction becomes obsolete),
    and time walk. Add non-linearity in charge to ToT conversion. Add noise simulation.
