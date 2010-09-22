@@ -15,6 +15,9 @@
 #include <TH1D.h>
 #include <TH2D.h>
 
+#include <string>
+#include <sstream>
+
 /** @class VeloIPResolutionMonitor VeloIPResolutionMonitor.h
  *  
  *  An algorithm to monitor IP resolutions as a function of 1/PT.
@@ -87,7 +90,8 @@ namespace Velo
     float m_limitFactor;
 
     bool m_refitPVs;
-
+    bool m_makePlotsVsPhiInBinsOfEta ;
+    
     ITrackExtrapolator* m_trackExtrapolator;
     IPVOfflineTool* m_pvtool;
     
@@ -95,6 +99,13 @@ namespace Velo
                              double&, double&, double&, double&, double&, double&, LHCb::State&, LHCb::State& );
     StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
 
+    void rebinHisto( TH1D*, int nbins=0 ) ;
+    void rebinHistos( TH1D** , int , int nbins=0 ) ;
+
+    void getBinsFromTH2D( TH2D* h, std::string id, std::string title, std::string unit, TH1D** out ) ;
+    void saveMeanAndSigmaProfiles( TH2D* ) ;
+    void saveMeanAndSigmaProfilesAndXProjection( TH2D*, std::string ) ;
+    
   };
 }
 
