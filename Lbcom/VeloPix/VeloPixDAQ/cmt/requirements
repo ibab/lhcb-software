@@ -2,7 +2,7 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VeloPixDAQ
-version           v1r2p1
+version           v1r3
 
 # Structure, i.e. directories to process. 
 #============================================================================

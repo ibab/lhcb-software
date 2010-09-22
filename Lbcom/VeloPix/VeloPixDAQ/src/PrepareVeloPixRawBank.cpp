@@ -38,7 +38,7 @@ PrepareVeloPixRawBank::PrepareVeloPixRawBank(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  "VeloPix/Clusters");
+                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
 }
