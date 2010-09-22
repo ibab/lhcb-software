@@ -7,7 +7,8 @@ use LCG_Settings      v*
 
 include_path none
 
-macro APR_home '/home/frankm/apr' WIN32 'C:\Program Files\Apache Software Foundation\Apache2.2'
+macro APR_home '/group/online/dataflow/cmtuser/libraries/apr' \
+         WIN32 'C:\Program Files\Apache Software Foundation\Apache2.2'
 
 include_dirs  "$(APR_home)/include/apr-1" \
 target-x86_64 "$(APR_home)/include64/apr-1"
