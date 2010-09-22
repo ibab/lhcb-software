@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Marco Cattaneo
+ - Remove RichPIDsFromProtoParticlesAlg, MuonPIDsFromProtoParticlesAlg,
+   ChargedProtoParticleAddRichInfo, ChargedProtoParticleAddMuonInfo,
+   ChargedProtoCombineDLLsAlg, moved to new Event/RecreatePIDTools package
+
 ! 2010-09-16 - Chris Jones
  - Change default track selection chi^2 cuts for charged ProtoParticles to
    <10 (previously <50)
