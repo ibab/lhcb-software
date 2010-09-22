@@ -68,15 +68,13 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
 
   // link veloPix, if requested
   if (m_linkVELOPIX) {
-    // Link is made from VeloPixCluster relation to MCP but is linked to VeloPixLiteCluster ID (that might differ)
-    // That is the correct one!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //LinkedTo<LHCb::MCHit,LHCb::VeloPixCluster> 
-    //  veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation + "2MCHits" );
-    LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster>
-      veloPixLink( evtSvc(), msgSvc(), "VeloPix/Clusters2Hits" );
-
+    // Link is made from VeloPixCluster relation to MCP but is linked to VeloPixLiteCluster ID 
+    
+    always()<<"# clusters: "<<LHCb::VeloPixClusterLocation::VeloPixClusterLocation<<endmsg;
+    LinkedTo<LHCb::MCHit,LHCb::VeloPixCluster>
+      veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation + "2MCHits" );
     LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    debug()<<"# clusters: "<<clusters->size()<<endmsg;
+    always()<<"# clusters: "<<clusters->size()<<endmsg;
     if (clusters->size() == 0){
        error() << "Unable to retrieve VeloPixClusters, check the container name"
             << endreq;

@@ -1,5 +1,5 @@
 package RecoUpgradeMC
-version v1r0
+version v1r1
 
 branches cmt src doc options python
 
@@ -10,6 +10,13 @@ use     TrackFitEvent   v*    Tr
 use     VeloPixDet      v*    Det
 
 
+use   LinkerEvent        v*    Event
+use   TrackEvent         v*    Event
+use   TrackFitEvent      v*    Tr
+use   TrackKernel        v*    Tr
+use   TrackInterfaces    v*    Tr
+use   LHCbMath           v*    Kernel
+use   PartProp           v*    Kernel
 
 #============================================================================
 # Component library building rule

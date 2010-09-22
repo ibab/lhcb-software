@@ -31,11 +31,14 @@ DECLARE_ALGORITHM_FACTORY( CheatedVeloPixPat );
 //=============================================================================
 CheatedVeloPixPat::CheatedVeloPixPat( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_veloPixFitter(0),
+    m_veloPixFitterName("")
 {
   declareProperty( "outputTracksLocation",    m_outputTracksLocation = LHCb::TrackLocation::VeloPix);
   declareProperty( "MinimalMCHitForTrack",    m_minIDs = 2 );
   declareProperty( "UseLinearFit",    m_UseLinearFit = true );
+  declareProperty( "VeloPixFitterName",    m_veloPixFitterName =  "Tf::PatVeloPixFitLHCbIDs/FitVeloPix" );
   
 }
 //=============================================================================
@@ -55,7 +58,7 @@ StatusCode CheatedVeloPixPat::initialize() {
   
   m_veloPix = getDet<DeVeloPix>( DeVeloPixLocation::Default );
   
-  m_veloPixFitter = tool<ITrackFitter>("Tf::PatVeloPixFitLHCbIDs") ;
+  m_veloPixFitter = tool<ITrackFitter>(m_veloPixFitterName, this ) ;
 
   return StatusCode::SUCCESS;
 };
@@ -160,19 +163,20 @@ StatusCode CheatedVeloPixPat::execute() {
         aCov(3,3)= 6.e-5 ;
         aCov(4,4)= 1.e-6 ;
         aState.setCovariance(aCov);
-        aState.setLocation( LHCb::State::EndVelo );
+        aState.setLocation( LHCb::State::LocationUnknown );
         lhcbidsList.push_back(temp);
         newTrack->addToStates(aState);
       }
       newTrack->setLhcbIDs(lhcbidsList  );
       newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-      newTrack->setType( LHCb::Track::VeloPix );
+      newTrack->setType( LHCb::Track::Velo );
       
     }
     // Be aware that the hit from same sensors are counted only once, but are all added to the list of ID
     if (countHits>m_minIDs){
       if (m_UseLinearFit == true){
         StatusCode scFit = m_veloPixFitter->fit(*newTrack, LHCb::ParticleID(211));
+        
         if(!scFit.isSuccess()){
           warning()<<"The linear fit failed"<<endreq;
         }
@@ -183,6 +187,8 @@ StatusCode CheatedVeloPixPat::execute() {
       delete(newTrack);
     }
   }
+  debug()<<"CheatPatRec gives: "<<outputTracks->size()<<endreq;
+  
   return StatusCode::SUCCESS;
 };
 

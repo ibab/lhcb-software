@@ -101,13 +101,16 @@ StatusCode TrackAssociatorUpgrade::execute() {
     myLinker( evtSvc(), msgSvc(), m_linkerOutTable );
 
   // Get the linker table VeloCluster => MCParticle
-  LinkedTo<MCParticle,VeloCluster>
-    veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
+  /*if (m_useVeloPix == false ) {
+    LinkedTo<MCParticle,VeloCluster>
+      veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
+  }
+  
   if( veloLink.notFound() && m_useVeloPix == false) {
     error() << "Unable to retrieve VeloCluster to MCParticle linker table."
             << endreq;
     return StatusCode::FAILURE;
-  }
+    }*/
   
   // Get the linker table VeloPixCluster => MCParticle
   ///LinkedTo<MCParticle,VeloPixCluster> 
@@ -117,8 +120,9 @@ StatusCode TrackAssociatorUpgrade::execute() {
   if (m_useVeloPix == true ) {
     veloPixclusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
   }
+
   LinkedTo<MCParticle,VeloPixCluster>
-    veloPixLink( evtSvc(), msgSvc(),  "VeloPix/Clusters2MCParticles"  );
+    veloPixLink( evtSvc(), msgSvc(),  LHCb::VeloPixClusterLocation::VeloPixClusterLocation  );
   if( veloPixLink.notFound() && m_useVeloPix == true) {
     error() << "Unable to retrieve VeloPixCluster to MCParticle linker table."
             << endreq;
@@ -182,7 +186,7 @@ StatusCode TrackAssociatorUpgrade::execute() {
     for( std::vector<LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
          tr->lhcbIDs().end() != iId; ++iId ) 
       {
-        if( (*iId).isVelo() ) {
+        /*if( (*iId).isVelo() ) {
           ++nMeas;
           VeloChannelID vID = (*iId).veloID();
           // Count number of Velo hits
@@ -199,7 +203,7 @@ StatusCode TrackAssociatorUpgrade::execute() {
             mcParticle = veloLink.next();
           }
           continue;
-        }
+          }*/
         
         if( (*iId).isVeloPix() ) {
           ++nMeas;

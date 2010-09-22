@@ -234,12 +234,13 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
   if (m_linkVELOPIX) {
     // Link is made from VeloPixCluster relation to MCP but is linked to VeloPixLiteCluster ID (that might differ)
 
-
+    
     // That is the correct one!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster> 
-    //  veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
-    LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster>
-      veloPixLink( evtSvc(), msgSvc(), "VeloPix/Clusters2MCParticles" );
+    LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster> 
+      veloPixLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
+    //LinkedTo<LHCb::MCParticle,LHCb::VeloPixCluster>
+    //  veloPixLink( evtSvc(), msgSvc(), "VeloPix/Clusters2MCParticles" );
+
 
     LHCb::VeloPixClusters* clusters = get<LHCb::VeloPixClusters>(LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
     debug()<<"# clusters: "<<clusters->size()<<endmsg;

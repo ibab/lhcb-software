@@ -66,13 +66,14 @@ StatusCode VeloPixChecker::execute() {
   debug() << "==> Execute" << endmsg;
 
   LHCb::Tracks* tracks = get<LHCb::Tracks>( m_container );
-  verbose()<<m_container<<" size: "<<tracks->size()<<endreq;
+  ////always()<<m_container<<" size: "<<tracks->size()<<endreq;
   
   LinkedTo<LHCb::MCParticle, LHCb::Track> link( evtSvc(), msgSvc(), m_container );
 
 
   m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
   
+  always()<<"NB tracks in "<<m_container<<": "<< tracks->size()<<endreq;
   for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT ; ++itT ) {
     LHCb::Track* tr = *itT;
     Gaudi::XYZPoint position = tr->position();
@@ -82,9 +83,10 @@ StatusCode VeloPixChecker::execute() {
     double transmomentum     = tr->pt();
     std::vector< const LHCb::Measurement * > meas = tr->measurements ();
     // Check backward
-    verbose()<<"ere"<<endreq;
+    //always()<<"ere"<<endreq;
     
     bool isBack = tr-> checkFlag(LHCb::Track::Backward);
+    
     
     // define for first hit info in ntuple
     LHCb::MCHit* hit = NULL;
@@ -92,6 +94,7 @@ StatusCode VeloPixChecker::execute() {
     double dx(0.),dy(0.);
     IVeloPixClusterPosition::toolInfo clusInfo;
     
+    //always()<<"ere1"<<endreq;
     // get infos from the first hit
     if(meas.size()!=0){
       double bestZ = 10000.;
@@ -118,28 +121,30 @@ StatusCode VeloPixChecker::execute() {
         }
       }
 
-      if ( ! theID.isVeloPix ()) continue;
-      ILHCbIDsToMCHits::LinkMap testMap;
-      StatusCode sc = linkTool()->link(theID,testMap);
-      ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin();
-      hit = it->first;
-      
-      // Get the VeloPixLiteCluster corresponding to the first measurment
-      const LHCb::VeloPixLiteCluster* liteclus = m_clusters->object( theID.velopixID () );
+      if (  theID.isVeloPix ()){
+        ILHCbIDsToMCHits::LinkMap testMap;
+        StatusCode sc = linkTool()->link(theID,testMap);
+        
+        ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin();
+        hit = it->first;
+     
+        // Get the VeloPixLiteCluster corresponding to the first measurment
+        const LHCb::VeloPixLiteCluster* liteclus = m_clusters->object( theID.velopixID () );
      	
-      //const LHCb::StateVector* theStateVector = new LHCb::StateVector (tr->firstState().stateVector (), bestZ);
-      // Get the position (halfbox) and errors (most important is error, position is can be accessed via detelem)
-      //IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus,*theStateVector) ;
-      clusInfo = m_positiontool->position(liteclus) ;
-      const DeVeloPixSquareType* sqDet =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));
-      thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
-      std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
-      //Check about errors too...
-      dx = pixSize.first*clusInfo.fractionalError.first ;
-      if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
-      dy = pixSize.second*clusInfo.fractionalError.second;
+        //const LHCb::StateVector* theStateVector = new LHCb::StateVector (tr->firstState().stateVector (), bestZ);
+        // Get the position (halfbox) and errors (most important is error, position is can be accessed via detelem)
+        //IVeloPixClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus,*theStateVector) ;
+        clusInfo = m_positiontool->position(liteclus) ;
+        const DeVeloPixSquareType* sqDet =static_cast<const DeVeloPixSquareType*>(m_veloPix->squareSensor(clusInfo.pixel.sensor()));
+        thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
+        std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
+        //Check about errors too...
+        dx = pixSize.first*clusInfo.fractionalError.first ;
+        if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
+        dy = pixSize.second*clusInfo.fractionalError.second;
+      }
+      
     }
-    
 
     LHCb::MCParticle* part = link.first( tr );
     while( 0 != part ) {
@@ -165,14 +170,13 @@ StatusCode VeloPixChecker::execute() {
 
       position += ( mcPosition.z() - position.z() ) * slopes;
 
-
       double ip = Gaudi::Math::impactParameter(mcPosition,line);
 
       // Fill the ntuple  
-      verbose()<<m_container<<endreq;
-      
+      //always()<<m_container<<endreq;
       Tuple tPoint = nTuple( m_tupleName );
       if (hit!=NULL){ 
+        //always()<<"hit is not null ...."<<endreq;
         tPoint->column("hit1_dxCalc",dx);
         tPoint->column("hit1_dyCalc",dy);
         tPoint->column("hit1_dx",hit->midPoint () .x()-thePixPoint.x());
@@ -180,11 +184,13 @@ StatusCode VeloPixChecker::execute() {
         tPoint->column("hit1_dz",hit->midPoint () .z()-thePixPoint.z());
         tPoint->column("hit1_dtx",hit->displacement ().x()/hit->displacement ().z()-slopes.x());
         tPoint->column("hit1_dty",hit->displacement ().y()/hit->displacement ().z()-slopes.y());
+        //always()<<"go for chip"<<endreq;
         tPoint->column("chip1",clusInfo.pixel.chip());
         tPoint->column("pixelX1",clusInfo.pixel.pixel_lp());
         tPoint->column("pixelY1",clusInfo.pixel.pixel_hp());
       }
       else{
+        //always()<<"hit is null ...."<<endreq;
         tPoint->column("hit1_dxCalc",0.);
         tPoint->column("hit1_dyCalc",0.);
         tPoint->column("hit1_dx",0.);
@@ -192,9 +198,10 @@ StatusCode VeloPixChecker::execute() {
         tPoint->column("hit1_dz",0.);
         tPoint->column("hit1_dtx",0.);
         tPoint->column("hit1_dty",0.);
-        tPoint->column("chip1",0.);
-        tPoint->column("pixelX1",0.);
-        tPoint->column("pixelY1",0.);
+        //always()<<"go for chip0"<<endreq;
+        tPoint->column("chip1",0);
+        tPoint->column("pixelX1",0);
+        tPoint->column("pixelY1",0);
       }
       
       tPoint->column( "x"   , positionForIp.x() );
@@ -207,6 +214,7 @@ StatusCode VeloPixChecker::execute() {
       tPoint->column( "pt"   , transmomentum );
       tPoint->column( "chi2ndof" , tr->chi2PerDoF() );
       tPoint->column( "nhits" , tr->nLHCbIDs () );
+      tPoint->column( "type" , tr->type () );
       tPoint->column( "mcpt" ,  mcTransMomentum);
       tPoint->column( "ip"   , ip );
       tPoint->column( "Extrapolation_dx"  , position.x() - mcPosition.x() );
@@ -217,6 +225,7 @@ StatusCode VeloPixChecker::execute() {
       tPoint->column( "mctx" , mcSlopes.x() );
       tPoint->column( "mcty" , mcSlopes.y() );
       tPoint->write();
+      //always()<<"after write."<<endreq;
 
       if ( msgLevel( MSG::DEBUG) ) {
         debug() << format( "Track%4d MC%5d x%8.3f y%8.3f z%8.3f tx%8.3f ty%8.3f",

@@ -44,6 +44,7 @@ private:
   std::string m_outputTracksLocation;
   unsigned int m_minIDs;
   bool m_UseLinearFit;
+  std::string m_veloPixFitterName;
   LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
   
 }; 

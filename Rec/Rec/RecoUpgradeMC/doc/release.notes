@@ -5,6 +5,10 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - Add some vertex checking algorithms + remove VeloPix track type in
+   CheatedVeloPixPat
+
 !========================== RecoUpgradeMC v1r0 2010-04-26 =====================
 ! 2010-04-13 - Victor Coco
  - CheatedVeloPixPat usable
