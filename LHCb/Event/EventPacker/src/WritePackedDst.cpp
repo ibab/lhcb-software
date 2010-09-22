@@ -201,6 +201,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedParticles* in = get<LHCb::PackedParticles>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedParticle) );
+      storeInBlob( bank, &(*in->extra().begin()), in->extra().size(), sizeof(std::pair<int,int>) );
       storeInBlob( bank, &(*in->daughters().begin()), in->daughters().size(), sizeof(int) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
@@ -209,6 +210,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedVertices* in = get<LHCb::PackedVertices>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedVertex) );
+      storeInBlob( bank, &(*in->outgoingParticles().begin()), in->outgoingParticles().size(), sizeof(int) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_WeightsVector        == myClID ) {
