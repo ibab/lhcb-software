@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Eduardo Rodrigues
+ - bins definition in 1 VeloClusterMonitor histo updated
+
 ! 2010-09-22 - Michael Alexander
  - Copied VeloIPResolutionMonitor to VeloIPResolutionMonitorNT
  - Greatly simplified VeloIPResolutionMonitor to produce only a few monitoring histos
