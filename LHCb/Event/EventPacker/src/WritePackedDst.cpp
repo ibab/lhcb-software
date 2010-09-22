@@ -14,6 +14,7 @@
 #include "Event/PackedMuonPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
+#include "Event/PackedWeightsVector.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -200,6 +201,7 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedParticles* in = get<LHCb::PackedParticles>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedParticle) );
+      storeInBlob( bank, &(*in->daughters().begin()), in->daughters().size(), sizeof(int) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_PackedVertices        == myClID ) {
@@ -207,6 +209,14 @@ StatusCode WritePackedDst::execute()
       LHCb::PackedVertices* in = get<LHCb::PackedVertices>( *itC );
       PackedBank bank( in );
       storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedVertex) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_WeightsVector        == myClID ) {
+
+      LHCb::PackedWeightsVector* in = get<LHCb::PackedWeightsVector>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedWeights) );
+      storeInBlob( bank, &(*in->weights().begin()), in->weights().size(), sizeof(LHCb::PackedWeight) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_ProcStatus == myClID ) {

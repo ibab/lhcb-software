@@ -13,6 +13,7 @@
 #include "Event/PackedRichPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
+#include "Event/PackedWeightsVector.h"
 
 template class DataPacking::Pack<LHCb::MCRichHitPacker>;
 typedef DataPacking::Pack<LHCb::MCRichHitPacker> A;
@@ -93,4 +94,8 @@ DECLARE_ALGORITHM_FACTORY( O );
 template class DataPacking::Pack<LHCb::VertexPacker>;
 typedef DataPacking::Pack<LHCb::VertexPacker> P;
 DECLARE_ALGORITHM_FACTORY( P );
+
+template class DataPacking::Pack<LHCb::WeightsVectorPacker>;
+typedef DataPacking::Pack<LHCb::WeightsVectorPacker> Q;
+DECLARE_ALGORITHM_FACTORY( Q );
 
