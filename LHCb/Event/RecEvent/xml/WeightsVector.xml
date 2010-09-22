@@ -18,7 +18,7 @@
 
       <attribute
 	name = "weights"
-        type = "std::vector&lt;std::pair&lt;int,double&gt; &gt;"
+        type = "std::vector&lt;std::pair&lt;int,float&gt; &gt;"
 	desc = "List of track keys with weight"
 	setMeth = "TRUE"
         getMeth = "TRUE" />
