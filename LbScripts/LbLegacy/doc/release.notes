@@ -1,3 +1,8 @@
+2010-09-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: created the $MYSITEROOT/etc directory. This is holding links 
+	to the current setup wrappers.
+
 2010-09-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the 

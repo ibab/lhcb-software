@@ -25,7 +25,7 @@ compat_version = None
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-site_subdirs = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp']
+site_subdirs = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp', 'etc']
 lcg_tar      = ["LCGCMT", "LCGGrid", "LCGGanga"]
 # dynamic modules
 
@@ -39,6 +39,7 @@ contrib_dir = None
 lcg_dir = None
 lhcb_dir = None
 html_dir = None
+etc_dir = None
 bootscripts_dir = None
 targz_dir = None
 tmp_dir = None
@@ -1137,10 +1138,21 @@ def getProjectTar(tar_list, already_present_list=None):
                                 log.debug("linking %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
                             else :
                                 log.error("%s is not a link. Please remove this file/directory" % prodlink)
+                    else :
+                        if os.path.exists(prodlink) :
+                            if os.path.isdir(prodlink) :
+                                removeAll(prodlink)
+                                shutil.copytree(pack_ver[0] + '_' + pack_ver[1], prodlink)
+                                log.debug("Copying %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
+                            else :
+                                log.error("%s is not a directory. Please remove this file" % prodlink)                                
                     my_dir = os.path.dirname(this_lhcb_dir)
-                    for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
+                    selected_script_dir = os.path.join(prodlink, "InstallArea", "scripts")
+                    if not os.path.exists(selected_script_dir) :
+                        selected_script_dir = os.path.join(pack_ver[3], "InstallArea", "scripts")
+                    for f in os.listdir(selected_script_dir) :
                         if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
-                            sourcef = os.path.join(pack_ver[3], "InstallArea", "scripts", f)
+                            sourcef = os.path.join(selected_script_dir, f)
                             targetf = os.path.join(my_dir, f)
                             if os.path.islink(targetf) or os.path.isfile(targetf):
                                 os.remove(targetf)
@@ -1153,6 +1165,28 @@ def getProjectTar(tar_list, already_present_list=None):
                                     sourcef = sourcef[1:]
                                 os.symlink(sourcef, targetf)
                                 log.debug("linking %s to %s" % (sourcef, targetf))
+                    etc_scripts = [ "LbLogin", "group_login", "group_shell", "LHCb"]
+                    my_etc_dir = os.path.join(my_dir, "etc")
+                    for s in etc_scripts :
+                        for f in os.listdir(selected_script_dir) :
+                            if f.startswith("%s." % s) and not (f.endswith(".zsh") or f.endswith(".py")):
+                                sourcef = os.path.join(selected_script_dir, f)
+                                targetf = os.path.join(my_etc_dir, f)
+                                if os.path.islink(targetf) or os.path.isfile(targetf):
+                                    os.remove(targetf)
+                                if sys.platform == "win32" :
+                                    shutil.copy(sourcef, targetf)
+                                    log.debug("copying %s into %s" % (sourcef, targetf))
+                                else :
+                                    sourcef = sourcef.replace(my_dir, "", 1)
+                                    while sourcef.startswith("/") or sourcef.startswith("\\") :
+                                        sourcef = sourcef[1:]
+                                    sourcef = os.path.join(os.pardir, sourcef)
+                                    os.symlink(sourcef, targetf)
+                                    log.debug("linking %s to %s" % (sourcef, targetf))
+
+            
+            
             prj = pack_ver[0]
             if isProjectRegistered(prj) :
                 callPostInstallCommand(prj)
@@ -1560,7 +1594,7 @@ def _multiPathJoin(path, subdir):
 def createBaseDirs(pname, pversion):
     global multiple_mysiteroot
     global cmtconfig
-    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir
+    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir, etc_dir
     global bootscripts_dir, targz_dir, tmp_dir
 
 
@@ -1611,6 +1645,7 @@ def createBaseDirs(pname, pversion):
     lcg_dir = _multiPathJoin(mysiteroot, os.path.join("lcg", "external"))
     lhcb_dir = _multiPathJoin(mysiteroot, "lhcb")
     html_dir = _multiPathJoin(mysiteroot, "html")
+    etc_dir = _multiPathJoin(mysiteroot, "etc")
     bootscripts_dir = _multiPathJoin(mysiteroot, "bootscripts")
     targz_dir = _multiPathJoin(mysiteroot, "targz")
 
