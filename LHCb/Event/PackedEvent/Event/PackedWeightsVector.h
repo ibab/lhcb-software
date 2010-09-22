@@ -34,8 +34,8 @@ namespace LHCb
       : key(0), weight(0)
     {}
 
-    int key;           ///< key of the track this weight is associated with
-    short int weight;  ///< Weight of this track in the PV
+    int key;     ///< key of the track this weight is associated with
+    int weight;  ///< Weight of this track in the PV
 
   };
 
