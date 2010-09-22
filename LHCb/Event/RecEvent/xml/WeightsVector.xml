@@ -16,6 +16,19 @@
       <base name = "KeyedObject&lt;int&gt;"/>
       &KeyedObject;
 
+      <typedef
+        type   = "std::pair&lt;int,float&gt;"
+        def    = "WeightData"
+        desc   = "Type for storage of weight data"
+        access = "PUBLIC"
+      />
+      <typedef
+        type   = "std::vector&lt;WeightData&gt;"
+        def    = "WeightDataVector"
+        desc   = "Vector of weight data"
+        access = "PUBLIC"
+      />
+
       <attribute
 	name = "weights"
         type = "std::vector&lt;std::pair&lt;int,float&gt; &gt;"

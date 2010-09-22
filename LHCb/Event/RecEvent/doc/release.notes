@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Chris Jones
+ - Add some typedefs to WeightsVector defining the data types. 
+   Used by the packing and unpacking code.
+
 ! 2010-09-22 - Marco Cattaneo
  - Change WeightsVector to store weights as float (was double)
  - Add dictionary for std::vector<std::pair<int,float>> to dict/lcgDict.h 
