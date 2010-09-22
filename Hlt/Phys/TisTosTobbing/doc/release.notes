@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-09-22 - Tomasz Skwarnicki
+ - Move Hlt project dependent code (TriggerSelectionTisTosInHlt, TriggerTisTosInHlt)
+   to a separate library (Hlt/HltTisTosTobbing) so this library can live under Phys project
 
 !========================== TisTosTobbing v5r2 2010-08-26 ===================
 ! 2010-08-17 - Gerhard Raven
