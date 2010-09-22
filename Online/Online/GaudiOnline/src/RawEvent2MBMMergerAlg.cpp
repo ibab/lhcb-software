@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.15 2010-09-21 14:28:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.16 2010-09-22 13:38:19 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -317,7 +317,7 @@ namespace LHCb  {
 
 	  if ( m_addFID )   {
 	    RawBank* fid_bank = 0;
-	    const FileIdInfo *src_info;
+	    const FileIdInfo *src_info = 0;
 	    FileIdInfo *fid_info;
 	    std::pair<const char*,int> buff = getDataFromAddress();
 	    if ( buff.first )   {
@@ -351,14 +351,13 @@ namespace LHCb  {
 		  h->setChecksum(0);
 		  h->setSize(h->size()+fid_len);
 		  h->setSize3(rec_len);
-		  if ( src_info ) {}
 		  break;
 		}
 		start += bb->totalSize();
 	      }
 	      */
 	    }
-	    if ( 0 == fid_bank ) {
+	    if ( 0 == fid_bank || 0 == src_info ) {
 	      return error("Failed to access FID bank from input data!");
 	    }
 	  }

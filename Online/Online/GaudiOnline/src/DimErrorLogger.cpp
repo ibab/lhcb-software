@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.17 2009-03-05 10:22:12 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.18 2010-09-22 13:38:19 frankb Exp $
 #define NO_LONGLONG_TYPEDEF
 
 #include "dis.hxx"
@@ -45,9 +45,9 @@ namespace LHCb  {
       }
     }
     void infoHandler()  {
-      char c, *msg = getString();
+      char *msg = getString();
       std::string svc, node;
-      switch(c=msg[0]) {
+      switch(msg[0]) {
         case '+':
           getServiceNode(++msg,svc,node);
           addHandler(svc,node);
@@ -141,8 +141,8 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
   for(; j != m_acceptedClients.end(); ++j)  {
     if ( ::str_match_wild(nam.c_str(), (*j).c_str()) )  {
       dim_lock();
-      Clients::iterator i=m_clients.find(nam);
-      if ( i == m_clients.end() )  {
+      Clients::iterator ic=m_clients.find(nam);
+      if ( ic == m_clients.end() )  {
         char def[32];
         memset(def,0,sizeof(def));
         DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);

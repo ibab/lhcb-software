@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.14 2010-06-02 08:14:47 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.15 2010-09-22 13:43:14 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( LHCb,RawBankSizes);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LHCb,RawBankSizes)
 
 using namespace LHCb;
 

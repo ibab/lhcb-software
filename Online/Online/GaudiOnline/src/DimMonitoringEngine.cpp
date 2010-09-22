@@ -1,7 +1,6 @@
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/MemMonitorSvc.h"
 
 using namespace LHCb;
@@ -32,9 +31,6 @@ namespace LHCb {
     virtual void serviceHandler();
   };
 }
-
-// Factory for instantiation of service objects
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMonitoringEngine);
 
 DimHistogram::DimHistogram(const std::string& nam,IMessageSvc* msg,AIDA::IHistogram* h)
 : DimService(), Histogram(nam,msg,h), m_service(0)
@@ -124,3 +120,7 @@ void DimMonitoringEngine::revokeItem(CSTR owner_name, CSTR nam)  {
     }
   }
 }
+
+#include "GaudiKernel/SvcFactory.h"
+// Factory for instantiation of service objects
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMonitoringEngine)

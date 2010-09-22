@@ -63,4 +63,5 @@ namespace LHCb  {
     }
   };
 }
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,SocketDataSender);
+
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,SocketDataSender)

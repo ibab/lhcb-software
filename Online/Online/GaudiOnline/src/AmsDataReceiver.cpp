@@ -1,5 +1,4 @@
 #include "GaudiOnline/NetworkDataReceiver.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
@@ -97,4 +96,6 @@ namespace LHCb  {
     }
   };
 }
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AmsDataReceiver);
+
+#include "GaudiKernel/SvcFactory.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AmsDataReceiver)

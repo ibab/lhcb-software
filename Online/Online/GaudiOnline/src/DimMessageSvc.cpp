@@ -1,11 +1,8 @@
-// $Id: DimMessageSvc.cpp,v 1.9 2010-09-21 14:28:25 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.10 2010-09-22 13:38:19 frankb Exp $
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/DimMessageSvc.h"
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMessageSvc);
 
 LHCb::DimBuffer::DimBuffer()  {
   m_size = 0;
@@ -90,3 +87,6 @@ void LHCb::DimMessageSvc::i_reportMessageEx(const Message& msg, int )    {
   i_reportMessage(msg);
   report(msg.getType(), msg.getSource(), msg.getMessage());
 }
+
+#include "GaudiKernel/SvcFactory.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMessageSvc)
