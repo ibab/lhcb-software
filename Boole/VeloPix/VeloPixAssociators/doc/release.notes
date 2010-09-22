@@ -3,6 +3,9 @@
 ! Responsible : Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - Replace hardcoded container location by proper location definition
+
 !================= VeloPixAssociators v1r1 2010-03-01 =====================
 ! 2010-02-25 Marcin Kucharczyk
  - Update output paths in the linkers

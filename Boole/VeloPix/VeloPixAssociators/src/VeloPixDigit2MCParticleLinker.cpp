@@ -28,9 +28,9 @@ VeloPixDigit2MCParticleLinker::VeloPixDigit2MCParticleLinker(
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("InputData", m_inputData = 
-                  "VeloPix/Digits");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
   declareProperty("OutputData", m_outputData = 
-                  "VeloPix/Digits2MCParticles");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation+"2MCParticles");
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("Minfrac", m_minFrac = 0.05);
   declareProperty("OneRef", m_oneRef = false);

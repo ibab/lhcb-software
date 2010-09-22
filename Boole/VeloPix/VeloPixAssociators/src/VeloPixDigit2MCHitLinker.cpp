@@ -28,9 +28,9 @@ VeloPixDigit2MCHitLinker::VeloPixDigit2MCHitLinker(const std::string& name,
     m_hitLocation("MC/VeloPix/Hits") 
 {
   declareProperty("InputData", m_inputData = 
-                  "VeloPix/Digits");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation);
   declareProperty("OutputData", m_outputData = 
-                  "VeloPix/Digits2MCHits");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation+"2MCHits");
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.05);
   declareProperty("OneRef",m_oneRef = false);

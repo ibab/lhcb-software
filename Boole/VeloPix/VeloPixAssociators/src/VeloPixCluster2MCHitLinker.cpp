@@ -29,17 +29,17 @@ VeloPixCluster2MCHitLinker::VeloPixCluster2MCHitLinker(const std::string& name,
                             ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm(name, pSvcLocator),
     m_hitLocation("MC/VeloPix/Hits"),
-    m_asctLocation("VeloPix/Digits2MCHits")
+    m_asctLocation(LHCb::VeloPixDigitLocation::VeloPixDigitLocation + "2MCHits")
 {
   declareProperty("InputData", m_inputData = 
-                  "VeloPix/Clusters");
+                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
   declareProperty("OutputData", m_outputData = 
-                  "Raw/VeloPix/Clusters2MCHits");
+                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation + "2MCHits");
   declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.2);
   declareProperty("OneRef",m_oneRef = false);
   declareProperty("DigitLocation", m_digitLocation =
-                  "VeloPix/Digits");
+                  LHCb::VeloPixDigitLocation::VeloPixDigitLocation );
   declareProperty("Conversion", m_conversion = 2100.0);
   declareProperty("ScaleFactor", m_scaleFactor = 2.0);
 }
