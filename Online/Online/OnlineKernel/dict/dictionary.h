@@ -5,7 +5,7 @@
   #define __GCCXML
   #define __REAL_COMP
   #ifdef _WIN32
-  #else
+#elif  !defined(__INTEL_COMPILER)
     typedef void __va_list_tag;
   #endif
 #else
@@ -55,6 +55,7 @@
 #include "CPP/Interactor.h"
 #include "CPP/Event.h"
 
+#if 0
 namespace  {
   class Dictionary  {
   protected:
@@ -64,4 +65,5 @@ namespace  {
     ~Dictionary() {}
   };
 }
+#endif
 #include "dict/PyInteractor.cpp"
