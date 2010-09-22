@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Mariusz Witek
+- store float weights instead of double
+
 ! 2010-09-20 - Mariusz Witek
 - lots of modifications to store track weights
 - removal of obsolete PV algorithms and fitting tools

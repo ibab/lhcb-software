@@ -86,13 +86,12 @@ StatusCode PatPVOffline::execute() {
 
   LHCb::RecVertices* recoVertices = get<LHCb::RecVertices>( m_outputVertices );
   for(unsigned int iv = 0; iv < recoVertices->size(); iv++) {
-    // comm
     //    SmartRefVector< LHCb::Track >  vtx_tracks = ( *( recoVertices->begin() ) )->tracks();
     SmartRefVector< LHCb::Track >  vtx_tracks = (*recoVertices)(iv)->tracks();
     std::vector<double> weights;
     weights = weightsvec[iv];
     LHCb::WeightsVector* theWeights = new LHCb::WeightsVector();
-    std::vector<std::pair<int,double> > the_weights;
+    std::vector<std::pair<int,float> > the_weights;
     
     for ( unsigned int it = 0; it < vtx_tracks.size(); it++) {
 
@@ -100,7 +99,7 @@ StatusCode PatPVOffline::execute() {
         debug() << " the weights " << vtx_tracks[it]->key() << " " << weights[it] << endmsg;
       }
       
-      std::pair<int,double> weight( (vtx_tracks[it])->key(), weights[it] );
+      std::pair<int,float> weight( (vtx_tracks[it])->key(), float(weights[it]) );
       the_weights.push_back(weight);
     }
     
