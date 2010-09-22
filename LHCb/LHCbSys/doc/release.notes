@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Marco Cattaneo
+ - Add Event/RecreatePIDTools
+
 </PRE><H1><A NAME=v31r5>2010-08-26 LHCbSys v31r5</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LCG_58e
 
