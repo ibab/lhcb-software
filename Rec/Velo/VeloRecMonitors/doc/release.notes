@@ -5,7 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-09-22 - Michael Alexander
- - VeloIPResolutionMonitor: added info on material intersections to ntupling.
+ - Copied VeloIPResolutionMonitor to VeloIPResolutionMonitorNT
+ - Greatly simplified VeloIPResolutionMonitor to produce only a few monitoring histos
+ - VeloIPResolutionMonitorNT: added info on material intersections to ntupling.
 
 !======================= VeloRecMonitors v2r11 2010-08-25 ===================
 ! 2010-08-24 - Rob Lambert
