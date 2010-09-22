@@ -14,6 +14,7 @@ use  MvaPreSelB2DH               v1r0     Phys   # Sajan Easo
 use  StrippingAlgs               v1r3     Phys   # Anton Poluektov
 use  StrippingConf               v3r7     Phys   # Anton Poluektov
 use  StrippingSelections         v1r26    Phys   # Anton Poluektov
+use  StrippingSettings           v1r1     Phys   # Anton Poluektov
 use  DisplVertices 		 v6r11	  Phys	 # Neal Guavin
 use  HighPtJets			 v1r1p1   Phys   # Marcin Kucharczyk
 
