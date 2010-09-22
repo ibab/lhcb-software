@@ -143,7 +143,7 @@ export CCACHE_PREFIX
 all: $(packages:=_build)
 
 clean: $(packages:=_clean)
-	$(RM) -r InstallArea
+	$(RM) -r InstallArea/$(CMTCONFIG)
 
 # This hack is needed because the stand-alone bash implementation on Windows is very limited (short command line)
 purge: clean $(foreach dep,$(wildcard .$(CMTCONFIG).d/*.pack.d),$(dep)_do_purge) $(packages:=/cmt/$(Makefile)_do_purge)
