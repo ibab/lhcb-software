@@ -4,6 +4,10 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Victor Coco
+ - Adding upgrade configurables and cleaning options files and unnecessary 
+   classes
+
 !========================== RecoUpgrade v1r1 2010-07-07 =====================
 ! 2010-07-07 - Laurence Carson
  - Correct the weights in linear fit in PatVeloPixFitLHCbIDs.
