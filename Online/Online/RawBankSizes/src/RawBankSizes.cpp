@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.16 2010-09-22 17:30:29 frankb Exp $
+// $Id: RawBankSizes.cpp,v 1.17 2010-09-22 19:01:14 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 #include <string>
 #include <utility>
 #include "RawBankSizes.h"
-#include "GaudiOnline/OnlineService.h"
 #include "MDF/OnlineRunInfo.h"
 #include "MDF/MDFHeader.h"
 //#include "Event/ODIN.h"
