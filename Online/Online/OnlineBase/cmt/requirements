@@ -4,6 +4,7 @@ version v1r3
 branches  cmt doc src
 use GaudiPolicy v*
 
+macro OnlineDictionary_cppflags "" target-icc " -wd2304 "
 apply_pattern install_more_includes more=OnlineBase
 library       OnlineBase   ../src/AMS/*.cpp     \
                            ../src/CPP/*.cpp     \

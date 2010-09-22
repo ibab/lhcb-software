@@ -17,7 +17,10 @@ apply_pattern reflex_dictionary dictionary=UPI \
                                 selectionfile=$(UPIROOT)/dict/dictionary.xml \
                                 imports=OnlineKernel
 
-macro_append UPI_reflex_options " -D__GCCXML -DSCREEN "
+macro_append UPI_reflex_options    " -D__GCCXML -DSCREEN "
+macro_append UPIDict_dependencies  " UPI "
+macro_append UPIDict_cppflags      " $(OnlineDictionary_cppflags) " 
+
 apply_pattern install_python_modules 
 
 private
