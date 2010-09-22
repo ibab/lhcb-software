@@ -4,6 +4,8 @@
 #include "GaudiUPI/UpiDialogMenu.h"
 #include <string>
 
+static DialogDisplayFactory* fac = 0;
+
 DisplayFactory::DisplayFactory (const std::string& type) {
   if ( AbstractDisplayFactory::instance() == 0 ) {
     static AbstractDisplayFactory* fac = 0;
@@ -18,8 +20,8 @@ DisplayFactory::DisplayFactory (const std::string& type) {
   }
 }
 
-AbstractDisplayFactory* DisplayFactory::factory() {
-  return AbstractDisplayFactory::instance();
+DialogDisplayFactory* DisplayFactory_factory() {
+  return fac;
 }
 
 DialogDisplayFactory::DialogDisplayFactory() {
