@@ -1,0 +1,47 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+
+from Configurables import EventClockSvc, TimeDecoderList, FakeEventTime
+# Prepare the EventClockSvc and add the decoder list
+ecs = EventClockSvc(OutputLevel = DEBUG)
+ecs.addTool(TimeDecoderList, "EventTimeDecoder")
+tdl = ecs.EventTimeDecoder
+
+# Fill the decoder list with a set of private tools (FakeEventTime).
+# On the first event the second one should be used, and on the following ones
+# the first tool.
+for i, c in enumerate([ {"StartTime": 0, "TimeStep": 1000000000},
+                        {"StartTime": 500000000, "TimeStep": 1000000000} ]):
+    tdl.addTool(FakeEventTime, "fet_%d" % i)
+    t = getattr(tdl, "fet_%d" % i)
+    for k, v in c.items():
+        setattr(t, k, v)
+    tdl.Decoders.append(t)
+
+app = ApplicationMgr(TopAlg = [],
+                     EvtSel = "NONE",
+                     EvtMax = 3,
+                     ExtSvc = [ToolSvc(), ecs])
+
+#MessageSvc(OutputLevel = DEBUG)
+
+</text></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ApplicationMgr       INFO Application Manager Started successfully
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.5
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 1.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 2.0
+ApplicationMgr       INFO Application Manager Stopped successfully
+""")
+</text></argument>
+</extension>

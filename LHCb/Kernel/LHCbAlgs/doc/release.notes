@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Marco Clemencic
+ - Added an implementation of IEventTimeDecoder (TimeDecoderList) that uses a
+   list of IEventTimeDecoder instances (returning the first non-zero time
+   found).
+
 !======================== LHCbAlgs v2r34p1 2010-05-21 ========================
 ! 2010-05-18 - Marco Cattaneo
  - Fix Windows warnings
@@ -22,7 +27,7 @@
    it directly. It was in LHCbAlgs_dll.cpp that was removed because obsolete.
 
 ! 2010-01-05 - Gerhard Raven
- - if DeterministicPrescaler accepts all events, don't print out an Info() 
+ - if DeterministicPrescaler accepts all events, don't print out an Info()
    level messages stating this
 
 !======================== LHCbAlgs v2r32 2010-01-20 ==========================
@@ -47,7 +52,7 @@
  - Fix Windows compilation error in ODINCodecBaseTool
 
 ! 2009-11-06 - Chris Jones
- - Add trivial algorithm that allows for sequence filtering based on the 
+ - Add trivial algorithm that allows for sequence filtering based on the
    version of DataObjects. Allows for use cases like the re-creation of some
    data depending on its version.
 
@@ -69,12 +74,12 @@
 ! 2009-10-08 - Vanya Belyaev
  - Memory Tool:
     1. two new conunters:
-       "Total Memory/MB" 
+       "Total Memory/MB"
        "Delta Memory/MB"
-    2. two new histograms 
-       "Total Memory [MB]" 
+    2. two new histograms
+       "Total Memory [MB]"
        "Delta Memory [MB]"
- 
+
 ! 2009-09-14 - Rob Lambert
  - Fixed compiler warnings in EventCountAlg
 
@@ -113,7 +118,7 @@
 
 !======================== LHCbAlgs v2r25 2009-03-10 ==========================
 ! 2009-03-09 - Jeroen van Tilburg
- - Added FilterByBankType algorithm. Can be used to select events based 
+ - Added FilterByBankType algorithm. Can be used to select events based
    on which banks are present in the RawEvent.
 
 !======================== LHCbAlgs v2r24 2009-02-19 ==========================
@@ -142,11 +147,11 @@
    ODINCodecBaseTool, which contains the implementation of the ODIN -> RawBank
    and RawBank -> ODIN functions. Added a test too (lhcbalgs.odin_codec).
  - Added dependencies on Det/DetDesc to compile RunChangeTest, and to
-   Det/DetDescSvc and Det/DetCond for the tests. 
+   Det/DetDescSvc and Det/DetCond for the tests.
 
 !======================== LHCbAlgs v2r23 2009-01-09 ==========================
 ! 2009-01-09 - Patrick Koppenburg
- - TESCheck : issue setFilterPassed(false) when location is not found in 
+ - TESCheck : issue setFilterPassed(false) when location is not found in
    Stop = false mode.
 
 ! 2008-12-29 - Gerhard Raven
@@ -166,7 +171,7 @@
  - More fixes gcc 4.3 compilation, and fix an uninitialised property
 
 ! 2008-10-29 - Patrick Koppenburg
- - AlgorithmCorrelations : 
+ - AlgorithmCorrelations :
    . Fix compilation warning from gcc 4.3
    . Remove all references to SelResult
 
@@ -201,7 +206,7 @@
  - Improve doxygen comments in FPE code + add a simple constructor
 
 ! 2008-06-09 - Gerhard Raven
- - more improvements to FPEAuditor: 
+ - more improvements to FPEAuditor:
    o fix chicken-and-egg problem when auditing initialize: 'after'
      will get called for the IAuditerSvc implementation without 'before'
    o split FPEGuard in dedicated header, to be moved 'upstream'
@@ -213,7 +218,7 @@
      on an unsupported platform, it becomes a no-op.
 
 ! 2008-06-06 - Gerhard Raven
- - general improvements to FPEAuditor: 
+ - general improvements to FPEAuditor:
    o  clear exception flags before switching on trapping (otherwise, any
       error generated earlier will generate a trap the moment trapping is
       switched on -- and hence produce a confusing traceback)
@@ -227,7 +232,7 @@
 
 ! 2008-06-04 - Marco Cattaneo
  - Add a windows implementation for FPEAuditor
- 
+
 ! 2008-06-03 - Gerhard Raven
  - Add FPEAuditor, which can configure the FPU to trap a specified set of
    Floating Point Exceptions, and generate a SIGFPE (which leads to Gaudi
@@ -240,7 +245,7 @@
 ! 2008-04-25 - Gerhard Raven
  - add rate prescaling based on run#, event#, gpsTime and algorithm instance
    name to DeterministicPrescaler
- - add some comments to FilterByRunEvent pointing out that event# is NOT a 
+ - add some comments to FilterByRunEvent pointing out that event# is NOT a
    32 bit number -- fixing this properly requires adding a new property type.
 
 !======================== LHCbAlgs v2r16 2008-04-16 ==========================
@@ -250,11 +255,11 @@
 
 !======================== LHCbAlgs v2r15 2008-02-12 ==========================
 ! 2008-02-11 - Patrick Koppenburg
- - AlgorithmCorrelations : Allow to print efficiencies for conditions 
+ - AlgorithmCorrelations : Allow to print efficiencies for conditions
    algorithms as well.
 
 ! 2008-02-05 - Patrick Koppenburg
- - AlgorithmCorrelations : More functionality. And allow non-square matrices 
+ - AlgorithmCorrelations : More functionality. And allow non-square matrices
    (did not work previously)
 
 !======================== LHCbAlgs v2r14 2008-02-02 ==========================
@@ -282,11 +287,11 @@
  - changes in TrajPoca
    . adapted to interface change in trajectory
    . fixed bug in specification of tolerance for validity of quadratic
-     approximation 
+     approximation
 
 !======================== LHCbAlgs v2r11 2007-10-11 ==========================
 ! 2007-10-11 - Marco Cattaneo
- - Rename EventCounter tool to EvtCounter, to avoid clash with GaudiAlg class 
+ - Rename EventCounter tool to EvtCounter, to avoid clash with GaudiAlg class
    of same name
 
 ! 2007-10-10 - Wouter Hulsbergen
@@ -326,7 +331,7 @@
  - Add dependency on DAQEvent (for ODIN bank definition)
 
 ! 2007-02-26 - Marco Cattaneo
- - Add LbAppInit factory declaration to LHCbAlgs_dll.cpp, to avoid having it 
+ - Add LbAppInit factory declaration to LHCbAlgs_dll.cpp, to avoid having it
    in LHCbKernel link library (and all .rootmaps of packages using LHCbKernel)
  - Remove obsolete LHCbAlgs_load.cpp file
  - Remove LHCBDefinitions includes
@@ -402,12 +407,12 @@
 
 !======================== LHCbAlgs v1r2 2004-11-11 ========================
 ! 2004-11-11 - Marco Cattaneo
- - LbAppInit: 
+ - LbAppInit:
    . Remove use of timing tool at initilisation, as normalisation of timing is
      now done in SequencerTimerTool
    . Improve initialisation of random numbers: now the run and event number are
      given as first and second seeds to setSeeds, as well as being used in the
-     hash algorithm to generate a third seed. The previous behaviour can be 
+     hash algorithm to generate a third seed. The previous behaviour can be
      recovered by seting the "SingleSeed" option to true. In addition, one can
      skip some random numbers before every event, set by the "SkipFactor" job
      option (default value = 0)
@@ -427,7 +432,7 @@
 
 ! 2004-07-30 - P. Koppenburg
  - LbAppInit: Print memory usage at each event in debug() OutputLevel
-    
+
 !======================== LHCbAlgs v1r0 2004-07-21 ========================
 ! 2004-07-21 - Marco Cattaneo
  - First version:
