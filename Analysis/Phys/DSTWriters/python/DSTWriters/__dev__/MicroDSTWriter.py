@@ -17,15 +17,18 @@ from DSTWriters.microdstelements import  (CloneRecHeader,
                                           CloneBTaggingInfo,
                                           ReFitAndClonePVs)
 
+defaultElements = [CloneRecHeader(),
+                   CloneODIN(),
+                   ClonePVs(),
+                   CloneParticleTrees(copyProtoParticles = False),
+                   ClonePVRelations("Particle2VertexRelations",True)]
+
 class MicroDSTWriter(BaseDSTWriter) :
     """
     Write a MicroDST for a set of selection sequences.
     """
 
     __slots__ = { "StreamConf"           : microDSTWriterConf(),
-                  "MicroDSTElements" : [CloneRecHeader(),
-                                        CloneODIN(),
-                                        ClonePVs(),
-                                        CloneParticleTrees(copyProtoParticles = False),
-                                        ClonePVRelations("Particle2VertexRelations",True)]
+                  "MicroDSTElements" : {'default' : defaultElements}
+
                   }

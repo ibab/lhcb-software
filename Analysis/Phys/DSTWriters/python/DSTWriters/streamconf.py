@@ -2,28 +2,11 @@
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.3 $'
-
-__all__ = ('OutputStreamConf', 'OutputStreamConfParams')
+__all__ = ('OutputStreamConf')
 
 from copy import copy
 
-from GaudiConf.Configuration import ConfigurableUser
-
-class OutputStreamConf(ConfigurableUser) :
-        
-    __slots__ = { 'streamType' : None,
-                  'filePrefix' : 'Sel',
-                  'fileExtension' : '.dst',
-                  'extraItems' :  []}
-
-    def params(self) :
-        return OutputStreamConfParams(streamType = self.getProp('streamType'),
-                                      filePrefix = self.getProp('filePrefix'),
-                                      fileExtension = self.getProp('fileExtension'),
-                                      extraItems = copy(self.getProp('extraItems'))  )
-
-class OutputStreamConfParams(object) :
+class OutputStreamConf(object) :
     def __init__(self,
                  streamType = None,
                  filePrefix = 'Sel',

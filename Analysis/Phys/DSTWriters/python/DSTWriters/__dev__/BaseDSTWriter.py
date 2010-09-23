@@ -11,7 +11,6 @@ from Configurables import GaudiSequencer
 
 from DSTWriters.dstwriters import DSTWriterSelectionSequence, baseDSTWriterConf
 from DSTWriters.dstwriterutils import MicroDSTElementList
-from DSTWriters.streamconf import OutputStreamConf
 from copy import copy
 
 class BaseDSTWriter(ConfigurableUser) :
@@ -22,28 +21,46 @@ class BaseDSTWriter(ConfigurableUser) :
     __slots__ = {
         "OutputFileSuffix"           : "Sel"
         , "SelectionSequences"       : []
-        , "ExtraItems"               : []
         , "WriteFSR"                 : True
-        , "StreamConf"               : baseDSTWriterConf()
-        , "MicroDSTElements" : []
+        , "StreamConf"               : {'default' :baseDSTWriterConf()}
+        , "MicroDSTElements"         : {'default' : []}
         }
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
         , "SelectionSequences" : """ List of SelectionSequences defining the selections"""
-        , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         , "WriteFSR"           : """ Flags whether to write out an FSR """
         , "StreamConf"         : """ Output stream configuration """
         , "MicroDSTElements"   : """ List of callables setting up each element to be added to each SelectionSequence and copied to MicroDST partition."""
         }
 
-    def buildClonerList(self, selSeq) :
+    def _buildClonerList(self, selSeq) :
         '''
         Build list of callables that will be used by the BaseDSTWriter.
         '''
-        clonerList = copy(self.getProp('MicroDSTElements'))
-        return MicroDSTElementList(branch = selSeq.name(), callables = clonerList)
+        clonerDict = copy(self.getProp('MicroDSTElements'))
+        seqName = selSeq.name()
+        clonerList = []
+        if seqName in clonerDict.keys() :
+            clonerList = clonerDict[seqName]
+        else :
+            clonerList = clonerDict['default']
+        
+        return MicroDSTElementList(branch = seqName, callables = clonerList)
 
+    def _buildStreamConf(self, selSeq) :
+        scDict = copy(self.getProp('StreamConf'))
+        seqName = selSeq.name()
+        sc = None
+        if seqName in scDict.keys() :
+            sc = scDict[seqName]
+        else :
+            sc = scDict['default']
+        prefix = self.getProp('OutputFileSuffix')
+        if prefix != '' :
+            sc.filePrefix = self.getProp('OutputFileSuffix') + '.'
+        return sc
+    
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
                               ModeOR = True, 
@@ -55,14 +72,9 @@ class BaseDSTWriter(ConfigurableUser) :
         each input SelectionSequence and adds it to the main sequence.
         """
         log.info("Configuring BaseDSTWriter")
-        sc = self.getProp('StreamConf').clone('StreamConf'+ '_' + self.name())
-        prefix = self.getProp('OutputFileSuffix')
-        if prefix != '' :
-            sc.filePrefix = self.getProp('OutputFileSuffix') + '.'
-        sc.extraItems += self.getProp('ExtraItems')
         for sel in self.getProp('SelectionSequences') :
             seq = DSTWriterSelectionSequence(selSequence = sel,
-                                             outputStreamConfiguration = sc.params(),
-                                             extras = self.buildClonerList(sel),
+                                             outputStreamConfiguration = self._buildStreamConf(sel),
+                                             extras = self._buildClonerList(sel),
                                              writeFSR = self.getProp('WriteFSR'))
             self.sequence().Members += [ seq.sequence() ]

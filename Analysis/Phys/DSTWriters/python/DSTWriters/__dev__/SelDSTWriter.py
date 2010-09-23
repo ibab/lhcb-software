@@ -14,12 +14,15 @@ from DSTWriters.dstwriters import selDSTWriterConf
 
 from DSTWriters.microdstelements import CloneParticleTrees, ClonePVRelations
 
+defaultElements = [CloneParticleTrees(copyProtoParticles = False),
+                   ClonePVRelations("Particle2VertexRelations",True)]
+
+
 class SelDSTWriter(MicroDSTWriter) :
     """
     Write a DST for a single selection sequence. Writes out the entire
     contents of the input DST file, plus extra items from the TES.
     """
-    __slots__ = { "StreamConf"           : selDSTWriterConf(),
-                  "MicroDSTElements" : [CloneParticleTrees(copyProtoParticles = False),
-                                        ClonePVRelations("Particle2VertexRelations",True)]
+    __slots__ = { "StreamConf"       : selDSTWriterConf(),
+                  "MicroDSTElements" : {'default' : defaultElements}
                   }

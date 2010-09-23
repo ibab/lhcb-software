@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.59 2010-09-06 21:20:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-09-23 - Juan Palacios
+ - python/DSTWriters/dstwriters.py
+ - python/DSTWriters/streamconf.py
+ - python/DSTWriters/__dev__/MicroDSTWriter.py
+ - python/DSTWriters/__dev__/BaseDSTWriter.py
+ - python/DSTWriters/__dev__/SelDSTWriter.py
+  . Enable configuration of DST writing per SelectionSequence. This allows
+    to configure the contents of the MicroDST partition, the ExtraItems, and
+    the type of output (DST, MicroDST) on a pre-stream basis.
+  . Simplify output stream configuration.
 
 ! ======================== DSTWriters v1r11 2010-09-06 =======================
 

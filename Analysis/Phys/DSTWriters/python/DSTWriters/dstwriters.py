@@ -14,18 +14,16 @@ from streamconf import OutputStreamConf
 from copy import copy
         
 def baseDSTWriterConf():
-    return OutputStreamConf("BaseDSTStreamConf", streamType = InputCopyStream)
+    return OutputStreamConf(streamType = InputCopyStream)
 
 def microDSTWriterConf() :
-    return OutputStreamConf("MicroDSTStreamConf",
-                            streamType = OutputStream,
+    return OutputStreamConf(streamType = OutputStream,
                             fileExtension = '.mdst',
                             extraItems = ['/Event/DAQ/ODIN#1',
                                           '/Event/Rec/Header#1'])
 
 def selDSTWriterConf() :
-    return OutputStreamConf("SelDSTStreamConf",
-                            streamType = InputCopyStream)
+    return OutputStreamConf(streamType = InputCopyStream)
 
 class DSTWriterSelectionSequence(object) :
     '''
