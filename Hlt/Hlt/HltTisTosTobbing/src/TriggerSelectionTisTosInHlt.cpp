@@ -12,7 +12,6 @@
 
 // local
 #include "TriggerSelectionTisTosInHlt.h"
-#include "ParticleTisTos.h"
 
 #include "Event/HltDecReports.h"
 

@@ -9,7 +9,7 @@
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
 
-#include "ParticleTisTos.h"
+#include "TisTos/ParticleTisTos.h"
 
 #include "Event/HltObjectSummary.h"
 #include "Event/Particle.h"
