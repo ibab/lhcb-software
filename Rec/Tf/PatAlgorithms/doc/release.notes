@@ -4,6 +4,17 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Manuel Tobias Schiller
+ - PatSeedingTool: make cuts on stereo hit content during per region search
+   explicit as job options (applies to OT only)
+ - PatSeedingTool: modify these cuts to prevent them from killing a large
+   fraction of the tracks going through a dead module
+ - PatSeedingTool: introduce a job option for the tolerance used to check
+   if a hit is inside the sensitive area (along y) of a straw or strip
+   (the default is 4 cm which should be plenty)
+ - PatSeedingTool: move one check for y compatibility (see previous item)
+   from collectPerRegion() to collectStereoHits() to kill bad hits earlier
+
 ! 2010-09-21 - Manuel Tobias Schiller
  - make the fit in PatSeedFit more similar to what is done in PatSeeding
    also clean up code somewhat (remove unused/superfluous members)

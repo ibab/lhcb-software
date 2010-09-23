@@ -44,6 +44,7 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
  *  @author Olivier Callot
  *  @date   2006-10-13 Initial version
  *  @date   2007-08-20 Update for a-team framework 
+ *  @author Manuel Schiller
  *  @date   2008-04-15 Major code refactoring, new pass over low quality
  *          tracks, bug fixes
  *  @date   2008-05-03 added methods to cache region z at y = 0, dz/dy
@@ -56,6 +57,11 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
  *          clone killing x distance cut, cuts for IT stub refitting,
  *          cuts on number of holes per track and minimum number of planes
  *          per station
+ *  @date   2010-09-24 have option for tolerance when checking if hit is
+ *          inside sensitive area of straw/sensor; fix bug in per-region
+ *          stereo search which kills tracks going through a dead OT
+ *          module; make cuts related to this problem explicit through
+ *          job options
  */
 
 class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
@@ -317,6 +323,14 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     double m_itStubLooseChi2;
     /// max. chi^2/ndf for IT stubs after stub refit
     double m_itStubTightChi2;
+
+    /// tolerance to check if a hit is within the sensitive y area of straw/sensor
+    double m_yTolSensArea;
+
+    /// min. number of stereo hits per station during per-region search (OT)
+    int m_minStHitsPerStaOT;
+    /// min. total number of stereo hits during per-region search (OT)
+    int m_minTotStHitsOT;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;

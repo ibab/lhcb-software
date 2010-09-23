@@ -102,6 +102,11 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "yCorrection",		m_yCorrection		= -1e42);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
   declareProperty( "MaxYAtOriginLowQual",	m_maxYAtOriginLowQual	= 1500. * Gaudi::Units::mm );
+  // tolerance to check if a hit is within the sensitive y area of straw/sensor
+  declareProperty( "yTolSensArea",		m_yTolSensArea		=   40. * Gaudi::Units::mm );
+  // y hit requirements during per-region stereo search
+  declareProperty( "MinStHitsPerStaOT",		m_minStHitsPerStaOT	= 1			   );
+  declareProperty( "MinTotStHitsOT",		m_minTotStHitsOT	= 6			   );
 
   //------------------------------------------------------------------------
   // track search starting with quartett in IT
@@ -648,14 +653,6 @@ void PatSeedingTool::collectPerRegion(
 
           if ( !ok ) continue;
 	  
-	  // remove "impossible" hits as early as feasible
-	  BOOST_FOREACH(PatFwdHit* hit, stereo) {
-	    if (!hit->hit()->isYCompatible(
-		  hit->projection() * hit->hit()->zAtYEq0() / m_zForYMatch,
-		  10. * m_tolCollect))
-	      hit->setIgnored(false);
-	  }
-
           if ( m_printing ) {
             info() << "--- After filtering of stereo hits " << endmsg;
             BOOST_FOREACH( PatFwdHit* hit, stereo ) {
@@ -716,7 +713,9 @@ void PatSeedingTool::collectPerRegion(
               BOOST_FOREACH( const PatFwdHit* hit, stereo)
                 if ( !hit->isIgnored() )
                   nInStation[ hit->hit()->station() ]++;
-              if ( 2 > nInStation[0] || 2 > nInStation[1] || 2 > nInStation[2] ){
+              if (m_minStHitsPerStaOT >
+		  std::min(nInStation[0], std::min(nInStation[1], nInStation[2])) ||
+		  m_minTotStHitsOT > nInStation[0] + nInStation[1] + nInStation[2]) {
                 if ( m_printing )
                   info() << "Not enough OT stereo in some station : "
                          << nInStation[0] << " "
@@ -883,7 +882,7 @@ void PatSeedingTool::collectITOT(
 	    // open search window into second stereo layer
 	    const double y = ((x0 + (hit1->hit()->zAtYEq0() - z0) * sl) -
 		hit1->hit()->xAtYEq0()) / hit1->hit()->dxDy();
-	    if (!hit1->hit()->isYCompatible(y, 10. * m_tolExtrapolate)) continue;
+	    if (!hit1->hit()->isYCompatible(y, m_yTolSensArea)) continue;
 	    // check slope in y if we have a state
 	    if (state && !isGoodSlope(state, false, y / hit1->hit()->zAtYEq0()))
 	      continue;
@@ -910,7 +909,7 @@ void PatSeedingTool::collectITOT(
               if ( hit2->isUsed() ) continue;
               if ( m_enforceIsolation && !isIsolated(itH2, rangeH2) ) continue;
 	      if (!hit2->hit()->isYCompatible(z2 / hit1->hit()->zAtYEq0() * y,
-		    10. * m_tolExtrapolate)) continue;
+		    m_yTolSensArea)) continue;
 
               // restore coordinates
               restoreCoordinate(hit0);
@@ -1051,7 +1050,7 @@ void PatSeedingTool::collectITOT(
 	      if ( hit->isUsed() ) continue;
 	      updateHitForTrack( hit, track.yAtZ(hit->hit()->zAtYEq0()),0);
 	      if ( m_tolExtrapolate < std::abs(track.distance(hit)) ) continue;
-	      if (!hit->hit()->isYCompatible(yPred, 10. * m_tolExtrapolate)) continue;
+	      if (!hit->hit()->isYCompatible(yPred, m_yTolSensArea)) continue;
 	      if ( m_enforceIsolation && !isIsolated(it, rangeXX) ) continue;
 	      if ( m_printing ) {
 		info() << "Add coord ";
@@ -1113,7 +1112,7 @@ void PatSeedingTool::collectITOT(
 		if ( hit->isUsed() ) continue;
 		updateHitForTrack( hit, track.yAtZ(hit->hit()->zAtYEq0()), 0);
 		if ( m_tolExtrapolate < std::abs(track.distance(hit)) ) continue;
-		if (!hit->hit()->isYCompatible(yPred, 10. * m_tolExtrapolate)) continue;
+		if (!hit->hit()->isYCompatible(yPred, m_yTolSensArea)) continue;
 		if ( m_enforceIsolation && !isIsolated(it, rangeYY) ) continue;
 		if ( m_printing ) {
 		  info() << "Add coord ";
@@ -1263,11 +1262,9 @@ void PatSeedingTool::collectLowQualTracks(
           if ( hit->isIgnored() ) continue;
           nInStation[ hit->hit()->station() ]++;
         }
-        int nStationsBelowTwoStereoHits =
-          ((2 > nInStation[0])?1:0) +
-          ((2 > nInStation[1])?1:0) +
-          ((2 > nInStation[2])?1:0);
-        if ( nStationsBelowTwoStereoHits > 0 ) {
+	if (m_minStHitsPerStaOT >
+	    std::min(nInStation[0], std::min(nInStation[1], nInStation[2])) ||
+	    m_minTotStHitsOT > nInStation[0] + nInStation[1] + nInStation[2]) {
           if ( m_printing ) info() << "Not enough OT stereo in some station : "
                                    << nInStation[0] << " "
                                    << nInStation[1] << " "
@@ -1872,6 +1869,8 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
           const double x = hit->hit()->xAtYEq0();
           const double z = hit->hit()->zAtYEq0();
           const double y = (track.xAtZ(z) - x) / hit->hit()->dxDy();
+	  if (!hit->hit()->isYCompatible(y, m_yTolSensArea)) continue;
+
           // check if the hit is isolated
           if ( m_enforceIsolation && !isIsolated(it, rangeW) ) {
             int idx = int(std::abs(y) * 20. / 3e3);
