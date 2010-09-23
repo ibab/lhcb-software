@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Marc Grabalosa, Marco Musy
+  . update and cleanup of BTaggingAnalysis.cpp
+  . complete revision of /root program for analysis
 
 ! 2010-07-02 - Marc Grabalosa
   .Added Some comments

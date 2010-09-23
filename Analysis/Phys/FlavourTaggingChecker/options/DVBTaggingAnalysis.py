@@ -17,7 +17,7 @@ from Configurables import CheatedSelection, PhysDesktop
 cheatsel = CheatedSelection("CheatedSelection")
 cheatsel.InputLocations = [ "Phys/TaggingPions" ]
 cheatsel.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
-cheatsel.OutputLevel = 3
+cheatsel.OutputLevel = 4
 
 ########################################################################
 # Flavour tagging. 
@@ -28,23 +28,29 @@ location = "Phys/CheatedSelection"
 
 tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
-tag.OutputLevel    = 4
+
+tag.OutputLevel  = 3
+
 tag.addTool( PhysDesktop )
 tag.PhysDesktop.OutputLevel = 4
 tag.addTool( TriggerTisTos )
 tag.TriggerTisTos.OutputLevel = 4
+tag.addTool( TaggingUtilsChecker )
+tag.TaggingUtilsChecker.OutputLevel = 4
+tag.addTool( TaggingUtils )
+tag.TaggingUtils.OutputLevel = 4
 tag.addTool( MCMatchObjP2MCRelator )
 tag.MCMatchObjP2MCRelator.OutputLevel = 4
 tag.addTool( BackgroundCategory )
 tag.BackgroundCategory.OutputLevel = 4
 
-
 tag.addTool( BTaggingTool )
-tag.BTaggingTool.ChoosePVCriterium = "PVbyIP"#needed by CheatedSel
-tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
-tag.BTaggingTool.OutputLevel    = 3
+tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+#tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
+
+tag.BTaggingTool.OutputLevel = 3
+
 #tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
-#tag.BTaggingTool.UseReFitPV = True
 
 ########################################################################
 # Flavour tagging Checker:
@@ -52,23 +58,26 @@ tag.BTaggingTool.OutputLevel    = 3
 tagcheck = BTaggingChecker("BTaggingChecker")
 tagcheck.InputLocations = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
-tagcheck.OutputLevel = 3
+tagcheck.OutputLevel = 4
 
 ########################################################################
 # BTaggingAnalysis ntuple creation
 
 tagana = BTaggingAnalysis("BTaggingAnalysis")
 tagana.InputLocations = [ location, 
-                          "Phys/TaggingElectrons",
+                          "Phys/TaggingElectrons", 
                           "Phys/TaggingMuons",
-                          "Phys/TaggingPions" 
+                          "Phys/TaggingPions"
                           ]
+
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
-tagana.RequireTisTos = True
+tagana.RequireTisTos = True #TisTosTool
+#tagana.RequireTisTos = False #TisTosTool
+#tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
 
-tagana.OutputLevel = 4
+tagana.OutputLevel = 3
 
 tagana.addTool( PhysDesktop )
 tagana.PhysDesktop.OutputLevel = 4
@@ -84,40 +93,41 @@ tagana.BackgroundCategory.OutputLevel = 4
 #################################################################
 # Triger information
 from Configurables import L0Conf
-#See L0Conf().TCK at $L0TCKROOT/options/L0DUConfig_201002_0x1210-0x1810.opts
 L0Conf().TCK = "0xDC09"
 
 DaVinci().ReplaceL0BanksWithEmulated = True    # Redo L0
 
 from Configurables import HltConf
-DaVinci().Hlt = True
-DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_Apr09'
-
+DaVinci().Hlt = False
 
 ########################################################################
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 200                         # Number of events
+DaVinci().EvtMax     = 500                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
-DaVinci().PrintFreq  = 10
-DaVinci().TupleFile     = "analysis.root"     # Ntuple
-DaVinci().HistogramFile = "DVHistos.root"     # Histogram file
+DaVinci().PrintFreq  = 1
+DaVinci().TupleFile  = "analysis.root"     # Ntuple
 
 DaVinci().Simulation = True
-DaVinci().DataType   = "2010"
-DaVinci().DDDBtag    = "head-20100119"
-DaVinci().CondDBtag  = "sim-20100222-vc-md100"
+DaVinci().DataType   = "2010" 
+
+#for bsjpsiphi 2010
+DaVinci().DDDBtag    = "head-20100407" 
+DaVinci().CondDBtag  = "sim-20100429-vc-md100"
 
 DaVinci().MoniSequence = [ cheatsel,
                            tag,
-                           #tagcheck,
+#                           tagcheck,
                            tagana
                            ]  # The algorithms
 
 ########################################################################
-#Bs2DsPi
-EventSelector().Input = [ "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-                          "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#DAVINCI/DAVINCI_HEAD/DaVinciSys/tests/options/DVTestTagging.py
+# example data files
 
+#bsjpsiphi
+EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
+#bdjpsi kshort
+#EventSelector().Input  = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007353/0000/00007353_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

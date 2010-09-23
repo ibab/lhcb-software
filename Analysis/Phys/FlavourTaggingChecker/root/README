@@ -1,0 +1,11 @@
+
+-----------
+- To quickly run:
+
+1. modify tag.opts to point to the ntuple or ntuple 
+   directory that you want to use.
+
+2. type make
+
+3. have fun :)
+

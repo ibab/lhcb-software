@@ -1,0 +1,78 @@
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  
+  THIS A PLAIN TEXT OPTION FILE parsed by the Tools!
+  Separators like ,;//>: or "" are ignored
+  # as first char can be used to comment out a specific line
+
+  >>>>>>>>>>>>>>>>>>>>>> DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+  
+  This is the file/directory that you want to run (LAST ONE IS TAKEN):
+   if a directory is given all root files in it will be read:
+
+   datafile = .
+   datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+
+   datafile = data/v25r2_retune/bsdspi_seed2
+   datafile = data/v25r2_retune/bdkp_seed2
+   datafile = data/v25r2_retune/bujpsik_seed2
+   datafile = data/MC10/bsjpsiphi_seed2
+
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bujpsik
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsjpsiphi_nu1
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi_seed2_marc
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/dstarmunu/dstarmu_s7.root
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bdjpsiks
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
+
+   datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+
+  >>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+   DBGLEVEL    =  3
+   Nmax        = -1    // events to run, -1 means all
+
+   requireL0   = 0     // Trigger
+   requireHlt1 = 0 
+   requireHlt2 = 0 
+   requireTis  = 0
+   requireTos  = 0
+   checkDV     = 0     // compare outcome from DaVinci package
+
+   IsControlChannel = 0     // take as the true flavour the reconsted B
+   UseObsoleteSV    = 0
+   NNetTrain        = none  // taggers: "mu" "e" "k" "kS" "pS" "vtx"
+   ViewOptionLHCb   = -1
+
+   ////check that event is present in a list of run event numbers 
+   EventListFileName = ./file.eventlist //just look in this file
+   //look in the same data directory for ONE file with .eventlist extension:
+   EventListFileName = DATAFILE  
+   EventListFileName = none             //ignore any list
+
+#   EventListFileName = ../selected_s7.txt            
+
+  >>>>>>>>>>>>>>>>>>>>>> OVERRIDE CUTS >>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#  ------------- common cuts -------------
+#   IPPU_cut   = 3.0, distPhi_cut = 0.005
+#   omegascale = 0.06, omegamaxbin = 0.36
+#
+#  ------------- muons -------------
+#   Muon_Pt_cut = 1.1, Muon_P_cut = 0; 
+#  
+#  ------------- elect -------------
+#   Ele_Pt_cut = 1.1, Ele_P_cut = 0;
+# 
+#  ------------- OS kaons -------------
+#   Kaon_Pt_cut = 0.4, Kaon_P_cut = 4, 
+#
+#  ------------- SS Kaons -------------
+#   KaonSame_Pt_cut = 0.45
+#
+#  ------------- SS Pions -------------
+#   PionSame_Pt_cut = 0.6, PionSame_P_cut = 0
+#   PionSame_dQ_cut = 3.0
+#
+#  ------------- Vertex Charge -------------
+#   VchPowerK = 0.35, MinimumVCharge = 0.12;
+ 
