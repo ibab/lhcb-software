@@ -1,0 +1,50 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+
+from Configurables import EventClockSvc, RecEventTime, FakeEventTime
+from Configurables import LHCbAlgsTest__CreateFakeRecHeader as CreateFakeRecHeader
+
+# Prepare the EventClockSvc and add the decoder
+ecs = EventClockSvc(OutputLevel = DEBUG)
+ecs.addTool(RecEventTime, "EventTimeDecoder")
+tdl = ecs.EventTimeDecoder
+
+# Prepare the algorithm to generate fake RecHeaders
+cfh = CreateFakeRecHeader()
+cfh.addTool(FakeEventTime, "EventTimeDecoder")
+cfh.EventTimeDecoder.TimeStep = 1000000000
+
+app = ApplicationMgr(TopAlg = [],
+                     EvtSel = "NONE",
+                     EvtMax = 3,
+                     ExtSvc = [ToolSvc(), cfh, ecs])
+
+EventDataSvc(ForceLeaves = True)
+
+#MessageSvc(OutputLevel = DEBUG)
+
+</text></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ApplicationMgr       INFO Application Manager Started successfully
+LHCbAlgsTest::C...   INFO Adding RecHeader with event time 0.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
+LHCbAlgsTest::C...   INFO Adding RecHeader with event time 1.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 1.0
+LHCbAlgsTest::C...   INFO Adding RecHeader with event time 2.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 2.0
+""")
+</text></argument>
+</extension>
