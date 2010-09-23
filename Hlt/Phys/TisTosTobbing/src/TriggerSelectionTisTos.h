@@ -5,7 +5,7 @@
 // Include files
 // from Gaudi
 //#include "GaudiAlg/GaudiTool.h"
-#include "ParticleTisTos.h" 
+#include "TisTos/ParticleTisTos.h" 
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
  
 #include "Event/HltObjectSummary.h"

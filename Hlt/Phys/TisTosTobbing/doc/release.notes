@@ -4,6 +4,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-09-23 - Tomasz Skwarnicki
+ - move TisTos and ParticleTisTos low level tools into linker_library, 
+   export their include files in TisTos/
+
 ! 2010-09-22 - Tomasz Skwarnicki
  - Move Hlt project dependent code (TriggerSelectionTisTosInHlt, TriggerTisTosInHlt)
    to a separate library (Hlt/HltTisTosTobbing) so this library can live under Phys project

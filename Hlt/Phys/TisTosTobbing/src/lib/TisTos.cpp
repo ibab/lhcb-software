@@ -4,10 +4,10 @@
 #include <sstream>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+// #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "TisTos.h"
+#include "TisTos/TisTos.h"
 
 #include "Kernel/CaloCellCode.h"
 
@@ -23,7 +23,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TisTos );
+// DECLARE_TOOL_FACTORY( TisTos );
 
 
 //=============================================================================

@@ -6,14 +6,14 @@
 
 // from Gaudi    
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/ToolFactory.h"
+//#include "GaudiKernel/ToolFactory.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
 
 #include "Kernel/CaloCellCode.h"
 
 // local
-#include "ParticleTisTos.h"
+#include "TisTos/ParticleTisTos.h"
 
 using namespace LHCb;
 
@@ -24,7 +24,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( ParticleTisTos );
+//DECLARE_TOOL_FACTORY( ParticleTisTos );
 
 
 //=============================================================================

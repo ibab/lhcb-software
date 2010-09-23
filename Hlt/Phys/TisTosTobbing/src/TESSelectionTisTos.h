@@ -8,7 +8,7 @@
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 
 
-#include "ParticleTisTos.h"
+#include "TisTos/ParticleTisTos.h"
 
 #include "Event/HltObjectSummary.h"
 #include "Event/Particle.h"

@@ -12,7 +12,6 @@
 
 // local
 #include "TESSelectionTisTos.h"
-#include "ParticleTisTos.h"
 
 using namespace LHCb;
 

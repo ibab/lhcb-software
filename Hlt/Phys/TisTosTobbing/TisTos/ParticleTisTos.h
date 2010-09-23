@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleTisTos.h"            // Interface
 
-#include "TisTos.h"
+#include "TisTos/TisTos.h"
 
 #include "CaloInterfaces/ITrack2Calo.h"
 
