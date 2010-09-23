@@ -126,6 +126,20 @@ StatusCode CheatedVeloPixPat::execute() {
     
     // Loop over the LHCbID corresponding to this MCParticle
     if ( linkedIds.size() > (unsigned int) part->key() ) {
+      
+      LHCb::State aStateEnd;
+      LHCb::State aStateFirst;
+      aStateEnd.setLocation( LHCb::State::EndVelo );
+      aStateFirst.setLocation( LHCb::State::FirstMeasurement );
+      if (!newTrack->checkFlag( LHCb::Track::Backward) ){
+        aStateEnd.setState(0.,0.,-10000. ,0.,0.,0.);
+        aStateFirst.setState(0.,0.,10000. ,0.,0.,0.);
+      }
+      else{
+        aStateEnd.setState(0.,0.,10000. ,0.,0.,0.);
+        aStateFirst.setState(0.,0.,-10000. ,0.,0.,0.);
+      }
+
       for ( std::vector<int>::const_iterator itIm = linkedIds[part->key()].begin();
             linkedIds[part->key()].end() != itIm; ++itIm ) {
         // Get the Lite cluster corresponding to the LHCbID
@@ -153,20 +167,36 @@ StatusCode CheatedVeloPixPat::execute() {
         if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
         double dy = pixSize.second*clusInfo.fractionalError.second;
 
-        LHCb::State aState;
-        aState.setState(thePixPoint.x(),thePixPoint.y(),thePixPoint.z() ,tx,ty,0.);
-        Gaudi::TrackSymMatrix aCov;
-        aCov(0,0)=dx*dx;
-        aCov(1,1)=dy*dy;
-        // Not so sure...
-        aCov(2,2)= 6.e-5 ;
-        aCov(3,3)= 6.e-5 ;
-        aCov(4,4)= 1.e-6 ;
-        aState.setCovariance(aCov);
-        aState.setLocation( LHCb::State::LocationUnknown );
         lhcbidsList.push_back(temp);
-        newTrack->addToStates(aState);
+
+        if ((!newTrack->checkFlag( LHCb::Track::Backward ) && thePixPoint.z()<aStateFirst.z()) || 
+            (newTrack->checkFlag( LHCb::Track::Backward ) && thePixPoint.z()>aStateFirst.z())){
+          aStateFirst.setState(thePixPoint.x(),thePixPoint.y(),thePixPoint.z() ,tx,ty,0.);
+          Gaudi::TrackSymMatrix aCov;
+          aCov(0,0)=dx*dx;
+          aCov(1,1)=dy*dy;
+          // Not so sure...
+          aCov(2,2)= 6.e-5 ;
+          aCov(3,3)= 6.e-5 ;
+          aCov(4,4)= 1.e-6 ;
+          aStateFirst.setCovariance(aCov);
+        }
+        
+        if ((!newTrack->checkFlag( LHCb::Track::Backward ) && thePixPoint.z()>aStateEnd.z()) || 
+            (newTrack->checkFlag( LHCb::Track::Backward ) && thePixPoint.z()<aStateEnd.z())){
+          aStateEnd.setState(thePixPoint.x(),thePixPoint.y(),thePixPoint.z() ,tx,ty,0.);
+          Gaudi::TrackSymMatrix aCov;
+          aCov(0,0)=dx*dx;
+          aCov(1,1)=dy*dy;
+          // Not so sure...
+          aCov(2,2)= 6.e-5 ;
+          aCov(3,3)= 6.e-5 ;
+          aCov(4,4)= 1.e-6 ;
+          aStateEnd.setCovariance(aCov);
+        }
       }
+      newTrack->addToStates(aStateEnd);
+      newTrack->addToStates(aStateFirst);
       newTrack->setLhcbIDs(lhcbidsList  );
       newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
       newTrack->setType( LHCb::Track::Velo );

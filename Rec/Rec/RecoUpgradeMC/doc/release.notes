@@ -5,6 +5,9 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Victor Coco
+ - Modification in the CheatedVeloPixPat. Remove the useless states.
+
 ! 2010-09-22 - Victor Coco
  - Add some vertex checking algorithms + remove VeloPix track type in
    CheatedVeloPixPat

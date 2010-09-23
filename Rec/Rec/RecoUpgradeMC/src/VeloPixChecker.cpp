@@ -73,7 +73,7 @@ StatusCode VeloPixChecker::execute() {
 
   m_clusters = get<LHCb::VeloPixLiteCluster::VeloPixLiteClusters>(LHCb::VeloPixLiteClusterLocation::Default );
   
-  always()<<"NB tracks in "<<m_container<<": "<< tracks->size()<<endreq;
+  //always()<<"NB tracks in "<<m_container<<": "<< tracks->size()<<endreq;
   for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT ; ++itT ) {
     LHCb::Track* tr = *itT;
     Gaudi::XYZPoint position = tr->position();
