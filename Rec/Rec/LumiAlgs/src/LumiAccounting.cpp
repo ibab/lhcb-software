@@ -237,12 +237,12 @@ StatusCode LumiAccounting::registerDB() {
   debug() << "==> Register DB" << endmsg;
 
   // register thresholds
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/ThresholdCalibration")) {
     registerCondition("Conditions/Lumi/LHCb/ThresholdCalibration",
                       m_condThresholds, &LumiAccounting::i_cacheThresholdData);
   }
-  catch (GaudiException &err){
-    error() << err << endmsg;
+  else {
+    error() << "Conditions/Lumi/LHCb/ThresholdCalibration not found" << endmsg;
     m_statusThresholds = 0;        // no thresholds
     return StatusCode::SUCCESS;
   }

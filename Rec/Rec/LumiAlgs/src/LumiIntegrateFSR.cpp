@@ -215,67 +215,67 @@ StatusCode LumiIntegrateFSR::registerDB() {
   debug() << "==> Register DB" << endmsg;
 
   // register absolute calibration
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/AbsoluteCalibration")) {
     registerCondition("Conditions/Lumi/LHCb/AbsoluteCalibration",
                       m_condAbsolute, &LumiIntegrateFSR::i_cacheAbsoluteData);
   }
-  catch (GaudiException &er2){
-    fatal() << er2 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/AbsoluteCalibration not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
 
   // register relative calibration
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibration")) {
     registerCondition("Conditions/Lumi/LHCb/RelativeCalibration",
                       m_condRelative, &LumiIntegrateFSR::i_cacheRelativeData);
   }
-  catch (GaudiException &er1){
-    fatal() << er1 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/RelativeCalibration not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
 
   // register relative calibration for -log method
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/RelativeCalibrationLog")) {
     registerCondition("Conditions/Lumi/LHCb/RelativeCalibrationLog",
                       m_condRelativeLog, &LumiIntegrateFSR::i_cacheRelativeDataLog);
   }
-  catch (GaudiException &er1){
-    fatal() << er1 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/RelativeCalibrationLog not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
 
   // register usage coefficients
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Coefficients")) {
     registerCondition("Conditions/Lumi/LHCb/Coefficients",
                       m_condCoefficients, &LumiIntegrateFSR::i_cacheCoefficientData);
   }
-  catch (GaudiException &er3){
-    fatal() << er3 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/Coefficients not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
 
   // register usage coefficients for -log method
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/CoefficientsLog")) {
     registerCondition("Conditions/Lumi/LHCb/CoefficientsLog",
                       m_condCoefficientsLog, &LumiIntegrateFSR::i_cacheCoefficientDataLog);
   }
-  catch (GaudiException &er3){
-    fatal() << er3 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/CoefficientsLog not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }
 
   // register sampling frequencies of bunches
-  try {
+  if (this->existDet<Condition>("Conditions/Lumi/LHCb/Sampling")) {
     registerCondition("Conditions/Lumi/LHCb/Sampling",
                       m_condSampling, &LumiIntegrateFSR::i_cacheSamplingData);
   }
-  catch (GaudiException &er3){
-    fatal() << er3 << endmsg;
+  else {
+    fatal() << "Conditions/Lumi/LHCb/Sampling not found" << endmsg;
     m_statusScale = 0;        // invalid luminosity
     return StatusCode::SUCCESS;
   }

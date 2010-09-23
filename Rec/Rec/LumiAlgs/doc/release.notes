@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Marco Cattaneo
+ - Properly check existence of conditions before trying to register them
+
 !========================== LumiAlgs v4r0p1 2010-08-25 ========================
 ! 2010-08-24 - Rob Lambert
  - Fixed compiler warning about converting double to int
