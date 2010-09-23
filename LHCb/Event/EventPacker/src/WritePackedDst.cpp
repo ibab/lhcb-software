@@ -213,7 +213,7 @@ StatusCode WritePackedDst::execute()
       storeInBlob( bank, &(*in->outgoingParticles().begin()), in->outgoingParticles().size(), sizeof(int) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
-    } else if ( LHCb::CLID_WeightsVector        == myClID ) {
+    } else if ( LHCb::CLID_PackedWeightsVector   == myClID ) {
 
       LHCb::PackedWeightsVector* in = get<LHCb::PackedWeightsVector>( *itC );
       PackedBank bank( in );

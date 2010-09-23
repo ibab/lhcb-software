@@ -255,7 +255,7 @@ StatusCode ReadPackedDst::execute() {
       getFromBlob<LHCb::PackedVertex> ( verts->data(), blobs );
       getFromBlob<int>                ( verts->outgoingParticles(), blobs );
 
-    } else if ( LHCb::CLID_WeightsVector        == classID ) {
+    } else if ( LHCb::CLID_PackedWeightsVector   == classID ) {
       
       LHCb::PackedWeightsVector* weights = new LHCb::PackedWeightsVector();
       put( weights, name + m_postfix );
