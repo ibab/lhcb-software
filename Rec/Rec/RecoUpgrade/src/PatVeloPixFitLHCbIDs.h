@@ -50,6 +50,22 @@ namespace Tf {
     virtual StatusCode fit ( LHCb::Track & track,
                              LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
+    struct DecreasingByZ  {
+      bool operator() (std::pair<double,LHCb::LHCbID> lhs, std::pair<double,LHCb::LHCbID> rhs) const
+      {
+        return lhs.first >  rhs.first;
+      }
+    }   DecreasingByZ;
+    
+    struct IncreasingByZ  {
+      bool operator() ( std::pair<double,LHCb::LHCbID> lhs, std::pair<double,LHCb::LHCbID>  rhs) const
+      {
+        return lhs.first <  rhs.first;
+      }
+    }    IncreasingByZ;
+    
+
+
   private:
 
     double m_sa;     ///< sum of weights for x
@@ -85,7 +101,10 @@ namespace Tf {
     DeVeloPix* m_veloPix;
 
     /// parameter to take MS into account
+    bool m_beamState;
     double m_stepError;
+    double m_variableMS;
+
 
     LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
     IVeloPixClusterPosition* m_positiontool;

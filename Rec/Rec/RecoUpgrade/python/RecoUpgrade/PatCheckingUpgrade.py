@@ -126,7 +126,7 @@ def PatCheckingUpgrade():
         fitBestChecker.InputTracks  = "Rec/Track/Best"
         fitBestChecker.NtupleName = "TracksBest"
        
-        veloPixVertices = VeloPixVertices()
+        ##veloPixVertices = VeloPixVertices()
         
          ##                                            trackV0Finder,veloPixVertices
         GaudiSequencer("CheckPatSeq").Members    += [ DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits")
@@ -138,9 +138,6 @@ def PatCheckingUpgrade():
         #    GaudiSequencer("CheckPatSeq").Members    += [fitTTChecker]
         
         
-
-
-
         trackV0Finder = VeloPixV0s()
         trackV0Finder.Extrapolator.MaterialLocator='DetailedMaterialLocator'
         trackV0Finder.Interpolator.Extrapolator.MaterialLocator='DetailedMaterialLocator'

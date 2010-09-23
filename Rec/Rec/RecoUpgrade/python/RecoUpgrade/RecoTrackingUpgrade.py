@@ -13,7 +13,7 @@ from Configurables import RecSysConf
 from Configurables import (  ProcessPhase,DecodeVeloRawBuffer,MuonIDAlg,
                              VeloPixRawBankToLiteCluster,VeloPixRawBankToPartialCluster,
                              PatLHCbIDUp2MCParticle,PatLHCbIDUp2MCHit,CheatedVeloPixPat,Tf__Tsa__Seed,
-                             TrackStateInitAlg,TrackStateInitTool,TrackStateVeloPixInitTool,
+                             TrackStateInitAlg,TrackStateInitTool,
                              TrackEventCloneKiller, TrackPrepareVelo, VeloPixLiteMeasurementProvider,
                              TrackAddLikelihood,PatForward,PatSeedFit,PatSeeding,PatVeloTT,PatVeloTTTool,
                              TrackMatchVeloSeed, PatDownstream,PatMatch,Tf__PatVeloPixFitLHCbIDs,Tf__PatVeloFitLHCbIDs  )
