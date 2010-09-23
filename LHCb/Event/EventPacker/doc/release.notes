@@ -6,7 +6,8 @@
 
 ! 2010-09-23 - Marco Cattaneo
  - Fix PackedWeightsVector classID in WritePackedDst and ReadPackedDst
- - Change info() printed by PackerBaseAlg::initialize() to debug()
+ - Change info() printed by PackerBaseAlg::initialize() and 
+   UnpackerBaseAlg::initialize() to debug()
 
 ! 2010-09-22 - Chris Jones
  - Add packer, unpacker and checker for the WeightsVector class.
