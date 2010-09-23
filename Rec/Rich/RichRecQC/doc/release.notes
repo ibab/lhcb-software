@@ -4,6 +4,8 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-09-23 - Chris Jones
+ - Some minor improvements to the Track selection efficiency monitor
 
 !======================= RichRecQC v2r45 2010-08-30 ========================
 ! 2010-08-27 - Chris Jones

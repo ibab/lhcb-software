@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
- *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.9 2009-08-13 13:22:50 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
  */
@@ -128,27 +125,27 @@ StatusCode TrackSelEff::execute()
       if ( !m_trSelector->trackSelected(*iT) ) continue;
 
       // Does this track have a RichRecTrack associated ?
-      const LHCb::RichRecTrack * rTrack = richTracks()->object((*iT)->key());
+      const LHCb::RichRecTrack * rTrack = getRichTrack(*iT);
 
-      // Ghost ?
+      // Fill real data plots
+      fillTrackPlots( *iT, rTrack, "All/" );
+
+      // MC only plots
       const LHCb::MCParticle * mcP = ( mcTrackOK ?
                                        m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight) : NULL );
       if ( mcTrackOK )
       {
         if ( mcP ) { ++nReal; } else { ++nGhost; }
         if ( rTrack ) { if ( mcP ) { ++nRealR; } else { ++nGhostR; } }
-      }
-
-      fillTrackPlots( *iT, rTrack, "All/" );
-      if ( mcTrackOK )
         fillTrackPlots( *iT, rTrack, mcP ? "Real/" : "Ghost/" );
+      }
 
     } // loop over tracks
 
     if ( mcTrackOK )
     {
-      plot1D( nReal,  "nRealTracks",  "# Real (MC Matched) Tracks / Event",      -0.5, 200.5, 201 );
-      plot1D( nGhost, "nGhostTracks", "# Ghost (Not MC Matched) Tracks / Event", -0.5, 200.5, 201 );
+      plot1D( nReal,   "nRealTracks",      "# Real (MC Matched) Tracks / Event",           -0.5, 200.5, 201 );
+      plot1D( nGhost,  "nGhostTracks",     "# Ghost (Not MC Matched) Tracks / Event",      -0.5, 200.5, 201 );
       plot1D( nRealR,  "nRealRichTracks",  "# Real (MC Matched) Rich Tracks / Event",      -0.5, 200.5, 201 );
       plot1D( nGhostR, "nGhostRichTracks", "# Ghost (Not MC Matched) Rich Tracks / Event", -0.5, 200.5, 201 );
     }
@@ -175,9 +172,25 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
 
   // plot selection variables
   const std::string tag = ( rTrack != NULL ? tkClass+"Selected/" : tkClass+"Rejected/" );
-  richHisto1D( tag+"P"  ) -> fill ( track->p()  );
-  richHisto1D( tag+"Pt" ) -> fill ( track->pt() );
-  richHisto1D( tag+"Chi2PDOF" ) -> fill ( track->chi2PerDoF() );
+  richHisto1D( tag+"P"          ) -> fill ( track->p()  );
+  richHisto1D( tag+"Pt"         ) -> fill ( track->pt() );
+  richHisto1D( tag+"Chi2PDOF"   ) -> fill ( track->chi2PerDoF() );
   richHisto1D( tag+"Likelihood" ) -> fill ( track->likelihood() );
   richHisto1D( tag+"GhostProb"  ) -> fill ( track->ghostProbability() );
+}
+
+const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track ) const
+{
+  // Get the RichRecTrack for the given Track
+  const LHCb::RichRecTrack * rT = richTracks()->object(track->key());
+
+  // Double check the smart ref from this RichRecTrack points back to the correct track ...
+  if ( rT && dynamic_cast<const LHCb::Track*>(rT->parentTrack()) != track )
+  {
+    Warning( "RichRecTrack found but wrong Track SmartRef !!" ).ignore();
+    rT = NULL;
+  }
+
+  // return the RichRecTrack pointer
+  return rT;
 }

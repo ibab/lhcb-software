@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
- *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.h,v 1.5 2009-07-29 12:35:07 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
  */
@@ -73,6 +70,9 @@ namespace Rich
         void fillTrackPlots( const LHCb::Track * track,
                              const LHCb::RichRecTrack * rTrack,
                              const std::string & tkClass );
+
+        /// Get RichRecTrack for a given Track
+        const LHCb::RichRecTrack * getRichTrack( const LHCb::Track * track ) const;
   
       private: // data
 
