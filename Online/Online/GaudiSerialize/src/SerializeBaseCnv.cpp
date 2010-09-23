@@ -1,4 +1,4 @@
-// $Id: SerializeBaseCnv.cpp,v 1.5 2010-09-22 13:27:57 frankb Exp $
+// $Id: SerializeBaseCnv.cpp,v 1.6 2010-09-23 12:13:36 frankb Exp $
 //====================================================================
 //	SerializeBaseCnv implementation
 //--------------------------------------------------------------------
@@ -126,5 +126,5 @@ PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv,
                            ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00050000),
                            IConverter*(long, CLID, ISvcLocator*) )
 PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + (1<<31)),
+                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID(1<<31)),
                            IConverter*(long, CLID, ISvcLocator*) )
