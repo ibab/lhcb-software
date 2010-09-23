@@ -24,16 +24,32 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
                                   const IInterface*  parent ) 
   : GaudiTool ( type, name , parent )
   , m_conditionName()
+  , m_corrections()
+  , m_hypos  () 
+  , m_hypos_ () 
+  , m_area   ()
+  , m_calo       (DeCalorimeterLocation::Ecal )
+  , m_spd        (DeCalorimeterLocation::Spd  )
+  , m_prs        (DeCalorimeterLocation::Prs  )
+  , m_detData    (DeCalorimeterLocation::Ecal )
+  , m_origin     (Gaudi::XYZPoint())
   , m_useCondDB( true )
   , m_cond    ( NULL )
 {
+
   declareInterface<CaloCorrectionBase>(this);
 
   declareProperty ( "UseCondDB"    , m_useCondDB   = true);
   declareProperty ( "ConditionName", m_conditionName = "none" ) ;
   declareProperty ( "Parameters"   , m_optParams);
   declareProperty ( "Corrections"  , m_corrections); // expect usage
+  declareProperty ( "Hypotheses"   , m_hypos_   ) ;
   m_corrections.push_back("All");
+
+  /// acceptable hypotheses 
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
+  m_hypos_.push_back ( (int) LHCb::CaloHypo::EmCharged ) ;
 }
 //=============================================================================
 // Destructor
@@ -49,9 +65,32 @@ StatusCode CaloCorrectionBase::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  // check the setting
 
+  // transform vector of accepted hypos
+  m_hypos.clear () ;
+  for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; m_hypos_.end() != ci ; ++ci ){
+    const int hypo = *ci ;
+    if( hypo <= (int) LHCb::CaloHypo::Undefined || 
+        hypo >= (int) LHCb::CaloHypo::Other      ) 
+    { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
+    m_hypos.push_back( (LHCb::CaloHypo::Hypothesis) hypo );
+  }
+  
+  // locate and set and configure the Detector 
+  m_det = getDet<DeCalorimeter>( m_detData ) ;
+  if( 0 == m_det ) { return StatusCode::FAILURE ; }
+  m_calo.setCalo( m_detData);
+  //
+  if( m_hypos.empty() )return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; 
+  
+  // debug printout of all allowed hypos 
+  debug() << " List of allowed hypotheses : " << endmsg;
+  for( Hypotheses::const_iterator it = m_hypos.begin() ; m_hypos.end() != it ; ++it ){ 
+    debug ()  <<  " -->" << *it  << endmsg ; 
+  };
 
-  // get parameters
+  // get parameters from DB or options
   if ( !existDet<DataObject>( m_conditionName)  ){
     debug() << "Initialize :  Condition '" << m_conditionName
               << "' not found -- apply options parameters !" << endmsg; 
@@ -181,16 +220,24 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   if( pars.first == CaloCorrection::Unknown ||  pars.second.empty() ) return cor; 
 
   // polynomial correction 
-  if (pars.first == CaloCorrection::Polynomial || pars.first == CaloCorrection::InversPolynomial){
-    std::vector<double> temp = pars.second;
+  std::vector<double> temp = pars.second;
+  if (pars.first == CaloCorrection::Polynomial || 
+      pars.first == CaloCorrection::InversPolynomial || 
+      CaloCorrection::ExpPolynomial ||
+      CaloCorrection::ReciprocalPolynomial ){
     double v = 1.;
     cor = 0.;
     for( std::vector<double>::iterator i = temp.begin() ; i != temp.end() ; ++ i){
       cor += (*i) * v;
-      v *= var;
+      if( pars.first == CaloCorrection::ReciprocalPolynomial )
+        v = (var == 0) ? 0. : v/var ;
+      else
+        v *= var;
     }
     if( pars.first == CaloCorrection::InversPolynomial) cor = ( cor == 0 ) ? def : 1./cor;
-  }    
+    if( pars.first == CaloCorrection::ExpPolynomial) cor = ( cor == 0 ) ? def : exp(cor);
+  }
+
   counter(name + " correction processing") += cor;
   return cor;
 }

@@ -1,15 +1,10 @@
 // $Id: CaloLCorrection.cpp,v 1.9 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
-// from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-// Event 
-#include "Event/CaloHypo.h"
-// Kernel
 #include "GaudiKernel/SystemOfUnits.h"
-// CaloDet
+#include "Event/CaloHypo.h"
 #include "CaloDet/DeCalorimeter.h"
-// local
 #include "CaloLCorrection.h"
 
 /** @file 
@@ -34,219 +29,87 @@ CaloLCorrection::CaloLCorrection
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GaudiTool( type , name , parent ) 
-  , m_hypos  () 
-  , m_hypos_ () 
-  /// 
-  , Par_Al1 ()
-  , Par_Al2 ()
-  , Par_Al3 ()
-  , Par_Be1 ()
-  , Par_Be2 ()
-  , Par_Be3 ()
-  , Par_z0  ()
-  ///
-  , m_area     ()
-  , m_calo       ( DeCalorimeterLocation::Ecal )
-  , m_spd        ( DeCalorimeterLocation::Spd  )
-  , m_prs        ( DeCalorimeterLocation::Prs  )
-  , m_detData    ( DeCalorimeterLocation::Ecal )
-{
-  /// properties
-  /// acceptable hypotheses 
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::Photon               ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::PhotonFromMergedPi0  ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::BremmstrahlungPhoton ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::EmCharged ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::Electron ) ;
-  m_hypos_.push_back ( (int) LHCb::CaloHypo::Positron ) ;
+  : CaloCorrectionBase( type , name , parent ){
 
-  declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
-  /// vectors of external parameters 
-  declareProperty    ( "Par_Al1" , Par_Al1 ) ;
-  declareProperty    ( "Par_Al2" , Par_Al2 ) ;
-  declareProperty    ( "Par_Al3" , Par_Al3 ) ;
-  declareProperty    ( "Par_Be1" , Par_Be1 ) ;
-  declareProperty    ( "Par_Be2" , Par_Be2 ) ;
-  declareProperty    ( "Par_Be3" , Par_Be3 ) ;
-  declareProperty    ( "Par_z0"  , Par_z0  ) ;
+  // define conditionName
+  const std::string uName ( LHCb::CaloAlgUtils::toUpper( name ) ) ;
+  if( uName.find( "ELECTRON" ) != std::string::npos  ) 
+    m_conditionName = "Conditions/Reco/Calo/ElectronLCorrection";
+  else if ( uName.find( "MERGED" )  != std::string::npos   ||  uName.find( "SPLITPHOTON" )  != std::string::npos ){
+    m_conditionName = "Conditions/Reco/Calo/SplitPhotonLCorrection";
+  }  
+  else if (  uName.find( "PHOTON" ) ){
+    m_conditionName = "Conditions/Reco/Calo/PhotonLCorrection"; 
+  }
 
   /// interafces 
   declareInterface<ICaloHypoTool> ( this ) ;  
 };
-// ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
 CaloLCorrection::~CaloLCorrection () {} ;
-// ============================================================================
-
-// ============================================================================
-/** finalization of the tool 
- *  @see  GaudiTool 
- *  @see   AlgTool 
- *  @see  IAlgTool 
- *  @return status code 
- */
-// ============================================================================
 StatusCode CaloLCorrection::finalize   () 
 {
   m_hypos.clear();
-  /// finalize the base class 
-  return GaudiTool::finalize () ;
+  return CaloCorrectionBase::finalize () ;
 };
-// ============================================================================
-
-// ============================================================================
-/** initialization of the tool 
- *  @see  GaudiTool 
- *  @see   AlgTool 
- *  @see  IAlgTool 
- *  @return status code 
- */
 // ============================================================================
 StatusCode CaloLCorrection::initialize () 
 {
   /// first initialize the base class 
-  StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) 
-    { return Error ( "Unable initialize the base class GaudiTool!" , sc ) ; }
-  
-  // transform vector of accepted hypos
-  m_hypos.clear () ;
-  for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
-       m_hypos_.end() != ci ; ++ci ) 
-  {
-    const int hypo = *ci ;
-    if( hypo <= (int) LHCb::CaloHypo::Undefined || 
-        hypo >= (int) LHCb::CaloHypo::Other      ) 
-    { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
-    m_hypos.push_back( (LHCb::CaloHypo::Hypothesis) hypo );
-  }
-  
-  // locate and set and configure the Detector 
-  m_det = getDet<DeCalorimeter>( m_detData ) ;
-  if( 0 == m_det ) { return StatusCode::FAILURE ; }
-  m_calo.setCalo( m_detData );
-  
-  // check vectors of paramters 
-  if( 3 != Par_Al1.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Al2.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Al3.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be1.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be2.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 3 != Par_Be3.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-  if( 1 != Par_z0.size() ) 
-    { return Error ( "Invalid number of parameters" ) ; }
-
-  if( m_hypos.empty() ) 
-    { return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; }
-  
-  // debug printout of all allowed hypos 
-  debug() << " List of allowed hypotheses : " << endmsg;
-  for( Hypotheses::const_iterator it = m_hypos.begin() ; 
-       m_hypos.end() != it ; ++it ) {
-    debug() << "--> " << *it << endmsg ;
-  };
-
+  StatusCode sc = CaloCorrectionBase::initialize();
+  if( sc.isFailure() ){ return Error ( "Unable initialize the base class CaloCorrectionBase !" , sc ) ; }  
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
 
 // ============================================================================
-/** The main processing method (functor interface)
- *  @see ICaloHypoTool
- *  @param  hypo  pointer to CaloHypo object to be processed
- *  @return status code 
- */  
-// ============================================================================
-StatusCode CaloLCorrection::operator() ( LHCb::CaloHypo* hypo  ) const 
-{ return process( hypo ); };
-// ============================================================================
+StatusCode CaloLCorrection::operator() ( LHCb::CaloHypo* hypo  ) const{ 
+  return process( hypo ); 
+};
 
 // ============================================================================
-/** The main processing method
- *  @see ICaloHypoTool
- *  @param  hypo  pointer to CaloHypo object to be processed
- *  @return status code 
- */  
-// ============================================================================
-StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const 
-{
-  // avoid long names 
-  typedef const LHCb::CaloHypo::Digits   Digits   ;
-  typedef const LHCb::CaloHypo::Clusters Clusters ;
-  
-  using namespace LHCb::ClusterFunctors ;
-  using namespace LHCb::CaloDataFunctor ;
+StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   
   // check arguments 
-  if( 0 == hypo ) { return Error ( " CaloHypo* points to NULL!" ) ; }
+  if( 0 == hypo ) { return Warning ( " CaloHypo* points to NULL!" , StatusCode::SUCCESS) ; }
 
   // check the Hypo
-  Hypotheses::const_iterator h = 
-    std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
-  if( m_hypos.end() == h ) { return Error ( "Invalid hypothesis!" ) ; }
+  Hypotheses::const_iterator h =std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
+  if( m_hypos.end() == h ) 
+    return Error ( "Invalid hypothesis -> no correction applied", StatusCode::FAILURE ) ; 
   
 
+  // get Prs/Spd
+  double ePrs = 0 ;
+  double eSpd = 0 ;
+  getPrsSpd(hypo,ePrs,eSpd);
 
-  // get all clusters from the hypo 
-  const Clusters& clusters = hypo->clusters() ;
 
-  // find the first cluster from Ecal (Global cluster)
-  Clusters::const_iterator iclu =
-    std::find_if( clusters.begin () , clusters.end () , m_calo );
-  if( clusters.end() == iclu ) 
-    { return Error("No clusters from '"+m_detData+"' is found!"); }
-
-  const LHCb::CaloCluster* GlobalCluster = *iclu ;
-  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endmsg; 
-
-  // Look for the splitCluster when PhotonFromMerged
-  if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()       
-       &&  2 == clusters.size() )iclu++; 
-  
-  const LHCb::CaloCluster* MainCluster = *iclu ; 
-  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endmsg;
-
+  // get cluster energy (special case for SplitPhotons)
+  const LHCb::CaloCluster* GlobalCluster = LHCb::CaloAlgUtils::ClusterFromHypo(hypo, false);
+  const LHCb::CaloCluster* MainCluster = LHCb::CaloAlgUtils::ClusterFromHypo(hypo,true) ;
 
   /*
     Cluster information (e/x/y  and Prs/Spd digit)
   */
   if( 0 == MainCluster ) { return Error ( "CaloCLuster* points to NULL!" ) ; }
-  double ePrs = 0 ;
-  double eSpd = 0 ;
-  const Digits& digits = hypo->digits();
-  for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
-    if     ( *d == 0     ) { continue           ; }
-    else if( m_prs( *d ) ) { ePrs  += (*d)->e() ; } 
-    else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; } 
-  }
+
   // For Split Photon - share the Prs energy
   if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() ){
     ePrs *= MainCluster->position().e()/GlobalCluster->position().e() ;
   }
 
 
-  const LHCb::CaloPosition& position = MainCluster->position();
-  const double eEcal = position. e () ;
-
+  const double energy = hypo->e () ;
 
   const LHCb::CaloCluster::Entries& entries = MainCluster->entries();
-  LHCb::CaloCluster::Entries::const_iterator iseed =locateDigit ( entries.begin () , 
-                                                                  entries.end   () , 
-                                                                  LHCb::CaloDigitStatus::SeedCell );
+  LHCb::CaloCluster::Entries::const_iterator iseed = 
+    LHCb::ClusterFunctors::locateDigit ( entries.begin () ,entries.end   () ,LHCb::CaloDigitStatus::SeedCell );
   if( entries.end() == iseed ){ return Error ( "The seed cell is not found !" ) ; }
 
   // get the "area" of the cluster (where seed is) 
-  const unsigned int area = m_area( MainCluster );
   const LHCb::CaloDigit*  seed    = iseed->digit();
   if( 0 == seed ) { return Error ( "Seed digit points to NULL!" ) ; }
 
@@ -256,7 +119,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
   
   /** here all information is available 
    *     
-   *  (1) Ecal energy in 3x3     :    eEcal 
+   *  (1) Ecal energy in 3x3     :    energy
    *  (2) Prs and Spd energies   :    ePrs, eSpd 
    *  (3) weighted barycenter    :    xBar, yBar 
    *  (4) Zone/Area in Ecal      :    area   
@@ -265,31 +128,51 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
    *  (7) Position of seed cell  :    seedPos 
    */
 
-  //  double CellSize =  m_det->cellSize( cellID  );
 
-  //  Gaudi::XYZPoint seedPos = m_det->cellCenter( cellID  );  
-  //  double z0 = seedPos.z();
-
-  double z0 = Par_z0[0] ;// Parameter tuned wrt to z0  12566 mm !!
-  double Zvtx = 0.   ;// Origin vertex (z) set to 0 !!
+  // Account for the tilt
+  ROOT::Math::Plane3D plane = m_det->plane(CaloPlane::Front); // Ecal Front-Plane
   const LHCb::CaloPosition* pos = hypo->position() ;
-  double  xg = pos->x();
-  double  yg = pos->y();
-  double  zg = z0 - Zvtx;
+  double  xg = pos->x() - m_origin.X();
+  double  yg = pos->y() - m_origin.Y();
+  Gaudi::XYZVector normal=plane.Normal();
+  double Hesse = plane.HesseDistance();
+  double z0 = (-Hesse-normal.X()*pos->x()-normal.Y()*pos->y())/normal.Z();
+  double  zg = z0 - m_origin.Z();
     
+  // hardcoded inner offset (+7.5 mm)
+  if(cellID.area() == 2)zg+=7.5;
+  
 
   // Uncorrected angle
   double tth   = sqrt ( pow(xg,2) + pow(yg,2) ) / zg ;
   double cth   = cos  ( atan( tth ) ) ;
 
   // Corrected angle
-  int zon = 2 - area;
-  double alpha = Par_Al1[zon] - exp( Par_Al2[zon] - Par_Al3[zon] * ePrs/Gaudi::Units::MeV );
-  double beta  = Par_Be1[zon] + exp( Par_Be2[zon] - Par_Be3[zon] * ePrs/Gaudi::Units::MeV  );
-  double tgfps = alpha * log(eEcal/Gaudi::Units::GeV) +beta ;
+  
+  double gamma0 = getCorrection(CaloCorrection::gamma0, cellID);
+  double delta0 = getCorrection(CaloCorrection::delta0, cellID);
+  double gammaP = getCorrection(CaloCorrection::gammaP, cellID, ePrs);
+  double deltaP = getCorrection(CaloCorrection::deltaP, cellID, ePrs);
+
+
+  double g = gamma0 - gammaP;
+  double d = delta0 + deltaP;
+
+  //double alpha = Par_Al1[zon] - exp( Par_Al2[zon] - Par_Al3[zon] * ePrs/Gaudi::Units::MeV );
+  //double beta  = Par_Be1[zon] + exp( Par_Be2[zon] - Par_Be3[zon] * ePrs/Gaudi::Units::MeV  );
+
+
+  counter("<gamma> " + cellID.areaName() ) += g ;  
+  counter("<delta> " + cellID.areaName() ) += d ;
+
+  double tgfps = g * log(energy/Gaudi::Units::GeV) + d ;
+
   tth = tth / ( 1. + tgfps * cth / zg ) ;
   cth= cos( atan( tth ) ) ;
   double dzfps = cth * tgfps ;
+
+  
+
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
 
@@ -302,15 +185,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
               << "zCor "   << zCor 
               << endmsg ;
   
-
-  /** At the end: 
-   */
-  
   hypo -> position() -> setZ( zCor ) ;
-
-  debug() << " ENE  " << hypo->position ()->e() <<  " "
-          << "New zg "   << pos->z() <<  " "
-          << endmsg ;
 
   
   return StatusCode::SUCCESS ;
