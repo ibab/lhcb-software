@@ -33,6 +33,7 @@ class VeloRecMonitors(ConfigurableUser):
         #histograms to be added in this mode            
         from Configurables import Velo__VeloClusterMonitor
         from Configurables import Velo__VeloTrackMonitor
+        from Configurables import Velo__VeloIPResolutionMonitor
         from Configurables import TrackSys
         if hasattr( self, "MoniSequence" ):
             # set by RecMoniConf to GaudiSequencer('MoniVELOSeq')
@@ -42,12 +43,15 @@ class VeloRecMonitors(ConfigurableUser):
                 raise RuntimeError("Monitoring sequence not set")
             VCM = Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
             VTM = Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
+            VIM = Velo__VeloIPResolutionMonitor( 'VeloIPResolutionMonitor'   )
             VCM.OutputLevel     = self.getProp( 'OutputLevel' )
             VTM.OutputLevel     = self.getProp( 'OutputLevel' )
+            VIM.OutputLevel     = self.getProp( 'OutputLevel' )
             VCM.PropertiesPrint = False
             VTM.PropertiesPrint = False
+            VIM.PropertiesPrint = False
             if TrackSys().getProp( "OutputType" ).upper() == "RDST":
                 VTM.TrackLocation = 'Rec/Track/PreparedVelo'
-            theseq.Members += [ VCM, VTM ]
+            theseq.Members += [ VCM, VTM, VIM ]
             
         return
