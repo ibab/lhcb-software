@@ -8,11 +8,11 @@
 #include "Kernel/ITriggerTisTos.h" 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
-
 // MicroDST
 #include "MicroDST/ICloneVertexBase.h"
 
 // DaVinci
+#include "DaVinciUtils/Guards.h"
 #include "Kernel/DaVinciStringUtils.h"
 #include "Kernel/Particle2VertexBase.h"
 // local
@@ -116,6 +116,7 @@ void CopyParticle2PVMap::executeLocation(const std::string& inputLocation)
                   << " entries!" << endmsg;
       }
       Map* p2pvClone = new Map();
+      DaVinci::Utils::DataObjectGuard guard(p2pvClone);
       Map::const_iterator iP2PV = p2pv->begin();
       Map::const_iterator iP2PVEnd = p2pv->end();
 

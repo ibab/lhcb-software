@@ -4,6 +4,12 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2010-09-23 - Juan Palacios
+ - src/CopyParticle2PVMap.cpp
+  . Use DaVinci::Utils::DataObjectGuard to prevent memory leak.
+ - cmt/requirements
+  . Increase to v4r1p1.
+
 !========================== MicroDSTAlgorithm v4r1 2010-09-07 =================
 
 ! 2010-08-26 - Juan Palacios
