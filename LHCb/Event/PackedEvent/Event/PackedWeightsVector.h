@@ -25,17 +25,18 @@ namespace LHCb
    *  Packed int to weight
    *
    *  @author Christopher Rob Jones
-   *  @date   2009-10-13
+   *  @date   2010-09-22
    */
   struct PackedWeight
   {
     /// Default constructor
-    PackedWeight()
-      : key(0), weight(0)
+    PackedWeight( const int       _key    = 0, 
+                  const short int _weight = 0 )
+      : key(_key), weight(_weight)
     {}
 
-    int key;     ///< key of the track this weight is associated with
-    int weight;  ///< Weight of this track in the PV
+    int key;           ///< key of the track this weight is associated with
+    short int weight;  ///< Weight of this track in the vertex
 
   };
 
@@ -44,7 +45,7 @@ namespace LHCb
    *  Packed vector of Weights
    *
    *  @author Christopher Rob Jones
-   *  @date   2009-10-13
+   *  @date   2010-09-22
    */
   struct PackedWeights
   {
@@ -73,7 +74,7 @@ namespace LHCb
    *  Packed WeightsVectors
    *
    *  @author Christopher Rob Jones
-   *  @date   2009-10-13
+   *  @date   2010-09-22
    */
   class PackedWeightsVector : public DataObject
   {
@@ -123,7 +124,7 @@ namespace LHCb
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
-    char   m_packingVersion;
+    char m_packingVersion;
 
     /// The packed data objects
     WeightsVector m_weights; 
@@ -137,10 +138,10 @@ namespace LHCb
 
   /** @class WeightsVectorPacker Event/PackedWeightsVector.h
    *
-   *  Utility class to handle the packing and unpacking of the WeightsVector
+   *  Utility class to handle the packing and unpacking of the WeightsVectors
    *
    *  @author Christopher Rob Jones
-   *  @date   2009-10-13
+   *  @date   2010-09-22
    */
   class WeightsVectorPacker
   {

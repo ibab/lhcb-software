@@ -33,11 +33,7 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
       for ( LHCb::WeightsVector::WeightDataVector::const_iterator iW = weights.weights().begin();
             iW != weights.weights().end(); ++iW )
       {
-        const LHCb::WeightsVector::WeightData & data = *iW;
-        pweightsV.weights().push_back( LHCb::PackedWeight() );
-        LHCb::PackedWeight & pweight = pweightsV.weights().back();
-        pweight.key = data.first;
-        pweight.weight = m_pack.fltPacked( data.second );
+        pweightsV.weights().push_back( LHCb::PackedWeight(iW->first,m_pack.fraction(iW->second)) );
       }
       pweights.lastWeight = pweightsV.weights().size();
 
@@ -75,7 +71,8 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
       for ( unsigned short int iW = pweights.firstWeight; iW < pweights.lastWeight; ++iW )
       {
         const PackedWeight & pweight = pweightsV.weights()[iW];
-        wWeights.push_back(LHCb::WeightsVector::WeightData(pweight.key,m_pack.fltPacked(pweight.weight)));
+        wWeights.push_back( LHCb::WeightsVector::WeightData( pweight.key,
+                                                             m_pack.fraction(pweight.weight) ) );
       }
 
     }
