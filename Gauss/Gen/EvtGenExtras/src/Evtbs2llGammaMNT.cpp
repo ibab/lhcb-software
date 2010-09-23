@@ -169,17 +169,17 @@ void Evtbs2llGammaMNT::decay( EvtParticle *p ){
   _calcamp->CalcAmp(p,_amp2,_mntffmodel, _wilscoeff, mu, Nf, res_swch, ias,  
                        Egamma_max, CKM_A,CKM_lambda,CKM_barrho,CKM_bareta);
 
-  report(NOTICE,"EvtGen") << "\n " 
-                          << "\n The function Evtbs2llGammaMNT::decay(...) passed with arguments:"
-                          << "\n mu = " << mu << " Nf =" << Nf 
-                          << "\n res_swch = " << res_swch 
-                          << "\n ias = " << ias 
-		 	  << "\n Egamma_max =" << Egamma_max
-                          << "\n CKM_A = " << CKM_A
-                          << "\n CKM_lambda = " << CKM_lambda
-                          << "\n CKM_barrho = " << CKM_barrho
-                          << "\n CKM_bareta = " << CKM_bareta
-                          << "\n "
-                          << std::endl;
+//  report(NOTICE,"EvtGen") << "\n " 
+//                          << "\n The function Evtbs2llGammaMNT::decay(...) passed with arguments:"
+//                          << "\n mu = " << mu << " Nf =" << Nf 
+//                          << "\n res_swch = " << res_swch 
+//                          << "\n ias = " << ias 
+//		 	    << "\n Egamma_max =" << Egamma_max
+//                          << "\n CKM_A = " << CKM_A
+//                          << "\n CKM_lambda = " << CKM_lambda
+//                          << "\n CKM_barrho = " << CKM_barrho
+//                          << "\n CKM_bareta = " << CKM_bareta
+//                          << "\n "
+//                          << std::endl;
 }
 

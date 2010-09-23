@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2010-23-09 - Nikolai Nikitin
+ - Some minor bug fixes
+
 !======================= EvtGenExtras v2r5 2010-09-13 ========================
 ! 2010-10-09 - Nikolai Nikitin
  - Commented noisy printouts

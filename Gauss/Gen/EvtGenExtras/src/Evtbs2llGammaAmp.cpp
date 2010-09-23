@@ -24,11 +24,12 @@
 //
 // Modification history:
 //
-//  A.Popov & N.Nikitin    Oktober 01, 2008     Module created
-//  A.Popov		   Oktober 22, 2008     Add Bramsstrahlung in the amplidude
-//  A.Popov & N.Nikitin    March   02, 2010     New description for CP-violation
-//  N.Nikitin              March   07, 2010     New algorithm for maximum calculation
-//  N.Nikitin              July    16, 2010     Correction of the found bugs
+//  A.Popov & N.Nikitin    Oktober   01, 2008     Module created
+//  A.Popov		   Oktober   22, 2008     Add Bramsstrahlung in the amplidude
+//  A.Popov & N.Nikitin    March     02, 2010     New description for CP-violation
+//  N.Nikitin              March     07, 2010     New algorithm for maximum calculation
+//  N.Nikitin              July      16, 2010     Correction of the found bugs
+//  N.Nikitin              September 22, 2010     Close all reports in this file
 //
 //-----------------------------------------------------------------------------------------
 //
@@ -161,14 +162,14 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
   EvtVector4R hatp1 = p_1/M1;
   EvtVector4R hatp2 = p_2/M1;
 
-  report(NOTICE,"EvtGen") 
-         << "\n\n The function EvtbsTollGammaAmp::CalcAmp(...)"
-         << "\n q =  p-k  =" << p-k     << "   q^2 = " << (p-k).mass2()
-         << "\n q = p1+p2 =" << p_1+p_2 << "   q^2 = " << (p_1+p_2).mass2()
-         << "\n m_ell     =" << parent->getDaug(il1)->mass()
-         << "\n m_ell     =" << parent->getDaug(il2)->mass()
-         << "\n m_gamma   =" << parent->getDaug(iG)->mass()
-         << std::endl;
+//  report(NOTICE,"EvtGen") 
+//         << "\n\n The function EvtbsTollGammaAmp::CalcAmp(...)"
+//         << "\n q =  p-k  =" << p-k     << "   q^2 = " << (p-k).mass2()
+//         << "\n q = p1+p2 =" << p_1+p_2 << "   q^2 = " << (p_1+p_2).mass2()
+//         << "\n m_ell     =" << parent->getDaug(il1)->mass()
+//         << "\n m_ell     =" << parent->getDaug(il2)->mass()
+//         << "\n m_gamma   =" << parent->getDaug(iG)->mass()
+//         << std::endl;
 
 
   EvtId idparent = parent->getId(); // B-meson Id
@@ -293,50 +294,50 @@ void Evtbs2llGammaAmp::CalcAmp(EvtParticle *parent,
   }
  
   
-  report(NOTICE,"EvtGen")
-      << "\n ============================================================================"
-      << "\n ============================================================================"
-      << "\n\n The function Evtbs2llGammaAmp::CalcAmp(...) passed."
-      << "\n Particle masses:"
-      << "\n B - meson mass M1 = " << M1
-      << "\n photon minimum E  = " << Egamma_min
-      << "\n q2                = " << q2
-      << "\n leptonic mass  ml = " << ml
-      << "\n light quark mass  = " << mq
-      << "\n c - quark mass mc = " << mc
-      << "\n b - quark mass mb = " << mb
-      << "\n t - quark mass mt = " << mt
-      << "\n W - boson mass Mw = " << Mw
-      << "\n ============================================================================"
-      << "\n Input parameters:"
-      << "\n scale parameter         mu = " << mu
-      << "\n number of flavors       Nf = " << Nf
-      << "\n resonant switching         = " << res_swch
-      << "\n parameter for alpha_s(M_Z) = " << ias
-      << "\n photon energy cut (GeV)    = " << Egamma_min
-      << "\n ============================================================================"
-      << "\n Form-factors"
-      << "\n Egam          = " << Egam
-      << "\n Egamma_min    = " << Egamma_min
-      << "\n Fv            = " << Fv
-      << "\n Fa            = " << Fa 
-      << "\n Ftv_b2q       = " << Ftv_b2q
-      << "\n Fta_b2q       = " << Fta_b2q
-      << "\n Ftv_barb2barq = " << Ftv_barb2barq
-      << "\n Fta_barb2barq = " << Fta_barb2barq
-      << "\n ============================================================================"
-      << "\n Wilson Coefficients:"
-      << "\n Egam                = " << Egam
-      << "\n Egamma_min          = " << Egamma_min
-      << "\n Re(c7gam)           = " << real(c7gam) 
-        << " Im(c7gam)           = " << imag(c7gam)
-      << "\n Re(c9eff_b2q)       = " << real(c9eff_b2q) 
-        << " Im(c9eff_b2q)       = " << imag(c9eff_b2q)
-      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
-        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
-      << "\n Re(c10a)            = " << real(c10a)  
-        << " Im(c10a)            = " << imag(c10a)
-      << std::endl;
+//  report(NOTICE,"EvtGen")
+//      << "\n ============================================================================"
+//      << "\n ============================================================================"
+//      << "\n\n The function Evtbs2llGammaAmp::CalcAmp(...) passed."
+//      << "\n Particle masses:"
+//      << "\n B - meson mass M1 = " << M1
+//      << "\n photon minimum E  = " << Egamma_min
+//      << "\n q2                = " << q2
+//      << "\n leptonic mass  ml = " << ml
+//      << "\n light quark mass  = " << mq
+//      << "\n c - quark mass mc = " << mc
+//      << "\n b - quark mass mb = " << mb
+//      << "\n t - quark mass mt = " << mt
+//      << "\n W - boson mass Mw = " << Mw
+//      << "\n ============================================================================"
+//      << "\n Input parameters:"
+//      << "\n scale parameter         mu = " << mu
+//      << "\n number of flavors       Nf = " << Nf
+//      << "\n resonant switching         = " << res_swch
+//      << "\n parameter for alpha_s(M_Z) = " << ias
+//      << "\n photon energy cut (GeV)    = " << Egamma_min
+//      << "\n ============================================================================"
+//      << "\n Form-factors"
+//      << "\n Egam          = " << Egam
+//      << "\n Egamma_min    = " << Egamma_min
+//      << "\n Fv            = " << Fv
+//      << "\n Fa            = " << Fa 
+//      << "\n Ftv_b2q       = " << Ftv_b2q
+//      << "\n Fta_b2q       = " << Fta_b2q
+//      << "\n Ftv_barb2barq = " << Ftv_barb2barq
+//      << "\n Fta_barb2barq = " << Fta_barb2barq
+//      << "\n ============================================================================"
+//      << "\n Wilson Coefficients:"
+//      << "\n Egam                = " << Egam
+//      << "\n Egamma_min          = " << Egamma_min
+//      << "\n Re(c7gam)           = " << real(c7gam) 
+//        << " Im(c7gam)           = " << imag(c7gam)
+//      << "\n Re(c9eff_b2q)       = " << real(c9eff_b2q) 
+//        << " Im(c9eff_b2q)       = " << imag(c9eff_b2q)
+//      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
+//        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
+//      << "\n Re(c10a)            = " << real(c10a)  
+//        << " Im(c10a)            = " << imag(c10a)
+//      << std::endl;
 
 
   // Hadronic matrix element coefficients
@@ -591,7 +592,7 @@ double Evtbs2llGammaAmp::CalcMaxProb(EvtId parnum, EvtId photnum,
                                      double CKM_barrho, double CKM_bareta){
 
   double maxfoundprob = -100.0; // maximum of the probability
-  int ijk_atmax = 1000000;
+//  int ijk_atmax = 1000000;
 
   double M1 = EvtPDL::getMeanMass(parnum);  // B - meson mass
   double ml = EvtPDL::getMeanMass(l1num);   // leptonic mass
@@ -600,14 +601,14 @@ double Evtbs2llGammaAmp::CalcMaxProb(EvtId parnum, EvtId photnum,
   double Momega = EvtPDL::getMeanMass(EvtPDL::getId(std::string("omega"))); // mass of the omega-meson, MeV
   double Mphi   = EvtPDL::getMeanMass(EvtPDL::getId(std::string("phi")));   // mass of the phi-meson, MeV
 
- report(NOTICE,"EvtGen")
-   << "\n M1         = " << M1
-   << "\n ml         = " << ml
-   << "\n Mrho       = " << Mrho
-   << "\n Momega     = " << Momega
-   << "\n Mphi       = " << Mphi
-   << "\n Egamma_min = " << Egamma_min
-   << std::endl;
+// report(NOTICE,"EvtGen")
+//   << "\n M1         = " << M1
+//   << "\n ml         = " << ml
+//   << "\n Mrho       = " << Mrho
+//   << "\n Momega     = " << Momega
+//   << "\n Mphi       = " << Mphi
+//   << "\n Egamma_min = " << Egamma_min
+//   << std::endl;
 
   double list_of_max_q2_points[5];
   list_of_max_q2_points[0] = pow(2.0*ml,2.0);
@@ -811,20 +812,20 @@ double Evtbs2llGammaAmp::CalcMaxProb(EvtId parnum, EvtId photnum,
 
   maxfoundprob *=1.01;
 
-  report(NOTICE,"EvtGen") 
-         << "\n **********************************************************************"
-         << "\n The function Evtbs2llGammaAmp::CalcMaxProb(...) passed with arguments:"
-         << "\n mu =" << mu << " Nf =" << Nf 
-         << " res_swch =" << res_swch 
-         << " ias =" << ias 
-         << "\n CKM_A      = " << CKM_A
-         << " CKM_lambda = " << CKM_lambda
-         << "\n CKM_barrho = " << CKM_barrho
-         << " CKM_bareta = " << CKM_bareta
-         << "\n The distribution maximum maxfoundprob =" << maxfoundprob
-         << "\n ijk = " << ijk_atmax
-         << "\n **********************************************************************" 
-         << std::endl;
+//  report(NOTICE,"EvtGen") 
+//         << "\n **********************************************************************"
+//         << "\n The function Evtbs2llGammaAmp::CalcMaxProb(...) passed with arguments:"
+//         << "\n mu =" << mu << " Nf =" << Nf 
+//         << " res_swch =" << res_swch 
+//         << " ias =" << ias 
+//         << "\n CKM_A      = " << CKM_A
+//         << " CKM_lambda = " << CKM_lambda
+//         << "\n CKM_barrho = " << CKM_barrho
+//         << " CKM_bareta = " << CKM_bareta
+//         << "\n The distribution maximum maxfoundprob =" << maxfoundprob
+//         << "\n ijk = " << ijk_atmax
+//         << "\n **********************************************************************" 
+//         << std::endl;
 
   return maxfoundprob;
 }
