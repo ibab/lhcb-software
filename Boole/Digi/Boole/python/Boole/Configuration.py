@@ -492,7 +492,8 @@ class Boole(LHCbConfigurableUser):
 
         if "Tr" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkTrSeq")
-            seq.Members += [ "BuildMCTrackInfo" ]
+            if "VeloPix" in linkDets: seq.Members += [ "BuildMCTrackWithVeloPixInfo" ]
+            else : seq.Members += [ "BuildMCTrackInfo" ]
 
         if "Rich" in linkDets and doWriteTruth:
             seq = GaudiSequencer("LinkRichSeq")

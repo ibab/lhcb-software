@@ -5,7 +5,8 @@ Purpose: LHCb Digitization program
 
  - Changes to configurable:
    . Upgrade VeloPix MC: add VeloPixDigitsCreator with deadtime, time walk,
-     ToT nonlinearity and electronic noise simulation. 
+     ToT nonlinearity, electronic noise simulation and bulding MCTrackInfo
+     for VeloPix. 
 
  - Update QMTest references for changes introduced in Boole v21r7:
    #53209 Fix size of dead region between inner/outer phi zones (VeloDet v13r12)
