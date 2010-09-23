@@ -20,6 +20,9 @@ library RawBankSizes RawBankSizes.cpp Structure.cpp
 apply_pattern component_library library=RawBankSizes
 
 private
+
+macro_remove GaudiKernel_linkopts '' target-icc '-limf'
+
 application MakeOptions MakeOptions.cpp
 macro_append target_MakeOptions
 
