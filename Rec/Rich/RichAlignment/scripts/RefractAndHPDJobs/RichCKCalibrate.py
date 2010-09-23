@@ -111,15 +111,15 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
     if len(pickedRunsList) == 0 :
         import glob
         pickedRunsList = glob.glob('RunData/*.pck')
-    print " Submitting jobs for RunData", pickedRunsList
+    print "Submitting jobs for RunData", pickedRunsList
 
     # Number of target events to process
     if jobType == "RefInCalib" :
         nEventsTotal = 500000
         nFilesMax    = 150
     else:
-        nEventsTotal = 250000
-        nFilesMax    = 100
+        nEventsTotal = 500000
+        nFilesMax    = 150
 
     # Base Job Name
     basejobname = jobType
@@ -188,19 +188,12 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
                         extraopts.write("from Gaudi.Configuration import *\n")
                         extraopts.write("from Configurables import CondDB, CondDBAccessSvc, LHCbApp\n")
                         # Main DB
-                        mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
-                        extraopts.write("CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n")
-                        extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
-                        mySandBox += ["databases/"+mainLHCbCond]
+                        #mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
+                        #extraopts.write("CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n")
+                        #extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
+                        #mySandBox += ["databases/"+mainLHCbCond]
                         # Additional DB Slices
                         dbFiles = ["NewRichCKRefIndexCalib"]
-                        #dbFiles = [ "TrackAlign-v4.0.VeloYFixed",
-                        #            "NewRichCKRefIndexCalib",
-                        #            "NewFittedHPDAlignmentsByFill",
-                        #            "NewAverageHPDAlignmentsByFill",
-                        #            "HPDAlignByFill-FullFitAverage",
-                        #            "Rich1MirrorAlignment-v1",
-                        #            "Rich2MirrorAlignment-v1" ]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
                             mySandBox += ["databases/"+dbFile+".db"]
@@ -743,11 +736,12 @@ def printCanvas(tag=''):
         
 def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
 
-    from ROOT import TF1, TH1, TText
+    from ROOT import TF1, TH1, TText, gROOT
     #from ROOT import TFitResultPtr, TFitResult
 
     # Parameters
-    minEntries = 75000
+    #minEntries = 50000
+    minEntries = 10000
 
     # Default return result
     result = { 'OK' : False, "Message" : "No Message" }
@@ -798,25 +792,20 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
             hist.Fit(preFitF,"QRS0")
 
             # Full Fitting range
-            delta = 0.007
-            if rad == 'Rich2Gas' : delta = 0.004
-            fitMin = preFitF.GetParameter(1) - delta
-            fitMax = preFitF.GetParameter(1) + delta
-            # Absolute max/min values
-            if  rad == 'Rich1Gas' :
-                if fitMax >  0.0052 : fitMax =  0.0065
-                if fitMin < -0.0052 : fitMin = -0.008
+            if rad == 'Rich1Gas' :
+                fitMax =  0.0064
+                fitMin = -0.0085
                 nPolFull = 3
             else:
-                if fitMax >  0.0025 : fitMax =  0.0035
-                if fitMin < -0.0029 : fitMin = -0.0044
+                fitMax =  0.0036
+                fitMin = -0.0044
                 nPolFull = 3
 
             # Loop over pol fits up to the final
             lastFitF = preFitF
             bestFitF = preFitF
             bestNPol = nPolFull
-            for nPol in range(1,nPolFull+1):
+            for nPol in xrange(1,nPolFull+1):
                 fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
                 fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
                 fFitF.SetLineColor(fullFitColor)
@@ -824,20 +813,27 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll'):
                 fFitF.SetParName(1,"Gaus Mean")
                 fFitF.SetParName(2,"Gaus Sigma")
                 nParamsToSet = 3
-                in nPol != 1 : nParamsToSet = 3+nPol
-                for p in range(0,nParamsToSet) :
+                if nPol > 1 : nParamsToSet = 3+nPol
+                for p in xrange(0,nParamsToSet) :
                     fFitF.SetParameter(p,lastFitF.GetParameter(p))
                 hist.Fit(fFitF,"QRSE0")
                 lastFitF = fFitF
                 # Fit OK ?
-                maxErrorForOK = 1e-4
+                maxErrorForOK = 1e-3
+                #gMinuit = gROOT.GetGlobal( "gMinuit", 1 )
+                #print gMinuit.GetStatus()
                 fitOK = fFitF.GetParError(1) < maxErrorForOK
                 if fitOK :
                     bestFitF = fFitF
                     bestNPol = nPol
-                # For debugging. Pause here
-                # if not fitOK :
-                #    raw_input("Press any key to continue ...")
+                else:
+                    if nPol == nPolFull:
+                        # Use last good fit
+                        print "Pol", nPol, "fit failed...."
+                        hist.Fit(fFitF,"RSE0")
+                        print " -> Going back to Pol", nPol-1, "fit"
+                        fitOK = True
+                    if nPol > 1 : break
                   
             # Draw the histogram
             hist.Draw()

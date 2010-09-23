@@ -7,6 +7,16 @@ import pickle
 import datetime, time
 import DIRAC
 
+def usage():
+  print 'Usage: %s <name>' %(Script.scriptName)
+
+from DIRAC.Core.Base import Script
+Script.parseCommandLine()
+args = Script.getPositionalArgs()
+if len(args) < 1:
+    usage()
+    DIRAC.exit(2)
+
 def genXML(data,run):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
@@ -25,10 +35,10 @@ def getUNIXTime(dtime):
     t = time.mktime(dtime.timetuple())
     return int( t * 1e9 )
 
-def getCalibrationsFromFile(rad):
+def getCalibrationsFromFile(rad,rootName):
     
     # Load the Corrections
-    filename = rad+'Gas-RefIndexCalib.pck'
+    filename = rad+'Gas_'+rootName+'.pck'
     print "Loading (n-1) Calibrations for", rad, "from", filename
 
     # Unpickle the calibration data
@@ -150,8 +160,9 @@ db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                       create_new_db=True, readOnly=False )
 
 # Load the RICH1 and RICH2 calibrations from file
-cali1 = getCalibrationsFromFile('Rich1')
-cali2 = getCalibrationsFromFile('Rich2')
+rootName = str(args[0])
+cali1 = getCalibrationsFromFile('Rich1',rootName)
+cali2 = getCalibrationsFromFile('Rich2',rootName)
 
 # Create a unique dict of all run start,stop times
 runsTimes = getRunTimes([cali1,cali2])
