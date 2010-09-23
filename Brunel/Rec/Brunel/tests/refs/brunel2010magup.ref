@@ -2821,7 +2821,6 @@ StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
  13 | ANNDispatchSvc::faultHandler() const | libHltDAQ.so
-142 | Velo::VeloIPResolutionMonitor::execute() | libVeloRecMonitors.so
 64000 | local                          | libHltDAQ.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully

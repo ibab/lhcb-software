@@ -2146,11 +2146,5 @@ FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 PoolRootTreeEvt...   INFO Disconnected data IO:4666E8BF-FCE2-DD11-96A6-0030487C5E0E[root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v17r2/00001820_00000001.digi?svcClass=default]
 PoolRootTreeEvt...   INFO Disconnected data IO:7635808C-656A-DF11-85AE-001E4F3DD7AB[00001820_00000001-10ev.dst]
 ChronoStatSvc.f...   INFO  Service finalized successfully
-StatusCodeSvc        INFO listing all unchecked return codes:
-StatusCodeSvc        INFO
-Num | Function                       | Source Library
-----+--------------------------------+------------------------------------------
-461 | Velo::VeloIPResolutionMonitor::execute() | libVeloRecMonitors.so
-
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
