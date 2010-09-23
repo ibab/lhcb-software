@@ -32,7 +32,7 @@ Hlt2SharedDstarWithD02KPi.DecayDescriptors = ["[D*(2010)+ -> pi+ D0]cc",
                                               "[D*(2010)+ -> pi+ D~0]cc" ]
 
 Hlt2SharedDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
-Hlt2SharedDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
+Hlt2SharedDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2PDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
 
 DstarWithD02KPi = bindMembers( None, [ SlowPions, D02KPi, Hlt2SharedDstarWithD02KPi ] )
 ################################################################################

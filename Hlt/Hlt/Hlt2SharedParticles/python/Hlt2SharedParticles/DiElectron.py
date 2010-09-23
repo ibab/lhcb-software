@@ -19,7 +19,7 @@ Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  , DecayDescriptor = "J/psi(1S) -> e+ e-" 
                                  , DaughtersCuts = {"e+" : "(PT>300*MeV)"}
                                  , CombinationCut = "AALL"
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
+                                 , MotherCut = "(VFASPF(VCHI2PDOF)<100)"
                                  , WriteP2PVRelations = False
                                  )
 

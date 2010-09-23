@@ -18,7 +18,7 @@ Hlt2SharedKsLL = Hlt2Member( CombineParticles, "KsLL"
                            , DecayDescriptor = "KS0 -> pi+ pi-" 
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" } 
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
-                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30)"
                            , InputLocations = [ GoodPions ]
                            )
 
@@ -29,7 +29,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
                            , DecayDescriptor = "KS0 -> pi+ pi-" 
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" } 
                            , CombinationCut = "(ADAMASS('KS0')<50*MeV)"
-                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+                           , MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2PDOF)<30)"
                            , InputLocations = [ BiKalmanFittedPions ]
                            )
 
@@ -40,7 +40,7 @@ Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
                            , DecayDescriptor = "KS0 -> pi+ pi-"
                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)" }
                            , CombinationCut = "(ADAMASS('KS0')<80*MeV)"
-                           , MotherCut = "(ADMASS('KS0')<64*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+                           , MotherCut = "(ADMASS('KS0')<64*MeV) & (VFASPF(VCHI2PDOF)<30)"
                            , InputLocations = [ BiKalmanFittedDownPions ]
                            )
 

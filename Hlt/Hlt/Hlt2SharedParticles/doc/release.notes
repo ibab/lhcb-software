@@ -4,6 +4,9 @@ $Id: release.notes,v 1.106 2010-09-05 18:42:43 fsoomro Exp $
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+!2010-09-22 - Gerhard Raven
+- replace VCHI2/VDOF by VCHI2PDOF
+
 !========================== Hlt2SharedParticles v4r5 2010-09-05 ===================
 !2010-09-05 - F. Soomro
  - Phi->kk and Kstar->Kpi now use BiKalmanFitted kaons and pions as input

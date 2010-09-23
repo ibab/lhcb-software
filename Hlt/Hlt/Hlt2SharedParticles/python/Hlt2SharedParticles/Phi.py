@@ -20,7 +20,7 @@ Hlt2SharedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
 
 Hlt2SharedPhi2KK.DaughtersCuts = { "K+" : "ALL"} 
 Hlt2SharedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<50*MeV)"
-Hlt2SharedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+Hlt2SharedPhi2KK.MotherCut = "(VFASPF(VCHI2PDOF)<25)"
 
 Phi2KK = bindMembers( None, [ BiKalmanFittedKaons, Hlt2SharedPhi2KK ] )
 
@@ -37,6 +37,6 @@ Hlt2SharedUnbiasedPhi2KK.InputLocations = [ NoCutsKaons.outputSelection() ]
 Hlt2SharedUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 Hlt2SharedUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 
 Hlt2SharedUnbiasedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<20*MeV)"
-Hlt2SharedUnbiasedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+Hlt2SharedUnbiasedPhi2KK.MotherCut = "(VFASPF(VCHI2PDOF)<25)"
 
 UnbiasedPhi2KK = bindMembers( None, [ NoCutsKaons, Hlt2SharedUnbiasedPhi2KK ] )

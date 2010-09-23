@@ -18,7 +18,7 @@ Hlt2SharedTrackFittedDiMuon = Hlt2Member( CombineParticles
                                           , "TrackFittedDiMuon"
                                           , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
                                           , CombinationCut = "AALL"
-                                          , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                                          , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                                           , InputLocations = [ BiKalmanFittedMuons ]
                                           , WriteP2PVRelations = False
                                           )

@@ -18,7 +18,7 @@ Hlt2SharedDiMuon = Hlt2Member( CombineParticles
                              , "DiMuon"
                              , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
                              , CombinationCut = "AALL"
-                             , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                             , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                              , InputLocations = [ Muons ]
                              , WriteP2PVRelations = False
                              )

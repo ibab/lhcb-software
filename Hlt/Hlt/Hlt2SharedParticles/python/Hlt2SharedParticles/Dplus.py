@@ -24,7 +24,7 @@ Hlt2SharedDplus2KPiPi.DaughtersCuts = { "K+"  : "ALL",
 #Note that the cut of 300 MeV around the *D_s* mass is NOT a typo, it is motivated by
 #the requirements of the B->Dh HLT2 selection
 Hlt2SharedDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<300*MeV) & (APT>1.5*GeV)" 
-Hlt2SharedDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 ) & (BPVDIRA > 0) " 
+Hlt2SharedDplus2KPiPi.MotherCut = "(VFASPF(VCHI2PDOF) < 10 ) & (BPVDIRA > 0) " 
 
 Hlt2SharedDplus2KPiPi.InputLocations = [ GoodKaons.outputSelection(), GoodPions.outputSelection() ]
 Dplus2KPiPi = bindMembers( None, [ GoodKaons, GoodPions, Hlt2SharedDplus2KPiPi ] )

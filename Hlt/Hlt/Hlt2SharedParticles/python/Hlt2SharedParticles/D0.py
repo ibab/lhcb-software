@@ -24,7 +24,7 @@ Hlt2SharedD02KPi = Hlt2Member( CombineParticles
                              , DaughtersCuts = {  "K+" : "ALL"
                                                , "pi+" : "ALL" }
                              , CombinationCut = "(ADAMASS('D0')<50*MeV) & (APT>1*GeV)"
-                             , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                             , MotherCut = "(VFASPF(VCHI2PDOF)<25)"
                              , InputLocations = [ GoodKaons, GoodPions ]
                              )
 D02KPi = bindMembers( 'Shared', [ GoodKaons, GoodPions, Hlt2SharedD02KPi ] )
@@ -54,7 +54,7 @@ Hlt2SharedD02KsPiPi = Hlt2Member( CombineParticles
                                                   , "K+"  : "(PT>400*MeV)"
                                                   , "KS0" : "(PT>1*GeV)"} 
                                 , CombinationCut = "(ADAMASS('D0')<80*MeV) & (APT>1800*MeV)"
-                                , MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (MIPCHI2DV(PRIMARY)>1)"
+                                , MotherCut = "(VFASPF(VCHI2PDOF)<10) & (MIPCHI2DV(PRIMARY)>1)"
                                 , InputLocations = [ GoodPions, KsV0LL, KsLL ]
                                 )
 
@@ -73,7 +73,7 @@ Hlt2SharedD02KsKK = Hlt2SharedD02KsPiPi.clone("D02KsKK"
                                              , DaughtersCuts = { "K+" : "(PT>300*MeV)",
                                                                  "KS0" : "(PT>800*MeV)" } 
                                              , CombinationCut = "(ADAMASS('D0')<80) & (APT>1500*MeV)" 
-                                             , MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (MIPCHI2DV(PRIMARY)>0.49)" 
+                                             , MotherCut = "(VFASPF(VCHI2PDOF)<10) & (MIPCHI2DV(PRIMARY)>0.49)" 
                                              , InputLocations = [ GoodKaons, KsV0LL, KsLL ]
                                              )
 

@@ -20,6 +20,6 @@ Hlt2SharedKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 
 Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "ALL", "K+" : "ALL" } 
 Hlt2SharedKstar2KPi.CombinationCut = "(ADAMASS('K*(892)0')<300)"
-Hlt2SharedKstar2KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+Hlt2SharedKstar2KPi.MotherCut = "(VFASPF(VCHI2PDOF)<25)"
 
 Kstar2KPi = bindMembers( None, [ BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2SharedKstar2KPi ] )
