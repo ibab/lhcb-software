@@ -10,6 +10,7 @@
 
 ! 2010-09-23 - Gerhard Raven
  - update Xgamma a bit to make it more readable -- no functional changes
+ - remove obsolete files in options/ subdirectory
 
 ! 2010-09-21 - Gerhard Raven
  - replace VCHI2/VDOF by VCHI2PDOF
