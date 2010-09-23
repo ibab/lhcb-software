@@ -50,7 +50,7 @@ private:
   double m_P_cut_kaon ;
   double m_IP_cut_kaon ;
   double m_IPs_cut_kaon ;
-  double m_lcs_kl, m_lcs_ku;
+  double m_lcs_kaon;
   double m_IP_kl, m_IP_ku;
   double m_AverageOmega;
   double m_ghost_cut;

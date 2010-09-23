@@ -21,11 +21,11 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareInterface<IBTaggingTool>(this);
 
-  //  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); //"CombineTaggersNN"
-  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersNN" );
+  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); //"CombineTaggersNN"
+  //declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersNN" );
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
-  declareProperty( "ChoosePVCriterium",     m_ChoosePV="PVbyIPs");
+  declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "PVbyIPs");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = false );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
@@ -370,8 +370,8 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     Particle::ConstVector::const_iterator ik;
     for ( ik = ip+1; ik != parts.end(); ik++) {
       if((*ik)->proto() == proto) { 
-	dup=true; 
-	break; 
+        dup=true; 
+        break; 
       }
     }
     //}

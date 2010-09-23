@@ -22,6 +22,8 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
+  declareProperty( "AverageOmega",    m_AverageOmega   = 0.33 );
+  
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.45 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.0 );
@@ -30,11 +32,10 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.0 );
 
-  declareProperty( "KaonSPID_kS_cut",  m_KaonSPID_kS_cut   =  1.0 );
-  declareProperty( "KaonSPID_kpS_cut", m_KaonSPID_kpS_cut  = -1.0 );
+  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  1.0 );
+  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -1.0 );
 
-  declareProperty( "ProbMin_kaonS",m_ProbMin_kaonS  = 0. ); //no cut
-  declareProperty( "AverageOmega",    m_AverageOmega = 0.33 );
+  declareProperty( "ProbMin_kaonS",   m_ProbMin_kaonS    = 0. ); //no cut
 
   m_nnet = 0;
   m_util = 0;
@@ -79,23 +80,25 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    //    if(! (*ipart)->proto()->info(ProtoParticle::RichPIDStatus, 0) ) continue;
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ); 
 
-    verbose()<<(*ipart)->particleID().abspid()<<" candidate kaonS p="<<(*ipart)->p()/GeV
-	   <<"  PIDk="<<pidk<<"  PIDp="<<pidp <<endreq;
+    verbose()<<(*ipart)->particleID().abspid()<<" candidate kaonS p="
+             <<(*ipart)->p()/GeV<<"  PIDk="<<pidk<<"  PIDp="<<pidp <<endreq;
 
     if(pidk==0) continue;
     if(pidk < m_KaonSPID_kS_cut ) continue;
     if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
-
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
 
     double P  = (*ipart)->p();
     if( P < m_P_cut_kaonS )  continue;
+
+    const Track* track = (*ipart)->proto()->track();
+    double lcs = track->chi2PerDoF();
+    if( lcs > m_lcs_cut ) continue;
 
    //calculate signed IP wrt RecVert
     double IP, IPerr;
@@ -105,12 +108,10 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    verbose()<<"     deta="<<deta <<endreq;
     if(deta > m_etacut_kaonS) continue;
 
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    verbose()<<"     dphi="<<dphi <<endreq;
     if(dphi > m_phicut_kaonS) continue;
 
     Gaudi::LorentzVector pm  = (*ipart)->momentum();
@@ -119,13 +120,9 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double dQ    = (ptotB+pmK).M() - ptotB.M();
     verbose()<<"kS dQ="<<dQ<<"  "<<((ptotB+(*ipart)->momentum()).M())
-	   <<"  "<< ptotB.M()<<endreq;
+             <<"  "<< ptotB.M()<<endreq;
 
     if(dQ > m_dQcut_kaonS ) continue;
-
-    const Track* track = (*ipart)->proto()->track();
-    double lcs = track->chi2PerDoF();
-    if( lcs > m_lcs_cut ) continue;
 
     ncand++;
 
@@ -136,7 +133,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       save_dQ=dQ;
       save_IPsig=IPsig;
       debug()<<" Kaon Ss cand, P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	     << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
+             << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
     }
 
   } 

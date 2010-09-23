@@ -22,25 +22,25 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName", m_NeuralNetName    = "NNetTool_MLP" );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
+
   declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.4 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.8 );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 1.5 );
 
-  declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
-  declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 2.0 );
+  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon = 5 );
 
   declareProperty( "Kaon_PIDk",  m_PID_k_cut =  0.0);
   declareProperty( "Kaon_PIDkp", m_PIDkp_cut = -1.0 );
 
-  declareProperty( "Kaon_ghost_cut", m_ghost_cut =-14.0 );
+  declareProperty( "Kaon_ghost_cut", m_ghost_cut = -14.0 );
 
   declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 ); //no cut
   declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 ); //no cut
 
-  declareProperty( "ProbMin_kaon",m_ProbMin_kaon  = 0. ); //no cut
+  declareProperty( "ProbMin_kaon", m_ProbMin_kaon  = 0. ); //no cut
 
-  declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
   m_util = 0;
 }
@@ -91,8 +91,13 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
+
     double P = (*ipart)->p();
     if( P < m_P_cut_kaon )  continue;
+
+    const Track* track = (*ipart)->proto()->track();
+    double lcs = track->chi2PerDoF();
+    if(lcs > m_lcs_kaon) continue;
 
     double tsa = (*ipart)->proto()->track()->likelihood();
     if( tsa < m_ghost_cut ) continue;
@@ -102,28 +107,23 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    verbose() << " Kaon P="<< P/GeV <<" Pt="<< Pt/GeV << " IPsig=" << IPsig 
-	      << " IP=" << IP <<" tsa="<< tsa<<" pidk="<<pidk<<" pidp="<<pidproton<<endreq;
-
+ 
     if (IPsig < m_IPs_cut_kaon) continue;
-    if (abs(IP) > m_IP_cut_kaon) continue;
-    
-    const Track* track = (*ipart)->proto()->track();
-    double lcs = track->chi2PerDoF();
 
-    if((track->type()==Track::Long || track->checkHistory(Track::TrackMatching)==true && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
-       || 
-       (track->type()==Track::Upstream && lcs<m_lcs_ku && fabs(IP)<m_IP_ku )){
-      ncand++;
+    if (fabs(IP) > m_IP_cut_kaon) continue;
+
+    ncand++;
+
+    verbose() << " Kaon P="<< P/GeV <<" Pt="<< Pt/GeV << " IPsig=" << IPsig 
+              << " IP=" << IP <<" tsa="<< tsa<<" pidk="<<pidk
+              <<" pidp="<<pidproton<<endreq;
 	
-      if( Pt > ptmaxk ) { 
-	ikaon = (*ipart);
-	ptmaxk = Pt;
-	debug()<<" Kaon Op cand, Pt="<<Pt<<endreq;
-      }
+    if( Pt > ptmaxk ) { 
+      ikaon = (*ipart);
+      ptmaxk = Pt;
     }
-    
   } 
+
   if( ! ikaon ) return tkaon;
 
   //calculate omega

@@ -5,6 +5,13 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-09-22 - Marc Grabalosa, Marco Musy 
+  . new polynomials for the omega estimator
+  . drop cut on ghost prob for electrons
+  . TMVA temporarily removed to allow compilation on windows.
+  . vertexcharge now uses a nnet.
+  . increase version to v12r0
+
 ! 2010-07-02 - Marc Grabalosa
   . New tuning for NNets
   . Added some comments

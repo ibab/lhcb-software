@@ -60,11 +60,6 @@ private:
   double m_PionSame_PIDNoK_cut;
   double m_PionSame_PIDNoP_cut;
 
-  double m_Inverse_PID_m_cut;
-  double m_Inverse_PID_e_cut;
-  double m_Inverse_PID_k_cut;
-  double m_Inverse_PID_kp_cut;
-
 };
 //===============================================================//
 #endif // USER_TAGGERPIONSAMETOOL_H

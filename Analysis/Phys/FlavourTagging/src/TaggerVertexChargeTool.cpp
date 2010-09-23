@@ -21,14 +21,17 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
 
   declareInterface<ITagger>(this);
 
-  declareProperty( "SecondaryVertexName", m_SecondaryVertexToolName = "SVertexOneSeedTool" ); //"SVertexTool"
+  declareProperty( "SecondaryVertexName", 
+                   m_SecondaryVertexToolName = "SVertexOneSeedTool" );
   declareProperty( "AverageOmega", m_AverageOmega         = 0.41 );
+ 
+  //NNet - no bias, Probability - old with bias:
+  declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
+  declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
+
   declareProperty( "PowerK",       m_PowerK               = 0.35 );
   declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.12 );
-  declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.52);
-
-  declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); //NNet - no bias, Probability - old with bias 
-  declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
+  declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.53);
 
   //For CombinationTechnique: "Probability"
   declareProperty( "P0",           m_P0                   = 5.255669e-01 );
@@ -87,7 +90,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
-  debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()<<", with "<<Pfit.size()<<"tracks"<<endreq;
+  debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
+         <<", with "<<Pfit.size()<<"tracks"<<endreq;
   double maxprobf = vvec.at(0).info(1, 0.5 );
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
 
@@ -107,26 +111,26 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ip, RecVert, minip, miniperr);
     Vipsmin += minip/miniperr;
     const Track* iptrack = (*ip)->proto()->track();
-    if( iptrack->type()== Track::Long || iptrack->checkHistory(Track::TrackMatching)==true) Vflaglong++;
+    if( iptrack->type()== Track::Long || 
+        iptrack->checkHistory(Track::TrackMatching)==true) Vflaglong++;
     double docaSV, docaErrSV;
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV);
     Vdocamax += docaSV;
-    verbose()<<"docaSV:"<<docaSV<<endreq;
+    debug()<<"docaSV:"<<docaSV<<endreq;
   }
 
-  verbose()<<"normalizing"<<endreq;
   if(norm) {
     Vch /= norm;
-    debug()<<"minVCh abs(0.12): "<<Vch<<endreq;
     if(fabs(Vch) < m_MinimumVCharge ) Vch = 0;
     Vptmin  /= vflagged;
     Vipsmin /= vflagged;
     Vdocamax/= vflagged;
   }
+  debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
-  debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
   //calculate omega
+  debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
   double omega = m_AverageOmega;
   double pn = 1-omega;
   if(m_CombinationTechnique == "Probability") {
@@ -160,8 +164,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 
-  verbose()<<"pass"<<endreq;
-
+  debug()<<"Vtx passed"<<endreq;
+ 
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );
   tVch.setType( Tagger::VtxCharge ); 

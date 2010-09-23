@@ -20,8 +20,8 @@ DECLARE_TOOL_FACTORY( SVertexOneSeedTool );
 // Standard constructor, initializes variables
 //=============================================================================
 SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent ) :
+                                        const std::string& name,
+                                        const IInterface* parent ) :
   GaudiTool ( type, name, parent ) 
 { 
   declareInterface<ISecondaryVertexTool>(this);
@@ -56,7 +56,7 @@ SVertexOneSeedTool::~SVertexOneSeedTool(){}
 
 //=============================================================================
 std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert, 
-						    const Particle::ConstVector& vtags){
+                                                    const Particle::ConstVector& vtags){
 
 
   debug()<<"=======SVertexOneSeedTool========"<<endreq;
@@ -116,16 +116,16 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       if( vtx.chi2PerDoF() > 10.0 ) continue;                   //cut
 
       ROOT::Math::PositionVector3D< ROOT::Math::Cartesian3D< double > > 
-	SVpoint((vtx.position()-RecVert.position()).x()/mm,
-		(vtx.position()-RecVert.position()).y()/mm,
-		(vtx.position()-RecVert.position()).z()/mm);
+        SVpoint((vtx.position()-RecVert.position()).x()/mm,
+                (vtx.position()-RecVert.position()).y()/mm,
+                (vtx.position()-RecVert.position()).z()/mm);
   
       if(SVpoint.z() < 0.0 ) continue;                 //cut
       if(SVpoint.Theta()>.350 || SVpoint.Theta()<.010) continue;//cut
 
       double rdist = sqrt(  SVpoint.x()*SVpoint.x()
-			   +SVpoint.y()*SVpoint.y()
-			   +SVpoint.z()*SVpoint.z()*.074*.074 );
+                            +SVpoint.y()*SVpoint.y()
+                            +SVpoint.z()*SVpoint.z()*.074*.074 );
 
       if(rdist < 0.3) continue;                                 //cut
       if(rdist > 10 ) continue;                                 //cut
@@ -133,21 +133,21 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       //if the couple is compatible with a Ks, drop it          //cut
       double mass = ((*jp)->momentum() + (*kp)->momentum()).M()/GeV;
       if( mass > 0.490 && mass < 0.505 
-	  &&  (*jp)->particleID().abspid() == 211
-	  &&  (*kp)->particleID().abspid() == 211
-	  && ((*jp)->charge()) * ((*kp)->charge())< 0){
-	verbose() << "This is a Ks candidate! skip."<<endreq;
-	continue;
+          &&  (*jp)->particleID().abspid() == 211
+          &&  (*kp)->particleID().abspid() == 211
+          && ((*jp)->charge()) * ((*kp)->charge())< 0){
+        verbose() << "This is a Ks candidate! skip."<<endreq;
+        continue;
       }
       debug() << "    seed found: ="<< vtx.position() <<endreq;
 
       //evaluate likelihood
       double prob_chi2  = pol(vtx.chi2PerDoF(), 
-			      0.615074, -0.081797, 0.00421188);
+                              0.615074, -0.081797, 0.00421188);
       double prob_ptmin = pol(std::min((*jp)->pt(), (*kp)->pt()) /GeV,
-			      0.0662687, 1.10754, -0.350278);
+                              0.0662687, 1.10754, -0.350278);
       double prob_ipmax = pol(std::max(ipl, ips),
-			      0.763837, -0.0822829, -0.0154407);
+                              0.763837, -0.0822829, -0.0154407);
       double prob_ipsmin = 0;
       double ipsmin= std::min(ipl/iperrl, ips/iperrs);
       if (ipsmin<2.5) continue;
@@ -217,7 +217,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
 //======================================================================
 double SVertexOneSeedTool::pol(double x, double a0, double a1, 
-			       double a2, double a3, double a4) {
+                               double a2, double a3, double a4) {
   double res = a0;
   if(a1) res += a1*x;
   if(a2) res += a2*x*x;
@@ -228,7 +228,7 @@ double SVertexOneSeedTool::pol(double x, double a0, double a1,
 
 //======================================================================
 double SVertexOneSeedTool::combine(double p1, double p2, double p3,
-				   double p4, double p5, double p6){
+                                   double p4, double p5, double p6){
   double probs = p1*p2*p3*p4*p5*p6;
   double probb = (1-p1)*(1-p2)*(1-p3)*(1-p4)*(1-p5)*(1-p6);
   return probs / ( probs + probb );
