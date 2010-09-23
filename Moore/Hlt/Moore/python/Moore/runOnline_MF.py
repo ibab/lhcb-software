@@ -43,6 +43,9 @@ def start() :
         Moore().CondDBtag = OnlineEnv.CondDBTag
         #Moore().DDDBtag   = OnlineEnv.CondDBTag
         Moore().UseDBSnapshot = True
+	
+    from Configurables import UpdateAndReset
+    UpdateAndReset().saveHistograms = 1	
 
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric

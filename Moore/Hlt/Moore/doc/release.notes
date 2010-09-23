@@ -3,6 +3,9 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 !========================== Moore v10r1 2010-09-09 ===================
+! 2010-09-23 - Eric van Herwijnen
+ - add UpdateAndReset.saveHistograms()=1 to runOnline_MF.py
+
 ! 2010-09-09 - Gerhard Raven
  - update database tags
 
