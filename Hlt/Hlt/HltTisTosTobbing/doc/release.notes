@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltTisTosTobbing
+! Responsible : Tomasz Skwarnicki
+! Purpose     : Hlt-project-dependent implementation of TisTosTobbing tools
+!-----------------------------------------------------------------------------
+
+! 2010-09-23 - Tomasz Skwarnicki
+ - Inital import. Moved TriggerSelectionTisTosInHlt,TriggerTisTosInHlt from Phys/TisTosTobbing.
+

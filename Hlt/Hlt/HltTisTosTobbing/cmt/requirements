@@ -1,0 +1,46 @@
+#============================================================================
+# Created    : 2010-09-22
+# Maintainer : Tomasz Skwarnicki
+#============================================================================
+package HltTisTosTobbing
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use GaudiAlg            v*
+
+
+use HltBase             v*    Hlt
+
+use TisTosTobbing       v*    Phys
+
+use HltEvent            v*    Event
+use TrackEvent          v*    Event
+use HltInterfaces       v*    Kernel
+
+use CaloDet             v*    Det 
+
+use DaVinciKernel       v*    Phys
+
+use Boost               v*    LCG_Interfaces
+
+# =============== include directories =========================================
+# apply_pattern     install_more_includes more=HltTisTosTobbing
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltTisTosTobbing    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltTisTosTobbing
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+
