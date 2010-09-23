@@ -203,7 +203,6 @@ def getRunFillData(rootfiles):
     md = fileMD5(rootfiles)
 
     RunFillCacheName = "RunFillInfoCache.pck"
-    RunCacheName     = "RunInfoCache.pck"
 
     # load cached run/fill info
     runFillTimeCache = loadDict(RunFillCacheName)
@@ -229,6 +228,7 @@ def getRunFillData(rootfiles):
         files = rootFileListFromTextFile(rootfiles)
 
         # Load the raw cached run data
+        RunCacheName = "RunInfoCache.pck"
         runTimeCache = loadDict(RunCacheName)
 
         # Loop over the sorted run list and get the runfilldata
@@ -243,23 +243,38 @@ def getRunFillData(rootfiles):
                 res = BookkeepingClient().getRunInformations(int(run))
                 runTimeCache[run] = res
             if res['OK'] :
+
+                # Start and stop times
                 start = res['Value']['RunStart']
                 stop  = res['Value']['RunEnd']
+
+                # fill number
                 fill  = int(res['Value']['FillNumber'])
-                runfilldata["RunData"][run] = { "Start" : start, "Stop" : stop, "Fill" : fill }
+
+                # Field polarity ?
+                polarity = getFieldPolarity(res)
+
+                # Fill data for this run
+                runfilldata["RunData"][run] = { "Start" : start,
+                                                "Stop"  : stop,
+                                                "Fill"  : fill,
+                                                "FieldPolarity" : polarity }
+                
                 if fill not in runfilldata["FillData"].keys():
                     runfilldata["FillData"][fill] = { "Start" : start,
                                                       "Stop"  : stop,
+                                                      "FieldPolarity" : polarity,
                                                       "Files" : []  }
                 fillData = runfilldata["FillData"][fill]
                 if fillData["Start"] > start : fillData["Start"] = start
                 if fillData["Stop"] < stop   : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
-                print " -> Run", run, "Fill", fill, "is from", start, "to", stop
+                print " -> Run", run, "Fill", fill, polarity, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
                 if unixEndTime > tmpTime :
                     tmpTime = unixEndTime
                     runfilldata["GlobalStopTime"] = stop
+                fillData['DataTakingDescription'] = res['Value']['DataTakingDescription']
             else:
                 print "ERROR Getting start/stop times for run", run
                 import DIRAC
@@ -274,6 +289,27 @@ def getRunFillData(rootfiles):
 
     # Return the Run Time Information
     return runfilldata
+
+def getFieldPolarity(res):
+
+    desc = res['Value']['DataTakingDescription']
+    splits = desc.split("-")
+
+    polarity = ''
+    
+    for split in splits :
+        if split == 'MagDown' or split == 'MagUp' or split == 'MagOff' :
+            if polarity == '' :
+                polarity = split
+            else:
+                print "WARNING : DataTaking description has two field polarities !!", desc
+                polarity = split
+
+    if polarity == '' :
+        print "WARNING : Unable to extract field polarity"
+        print res
+
+    return polarity
 
 def rFromXY(a,b):
 
@@ -323,11 +359,11 @@ def runToFill(run):
     return fill
 
 def calibrationByRuns(rootfiles='RootFileNames.txt',
-                      fullFit=False,forceAverages=False):
+                      fullFit=False,forceAverages=True):
     return calibration(rootfiles,'Run',fullFit,forceAverages)
 
 def calibrationByFills(rootfiles='RootFileNames.txt',
-                       fullFit=False,forceAverages=False):
+                       fullFit=False,forceAverages=True):
     return calibration(rootfiles,'Fill',fullFit,forceAverages)
 
 def calibration(rootfiles,type,fullFit,forceAverages):
@@ -351,8 +387,6 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     # Number of HPDs
     minHPDID = 0
     maxHPDID = 484
-    #minHPDID = 9
-    #maxHPDID = 10
 
     # Min number of entries in HPD alignment histogram for update
     minHPDEntries = 1000
@@ -388,7 +422,8 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         unixStopTime  = getUNIXTime(stopTime)
 
         nFile += 1
-        print "Processing", type , flag, "( #", nFile, "of", len(filesToLoopOver), ")", filename
+        print "Processing", type , flag, \
+              "( #", nFile, "of", len(filesToLoopOver), ")", filename
 
         # Set UMS to the start time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
@@ -439,14 +474,14 @@ def calibration(rootfiles,type,fullFit,forceAverages):
 
     # Average X and Y values
     averageShifts = { }
+    averageShifts['All']     = { }
+    averageShifts['MagDown'] = { }
+    averageShifts['MagUp']   = { }
+    averageShifts['MagOff']  = { }
 
     # Make plots showing the variations
-    print "Making summary plots"
-
-    fileType = ".pdf"
-
-    # Start a PDF file
-    globals()["imageFileName"] = "HPDAlignBy"+type+"-"+fitType+avType+fileType
+    globals()["imageFileName"] = "HPDAlignBy"+type+"-"+fitType+avType+".pdf"
+    print "Making summary plots", globals()["imageFileName"]
     printCanvas('[')
 
     for hpd,data in plotData.iteritems():
@@ -466,14 +501,48 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         dbX        = array('d')
         dbY        = array('d')
         dbR        = array('d')
+
+        vflagMagDown      = array('d')
+        vflagerrMagDown   = array('d')
+
+        vflagMagUp      = array('d')
+        vflagerrMagUp   = array('d')
+
+        vflagMagOff      = array('d')
+        vflagerrMagOff   = array('d')
+
+        vshiftRMagDown    = array('d')
+        vshiftRerrMagDown = array('d')
+        vshiftXMagDown    = array('d')
+        vshiftXerrMagDown = array('d')
+        vshiftYMagDown    = array('d')
+        vshiftYerrMagDown = array('d')
+
+        vshiftRMagUp    = array('d')
+        vshiftRerrMagUp = array('d')
+        vshiftXMagUp    = array('d')
+        vshiftXerrMagUp = array('d')
+        vshiftYMagUp    = array('d')
+        vshiftYerrMagUp = array('d')
+
+        vshiftRMagOff    = array('d')
+        vshiftRerrMagOff = array('d')
+        vshiftXMagOff    = array('d')
+        vshiftXerrMagOff = array('d')
+        vshiftYMagOff    = array('d')
+        vshiftYerrMagOff = array('d')
         
         for fl in sorted(data.keys()):
+
+            # Field Polarity
+            polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
             
             if fl < minMaxFlag[0] : minMaxFlag[0] = fl
             if fl > minMaxFlag[1] : minMaxFlag[1] = fl
             
             values = data[fl]
             if values['FitOK'] :
+                
                 vflag.append(fl)
                 vflagerr.append(0.0)
                 vshiftX.append(values['ShiftX'][0])
@@ -486,13 +555,54 @@ def calibration(rootfiles,type,fullFit,forceAverages):
                 dbY.append(values["DBShiftY"])
                 dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
 
+                if polarity == 'MagDown':
+                    vflagMagDown.append(fl)
+                    vflagerrMagDown.append(0.0)
+                    vshiftXMagDown.append(values['ShiftX'][0])
+                    vshiftXerrMagDown.append(values['ShiftX'][1])
+                    vshiftYMagDown.append(values['ShiftY'][0])
+                    vshiftYerrMagDown.append(values['ShiftY'][1])
+                    vshiftRMagDown.append(values['ShiftR'][0])
+                    vshiftRerrMagDown.append(values['ShiftR'][1])
+                if polarity == 'MagUp':
+                    vflagMagUp.append(fl)
+                    vflagerrMagUp.append(0.0)
+                    vshiftXMagUp.append(values['ShiftX'][0])
+                    vshiftXerrMagUp.append(values['ShiftX'][1])
+                    vshiftYMagUp.append(values['ShiftY'][0])
+                    vshiftYerrMagUp.append(values['ShiftY'][1])
+                    vshiftRMagUp.append(values['ShiftR'][0])
+                    vshiftRerrMagUp.append(values['ShiftR'][1])
+                if polarity == 'MagOff':
+                    vflagMagOff.append(fl)
+                    vflagerrMagOff.append(0.0)
+                    vshiftXMagOff.append(values['ShiftX'][0])
+                    vshiftXerrMagOff.append(values['ShiftX'][1])
+                    vshiftYMagOff.append(values['ShiftY'][0])
+                    vshiftYerrMagOff.append(values['ShiftY'][1])
+                    vshiftRMagOff.append(values['ShiftR'][0])
+                    vshiftRerrMagOff.append(values['ShiftR'][1])
+
         if len(vflag) > 0:
 
-            alignColor = 1
-            refColor   = 4
+            alignColor     = 1
+            alignColorUp   = 28
+            alignColorDown = 35
+            alignColorOff  = 38    
+            refColor       = 4
 
             linearFit = TF1("AverageFit","pol0",minMaxFlag[0],minMaxFlag[1])
             linearFit.SetParName(0,"Fitted Shift")
+            linearFit.SetLineColor(alignColor)
+            linearFitUp = TF1("AverageFitUp","pol0",minMaxFlag[0],minMaxFlag[1])
+            linearFitUp.SetParName(0,"Fitted Shift Mag Up")
+            linearFitUp.SetLineColor(alignColorUp)
+            linearFitDown = TF1("AverageFitDown","pol0",minMaxFlag[0],minMaxFlag[1])
+            linearFitDown.SetParName(0,"Fitted Shift Mag Down")
+            linearFitDown.SetLineColor(alignColorDown)
+            linearFitOff = TF1("AverageFitOff","pol0",minMaxFlag[0],minMaxFlag[1])
+            linearFitOff.SetParName(0,"Fitted Shift Mag Off")
+            linearFitOff.SetLineColor(alignColorOff)
             
             plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
             plotX.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
@@ -507,7 +617,25 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             plotXDB.SetMarkerColor(refColor)
             plotXDB.SetLineColor(refColor)
             plotXDB.Draw("LP")
-            labelDataDB(alignColor,refColor)
+            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
+            if len(vflagMagUp) > 0 :
+                plotXUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftXMagUp,
+                                        vflagerrMagUp, vshiftXerrMagUp )
+                plotXUp.Fit(linearFitUp,"QRS")
+                linearFitUp.Draw('SAME')
+                avXUp = linearFitUp.GetParameter(0)
+            if len(vflagMagDown) > 0 :
+                plotXDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftXMagDown,
+                                          vflagerrMagDown, vshiftXerrMagDown )
+                plotXDown.Fit(linearFitDown,"QRS")
+                linearFitDown.Draw('SAME')
+                avXDown = linearFitDown.GetParameter(0)
+            if len(vflagMagOff) > 0 :
+                plotXOff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftXMagOff,
+                                          vflagerrMagOff, vshiftXerrMagOff )
+                plotXOff.Fit(linearFitOff,"QRS")
+                linearFitOff.Draw('SAME')
+                avXOff = linearFitOff.GetParameter(0)
             printCanvas()
             
             plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
@@ -523,11 +651,38 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             plotYDB.SetMarkerColor(refColor)
             plotYDB.SetLineColor(refColor)
             plotYDB.Draw("LP")
-            labelDataDB(alignColor,refColor)
+            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
+            if len(vflagMagUp) > 0 :
+                plotYUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftYMagUp,
+                                        vflagerrMagUp, vshiftYerrMagUp )
+                plotYUp.Fit(linearFitUp,"QRS")
+                linearFitUp.Draw('SAME')
+                avYUp = linearFitUp.GetParameter(0)
+            if len(vflagMagDown) > 0 :
+                plotYDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftYMagDown,
+                                          vflagerrMagDown, vshiftYerrMagDown )
+                plotYDown.Fit(linearFitDown,"QRS")
+                linearFitDown.Draw('SAME')
+                avYDown = linearFitDown.GetParameter(0)
+            if len(vflagMagOff) > 0 :
+                plotYOff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftYMagOff,
+                                          vflagerrMagOff, vshiftYerrMagOff )
+                plotYOff.Fit(linearFitOff,"QRS")
+                linearFitOff.Draw('SAME')
+                avYOff = linearFitOff.GetParameter(0)
             printCanvas()
             
             # Save the fitted averages for this HPD
-            averageShifts[hpd] = [avX,avY]
+            averageShifts['All'][hpd]     = [avX,avY]
+            averageShifts['MagUp'][hpd]   = [0,0]
+            averageShifts['MagDown'][hpd] = [0,0]
+            averageShifts['MagOff'][hpd]  = [0,0]
+            if len(vflagMagUp) > 0 :
+                averageShifts['MagUp'][hpd] = [avXUp,avYUp]
+            if len(vflagMagDown) > 0 :
+                averageShifts['MagDown'][hpd] = [avXDown,avYDown]
+            if len(vflagMagOff) > 0 :
+                averageShifts['MagOff'][hpd] = [avXOff,avYOff]
 
             plotR = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
             plotR.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
@@ -541,7 +696,22 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             plotRDB.SetMarkerColor(refColor)
             plotRDB.SetLineColor(refColor)
             plotRDB.Draw("LP")
-            labelDataDB(alignColor,refColor)
+            labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor)
+            if len(vflagMagUp) > 0 :
+                plotRUp = TGraphErrors( len(vflagMagUp), vflagMagUp, vshiftRMagUp,
+                                        vflagerrMagUp, vshiftRerrMagUp )
+                plotRUp.Fit(linearFitUp,"QRS")
+                linearFitUp.Draw('SAME')
+            if len(vflagMagDown) > 0 :
+                plotRDown = TGraphErrors( len(vflagMagDown), vflagMagDown, vshiftRMagDown,
+                                          vflagerrMagDown, vshiftRerrMagDown )
+                plotRDown.Fit(linearFitDown,"QRS")
+                linearFitDown.Draw('SAME')
+            if len(vflagMagOff) > 0 :
+                plotROff = TGraphErrors( len(vflagMagOff), vflagMagOff, vshiftRMagOff,
+                                          vflagerrMagOff, vshiftRerrMagOff )
+                plotROff.Fit(linearFitOff,"QRS")
+                linearFitOff.Draw('SAME')
             printCanvas()
 
     # Close the PDF 
@@ -568,7 +738,11 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     nflag = 0
     for flag in sorted(alignData.keys()):
         nflag += 1
-        print " -> Creating alignment update for", type, flag, \
+
+        # Get field polarity
+        polarity = runFillData[type+"Data"][flag]["FieldPolarity"]
+                
+        print " -> Creating alignment update for", type, flag, polarity, \
               "( #", nflag, "of", len(alignData.keys()), ")"
 
         # alignments for this run/fill
@@ -600,16 +774,19 @@ def calibration(rootfiles,type,fullFit,forceAverages):
                 yOff = values["ShiftY"][0]
                 text = "From Fit"
             else:
-                if hpdID in averageShifts.keys():
-                    xOff = averageShifts[hpdID][0]
-                    yOff = averageShifts[hpdID][1]
-                    text = "From Average"
-                    #print "Using average for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
+                if hpdID in averageShifts[polarity].keys():
+                    xOff = averageShifts[polarity][hpdID][0]
+                    yOff = averageShifts[polarity][hpdID][1]
+                    text = "From" + polarity + "average"                      
                 else:
-                    xOff = values["DBShiftX"]
-                    yOff = values["DBShiftY"]
-                    text = "From original DB"
-                    #print "Using DB for", type, flag, "HPD", hpdID, "Offsets", xOff, yOff
+                    if hpdID in averageShifts['All'].keys():
+                        xOff = averageShifts['All'][hpdID][0]
+                        yOff = averageShifts['All'][hpdID][1]
+                        text = "From All average"
+                    else:
+                        xOff = values["DBShiftX"]
+                        yOff = values["DBShiftY"]
+                        text = "From original DB"
 
             # Update the Si alignment with the image movement data
             paramName = "dPosXYZ"
@@ -671,15 +848,21 @@ def createDBFile(name):
     return CondDBUI.CondDB( "sqlite_file:"+name+"/LHCBCOND",
                             create_new_db=True, readOnly=False )
 
-def labelDataDB(dataColor,dbColor):
+def labelDataDB(alignColor,alignColorUp,alignColorDown,alignColorOff,refColor):
     from ROOT import TText
     text = TText()
     text.SetNDC()
-    text.SetTextSize(0.03)
-    text.SetTextColor(dataColor)
-    text.DrawText( 0.13, 0.85, "Fitted Image Shifts" )
-    text.SetTextColor(dbColor)
-    text.DrawText( 0.13, 0.81, "LHCbCond" )
+    text.SetTextSize(0.02)
+    text.SetTextColor(alignColor)
+    text.DrawText( 0.13, 0.85, "All Fitted Image Shifts" )
+    text.SetTextColor(alignColorUp)
+    text.DrawText( 0.13, 0.82, "MagUp Fitted Image Shifts" )
+    text.SetTextColor(alignColorDown)
+    text.DrawText( 0.13, 0.79, "MagDown Fitted Image Shifts" )
+    text.SetTextColor(alignColorOff)
+    text.DrawText( 0.13, 0.76, "MagOff Fitted Image Shifts" )
+    text.SetTextColor(refColor)
+    text.DrawText( 0.13, 0.73, "LHCbCond" )
     
 def printCanvas(tag=''):
     canvas = rootCanvas()

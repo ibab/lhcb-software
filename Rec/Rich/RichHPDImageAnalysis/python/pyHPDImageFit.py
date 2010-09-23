@@ -25,7 +25,7 @@ class HPDBoundaryFcn :
         self.threshold = _threshold
         self.hist      = _hist
         if _hist != None:
-            self.sf        = (1.0*_hist.GetNbinsX())/(1.0*_hist.GetNbinsY())
+            self.sf = (1.0*_hist.GetNbinsX())/(1.0*_hist.GetNbinsY())
         self.boundary  = [ ]
 
     def nPixels(self):
