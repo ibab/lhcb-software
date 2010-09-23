@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-09-23 - Chris Jones
- - Update LHCb::WeightsVector packing to sotre weight as a short int, 
-   exploiting the fact it will only ever be in the range 0 to 1
+ - Update LHCb::WeightsVector packing to store the packed weight as a short 
+   int, exploiting the fact it will only ever be in the range 0 to 1
 
 ! 2010-09-22 - Chris Jones
  - Add packed data classes for LHCb::WeightsVector class.
