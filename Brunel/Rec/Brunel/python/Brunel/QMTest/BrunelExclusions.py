@@ -5,6 +5,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["MagneticFieldSvc     INFO Map scaled by factor"]) + \
   LineSkipper(["MagneticFieldSvc     INFO Opened magnetic field file"]) + \
   LineSkipper(["ToolSvc.PatTTMa...   INFO  No B field detected."]) + \
+  LineSkipper(["ConfigTarFileAc...   INFO  opening "]) + \
   LineSkipper(["Gas       INFO Refractive index update triggered : Pressure ="]) + \
   LineSkipper(["LHCBCOND_"]) + \
   LineSkipper(["SIMCOND_"]) + \

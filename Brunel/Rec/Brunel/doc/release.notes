@@ -8,6 +8,9 @@ Purpose: LHCb reconstruction program
     information prior to DST writting. This is now done when needed, via the 
     DstConf Configurable in GaudiConf (see Savannah task #17217)
   . Propagate value of Simulation slot to RecMoniConf
+  . Do not run lumi when using SIMCOND (which was already the case when WithMC
+    was set, but not when just Simulation was set, e.g. in case of FEST on
+    simulated data)
 
 - Changes to references to reflect changes in Brunel v37r8 output
   . #54084: PhotonFromMergedRec algorithm removed from Calo Reco sequence, save 
@@ -16,6 +19,8 @@ Purpose: LHCb reconstruction program
   . Added several histograms to TrackFitMatchMonitor
   . Fixed untested StatusCode in CaloPhotonIDAlg
   . #82690: Change track selection chi2 for charged ProtoParticles to < 10
+  . #86415: Make fit in PatSeedFit more similar to what is used in PatSeeding
+  . #86502: Add VeloIPResolutionMonitor to standard monitoring
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
