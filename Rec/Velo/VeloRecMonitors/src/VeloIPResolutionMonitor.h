@@ -97,7 +97,7 @@ namespace Velo
     
     StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, 
                              double&, double&, double&, double&, double&, double&, LHCb::State&, LHCb::State& );
-    StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
+    void distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
 
     void rebinHisto( TH1D*, int nbins=0 ) ;
     void rebinHistos( TH1D** , int , int nbins=0 ) ;

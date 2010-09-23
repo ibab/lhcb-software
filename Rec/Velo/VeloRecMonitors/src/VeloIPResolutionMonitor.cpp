@@ -186,12 +186,12 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         nVeloTracks += 1;
       }
     }
-    
-    // can't refit a PV with only one track!
-    if( m_refitPVs && PVtracks.size() < 3 ) continue;
+
     // apply ntracks cut
     if( nVeloTracks < m_minPVnTracks ) continue;
     counter("PVs Selected")++;
+    // can't refit a PV with only one track!
+    if( m_refitPVs && PVtracks.size() < 3 ) continue;
         
     m_h_TrackMultiplicity->Fill( nVeloTracks );    
 
@@ -208,12 +208,10 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       double eta = m_track->pseudoRapidity() ;
       
       counter("Tracks selected")++;
-        
+
       // refit PV removing current track
-      bool isInPV = find( PVtracks.begin(), PVtracks.end(), m_track ) != PVtracks.end() ;
-      
+      bool isInPV = find( PVtracks.begin(), PVtracks.end(), m_track ) != PVtracks.end() ;        
       if( m_refitPVs && isInPV ){
-          
         RecVertex* newVertex = new RecVertex( *m_pv ) ;
         vector< const Track* > trackToRemove( 1, m_track ) ;
         StatusCode scPVfit = 
@@ -228,8 +226,10 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       
       double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma ;
       State POCAtoPVstate, stateAtPVZ ;
-      calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma, stateAtPVZ, POCAtoPVstate );
-
+      StatusCode scCalcIPs = 
+        calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma, stateAtPVZ, POCAtoPVstate );
+      if( scCalcIPs.isFailure() ) continue ;
+      
       if( m_makePlotsVsPhiInBinsOfEta ){
         if( m_track->flag() == Track::Backward ){
           m_h_IPXVsPhi_EtaLT0->Fill( phi, ipx ) ;
@@ -315,14 +315,15 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, con
   // extrapolate the current track to its point of closest approach to the PV 
   // to get the 3D IP
   isSuccess = m_trackExtrapolator->propagate( *track, pv->position(), POCAtoPVstate );
-  isSuccess = distance( pv, POCAtoPVstate, ip3d, ip3dsigma, 0 );
+  if( isSuccess.isFailure() ) return isSuccess ;
+  distance( pv, POCAtoPVstate, ip3d, ip3dsigma, 0 );
   
   // extrapolate the current track to the same Z position as the PV to get X & Y IP
   stateAtPVZ = track->firstState();
   isSuccess = m_trackExtrapolator->propagate( stateAtPVZ, pv->position().z() );
   
-  isSuccess = distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
-  isSuccess = distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
+  distance( pv, stateAtPVZ, ipx, ipxsigma, 1 );
+  distance( pv, stateAtPVZ, ipy, ipysigma, 2 );
 
   return isSuccess;
 
@@ -333,7 +334,7 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, con
 // error is calculated assuming the PV position & state position are uncorrelated
 //====================================================================
 
-StatusCode Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& state, 
+void Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& state, 
                                                     double& dist, double& sigma, int type=0 )
 {
   const Gaudi::XYZVector delta ( pv->position() - state.position() ) ;
@@ -360,7 +361,6 @@ StatusCode Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& 
     sigma = -999;
   }
 
-  return StatusCode::SUCCESS ;
 }
 
 //====================================================================
