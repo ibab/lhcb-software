@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Chris Jones
+ - Update the ProtoParticle monitor to produce the efficiency plots seperately
+   for each track type.
+
 !========================== GlobalReco v6r33 2010-09-24 =====================
 ! 2010-09-22 - Marco Cattaneo
  - Remove RichPIDsFromProtoParticlesAlg, MuonPIDsFromProtoParticlesAlg,

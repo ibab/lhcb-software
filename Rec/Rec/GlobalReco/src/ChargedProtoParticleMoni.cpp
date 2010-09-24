@@ -4,16 +4,10 @@
  *
  * Implementation file for algorithm ChargedProtoParticleMoni
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleMoni.cpp,v 1.5 2009-09-03 11:09:22 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */
 //-----------------------------------------------------------------------------
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "ChargedProtoParticleMoni.h"
@@ -96,13 +90,24 @@ StatusCode ChargedProtoParticleMoni::execute()
     // count all tracks
     ++tally.totTracks;
 
-    // Does this track have a proto (uses same ey convention) ?
-    LHCb::ProtoParticle * proto = protos->object((*iTrack)->key());
+    // Does this track have a proto (uses same key convention) ?
+    const LHCb::ProtoParticle * proto = protos->object((*iTrack)->key());
+    // double check with the SmartRef
+    if ( proto && proto->track() != *iTrack ) proto = NULL;
+
+    // Track Type
+    std::ostringstream type;
+    type << (*iTrack)->type() << "/";
+
+    // Eff. for making ProtoParticles
     profile1D( (*iTrack)->p(), 100.0 * (int)(NULL != proto),
+               type.str()+"trackToProtoEff",
                "% Tracks with ProtoParticles V Momentum", 0*GeV, 100*GeV, 100 );
 
-    // Proceeed with tracks with ProtoParticles
+    // Proceed only with tracks with ProtoParticles
     if ( !proto ) continue;
+
+    // count tracks with ProtoParticles
     ++tally.selTracks;
 
     // Printout ProtoParticles
@@ -112,48 +117,56 @@ StatusCode ChargedProtoParticleMoni::execute()
     const bool hasRICH = proto->hasInfo(LHCb::ProtoParticle::RichPIDStatus);
     if ( hasRICH ) { ++tally.richTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasRICH,
+               type.str()+"protosWithRICH",
                "% ProtoParticles with RICH info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Muon INFO
     const bool hasMUON = proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus);
     if ( hasMUON ) { ++tally.muonTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasMUON,
+               type.str()+"protosWithMUON",
                "% ProtoParticles with MUON info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // ECAL info
     const bool hasECAL = proto->hasInfo(LHCb::ProtoParticle::InAccEcal);
     if ( hasECAL ) { ++tally.ecalTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasECAL,
+               type.str()+"protosWithECAL",
                "% ProtoParticles with CALO-ECAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Brem info
     const bool hasBREM = proto->hasInfo(LHCb::ProtoParticle::InAccBrem);
     if ( hasBREM ) { ++tally.bremTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasBREM,
+               type.str()+"protosWithBREM",
                "% ProtoParticles with CALO-BREM info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Spd info
     const bool hasSPD = proto->hasInfo(LHCb::ProtoParticle::InAccSpd);
     if ( hasSPD ) { ++tally.spdTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasSPD,
+               type.str()+"protosWithSPD",
                "% ProtoParticles with CALO-SPD info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // PRS info
     const bool hasPRS = proto->hasInfo(LHCb::ProtoParticle::InAccPrs);
     if ( hasPRS ) { ++tally.prsTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasPRS,
+               type.str()+"protosWithPRS",
                "% ProtoParticles with CALO-PRS info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Hcal info
     const bool hasHCAL = proto->hasInfo(LHCb::ProtoParticle::InAccHcal);
     if ( hasHCAL ) { ++tally.hcalTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasHCAL,
+               type.str()+"protosWithHCAL",
                "% ProtoParticles with CALO-HCAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Velo dE/dx info
     const bool hasDEDX = proto->hasInfo(LHCb::ProtoParticle::VeloCharge);
     if ( hasDEDX ) { ++tally.velodEdxTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasDEDX,
+               type.str()+"protosWithVELOdEdx",
                "% ProtoParticles with VELO dE/dx info V Momentum", 0*GeV, 100*GeV, 100 );
 
   }

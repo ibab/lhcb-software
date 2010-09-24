@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ChargedProtoParticleMoni
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleMoni.h,v 1.1 2009-08-29 20:37:19 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */
@@ -15,9 +12,13 @@
 #ifndef GLOBALRECO_ChargedProtoParticleMoni_H
 #define GLOBALRECO_ChargedProtoParticleMoni_H 1
 
+// STL
+#include <sstream>
+
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/Track.h"
