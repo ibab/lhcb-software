@@ -21,7 +21,7 @@ multiSeqB = MultiSelectionSequence('CocktailB', Sequences = [pions, muons, kaons
 multiSeqC = MultiSelectionSequence('CocktailC', Sequences = [muons, pions, kaons])
 
 conf = SelDSTWriter("MicroDST0")
-conf.OutputFileSuffix = "TestAll"
+conf.OutputFileSuffix = "TestAll2"
 conf.SelectionSequences = [multiSeqA, multiSeqB, multiSeqC]
 #conf.SelectionSequences = [pions]
 #conf.SelectionSequences = [kaons, pions, muons]

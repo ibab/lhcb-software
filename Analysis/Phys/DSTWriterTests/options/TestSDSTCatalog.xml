@@ -12,4 +12,221 @@
 </logical>
 </File>
 
+  <File ID="D61E7112-5EC5-DF11-AD98-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.CocktailA.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D02FA014-5EC5-DF11-AD98-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.CocktailB.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="0C2AA614-5EC5-DF11-AD98-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.CocktailC.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="A6F822BA-69C5-DF11-951D-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll2.CocktailA.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="CE6D3EBB-69C5-DF11-951D-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll2.CocktailB.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="263D44BB-69C5-DF11-951D-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll2.CocktailC.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="FC9839FF-38C7-DF11-9A84-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.SeqKaons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="78E98900-39C7-DF11-9A84-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.SeqPions.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="0AEBA50A-39C7-DF11-9A84-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.SeqMuons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="18A919E7-49C7-DF11-B240-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="TestAll.SeqMuons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="6E74E3CA-4DC7-DF11-B211-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="Cool.SeqKaons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="1A579FCB-4DC7-DF11-B211-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="Cool.SeqPions.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="02D9A4D4-4DC7-DF11-B211-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="Cool.SeqMuons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="7C5A8CC2-DBC7-DF11-9218-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="SelDST.SeqKaons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D06CC5C3-DBC7-DF11-9218-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="SelDST.SeqPions.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="0EC0F8D6-DBC7-DF11-9218-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="SelDST.SeqMuons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="AC2B5629-DCC7-DF11-9E82-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="MDST.SeqKaons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="F8B88F2A-DCC7-DF11-9E82-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="MDST.SeqPions.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="36762C3D-DCC7-DF11-9E82-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="MDST.SeqMuons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="F245A70B-E4C7-DF11-AC39-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="STRIP.SeqKaons.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="E699CC0C-E4C7-DF11-AC39-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="STRIP.SeqPions.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="FA1E1D1E-E4C7-DF11-AC39-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="STRIP.SeqMuons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="AEB3E654-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Calibration.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="820B4557-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.MiniBias.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="CACB265E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Bhadron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="AEF1765E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Charm.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D2EDB55E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Dielectron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="7A64BA5E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Dimuon.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="A003F05E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Semileptonic.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="628AFC5E-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.Radiative.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D803085F-EBC7-DF11-8C11-001B783C93CF">
+    <physical>
+      <pfn filetype="ROOT_All" name="01234567.EW.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
