@@ -39,8 +39,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types
        ,"UseLumiLow"    : False      # flag to use the LumiLow event for counting
-       ,"OutputLevel"   : INFO       
-        }
+       ,"OutputLevel"   : INFO
+       ,"Simulation"    : False      # flag to indicate simulated data
+       }
 
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
@@ -52,6 +53,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"BXTypes"       : "bunch crossing types [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] "
        ,"UseLumiLow"    : "flag to use the LumiLow event for counting [False]"
        ,"OutputLevel"   : "printed output"
+       ,"Simulation"    : "flag to indicate simulated data [False]"
        }
     
     ## Helper functions
@@ -82,10 +84,11 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                OutputLevel = self.getProp("OutputLevel") )
             seqMembers.append( methodfilter )
 
-            accounting = LumiAccounting('LumiCount'+i,
-                                        OutputDataContainer = "/FileRecords/LumiFSR"+i,
-                                        OutputLevel = self.getProp("OutputLevel") )
-            seqMembers.append( accounting )
+            if not self.getProp("Simulation"):
+                accounting = LumiAccounting('LumiCount'+i,
+                                            OutputDataContainer = "/FileRecords/LumiFSR"+i,
+                                            OutputLevel = self.getProp("OutputLevel") )
+                seqMembers.append( accounting )
             
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 
                                              Members = seqMembers,
@@ -124,10 +127,11 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                OutputLevel = self.getProp("OutputLevel") )
             seqMembers.append( methodfilter )
             
-            accounting = LumiAccounting('LumiLowCount'+i,
-                                        OutputDataContainer = "/FileRecords/LumiLowFSR"+i,
-                                        OutputLevel = self.getProp("OutputLevel") )
-            seqMembers.append( accounting )
+            if not self.getProp("Simulation"):
+                accounting = LumiAccounting('LumiLowCount'+i,
+                                            OutputDataContainer = "/FileRecords/LumiLowFSR"+i,
+                                            OutputLevel = self.getProp("OutputLevel") )
+                seqMembers.append( accounting )
             
             BXMembers.append( GaudiSequencer('LumiLow'+i+'Seq', 
                                              Members = seqMembers,
