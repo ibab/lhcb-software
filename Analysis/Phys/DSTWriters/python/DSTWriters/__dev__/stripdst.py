@@ -1,12 +1,11 @@
 """
-Write a DST for a single selection sequence. Writes out the entire
-contents of the input DST
+Default configuration for stripping DST.
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.4 2010-08-05 10:14:53 jpalac Exp $"
+
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-__all__ = ('selDSTElements',
-           'selDSTStreamConf')
+__all__ = ('stripDSTElements',
+           'stripDSTStreamConf')
 
 from GaudiConf.Configuration import *
 from Configurables import InputCopyStream
@@ -14,9 +13,9 @@ from Configurables import InputCopyStream
 from streamconf import OutputStreamConf
 from microdstelements import CloneParticleTrees, ClonePVRelations
 
-def selDSTElements() :
+def stripDSTElements() :
     return[CloneParticleTrees(copyProtoParticles = False),
            ClonePVRelations("Particle2VertexRelations",True)]
 
-def selDSTStreamConf() :
+def stripDSTStreamConf() :
     return OutputStreamConf(streamType = InputCopyStream)
