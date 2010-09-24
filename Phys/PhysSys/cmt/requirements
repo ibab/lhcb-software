@@ -35,6 +35,9 @@ use LoKiPhys                    v9r3p1   Phys    # Vanya Belyaev
 use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r0     Phys    # Vanya Belyaev
 
+#===================================================================
+use TisTosTobbing		v6r0	 Phys	 # Tomasz Skwarnicki
+
 # Declare this as a container package
 apply_pattern container_package
 
