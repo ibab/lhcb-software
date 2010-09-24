@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r32 2010-07-26 ==========================
 ! 2010-09-09 - Chris Jones
  - Add new "Wide" photon selection, that enlarges the selection a bit, in 
    order to get more of the tails. The idea is it provides a loose enough 
