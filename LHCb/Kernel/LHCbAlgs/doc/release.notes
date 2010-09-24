@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Marco Clemencic
+ - Added forgotten dependency on Event/RecEvent
+
 ! 2010-09-23 - Marco Clemencic
  - Added an implementation of IEventTimeDecoder (TimeDecoderList) that uses a
    list of IEventTimeDecoder instances (returning the first non-zero time
