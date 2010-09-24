@@ -204,7 +204,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
     if( iFitTr->weight > m_minTrackWeight) {
       outTracks++;
-      chi2 += iFitTr->chi2;
+      chi2 += iFitTr->chi2 * iFitTr->weight ;
       nDoF += 2;
     }
   }

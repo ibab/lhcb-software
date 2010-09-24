@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Mariusz Witek
+- include track weights in vertex chi2 calculation
+
 ! 2010-09-22 - Mariusz Witek
 - store float weights instead of double
 

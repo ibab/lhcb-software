@@ -531,7 +531,7 @@ void SimplePVFitter::setChi2(LHCb::RecVertex& vtx,
   for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
       itrack != pvTracks.end(); itrack++) {  
     if((*itrack)->weight > m_acceptTrack) {
-      chi2 += (*itrack)->chi2;
+      chi2 += (*itrack)->chi2 * (*itrack)->weight;
       nDoF += 2;
     }
   }
