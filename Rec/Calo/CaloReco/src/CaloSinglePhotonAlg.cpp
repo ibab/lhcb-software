@@ -99,9 +99,9 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
       m_hypotoolsTypeNames  , 
       "List of generic Hypo-tools to apply to newly created hypos") ;
   
-  m_correctionsTypeNames2.push_back ( "CaloECorrecrion/ECorrection" ) ;
-  m_correctionsTypeNames2.push_back ( "CaloSCorrecrion/SCorrection" ) ;
-  m_correctionsTypeNames2.push_back ( "CaloLCorrecrion/LCorrection" ) ;
+  m_correctionsTypeNames2.push_back ( "CaloECorrection/ECorrection" ) ;
+  m_correctionsTypeNames2.push_back ( "CaloSCorrection/SCorrection" ) ;
+  m_correctionsTypeNames2.push_back ( "CaloLCorrection/LCorrection" ) ;
   
   declareProperty 
     ( "CorrectionTools2"       , 

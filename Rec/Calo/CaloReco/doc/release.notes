@@ -7,6 +7,9 @@
 ! -----------------------------------------------------------------------------
 
 - 2010-09-23 - Olivier Deschamps :
+ - SinglePhotonAlg : fix typo in default setting
+
+- 2010-09-23 - Olivier Deschamps :
   - CaloCorrection : 
     - add new functions in CaloCorrectionBase
     - adapt CaloLCorrection to the new correction framework (adapt options and configurable)

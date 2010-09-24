@@ -36,7 +36,7 @@ def eCorrection ( ecorr , version = None ) :
     # ============================================================================
     #                      function   #params      Outer         Middle       Inner 
     # ============================================================================
-    ecorr.Parameters[ "alphaG"] = [ 0      ,     1    ,               1.0          , 1.0         ,  1.0           ]
+    ecorr.Parameters["alphaG"] = [ 0      ,     1    ,               1.0          , 1.0         ,  1.0           ]
     ecorr.Parameters["alphaE"]  = [ 0      ,     2    ,               1.0105       , 1.0208      ,  1.0325 ,  0.11561E-06  , 0.33802E-07 , -0.28272E-07   ]
     ecorr.Parameters["alphaB"]  = [ 0      ,     2    ,               1.0159       , 1.0210      ,  1.0256 , -0.67500E-01  ,-0.78525E-01 , -0.8901E-01    ]
     ecorr.Parameters["alphaX"]  = [ 0      ,     2    ,        1,1,1, 0.     , 0.0171 ,  0.0315    ]
@@ -91,10 +91,10 @@ def lCorrection ( lcorr , version = None ) :
     >>> tool = ...
     >>> lCorrection ( tool )
     """    
-    lcorr.Parameters[ "gamma0"] = [ 1      ,     1    ,     22.305 ,    19.053  ,  17.936 ]
-    lcorr.Parameters[ "gammaP"] = [ 2      ,     2    ,      2.04  ,     1.53   ,   1.15  , -0.0281, -0.455, -0.0392]
-    lcorr.Parameters[ "delta0"] = [ 1      ,     1    ,     49.04  ,     51.87  ,  45.54  ]
-    lcorr.Parameters[ "deltaP"] = [ 2      ,     2    ,      4.38  ,      4.15  ,   4.02  , -0.0247,    -0.0597 ,  -0.0308 ]
+#    lcorr.Parameters["gamma0"] = [ 1      ,     1    ,     22.305 ,    19.053  ,  17.936 ]
+#    lcorr.Parameters["gammaP"] = [ 2      ,     2    ,      2.04  ,     1.53   ,   1.15  , -0.0281, -0.455, -0.0392]
+#    lcorr.Parameters["delta0"] = [ 1      ,     1    ,     49.04  ,     51.87  ,  45.54  ]
+#    lcorr.Parameters["deltaP"] = [ 2      ,     2    ,      4.38  ,      4.15  ,   4.02  , -0.0247,    -0.0597 ,  -0.0308 ]
     
     ##
     log.info ('Configure L-Corrections for Ecal hypotheses: %s' % lcorr.name () ) 
