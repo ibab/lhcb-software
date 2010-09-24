@@ -45,8 +45,9 @@
 # |-OutputLevel       = 1  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
+# |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x640bb90>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x71d3260>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
@@ -81,7 +82,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v37r7
-                                          running on volhcb27.cern.ch on Thu Sep 23 15:07:07 2010
+                                          running on volhcb27.cern.ch on Fri Sep 24 15:52:43 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -366,28 +367,6 @@ FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7
 FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
 FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
-PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >
-PoolDbBaseCnv       DEBUG {ID=000634BD-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/LumiFSRBeam2
 FileRecordDataSvc VERBOSE Requested object /FileRecords/225D08B8-656A-DF11-89C9-001E4F3DD7AB/TimeSpanFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634C0-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
@@ -1170,8 +1149,8 @@ ToolSvc.Sequenc...   INFO ------------------------------------------------------
 ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.052 |     0.039 |    0.013       0.1 |      97 |     0.004 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.004 |    0.002       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.012 |    0.011       0.0 |      97 |     0.001 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -1184,7 +1163,7 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.126242(+-1.49362)/0/20.997[ms] Total:0.024996[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0656465(+-0.65183)/0/8.999[ms] Total:0.012998[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.

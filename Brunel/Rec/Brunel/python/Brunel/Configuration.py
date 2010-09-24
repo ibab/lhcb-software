@@ -226,7 +226,7 @@ class Brunel(LHCbConfigurableUser):
 
             # Prepare the FSR
             if self.getProp("WriteFSR"):
-                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
+                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType","Simulation"])
                 lumiCounters = GaudiSequencer("LumiCounters")
                 lumiSeq.Members += [ lumiCounters ]
                 LumiAlgsConf().LumiSequencer = lumiCounters
