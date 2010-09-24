@@ -367,8 +367,6 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << "MuonIDAlg v7r8" << endmsg;
-
   info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
   info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
 

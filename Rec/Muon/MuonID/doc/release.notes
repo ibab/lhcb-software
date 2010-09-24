@@ -1,6 +1,12 @@
 ! Package     : MuonID
-! Responsible : Erica Polycarpo, Miriam Gandelman
+! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
+
+! 2010-09-14 - Helder Lopes
+ - Supressed a few printouts (Savannah bug 64670)
+ - Replaced contact persons for the MuonID code to Alessio Sarti and Helder Lopes
+
+!======================== MuonID v7r9p1 2010-09-14 =============================
 
 !======================== MuonID v7r9 2010-07-20 =============================
 ! 2010-07-19 - Chris Jones

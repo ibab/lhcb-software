@@ -16,7 +16,7 @@ tanhScaleFactorsR4 = [ 73.2,14.8,8.7,4.9, 2.3]
 # (So, only distfac makes it different for a given p-bin)
 nDistBins = 50
 
-#print "Loading tanh parameterss for signal muons distributions" 
+#print "Loading tanh parameters for signal muons distributions" 
 # Automatically printed by perfDLL::ReadDLLPar()
 # Signal muons:
 #Region 1 ( 3 < p < 10 ):
@@ -86,7 +86,7 @@ tanhCumulHistoMuonR4_4 = [0, 0.0225046, 0.0672619, 0.138107, 0.215025, 0.286178,
 tanhCumulHistoMuonR4_5 = [0, 0.00325542, 0.0188308, 0.0549134, 0.102322, 0.152576, 0.205345, 0.266301, 0.325094, 0.385836, 0.438878, 0.489776, 0.53925, 0.584378, 0.626796, 0.668103, 0.705082, 0.7375, 0.766136, 0.790815, 0.814441, 0.834227, 0.851771, 0.868107, 0.8822, 0.895164, 0.90569, 0.915456, 0.924599, 0.932455, 0.938868, 0.945457, 0.951325, 0.956412, 0.960993, 0.964931, 0.969356, 0.972787, 0.975594, 0.978421, 0.98154, 0.984093, 0.986588, 0.988674, 0.991013, 0.992904, 0.994698, 0.996472, 0.997895, 0.99922]
 
 
-#print "Loading tanh parameterss for non muons distributions" 
+#print "Loading tanh parameters for non muons distributions" 
 # Non muons:
 # From file DVNv22r3_tanh_jpsi-bbinc-closest-isMuonLoose-cumulative-AllMom-PerfDLL.log_options-file-AllMom
 #Region 1 ( 3 < p < 10 ):
