@@ -70,8 +70,9 @@ selDST0Seq = conf.sequence()
 dv = DaVinci()
 dv.DataType = '2010'
 dv.InputType = 'SDST'
-dv.EvtMax = -1
+dv.EvtMax = 2000
 #dv.UserAlgorithms = [multiSeqA.sequence(), multiSeqB.sequence(), selDST0Seq]
 dv.UserAlgorithms = [conf.sequence()]
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
-FileCatalog().Catalogs =['xmlcatalog_file:TestSDSTCatalog.xml']
+importOptions("Reco05-Stripping09_SDSTs.py")
+#EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+#FileCatalog().Catalogs =['xmlcatalog_file:TestSDSTCatalog.xml']
