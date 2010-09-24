@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-09-24 - Stephanie Hansmann-Menzemer
+ - add fix to OT expected hits
 
 ! 2010-09-24 - Chris Jones
  - For convenience, as Track P and Pt values to information printed by

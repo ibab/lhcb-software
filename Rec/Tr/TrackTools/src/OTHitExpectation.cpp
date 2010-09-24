@@ -108,14 +108,23 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
     LHCb::OTChannelID testChan = channelHint((*iterL)->elementID(),ids);
     OTPairs output;
 
-    // try both sectors...
-    for (unsigned int iSector = 3; iSector <=4; ++iSector){
-      StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
-      if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
-      }  
-    }  // sectors
 
+    if (testChan.module() == 0){
+	// try both sectors...
+	for (unsigned int iSector = 3; iSector <=4; ++iSector){
+	    StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
+	    if (sc.isFailure()){
+		Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
+	    }  
+	}  // sectors
+    }
+    else {
+	StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, 0);    
+	if (sc.isFailure()){
+            Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
+        }
+    }
+    
     for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
 
       std::vector<LHCbID>::const_iterator lIter = otHits.begin();
@@ -156,13 +165,22 @@ void OTHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCb
     LHCb::OTChannelID testChan = channelHint((*iterL)->elementID(),ids);
     OTPairs output;
 
-    // try both sectors...
-    for (unsigned int iSector = 3; iSector <=4; ++iSector){
-      StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
-      if (sc.isFailure()){
-        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
-      }  
-    }  // sectors
+
+    if (testChan.module() == 0){	
+	// try both sectors...
+	for (unsigned int iSector = 3; iSector <=4; ++iSector){
+	    StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
+	    if (sc.isFailure()){
+		Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
+	    }  
+	}  // sectors
+    }
+    else {
+        StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, 0);
+        if (sc.isFailure()){
+            Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1).ignore();
+        }
+    }
 
     ids.reserve(output.size());
     for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
