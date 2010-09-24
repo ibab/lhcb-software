@@ -1,6 +1,46 @@
 """
-Write a DST for a single selection sequence. Writes out the entire
-contents of the input DST
+DST-writing ConfigurableUser classes and default configuration parameter
+sets for three standard use-cases. Every configuration is possible via
+SelDSTWriter.
+
+Exported symbols:
+
+    * ConfigurableUsers:
+       'SelDSTWriter'   - The base class doing all the work.
+       'MicroDSTWriter' - special configuration of SelDSTWriter.
+       'StripDSTWriter' - special configuration of SelDSTWriter.
+    * default output stream parameters:
+       'selDSTStreamConf'
+       'microDSTStreamConf'
+       'stripDSTStreamConf'
+    * default sets of items for MicroDST partition.
+       'selDSTElements'
+       'microDSTElements'
+       'stripDSTElements'
+
+Example of useage:
+
+from DSTWriters.__dev__.microdstelements import *
+from DSTWriters.__dev__.Configuration import *
+
+defaultElements = selDSTElements()
+
+stripElements = stripDSTElements()
+
+microElements = defaultElements + [CloneLHCbIDs(),
+                                  ReFitAndClonePVs()]
+
+
+streamConf = {'default' : stripDSTStreamConf(),
+              muons.name(): microDSTStreamConf()}
+
+conf = SelDSTWriter('SelDST',
+                    StreamConf = streamConf,
+                    MicroDSTElements = {'default' : stripElements,
+                                        muons.name() : microElements},
+                    OutputFileSuffix = 'Test',
+                    SelectionSequences = [...])
+
 """
 
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
