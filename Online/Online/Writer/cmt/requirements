@@ -13,8 +13,8 @@ use MDF           v* DAQ
 apply_pattern install_more_includes more=Writer
 library Writer *.cpp -import=DAQEvent -import=ROOT
 
-application  monitorreaderd ../reader/*.cpp
-macro_append monitorreaderd_dependencies " Writer "
+##application  monitorreaderd ../reader/*.cpp
+##macro_append monitorreaderd_dependencies " Writer "
 
 apply_pattern linker_library library=Writer
 apply_pattern ld_library_path
@@ -27,4 +27,4 @@ macro_append lib_Writer_cppflags " -DBUILD_WRITER=1"\
  slc3-ia32&gcc323                ""
 
 macro_append Writer_shlibflags      " -lrt " WIN32 ""
-macro_append monitorreaderdlinkopts " -lrt " WIN32 ""
+##macro_append monitorreaderdlinkopts " -lrt " WIN32 ""
