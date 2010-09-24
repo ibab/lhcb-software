@@ -5,6 +5,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================== CaloPIDs v5r8 2010-09-24 ========================
 ! 2010-09-20 - Olivier Deschamps
   - CaloPhotonIdALg :  fix unchecked StatusCode
 
