@@ -117,6 +117,8 @@ StatusCode TupleToolTrigger::fillVerbose( Tuples::Tuple& tuple )
   {
     test&=fillHlt(tuple, "Hlt2");
   }
+
+  fillRoutingBits(tuple);
   
   return StatusCode(test);
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Patrick Koppenburg
+ - Restore ReoutingBits in TupleToolTrigger. They got lost somehow.
+
 ! 2010-09-09 - Patrick Koppenburg
  - Add VeloLiteClusters to TupleToolRecoStats
 
