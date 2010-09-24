@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-24-09 - Johan Blouw
+ - initialized all histogram pointers to NULL in OTTrackMonitor and OTHitEfficiencyMonitor
+
 ! 2010-09-24 - Patrick Koppenburg
  - Add a PV z plot with very wide range
 

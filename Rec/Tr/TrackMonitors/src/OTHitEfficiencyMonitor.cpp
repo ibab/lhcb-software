@@ -224,6 +224,8 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   if(!m_isOnline)
     m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
                                            -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
+  else 
+    m_efficiencyPerOtisPr = NULL;
   m_moduleHistograms.reserve(9) ;
   m_layerHistograms.reserve(12) ;
 

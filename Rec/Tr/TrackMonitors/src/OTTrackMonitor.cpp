@@ -100,7 +100,7 @@ private:
   void plotHist2D( AIDA::IHistogram2D* hist, double x, double y, double weight);
   void plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight);
   void setNormalization(AIDA::IHistogram1D* hist);
-
+  void initPointers(int index);
   enum
   {
     NumUniqueStation = 3,
@@ -151,10 +151,27 @@ DECLARE_ALGORITHM_FACTORY( OTTrackMonitor );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg( name , pSvcLocator ),
-                               m_projector("TrajOTProjector"),
-                               m_decoder("OTRawBankDecoder"),
-                               m_numEvents(0)
+OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator): 
+  GaudiHistoAlg( name , pSvcLocator ),
+  m_projector("TrajOTProjector"),
+  m_decoder("OTRawBankDecoder"),
+  m_numEvents(0),
+  profileTimeResidualVsModuleGood(NULL),
+  profileResidualPullVsModule(NULL),
+  profileTimeResidualVsDistance(NULL),
+  profileResidualVsDistance(NULL),
+  profileResidualPullVsDistance(NULL),
+  profileTimeResidualVsDistanceGood(NULL),
+  profileResidualVsDistanceGood(NULL),
+  profileResidualPullVsDistanceGood(NULL),
+  histModuleOutlierOccupancy(NULL),
+  histOtisHitOccupancy(NULL),
+  histOtisHotOccupancy(NULL),
+  histAverageTimeResidual(NULL),
+  histAverageTimeResidualVsMomentum(NULL),
+  histDeltaToF(NULL),
+  m_driftTimeUse(NULL),
+  histEventAverageTimeResidual(NULL)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default );
   declareProperty( "Projector", m_projector ) ;
@@ -208,6 +225,27 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
    
 }
 
+void OTTrackMonitor::initPointers(int index) {
+  hists[index][HIST_DRIFTTIME] = NULL;
+  hists[index][HIST_RESIDUAL] = NULL;
+  histXY[index] = NULL;
+  histRT[index] = NULL;
+  
+  hists[index][HIST_DRIFTRADIUS] = NULL;
+  hists[index][HIST_TRACK_DISTANCE] = NULL;
+  hists[index][HIST_DRIFTTIME_RESIDUAL] = NULL;
+  
+  hists[index][HIST_RESIDUAL_PULL] = NULL;
+  
+  hists[index][HIST_GOOD_DRIFTTIME] = NULL;
+  hists[index][HIST_GOOD_DRIFTRADIUS] = NULL;
+  hists[index][HIST_GOOD_TRACK_DISTANCE] = NULL;
+  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = NULL;
+  hists[index][HIST_GOOD_RESIDUAL] = NULL;
+  hists[index][HIST_GOOD_RESIDUAL_PULL] = NULL;
+  histAverageTimeResidualVsY[index] = NULL;
+
+}
 
 //=============================================================================
 // Initialization
@@ -224,6 +262,10 @@ StatusCode OTTrackMonitor::initialize()
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   m_pitchtool = tool<IPitchResTool>("PitchResTool");
 
+  // initialize *all* pointers to NULL:
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++)
+    initPointers(4 * s + l);
+  
   setHistoTopDir("OT/");
 
   switch(m_granularity)
