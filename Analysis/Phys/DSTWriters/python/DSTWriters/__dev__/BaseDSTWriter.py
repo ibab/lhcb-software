@@ -2,17 +2,22 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.10 2010-08-30 11:20:27 jpalac Exp $"
+
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer
+__all__ = ('BaseDSTWriter',
+           'baseDSTStreamConf')
 
-from DSTWriters.dstwriters import DSTWriterSelectionSequence
-from DSTWriters.streamconf import defaultDSTWriterConf
-from DSTWriters.dstwriterutils import MicroDSTElementList
+from GaudiConf.Configuration import *
+from Configurables import GaudiSequencer, InputCopyStream
+
+from dstwriters import DSTWriterSelectionSequence
+from dstwriterutils import MicroDSTElementList
+from streamconf import OutputStreamConf
 from copy import copy
+
+def baseDSTStreamConf() :
+    return OutputStreamConf(streamType = InputCopyStream)
 
 class BaseDSTWriter(ConfigurableUser) :
     """
@@ -23,7 +28,7 @@ class BaseDSTWriter(ConfigurableUser) :
         "OutputFileSuffix"           : "Sel"
         , "SelectionSequences"       : []
         , "WriteFSR"                 : True
-        , "StreamConf"               : {'default' :baseDSTWriterConf()}
+        , "StreamConf"               : {'default' : baseDSTStreamConf()}
         , "MicroDSTElements"         : {'default' : []}
         }
 
