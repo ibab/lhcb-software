@@ -15,6 +15,8 @@ use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
 use StrippingConf        v*     Phys
 use PhysSelPython        v*     PhysSel
+use TisTosTobbing	 v*	Phys
+
 private
 use LHCbAlgs             v*     Kernel  
 end_private
