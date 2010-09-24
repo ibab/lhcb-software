@@ -4,6 +4,28 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Juan Palacios
+ - Major re-structuring of DSTWriters.__dev__ module.
+  . Main configurable is SelDSTWriter. MicroDSTWriter and StripDSTWriter
+    provided for default behaviour, but is is possible to co everything
+    via configuration of SelDSTWriter. Default "elements" and "stream conf"
+    functions are provided to controll the items going into the MicroDST
+    partition and the OutputStream configuration respectively. Relevant
+    symbols from DSTWriters.__dev__.Configuration:
+
+    * ConfigurableUsers:
+	     'SelDSTWriter'
+  	   'MicroDSTWriter'
+       'StripDSTWriter'
+    * default output stream parameters:
+       'selDSTStreamConf'
+       'microDSTStreamConf'
+       'stripDSTStreamConf'
+    * default sets of items for MicroDST partition.
+       'selDSTElements'
+       'microDSTElements'
+       'stripDSTElements'
+
 ! 2010-09-23 - Juan Palacios
  - python/DSTWriters/dstwriters.py
  - python/DSTWriters/streamconf.py
