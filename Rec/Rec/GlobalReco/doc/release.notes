@@ -4,7 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-!========================== GlobalReco v6r32p2 2010-09-24 =====================
+!========================== GlobalReco v6r33 2010-09-24 =====================
 ! 2010-09-22 - Marco Cattaneo
  - Remove RichPIDsFromProtoParticlesAlg, MuonPIDsFromProtoParticlesAlg,
    ChargedProtoParticleAddRichInfo, ChargedProtoParticleAddMuonInfo,
