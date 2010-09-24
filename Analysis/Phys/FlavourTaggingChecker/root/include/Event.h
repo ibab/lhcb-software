@@ -20,31 +20,30 @@ using namespace std;
  */
 class Event {
 
- public:
- Event( ):
-  m_SignalParts(10),
+public:
+  Event( ):
+    m_SignalParts(10),
     m_Particles(200),
-    m_vertices(200)
-      {  
-	m_eventNr=m_runNr=0;
-	m_hasOscillated=0, m_Multiplicity=0;
-	m_eventType=0; m_L0=0; m_Hlt1=0; m_Hlt2=0; m_TrueTag=0;
-	m_L0TisTos=0; m_HltTisTos=0; m_backgroundCat=-1;
-	m_StdOmega=0.5; m_StdTag=0; m_StdTagCat=0; m_Btau=0; m_BtauErr=-1; 
-	m_SecVtxChi2=0; m_SecVtxCharge=0; m_pileup=0;
-	m_SecVtxVector=m_RecVertex=m_MCVertex=m_BSVertex=TVector3(0,0,0);
-	m_TaggersFromDV=0; m_TaggersDecisionFromDV=0;
-	m_SignalB=m_OppositeB=NULL;
-	m_SignalParts.clear(); 
-	m_Particles.clear();   
-	m_vertices.clear();    
-	m_TauChi2=0;
-	m_ProcessNr=0;
-      } ///< Constructor
+    m_Seeds(20),
+    m_SVertices(20)
+  {  
+    m_eventNr=m_runNr=0;
+    m_hasOscillated=0, m_Multiplicity=0;
+    m_eventType=0; m_L0=0; m_Hlt1=0; m_Hlt2=0; m_TrueTag=0;
+    m_L0TisTos=0; m_HltTisTos=0; m_backgroundCat=-1;
+    m_StdOmega=0.5; m_StdTag=0; m_StdTagCat=0; m_Btau=0; m_BtauErr=-1; 
+    m_SecVtxChi2=0; m_SecVtxCharge=0; m_pileup=0;
+    m_RecVertex=m_MCVertex=m_BSVertex=TVector3(0,0,0);
+    m_TaggersFromDV=0; m_TaggersDecisionFromDV=0;
+    m_SignalB=m_OppositeB=NULL;
+    m_SignalParts.clear(); 
+    m_Particles.clear();   
+    m_Seeds.clear();    
+    m_SVertices.clear();    
+    m_TauChi2=0;
+    m_ProcessNr=0;
+  } ///< Constructor
 
- /*  Event(const Event& p) { */
-/*     *this = p; */
-/*   }///< copy constructor */
 
   ~Event( ){
     Particles::iterator i;
@@ -55,7 +54,7 @@ class Event {
       if(*i) delete (*i);
     }
     Vertices::iterator iv;
-    for(iv=m_vertices.begin();iv!=m_vertices.end(); ++iv){
+    for(iv=m_SVertices.begin();iv!=m_SVertices.end(); ++iv){
       if(*iv) delete (*iv);
     }
     if(m_OppositeB) delete m_OppositeB;
@@ -94,17 +93,16 @@ class Event {
       /m_SignalB->p() /0.299792458;
   }///< signal B proper time calculated from PV and B decay point distances
 
-  TVector3 SecVtxVector() { return m_SecVtxVector; }///< position of SV
-  double SecVtxChi2()     { return m_SecVtxChi2; }///< SV chi2
-  double SecVtxCharge()   { return m_SecVtxCharge; }///< charge of SV
 
   Particles particles()   { return m_Particles; }///< retrieve all tagger candidates
 
   int taggersFromDV() { return m_TaggersFromDV;}///< retrieve taggers flag as calculated in DaVinci
   int taggersDecisionFromDV() { return m_TaggersDecisionFromDV;}///< retrieve taggers flag  decisions as calculated in DaVinci
 
-  Vertices getVertices()    {return m_vertices; } ///< get Vertices in event
-  bool hasSecondaryVertex() { return !m_vertices.empty(); }///< event has a SV
+  Vertices getSeeds()      {return m_Seeds; } ///< get Seed in event
+  bool hasSecondaryVertexSeed() { return !m_Seeds.empty(); }///< event has a SV
+
+  Vertices getSecondaryVertices() {return m_SVertices; } ///< get SVertices in event
 
 
   //Signal
@@ -171,10 +169,6 @@ class Event {
   void setBtau(double a)      {  m_Btau = a; }
   void setBtauErr(double a)   {  m_BtauErr = a; };
 
-  void setSecVtxVector(TVector3 a) {  m_SecVtxVector = a; }
-  void setSecVtxChi2(double a)     {  m_SecVtxChi2 = a; }
-  void setSecVtxCharge(double a)   {  m_SecVtxCharge = a; }
-
   void setSignalParts(Particles a){  m_SignalParts = a; }
   void setSignalB(Particle* a)   {  m_SignalB = a; }
   void setOppositeB(Particle* a) {  m_OppositeB = a; }
@@ -186,8 +180,9 @@ class Event {
 
   void setpileup(int a)  {  m_pileup  = a; }
 
-  void setVertices(Vertices a) {m_vertices = a;}
-  
+  void setSeeds(Vertices a) {m_Seeds = a;}
+  void setSecondaryVertices(Vertices a) {m_SVertices = a;}
+
   void setTaggersFromDV(int a ) {m_TaggersFromDV=a;}
   void setTaggersDecisionFromDV(int a ) {m_TaggersDecisionFromDV=a;}
 
@@ -199,21 +194,21 @@ class Event {
 
   void Print() {
     //if(DBGLEVEL<3) {
-      cout<< "=================================================== "
-	  << m_runNr << " " << m_eventNr <<endl;
-      cout<< "TAG EVENT: "<<m_runNr<< "   " << m_eventNr<<endl;
-      cout<< "           Trig="<< m_Hlt2<<m_Hlt1<<m_L0
-	  <<"   multip="<<m_Multiplicity
-	  << "   L0TisTos=" << m_L0TisTos
-	  << "   bkgCat=" << m_backgroundCat<<endl;
-      cout<< "           RecPV_z="<< m_RecVertex.z()
-	  << "   OppoB.ID=" << (m_OppositeB!=NULL? m_OppositeB->ID():0)
-	  << "   Oscill=" <<m_hasOscillated<<endl;
-      //}
+    cout<< "=================================================== "
+        << m_runNr << " " << m_eventNr <<endl;
+    cout<< "TAG EVENT: "<<m_runNr<< "   " << m_eventNr<<endl;
+    cout<< "           Trig="<< m_Hlt2<<m_Hlt1<<m_L0
+        <<"   multip="<<m_Multiplicity
+        << "   L0TisTos=" << m_L0TisTos
+        << "   bkgCat=" << m_backgroundCat<<endl;
+    cout<< "           RecPV_z="<< m_RecVertex.z()
+        << "   OppoB.ID=" << (m_OppositeB!=NULL? m_OppositeB->ID():0)
+        << "   Oscill=" <<m_hasOscillated<<endl;
+    //}
   } ///< printout event information
 
 
- private:
+private:
 
   bool      m_hasOscillated;
   int       m_eventType, m_L0, m_Hlt1, m_Hlt2, m_TrueTag, m_pileup;
@@ -221,10 +216,10 @@ class Event {
   int       m_TaggersFromDV, m_TaggersDecisionFromDV;
   double    m_StdOmega, m_StdTag, m_StdTagCat, m_Btau, m_BtauErr; 
   double    m_SecVtxChi2, m_SecVtxCharge, m_TauChi2;
-  TVector3  m_SecVtxVector, m_RecVertex, m_BSVertex, m_MCVertex;
+  TVector3  m_RecVertex, m_BSVertex, m_MCVertex;
   Particles m_SignalParts, m_Particles;
   Particle  *m_SignalB, *m_OppositeB;
-  Vertices  m_vertices;
+  Vertices  m_Seeds, m_SVertices;
   int       m_ProcessNr, m_eventNr, m_runNr;
 
 };

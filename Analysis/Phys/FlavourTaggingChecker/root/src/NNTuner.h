@@ -54,8 +54,9 @@ class NNTuner {
   TString name;
 
   Int_t   iscorrect,tagger;
-  Float_t mult,ptB,partP,partPt,IPPV,nndeta,nndphi,nndq;
-
+  Float_t mult,ptB,partP,partPt,IPPV,nndeta,nndphi,nndq, nnkrec;
+  Float_t vflag, ptmin, ipsmin, docamax, maxprobf, vratio, vcharge;
+  
 };
 
 #endif 

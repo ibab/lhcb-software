@@ -29,21 +29,28 @@ class Vertex {
     m_chisquare=0;
     m_likelihood=0;
     m_motherpart=NULL;
-  }
+
+    m_Vflagged=0;
+    m_Vptmin=0;
+    m_Vipsmin=0;
+    m_Vdocamax=0;
+    m_Vratio=0;
+    m_VCharge=0;
+
+ }
   ~Vertex( ){} ///< Destructor
  
-  enum Type{ Primary  = 1,
-	     Pileup   = 2,
-	     Secondary= 3,
-	     Seed     = 4,
-	     none     = 0
+  enum Type{ 
+    Primary  = 1,
+    Pileup   = 2,
+    Secondary= 3,
+    Seed     = 4,
+    none     = 0
   };
 
-  int  type()          { return m_type ; }///< return type of vertex
+  int  type()         { return m_type ; }///< return type of vertex
   double chi2PerDoF() { return m_chisquare; } ///< chi2 per degree of freedom 
-  double likelihood() { 
-    if(m_type!=4) cout<<"calling likelihood for non-seed vertex.."<<endl;
-    return m_likelihood; 
+  double likelihood() { return m_likelihood; 
   }   ///< returns a likelihood value if the vertex is of type Seed
 
   int nrofdaughters() { return m_outgoingParticles.size(); }///< number of daughters
@@ -52,6 +59,14 @@ class Vertex {
   bool isPileup()    {return m_type==2? true:false; }///< is a Pileup Vertex
   bool isSecondary() {return m_type==3? true:false; }///< is a Secondary Vertex
   bool isSeed()      {return m_type==4? true:false; }///< is a Vertex from seeding algorithm
+
+  double getVflagged() {return m_Vflagged;}
+  double getVptmin() {return m_Vptmin;}
+  double getVipsmin() {return m_Vipsmin;}
+  double getVdocamax() {return m_Vdocamax;}
+  double getVratio() {return m_Vratio;}
+  double getVCharge() {return m_VCharge;}
+    
 
   TVector3 position() { return m_position ; }///< position in space wrt to PV
 
@@ -69,6 +84,13 @@ class Vertex {
   void setOutgoingParticles(Particles a) {m_outgoingParticles=a;}
   void setMotherParticle(Particle* a) {m_motherpart=a;}
 
+  void setVflagged(double a) { m_Vflagged=a;}
+  void setVptmin(double a)   { m_Vptmin=a;}
+  void setVipsmin(double a)  { m_Vipsmin=a;}
+  void setVdocamax(double a) { m_Vdocamax=a;}
+  void setVratio(double a)   { m_Vratio=a;}
+  void setVCharge(double a)  { m_VCharge=a;}
+    
   void Print() {
     if(DBGLEVEL<3) {
       cout<< "---Vertex type="<<m_type << " isPrimary="<<this->isPrimary()
@@ -88,7 +110,8 @@ class Vertex {
   int m_type;
   Particle* m_motherpart;
   double m_chisquare, m_likelihood;
-
+  double m_Vflagged, m_Vptmin, m_Vipsmin, m_Vdocamax,m_Vratio,m_VCharge;
+  
 };
 
 #endif 

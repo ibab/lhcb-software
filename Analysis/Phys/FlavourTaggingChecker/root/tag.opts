@@ -40,7 +40,7 @@
 
    IsControlChannel = 0     // take as the true flavour the reconsted B
    UseObsoleteSV    = 0
-   NNetTrain        = none  // taggers: "mu" "e" "k" "kS" "pS" "vtx"
+   NNetTrain        = none  // taggers: "muon" "ele" "kaon" "kaonS" "pionS" "vtx"
    ViewOptionLHCb   = -1
 
    ////check that event is present in a list of run event numbers 

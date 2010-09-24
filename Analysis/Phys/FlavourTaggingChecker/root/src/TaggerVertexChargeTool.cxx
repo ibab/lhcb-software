@@ -42,16 +42,19 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
 
+  Vertex* mysecvtx=NULL;
+  
   if(m_UseObsoleteSV) { //use DaVinci processed information
     for (i=parts.begin(); i!=parts.end(); ++i) {
       if((*i)->ComesFromSVtx()) Pfit.push_back(*i);
     }
   } else { //use seed from DaVinci and add tracks custom
-    Vertices allvtx = m_svtool->buildVertex( parts, &event );
-    if(allvtx.empty()) return tVch;
-    if( allvtx.at(0)->type() != Vertex::Seed ) return tVch;
-    Pfit = allvtx.at(0)->outgoingParticles();
-    maxprobf= allvtx.at(0)->likelihood();
+   Vertices allvtx = m_svtool->buildVertex( parts, &event );
+   if(allvtx.empty()) return tVch;
+   mysecvtx = allvtx.at(0);
+    if( mysecvtx->type() != Vertex::Secondary ) return tVch;
+    Pfit = mysecvtx->outgoingParticles();
+    maxprobf= mysecvtx->likelihood();
   }
 
   //if Vertex does not contain any daughters, exit
@@ -78,7 +81,6 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     Vdocamax += (*ip)->DOCA();
     debug()<<"docaSV:"<<(*ip)->DOCA()<<endmsg;
   }
-
   if(norm) {
     Vch /= norm;
     if(fabs(Vch) < m_MinimumVCharge ) Vch = 0;
@@ -87,7 +89,18 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     Vdocamax/= vflagged;
   }
   debug()<<"Vch: "<<Vch<<endreq;
+
+  if(!m_UseObsoleteSV) { //needed by NNtuner
+    mysecvtx->setVflagged(vflagged);
+    mysecvtx->setVptmin(Vptmin);
+    mysecvtx->setVipsmin(Vipsmin);
+    mysecvtx->setVdocamax(Vdocamax);
+    mysecvtx->setVratio(Vflaglong/(vflagged? vflagged:1));
+    mysecvtx->setVCharge(fabs(Vch));
+  }
+  
   if( Vch==0 ) return tVch;
+
 
   //calculate omega
   debug()<<"calculate omega with "<<m_UseObsoleteSV<<endreq;

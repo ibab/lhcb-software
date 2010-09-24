@@ -199,7 +199,7 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
     break; //TAKE JUST ONE SEED
   }
 
-  evt.setVertices( allSeeds );
+  evt.setSeeds( allSeeds );
 
   //Fill tag info direct from DaVinci run algorithm
   //build a bit flag

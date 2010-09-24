@@ -59,11 +59,11 @@ void EventViewer::storeClone(Event& event) {
     eventcopy->addToParticles(a);
   }
   //Vertices::iterator iv;
-  for(unsigned int i=0; i<event.getVertices().size(); ++i){
+  for(unsigned int i=0; i<event.getSecondaryVertices().size(); ++i){
     // for(iv=event.getVertices().begin();iv!=event.getVertices().end(); ++iv){
     //cout<<" "<<event.getVertices().size()<<endl;
 
-    Vertex * a = new Vertex(*(event.getVertices()[i])); 
+    Vertex * a = new Vertex(*(event.getSecondaryVertices()[i])); 
     //cout<<a->position().z()<<endl;
     vert_copy.push_back(a);
   }
@@ -72,7 +72,7 @@ void EventViewer::storeClone(Event& event) {
     eventcopy->setOppositeB(a);
   }
 
-  eventcopy->setVertices(vert_copy);
+  eventcopy->setSecondaryVertices(vert_copy);
 
   event_list.push_back(eventcopy);
 

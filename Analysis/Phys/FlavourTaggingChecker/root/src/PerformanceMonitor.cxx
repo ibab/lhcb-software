@@ -102,7 +102,7 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
     } 
     else if(mcid==321 && (*i)->fromB()==0 && (*i)->xFlag()!=0) ntruekS++;
 
-   if((*i)->p() > 5.0) { //purity and efficiency of MCID
+    if((*i)->p() > 5.0) { //purity and efficiency of MCID
       if     (mcid==13) {nlm++; if( checkPIDhypo(Particle::muon,*i) )    nllm++;} 
       else if(mcid==11) {nle++; if( checkPIDhypo(Particle::electron,*i)) nlle++;} 
       else if(mcid==321) {
@@ -122,37 +122,37 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
   if(iele)   {if(iele ->absMCID()==11)  nide++; else if(iele ->MCID()==0) nghost_e++;}
   if(ikaon)  {if(ikaon->absMCID()==321) nidk++; else if(ikaon->MCID()==0) nghost_k++;}
   if(isBs) if(isame) 
-	     {if(isame->absMCID()==321) nidkS++;else if(isame->MCID()==0) nghost_kS++;}
+  {if(isame->absMCID()==321) nidkS++;else if(isame->MCID()==0) nghost_kS++;}
 
   
   if(imuon) if(imuon->absMCID()==13 && imuon->fromB()==1) ntruemutag++;
   if(iele ) if(iele ->absMCID()==11 && iele ->fromB()==1) ntrueeltag++;
   if(ikaon) if(ikaon->absMCID()==321&& ikaon->fromB()==1) ntruekOtag++;
   if(isBs)  if(isame) 
-	      if(isame->absMCID()==321 &&
-		 isame->fromB()==0 && isame->xFlag()==0)  ntruekStag++;
+    if(isame->absMCID()==321 &&
+       isame->fromB()==0 && isame->xFlag()==0)  ntruekStag++;
 
   if(imuon) if(imuon->absMCID()==13 && imuon->fromB()==1
-	       && imuon->motherID() == imuon->ancestorID()) ndirect_mu++;
+               && imuon->motherID() == imuon->ancestorID()) ndirect_mu++;
   if(iele ) if(iele ->absMCID()==11 && iele ->fromB()==1
-	       && iele ->motherID() == iele ->ancestorID()) ndirect_el++;
+               && iele ->motherID() == iele ->ancestorID()) ndirect_el++;
 
   //decay b -> c -> mu,e,K
   if(imuon) if(imuon->absMCID()==13 && imuon->fromB()==1
-	       && isD( (int) imuon->motherID() ) )  nbc_mu++;
+               && isD( (int) imuon->motherID() ) )  nbc_mu++;
   if(iele ) if(iele ->absMCID()==11 && iele ->fromB()==1
-	       && isD( (int) iele ->motherID() ) )  nbc_el++;
+               && isD( (int) iele ->motherID() ) )  nbc_el++;
   if(ikaon) if(ikaon->absMCID()==321 && ikaon->fromB()==1)  nbc_kO++;
   if(isBs)  if(isame) if(isame->absMCID()==321 && isame->xFlag()) nbc_kS++;
 
   //SVertex
-  if( ! event.getVertices().empty()){
-    Particles pinSV = event.getVertices().at(0)->outgoingParticles();
+  if( ! event.getSecondaryVertices().empty()){
+    Particles pinSV = event.getSecondaryVertices().at(0)->outgoingParticles();
     npartsinSV += pinSV.size();
     if(!pinSV.empty()) nrSV++; //SV exists
-    if( event.getVertices().at(0)->type() == Vertex::Seed ){
+    if( event.getSecondaryVertices().at(0)->type() == Vertex::Secondary ){
       for(Particles::iterator i=pinSV.begin(); i!=pinSV.end(); ++i){
-	if( (*i)->fromB()==1 ) ninSVtrue++; 
+        if( (*i)->fromB()==1 ) ninSVtrue++; 
       }
     }
   }
@@ -205,15 +205,15 @@ void PerformanceMonitor::printStats() {
     cout <<BOLD<<"=========================================================\n";  
     cout<<"Fraction in event sample of true particles from B:"<<endl;
     cout<<ENDC<<setprecision(3)
-	<<"mu= "<<float(ntruemu)/nsele*100
-	<< "%\t selected as tagger: " <<float(ntruemutag)/nsele*100<<"%"<<endl;
+        <<"mu= "<<float(ntruemu)/nsele*100
+        << "%\t selected as tagger: " <<float(ntruemutag)/nsele*100<<"%"<<endl;
     cout<<"el= "<<float(ntrueel)/nsele*100
-	<< "%\t selected as tagger: " <<float(ntrueeltag)/nsele*100<<"%"<<endl;
+        << "%\t selected as tagger: " <<float(ntrueeltag)/nsele*100<<"%"<<endl;
     cout<<"kO= "<<float(ntruekO)/nsele*100
-	<< "%\t selected as tagger: "<<float(ntruekOtag) /nsele*100<<"%"<<endl;
+        << "%\t selected as tagger: "<<float(ntruekOtag) /nsele*100<<"%"<<endl;
     if(isBs)
       cout<<"kS= "<<float(ntruekS)/nsele*100
-	  << "%\t selected as tagger: "<<float(ntruekStag) /nsele*100<<"%"<<endl;
+          << "%\t selected as tagger: "<<float(ntruekStag) /nsele*100<<"%"<<endl;
     cout<<BOLD<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout<<BOLD<<"Fraction in tagger sample of:\n"<<ENDC;
     cout<<"b->mu= "   <<ndirect_mu /den_m*100<<"%\t";
@@ -228,7 +228,7 @@ void PerformanceMonitor::printStats() {
   if(npartsinSV && nrSV) {
     cout<<BOLD<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
     cout<<"Inclusive SV:"<<ENDC<<"  eff.=" <<setw(5)<< nrSV/nsele*100 << "%"
-	<< "\tpurity=" <<setw(5)<< ninSVtrue/float(npartsinSV)*100<< "%" <<endl;
+        << "\tpurity=" <<setw(5)<< ninSVtrue/float(npartsinSV)*100<< "%" <<endl;
     cout<<"mean nr. of tracks = "<<setw(4)<< npartsinSV/float(nrSV) <<endl;
   }
 
@@ -258,14 +258,14 @@ void PerformanceMonitor::printStats() {
     cout <<BOLD<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     cout <<setprecision(3)<<"PID purity (in r+w), and efficiency (P>5GeV)\n"<<ENDC;
     if(den_m) cout <<"muon:\t"<<nidm/den_m*100
-		   <<"\t\t"   <<nllm/nlm*100<<" %"<<endl;
+                   <<"\t\t"   <<nllm/nlm*100<<" %"<<endl;
     if(den_e) cout <<"elec:\t"<<nide/den_e*100
-		   <<"\t\t"   <<nlle/nle*100<<" %"<<endl;
+                   <<"\t\t"   <<nlle/nle*100<<" %"<<endl;
     if(den_k) cout <<"kaon:\t"<<nidk/den_k*100
-		   <<"\t\t"   <<nllk/nlk*100<<" %"<<endl;
+                   <<"\t\t"   <<nllk/nlk*100<<" %"<<endl;
     if(isBs && den_kS)
       cout <<"kaonS:\t"       <<nidkS/den_kS*100
-	   <<"\t\t"           <<nllkS/nlkS*100<<" %"<<endl;
+           <<"\t\t"           <<nllkS/nlkS*100<<" %"<<endl;
     
   }
   cout<<BOLD<<"=========================================================\n";
@@ -284,7 +284,7 @@ void PerformanceMonitor::printStats() {
     if(it==maxnrofcat+3){cats =  "  OS kaons"; rtag = nrtag[2]; wtag = nwtag[2]; }
     if(it==maxnrofcat+4){cats =  "  SS pions"; rtag = nrtag[3]; wtag = nwtag[3]; }
     if(isBs)if(it==maxnrofcat+4)
-	     {cats ="  SS kaons"; rtag= nrtag[3]; wtag= nwtag[3]; }
+    {cats ="  SS kaons"; rtag= nrtag[3]; wtag= nwtag[3]; }
     if(it==maxnrofcat+5){cats =  "  VertexCh"; rtag = nrtag[4]; wtag = nwtag[4]; }
     if(it==maxnrofcat+6){cats =  "  Fragment"; rtag = nrtag[5]; wtag = nwtag[5]; }
  
@@ -321,7 +321,7 @@ void PerformanceMonitor::printStats() {
         <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
         <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
         <<" "<<setw(7)<< (int) wtag<<ENDC
-	<< endl;
+        << endl;
   }
 
   //calculate global tagging performances -------------------------------

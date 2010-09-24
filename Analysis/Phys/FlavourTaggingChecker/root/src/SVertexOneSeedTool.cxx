@@ -31,16 +31,16 @@ SVertexOneSeedTool::SVertexOneSeedTool() {
 
 //////////////////////////////////////////////////////////
 Vertices SVertexOneSeedTool::buildVertex(Particles& vtags, 
-					 Event* event) {
+                                         Event* event) {
   Vertices vtxvect; 
 
-  if( ! event->hasSecondaryVertex() ) return vtxvect;
+  if( ! event->hasSecondaryVertexSeed() ) return vtxvect;
 
   //loop to find seed -----------------------------------
   // this has been done already in DaVinci...
   // just use 2-track seed formed there:
 
-  Vertex* Vfit = event->getVertices().at(0);
+  Vertex* Vfit = event->getSeeds().at(0);
 
   Particles pp = Vfit->outgoingParticles();
   Particle* p1 = pp.at(0); 
@@ -120,7 +120,9 @@ Vertices SVertexOneSeedTool::buildVertex(Particles& vtags,
 
   if(smass>0.48 && smass<0.51 &&
      p1->charge()*p2->charge()<0) return vtxvect; //////////// CUT
- 
+
+  Vfit->setType(Vertex::Secondary);
+
   vtxvect.push_back(Vfit);
 
   //fill some more histos!
@@ -138,6 +140,8 @@ Vertices SVertexOneSeedTool::buildVertex(Particles& vtags,
   else         hvdphi0->Fill(dphi);
   if(twofromB) hvmass2->Fill(smass);
   else         hvmass0->Fill(smass);
+  event->setSecondaryVertices(vtxvect);
+  
   return vtxvect;
 }
 
