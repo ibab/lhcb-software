@@ -72,7 +72,7 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
       {
         const PackedWeight & pweight = pweightsV.weights()[iW];
         wWeights.push_back( LHCb::WeightsVector::WeightData( pweight.key,
-                                                             m_pack.fraction(pweight.weight) ) );
+                                                             (float)m_pack.fraction(pweight.weight) ) );
       }
 
     }

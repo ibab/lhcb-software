@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Chris Jones
+ - Fix compilation warning on windows, due to implicit double to float conversion
+
 ! 2010-09-23 - Chris Jones
  - Update LHCb::WeightsVector packing to store the packed weight as a short 
    int, exploiting the fact it will only ever be in the range 0 to 1
