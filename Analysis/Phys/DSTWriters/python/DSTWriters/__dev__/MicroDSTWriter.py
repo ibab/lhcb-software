@@ -1,34 +1,35 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.8 2010-08-05 16:16:25 jpalac Exp $"
+
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-from DSTWriters.__dev__.BaseDSTWriter import BaseDSTWriter
+__all__ = ('microDSTElements',
+           'microDSTStreamConf')
 
-from DSTWriters.streamconf import microDSTWriterConf
+from GaudiConf.Configuration import *
+from Configurables import OutputStream
 
-from DSTWriters.microdstelements import  (CloneRecHeader,
-                                          CloneODIN,
-                                          ClonePVs,
-                                          CloneParticleTrees,
-                                          ClonePVRelations,
-                                          CloneBackCat,
-                                          CloneBTaggingInfo,
-                                          ReFitAndClonePVs)
+from streamconf import OutputStreamConf
 
-defaultElements = [CloneRecHeader(),
-                   CloneODIN(),
-                   ClonePVs(),
-                   CloneParticleTrees(copyProtoParticles = False),
-                   ClonePVRelations("Particle2VertexRelations",True)]
+from microdstelements import  (CloneRecHeader,
+                               CloneODIN,
+                               ClonePVs,
+                               CloneParticleTrees,
+                               ClonePVRelations,
+                               CloneBackCat,
+                               CloneBTaggingInfo,
+                               ReFitAndClonePVs)
 
-class MicroDSTWriter(BaseDSTWriter) :
-    """
-    Write a MicroDST for a set of selection sequences.
-    """
+def microDSTElements() :
+    return [CloneRecHeader(),
+            CloneODIN(),
+            ClonePVs(),
+            CloneParticleTrees(copyProtoParticles = False),
+            ClonePVRelations("Particle2VertexRelations",True)]
 
-    __slots__ = { "StreamConf"       : { 'default' : microDSTWriterConf() },
-                  "MicroDSTElements" : { 'default' : defaultElements }
-
-                  }
+def microDSTStreamConf() :
+    return OutputStreamConf(streamType = OutputStream,
+                            fileExtension = '.mdst',
+                            extraItems = ['/Event/DAQ/ODIN#1',
+                                          '/Event/Rec/Header#1'])
