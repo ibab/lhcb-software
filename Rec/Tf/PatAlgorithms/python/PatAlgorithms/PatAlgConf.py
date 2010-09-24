@@ -53,7 +53,19 @@ class SeedingConf(object):
       SeedTool.zMagnet = 0.
       SeedTool.FieldOff = True
       SeedTool.MinMomentum = 5e4
-
+    if TrackSys().earlyData():
+      SeedTool.MaxRangeIT           =  30. # mm in y @ z=9m
+      SeedTool.TolCollectOT         =  4.0 # mm
+      SeedTool.TolCollectIT         =  0.6 # mm
+      SeedTool.TolCollectITOT       =  0.6 # mm
+      SeedTool.MaxChi2HitOT         =  56.25 # (chi^2) - 1.5mm @ 0.2mm res.
+      SeedTool.MaxChi2HitIT         =  36.0  # (chi^2) - 0.3mm @ 0.05mm res.
+      SeedTool.MinXPlanes           =   4 # planes
+      SeedTool.MinTotalPlanes       =   8 # planes
+      SeedTool.OTNHitsLowThresh     =  15 # hits
+      SeedTool.MaxMisses            =   2 # planes
+      SeedTool.MinPlanesPerStation  =   1 # planes
+      SeedTool.MaxHoles             =   4 # planes
 
 class CosmicConf(object):
   '''Configure for cosmics'''

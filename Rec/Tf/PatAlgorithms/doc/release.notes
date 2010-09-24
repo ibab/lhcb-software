@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-09-24 - Manuel Tobias Schiller
+ - add an earlyData tuning for PatSeeding
+
 ! 2010-09-23 - Manuel Tobias Schiller
  - PatSeedingTool: make cuts on stereo hit content during per region search
    explicit as job options (applies to OT only)
