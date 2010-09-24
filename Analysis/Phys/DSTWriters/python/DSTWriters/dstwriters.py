@@ -1,29 +1,10 @@
-''' '''
-#$Id: dstwriters.py,v 1.12 2010-08-12 11:15:53 jpalac Exp $
-
+'''Modules to create a complete DST-writing sequence given a selection and some configuration parameters.'''
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__version__ = '$Revision: 1.12 $'
-
-
-from Configurables import GaudiSequencer, InputCopyStream, OutputStream, RecordStream
-
-from streamconf import OutputStreamConf
+from Configurables import GaudiSequencer, RecordStream
 
 from copy import copy
-        
-def baseDSTWriterConf():
-    return OutputStreamConf(streamType = InputCopyStream)
-
-def microDSTWriterConf() :
-    return OutputStreamConf(streamType = OutputStream,
-                            fileExtension = '.mdst',
-                            extraItems = ['/Event/DAQ/ODIN#1',
-                                          '/Event/Rec/Header#1'])
-
-def selDSTWriterConf() :
-    return OutputStreamConf(streamType = InputCopyStream)
 
 class DSTWriterSelectionSequence(object) :
     '''
@@ -35,7 +16,7 @@ class DSTWriterSelectionSequence(object) :
     '''
     def __init__(self,
                  selSequence,
-                 outputStreamConfiguration = baseDSTWriterConf(),
+                 outputStreamConfiguration,
                  writeFSR = True,
                  extras = None ) :
 

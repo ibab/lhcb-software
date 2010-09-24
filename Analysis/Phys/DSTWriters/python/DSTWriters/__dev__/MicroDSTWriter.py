@@ -6,7 +6,7 @@ __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from DSTWriters.__dev__.BaseDSTWriter import BaseDSTWriter
 
-from DSTWriters.dstwriters import microDSTWriterConf
+from DSTWriters.streamconf import microDSTWriterConf
 
 from DSTWriters.microdstelements import  (CloneRecHeader,
                                           CloneODIN,
@@ -28,7 +28,7 @@ class MicroDSTWriter(BaseDSTWriter) :
     Write a MicroDST for a set of selection sequences.
     """
 
-    __slots__ = { "StreamConf"           : microDSTWriterConf(),
-                  "MicroDSTElements" : {'default' : defaultElements}
+    __slots__ = { "StreamConf"       : { 'default' : microDSTWriterConf() },
+                  "MicroDSTElements" : { 'default' : defaultElements }
 
                   }

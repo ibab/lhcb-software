@@ -9,7 +9,8 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 
-from DSTWriters.dstwriters import DSTWriterSelectionSequence, baseDSTWriterConf
+from DSTWriters.dstwriters import DSTWriterSelectionSequence
+from DSTWriters.streamconf import defaultDSTWriterConf
 from DSTWriters.dstwriterutils import MicroDSTElementList
 from copy import copy
 
