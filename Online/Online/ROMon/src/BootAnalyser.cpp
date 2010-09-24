@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.4 2010-09-24 21:18:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.3 2010-09-21 18:17:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.4 2010-09-24 21:18:19 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -122,21 +122,19 @@ namespace ROMon {
 #endif // ONLINE_ROMON_BOOTANALYZER_H
 
 // Framework include files
+#include "TaskSupervisorParser.h"
 #include "RTL/rtl.h"
 #include "RTL/readdir.h"
+#include "NET/defs.h"
 #include "CPP/Event.h"
 #include "CPP/TimeSensor.h"
 #include "ROMon/CPUMon.h"
 #include "ROMonDefs.h"
 
 // C++ include files
-#include <fcntl.h>
-#include <cerrno>
 #include <fstream>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include "TaskSupervisorParser.h"
+#include <cerrno>
+#include <fcntl.h>
 
 extern "C" {
   #include "dis.h"
