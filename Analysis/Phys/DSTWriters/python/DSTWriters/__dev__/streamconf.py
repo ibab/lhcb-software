@@ -2,11 +2,7 @@
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__all__ = ('OutputStreamConf',
-           'defaultDSTWriterConf',
-           'selDSTWriterConf',
-           'microDSTWriterConf',
-           'stripDSTWriterConf')
+__all__ = ('OutputStreamConf')
 
 from copy import copy
 
@@ -30,19 +26,3 @@ class OutputStreamConf(object) :
         output += 'extension  : '+ str(self.extension) + '\n'
         output += 'extraItems : '+ str(self.extraItems) + '\n'
         return output
-
-def defaultDSTWriterConf():
-    return OutputStreamConf(streamType = InputCopyStream)
-
-def microDSTWriterConf() :
-    return OutputStreamConf(streamType = OutputStream,
-                            fileExtension = '.mdst',
-                            extraItems = ['/Event/DAQ/ODIN#1',
-                                          '/Event/Rec/Header#1'])
-
-def selDSTWriterConf() :
-    return OutputStreamConf(streamType = InputCopyStream)
-
-def stripDSTWriterConf() :
-    return OutputStreamConf(streamType = InputCopyStream,
-                            extraItems = [''])

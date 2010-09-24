@@ -5,24 +5,18 @@ contents of the input DST
 __version__ = "$Id: SelDSTWriter.py,v 1.4 2010-08-05 10:14:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-from LHCbKernel.Configuration import *
+__all__ = ('selDSTElements',
+           'selDSTStreamConf')
+
 from GaudiConf.Configuration import *
+from Configurables import InputCopyStream
 
-from DSTWriters.__dev__.MicroDSTWriter import MicroDSTWriter
-from DSTWriters.dstwriters import selDSTWriterConf
+from streamconf import OutputStreamConf
+from microdstelements import CloneParticleTrees, ClonePVRelations
 
+def selDSTElements() :
+    return[CloneParticleTrees(copyProtoParticles = False),
+           ClonePVRelations("Particle2VertexRelations",True)]
 
-from DSTWriters.microdstelements import CloneParticleTrees, ClonePVRelations
-
-defaultElements = [CloneParticleTrees(copyProtoParticles = False),
-                   ClonePVRelations("Particle2VertexRelations",True)]
-
-
-class SelDSTWriter(MicroDSTWriter) :
-    """
-    Write a DST for a single selection sequence. Writes out the entire
-    contents of the input DST file, plus extra items from the TES.
-    """
-    __slots__ = { "StreamConf"       : selDSTWriterConf(),
-                  "MicroDSTElements" : {'default' : defaultElements}
-                  }
+def selDSTStreamConf() :
+    return OutputStreamConf(streamType = InputCopyStream)

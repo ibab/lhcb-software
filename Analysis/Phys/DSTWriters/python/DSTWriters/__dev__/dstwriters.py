@@ -1,5 +1,8 @@
 '''Modules to create a complete DST-writing sequence given a selection and some configuration parameters.'''
 
+__all__ = ('DSTWriterSelectionSequence',
+           'SelDSTWriter')
+
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 from Configurables import GaudiSequencer, RecordStream
