@@ -1,0 +1,34 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           CondDBAccessSvc, CondDBTimeSwitchSvc)
+
+DDDBConf()
+
+ecs = EventClockSvc()
+ecs.addTool(FakeEventTime,"EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = 5
+ecs.EventTimeDecoder.TimeStep = 10
+
+from Configurables import DetCondTest__TestConditionAlg
+alg = DetCondTest__TestConditionAlg()
+alg.Conditions = ["/dd/Conditions/This/Does/Not/Exist"]
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 2)
+#MessageSvc(OutputLevel = 1)
+
+</text></argument>
+<argument name="validator"><text>
+## Find the error message about the problematic condition
+import re
+regexp = r"ERROR.*Conditions/This/Does/Not/Exist"
+if not re.findall(regexp, stdout):
+    causes.append("output")
+    result["GaudiTest.output.expected_regexp"] = result.Quote(regexp)
+</text></argument>
+</extension>

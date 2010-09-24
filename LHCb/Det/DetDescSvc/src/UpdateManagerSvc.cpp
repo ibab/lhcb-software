@@ -393,13 +393,9 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
     // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
     Gaudi::Time head_copy_since(Gaudi::Time::epoch());
     Gaudi::Time head_copy_until(Gaudi::Time::max());
+    MsgStream item_log(msgSvc(), name()+"::Item");
     for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
-      if ( m_outputLevel <= MSG::DEBUG ) {
-        MsgStream item_log(msgSvc(),name()+"::Item");
-        sc = (*it)->update(dataProvider(), evtTime, &item_log, inInit);
-      } else {
-        sc = (*it)->update(dataProvider(), evtTime, NULL, inInit);
-      }
+      sc = (*it)->update(dataProvider(), evtTime, item_log, inInit);
       if (sc.isSuccess()) {
         if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
         if ( head_copy_until > (*it)->until )  head_copy_until = (*it)->until;
@@ -442,12 +438,8 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
         StatusCode sc;
         // We are in the initialization phase if we are not yet "STARTED"
         const bool inInit = FSMState() <= Gaudi::StateMachine::INITIALIZED;
-        if ( m_outputLevel <= MSG::DEBUG ) {
-          MsgStream item_log(msgSvc(),name()+"::Item");
-          sc = item->update(dataProvider(), detDataSvc()->eventTime(), &item_log, inInit);
-        } else {
-          sc = item->update(dataProvider(), detDataSvc()->eventTime(), NULL, inInit);
-        }
+        MsgStream item_log(msgSvc(),name()+"::Item");
+        sc = item->update(dataProvider(), detDataSvc()->eventTime(), item_log, inInit);
         if (sc.isSuccess()) {
           if ( m_head_since < item->since )  m_head_since = item->since;
           if ( m_head_until > item->until )  m_head_until = item->until;

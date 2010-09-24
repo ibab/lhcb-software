@@ -34,20 +34,18 @@ UpdateManagerSvc::Item::~Item() {
 //=============================================================================
 // Main method. Used to update the object and all the used ones.
 //=============================================================================
-StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log, bool inInit){
-  if (log){
-    (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
-    if (!path.empty()) (*log) << " " << path;
-    (*log) << endmsg;
-    (*log) << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
-  }
+StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream &log, bool inInit){
+  log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
+  if (!path.empty()) log << " " << path;
+  log << endmsg;
+  log << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
   if (updateLock) {
-    if (log) (*log) << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
+    log << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
     return StatusCode::SUCCESS;
   }
   // check validity
   if (isValid(when)) {
-    if (log) (*log) << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
+    log << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
     return StatusCode::SUCCESS;
   }
   // prepare for update
@@ -57,13 +55,13 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
   // start real update
   if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
 
-    if (log) (*log) << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
+    log << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
 
     DataObject  *pObj;
     sc = dp->retrieveObject(path,pObj);
 
     if (!sc.isSuccess()){
-      if (log) (*log) << MSG::ERROR << "Retrieve from data provider failed!" << endmsg;
+      log << MSG::ERROR << "Cannot retrieve " << path << " from data provider!" << endmsg;
       return sc;
     }
 
@@ -78,9 +76,9 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         if (cond) { // A condition needs to be initialized too
           sc = cond->initialize();
           if ( !sc.isSuccess() ) {
-            if (log) (*log) << MSG::ERROR
-                            << "Unable to initialize overridden condition at "
-                            << path << endmsg;
+            log << MSG::ERROR
+                << "Unable to initialize overridden condition at "
+                << path << endmsg;
             return sc;
           }
         }
@@ -92,7 +90,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         //   let's unregister the original object
         sc = dp->unregisterObject(pObj);
         if ( !sc.isSuccess() ) {
-          if (log) (*log) << MSG::ERROR << "Unable to unregister object at " << path << endmsg;
+          log << MSG::ERROR << "Unable to unregister object at " << path << endmsg;
           return sc;
         }
         //   and delete it
@@ -101,7 +99,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         pObj = override;
         sc = dp->registerObject(path,pObj);
         if ( !sc.isSuccess() ) {
-          if (log) (*log) << MSG::ERROR << "Unable to register override object to " << path << endmsg;
+          log << MSG::ERROR << "Unable to register override object to " << path << endmsg;
           return sc;
         }
         // I do not need to delete the overriding object because now it belongs to the T.S.
@@ -111,7 +109,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     // Set also internal pointers
     sc = setPointers(pObj);
     if ( !sc.isSuccess() ) {
-      if (log) (*log) << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
+      log << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
       return sc;
     }
 
@@ -127,17 +125,17 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
       if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
     	             // IOV because of the HeartBeat, so it is actually OK and doesn't need to be updated.
-        if (log) (*log) << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
+        log << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
         sc = vdo->update(); // only if I didn't load it
         if ( !sc.isSuccess() ) {
-          if (log) (*log) << MSG::ERROR << "Update from data provider failed!" << endmsg;
+          log << MSG::ERROR << "Cannot update " << path << " from data provider!" << endmsg;
           return sc;
         }
       }
       // Set also internal pointers (needed here too, because it is needed in a very special case... a test)
       sc = setPointers(vdo);
       if ( !sc.isSuccess() ) {
-        if (log) (*log) << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
+        log << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
         return sc;
       }
     }
@@ -148,11 +146,11 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     until = vdo->validTill();
   }
   // object internal data are up-to-date, now check what it depends on
-  if (log) (*log) << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
+  log << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
   for (MembFuncList::iterator mfIt = memFuncs.begin(); mfIt != memFuncs.end(); ++mfIt){
     if (!mfIt->isValid(when)) { // only if one the children of the member function need an update
       size_t n = mfIt - memFuncs.begin();
-      if (log) (*log) << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
+      log << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
       mfIt->resetIOV();
       for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
         sc = (*itemIt)->update(dp, when, log, inInit);
@@ -161,10 +159,10 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
         if (mfIt->until > (*itemIt)->until) mfIt->until = (*itemIt)->until;
       }
-      if (log) (*log) << MSG::VERBOSE << "Call m.f. " << n << endmsg;
+      log << MSG::VERBOSE << "Call m.f. " << n << endmsg;
       sc = (*(mfIt->mf))();
       if (!sc.isSuccess()){
-        if (log) (*log) << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
+        log << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
         return sc;
       }
     }
@@ -175,14 +173,12 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
   updateLock = false;
   //std::cout << "UMS:      final validity: " << since << " -> " << until << std::endl;
   //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
-  if (log){
-    (*log) << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
-    (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
-    if (!path.empty()) (*log) << " " << path;
-    (*log) << endmsg;
-  }
-  sc = StatusCode::SUCCESS;
-  return sc;
+  log << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
+  log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
+  if (!path.empty()) log << " " << path;
+  log << endmsg;
+
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Adds a child item to the given member function

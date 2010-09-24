@@ -5,6 +5,10 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2010-09-24 - Marco Clemencic
+ - Modified UpdateManagerSvc to print an error message with the problematic
+   condition when the update fails.
+
 !========================= DetDescSvc v2r5 2010-08-25 =========================
 ! 2010-08-06 - Marco Clemencic
  - Fixes and improvements in UpdateManagerSvc
