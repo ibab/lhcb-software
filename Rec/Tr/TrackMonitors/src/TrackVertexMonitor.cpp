@@ -43,6 +43,8 @@ private:
   double m_rpvmax ;
   double m_zpvmin ;
   double m_zpvmax ;
+  double m_zpvmin_wide ;
+  double m_zpvmax_wide ;
   double m_maxLongTrackChisqPerDof ;
   double m_minLongTrackMomentum ;
   size_t m_nprbins ;
@@ -99,6 +101,8 @@ TrackVertexMonitor::TrackVertexMonitor( const std::string& name,
   declareProperty( "MaxRPV", m_rpvmax = 1*Gaudi::Units::mm ) ;
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;
   declareProperty( "MaxZPV", m_zpvmax =  20*Gaudi::Units::cm ) ;
+  declareProperty( "MinZPV_Wide", m_zpvmin = -150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
+  declareProperty( "MaxZPV_Wide", m_zpvmax =  150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
   declareProperty( "MaxLongTrackChisqPerDof", m_maxLongTrackChisqPerDof = 5 ) ;
   declareProperty( "MinLongTrackMomentum", m_minLongTrackMomentum = 5 ) ;
   declareProperty( "NumProfileBins", m_nprbins = 20 ) ;
@@ -137,7 +141,8 @@ StatusCode TrackVertexMonitor::initialize()
   m_fastTrackLongitudinalIP = book1D("fast track longitudinal IP",-m_ipmax,m_ipmax) ;
   m_fastTrackTransverseIPVsPhi = bookProfile1D("fast track transverse IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
   m_fastTrackTransverseIPVsEta = bookProfile1D("fast track transverse IP vs eta",2.0,5.0,m_nprbins) ;
-  m_fastTrackLongitudinalIPVsPhi = bookProfile1D("fast track longitudinal IP vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackLongitudinalIPVsPhi = bookProfile1D("fast track longitudinal IP vs phi",
+                                                 -Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
   m_fastTrackLongitudinalIPVsEta = bookProfile1D("fast track longitudinal IP vs eta",2.0,5.0,m_nprbins) ;
 
   // impact parameter and vertex chisquare of the two highest Pt tracks
@@ -256,12 +261,13 @@ StatusCode TrackVertexMonitor::execute()
     plot( backwardtracks.size(), "NumBackTracksPerPV",-0.5,99.5,50) ;
     // chisquare
     plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,10) ;
-    // position
-    if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){   // crap hack for vertices at exactly 0
+    // position with crap hack for vertices at exactly 0
+    if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){  
             //info() << "pvx " << pv->position().x() << endmsg;
             plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
             plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
             plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
+            plot( pv->position().z(), "PV z position (wide)", m_zpvmin_wide,m_zpvmax_wide) ;
     }
 
     if( std::abs( pv->position().y() ) < m_rpvmax ) 
