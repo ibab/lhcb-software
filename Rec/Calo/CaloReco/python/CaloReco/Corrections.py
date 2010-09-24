@@ -91,10 +91,10 @@ def lCorrection ( lcorr , version = None ) :
     >>> tool = ...
     >>> lCorrection ( tool )
     """    
-#    lcorr.Parameters["gamma0"] = [ 1      ,     1    ,     22.305 ,    19.053  ,  17.936 ]
-#    lcorr.Parameters["gammaP"] = [ 2      ,     2    ,      2.04  ,     1.53   ,   1.15  , -0.0281, -0.455, -0.0392]
-#    lcorr.Parameters["delta0"] = [ 1      ,     1    ,     49.04  ,     51.87  ,  45.54  ]
-#    lcorr.Parameters["deltaP"] = [ 2      ,     2    ,      4.38  ,      4.15  ,   4.02  , -0.0247,    -0.0597 ,  -0.0308 ]
+    lcorr.Parameters["gamma0"] = [ 1      ,     1    ,     22.305 ,    19.053  ,  17.936 ]
+    lcorr.Parameters["gammaP"] = [ 2      ,     2    ,      2.04  ,     1.53   ,   1.15  , -0.0281, -0.455, -0.0392]
+    lcorr.Parameters["delta0"] = [ 1      ,     1    ,     49.04  ,     51.87  ,  45.54  ]
+    lcorr.Parameters["deltaP"] = [ 2      ,     2    ,      4.38  ,      4.15  ,   4.02  , -0.0247,    -0.0597 ,  -0.0308 ]
     
     ##
     log.info ('Configure L-Corrections for Ecal hypotheses: %s' % lcorr.name () ) 
