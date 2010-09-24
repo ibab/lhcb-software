@@ -25,7 +25,7 @@ class DSTWriterSelectionSequence(object) :
 
         outputStreamConfiguration.name=selSequence.name()
         self.stream = outputStream(outputStreamConfiguration)
-        self.stream.OutputLevel=3
+#        self.stream.OutputLevel=3
         self.fsrStream = fsrStream(outputStreamConfiguration)
         self.algos = [selSequence.sequence()]
         if writeFSR :

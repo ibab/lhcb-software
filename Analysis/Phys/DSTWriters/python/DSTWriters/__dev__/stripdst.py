@@ -18,4 +18,6 @@ def stripDSTElements() :
            ClonePVRelations("Particle2VertexRelations",True)]
 
 def stripDSTStreamConf() :
-    return OutputStreamConf(streamType = InputCopyStream)
+    return OutputStreamConf(streamType = InputCopyStream,
+                            extraItems = ['/Event/DAQ/RawEvent#1',
+                                          '/Event/Strip/Phys/DecReports#1'])
