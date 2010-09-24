@@ -12,6 +12,7 @@ Purpose: LHCb Digitization program
    #53209 Fix size of dead region between inner/outer phi zones (VeloDet v13r12)
    #53637 Remove DeRichSystem initialisation messages (RichDet v15r0)
    New prntout from CaloDet initialisation (CaloDet v10r6)
+   #86508 Less verbosity in unpackers
 
 </PRE><H1><A NAME=v21r7>2010-08-26 Boole v21r7</A></H1><PRE>
 This version uses projects LCGCMT 58e, Gaudi v21r10p1, LHCb v31r5, Lbcom v9r6
