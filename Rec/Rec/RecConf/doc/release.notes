@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================== RecConf v1r3 2010-09-24 ===========================
 ! 2010-09-22 - Victor Coco
  - Add upgrade special datatype and change measurmenet provider of muonID 
    if VeloPix is part of the detector used.
