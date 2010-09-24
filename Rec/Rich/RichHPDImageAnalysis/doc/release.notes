@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!================= Rich/RichHPDImageAnalysis v1r3 2010-09-24 =================
 ! 2010-09-23 - Chris Jones
  - Some more improvements to the run by run calibration script. Now it is
    possible to seperately fit field Up, Down and Off data.
