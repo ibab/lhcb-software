@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v4r0p2 2010-09-24 ========================
 ! 2010-09-24 - Marco Cattaneo
  - Add LumiAlgsConf().Siumlation slot (default False) to switch off 
    LumiAccounting algorithm in case of Simulation
