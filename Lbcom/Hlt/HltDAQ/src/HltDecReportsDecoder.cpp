@@ -255,16 +255,14 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
     }    
     static const std::string Dummy("Dummy");
     if( selName != Dummy ){
-      if( output.hasDecisionName( selName ) ){
-        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
-      } else {
-        output.insert( selName, dec );
+      if( !output.insert( selName, dec ).isSuccess() ) {
+        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 ).ignore();
       }
     } else {
       std::ostringstream mess;
       mess << " No string key found for trigger decision in storage "
            << " id=" << id;
-      Error(mess.str(), StatusCode::SUCCESS, 50 );
+      Error(mess.str(), StatusCode::SUCCESS, 50 ).ignore();
     }
    }
     

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-09-24 - Roel Aaij
+ - Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
+
 !========================== HltDAQ v2r2 2010-08-25 ============================
 ! 2010-08-24 - Rob Lambert
  - fix compiler warning about long long int from double in HltRoutingBitsWriter.cpp
@@ -11,7 +14,6 @@
 ! 2010-08-17 - Gerhard Raven
  - xml: properly declare signature of fillStream so that it is not neccessary
    to do a const_cast...
-
 
 !========================== HltDAQ v2r1 2010-08-15 =============================
 

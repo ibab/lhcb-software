@@ -227,7 +227,7 @@ void ANNDispatchSvc::faultHandler() const {
         // push properties to child
         SmartIF<IProperty> iProp(m_child);
         for (PropertyConfig::Properties::const_iterator i =  config->properties().begin();i!= config->properties().end(); ++i ) {
-          iProp->setProperty( i->first, i->second  );
+          iProp->setProperty( i->first, i->second  ).ignore();
         }
         m_currentDigest = child;
         // do not reinit for ANNSvc derived instances, as they have a proper updateHandler...
