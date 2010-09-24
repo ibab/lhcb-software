@@ -47,7 +47,7 @@ public:
     return packDouble( x * Packer::SLOPE_SCALE );
   }
 
-  /** returns an short int for a double fraction, for covariance matrix */
+  /** returns an short int for a double fraction */
   short int fraction( const double f ) const {
     return shortPackDouble( f * Packer::FRACTION_SCALE );
   }
