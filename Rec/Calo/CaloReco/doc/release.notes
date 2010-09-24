@@ -7,6 +7,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== CaloReco v5r7  2010-09-24 =======================
+- 2010-09-24 - Olivier Deschamps :
+ - Uncomment correction
+
 - 2010-09-23 - Olivier Deschamps :
  - SinglePhotonAlg : fix typo in default setting
 
