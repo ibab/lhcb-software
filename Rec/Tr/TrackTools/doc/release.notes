@@ -3,6 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2010-09-24 - Chris Jones
+ - For convenience, as Track P and Pt values to information printed by
+   the TrackSelector tools, when in VERBOSE printout mode.
+
 ! 2010-09-20 - Michel De Cian
  - Added cut on minimal number of TT hits in MuonTTTrack.cpp
 

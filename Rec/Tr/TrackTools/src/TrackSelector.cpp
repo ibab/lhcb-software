@@ -91,6 +91,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Trying Track " << aTrack.key() << " " << aTrack.type()
+              << " P=" << aTrack.p() << " Pt=" << aTrack.pt()
               << endreq;
   }
 
