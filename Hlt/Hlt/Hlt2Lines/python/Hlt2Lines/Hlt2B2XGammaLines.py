@@ -30,7 +30,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'PhiVCHI2'            : 25       # dimensionless
                    ,'KstVCHI2'            : 16       # dimensionless
                    ,'TrChi2'              : 10.       # dimensionless
-                   ,'HLT1FILTER'         : ""#HLT_PASS_RE('Hlt1.*Photon.*Decision')"
+                   ,'HLT1FILTER'         : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
                    
                    ,'Prescale'           : {'Hlt2Bs2PhiGamma$'          : 1.0
                                             ,'Hlt2Bs2PhiGamma.+'        : 0.1       # prescale by a factor of 10
