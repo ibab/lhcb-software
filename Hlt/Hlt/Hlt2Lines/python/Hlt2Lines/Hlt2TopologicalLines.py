@@ -131,15 +131,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
         pid = "(('pi+'==ABSID) | ('K+'==ABSID))"
         
-        cuts = "(MAXTREE(%s,PT) > %s*MeV) &" \
+        cuts = "(MAXTREE(%s,PT) > %s*MeV)" \
                % (pid,props["MAX_PT_MIN"])
         sum_pt_min = float(props['SUM_PT_MIN'])
         if name.find('3Body') >=0: sum_pt_min += 250
-        if name.find('4Body') >= 0: sum_pt_min += 500
+        if name.find('4Body') >=0: sum_pt_min += 500
         
-        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
-        cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
-                % (props['MCOR_MIN'],props['MCOR_MAX'])
+        cuts += ' & (SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
+        cuts += ' & (in_range(%(MCOR_MIN)s*MeV,MCOR,%(MCOR_MAX)s*MeV))' % props
         if extraCode: cuts = cuts + ' & ' + extraCode
         filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
                             Code=cuts,Preambulo=preambulo)

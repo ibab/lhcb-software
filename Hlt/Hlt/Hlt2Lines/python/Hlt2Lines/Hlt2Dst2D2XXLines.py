@@ -137,7 +137,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine = Hlt2Line('Dst2PiD02PiPi'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                            , prescale = self.prescale
                            , postscale = self.postscale
-                           , algos = [  BiKalmanFittedPions, PV3D(), D2PiPiComb  ]
+                           , algos = [ PV3D(), BiKalmanFittedPions,  D2PiPiComb  ]
                            )
         
         
@@ -147,7 +147,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_mm = DstLine.clone('Dst2PiD02MuMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ BiKalmanFittedMuons, PV3D(), D2MuMuComb]
+                                   , algos = [ PV3D(), BiKalmanFittedMuons, D2MuMuComb]
                                    )
         
         
@@ -159,13 +159,13 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_pm = DstLine.clone('Dst2PiD02PiMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedMuons, PV3D(), D2PiMuComb ]
+                                    , algos = [ PV3D(), BiKalmanFittedMuons, BiKalmanFittedPions, D2PiMuComb ]
                                    )
 
         DstLine_km = DstLine.clone('Dst2PiD02KMu'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ BiKalmanFittedMuons, BiKalmanFittedKaons, PV3D(), D2KMuComb ]
+                                   , algos = [ PV3D(), BiKalmanFittedMuons, BiKalmanFittedKaons, D2KMuComb ]
                                    )
         ################################################################################
         #
@@ -173,26 +173,26 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_kp = DstLine.clone('Dst2PiD02KPi'
                                    , prescale = self.prescale
                                    , postscale = self.postscale
-                                    , algos = [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), D2KPiComb ]
+                                    , algos = [  PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, D2KPiComb ]
                                    )
         
         ###########################################################        
         DstLine_emu = DstLine.clone('Dst2PiD02EMu'
                                     , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ BiKalmanFittedElectrons, BiKalmanFittedMuons, PV3D(), D2EMuComb ]
+                                   , algos = [ PV3D(), BiKalmanFittedMuons,BiKalmanFittedElectrons, D2EMuComb ]
                                      )
         ###########################################################        
         DstLine_epi = DstLine.clone('Dst2PiD02EPi'
                                     , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ BiKalmanFittedElectrons, BiKalmanFittedPions, PV3D(), D2EPiComb ]
+                                   , algos = [ PV3D(), BiKalmanFittedElectrons, BiKalmanFittedPions, D2EPiComb ]
                                      )
         ###########################################################        
         DstLine_eK = DstLine.clone('Dst2PiD02EK'
                                     , prescale = self.prescale
                                    , postscale = self.postscale
-                                   , algos = [ BiKalmanFittedElectrons, BiKalmanFittedKaons, PV3D(), D2EKComb ]
+                                   , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedElectrons, D2EKComb ]
                                      )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02PiPiDecision" : 50420 } )
@@ -203,8 +203,3 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02EMuDecision" : 50434 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02EPiDecision" : 50435 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Dst2PiD02EKDecision" : 50436 } )
-        
-
-
-
-        
