@@ -52,8 +52,7 @@ class Exclusive_Leptonic :
 
         from Hlt2Lines.Hlt2Dst2D2XXLines import Hlt2Dst2D2XXLinesConf
                     
-        d.update( { Hlt2Dst2D2XXLinesConf : { 'D0MinPT'            : 1600.      # MeV
-                                            , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi'       :  0.1
+        d.update( { Hlt2Dst2D2XXLinesConf : { 'Prescale'   : { 'Hlt2Dst2PiD02PiPi'       :  0.1
                                                              , 'Hlt2Dst2PiD02KPi'        :  0.02
                                                              , 'Hlt2Dst2PiD02MuMu'       :  1
                                                              , 'Hlt2Dst2PiD02PiMu'       :  1
