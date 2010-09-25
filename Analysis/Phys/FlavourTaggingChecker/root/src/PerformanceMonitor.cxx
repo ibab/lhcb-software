@@ -87,7 +87,6 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
   Particle* iele  = tele_dec ? tele ->taggerparts().at(0) : NULL;
   Particle* ikaon = tkaon_dec? tkaon->taggerparts().at(0) : NULL;
   Particle* isame = tsame_dec? tsame->taggerparts().at(0) : NULL;
-  Particle* ifrag = tfrag_dec? tfrag->taggerparts().at(0) : NULL;
     
   //counting
   isBs = event.isBs();

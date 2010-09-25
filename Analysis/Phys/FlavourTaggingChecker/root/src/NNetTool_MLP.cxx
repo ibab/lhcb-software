@@ -19,8 +19,8 @@ NNetTool_MLP::NNetTool_MLP( ) {
   declareProperty( "P0_ps_scale", m_P0ps =  1.05709);
   declareProperty( "P1_ps_scale", m_P1ps = -1.09695);
 
-  declareProperty( "P0_vtx_scale", m_P0vtx = 0.700654 );
-  declareProperty( "P1_vtx_scale", m_P1vtx =-0.421912 );
+  declareProperty( "P0_vtx_scale", m_P0vtx =  0.700654 );
+  declareProperty( "P1_vtx_scale", m_P1vtx = -0.421912 );
  
   m_rnet_mu= m_rnet_ele= m_rnet_k= m_rnet_kS= m_rnet_pS= m_rnet_vtx=0;
  
@@ -29,9 +29,10 @@ NNetTool_MLP::NNetTool_MLP( ) {
 //=============================================================================
 void NNetTool_MLP::normaliseOS(std::vector<double>& par) { 
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
-         <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
+  if(DBGLEVEL>2)debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+                       <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "
+                       <<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)
+                       <<" "<<par.at(1)<<endreq;
 
   par.at(0) /= 90.; //multiplicity
   par.at(1) /= 25.; //ptB
@@ -53,9 +54,10 @@ void NNetTool_MLP::normaliseSS(std::vector<double>& par) {
 }
 void NNetTool_MLP::normaliseVtx(std::vector<double>& par) { 
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
-         <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
+  if(DBGLEVEL>2)debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+                       <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+                       <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)
+                       <<" "<<par.at(1)<<endreq;
 
   par.at(0) /= 90.; //vtag size
   par.at(2) /= 25.; //ptB

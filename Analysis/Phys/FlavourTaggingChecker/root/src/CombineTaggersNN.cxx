@@ -6,29 +6,15 @@ CombineTaggersNN::CombineTaggersNN() {
 
   declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
   declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
-  declareProperty( "CombineTaggersNN_ProbMin",   m_ProbMin   = 0.55 );
-  declareProperty( "CombineTaggersNN_P0_NN",     m_P0_NN     = 0.502625 ); 
-  declareProperty( "CombineTaggersNN_P1_NN",     m_P1_NN     = 0.504699 );
-  declareProperty( "ProbMin_NN",     m_ProbMin_NN = 0.55 );
-  declareProperty( "WeightsFile",
-		   m_WeightsFile = "nnet/TMVAClassification_MLP.weights.xml");
-  declareProperty( "TmvaMethod", m_TmvaMethod = "MLP method");
+  declareProperty( "ProbMin_NN",  m_ProbMin     = 0.55 );
 
-
-  TString pathWeightsFile = m_WeightsFile;
-  m_reader_comb = new TMVA::Reader();
-  m_reader_comb->AddVariable("pmu", &pmu);
-  m_reader_comb->AddVariable("pe",  &pe);
-  m_reader_comb->AddVariable("pk",  &pk);
-  m_reader_comb->AddVariable("pss", &pss);
-  m_reader_comb->AddVariable("pvtx",&pvtx);
-  m_reader_comb->BookMVA( m_TmvaMethod, pathWeightsFile ); 
+  declareProperty( "P0_NN",   m_P0_NN   = 0.502625 ); 
+  declareProperty( "P1_NN",   m_P1_NN   = 0.504699 );
 
   theTag = new FlavourTag();
 
 }
 CombineTaggersNN::~CombineTaggersNN() { 
-  if(m_reader_comb) delete m_reader_comb; 
   delete theTag;
 }
 
@@ -90,34 +76,32 @@ FlavourTag* CombineTaggersNN::combineTaggers( Taggers& vtg ) {
   if (abstagsum==1){
     pnsum=pmu+pe+pk+pss+pvtx-2;//sum all taggers minus 2(4 taggers inactive)
     tagdecision=mutag+etag+ktag+sstag+vtxtag;
-    //throw away poorly significant tags
-    if(pnsum < m_ProbMin) {
-      pnsum = 0.50;
-      tagdecision = 0;
-    }
   }
 
   //more than one tagger
   if (abstagsum>1){
     //ch p[i] for tagdec=-1
     if (mutag<0) pmu=1-pmu;
-    if (etag<0) pe=1-pe;
-    if (ktag<0) pk=1-pk;
+    if (etag<0)  pe =1-pe;
+    if (ktag<0)  pk =1-pk;
     if (sstag<0) pss=1-pss;
-    if (vtxtag<0) pvtx=1-pvtx;
-    probNN = m_reader_comb -> EvaluateMVA( m_TmvaMethod );
+    if (vtxtag<0)pvtx=1-pvtx;
+
+    NNcomb net;
+    probNN = net.Value(0, pmu,pe,pk,pss,pvtx);
     double probPlus = m_P0_NN + m_P1_NN*(probNN);//tuning NN
+
     if (probPlus>1) probPlus=1;
     if (probPlus<0) probPlus=0;
     if (probNN>0.) {tagdecision = +1, pnsum=probPlus;}
     if (probNN<0.) {tagdecision = -1, pnsum=1-probPlus;}
     debug() << "probNN: " << probNN <<", probPlus: " << probPlus 
-	    <<", pnsum: "<<pnsum<<", tagdecision: "<<tagdecision<<endreq;
-    //throw away poorly significant tags
-    if(pnsum < m_ProbMin_NN) {
-      pnsum = 0.50;
-      tagdecision = 0;
-    }
+            <<", pnsum: "<<pnsum<<", tagdecision: "<<tagdecision<<endreq;
+  }
+  //throw away poorly significant tags
+  if(pnsum < m_ProbMin) {
+    pnsum = 0.50;
+    tagdecision = 0;
   }
   
   //sort decision into categories ------------------

@@ -73,7 +73,7 @@ int main () {
       int TrueTag = event.TrueTag();
       theTag->setTrueTag(TrueTag);
 
-      nnetune.Fill(event, taggers);//fill info for retuning, set by NNetTrain
+      nnetune.Fill(event, theTag);//fill info for retuning, set by NNetTrain
       perfmon.increment(event, theTag);//update counters for this event
  
 

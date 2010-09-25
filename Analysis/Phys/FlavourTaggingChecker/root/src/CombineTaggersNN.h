@@ -6,17 +6,18 @@
 #include "Particle.h"
 #include "FlavourTag.h"
 #include "Tagger.h"
-#include "TMVA/Reader.h"
-#include "TMVA/Factory.h"
+
+#include "NNcomb.h"
 
 
 /** @class CombineTaggersNN
  *
  *  Combine taggers decision using a NNet which takes as input the mistags
  *
- *  @author Marc Grabalosa
- *  @date   2010-07-15
+ *  @author Marc Grabalosa, Marco Musy
+ *  @date   2010-09-07
  */
+
 class CombineTaggersNN {
 
  public:
@@ -29,14 +30,11 @@ class CombineTaggersNN {
  
  private:
 
-  double m_ProbMin, m_ProbMin_NN;
+  double m_ProbMin;
   double m_P0_NN, m_P1_NN;
   double m_omegascale, m_omegamaxbin;
 
   TString getPath(std::string);
-  TString m_TmvaMethod;
-  TString m_WeightsFile;
-  TMVA::Reader* m_reader_comb;
   float pmu, pe, pk, pss, pvtx;
   FlavourTag* theTag;
 

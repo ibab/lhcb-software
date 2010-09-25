@@ -17,14 +17,13 @@
    datafile = data/v25r2_retune/bujpsik_seed2
    datafile = data/MC10/bsjpsiphi_seed2
 
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bujpsik
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsjpsiphi_nu1
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi_seed2_marc
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/dstarmunu/dstarmu_s7.root
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bdjpsiks
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+
 
   >>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -40,7 +39,7 @@
 
    IsControlChannel = 0     // take as the true flavour the reconsted B
    UseObsoleteSV    = 0
-   NNetTrain        = none  // taggers: "muon" "ele" "kaon" "kaonS" "pionS" "vtx"
+   NNetTrain        = none  // "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
    ViewOptionLHCb   = -1
 
    ////check that event is present in a list of run event numbers 
@@ -49,7 +48,6 @@
    EventListFileName = DATAFILE  
    EventListFileName = none             //ignore any list
 
-#   EventListFileName = ../selected_s7.txt            
 
   >>>>>>>>>>>>>>>>>>>>>> OVERRIDE CUTS >>>>>>>>>>>>>>>>>>>>>>>>>>>
 

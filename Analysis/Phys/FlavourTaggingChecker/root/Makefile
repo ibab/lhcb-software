@@ -73,7 +73,8 @@ edit:
 
 #------------------------------------------------------------------------------
 clean:
-	@rm -f *.exe ./lib/*.o *.o *.so *.d core* tag_macro_h.* *~ */*~ $(OUTPUTLOG)
+	@rm -f *.exe ./lib/*.o *.o *.so *.d core* tag_macro_h.* \
+	output/*root output/*gif *~ */*~ $(OUTPUTLOG)
 
 #------------------------------------------------------------------------------
 zip:
@@ -124,6 +125,8 @@ lib/NNpionS.o: nnet/NNpionS.cxx
 	$(COMPILE)
 lib/NNvtx.o: nnet/NNvtx.cxx 
 	$(COMPILE)
+lib/NNcomb.o: nnet/NNcomb.cxx 
+	$(COMPILE)
 lib/NNetTool_MLP.o: src/NNetTool_MLP.cxx 
 	$(COMPILE)
 lib/NtpTag.o: src/NtpTag.cxx 
@@ -162,6 +165,7 @@ lib/tag.o: include/FlavourTag.h include/Tagger.h src/NNTuner.h
 lib/tag.o: src/TaggerElectronTool.h include/GenericTool.h src/NNetTool_MLP.h
 lib/tag.o: nnet/NNmuon.h nnet/NNele.h nnet/NNkaon.h nnet/NNkaonS.h nnet/NNpionS.h
 lib/tag.o: nnet/NNvtx.h src/TaggerKaonOppositeTool.h src/TaggerKaonSameTool.h
+lib/tag.o: nnet/NNcomb.h 
 lib/tag.o: src/TaggerFragmentationOppositeTool.h 
 lib/tag.o: src/TaggerMuonTool.h src/TaggerPionSameTool.h src/NtpTag.h
 lib/tag.o: src/EventViewer.h
@@ -184,13 +188,14 @@ lib/NNTuner.o: include/globals.h include/Event.h include/Vertex.h
 lib/NNTuner.o: src/TaggerElectronTool.h include/GenericTool.h
 lib/NNTuner.o: src/taggingutils.h src/NNetTool_MLP.h nnet/NNmuon.h
 lib/NNTuner.o: nnet/NNele.h nnet/NNkaon.h nnet/NNkaonS.h nnet/NNpionS.h
-lib/NNTuner.o: nnet/NNvtx.h src/TaggerKaonOppositeTool.h
+lib/NNTuner.o: nnet/NNvtx.h nnet/NNcomb.h src/TaggerKaonOppositeTool.h
 lib/NNTuner.o: src/TaggerKaonSameTool.h src/TaggerMuonTool.h
 lib/NNTuner.o: src/TaggerPionSameTool.h
 lib/NNetTool_MLP.o: src/NNetTool_MLP.h include/GenericTool.h
 lib/NNetTool_MLP.o: src/taggingutils.h include/globals.h
 lib/NNetTool_MLP.o: include/Particle.h nnet/NNmuon.h nnet/NNele.h
 lib/NNetTool_MLP.o: nnet/NNkaon.h nnet/NNkaonS.h nnet/NNpionS.h nnet/NNvtx.h
+lib/NNetTool_MLP.o: nnet/NNcomb.h 
 lib/NtpTag.o: src/taggingutils.h include/globals.h src/NtpTag.h
 lib/NtpTag.o: include/Event.h include/Particle.h include/Vertex.h
 lib/PerformanceMonitor.o: src/PerformanceMonitor.h 
@@ -256,3 +261,4 @@ lib/NNkaonS.o: nnet/NNkaonS.h
 lib/NNmuon.o: nnet/NNmuon.h
 lib/NNpionS.o: nnet/NNpionS.h
 lib/NNvtx.o: nnet/NNvtx.h
+lib/NNcomb.o: nnet/NNcomb.h

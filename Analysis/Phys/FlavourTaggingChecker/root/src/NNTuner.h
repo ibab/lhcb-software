@@ -12,6 +12,7 @@
 #include "Tagger.h"
 #include "Particle.h"
 #include "Event.h"
+#include "FlavourTag.h"
 
 #include "TaggerElectronTool.h"
 #include "TaggerKaonOppositeTool.h"
@@ -38,7 +39,7 @@ class NNTuner {
   ~NNTuner( ){ } ///< Destructor
   NNTuner(TString& );
 
-  void Fill(Event&, Taggers&);
+  void Fill(Event&, FlavourTag*);
   void TrainNNet();
 
   void Write() {   
@@ -49,6 +50,9 @@ class NNTuner {
   }
 
  private:
+
+  void exittuner();
+
   TTree*  nntrain;
   TFile*  fnnet;
   TString name;
@@ -56,6 +60,7 @@ class NNTuner {
   Int_t   iscorrect,tagger;
   Float_t mult,ptB,partP,partPt,IPPV,nndeta,nndphi,nndq, nnkrec;
   Float_t vflag, ptmin, ipsmin, docamax, maxprobf, vratio, vcharge;
+  Float_t om_muon, om_ele, om_kaon, om_same, om_vtx;
   
 };
 
