@@ -7,9 +7,11 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
-!========================== Hlt2Lines v5r1p2 2010-09-24 ===================
+
 ! 2010-09-24 - Fatima Soomro
 - Hlt2XGamma lines now explicitly depend on Hlt1 Photon lines
+
+!========================== Hlt2Lines v5r1p2 2010-09-24 ===================
 ! 2010-09-23 - Gerhard Raven
  - update Xgamma a bit to make it more readable -- no functional changes
  - remove obsolete files in options/ subdirectory
