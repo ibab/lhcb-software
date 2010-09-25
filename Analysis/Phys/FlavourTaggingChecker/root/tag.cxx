@@ -11,11 +11,10 @@ int main () {
   TaggerKaonSameTool        kStool ;
   TaggerPionSameTool        pStool ;
   TaggerVertexChargeTool    vtxtool;
-  TaggerFragmentationOppositeTool fragtool;
 
   CombineTaggersProbability combProbtool;
   CombineTaggersPID         combPIDtool ;
-  //CombineTaggersNN          combNNtool;
+  CombineTaggersNN          combNNtool;
 
   NNTuner nnetune(NNetTrain);
   PerformanceMonitor perfmon, perfmonNN;
@@ -58,7 +57,6 @@ int main () {
       Tagger* tkaon = ktool  .tag(event);
       Tagger* tsame = event.isBs()? kStool.tag(event):pStool.tag(event);
       Tagger* tvtx  = vtxtool.tag(event);
-      Tagger* tfrag = fragtool.tag(event);
    
       //Combination of tagger's decisions:
       Taggers taggers; 
@@ -67,7 +65,6 @@ int main () {
       taggers.push_back(tkaon); 
       taggers.push_back(tsame); 
       taggers.push_back(tvtx); 
-      taggers.push_back(tfrag); 
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
 
       int TrueTag = event.TrueTag();

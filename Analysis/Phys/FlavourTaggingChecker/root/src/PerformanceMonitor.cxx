@@ -61,14 +61,12 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
   Tagger* tkaon = mytaggers.at(2);
   Tagger* tsame = mytaggers.at(3);
   Tagger* tvtx  = mytaggers.at(4);
-  Tagger* tfrag = mytaggers.at(5);
 
   int tmuon_dec = tmuon->decision();
   int tele_dec  = tele ->decision();
   int tkaon_dec = tkaon->decision();
   int tsame_dec = tsame->decision();
   int tvtx_dec  = tvtx ->decision();
-  int tfrag_dec = tfrag->decision();
 
   int truetag = theTag->TrueTag();
   if(tmuon_dec) {tmuon_dec == truetag ? nrtag[0]++ : nwtag[0]++;}
@@ -76,7 +74,6 @@ void PerformanceMonitor::increment( Event& event, FlavourTag* theTag ){
   if(tkaon_dec) {tkaon_dec == truetag ? nrtag[2]++ : nwtag[2]++;}
   if(tsame_dec) {tsame_dec == truetag ? nrtag[3]++ : nwtag[3]++;}
   if(tvtx_dec)  {tvtx_dec  == truetag ? nrtag[4]++ : nwtag[4]++;}
-  if(tfrag_dec) {tfrag_dec == truetag ? nrtag[5]++ : nwtag[5]++;}
 
   int tagdec  = theTag->decision(); 
   int tagcat  = theTag->category();
@@ -285,7 +282,7 @@ void PerformanceMonitor::printStats() {
     if(isBs)if(it==maxnrofcat+4)
     {cats ="  SS kaons"; rtag= nrtag[3]; wtag= nwtag[3]; }
     if(it==maxnrofcat+5){cats =  "  VertexCh"; rtag = nrtag[4]; wtag = nwtag[4]; }
-    if(it==maxnrofcat+6){cats =  "  Fragment"; rtag = nrtag[5]; wtag = nwtag[5]; }
+    //if(it==maxnrofcat+6){cats =  "  Fragment"; rtag = nrtag[5]; wtag = nwtag[5]; }
  
     if(rtag+wtag == 0) continue; //empty category
 
