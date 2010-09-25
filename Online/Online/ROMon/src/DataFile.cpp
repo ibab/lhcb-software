@@ -1,4 +1,4 @@
-// $Id: DataFile.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: DataFile.cpp,v 1.2 2010-09-25 04:40:13 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.2 2010-09-25 04:40:13 frankb Exp $
 
 // Framework include files
 #include "RTL/rtl.h"
@@ -22,6 +22,11 @@
 
 using namespace ROMon;
 using namespace std;
+
+#ifdef _WIN32
+#include <io.h>
+#include <sys/stat.h>
+#endif
 
 /// Initializing constructor
 DataFile::DataFile(const string& n) : m_fd(0), m_name(n)  {
@@ -38,7 +43,7 @@ DataFile::~DataFile() {
 bool DataFile::migrated()  const {
   struct stat statbuf;
   if ( m_fd ) {
-    if ( 0 == ::lstat(name().c_str(),&statbuf) ) {
+    if ( 0 == ::stat(name().c_str(),&statbuf) ) {
       bool mig = m_stbuff.st_ino != statbuf.st_ino;
       ::lib_rtl_output(LIB_RTL_VERBOSE,"DataFile::migrated> File:%s %s",
 		       name().c_str(),mig ? "was migrated" : "is identical");

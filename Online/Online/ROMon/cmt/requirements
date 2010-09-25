@@ -5,6 +5,7 @@ package           ROMon
 version           v1r25
 #============================================================================
 branches          cmt doc src ROMon
+include_path none
 # dependency list
 use OnlineKernel  v* Online
 use DIM           v* Online         -no_auto_imports

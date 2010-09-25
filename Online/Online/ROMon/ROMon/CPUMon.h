@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.12 2010-09-20 18:59:49 frankb Exp $
+// $Id: CPUMon.h,v 1.13 2010-09-25 04:40:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.12 2010-09-20 18:59:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.13 2010-09-25 04:40:12 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -435,8 +435,8 @@ namespace ROMon {
     PPID, 
     PGID, 
     NLWP, 
-    USER_NAME,
-    GROUP_NAME,
+    PROC_USER_NAME,
+    PROC_GROUP_NAME,
     TTY,
     CMD,
     SCHED,
