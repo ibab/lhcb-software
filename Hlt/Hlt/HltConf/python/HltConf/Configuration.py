@@ -9,7 +9,6 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
-from Configurables       import HltANNSvc 
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 
@@ -250,6 +249,7 @@ class HltConf(LHCbConfigurableUser):
         HltRoutingBitsWriter().RoutingBits = routingBits
 
         ## and record the settings in the ANN service
+        from Configurables       import HltANNSvc 
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
         # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
         # make sure 'strings' is known... 
@@ -325,6 +325,7 @@ class HltConf(LHCbConfigurableUser):
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
         from HltLine.HltLine     import hlt1Selections
+        from Configurables       import HltANNSvc 
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
         updateDict( HltANNSvc().Hlt1SelectionID, 1000, missingDecisions )
