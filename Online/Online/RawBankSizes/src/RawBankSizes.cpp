@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.17 2010-09-22 19:01:14 frankb Exp $
+// $Id: RawBankSizes.cpp,v 1.18 2010-09-25 21:31:08 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -310,7 +310,8 @@ StatusCode RawBankSizes::initialize()
    totsize.binw = (totsize.xmax-totsize.xmin)/totsize.nbin;
    if (((int)totsize.binw % 4) != 0)
    {
-    printf("Binwidth for %s not a multiple of 4. %f\n",Banks[i].name.c_str(),totsize.binw);
+    // Beat: This is wrong and was Banks[i], which clearly accesses bad memory!
+    printf("Binwidth for %s not a multiple of 4. %f\n",Banks[0].name.c_str(),totsize.binw);
    }
    for (hindx=0;hindx<HISTPERHIST;hindx++)
    {
@@ -333,7 +334,8 @@ StatusCode RawBankSizes::initialize()
       bd->second->binw = (j->second->xmax-j->second->xmin)/j->second->n_bin; 
       if (((int)bd->second->binw % 4) != 0)
       {
-       printf("Binwidth for %s not a multiple of 4. %f\n",Banks[i].name.c_str(),bd->second->binw);
+        // Beat: This is wrong and was Banks[i], which clearly accesses bad memory!
+        printf("Binwidth for %s not a multiple of 4. %f\n",Banks[0].name.c_str(),bd->second->binw);
       }
       for (hindx=0;hindx<HISTPERHIST;hindx++)
       {

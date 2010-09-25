@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.h,v 1.6 2010-06-02 08:14:47 jost Exp $
+// $Id: RawBankSizes.h,v 1.7 2010-09-25 21:31:08 frankb Exp $
 #ifndef COMPONENT_RawBankSizes_H 
 #define COMPONENT_RawBankSizes_H 1
 
@@ -64,10 +64,10 @@ namespace LHCb
     bool m_firstevent;
     LHCb::BankDescr Banks[LHCb::RawBank::LastType];
     LHCb::BankDescr totsize;
-		HParam::HistParams m_hparams[LHCb::RawBank::LastType];
+    HParam::HistParams m_hparams[LHCb::RawBank::LastType];
 
-		HParam::HistParams m_totevpar;
-		HParam::HistParams m_HLTratiopar;
+    HParam::HistParams m_totevpar;
+    HParam::HistParams m_HLTratiopar;
 
     dethmap dethparams;
 
