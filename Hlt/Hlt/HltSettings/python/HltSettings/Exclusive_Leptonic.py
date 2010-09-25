@@ -21,18 +21,9 @@ class Exclusive_Leptonic :
             # Dstar for D2mumu
             'Hlt2Dst2PiD02KMu', 
             'Hlt2Dst2PiD02KPi', 
-            'Hlt2Dst2PiD02KPiD0SB', 
-            'Hlt2Dst2PiD02KPiDMSB', 
-            'Hlt2Dst2PiD02KPiSignal', 
             'Hlt2Dst2PiD02MuMu', 
-            'Hlt2Dst2PiD02MuMuD0SB', 
-            'Hlt2Dst2PiD02MuMuDMSB', 
-            'Hlt2Dst2PiD02MuMuSignal', 
             'Hlt2Dst2PiD02PiMu',
             'Hlt2Dst2PiD02PiPi', 
-            'Hlt2Dst2PiD02PiPiD0SB', 
-            'Hlt2Dst2PiD02PiPiDMSB', 
-            'Hlt2Dst2PiD02PiPiSignal',
 
             # another D2mumu
             'Hlt2CharmD02MuMu',
@@ -61,21 +52,17 @@ class Exclusive_Leptonic :
 
         from Hlt2Lines.Hlt2Dst2D2XXLines import Hlt2Dst2D2XXLinesConf
                     
-        d.update( { Hlt2Dst2D2XXLinesConf : { 
-            ## Cut values
-            'D0MinPT'            : 1600.      # MeV
-            , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi'         :  0.05
-                               , 'Hlt2Dst2PiD02KPi'        :  0.05
-                               , 'Hlt2Dst2PiD02KPiD0SB'    :  0.05
-                               , 'Hlt2Dst2PiD02KPiDMSB'    :  0.05
-                               , 'Hlt2Dst2PiD02KPiSignal'  :  0.1
-                               , 'Hlt2Dst2PiD02PiPiD0SB'   :  0.05
-                               , 'Hlt2Dst2PiD02PiPiDMSB'   :  0.05
-                               , 'Hlt2Dst2PiD02PiPiSignal' :  0.05
-                      
-          
-                               }
-            }}
-                  )
+        d.update( { Hlt2Dst2D2XXLinesConf : { 'D0MinPT'            : 1600.      # MeV
+                                            , 'Prescale'   : { 'Hlt2Dst2PiD02PiPi'       :  0.1
+                                                             , 'Hlt2Dst2PiD02KPi'        :  0.02
+                                                             , 'Hlt2Dst2PiD02MuMu'       :  1
+                                                             , 'Hlt2Dst2PiD02PiMu'       :  1
+                                                             , 'Hlt2Dst2PiD02KMu'        :  0.2
+                                                             , 'Hlt2Dst2PiD02EMu'        :  1
+                                                             , 'Hlt2Dst2PiD02EPi'        :  1
+                                                             , 'Hlt2Dst2PiD02EK'         :  1
+                                                             }
+                  }                         }
+                )
         
         return d

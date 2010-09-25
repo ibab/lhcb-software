@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-09-25 - Gerhard Raven
+ - adapt to Walter's changes in Hlt2Lines
+
 ! 2010-09-20 - Johannes Albrecht
  - add another (minimal) setting for VDM scan 
 

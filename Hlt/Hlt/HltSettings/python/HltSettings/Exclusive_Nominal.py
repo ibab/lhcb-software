@@ -80,13 +80,10 @@ class Exclusive_Nominal :
             'Hlt2Dst2PiD02KPiDMSB', 
             'Hlt2Dst2PiD02KPiSignal', 
             'Hlt2Dst2PiD02MuMu', 
-            'Hlt2Dst2PiD02MuMuD0SB', 
             'Hlt2Dst2PiD02MuMuDMSB', 
             'Hlt2Dst2PiD02MuMuSignal', 
             'Hlt2Dst2PiD02PiMu', 
             'Hlt2Dst2PiD02PiPi', 
-            'Hlt2Dst2PiD02PiPiD0SB', 
-            'Hlt2Dst2PiD02PiPiDMSB', 
             'Hlt2Dst2PiD02PiPiSignal',
 # Di-Proton
             'Hlt2IncDiProton', 
