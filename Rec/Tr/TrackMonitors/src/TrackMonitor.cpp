@@ -265,7 +265,23 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     if( (tmp=kalfit->chi2Match()).nDoF() > 0 )
       plot(tmp.chi2PerDoF(),type+"/chi2PerDofMatch","chi/dof upstream-downstream match",0,20) ;
     if( (tmp=kalfit->chi2Muon()).nDoF() > 0 ) 
-      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMuon","chi/dof for muon segment",0,20) ;
+      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMuon","chi/dof for muon segment",0,20) ; 
+    double mom = track.p()/Gaudi::Units::GeV ;
+    if( kalfit->chi2Velo().nDoF() > 0 ) 
+      profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
+		 "chi2 prob for velo segment versus momentum",0,30,30) ;
+    if( kalfit->chi2Downstream().nDoF() > 0 ) 
+      profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
+		 "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
+    if( kalfit->chi2Match().nDoF() > 0 )
+      profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
+		"chi2 prob upstream-downstream match versus momentum",0,30,30) ;
+    if( kalfit->chi2().nDoF() > 0 ) {
+      profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,50,50) ;
+      profile1D(track.pseudoRapidity(), kalfit->chi2().prob(),type+"/chi2ProbVsEta","chi2 prob versus eta",2,5,30) ;
+      profile1D(track.phi(), kalfit->chi2().prob(),type+"/chi2ProbVsPhi","chi2 prob versus phi",-M_PI,M_PI,50) ;
+    }
+    
   }
   
   // expert checks  
@@ -301,53 +317,41 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
            type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
     }
     
-    double mom = track.p()/Gaudi::Units::GeV ;
-    if (kalfit) {
-      if( kalfit->chi2Velo().nDoF() > 0 ) 
-	profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
-	    "chi2 prob for velo segment versus momentum",0,30,30) ;
-      if( kalfit->chi2Downstream().nDoF() > 0 ) 
-	profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
-	    "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
-      if( kalfit->chi2Match().nDoF() > 0 )
-	profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
-	    "chi2 prob upstream-downstream match versus momentum",0,30,30) ;
-      if( kalfit->chi2().nDoF() > 0 )
-	profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,30,30) ;
-    }
-    
-    std::vector<LHCb::LHCbID > ids;
-    std::bitset<23> velo[4];
-    m_veloExpectation->expectedInfo(track, velo);
-    m_ttExpectation->collect(track, ids);
-    m_itExpectation->collect(track, ids);
-    m_otExpectation->collect(track, ids);
-    
-    LHCb::HitPattern expHitPattern = LHCb::HitPattern(ids);
-    expHitPattern.setVeloRA(velo[0]);
-    expHitPattern.setVeloRC(velo[1]); 
-    expHitPattern.setVeloPhiA(velo[2]);
-    expHitPattern.setVeloPhiC(velo[3]);
+ 
+    if( track.type() == LHCb::Track::Long ) {
+      std::vector<LHCb::LHCbID > ids;
+      std::bitset<23> velo[4];
+      m_veloExpectation->expectedInfo(track, velo);
+      m_ttExpectation->collect(track, ids);
+      m_itExpectation->collect(track, ids);
+      m_otExpectation->collect(track, ids);
+      
+      LHCb::HitPattern expHitPattern = LHCb::HitPattern(ids);
+      expHitPattern.setVeloRA(velo[0]);
+      expHitPattern.setVeloRC(velo[1]); 
+      expHitPattern.setVeloPhiA(velo[2]);
+      expHitPattern.setVeloPhiC(velo[3]);
 
 
-    // compare to what we expected
-    if (expHitPattern.numOTHits() > 0 ){
-      plot(nOTHits  - expHitPattern.numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
-    }
-
-    // compare to what we expected
-    if (expHitPattern.numITHits() > 0){
-      plot(nITHits  - expHitPattern.numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
-    }
-
-    // compare to what we expected
-    if (expHitPattern.numTTHits() > 0){
-      plot(nTTHits - expHitPattern.numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
-    }
-
-    // compare to what we expected
-    if (expHitPattern.numVeloR() + expHitPattern.numVeloPhi() > 0){
-      plot(nVeloHits - expHitPattern.numVeloR() - expHitPattern.numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+      // compare to what we expected
+      if (expHitPattern.numOTHits() > 0 ){
+	plot(nOTHits  - expHitPattern.numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
+      }
+      
+      // compare to what we expected
+      if (expHitPattern.numITHits() > 0){
+	plot(nITHits  - expHitPattern.numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
+      }
+      
+      // compare to what we expected
+      if (expHitPattern.numTTHits() > 0){
+	plot(nTTHits - expHitPattern.numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
+      }
+      
+      // compare to what we expected
+      if (expHitPattern.numVeloR() + expHitPattern.numVeloPhi() > 0){
+	plot(nVeloHits - expHitPattern.numVeloR() - expHitPattern.numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+      }
     }
 
     const LHCb::Track::ExtraInfo& info = track.extraInfo();
