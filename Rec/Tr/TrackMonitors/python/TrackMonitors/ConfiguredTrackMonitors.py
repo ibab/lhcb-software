@@ -4,7 +4,8 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,OTTimeMonitor,
                            TrackCaloMatchMonitor,TrackMuonMatchMonitor,
                            TrackITOverlapMonitor,TrackVeloOverlapMonitor,
-                           TTTrackMonitor, ITTrackMonitor, TrackTimingMonitor,
+                           TTTrackMonitor, ITTrackMonitor,TrackTimingMonitor,
+                           TrackPV2HalfAlignMonitor,
 			   HitEffPlotter)
 from Configurables import (RecSysConf, RecMoniConf, TrackSys)
 
@@ -27,7 +28,7 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         seq.Members.append( TrackVeloOverlapMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TTTrackMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( ITTrackMonitor(HistoPrint=HistoPrint) )
-        
+        seq.Members.append( TrackPV2HalfAlignMonitor(HistoPrint=HistoPrint) )
 	if RecMoniConf().expertHistos() : 
             seq.Members.append( HitEffPlotter(HistoPrint=HistoPrint) )
 
