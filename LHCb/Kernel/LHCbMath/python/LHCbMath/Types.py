@@ -2,6 +2,8 @@
 # =============================================================================
 # $Id: Types.py,v 1.9 2010-06-16 12:20:57 ibelyaev Exp $
 # =============================================================================
+# $URL$
+# =============================================================================
 ## @file
 #
 #  Simple file to provide "easy" access in python for
@@ -34,6 +36,11 @@
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-09-12
+#
+#  Last modification $Date$
+#                 by $Author$
+#
+#
 # =============================================================================
 """
 
@@ -66,13 +73,17 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
   >>> dir( Gaudi      )
   
 
+
+  Last modification $Date$
+                 by $Author$
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " Version $Revision: 1.9 $ "
 # =============================================================================
-__all__     = ()  ## nothing to be imported !
+__all__     = () ## nothing to be imported !
 # =============================================================================
 import ROOT
 
@@ -83,125 +94,97 @@ from GaudiPython.Bindings import gbl as cpp
 Gaudi = cpp.Gaudi
 
 ## ROOT::Math namespace 
-_RM = cpp.ROOT.Math
+_RM = ROOT.ROOT.Math
 
-if not hasattr ( Gaudi , 'XYZPoint'      ) : 
-    Gaudi.XYZPoint      = _RM.PositionVector3D     ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
-if not hasattr ( Gaudi , 'XYZVector'     ) :     
-    Gaudi.XYZVector     = _RM.DisplacementVector3D ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
-if not hasattr ( Gaudi , 'LorentzVector' ) :     
-    Gaudi.LorentzVector = _RM.LorentzVector        ('ROOT::Math::PxPyPzE4D<double>')
-if not hasattr ( Gaudi      , 'Plane3D'  ) :
-    Gaudi.Plane3D       = _RM.Plane3D
 
-if not hasattr ( Gaudi.Math , 'XYZPoint'       ) : Gaudi.Math.XYZPoint       = Gaudi.XYZPoint
-if not hasattr ( Gaudi.Math , 'XYZVector'      ) : Gaudi.Math.XYZVector      = Gaudi.XYZVector
-if not hasattr ( Gaudi.Math , 'LorentzVector'  ) : Gaudi.Math.LorentzVector  = Gaudi.LorentzVector    
-if not hasattr ( Gaudi.Math , 'Plane3D'        ) : Gaudi.Math.Plane3D  = Gaudi.Plane3D  
+Gaudi.XYZPoint            = _RM.PositionVector3D     ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
+Gaudi.XYZVector           = _RM.DisplacementVector3D ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
+Gaudi.LorentzVector       = _RM.LorentzVector        ('ROOT::Math::PxPyPzE4D<double>')
+Gaudi.Plane3D             = _RM.Plane3D
 
-if not hasattr ( Gaudi      , 'Point3D'        ) : Gaudi.Point3D            = Gaudi.XYZPoint
-if not hasattr ( Gaudi.Math , 'Point3D'        ) : Gaudi.Math.Point3D       = Gaudi.XYZPoint
+Gaudi.Math.XYZPoint       = Gaudi.XYZPoint
+Gaudi.Math.XYZVector      = Gaudi.XYZVector
+Gaudi.Math.LorentzVector  = Gaudi.LorentzVector    
+Gaudi.Math.Plane3D        = Gaudi.Plane3D  
 
-if not hasattr ( Gaudi      , 'Vector3D'       ) : Gaudi.Vector3D           = Gaudi.XYZVector
-if not hasattr ( Gaudi.Math , 'Vector3D'       ) : Gaudi.Math.Vector3D      = Gaudi.XYZVector
+Gaudi.Point3D             = Gaudi.XYZPoint
+Gaudi.Math.Point3D        = Gaudi.XYZPoint
 
-    
-if not hasattr ( Gaudi , 'Vector2' )  :
-    Gaudi.Vector2      = _RM.SVector( 'double' , 2 )
-if not hasattr ( Gaudi , 'Vector3' )  :
-    Gaudi.Vector3      = _RM.SVector( 'double' , 3 )
-if not hasattr ( Gaudi , 'Vector4' )  :
-    Gaudi.Vector4      = _RM.SVector( 'double' , 4 )
-if not hasattr ( Gaudi , 'Vector5' )  :
-    Gaudi.Vector5      = _RM.SVector( 'double' , 5 )
-if not hasattr ( Gaudi , 'Vector8' )  :
-    Gaudi.Vector8      = _RM.SVector( 'double' , 8 )
+Gaudi.Vector3D            = Gaudi.XYZVector
+Gaudi.Math.Vector3D       = Gaudi.XYZVector
 
-if not hasattr ( Gaudi.Math , 'Vector2' ) : Gaudi.Math.Vector2 = Gaudi.Vector2 
-if not hasattr ( Gaudi.Math , 'Vector3' ) : Gaudi.Math.Vector3 = Gaudi.Vector3 
-if not hasattr ( Gaudi.Math , 'Vector4' ) : Gaudi.Math.Vector4 = Gaudi.Vector4 
-if not hasattr ( Gaudi.Math , 'Vector5' ) : Gaudi.Math.Vector5 = Gaudi.Vector5 
-if not hasattr ( Gaudi.Math , 'Vector8' ) : Gaudi.Math.Vector8 = Gaudi.Vector8 
+Gaudi.Vector2             = _RM.SVector( 'double' , 2 )
+Gaudi.Vector3             = _RM.SVector( 'double' , 3 )
+Gaudi.Vector4             = _RM.SVector( 'double' , 4 )
+Gaudi.Vector5             = _RM.SVector( 'double' , 5 )
+Gaudi.Vector8             = _RM.SVector( 'double' , 8 )
 
-if not hasattr ( Gaudi , 'SymMatrix2x2' ) :
-    Gaudi.SymMatrix2x2 = _RM.SMatrix('double,2,2,ROOT::Math::MatRepSym<double,2>')
-if not hasattr ( Gaudi , 'SymMatrix3x3' ) :
-    Gaudi.SymMatrix3x3 = _RM.SMatrix('double,3,3,ROOT::Math::MatRepSym<double,3>')    
-if not hasattr ( Gaudi , 'SymMatrix4x4' ) :
-    Gaudi.SymMatrix4x4 = _RM.SMatrix('double,4,4,ROOT::Math::MatRepSym<double,4>')
-if not hasattr ( Gaudi , 'SymMatrix5x5' ) :
-    Gaudi.SymMatrix5x5 = _RM.SMatrix('double,5,5,ROOT::Math::MatRepSym<double,5>')
-if not hasattr ( Gaudi , 'SymMatrix6x6' ) :
-    Gaudi.SymMatrix6x6 = _RM.SMatrix('double,6,6,ROOT::Math::MatRepSym<double,6>')
+Gaudi.Math.Vector2        = Gaudi.Vector2 
+Gaudi.Math.Vector3        = Gaudi.Vector3 
+Gaudi.Math.Vector4        = Gaudi.Vector4 
+Gaudi.Math.Vector5        = Gaudi.Vector5 
+Gaudi.Math.Vector8        = Gaudi.Vector8 
+
+Gaudi.SymMatrix2x2        = _RM.SMatrix('double,2,2,ROOT::Math::MatRepSym<double,2>')
+Gaudi.SymMatrix3x3        = _RM.SMatrix('double,3,3,ROOT::Math::MatRepSym<double,3>')    
+Gaudi.SymMatrix4x4        = _RM.SMatrix('double,4,4,ROOT::Math::MatRepSym<double,4>')
+Gaudi.SymMatrix5x5        = _RM.SMatrix('double,5,5,ROOT::Math::MatRepSym<double,5>')
+Gaudi.SymMatrix6x6        = _RM.SMatrix('double,6,6,ROOT::Math::MatRepSym<double,6>')
 ## LHCb::Particle
-if not hasattr ( Gaudi , 'SymMatrix7x7' ) :
-    Gaudi.SymMatrix7x7 = _RM.SMatrix('double,7,7,ROOT::Math::MatRepSym<double,7>')
+Gaudi.SymMatrix7x7        = _RM.SMatrix('double,7,7,ROOT::Math::MatRepSym<double,7>')
 ## Gaudi::Math::ParticleParams 
-if not hasattr ( Gaudi , 'SymMatrix8x8' ) :
-    Gaudi.SymMatrix8x8 = _RM.SMatrix('double,8,8,ROOT::Math::MatRepSym<double,8>')
+Gaudi.SymMatrix8x8        = _RM.SMatrix('double,8,8,ROOT::Math::MatRepSym<double,8>')
 ## LHCb:TwoProngVertex
-if not hasattr ( Gaudi , 'SymMatrix9x9' ) :
-    Gaudi.SymMatrix9x9 = _RM.SMatrix('double,9,9,ROOT::Math::MatRepSym<double,9>')
+Gaudi.SymMatrix9x9        = _RM.SMatrix('double,9,9,ROOT::Math::MatRepSym<double,9>')
 
 
-if not hasattr ( Gaudi.Math , 'SymMatrix2x2' ) : Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix2x2 
-if not hasattr ( Gaudi.Math , 'SymMatrix3x3' ) : Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix3x3 
-if not hasattr ( Gaudi.Math , 'SymMatrix4x4' ) : Gaudi.Math.SymMatrix4x4 = Gaudi.SymMatrix4x4
-if not hasattr ( Gaudi.Math , 'SymMatrix5x5' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix5x5 
-if not hasattr ( Gaudi.Math , 'SymMatrix6x6' ) : Gaudi.Math.SymMatrix6x6 = Gaudi.SymMatrix6x6 
-if not hasattr ( Gaudi.Math , 'SymMatrix7x7' ) : Gaudi.Math.SymMatrix7x7 = Gaudi.SymMatrix7x7 
-if not hasattr ( Gaudi.Math , 'SymMatrix8x8' ) : Gaudi.Math.SymMatrix8x8 = Gaudi.SymMatrix8x8 
-if not hasattr ( Gaudi.Math , 'SymMatrix9x9' ) : Gaudi.Math.SymMatrix9x9 = Gaudi.SymMatrix9x9 
+Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix2x2 
+Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix3x3 
+Gaudi.Math.SymMatrix4x4   = Gaudi.SymMatrix4x4
+Gaudi.Math.SymMatrix5x5   = Gaudi.SymMatrix5x5 
+Gaudi.Math.SymMatrix6x6   = Gaudi.SymMatrix6x6 
+Gaudi.Math.SymMatrix7x7   = Gaudi.SymMatrix7x7 
+Gaudi.Math.SymMatrix8x8   = Gaudi.SymMatrix8x8 
+Gaudi.Math.SymMatrix9x9   = Gaudi.SymMatrix9x9
 
 #
 # specific matrices for 'tracks'
 #
 
-if not hasattr ( Gaudi      , 'Matrix5x5'      ) : Gaudi.Matrix5x5             = _RM.SMatrix('double,5,5')
-if not hasattr ( Gaudi      , 'TrackMatrix'    ) : Gaudi.TrackMatrix           = Gaudi.Matrix5x5 
-if not hasattr ( Gaudi.Math , 'Matrix5x5'      ) : Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5 
-if not hasattr ( Gaudi.Math , 'TrackMatrix'    ) : Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix 
+Gaudi.Matrix5x5             = _RM.SMatrix('double,5,5')
+Gaudi.TrackMatrix           = Gaudi.Matrix5x5 
+Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5 
+Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix 
 
-if not hasattr ( Gaudi      , 'TrackSymMatrix' ) : Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
-if not hasattr ( Gaudi.Math , 'TrackSymMatrix' ) : Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix 
+Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
+Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix 
 
-if not hasattr ( Gaudi      , 'TrackVector'    ) : Gaudi.TrackVector           = Gaudi.Vector5 
-if not hasattr ( Gaudi.Math , 'TrackVector'    ) : Gaudi.Math.TrackVector      = Gaudi.TrackVector
+Gaudi.TrackVector           = Gaudi.Vector5 
+Gaudi.Math.TrackVector      = Gaudi.TrackVector
 
 #
 # matrix from LHCb::Particle
 #
-if not hasattr ( Gaudi      , 'Matrix4x3'      ) : Gaudi.Matrix4x3             = _RM.SMatrix('double,4,3')
-if not hasattr ( Gaudi.Math , 'Matrix4x3'      ) : Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
+Gaudi.Matrix4x3             = _RM.SMatrix('double,4,3')
+Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
 
     
 ## Gaudi::Math
-        
-if not hasattr ( Gaudi.Math , 'XYZLine' ) :
-    Gaudi.Math.XYZLine = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
+Gaudi.Math.XYZLine           = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
+Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
+Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
+Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
+Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
+Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
 
-if not hasattr ( Gaudi.Math , 'SVector2WithError' ) :
-    Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
-if not hasattr ( Gaudi.Math , 'SVector3WithError' ) :
-    Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
-if not hasattr ( Gaudi.Math , 'SVector4WithError' ) :
-    Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
-if not hasattr ( Gaudi.Math , 'SVector5WithError' ) :
-    Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
-if not hasattr ( Gaudi.Math , 'SVector8WithError' ) :
-    Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
-
-if not hasattr ( Gaudi      , 'XYZLine' ) : Gaudi.XYZLine     = Gaudi.Math.XYZLine
-if not hasattr ( Gaudi      , 'Line3D'  ) : Gaudi.Line3D      = Gaudi.Math.XYZLine
-if not hasattr ( Gaudi.Math , 'Line3D'  ) : Gaudi.Math.Line3D = Gaudi.Math.XYZLine
+Gaudi.XYZLine                = Gaudi.Math.XYZLine
+Gaudi.Line3D                 = Gaudi.Math.XYZLine
+Gaudi.Math.Line3D            = Gaudi.Math.XYZLine
 
 
-if not hasattr ( Gaudi.Math , 'frac' ) :
-    Gaudi.Math.frac     = Gaudi.Math.Functions.frac
-if not hasattr ( Gaudi.Math , 'asym' ) :
-    Gaudi.Math.asym     = Gaudi.Math.Functions.asym
-if not hasattr ( Gaudi.Math , 'binomEff' ) :
-    Gaudi.Math.binomEff = Gaudi.Math.Functions.binomEff 
+Gaudi.Math.frac              = Gaudi.Math.Functions.frac
+Gaudi.Math.asym              = Gaudi.Math.Functions.asym
+Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff 
 
 ## ============================================================================
 ## some useful decoration:
@@ -229,7 +212,6 @@ def _o_sub_ ( self , other ) :
     tmp  -= other 
     return tmp
 
-
 ## Self-printout of 3D-points and 3D-vectors
 def _o1_str_ ( self , fmt = "( %g, %g, %g) ") :
     """    
@@ -247,30 +229,35 @@ def _o2_str_ ( self , fmt = "[( %g, %g, %g), %g]" ) :
     return fmt % ( self.X() , self.Y( ), self.Z() , self.E() )
 
 
-if not hasattr ( _P3D , '__mul__' ) : _P3D.__mul__ = _o_mul_
-if not hasattr ( _V3D , '__mul__' ) : _V3D.__mul__ = _o_mul_
-if not hasattr ( _V4D , '__mul__' ) : _V4D.__mul__ = _o_mul_
+_P3D.__mul__ = _o_mul_
+_V3D.__mul__ = _o_mul_
+_V4D.__mul__ = _o_mul_
 
-if not hasattr ( _P3D , '__add__' ) : _P3D.__add__ = _o_add_
-if not hasattr ( _V3D , '__add__' ) : _V3D.__add__ = _o_add_
-if not hasattr ( _V4D , '__add__' ) : _V4D.__add__ = _o_add_
+_P3D.__add__ = _o_add_
+_V3D.__add__ = _o_add_
+_V4D.__add__ = _o_add_
 
-if not hasattr ( _P3D , '__sub__' ) : _P3D.__sub__ = _o_sub_
-if not hasattr ( _V3D , '__sub__' ) : _V3D.__sub__ = _o_sub_
-if not hasattr ( _V4D , '__sub__' ) : _V4D.__sub__ = _o_sub_
-
+_P3D.__sub__ = _o_sub_
+_V3D.__sub__ = _o_sub_
+_V4D.__sub__ = _o_sub_
     
-if not hasattr ( _V3D , '__rmul__' ) : _V3D. __rmul__ = _V3D.__mul__ 
-if not hasattr ( _V4D , '__rmul__' ) : _V4D. __rmul__ = _V4D.__mul__ 
+_V3D. __rmul__ = _V3D.__mul__ 
+_V4D. __rmul__ = _V4D.__mul__
 
+if not hasattr ( _P3D , '_new_str_' ) :
+    _P3D._new_str_ = _o1_str_  
+    _P3D.__str__   = _o1_str_
+    _P3D.__repr__  = _o1_str_
+
+if not hasattr ( _V3D , '_new_str_' ) :
+    _V3D._new_str_ = _o1_str_
+    _V3D.__str__   = _o1_str_
+    _V3D.__repr__  = _o1_str_
     
-_P3D.__str__  = _o1_str_
-_V3D.__str__  = _o1_str_
-_V4D.__str__  = _o2_str_
-
-_P3D.__repr__ = _o1_str_
-_V3D.__repr__ = _o1_str_
-_V4D.__repr__ = _o2_str_
+if not hasattr ( _V4D , '_new_str_' ) :    
+    _V4D._new_str_ = _o2_str_
+    _V4D.__str__   = _o2_str_
+    _V4D.__repr__  = _o2_str_
 
 # =============================================================================
 ## Self-printout of line
@@ -282,8 +269,10 @@ def _l_str_ ( self ) :
     """
     return "(%s,%s)" % ( self.beginPoint() , self.direction() )
 
-Gaudi.Math.XYZLine.__str__  = _l_str_
-Gaudi.Math.XYZLine.__repr__ = _l_str_
+if not hasattr ( Gaudi.Math.XYZLine , '_new_str_' ) :
+    Gaudi.Math.XYZLine._new_str_ = _l_str_
+    Gaudi.Math.XYZLine.__str__   = _l_str_
+    Gaudi.Math.XYZLine.__repr__  = _l_str_
 
 # ============================================================================
 ## self-printpout of matrices
@@ -301,7 +290,7 @@ def _mg_str_ ( self , fmt = ' %+11.4g') :
         _line += ' |'
         if ( _rows - 1 )  != _irow : _line += '\n'
     return _line
-# 
+#
 ## self-printpout of symmetrical matrices
 def _ms_str_ ( self , fmt = ' %+11.4g' , width = 12 ) :
     """
@@ -322,8 +311,10 @@ def _ms_str_ ( self , fmt = ' %+11.4g' , width = 12 ) :
 for m in ( Gaudi.Matrix5x5      ,
            Gaudi.TrackMatrix    ,
            Gaudi.Matrix4x3      ) :
-    m. __repr__ = _mg_str_
-    m. __str__  = _mg_str_
+    if not hasattr ( m , '_new_str_' ) : 
+        m. _new_str_ = _mg_str_
+        m. __repr__  = _mg_str_
+        m. __str__   = _mg_str_
     
 for m in ( Gaudi.SymMatrix2x2   ,
            Gaudi.SymMatrix3x3   ,
@@ -334,12 +325,12 @@ for m in ( Gaudi.SymMatrix2x2   ,
            Gaudi.SymMatrix8x8   ,
            Gaudi.SymMatrix9x9   ,
            Gaudi.TrackSymMatrix ) :
-    m. __repr__ = _ms_str_
-    m. __str__  = _ms_str_
-
-           
-           
-    
+    if not hasattr ( m , '_new_str_' ) : 
+        m. _new_str_ = _ms_str_
+        m. __repr__  = _ms_str_
+        m. __str__   = _ms_str_
+        
+                      
 # =============================================================================
 ## Self-printout of 3D-plane
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -350,8 +341,10 @@ def _p_str_ ( self ) :
     """
     return "(%s,%s)" % ( self.ProjectOntoPlane( Gaudi.XYZPoint()) , self.Normal() )
 
-Gaudi.Plane3D.__str__   = _p_str_
-Gaudi.Plane3D.__repr__  = _p_str_
+if not hasattr ( Gaudi.Plane3D , '_new_str_' ) :
+    Gaudi.Plane3D._new_str_ = _p_str_
+    Gaudi.Plane3D.__str__   = _p_str_
+    Gaudi.Plane3D.__repr__  = _p_str_
 
 # =============================================================================
 ## self-printout of S-vectors 
@@ -373,10 +366,11 @@ for t in  ( Gaudi.Vector2 ,
             Gaudi.Vector3 ,
             Gaudi.Vector4 ,
             Gaudi.Vector5 ) :
-    
-    t.__str__  = _v_str_
-    t.__repr__ = _v_str_
-
+    if not hasattr ( t , '_new_str_' ) :
+        t._new_str_ = _v_str_
+        t.__str__   = _v_str_
+        t.__repr__  = _v_str_
+        
 
 for t in ( Gaudi.Math.ValueWithError         ,
            Gaudi.Math.Point3DWithError       ,
@@ -386,8 +380,10 @@ for t in ( Gaudi.Math.ValueWithError         ,
            Gaudi.Math.SVector4WithError      , 
            Gaudi.Math.SVector5WithError      , 
            Gaudi.Math.SVector8WithError      ) :
-    t.__str__  = t.toString
-    t.__repr__ = t.toString
+    if not hasattr ( t , '_new_str_' ) :
+        t._new_str_ = t.toString
+        t.__str__   = t.toString
+        t.__repr__  = t.toString
 
 # =============================================================================
 ## self-printout of Gaudi::Math::ParticleParams  
@@ -402,8 +398,10 @@ def _pp_str_ ( self ) :
     len = self.decayLength () 
     return " ( %s/%s/%s ) " % ( pos, mom , len )
 
-Gaudi.Math.ParticleParams.__str__  = _pp_str_
-Gaudi.Math.ParticleParams.__repr__ = _pp_str_
+if not hasattr ( Gaudi.Math.ParticleParams , '_new_str_' ) :
+    Gaudi.Math.ParticleParams._new_str_ = _pp_str_
+    Gaudi.Math.ParticleParams.__str__   = _pp_str_
+    Gaudi.Math.ParticleParams.__repr__  = _pp_str_
 
 # =============================================================================
 ## various decorators for GeomFun.h
@@ -420,21 +418,23 @@ if not hasattr ( Gaudi , 'XYZGeomFun' ) :
     
 _GeomFun = Gaudi.Math.XYZGeomFun
 
-
 # =============================================================================
 ## intersection of line and plane 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __intersect_line_and_plane__ ( line , plane ) :
+def _intersect_line_and_plane_ ( line , plane ) :
     """
     Find the intersection of line and plane
 
     >>> line  = ...
     >>> plane = ...
+    
     >>> ok, point, mu = line.intersect ( plane )
 
     The return value is a tuple: 
     - the point
+
+     
     - the parameter along the line
     - the flag (true if intersection exists)
     
@@ -449,16 +449,16 @@ def __intersect_line_and_plane__ ( line , plane ) :
     else     : _flag = False 
     return (_point,_mu,_flag)
     
-__intersect_line_and_plane__ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
+_intersect_line_and_plane_ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
 
 if not hasattr ( Gaudi.XYZLine , 'intersect' ) :
-    Gaudi.XYZLine.intersect = __intersect_line_and_plane__
+    Gaudi.XYZLine.intersect = _intersect_line_and_plane_
 
 # =============================================================================
 ## intersect two planes 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __intersect_two_planes__ ( plane , plane1 ) :
+def _intersect_two_planes_ ( plane , plane1 ) :
     """
     Find the intersection line for two planes:
 
@@ -478,17 +478,17 @@ def __intersect_two_planes__ ( plane , plane1 ) :
     else     : _flag = False 
     return (_line,_flag)
 
-__intersect_two_planes__ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
+_intersect_two_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
 
 if not hasattr ( Gaudi.Plane3D , 'line' ) :
-    Gaudi.Plane3D.line = __intersect_two_planes__
+    Gaudi.Plane3D.line = _intersect_two_planes_
 
 
 # =============================================================================
 ## intersect three planes 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __intersect_three_planes__ ( plane , plane1 , plane2 ) :
+def _intersect_three_planes_ ( plane , plane1 , plane2 ) :
     """
     Find the intersection point for three planes:
 
@@ -510,19 +510,19 @@ def __intersect_three_planes__ ( plane , plane1 , plane2 ) :
     return (_point,_flag)
 
 
-__intersect_three_planes__ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
+_intersect_three_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
 
 if not hasattr ( Gaudi.Plane3D , 'point' ) :
-    Gaudi.Plane3D.point = __intersect_three_planes__
+    Gaudi.Plane3D.point = _intersect_three_planes_
 
 
 # =============================================================================
 ## intersect the planes 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __intersect_the_planes__ ( plane , plane1 , plane2 = None ) :
+def _intersect_the_planes_ ( plane , plane1 , plane2 = None ) :
     """
-    Find the intersection line/point for tteo/three planes:
+    Find the intersection line/point for two or three planes:
 
     >>> plane  = ...
     >>> plane1 = ...
@@ -539,20 +539,20 @@ def __intersect_the_planes__ ( plane , plane1 , plane2 = None ) :
     - the flag (true if intersection exists)
     
     """
-    if not plane2 : return __intersect_two_planes__ ( plane , plane1 )
-    return __intersect_three_planes__ ( plane , plane1 , plane2 )
+    if not plane2 : return _intersect_two_planes_ ( plane , plane1 )
+    return _intersect_three_planes_ ( plane , plane1 , plane2 )
     
-__intersect_the_planes__ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
+_intersect_the_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__ 
 
 if not hasattr ( Gaudi.Plane3D , 'intersect' ) :
-    Gaudi.Plane3D.intersect = __intersect_the_planes__
+    Gaudi.Plane3D.intersect = _intersect_the_planes_
 
 
 # =============================================================================
 ## calculate the impact parameter of the line & point
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __imp_par_1__ ( line , point ) :
+def _imp_par_1_ ( line , point ) :
     """
     Calculate the impact parameter of the line and the point
 
@@ -563,18 +563,18 @@ def __imp_par_1__ ( line , point ) :
     """
     return _GeomFun.impactParameter ( point , line )
 
-__imp_par_1__ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__ 
+_imp_par_1_ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__ 
 
 if not hasattr ( Gaudi.XYZLine , 'impactParameter' ) :
-    Gaudi.XYZLine.impactParameter = __imp_par_1__
+    Gaudi.XYZLine.impactParameter = _imp_par_1_
 if not hasattr ( Gaudi.XYZLine , 'ip'              ) :
-    Gaudi.XYZLine.ip              = __imp_par_1__
+    Gaudi.XYZLine.ip              = _imp_par_1_
 
 # =============================================================================
 ## calculate the impact parameter of the line & point
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __imp_par_2__ ( point , line ) :
+def _imp_par_2_ ( point , line ) :
     """
     Calculate the impact parameter of the line and the point
 
@@ -586,12 +586,12 @@ def __imp_par_2__ ( point , line ) :
     return _GeomFun.impactParameter ( point , line )
 
 
-__imp_par_2__ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__ 
+_imp_par_2_ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__ 
 
 if not hasattr ( Gaudi.XYZPoint , 'impactParameter' ) :
-    Gaudi.XYZPoint.impactParameter = __imp_par_2__
+    Gaudi.XYZPoint.impactParameter = _imp_par_2_
 if not hasattr ( Gaudi.XYZPoint , 'ip'              ) :
-    Gaudi.XYZPoint.ip              = __imp_par_2__
+    Gaudi.XYZPoint.ip              = _imp_par_2_
 
 
 
@@ -599,7 +599,7 @@ if not hasattr ( Gaudi.XYZPoint , 'ip'              ) :
 ## distance between two lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __distance_between_two_lines__ ( line , line1 ) :
+def _distance_between_two_lines_ ( line , line1 ) :
     """
     Find the distance netween two lines :
 
@@ -611,17 +611,17 @@ def __distance_between_two_lines__ ( line , line1 ) :
     return _GeomFun.distance ( line , line1 )
 
 
-__distance_between_two_lines__ . __doc__ += '\n' + _GeomFun.distance. __doc__
+_distance_between_two_lines_ . __doc__ += '\n' + _GeomFun.distance. __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'distance' ) :
-    Gaudi.XYZLine.distance = __distance_between_two_lines__
+    Gaudi.XYZLine.distance = _distance_between_two_lines_
 
 
 # =============================================================================
 ## find the closest points for two lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __closest_points__ ( line , line1 ) :
+def _closest_points_ ( line , line1 ) :
     """
     Calculate the two closest points between two lines
 
@@ -643,17 +643,17 @@ def __closest_points__ ( line , line1 ) :
     return (_point1,_point2,_flag)
     
 
-__closest_points__ . __doc__ += '\n' + _GeomFun.closestPoints . __doc__
+_closest_points_ . __doc__ += '\n' + _GeomFun.closestPoints . __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'closestPoints' ) :
-    Gaudi.XYZLine.closestPoints = __closest_points__
+    Gaudi.XYZLine.closestPoints = _closest_points_
 
 
 # =============================================================================
 ## find the closest points for two lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __closest_point_params__ ( line , line1 ) :
+def _closest_point_params_ ( line , line1 ) :
     """
     Calculate the parameters for two closest points between two lines
 
@@ -675,16 +675,16 @@ def __closest_point_params__ ( line , line1 ) :
     return (_mu1,_mu2,_flag)
     
 
-__closest_point_params__ . __doc__ += '\n' + _GeomFun.closestPointParams . __doc__
+_closest_point_params_ . __doc__ += '\n' + _GeomFun.closestPointParams . __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'closestPointParams' ) :
-    Gaudi.XYZLine.closestPointParams = __closest_point_params__
+    Gaudi.XYZLine.closestPointParams = _closest_point_params_
 
 # =============================================================================
 ## find the point on ilne closest to the given point
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __closest_point_1__ ( line , point ) :
+def _closest_point_1_ ( line , point ) :
     """
     Find the point on line closest to the given point
 
@@ -695,16 +695,16 @@ def __closest_point_1__ ( line , point ) :
     """
     return _GeomFun.closestPoint ( point , line )
 
-__closest_point_1__ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
+_closest_point_1_ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'closestPoint' ) :
-    Gaudi.XYZLine.closestPoint = __closest_point_1__
+    Gaudi.XYZLine.closestPoint = _closest_point_1_
     
 # =============================================================================
 ## find the point on ilne closest to the given point
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __closest_point_2__ ( point , line ) :
+def _closest_point_2_ ( point , line ) :
     """
     Find the point on line closest to the given point
 
@@ -715,10 +715,10 @@ def __closest_point_2__ ( point , line ) :
     """
     return _GeomFun.closestPoint ( point , line )
 
-__closest_point_2__ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
+_closest_point_2_ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
 
 if not hasattr ( Gaudi.XYZPoint , 'closestPoint' ) :
-    Gaudi.XYZPoint.closestPoint = __closest_point_2__
+    Gaudi.XYZPoint.closestPoint = _closest_point_2_
 
 
 # =============================================================================
@@ -747,7 +747,7 @@ if not hasattr ( Gaudi.XYZLine , 'closestPointParam' ) :
 ## find the parameter along the line to the closest point to the given point
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __closest_point_param_2__ ( point , line ) :
+def _closest_point_param_2_ ( point , line ) :
     """
     Find the parameter along the line to the closest point 
 
@@ -758,17 +758,17 @@ def __closest_point_param_2__ ( point , line ) :
     """
     return _GeomFun.closestPointParam ( point , line )
 
-__closest_point_param_2__ . __doc__ += '\n' + _GeomFun.closestPointParam .__doc__
+_closest_point_param_2_ . __doc__ += '\n' + _GeomFun.closestPointParam .__doc__
 
 if not hasattr ( Gaudi.XYZPoint , 'closestPointParam' ) :
-    Gaudi.XYZPoint.closestPointParam = __closest_point_param_2__
+    Gaudi.XYZPoint.closestPointParam = _closest_point_param_2_
 
 
 # =============================================================================
 ## check if two lines are parallel
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-def __parallel_lines__ ( line , line1 ) :
+def _parallel_lines_ ( line , line1 ) :
     """
     Check if two lines are parallel:
 
@@ -780,10 +780,10 @@ def __parallel_lines__ ( line , line1 ) :
     if not _flag : return False
     return True
 
-__parallel_lines__ . __doc__ += '\n' + _GeomFun.parallel . __doc__
+_parallel_lines_ . __doc__ += '\n' + _GeomFun.parallel . __doc__
 
 if not hasattr ( Gaudi.XYZLine , 'parallel' ) :
-    Gaudi.XYZLine.parallel = __parallel_lines__
+    Gaudi.XYZLine.parallel = _parallel_lines_
 
 # =============================================================================
 ## helper function/wrapper for Gaudi::Math:FitMass
