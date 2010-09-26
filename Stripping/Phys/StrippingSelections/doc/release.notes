@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-26 - Walter Bonivento
+- Update stripping line StrippingDstarD02xx.py with more cuts to reduce retention
+
 ! 2010-09-26 - Markward Britsch
  - Add stripping line python/StrippingSelections/StrippingDKPiGeo.py.
    D0->Kpi based on geometric variable
