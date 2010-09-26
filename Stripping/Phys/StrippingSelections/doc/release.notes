@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-26 - Markward Britsch
+ - Add stripping line python/StrippingSelections/StrippingDKPiGeo.py.
+   D0->Kpi based on geometric variable
+   This is for the 'private' open charm stripping only.
+
 ! 2010-09-24 - Rob Lambert
  - Add dependency on Phys/TisTosTobbing as used by 
    StrippingBd2KstarMuMuTriggered see task #17209
