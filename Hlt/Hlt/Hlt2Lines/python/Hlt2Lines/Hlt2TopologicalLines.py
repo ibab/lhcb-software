@@ -1,12 +1,9 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 from Gaudi.Configuration import *
-from Configurables import HltANNSvc, FilterDesktop, CombineParticles
-from Configurables import LoKi__VoidFilter as VoidFilter
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+from Configurables import FilterDesktop, CombineParticles
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-from HltTracking.HltPVs import PV3D
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -70,6 +67,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Updates the HltANNSvc after a new line has been constructed.'''
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
+        from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update({lineName:id})
 
     def __makeLine(self, lineName, algos):
@@ -148,6 +146,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Defines a global event cut (sets upper limit on n_tracks).'''
         from HltTracking.Hlt2TrackingConfigurations import \
              Hlt2UnfittedForwardTracking
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules =  CoreFactory('CoreFactory').Modules
         if 'LoKiTrigger.decorators' not in modules:
             modules.append('LoKiTrigger.decorators')
@@ -161,6 +160,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('" + tracks.outputSelection() + \
                        "') < %(GEC_MAX)s" % self.getProps()
 
+        from Configurables import LoKi__VoidFilter as VoidFilter
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg',
                                                  Code=filtCode)
         return bindMembers(None,[tracks, Hlt2TopoKillTooManyInTrkAlg])
@@ -180,6 +180,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
+        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[filter])
 
     def __buildNBodySeqs(self,lineName,seqName,stage,input):
