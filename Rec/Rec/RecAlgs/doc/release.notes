@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-09-26 - Chris Jones
+ - Set HistoTopDir property for RecProcessingTimeMoni to "Timing"
+
 !========================== RecAlgs v1r11 2010-09-25 ==========================
 ! 2010-09-21 - Marco Cattaneo
  - In RecInit.cpp: Copy gpsTime to RecHeader from ODIN Raw bank

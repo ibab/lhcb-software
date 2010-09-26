@@ -20,9 +20,10 @@ RecProcessingTimeMoni::RecProcessingTimeMoni( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator ),
     m_hist        ( NULL )
 {
-  declareProperty( "Algorithms",   m_algNames );
+  declareProperty( "Algorithms",      m_algNames );
   declareProperty( "LogMinEventTime", m_logMinTime = -2.0 );
   declareProperty( "LogMaxEventTime", m_logMaxTime =  8.0 );
+  setProperty( "HistoTopDir", "Timing/" );
 }
 
 //=============================================================================
