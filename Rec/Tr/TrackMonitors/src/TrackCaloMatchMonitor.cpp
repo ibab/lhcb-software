@@ -2,6 +2,8 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/Track.h"
+#include "Event/FitNode.h"
+#include "Event/StateParameters.h"
 #include "Event/State.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloPosition.h"
@@ -50,6 +52,8 @@ private:
   IHistogram1D* m_dyASideH1[3] ;
   IHistogram1D* m_dxCSideH1[3] ;
   IHistogram1D* m_dyCSideH1[3] ;
+  IHistogram1D* m_dyVeloASideH1[3] ;
+  IHistogram1D* m_dyVeloCSideH1[3] ;
   IHistogram1D* m_zH1[3] ;
   IHistogram1D* m_eOverPH1[3] ;
   IProfile1D* m_dyVsYPr ;
@@ -141,6 +145,10 @@ StatusCode TrackCaloMatchMonitor::initialize()
     m_dxCSideH1[i] = book1D(histitle,-200,200) ;
     sprintf(histitle,"y%s - yTRK (%s C-side)",m_caloName.c_str(),systitle[i]) ;
     m_dyCSideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"y%s - yVELO (%s A-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dyVeloASideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"y%s - yVELO (%s C-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dyVeloCSideH1[i] = book1D(histitle,-200,200) ;
     sprintf(histitle,"zMatch (%s)",systitle[i]) ;
     m_zH1[i] = book1D(histitle,m_geometricZ - 400, m_geometricZ + 400 ) ;
     sprintf(histitle,"E over P (%s)",systitle[i]) ;
@@ -166,13 +174,37 @@ StatusCode TrackCaloMatchMonitor::initialize()
   return sc;
 }
 
-struct MyCaloPosition
-{
-  MyCaloPosition( const LHCb::CaloCellID& _cell,
-		  const LHCb::CaloPosition& _pos) : cell(_cell), pos(_pos) {}
-  LHCb::CaloCellID cell ;
-  LHCb::CaloPosition pos ;
-} ;
+namespace {
+
+  struct MyCaloPosition
+  {
+    MyCaloPosition( const LHCb::CaloCellID& _cell,
+		    const LHCb::CaloPosition& _pos) : cell(_cell), pos(_pos) {}
+    LHCb::CaloCellID cell ;
+    LHCb::CaloPosition pos ;
+  } ;
+  
+  const LHCb::State* unbiasedVeloState( const LHCb::Track& track )
+  {
+    const LHCb::State* rc(0) ;
+    LHCb::Track::ConstNodeRange nodes = track.nodes() ;
+    if( track.hasVelo() && nodes.size()>0 ) {
+      // find the last node with a velo measurement
+      const LHCb::Node* node(0) ;
+      BOOST_FOREACH( const LHCb::Node* inode, nodes ) {
+	if( inode->z() < StateParameters::ZEndVelo &&
+	    (node==0 || (node->z() < inode->z()) ) )
+	  node = inode ;
+      }
+      const LHCb::FitNode* fitnode = static_cast<const LHCb::FitNode*>(node) ;
+      bool upstream = nodes.front()->z() > nodes.back()->z() ;
+      rc = upstream ? 
+	&(fitnode->filteredStateBackward()) : 
+	&(fitnode->filteredStateForward()) ;
+    }
+    return rc ;
+  }
+}
 
 StatusCode TrackCaloMatchMonitor::execute()
 { 
@@ -215,6 +247,14 @@ StatusCode TrackCaloMatchMonitor::execute()
       LHCb::StateVector state = LHCb::StateVector( closest.stateVector(), closest.z()) ;
       m_extrapolator->propagate( state, m_geometricZ ) ;
 
+      const LHCb::State* fullvelostate = unbiasedVeloState( *track ) ;
+      LHCb::StateVector velostate ;
+      if(fullvelostate) {
+	velostate = LHCb::StateVector( fullvelostate->stateVector(), fullvelostate->z()) ;
+	velostate.setQOverP( state.qOverP() ) ;
+	m_extrapolator->propagate( velostate, m_geometricZ ) ;
+      }
+
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
 	//state = &(track->closestState(pos.z())) ;
 	double dz = cluster.pos.z() + m_clusterZCorrection - state.z() ;
@@ -247,8 +287,18 @@ StatusCode TrackCaloMatchMonitor::execute()
 	    m_dyVsTyPr->fill( state.ty(),dy ) ;
 	  }
 	}
+	if(fullvelostate && std::abs(dx)<200 ) {
+	  ytrack = velostate.y() + velostate.ty() * dz ;
+	  dy = cluster.pos.y() - ytrack ;
+	  if( cluster.pos.x() > 0 ) {
+	    m_dyVeloASideH1[cluster.cell.area()]->fill( dy ) ;
+	  } else {
+	    m_dyVeloCSideH1[cluster.cell.area()]->fill( dy ) ;
+	  }
+	}
       }
     }
   return StatusCode::SUCCESS ;
 }
+
 
