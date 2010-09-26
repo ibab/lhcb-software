@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.181 2010-08-19 20:55:20 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.182 2010-09-26 04:32:14 frankb Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1129,7 +1129,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
     if (stats) stats->Delete();
     pad->SetLogx(0);
     pad->SetLogy(0);
-    fopt=.16;
+    fopt=.16f;
     pad->SetBottomMargin( (Float_t) fopt);
     bool histByRun=false;
     if( 0 != m_presenterInfo ) 
@@ -1137,12 +1137,12 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
 
     if ( histByRun ) {
       m_rootHistogram->GetXaxis()->SetTitle("run");
-      fopt=1.2;
+      fopt=1.2f;
       m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
     }
     else {
       m_rootHistogram->GetXaxis()->SetTitle("time");
-      fopt=1.6;
+      fopt=1.6f;
       m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
     }
     std::string ylab="Average";
@@ -1296,10 +1296,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
     iopt = (int) stats->GetOptStat();
     // 111110 seems to be hardcoded in root
     out |= updateDBOption("STATS", &iopt, iopt == 111110 );
-    fopt = stats->GetX1NDC();
+    fopt = float(stats->GetX1NDC());
     out |= updateDBOption("STAT_X_OFFS", &fopt, 
 			  TMath::Abs(fopt - m_statpave->GetX1NDC())<0.001);
-    fopt = stats->GetX2NDC() - stats->GetX1NDC();
+    fopt = float(stats->GetX2NDC() - stats->GetX1NDC());
     out |= updateDBOption("STAT_X_SIZE", &fopt, 
 			  TMath::Abs(fopt - (m_statpave->GetX2NDC()-m_statpave->GetX1NDC())) <0.001);
     fopt = stats->GetY1NDC();

@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.11 2010-09-20 18:41:27 robbep Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.12 2010-09-26 04:32:14 frankb Exp $
 // Include files
 
 // local
@@ -54,10 +54,10 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
     boost::filesystem::path fp( fileName ) ;
     boost::xpressive::mark_tag rn( 1 ) ;
     boost::xpressive::sregex rnbrx = 
-      ( boost::xpressive::as_xpr("Brunel")|
-	boost::xpressive::as_xpr("DaVinci")|
-	boost::xpressive::as_xpr("Boole")|
-	boost::xpressive::as_xpr("Gauss") ) 
+      ( boost::xpressive::as_xpr(std::string("Brunel"))|
+      boost::xpressive::as_xpr(std::string("DaVinci"))|
+      boost::xpressive::as_xpr(std::string("Boole"))|
+      boost::xpressive::as_xpr(std::string("Gauss")) ) 
       >> +boost::xpressive::_w >> "_" 
       >> (rn=+boost::xpressive::_d) >> "_"
       >> +boost::xpressive::_w >> ".root" ;
@@ -75,8 +75,8 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
   boost::xpressive::mark_tag system( 1 ) ;
 
   boost::xpressive::sregex pb = 
-    (boost::xpressive::as_xpr("/OfflineDataQuality/")|
-     boost::xpressive::as_xpr("/Shift/"))
+    (boost::xpressive::as_xpr(std::string("/OfflineDataQuality/"))|
+    boost::xpressive::as_xpr(std::string("/Shift/")))
     >> (system=*~(boost::xpressive::set =':')) >> ":"  ;
   boost::xpressive::smatch what ;
   std::string systemName ;
