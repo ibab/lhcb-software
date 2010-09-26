@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-09-26 - Wouter Hulsbergen
+ - fix bug in TrackHitAdder (Frederic Dupertuis)
+
 !========================== TrackUtils v1r38 2010-08-25 ======================
 ! 2010-08-24 - Rob Lambert
  - TrackHitAdder, supress warnings in windows, converting from double to float
