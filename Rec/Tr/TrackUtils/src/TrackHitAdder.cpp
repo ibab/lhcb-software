@@ -220,7 +220,8 @@ namespace {
 		      newlhcbids.begin(), newlhcbids.end(),
 		      mergedlhcbids.begin() ) ;
     mergedlhcbids.erase( end, mergedlhcbids.end() ) ;
-    return mergedlhcbids.size() - lhcbids.size() ;
+    lhcbids.swap( mergedlhcbids ) ;
+    return lhcbids.size() - mergedlhcbids.size() ;
   }
 }
 
