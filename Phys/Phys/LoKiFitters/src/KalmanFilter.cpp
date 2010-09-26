@@ -583,6 +583,35 @@ bool LoKi::KalmanFilter::okForVertex
   //
   return 2 <= nLong ;
 }
+// ============================================================================
+/*  calculate number degrees of freedom for vertex fit 
+ *  @thanks Yuehong Xie 
+ *  @thanks Wouter Hulsbergen
+ *  @thanks Fred Blanc 
+ *  @param entries (input) vector of entries 
+ *  @return true of colelction of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-09-26
+ */
+// ============================================================================
+int LoKi::KalmanFilter::nDoF 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{
+  //
+  int result = -3 ;
+  //
+  for ( Entries::const_iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    // 3 DoFs per vertex 
+    if      ( ientry->m_type == ShortLivedParticle ) { result += 3 ; }
+    // 2 DoFs for track 
+    else if ( ientry->m_type == LongLivedParticle  ) { result += 2 ; }
+  }
+  //
+  return result ;
+}
+// ========================================================================
 
 // ============================================================================
 // The END 

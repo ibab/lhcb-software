@@ -314,12 +314,15 @@ StatusCode LoKi::VertexFitter::fit
   vertex.setPosition  ( Gaudi::XYZPoint ( x(0) , x(1) , x(2) ) ) ;
   vertex.setCovMatrix ( c    ) ;
   vertex.setChi2      ( chi2 ) ;
-  vertex.setNDoF      ( 2 * m_entries.size() - 3 ) ;
+  vertex.setNDoF      ( LoKi::KalmanFilter::nDoF ( m_entries ) ) ;
   // fill the vertex 
   vertex.clearOutgoingParticles() ;
-  for ( LHCb::Particle::ConstVector::const_iterator ip = daughters.begin() ; 
-        daughters.end() != ip ; ++ip ) 
-  { vertex.addToOutgoingParticles( *ip ) ; } ;
+  for ( Entries::const_iterator ientry = m_entries.begin() ; 
+        m_entries.end() != ientry ; ++ientry ) 
+  {
+    if ( ientry->regular() )  
+    { vertex.addToOutgoingParticles( ientry -> m_p0 ) ; }  
+  }
   // keep for future tracing
   m_vertex = &vertex ;
   if ( m_seedZmin > vertex.position().Z()  

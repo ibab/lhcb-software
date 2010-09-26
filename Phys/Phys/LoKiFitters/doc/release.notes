@@ -5,6 +5,23 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-26 - Vanya Belyaev
+
+ - VertexFitter:
+    
+     fix the bug with nDoF evaluation 
+
+ - MassFitter:
+  
+     a. change the default tolerance from 200 keV/c2 to 20 keV/c2
+     b. replace usage of (Gaudi)IParticlePropertySvc by 
+        LHCb::ParticlePropertySvc
+
+ - cmt/requirements
+  
+     version increment to v3r1 
+
+
 !========================== LoKiFitters v3r0 2010-08-25 =====================
 
 ! 2010-08-24 - Vanya Belyaev

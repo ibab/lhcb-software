@@ -462,6 +462,17 @@ namespace LoKi
      */   
     bool okForVertex ( const Entries& entries ) ;
     // ========================================================================
+    /** calculate number degrees of freedom for vertex fit 
+     *  @thanks Yuehong Xie 
+     *  @thanks Wouter Hulsbergen
+     *  @thanks Fred Blanc 
+     *  @param entries (input) vector of entries 
+     *  @return true of colelction of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-09-26
+     */
+    int nDoF ( const Entries& entries ) ;
+    // ========================================================================
   } //                                      end of namespace LoKi::KalmanFilter
   // ==========================================================================
 } //                                                      end of namespace LoKi

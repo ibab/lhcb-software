@@ -9,7 +9,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h" 
 #include "GaudiKernel/SystemOfUnits.h" 
 #include "GaudiKernel/Vector4DTypes.h" 
@@ -27,6 +26,11 @@
 // ============================================================================
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -206,7 +210,7 @@ namespace LoKi
     {
       if ( 0 == particle ) 
       { return Error ( "LHCb::Particle* points to NULL" , InvalidParticle ) ; }
-      const ParticleProperty* prop = pp ( particle->particleID() ) ;
+      const LHCb::ParticleProperty* prop = pp ( particle->particleID() ) ;
       if ( 0 == prop     )
       { return Error ( "Invalid LHCb::ParticleID" , InvalidParticleID ) ; }
       return fit ( particle , prop->mass() ) ;
@@ -303,7 +307,7 @@ namespace LoKi
       : base_class      ( type, name , parent )
       , m_ppSvc         (  0 ) 
       , m_iterMax       ( 20 )
-      , m_tolerance     ( 0.2  * Gaudi::Units::MeV ) 
+      , m_tolerance     ( 20 * Gaudi::Units::keV ) 
       , m_change_vertex ( true )
     {
       //
@@ -325,29 +329,29 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // The default constructor is disabled 
-    MassFitter() ; ///< The default constructor is disabled 
-    // The dcopy constructor is disabled 
-    MassFitter ( const MassFitter& ) ; ///< The copy constructor is disabled 
-    // The assigmenent operator is disabled 
-    MassFitter& operator=( const MassFitter& ) ; ///< The assignement is disabled
+    /// The default constructor is disabled 
+    MassFitter() ;                       // The default constructor is disabled 
+    /// The dcopy constructor is disabled 
+    MassFitter ( const MassFitter& ) ;   //    The copy constructor is disabled 
+    /// The assigmenent operator is disabled 
+    MassFitter& operator=( const MassFitter& ) ; // The assignement is disabled
     // ========================================================================
   private:
     // ========================================================================
     /// get the particle property for the given particle ID 
-    inline const ParticleProperty* pp ( const LHCb::ParticleID& pid ) const 
+    inline const LHCb::ParticleProperty* pp ( const LHCb::ParticleID& pid ) const 
     {
       // locate the service (if needed)
       if ( 0 == m_ppSvc )  
-      { m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc" , true ) ; }  
-      Assert ( 0 != m_ppSvc , "Unable to locate Particle Property Service" , 
+      { m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true ) ; }  
+      Assert ( 0 != m_ppSvc , "Unable to locate LHCb::ParticlePropertySvc" , 
                StatusCode ( InvalidParticlePSvc , true ) ) ;
-      const ParticleProperty* p = m_ppSvc -> findByStdHepID( pid.pid() ) ;
+      const LHCb::ParticleProperty* p = m_ppSvc -> find ( pid ) ;
       if ( 0 == p )
       {
         StatusCode sc = StatusCode ( InvalidParticleID , true ) ;
         Error 
-          ( "Invalid ParticleProperty for ID=" + 
+          ( "Invalid LHCb::ParticleProperty for ID=" + 
             boost::lexical_cast<std::string> ( pid.pid() ) , sc ) ;
       }
       return p ;
@@ -374,7 +378,7 @@ namespace LoKi
   private:
     // ========================================================================
     /// pointer to the particle property service 
-    mutable IParticlePropertySvc* m_ppSvc     ; // the particle property service 
+    mutable LHCb::IParticlePropertySvc* m_ppSvc ; // particle property service 
     /// maximal number of iterations 
     unsigned int                  m_iterMax   ; // maximal number of iterations 
     /// the tolerance
@@ -382,8 +386,9 @@ namespace LoKi
     /// flag to control the modification of end-vertex
     bool m_change_vertex ; // flag to control the modification of end-vertex
     // ========================================================================
-  } ;  
-} // end of namespace LoKi
+  } ;
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 /* perform the mass-constrained fit of the particle into 
  *  the specified mass and explicitly return chi2
@@ -519,7 +524,7 @@ StatusCode LoKi::MassFitter::fit
       particle -> setPosCovMatrix    ( s_vxx       ) ;
       particle -> setPosMomCovMatrix ( s_vpx       ) ; 
       //      
-
+      
       // set chi2:
       chi2 = s_chi2 ;
       // play a bit with extra-info
