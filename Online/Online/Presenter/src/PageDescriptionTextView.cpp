@@ -1,4 +1,4 @@
-// $Id: PageDescriptionTextView.cpp,v 1.12 2010-09-26 04:32:14 frankb Exp $
+// $Id: PageDescriptionTextView.cpp,v 1.13 2010-09-26 04:36:57 frankb Exp $
 // Include files
 
 // local
@@ -128,7 +128,7 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
       cellColor = "red" ;
     else 
       cellColor = "white" ;
-    
+
     theStr << "<tr><td class=\"links\" bgcolor=\"" << cellColor << "\">" 
            << "<a href=\"http://" << m_problemDbServerAddress 
            << "/problems/" << vec[ 3 ] << "/\" STYLE=\"text-decoration: none\">"

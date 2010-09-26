@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.182 2010-09-26 04:32:14 frankb Exp $
+// $Id: DbRootHist.cpp,v 1.183 2010-09-26 04:36:13 frankb Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -1302,10 +1302,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
     fopt = float(stats->GetX2NDC() - stats->GetX1NDC());
     out |= updateDBOption("STAT_X_SIZE", &fopt, 
 			  TMath::Abs(fopt - (m_statpave->GetX2NDC()-m_statpave->GetX1NDC())) <0.001);
-    fopt = stats->GetY1NDC();
+    fopt = float(stats->GetY1NDC());
     out |= updateDBOption("STAT_Y_OFFS", &fopt, 
 			  TMath::Abs(fopt - m_statpave->GetY1NDC())<0.001);
-    fopt = stats->GetY2NDC() - stats->GetY1NDC();
+    fopt = float(stats->GetY2NDC() - stats->GetY1NDC());
     out |= updateDBOption("STAT_Y_SIZE", &fopt, 
 			  TMath::Abs(fopt - (m_statpave->GetY2NDC()-m_statpave->GetY1NDC())) <0.001);
     delete m_statpave;
@@ -1314,16 +1314,16 @@ bool DbRootHist::saveTH1ToDB(TPad* pad) {
   // now title options
   TPaveText* tit = (TPaveText*)pad->GetPrimitive("title");
   if(tit && m_titpave) {
-    fopt = tit->GetX1NDC();
+    fopt = float(tit->GetX1NDC());
     out |= updateDBOption("HTIT_X_OFFS", &fopt, 
 			  TMath::Abs(fopt - m_titpave->GetX1NDC())<0.0001);
-    fopt = tit->GetX2NDC() - tit->GetX1NDC();
+    fopt = float(tit->GetX2NDC() - tit->GetX1NDC());
     out |= updateDBOption("HTIT_X_SIZE", &fopt, 
 			  TMath::Abs(fopt - (m_titpave->GetX2NDC()-m_titpave->GetX1NDC())) <0.0001);
-    fopt = tit->GetY1NDC();
+    fopt = float(tit->GetY1NDC());
     out |= updateDBOption("HTIT_Y_OFFS", &fopt, 
 			  TMath::Abs(fopt - m_titpave->GetY1NDC())<0.001);
-    fopt = tit->GetY2NDC() - tit->GetY1NDC();
+    fopt = float(tit->GetY2NDC() - tit->GetY1NDC());
     out |= updateDBOption("HTIT_Y_SIZE", &fopt, 
 			  TMath::Abs(fopt - (m_titpave->GetY2NDC()-m_titpave->GetY1NDC())) <0.0001);
     delete m_titpave;
