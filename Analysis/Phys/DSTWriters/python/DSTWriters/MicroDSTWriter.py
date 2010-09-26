@@ -8,7 +8,7 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 from BaseDSTWriter import BaseDSTWriter
-from dstwriterutils import ConfigurableList, setCloneFilteredParticlesToTrue
+from DSTWriters.__dev__.dstwriterutils import ConfigurableList, setCloneFilteredParticlesToTrue
 
 class MicroDSTWriter(BaseDSTWriter) :
     __slots__ = { "CopyParticles"        : True
