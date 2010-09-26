@@ -4,6 +4,14 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2010-09-26 - Yuehong Xie
+ - OfflineVertexFitter
+  . introduce new option "includeDauVertexChi2", which controls whether to add
+    the chi2 and DOF of daughter vertices to the mother vertex. Default value
+    is set to be true.
+  . new option "applyMomMassConstraint" controls whether to  apply 
+    mass constraint on the mother particle.  Default value is set to false.
+
 !========================== VertexFit v6r4 2010-08-19 ======================
 
 ! 2010-08-12 - Juan Palacios

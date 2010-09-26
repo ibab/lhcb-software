@@ -189,7 +189,9 @@ private:
   IParticlePropertySvc* m_ppSvc;
 
   bool m_useResonanceVertex;
+  bool m_includeDauVertexChi2;
   bool m_applyDauMassConstraint;
+  bool m_applyMomMassConstraint;
   double m_widthThreshold;
   int m_maxIter;
   double m_maxDeltaChi2;

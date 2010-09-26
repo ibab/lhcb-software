@@ -47,7 +47,9 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareInterface<IParticleReFitter>(this);
 
   declareProperty( "useResonanceVertex", m_useResonanceVertex = true);
+  declareProperty( "includeDauVertexChi2", m_includeDauVertexChi2 = true);
   declareProperty( "applyDauMassConstraint", m_applyDauMassConstraint = false);
+  declareProperty( "applyMomMassConstraint", m_applyMomMassConstraint = false);
   declareProperty( "widthThreshold", m_widthThreshold = 2.0 * MeV);
   declareProperty( "maxIter", m_maxIter = 10);
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
@@ -213,6 +215,27 @@ StatusCode OfflineVertexFitter::fit
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a photon pair" << endmsg;
       return StatusCode::FAILURE;
     }
+  }
+
+  if(m_applyMomMassConstraint) {
+    Gaudi::Vector7 V7;
+    Gaudi::SymMatrix7x7 C7;
+    double chi2 = 0.;
+    int NDoF = 0;
+    getParticleInfo(P, V7, C7, chi2, NDoF);
+    double mm = P.measuredMass();
+    double mmerr = P.measuredMassErr();
+    const int pid = P.particleID().pid();
+    ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    double nominalMass = partProp->mass();
+    sc=constrainMass(V7, C7, nominalMass);
+    if(sc.isFailure()) {
+      if (msgLevel(MSG::DEBUG)) debug() << "Fail to apply mass constraint on the mother particle" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    sc= updateParticle(P, V7, C7, chi2, NDoF);
+    P.setMeasuredMass(mm);
+    P.setMeasuredMassErr(mmerr);
   }
 
   if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size())
@@ -416,9 +439,11 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
       sc=constrainMass(V7, C7, nominalMass);
       if(sc.isFailure()) return StatusCode::FAILURE;
     }
-    //     //don't include resonance veretx chi2 and NDoF!
-    //     chi2 = 0.;
-    //     NDoF = 0;
+    if(!m_includeDauVertexChi2) {
+      //don't include resonance veretx chi2 and NDoF!
+      chi2 = 0.;
+      NDoF = 0;
+    }
     sc = updateParticle(part, V7, C7, chi2, NDoF);
 
   }
@@ -812,6 +837,11 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
   double chi2new = chi2 + chi2Fit ;
   int NDoFnew = NDoF + 3;
+
+  if(m_includeDauVertexChi2) {
+    chi2new += dauchi2;
+    NDoFnew += dauNDoF;
+  }
 
   V7new[0]=vfit[0];
   V7new[1]=vfit[1];
