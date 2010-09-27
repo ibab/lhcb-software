@@ -6,30 +6,23 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r20 2010-09-27 =========================
 ! 2010-09-27 - Vanya Belyaev
-
  - python/LHCbMath/Types.py
-
    remove unprintable null byte form the string
    (manythanks to Marco Clemencic)
 
-
 ! 2010-09-26 - Vanya Belyaev
-
  - python/LHCbMath/Types.py
-
      solve the problem with vizibility of symbols 
 
  - python/LHCbMath.py -> python/LHCbMath/Math.py 
-
  - python/LHCbMath/__init__.py 
-
      forced import of everything from LHCbMath/Math.py  
       (for backward compatibility)
 
  - cmt/requiremnts
     version increment to v3r20 
-
 
 !========================= LHCbMath v3r19 2010-07-19 =========================
 ! 2010-07-12 - Manuel Tobias Schiller
