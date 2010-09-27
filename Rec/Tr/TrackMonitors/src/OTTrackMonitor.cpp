@@ -1,4 +1,3 @@
-
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -153,15 +152,12 @@ DECLARE_ALGORITHM_FACTORY( OTTrackMonitor );
 //=============================================================================
 OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator): 
   GaudiHistoAlg( name , pSvcLocator ),
-  m_projector("TrajOTProjector"),
-  m_decoder("OTRawBankDecoder"),
-  m_numEvents(0),
-  profileTimeResidualVsModuleGood(NULL),
   profileResidualPullVsModule(NULL),
   profileTimeResidualVsDistance(NULL),
   profileResidualVsDistance(NULL),
   profileResidualPullVsDistance(NULL),
   profileTimeResidualVsDistanceGood(NULL),
+  profileTimeResidualVsModuleGood(NULL),
   profileResidualVsDistanceGood(NULL),
   profileResidualPullVsDistanceGood(NULL),
   histModuleOutlierOccupancy(NULL),
@@ -171,7 +167,10 @@ OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator
   histAverageTimeResidualVsMomentum(NULL),
   histDeltaToF(NULL),
   m_driftTimeUse(NULL),
-  histEventAverageTimeResidual(NULL)
+  histEventAverageTimeResidual(NULL),
+  m_projector("TrajOTProjector"),
+  m_decoder("OTRawBankDecoder"),
+  m_numEvents(0)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default );
   declareProperty( "Projector", m_projector ) ;
