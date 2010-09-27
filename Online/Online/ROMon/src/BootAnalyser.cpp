@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.5 2010-09-25 04:40:13 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.6 2010-09-27 08:15:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.5 2010-09-25 04:40:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.6 2010-09-27 08:15:54 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -42,8 +42,6 @@ namespace ROMon {
     typedef std::map<std::string,BootNodeStatus*> Hosts;
 
   protected:
-    /// Buffer pointer
-    char*              m_ptr;
     /// List of individual node monitors known to this sub-farm
     BootNodeStatusset* m_status;
     std::string        m_name;
@@ -92,8 +90,6 @@ namespace ROMon {
     typedef std::map<std::string,SubfarmBootStatus*> Clusters;
 
   protected:
-    /// Buffer pointer
-    char*                  m_ptr;
     /// Collection of contained cluster names
     BootClusterCollection* m_clusterdata;
     /// Boot cluster container
@@ -294,7 +290,7 @@ struct BootDataProcessor : public DataFile::DataProcessor {
 
 /// Initializing constructor
 SubfarmBootStatus::SubfarmBootStatus(const string& n) 
-: m_ptr(0), m_status(0), m_name(n), m_file("/clusterlogs/farm/"+n+"/messages"), m_id(0), m_tsID(0)
+: m_status(0), m_name(n), m_file("/clusterlogs/farm/"+n+"/messages"), m_id(0), m_tsID(0)
 {}
 
 /// Default destructor
@@ -307,12 +303,11 @@ SubfarmBootStatus::~SubfarmBootStatus() {
     ::dis_remove_service(m_id);
     m_id = 0;
   }
-  if ( m_ptr ) {
-    delete [] m_ptr;
-    m_ptr = 0;
+  if ( m_status ) {
+    delete [] (char*)m_status;
+    m_status = 0;
   }
   m_file.close();
-  m_status = 0;
 }
 
 static void error_user_routine (int severity, int error_code, char* message) {
@@ -333,9 +328,7 @@ int SubfarmBootStatus::start() {
   if ( ni != inv.nodecollections.end() ) {
     const Inventory::NodeCollection::NodeList& nl = (*ni).second.nodes;
     Inventory::NodeCollection::NodeList::const_iterator niter = nl.begin();
-    m_ptr = new char[sizeof(BootNodeStatus)*(nl.size()+1)+sizeof(BootNodeStatusset)];
-
-    m_status = new(m_ptr) BootNodeStatusset(name());
+    m_status = new(new char[sizeof(BootNodeStatus)*(nl.size()+1)+sizeof(BootNodeStatusset)]) BootNodeStatusset(name());
     string svc_name = "/"+strupper(name())+"/TaskSupervisor/Summary";
     if ( s_use_ts ) {
       m_tsID = ::dic_info_service((char*)svc_name.c_str(),TIMED,15,0,0,summaryHandler,(long)this,0,0);
@@ -370,7 +363,7 @@ void SubfarmBootStatus::feedData(void* tag, void** buf, int* size, int* /* first
   SubfarmBootStatus* h = *(SubfarmBootStatus**)tag;
   ro_gettime(&h->m_status->time,(unsigned int*)&h->m_status->millitm);
   *size = h->m_status->length();
-  *buf = h->m_ptr;
+  *buf  = h->m_status;
 }
 
 /// DIM callback on dic_info_service
@@ -494,15 +487,14 @@ void SubfarmBootStatus::dump() {
 }
 
 /// Initializing constructor
-BootMonitor::BootMonitor(const std::string& n) : m_ptr(0), m_clusterdata(0), m_name(n), m_id(0) {
+BootMonitor::BootMonitor(const std::string& n) : m_clusterdata(0), m_name(n), m_id(0) {
 }
 
 /// Default destructor
 BootMonitor::~BootMonitor() {
   if ( 0 != m_id ) ::dis_remove_service(m_id);
   m_id = 0;
-  if ( m_ptr ) delete [] m_ptr;
-  m_ptr = 0;
+  if ( m_clusterdata ) delete [] (char*)m_clusterdata;
   m_clusterdata = 0;
   for(Clusters::iterator i=m_clusters.begin(); i!=m_clusters.end(); ++i)
     delete (*i).second;
@@ -550,9 +542,8 @@ int BootMonitor::start() {
       }
     }
     ::closedir(dir);
-    m_ptr = new char[(m_clusters.size()+1)*sizeof(BootClusterItem)+sizeof(BootClusterCollection)];
-    m_clusterdata = new(m_ptr) BootClusterCollection();
-    BootClusterCollection::iterator ci=m_clusterdata->begin();
+    m_clusterdata = (BootClusterCollection*)new char[(m_clusters.size()+1)*sizeof(BootClusterItem)+sizeof(BootClusterCollection)];
+    BootClusterCollection::iterator ci=m_clusterdata->reset();
     for(Clusters::const_iterator i=m_clusters.begin(); i!=m_clusters.end();++i) {
       ::strncpy((*ci).name,(*i).second->name().c_str(),sizeof((*ci).name));
       (*ci).name[sizeof((*ci).name)-1]=0;
@@ -570,7 +561,7 @@ int BootMonitor::start() {
 void BootMonitor::feedData(void* tag, void** buf, int* size, int* /* first */) {
   BootMonitor* h = *(BootMonitor**)tag;
   *size = h->m_clusterdata->length();
-  *buf = h->m_ptr;
+  *buf = h->m_clusterdata;
 }
 
 void BootMonitor::scan() {
