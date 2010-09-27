@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r35 2010-09-27 ==========================
 ! 2010-09-24 - Marco Clemencic
  - Added forgotten dependency on Event/RecEvent
 
