@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r7p2 2010-09-27 ================
+! 2010-03-05 - Chris Jones
+ - Minor changes in comments
+
 !======================= RichRecPhotonTools v1r7p1 2010-05-21 ================
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
