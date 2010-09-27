@@ -1295,9 +1295,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line_Detached = Hlt2Line('TFBc2JpsiHDetached'
                                  , prescale = self.prescale
-                                 , algos = [ TFBc2JpsiHPDLoose
-                                             , PV3D()
-                                             , FilterTFBc2JpsiHPD ]
+                                 , algos = [ PV3D(), TFBc2JpsiHPDLoose , FilterTFBc2JpsiHPD ]
                                  , postscale = self.postscale
                                  )        
         

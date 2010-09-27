@@ -663,8 +663,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedJpsi2ee_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedJpsi2ee_ElecPIDe)s)"\
-                                      " & (MM > %(UnbiasedJpsi2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedJpsi2ee_MaxMass)s *MeV)"\
+                                      " & (in_range( %(UnbiasedJpsi2ee_MinMass)s *MeV, MM,  %(UnbiasedJpsi2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(UnbiasedJpsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
@@ -685,8 +684,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedPsi2ee_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedPsi2ee_ElecPIDe)s)"\
-                                      " & (MM > %(UnbiasedPsi2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedPsi2ee_MaxMass)s *MeV)"\
+                                      " & (in_range( %(UnbiasedPsi2ee_MinMass)s *MeV, MM , %(UnbiasedPsi2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(UnbiasedPsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
@@ -708,8 +706,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedB2ee_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedB2ee_ElecPIDe)s)"\
-                                      " & (MM > %(UnbiasedB2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(UnbiasedB2ee_MaxMass)s *MeV)"\
+                                      " & (in_range(%(UnbiasedB2ee_MinMass)s *MeV), MM,  %(UnbiasedB2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(UnbiasedB2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedB2ee_PT)s *MeV)" %self.getProps() 
                                       }
@@ -844,8 +841,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFJpsi2ee_ElecPT)s *MeV)"\
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFJpsi2ee_ElecPIDe)s)"\
-                                        " & (MM > %(UnbiasedTFJpsi2ee_MinMass)s *MeV)"\
-                                        " & (MM < %(UnbiasedTFJpsi2ee_MaxMass)s *MeV)"\
+                                        " & (in_range( %(UnbiasedTFJpsi2ee_MinMass)s *MeV, MM,  %(UnbiasedTFJpsi2ee_MaxMass)s *MeV))"\
                                         " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFJpsi2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
                                         }
@@ -866,8 +862,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFPsi2ee_ElecPT)s *MeV)"\
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFPsi2ee_ElecPIDe)s)"\
-                                        " & (MM > %(UnbiasedTFPsi2ee_MinMass)s *MeV)"\
-                                        " & (MM < %(UnbiasedTFPsi2ee_MaxMass)s *MeV)"\
+                                        " & (in_range( %(UnbiasedTFPsi2ee_MinMass)s *MeV, MM, %(UnbiasedTFPsi2ee_MaxMass)s *MeV))"\
                                         " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFPsi2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
                                         }
@@ -889,8 +884,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                        , FilterTFDiElectron =
                                        {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedTFB2ee_ElecPT)s *MeV)"\
                                         " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedTFB2ee_ElecPIDe)s)"\
-                                        " & (MM > %(UnbiasedTFB2ee_MinMass)s *MeV)"\
-                                        " & (MM < %(UnbiasedTFB2ee_MaxMass)s *MeV)"\
+                                        " & (in_range( %(UnbiasedTFB2ee_MinMass)s *MeV, MM, %(UnbiasedTFB2ee_MaxMass)s *MeV))"\
                                         " & (VFASPF(VCHI2PDOF) < %(UnbiasedTFB2ee_VtxCHI2)s)"\
                                         " & (PT > %(UnbiasedTFB2ee_PT)s *MeV)" %self.getProps() 
                                         }
@@ -1036,8 +1030,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedJpsi2ee_ElecPIDe)s)"\
                                     " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedJpsi2ee_ElecIP)s *mm)"\
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedJpsi2ee_ElecIPCHI2)s *mm)"\
-                                    " & (MM > %(BiasedJpsi2ee_MinMass)s *MeV)"\
-                                    " & (MM < %(BiasedJpsi2ee_MaxMass)s *MeV)"\
+                                    " & (in_range( %(BiasedJpsi2ee_MinMass)s *MeV, MM, %(BiasedJpsi2ee_MaxMass)s *MeV))"\
                                     " & (VFASPF(VCHI2PDOF) < %(BiasedJpsi2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedJpsi2ee_PT)s *MeV)" %self.getProps() 
                                     }
@@ -1062,8 +1055,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedPsi2ee_ElecPIDe)s)"\
                                     " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedPsi2ee_ElecIP)s *mm)"\
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedPsi2ee_ElecIPCHI2)s *mm)"\
-                                    " & (MM > %(BiasedPsi2ee_MinMass)s *MeV)"\
-                                    " & (MM < %(BiasedPsi2ee_MaxMass)s *MeV)"\
+                                    " & (in_range( %(BiasedPsi2ee_MinMass)s *MeV, MM,  %(BiasedPsi2ee_MaxMass)s *MeV))"\
                                     " & (VFASPF(VCHI2PDOF) < %(BiasedPsi2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedPsi2ee_PT)s *MeV)" %self.getProps() 
                                     }
@@ -1088,8 +1080,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                     " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedB2ee_ElecPIDe)s)"\
                                     " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedB2ee_ElecIP)s *mm)"\
                                     " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedB2ee_ElecIPCHI2)s *mm)"\
-                                    " & (MM > %(BiasedB2ee_MinMass)s *MeV)"\
-                                    " & (MM < %(BiasedB2ee_MaxMass)s *MeV)"\
+                                    " & (in_range( %(BiasedB2ee_MinMass)s *MeV, MM, %(BiasedB2ee_MaxMass)s *MeV))"\
                                     " & (VFASPF(VCHI2PDOF) < %(BiasedB2ee_VtxCHI2)s)"\
                                     " & (PT > %(BiasedB2ee_PT)s *MeV)" %self.getProps() 
                                     }
@@ -1234,8 +1225,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFJpsi2ee_ElecPIDe)s)"\
                                       " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFJpsi2ee_ElecIP)s *mm)"\
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFJpsi2ee_ElecIPCHI2)s *mm)"\
-                                      " & (MM > %(BiasedTFJpsi2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(BiasedTFJpsi2ee_MaxMass)s *MeV)"\
+                                      " & (in_range( %(BiasedTFJpsi2ee_MinMass)s *MeV, MM,  %(BiasedTFJpsi2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(BiasedTFJpsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFJpsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
@@ -1260,8 +1250,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFPsi2ee_ElecPIDe)s)"\
                                       " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFPsi2ee_ElecIP)s *mm)"\
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFPsi2ee_ElecIPCHI2)s *mm)"\
-                                      " & (MM > %(BiasedTFPsi2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(BiasedTFPsi2ee_MaxMass)s *MeV)"\
+                                      " & (in_range( %(BiasedTFPsi2ee_MinMass)s *MeV, MM, %(BiasedTFPsi2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(BiasedTFPsi2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFPsi2ee_PT)s *MeV)" %self.getProps() 
                                       }
@@ -1286,8 +1275,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(BiasedTFB2ee_ElecPIDe)s)"\
                                       " & (MINTREE('e+'==ABSID, MIPDV(PRIMARY)) > %(BiasedTFB2ee_ElecIP)s *mm)"\
                                       " & (MINTREE('e+'==ABSID, MIPCHI2DV(PRIMARY)) > %(BiasedTFB2ee_ElecIPCHI2)s *mm)"\
-                                      " & (MM > %(BiasedTFB2ee_MinMass)s *MeV)"\
-                                      " & (MM < %(BiasedTFB2ee_MaxMass)s *MeV)"\
+                                      " & (in_range( %(BiasedTFB2ee_MinMass)s *MeV, MM, %(BiasedTFB2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(BiasedTFB2ee_VtxCHI2)s)"\
                                       " & (PT > %(BiasedTFB2ee_PT)s *MeV)" %self.getProps() 
                                       }

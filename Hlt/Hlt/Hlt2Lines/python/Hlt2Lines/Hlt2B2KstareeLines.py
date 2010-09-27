@@ -141,7 +141,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                      , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                      , InputLocations = [BiKalmanFittedElectrons]
                                      , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
-                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
+                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (in_range( %(eeMinMass)s, MM, %(eeMaxMass)s))" % self.getProps()
                                      )
 	
 	#Make Kstar
@@ -177,10 +177,10 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                              , InputLocations = [FittedDiElectron, FittedKstar]
                              )
         
-        B2KstareeRobustAndFittedAll = bindMembers( "B2KstareeRobustAndFitted", [ Electrons,
+        B2KstareeRobustAndFittedAll = bindMembers( "B2KstareeRobustAndFitted", [ PV3D(),
+                                                                                 Electrons,
                                                                                  LowPtDiElectron,
                                                                                  BiKalmanFittedElectrons,
-                                                                                 PV3D(),
                                                                                  FittedDiElectron,
                                                                                  NoCutsPions,
                                                                                  NoCutsKaons,
@@ -196,10 +196,10 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	              , prescale = self.prescale
                       , L0DU = L0Req
                       , HLT  = Hlt1Req
-		      , algos = [ Electrons,
+		      , algos = [ PV3D(),
+                                  Electrons,
                                   LowPtDiElectron,
                                   BiKalmanFittedElectrons,
-                                  PV3D(),
                                   FittedDiElectron,
                                   NoCutsPions,
                                   NoCutsKaons,
@@ -305,7 +305,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                      , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                      , InputLocations = [BiKalmanFittedElectrons]
                                      , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
-                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (%(eeMinMass)s < MM) & (MM< %(eeMaxMass)s)" % self.getProps()
+                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (in_range(%(eeMinMass)s, MM, %(eeMaxMass)s))" % self.getProps()
                                      )
         
 	#Make fitted Kstar
@@ -329,8 +329,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 				  , InputLocations = [FittedDiElectron, FittedKstar]
 	)
 
-        B2KstareeFittedAll = bindMembers('B2KstareeFitted', [ BiKalmanFittedElectrons,
-                                                              PV3D(),
+        B2KstareeFittedAll = bindMembers('B2KstareeFitted', [ PV3D(),
+                                                              BiKalmanFittedElectrons,
                                                               FittedDiElectron,
                                                               BiKalmanFittedKaons,
                                                               BiKalmanFittedPions,
@@ -344,8 +344,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                       , L0DU = L0Req
                       , HLT  = Hlt1Req
 	              , prescale = self.prescale
-		      , algos = [ BiKalmanFittedElectrons,
-                                  PV3D(),
+		      , algos = [ PV3D(),
+                                  BiKalmanFittedElectrons,
                                   FittedDiElectron,
                                   BiKalmanFittedKaons,
                                   BiKalmanFittedPions,

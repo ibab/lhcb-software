@@ -53,5 +53,5 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2PhiPhi'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [BiKalmanFittedKaons, phiCombine, PV3D(), BsCombine]
+                        , algos = [PV3D(), BiKalmanFittedKaons, phiCombine, BsCombine]
                         )
