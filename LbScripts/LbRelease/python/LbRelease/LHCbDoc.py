@@ -465,7 +465,7 @@ class Doc(object):
             ## @todo: check if the version is the same as the contained one
             raise ValueError("Project %s already in %s" % (project, self.name))
         else:
-            self._log.debug("Adding project %s %s", project, version)
+            self._log.info("Adding project %s %s", project, version)
             # make link to the root directory of the project in the doc dir
             root = _projRoot(project, version)
             if not root:
@@ -873,7 +873,7 @@ class Doc(object):
             self._log.warning("Cannot build in a locked directory")
             return
         # create lockfile
-        self._log.info("Creating lock file '%s'", self._lockFile)
+        self._log.debug("Creating lock file '%s'", self._lockFile)
         open(self._lockFile, "w").write("%s - %s\n" % (os.getpid(), datetime.now()))
         try:
             # Build the documentation in a temporary directory.
@@ -960,6 +960,7 @@ class Doc(object):
 
         finally:
             # clean up the lock
+            self._log.debug("Removing lock file '%s'", self._lockFile)
             os.remove(self._lockFile)
 
     def _updateCommonLinks(self):
@@ -1037,7 +1038,7 @@ def updateLatestLinks(root = None):
             if os.path.exists(latest) or os.path.islink(latest):
                 # ensure that the link is not present before creating the new one
                 os.remove(latest)
-            _log.debug("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
+            _log.info("Moving link %s to %s", os.path.join(p, "latest"), os.path.join(p, v))
             os.symlink(v, latest)
 
 

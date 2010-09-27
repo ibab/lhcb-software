@@ -277,7 +277,6 @@ div.navtab {
 
 a {
     color: #153788;
-    font-weight: normal;
     text-decoration: none;
 }
 
@@ -727,6 +726,8 @@ table.doxtable th {
 p.subtitle {
     text-align: center;
     font-style: italic;
+    font-size: 120%;
+    font-weight: bold;
 }
 """
 
