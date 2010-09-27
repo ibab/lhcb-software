@@ -3,7 +3,7 @@
 # Maintainer : Edwin Bos
 #============================================================================
 package           TrackCheckers
-version           v4r10p2
+version           v4r10p3
 
 #============================================================================
 # Structure, i.e. directories to process. 
