@@ -89,7 +89,7 @@ protected:
 
 private:
   unsigned int m_nEvents;
-  unsigned int m_nCandidats;
+  unsigned int m_nCandidates;
   unsigned int m_nPhotons;
   unsigned int m_nMCPhotons;
   unsigned int m_nWrongs;

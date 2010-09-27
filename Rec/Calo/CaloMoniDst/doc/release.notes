@@ -5,6 +5,9 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-27 - Marco Cattaneo
+ - Fix uninitialised member variables in CaloPhotonChecker
+
 !========================== CaloMoniDst v5r4 2010-06-22 =======================
 ! 2010-09-01 - Olivier Deschamps
   - fix compilation warning on windows

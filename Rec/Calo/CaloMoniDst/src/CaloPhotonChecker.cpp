@@ -52,6 +52,7 @@ CaloPhotonChecker::CaloPhotonChecker
   : CaloMoniAlg ( name , pSvc )
 
   , m_nEvents   ( 0 )
+  , m_nCandidates ( 0 )
   , m_nPhotons  ( 0 )
   , m_nMCPhotons( 0 )
   , m_nWrongs   ( 0 )
@@ -184,15 +185,15 @@ StatusCode CaloPhotonChecker::initialize()
     m_rec_sig.push_back(0);
   }
 
+  m_lh_mcg=0;
+  m_lh_mcg_conv=0;
+  m_lh_mcg_noconv=0;
   for (int i=0 ; i<m_nbinlh ; ++i){
-    m_lh_mcg=0;
     m_lh_recsig.push_back(0);
     m_lh_recbkg.push_back(0);
-    m_lh_mcg_conv=0;
     m_lh_recsig_conv.push_back(0);
     m_lh_recsig_spd.push_back(0);
     m_lh_recbkg_spd.push_back(0);
-    m_lh_mcg=0;
     m_lh_recsig_noconv.push_back(0);
     m_lh_recsig_nospd.push_back(0);
     m_lh_recbkg_nospd.push_back(0);
@@ -275,7 +276,7 @@ StatusCode CaloPhotonChecker::finalize()
   info() << "Number of Events Analyzed : " << m_nEvents << endmsg;
   info()
     //<< "MCPhotons (Signal def.) in sample: "<<m_nMCPhotons<<" - "
-    <<m_nPhotons<<" Photons (Signal def.) out of "<<m_nCandidats<<" hypos processed."
+    <<m_nPhotons<<" Photons (Signal def.) out of "<<m_nCandidates<<" hypos processed."
     <<" - "<<m_nWrongs<<" hypos rejected."<<endmsg;
   char line[70];
   info() << endmsg;
@@ -476,7 +477,7 @@ StatusCode CaloPhotonChecker::execute()
      if ( 0 == hypo ) return Warning( "*CaloHypo* points to NULL",StatusCode::SUCCESS );
      LHCb::CaloMomentum momentum( hypo );
 
-     m_nCandidats++;
+     m_nCandidates++;
 
 // Transverse Momentum
      debug() << "==> Processing new CaloHypo : Et=" << momentum.momentum().pt() << endmsg;
