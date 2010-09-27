@@ -49,15 +49,7 @@ __date__    = "????-??-??"
 __version__ = "SVN $Revision$ "
 # =============================================================================
 
-import PyCintex
-
-# construct the global namespace 
-_global   = PyCintex.makeNamespace('')
-# namespace LoKi
-cpp  = _global 
-std  = _global.std
-LoKi = _global.LoKi
-LHCb = _global.LHCb
+from LoKiCore.basic import cpp, std, LoKi,LHCb 
 
 # (auto) load the objects from LoKiCoreDict dictionary 
 LoKi.RangeBase_ = cpp.Gaudi.RangeBase_ 
@@ -139,10 +131,10 @@ def getInherited ( name , base ) :
     """
     if not issubclass ( base.__class__ , type ) : base = base.__class__
     ##
-    import sys,types,sets
-    result = sets.Set()
+    result = set()
     # get the whole content of the module:
     _mod = {}
+    import sys
     if sys.modules.has_key ( name ) : _mod = sys.modules[name].__dict__
     # loop over the module members:
     for key in _mod :

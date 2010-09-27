@@ -16,6 +16,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-09-27 - Vanya Belyaev
+ - remove usage of obsolete python module 'sets'
+ - decouple LoKiCore.functions and LoKiCore.decorators 
+
 ! =========================== LoKiCore v10r3 2010-08-25 =======================
 ! 2010-08-24 - Gerhard Raven
  - add max print to Error and Warning
