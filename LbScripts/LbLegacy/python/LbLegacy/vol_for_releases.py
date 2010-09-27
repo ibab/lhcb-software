@@ -42,7 +42,7 @@ def create_volume(pname,pversion,size=0):
         if os.path.exists(os.path.join(P_DIR,PNAME,PNAME+'_'+pversion)):
             log.warning('The version %s of the project %s already exists'%(pversion, projconf.Name()))
             return
-    PPATH = os.path.join(P_DIR,PNAME,PNAME+'_'+pversion)
+    PPATH = os.path.join(P_DIR, PNAME, PNAME+'_'+pversion)
 
 
 # create the new volume
