@@ -5,9 +5,6 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2010-09-22 - Marco Cattaneo
- - Add Event/RecreatePIDTools
-
 </PRE><H1><A NAME=v31r6>2010-09-28 LHCbSys v31r6</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
 
@@ -21,7 +18,7 @@ This version uses Gaudi v21r11 and LCG_58f
     Event/TrackEvent v5r8, IO/IOExample v3r5, GaudiConf v13r7, 
     Kernel/LHCbAlgs v2r35, Kernel/LHCbKernel v12r5, Kernel/LHCbMath v3r20,
     Kernel/XMLSummaryBase v1r2, Kernel/XMLSummaryKernel v1r0p2, 
-    Phys/LoKiCore v10r4, Tr/TrackInterfaces v4r16
+    Phys/LoKiCore v10r4, ST/STKernel v2r4, Tr/TrackInterfaces v4r16
 
 - In Calo/CaloInterfaces v7r19
   . ICaloHypoEstimator/ITrack2Calo : add virtual method + increment interface ID
@@ -124,6 +121,10 @@ This version uses Gaudi v21r11 and LCG_58f
 - In Phys/LoKiCore v10r4
   . remove usage of obsolete python module 'sets'
   . decouple LoKiCore.functions and LoKiCore.decorators 
+
+- In ST/STKernel v2r4
+  . Fix warnings from the INTEL compiler
+  . Add writeMappingToXML to ISTReadoutTool interface
 
 - In Tr/TrackInterfaces v4r16
   . modification of IPVOfflineTool.h conected to new PatPV to store track weights
