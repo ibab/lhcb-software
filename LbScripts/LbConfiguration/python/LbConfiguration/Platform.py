@@ -110,6 +110,12 @@ def getConfig(architecture, platformtype, compiler, debug=False):
     cmtconfig = None
     if platformtype.startswith("win") :
         cmtconfig = "_".join([platformtype, compiler])
+        if compiler.startswith("vc9") :
+            if architecture == "ia32" :
+                architecture = "i686"
+            elif architecture == "amd64" :
+                architecture = "x86_64"
+            cmtconfig = "-".join([architecture, "winxp", compiler, "opt"])
     else :
         if architecture == "ia32" :
             architecture = "i686"
@@ -131,7 +137,7 @@ def getConfig(architecture, platformtype, compiler, debug=False):
 # officially supported binaries
 binary_opt_list = ["slc4_ia32_gcc34", "slc4_amd64_gcc34",
                    "x86_64-slc5-gcc43-opt",
-                   "win32_vc71"]
+                   "win32_vc71", "i686-winxp-vc9-opt"]
 # future possible supported binaries
 extra_binary_opt_list = ["slc3_ia32_gcc323",
                          "x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
@@ -227,6 +233,7 @@ flavor_runtime_compatibility = {
                                 "slc3"  : ["slc3"],
                                 "rh73"  : ["rh73"],
                                 "win32" : ["win32"],
+                                "win64" : ["win64"],
                                 "osx105": ["osx105"],
                                 "osx106": ["osx105", "osx106"]
                                 }
@@ -248,6 +255,7 @@ flavor_runtime_equivalence = {
                               "slc3"  : ["slc3", "suse90", "suse100"],
                               "rh73"  : ["rh73", "suse80", "suse81", "suse82", "suse83"],
                               "win32" : ["win32"],
+                              "win64" : ["win64"],
                               "osx105": ["osx105"],
                               "osx106": ["osx106"]
                              }
@@ -256,7 +264,8 @@ supported_compilers = {
                        "slc5"   : ["gcc43"],
                        "slc4"   : ["gcc34"],
                        "slc3"   : ["gcc323"],
-                       "win32"  : ["vc71"],
+                       "win32"  : ["vc71", "vc9"],
+                       "win64"  : ["vc71", "vc9"],
                        "osx104" : ["gcc40"],
                        "osx105" : ["gcc401"],
                        "osx106" : ["gcc42"]
