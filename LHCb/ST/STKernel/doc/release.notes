@@ -3,6 +3,7 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v2r4 2010-09-27 ============================
 ! 2010-09-09 M Needham
  - Fix warnings from the INTEL compiler
  - Add writeMappingToXML to ISTReadoutTool interface
