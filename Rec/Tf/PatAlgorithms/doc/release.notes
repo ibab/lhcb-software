@@ -4,6 +4,8 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r7 2010-09-27 =========================
+
 ! 2010-09-24 - Manuel Tobias Schiller
  - add an earlyData tuning for PatSeeding
 
