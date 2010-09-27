@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r35 2010-09-27 ============================
 ! 2010-09-21 - Marco Cattaneo
  - Changed default SIMCOND tag for MC09:
    . MC09-20100921-vc-md100 for SIMCOND
