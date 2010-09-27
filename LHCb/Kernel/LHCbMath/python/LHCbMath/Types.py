@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.9 2010-06-16 12:20:57 ibelyaev Exp $
+# $Id$
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -43,7 +43,6 @@
 #
 # =============================================================================
 """
-
 Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 
   see $GAUDIKERNELROOT/GaudiKernel/Point3DTypes.h
@@ -67,21 +66,19 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
   >>> import LHCbMath.Types
   >>> from GaudiPython.Bindings import gbl as cpp ## get global C++ namespace
   >>> Gaudi = cpp.Gaudi                           ## get C++ namespace Gaudi
-  >>> p3 = Gaudi.XYZPoint(0,1,2)               ## use C++ type Gaudi::XYZPoint
+  >>> p3 = Gaudi.XYZPoint(0,1,2)                  ## use C++ type Gaudi::XYZPoint
 
   >>> dir( Gaudi.Math )
   >>> dir( Gaudi      )
   
-
-
   Last modification $Date$
                  by $Author$
 
 """
 # =============================================================================
-__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__date__    = " 2009-09-12 "
-__version__ = " Version $Revision: 1.9 $ "
+__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
+__date__    = "2009-09-12"
+__version__ = "Version$Revision$"
 # =============================================================================
 __all__     = () ## nothing to be imported !
 # =============================================================================
@@ -275,7 +272,7 @@ if not hasattr ( Gaudi.Math.XYZLine , '_new_str_' ) :
     Gaudi.Math.XYZLine.__repr__  = _l_str_
 
 # ============================================================================
-## self-printpout of matrices
+## self-printout of matrices
 def _mg_str_ ( self , fmt = ' %+11.4g') :
     """
     Self-printout of matrices 
@@ -371,7 +368,6 @@ for t in  ( Gaudi.Vector2 ,
         t.__str__   = _v_str_
         t.__repr__  = _v_str_
         
-
 for t in ( Gaudi.Math.ValueWithError         ,
            Gaudi.Math.Point3DWithError       ,
            Gaudi.Math.Vector3DWithError      ,
@@ -433,8 +429,6 @@ def _intersect_line_and_plane_ ( line , plane ) :
 
     The return value is a tuple: 
     - the point
-
-     
     - the parameter along the line
     - the flag (true if intersection exists)
     
@@ -593,8 +587,6 @@ if not hasattr ( Gaudi.XYZPoint , 'impactParameter' ) :
 if not hasattr ( Gaudi.XYZPoint , 'ip'              ) :
     Gaudi.XYZPoint.ip              = _imp_par_2_
 
-
-
 # =============================================================================
 ## distance between two lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -609,7 +601,6 @@ def _distance_between_two_lines_ ( line , line1 ) :
     
     """
     return _GeomFun.distance ( line , line1 )
-
 
 _distance_between_two_lines_ . __doc__ += '\n' + _GeomFun.distance. __doc__
 

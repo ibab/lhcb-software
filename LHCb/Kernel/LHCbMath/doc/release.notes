@@ -6,6 +6,14 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Vanya Belyaev
+
+ - python/LHCbMath/Types.py
+
+   remove unprintable null byte form the string
+   (manythanks to Marco Clemencic)
+
+
 ! 2010-09-26 - Vanya Belyaev
 
  - python/LHCbMath/Types.py
