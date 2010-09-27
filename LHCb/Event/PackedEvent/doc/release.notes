@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v4r3 2010-09-27 =========================
 ! 2010-09-24 - Chris Jones
  - Fix compilation warning on windows, due to implicit double to float conversion
 
