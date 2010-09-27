@@ -40,19 +40,22 @@
 #  In addition the PT-cut for the long-lived charmed particle has been applied.
 #  Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 #
-#  The performance with 100k events from Reco05-Stripping08_SDSTs.py:
-#
-# +-----------------------------------+----------+----------+-------+--------+
-# | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
-# +-----------------------------------+----------+----------+-------+--------+
-# | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.038  |
-# | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.323  |
-# | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.032  |
-# | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.210  |
-# | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.276  |
-# | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.137  |
-# +-----------------------------------+----------+----------+-------+--------+
-#                                                   Thanks to Anton Poluektov
+
+#  The performance with 100k events from Reco05-Stripping09_SDSTs.py:
+# +-------------------------------------+----------+----------+-------+--------+
+# | Decision name                       |     Rate | Accepted | Mult. | <T>,ms |
+# +-------------------------------------+----------+----------+-------+--------+
+# | StrippingSequenceStreamPromptCharm  | 0.001590 |   159    | 4.097 |        |
+# +-------------------------------------+----------+----------+-------+--------+
+# |    StrippingDstarForPromptCharm     | 0.000490 |    49    | 1.204 |  3.093 |
+# |  * StrippingD02HHForPromptCharm     | 0.000530 |    53    | 1.000 |  0.040 |
+# |    StrippingDsForPromptCharm        | 0.000170 |    17    | 1.000 |  0.151 |
+# |  * StrippingDForPromptCharm         | 0.000250 |    25    | 1.000 |  0.064 |
+# |    StrippingLambdaCForPromptCharm   | 0.000230 |    23    | 1.000 |  0.675 |
+# +-----------------------------------------------------------+-------+--------+
+#     * denotes prescaled lines: prescale = 0.25 
+#                                                      Thanks to Anton Poluektov
+# 
 #
 # Usage:
 #
@@ -105,19 +108,20 @@ The cuts more or less correspond to D*+ selection by Alexandr Kozlinzkiy
 In addition the PT-cut for the long-lived charmed particle has been applied
 Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 
-The performance with 100k events from Reco05-Stripping08_SDSTs.py:
-
-  +-----------------------------------+----------+----------+-------+--------+
-  | Decision name                     |     Rate | Accepted | Mult. | <T>,ms |
-  +-----------------------------------+----------+----------+-------+--------+
-  | StrippingSequenceStream_Vanya     | 0.006300 |     630  |       | 3.038  |
-  | -- StrippingDstarForPromptCharm   | 0.001030 |     103  | 1.417 | 1.323  |
-  | -- StrippingD02HHForPromptCharm   | 0.003160 |     316  | 1.016 | 0.032  |
-  | -- StrippingDsForPromptCharm      | 0.000530 |      53  | 1.132 | 0.210  |
-  | -- StrippingDForPromptCharm       | 0.001600 |     160  | 1.019 | 0.276  |
-  | -- StrippingLambdaCForPromptCharm | 0.000860 |      86  | 1.105 | 1.137  |
-  +-----------------------------------+----------+----------+-------+--------+
+ The performance with 100k events from Reco05-Stripping09_SDSTs.py:
+ +-------------------------------------+----------+----------+-------+--------+
+ | Decision name                       |     Rate | Accepted | Mult. | <T>,ms |
+ +-------------------------------------+----------+----------+-------+--------+
+ | StrippingSequenceStreamPromptCharm  | 0.001590 |   159    | 4.097 |        |
+ +-------------------------------------+----------+----------+-------+--------+
+ |    StrippingDstarForPromptCharm     | 0.000490 |    49    | 1.204 |  3.093 |
+ |  * StrippingD02HHForPromptCharm     | 0.000530 |    53    | 1.000 |  0.040 |
+ |    StrippingDsForPromptCharm        | 0.000170 |    17    | 1.000 |  0.151 |
+ |  * StrippingDForPromptCharm         | 0.000250 |    25    | 1.000 |  0.064 |
+ |    StrippingLambdaCForPromptCharm   | 0.000230 |    23    | 1.000 |  0.675 |
+ +-----------------------------------------------------------+-------+--------+
                                                      Thanks to Anton Poluektov
+    * denotes prescaled lines: prescale = 0.25 
 
   Usage:
  
@@ -140,7 +144,7 @@ __version__ = '$Revision: 1.14 $'
 # =============================================================================
 __all__ = (
     #
-    "StrippingPromptCharmConf"         , ## required by Tom & Greig 
+    'StrippingPromptCharmConf'         , ## required by Tom & Greig 
     #
     "Selections"                       , ## the selections
     #
@@ -542,29 +546,42 @@ from StrippingConf.StrippingLine import StrippingLine
 ## require 1,2, or 3 primary vertex 
 PrimaryVertices = (1,3)
 
-## require less than 400 tracks
-Filter          = "CONTAINS('Rec/Track/Best') < 400" 
+##    ( monitor ( CONTAINS('Rec/Track/Best' ) ) <  400 ) &
+##    ( monitor ( CONTAINS('Raw/Spd/Digits' ) ) <  600 ) &
+##    ( monitor ( CONTAINS('Raw/IT/Clusters') ) < 1500 ) &
+##    ( monitor ( TrSOURCE('Rec/Track/Best' , TrVELO ) >> TrSIZE ) < 200 )
 
+## Global Event Cuts
+GEC          = {
+    'Code'       : """
+    ( CONTAINS('Rec/Track/Best' ) <  400 ) &
+    ( CONTAINS('Raw/Spd/Digits' ) <  600 ) &
+    ( CONTAINS('Raw/IT/Clusters') < 1500 ) &
+    ( TrSOURCE('Rec/Track/Best' , TrVELO ) >> ( TrSIZE < 200 ) ) 
+    """ ,
+    'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
+                     'from LoKiCore.functions    import *' ]
+    }
 
 D02HHForPromptCharm_Line   = StrippingLine (
     "D02HHForPromptCharm"      ,
     prescale = 0.25            ,                ## ATTENTION! Prescale here !!
     checkPV  = PrimaryVertices ,
-    FILTER   = Filter          , 
+    FILTER   = GEC             , 
     algos    = [ D02HHForPromptCharm_Selection   ]
     )
 
 DstarForPromptCharm_Line   = StrippingLine (
     "DstarForPromptCharm"      ,
     checkPV  = PrimaryVertices , 
-    FILTER   = Filter          , 
+    FILTER   = GEC             , 
     algos    = [ DstarForPromptCharm_Selection    ]
     )
 
 DsForPromptCharm_Line       = StrippingLine (
     "DsForPromptCharm"         ,
     checkPV  = PrimaryVertices , 
-    FILTER   = Filter          , 
+    FILTER   = GEC             , 
     algos    = [ DsForPromptCharm_Selection       ]
     )
 
@@ -572,14 +589,14 @@ DForPromptCharm_Line       = StrippingLine (
     "DForPromptCharm"          ,
     prescale = 0.25            ,                ## ATTENTION! Prescale here !!
     checkPV  = PrimaryVertices , 
-    FILTER   = Filter          , 
+    FILTER   = GEC             , 
     algos    = [ DForPromptCharm_Selection        ]
     )
 
 LambdaCForPromptCharm_Line = StrippingLine (
     "LambdaCForPromptCharm"    ,
     checkPV  = PrimaryVertices , 
-    FILTER   = Filter          , 
+    FILTER   = GEC             , 
     algos    = [ LambdaCForPromptCharm_Selection  ]
     )
 

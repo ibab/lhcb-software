@@ -7,6 +7,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
 ! 2010-09-27 - Vanya Belyaev
 
+   StrippingPromtCharm.py
+      update documentation
+  
+! 2010-09-27 - Vanya Belyaev
+
  - StrippingTriMuon.py
    StrippingPromtCharm.py
       make changes recommended by Greig & Tom

@@ -43,17 +43,14 @@
 #    - the Hlt-requirements: MicroBias or Muon-trigger
 #         HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 #
-#  Test with 100k events Reco05-Stripping08_SDSTs.py : 
-# 
+#  Test with 100k events Reco05-Stripping09_SDSTs.py : 
 #   +-----------------------------+-----------+-----------+---------+--------+
 #   | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
 #   +-----------------------------+-----------+-----------+---------+--------+
-#   | StrippingGlobal             | 0.000930  |      93   |         | 1.035  |
-#   +-----------------------------+-----------+-----------+---------+--------+
-#   | StrippingSequenceStreamTest | 0.000930  |      93   |         |  1.029 | 
-#   | -- StrippingThreeMuons      | 0.000510  |      51   | 226.000 |  0.860 | 
-#   | -- StrippingBc2ThreeMu      | 0.000180  |      18   | 1.556   |  0.057 | 
-#   | -- StrippingTau2ThreeMu     | 0.000240  |      24   | 1.500   |  0.051 | 
+#   | StrippingSequenceStreamTest | 0.000360  |      36   |         |  1.029 | 
+#   | -- StrippingThreeMuons      | 0.000140  |      14   | 226.000 |  0.860 | 
+#   | -- StrippingBc2ThreeMu      | 0.000100  |      10   | 1.000   |  0.057 | 
+#   | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
 #   +-----------------------------+-----------+---------------------+--------+
 #
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -101,19 +98,15 @@ Strip three-muon events:
          HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 
 
-   Test with 100k events Reco05-Stripping08_SDSTs.py : 
- 
-    +-----------------------------+-----------+-----------+---------+--------+
-    | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
-    +-----------------------------+-----------+-----------+---------+--------+
-    | StrippingGlobal             | 0.000930  |      93   |         | 1.035  |
-    +-----------------------------+-----------+-----------+---------+--------+
-    | StrippingSequenceStreamTest | 0.000930  |      93   |         |  1.029 | 
-    | -- StrippingThreeMuons      | 0.000510  |      51   | 226.000 |  0.860 | 
-    | -- StrippingBc2ThreeMu      | 0.000180  |      18   | 1.556   |  0.057 | 
-    | -- StrippingTau2ThreeMu     | 0.000240  |      24   | 1.500   |  0.051 | 
-    +-----------------------------+-----------+---------------------+--------+
-
+   Test with 100k events Reco05-Stripping09_SDSTs.py : 
+   +-----------------------------+-----------+-----------+---------+--------+
+   | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
+   +-----------------------------+-----------+-----------+---------+--------+
+   | StrippingSequenceStreamTest | 0.000360  |      36   |         |  1.029 | 
+   | -- StrippingThreeMuons      | 0.000140  |      14   | 226.000 |  0.860 | 
+   | -- StrippingBc2ThreeMu      | 0.000100  |      10   | 1.000   |  0.057 | 
+   | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
+   +-----------------------------+-----------+---------------------+--------+
  
 $Revision: 1.3 $
 Last modification $Date: 2010-08-24 11:05:43 $
@@ -154,13 +147,13 @@ _Preambulo  = [
     ## shortcut for chi2 of vertex fit 
     'chi2vx = VFASPF(VCHI2) '                   ,
     ## shortcut for the c*tau
-    "from GaudiKernel.PhysicalConstants import c_light"      ,
+    "from GaudiKernel.PhysicalConstants import c_light"   ,
     "ctau    =                  BPVLTIME ( ) * c_light "  ,
     "ctauBc  = PDGM('B_c+')/M * BPVLTIME ( ) * c_light "  
     ]
 
-muoncuts      = " ( PT > 250 * MeV ) & ( TRCHI2DOF < 10  ) & ( BPVIPCHI2 () > 4 ) "
-tightmuoncuts = " ( PT > 1.2 * GeV )                       & ( BPVIPCHI2 () > 9 ) "
+muoncuts      = " ( PT > 250 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () > 4 ) "
+tightmuoncuts = " ( PT > 1.2 * GeV )                      & ( BPVIPCHI2 () > 9 ) "
 
 ## helper selection of 'good' muons 
 _GoodMuons = FilterDesktop (
@@ -179,7 +172,6 @@ GoodMuons_Selection = Selection (
     ##
     RequiredSelections = [ _LooseMuons ]
     )
-
 
 ## require at least 3 good muons
 ThreeGoodMuons_Selection = EventSelection (
@@ -308,7 +300,7 @@ Selections = [
 
 from StrippingConf.StrippingLine import StrippingLine
 
-hlt = " HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision') "
+hlt = " HLT_PASS_RE('Hlt.*(MicroBias|Muon|MuMu|DiMu).*Decision') "
 
 Tau2ThreeMu_Line = StrippingLine (
     "Tau2ThreeMu" ,
