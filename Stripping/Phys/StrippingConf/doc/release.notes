@@ -5,6 +5,43 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-09-27 - Vanya Belyaev
+
+ - python/StrippingConf/StrippingLine.py
+
+      add new property FILTER, to run LoKi::VoidFilter instance 
+      before entering into line
+
+       - corresponding filter is bound to the line 
+       - the filter is not propagated to underlying c++ StrippingAlg 
+      
+       The usage:
+
+       a. simple string:
+
+       line = StrippingLine ( ... ,
+          FILTER = " CONTAINS ( 'Rec/Track/Best') < 400  "
+          )
+
+       b. tuple: ( code, preambulo) 
+
+       line = StrippingLine ( ... ,
+  		    FILTER =  ( " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " , 
+                      [ "from LoKiTracks.decorators import *" ] ) 
+	
+          )
+
+       c. dictionary with full configuration of LoKi::VoidFilter algoithm
+
+       line = StrippingLine ( ... ,
+  		    FILTER =  { 'Code'        : " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " , 
+                      'Preambulo'   : [ "from LoKiTracks.decorators import *" ] , 
+                      'OutputLevel' : 3  } 
+          )
+
+  - cmt/requirements 
+     version increment to v3r8 
+
 !========================== StrippingConf v3r7 2010-08-20 =================
 
 ! 2010-08-11 - Vanya Belyaev

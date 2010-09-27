@@ -18,6 +18,7 @@ from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
+from Configurables import LoKi__VoidFilter  as VOIDFilter
 from SelPy.selection import FlatSelectionListBuilder
 #from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
@@ -46,8 +47,13 @@ def odinentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'ODINFilter' algorithm inside StrippingLine """
     return '%s%sODINFilter'   % (level,line)
 
+## Convention: the name of 'VOIDFilter' algorithm inside StrippingLine
+def voidentryName    ( line, level = 'Stripping' ) :
+    """ Convention: the name of 'VOIDFilter' algorithm inside StrippingLine """
+    return '%s%sVOIDFilter'   % (level,line)
+
 ## Convention: the name of 'L0DUFilter' algorithm inside StrippingLine
-def l0entryName    ( line, level = 'StrippingLine' ) :
+def l0entryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'L0DUFilter' algorithm inside StrippingLine """
     return '%s%sL0DUFilter'   % (level,line)
 
@@ -56,7 +62,7 @@ def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
 
-def decisionName   ( line, level = 'Hlt1' ) :
+def decisionName   ( line, level = 'Stripping'  ) :
     """Convention: the name of 'Decision' algorithm inside StrippingLine"""
     return level + '%sDecision'   % line if line != 'Global' else level+'Global'
 
@@ -301,42 +307,8 @@ class StrippingMember ( object ) :
 
         return instance
 
-
-#    def createConfigurable( self, line, **args ) :
-#        """
-#        Create the configurable, and, if needed, deal with tool configuration
-#        """
-#        ## clone the arguments
-#        line = deepcopy ( line )
-#        args = deepcopy ( args ) 
-#        if 'InputLocations' in args : 
-#            # adapt input...  and put back...  
-#            inputLocations = args.pop('InputLocations')
-#            # adapt bindMembers...
-#            inputLocations = [ i.outputSelection() if type(i) is bindMembers else i 
-#                               for i in inputLocations ]
-#            # deal with nested lists (one level only), keep order invariant
-#            _x = []
-#            for i in inputLocations :
-#                _x += i if type(i) is list else [ i ]
-#            inputLocations = _x
-#            # deal with concrete instances
-#            from Configurables import FilterDesktop, CombineParticles
-#            inputLocations = [ i.getName() if type(i) in [ CombineParticles, FilterDesktop ] else i
-#                               for i in inputLocations ]
-#            # and perform pattern substitution
-#            from re import sub
-#            inputLocations = [ sub('^%', 'Stripping' + line, i ) 
-#                               for i in inputLocations ]
-#            args['InputLocations'] = inputLocations
-#        _name = self.name( line )
-#        instance =  self.Type( _name, **args)
-#        # see if alg has any special Tool requests...
-#        for tool in self.Tools : tool.createConfigurable( instance )
-#        return instance
-
-
-
+# =============================================================================
+## @class StrippingLine
 class StrippingLine(object):
 
     def __init__ ( self             ,
@@ -345,6 +317,7 @@ class StrippingLine(object):
                    ODIN      = None ,   # ODIN predicate
                    L0DU      = None ,   # L0DU predicate
                    HLT       = None ,   # HltDecReports predicate
+                   FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
                    checkPV   = True ,   # Check PV before running algos 
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
@@ -353,12 +326,13 @@ class StrippingLine(object):
                    **args           ) : # other configuration parameters
 
         ## 1) clone all arguments
-        name  = deepcopy ( name  )
-        ODIN  = deepcopy ( ODIN  )
-        L0DU  = deepcopy ( L0DU  )
-        HLT   = deepcopy ( HLT   )
-        algos = deepcopy ( algos )
-        args  = deepcopy ( args  )
+        name   = deepcopy ( name   )
+        ODIN   = deepcopy ( ODIN   )
+        L0DU   = deepcopy ( L0DU   )
+        HLT    = deepcopy ( HLT    )
+        FILTER = deepcopy ( FILTER )
+        algos  = deepcopy ( algos  )
+        args   = deepcopy ( args   )
         # 2) save all parameters (needed for the proper cloning)
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
@@ -367,6 +341,7 @@ class StrippingLine(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
+        self._FILTER    = FILTER
         self._checkPV   = checkPV
         
         if callable(postscale) : postscale = postscale( self.name() )
@@ -381,13 +356,8 @@ class StrippingLine(object):
         # most recent output selection
         self._outputsel = None
         self._outputloc = None
-        # bind members to line
-        _boundMembers = bindMembers( line, algos )
-        self._members = _boundMembers.members()
-        self._outputsel = _boundMembers.outputSelection()
-        self._outputloc = _boundMembers.outputLocation()
         
-        self._appended = False
+        self._appended  = False
 
         # register into the local storage of all created Lines
         _add_to_stripping_lines_( self ) 
@@ -408,6 +378,7 @@ class StrippingLine(object):
         ODIN    = self._ODIN
         L0DU    = self._L0DU
         HLT     = self._HLT
+        FILTER  = self._FILTER
 
         mdict = {} 
         for key in args :
@@ -417,6 +388,7 @@ class StrippingLine(object):
 
         #start to contruct the sequence        
         line = self.subname()
+        self._members = []
         
         # if needed, check Primary Vertex before running all algos
         
@@ -440,6 +412,27 @@ class StrippingLine(object):
     	elif checkPV != False : 
     	    raise TypeError, "Wrong checkPV argument type '%s'" % type(checkPV).__name__
 
+        # if needed, apply filter before running all algos
+        if FILTER :
+            if isinstance   ( FILTER , str   ) :
+                fltr = VOIDFilter  ( voidentryName  ( line ) , Code = FILTER )
+                self._members.insert ( 0 , fltr )
+            elif isinstance ( FILTER , ( tuple , list ) ) and 2 == len ( FILTER ) :
+                fltr = VOIDFilter  ( voidentryName  ( line ) , Code = FILTER[0] , Preambulo = FILTER[1] )
+                self._members.insert ( 0 , fltr )
+            elif isinstance ( FILTER , dict     ) :
+                fltr = VOIDFilter  ( voidentryName  ( line ) , **FILTER ) 
+                self._members.insert ( 0 , fltr )
+            else :
+    		raise TypeError, "Wrong FILTER attribute: %s " % FILTER
+
+            
+        # bind members to line
+        _boundMembers    = bindMembers( line, algos )
+        self._members   += _boundMembers.members()
+        self._outputsel  = _boundMembers.outputSelection()
+        self._outputloc  = _boundMembers.outputLocation()
+        
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
@@ -447,9 +440,9 @@ class StrippingLine(object):
                       , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale ) 
                       } )
 
-        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
-        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
-        if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
+        if ODIN   : mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
+        if L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
+        if HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
 
         if self._members : 
             last = self._members[-1]
@@ -598,6 +591,7 @@ class StrippingLine(object):
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __FILTER     = deepcopy ( args.get ( 'FILTER'    , self._FILTER    ) )        
         __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
@@ -635,6 +629,7 @@ class StrippingLine(object):
                                ODIN      = __ODIN       ,
                                L0DU      = __L0DU       ,
                                HLT       = __HLT        ,
+                               FILTER    = __FILTER     ,
                                checkPV   = __checkPV    ,
                                postscale = __postscale  ,
                                algos     = __algos      , 
