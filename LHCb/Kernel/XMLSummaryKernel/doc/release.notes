@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!======================== XmlSummaryKernel v1r0p2 2010-09-27 =================
 ! 2010-09-22 - Rob Lambert
  - Gaudi now has better return codes, see bug #70956
    this required further adaptation of the tests
