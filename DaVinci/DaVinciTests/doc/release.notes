@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Juan Palacios
+ - Modify initialisation test. PID calibration sequence has been put on-demand
+   so some algorithms don't appear anymore.
+ - Remove DC06 tests.
+ - Increase to v1r5.
+
 ! 2010-09-20 - Juan Palacios
  - Add davinci.commonparticles.test_standatdbasic_init and 
    davinci.commonparticles.test_standardintermediate_init
