@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Michael Alexander
+ - bugfix to VeloIPResolutionMonitor for windows
+
 ! 2010-09-23 - Michael Alexander
  - bugfix to VeloIPResolutionMonitor to catch unchecked StatusCode
 

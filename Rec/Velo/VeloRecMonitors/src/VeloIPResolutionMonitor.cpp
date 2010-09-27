@@ -417,7 +417,7 @@ void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string 
 
 void Velo::VeloIPResolutionMonitor::saveMeanAndSigmaProfiles( TH2D* h )
 {
-  int nbins = h->GetNbinsX() ;
+  const int nbins( h->GetNbinsX() ) ;
   TH1D* binHistos[nbins] ;
   getBinsFromTH2D( h, string(h->GetName()), string(h->GetName()), string(""), binHistos ) ;
   rebinHistos( binHistos, nbins ) ;
