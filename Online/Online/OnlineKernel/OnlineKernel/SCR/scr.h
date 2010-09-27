@@ -123,14 +123,17 @@ struct Update    {
   int          *mod_col0,
                *mod_col1;
 };
+
+struct PasteboardContext {
+  Pasteboard* pb;
+  int         rows;
+  int         cols;
+  /*
+  PasteboardContext() : pb(0), rows(0), cols(0) {}
+  PasteboardContext(const PasteboardContext& c) : pb(c.pb), rows(c.rows), cols(c.cols) {}
+  */
+};
 #ifdef __cplusplus
- struct PasteboardContext {
-   Pasteboard* pb;
-   int         rows;
-   int         cols;
-   PasteboardContext() : pb(0), rows(0), cols(0) {}
-   PasteboardContext(const PasteboardContext& c) : pb(c.pb), rows(c.rows), cols(c.cols) {}
- };
 }
 #endif
 

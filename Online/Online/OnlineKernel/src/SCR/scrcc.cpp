@@ -4,6 +4,7 @@ using namespace SCR;
 //---------------------------------------------------------------------------
 SCR::PasteboardContext scrcc_create_pasteboard(const char* dev) {
   PasteboardContext pb;
+  ::memset(&pb,0,sizeof(pb));
   scrc_create_pasteboard(&pb.pb,dev,&pb.rows,&pb.cols);
   return pb;
 }
