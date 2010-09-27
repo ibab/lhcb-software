@@ -214,7 +214,7 @@ void NNTuner::TrainNNet() {
 
 void NNTuner::exittuner() {
   if(name!="") {
-    system("rm -v output/tag.root"); //to avoid confusion
+    cout<<system("rm -v output/tag.root"); //to avoid confusion
 
     info()<<BOLD<<SUBAMARILLO<<"\n    INSTRUCTIONS on how to proceed:";
     info()<<ROJO<<"\n 1. Quit root, set NNetTrain=none in tag.opts "

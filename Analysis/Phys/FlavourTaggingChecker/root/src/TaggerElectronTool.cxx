@@ -4,13 +4,13 @@ TaggerElectronTool::TaggerElectronTool() {
 
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 2.5 );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
   declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
   declareProperty( "EoverP",       m_EoverP     = 0.85 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut  = 4.0 );
-  declareProperty( "ProbMin_ele",  m_ProbMin_ele  = 0. ); //no cut
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut   = 4.0 );
+  declareProperty( "ProbMin_ele",  m_ProbMin_ele = 0. ); //no cut
 
   NNetTool_MLP nnet;
   tele = new Tagger();

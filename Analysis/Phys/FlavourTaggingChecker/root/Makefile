@@ -17,7 +17,7 @@ CXXFLAGS_DBG  = -fPIC -Wall -g3 -gdwarf-2
 LD            = g++
 LDFLAGS       = -O2
 SOFLAGS       = -shared
-EXTRALIBS     = -lMLP -lTMVA -lRGL -lGeom -lEve
+EXTRALIBS     = -lMLP -lGeom -lEve
 EXTRAFLAGS    = -Iinclude -Isrc -Innet 
 
 #------------------------------------------------------------------------------

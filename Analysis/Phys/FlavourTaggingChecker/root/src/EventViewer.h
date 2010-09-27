@@ -1,3 +1,7 @@
+#define ENABLEEVENTVIEWER //commentout this line to disable the class
+#ifdef  ENABLEEVENTVIEWER
+
+
 #ifndef EventViewer_H
 #define EventViewer_H 1
 
@@ -40,4 +44,5 @@ class EventViewer : public GenericTool {
 
 };
 
+#endif 
 #endif 

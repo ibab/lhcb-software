@@ -7,7 +7,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
 		   m_SecondaryVertexToolName = "SVertexOneSeedTool");
 
   //"NNet", "Probability"
-  declareProperty( "UseObsoleteSV",   m_UseObsoleteSV     = false );
+  declareProperty( "UseObsoleteSV", m_UseObsoleteSV       = false );
   declareProperty( "AverageOmega",  m_AverageOmega        = 0.41 );
 
   declareProperty( "PowerK",        m_PowerK              = 0.35 );

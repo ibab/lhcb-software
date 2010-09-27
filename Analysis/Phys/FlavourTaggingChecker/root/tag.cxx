@@ -1,6 +1,7 @@
 #include "tag.h"
 
 int main () {
+
 #include "tag_histo.h" //define here histograms to fill.
 
   TApplication appKey("appKey",0,0);
@@ -12,13 +13,13 @@ int main () {
   TaggerPionSameTool        pStool ;
   TaggerVertexChargeTool    vtxtool;
 
-  CombineTaggersProbability combProbtool;
   CombineTaggersPID         combPIDtool ;
   CombineTaggersNN          combNNtool;
+  CombineTaggersProbability combProbtool;
 
+  EventViewer viewer;
   NNTuner nnetune(NNetTrain);
   PerformanceMonitor perfmon, perfmonNN;
-  EventViewer viewer;
 
   //FILE LOOP ////////////////////////////////////////////////////////////////
   for( std::vector<TString>::iterator ifile=filelist.begin(); 

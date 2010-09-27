@@ -50,8 +50,9 @@ More general information and tables of performance are found here:
 
 Latest version of source code is at:
 
-\link http://isscvs.cern.ch/cgi-bin/cvsweb.cgi/Phys/FlavourTagging/src/?cvsroot=lhcb 
+\link http://svnweb.cern.ch/world/wsvn/lhcb/Analysis/trunk/Phys/FlavourTaggingChecker/root/#path_Analysis_trunk_Phys_FlavourTaggingChecker_root_
 \endlink
+
 
 
  \section run_sec How to Compile and Run
@@ -66,34 +67,38 @@ are assigned.
 
 If a property is not present in this file the default value in the
 .cxx code will be used. If you want to change its value add it to 
-tag.opts using the " = " (with spaces!) sign. All other characters will be ignored.
-The last declaration will be always taken.
+tag.opts. Keep in mind that all separation characters 
+will be ignored. The last declaration is always taken.
 At run time you will be informed that a property has changed from its default.
 
 Compilation produces a tag.exe that is automatically run. Simply type
 
 \b make or \b make \b run if you already have the executable.
 
-This compiles, runs and plots using default macro tag.C.
+This compiles, runs and plots using default macro plot.C.
 
 
  \subsection data What input data is needed?
  This package reads the information stored in ntuple(s) produced 
 by the DaVinci algorithm Phys/FlavourTaggingChecker/src/BTaggingAnalysis.cpp
 this can be run with the example python file  in 
-Phys/FlavourTaggingChecker/options/DVBTaggingAnalysis.py
+Phys/FlavourTaggingChecker/options/DVBTaggingAnalysis.py.
+
  Please refer to the DaVinci pages for further information on this.
 
 An example (default) ntuple is kept in the lxplus area: ~musy/public/analysis.root
 
-You can also just specify a directory: all *.root files will be parsed automatically.
+You can also just specify a directory: in this case all root files 
+will be parsed automatically.
 
 The output of the tag.exe is a dump of the main tagging figures of performance,
 a log file in output/logfile.txt and a root file output/tag.root which contains
 all the filled histograms ready to be plotted.
 
-The actual plotting is done by root macros (tag.C or tag.control.C).
-
+The actual plotting is done by the root macro plot.C.
+This macro contains blocks of plots already filled. Uncomment the 
+goto statement that points to the block
+of plots that you you wish to look at.
 
  \subsection debug Compile in debug mode: 
  For debugging with gdb you can issue
@@ -102,8 +107,8 @@ The actual plotting is done by root macros (tag.C or tag.control.C).
 
  This forces recompilation without optimization and enters gdb.
  You can then type "run" and if a core dump happens type "bt" to have a
-backtrace of the exception. You can also change the DEBUG property to 2 or 1
-to have additional dump information.
+backtrace of the exception. You can also set the DEBUG property 
+in tag.opts to 2 or 1 to have additional dump information.
  
 
  \section info_sec How to get Information on Methods and Classes
@@ -119,7 +124,17 @@ to have additional dump information.
  \a make \a doxygen the embedded html helper).
 
  \section nnet_sec How to Retune the Neural Networks
- to do.
+ In the tag.opts file you have the possibility to retune each tagger
+neural net individually.
+
+Change the option NNetTrain to either 
+"muon", "ele", "kaon", "kaonS", "pionS", "vtx", or "comb" to 
+redo the training of the neural net for all the taggers one by one,
+the last being the retraining for the combination of the tagger's 
+responses.
+
+Type "make", and follow the instruction given by the program itself.
+
 
  \section boh_sec If you haven't found the solution here
  Contact Marco Musy (Marco.Musy@cern.ch) or Marc Grabalosa (marc.grabalosa@cern.ch).

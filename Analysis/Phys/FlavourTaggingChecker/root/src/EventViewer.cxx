@@ -1,6 +1,7 @@
-#include <iostream>
 #include "EventViewer.h"
+#ifdef ENABLEEVENTVIEWER
 
+#include <iostream>
 #include "TEveWindowManager.h"
 #include "TEveManager.h"
 #include "TEveGeoNode.h"
@@ -249,3 +250,6 @@ TEveVector  EventViewer::GetTEveVector( Float_t& eta, Float_t& phi ) {
 		  (Float_t) TMath::TanH( (Double_t) eta ) );
   return vec;
 }
+
+
+#endif
