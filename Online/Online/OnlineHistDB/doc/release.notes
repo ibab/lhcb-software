@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2010-09-20 18:48:35 ggiacomo Exp $
+! $Id: release.notes,v 1.61 2010-09-27 07:53:24 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,7 +6,7 @@
 ! or using makedoc script in this folder
 !
 
-! 20100920
+! 20100920 v7r3
 - fix some problems with loading non-standard messages
 
 ! 20100803 v7r2
