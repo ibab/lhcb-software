@@ -11,8 +11,6 @@
 ! 2010-09-27 - Gerhard Raven
  - in Hlt2B2HHPi0Lines, first do PV3D before Kalman fitting all pions
  - replace some ( x < y ) & ( y < z ) with in_range( x, y, z)
- - replace some MINTREE( x, y ) < z with INTREE( x & ( y < z ) )
-   and          MAXTREE( x, y ) > z with INTREE( x & ( y > z ) )
 
 ! 2010-09-26 - Gerhard Raven
  - move some imports out of global scope

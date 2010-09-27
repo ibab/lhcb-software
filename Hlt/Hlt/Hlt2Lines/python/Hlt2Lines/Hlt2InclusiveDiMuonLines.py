@@ -323,7 +323,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
            cut definitions for biased DiMuon Lines
         '''
-        MuPtCut = "( INTREE( ( ABSID=='mu+' ) & ( PT>%(BiasedSingleMuonPt)s*MeV) ) )" % self.getProps()
+        MuPtCut = "( MAXTREE(ABSID=='mu+',PT)>%(BiasedSingleMuonPt)s*MeV)" % self.getProps()
         MassCut  = "(MM>%(BiasedMass)s*MeV)" % self.getProps()
         MassLCut = "(MM>%(BiasedLMass)s*MeV)" % self.getProps()
         MassTCut = "(MM>%(BiasedTMass)s*MeV)" % self.getProps()
@@ -331,8 +331,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonTIP)s*mm)))" % self.getProps()
         LTimeCut  = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTime)s*ps)" % self.getProps()
         LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTimeT)s*ps)" % self.getProps()
-        IPChi2Cut  = "( INTREE( ( ABSID=='mu+' ) & ( MIPCHI2DV(PRIMARY)>%(BiasedSingleIPChi2)s) ) )" % self.getProps()
-        TIPChi2Cut = "( INTREE( ( ABSID=='mu+' ) & ( MIPCHI2DV(PRIMARY)>%(BiasedSingleIPTChi2)s ) ) )" % self.getProps()
+        IPChi2Cut  = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPChi2)s)" % self.getProps()
+        TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPTChi2)s)" % self.getProps()
         VertexChi2Cut = "(VFASPF(VCHI2PDOF)<%(BiasedVertexChi2)s)" % self.getProps()
         PVDistChi2Cut  = "(BPVVDCHI2>%(BiasedPVDistanceChi2)s)" % self.getProps()
         PVDistTChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceTChi2)s)" % self.getProps()

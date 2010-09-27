@@ -129,7 +129,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
         pid = "(('pi+'==ABSID) | ('K+'==ABSID))"
         
-        cuts = "(INTREE( (%s)& (PT > %s*MeV)))" % (pid,props["MAX_PT_MIN"])
+        cuts = "(MAXTREE(%s,PT) > %s*MeV)"  % (pid,props["MAX_PT_MIN"])
         sum_pt_min = float(props['SUM_PT_MIN'])
         if name.find('3Body') >=0: sum_pt_min += 250
         if name.find('4Body') >=0: sum_pt_min += 500
