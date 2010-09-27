@@ -4,6 +4,7 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+!===================== Event/RecreatePIDTools v1r0 2010-09-27 ================
 ! 2010-09-22 - Marco Cattaneo
  - Initial version, contains algorithms needed by DstConf, previously in
    Rec/GlobalReco
