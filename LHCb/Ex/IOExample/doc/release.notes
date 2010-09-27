@@ -4,6 +4,7 @@
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
 
+!====================== IOExample v3r5 2010-09-27 ==============================
 ! 2010-09-07 - Marco Cattaneo
  - Test rfio protocol when reading sim file, rootd protocol when reading digi 
    file, and xrootd when reading dst file
