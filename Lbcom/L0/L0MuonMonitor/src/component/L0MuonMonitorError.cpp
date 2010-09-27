@@ -433,7 +433,7 @@ StatusCode L0MuonMonitorError::execute() {
           if ( ((Fs>>ipu)&0x1) >0 ) fill(m_bcsu_src[quarter][board],9+(ipu*4),1.);
         }
         dernd_summary |= (Hs|Fs);
-        tell1_summary |= (J|K);
+        tell1_summary |= (J|K|J2|K2);
       }
     }
     
@@ -468,7 +468,7 @@ StatusCode L0MuonMonitorError::execute() {
         if (K2 > 0) fill(m_tell1_ref_src[iq],2*(quarter%2)+1,1.);
         if (K  > 0) fill(m_tell1_int_src[iq],2*(quarter%2)+1,1.);
         if ( ((hardware>>0)&0xF) != ((hardware>>4)&0xF) ) fill(m_sync_ctrl_src,quarter,1.); // BCIDs : SU!=CU
-        tell1_summary |= (J|K);
+        tell1_summary |= (J|K|J2|K2);
       }
     }
   

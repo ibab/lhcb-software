@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2010-09-27 - Julien Cogan
+ - L0MuonMoniError : report tell1 errors (type J2 and K2) in the summary plot.
+
 ! 2010-08-30 - Julien Cogan
  - L0MuonMonitorInput : 
    - check if muon read out is saturated before processing events
