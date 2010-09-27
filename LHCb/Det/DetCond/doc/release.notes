@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r15 2010-09-27 =========================
 ! 2010-09-24 - Marco Clemencic
  - Added a test to verify that a failure to load a condition in the
    UpdateManagerSvc is properly reported.
