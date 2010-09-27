@@ -5,6 +5,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Marco Musy
+  . dropped cuts on ghost likelihood and loosen chi2 cut to 5     
+    to make agreement closer to distributions observed in data
+
 ! 2010-09-22 - Marc Grabalosa, Marco Musy 
   . new polynomials for the omega estimator
   . drop cut on ghost prob for electrons

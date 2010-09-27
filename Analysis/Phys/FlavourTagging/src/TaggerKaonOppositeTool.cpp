@@ -34,7 +34,7 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_PIDk",  m_PID_k_cut =  0.0);
   declareProperty( "Kaon_PIDkp", m_PIDkp_cut = -1.0 );
 
-  declareProperty( "Kaon_ghost_cut", m_ghost_cut = -14.0 );
+  declareProperty( "Kaon_ghost_cut", m_ghost_cut = -9999.0 );
 
   declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 ); //no cut
   declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 ); //no cut

@@ -28,10 +28,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.6 *GeV );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
-  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 2.0 );
+
+  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 5.0 );
+  declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -9999.0);
+
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
-  declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
 
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);

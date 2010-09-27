@@ -30,7 +30,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.1 );
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
-  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.0 );
+  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 5.0 );
 
   declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  1.0 );
   declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -1.0 );
