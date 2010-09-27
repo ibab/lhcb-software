@@ -69,7 +69,6 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
         from Hlt2SharedParticles.Phi import Phi2KK
         from Hlt2SharedParticles.Kstar import  Kstar2KPi
-        #from Hlt2SharedParticles.TrackFittedBasicParticles import  BiKalmanFittedKaons, BiKalmanFittedPions
       
         hltfilter = self.getProp("HLT1FILTER")
         if hltfilter == "" : hltfilter = None
@@ -90,6 +89,9 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         
         Phi4PhiGammaFilter = Hlt2Member( FilterDesktop
                                          ,"FilterPhi2KK"
+                                         # FIXME: wy do we do twice 'INTREE( phi & ... ) and not INTREE( phi & .. & .. ) ???
+                                         #        and why cut on the 'MINTREE' instead of aborting as soon as one track has a large chisq??? 
+                                         #        
                                          ,Code = " (MINTREE ( Q != 0 , MIPCHI2DV(PRIMARY) ) > %(TrIPchi2Phi)s ) "\
                                                " & (MINTREE ( Q != 0, TRCHI2DOF) < %(TrChi2)s ) "\
                                                " & (INTREE ( (ABSID=='phi(1020)') & (ADMASS('phi(1020)')< %(PhiMassWinT)s) ) ) "\

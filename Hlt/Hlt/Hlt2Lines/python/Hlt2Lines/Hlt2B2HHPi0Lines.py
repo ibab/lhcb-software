@@ -86,7 +86,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('B2HHPi0_Merged'
                         , HLT = hltfilter
                         , prescale = self.prescale
-                        , algos = [ BiKalmanFittedPions, PV3D(), Hlt2Rho4HHPi0, MergedPi0s, Hlt2B2HHPi0 ]
+                        , algos = [ PV3D(), BiKalmanFittedPions, Hlt2Rho4HHPi0, MergedPi0s, Hlt2B2HHPi0 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHPi0_MergedDecision" : self.getProp('HltANNSvcID')['Hlt2B2HHPi0_Merged'] } )
@@ -97,7 +97,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
         line.clone('B2HHPi0_Resolved'
                    , HLT = hltfilter
                    , prescale = self.prescale
-                   , algos = [ BiKalmanFittedPions, PV3D(), Hlt2Rho4HHPi0, ResolvedPi0s, Hlt2B2HHPi0 ]
+                   , algos = [ PV3D(), BiKalmanFittedPions, Hlt2Rho4HHPi0, ResolvedPi0s, Hlt2B2HHPi0 ]
                    , CombineB =
                    {
             "DaughtersCuts" : {

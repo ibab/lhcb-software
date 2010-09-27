@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Gerhard Raven
+ - in Hlt2B2HHPi0Lines, first do PV3D before Kalman fitting all pions
+
 ! 2010-09-26 - Gerhard Raven
  - move some imports out of global scope
 
