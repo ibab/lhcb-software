@@ -12,5 +12,12 @@
   <class name = "DaVinci::Map::Particle2VertexBase"
          id = "00000371-0000-0000-0000-000000000000"/>
 
+  <class name = "std::vector<unsigned int>"/>
+  <class name = "std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> >" />
+  <class name = "std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > >" />
+  <class name = "_P2UInts" />
+  <class name = "DaVinci::Map::Particle2UnsignedInts"
+         id = "00000372-0000-0000-0000-000000000000"/>
+
 
 </lcgdict>

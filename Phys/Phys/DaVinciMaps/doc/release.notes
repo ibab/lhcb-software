@@ -4,6 +4,15 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+! 2010-09-27 - Juan Palacios
+ - Add Kernel/DataObject2ObjectMap.h
+  . Template class with generic structure for mapping T* to POD or sequence 
+    of POD. Uses GaudiUtils::VectorMap<SmartRef<T>, sequence<POD> > internally,
+    with a few specializations.
+ - Add Particle2UnsignedInts class, re-code Particle2LHCbIDs in terms of
+   DataObject2ObjectMap.
+ - Increase to v1r2.
+
 !======================== DaVinciMaps v1r1 2010-08-26 ========================
 
 ! 2010-08-27 - Juan Palacios

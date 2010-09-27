@@ -13,12 +13,15 @@
 #include "Kernel/LHCbID.h"
 #include "Kernel/Particle2LHCbIDs.h"
 #include "Kernel/Particle2VertexBase.h"
+#include "Kernel/Particle2UnsignedInts.h"
 
 namespace 
 {
   typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _P2LHCbIDs;
 
-    typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _P2PV;
+  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _P2PV;
+
+  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, std::vector<unsigned int> > _P2UInts;
 
   struct _Instantiations 
   {
@@ -30,6 +33,11 @@ namespace
     std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _i4;
     std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > > _i5;
     _P2LHCbIDs _i6;
+
+    std::vector<unsigned int> _i7;
+    std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > _i8;
+    std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > > _i9;
+    _P2UInts _i10;
 
 
   };
