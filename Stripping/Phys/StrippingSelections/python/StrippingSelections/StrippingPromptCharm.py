@@ -140,6 +140,8 @@ __version__ = '$Revision: 1.14 $'
 # =============================================================================
 __all__ = (
     #
+    "StrippingPromptCharmConf"         , ## required by Tom & Greig 
+    #
     "Selections"                       , ## the selections
     #
     'D02HHForPromptCharm_PreSelection' ,
@@ -159,22 +161,24 @@ __all__ = (
     )
 # =============================================================================
 
-from PhysSelPython.Wrappers import AutomaticData    , Selection     , MergedSelection 
-from Configurables          import CombineParticles , FilterDesktop
+from PhysSelPython.Wrappers import AutomaticData    , Selection
+from PhysSelPython.Wrappers import EventSelection   , MergedSelection 
+from Configurables          import CombineParticles , FilterDesktop  , LoKi__VoidFilter
 
-_Pions      = AutomaticData ( Location = "Phys/StdLoosePions"   )
-_Kaons      = AutomaticData ( Location = "Phys/StdLooseKaons"   )
-_Protons    = AutomaticData ( Location = "Phys/StdLooseProtons" )
-_NoPIDPions = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
+
+_Pions         = AutomaticData ( Location = "Phys/StdLoosePions"   )
+_Kaons         = AutomaticData ( Location = "Phys/StdLooseKaons"   )
+_Protons       = AutomaticData ( Location = "Phys/StdLooseProtons" )
+_NoPIDPions    = AutomaticData ( Location = "Phys/StdNoPIDsPions"  )
 
 ## the common cuts for all basic particles: 
-_trackcuts     = " ( TRCHI2DOF < 10 ) & ( PT > 250 * MeV ) "
+_trackcuts     = " ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) "
 _basiccuts     = _trackcuts + " & ( MIPCHI2DV () > 9  ) "
 _kaoncuts      = _basiccuts + " & ( 2 < PIDK  - PIDpi ) "
 _pioncuts      = _basiccuts + " & ( 2 < PIDpi - PIDK  ) " 
 _protoncuts    = _basiccuts + " & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) "
 # slow pion is the special case 
-_slowpioncuts  = "TRCHI2DOF < 10 "
+_slowpioncuts  = "TRCHI2DOF < 5 "
 
 ## switch on/off embedded monitoring 
 _monitor        = False 
@@ -217,7 +221,6 @@ ProtonSelection = Selection (
     RequiredSelections = [ _Protons ]
     )
 
-
 _preambulo      = [
     ## the D0 decay channels
     "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
@@ -256,7 +259,7 @@ _D0PreCombine = CombineParticles (
     ## mother cut
     MotherCut      = """
     ( chi2vx < 9 )              &
-    ( PT     > 1.5 * GeV      ) & 
+    ( PT     > 2.0 * GeV      ) & 
     ( ADMASS('D0') < 75 * MeV ) &
     ( abs ( LV01 ) < 0.9      ) &
     ( ctau > 100 * micrometer )
@@ -270,8 +273,8 @@ D02HHForPromptCharm_PreSelection = Selection (
     ##
     Algorithm          = _D0PreCombine   ,
     ##
-    RequiredSelections = [ MesonsSelection ] if _use_mesons else [ _Kaons ,
-                                                                   _Pions ]
+    RequiredSelections = [ MesonsSelection ] if _use_mesons else [ _Kaons     ,
+                                                                   _Pions     ]
     )
 
 # =============================================================================
@@ -390,14 +393,14 @@ _DsCombine = CombineParticles(
     } ,
     ##                                 phi                         
     CombinationCut = """
-    aphi                &
-    ( APT > 900 * MeV ) & 
+    aphi                 &
+    ( APT > 1750 * MeV ) & 
     ( admD | admDs  ) 
     """ ,
     ##
     MotherCut      = """
     ( chi2vx  < 25            ) &
-    ( PT      > 1.5 * GeV     ) & 
+    ( PT      > 2.0 * GeV     ) & 
     ( dmD | dmDs              ) &
     ( ctau > 100 * micrometer )
     """ , 
@@ -440,11 +443,11 @@ _DCombine = CombineParticles(
     ##                                 
     CombinationCut = """
     ( ADAMASS('D+') < 65 * MeV ) &
-    ( APT > 1 * GeV )
+    ( APT > 1.75 * GeV )
     """ , 
     MotherCut      = """
     ( chi2vx  < 25                   ) &
-    ( PT      > 1.5 * GeV            ) & 
+    ( PT      > 2.0 * GeV            ) & 
     ( ADMASS  ('D+'  )  <   50 * MeV ) & 
     ( ctau    > 100 * micrometer )
     """ , 
@@ -487,7 +490,7 @@ _LambdaC_Combine = CombineParticles(
     ##
     CombinationCut = """
     ( ADAMASS('Lambda_c+') < 65 * MeV ) &
-    ( APT > 1.30 * MeV ) 
+    ( APT > 1.75 * MeV ) 
     """ ,
     ##
     MotherCut      = """
@@ -537,38 +540,47 @@ if _use_mesons :
 from StrippingConf.StrippingLine import StrippingLine
 
 ## require 1,2, or 3 primary vertex 
-PrimaryVertices = (1,3) 
+PrimaryVertices = (1,3)
+
+## require less than 400 tracks
+Filter          = "CONTAINS('Rec/Track/Best') < 400" 
+
 
 D02HHForPromptCharm_Line   = StrippingLine (
     "D02HHForPromptCharm"      ,
-    prescale = 0.20            ,                ## ATTENTION! Prescale here !!
+    prescale = 0.25            ,                ## ATTENTION! Prescale here !!
     checkPV  = PrimaryVertices ,
+    FILTER   = Filter          , 
     algos    = [ D02HHForPromptCharm_Selection   ]
     )
 
 DstarForPromptCharm_Line   = StrippingLine (
-    "DstarForPromptCharm"     ,
-    checkPV = PrimaryVertices , 
-    algos   = [ DstarForPromptCharm_Selection    ]
+    "DstarForPromptCharm"      ,
+    checkPV  = PrimaryVertices , 
+    FILTER   = Filter          , 
+    algos    = [ DstarForPromptCharm_Selection    ]
     )
 
 DsForPromptCharm_Line       = StrippingLine (
-    "DsForPromptCharm"        ,
-    checkPV = PrimaryVertices , 
-    algos   = [ DsForPromptCharm_Selection       ]
+    "DsForPromptCharm"         ,
+    checkPV  = PrimaryVertices , 
+    FILTER   = Filter          , 
+    algos    = [ DsForPromptCharm_Selection       ]
     )
 
 DForPromptCharm_Line       = StrippingLine (
-    "DForPromptCharm"         ,
-    prescale = 0.25           ,                ## ATTENTION! Prescale here !!
-    checkPV = PrimaryVertices , 
-    algos   = [ DForPromptCharm_Selection        ]
+    "DForPromptCharm"          ,
+    prescale = 0.25            ,                ## ATTENTION! Prescale here !!
+    checkPV  = PrimaryVertices , 
+    FILTER   = Filter          , 
+    algos    = [ DForPromptCharm_Selection        ]
     )
 
 LambdaCForPromptCharm_Line = StrippingLine (
-    "LambdaCForPromptCharm" ,
-    checkPV = PrimaryVertices , 
-    algos   = [ LambdaCForPromptCharm_Selection  ]
+    "LambdaCForPromptCharm"    ,
+    checkPV  = PrimaryVertices , 
+    FILTER   = Filter          , 
+    algos    = [ LambdaCForPromptCharm_Selection  ]
     )
 
 Lines  = [
@@ -579,6 +591,21 @@ Lines  = [
     LambdaCForPromptCharm_Line 
     ]
 
+# =============================================================================
+## @class  StrippingPromptCharmConf
+#  Helper class required by Tom & Greig 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-09-26
+class StrippingPromptCharmConf(object) :
+    """
+    Helper class required by Tom & Greig
+    """
+    
+    def __init__   ( self , config = {} ) : pass
+    def lines      ( self )               : return Lines
+    def selections ( self )               : return Selections 
+
+    
 # =============================================================================
 if '__main__' == __name__ :
 

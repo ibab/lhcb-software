@@ -126,6 +126,8 @@ __version__ = '$Revision: 1.3 $'
 # =============================================================================
 __all__ = (
     #
+    "StrippingTriMuonsConf"     , ## asked by Tom & Greig
+    #
     "Selections"                , ## the list of selections
     #
     "GoodMuons_Selection"       ,
@@ -332,6 +334,21 @@ Lines = [
     Tau2ThreeMu_Line 
     ]
 
+# =============================================================================
+## @class  StrippingTriMuonsConf
+#  Helper class required by Tom & Greig 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date 2010-09-26
+class StrippingTriMuonsConf(object) :
+    """
+    Helper class required by Tom & Greig
+    """
+    
+    def __init__   ( self , config = {} ) : pass
+    def lines      ( self )               : return Lines
+    def selections ( self )               : return Selections 
+
+   
 # =============================================================================
 if '__main__' == __name__ :
 

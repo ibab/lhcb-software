@@ -5,6 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-27 - Vanya Belyaev
+
+ - StrippingTriMuon.py
+   StrippingPromtCharm.py
+      make changes recommended by Greig & Tom
+
+   StrippingPromtCharm.py
+      make use of new proeprty FILTER for StrippingLine
+
 ! 2010-09-27 Steve Blusk
 - Fix small bugs in StrippingB2D3H.py: 
 - B2DDSignalLine was same as "All" Line (typo)
