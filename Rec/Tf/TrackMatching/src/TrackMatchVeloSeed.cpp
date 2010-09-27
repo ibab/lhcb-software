@@ -132,7 +132,7 @@ StatusCode TrackMatchVeloSeed::initialize()
   m_addTTClusterTool = tool<IAddTTClusterTool>( m_ttClusterToolName, "TTClusterTool",  this );
 
   // Access the measurement provider tool
-  m_measProvider = tool<IMeasurementProvider>( "MeasurementProvider" );
+  m_measProvider = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider",this );
 
   m_usedVelo.clear();
   m_usedT.clear();

@@ -1,8 +1,12 @@
-!-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 ! Package     : Tf/TrackMatching
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+
+! 2010-09-27 - Victor Coco
+ - Modify MeasurmentProvider tool initialisation in TrackMatchVeloSeed to be 
+   able to modify it from configurables
 
 !========================= TrackMatching v2r31 2010-08-25 ====================
 ! 2010-07-29 M Needham
