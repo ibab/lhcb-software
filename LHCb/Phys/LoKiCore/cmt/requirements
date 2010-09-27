@@ -1,13 +1,7 @@
 # $Id: requirements,v 1.78 2010-05-29 18:28:19 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
-#
-# $Revision$
-# Last Modification $Date$
-#                by $Author$
 # =============================================================================
 package            LoKiCore
 version            v10r4
