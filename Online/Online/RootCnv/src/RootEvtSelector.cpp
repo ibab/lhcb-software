@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.10 2010-09-17 09:40:02 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.11 2010-09-27 15:43:53 frankb Exp $
 //====================================================================
 //	RootEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -18,18 +18,18 @@
 class TBranch;
 
 /*
- *  Gaudi namespace declaration
- */
+*  Gaudi namespace declaration
+*/
 namespace Gaudi {
 
   /** @class RootEvtSelectorContext
-   *
-   *  ROOT specific event selector context.
-   *  See the base class for a detailed description.
-   *
-   *  @author  M.Frank
-   *  @version 1.0
-   */
+  *
+  *  ROOT specific event selector context.
+  *  See the base class for a detailed description.
+  *
+  *  @author  M.Frank
+  *  @version 1.0
+  */
   class RootEvtSelectorContext : public IEvtSelector::Context {
   public:
     /// Definition of the file container
@@ -160,20 +160,20 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
       pCtxt->setBranch(0);
       pCtxt->setEntry(-1);
       if ( fileit != pCtxt->files().end() ) {
-	RootDataConnection* con=0;
+        RootDataConnection* con=0;
         string input = *fileit;
-	StatusCode sc=m_dbMgr->connectDatabase(input,IDataConnection::READ,&con);
-	if ( sc.isSuccess() ) {
-	  string section = m_rootName[0] == '/' ? m_rootName.substr(1) : m_rootName;
-	  b = con->getBranch(section,m_rootName);
-	  if ( b ) {
-	    pCtxt->setBranch(b);
-	    return next(ctxt);
-	  }
-	}
-	m_dbMgr->disconnect(input).ignore();
-	pCtxt->setFileIterator(++fileit);
-	return next(ctxt);
+        StatusCode sc=m_dbMgr->connectDatabase(input,IDataConnection::READ,&con);
+        if ( sc.isSuccess() ) {
+          string section = m_rootName[0] == '/' ? m_rootName.substr(1) : m_rootName;
+          b = con->getBranch(section,m_rootName);
+          if ( b ) {
+            pCtxt->setBranch(b);
+            return next(ctxt);
+          }
+        }
+        m_dbMgr->disconnect(input).ignore();
+        pCtxt->setFileIterator(++fileit);
+        return next(ctxt);
       }
       return StatusCode::FAILURE;
     }
@@ -251,9 +251,9 @@ RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
     if ( ent >= 0 )  {
       RootEvtSelectorContext::Files::const_iterator fileit = pctxt->fileIterator();
       if ( fileit != pctxt->files().end() ) {
-	const string par[2] = {*fileit, m_rootName};
-	const unsigned long ipar[2] = {0,ent};
-	return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
+        const string par[2] = {*fileit, m_rootName};
+        const unsigned long ipar[2] = {0,ent};
+        return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
       }
     }
   }

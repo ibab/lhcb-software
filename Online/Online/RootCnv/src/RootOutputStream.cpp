@@ -1,4 +1,4 @@
-// $Id: RootOutputStream.cpp,v 1.1 2010-09-03 08:52:08 frankb Exp $
+// $Id: RootOutputStream.cpp,v 1.2 2010-09-27 15:43:53 frankb Exp $
 #define GAUDISVC_PERSISTENCYSVC_OUTPUTSTREAM_CPP
 
 // Framework include files
@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY(RootOutputStream)
 
 // Standard Constructor
 RootOutputStream::RootOutputStream(const string& name, ISvcLocator* pSvcLocator)
- : Algorithm(name, pSvcLocator)
+: Algorithm(name, pSvcLocator)
 {
   m_verifyItems    = true;
   m_output         = "";
@@ -90,7 +90,7 @@ StatusCode RootOutputStream::initialize() {
     if( !status.isSuccess() )   {
       log << MSG::FATAL << "Unable to connect to conversion service." << endmsg;
       if(m_outputName!="" && m_fireIncidents) m_incidentSvc->fireIncident(Incident(m_outputName,
-                                           IncidentType::FailOutputFile));
+        IncidentType::FailOutputFile));
       return status;
     }
   }
@@ -133,7 +133,7 @@ StatusCode RootOutputStream::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Events output: " << m_events << endmsg;
   if(m_fireIncidents) m_incidentSvc->fireIncident(Incident(m_outputName,
-                                       IncidentType::EndOutputFile));
+    IncidentType::EndOutputFile));
   m_incidentSvc.reset();
   m_pDataProvider.reset();
   m_pDataManager.reset();
@@ -152,10 +152,10 @@ StatusCode RootOutputStream::execute() {
     m_events++;
     if(sc.isSuccess() && m_fireIncidents)
       m_incidentSvc->fireIncident(Incident(m_outputName,
-                                           IncidentType::WroteToOutputFile));
+      IncidentType::WroteToOutputFile));
     else if(m_fireIncidents)
       m_incidentSvc->fireIncident(Incident(m_outputName,
-                                           IncidentType::FailOutputFile));
+      IncidentType::FailOutputFile));
     return sc;
   }
   return StatusCode::SUCCESS;
@@ -171,11 +171,11 @@ StatusCode RootOutputStream::writeObjects()  {
     if ( status.isSuccess() ) {
       status = writeObjects(m_optItemList,unique,false);
       if ( status.isSuccess() ) {
-	unique.clear();
-	status = writeObjectRefs(m_itemList,unique,true);
-	if ( status.isSuccess() ) {
-	  status = writeObjectRefs(m_optItemList,unique,false);
-	}
+        unique.clear();
+        status = writeObjectRefs(m_itemList,unique,true);
+        if ( status.isSuccess() ) {
+          status = writeObjectRefs(m_optItemList,unique,false);
+        }
       }
     }
     // Commit the data if there was no error; otherwise possibly discard
@@ -203,7 +203,7 @@ RootOutputStream::writeObjects(const Items& items,set<DataObject*>& unique, bool
       if ( required ) status = iret;
       iret = m_cnvSvc->createNullRep((*i)->path());
       if ( !iret.isSuccess() )      {
-	status = iret;
+        status = iret;
       }
       continue;
     }
@@ -211,7 +211,7 @@ RootOutputStream::writeObjects(const Items& items,set<DataObject*>& unique, bool
       continue;
     }
     unique.insert(obj);
-    
+
     IRegistry* pReg = obj->registry();
     iret = m_pConversionSvc->createRep( obj, pAddress );
     if ( !iret.isSuccess() )      {
@@ -235,7 +235,7 @@ RootOutputStream::writeObjectRefs(const Items& items,set<DataObject*>& unique,bo
       if ( required ) status = iret;
       iret = m_cnvSvc->createNullRef((*i)->path());
       if ( !iret.isSuccess() )      {
-	status = iret;
+        status = iret;
       }
       continue;
     }
@@ -297,8 +297,8 @@ void RootOutputStream::addItem(Items& itms, const string& descriptor)   {
   }
   DataStoreItem* item = new DataStoreItem(obj_path, level);
   log << MSG::DEBUG << "Adding RootOutputStream item " << item->path()
-      << " with " << item->depth()
-      << " level(s)." << endmsg;
+    << " with " << item->depth()
+    << " level(s)." << endmsg;
   itms.push_back( item );
 }
 
@@ -322,29 +322,29 @@ StatusCode RootOutputStream::connectConversionSvc()   {
       break;
     case 'S':
       switch( ::toupper(tag[1]) )   {
-      case 'V':    svc = val;      break;
-      case 'H':    shr = "YES";    break;
+    case 'V':    svc = val;      break;
+    case 'H':    shr = "YES";    break;
       }
       break;
     case 'O':   // OPT='<NEW<CREATE,WRITE,RECREATE>, UPDATE>'
       switch( ::toupper(val[0]) )   {
-      case 'R':
-        if ( ::strncasecmp(val.c_str(),"RECREATE",3)==0 )
-          m_outputType = "RECREATE";
-        else if ( ::strncasecmp(val.c_str(),"READ",3)==0 )
-          m_outputType = "READ";
-        break;
-      case 'C':
-      case 'N':
-      case 'W':
-        m_outputType = "NEW";
-        break;
-      case 'U':
-        m_outputType = "UPDATE";
-        break;
-      default:
-        m_outputType = "???";
-        break;
+    case 'R':
+      if ( ::strncasecmp(val.c_str(),"RECREATE",3)==0 )
+        m_outputType = "RECREATE";
+      else if ( ::strncasecmp(val.c_str(),"READ",3)==0 )
+        m_outputType = "READ";
+      break;
+    case 'C':
+    case 'N':
+    case 'W':
+      m_outputType = "NEW";
+      break;
+    case 'U':
+      m_outputType = "UPDATE";
+      break;
+    default:
+      m_outputType = "???";
+      break;
       }
       break;
     default:
@@ -382,9 +382,9 @@ StatusCode RootOutputStream::connectConversionSvc()   {
   }
   else    {
     log << MSG::FATAL
-        << "Unable to locate IConversionSvc interface (Unknown technology) " << endmsg
-        << "You either have to specify a technology name or a service name!" << endmsg
-        << "Please correct the job option \"" << name() << ".Output\" !"     << endmsg;
+      << "Unable to locate IConversionSvc interface (Unknown technology) " << endmsg
+      << "You either have to specify a technology name or a service name!" << endmsg
+      << "Please correct the job option \"" << name() << ".Output\" !"     << endmsg;
     return StatusCode::FAILURE;
   }
   m_cnvSvc = dynamic_cast<RootCnvSvc*>(m_pConversionSvc.get());
@@ -399,7 +399,7 @@ void RootOutputStream::acceptAlgsHandler( Property& /* theProp */ )  {
   StatusCode sc = decodeAlgorithms( m_acceptNames, &m_acceptAlgs );
   if (sc.isFailure()) {
     throw GaudiException("Failure in RootOutputStream::decodeAlgorithms",
-                         "RootOutputStream::acceptAlgsHandler",sc);
+      "RootOutputStream::acceptAlgsHandler",sc);
   }
 }
 
@@ -411,7 +411,7 @@ void RootOutputStream::requireAlgsHandler( Property& /* theProp */ )  {
   StatusCode sc = decodeAlgorithms( m_requireNames, &m_requireAlgs );
   if (sc.isFailure()) {
     throw GaudiException("Failure in RootOutputStream::decodeAlgorithms",
-                         "RootOutputStream::requireAlgsHandler",sc);
+      "RootOutputStream::requireAlgsHandler",sc);
   }
 }
 
@@ -423,13 +423,14 @@ void RootOutputStream::vetoAlgsHandler( Property& /* theProp */ )  {
   StatusCode sc = decodeAlgorithms( m_vetoNames, &m_vetoAlgs );
   if (sc.isFailure()) {
     throw GaudiException("Failure in RootOutputStream::decodeAlgorithms",
-                         "RootOutputStream::vetoAlgsHandler",sc);
+      "RootOutputStream::vetoAlgsHandler",sc);
   }
 }
 
 StatusCode 
-RootOutputStream::decodeAlgorithms( StringArrayProperty& theNames,
-				    vector<Algorithm*>* theAlgs )  {
+RootOutputStream::decodeAlgorithms(StringArrayProperty& theNames,
+                                   vector<Algorithm*>* theAlgs )  
+{
   MsgStream log( msgSvc( ), name( ) );
   StatusCode result = StatusCode::FAILURE;
   SmartIF<IAlgManager> theAlgMgr(serviceLocator());

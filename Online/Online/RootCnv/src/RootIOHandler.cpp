@@ -1,4 +1,4 @@
-// $Id: RootIOHandler.cpp,v 1.2 2010-08-24 23:30:32 frankb Exp $
+// $Id: RootIOHandler.cpp,v 1.3 2010-09-27 15:43:53 frankb Exp $
 //====================================================================
 //
 //  Package    : RootCnv
@@ -49,7 +49,7 @@ namespace GaudiRoot {
   };
 
   /**@class IOHandler
-   */
+  */
   template <class T> class IOHandler : public TClassStreamer {
   protected:
     /// ROOT persistent class description
@@ -62,19 +62,19 @@ namespace GaudiRoot {
     /// ROOT I/O callback
     virtual void operator()(TBuffer &b, void *obj)  {
       try {
-	if ( b.IsReading() ) 
-	  get(b,obj);
-	else
-	  put(b,obj);
+        if ( b.IsReading() ) 
+          get(b,obj);
+        else
+          put(b,obj);
       }
       catch( const exception& e )    {
-	string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
-	err += e.what();
-	throw runtime_error(err);
+        string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
+        err += e.what();
+        throw runtime_error(err);
       }
       catch( ... )    {
-	string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
-	throw runtime_error(err);
+        string err = "Class:" + string(m_root->GetName()) + "> Exception in object I/O";
+        throw runtime_error(err);
       }
     }
     /// Callback for reading the object
@@ -114,46 +114,46 @@ namespace GaudiRoot {
     if ( pDO )  {
       switch( r.Base->objectType() ) {
       case SmartRefBase::CONTAINEDOBJECT:
-	p = r.ContainedRef->data();
-	if ( p )  {
-	  const ObjectContainerBase* parent = p->parent();
-	  if ( parent )  {
-	    link = p->index();
-	    pDO  = const_cast<ObjectContainerBase*>(parent);
-	    break;
-	  }
-	}
-	pDO = 0;
-	cout << "IOHandler<SmartRefBase>::onWrite> "
-		  << "Found invalid smart reference with object "
-		  << "having no parent."
-		  << endl;
-	throw runtime_error("IOHandler<SmartRefBase>::onWrite> "
-				 "Found invalid smart reference with object "
-				 "having no parent.");
-	break;
+        p = r.ContainedRef->data();
+        if ( p )  {
+          const ObjectContainerBase* parent = p->parent();
+          if ( parent )  {
+            link = p->index();
+            pDO  = const_cast<ObjectContainerBase*>(parent);
+            break;
+          }
+        }
+        pDO = 0;
+        cout << "IOHandler<SmartRefBase>::onWrite> "
+          << "Found invalid smart reference with object "
+          << "having no parent."
+          << endl;
+        throw runtime_error("IOHandler<SmartRefBase>::onWrite> "
+          "Found invalid smart reference with object "
+          "having no parent.");
+        break;
       case SmartRefBase::DATAOBJECT:
-	link = StreamBuffer::INVALID;
-	break;
+        link = StreamBuffer::INVALID;
+        break;
       default:
-	break;
+        break;
       }
       if ( pDO == last_link_object )  {
-	r.Base->set(curr, last_link_hint, link);
-	m_root->WriteBuffer(b, obj);
-	return;
+        r.Base->set(curr, last_link_hint, link);
+        m_root->WriteBuffer(b, obj);
+        return;
       }
       else if ( pDO ) {
-	LinkManager* mgr = curr->linkMgr();
-	IRegistry*   reg = pDO->registry();
-	if ( reg && mgr )  {
-	  hint = mgr->addLink(reg->identifier(), pDO);
-	  last_link_hint   = hint;
-	  last_link_object = pDO;
-	}
+        LinkManager* mgr = curr->linkMgr();
+        IRegistry*   reg = pDO->registry();
+        if ( reg && mgr )  {
+          hint = mgr->addLink(reg->identifier(), pDO);
+          last_link_hint   = hint;
+          last_link_object = pDO;
+        }
       }
       else {
-	hint = link = StreamBuffer::INVALID;
+        hint = link = StreamBuffer::INVALID;
       }
     }
     r.Base->set(curr, hint, link);
@@ -167,7 +167,7 @@ namespace GaudiRoot {
     ContainedObject* p = (ContainedObject*)obj;
     p->setParent((ObjectContainerBase*)Gaudi::getCurrentDataObject());
   }
-  
+
   template <> void IOHandler<ContainedObject>::put(TBuffer &b, void* obj) {
     m_root->WriteBuffer(b, obj);
   }
@@ -179,7 +179,7 @@ namespace GaudiRoot {
     b.ReadFastArray(&t->m_oid.first, 2);
     b.CheckByteCount(start, count, m_root);
   }
-  
+
   template <> void IOHandler<pool::Token>::put(TBuffer &, void* ) {
     throw runtime_error("Writing POOL files is not implemented!");
   }

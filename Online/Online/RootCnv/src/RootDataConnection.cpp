@@ -1,11 +1,11 @@
-// $Id: RootDataConnection.cpp,v 1.15 2010-09-17 09:40:02 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.16 2010-09-27 15:43:53 frankb Exp $
 //====================================================================
 //	RootDataConnection.cpp
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.15 2010-09-17 09:40:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.16 2010-09-27 15:43:53 frankb Exp $
 
 // Framework include files
 #include "RootDataConnection.h"
@@ -49,7 +49,7 @@ static bool match_wild(const char *str, const char *pat)    {
     for (int i = 0; i < 256; ++i) table[i] = char(i);
     first = false;
   }
- loopStart:
+loopStart:
   for (s = str, p = pat; *s; ++s, ++p) {
     switch (*p) {
     case '?':
@@ -63,14 +63,14 @@ static bool match_wild(const char *str, const char *pat)    {
       goto loopStart;
     default:
       if ( *(table+*s) != *(table+*p) )
-	goto starCheck;
+        goto starCheck;
       break;
     } /* endswitch */
   } /* endfor */
   while (*p == '*') ++p;
   return (!*p);
-  
- starCheck:
+
+starCheck:
   if (!star) return false;
   str++;
   goto loopStart;
@@ -108,7 +108,7 @@ void RootConnectionSetup::setMessageSvc(MsgStream* m) {
 
 // Standard constructor
 RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, RootConnectionSetup* setup)
-  : IDataConnection(owner,fname), m_setup(setup), m_statistics(0), m_tool(0)
+: IDataConnection(owner,fname), m_setup(setup), m_statistics(0), m_tool(0)
 { //               01234567890123456789012345678901234567890
   // Check if FID: A82A3BD8-7ECB-DC11-8DC0-000423D950B0
   if ( fname.length() == 36 && fname[8]=='-'&&fname[13]=='-'&&fname[18]=='-'&&fname[23]=='-' ) {
@@ -178,23 +178,23 @@ StatusCode RootDataConnection::connectRead()  {
       string fid = m_fid;
       m_mergeFIDs.clear();
       for(size_t i=0, n=m_params.size(); i<n; ++i) {
-	if ( m_params[i].first == "FID" )  {
-	  m_mergeFIDs.push_back(m_params[i].second);
-	  if ( m_params[i].second != m_fid )    {
-	    msgSvc() << MSG::DEBUG << "Check FID param:" << m_params[i].second << endmsg;
-	    //if ( m_fid == m_pfn ) {
-	    m_fid = m_params[i].second;
-	    //}
-	  }
-	}
+        if ( m_params[i].first == "FID" )  {
+          m_mergeFIDs.push_back(m_params[i].second);
+          if ( m_params[i].second != m_fid )    {
+            msgSvc() << MSG::DEBUG << "Check FID param:" << m_params[i].second << endmsg;
+            //if ( m_fid == m_pfn ) {
+            m_fid = m_params[i].second;
+            //}
+          }
+        }
       }
       if ( !need_fid && fid != m_fid ) {
-	msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg
-		 << "for PFN:" << m_pfn << endmsg;
-	return StatusCode::FAILURE;
+        msgSvc() << MSG::ERROR << "FID mismatch:" << fid << "(Catalog) != " << m_fid << "(file)" << endmsg
+          << "for PFN:" << m_pfn << endmsg;
+        return StatusCode::FAILURE;
       }
       msgSvc() << MSG::DEBUG << "Using FID " << m_fid << " from params table...." << endmsg
-	       << "for PFN:" << m_pfn << endmsg;
+        << "for PFN:" << m_pfn << endmsg;
       return sc;
     }
   }
@@ -255,19 +255,19 @@ StatusCode RootDataConnection::disconnect()    {
   if ( m_file ) {
     if ( !m_file->IsZombie() )   {
       if ( m_file->IsWritable() ) {
-	msgSvc() << MSG::DEBUG;
-	TDirectory::TContext ctxt(m_file);
-	if ( m_refs ) {
-	  m_tool->saveRefs().ignore();
-	  m_refs->Write();
-	}
-	for(Sections::iterator i=m_sections.begin(); i!= m_sections.end();++i) {
-	  if ( (*i).second ) {
-	    (*i).second->Write();
-	    msgSvc() << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endmsg;
-	  }
-	}
-	m_sections.clear();
+        msgSvc() << MSG::DEBUG;
+        TDirectory::TContext ctxt(m_file);
+        if ( m_refs ) {
+          m_tool->saveRefs().ignore();
+          m_refs->Write();
+        }
+        for(Sections::iterator i=m_sections.begin(); i!= m_sections.end();++i) {
+          if ( (*i).second ) {
+            (*i).second->Write();
+            msgSvc() << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endmsg;
+          }
+        }
+        m_sections.clear();
       }
       msgSvc() << MSG::DEBUG;
       if ( msgSvc().isActive() ) m_file->ls();
@@ -294,51 +294,51 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
     if ( t ) {
       int cacheSize = m_setup->cacheSize;
       if ( create ) {
-	//t->SetAutoFlush(100);
+        //t->SetAutoFlush(100);
       }
       if ( section == m_setup->loadSection && cacheSize>-2 )  {
-	MsgStream& msg = msgSvc();
-	int learnEntries = m_setup->learnEntries;
-	t->SetCacheSize(cacheSize);
-	t->SetCacheLearnEntries(learnEntries);
-	const StringVec& vB = m_setup->vetoBranches;
-	const StringVec& cB = m_setup->cacheBranches;
-	msg << MSG::DEBUG;
-	if ( create ) {
-	  msg << "Tree:" << section << "Setting up tree cache:" << cacheSize << endmsg;
-	}
-	else {
-	  msg << "Tree:" << section << " Setting up tree cache:" << cacheSize << " Add all branches." << endmsg;
-	  msg << "Tree:" << section << " Learn for " << learnEntries << " entries." << endmsg;
-	  if ( cB.size()==1 && cB[0]=="*" ) {
-	    t->AddBranchToCache("*",kTRUE);
-	  }
-	  else if ( cB.size()==0 && !(vB.size()>0 && vB[0]=="*")) {
-	    t->AddBranchToCache("*",kTRUE);
-	  }
-	  else {
-	    bool add = false, veto = false;
-	    StringVec::const_iterator i;
-	    // Add all branches, which should be cached
-	    for(TIter it(t->GetListOfBranches()); it.Next(); )  {
-	      const char* n = ((TNamed*)(*it))->GetName();
-	      for(i=vB.begin(); add && i!=vB.end();++i) {
-		if ( !match_wild(n,(*i).c_str()) ) continue;
-		veto = true;
-		break;
-	      }
-	      for(i=cB.begin(); add && i!=cB.end();++i) {
-		if ( !match_wild(n,(*i).c_str()) ) continue;
-		add = true;
-		break;
-	      }
-	      if ( add && !veto ) {
-		msg << "Add " << n << " to branch cache." << endmsg;
-		t->AddBranchToCache(n,kTRUE);
-	      }
-	    }
-	  }
-	}
+        MsgStream& msg = msgSvc();
+        int learnEntries = m_setup->learnEntries;
+        t->SetCacheSize(cacheSize);
+        t->SetCacheLearnEntries(learnEntries);
+        const StringVec& vB = m_setup->vetoBranches;
+        const StringVec& cB = m_setup->cacheBranches;
+        msg << MSG::DEBUG;
+        if ( create ) {
+          msg << "Tree:" << section << "Setting up tree cache:" << cacheSize << endmsg;
+        }
+        else {
+          msg << "Tree:" << section << " Setting up tree cache:" << cacheSize << " Add all branches." << endmsg;
+          msg << "Tree:" << section << " Learn for " << learnEntries << " entries." << endmsg;
+          if ( cB.size()==1 && cB[0]=="*" ) {
+            t->AddBranchToCache("*",kTRUE);
+          }
+          else if ( cB.size()==0 && !(vB.size()>0 && vB[0]=="*")) {
+            t->AddBranchToCache("*",kTRUE);
+          }
+          else {
+            bool add = false, veto = false;
+            StringVec::const_iterator i;
+            // Add all branches, which should be cached
+            for(TIter it(t->GetListOfBranches()); it.Next(); )  {
+              const char* n = ((TNamed*)(*it))->GetName();
+              for(i=vB.begin(); add && i!=vB.end();++i) {
+                if ( !match_wild(n,(*i).c_str()) ) continue;
+                veto = true;
+                break;
+              }
+              for(i=cB.begin(); add && i!=cB.end();++i) {
+                if ( !match_wild(n,(*i).c_str()) ) continue;
+                add = true;
+                break;
+              }
+              if ( add && !veto ) {
+                msg << "Add " << n << " to branch cache." << endmsg;
+                t->AddBranchToCache(n,kTRUE);
+              }
+            }
+          }
+        }
       }
       m_sections[section] = t;
     }
@@ -401,17 +401,17 @@ RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fi
     if ( 0 == evt && fill_missing ) {
       Long64_t nevt = b->GetTree()->GetEntries();
       if ( nevt > evt ) {
-	void* p = 0;
-	b->SetAddress(&p);
-	for(Long64_t i=0; i<nevt; ++i) {
-	  b->Fill();
-	}
-	msgSvc() << MSG::INFO << "Added " << long(b->GetEntries()) 
-		 << " NULL entries to:" << cnt << endmsg;
+        void* p = 0;
+        b->SetAddress(&p);
+        for(Long64_t i=0; i<nevt; ++i) {
+          b->Fill();
+        }
+        msgSvc() << MSG::INFO << "Added " << long(b->GetEntries()) 
+          << " NULL entries to:" << cnt << endmsg;
       }
     }
     b->SetAddress(&pObj);
-    return make_pair(b->Fill(),evt);
+    return make_pair(b->Fill(),(unsigned long)evt);
   }
   else if ( 0 != pObj ) {
     msgSvc() << MSG::ERROR << "Failed to access branch " << m_name << "/" << cnt << endmsg;
@@ -429,17 +429,17 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
       DataObjectPush push(pObj);
       b->SetAddress(&pObj);
       if ( section == m_setup->loadSection ) {
-	TTree* t = b->GetTree();
-	if ( Long64_t(entry) != t->GetReadEntry() ) {
-	  t->LoadTree(Long64_t(entry));
-	}
+        TTree* t = b->GetTree();
+        if ( Long64_t(entry) != t->GetReadEntry() ) {
+          t->LoadTree(Long64_t(entry));
+        }
       }
       int nb = b->GetEntry(entry);
       msgSvc() << MSG::VERBOSE;
       if ( msgSvc().isActive() ) {
-	msgSvc() << "Load [" << entry << "] --> " << section 
-		 << ":" << cnt << "  " << nb << " bytes." 
-		 << endmsg;
+        msgSvc() << "Load [" << entry << "] --> " << section 
+          << ":" << cnt << "  " << nb << " bytes." 
+          << endmsg;
       }
       return nb;
     }
@@ -459,20 +459,20 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
     for(ContainerSections::const_iterator j=s.begin(); j != s.end(); ++j,++cnt) {
       const ContainerSection& c = *j;
       if ( entry >= c.start && entry < (c.start+c.length) ) {
-	if ( m_linkSects.size() > cnt ) {
-	  if ( msgSvc().isActive() ) {
-	    msgSvc() << MSG::VERBOSE << "MergeSection for:" << container 
-		     << "  [" << entry << "]" << endmsg
-		     << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
-	  }
-	  return make_pair(&(m_linkSects[cnt]), &c);
-	}
+        if ( m_linkSects.size() > cnt ) {
+          if ( msgSvc().isActive() ) {
+            msgSvc() << MSG::VERBOSE << "MergeSection for:" << container 
+              << "  [" << entry << "]" << endmsg
+              << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+          }
+          return make_pair(&(m_linkSects[cnt]), &c);
+        }
       }
     }
   }
   msgSvc() << MSG::ERROR << "Return INVALID MergeSection for:" << container 
-	   << "  [" << entry << "]" << endmsg
-	   << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
+    << "  [" << entry << "]" << endmsg
+    << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
   return make_pair((const RootRef*)0,(const ContainerSection*)0);
 }
 
@@ -521,9 +521,9 @@ void RootDataConnection::makeRef(CSTR name, long clid, int tech, CSTR dbase, CST
   ref.clid      = clid;
   ref.svc       = tech;
   if ( ref.svc == POOL_ROOT_StorageType || 
-       ref.svc == POOL_ROOTKEY_StorageType || 
-       ref.svc == POOL_ROOTTREE_StorageType ) {
-    ref.svc = ROOT_StorageType;
-  }
+    ref.svc == POOL_ROOTKEY_StorageType || 
+    ref.svc == POOL_ROOTTREE_StorageType ) {
+      ref.svc = ROOT_StorageType;
+    }
 }
 

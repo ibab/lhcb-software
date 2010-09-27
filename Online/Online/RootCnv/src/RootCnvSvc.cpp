@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.11 2010-09-17 09:00:12 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.12 2010-09-27 15:43:53 frankb Exp $
 //====================================================================
 //  RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -69,8 +69,8 @@ namespace {
 
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
-  : ConversionSvc( nam, svc, ROOT_StorageType), 
-    m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
+: ConversionSvc( nam, svc, ROOT_StorageType), 
+m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
 {
   m_classRefs = m_classDO = 0;
   m_setup = new RootConnectionSetup();
@@ -140,14 +140,14 @@ StatusCode RootCnvSvc::finalize()    {
     if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
-	if ( !m_ioPerfStats.empty() )   {
-	  RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
-	  if ( pc ) pc->saveStatistics(m_ioPerfStats);
-	}
+        if ( !m_ioPerfStats.empty() )   {
+          RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
+          if ( pc ) pc->saveStatistics(m_ioPerfStats);
+        }
         if ( m_ioMgr->disconnect(*i).isSuccess() )  {
           log() << "Disconnected data IO:" << (*i)->fid()
-		<< "[" << (*i)->pfn() << "]"
-		<< endmsg;
+            << "[" << (*i)->pfn() << "]"
+            << endmsg;
           delete (*i);
         }
       }
@@ -186,8 +186,8 @@ void RootCnvSvc::loadConverter(DataObject* pObject) {
     if ( 0 == cl ) {
       cl = gROOT->GetClass(cname.c_str());
       if ( cl ) {
-	s_classesNames[cname] = cl;
-	s_classesClids[pObject->clID()] = cl;
+        s_classesNames[cname] = cl;
+        s_classesClids[pObject->clID()] = cl;
       }
     }
   }
@@ -238,7 +238,7 @@ StatusCode RootCnvSvc::connectOutput(CSTR dsn, CSTR openMode)   {
   }
   m_incidentSvc->fireIncident(Incident(dsn,IncidentType::FailOutputFile));
   log() << MSG::ERROR << "The dataset " << dsn << " cannot be opened in mode " 
-	<< openMode << ". [Invalid mode]" << endmsg;
+    << openMode << ". [Invalid mode]" << endmsg;
   return sc;
 }
 
@@ -252,16 +252,16 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     if ( !c )  {
       auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
       StatusCode sc = (mode != IDataConnection::READ)
-	? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT_TREE")
-	: m_ioMgr->connectRead(false,connection.get());
+        ? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT_TREE")
+        : m_ioMgr->connectRead(false,connection.get());
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
-	fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
-	//enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
-	connection.release();
+        fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
+        //enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
+        connection.release();
       }
       else  {
-	return sc;
+        return sc;
       }
     }
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
@@ -273,30 +273,30 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     }
     if ( *con )  {
       if ( fire_incident ) {
-	IOpaqueAddress* pAddr = 0;
-	string fid = pc->fid();
-	string section = m_recordName[0] == '/' ? m_recordName.substr(1) : m_recordName;
-	TBranch* b = pc->getBranch(section,m_recordName);
-	log() << MSG::VERBOSE;
-	if ( b ) {
-	  const string par[2] = { fid, m_recordName };
-	  unsigned long ipar[2] = { (unsigned long)(*con), (unsigned long)b->GetEntries()-1 };
-	  for(int i=0; i<b->GetEntries(); ++i) {
-	    ipar[1] = i;
-	    if ( !pc->mergeFIDs().empty() )
-	      fid = pc->mergeFIDs()[i];
-	    if ( !createAddress(repSvcType(),CLID_DataObject,par,ipar,pAddr).isSuccess() ) {
-	      log() << "Failed to create address for " << m_recordName << " in:" << fid
-		    << " [" << pc->fid() << "][" << i << "]" << endmsg;
-	      continue;
-	    }
-	    log() << "Prepare " << m_recordName << " " << fid << " [" << par[0] << "][" << i << "]" << endmsg;
-	    m_incidentSvc->fireIncident(ContextIncident<IOpaqueAddress*>(fid,"FILE_OPEN_READ",pAddr));
-	  }
-	}
-	else {
-	  log() << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
-	}
+        IOpaqueAddress* pAddr = 0;
+        string fid = pc->fid();
+        string section = m_recordName[0] == '/' ? m_recordName.substr(1) : m_recordName;
+        TBranch* b = pc->getBranch(section,m_recordName);
+        log() << MSG::VERBOSE;
+        if ( b ) {
+          const string par[2] = { fid, m_recordName };
+          unsigned long ipar[2] = { (unsigned long)(*con), (unsigned long)b->GetEntries()-1 };
+          for(int i=0; i<b->GetEntries(); ++i) {
+            ipar[1] = i;
+            if ( !pc->mergeFIDs().empty() )
+              fid = pc->mergeFIDs()[i];
+            if ( !createAddress(repSvcType(),CLID_DataObject,par,ipar,pAddr).isSuccess() ) {
+              log() << "Failed to create address for " << m_recordName << " in:" << fid
+                << " [" << pc->fid() << "][" << i << "]" << endmsg;
+              continue;
+            }
+            log() << "Prepare " << m_recordName << " " << fid << " [" << par[0] << "][" << i << "]" << endmsg;
+            m_incidentSvc->fireIncident(ContextIncident<IOpaqueAddress*>(fid,"FILE_OPEN_READ",pAddr));
+          }
+        }
+        else {
+          log() << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
+        }
       }
       return S_OK;
     }
@@ -328,16 +328,16 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
       Long64_t evt = b->GetEntries();
       b->GetTree()->SetEntries(evt);
       if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
-	if ( evt == m_setup->autoFlush ) {
-	  b->GetTree()->SetAutoFlush(m_setup->autoFlush);
-	  b->GetTree()->OptimizeBaskets(40000000,1.,"");
-	}
-	else   {
-	  b->GetTree()->FlushBaskets();
-	}
+        if ( evt == m_setup->autoFlush ) {
+          b->GetTree()->SetAutoFlush(m_setup->autoFlush);
+          b->GetTree()->OptimizeBaskets(40000000,1.,"");
+        }
+        else   {
+          b->GetTree()->FlushBaskets();
+        }
       }
       log() << MSG::DEBUG << "Set section entries of " << m_currSection
-	    << " to " << long(evt) << " entries." << endmsg;
+        << " to " << long(evt) << " entries." << endmsg;
     }
     else {
       return error("commitOutput> Failed to update entry numbers on "+dsn);
@@ -354,10 +354,10 @@ StatusCode RootCnvSvc::disconnect(CSTR dataset)  {
 
 // IAddressCreator implementation: Address creation
 StatusCode RootCnvSvc::createAddress(long  typ,
-				     const CLID& clid,
-				     const string* par, 
-				     const unsigned long* ip,
-				     IOpaqueAddress*& refpAddress) 
+                                     const CLID& clid,
+                                     const string* par, 
+                                     const unsigned long* ip,
+                                     IOpaqueAddress*& refpAddress) 
 {
   refpAddress = new RootAddress(typ,clid,par[0],par[1],ip[0],ip[1]);
   return S_OK;
@@ -378,7 +378,7 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
   pair<int,unsigned long> ret = m_current->save(section,path+"#R",0,refs);
   log() << MSG::DEBUG << "Writing object:" << path << " " 
-	<< ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
+    << ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
   return S_OK;
 }
 
@@ -420,22 +420,22 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
       bool          fill  = sect==m_setup->loadSection;
       LinkManager* pLinks = pObj->linkMgr();
       for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
-	if ( (*i)->address() ) {
-	  m_current->makeRef(*i,ref);
-	  ref.entry = (*i)->address()->ipar()[1];
-	  refs.refs.push_back(ref);
-	}
+        if ( (*i)->address() ) {
+          m_current->makeRef(*i,ref);
+          ref.entry = (*i)->address()->ipar()[1];
+          refs.refs.push_back(ref);
+        }
       }
       for(int i = 0, n=pLinks->size(); i < n; ++i)  {
-	LinkManager::Link* lnk = pLinks->link(i);
-	int link_id = m_current->makeLink(lnk->path());
-	refs.links.push_back(link_id);
+        LinkManager::Link* lnk = pLinks->link(i);
+        int link_id = m_current->makeLink(lnk->path());
+        refs.links.push_back(link_id);
       }
       pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,fill);
       if ( ret.first > 1 ) {
-	log() << MSG::DEBUG << "Writing object:" << id << " " 
-	      << ret.first << " " << hex << ret.second << dec << endmsg;
-	return S_OK;
+        log() << MSG::DEBUG << "Writing object:" << id << " " 
+          << ret.first << " " << hex << ret.second << dec << endmsg;
+        return S_OK;
       }
     }
   }
@@ -458,8 +458,8 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
 
       int nb = con->loadObj(section,par[1],ipar[1],pObj);
       if ( nb > 1 || (nb == 1 && pObj->clID() == CLID_DataObject) ) {
-	refpObj = pObj;
-	return S_OK;
+        refpObj = pObj;
+        return S_OK;
       }
       delete pObj;
     }
@@ -486,57 +486,58 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
       int nb = con->loadRefs(section,par[1],ipar[1],refs);
       log() << MSG::VERBOSE;
       if ( nb >= 1 ) {
-	string npar[3];
-	unsigned long nipar[2];
-	IOpaqueAddress* nPA;
-	SmartIF<IService> isvc(m_dataMgr);
-	LinkManager* mgr = pObj->linkMgr();
-	bool active = log().isActive();
-	for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
-	  mgr->addLink(con->getLink(*i),0);
-	}
-	for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
-	  const RootRef& r = refs.refs[j];
-	  npar[0] = con->getDb(r.dbase);
-	  npar[1] = con->getCont(r.container);
-	  npar[2] = con->getLink(r.link);
-	  nipar[0] = 0;
-	  nipar[1] = r.entry;
-	  StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
-	  if ( sc.isSuccess() ) {
-	    if ( active )  {
-	      log() << isvc->name() << " -> Register:" << pA->registry()->identifier() 
-		    << "#" << npar[2] << "[" << r.entry << "]" << endmsg;
-	    }
-	    sc = m_dataMgr->registerAddress(pA->registry(),npar[2],nPA);
-	    if ( sc.isSuccess() ) {
-	      continue;
-	    }
-	  }
-	  log() << MSG::ERROR << con->fid() << ": Failed to create address!!!!" << endmsg;
-	  return S_FAIL;
-	}
-	ObjectTypes obj(pObj);
-	const CLID id = (pObj->clID()&0xFFFF0000);
-	switch(id) {
-	case CLID_ObjectList:              /* ObjectList               */
-	  return S_OK;
-	case CLID_ObjectVector:            /* ObjectVector             */
-	  return S_OK;
-	case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
-	  obj.KeyMap->configureDirectAccess();
-	  return S_OK;
-	case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
-	  obj.KeyHashMap->configureDirectAccess();
-	  return S_OK;
-	case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
-	  obj.KeyArray->configureDirectAccess();
-	  return S_OK;
-	case 0:                            /* Any other object         */
-	  return S_OK;
-	default:
-	  return obj.update(0);
-	}
+        string npar[3];
+        unsigned long nipar[2];
+        IOpaqueAddress* nPA;
+        SmartIF<IService> isvc(m_dataMgr);
+        LinkManager* mgr = pObj->linkMgr();
+        bool active = log().isActive();
+        for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
+          mgr->addLink(con->getLink(*i),0);
+        }
+        for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
+          const RootRef& r = refs.refs[j];
+          npar[0] = con->getDb(r.dbase);
+          npar[1] = con->getCont(r.container);
+          npar[2] = con->getLink(r.link);
+          nipar[0] = 0;
+          nipar[1] = r.entry;
+          StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
+          if ( sc.isSuccess() ) {
+            if ( active )  {
+              log() << isvc->name() << " -> Register:" << pA->registry()->identifier() 
+                << "#" << npar[2] << "[" << r.entry << "]" << endmsg;
+            }
+            sc = m_dataMgr->registerAddress(pA->registry(),npar[2],nPA);
+            if ( sc.isSuccess() ) {
+              continue;
+            }
+          }
+          log() << MSG::ERROR << con->fid() << ": Failed to create address!!!!" << endmsg;
+          return S_FAIL;
+        }
+        ObjectTypes obj(pObj);
+        const CLID id = (pObj->clID()&0xFFFF0000);
+        switch(id) 
+        {
+        case CLID_ObjectList:              /* ObjectList               */
+          return S_OK;
+        case CLID_ObjectVector:            /* ObjectVector             */
+          return S_OK;
+        case CLID_ObjectVector+0x0030000:  /* Keyed object map         */
+          obj.KeyMap->configureDirectAccess();
+          return S_OK;
+        case CLID_ObjectVector+0x0040000:  /* Keyed object hashmap     */
+          obj.KeyHashMap->configureDirectAccess();
+          return S_OK;
+        case CLID_ObjectVector+0x0050000:  /* Keyed indirection array  */
+          obj.KeyArray->configureDirectAccess();
+          return S_OK;
+        case 0:                            /* Any other object         */
+          return S_OK;
+        default:
+          return obj.update(0);
+        }
       }
     }
     return S_FAIL;

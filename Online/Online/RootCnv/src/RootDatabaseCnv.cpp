@@ -1,4 +1,4 @@
-// $Id: RootDatabaseCnv.cpp,v 1.5 2010-09-02 11:59:57 frankb Exp $
+// $Id: RootDatabaseCnv.cpp,v 1.6 2010-09-27 15:43:53 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDatabaseCnv
@@ -17,8 +17,8 @@
 #if 0
 #include "GaudiKernel/CnvFactory.h"
 PLUGINSVC_FACTORY_WITH_ID( RootDatabaseCnv,
-                           ConverterID(ROOT_StorageType,CLID_StatisticsFile),
-                           IConverter*(long, CLID, ISvcLocator*) );
+                          ConverterID(ROOT_StorageType,CLID_StatisticsFile),
+                          IConverter*(long, CLID, ISvcLocator*) );
 #endif
 
 using namespace Gaudi;
@@ -58,7 +58,7 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);
       if ( status.isSuccess() )  {
         log() << MSG::INFO << "Opened NEW Database file:"
-	      << fname << " as " << oname << endmsg;
+          << fname << " as " << oname << endmsg;
       }
     }
     else if ( update )  {
@@ -66,14 +66,14 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);
       if ( status.isSuccess() )  {
         log() << MSG::INFO << "Connect to existing Database file:"
-	      << fname << " as " << oname << " for UPDATE" << endmsg;
+          << fname << " as " << oname << " for UPDATE" << endmsg;
       }
     }
     else if ( read ) {
       status = m_dbMgr->connectDatabase(fname,IDataConnection::READ,&con);
       if ( status.isSuccess() )  {
         log() << MSG::INFO << "Connect to existing Database file:"
-	      << fname << " as " << oname << " for READ" << endmsg;
+          << fname << " as " << oname << " for READ" << endmsg;
       }
     }
     else if ( recrea )  {

@@ -1,4 +1,4 @@
-// $Id: RootStatCnv.cpp,v 1.5 2010-09-02 11:59:57 frankb Exp $
+// $Id: RootStatCnv.cpp,v 1.6 2010-09-27 15:43:53 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootStatCnv
@@ -23,7 +23,7 @@ using namespace Gaudi;
 
 // Standard Constructor
 RootStatCnv::RootStatCnv (long typ,const CLID& clid, ISvcLocator* svc, RootCnvSvc* mgr) 
-  : RootConverter(typ, clid, svc, mgr), m_dataMgr(0), m_log(0)
+: RootConverter(typ, clid, svc, mgr), m_dataMgr(0), m_log(0)
 {
 }
 
@@ -116,11 +116,12 @@ StatusCode RootStatCnv::makeError(const std::string& msg, bool throw_exc)  const
 }
 
 // Save statistics object description.
-StatusCode RootStatCnv::saveDescription(const string&  path, 
-					const string&  ident, 
-					const string&  desc,
-					const string&  opt,
-					const CLID&    clid)
+StatusCode 
+RootStatCnv::saveDescription(const string&  path, 
+                             const string&  ident, 
+                             const string&  desc,
+                             const string&  opt,
+                             const CLID&    clid)
 {
   RootDataConnection* con = 0;
   StatusCode status = m_dbMgr->connectDatabase(path, IDataConnection::UPDATE, &con);
@@ -131,16 +132,16 @@ StatusCode RootStatCnv::saveDescription(const string&  path,
       auto_ptr<RootNTupleDescriptor> dsc(ptr=new RootNTupleDescriptor());
       TBranch* b = con->getBranch("##Descriptors","GaudiStatisticsDescription",cl);
       if ( b ) {
-	dsc->description = desc;
-	dsc->optional    = opt;
-	dsc->container   = ident;
-	dsc->clid        = clid;
-	b->SetAddress(&ptr);
-	int nb = b->Fill();
-	if ( nb > 1 ) {
-	  log() << MSG::DEBUG << "Save description for " << ident << endmsg;
-	  return StatusCode::SUCCESS;
-	}
+        dsc->description = desc;
+        dsc->optional    = opt;
+        dsc->container   = ident;
+        dsc->clid        = clid;
+        b->SetAddress(&ptr);
+        int nb = b->Fill();
+        if ( nb > 1 ) {
+          log() << MSG::DEBUG << "Save description for " << ident << endmsg;
+          return StatusCode::SUCCESS;
+        }
       }
       return makeError("Failed to access ROOT branch GaudiStatisticsDescription");
     }
