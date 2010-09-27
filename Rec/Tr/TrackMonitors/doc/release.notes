@@ -8,6 +8,7 @@
  - TrackPV2HalfAlignMonitor to sequence
  - moved some histograms out of expert level in TrackMonitor
  - added histograms for velo-calo matching to TrackCaloMatchMonitor
+ - rarrange datamembers to get rid of warning in OTTrackMonitor
 
 ! 2010-24-09 - Johan Blouw
  - initialized all histogram pointers to NULL in OTTrackMonitor and OTHitEfficiencyMonitor
