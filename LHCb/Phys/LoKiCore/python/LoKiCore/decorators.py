@@ -49,7 +49,7 @@ __date__    = "????-??-??"
 __version__ = "SVN $Revision$ "
 # =============================================================================
 
-from LoKiCore.basic import cpp, std, LoKi,LHCb 
+from LoKiCore.basic import cpp, std, LoKi, LHCb, Gaudi  
 
 # (auto) load the objects from LoKiCoreDict dictionary 
 LoKi.RangeBase_ = cpp.Gaudi.RangeBase_ 
