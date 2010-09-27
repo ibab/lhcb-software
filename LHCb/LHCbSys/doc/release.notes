@@ -8,6 +8,126 @@
 ! 2010-09-22 - Marco Cattaneo
  - Add Event/RecreatePIDTools
 
+</PRE><H1><A NAME=v31r6>2010-09-28 LHCbSys v31r6</A></H1><PRE>
+This version uses Gaudi v21r11 and LCG_58f
+
+- Packages added: 
+  . Event/RecreatePIDTools : Components to fully rebuild PIDs from packed DST
+
+- Packages modified:
+    Calo/CaloInterfaces v7r19, Calo/CaloUtils v9r0, Det/DDDB v1r35,
+    Det/DetCond v12r15, Det/DetDescSvc v2r6, Det/VeloPixDet v1r7,
+    Event/EventPacker v2r5, Event/PackedEvent v4r3, Event/RecEvent v2r32,
+    Event/TrackEvent v5r8, IO/IOExample v3r5, GaudiConf v13r7, 
+    Kernel/LHCbAlgs v2r35, Kernel/LHCbKernel v12r5, Kernel/LHCbMath v3r20,
+    Kernel/XMLSummaryBase v1r2, Kernel/XMLSummaryKernel v1r0p2, 
+    Phys/LoKiCore v10r4, Tr/TrackInterfaces v4r16
+
+- In Calo/CaloInterfaces v7r19
+  . ICaloHypoEstimator/ITrack2Calo : add virtual method + increment interface ID
+  . new interface : ICaloHypoEstimator
+  . Added explicit [missing] dependency to Event/L0Event package. 
+    Only needed for the CMake tests. 
+
+- In Calo/CaloUtils v9r0
+  . Kinematics.h, Kinematics.cpp
+    o factor out the evaluation of various quantities from CaloMomentum class
+    o FIX THE BUG in Evaluation of F11 and F12 matrix elements! 
+  . CaloAlgUtils :  new method ClusterFromHypo(CaloHypo*) return hypo->cluster
+                    with special care for SplitPhotons
+
+- In Det/DDDB v1r35
+  . Changed default SIMCOND tag for MC09:
+    o MC09-20100921-vc-md100 for SIMCOND
+
+- In Det/DetCond v12r15
+  . Added a test to verify that a failure to load a condition in the
+    UpdateManagerSvc is properly reported.
+
+- In Det/DetDescSvc v2r6
+  . Modified UpdateManagerSvc to print an error message with the problematic
+    condition when the update fails.
+
+- In Det/VeloPixDet v1r7
+  . Bug fix in the PixelSize function of DeVeloPixSquareType.
+
+- In Event/EventPacker v2r5
+  . Change info() printed by PackerBaseAlg::initialize() and 
+    UnpackerBaseAlg::initialize() to debug()
+  . Add packer, unpacker and checker for the WeightsVector class.
+  . Fix WritePackedDst and ReadPackedDst for the Particle and Vertex classes
+  . Add support for Packed WeightsVector to WritePackedDst and ReadPackedDst
+
+- In Event/PackedEvent v4r3
+  . Add packed data classes for LHCb::WeightsVector class.
+  . Add a first try at full implementations of the packers for Particles and
+    Vertices
+
+- In Event/RecEvent v2r32
+  . Add dictionary for std::vector<std::pair<int,float>> to dict/lcgDict.h 
+  . Add WeightsVector.xml, temporary class for storing primary vertex track
+    weights, pending redesign of RecVertex
+  . RecHeader.xml: new gpsTime() member, same content as in ODIN
+  . ProtoParticle.xml : new calo-related additional info
+
+- In Event/TrackEvent v5r8
+  . Remove VeloPix track type and related functions from LHCb::Track
+
+- In Ex/IOExample v3r5
+  . Test rfio protocol when reading sim file, rootd protocol when reading digi 
+    file, and xrootd when reading dst file
+
+- In GaudiConf v13r7
+  . Add support for packing of the PV vertex weights
+  . Add Rec/Vertex/Weights to DST. For the time being without packing, as no
+    packer exists.
+  . Extend the data unpacking data-on-demand options to include some additional
+    algorithms, that previously where run by default in PhysConf. This change
+    means they are now only run when really needed, on demand.
+
+- In Kernel/LHCbAlgs v2r35
+  . Added an implementation of IEventTimeDecoder (TimeDecoderList) that uses a
+    list of IEventTimeDecoder instances (returning the first non-zero time
+    found).
+  . Added RecEventTime, an implementation of IEventTimeDecoder that takes the
+    event time from LHCb::RecHeader.
+
+- In Kernel/LHCbKernel v12r5
+  . FastClusterContainer: add almost fictive inheritance from ObjectContainerBase
+    class.
+
+- In Kernel/LHCbMath v3r20
+  . python/LHCbMath/Types.py : solve the problem with visibility of symbols 
+  . python/LHCbMath.py -> python/LHCbMath/Math.py 
+  . python/LHCbMath/__init__.py : forced import of everything from 
+    LHCbMath/Math.py (for backward compatibility)
+
+- In Kernel/XMLSummaryBase v1r2
+  . Changes to allow the summary class to be imported using imp
+    imp.load_source('summary_application_version',<path>)
+  . Fix bug with merging input/output to the same filename
+  . Added test of this functionality in test_parse_summary.py
+  . Switch to cElementTree, faster implimentation
+  . Stop validating every summary file before merging, now only do it if there's
+    a problem
+  . Stop constructing lists of keys from dictionaries, where "for i in dict"
+    works just as well
+  . Only parse the schema once in the merging step
+  . Added __insert_element__ and __remove_element__ methods
+  . Added support for type 'normalizedString'
+  . Fixed a few minor bugs
+
+- In Kernel/XMLSummaryKernel v1r0p2
+  . Gaudi now has better return codes, see bug #70956
+    this required further adaptation of the tests
+
+- In Phys/LoKiCore v10r4
+  . remove usage of obsolete python module 'sets'
+  . decouple LoKiCore.functions and LoKiCore.decorators 
+
+- In Tr/TrackInterfaces v4r16
+  . modification of IPVOfflineTool.h conected to new PatPV to store track weights
+
 </PRE><H1><A NAME=v31r5>2010-08-26 LHCbSys v31r5</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LCG_58e
 
