@@ -423,7 +423,7 @@ class StrippingB2D3HConf( object ):
                                    BZVtxSep = config['BZVtxSep'],
                                    BDZVtxSep = config['BDZVtxSep'],
                                    BDRPV = config['BDRPV'],      
-                                   decayDesc = "[B0 -> D- D+]cc",
+                                   decayDesc = "B0 -> D- D+",
                                    parentB = "B0")
 
         # Make B- --> D_(s)- D_(s)+
@@ -605,7 +605,7 @@ class StrippingB2D3HConf( object ):
         self.StrippingSignalB2DDLine = StrippingLine('SignalB2DDLine'+name,
                                                     prescale = config['B2DDAll_Prescale'],
                                                     postscale = config['B2DDAll_Postscale'],
-                                                    algos = [ self.EventFilter, self.B2DD]
+                                                    algos = [ self.EventFilter, self.SignalB2DD]
                                                     )
 
         self.StrippingSignalB2DStarDLine = StrippingLine('SignalB2DStarDLine'+name,
@@ -1079,7 +1079,10 @@ def makeB2D3H( name,
                        " & (MIPDV(PRIMARY)< %(BIP2PV)s *mm) )" % locals()
 
     selName = 'Sel'+name
-    return Selection(name, Algorithm  = _b2d3h, RequiredSelections = [dSel, hhhSel])
+    if dSel == hhhSel:
+        return Selection(name, Algorithm  = _b2d3h, RequiredSelections = [dSel])
+    else:
+        return Selection(name, Algorithm  = _b2d3h, RequiredSelections = [dSel, hhhSel])
 
 
 def filterB2D3H( name,

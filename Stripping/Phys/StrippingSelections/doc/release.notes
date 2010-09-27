@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-27 Steve Blusk
+- Fix small bugs in StrippingB2D3H.py: 
+- B2DDSignalLine was same as "All" Line (typo)
+- Duplicate candidates in B-->D+ D- selection fixed
+
 ! 2010-09-26 - Walter Bonivento
 - Update stripping line StrippingDstarD02xx.py with more cuts to reduce retention
 
