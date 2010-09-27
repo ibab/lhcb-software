@@ -3,6 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2010-09-27 - Victor Coco
+ - modify initialisation of m_veloFitter in TrackStateInitTool, to be able to 
+   modify via configurables.
+
 ! 2010-09-24 - Stephanie Hansmann-Menzemer
  - add fix to OT expected hits
 

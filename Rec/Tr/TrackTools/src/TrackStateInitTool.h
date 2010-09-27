@@ -63,6 +63,7 @@ protected:
 private:
   IPatSeedFit* m_seedFit ;
   ITrackFitter* m_veloFitter ;  
+  std::string   m_veloFitterName ;  
   IPatVeloTTFit* m_veloTTFit;
 
   ITrackExtrapolator* m_extrapolator;

@@ -13,8 +13,11 @@ TrackStateInitTool::TrackStateInitTool( const std::string& type,
 					const std::string& name,
 					const IInterface* parent)
   : GaudiTool ( type, name , parent )
+  ,m_veloFitter(0)
+  ,m_veloFitterName("")
 {
   declareInterface<ITrackStateInit>(this);
+  declareProperty( "VeloFitterName" , m_veloFitterName = "Tf::PatVeloFitLHCbIDs/FitVelo");
 }
 
 TrackStateInitTool::~TrackStateInitTool() {}
@@ -23,7 +26,7 @@ StatusCode TrackStateInitTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   m_seedFit = tool<IPatSeedFit>( "PatSeedFit" );
-  m_veloFitter = tool<ITrackFitter>("Tf::PatVeloFitLHCbIDs", "FitVelo", this) ;
+  m_veloFitter = tool<ITrackFitter>(m_veloFitterName, this) ;
   m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", 
 					    "Extrapolator",this);
