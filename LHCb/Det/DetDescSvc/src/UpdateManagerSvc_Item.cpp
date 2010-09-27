@@ -51,7 +51,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
   // prepare for update
   updateLock = true;
   resetIOV();
-  StatusCode sc;
+  StatusCode sc(StatusCode::SUCCESS, true);
   // start real update
   if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
 
