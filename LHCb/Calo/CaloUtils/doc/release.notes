@@ -3,15 +3,14 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v9r0 2010-09-27 =========================
 ! 2010-08-31 - Olivier Deschamps
   - fix compilation warning on slc4
 
 ! 2010-08-30 - Vanya Belyaev
-
  - a bit more polishing to Kinemactics functions 
 
 ! 2010-08-30 - Vanya Belyaev
-
  - Kinematics.h, 
    Kinematics.cpp
 
