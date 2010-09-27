@@ -14,30 +14,41 @@
 #include "Kernel/Particle2LHCbIDs.h"
 #include "Kernel/Particle2VertexBase.h"
 #include "Kernel/Particle2UnsignedInts.h"
+#include "Kernel/DataObject2ObjectMap.h"
 
 namespace 
 {
-  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _P2LHCbIDs;
+  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, 
+                                 std::vector<LHCb::LHCbID> > _P2LHCbIDs;
 
-  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _P2PV;
+  typedef DaVinci::Map::DataObject2ObjectMap< LHCb::Particle, 
+                                              std::vector<LHCb::LHCbID> > _P2LHCbIDMap;
 
-  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, std::vector<unsigned int> > _P2UInts;
+  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, 
+                                 SmartRef<LHCb::VertexBase> > _P2PV;
+
+  typedef GaudiUtils::VectorMap< SmartRef<LHCb::Particle>, 
+                                 std::vector<unsigned int> > _P2UInts;
+  typedef DaVinci::Map::DataObject2ObjectMap< LHCb::Particle, 
+                                              std::vector<unsigned int> > _P2UIntMap;
 
   struct _Instantiations 
   {
-    std::vector<LHCb::LHCbID> _i0;
-    std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _i1;
-    std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > > _i2;
-    _P2LHCbIDs _i3;
+    std::vector<LHCb::LHCbID> _i00;
+    std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > _i01;
+    std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<LHCb::LHCbID> > > _i02;
+    _P2LHCbIDs _i03;
+    _P2LHCbIDMap _i04;
+    
+    std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _i10;
+    std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > > _i11;
+    _P2LHCbIDs _12;
 
-    std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > _i4;
-    std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > > _i5;
-    _P2LHCbIDs _i6;
-
-    std::vector<unsigned int> _i7;
-    std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > _i8;
-    std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > > _i9;
-    _P2UInts _i10;
+    std::vector<unsigned int> _i20;
+    std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > _i21;
+    std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > > _i22;
+    _P2UInts _i23;
+    _P2UIntMap _i24;
 
 
   };

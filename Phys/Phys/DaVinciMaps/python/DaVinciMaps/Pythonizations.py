@@ -19,7 +19,8 @@ from GaudiPython.Pythonizations import (__mapbase_iteritems__,
                                         __mapbase_delitem__)
 
 _maps = (GaudiPython.gbl.DaVinci.Map.Particle2VertexBase,
-         GaudiPython.gbl.DaVinci.Map.Particle2LHCbIDs)
+         GaudiPython.gbl.DaVinci.Map.Particle2LHCbIDs,
+         GaudiPython.gbl.DaVinci.Map.Particle2UnsignedInts)
 
 def _addPythonMembers(_map) :
     _map.__len__       = lambda s   : s.size()
