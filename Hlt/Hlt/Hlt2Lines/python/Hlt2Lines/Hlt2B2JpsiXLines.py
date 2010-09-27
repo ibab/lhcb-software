@@ -345,7 +345,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         ElCuts = "(PT > %(Bs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
 
         # Jpsi Cuts
-        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(Bs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (in_range(%(Bs2JpsieePhi_JpsiMassMin)s *MeV, MM, %(Bs2JpsieePhi_JpsiMassMax)s *MeV))" % self.getProps()
 
         # Make the Jpsiee
         JpsiCombine = Hlt2Member( CombineParticles
@@ -359,7 +359,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                   )
         
         # Phi Cuts
-        PhiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(Bs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(Bs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(Bs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+        PhiCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(Bs2JpsieePhi_PhiPT)s *MeV) & ( in_range( %(Bs2JpsieePhi_PhiMassMin)s *MeV, MM, %(Bs2JpsieePhi_PhiMassMax)s *MeV) )" % self.getProps()
         
         # Make the phi
         PhiCombine = Hlt2Member( CombineParticles
@@ -372,7 +372,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  )
         
         # Bs Cuts
-        BsCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(Bs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(Bs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+        BsCuts = "(VFASPF(VCHI2PDOF) < %(Bs2JpsieePhi_BsVertexCHI2pDOF)s ) & ( in_range( %(Bs2JpsieePhi_BsPseudoMassMin)s *MeV, M-M1+3096.916*MeV, %(Bs2JpsieePhi_BsPseudoMassMax)s *MeV) )"  % self.getProps()
 
         # Make the Bs
         BsCombine = Hlt2Member( CombineParticles
@@ -448,17 +448,14 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         L0Req   = self.getProp("TFBs2JpsieePhi_L0Req")
         Hlt1Req = self.getProp("TFBs2JpsieePhi_Hlt1Req")
         
-        if not L0Req:
-            L0Req = None
-
-        if not Hlt1Req:
-            Hlt1Req= None
+        if not L0Req: L0Req = None
+        if not Hlt1Req: Hlt1Req= None
 
         # Electron Cuts
         ElCuts = "(PT > %(TFBs2JpsieePhi_ElectronPT)s *MeV)" % self.getProps()
 
         # Jpsi Cuts
-        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (MM > %(TFBs2JpsieePhi_JpsiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_JpsiMassMax)s *MeV)" % self.getProps()
+        JpsiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_JpsiVertexCHI2pDOF)s ) & (in_range(%(TFBs2JpsieePhi_JpsiMassMin)s *MeV, MM, %(TFBs2JpsieePhi_JpsiMassMax)s *MeV))" % self.getProps()
 
         # Make the Jpsiee
         JpsiCombine = Hlt2Member( CombineParticles
@@ -472,7 +469,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                   )
 
         # Phi Cuts
-        PhiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(TFBs2JpsieePhi_PhiPT)s *MeV) & ( MM > %(TFBs2JpsieePhi_PhiMassMin)s *MeV) & (MM < %(TFBs2JpsieePhi_PhiMassMax)s *MeV)" % self.getProps()
+        PhiCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_PhiVertexCHI2pDOF)s ) & (PT > %(TFBs2JpsieePhi_PhiPT)s *MeV) & (in_range(%(TFBs2JpsieePhi_PhiMassMin)s *MeV, MM, %(TFBs2JpsieePhi_PhiMassMax)s *MeV))" % self.getProps()
 
         # Make the phi
         PhiCombine = Hlt2Member( CombineParticles
@@ -484,7 +481,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  , UseP2PVRelations = False
                                  )
         # Bs Cuts
-        BsCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_BsVertexCHI2pDOF)s ) & ((M-M1+3096.916*MeV) > %(TFBs2JpsieePhi_BsPseudoMassMin)s *MeV) & ((M-M1+3096.916*MeV) < %(TFBs2JpsieePhi_BsPseudoMassMax)s *MeV)"  % self.getProps()
+        BsCuts = "(VFASPF(VCHI2PDOF) < %(TFBs2JpsieePhi_BsVertexCHI2pDOF)s ) & (in_range(%(TFBs2JpsieePhi_BsPseudoMassMin)s *MeV, M-M1+3096.916*MeV, %(TFBs2JpsieePhi_BsPseudoMassMax)s *MeV))"  % self.getProps()
         
         # Make the Bs
         BsCombine = Hlt2Member( CombineParticles

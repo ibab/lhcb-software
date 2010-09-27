@@ -89,11 +89,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         
         Phi4PhiGammaFilter = Hlt2Member( FilterDesktop
                                          ,"FilterPhi2KK"
-                                         # FIXME: wy do we do twice 'INTREE( phi & ... ) and not INTREE( phi & .. & .. ) ???
-                                         #        and why cut on the 'MINTREE' instead of aborting as soon as one track has a large chisq??? 
-                                         #        
                                          ,Code = " (MINTREE ( Q != 0 , MIPCHI2DV(PRIMARY) ) > %(TrIPchi2Phi)s ) "\
-                                               " & (MINTREE ( Q != 0, TRCHI2DOF) < %(TrChi2)s ) "\
+                                               " & (INTREE ( ( Q != 0 ) & ( TRCHI2DOF < %(TrChi2)s ) ) ) "\
                                                " & (INTREE ( (ABSID=='phi(1020)') & (ADMASS('phi(1020)')< %(PhiMassWinT)s) ) ) "\
                                                " & (INTREE ( (ABSID=='phi(1020)') & (VFASPF(VCHI2)< %(PhiVCHI2)s))) " % self.getProps()
                                          , InputLocations  = [ Phi2KK ]
@@ -114,7 +111,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         Kst4KstGammaFilter = Hlt2Member( FilterDesktop
                                          ,"FilterKstar2KPi"
                                          ,Code = " (MINTREE ( Q != 0 , MIPCHI2DV(PRIMARY) ) > %(TrIPchi2Kst)s ) "\
-                                               " & (MINTREE ( Q != 0, TRCHI2DOF) < %(TrChi2)s) " \
+                                               " & (INTREE ( ( Q != 0 ) & ( TRCHI2DOF < %(TrChi2)s) ) )" \
                                                " & (INTREE ( (ABSID=='K*(892)0') & (ADMASS('K*(892)0')< %(KstMassWinT)s )) ) " \
                                                " & (INTREE ( (ABSID=='K*(892)0') & (VFASPF(VCHI2)< %(KstVCHI2)s)))" % self.getProps()
                                          , InputLocations  = [ Kstar2KPi] 
