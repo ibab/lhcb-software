@@ -4,6 +4,9 @@ $Id: release.notes,v 1.106 2010-09-05 18:42:43 fsoomro Exp $
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+!2010-09-27 - Gerhard Raven
+- good kaons/pions: first do PV
+
 !2010-09-22 - Gerhard Raven
 - replace VCHI2/VDOF by VCHI2PDOF
 
