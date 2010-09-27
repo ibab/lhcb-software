@@ -44,11 +44,12 @@ var MagnetStatus = function(msg)   {
     this.magnetField.style.borderColor = '#000000';
     this.magnetField.style.borderWidth = 1;
     this.magnetField.conversion = function(data) {
-      if ( data>0.85 ) {
+      var d = Math.abs(data);
+      if ( d>0.75 ) {
 	this.style.backgroundColor = 'lightgreen';
 	return '<font size="+3">ON</font>';
       }
-      else if ( data<0.15 ) {
+      else if ( d<0.1 ) {
 	this.style.backgroundColor = 'yellow';
 	return '<font size="+2">OFF</font>';
       }

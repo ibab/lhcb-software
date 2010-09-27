@@ -399,43 +399,49 @@ if ( !lhcb.widgets ) {
     tab.runStart       = StyledItem('lbWeb.'+sys+'_RunInfo.general.runStartTime',null,'Started at: %s');
     tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',       null,null);
     tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers',null,null);
-    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     null,'%8.0f');
-    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  null,'%8.0f');
-    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     null,'%8.0f');
-    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  null,'%8.0f');
-    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        'MonitorDataHeader','Now:%8.2f %%');
-    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     'MonitorDataHeader','Run:%8.2f %%');
+    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'Now:%8.2f %%');
+    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     null,'Run:%8.2f %%');
+    tab.trgConfig      = StyledItem('lbWeb.'+sys+'_RunInfo.Trigger.TCKLabel',    null,null);
     tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                            null,'%7.4f');
     tab.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',                     null, null);
     tab.hvState        = StyledItem('lbWeb.LHCb_LHC_HV.FSM.state','MonitorDataHeader',null);
     tab.hvState.conversion = function(data) {  return 'LV & HV:'+(data.split('/')[1]); };
     tab.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position','MonitorDataHeader','VELO %s');
-    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                           null, 'S0:%7.3f');
-    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                          null, '%7.3f');
-    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                           null, 'S1:%7.3f');
-    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                          null, '%7.3f');
-    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',          null, null);
-    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',          null, null);
-    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',          null, null);
+    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                   null, 'S0:%7.3f');
+    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                  null, '%7.3f');
+    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                   null, 'S1:%7.3f');
+    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                  null, '%7.3f');
+    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',  null, null);
+    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',  null, null);
+    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',  null, null);
     tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP', null, '%7.0f Hz');
-    tab.physicsRateEx  = StyledItem('lbWeb.LHCB_STATS.PhysEx', null, 'Excl:%7.0f');
-    tab.physicsRateIn  = StyledItem('lbWeb.LHCB_STATS.PhysIn', null, 'Incl:%7.0f');
-    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',null,'%7.0f');
-    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',null,'%7.0f');
+
+    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     'Text-Right','%8.0f');
+    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  'Text-Right','%8.0f');
+    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     'Text-Right','%8.0f');
+    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  'Text-Right','%8.0f');
+    tab.physicsRateEx  = StyledItem('lbWeb.LHCB_STATS.PhysEx',  'Text-Right',   '%7.0f');
+    tab.physicsRateIn  = StyledItem('lbWeb.LHCB_STATS.PhysIn',  'Text-Right',   '%7.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',  'Text-Right',   '%7.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',  'Text-Right',   '%7.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',  'Text-Right',   '%7.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',  'Text-Right',   '%7.0f');
+    tab.minbRateEx     = StyledItem('lbWeb.LHCB_STATS.MBiasEx', 'Text-Right',   '%7.0f');
+    tab.minbRateIn     = StyledItem('lbWeb.LHCB_STATS.MBiasIn', 'Text-Right',   '%7.0f');
     tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', null, '%7.2f &mu;b<sup>-1</sup>/s');
 
     // Run status
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(tab.runType);
-    tab.runStart.colSpan = 4;
+    tab.runStart.colSpan = 5;
     tr.appendChild(tab.runStart);
     tab.runStart.style.textAlign = 'left';
 
     // Magnet status
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Magnet [&nbsp;T&nbsp;]:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Magnet [&nbsp;T&nbsp;]:',2,'MonitorDataHeader'));
     tr.appendChild(tab.magnetField);
-    tr.appendChild(Cell('Polarity:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Polarity:',2,'MonitorDataHeader'));
     tr.appendChild(tab.magnetPolarity);
     tab.magnetPolarity.conversion = function(data) {
       if ( data>0 ) return '+&nbsp;(Down)';
@@ -445,56 +451,70 @@ if ( !lhcb.widgets ) {
 
     // Background status
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('BCM BKG [&permil;]:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('BCM BKG [&permil;]:',2,'MonitorDataHeader'));
     tr.appendChild(tab.figureOfMerit1);
-    tr.appendChild(tab.figureOfMerit2);
+    tr.appendChild(td=tab.figureOfMerit2);
+    td.colSpan = 2;
     tr.appendChild(tab.figureOfMerit3);
     tr.appendChild(tab.figureOfMerit4);
 
     // Beam permits
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Beam Permits:',null,'MonitorDataHeader'));
-    tr.appendChild(tab.bcmBeamPermit1);
+    tr.appendChild(Cell('Beam Permits:',2,'MonitorDataHeader'));
+    tr.appendChild(td=tab.bcmBeamPermit1);
+    td.colSpan = 2;
     tr.appendChild(tab.bcmBeamPermit2);
     tr.appendChild(tab.bcmBeamPermit3);
     tr.appendChild(tab.veloPosition);    // Velo position
 
     // Luminosity and interaction information
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Interaction rate:',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Interaction rate:',2,'MonitorDataHeader'));
     tr.appendChild(tab.interActionRate);
-    tr.appendChild(Cell('Inst.Lumi:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Inst.Lumi:',2,'MonitorDataHeader'));
     tr.appendChild(tab.instantLumi);
     tab.instantLumi.colSpan = 2;
 
     // Event processing information
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('L0 Events:',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('L0 Events:',2,'MonitorDataHeader'));
     tr.appendChild(tab.nTriggers);
-    tr.appendChild(Cell('accepted:',1,'MonitorDataHeader'));
-    tr.appendChild(tab.hltNTriggers);
-    tab.hltNTriggers.colSpan = 2;
+    tr.appendChild(Cell('Dead time:',2,'MonitorDataHeader'));
+    //tr.appendChild(tab.hltNTriggers);
+    tr.appendChild(tab.deadTime);
+    tr.appendChild(tab.deadTimeRun);
+    //tab.hltNTriggers.colSpan = 2;
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Dead time',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('L0 [Hz]',  1,'MonitorDataHeader'));
-    tr.appendChild(Cell('HLT [Hz]', 1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Phys [Hz]',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Rates:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('L0&nbsp;&nbsp;[Hz]', 1,'MonitorDataHeader'));
+    tr.appendChild(Cell('HLT&nbsp;[Hz]',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Phys [Hz]',2,'MonitorDataHeader'));
+    tr.appendChild(Cell('MinB [Hz]',1,'MonitorDataHeader'));
     tr.appendChild(Cell('Lumi [Hz]',1,'MonitorDataHeader'));
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(tab.deadTime);
+    tr.appendChild(Cell('Now:',1,null));
     tr.appendChild(tab.l0Rate);
     tr.appendChild(tab.hltRate);
+    tr.appendChild(Cell('Incl:', 1,'Text-Left'));
     tr.appendChild(tab.physicsRateIn);
+    tr.appendChild(tab.minbRateIn);
     tr.appendChild(tab.LumiRateIn);
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(tab.deadTimeRun);
+    tr.appendChild(Cell('Run:',1,null));
     tr.appendChild(tab.l0RateRun);
     tr.appendChild(tab.hltRateRun);
+    tr.appendChild(Cell('Excl:',1,'Text-Left'));
     tr.appendChild(tab.physicsRateEx);
+    tr.appendChild(tab.minbRateEx);
     tr.appendChild(tab.LumiRateEx);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('TCK:',1,'MonitorDataHeader'));
+    tab.trgConfig.colSpan=6;
+    tr.appendChild(tab.trgConfig);
 
     tab.appendChild(tb);
 
@@ -531,6 +551,9 @@ if ( !lhcb.widgets ) {
       provider.subscribeItem(this.physicsRateEx);
       provider.subscribeItem(this.LumiRateIn);
       provider.subscribeItem(this.LumiRateEx);
+      provider.subscribeItem(this.minbRateIn);
+      provider.subscribeItem(this.minbRateEx);
+      provider.subscribeItem(this.trgConfig);
       return this;
     };
     return tab;

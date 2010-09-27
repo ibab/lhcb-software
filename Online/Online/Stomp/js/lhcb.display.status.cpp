@@ -49,7 +49,7 @@ var PartitionSelector = function(msg) {
   table.add = function() {
     var tr = document.createElement('tr');
     var td = document.createElement('td');
-    td.setAttribute('colSpan',4);
+    td.setAttribute('colSpan',5);
     tr.appendChild(td);
     this.body.appendChild(tr);
     return td;
@@ -62,8 +62,11 @@ var PartitionSelector = function(msg) {
   table.heading.innerHTML = 'LHCb Run Status Display';
   table.heading.colSpan = 2;
   table.heading.className = 'RunStatusHeader';
-  table.heading.style.width = '100%';
+  table.heading.style.width = '90%';
   table.heading.style.textAlign='left';
+
+  td = Cell(lhcb_online_picture(),1,null);
+  table.heading.parentNode.appendChild(td);
   td = Cell('A<sup>+</sup>',1,'MonitorDataHeader');
   td.onclick     = function() { zoom_increaseFontSize();};
   tooltips.set(td,'Increase font size');
@@ -82,6 +85,7 @@ var PartitionSelector = function(msg) {
   table.select.appendChild(table.selectBox);
   table.row.appendChild(table.select);
   tooltips.set(table.select,'Select the correct partition to initiate the display');
+  table.row.appendChild(Cell('',null,null));
 
   table.change = document.createElement('td');
   table.change.handler     = table;
@@ -108,7 +112,7 @@ var PartitionSelector = function(msg) {
   table.logDisplay = table.add();
 
   table.suggestions = document.createElement('tr');
-  table.suggestions.appendChild(td=Cell('Comments and suggestions to M.Frank CERN/LHCb',3,'MonitorTinyHeader'));
+  table.suggestions.appendChild(td=Cell('Comments and suggestions to M.Frank CERN/LHCb',4,'MonitorTinyHeader'));
   td.style.textAlign = 'right';
   table.body.appendChild(table.suggestions);
 

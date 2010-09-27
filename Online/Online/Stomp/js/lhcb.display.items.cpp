@@ -656,30 +656,32 @@ var RunStatusDisplay = function(partition,provider,logger) {
   var td      = null;
   
   table._logger.debug('RunStatusDisplay.build: Creating table...');
-  
+
   row = document.createElement('tr');
   table.experiment_run_header = document.createElement('td');
+  table.experiment_run_header.colSpan = 2;
   row.appendChild(table.experiment_run_header);
-  td = Cell(lhcb_online_picture(),1,null);
-  td.style.textAlign = 'right';
-  td.rowSpan = 2;
-  row.appendChild(td);
+  //td = Cell(lhcb_online_picture(),1,null);
+  //td = Cell('',1,null);
+  //td.style.textAlign = 'right';
+  //td.rowSpan = 1;
+  //row.appendChild(td);
   table.body.appendChild(row);
 
   row = document.createElement('tr');
   table.ctrl_status = document.createElement('td');
   row.appendChild(table.ctrl_status);
+  table.run_properties = document.createElement('td');
+  table.run_properties.rowSpan = 2;
+  row.appendChild(table.run_properties);  
   table.body.appendChild(row);
   
   row = document.createElement('tr');
   table.fsm_items = document.createElement('td');
   table.fsm_items.width = '40%';
   row.appendChild(table.fsm_items);
-
-  table.run_properties = document.createElement('td');
-  row.appendChild(table.run_properties);
   table.body.appendChild(row);
-  
+
   table.det_row = document.createElement('tr');
   table.det_items = Cell('',2,null);
   table.det_items.width = '100%';
@@ -729,7 +731,15 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.addFormat(prefix+'HLTFarm.hltRate',      'HLT Accept Rate',1,'%8.2f Hz');
     prop.addFormat(prefix+'HLTFarm.runHltRate',   'Integrated HLT accept rate',1,'%8.2f Hz');
 
-    prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
+    var dead = prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
+    /*
+    dead.conversion = function(data) {
+      if ( data<5. ) this.style.bgcolor = "#00CC99";
+      else if ( data<15. ) this.style.bgcolor = "#F1F166";
+      else this.style.bgcolor = "#FF0000";
+      return data;
+    };
+    */
     prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
 
     if ( this._partition=='LHCb' || this._partition=='TRG' )  {

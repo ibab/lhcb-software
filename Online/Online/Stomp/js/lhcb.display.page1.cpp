@@ -83,11 +83,11 @@ var Page1 = function(msg, sys)   {
     this.head_date.id = 'current_time';
     this.head_date.style.width = '100%';
     tr.appendChild(this.head_date);
-    cell = Cell('A<sup>+</sup>',1,'MonitorDataHeader');
+    cell = Cell('<B>A<sup>+</sup></B>',1,'MonitorDataHeader');
     cell.onclick     = function() { zoom_increaseFontSize();};
     tooltips.set(cell,'Increase font size');
     tr.appendChild(cell);
-    cell = Cell('A<sup>-</sup>',1,'MonitorDataHeader');
+    cell = Cell('<B>A<sup>-</sup></B>',1,'MonitorDataHeader');
     cell.onclick     = function() { zoom_decreaseFontSize();};
     tooltips.set(cell,'Decrease font size');
     tr.appendChild(cell);
