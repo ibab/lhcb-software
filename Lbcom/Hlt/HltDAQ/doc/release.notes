@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================== HltDAQ v2r3 2010-09-28 ============================
 ! 2010-09-24 - Roel Aaij
  - Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
 
