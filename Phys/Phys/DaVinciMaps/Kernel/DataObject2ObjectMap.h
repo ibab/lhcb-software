@@ -55,22 +55,22 @@ namespace DaVinci{
       
     public :
 
-      inline iterator find(const From* key) const
+      inline iterator find(key_type key) const
       {
         return m_map.find(key);
       }
 
-      inline const mapped_type& operator()(const From* key) const
+      inline const mapped_type& operator()(key_type key) const
       {
         return m_map(key);
       }
   
-      inline const mapped_type& operator[](const From* key) const
+      inline const mapped_type& operator[](key_type key) const
       {
         return m_map[key];    
       }
 
-      inline const mapped_type& at(const From* key) const
+      inline const mapped_type& at(key_type key) const
       {
         return m_map.at(key); 
       }
@@ -80,7 +80,7 @@ namespace DaVinci{
         return m_map.count(key);
       }
 
-      inline result_type insert(const From* key,
+      inline result_type insert(key_type key,
                                 mapped_type mapped) 
       {
         return m_map.insert(key, mapped);

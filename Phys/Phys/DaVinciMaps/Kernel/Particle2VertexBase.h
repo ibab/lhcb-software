@@ -61,33 +61,33 @@ namespace DaVinci{
 
     public :
 
-      inline iterator find(const LHCb::Particle* key) const
+      inline iterator find(key_type key) const
       {
         return m_map.find(key);
       }
 
-      inline mapped_type operator()(const LHCb::Particle* key) const
+      inline mapped_type operator()(key_type key) const
       {
         return m_map(key);
       }
   
-      inline mapped_type operator[](const LHCb::Particle* key) const
+      inline mapped_type operator[](key_type key) const
       {
         return m_map[key];    
       }
 
-      inline mapped_type at(const LHCb::Particle* key) const
+      inline mapped_type at(key_type key) const
       {
         return m_map.at(key); 
       }
 
-      inline size_type count(const LHCb::Particle* key) const 
+      inline size_type count(key_type key) const 
       {
         return m_map.count(key);
       }
 
-      inline result_type insert(const LHCb::Particle* key,
-                                Map::mapped_type mapped) 
+      inline result_type insert(key_type key,
+                                mapped_type mapped) 
       {
         return m_map.insert(key, mapped);
       }
