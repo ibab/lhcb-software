@@ -10,11 +10,17 @@
 This version uses Gaudi v21r11 and LHCb v31r6
 
 - Modified packages:
-  Hlt/HltDAQ v2r3, L0/L0MuonMonitor v2r1, Rich/RichDAQ v3r29,
-  VeloPix/VeloPixDAQ v1r3
+  Calo/CaloTools v5r17, Hlt/HltDAQ v2r3, L0/L0DU v10r9, L0/L0MuonMonitor v2r1,
+  Rich/RichDAQ v3r29, ST/STDAQ v3r24, VeloPix/VeloPixDAQ v1r3
+
+- In Calo/CaloTools v5r17:
+  . New tool CaloHypoEstimator + update CaloHypo2Calo
 
 - In Hlt/HltDAQ v2r3:
   . Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
+
+- In L0/L0DU v10r9:
+  . L0CondDBProvider : reduced verbosity
 
 - In L0/L0MuonMonitor v2r1:
   . L0MuonMonitorInput : 
@@ -33,6 +39,10 @@ This version uses Gaudi v21r11 and LHCb v31r6
 - In Rich/RichDAQ v3r29:
   . Suppress unneccessary warning message during initialisation of the 
     decoding tool
+
+- In ST/STDAQ v3r24:
+  . Fix warnings from the INTEL compiler
+  . Add writeMappingToXML to ISTReadoutTool interface
 
 - In VeloPix/VeloPixDAQ v1r3
   . Replace hardcoded container location by proper location definition
