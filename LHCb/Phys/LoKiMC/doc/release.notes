@@ -15,6 +15,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-09-28 - Vanya Belyaev
+ - LoKiMC/trees.py
+    fix for new structure of LoKiCore
+ - cmt/requirements
+    version increment to v9r2 
+
 !========================== LoKiMC v9r1 2010-06-18 ============================
 ! 2010-06-06 - Vanya Belyaev
  - fix typo

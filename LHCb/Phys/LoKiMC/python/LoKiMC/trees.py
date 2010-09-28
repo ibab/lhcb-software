@@ -36,11 +36,8 @@ __version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.
 import LoKiCore.decorators    as      _LoKiCore
 
 # Namespaces:
-_global  = _LoKiCore._global
-cpp      = _global
-std      = cpp.std
+from LoKiCore.basic import cpp, std, LoKi 
 Decays   = cpp.Decays
-LoKi     = cpp.LoKi
 
 _MCP = 'const LHCb::MCParticle*'
 
