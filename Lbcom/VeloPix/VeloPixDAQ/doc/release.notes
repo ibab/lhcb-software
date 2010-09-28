@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!=========================  VeloPixDAQ v1r3 2010-09-28 =======================
 ! 2010-09-22 - Victor Coco
  - Replace hardcoded container location by proper location definition
 
