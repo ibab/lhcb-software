@@ -95,7 +95,7 @@ void CopyParticle2TisTosDecisions::executeLocation(const std::string& particleLo
   
   DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
 
-  outputLocation += "/Particle2LHCbIDMap";
+  outputLocation += "/Particle2TisTos";
 
   outputLocation = this->outputTESLocation( outputLocation );
 
