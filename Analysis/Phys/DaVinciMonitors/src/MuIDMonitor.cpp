@@ -431,7 +431,7 @@ StatusCode MuIDMonitor::execute() {
 	    }
 	  }//If pmuid
 	  
-	  plot1D ( m_region, nameD+"R_illu",tit+" Region illumination",0.5, 4.5, 4 );
+	  plot1D ( m_region, nameD+"R_illu",tit+" Region illumination",-0.5, 3.5, 4 );
 	  
 	  eEcal =  protop->info( LHCb::ProtoParticle::CaloEcalE , -1 * Gaudi::Units::GeV  );
 	  eHcal =  protop->info( LHCb::ProtoParticle::CaloHcalE , -1 * Gaudi::Units::GeV  );
