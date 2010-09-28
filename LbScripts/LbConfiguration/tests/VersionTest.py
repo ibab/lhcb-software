@@ -3,6 +3,7 @@
 from LbConfiguration.Version import CoreVersion, NotAVersion
 from LbConfiguration.Version import sortVersions, extractVersion, sortStrings
 from LbConfiguration.Version import LCGVersion
+from LbConfiguration.Version import genericSortStrings
 
 import unittest
 
@@ -119,6 +120,16 @@ class VersionTestCase(unittest.TestCase):
         self.assertEqual(extractVersion(v1, versiontype=LCGVersion).name(), "56a")
         v2 = "CGCMT_58.tar.gz"
         self.assertEqual(extractVersion(v2, versiontype=LCGVersion).name(), "58")
+        
+    def testGenericSort(self):
+        vlist = ["v1r0","v1r1","v0r1","v2r0","v1r0p1","v1r0p0"]
+        self.assertTrue(genericSortStrings(vlist) == ["v0r1", "v1r0","v1r0p0","v1r0p1", "v1r1", "v2r0"])
+        vlist2 = ["GAUDI_v1r0","GAUDI_v1r1","GAUDI_v0r1","GAUDI_v2r0","GAUDI_v1r0p1","GAUDI_v1r0p0"]
+        self.assertTrue(genericSortStrings(vlist2) == ["GAUDI_v0r1", "GAUDI_v1r0","GAUDI_v1r0p0","GAUDI_v1r0p1", "GAUDI_v1r1", "GAUDI_v2r0"])
+        vlist3 = ["54aa", "54ab", "56", "57", "54a", "57b", "57c", "54b"]
+        self.assertTrue(genericSortStrings(vlist3) == ["54a", "54aa", "54ab", "54b", "56", "57", "57b", "57c"])
+        vlist4 = ["5.1.4", "5.1.1", "5.1", "5.1.0", "5.2.1", "5", "5.03.1", "5.1.1a", "5.1.010", "5.1.9"]
+        self.assertTrue(genericSortStrings(vlist4) == ["5", "5.1", "5.1.0", "5.1.1", "5.1.1a", "5.1.4", "5.1.9", "5.1.010", "5.2.1", "5.03.1"])
 
         
 if __name__ == '__main__':

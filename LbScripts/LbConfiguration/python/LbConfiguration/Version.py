@@ -26,13 +26,34 @@ cvs_version_style = re.compile(_txt_cvs_version_style)
 class NotAVersion(Exception):
     pass
 
-class CoreVersion:
+class GenericVersion(object):
+    txt_version_style = None
+    version_style = None
+    def __init__(self, vname):
+        self._vname = vname
+        if vname :
+            self._version = stringVersion2Tuple(vname)
+        else :
+            self._version = vname
+        self._patchversion = False
+    def __str__(self):
+        return self._vname
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self._vname)
+    def __cmp__(self, other):
+        return cmp(self._version, other.version())
+    def __hash__(self):
+        return hash(self._vname)
+    def name(self):
+        return self._vname
+    def version(self):
+        return self._version
+
+class CoreVersion(GenericVersion):
     txt_version_style = _txt_version_style
     version_style = re.compile("%s$" % _txt_version_style)
     def __init__(self, vname):
-        self._vname = vname
-        self._version = None
-        self._patchversion = False
+        super(CoreVersion, self).__init__(vname)
         try :
             m = self.version_style.match(self._vname)
         except TypeError:
@@ -49,26 +70,12 @@ class CoreVersion:
             self._version = (a, b, c)
         else :
             raise NotAVersion, vname
-    def __str__(self):
-        return self._vname
-    def __repr__(self):
-        return "%s %s" % (self.__class__, self._vname)
-    def __cmp__(self, other):
-        return cmp(self._version, other.version())
-    def __hash__(self):
-        return hash(self._vname)
-    def name(self):
-        return self._vname
-    def version(self):
-        return self._version
 
-class LCGVersion(CoreVersion):
+class LCGVersion(GenericVersion):
     txt_version_style = _txt_lcg_version_style
     version_style = re.compile("%s$" % _txt_lcg_version_style)
     def __init__(self, vname):
-        self._vname = vname
-        self._version = None
-        self._patchversion = False
+        super(LCGVersion, self).__init__(vname)
         try :
             m = self.version_style.match(self._vname)
         except TypeError:
@@ -102,15 +109,41 @@ def sortVersions(versionlist, versiontype=CoreVersion, safe=False, reverse=False
 
 def extractVersion(strname, versiontype=CoreVersion):
     result = None
-    verstyle = re.compile(versiontype.txt_version_style)
-    m = verstyle.search(strname)
-    if m :
-        result = versiontype(m.group())
+    if versiontype and versiontype.txt_version_style :
+        verstyle = re.compile(versiontype.txt_version_style)
+        m = verstyle.search(strname)
+        if m :
+            result = versiontype(m.group())
+    else :
+        result = GenericVersion(strname)
     return result
 
 
+def stringVersion2Tuple(strver):
+    sl = re.split("(\d+)", strver)
+    nsl = []
+    for i in sl :
+        if i :
+            if re.match("\d+", i) :
+                nsl.append(int(i))
+            else :
+                nsl.append(i)
+    return tuple(nsl)
+
+
+def genericSortStrings(strlist, reverse=False):
+    versionlist = [ (stringVersion2Tuple(s), s) for s in strlist ]
+    versionlist.sort()
+    if reverse :
+        versionlist.reverse()
+    return [ x[1] for x in versionlist ]
+
+
 def sortStrings(strlist, versiontype=CoreVersion, safe=False, reverse=False):
-    versionlist = [ (extractVersion(s, versiontype=versiontype), s) for s in strlist ]
+    if versiontype :
+        versionlist = [ (extractVersion(s, versiontype=versiontype), s) for s in strlist ]
+    else :
+        versionlist = [ (stringVersion2Tuple(s), s) for s in strlist ]
     if safe :
         versionlist = [ t for t in versionlist if t[0]]
     versionlist.sort()
