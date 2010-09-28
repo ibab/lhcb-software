@@ -102,9 +102,10 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     std::string paramFileName;
     config >> paramFileName;
     paramFileName = paramRoot+paramFileName;
-    std::ifstream ftest;
-    ftest.open(paramFileName.c_str());
-    if ( !ftest.is_open() ) return Error( "Network parameters file cannot be opened" );
+    std::ifstream ftest(paramFileName.c_str());
+    if ( !ftest.is_open() ) return Error( "Network parameters file '" + 
+                                          paramFileName + "' cannot be opened" );
+    ftest.close();
 
     // Read the list of inputs
     std::string input;
