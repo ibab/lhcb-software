@@ -35,6 +35,7 @@ alg.ConditionsDependencies = ["/dd/Conditions/Online/HeartBeatTest/Condition1 ->
 UpdateManagerSvc().OutputLevel = DEBUG
 MessageSvc().setDebug += ["UpdateManagerSvc::Item"]
 </text></argument>
+<argument name="exit_code"><integer>4</integer></argument>
 <argument name="validator"><text>
 outputlines = [ l.rstrip() for l in stdout.splitlines() ]
 

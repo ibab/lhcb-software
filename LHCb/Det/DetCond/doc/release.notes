@@ -4,7 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!===================== Det/DetCond v12r15 2010-09-27 =========================
+!===================== Det/DetCond v12r15 2010-09-28 =========================
+! 2010-09-28 - Marco Clemencic
+ - Updated tests to expect the return codes of Gaudi (v21r11).
+
 ! 2010-09-24 - Marco Clemencic
  - Added a test to verify that a failure to load a condition in the
    UpdateManagerSvc is properly reported.

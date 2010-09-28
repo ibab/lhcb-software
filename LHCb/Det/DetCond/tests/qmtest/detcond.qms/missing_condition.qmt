@@ -23,6 +23,7 @@ ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 2)
 #MessageSvc(OutputLevel = 1)
 
 </text></argument>
+<argument name="exit_code"><integer>4</integer></argument>
 <argument name="validator"><text>
 ## Find the error message about the problematic condition
 import re
