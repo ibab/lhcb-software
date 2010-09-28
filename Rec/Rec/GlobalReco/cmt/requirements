@@ -11,13 +11,14 @@ include_path none
 
 # Used packages.
 #============================================================================
-use   GaudiAlg         v*
-use   RecEvent         v*    Event
-use   TrackInterfaces  v*    Tr
-use   CaloInterfaces   v*    Calo
-use   CaloUtils        v*    Calo
-use   CaloDet          v*    Det
-use   Relations        v*    Kernel
+use   GaudiAlg            v*
+use   RecEvent            v*    Event
+use   TrackInterfaces     v*    Tr
+use   CaloInterfaces      v*    Calo
+use   CaloUtils           v*    Calo
+use   CaloDet             v*    Det
+use   Relations           v*    Kernel
+use   ChargedProtoANNPID  v*    Rec
 
 # Component library building rule
 #============================================================================

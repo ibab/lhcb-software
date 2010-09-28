@@ -2,10 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoParticleTupleAlg.cpp
  *
- * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
- *
- * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.10 2010-03-15 16:47:36 jonrob Exp $
+ * Implementation file for algorithm ChargedProtoParticleTupleAlg
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -142,9 +139,13 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "CaloChargedEcal",   proto->info ( LHCb::ProtoParticle::CaloChargedEcal, 0 ) );
     sc = sc && tuple->column( "CaloSpdE",   proto->info ( LHCb::ProtoParticle::CaloSpdE,   0 ) );
     sc = sc && tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE,   0 ) );
+    sc = sc && tuple->column( "CaloEcalChi2", proto->info ( LHCb::ProtoParticle::CaloEcalChi2, 0 ) );
+    sc = sc && tuple->column( "CaloClusChi2", proto->info ( LHCb::ProtoParticle::CaloClusChi2, 0 ) );
+    sc = sc && tuple->column( "CaloBremChi2", proto->info ( LHCb::ProtoParticle::CaloBremChi2, 0 ) );
+    sc = sc && tuple->column( "CaloPrsE",   proto->info ( LHCb::ProtoParticle::CaloPrsE,   0 ) );
     sc = sc && tuple->column( "CaloEcalE",  proto->info ( LHCb::ProtoParticle::CaloEcalE,  0 ) );
     sc = sc && tuple->column( "CaloHcalE",  proto->info ( LHCb::ProtoParticle::CaloHcalE,  0 ) );
-    sc = sc && tuple->column( "CaloTrajectoryL", proto->info ( LHCb::ProtoParticle::CaloTrajectoryL,  0 ) );
+    sc = sc && tuple->column( "CaloTrajectoryL", proto->info ( LHCb::ProtoParticle::CaloTrajectoryL, 0 ) );
     sc = sc && tuple->column( "EcalPIDe",   proto->info ( LHCb::ProtoParticle::EcalPIDe,  0 ) );
     sc = sc && tuple->column( "HcalPIDe",   proto->info ( LHCb::ProtoParticle::HcalPIDe,  0 ) );
     sc = sc && tuple->column( "PrsPIDe",    proto->info ( LHCb::ProtoParticle::PrsPIDe,   0 ) );
@@ -160,7 +161,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "CombDLLp",   proto->info ( LHCb::ProtoParticle::CombDLLp,  0 ) );
 
     // VeloCharge
-    sc = sc && tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge,  0 ) );
+    sc = sc && tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge, 0 ) );
 
     // MCParticle information
     const LHCb::MCParticle * mcPart = m_truth->mcParticle( track );

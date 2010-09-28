@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleAddEcalInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddEcalInfo.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */

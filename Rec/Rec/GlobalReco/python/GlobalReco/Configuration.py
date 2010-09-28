@@ -27,7 +27,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                      ,"Upstream"   : { "Chi2Cut" : [0,10] }
                                      ,"Downstream" : { "Chi2Cut" : [0,10] }
                                    }
-                  ,"AddANNPIDInfo" : False
+                  ,"AddANNPIDInfo" : True
                   }
 
     ## Configure a track selector with the given name
@@ -111,16 +111,16 @@ class GlobalRecoConf(LHCbConfigurableUser):
             combine.OutputLevel = level
             neutral.OutputLevel = level
 
-        # DEV stuff
+        # ANN PID
         if self.getProp("AddANNPIDInfo") :
-            from Configurables import ChargedProtoANNPIDAlg
+            from Configurables import ANNGlobalPID__ChargedProtoANNPIDAlg
             trackTypes = ["Long","Downstream","Upstream"]
             pidTypes   = ["Electron","Muon","Pion","Kaon","Proton"]
             nnpidseq = GaudiSequencer("ANNGPIDSeq")
             cseq.Members += [nnpidseq]
             for track in trackTypes :
                 for pid in pidTypes :
-                    nn = ChargedProtoANNPIDAlg("ANNGPID"+track+pid)
+                    nn = ANNGlobalPID__ChargedProtoANNPIDAlg("ANNGPID"+track+pid)
                     nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"
                     if self.isPropertySet("OutputLevel") :
                         nn.OutputLevel = self.getProp("OutputLevel")
@@ -136,6 +136,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
     __slots__ = { "Sequencer"   : None    # The sequencer to add monitors to
                  ,"OutputLevel" : INFO    # The printout level to use
                  ,"Context":    "Offline" # The context within which to run
+                 ,"AddANNPIDInfo" : False
                   }
 
     ## Apply the configuration to the given sequence
@@ -169,11 +170,12 @@ class GlobalRecoChecks(LHCbConfigurableUser):
         NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
 
         # ANN training ntuple
-        #from Configurables import ( ChargedProtoANNPIDTrainingTuple )
-        #annTuple = ChargedProtoANNPIDTrainingTuple("ChargedProtoPIDANNTuple")
-        #annTuple.NTupleLUN = "ANNPIDTUPLE"
-        #protoSeq.Members += [annTuple]
-        #NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
+        if self.getProp("AddANNPIDInfo") :
+            from Configurables import ANNGlobalPID__ChargedProtoANNPIDTrainingTuple
+            annTuple = ANNGlobalPID__ChargedProtoANNPIDTrainingTuple("ChargedProtoPIDANNTuple")
+            annTuple.NTupleLUN = "ANNPIDTUPLE"
+            protoSeq.Members += [annTuple]
+            NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
 
         # Set output levels
         if self.isPropertySet("OutputLevel"):

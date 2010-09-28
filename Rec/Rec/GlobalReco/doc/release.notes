@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-09-28 - Chris Jones
+ - Enable by default the running of the new ANN PID algorithms
+
 !========================== GlobalReco v6r33 2010-09-28 =====================
 ! 2010-09-24 - Chris Jones
  - Update the ProtoParticle monitor to produce the efficiency plots seperately
