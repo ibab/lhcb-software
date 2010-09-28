@@ -6,13 +6,20 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-09-28 - Greig Cowan
- - New stripping test sample
+ - New stripping test samples
         Events: ~2M
-        Run: 79467
-        mu: ~2.08
-        TCK: 0x001D0030
+        Run: 79646
+        mu: ~2.23
+        TCK: 0x001F0029 (track+3.6)
         Magnet: Up
-        http://lbrundb.cern.ch/rundb/run/79467/
+        http://lbrundb.cern.ch/rundb/run/79646/
+
+        Events: ~2M
+        Run: 79647
+        mu: ~2.08
+        TCK: 0x001D0030 (all+2.6)
+        Magnet: Up
+        http://lbrundb.cern.ch/rundb/run/79647/
 
 ! 2010-09-28 - Vanya Belyaev
 

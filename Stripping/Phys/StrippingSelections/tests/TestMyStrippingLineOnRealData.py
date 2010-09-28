@@ -36,4 +36,5 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py")
