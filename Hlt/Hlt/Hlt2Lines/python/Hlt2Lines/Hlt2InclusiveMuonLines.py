@@ -28,18 +28,24 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'SingleMuonPt'        : 1000      # MeV
                   ,'SingleMuonIP'        : 0.080     # mm
                   ,'SingleMuonHighPt'    : 10000     # MeV
-                  ,'MuTrackMuPt'         : 1000      # MeV
+                  # Mu+track cuts 
+                  ,'MuTrackMuPt'         : 800       # MeV
                   ,'MuTrackTrPt'         : 600       # MeV
-                  ,'MuTrackMuIP'         : 0.080     # mm
-                  ,'MuTrackTrIP'         : 0.080     # mm
+                  ,'MuTrackTrChi2'       : 5.0       # dimensionless
+                  ,'MuTrackChi2'         : 15.0      # dimensionless
+                  ,'MuTrackMuIPChi2'     : 9.0       # dimensionless
+                  ,'MuTrackTrIPChi2'     : 9.0       # dimensionless
                   ,'MuTrackDoca'         : 0.200     # mm
-                  ,'MuTrackDz'           : 1.0       # mm
-                  ,'MuTrackMass'         : 2000      # MeV
-                  ,'MuTrackPoint'        : 0.4       # dimensionless
-                  ,'MuTrackNoIPMuPt'    : 1600      # MeV
-                  ,'MuTrackNoIPTrPt'    : 400       # MeV
-                  ,'MuTrackNoIPDoca'    : 0.100     # mm
-                  ,'MuTrackNoIPMass'    : 2900      # MeV
+                  ,'MuTrackFDChi2'       : 64.0      # dimensionless
+                  ,'MuTrackMass'         : 1000      # MeV
+                  ,'MuTrackSumPt'        : 2200      # MeV
+                  ,'MuTrackCorMass'      : 7000.0    # MeV
+                  ,'MuTrackDIRA'         : 0.995       # dimensionless
+                  # Mu+track no IP cuts
+                  ,'MuTrackNoIPMuPt'    : 1600       # MeV
+                  ,'MuTrackNoIPTrPt'    : 400        # MeV
+                  ,'MuTrackNoIPDoca'    : 0.100      # mm
+                  ,'MuTrackNoIPMass'    : 2900       # MeV
                   }
     
     
@@ -58,11 +64,23 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         decayDescB2MuTrack = ["[B0 -> mu+ pi-]cc","[B0 -> mu+ pi+]cc"]
         decayDescB2MuTrackNoIP = ["[B0 -> mu+ pi-]cc"]
         
-        Doca = "(AMAXDOCA('')<"+str(self.getProp('MuTrackDoca'))+"*mm)"
-        Dz = "(BPVVDZ>"+str(self.getProp('MuTrackDz'))+"*mm)"
-        Mass = "(AM>"+str(self.getProp('MuTrackMass'))+"*MeV)"
-        Point = "(BPVTRGPOINTINGWPT<"+str(self.getProp('MuTrackPoint'))+")" 
-
+        MuTrackMuCut = "(TRCHI2DOF<"+str(self.getProp('MuTrackTrChi2'))+")&" \
+                       "(PT>"+str(self.getProp('MuTrackMuPt'))+"*MeV)&" \
+                       "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('MuTrackMuIPChi2'))+")"
+        
+        MuTrackTrCut = "(TRCHI2DOF<"+str(self.getProp('MuTrackTrChi2'))+")&" \
+                       "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV)&" \
+                       "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('MuTrackTrIPChi2'))+")"
+        
+        MuTrackComCut = "(AM>"+str(self.getProp('MuTrackMass'))+"*MeV)&" \
+                        "(ASUM(PT)>"+str(self.getProp('MuTrackSumPt'))+")&" \
+                        "(AMAXDOCA('')<"+str(self.getProp('MuTrackDoca'))+"*mm)"
+        
+        MuTrackCut = "(VFASPF(VCHI2)<"+str(self.getProp('MuTrackChi2'))+")&" \
+                     "(BPVVDCHI2>"+str(self.getProp('MuTrackFDChi2'))+")&" \
+                     "(BPVDIRA>"+str(self.getProp('MuTrackDIRA'))+")&" \
+                     "(MCOR<"+str(self.getProp('MuTrackCorMass'))+"*MeV)"
+        
         DocaNoIP = "(AMAXDOCA('')<"+str(self.getProp('MuTrackNoIPDoca'))+"*mm)"
         MassNoIP = "(AM>"+str(self.getProp('MuTrackNoIPMass'))+"*MeV)"
         
@@ -123,15 +141,20 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         #####################################################
         #    Selections for inclusive decays with mu + track 
         #####################################################
+
+        _preambulo = [ "PTRANS = P*sqrt( 1-BPVDIRA**2 )",
+                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS" ]
+
         
         combine = Hlt2Member( CombineParticles
                               , "CombineB"
                               , DecayDescriptors = decayDescB2MuTrack
-                              , DaughtersCuts = { "mu+" : "(PT>"+str(self.getProp('MuTrackMuPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackMuIP'))+")",
-                                                  "pi+" : "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackTrIP'))+")"}
-                              , CombinationCut =  Doca+" & "+Mass 
-                              , MotherCut = Dz+" & "+ Point
+                              , DaughtersCuts = { "mu+" : MuTrackMuCut , 
+                                                  "pi+" : MuTrackTrCut }
+                              , CombinationCut = MuTrackComCut
+                              , MotherCut = MuTrackCut  
                               , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
+                              , Preambulo = _preambulo
                               )
         line = Hlt2Line('MuTrack'
                         , prescale = self.prescale 
