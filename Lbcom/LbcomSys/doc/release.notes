@@ -6,6 +6,37 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v9r6>2010-08-26 LbcomSys v9r7</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r6
+
+- Modified packages:
+  Hlt/HltDAQ v2r3, L0/L0MuonMonitor v2r1, Rich/RichDAQ v3r29,
+  VeloPix/VeloPixDAQ v1r3
+
+- In Hlt/HltDAQ v2r3:
+  . Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
+
+- In L0/L0MuonMonitor v2r1:
+  . L0MuonMonitorInput : 
+    o check if muon read out is saturated before processing events
+    o add hit maps of bad channels (if FullDetail is enabled)
+    o write out list list of bad channels at the end of the job (if Offline 
+      and FullDetail are enabled)
+  . L0MuonMuonComp :
+    o check if muon read out is saturated before processing events
+  . L0MuonMonitorData : 
+    o protect FAILURE in case of missing container
+  . L0MuonMoniError : 
+    o don't fill histo per quarter for PU bcid errors
+    o report tell1 errors (type J2 and K2) in the summary plot.
+
+- In Rich/RichDAQ v3r29:
+  . Suppress unneccessary warning message during initialisation of the 
+    decoding tool
+
+- In VeloPix/VeloPixDAQ v1r3
+  . Replace hardcoded container location by proper location definition
+
 </PRE><H1><A NAME=v9r6>2010-08-26 LbcomSys v9r6</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
 

@@ -1,5 +1,5 @@
 package LbcomSys
-version v9r6
+version v9r7
 
 branches doc cmt tests
 
@@ -11,20 +11,20 @@ branches doc cmt tests
 use Associators       v3r7    Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r10p1 Calo      # In SVN. Olivier Deschamps
-use CaloTools         v5r16p1 Calo      # In SVN. Olivier Deschamps
+use CaloAssociators   v6r10p1 Calo      # Olivier Deschamps
+use CaloTools         v5r16p1 Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r2    DAQ       # In SVN. Olivier Deschamps
+use DAQMonitors       v1r2    DAQ       # Olivier Deschamps
 
 # HLT
-use HltDAQ            v2r2  Hlt       # Tomasz Skwarnicki
+use HltDAQ            v2r3    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r2p1 L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v10r8   L0        # Olivier Deschamps   
 use L0Muon            v9r1p1  L0        # Andrei Tsarogorodtsev, Julien Cogan
-use L0MuonMonitor     v2r0p1  L0        # Julien Cogan
+use L0MuonMonitor     v2r1    L0        # Julien Cogan
 use PuVeto            v7r7p1  L0        # Serena Oggero
 
 # Muon
@@ -36,7 +36,7 @@ use OTMonitor         v3r2p1  OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r2    Rich      # Chris Jones
-use RichDAQ           v3r28   Rich      # Chris Jones
+use RichDAQ           v3r29   Rich      # Chris Jones
 use RichMCMonitors    v1r7p2  Rich      # Chris Jones
 use RichMCTools       v3r13   Rich      # Chris Jones
 use RichTools         v2r30   Rich      # Chris Jones
@@ -60,8 +60,8 @@ use VeloSimulation    v3r7    Velo      # Tomasz Szumlak
 use VeloTools         v3r5    Velo      # Tomasz Szumlak
 
 # VeloPix
-use VeloPixDAQ        v1r2p1  VeloPix  # Marcin Kucharczyk
-use VeloPixTools      v1r0p1  VeloPix  # In SVN. Victor Coco
+use VeloPixDAQ        v1r3    VeloPix   # Marcin Kucharczyk
+use VeloPixTools      v1r0p1  VeloPix   # Victor Coco
 
 # Declare this as a container package
 apply_pattern container_package
