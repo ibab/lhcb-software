@@ -100,9 +100,9 @@ use OTDAQ                 v7r8    OT      # Wouter Hulsbergen
 use DaVinciInterfaces     v2r5    Phys    # Juan Palacios
 use DaVinciTypes          v2r0    Phys    # Juan Palacios
 use LoKiCore              v10r4   Phys    # Ivan Belyaev
-use LoKiGen               v9r1    Phys    # Ivan Belyaev
+use LoKiGen               v9r2    Phys    # Ivan Belyaev
 use LoKiHlt               v3r2    Phys    # Ivan Belyaev
-use LoKiMC                v9r1    Phys    # Ivan Belyaev
+use LoKiMC                v9r2    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r2    Phys    # Ivan Belyaev
 
 use RichKernel            v7r38   Rich    # Chris Jones

@@ -18,7 +18,8 @@ This version uses Gaudi v21r11 and LCG_58f
     Event/TrackEvent v5r8, IO/IOExample v3r5, GaudiConf v13r7, 
     Kernel/LHCbAlgs v2r35, Kernel/LHCbKernel v12r5, Kernel/LHCbMath v3r20,
     Kernel/XMLSummaryBase v1r2, Kernel/XMLSummaryKernel v1r0p2, 
-    Phys/LoKiCore v10r4, ST/STKernel v2r4, Tr/TrackInterfaces v4r16
+    Phys/LoKiCore v10r4, Phys/LoKiGen v9r2, Phys/LoKiMC v9r2, ST/STKernel v2r4,
+    Tr/TrackInterfaces v4r16
 
 - In Calo/CaloInterfaces v7r19
   . ICaloHypoEstimator/ITrack2Calo : add virtual method + increment interface ID
@@ -121,6 +122,9 @@ This version uses Gaudi v21r11 and LCG_58f
 - In Phys/LoKiCore v10r4
   . remove usage of obsolete python module 'sets'
   . decouple LoKiCore.functions and LoKiCore.decorators 
+
+- In Phys/LoKiGen v9r2, Phys/LoKiMC v9r2
+  . fix for new module in LoKiCore
 
 - In ST/STKernel v2r4
   . Fix warnings from the INTEL compiler
