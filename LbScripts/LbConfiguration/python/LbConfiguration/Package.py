@@ -28,6 +28,7 @@ package_names = ['XmlDDDB',
                  'L0TCK',
                  'HltTCK',
                  'AppConfig',
+                 'ChargedProtoANNPIDParam',
                  'Emacs',
                  'eclipse',
                  'jre']
@@ -204,6 +205,8 @@ HltTCK.setHat("TCK")#IGNORE:E0602
 HltTCK.setProject("DBASE")#IGNORE:E0602
 
 AppConfig.setProject("DBASE")#IGNORE:E0602
+
+ChargedProtoANNPIDParam.setProject("PARAM")#IGNORE:E0602
 
 Emacs.setHat("Tools")#IGNORE:E0602
 Emacs.setProject("TOOLS")#IGNORE:E0602

@@ -1,5 +1,6 @@
 2010-09-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Package.py: added ChargedProtoANNPIDParam to the list of PARAM packages.
 	* python/LbConfiguration/Version.py: added generic version sorting. This relies on the splitting of
 	the string holding the version into alphabetic and numeric token which then are placed in a tuple. This
 	works for any version type (LHCb, LCG, ROOT) except for the extended LHCb version with the "-pre" suffix.
