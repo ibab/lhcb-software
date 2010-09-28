@@ -1,0 +1,25 @@
+#============================================================================
+# Created    : 2010-03-09
+# Maintainer : Chris Jones
+#============================================================================
+package           ChargedProtoANNPID
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages.
+#============================================================================
+use  GaudiAlg                  v*
+use  RecEvent                  v*   Event
+use  neurobayes_expert         v*   LCG_Interfaces 
+use  ChargedProtoANNPIDParam   v* 
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          ChargedProtoANNPID    ../src/*.cpp 
+apply_pattern    component_library library=ChargedProtoANNPID

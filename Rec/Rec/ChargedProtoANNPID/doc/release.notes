@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/ChargedProtoANNPID
+! Responsible : Chris Jones
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2010-09-28 - Chris Jones
+ - First import. New PID package that adds ANN information to each 
+   ProtoParticle, using the NeuroBayes package.
