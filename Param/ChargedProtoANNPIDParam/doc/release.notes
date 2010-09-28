@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : PARAM/ProtoParticleANNPIDParam
+! Responsible : Chris Jones
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2010-09-28 - Chris Jones
+ - First version. Includes preliminary tuning based on MC2010 data
+
