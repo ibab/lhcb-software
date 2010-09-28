@@ -17,10 +17,10 @@
 ! 2010-09-28 - Vanya Belyaev
 
  - LoKiGen/trees.py
-   fix for new module in LoKiCore
+     fix for new module in LoKiCore
 
  - cmt/requirements
-   version incrment to v9r2 
+     version incrment to v9r2 
 
 !========================== LoKiGen v9r1 2010-06-18 ===========================
 ! 2010-05-30 - Vanya Belyaev
