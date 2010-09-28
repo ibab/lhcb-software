@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r29 2010-09-28 =========================
 ! 2010-08-30 - Chris Jones
  - Suppress unneccessary warning message during initialisation of the 
    decoding tool
