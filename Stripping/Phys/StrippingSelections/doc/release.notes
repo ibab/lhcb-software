@@ -5,6 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-28 - Greig Cowan
+ - New stripping test sample
+        Events: ~2M
+        Run: 79467
+        mu: ~2.08
+        TCK: 0x001D0030
+        Magnet: Up
+        http://lbrundb.cern.ch/rundb/run/79467/
+
 ! 2010-09-28 - Vanya Belyaev
 
  - StrippingPromtCharm.py
