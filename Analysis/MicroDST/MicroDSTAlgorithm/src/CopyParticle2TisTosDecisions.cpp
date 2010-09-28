@@ -1,4 +1,3 @@
-// $Id: CopyParticle2LHCbIDs.cpp,v 1.2 2010-08-20 09:47:07 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -6,42 +5,44 @@
 #include <GaudiKernel/ObjectVector.h>
 // LHCb 
 #include "Kernel/ITriggerTisTos.h" 
-#include "Kernel/LHCbID.h"
 #include "Event/Particle.h"
+#include "Event/HltDecReports.h"
 // DaVinci
 #include "Kernel/DaVinciStringUtils.h"
-#include "Kernel/Particle2LHCbIDs.h"
+#include "Kernel/Particle2UnsignedInts.h"
 // local
-#include "CopyParticle2LHCbIDs.h"
+#include "CopyParticle2TisTosDecisions.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CopyParticle2LHCbIDs
+// Implementation file for class : CopyParticle2TisTosDecisions
 //
-// 2010-08-18 : Juan Palacios
+// 2010-09-28 : Juan Palacios
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyParticle2LHCbIDs );
+DECLARE_ALGORITHM_FACTORY( CopyParticle2TisTosDecisions );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CopyParticle2LHCbIDs::CopyParticle2LHCbIDs( const std::string& name,
-                                            ISvcLocator* pSvcLocator)
-  : MicroDSTAlgorithm ( name , pSvcLocator )
+CopyParticle2TisTosDecisions::CopyParticle2TisTosDecisions( const std::string& name,
+                                                            ISvcLocator* pSvcLocator)
+  : MicroDSTAlgorithm ( name , pSvcLocator ),
+  m_decReports(0),
+  m_decReportsLocation(LHCb::HltDecReportsLocation::Default)
 {
-
+  declareProperty("HltDecReportsLocation", m_decReportsLocation);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CopyParticle2LHCbIDs::~CopyParticle2LHCbIDs() {} 
+CopyParticle2TisTosDecisions::~CopyParticle2TisTosDecisions() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode CopyParticle2LHCbIDs::initialize() {
+StatusCode CopyParticle2TisTosDecisions::initialize() {
   StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -56,17 +57,26 @@ StatusCode CopyParticle2LHCbIDs::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CopyParticle2LHCbIDs::execute() {
+StatusCode CopyParticle2TisTosDecisions::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+
+  m_decReports = get<LHCb::HltDecReports>(m_decReportsLocation);
+
+  if (0==m_decReports) {
+    return Warning("No LHCb::HltDecReports in " +
+            m_decReportsLocation,
+            StatusCode::SUCCESS, 
+            0);
+  }
 
   typedef std::vector<std::string>::const_iterator stringIter;
   stringIter iLoc = this->inputTESLocations().begin();
   stringIter locEnd = this->inputTESLocations().end();
 
       
-  for ( ; iLoc != locEnd; ++iLoc) {
+  for (; iLoc != locEnd; ++iLoc) {
     
     const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
 
@@ -78,7 +88,7 @@ StatusCode CopyParticle2LHCbIDs::execute() {
 
 }
 //=============================================================================
-void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation) 
+void CopyParticle2TisTosDecisions::executeLocation(const std::string& particleLocation) 
 {
 
   std::string outputLocation = particleLocation;
@@ -111,9 +121,9 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
     return;
   }
 
-  DaVinci::Map::Particle2LHCbIDs* p2LHCbID = new DaVinci::Map::Particle2LHCbIDs;
+  DaVinci::Map::Particle2UnsignedInts* p2TisTos = new DaVinci::Map::Particle2UnsignedInts;
 
-  put(p2LHCbID, outputLocation);
+  put(p2TisTos, outputLocation);
 
   LHCb::Particle::Range::const_iterator iPart = particles.begin();
   LHCb::Particle::Range::const_iterator iPartEnd = particles.end();
@@ -121,21 +131,33 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
   for ( ; iPart != iPartEnd; ++iPart) {
     const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(*iPart);
     if (clone) {
+
       m_iTisTos->setOfflineInput(); 
       m_iTisTos->addToOfflineInput(**iPart);
-      std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
-      p2LHCbID->insert(clone, signalHits);
+
+      std::vector<std::string> decNames = m_decReports->decisionNames();
+      std::vector<unsigned int> decisions;
+
+      std::vector<std::string>::const_iterator iName = decNames.begin();
+      std::vector<std::string>::const_iterator nameEnd = decNames.end();
+
+      for ( ; iName != nameEnd; ++ iName) {
+        decisions.push_back(m_iTisTos->tisTosSelection(*iName));
+      }
+
+      p2TisTos->insert(clone, decisions);
+
     }
   }
 
   // test that we find the stuff.
   
-  DaVinci::Map::Particle2LHCbIDs* test = get<DaVinci::Map::Particle2LHCbIDs>(outputLocation);
+  DaVinci::Map::Particle2UnsignedInts* test = get<DaVinci::Map::Particle2UnsignedInts>(outputLocation);
   if (test) {
     debug() << "Test passed, found P2LHCbID map with " 
             << test->size() <<" entries!" << endmsg;
     if (!test->empty()) {
-      for (DaVinci::Map::Particle2LHCbIDs::const_iterator iMap = test->begin();
+      for (DaVinci::Map::Particle2UnsignedInts::const_iterator iMap = test->begin();
            iMap!=test->end();
            ++iMap) {
         debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
@@ -153,7 +175,7 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode CopyParticle2LHCbIDs::finalize() {
+StatusCode CopyParticle2TisTosDecisions::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 

@@ -65,11 +65,11 @@ StatusCode CopyParticle2PVMap::execute() {
 
 
   typedef std::vector<std::string>::const_iterator stringIter;
-  stringIter locBegin = this->inputTESLocations().begin();
+  stringIter iLoc = this->inputTESLocations().begin();
   stringIter locEnd = this->inputTESLocations().end();
 
       
-  for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
+  for ( ; iLoc != locEnd; ++iLoc) {
     
     const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
 
