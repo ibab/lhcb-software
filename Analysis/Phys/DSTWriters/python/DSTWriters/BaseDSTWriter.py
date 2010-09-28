@@ -5,7 +5,6 @@ contents of the input DST
 __version__ = "$Id: BaseDSTWriter.py,v 1.12 2010-08-12 11:15:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
-from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 class BaseDSTWriter(ConfigurableUser) :

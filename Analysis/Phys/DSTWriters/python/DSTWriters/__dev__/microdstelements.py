@@ -19,7 +19,8 @@ __all__ = ( 'CloneRecHeader',
             'CloneHltDecReports',
             'CloneBackCat',
             'CloneRawBanks',
-            'CloneLHCbIDs')
+            'CloneLHCbIDs',
+            'CloneTisTosInfo')
 
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
@@ -43,15 +44,18 @@ class CloneODIN(MicroDSTElement) :
 
 class CloneParticleTrees(MicroDSTElement) :
 
-    def __init__(self, branch='', copyProtoParticles = True) :
+    def __init__(self, branch='', copyProtoParticles = True, pack = False) :
         MicroDSTElement.__init__(self, branch)
         self.copyPP = copyProtoParticles
+        self.pack = pack
 
     def __call__(self, sel) :
         from Configurables import (CopyParticles,
                                    VertexCloner,
                                    ParticleCloner,
-                                   ProtoParticleCloner )
+                                   ProtoParticleCloner,
+                                   DataPacking__Pack_LHCb__ParticlePacker_,
+                                   DataPacking__Pack_LHCb__VertexPacker_   )
         cloner = CopyParticles(self.personaliseName(sel,
                                                     'CopyParticles'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
@@ -64,7 +68,24 @@ class CloneParticleTrees(MicroDSTElement) :
         confList = ConfigurableList(sel)
         setCloneFilteredParticlesToTrue( confList.flatList() )
 
-        return [cloner]
+        algs =  [cloner]
+        if self.pack :
+            iLoc = 0
+            for loc in self.dataLocations(sel,'') :
+                partPack = DataPacking__Pack_LHCb__ParticlePacker_(self.personaliseName(sel, 'PartPack'+str(iLoc)),
+                                                                   OutputLevel=1)
+                vtxPack = DataPacking__Pack_LHCb__VertexPacker_(self.personaliseName(sel, 'VertexPack'+str(iLoc)),
+                                                                OutputLevel=1)
+                partPack.InputName = self.branch+'/'+loc+'/Particles'
+                partPack.OutputName = self.branch+'/'+loc+'/pParticles'
+                vtxPack.InputName = self.branch+'/'+loc+'/decayVertices'
+                vtxPack.OutputName = self.branch+'/'+loc+'/pVertices'
+                algs += [partPack, vtxPack]
+                iLoc +=1
+
+
+                
+        return algs
 
 class ClonePVs(MicroDSTElement) :
     def __call__(self, sel) :
@@ -246,6 +267,16 @@ class CloneLHCbIDs(MicroDSTElement) :
         from Configurables import CopyParticle2LHCbIDs
         cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
                                                             'CopyLHCbIDs'))
+        cloner.InputLocations = self.dataLocations(sel,"Particles")
+        cloner.OutputLevel=3
+        self.setOutputPrefix(cloner)
+        return [cloner]
+
+class CloneTisTosInfo(MicroDSTElement) :
+    def __call__(self, sel) :
+        from Configurables import CopyParticle2TisTosDecisions
+        cloner =  CopyParticle2TisTosDecisions(self.personaliseName(sel,
+                                                            'CopyTisTos'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
         cloner.OutputLevel=3
         self.setOutputPrefix(cloner)
