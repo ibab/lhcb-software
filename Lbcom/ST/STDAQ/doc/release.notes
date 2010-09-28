@@ -4,7 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-
+!=============================== STDAQ v3r24 2010-09-28 ======================
 ! 2010-09-09 M Needham
  - Fix warnings from the INTEL compiler
  - Add writeMappingToXML to ISTReadoutTool interface
