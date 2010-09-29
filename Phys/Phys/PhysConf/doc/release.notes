@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================== PhysConf v1r8 2010-09-29 ===================
+
 ! 2010-09-29 - Juan Palacios
  - python/PhysConf/Configuration.py
   . Added configureEventTime() function. Configures EventClockSvc to take
