@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Greig Cowan
+ - Fixed Charm stream. Used configuration dictionary in the StreamCharm.py 
+   file so as not to use the default behaviour. I don't want this to be 
+   standard behaviour, configuration parameters of streams should move into
+   an organised StrippingSettings package.
+
 ! 2010-09-29 - Juan Palacios
  - Commented out StreamPromptCharm from StreamCharm, they are not compatible 
    with each other. StreamCharm needs to be updated.
