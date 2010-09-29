@@ -151,9 +151,9 @@ D02K3PiForXSection = StrippingD02K3PiForXSectionConf(
 
 stream.appendLines( StrippingLambdacConf().lines() )
 
-from StrippingSelections.StrippingPromptCharm import Lines as PromptCharmLines
+#from StrippingSelections.StrippingPromptCharm import Lines as PromptCharmLines
 
-stream.appendLines ( PromptCharmLines ) 
+#stream.appendLines ( PromptCharmLines ) 
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
 stream.appendLines( StrippingD2hhConf().lines() )
