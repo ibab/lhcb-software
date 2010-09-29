@@ -19,10 +19,9 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
-        # Get the muon tracks straight from the HLT reconstruction
-        # TODO: check that this does what it is supposed to do
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        from Configurables import CombineParticles, FilterDesktop, NumberOfTracksFilter
+        from Configurables import CombineParticles, FilterDesktop
+        from Configurables import LoKi__VoidFilter as VoidFilter
 
         #-------------------------------------------
         '''
@@ -31,10 +30,9 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         #--------------------------------------------
         
-        FilterNumMuons = NumberOfTracksFilter("FilterNumMuons")
-        FilterNumMuons.MinTracks = 2  
-        FilterNumMuons.MaxTracks = 2  
-        FilterNumMuons.TrackLocations  = [ Hlt2BiKalmanFittedForwardTracking()._trackifiedMuonIDLocation() ]
+        # carefull: we cheat because we know that BiKalmanFittedMuons uses the location below internally...
+        muonLoc =  Hlt2BiKalmanFittedForwardTracking()._trackifiedMuonIDLocation() 
+        FilterNumMuons = VoidFilter("Hlt2diphotonDiMuonFilterNumMuons", Code = "CONTAINS('%s') == 2" % muonLoc )
 
        #------------------------------------------------
         
@@ -54,8 +52,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'diphotonDiMuon'
                        , prescale = self.prescale
-### TODO: where is the input to FilterNumMuons???
-                       , algos = [ FilterNumMuons, BiKalmanFittedMuons, Filter ]
+                       , algos = [ BiKalmanFittedMuons, FilterNumMuons, Filter ]
                        , postscale = self.postscale
                        )
 

@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v6r0 2010-09-29 ===================
+! 2010-09-29 - Gerhard Raven
+ - fix typo in Hlt2CharmLines, fix order in Hlt2diphotonDiMuon
+
 ! 2010-09-29 - Johannes Albrecht
  - add lines for prompt JPsi measurement
 

@@ -811,7 +811,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                           , "D0 -> K+ K-"   
                           , "D0 -> K+ pi-"  , "D0 -> pi+ K-"]
         decayDesc2BodyInc = [  "D0 -> pi+ pi-"
-                          , "D0 -> pi+ pi-"   
+                          , "D0 -> pi+ pi+"   
                           , "D0 -> pi- pi-"]
         decayDesc3Body = ["[D+ -> pi+ pi+ K-]cc", "[D+ -> pi+ K+ K-]cc", "[D+ -> K+ K+ K-]cc", 
                           "[D+ -> K+ K+ pi-]cc" , "[D+ -> pi+ pi+ pi-]cc", "[D+ -> pi+ pi- K+]cc"]
