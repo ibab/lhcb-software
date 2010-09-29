@@ -167,5 +167,5 @@ class PhysConf(LHCbConfigurableUser) :
         self.dataOnDemand()
         self.loki()
         if 'DST' in  self.getProp('InputType').upper() :
-            log.info('Configuring EventClockSvc to use RecHeader')
+            log.info('PhysConf: Configuring EventClockSvc to use RecHeader')
             configureEventTime()
