@@ -6,6 +6,12 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - Marco Musy
+  . modified kaon oppo cuts to adapt to latest data in /root,
+  cuts are always accessible through properties.
+  (p,pt,IPPU)
+
+
 ! 2010-09-27 - Marco Musy
   . dropped cuts on ghost likelihood and loosen chi2 cut to 5     
     for all the taggers in /root

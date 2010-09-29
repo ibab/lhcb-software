@@ -171,7 +171,7 @@ void taginit() {
   declareProperty( "Nmax",    Nmax    = -1 ); 
   declareProperty( "checkDV", checkDV =  0 );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
+  declareProperty( "IPPU_cut",     m_IPPU_cut    = 4.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 

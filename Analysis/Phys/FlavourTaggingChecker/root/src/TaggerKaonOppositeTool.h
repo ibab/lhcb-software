@@ -38,8 +38,6 @@ class TaggerKaonOppositeTool : public GenericTool {
   double m_IP_cut_kaon;
   double m_lcs_kaon;
   double m_ghost_cut;
-  double m_IP_kl ;
-  double m_IP_ku;
   double m_ProbMin_kaon;
 
   NNetTool_MLP nnet;

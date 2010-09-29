@@ -52,6 +52,11 @@ tag.BTaggingTool.OutputLevel = 3
 
 #tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
 
+
+#Import cuts for MC2010
+#importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
+
+
 ########################################################################
 # Flavour tagging Checker:
 
