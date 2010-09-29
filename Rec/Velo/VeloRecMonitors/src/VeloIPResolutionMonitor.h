@@ -10,7 +10,7 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 
-#include <Event/RecVertex.h>
+#include "Event/RecVertex.h"
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -100,9 +100,9 @@ namespace Velo
     void distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
 
     void rebinHisto( TH1D*, int nbins=0 ) ;
-    void rebinHistos( TH1D** , int , int nbins=0 ) ;
+    void rebinHistos( std::vector<TH1D*>, int nbins=0 ) ;
 
-    void getBinsFromTH2D( TH2D* h, std::string id, std::string title, std::string unit, TH1D** out ) ;
+    void getBinsFromTH2D( TH2D* h, std::string id, std::string title, std::string unit, std::vector<TH1D*>& out ) ;
     void saveMeanAndSigmaProfiles( TH2D* ) ;
     void saveMeanAndSigmaProfilesAndXProjection( TH2D*, std::string ) ;
     

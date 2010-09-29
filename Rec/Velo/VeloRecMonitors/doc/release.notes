@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - Michael Alexander
+ - Try again to get VeloIPResolutionMonitor to compile on Windows
+ - Remove obsolete histogramming code from VeloIPResolutionMonitorNT
+
 !======================= VeloRecMonitors v2r12 2010-09-27 ===================
 ! 2010-09-27 - Michael Alexander
  - bugfix to VeloIPResolutionMonitor for windows

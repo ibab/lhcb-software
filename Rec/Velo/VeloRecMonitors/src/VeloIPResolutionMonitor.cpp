@@ -146,7 +146,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       
   // Get PVs
   if( !exist<RecVertices>( m_vertexLocation ) ){
-    counter( string("No vertices at ") + m_vertexLocation )++;
+    string counterName = string("No vertices at ") + m_vertexLocation ;
+    counter( counterName )++;
     debug() << "No vertices at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
@@ -158,7 +159,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   // get the tracks
   if( !exist<Tracks>( m_trackLocation ) )
   {
-    counter( string("No tracks at ") + m_trackLocation )++;
+    string counterName = string("No tracks at ") + m_trackLocation ;
+    counter( counterName )++;
     return StatusCode::SUCCESS;
   }
   
@@ -203,12 +205,6 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
 
       m_track = *tr;
       
-      double inversePT = 1./(m_track->pt()/GeV);
-      double phi = m_track->phi()/radian ;
-      double eta = m_track->pseudoRapidity() ;
-      
-      counter("Tracks selected")++;
-
       // refit PV removing current track
       bool isInPV = find( PVtracks.begin(), PVtracks.end(), m_track ) != PVtracks.end() ;        
       if( m_refitPVs && isInPV ){
@@ -229,6 +225,12 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       StatusCode scCalcIPs = 
         calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma, stateAtPVZ, POCAtoPVstate );
       if( scCalcIPs.isFailure() ) continue ;
+
+      counter("Tracks selected")++;
+
+      double inversePT = 1./(m_track->pt()/GeV);
+      double phi = m_track->phi()/radian ;
+      double eta = m_track->pseudoRapidity() ;
       
       if( m_makePlotsVsPhiInBinsOfEta ){
         if( m_track->flag() == Track::Backward ){
@@ -279,26 +281,51 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsInversePT, string("InversePTFrequency-LongTracks") ) ;
+  delete m_h_IPXVsInversePT;
+  
   saveMeanAndSigmaProfiles( m_h_IPYVsInversePT ) ; 
-                               
+  delete m_h_IPYVsInversePT ;
+  
   saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsPhi, string("PhiFrequency-LongTracks") ) ;
+  delete m_h_IPXVsPhi ;
+  
   saveMeanAndSigmaProfiles( m_h_IPYVsPhi ) ;
+  delete m_h_IPYVsPhi ;
+  
   saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsPhi_HighPT, string("PhiFrequency-LongTracks-PTGreaterThan1GeV") ) ;
+  delete m_h_IPXVsPhi_HighPT ;
+  
   saveMeanAndSigmaProfiles( m_h_IPYVsPhi_HighPT ) ; 
-
+  delete m_h_IPYVsPhi_HighPT ;
+  
   if( m_makePlotsVsPhiInBinsOfEta ){
+    
     saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsPhi_Eta45To50, string("PhiFrequency-AllTracks-Eta4.5To5.0") ) ;
+    delete m_h_IPXVsPhi_Eta45To50;
+    
     saveMeanAndSigmaProfiles( m_h_IPYVsPhi_Eta45To50 ) ; 
+    delete m_h_IPYVsPhi_Eta45To50 ;
+    
     saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsPhi_Eta25To30, string("PhiFrequency-AllTracks-Eta2.5To3.0") ) ;
+    delete m_h_IPXVsPhi_Eta25To30 ;
+    
     saveMeanAndSigmaProfiles( m_h_IPYVsPhi_Eta25To30 ) ; 
+    delete m_h_IPYVsPhi_Eta25To30 ;
+    
     saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsPhi_EtaLT0, string("PhiFrequency-AllTracks-EtaLessThan0") ) ;
+    delete m_h_IPXVsPhi_EtaLT0 ;
+    
     saveMeanAndSigmaProfiles( m_h_IPYVsPhi_EtaLT0 ) ; 
+    delete m_h_IPYVsPhi_EtaLT0 ;
+    
   }
   
   saveMeanAndSigmaProfilesAndXProjection( m_h_IPXVsEta, string("EtaFrequency-LongTracks") ) ; 
+  delete m_h_IPXVsEta ;
+  
   saveMeanAndSigmaProfiles( m_h_IPYVsEta ) ; 
-
-
+  delete m_h_IPYVsEta ;
+  
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
@@ -337,7 +364,7 @@ StatusCode Velo::VeloIPResolutionMonitor::calculateIPs( const RecVertex* pv, con
 void Velo::VeloIPResolutionMonitor::distance( const RecVertex* pv, State& state, 
                                                     double& dist, double& sigma, int type=0 )
 {
-  const Gaudi::XYZVector delta ( pv->position() - state.position() ) ;
+  const Gaudi::XYZVector delta = pv->position() - state.position() ;
   double theta = state.slopes().theta()/rad ;
   
   Gaudi::SymMatrix3x3 covpv ( pv->covMatrix() ) ;
@@ -381,18 +408,22 @@ void Velo::VeloIPResolutionMonitor::rebinHisto( TH1D* h, int nbins )
   }
 }
 
-void Velo::VeloIPResolutionMonitor::rebinHistos( TH1D** histos, int nHistos, int nbins )
+void Velo::VeloIPResolutionMonitor::rebinHistos( vector<TH1D*> histos, int nbins )
 {
-  for( int i=0; i<nHistos; ++i ) rebinHisto( histos[i], nbins ) ;
+  for( unsigned int i=0; i<histos.size(); ++i ) rebinHisto( histos[i], nbins ) ;
 }
 
 //====================================================================
 // get histos in individual bins from a th2d
 //====================================================================
-void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string title, string unit, TH1D** out ){
+void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string title, string unit, vector<TH1D*>& out ){
 
-	int nbins = h->GetNbinsX() ;
-
+	const int nbins = h->GetNbinsX() ;
+  if( out.size() != (unsigned int)nbins ){
+    out.clear() ;
+    out.reserve( nbins ) ;
+  }
+  
 	for( int i=0 ; i<nbins ; ++i ){
 		double low = h->GetXaxis()->GetBinLowEdge( i+1 ) ;
 		double high = h->GetXaxis()->GetBinUpEdge( i+1 ) ;
@@ -418,7 +449,7 @@ void Velo::VeloIPResolutionMonitor::getBinsFromTH2D( TH2D* h, string id, string 
 void Velo::VeloIPResolutionMonitor::saveMeanAndSigmaProfiles( TH2D* h )
 {
   const int nbins( h->GetNbinsX() ) ;
-  TH1D* binHistos[nbins] ;
+  vector<TH1D*> binHistos(nbins) ;
   getBinsFromTH2D( h, string(h->GetName()), string(h->GetName()), string(""), binHistos ) ;
   rebinHistos( binHistos, nbins ) ;
   
@@ -446,10 +477,8 @@ void Velo::VeloIPResolutionMonitor::saveMeanAndSigmaProfiles( TH2D* h )
     }
     
     delete binHistos[i] ;
-  }
-  
-  delete h ;
-  
+  } 
+ 
 }
 
 void Velo::VeloIPResolutionMonitor::saveMeanAndSigmaProfilesAndXProjection( TH2D* h, string projTitle )
