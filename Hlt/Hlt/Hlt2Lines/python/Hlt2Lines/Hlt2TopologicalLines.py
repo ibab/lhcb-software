@@ -1,9 +1,12 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from Configurables import HltANNSvc, FilterDesktop, CombineParticles
+from Configurables import LoKi__VoidFilter as VoidFilter
+from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
+from HltTracking.HltPVs import PV3D
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -22,19 +25,22 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         'MAX_PT_MIN'        : 1500.0, # MeV
         'ALL_PT_MIN'        : 500.0,  # MeV
         'ALL_P_MIN'         : 5000.0, # MeV
-        'AMAXDOCA_MAX'      : 0.15,    # mm
-        'AMINDOCA_MAX'      : 0.15,    # mm
+        'AMAXDOCA_MAX'      : 0.12,   # mm
+        'AMINDOCA_MAX'      : 0.12,   # mm
         'USE_GEC'           : False,
         'GEC_MAX'           : 350,
+        'HLT1FILTER'        : "",
+        'M_CHARM_VETO'      : 2500,   # MeV
+        'SUM_IPCHI2_MIN'    : 100,
         # fit cuts
         'ALL_MIPCHI2DV_MIN' : 16.0,    # unitless
         'ALL_TRCHI2DOF_MAX' : 5.0,   # unitless
         'BPVVDCHI2_MIN'     : 64.0,   # unitless
+        'MIN_TRCHI2DOF_MAX' : 3,
         # robust
         'ALL_MIPDV_MIN'     : 0.025,  # mm
         'BPVVD_MIN'         : 2.0,    # mm
         'BPVVDR_MIN'        : 0.2,    # mm
-        'HLT1FILTER'        : "",
         # pre- and post-scale values are set in HltSettings/TopoLines.py
         'Prescale' : {},
         'Postscale' : {},
@@ -67,7 +73,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Updates the HltANNSvc after a new line has been constructed.'''
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
-        from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update({lineName:id})
 
     def __makeLine(self, lineName, algos):
@@ -80,8 +85,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         hltfilter = self.getProp("HLT1FILTER")
         if hltfilter == "" : hltfilter = None
      
-        Hlt2Line(lineName, HLT = hltfilter, prescale=self.prescale, postscale=self.postscale,
-                 algos=lclAlgos) 
+        Hlt2Line(lineName, HLT=hltfilter, prescale=self.prescale,
+                 postscale=self.postscale,algos=lclAlgos) 
         self.__updateHltANNSvc(lineName)
         
     def __combine(self, name, stage, inputSeq, decayDesc, extraCuts=None):
@@ -99,6 +104,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # cuts for the vertexed combo
         #momCuts = '(VFASPF(VCHI2) < 10) & '
         momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > %s)" % props['BPVVDCHI2_MIN']
+        momCuts += "& ((M > %s*MeV) | (BPVIPCHI2() > %s))" \
+                   % (props['M_CHARM_VETO'],props['ALL_MIPCHI2DV_MIN'])
         if stage == 'ComRob':
             momCuts = "(BPVVD > %s) & (BPVVDR > %s)" % \
                       (props['BPVVD_MIN'],props['BPVVDR_MIN'])
@@ -129,13 +136,25 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                      "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
         pid = "(('pi+'==ABSID) | ('K+'==ABSID))"
         
-        cuts = "(MAXTREE(%s,PT) > %s*MeV)"  % (pid,props["MAX_PT_MIN"])
+        cuts = "(MAXTREE(%s,PT) > %s*MeV) &" \
+               % (pid,props["MAX_PT_MIN"])
         sum_pt_min = float(props['SUM_PT_MIN'])
-        if name.find('3Body') >=0: sum_pt_min += 250
-        if name.find('4Body') >=0: sum_pt_min += 500
+        sum_ipchi2_min = float(props['SUM_IPCHI2_MIN'])
+        if name.find('3Body') >=0:
+            sum_pt_min += 250
+            sum_ipchi2_min += 50
+        if name.find('4Body') >= 0:
+            sum_pt_min += 500
+            sum_ipchi2_min += 100
         
-        cuts += ' & (SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
-        cuts += ' & (in_range(%(MCOR_MIN)s*MeV,MCOR,%(MCOR_MAX)s*MeV))' % props
+        cuts += '(SUMTREE(PT,%s,0.0) > %.1f*MeV)' % (pid,sum_pt_min)
+        cuts += '& (in_range(%s*MeV,MCOR,%s*MeV))' \
+                % (props['MCOR_MIN'],props['MCOR_MAX'])
+        if stage != 'ComRob':            
+            cuts += '& (SUMTREE(MIPCHI2DV(PRIMARY),%s,0.0) > %s)' \
+                    % (pid,sum_ipchi2_min)
+            cuts += '& (MINTREE(%s,TRCHI2DOF) < %s)' \
+                    % (pid,props['MIN_TRCHI2DOF_MAX'])
         if extraCode: cuts = cuts + ' & ' + extraCode
         filter = Hlt2Member(FilterDesktop, 'Filter', InputLocations=inputSeq,
                             Code=cuts,Preambulo=preambulo)
@@ -145,7 +164,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         '''Defines a global event cut (sets upper limit on n_tracks).'''
         from HltTracking.Hlt2TrackingConfigurations import \
              Hlt2UnfittedForwardTracking
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules =  CoreFactory('CoreFactory').Modules
         if 'LoKiTrigger.decorators' not in modules:
             modules.append('LoKiTrigger.decorators')
@@ -159,7 +177,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('" + tracks.outputSelection() + \
                        "') < %(GEC_MAX)s" % self.getProps()
 
-        from Configurables import LoKi__VoidFilter as VoidFilter
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg',
                                                  Code=filtCode)
         return bindMembers(None,[tracks, Hlt2TopoKillTooManyInTrkAlg])
@@ -179,7 +196,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member(FilterDesktop,'Filter', InputLocations=inputSeq,
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
-        from HltTracking.HltPVs import PV3D
         return bindMembers(name, [PV3D()]+inputSeq+[filter])
 
     def __buildNBodySeqs(self,lineName,seqName,stage,input):
