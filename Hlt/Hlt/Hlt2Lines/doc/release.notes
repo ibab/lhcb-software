@@ -9,7 +9,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-09-29 - Gerhard Raven
- - now that there are Hlt2BeamGasLines, remove the Hlt1 beamgas passthrough
+ - now that there are Hlt2BeamGasLines, remove the Hlt1 beamgas passthrough in Hlt2
+
 
 ! 2010-09-29 - P. Hopchev
  - Hlt2BeamGasLines: add input and output rate limiters
