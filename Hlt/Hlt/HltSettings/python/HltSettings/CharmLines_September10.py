@@ -33,6 +33,7 @@ class CharmLines :
                      , 'Hlt2CharmTF4BodyWideMass'
                      , 'Hlt2CharmOSTF2Body'
                      , 'Hlt2CharmOSTF3Body'
+                     , 'Hlt2CharmOSTF2BodyInc'
                      , 'Hlt2CharmOSTF4Body'
                      , 'Hlt2CharmOSTF2BodyWideMass'
                      , 'Hlt2CharmOSTF3BodyWideMass'
@@ -72,15 +73,42 @@ class CharmLines :
                         , 'ComTFVtxPVDispChi2LL'    : 25.0       # unitless
                         , 'TFPointUL'               : 0.20       # unitless
                         ## Cut values for one stage track-fit (OSTF) lines.
-                        , 'OSTFAllTrkPtLL'          : 500.0      # in MeV
-                        , 'OSTFAllTrkPLL'           : 5000.0     # in MeV
-                        , 'OSTFAllTrkPVIPChi2LL'    : 9.0        # unitless
-                        , 'OSTFAllTrkChi2UL'        : 5.0       # unitless
-                        , 'OSTFPairMinDocaUL'       : 0.20       # in mm
-                        , 'OSTFPairMaxDocaUL'       : 1.0        # in mm
-                        , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
-                        , 'OSTFVtxPVDispChi2LL'     : 25.0       # unitless
-                        , 'OSTFPointUL'             : 0.20       # unitless
+                        ## 2Body
+                        , 'OSTFAllTrkPtLL_2Body'          : 800.0      # in MeV
+                        , 'OSTFAllTrkPLL_2Body'           : 5000.0     # in MeV
+                        , 'OSTFAllTrkPVIPChi2LL_2Body'    : 2.0        # unitless
+                        , 'OSTFAllTrkChi2UL_2Body'        : 5.0        # unitless
+                        , 'OSTFPairMinDocaUL_2Body'       : 0.10       # in mm
+                        , 'OSTFTrkMaxPtLL_2Body'          : 1500.0     # in MeV
+                        , 'OSTFVtxPVDispChi2LL_2Body'     : 25.0       # unitless
+                        , 'OSTFVtxChi2UL_2Body'           : 10.0       # unitless
+                        , 'OSTFPointLL_2Body'             : 0.99985    # unitless
+                        ## 3Body
+                        , 'OSTFAllTrkPtLL_3Body'          : 500.0      # in MeV
+                        , 'OSTFAllTrkPLL_3Body'           : 5000.0     # in MeV
+                        , 'OSTFAllTrkPVIPChi2LL_3Body'    : 4.0        # unitless
+                        , 'OSTFAllTrkChi2UL_3Body'        : 5.0        # unitless
+                        , 'OSTFPairMinDocaUL_3Body'       : 0.20       # in mm
+                        , 'OSTFPairMaxDocaUL_3Body'       : 1.0       # in mm
+                        , 'OSTFTrkMaxPtLL_3Body'          : 1000.0        # in MeV
+                        , 'OSTFVtxPVDispChi2LL_3Body'     : 150.0        # unitless
+                        , 'OSTFVtxChi2UL_3Body'           : 15.0       # unitless
+                        , 'OSTFDIPChi2UL_3Body'           : 15.0        # unitless
+                        , 'OSTFDPtLL_3Body'               : 2000.0     # PT
+                        , 'OSTFDSumPtLL_3Body'            : 1800.0     # PT   
+                        ## 2-body inclusive!
+		                , 'OSTFAllTrkPtLL_2BodyInc'          : 500.0      # in MeV
+		                , 'OSTFAllTrkPLL_2BodyInc'           : 5000.0     # in MeV
+		                , 'OSTFAllTrkPVIPChi2LL_2BodyInc'    : 16.0        # unitless
+		                , 'OSTFAllTrkChi2UL_2BodyInc'        : 3.0        # unitless
+		                , 'OSTFPairMinDocaUL_2BodyInc'       : 0.15       # in mm
+                        , 'OSTFVtxPVDispChi2LL_2BodyInc'     : 100.       # unitless  
+		                , 'OSTFTrkMaxPtLL_2BodyInc'          : 1000.0     # in MeV
+		                , 'OSTFDPtLL_2BodyInc'               : 1500.0     # in MeV
+		                , 'OSTFDSumPtLL_2BodyInc'            : 1800.0     # in MeV
+		                , 'OSTFDIPChi2LL_2BodyInc'           : 2.0       # unitless
+		                , 'OSTFMCOR_MIN_2BodyInc'            : 300.        # MeV
+		                , 'OSTFMCOR_MAX_2BodyInc'            : 3200.        # MeV
                         ## Slots for K_S h h' lines
                         , 'KshhTFHHTrkPLL'          : 1500.0     # in MeV
                         , 'KshhTFHHTrkChi2UL'       : 20.0       # unitless
