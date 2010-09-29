@@ -452,6 +452,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         os.chdir(rel_dir)
 
 # ======================= action: compilation in debug mode ====================================
+
     if debug and projconf.hasBinary():
         log.info('compile in debug mode')
         os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))

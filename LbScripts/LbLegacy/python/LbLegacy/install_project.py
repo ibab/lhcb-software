@@ -1135,7 +1135,7 @@ def getProjectTar(tar_list, already_present_list=None):
                             if os.path.islink(prodlink) :
                                 os.remove(prodlink)
                                 os.symlink(pack_ver[0] + '_' + pack_ver[1], prodlink)
-                                log.debug("linking %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
+                                log.debug("linking %s -> %s" % (prodlink, pack_ver[0] + '_' + pack_ver[1]))
                             else :
                                 log.error("%s is not a link. Please remove this file/directory" % prodlink)
                     else :
@@ -1164,7 +1164,7 @@ def getProjectTar(tar_list, already_present_list=None):
                                 while sourcef.startswith("/") or sourcef.startswith("\\") :
                                     sourcef = sourcef[1:]
                                 os.symlink(sourcef, targetf)
-                                log.debug("linking %s to %s" % (sourcef, targetf))
+                                log.debug("linking %s -> %s" % (targetf, sourcef))
                     etc_scripts = [ "LbLogin", "group_login", "group_shell", "LHCb"]
                     my_etc_dir = os.path.join(my_dir, "etc")
                     for s in etc_scripts :
@@ -1183,7 +1183,7 @@ def getProjectTar(tar_list, already_present_list=None):
                                         sourcef = sourcef[1:]
                                     sourcef = os.path.join(os.pardir, sourcef)
                                     os.symlink(sourcef, targetf)
-                                    log.debug("linking %s to %s" % (sourcef, targetf))
+                                    log.debug("linking %s -> %s" % (targetf, sourcef))
 
             
             
@@ -1688,7 +1688,7 @@ def installLoginScripts():
                     targetf = os.path.join(this_maindir, f)
                     if sys.platform != "win32" :
                         os.symlink(sourcef, targetf)
-                        log.debug("linking %s to %s" % (sourcef, targetf))
+                        log.debug("linking %s -> %s" % (targetf, sourcef))
                     else :
                         shutil.copy(sourcef, targetf)
                         log.debug("copying %s to %s" % (sourcef, targetf))
