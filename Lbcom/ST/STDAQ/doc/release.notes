@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 M Needham
+ - Make raw location a property in encoding
+
 !=============================== STDAQ v3r24 2010-09-28 ======================
 ! 2010-09-09 M Needham
  - Fix warnings from the INTEL compiler

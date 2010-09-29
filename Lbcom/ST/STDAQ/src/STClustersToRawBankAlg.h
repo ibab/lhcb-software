@@ -73,6 +73,7 @@ private:
   
   std::string m_clusterLocation;
   std::string m_summaryLocation;
+  std::string m_rawLocation;
 
   LHCb::RawBank::BankType m_bankType;
 

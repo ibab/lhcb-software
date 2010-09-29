@@ -53,6 +53,7 @@ STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
 
   declareSTConfigProperty("clusterLocation", m_clusterLocation , STClusterLocation::TTClusters);
   declareSTConfigProperty("summaryLocation", m_summaryLocation , STSummaryLocation::TTSummary);
+  declareProperty("rawLocation", m_rawLocation = RawEventLocation::Default);
   declareProperty("maxClusters", m_maxClustersPerPPx = 512);
 
   m_bankMapping = new STBoardToBankMap();
@@ -124,7 +125,7 @@ StatusCode STClustersToRawBankAlg::configureBankType(){
 StatusCode STClustersToRawBankAlg::execute() {
 
   // Retrieve the RawBank
-  RawEvent* tEvent = get<RawEvent>(RawEventLocation::Default);
+  RawEvent* tEvent = get<RawEvent>(m_rawLocation);
 
   // initialize this event
   initEvent();
