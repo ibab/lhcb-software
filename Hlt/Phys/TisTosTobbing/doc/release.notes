@@ -4,6 +4,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v6r0 2010-09-29 ===================
+
 ! 2010-09-23 - Tomasz Skwarnicki
  - move TisTos and ParticleTisTos low level tools into linker_library, 
    export their include files in TisTos/
