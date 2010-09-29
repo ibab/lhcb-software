@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - V. Gligorov
+ - Update for new HLT2 charm lines
+
 ! 2010-09-28 - Gerhard Raven
  - first version of Physics_3000Vis_200L0_20Hlt1_{Core,Express}Hlt2_Oct10 -- not yet final!
 
