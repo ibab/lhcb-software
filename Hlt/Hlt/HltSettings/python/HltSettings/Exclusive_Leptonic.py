@@ -37,7 +37,10 @@ class Exclusive_Leptonic :
             'Hlt2TFBc2JpsiHDetached', 
             'Hlt2TFBc2JpsiHPrescaled', 
             'Hlt2TFBc2JpsiMuX', 
-            'Hlt2TFBc2JpsiMuXSignal'
+            'Hlt2TFBc2JpsiMuXSignal',
+
+            # Exclusive DiMuons
+            'Hlt2diphotonDiMuon'
              ]
         
         return lines
