@@ -28,30 +28,31 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'L0ChannelBXLonelyBeam2'  : "B2gas"
                 # , 'L0FilterBeamCrossing'    : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['SPD','PU'] ] )
                 , 'L0FilterBeamCrossing'    : "|".join( [ "(L0_DATA('Spd(Mult)') > 2)" , "(L0_DATA('PUHits(Mult)') > 3)" ] )
+                , 'FractionOfUnusedClusters':  0.23
                 , 'Beam1VtxRangeLow'        : -1500.
                 , 'Beam1VtxRangeUp'         :   300.
                 , 'Beam2VtxRangeLow'        :   100.
                 , 'Beam2VtxRangeUp'         :  1500.
                 , 'BGVtxExclRangeMin'       :  -300.      # These 2 options take effect
                 , 'BGVtxExclRangeMax'       :   300.      # only for the Lines for bb BX
-                , 'MaxBinValueCut'          :     5
-                , 'HistoBinWidth'           :    12
+                , 'MaxBinValueCut'          :     4
+                , 'HistoBinWidth'           :    14.
                 , 'ForcedInputRateLimit'    :  1000.
                 , 'BXLonelyBeam1RateLimit'  :  5000.
                 , 'BXLonelyBeam2RateLimit'  :  5000.
                 , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
                                               , 'Hlt1BeamGasBeam2' :                1.0
                                               , 'Hlt1BeamGasCrossing' :             1.0
-                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
+                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 1.0
                                               , 'Hlt1BeamGasCrossingLonelyBeam1'  : 1.0
                                               , 'Hlt1BeamGasCrossingLonelyBeam2'  : 1.0
                                               }
-                , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(15)'
-                                              , 'Hlt1BeamGasBeam2' :                'RATE(15)'
-                                              , 'Hlt1BeamGasCrossing' :             'RATE(25)'
-                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 'RATE(25)'
-                                              , 'Hlt1BeamGasCrossingLonelyBeam1'  : 'RATE(25)'
-                                              , 'Hlt1BeamGasCrossingLonelyBeam2'  : 'RATE(25)'
+                , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(50)'
+                                              , 'Hlt1BeamGasBeam2' :                'RATE(50)'
+                                              , 'Hlt1BeamGasCrossing' :             'RATE(150)'
+                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 'RATE(10)'
+                                              , 'Hlt1BeamGasCrossingLonelyBeam1'  : 'RATE(20)'
+                                              , 'Hlt1BeamGasCrossingLonelyBeam2'  : 'RATE(20)'
                                               }
                 } 
 
@@ -101,7 +102,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         l0du = "L0_CHANNEL('%s')" % channel
         lineBeamEmptyBX =  Line( name
                                , prescale = self.prescale
-                               , ODIN  = L0Mask2ODINPredicate(mask) 
+                               , ODIN  = L0Mask2ODINPredicate(mask)
                                , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, ratelimit) if ratelimit else l0du
                                , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                                , postscale = self.postscale
@@ -154,11 +155,12 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__VoidFilter as VoidFilter
         algCheckTracks = VoidFilter('Hlt1BeamGasRequireRZVelo' , Code = "CONTAINS('%s') > 0" % MinimalRZVelo.outputSelection() )
         
+        FrUnusedClust = self.getProp('FractionOfUnusedClusters')
         from Configurables import BeamGasTrigClusterCut
         algClusterCut = BeamGasTrigClusterCut( 'Hlt1BeamGasTrigClusterCut'
                                              , SensorsBegin = 22
                                              , SensorsEnd   = 39
-                                             , FracUnusedClustersCut = 0.27 )
+                                             , FracUnusedClustersCut = FrUnusedClust )
 
         from Configurables import BeamGasTrigExtractClusters
         algExtractClust = BeamGasTrigExtractClusters( 'Hlt1BeamGasTrigExtractClusters'
@@ -200,6 +202,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         line_beamCrossing = Line( lineName
                                 , priority = 200 
                                 , prescale = self.prescale
+                                , ODIN = 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing'
                                 , L0DU  = self.getProp('L0FilterBeamCrossing')
                                 , algos = [ algCheckTracks ] + bgTrigAlgos
                                 , postscale = self.postscale )
@@ -212,6 +215,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
                                                                , priority = None
                                                                , prescale = self.prescale
+                                                               , ODIN = 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing'
                                                                , L0DU = 'scale( %s, RATE(%s) )' % (line_beamCrossing._L0DU, limit) if limit else line_beamCrossing._L0DU
                                                                , algos = [ MinimalRZVelo ] + bgTrigAlgos 
                                                                , postscale = self.postscale 

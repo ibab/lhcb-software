@@ -4,6 +4,15 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2010-09-29 Plamen Hopchev
+ - Several Changes to Hlt1BeamGasLines in regards to the creation of Hlt2BeamGasLines: 
+   -- The BeamGasCrossing and ForcedRZ lines now run only on events with BXType = 3 (before
+      there was no BXType requirement)  
+   -- put FractionOfUnusedClusterCut in __slots__ and decreased its value from 0.27 to 0.23
+   -- loosened a bit the cuts on the pseudo-vertex
+   -- increased the output rate limits		
+
 !========================== Hlt1Lines v5r1   2010-09-16 ===================
 ! 2010-09-16 Gerhard Raven
  - allow to give seperate Et cut for SingleElectronNoIP
