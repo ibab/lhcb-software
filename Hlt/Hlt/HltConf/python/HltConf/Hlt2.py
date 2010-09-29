@@ -36,6 +36,7 @@ from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
+from Hlt2Lines.Hlt2BeamGasLines import Hlt2BeamGasLinesConf
 #
 # The tracking configurations
 #
@@ -87,6 +88,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2InclusiveDiElectronLinesConf
                              , Hlt2InclusiveElectronLinesConf
                              , Hlt2B2KstareeLinesConf  
+                             , Hlt2BeamGasLinesConf
                              ]
     __slots__ = { "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration

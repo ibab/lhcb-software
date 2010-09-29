@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-09-29 - Gerhard Raven
+ - add Hlt2BeamGasLinesConf to list of used configurables
 
 !========================== HltConf v8r4p1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
