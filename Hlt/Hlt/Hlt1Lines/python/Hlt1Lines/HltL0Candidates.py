@@ -165,6 +165,9 @@ _l0Conditions = None
 def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = True) :
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
+    # canonicalize L0 TCK...
+    L0TCK = int(L0TCK,16) if type(L0TCK)==str else L0TCK
+    L0TCK = '0x%04X' %  L0TCK  
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
         raise KeyError('requested L0 TCK %s is not known'%L0TCK)
     if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :

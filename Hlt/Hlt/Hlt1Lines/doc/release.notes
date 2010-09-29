@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 Gerhard Raven
+ - canonicalize L0TCK so that both '0x002a' and '0x002A' are properly treated...
+
 ! 2010-09-29 Plamen Hopchev
  - Several Changes to Hlt1BeamGasLines in regards to the creation of Hlt2BeamGasLines: 
    -- The BeamGasCrossing and ForcedRZ lines now run only on events with BXType = 3 (before
