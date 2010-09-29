@@ -5,6 +5,14 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Greig Cowan
+ - Modified TestMyStrippingLineOnRealData.py to reflect the same options as
+   are used in production. Also added HltFilter to remove microbias, beam gas
+   etc triggers before writing out an ETC with the selection results. Please
+   report retention rates from looking at the ETC output (not the 
+   StrippingReport) since the StrippingReport still includes the microbias 
+   triggers.
+
 ! 2010-09-29 - Vanya Belyaev
 
  - StrippingPromptCharm
