@@ -21,8 +21,14 @@ class Hlt2BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'InputRZTracksLocation'  : 'Hlt1/Track/RZVeloBeamGas'
                 , 'Output3DTracksLocation' : 'Hlt/Track/BeamGasVelo3D'
                 , 'OutputVerticesLocation' : 'Hlt/Vertex/PVBeamGas'
-                #, 'Prescale'             : 1.0   
-                #, 'Postscale'            : 1.0   
+                , 'InputRateLimitNonBBLine': 100.
+                , 'InputRateLimitBBLine'   : 200.
+                , 'Prescale'               : { 'Hlt2BeamGasNonBBCrossing' : 1.0
+                                             , 'Hlt2BeamGasBBCrossing'    : 1.0
+                                             }
+                , 'Postscale'              : { 'Hlt2BeamGasNonBBCrossing' : 'RATE(30)'
+                                             , 'Hlt2BeamGasBBCrossing'    : 'RATE(70)'
+                                             }
                 }
 
     
@@ -54,10 +60,15 @@ class Hlt2BeamGasLinesConf(HltLinesConfigurableUser) :
 
 
 
+        inpRateLimitNonBB = self.getProp('InputRateLimitNonBBLine')
+        inpRateLimitBB    = self.getProp('InputRateLimitBBLine')
+        hltFilterNonBB    = "HLT_PASS_SUBSTR('Hlt1BeamGasBeam')"
+        hltFilterBB       = "HLT_PASS_SUBSTR('Hlt1BeamGasCrossing')"
+
         lineNonBB = Hlt2Line( 'BeamGasNonBBCrossing'
                             , prescale = self.prescale
                             , ODIN = 'ODIN_BXTYP != LHCb.ODIN.BeamCrossing'
-                            , HLT = "HLT_PASS_SUBSTR('Hlt1BeamGas')"
+                            , HLT = 'scale( %s, RATE(%s) )' %(hltFilterNonBB, inpRateLimitNonBB)
                             , algos = recoSeq+[fltrVerticesBE]
                             , postscale = self.postscale
                             )
@@ -65,7 +76,7 @@ class Hlt2BeamGasLinesConf(HltLinesConfigurableUser) :
         lineBB = Hlt2Line( 'BeamGasBBCrossing'
                          , prescale = self.prescale
                          , ODIN = 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing'
-                         , HLT = "HLT_PASS_SUBSTR('Hlt1BeamGas')"
+                         , HLT = 'scale( %s, RATE(%s) )' %(hltFilterBB, inpRateLimitBB)
                          , algos = recoSeq+[fltrVerticesBB]
                          , postscale = self.postscale
                          )

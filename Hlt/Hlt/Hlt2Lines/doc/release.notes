@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - P. Hopchev
+ - Hlt2BeamGasLines: add input and output rate limiters
+
 ! 2010-09-29 - V. Gligorov
  - Update for new HLT2 charm lines
 
