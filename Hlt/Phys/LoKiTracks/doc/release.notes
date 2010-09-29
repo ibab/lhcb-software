@@ -5,6 +5,11 @@
 ! Purpose     : tarcj-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Vanya Belyaev
+ - fix for new structire of modules in LoKiCore 
+ - cmt/requirements
+     version increment to v1r2 
+
 !========================== LoKiTracks v1r1 2010-09-09 ===================
 ! 2010-08-31 - Vanya Belyaev
 

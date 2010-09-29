@@ -37,7 +37,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl "
 __date__    = "2010-07-17"
-__version__ = "CVS tag $Name:$, version $Revision:$ "
+__version__ = "CVS tag $Name:$, version $Revision$ "
 # =============================================================================
 
 
@@ -51,10 +51,8 @@ else                       : PyCintex.loadDict ( "libTrackEventDict" )
     
 
 # Namespaces:
-_global  = _LoKiCore._global 
-std      = _global.std
-LoKi     = _global.LoKi
-LHCb     = _global.LHCb
+from LoKiCore.basic import cpp, std, LoKi
+LHCb     = cpp.LHCb
 
 _T = 'const LHCb::Track*'
 
