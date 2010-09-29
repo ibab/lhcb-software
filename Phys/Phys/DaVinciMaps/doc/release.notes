@@ -4,6 +4,8 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciMaps v1r2 2010-09-29 ========================
+
 ! 2010-09-27 - Juan Palacios
  - Add Kernel/DataObject2ObjectMap.h
   . Template class with generic structure for mapping T* to POD or sequence 
