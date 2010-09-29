@@ -152,8 +152,9 @@ D02K3PiForXSection = StrippingD02K3PiForXSectionConf(
 stream.appendLines( StrippingLambdacConf().lines() )
 
 from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf
-conf = { "D0Prescale" : 0.25 , "DplusPrescale" : 0.25 }
-Lines = StrippingPromptCharmConf( config = conf )
+_conf = { "D0Prescale"    : 1.00 ,
+          "DplusPrescale" : 1.00 }
+Lines = StrippingPromptCharmConf( config = _conf )
 stream.appendLines ( Lines.lines() )
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf

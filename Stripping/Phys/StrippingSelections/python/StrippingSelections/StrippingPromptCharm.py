@@ -207,10 +207,10 @@ _default_configuration_ = {
     'PrimaryVertices' :  ( 1 , 3 )    , 
     'GlobalEventCuts' : { 'Code'       :
                           """
-                          ( CONTAINS('Rec/Track/Best' ) <  400 ) &
-                          ( CONTAINS('Raw/Spd/Digits' ) <  600 ) &
-                          ( CONTAINS('Raw/IT/Clusters') < 1200 ) &
-                          ( TrSOURCE('Rec/Track/Best' , TrVELO ) >> ( TrSIZE < 200 ) ) 
+                          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                          ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                          ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 ) &
+                          ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE < 200 ) ) 
                           """ ,
                           'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
                                            'from LoKiCore.functions    import *' ]
@@ -239,8 +239,10 @@ _default_configuration_ = {
     "from GaudiKernel.PhysicalConstants import c_light" , 
     "ctau   = BPVLTIME ( 9 ) * c_light "  ## use the embedded cut for chi2(LifetimeFit)<9 
     ] ,
-    ## monitring ?
-    'Monitor'     : False 
+    ## monitoring ?
+    'Monitor'     : False  ,
+    ## name
+    'Name'        : "%sForPromptCharm"
     }
 
 # =============================================================================
@@ -253,23 +255,48 @@ class StrippingPromptCharmConf(object) :
     Helper class to confiugure 'PromptCharm'-lines
     """
     __configuration_keys__ = _default_configuration_ 
+
+    ## get the default configuration 
+    @staticmethod
+    def defaultConfiguration( key = None ) :
+        """
+        Get the defualt configurtaion
+
+        >>> conf = StrippingPromptCharmConf.defaultConfiguration()
+
+
+        Get the elements of default configurtaion:
+        
+        >>> d0prescale = StrippingPromptCharmConf.defaultConfiguration( 'D0Prescale' )
+        """
+        from copy import deepcopy
+        _config = deepcopy ( _default_configuration_ )
+        if key : return _config[ key ]
+        return _config
     
     ## constructor
-    def __init__   ( self , name = '%sForPromptCharm' , config = {} ) :
+    def __init__   ( self , config ) :
         """
         Constructor
         """
-        self._name = name
-        if '%sForPromptCharm' != name :
-            log.warning ('StrippingPromptCharm: non-default configuration name %s ' % name )
-            
+        
         from copy import deepcopy
         _config   = deepcopy ( config )
-            
+        
         keys = _config.keys()
         for key in keys :
-            log.warning ('StrippingPromptCharm: new configuration: %-16s : %s ' % ( key , _config[key] ) )
             
+            if not key in _default_configuration_ :
+                raise KeyError("Invalid key is specified: '%s'" % key )
+            
+            val = _config[key]
+            if val != _default_configuration_ [ key ] : 
+                log.warning ('StrippingPromptCharm: new configuration: %-16s : %s ' % ( key , _config[key] ) )
+
+
+        
+        self._name         = _config.pop ( 'Name' , _default_configuration_ [ 'Name' ] ) 
+
         self._trackcuts    =                   _config.pop ( 'TrackCuts'    , _default_configuration_ [ 'TrackCuts'    ] )
         self._basiccuts    = self._trackcuts + _config.pop ( 'BasicCuts'    , _default_configuration_ [ 'BasicCuts'    ] )
         self._kaoncuts     = self._basiccuts + _config.pop ( 'KaonCuts'     , _default_configuration_ [ 'KaonCuts'     ] )    
@@ -770,7 +797,7 @@ if '__main__' == __name__ :
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
     print ' The output locations for default configuration: '
-    _conf = StrippingPromptCharmConf() 
+    _conf = StrippingPromptCharmConf( config = {} ) 
     for l in _conf.lines() :
         print ' \t ', l.outputLocation  () , l 
     print 80*'*'

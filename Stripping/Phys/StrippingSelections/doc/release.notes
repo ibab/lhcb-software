@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Vanya Belyaev
+
+ - StrippingPromptCharm
+    1. eliminate the default constructor 
+    2. tighten a bit the cuts 
+
 ! 2010-09-29 - Greig Cowan
  - Fixed Charm stream. Used configuration dictionary in the StreamCharm.py 
    file so as not to use the default behaviour. I don't want this to be 
