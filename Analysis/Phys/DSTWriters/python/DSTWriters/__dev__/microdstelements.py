@@ -44,22 +44,18 @@ class CloneODIN(MicroDSTElement) :
 
 class CloneParticleTrees(MicroDSTElement) :
 
-    def __init__(self, branch='', copyProtoParticles = True, pack = False) :
+    def __init__(self, branch='', copyProtoParticles = True) :
         MicroDSTElement.__init__(self, branch)
         self.copyPP = copyProtoParticles
-        self.pack = pack
 
     def __call__(self, sel) :
         from Configurables import (CopyParticles,
                                    VertexCloner,
                                    ParticleCloner,
-                                   ProtoParticleCloner,
-                                   DataPacking__Pack_LHCb__ParticlePacker_,
-                                   DataPacking__Pack_LHCb__VertexPacker_   )
+                                   ProtoParticleCloner)
         cloner = CopyParticles(self.personaliseName(sel,
                                                     'CopyParticles'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
-        cloner.OutputLevel=4
         if self.copyPP == False :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
@@ -68,31 +64,13 @@ class CloneParticleTrees(MicroDSTElement) :
         confList = ConfigurableList(sel)
         setCloneFilteredParticlesToTrue( confList.flatList() )
 
-        algs =  [cloner]
-        if self.pack :
-            iLoc = 0
-            for loc in self.dataLocations(sel,'') :
-                partPack = DataPacking__Pack_LHCb__ParticlePacker_(self.personaliseName(sel, 'PartPack'+str(iLoc)),
-                                                                   OutputLevel=1)
-                vtxPack = DataPacking__Pack_LHCb__VertexPacker_(self.personaliseName(sel, 'VertexPack'+str(iLoc)),
-                                                                OutputLevel=1)
-                partPack.InputName = self.branch+'/'+loc+'/Particles'
-                partPack.OutputName = self.branch+'/'+loc+'/pParticles'
-                vtxPack.InputName = self.branch+'/'+loc+'/decayVertices'
-                vtxPack.OutputName = self.branch+'/'+loc+'/pVertices'
-                algs += [partPack, vtxPack]
-                iLoc +=1
-
-
-                
-        return algs
+        return cloner
 
 class ClonePVs(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyPrimaryVertices
         cloner=CopyPrimaryVertices(self.personaliseName(sel,
                                                         'CopyPrimaryVertices'))
-        cloner.OutputLevel = 4
         self.setOutputPrefix(cloner)
         return [cloner]
 
@@ -111,7 +89,6 @@ class CloneMCInfo(MicroDSTElement) :
         # This will make a relations table in mainLocation+"/P2MCPRelations"
         p2mcRelator = P2MCRelatorAlg(self.personaliseName(sel,'P2MCRel'))
         p2mcRelator.ParticleLocations = self.dataLocations(sel,'Particles')
-        p2mcRelator.OutputLevel=4
         # Now copy relations table + matched MCParticles to MicroDST
         cloner = CopyParticle2MCRelations(self.personaliseName(sel,
                                                                "CopyP2MCRel"))
@@ -119,7 +96,6 @@ class CloneMCInfo(MicroDSTElement) :
         cloner.MCParticleCloner.addTool(MCVertexCloner,
                                         name = 'ICloneMCVertex')
         cloner.InputLocations = self.dataLocations(sel,"P2MCPRelations")
-        cloner.OutputLevel = 4
         self.setOutputPrefix(cloner)
         return [p2mcRelator, cloner]
 
@@ -134,11 +110,9 @@ class CloneBTaggingInfo(MicroDSTElement) :
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging(self.personaliseName(sel,'BTagging'))
         BTagAlgo.InputLocations=self.dataLocations(sel,"")
-        BTagAlgo.OutputLevel = 4
         cloner = CopyFlavourTag(self.personaliseName(sel,
                                                      "CopyFlavourTag"))
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
-        cloner.OutputLevel=4
         self.setOutputPrefix(cloner)
         return [BTagAlgo, cloner]
 
@@ -159,7 +133,6 @@ class ClonePVRelations(MicroDSTElement) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self.personaliseName(sel, "CopyP2PV_"+self.location))
         cloner.InputLocations = self.dataLocations(sel, self.location)
-        cloner.OutputLevel=4
         clonerType = cloner.getProp('ClonerType')
         if self.clonePVs == False :
             cloner.ClonerType = 'NONE'
@@ -243,7 +216,6 @@ class CloneRawBanks(MicroDSTElement) :
         rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
         rawBankCopy.RawBanksToCopy = self.banks 
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
-        rawBankCopy.OutputLevel=4
         return [rawBankCopy]
 
 class CloneBackCat(MicroDSTElement) :
@@ -258,7 +230,6 @@ class CloneBackCat(MicroDSTElement) :
         backCatAlg.InputLocations=self.dataLocations(sel,"Particles")
         cloner =  CopyParticle2BackgroundCategory(self.personaliseName(sel, 'CopyP2BackCat'))
         cloner.InputLocations = self.dataLocations(sel,"P2BCRelations")
-        cloner.OutputLevel=4
         self.setOutputPrefix(cloner)
         return [backCatAlg, cloner]
 
@@ -268,7 +239,6 @@ class CloneLHCbIDs(MicroDSTElement) :
         cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
                                                             'CopyLHCbIDs'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
-        cloner.OutputLevel=3
         self.setOutputPrefix(cloner)
         return [cloner]
 
@@ -278,6 +248,5 @@ class CloneTisTosInfo(MicroDSTElement) :
         cloner =  CopyParticle2TisTosDecisions(self.personaliseName(sel,
                                                             'CopyTisTos'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
-        cloner.OutputLevel=3
         self.setOutputPrefix(cloner)
         return [cloner]

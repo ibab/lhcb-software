@@ -25,7 +25,7 @@ def microDSTElements() :
     return [CloneRecHeader(),
             CloneODIN(),
             ClonePVs(),
-            CloneParticleTrees(copyProtoParticles = False),
+            CloneParticleTrees(copyProtoParticles = True),
             ClonePVRelations("Particle2VertexRelations",True)]
 
 def microDSTStreamConf() :

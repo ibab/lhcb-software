@@ -4,6 +4,13 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - Juan Palacios
+ - python/DSTWriters/__dev__/microdst.py
+  . MicroDSTWriter defaults shallow-copy ProtoParticles.
+ - python/DSTWriters/__dev__/microdstelements.py
+  . Remove all OutputLevel settings. Leave it up to the job (if they can
+    find the configurable!)
+
 ! 2010-09-24 - Juan Palacios
  - Major re-structuring of DSTWriters.__dev__ module.
   . Main configurable is SelDSTWriter. MicroDSTWriter and StripDSTWriter
