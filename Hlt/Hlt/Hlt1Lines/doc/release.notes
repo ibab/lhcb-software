@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v5r2   2010-09-29 ===================
 ! 2010-09-29 Gerhard Raven
  - canonicalize L0TCK so that both '0x002a' and '0x002A' are properly treated...
 
