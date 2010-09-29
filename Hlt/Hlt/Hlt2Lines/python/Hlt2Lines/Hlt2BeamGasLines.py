@@ -24,8 +24,8 @@ class Hlt2BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'Prescale'               : { 'Hlt2BeamGasNonBBCrossing' : 1.0
                                              , 'Hlt2BeamGasBBCrossing'    : 1.0
                                              }
-                , 'Postscale'              : { 'Hlt2BeamGasNonBBCrossing' : 'RATE(6)'
-                                             , 'Hlt2BeamGasBBCrossing'    : 'RATE(14)'
+                , 'Postscale'              : { 'Hlt2BeamGasNonBBCrossing' : 'RATE(20)'
+                                             , 'Hlt2BeamGasBBCrossing'    : 'RATE(80)'
                                              }
                 }
 
