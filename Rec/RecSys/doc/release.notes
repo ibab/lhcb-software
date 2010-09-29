@@ -1,19 +1,187 @@
 <PRE>
 Package: RecSys
-Package Coordinator: Marco Cattaneo
+Package Coordinator: Marco Cattaneo, Rob Lambert
 Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2010-09-28 - Chris Jones
- - Add new package Rec/ChargedProtoANNPID
-
 </PRE><H1><A NAME=v10r5>2010-09-27 RecSys v10r5</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6
+
+- This stack of releases is the penultimate release of 2010, with the 
+  last major developments in the series before the winter reprocessing.
+
+- There has been considerable repackaging higher up the release stack, 
+  now Phys depends directly on Rec.
+
+- A major reshuffling of the upgrade tracking sequence now uses the
+  existing configurables (see task #14927)
+
+- The default track selection chi2 has been reduced to <10 from <50.
+
+- Weights for tracks in each PV are now stored on the DST.
+  This is a major new development to speed up and correct refitting
+  (see task #17004)
+
+- The event time is now stored int the Rec header, avoiding the need
+  to open the raw file to configure the updateManagerSvc
 
 - Packages Added:
   Hlt/HltMonitors v1r0
   . Algorithms for offline monitoring of Hlt rate and composition.
+  Add new package Rec/ChargedProtoANNPID
+  . NN-based (NeuroBayes) PID
+
+- Packages Modified:
+  Calo/CaloMoniDst v5r4, Calo/CaloPIDs v5r8, Calo/CaloReco v5r7, 
+  Muon/MuonID v7r9p2,
+  Rec/GlobalReco v6r33, Rec/LumiAlgs v4r0p2, Rec/RecAlgs v1r11p1,
+  Rec/RecConf v1r3, Rec/RecoUpgrade v2r0, Rec/RecoUpgradeMC v1r1,
+  Rich/RichAlignment v1r1, Rich/RichHPDImageAnalysis v1r3,
+  Rich/RichPIDMerge v2r9p1, Rich/RichRecPhotonTools v1r7p2,
+  Rich/RichRecQC v2r46, Rich/RichRecSys v3r32, Rich/RichRecTools v4r12p1,
+  Rich/RichRecTrackTools v1r24p1, Tf/PatAlgorithms v4r7, Tf/PatVeloTT v3r15,
+  Tf/TrackMatching v2r32, Tf/TrackSys v5r0, Tr/PatPV v3r18,
+  Tr/TrackCheckers v4r11, Tr/TrackExtrapolators v2r29,
+  Tr/TrackMCTools v2r27, Tr/TrackMonitors v1r30, Tr/TrackTools v3r35,
+  Tr/TrackUtils v1r39
+
+- In Calo/CaloMoniDst v5r4:
+  . Fix uninitialised member variables in CaloPhotonChecker
+  . new monitoring alg CaloHypoNtp
+
+- In Calo/CaloPIDs  v5r8:
+  . update configurables + CaloPhotonIDAlg
+  . fixed compiltion warnings and unchecked status code
+
+- In Calo/CaloReco v5r7:
+  . update configurable + CaloMergedPi0Alg
+  . fix DoD setting
+  . improve LCorrection
+
+- In Muon/MuonID v7r9p2:
+  . Supress some unnecessary printouts (Savannah bug #64670)
+
+- In Rec/GlobalReco v6r33:
+  . ProtoParticle monitor now produces efficiency plots by track type
+  . Move files to RecreatePIDTools
+  . Remove "earlyData" tuning
+  . Change default track selection chi^2 cuts for charged ProtoParticles 
+    to <10 from <50
+  . update NeutralProtoPAlg
+
+- In Rec/LumiAlgs v4r0p2:
+  . Add Simulation slot, switch off LumiAccounting in case of Simulation
+  . Properly check existence of conditions before trying to register them
+
+- In Rec/RecAlgs v1r11p1:
+  . Set HistoTopDir property for RecProcessingTimeMoni to "Timing"
+  . In RecInit.cpp: Copy gpsTime to RecHeader from ODIN Raw bank
+  . bugfix in order of the arguments when processing time histogram is booked
+  . The histogram in RecProcessingTimeMoni is now booked at initialization
+
+- In Rec/RecConf v1r3:
+  . Add upgrade special datatype and special case for muonId if veloPix is in
+  . Do not run Hlt mon on DataTypes without HltDecReports or on simulation
+  . Added Hlt monitors to the default monitoring configuration
+
+- In Rec/RecoUpgrade v2r0:
+  . Add upgrade configurables and remove useless classes/options
+  . enable PatVeloPixFitLHCbIDs compatibility with non velopix only tracks 
+  . addition of a simple option file for velopix 
+  . cleaning of configurables files
+
+- In Rec/RecoUpgradeMC v1r1:
+  . Remove printout in VeloPixChecker and useless states in CheatedVeloPixPat
+  . Add some vertex monitoring + update algorithms
+
+- In Rich/RichAlignment v1r1:
+  . Add pickled run data for all of August
+  . Cache resuts of DB look ups for run information for speed
+  . More improvements to the CK theta fit used to extract the n-1 scale factors
+  . Add plots showing the CK theta resolution as a function of run number
+  . Some more improvements to the refractive index calibration scripts.
+
+- In Rich/RichHPDImageAnalysis v1r3:
+  . Some more improvements to the run by run calibration script. 
+    Now it is possible to seperately fit field Up, Down and Off data.
+  . Various improvements in the image alignment scripts
+
+- In Rich/RichPIDMerge v2r9p1:
+  . remove CVS comment
+
+- In Rich/RichRecPhotonTools v1r7p2:
+  . Minor changes in comments
+
+- In Rich/RichRecQC v2r46:
+  . Some minor improvements to the Track selection efficiency monitor
+
+- In Rich/RichRecSys v3r32:
+  . Add new Wide photon selection
+  . minor bugfixes
+
+- In Rich/RichRecTools v4r12p1:
+  . add debug printout
+
+- In Rich/RichRecTrackTools v1r24p1:
+  . Fix against very rare crashed in the isolated track tool, 
+    (when the photon Cherenkov phi value is precisely 2.0*M_PI)
+
+- In  Tf/PatAlgorithms v4r7:
+  . add earlyData tuning for PatSeeding
+  . some small PatSeedingTool bugs fixed (dead modules in real data)
+  . make fit in PatSeedFit more similar to what is in PatSeeding, 
+    some code cleanup
+  . fix compiler warning in PatSeedTrack.h (gcc 4.3/SLC5)
+  . lots of PatSeeding development 
+  . see Tracking and Alignment meeting 2nd Sept 2010
+
+- In Tf/PatVeloTT v3r15:
+  . Add VeloPix case in IDs count in PatVeloTT.cpp
+
+- In Tf/TrackMatching v2r32:
+  . Modify MeasurmentProvider tool initialisation in TrackMatchVeloSeed
+
+- In Tf/TrackSys v5r0:
+  . Add call of upgrade configurables when there is upgrade special data
+
+- In Tr/PatPV v3r18:
+  . Removed obsolete cut of collecting tracks for PV fit in LSAdaptPVFitter
+  . fix PVConf problem after removal of zMaxSpread parameter in LSAdaptPVFitter
+  . Modifications to store track weights
+  . removal of obsolete algorithms and tools
+  . include track weights in vertex chi2 calculation
+
+- In Tr/TrackCheckers v4r11:
+  . Add VeloPix LHCbID case to the TrackEffChecker
+
+- In Tr/TrackExtrapolators v2r29:
+  . several bug fixes in TrackStateProvider
+
+- In Tr/TrackMCTools v2r27:
+  . Remove hardcoded VeloPix cluster locations in LHCbIDsToMCHits 
+    and replace it by proper VeloPIxClusterLocation::VeloPixClusterLocation
+
+- In Tr/TrackMonitors v1r30:
+  . Remove unused variable from previous commit
+  . widened window for PV plot
+  . initialized histogram pointers in OTTrackMonitor and OTHitEfficiencyMonitor
+  . Add TrackPV2HalfAlignMonitor to sequence 
+  . moved some histograms out of expert level in TrackMonitor 
+  . added histograms for velo-calo matching to TrackCaloMatchMonitor
+
+- In Tr/TrackTools v3r35:
+  . Modify veloFitter tool initialisation in TrackStateInitTool
+  . fix for OT expected hits
+  . fix for windows warnings in VeloCaloBuilder and VeloMuonBuilder
+  . Added minimal number of TT hits in MuonTTTrack.cpp
+  . Added VeloMuonBuilder.cpp/.h and VeloCaloBuilder.cpp/.h building 
+    Tracks from Velo and Calo/Muon for TrackingEfficiency Stripping
+  . Added MuonTTTrack.cpp / .h for making tracks with muon and TT station, 
+    added MuonInterfaces to requirements file
+
+- In Tr/TrackUtils v1r39:
+  . fixed bug in TrackHitAdder
 
 </PRE><H1><A NAME=v10r4>2010-08-26 RecSys v10r4</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
