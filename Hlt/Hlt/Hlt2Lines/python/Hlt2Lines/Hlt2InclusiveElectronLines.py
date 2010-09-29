@@ -107,7 +107,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
 
 
 #        TKQuality =  " & (MIPDV(PRIMARY)<"+str(self.getProp('SingleHighPTElectronIP'))+"*mm) & (TRCHI2DOF<"+str(self.getProp('SingleHighPTElectronTkChi2'))+")"                                
-        TKQuality =  " & (TRCHI2DOF<"+str(self.getProp('SingleHighPTElectronTkChi2'))+")"                                
+        TKQuality =  " & (TRCHI2DOF<%(SingleHighPTElectronTkChi2)s)"  % self.getProps()
 
         ############################################################################
         #    Selection for a large PT single electron:  
@@ -115,7 +115,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
         
         Hlt2SelSingleHighPTElectron = Hlt2Member(   FilterDesktop
                                                     , "Filter"
-                                                    , Code = " (PT>"+str(self.getProp('SingleHighPTElectronPT'))+"*MeV) " + TKQuality
+                                                    , Code = " (PT>%(SingleHighPTElectronPT)s*MeV) " % self.getProps() + TKQuality
                                                     , InputLocations  = [BiKalmanFittedElectrons]
                                                     )
         line = Hlt2Line( 'SingleHighPTElectron'
