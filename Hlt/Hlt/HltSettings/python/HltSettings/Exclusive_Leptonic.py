@@ -24,6 +24,7 @@ class Exclusive_Leptonic :
             'Hlt2Dst2PiD02MuMu', 
             'Hlt2Dst2PiD02PiMu',
             'Hlt2Dst2PiD02PiPi', 
+            'Hlt2Dst2PiD02EMu', 
 
             # another D2mumu
             'Hlt2CharmD02MuMu',

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - Gerhard Raven
+ - add Hlt2Dst2PiD02EMu and Hlt2 beamgas lines to Oct10
+
 ! 2010-09-29 - V. Gligorov
  - Update for new HLT2 charm lines
 

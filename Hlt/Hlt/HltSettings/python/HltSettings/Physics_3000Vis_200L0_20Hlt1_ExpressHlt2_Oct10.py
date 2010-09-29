@@ -206,7 +206,7 @@ class Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 :
         """
         Returns a list of active lines
         """
-        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent']
+        hlt2 = [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent','Hlt2ErrorEvent','Hlt2BeamGasNonBBCrossing','Hlt2BeamGasBBCrossing']
         from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
         hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
 
