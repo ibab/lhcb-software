@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - V. Gligorov
+ - Update for new HLT2 charm lines
+
 ! 2010-09-29 - Plamen Hopchev
  - First commit of Hlt2BeamGasLines
 
