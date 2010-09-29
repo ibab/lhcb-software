@@ -84,6 +84,12 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'BiasedVertexChi2'        :    5
                    ,'BiasedPVDistanceChi2'    :   10
                    ,'BiasedPVDistanceTChi2'   :  150
+                   ,'PromptJPsiMinMass'       : 2900      # MeV
+                   ,'PromptJPsiPt'            :    0
+                   ,'PromptJPsiHighPt'        : 2000      # MeV
+                   ,'PromptJPsiMuPt'          :  700      # MeV
+                   ,'PromptJPsiVChi2'         :   15
+                   ,'PromptJPsiTrChi2'        :    5
 
                    }
     
@@ -154,6 +160,40 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
+
+
+        #--------------------------------------------
+        '''
+        prompt JPsi for cross section analysis
+        '''
+        line.clone( 'PromptJPsi'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>%(PromptJPsiMinMass)s*MeV)"\
+                                 "& (PT>%(PromptJPsiPt)s*MeV) "\
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
+                                 "& (VFASPF(VCHI2/VDOF)<%(PromptJPsiVChi2)s )"\
+                                 "& (TRCHI2DOF < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PromptJPsiDecision":  50212 } )
+
+        #--------------------------------------------
+        '''
+        prompt JPsi for cross section analysis high JPsi PT
+        '''
+        line.clone( 'PromptJPsiHighPT'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>%(PromptJPsiMinMass)s*MeV)"\
+                                 "& (PT>%(PromptJPsiHighPt)s*MeV) "\
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
+                                 "& (VFASPF(VCHI2/VDOF)<%(PromptJPsiVChi2)s )"\
+                                 "& (TRCHI2DOF < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PromptJPsiHighPTDecision":  50213 } )
+            
             
         #--------------------------------------------
         '''
