@@ -39,7 +39,10 @@ class Muons_Retention50_Oct10 :
 #            'Hlt2DiMuonUnbiasedJPsiLow',
             'Hlt2UnbiasedDiMuon',  
             'Hlt2UnbiasedDiMuonLowMass',
-            'Hlt2DiMuonSameSign'
+            'Hlt2DiMuonSameSign',
+            'Hlt2PromptJPsi',
+            'Hlt2PromptJPsiHighPT'
+            
             ]
             
         return lines
@@ -80,7 +83,7 @@ class Muons_Retention50_Oct10 :
             ,'DY4MaxMass'              :50000      # MeV
             ,'UnbiasedZmmMinMass'      :40000      # MeV
             ,'UnbiasedZmmPt'           :  0.0      # MeV
-            , 'Prescale'   : { 'Hlt2UnbiasedDiMuon'          : 1.0
+            , 'Prescale'   : { 'Hlt2UnbiasedDiMuon'          : 0.2
                                , 'Hlt2UnbiasedDiMuonLowMass' : 0.002
                                ,'Hlt2DiMuonDY1'              :  0.1
                                ,'Hlt2DiMuonDY2'              :  1
@@ -95,7 +98,7 @@ class Muons_Retention50_Oct10 :
             ,'SingleMuonIP'        : 0.08     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.001
-                              ,'Hlt2SingleMuon'        : 0.01
+                              ,'Hlt2SingleMuon'        : 0.1
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               ,'Hlt2IncMuTrack'        : 1.0
                               ,'Hlt2MuTrackNoIP'    : 0.01
