@@ -36,17 +36,43 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                 , 'ComTFVtxPVDispChi2LL'    : 25.0       # unitless
                 , 'TFPointUL'               : 0.20       # unitless
                 ## Cut values for one stage track-fit (OSTF) lines.
-                , 'OSTFAllTrkPtLL'          : 300.0      # in MeV
-                , 'OSTFAllTrkPLL'           : 2000.0     # in MeV
-                , 'OSTFAllTrkPVIPChi2LL'    : 9.0        # unitless
-                , 'OSTFAllTrkChi2UL'        : 10.0       # unitless
-                , 'OSTFPairMinDocaUL'       : 0.20       # in mm
-                , 'OSTFPairMaxDocaUL'       : 1.0        # in mm
-                , 'OSTFTrkMaxPtLL'          : 1500.0     # in MeV
-                , 'OSTFVtxPVDispChi2LL'     : 100.0      # unitless
-                , 'OSTFPointUL'             : 0.20       # unitless
-                , 'OSTFVtxChi2UL'           : 20.0       # unitless
-                , 'OSTFDPtLL'               : 2000.0     # in MeV 
+                ## 2-body!
+                , 'OSTFAllTrkPtLL_2Body'          : 500.0      # in MeV
+                , 'OSTFAllTrkPLL_2Body'           : 5000.0     # in MeV
+                , 'OSTFAllTrkPVIPChi2LL_2Body'    : 2.0        # unitless
+                , 'OSTFAllTrkChi2UL_2Body'        : 5.0        # unitless
+                , 'OSTFPairMinDocaUL_2Body'       : 0.10       # in mm
+                , 'OSTFTrkMaxPtLL_2Body'          : 1500.0     # in MeV
+                , 'OSTFVtxPVDispChi2LL_2Body'     : 25.0       # unitless
+                , 'OSTFPointLL_2Body'             : 0.99985     # unitless
+                , 'OSTFVtxChi2UL_2Body'           : 10.0       # unitless
+                , 'OSTFDPtLL_2Body'               : 2000.0     # in MeV
+                ## 3-body!
+                , 'OSTFAllTrkPtLL_3Body'          : 500.0      # in MeV
+                , 'OSTFAllTrkPLL_3Body'           : 5000.0     # in MeV
+                , 'OSTFAllTrkPVIPChi2LL_3Body'    : 4.0       # unitless
+                , 'OSTFAllTrkChi2UL_3Body'        : 5.0        # unitless
+                , 'OSTFPairMinDocaUL_3Body'       : 0.20       # in mm
+                , 'OSTFPairMaxDocaUL_3Body'       : 1.00       # in mm
+                , 'OSTFTrkMaxPtLL_3Body'          : 1500.0     # in MeV
+                , 'OSTFVtxPVDispChi2LL_3Body'     : 100.0      # unitless
+                , 'OSTFDIPChi2UL_3Body'           : 9.0       # unitless
+                , 'OSTFVtxChi2UL_3Body'           : 15.0       # unitless
+                , 'OSTFDSumPtLL_3Body'            : 1800.0     # in MeV
+                , 'OSTFDPtLL_3Body'               : 2000.0     # in MeV 
+                ## 2-body inclusive!
+                , 'OSTFAllTrkPtLL_2BodyInc'          : 500.0      # in MeV
+                , 'OSTFAllTrkPLL_2BodyInc'           : 5000.0     # in MeV
+                , 'OSTFAllTrkPVIPChi2LL_2BodyInc'    : 16.0        # unitless
+                , 'OSTFAllTrkChi2UL_2BodyInc'        : 3.0        # unitless
+                , 'OSTFPairMinDocaUL_2BodyInc'       : 0.15       # in mm
+                , 'OSTFVtxPVDispChi2LL_2BodyInc'     : 100.0       # unitless
+                , 'OSTFTrkMaxPtLL_2BodyInc'          : 1000.0     # in MeV
+                , 'OSTFDPtLL_2BodyInc'               : 1500.0     # in MeV
+                , 'OSTFDSumPtLL_2BodyInc'            : 1800.0     # in MeV
+                , 'OSTFDIPChi2LL_2BodyInc'           : 2.0       # unitless
+                , 'OSTFMCOR_MIN_2BodyInc'            : 300.        # MeV
+                , 'OSTFMCOR_MAX_2BodyInc'            : 3200.        # MeV
                 ## Slots for K_S h h' lines
                 , 'KshhTFHHTrkPLL'          : 1500.0     # in MeV
                 , 'KshhTFHHTrkChi2UL'       : 20.0       # unitless
@@ -85,53 +111,42 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                 , 'Prescale'                : {
                                                  'Hlt2CharmTF2BodySA' : 0.001
                                                , 'Hlt2CharmTF3BodySA' : 0.001
-                                               , 'Hlt2CharmTF4BodySA' : 0.001
                                                , 'Hlt2CharmTF2BodyWideMass' : 0.05
                                                , 'Hlt2CharmTF3BodyWideMass' : 0.05
-                                               , 'Hlt2CharmTF4BodyWideMass' : 0.05
                                                , 'Hlt2CharmTF2BodyWideMassSA' : 0.001
                                                , 'Hlt2CharmTF3BodyWideMassSA' : 0.001
-                                               , 'Hlt2CharmTF4BodyWideMassSA' : 0.001
                                                , 'Hlt2CharmOSTF2BodyWideMass' : 0.05
                                                , 'Hlt2CharmOSTF3BodyWideMass' : 0.05
-                                               , 'Hlt2CharmOSTF4BodyWideMass' : 0.05
                                                , 'Hlt2CharmD02PiPiForD02MuMu' : 0.01
                                                , 'Hlt2CharmD02KPiForD02MuMu'  : 0.01
                                                , 'Hlt2CharmD02KKForD02MuMu'   : 0.01
                                               }
                 , 'Postscale'               : {'Hlt2Charm2BodySA' : 0.002
                                                , 'Hlt2Charm3BodySA' : 0.0005
-                                               , 'Hlt2Charm4BodySA' : 0.0005
                                               }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : { ## Main two stage lines
                                      'Hlt2CharmTF2BodySignalDecision' : 50880
                                    , 'Hlt2CharmTF3BodySignalDecision' : 50910
-                                   , 'Hlt2CharmTF4BodySignalDecision' : 50950
                                    ## Robust stage monitoring lines
                                    , 'Hlt2Charm2BodySADecision'   : 50850
                                    , 'Hlt2Charm3BodySADecision'   : 50860
-                                   , 'Hlt2Charm4BodySADecision'   : 50870
                                    ## Post-track fit stage monitoring lines
                                    , 'Hlt2CharmTF2BodySADecision' : 50882
                                    , 'Hlt2CharmTF3BodySADecision' : 50912
-                                   , 'Hlt2CharmTF4BodySADecision' : 50952
                                    ## Two stage wide mass sideband lines
                                    , 'Hlt2CharmTF2BodyWideMassDecision' : 50890
                                    , 'Hlt2CharmTF3BodyWideMassDecision' : 50920
-                                   , 'Hlt2CharmTF4BodyWideMassDecision' : 50960
                                    ## Post-TF monitoring for wide mass
                                    , 'Hlt2CharmTF2BodyWideMassSADecision' : 50893
                                    , 'Hlt2CharmTF3BodyWideMassSADecision' : 50923
-                                   , 'Hlt2CharmTF4BodyWideMassSADecision' : 50963
                                    ## Main One stage lines
                                    , 'Hlt2CharmOSTF2BodyDecision' : 50883
+                                   , 'Hlt2CharmOSTF2BodyIncDecision' : 50884 
                                    , 'Hlt2CharmOSTF3BodyDecision' : 50913
-                                   , 'Hlt2CharmOSTF4BodyDecision' : 50953
                                    ## One stage wide mass lines
                                    , 'Hlt2CharmOSTF2BodyWideMassDecision' : 50885
                                    , 'Hlt2CharmOSTF3BodyWideMassDecision' : 50915
-                                   , 'Hlt2CharmOSTF4BodyWideMassDecision' : 50955
                                    ## Kshh' lines
                                    , 'Hlt2CharmTFD2HHKsLLDecision' : 50967
                                    , 'Hlt2CharmTFD2HHKsDDDecision' : 50968
@@ -325,26 +340,12 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __ostfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
-        """
-        # Function to configure track fit particle combinations
-        #   used by the one stage topological lines.  It lashes the new
-        #   CombineParticles to a bindMembers with its antecedents.
-        # Its arguments:
-        #     name      : string name
-        #     inputSeq  : list of input particle sequences
-        #     decayDesc : list of string decay descriptors
-        #     extracuts : dictionary of extra cuts to be applied.
-        #                 Can include cuts at the CombinationCut or at
-        #                 the MotherCut level.
-        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
-        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
-        """
+    def __ostfCombine2Body(self, name, inputSeq, decayDesc, extracuts = None) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
         # Construct a cut string for the combination.
-        combcuts = "(AM<2100*MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMaxDocaUL)s ) & (AALLSAMEBPV)" % self.getProps()
+        combcuts = "(AM<2100*MeV) & (AALLSAMEBPV)" % self.getProps()
 
         # extracuts allows additional cuts to be applied for special
         #   cases, including the tight doca requirement of the 2-body and
@@ -353,8 +354,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + '&' + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL)s )
-            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL)s *MeV)""" % self.getProps()
+        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL_2Body)s )
+            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL_2Body)s *MeV)""" % self.getProps()
 
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
@@ -371,8 +372,71 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         return topoNBody
     # }
 
+    def __ostfCombine2BodyInc(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
 
-    def __ostfFilter(self, name, inputSeq, extracode = None) : # {
+        # Construct a cut string for the combination.
+        combcuts = "(AM<2000*MeV) & (AALLSAMEBPV)" % self.getProps()
+
+        # extracuts allows additional cuts to be applied for special
+        #   cases, including the tight doca requirement of the 2-body and
+        #   the additional cuts to reduce stored combinations in the 4-body.
+        if extracuts and extracuts.has_key('CombinationCut') :
+            combcuts = combcuts + '&' + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL_2BodyInc)s )
+            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(OSTFTrkMaxPtLL_2BodyInc)s *MeV)""" % self.getProps()
+
+        if extracuts and extracuts.has_key('MotherCut') :
+            parentcuts = parentcuts  + '&' + extracuts['MotherCut']
+
+        combineTopoNBody = Hlt2Member( CombineParticles
+                                       , 'Combine'
+                                       , DecayDescriptors = decayDesc
+                                       , InputLocations = inputSeq
+                                       , CombinationCut = combcuts
+                                       , MotherCut = parentcuts
+                                     )    
+
+        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
+        return topoNBody
+    # }
+
+    def __ostfCombine3Body(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+
+        # Construct a cut string for the combination.
+        combcuts = "(AM<2100*MeV)&(AMAXDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMaxDocaUL_3Body)s )&(AALLSAMEBPV)" % self.getProps()
+
+        # extracuts allows additional cuts to be applied for special
+        #   cases, including the tight doca requirement of the 2-body and
+        #   the additional cuts to reduce stored combinations in the 4-body.
+        if extracuts and extracuts.has_key('CombinationCut') :
+            combcuts = combcuts + '&' + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        parentcuts = """(BPVVDCHI2> %(OSTFVtxPVDispChi2LL_3Body)s )
+            & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)), PT)> %(OSTFTrkMaxPtLL_3Body)s *MeV)""" % self.getProps()
+
+        if extracuts and extracuts.has_key('MotherCut') :
+            parentcuts = parentcuts  + '&' + extracuts['MotherCut']
+
+        combineTopoNBody = Hlt2Member( CombineParticles
+                                       , 'Combine'
+                                       , DecayDescriptors = decayDesc
+                                       , InputLocations = inputSeq
+                                       , CombinationCut = combcuts
+                                       , MotherCut = parentcuts
+                                     )
+
+        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
+        return topoNBody
+    # }
+
+    def __ostfFilter2Body(self, name, inputSeq, extracode = None) : # {
         """
         # Function to configure a filter for the one stage track-fit
         #   topological lines.  It lashes the new FilterDesktop to a
@@ -383,7 +447,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        codestr = "(BPVTRGPOINTINGWPT< %(OSTFPointUL)s )" % self.getProps()
+        codestr = "(BPVDIRA > %(OSTFPointLL_2Body)s )" % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
@@ -395,6 +459,55 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         return filterSeq
     # }
 
+    def __ostfFilter2BodyInc(self, name, inputSeq, extracode = None) : # {
+        """  
+        # Function to configure a filter for the one stage track-fit
+        #   topological lines.  It lashes the new FilterDesktop to a
+        #   bindMembers with its antecedents.
+        # The argument inputSeq should be a list of bindMember sequences that
+        #   produces the particles to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+
+        props = self.getProps()
+        preambulo = ["PTRANS = P*sqrt( 1-BPVDIRA**2 )",
+                     "MCOR = sqrt(M**2 + PTRANS**2) + PTRANS"]
+        codestr = '(in_range(%s*MeV,MCOR,%s*MeV))' % (props['OSTFMCOR_MIN_2BodyInc'],props['OSTFMCOR_MAX_2BodyInc'])
+        if extracode :
+          codestr = codestr + '&' + extracode
+        filter = Hlt2Member( FilterDesktop
+                             , 'TFFilter'
+                             , InputLocations = inputSeq
+                             , Code = codestr
+                             , Preambulo=preambulo 
+                           )    
+        filterSeq = bindMembers( name, inputSeq + [ filter ] )
+        return filterSeq
+    # }
+
+    def __ostfFilter3Body(self, name, inputSeq, extracode = None) : # {
+        """
+        # Function to configure a filter for the one stage track-fit
+        #   topological lines.  It lashes the new FilterDesktop to a
+        #   bindMembers with its antecedents.
+        # The argument inputSeq should be a list of bindMember sequences that
+        #   produces the particles to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        
+        codestr = "( BPVIPCHI2() < %(OSTFDIPChi2UL_3Body)s )" % self.getProps()
+        if extracode :
+          codestr = codestr + '&' + extracode
+        filter = Hlt2Member( FilterDesktop
+                             , 'TFFilter'
+                             , InputLocations = inputSeq
+                             , Code = codestr
+                           )
+        filterSeq = bindMembers( name, inputSeq + [ filter ] )
+        return filterSeq
+    # }
 
     def __seqGEC(self) : # {
         """
@@ -489,23 +602,15 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __ostfInPartFilter(self, name, inputContainers) : # {
-        """
-        # Function to configure a filter for the input particles of the
-        #   one stage track fit lines.  It lashes the new FilterDesktop
-        #   to a bindMembers with its antecedents.
-        # The argument inputContainer should be 
-        #   a list of bindMember sequences that produces the particles
-        #   to filter.
-        """
+    def __ostfInPartFilter2Body(self, name, inputContainers) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        incuts = """(PT> %(OSTFAllTrkPtLL)s *MeV)
-                    & (P> %(OSTFAllTrkPLL)s *MeV)
-                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL)s )
-                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL)s )""" % self.getProps()
+        incuts = """(PT> %(OSTFAllTrkPtLL_2Body)s *MeV)
+                    & (P> %(OSTFAllTrkPLL_2Body)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL_2Body)s )
+                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL_2Body)s )""" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -519,6 +624,50 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         return filterSeq
     # }
 
+    def __ostfInPartFilter2BodyInc(self, name, inputContainers) : # {
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D 
+
+        incuts = """(PT> %(OSTFAllTrkPtLL_2BodyInc)s *MeV)
+                    & (P> %(OSTFAllTrkPLL_2BodyInc)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL_2BodyInc)s )
+                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL_2BodyInc)s )""" % self.getProps()
+
+        filter = Hlt2Member( FilterDesktop
+                            , 'Filter'
+                            , InputLocations = inputContainers
+                            , Code = incuts
+                           )    
+
+        ## Require the PV3D reconstruction before our cut on IP.
+        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+
+        return filterSeq
+    # }    
+
+   
+    def __ostfInPartFilter3Body(self, name, inputContainers) : # {
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltTracking.HltPVs import PV3D
+
+        incuts = """(PT> %(OSTFAllTrkPtLL_3Body)s *MeV)
+                    & (P> %(OSTFAllTrkPLL_3Body)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(OSTFAllTrkPVIPChi2LL_3Body)s )
+                    & (TRCHI2DOF< %(OSTFAllTrkChi2UL_3Body)s )""" % self.getProps()
+
+        filter = Hlt2Member( FilterDesktop
+                            , 'Filter'
+                            , InputLocations = inputContainers
+                            , Code = incuts
+                           )
+
+        ## Require the PV3D reconstruction before our cut on IP.
+        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+
+        return filterSeq
+    # }
 
     def __KshhTFHHInPartFilter(self, name, inputContainers) : # {
         """
@@ -579,7 +728,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             combcuts = combcuts + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        parentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFDVtxChi2UL)s )
+        parentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFDVtxChi2UL)s )
                           & (BPVVD> %(KshhTFDVtxPVDispLL)s *mm)
                           & (PT> %(KshhTFDPtLL)s *MeV)
                           & (BPVDIRA > %(KshhTFDDiraLL)s )""" % self.getProps()
@@ -633,7 +782,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
          #  DCombCuts  = DCombCuts + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        DMotherCuts = """(VFASPF(VCHI2PDOF)< 20 )
+        DMotherCuts = """(VFASPF(VCHI2/VDOF)< 20 )
                           & (MM> 1400*MeV) & (MM < 2200*MeV)
                           & (MIPCHI2DV(PRIMARY) < 4) """ 
             
@@ -658,13 +807,14 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Decay descriptors
         ###################################################################
-        decayDesc2Body = [  "K*(892)0 -> pi+ pi+" , "K*(892)0 -> pi+ pi-"
-                          , "K*(892)0 -> pi- pi-" , "K*(892)0 -> K+ K+"
-                          , "K*(892)0 -> K+ K-"   , "K*(892)0 -> K- K-"
-                          , "K*(892)0 -> K+ pi-"  , "K*(892)0 -> pi+ K-"
-                          , "K*(892)0 -> K+ pi+"  , "K*(892)0 -> K- pi-" ]
-        decayDesc3Body = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
-        decayDesc4Body = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+        decayDesc2Body = [  "D0 -> pi+ pi-"
+                          , "D0 -> K+ K-"   
+                          , "D0 -> K+ pi-"  , "D0 -> pi+ K-"]
+        decayDesc2BodyInc = [  "D0 -> pi+ pi-"
+                          , "D0 -> pi+ pi-"   
+                          , "D0 -> pi- pi-"]
+        decayDesc3Body = ["[D+ -> pi+ pi+ K-]cc", "[D+ -> pi+ K+ K-]cc", "[D+ -> K+ K+ K-]cc", 
+                          "[D+ -> K+ K+ pi-]cc" , "[D+ -> pi+ pi+ pi-]cc", "[D+ -> pi+ pi- K+]cc"]
         ###################################################################
         ## Filter the input particles.
         ###################################################################
@@ -688,21 +838,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # CombineParticles for the robust 3-body combinations.
         ###################################################################
         charm3Body = self.__robustCombine(  name = 'Charm3Body'
-                                  , inputSeq = [ lclRobInputPions, charm2Body ]
-                                  , decayDesc = decayDesc3Body )
-
-
-        # Construct a bindMember for the charm robust 4-body decision
-        # CombineParticles for the 4-body combinations.
-        ###################################################################
-        charmRob4Body = self.__robustCombine(  name = 'CharmRobust4Body'
-                                  , inputSeq = [lclRobInputPions, charm3Body ]
-                                  , decayDesc = decayDesc4Body
-                                  , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
-                                                , 'MotherCut'     : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
-                                                }
+                                  , inputSeq = [ charm2Body, lclRobInputKaons ]
+                                  , decayDesc = decayDesc3Body
                                   )
-
 
         ###################################################################
         # Construct a bindMember for the charm robust 2-body decision
@@ -713,13 +851,6 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # Construct a bindMember for the charm robust 3-body decision
         ###################################################################
         charmRobust3BodySeq = self.__robustFilter('CharmRobust3Body', [charm3Body])
-
-
-        # Construct a bindMember for the charm robust 4-body decision
-        ###################################################################
-        charmRobust4BodySeq = self.__robustFilter('CharmRobust4Body', [charmRob4Body])
-
-
 
         ###################################################################
         ## Filter post-track fit input particles.
@@ -750,15 +881,6 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                 , decayDesc = decayDesc3Body
                                )
 
-        # post-track-fit 4-body combinations
-        ###################################################################
-        charmTF4Body = self.__tfCombine(  name = 'CharmTF4Body'
-                                , inputSeq = [ lclTFInputPions, charmTF3Body ]
-                                , decayDesc = decayDesc4Body
-                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
-                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
-                                              }
-                                 )
         ###################################################################
         # Main 2-body charm post-track-fit sequence and line.
         ###################################################################
@@ -773,15 +895,6 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                      , [charmTF3Body]
                                      , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
-
-        # Main 4-body charm post-track-fit sequence and line.
-        ###################################################################
-        charmTF4BodySeq = self.__tfFilter('CharmPostTF4Body'
-                                     , [charmTF4Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
-
-
-
         ##
         #
         # Charm lines
@@ -793,8 +906,6 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                       , 'TF'  : charmTF2BodySeq }
                          , '3Body' : {  'Rob' : charmRobust3BodySeq
                                       , 'TF'  : charmTF3BodySeq }
-                         , '4Body' : {  'Rob' : charmRobust4BodySeq
-                                      , 'TF'  : charmTF4BodySeq }
                         }
 
         ###################################################################
@@ -830,23 +941,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
 
 
-        # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
-        ###################################################################
-        charmTF4BodySB = self.__tfCombine(  name = 'CharmWMTF4Body'
-                                , inputSeq = [ lclTFInputPions, charmTF3Body ]
-                                , decayDesc = decayDesc4Body
-                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
-                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
-                                              }
-                                 )
-
-        charmTF4BodySBSeq = self.__tfFilter('CharmPostTF4BodyWideMass'
-                                     , [charmTF4BodySB]
-                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
-
         charmNBodyWideMassSeq = {  '2Body' : charmTF2BodySBSeq
                                  , '3Body' : charmTF3BodySBSeq
-                                 , '4Body' : charmTF4BodySBSeq
                                 }
 
 
@@ -870,86 +966,78 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         # low rate running.
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclOSTFInputKaons = self.__ostfInPartFilter('CharmOSTFInputKaons', [ BiKalmanFittedKaons] )
-        lclOSTFInputPions = self.__ostfInPartFilter('CharmOSTFInputPions', [ BiKalmanFittedPions] )
+        lclOSTFInputKaons2Body = self.__ostfInPartFilter2Body('CharmOSTFInputKaons2Body', [ BiKalmanFittedKaons] )
+        lclOSTFInputPions2Body = self.__ostfInPartFilter2Body('CharmOSTFInputPions2Body', [ BiKalmanFittedPions] )
+        lclOSTFInputKaons2BodyInc = self.__ostfInPartFilter2BodyInc('CharmOSTFInputKaons2BodyInc', [ BiKalmanFittedKaons] )
+        lclOSTFInputPions2BodyInc = self.__ostfInPartFilter2BodyInc('CharmOSTFInputPions2BodyInc', [ BiKalmanFittedPions] )
+        lclOSTFInputKaons3Body = self.__ostfInPartFilter3Body('CharmOSTFInputKaons3Body', [ BiKalmanFittedKaons] )
+        lclOSTFInputPions3Body = self.__ostfInPartFilter3Body('CharmOSTFInputPions3Body', [ BiKalmanFittedPions] )
 
         # 2-body combinations
         ###################################################################
-        charmOSTF2Body = self.__ostfCombine(  name = 'CharmOSTF2Body'
-                                , inputSeq = [ lclOSTFInputKaons, lclOSTFInputPions ]
-                                #, decayDesc = ["K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-"]
+        charmOSTF2Body = self.__ostfCombine2Body(  name = 'CharmOSTF2Body'
+                                , inputSeq = [ lclOSTFInputKaons2Body, lclOSTFInputPions2Body ]
                                 , decayDesc = decayDesc2Body 
-                                , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(OSTFPairMinDocaUL)s )" % self.getProps() }
+                                , extracuts = { 'CombinationCut' : 
+                                                "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(OSTFPairMinDocaUL_2Body)s )" % self.getProps() 
+                                              }
+                               )
+
+        # 2-body inclusive combinations
+        ###################################################################
+        charmOSTF2BodyInc = self.__ostfCombine2BodyInc(  name = 'CharmOSTF2BodyInc'
+                                , inputSeq = [ lclOSTFInputKaons2BodyInc, lclOSTFInputPions2BodyInc ]
+                                , decayDesc = decayDesc2BodyInc 
+                                , extracuts = { 'CombinationCut' : 
+                                                "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(OSTFPairMinDocaUL_2BodyInc)s )" % self.getProps() 
+                                              }    
                                )
 
         # 3-body combinations
         ###################################################################
-        charmOSTF3Body = self.__ostfCombine(  name = 'CharmOSTF3Body'
-                                , inputSeq = [ lclOSTFInputPions, charmOSTF2Body ]
+        charmOSTF3Body = self.__ostfCombine3Body(  name = 'CharmOSTF3Body'
+                                , inputSeq = [ lclOSTFInputPions3Body,lclOSTFInputKaons3Body]
                                 , decayDesc = decayDesc3Body
+                                , extracuts = { 'CombinationCut' : 
+                                                "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(OSTFPairMinDocaUL_3Body)s)" % self.getProps() 
+                                              }
                                )
 
-        # 4-body combinations
-        ###################################################################
-        charmOSTF4Body = self.__ostfCombine(  name = 'CharmOSTF4Body'
-                                , inputSeq = [ lclOSTFInputPions, charmOSTF3Body ]
-                                , decayDesc = decayDesc4Body
-                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
-                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(OSTFPointUL)s )' % self.getProps()
-                                              }
-                                 )
         ###################################################################
         # Decision sequences for the one stage lines
         ###################################################################
 
         # 2-body decision
         ###################################################################
-        charmOSTF2BodySeq = self.__ostfFilter('CharmOSTF2Body'
+        charmOSTF2BodySeq = self.__ostfFilter2Body('CharmOSTF2Body'
                                      , [charmOSTF2Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2PDOF) < %(OSTFVtxChi2UL)s)' % self.getProps()) 
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (PT > %(OSTFDPtLL_2Body)s) & (VFASPF(VCHI2/VDOF) < %(OSTFVtxChi2UL_2Body)s)' % self.getProps()) 
 
+        # 2-body inclusive decision
+        ###################################################################
+        charmOSTF2BodyIncSeq = self.__ostfFilter2BodyInc('CharmOSTF2BodyInc'
+                                     , [charmOSTF2BodyInc]
+                                     , extracode = "(SUMTREE(PT,('pi+'==ABSID),0.0) > %(OSTFDSumPtLL_2BodyInc)s) & (PT > %(OSTFDPtLL_2BodyInc)s) & (BPVIPCHI2() > %(OSTFDIPChi2LL_2BodyInc)s)" % self.getProps())
 
         # 3-body decision
         ###################################################################
-        charmOSTF3BodySeq = self.__ostfFilter('CharmOSTF3Body'
+        charmOSTF3BodySeq = self.__ostfFilter3Body('CharmOSTF3Body'
                                      , [charmOSTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2PDOF) < %(OSTFVtxChi2UL)s)' % self.getProps() )
-
-
-        # 4-body decision
-        ###################################################################
-        charmOSTF4BodySeq = self.__ostfFilter('CharmOSTF4Body'
-                                     , [charmOSTF4Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (PT > %(OSTFDPtLL)s) & (VFASPF(VCHI2PDOF) < %(OSTFVtxChi2UL)s)' % self.getProps())
-
+                                     , extracode = "(((M>1800*MeV) & (M<2040*MeV)) | ((M>1943*MeV) & (M<1993*MeV))) & (VFASPF(VCHI2/VDOF) < %(OSTFVtxChi2UL_3Body)s) & ( SUMTREE(PT,(('pi+'==ABSID) | ('K+'==ABSID)),0.0) > %(OSTFDSumPtLL_3Body)s)" % self.getProps() )
 
         # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
         ###################################################################
-        charmOSTF2BodySBSeq = self.__ostfFilter('CharmPostOSTF2BodyWideMass'
+        charmOSTF2BodySBSeq = self.__ostfFilter2Body('CharmPostOSTF2BodyWideMass'
                                      , [charmOSTF2Body]
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
 
         # Line for 3-body charm mass sidebands.  Heavily pre-scaled.
         ###################################################################
-        charmOSTF3BodySBSeq = self.__ostfFilter('CharmPostOSTF3BodyWideMass'
+        charmOSTF3BodySBSeq = self.__ostfFilter3Body('CharmPostOSTF3BodyWideMass'
                                      , [charmOSTF3Body]
-                                     , extracode = '(M>1700*MeV) & (M<2100*MeV) & (abs(CHILD(1,SUMQ) + CHILD(2,Q))==1)')
-
-
-        # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
-        ###################################################################
-        charmOSTF4BodySB = self.__ostfCombine(  name = 'CharmWMOSTF4Body'
-                                , inputSeq = [ lclOSTFInputPions, charmOSTF3Body ]
-                                , decayDesc = decayDesc4Body
-                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
-                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(OSTFPointUL)s )' % self.getProps()
-                                              }
-                                 )
-
-        charmOSTF4BodySBSeq = self.__ostfFilter('CharmPostOSTF4BodyWideMass'
-                                     , [charmOSTF4BodySB]
                                      , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+
 
         # Line creation for one stage track fit lines.
         ###################################################################
@@ -957,8 +1045,6 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                                         , 'Wide' : charmOSTF2BodySBSeq }
                            , '3Body' : {  'Std'  : charmOSTF3BodySeq
                                         , 'Wide' : charmOSTF3BodySBSeq }
-                           , '4Body' : {  'Std'  : charmOSTF4BodySeq
-                                        , 'Wide' : charmOSTF4BodySBSeq }
                           }
 
         for charmSeq in charmOSNBodySeq.keys() :
@@ -967,7 +1053,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             self.__makeLine(osLineName, algos = [ charmOSNBodySeq[charmSeq]['Std'] ])
             self.__makeLine(oswmTFLineName, algos = [ charmOSNBodySeq[charmSeq]['Wide'] ])
 
-
+        #Make the inclusive line!
+        self.__makeLine("CharmOSTF2BodyInc",algos=[charmOSTF2BodyIncSeq])
 
         ###################################################################
         # Lines for D decays with K_S
@@ -985,7 +1072,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         KshhHHcombcuts = """(AM<2100*MeV) 
                             & (AMAXCHILD(MIPDV(PRIMARY), (('pi+'==ABSID) | ('K+'==ABSID)))> %(KshhTFHHTrkMaxPVIPLL)s *mm)
                             & (AALLSAMEBPV)""" % self.getProps()
-        KshhHHparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFHHVtxChi2UL)s )
+        KshhHHparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFHHVtxChi2UL)s )
                               & (BPVVD> %(KshhTFHHVtxPVDispLL)s *mm)
                               & (PT> %(KshhTFHHPtLL)s *MeV)""" % self.getProps()
 
@@ -1008,7 +1095,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         KshhKsLLdaugcuts = { "pi+" : "(P> %(KshhTFKsLLTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsLLTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsLLTrkChi2UL)s)" % self.getProps() }
         KshhKsLLcombcuts = "ADAMASS('KS0')< %(KshhTFKsLLCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsLLparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFKsLLVtxChi2UL)s ) 
+        KshhKsLLparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFKsLLVtxChi2UL)s ) 
                         & (BPVVDZ> %(KshhTFKsLLVtxPVDispZLL)s *mm) 
                         & (BPVVDZ< %(KshhTFKsLLVtxPVDispZUL)s *mm) 
                         & (BPVDIRA > %(KshhTFKsLLDiraLL)s ) 
@@ -1031,7 +1118,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         KshhKsDDdaugcuts = { "pi+" : "(P> %(KshhTFKsDDTrkPLL)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KshhTFKsDDTrkPVIPChi2LL)s ) & (TRCHI2DOF< %(KshhTFKsDDTrkChi2UL)s)" % self.getProps() }
         KshhKsDDcombcuts = "ADAMASS('KS0')< %(KshhTFKsDDCombSymMassWin)s *MeV" % self.getProps()
-        KshhKsDDparentcuts = """(VFASPF(VCHI2PDOF)< %(KshhTFKsDDVtxChi2UL)s ) 
+        KshhKsDDparentcuts = """(VFASPF(VCHI2/VDOF)< %(KshhTFKsDDVtxChi2UL)s ) 
                         & (BPVVDZ> %(KshhTFKsDDVtxPVDispZLL)s *mm) 
                         & (BPVVDZ< %(KshhTFKsDDVtxPVDispZUL)s *mm) 
                         & (BPVDIRA > %(KshhTFKsDDDiraLL)s ) 
@@ -1072,8 +1159,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 #        D0DaughterCut = "(PT > 1 * GeV)"
         D0DaughterCut = "(PT > %(D02MuMuMinDaughterPt)s * GeV)" % self.getProps()
         D0CombinationCut = "(ADAMASS('D0') < 100 * MeV)"
-#        D0MotherCut = "(VFASPF(VCHI2PDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > 0.1 * ps)"
-        D0MotherCut = "(VFASPF(VCHI2PDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
+#        D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > 0.1 * ps)"
+        D0MotherCut = "(VFASPF(VCHI2/VDOF) < 100) & (BPVLTFITCHI2() < 100) & (BPVLTIME() > %(D02MuMuMinLifeTime)s * ps)" % self.getProps()
 
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons, BiKalmanFittedPions, BiKalmanFittedKaons
 
