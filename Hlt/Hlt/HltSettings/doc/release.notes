@@ -4,11 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v4r0  2010-09-29 ===================
 ! 2010-09-29 - Johannes Albrecht
  - Muons_Retention50_Oct10: HLT2: include prompt JPsi lines, prescale UnbiasedDiMuon, move single muon prescale to 0.1
  - add also dimuondiphoton line
-
-!========================== HltSettings v4r0  2010-09-29 ===================
 
 ! 2010-09-29 - Gerhard Raven
  - add Hlt2Dst2PiD02EMu and Hlt2 beamgas lines to Oct10
