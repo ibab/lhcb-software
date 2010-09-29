@@ -86,7 +86,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   
   char nCluTitle[100];
   sprintf( nCluTitle, "Number of VELO clusters per event (%s)", m_tae.c_str() );
-  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 4000., 400. );
+  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 4000., 400 );
   m_hCluSize = book1D( "Cluster size", "Number of strips per cluster",
                        -0.5, 5.5, 6 );
   m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster",
