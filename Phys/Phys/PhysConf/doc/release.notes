@@ -5,6 +5,13 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 - Juan Palacios
+ - python/PhysConf/Configuration.py
+  . Added configureEventTime() function. Configures EventClockSvc to take
+    event time from RecHeader or ODIN if that fails. PhysConf() calls it
+    for all InputTypes containing 'DST'.
+ - Increase to v1r8.
+
 ! 2010-09-21 - Chris Jones
  - Updates to the PhysConf configurable, to move some of the initialisation
    algorithms to GaudiConf where they are run as needed via the data on 

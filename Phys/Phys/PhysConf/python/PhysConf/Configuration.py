@@ -7,6 +7,24 @@ __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
+from Configurables import (EventClockSvc,
+                           RecEventTime,
+                           TimeDecoderList,
+                           OdinTimeDecoder)
+def configureEventTime() :
+    """
+    Configure EventClockSvc to get event time from RecHeader first
+    and then from ODIN in case of faulire.
+    Returns EventClockSvs()
+    Author: Marco Clemencic.
+    """
+    ecs = EventClockSvc()
+    ecs.addTool(TimeDecoderList, "EventTimeDecoder")
+    tdl = ecs.EventTimeDecoder
+    tdl.addTool(RecEventTime)
+    tdl.addTool(OdinTimeDecoder)
+    tdl.Decoders = [tdl.RecEventTime, tdl.OdinTimeDecoder]
+    return ecs
 
 class PhysConf(LHCbConfigurableUser) :
 
@@ -148,4 +166,6 @@ class PhysConf(LHCbConfigurableUser) :
         log.info("Applying Phys configuration")
         self.dataOnDemand()
         self.loki()
-        
+        if 'DST' in  self.getProp('InputType').upper() :
+            log.info('Configuring EventClockSvc to use RecHeader')
+            configureEventTime()
