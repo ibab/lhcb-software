@@ -64,25 +64,25 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         decayDescB2MuTrack = ["[B0 -> mu+ pi-]cc","[B0 -> mu+ pi+]cc"]
         decayDescB2MuTrackNoIP = ["[B0 -> mu+ pi-]cc"]
         
-        MuTrackMuCut = "(TRCHI2DOF<"+str(self.getProp('MuTrackTrChi2'))+")&" \
-                       "(PT>"+str(self.getProp('MuTrackMuPt'))+"*MeV)&" \
-                       "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('MuTrackMuIPChi2'))+")"
+        MuTrackMuCut = "(TRCHI2DOF<%(MuTrackTrChi2)s) " \
+                     "& (PT>%(MuTrackMuPt)s*MeV) " \
+                     "& (MIPCHI2DV(PRIMARY)>%(MuTrackMuIPChi2)s)" % self.getProps()
         
-        MuTrackTrCut = "(TRCHI2DOF<"+str(self.getProp('MuTrackTrChi2'))+")&" \
-                       "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV)&" \
-                       "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('MuTrackTrIPChi2'))+")"
+        MuTrackTrCut = "(TRCHI2DOF<%(MuTrackTrChi2)s) " \
+                     "& (PT>%(MuTrackTrPt)s*MeV) " \
+                     "& (MIPCHI2DV(PRIMARY)>%(MuTrackTrIPChi2)s)" % self.getProps()
         
-        MuTrackComCut = "(AM>"+str(self.getProp('MuTrackMass'))+"*MeV)&" \
-                        "(ASUM(PT)>"+str(self.getProp('MuTrackSumPt'))+")&" \
-                        "(AMAXDOCA('')<"+str(self.getProp('MuTrackDoca'))+"*mm)"
+        MuTrackComCut = "(AM>%(MuTrackMass)s*MeV) " \
+                      "& (ASUM(PT)>%(MuTrackSumPt)s) " \
+                      "& (AMAXDOCA('')<%(MuTrackDoca)s*mm)" % self.getProps()
         
-        MuTrackCut = "(VFASPF(VCHI2)<"+str(self.getProp('MuTrackChi2'))+")&" \
-                     "(BPVVDCHI2>"+str(self.getProp('MuTrackFDChi2'))+")&" \
-                     "(BPVDIRA>"+str(self.getProp('MuTrackDIRA'))+")&" \
-                     "(MCOR<"+str(self.getProp('MuTrackCorMass'))+"*MeV)"
+        MuTrackCut = "(VFASPF(VCHI2)<%(MuTrackChi2)s) " \
+                   "& (BPVVDCHI2>%(MuTrackFDChi2)s) " \
+                   "& (BPVDIRA>%(MuTrackDIRA)s) " \
+                   "& (MCOR<%(MuTrackCorMass)s*MeV)" % self.getProps()
         
-        DocaNoIP = "(AMAXDOCA('')<"+str(self.getProp('MuTrackNoIPDoca'))+"*mm)"
-        MassNoIP = "(AM>"+str(self.getProp('MuTrackNoIPMass'))+"*MeV)"
+        DocaNoIP = "(AMAXDOCA('')<%(MuTrackNoIPDoca)s*mm)" % self.getProps()
+        MassNoIP = "(AM>%(MuTrackNoIPMass)s*MeV)" % self.getProps()
         
         Hlt1UnbMuon = "HLT_PASS_RE('Hlt1(SingleMuonNoIPL0|MuTrack4JPsi)Decision')"
         Hlt1AllMuons = "HLT_PASS_RE('Hlt1.*Mu.*Decision')"
@@ -113,7 +113,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleMuon= Hlt2Member( FilterDesktop
                                        , "Filter"
                                        , InputLocations  = [BiKalmanFittedMuons]
-                                       , Code = "((PT>"+str(self.getProp('SingleMuonPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('SingleMuonIP'))+"))"
+                                       , Code = "((PT>%(SingleMuonPt)s*MeV) & (MIPDV(PRIMARY)>%(SingleMuonIP)s))" % self.getProps()
                                        )
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
@@ -126,7 +126,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         
         Hlt2SelSingleHighPTMuon = Hlt2Member(   FilterDesktop
                                                 , "Filter"
-                                                , Code = "(PT>"+str(self.getProp('SingleMuonHighPt'))+"*MeV)"
+                                                , Code = "(PT>%(SingleMuonHighPt)s*MeV)" % self.getProps()
                                                 , InputLocations  = [BiKalmanFittedMuons]
                                                 , InputPrimaryVertices = "None"
                                                 , UseP2PVRelations = False
@@ -169,8 +169,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         combine_noip = Hlt2Member( CombineParticles
                                    , "Combine"
                                    , DecayDescriptors = decayDescB2MuTrackNoIP
-                                   , DaughtersCuts = { "mu+" : "(PT>"+str(self.getProp('MuTrackNoIPMuPt'))+"*MeV)",
-                                                       "pi-" : "(PT>"+str(self.getProp('MuTrackNoIPTrPt'))+"*MeV)" }
+                                   , DaughtersCuts = { "mu+" : "(PT>%(MuTrackNoIPMuPt)s*MeV)"%self.getProps(),
+                                                       "pi-" : "(PT>%(MuTrackNoIPTrPt)s*MeV)"%self.getProps() }
                                    , CombinationCut = DocaNoIP+" & "+MassNoIP 
                                    , MotherCut = "ALL"
                                    , InputLocations  = [ BiKalmanFittedMuons , BiKalmanFittedPions ]
