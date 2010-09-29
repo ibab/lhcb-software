@@ -28,10 +28,10 @@ public:
   * nR - Number of R hits
   * nPhi Number of Phi hits
   */
-  typedef struct{
+  struct Info {
     unsigned int nR;
     unsigned int nPhi;
-  } Info;
+  };
  
                                                                         
   /// Retrieve interface ID

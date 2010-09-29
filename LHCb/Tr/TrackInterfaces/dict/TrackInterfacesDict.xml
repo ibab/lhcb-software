@@ -38,6 +38,7 @@
   <class name    = "ITrajectoryProvider"     />
   <class name    = "ITrajFitter"             />
   <class name    = "IVeloExpectation"        />
+  <struct name   = "IVeloExpectation::Info"  />
   <class name    = "IVeloClusterPosition"    />
   <class name    = "IVeloPixClusterPosition" />
   <class name    = "IPitchResTool"           />
