@@ -31,7 +31,7 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 500
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 800
+DaVinci().EvtMax = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().DataType = "2010"

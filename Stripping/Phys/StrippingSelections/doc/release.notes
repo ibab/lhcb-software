@@ -5,8 +5,13 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Greig Cowan
+ - Fixed mistake in the definition of the new Gaudi cards for test samples.
+
 ! 2010-09-28 - Greig Cowan
- - New stripping test samples
+ - New stripping test samples. Run 79646 is closer to conditions we will take
+   over coming weeks.
+
         Events: ~2M
         Run: 79646
         mu: ~2.23
