@@ -5,6 +5,14 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-09-29 - Vanya Belyaev
+
+ - small adaptation for new structiure of LoKiCore 
+
+ - cmt/requirements
+
+    version ioncrement to v11r1 
+
 !========================== LoKiTrigger v11r0p1 2010-09-09 ===================
 ! 2010-09-09 - Gerhard Raven
  - work around some Visual C++ confusion (see https://savannah.cern.ch/task/index.php?17256)

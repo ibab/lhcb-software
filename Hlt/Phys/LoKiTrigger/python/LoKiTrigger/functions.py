@@ -44,12 +44,8 @@ __version__ = "CVS Tag: $Name:$, version $Revision$ "
 
 import LoKiCore.decorators as _LoKiCore 
 
-
 # Namespaces:
-_global  = _LoKiCore._global
-cpp      = _global 
-std      = cpp.std
-LoKi     = cpp.LoKi
+from LoKiCore.basic import cpp, std, LoKi
 LHCb     = cpp.LHCb
 Hlt      = cpp.Hlt 
 
