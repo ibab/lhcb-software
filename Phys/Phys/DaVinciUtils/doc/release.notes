@@ -4,6 +4,8 @@
 ! Purpose     : DaVinci independent functions and classes to help DaVinci life.
 !-----------------------------------------------------------------------------
 
+! =============================== DaVinciUtils v1r0 2010-09-29 ===============
+
 ! 2010-09-21 - Juan Palacios
  - First version with some guard classes and simple functions.
  - Everything is in DaVinci::Utils namespace, DaVinciUtils include directory.
