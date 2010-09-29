@@ -5,6 +5,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+
+! 2010-09-29 - Marco Musy
+  . modified kaon oppo cuts to adapt to latest data in src,
+  cuts are always accessible through properties. risen IPPU to 4
+  . added python MC2010_cuts.py to apply mc tuning.
+
 ! 2010-09-27 - Marco Musy
   . dropped cuts on ghost likelihood and loosen chi2 cut to 5     
     to make agreement closer to distributions observed in data

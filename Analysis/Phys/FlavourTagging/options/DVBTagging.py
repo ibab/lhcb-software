@@ -47,9 +47,10 @@ tag.BackgroundCategory.OutputLevel = 4
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP"#needed by CheatedSel
 tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
-tag.BTaggingTool.OutputLevel    = 2
-#tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
-#tag.BTaggingTool.UseReFitPV = True
+tag.BTaggingTool.OutputLevel    = 3
+
+#Import cuts for MC2010
+#importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
 
 
 ######################################################################\

@@ -28,7 +28,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "PVbyIPs");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = false );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
+  declareProperty( "IPPU_cut",     m_IPPU_cut    = 4.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 ); 
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
