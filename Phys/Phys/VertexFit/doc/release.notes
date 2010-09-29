@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v6r5 2010-09-29 ======================
+
 ! 2010-09-26 - Yuehong Xie
  - OfflineVertexFitter
   . introduce new option "includeDauVertexChi2", which controls whether to add
