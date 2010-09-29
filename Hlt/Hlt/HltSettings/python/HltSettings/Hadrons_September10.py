@@ -48,6 +48,7 @@ class Hadrons_Minimal :
             # The charm lines
             'Hlt2CharmOSTF2Body',
             'Hlt2CharmOSTF3Body',
+            #'Hlt2CharmOSTF2BodyInc',    
             'Hlt2CharmOSTF2BodyWideMass',
             'Hlt2CharmOSTF3BodyWideMass',
             ]
