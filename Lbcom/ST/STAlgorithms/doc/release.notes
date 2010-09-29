@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2010-09-29 M Needham
+ - Add the missing STClusterContainerCopy .cpp
+
 !======================= STAlgorithms v4r3 2010-08-25 ========================
 ! 2010-08-08 M Needham
  - Set key in copied clusters in STClusterContainerCopy
