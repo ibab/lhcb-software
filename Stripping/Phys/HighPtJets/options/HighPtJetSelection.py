@@ -19,13 +19,16 @@ jetMaker = LoKi__FastJetMaker()
 jetMaker.RParameter = 1.0
 highPtJetSel = HighPtJetSelection("highPtJetSel")
 highPtJetSel.InputLocations = ["Phys/StdNoPIDsPions",
+                               "Phys/StdNoPIDsDownPions.py",
                                "Phys/StdLooseAllPhotons"]
 highPtJetSel.addTool(jetMaker)
-highPtJetSel.MinPartPt = 0.1
-highPtJetSel.MinPartE = 2.0
+highPtJetSel.MinPartPt   = 0.2
+highPtJetSel.MinPartP    = 1.0
+highPtJetSel.MinPartE    = 2.0
 highPtJetSel.Min1stJetPt = 10.0
-highPtJetSel.Min2ndJetPt = 0.0
-highPtJetSel.JetMult = 2
+highPtJetSel.Min2ndJetPt = 7.0
+highPtJetSel.JetMult     = 2
+highPtJetSel.MaxRPV      = 1.0
 ## #####################################################################
 DVSeq = GaudiSequencer("DVSeq")
 DVSeq.IgnoreFilterPassed = False
@@ -35,8 +38,8 @@ from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 100
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09"
-DaVinci().Simulation = True
+DaVinci().DataType = "2010"
+DaVinci().Simulation = False
 DaVinci().HistogramFile = "test_histo.root"
 DaVinci().TupleFile = "test.root"    
 DaVinci().UserAlgorithms = [DVSeq]
