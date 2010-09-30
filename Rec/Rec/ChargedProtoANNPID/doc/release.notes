@@ -7,6 +7,8 @@
 !========================== ChargedProtoANNPID v1r0 2010-09-30 ================
 ! 2010-09-30 - Chris Jones
  - Fix silly bug in environment variable name used to find parameter files.
+ - Add a guard around the external call(s) to NB to protect again FPE exceptions
+ - Fix untested StatusCodes
 
 ! 2010-09-28 - Chris Jones
  - First import. New PID package that adds ANN information to each 

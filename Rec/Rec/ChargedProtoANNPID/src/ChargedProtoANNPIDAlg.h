@@ -37,6 +37,9 @@
 // boost
 #include "boost/assign/list_of.hpp"
 
+// FPE exception protection
+#include "Kernel/FPEGuard.h"
+
 namespace ANNGlobalPID
 {
 

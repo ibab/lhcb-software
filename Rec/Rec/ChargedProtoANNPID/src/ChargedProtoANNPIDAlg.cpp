@@ -48,7 +48,7 @@ ChargedProtoANNPIDAlg::~ChargedProtoANNPIDAlg() { }
 //=============================================================================
 StatusCode ChargedProtoANNPIDAlg::initialize()
 {
-  const StatusCode sc = ChargedProtoANNPIDBase::initialize();
+  StatusCode sc = ChargedProtoANNPIDBase::initialize();
   if ( sc.isFailure() ) return sc;
 
 #ifdef __GNUC__
@@ -124,6 +124,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     // Load the network
     if ( "NeuroBayes" == annType )
     {
+      // FPE Guard for NB call
+      FPE::Guard guard(true);
       m_netHelper = new NeuroBayesANN(paramFileName,variableIDs(inputs),this);
     }
     else
@@ -140,13 +142,13 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     DoubleProperty      ghostProp ( "MaxGhostProbCut", maxGhostProb );
     StringArrayProperty tkProp    ( "TrackTypes", boost::assign::list_of(trackType) );
     IJobOptionsSvc * joSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, pProp     );
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, ptProp    );
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, chiProp   );
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, likProp   );
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, ghostProp );
-    joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp    );
-    release(joSvc);
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, pProp     );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ptProp    );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, chiProp   );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, likProp   );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ghostProp );
+    sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, tkProp    );
+    sc = sc && release(joSvc);
 
     // get an instance of the track selector
     m_trSel = tool<ITrackSelector>( m_trSelType, trSelName, this );
@@ -237,6 +239,9 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
+
+  // FPE Guard for NB call
+  FPE::Guard guard(true);
 
   // get the NN output
   const double nnOut = m_expert->nb_expert(m_inArray);
