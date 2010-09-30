@@ -84,6 +84,7 @@ private:
   double RFromBL( const Gaudi::XYZPoint& );
   double GetSumPt( const LHCb::Particle * );
   double GetSumPt( const LHCb::RecVertex * );
+  void   GetSumPtNbGoodTrks( const LHCb::RecVertex *, double &, int & );
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   double Angle( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
   double Angle( const Gaudi::XYZVector &, const Gaudi::XYZVector & );
@@ -108,6 +109,7 @@ private:
   double m_SumPt;             ///< Sumpt of all daughters tracks
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
+  double m_TChi2;             ///< Max chi2/ndof of tracks to stay in Vtx.
   double m_Dist;              ///< Distance bet. RV to be said isolated
   unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   /***************************************************************//**

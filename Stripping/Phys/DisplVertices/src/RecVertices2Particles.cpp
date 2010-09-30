@@ -51,6 +51,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   declareProperty("RMin", m_RMin = 0.3*Gaudi::Units::mm );
   declareProperty("RMax", m_RMax = 50.*Gaudi::Units::m );
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks
+  declareProperty("TrackMaxChi2oNDOF", m_TChi2 = 1000. );
   declareProperty("RecVerticesLocation", m_RVLocation );
   //"BlindVertexFitter", "OfflineVertexFitter"
   declareProperty("VertexFitter", m_Fitter = "none"  );
@@ -135,6 +136,7 @@ StatusCode RecVertices2Particles::initialize() {
             <<"*PosCovMatric from detector material"<< endmsg;
     if( m_RemVtxFromDet == 4 )
       info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+    info()<<"Remove tracks with Chi2/ndof > "<< m_TChi2<< endmsg;
     info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
     info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
     info()<<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
@@ -354,15 +356,23 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     }
 
     //Cut on the sum pt of daughter tracks
-    double sumpt = GetSumPt( rv );
-    if( sumpt < m_SumPt ){
-      if( msgLevel(MSG::DEBUG) )
-        debug() <<"RV has sumpt "<< sumpt/GeV <<" < "<< m_SumPt/GeV 
-                <<" --> disguarded !"<< endmsg;
+    double sumpt(0);
+    int nbtrks(0);
+    GetSumPtNbGoodTrks( rv, sumpt, nbtrks );
+    if( sumpt < m_SumPt || nbtrks < m_nTracks ){
+      if( msgLevel(MSG::DEBUG) ){
+        if( sumpt < m_SumPt )
+          debug() <<"RV has sumpt "<< sumpt/GeV <<" < "<< m_SumPt/GeV 
+                  <<" --> disguarded !"<< endmsg;
+        else if( nbtrks < m_nTracks )
+          debug() <<"RV has have number of tracks "<< nbtrks <<" < "
+                  << m_nTracks <<" after low Chi2/ndof tracks removal." 
+                  <<" --> disguarded !"<< endmsg;
+      }
       continue;
     }
     
-
+    
     //Turn it into a Particle !
     //Eventually don't keep it if close to/in detector material
     if( !RecVertex2Particle( rv, RecParts ) ) continue;
@@ -512,6 +522,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
       for( ; iVtx != iVtxend; ++iVtx ){
         //debug()<<"Key "<< (*iVtx)->key() <<" type "
         //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
+        if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
 
@@ -548,6 +559,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //debug()<<"Mom should be the same "<< (*iVtx)->momentum() <<" "
           //       << pp->track()->momentum() << endmsg;
           //Make a Particle with best PID 
+          if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
           const Particle * part = MakeParticle( pp );
           tmpVtx.addToOutgoingParticles ( part );
           tmpPart.addToDaughters( part );
@@ -575,6 +587,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //       << tk->momentum() << endmsg;
           //debug() <<"Track type "<< tk->type() << endmsg;
           if( (*iVtx)->key() != endkey ) ++iVtx; 
+          if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
           tmpVtx.addToOutgoingParticles ( *j );
           tmpPart.addToDaughters( *j );
           mom += (*j)->momentum();
@@ -633,6 +646,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         //     << tk->momentum() << endmsg;
         //debug() <<"Track type "<< tk->type() << endmsg;
         if( (*iVtx)->key() != endkey ) ++iVtx; 
+        if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
         Daughters.push_back( *j );
         continue;
       }
@@ -1298,7 +1312,7 @@ double RecVertices2Particles::GetSumPt( const Particle * p ){
   double sumpt = 0;
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
   for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i != iend; ++i ){
+         p->daughters().begin(); i != iend; ++i ){
     sumpt += i->target()->pt();
   }
   return sumpt;
@@ -1311,10 +1325,31 @@ double RecVertices2Particles::GetSumPt( const LHCb::RecVertex * rv ){
        i < iend; ++i ){
     //cout<<"Track "<< i->target()->type() <<" momentum "
     //  << i->target()->momentum() <<" pt "<< i->target()->pt() << endl;
+    if( i->target()->chi2PerDoF() > m_TChi2 ) continue;
     sumpt += i->target()->pt();
   }
   return sumpt;
 }
+
+//=============================================================================
+// Compute the number and sum pT of daughter tracks with chi2/ndof < Max
+//=============================================================================
+void RecVertices2Particles::GetSumPtNbGoodTrks( const LHCb::RecVertex * rv, 
+                                                double & pttot, int & nb  ){
+  pttot = 0;
+  nb = 0;
+  SmartRefVector< Track >::const_iterator iend = rv->tracks().end();
+  for( SmartRefVector< Track >::const_iterator i = rv->tracks().begin();
+       i < iend; ++i ){
+    //cout<<"Track "<< i->target()->type() <<" momentum "
+    //  << i->target()->momentum() <<" pt "<< i->target()->pt() << endl;
+    if( i->target()->chi2PerDoF() > m_TChi2 ) continue;
+    pttot += i->target()->pt();
+    nb++;
+  }
+};
+
+
 
 
 //=============================================================================

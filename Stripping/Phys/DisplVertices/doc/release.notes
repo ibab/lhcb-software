@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-09-30 - Neal Gauvin
+ - Add new cut in RecVertices2Particles : TrackMaxChi2oNDOF
+   The max allowed chi2/ndof of daughter track to be kept in the vertex candidate.
+
 ! 2010-09-20 - Neal Gauvin
  - The DisplVertices package is being moved from project Analysis to Stripping
    ( task #17349 ). MC-dependent code has been put in the newly created 
