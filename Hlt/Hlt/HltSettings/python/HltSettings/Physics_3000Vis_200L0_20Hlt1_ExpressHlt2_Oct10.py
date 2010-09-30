@@ -223,11 +223,11 @@ class Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 :
         """
         Returns a list of active lines
         """
-        lines = [# 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1Incident' , 'Hlt1ErrorEvent' # , 'Hlt1NZSVelo'
-                #, 'Hlt1L0Any'
-                #, 'Hlt1Lumi' , 'Hlt1LumiMidBeamCrossing', 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
-                'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco' , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
-                #, 'Hlt1MBNoBias' , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
+        lines = [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1Incident' , 'Hlt1ErrorEvent' # , 'Hlt1NZSVelo'
+                , 'Hlt1L0Any'
+                , 'Hlt1Lumi' , 'Hlt1LumiMidBeamCrossing', 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
+                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco' , 'Hlt1BeamGasCrossingLonelyBeam1' , 'Hlt1BeamGasCrossingLonelyBeam2'
+                , 'Hlt1MBNoBias' , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                 , 'Hlt1TrackAllL0', 'Hlt1TrackMuon', 'Hlt1TrackPhoton' # Add one track lines!
                 , 'Hlt1SingleHadron'
                 , 'Hlt1DiHadron' # , 'Hlt1DiHadronLTUnbiased'
