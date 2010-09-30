@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v7r0p1 2010-09-30 ===================
+! 2010-09-30 - Gerhard Raven
+ - fix typo in requirements
+
 !========================== HltTracking v7r0 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
  - change upgrade such that there is one public (common!) tool
