@@ -646,6 +646,8 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
            line += '%-15s : %s' % ( k, v)
        print line
 
+def getConfigTree(id, cas = ConfigAccessSvc()):
+    return execInSandbox( _getConfigTree, id, cas )
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
