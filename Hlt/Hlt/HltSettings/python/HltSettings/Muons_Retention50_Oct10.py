@@ -97,6 +97,18 @@ class Muons_Retention50_Oct10 :
             'SingleMuonPt'         : 1300      # MeV
             ,'SingleMuonIP'        : 0.08     # mm
             ,'SingleMuonHighPt'    : 10000     # MeV
+            ,'MuTrackMuPt'         : 1000       # MeV
+            ,'MuTrackTrPt'         : 600       # MeV
+            ,'MuTrackTrChi2'       : 5.0       # dimensionless
+            ,'MuTrackChi2'         : 15.0      # dimensionless
+            ,'MuTrackMuIPChi2'     : 9.0       # dimensionless
+            ,'MuTrackTrIPChi2'     : 9.0       # dimensionless
+            ,'MuTrackDoca'         : 0.200     # mm
+            ,'MuTrackFDChi2'       : 64.0      # dimensionless
+            ,'MuTrackMass'         : 2000      # MeV
+            ,'MuTrackSumPt'        : 2200      # MeV
+            ,'MuTrackCorMass'      : 7000.0    # MeV
+            ,'MuTrackDIRA'         : 0.995       # dimensionless
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.001
                               ,'Hlt2SingleMuon'        : 0.1
                               ,'Hlt2SingleHighPTMuon'  : 1.0
@@ -108,3 +120,5 @@ class Muons_Retention50_Oct10 :
         
         return d
     
+
+
