@@ -24,7 +24,7 @@ use HltRawData          v2r8p1  Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v11r1   Hlt   # Patrick Koppenburg
 use HltSettings         v4r0    Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTracking         v7r0    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v7r0p1  Hlt   # Jose Angel Hernando-Morata
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
 use TCKUtils            v1r6p7  Hlt   # Gerhard Raven
 use Fidel               v1r4p1  Phys  # Sara Furcas
