@@ -254,7 +254,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
+        codestr = "in_range(1700*MeV,M, 2100*MeV) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
