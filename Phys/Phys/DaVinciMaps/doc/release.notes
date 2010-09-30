@@ -4,7 +4,10 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
-!======================== DaVinciMaps v1r2 2010-09-29 ========================
+!======================== DaVinciMaps v1r2 2010-09-30 ========================
+
+! 2010-09-30 - Juan Palacios
+ - Remove (duplicate) dictionary for std::vector<unsugned int>.
 
 ! 2010-09-27 - Juan Palacios
  - Add Kernel/DataObject2ObjectMap.h

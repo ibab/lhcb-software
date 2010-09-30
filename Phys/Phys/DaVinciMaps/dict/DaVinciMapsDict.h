@@ -44,7 +44,6 @@ namespace
     std::vector< std::pair<SmartRef<LHCb::Particle>, SmartRef<LHCb::VertexBase> > > _i11;
     _P2LHCbIDs _12;
 
-    std::vector<unsigned int> _i20;
     std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > _i21;
     std::vector< std::pair<SmartRef<LHCb::Particle>, std::vector<unsigned int> > > _i22;
     _P2UInts _i23;
