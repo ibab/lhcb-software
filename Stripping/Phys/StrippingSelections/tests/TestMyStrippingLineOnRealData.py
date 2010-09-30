@@ -29,6 +29,10 @@ sc.OutputType = "ETC"                    # Can be either "ETC" or "DST"
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
 
+# Mimic the new default tracking cuts
+from CommonParticles.Utils import DefaultTrackingCuts
+DefaultTrackingCuts().Cuts = { "Chi2Cut" : [0,5] }
+
 # Configure the ETC writing step
 from Configurables import EventTuple, TupleToolSelResults
 from Configurables import TupleToolStripping
