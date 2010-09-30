@@ -10,7 +10,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
    To be added to the Bhadron stream
 
 ! 2010-09-30 - Eduardo Rodrigues
- - New stripping line for B -> p pbar. Will soon be added to the Bhadron stream
+ - New stripping line for B -> p pbar.
+ - StreamBhadron.py file updated accordingly. It now gets the Hb->hh and
+   B -> p pbar lines from the new file StrippingHb2Charged2Body.py
 
 ! 2010-09-30 - Neal Gauvin
  - Pre-scale the SingleDisplVtx line to meet current rentention limits.

@@ -12,7 +12,7 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingB2Charged2Body
+from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
 #from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import B02D0Kstar_D02KPiPi0Conf
 #from StrippingSelections.StrippingB02D0Kstar_D02K3Pi import B02D0Kstar_D02K3PiConf
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
@@ -36,7 +36,7 @@ MyStrippingBs2PhiPhiConf =  StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiP
 stream.appendLines( MyStrippingBs2PhiPhiConf.lines )
 
 stream.appendLines( [ 
-		        StrippingB2Charged2Body.line,  
+		        Hb2Charged2BodyLines().lines(),
 	                _StrippingBu2D0h_D02KShh_NoPIDConf.Line_LL,  
 		        _StrippingBu2D0h_D02KShh_NoPIDConf.Line_DD,
                         StrippingB2KShhConf().B2KSLLhh(),
