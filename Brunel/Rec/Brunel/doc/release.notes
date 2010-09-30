@@ -26,6 +26,7 @@ Purpose: LHCb reconstruction program
   . #86550: Suppress unnecessary printouts from MuonID
   . #86666: Add TrackPV2HalfAlignMonitor to monitoring sequence, add histograms
             for Velo-Calo matching
+  . #86866: Enable by defaul the running of the new ANN PID algorithms
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
