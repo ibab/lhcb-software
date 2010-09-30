@@ -5,6 +5,11 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-30 - Marco Cattaneo
+ - Undo part of previous fix, which was causing a relations table to not be 
+   loaded, causing the algorithm to throw ane exception. This was masking the
+   finalization crash, that is still there....
+
 ! 2010-09-30 - Olivier Deschamps 
   - CaloPhotonChecker : fix finalization crash
 

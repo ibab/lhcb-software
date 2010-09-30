@@ -327,9 +327,9 @@ StatusCode CaloPhotonChecker::finalize()
 // ============================================================================
 StatusCode CaloPhotonChecker::execute()
 { 
-  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,double>  MCTable;
+  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,float>  MCTable;
   typedef MCTable::Range                                               MCRange;
-  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,double>       Table;
+  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,float>       Table;
   typedef Table::Range                                                 Range;
 
   typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
