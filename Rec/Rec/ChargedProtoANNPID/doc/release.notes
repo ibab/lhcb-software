@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== ChargedProtoANNPID v1r0 2010-09-30 ================
 ! 2010-09-30 - Chris Jones
  - Fix silly bug in environment variable name used to find parameter files.
 
