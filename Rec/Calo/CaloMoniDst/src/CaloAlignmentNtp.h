@@ -1,6 +1,6 @@
-// $Id: CaloElectronNtp.h,v 1.1 2010/05/20 09:55:38 odescham Exp $
-#ifndef CALOELECTRONNTP_H 
-#define CALOELECTRONNTP_H 1
+// $Id: CaloAlignmentNtp.h,v 1.1 2010/05/20 09:55:38 odescham Exp $
+#ifndef CALOALIGNEMENTNTP_H 
+#define CALOALIGNEMENTNTP_H 1
 
 // Include files
 // from Gaudi
@@ -11,19 +11,20 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
+#include "CaloInterfaces/ICaloHypoEstimator.h"
 
-/** @class CaloElectronNtp CaloElectronNtp.h
+/** @class CaloAlignmentNtp CaloAlignmentNtp.h
  *  
  *
  *  @author Olivier Deschamps
  *  @date   2009-12-11
  */
-class CaloElectronNtp : public GaudiTupleAlg {
+class CaloAlignmentNtp : public GaudiTupleAlg {
 public: 
   /// Standard constructor
-  CaloElectronNtp( const std::string& name, ISvcLocator* pSvcLocator );
+  CaloAlignmentNtp( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CaloElectronNtp( ); ///< Destructor
+  virtual ~CaloAlignmentNtp( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -47,6 +48,7 @@ private:
   std::pair<double,double> m_e;
   std::pair<double,double> m_et;
   std::pair<double,double> m_prs;
+  std::pair<double,double> m_spd;
   std::pair<double,double> m_eop;
   std::string m_input;
   ICaloHypo2Calo* m_toSpd ;   
@@ -55,8 +57,19 @@ private:
   IEventTimeDecoder* m_odin;
   bool m_histo;
   bool m_tuple;
-  bool m_trend;
-  std::string m_vertLoc;
-  bool m_usePV3D;
+  bool m_profil;
+  ICaloHypoEstimator* m_estimator ;   
+  ICaloHypoEstimator* estimator(){return m_estimator;}
+  std::pair<double,double> m_dlle;
+  std::pair<double,double> m_rdlle;
+  std::pair<double,double> m_bMatch;
+  std::pair<double,double> m_eMatch;
+  std::pair<double,double> m_cMatch;
+  std::pair<double,double> m_mas;
+  std::pair<double,double> m_dist;
+  double m_min;
+  double m_max;
+  int    m_thBin;
+  int    m_bin;
 };
-#endif // CALOELECTRONNTP_H
+#endif // CALOALIGNEMENTNTP_H

@@ -60,9 +60,11 @@ private:
   double m_hMax;
   int m_hBin;
   IEventTimeDecoder* m_odin;
-  bool m_tupling;
+  bool m_tuple;
   bool m_histo;
+  bool m_trend;
   std::string m_vertLoc;
   int m_spdBin;
   int m_spdMult;
+  bool m_usePV3D;
 };

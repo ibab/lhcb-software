@@ -4,6 +4,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include  "CaloUtils/CaloMomentum.h"
+#include "Event/RecVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Event/ODIN.h" 
 // local
@@ -34,9 +35,11 @@ CaloElectronNtp::CaloElectronNtp( const std::string& name,
   declareProperty("EtFilter"  , m_et = std::make_pair(150.,999999.));
   declareProperty("PrsFilter" , m_prs  = std::make_pair(-1.,1024));
   declareProperty("ElectronPairing", m_pairing = true );
-  declareProperty( "Tupling"  , m_tupling = true);
+  declareProperty( "Tuple"    , m_tuple = true);
   declareProperty( "Histo"    , m_histo = true);
-  
+  declareProperty( "Trend"    , m_trend = false);  
+  declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Primary);
+  declareProperty( "UsePV3D", m_usePV3D = false);
 }
 //=============================================================================
 // Destructor
@@ -53,6 +56,10 @@ StatusCode CaloElectronNtp::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
+
+  // set vertex location
+  if(m_vertLoc == "")
+    m_vertLoc=(m_usePV3D) ? LHCb::RecVertexLocation::Velo3D :  LHCb::RecVertexLocation::Primary;
 
   // get tools
   m_caloElectron = tool<ICaloElectron>("CaloElectron", this); 
@@ -74,7 +81,7 @@ StatusCode CaloElectronNtp::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   Tuple ntp = NULL;
-  if(m_tupling)ntp=nTuple(500, "e_tupling" ,CLID_ColumnWiseTuple);
+  if(m_tuple)ntp=nTuple(500, "e_tupling" ,CLID_ColumnWiseTuple);
   StatusCode scnt;
 
   // get input data
@@ -157,7 +164,7 @@ StatusCode CaloElectronNtp::execute() {
     }    
     
     // proto info
-    if(m_tupling){
+    if(m_tuple){
       sc=ntp->column("TrackMatch", proto->info(LHCb::ProtoParticle::CaloTrMatch, 9999.));
       sc=ntp->column("ElecMatch", proto->info(LHCb::ProtoParticle::CaloElectronMatch, 9999.));
       sc=ntp->column("BremMatch", proto->info(LHCb::ProtoParticle::CaloBremMatch, 9999.));
@@ -201,9 +208,36 @@ StatusCode CaloElectronNtp::execute() {
         <<Gaudi::Utils::toString( m_calo->cardColumn( id ) + nColCaloCard * m_calo->cardRow( id ) );
       plot1D(eOp, sid.str() , sid.str() , 0., 2.5, 100);
     }
+
+
+
+    // vertices
+    int nVert = 0;
+    if( m_usePV3D){
+      if( exist<LHCb::VertexBases>( m_vertLoc ) ){
+        LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
+        if( NULL != verts)nVert = verts->size();
+          }
+    }
+    else{
+      if( exist<LHCb::RecVertices>(m_vertLoc) ){
+        LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
+        if( NULL != verts)nVert = verts->size();
+      }
+    }
+    counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
+    
+    if( m_trend){
+      std::string sNpv = "PV" + Gaudi::Utils::toString( nVert ) +"/";
+      std::string sRun  =  "r" + Gaudi::Utils::toString( run   ) +"/";
+      std::string base = "Trend/";
+      plot1D(eOp, base+"allPV/"+sRun+"eOp","e/p spectrum for run = "+sRun , 0. , 2.5, 250);
+      plot1D(eOp, base+sNpv+sRun+"eOp","e/p spectrum for PV="+sNpv+" (run = "+sRun+")" , 0., 2.5, 250); 
+    }
+    
     
 
-    if(m_tupling){
+    if(m_tuple){
       // perform electron pairing
       double mas = 999999.;
       if( !m_pairing)continue;

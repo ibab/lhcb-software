@@ -24,15 +24,15 @@ CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
   declareProperty( "hMin"    , m_hMin      = 0.);
   declareProperty( "hMax"    , m_hMax      = 900.);
   declareProperty( "hBin"    , m_hBin      = 450);
-
   declareProperty( "etBin"    , m_etBin      = 150.);
   declareProperty( "leBin"    , m_leBin      = 0.25);
   declareProperty( "thBin"    , m_thBin      = 0.005); // (x1 inner, x2 middle, x4 outer)
-  declareProperty( "spdBin"   , m_spdBin     = 50   ); 
-
-  declareProperty( "Tupling"  , m_tupling = true);
+  declareProperty( "spdBin"   , m_spdBin     = 50   );
+  declareProperty( "Tuple"    , m_tuple = true);
   declareProperty( "Histo"    , m_histo = true);
-  declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Velo3D);
+  declareProperty( "Trend"    , m_trend = false);
+  declareProperty( "VertexLoc", m_vertLoc = "");
+  declareProperty( "UsePV3D", m_usePV3D = false);
 };
 CaloPi0Ntp::~CaloPi0Ntp(){};
 
@@ -47,8 +47,10 @@ StatusCode CaloPi0Ntp::initialize(){
   m_toPrs = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Prs" , this );
   m_toPrs->setCalos( "Ecal" ,"Prs");
   m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
-  
 
+  // set vertex location
+  if(m_vertLoc == "")
+    m_vertLoc=(m_usePV3D) ? LHCb::RecVertexLocation::Velo3D :  LHCb::RecVertexLocation::Primary;
 
   /*
   const CaloVector<CellParam>& cells = m_calo->cellParams();
@@ -75,7 +77,7 @@ StatusCode CaloPi0Ntp::execute(){
 
 
   Tuple ntp = NULL;
-  if( m_tupling)ntp = nTuple(500, "pi0_tupling" ,CLID_ColumnWiseTuple);
+  if( m_tuple)ntp = nTuple(500, "pi0_tupling" ,CLID_ColumnWiseTuple);
 
 
   if( !exist<Hypos>(LHCb::CaloHypoLocation::Photons) )return Error("Photon hypo container not found", StatusCode::SUCCESS );
@@ -250,14 +252,24 @@ StatusCode CaloPi0Ntp::execute(){
         double cccmas = (isPi0) ? ccc.mass() : 0;
         // vertices
         int nVert = 0;
-        if( exist<LHCb::VertexBases>(m_vertLoc) ){
-          LHCb::VertexBases* verts= get<LHCb::VertexBases>(m_vertLoc);
-          if( NULL != verts)nVert = verts->size();
+        if( m_usePV3D){
+          if( exist<LHCb::VertexBases>( m_vertLoc ) ){
+            LHCb::VertexBases* verts= get<LHCb::VertexBases>( m_vertLoc );
+            if( NULL != verts)nVert = verts->size();
+          }
         }
-        debug() << "found " << nVert << " vertex at " << m_vertLoc << endmsg;
+        else{
+          if( exist<LHCb::RecVertices>(m_vertLoc) ){
+            LHCb::RecVertices* verts= get<LHCb::RecVertices>(m_vertLoc);
+            if( NULL != verts)nVert = verts->size();
+          }
+        }
+        counter("#PV="+ Gaudi::Utils::toString(nVert) + " ["+ m_vertLoc+"]")+=1;
         
 
-        if( m_tupling){
+
+
+        if( m_tuple){
           sc=ntp->column("p1" , v1);
           sc=ntp->column("p2" , v2);
           sc=ntp->column("r1" , point1);
@@ -291,6 +303,13 @@ StatusCode CaloPi0Ntp::execute(){
         if( m_histo){
           hTuning("Cluster", spd ,prs1,prs2, ccc1, id1 , ccc2 , id2,nVert);
           hTuning("Corrected", spd , prs1,prs2,v1, id1 , v2 , id2,nVert);
+        }
+        if ( m_trend ){
+          std::string sNpv = "PV" + Gaudi::Utils::toString( nVert ) +"/";
+          std::string sRun  =  "r" + Gaudi::Utils::toString( run   ) +"/";
+          std::string base = "Trend/";
+          plot1D(pi0m, base+"allPV/"+sRun+"mass","di-photon mass spectrum for run = "+sRun , m_hMin, m_hMax, m_hBin);
+          plot1D(pi0m, base+sNpv+sRun+"mass","di-photon mass spectrum for PV="+sNpv+" (run = "+sRun+")" , m_hMin, m_hMax, m_hBin);
         }
       }
     }
