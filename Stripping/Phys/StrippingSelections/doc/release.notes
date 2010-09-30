@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-30 - Neal Gauvin
+ - Pre-scale the SingleDisplVtx line to meet current rentention limits.
+
 ! 2010-09-30 - Greig Cowan
  - Updated TestMyStrippingLineOnRealData.py to put the HltFilter in the
    DaVinci EventPreFilter so that the event is skipped. This means that 

@@ -27,7 +27,7 @@ The selection of displaced vertices is achieved in 3 steps :
 
 __author__ = ['Neal Gauvin','Marcin Kucharczyk']
 __date__ = '22/01/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 
 from Gaudi.Configuration import *
@@ -78,7 +78,8 @@ PreselDisplVertices = RecVertices2Particles("PreselDisplVertices")
 #PreselDisplVertices.RecVerticesLocation = ["Rec/Vertex/Primary", "Rec/Vertices/DisplRV"]
 PreselDisplVertices.RecVerticesLocation = [VerticesLocation]
 PreselDisplVertices.RCutMethod = RCutMethod
-PreselDisplVertices.PreyMinMass = 2.0*GeV
+PreselDisplVertices.PreyMinSumpt = 3.0*GeV
+PreselDisplVertices.PreyMinMass = 3.0*GeV
 PreselDisplVertices.RMin = 0.3*mm
 PreselDisplVertices.NbTracks = 4 
 PreselDisplVertices.RemVtxFromDet = 0
@@ -127,7 +128,7 @@ IntwMat.RemVtxFromDet = 0
 ################################################################
 # Create line for single DisplVertex selection
 line1 = StrippingLine('SingleDisplVtx'
-                      , prescale = 0.08
+                      , prescale = 0.05
                       , algos = [DisplPatPV3D,PreselDisplVertices,SingleDV]
                       )
 #
