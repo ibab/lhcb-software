@@ -1,6 +1,6 @@
 JobOptionsSvc        INFO
 //GP:================================================================================
-//GP: include "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts" (0,0)
+//GP: include "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts" (0,0)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (1,1)
 EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
@@ -17,10 +17,10 @@ ExceptionSvc.Catch = "NONE";                                            //GP: (1
 ChronoStatSvc.ChronoPrintOutTable = 0;                                  //GP: (1,1)
 CounterSvc.PrintStat = 0;                                               //GP: (1,1)
 ApplicationMgr.AppName = "";                                            //GP: (1,1)
-//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts" (17,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts" (17,1)
 //GP:================================================================================
 
-JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/TimeoutAlg.opts
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...WARNING Histograms saving not required.
@@ -57,3 +57,4 @@ EventLoopMgr      WARNING Execution of algorithm Delay failed
 EventLoopMgr        ERROR Error processing event loop.
 EventLoopMgr        ERROR Terminating event processing loop due to errors
 EventLoopMgr        ERROR Terminating event processing loop due to errors
+ApplicationMgr      FATAL Application execution failed. Ending the job.
