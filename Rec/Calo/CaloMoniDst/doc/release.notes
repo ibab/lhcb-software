@@ -5,6 +5,14 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-09-30 - Olivier Deschamps 
+  - CaloPhotonChecker : fix finalization crash
+
+! 2010-09-30 - Olivier Deschamps 
+  - Improve CaloPi0Ntp & CaloElectronNtp
+  - add new ntp algorithm : CaloAlignmentNtp
+
+
 !========================== CaloMoniDst v5r4 2010-09-29 =======================
 ! 2010-09-27 - Marco Cattaneo
  - Fix uninitialised member variables in CaloPhotonChecker

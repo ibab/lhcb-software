@@ -132,7 +132,7 @@ CaloPhotonChecker::CaloPhotonChecker
  */
 // ============================================================================
 StatusCode CaloPhotonChecker::initialize()
-{ StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+{ StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
 
 //----- locate particle property service
@@ -206,49 +206,43 @@ StatusCode CaloPhotonChecker::initialize()
   m_lhBkgSpd = book1D( "Lh_Bkg_Spd"  ,"likelihood Background - SPD hit",0.,1.,50);
 
   // Efficiency / Purity versus Pt
-  m_efficiency = book1D( "Efficiency" ,
-			 "Photon Selection Efficiency vs Pt",
-			 m_ptmin,m_ptmax,m_nbinpt);
-  m_purity     = book1D( "Purity" ,
-			 "Photon Selection Purity vs Pt",
-			 m_ptmin,m_ptmax,m_nbinpt);
+  m_efficiency = book1D( "Efficiency" ,"Photon Selection Efficiency vs Pt",m_ptmin,m_ptmax,m_nbinpt);
+  m_purity     = book1D( "Purity" ,"Photon Selection Purity vs Pt",m_ptmin,m_ptmax,m_nbinpt);
   
-  m_effpur       = book2D( "Eff_Pur", "Efficiency vs Purity - Lh cut",
-			   0.,1.,100,0.,1.,100);
-  m_effpur_spd   = book2D( "Eff_Pur", "Efficiency vs Purity - Lh cut - no Conv. sample",
-			   0.,1.,100,0.,1.,100);
-  m_effpur_nospd = book2D( "Eff_Pur", "Efficiency vs Purity - Lh cut - Conv. sample",
-			   0.,1.,100,0.,1.,100);
+  m_effpur       = book2D( "Eff_Pur", "Efficiency vs Purity - Lh cut",0.,1.,100,0.,1.,100);
+  m_effpur_spd   = book2D( "Eff_Pur_Spd", "Efficiency vs Purity - Lh cut - no Conv. sample",0.,1.,100,0.,1.,100);
+  m_effpur_nospd = book2D( "Eff_Pur_noSpd", "Efficiency vs Purity - Lh cut - Conv. sample",0.,1.,100,0.,1.,100);
+
 
   // Probability Density Functions Definitions
   if (m_pdf){
     m_signalEPrs2D=defHisto(int(m_prsbin[ 0 ]),m_prsbin[ 1 ],m_prsbin[ 2 ],
-                           10, std::string("Signal Prs noSpdHit"));
+                           10, std::string("Signal_Prs_noSpdHit"));
     m_signalChi22D=defHisto(int(m_chi2bin[ 0 ]),m_chi2bin[ 1 ],m_chi2bin[ 2 ],
-                           20, std::string("Signal Chi2Tk noSpdHit"));
+                           20, std::string("Signal_Chi2Tk_noSpdHit"));
     m_signalSeed2D=defHisto(int(m_seedbin[ 0 ]),m_seedbin[ 1 ],m_seedbin[ 2 ],
-                            30, std::string("Signal ESeed noSpdHit"));
+                            30, std::string("Signal_ESeed_noSpdHit"));
 
     m_signalEPrsSpd2D=defHisto(int(m_prsbin[ 0 ]),m_prsbin[ 1 ],m_prsbin[ 2 ],
-                              15, std::string("Signal Prs SpdHit"));
+                              15, std::string("Signal_Prs_SpdHit"));
     m_signalChi2Spd2D=defHisto(int(m_chi2bin[ 0 ]),m_chi2bin[ 1 ],m_chi2bin[ 2 ],
-                              25, std::string("Signal Chi2Tk SpdHit"));
+                              25, std::string("Signal_Chi2Tk_SpdHit"));
     m_signalSeedSpd2D=defHisto(int(m_seedbin[ 0 ]),m_seedbin[ 1 ],m_seedbin[ 2 ],
-                              35, std::string("Signal ESeed SpdHit"));
+                              35, std::string("Signal_ESeed_SpdHit"));
 
     m_backgrEPrs2D=defHisto(int(m_prsbin[ 0 ]),m_prsbin[ 1 ],m_prsbin[ 2 ],
-                           110, std::string("Background Prs noSpdHit"));
+                           110, std::string("Background_Prs_noSpdHit"));
     m_backgrChi22D=defHisto(int(m_chi2bin[ 0 ]),m_chi2bin[ 1 ],m_chi2bin[ 2 ],
-                           120, std::string("Background Chi2Tk noSpdHit"));
+                           120, std::string("Background_Chi2Tk_noSpdHit"));
     m_backgrSeed2D=defHisto(int(m_seedbin[ 0 ]),m_seedbin[ 1 ],m_seedbin[ 2 ],
-                            130, std::string("Background ESeed noSpdHit"));
+                            130, std::string("Background ESeed_noSpdHit"));
 
     m_backgrEPrsSpd2D=defHisto(int(m_prsbin[ 0 ]),m_prsbin[ 1 ],m_prsbin[ 2 ],
-                              115, std::string("Background Prs SpdHit"));
+                              115, std::string("Background_Prs_SpdHit"));
     m_backgrChi2Spd2D=defHisto(int(m_chi2bin[ 0 ]),m_chi2bin[ 1 ],m_chi2bin[ 2 ],
-                              125, std::string("Background Chi2Tk SpdHit"));
+                              125, std::string("Background_Chi2Tk_SpdHit"));
     m_backgrSeedSpd2D=defHisto(int(m_seedbin[ 0 ]),m_seedbin[ 1 ],m_seedbin[ 2 ],
-                              135, std::string("Background ESeed SpdHit"));
+                              135, std::string("Background_ESeed_SpdHit"));
    }   
    
   if( m_split ){
@@ -283,12 +277,11 @@ StatusCode CaloPhotonChecker::finalize()
   info() << "     Et(GeV)        | Efficiency |   Purity   "<<endmsg;
   info() << "----------------------------------------------"<<endmsg;
   for (int i=0; i<m_nbinpt ; ++i){
-    float pt=float( m_ptmin+float(i)*(m_ptmax-m_ptmin)/float(m_nbinpt));
-    float eff=(m_mc_g[i]>0) ? float(m_rec_sig[i])/float(m_mc_g[i]) : (0.F);
-    float pur=(m_rec_sig[i]+m_rec_bkg[i]>0) ?
-          float(m_rec_sig[i])/float(m_rec_sig[i]+m_rec_bkg[i]) : (0.F) ;
+    double pt= m_ptmin+double(i)*(m_ptmax-m_ptmin)/double(m_nbinpt);
+    double eff=(m_mc_g[i]>0) ? double(m_rec_sig[i])/double(m_mc_g[i]) : 0.;
+    double pur=(m_rec_sig[i]+m_rec_bkg[i]>0) ? m_rec_sig[i]/(m_rec_sig[i]+m_rec_bkg[i]) : 0. ;
     sprintf(line," [ %5.2f - %5.2f ]  |    %4.2f    |    %4.2f    ",
-      pt/1000.,(pt+(m_ptmax-m_ptmin)/float(m_nbinpt))/1000.,eff,pur);
+      pt/1000.,(pt+(m_ptmax-m_ptmin)/double(m_nbinpt))/1000.,eff,pur);
 
     info() << line <<endmsg;
 
@@ -300,25 +293,19 @@ StatusCode CaloPhotonChecker::finalize()
   info() << "      | Eff   Pur | Eff   Pur | Eff   Pur "<<endmsg;
   info() << " -----------------------------------------"<<endmsg;
   for (int i=0; i<m_nbinlh ; ++i){
-    float eff=(m_lh_mcg>0) ? float(m_lh_recsig[i])/float(m_lh_mcg) : (0.F);
-    float effnoconv=(m_lh_mcg_noconv>0) ?
-      float(m_lh_recsig_noconv[i])/float(m_lh_mcg_noconv) : (0.F);
-    float effconv=(m_lh_mcg_conv>0) ?
-      float(m_lh_recsig_conv[i])/float(m_lh_mcg_conv) : (0.F);
-
-    float pur=(m_lh_recsig[i]+m_lh_recbkg[i]>0) ?
-          float(m_lh_recsig[i])/float(m_lh_recsig[i]+m_lh_recbkg[i]) : (0.F) ;
-    float purnoconv=(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]>0) ?
-          float(m_lh_recsig_nospd[i])/float(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]) : (0.F) ;
-    float purconv=(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]>0) ?
-          float(m_lh_recsig_spd[i])/float(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]) : (0.F) ;
+    double eff=(m_lh_mcg>0) ? m_lh_recsig[i]/m_lh_mcg : 0.;
+    double effnoconv=(m_lh_mcg_noconv>0) ? m_lh_recsig_noconv[i]/m_lh_mcg_noconv : 0.;
+    double effconv=(m_lh_mcg_conv>0) ? m_lh_recsig_conv[i]/m_lh_mcg_conv : 0.;
+    double pur=(m_lh_recsig[i]+m_lh_recbkg[i]>0) ? m_lh_recsig[i]/(m_lh_recsig[i]+m_lh_recbkg[i]) : 0. ;
+    double purnoconv=(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]>0) ? m_lh_recsig_nospd[i]/(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]) : 0. ;
+    double purconv=(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]>0) ?m_lh_recsig_spd[i]/(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]) : 0. ;
 
     fill(m_effpur,pur,eff,1.);
     fill(m_effpur_nospd,purnoconv,effnoconv,1.);
     fill(m_effpur_spd,purconv,effconv,1.);
 
-    sprintf(line," %3.2f | %3.2f %3.2f | %3.2f %3.2f | %3.2f %3.2f",
-            float(i)/float(m_nbinlh),eff,pur,effnoconv,purnoconv,effconv,purconv);
+    sprintf(line," %3.2f | %3.2f %3.2f | %3.2f %3.2f | %3.2f %3.2f", 
+            double(i)/double(m_nbinlh),eff,pur,effnoconv,purnoconv,effconv,purconv);
 
     info() << line <<endmsg;
 
@@ -340,9 +327,9 @@ StatusCode CaloPhotonChecker::finalize()
 // ============================================================================
 StatusCode CaloPhotonChecker::execute()
 { 
-  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,float>  MCTable;
+  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,double>  MCTable;
   typedef MCTable::Range                                               MCRange;
-  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,float>       Table;
+  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::Track,double>       Table;
   typedef Table::Range                                                 Range;
 
   typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
@@ -690,18 +677,18 @@ StatusCode CaloPhotonChecker::execute()
      // Fill General Monitoring histograms
      if (isSignal){
        if (eSpd>1.){
-	fill(m_lhSigSpd,likelihood,1.);
+         fill(m_lhSigSpd,likelihood,1.);
        }
        else{
-	fill(m_lhSig,likelihood,1.);
+         fill(m_lhSig,likelihood,1.);
        }
      }
      else{
        if (eSpd>1.){
-	fill(m_lhBkgSpd,likelihood,1.);
+         fill(m_lhBkgSpd,likelihood,1.);
        }
        else{
-	fill(m_lhBkg,likelihood,1.);
+         fill(m_lhBkg,likelihood,1.);
        }
      }
 
