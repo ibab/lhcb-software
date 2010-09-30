@@ -23,6 +23,9 @@ Purpose: LHCb reconstruction program
   . #86415: Make fit in PatSeedFit more similar to what is used in PatSeeding
   . #86502: Add VeloIPResolutionMonitor to standard monitoring
   . #86515: Improve Calo LCorrection
+  . #86550: Suppress unnecessary printouts from MuonID
+  . #86666: Add TrackPV2HalfAlignMonitor to monitoring sequence, add histograms
+            for Velo-Calo matching
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
