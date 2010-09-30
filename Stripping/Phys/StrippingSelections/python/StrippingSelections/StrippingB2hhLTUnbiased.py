@@ -7,6 +7,13 @@ B->hh selection, unbiased lifetime
 """
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
+from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
+import GaudiKernel.SystemOfUnits as Units
+from GaudiKernel.PhysicalConstants import c_light
+
+
+
 
 class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
     """
@@ -25,7 +32,9 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
     """
     __slots__ = { 
         'TrackChi2'               :    5.0
-        , 'CTauMin'               :    0.1 # mm 
+        , 'CTauMin'               :   0.1# mm
+        , 'SpdMult'               :  350.0
+        , 'SpdMultLoose'          :  500.0
         , 'DaughterPtMin'         :    1.8 # GeV
         , 'DaughterPtMax'         :    2.5 # GeV
         , 'DaughterPMin'          :   15.0 # GeV
@@ -38,7 +47,7 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
         , 'DaughterPIDKMaxLoose'  :    0.1
         , 'BMassMin'              :    5.0 # GeV
         , 'BMassMax'              :    5.9 # GeV
-        , 'BMassMinLoose'         :    4.9 # GeV
+        , 'BMassMinLoose'         :    5.0 # GeV
         , 'BMassMaxLoose'         :    6.0 # GeV
         , 'DOCA'                  :    0.07
         , 'DOCALoose'             :    0.10
@@ -50,9 +59,6 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
     # loose line
     #
     def StripB2hhLTUnbiasedLoose( self ) :
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        from Configurables import FilterDesktop, CombineParticles
-        import GaudiKernel.SystemOfUnits as Units
 
         StripB2hhLTUnbiasedLoose                 = CombineParticles("StripB2hhLTUnbiasedLoose")
         #StripB2hhLTUnbiasedLoose.ReFitPVs        = True
@@ -64,17 +70,19 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
         
 
         StripB2hhLTUnbiasedLoose.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiasedLoose', prescale = 0.01,  postscale = 1.0, algos = [ StripB2hhLTUnbiasedLoose ] )
+        return StrippingLine('B2hhLTUnbiasedLoose', prescale = 0.005,  postscale = 1.0, algos = [ self.SpdMultFilterLoose(), StripB2hhLTUnbiasedLoose ] )
 
 
     #
     # default version
     #
     def StripB2hhLTUnbiased( self ) :
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        from Configurables import FilterDesktop, CombineParticles
-        import GaudiKernel.SystemOfUnits as Units
-        from GaudiKernel.PhysicalConstants import c_light
+
+        #from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        #from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
+        #import GaudiKernel.SystemOfUnits as Units
+        #from GaudiKernel.PhysicalConstants import c_light
+
 
         StripB2hhLTUnbiased                 = CombineParticles("StripB2hhLTUnbiased")
         StripB2hhLTUnbiased.Preambulo      += [ "from GaudiKernel.PhysicalConstants import c_light "]
@@ -87,27 +95,28 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
 
 
         # plots
-        from Configurables import LoKi__Hybrid__PlotTool as PlotTool
-        StripB2hhLTUnbiased.HistoProduce = TRUE
-        StripB2hhLTUnbiased.addTool( PlotTool("MotherPlots") )
-        StripB2hhLTUnbiased.MotherPlots.Preambulo += [ "from GaudiKernel.PhysicalConstants import c_light "]
-        StripB2hhLTUnbiased.MotherPlots.Histos = { "P/GeV"                                                              : ('P'     ,  20  ,  50) ,
-                                                   "PT/GeV"                                                             : ('Pt'    ,  0   ,  10) ,
-                                                   "VFASPF(VCHI2/VDOF)"                                                 : ('Chi2'  ,  0   ,  25) ,
-                                                   "BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light"             : ('tau '  , -0.2 ,   3) ,
-                                                   "(MAXTREE(('K+'==ABSID) , PIDK))"                                    : ('PidMax', -1   ,  20)}
-        
+        #from Configurables import LoKi__Hybrid__PlotTool as PlotTool
+        #StripB2hhLTUnbiased.HistoProduce = TRUE
+        #StripB2hhLTUnbiased.addTool( PlotTool("MotherPlots") )
+        #StripB2hhLTUnbiased.MotherPlots.Preambulo += [ "from GaudiKernel.PhysicalConstants import c_light "]
+        #StripB2hhLTUnbiased.MotherPlots.Histos = { "MM/GeV"                                                             : ('MM'    ,   5.0,   5.9),
+        #                                           "P/GeV"                                                              : ('P'     ,  20  ,  50) ,
+        #                                           "PT/GeV"                                                             : ('Pt'    ,  0   ,  10) ,
+        #                                           "VFASPF(VCHI2/VDOF)"                                                 : ('Chi2'  ,  0   ,  25) ,
+        #                                           "BPVLTIME('PropertimeFitter/properTime:PUBLIC')*c_light"             : ('tau '  , -0.2 ,   3) ,
+        #                                           "(MAXTREE(('K+'==ABSID) , PIDK))"                                    : ('PidMax', -1   ,  20)}
+        #
 
         StripB2hhLTUnbiased.InputLocations = [ 'Phys/StdNoPIDsKaons' ]
-        return StrippingLine('B2hhLTUnbiased', prescale = 1, postscale = 1.0, algos = [ StripB2hhLTUnbiased] )
+        return StrippingLine('B2hhLTUnbiased', prescale = 1, postscale = 1.0, algos = [ self.SpdMultFilter(), StripB2hhLTUnbiased] )
 
     #
     # with Trigger
     #
     def StripB2hhLTUnbiasedTrigger( self ) :
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        from Configurables import FilterDesktop, CombineParticles
-        import GaudiKernel.SystemOfUnits as Units
+        #from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        #from Configurables import FilterDesktop, CombineParticles
+        #import GaudiKernel.SystemOfUnits as Units
 
         StripB2hhLTUnbiasedTrigger                 = CombineParticles("StripB2hhLTUnbiasedTrigger")
         #StripB2hhLTUnbiasedTrigger.ReFitPVs        = True
@@ -123,7 +132,18 @@ class StrippingB2hhLTUnbiasedConf(LHCbConfigurableUser):
                              prescale = 1.0, postscale = 0.1,
                              HLT = "HLT_PASS('Hlt1DiHadronLTUnbiasedDecision')" ,
                              algos = [ StripB2hhLTUnbiasedTrigger ] )
-          
+
+
+    def SpdMultFilterLoose(self):
+        return LoKi__VoidFilter("SpdMultFilterLoose",
+                                Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMultLoose)s )" % self.getProps()
+                                )
+
+    def SpdMultFilter(self):
+        return LoKi__VoidFilter("SpdMultFiltere",
+                                Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
+                                ) 
+        
 
     def getProps(self) :
         """

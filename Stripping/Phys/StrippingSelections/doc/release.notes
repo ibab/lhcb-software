@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-30 - Ulrich Kerzel
+- update StrippingB2hhLTUnbiased: introduce GEC SPD<350 for nominal line
+
 ! 2010-09-30 - Walter Bonivento
  - New stripping inclusive line for prompt reseonances decaying to 2 bodies. Very similar structure to B2Twobody.
    To be added to the Bhadron stream
