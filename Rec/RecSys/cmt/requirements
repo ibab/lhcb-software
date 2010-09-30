@@ -86,7 +86,7 @@ use TrackUtils           v1r39   Tr   # Eduardo Rodrigues
 use PatPV                v3r18   Tr   # Mariusz Witek
 
 # Velo
-use VeloRecMonitors      v2r11   Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r12   Velo # Malcom John, Eduardo Rodrigues
 
 # Declare this as a container package
 apply_pattern container_package

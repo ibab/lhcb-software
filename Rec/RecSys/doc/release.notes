@@ -44,7 +44,7 @@ This version uses Gaudi v21r11 and LHCb v31r6
   Tf/TrackMatching v2r32, Tf/TrackSys v5r0, Tr/PatPV v3r18,
   Tr/TrackCheckers v4r11, Tr/TrackExtrapolators v2r29,
   Tr/TrackMCTools v2r27, Tr/TrackMonitors v1r30, Tr/TrackTools v3r35,
-  Tr/TrackUtils v1r39
+  Tr/TrackUtils v1r39, Velo/VeloRecMonitors v2r12
 
 - In Calo/CaloMoniDst v5r4:
   . Fix uninitialised member variables in CaloPhotonChecker
@@ -182,6 +182,11 @@ This version uses Gaudi v21r11 and LHCb v31r6
 
 - In Tr/TrackUtils v1r39:
   . fixed bug in TrackHitAdder
+
+- In Velo/VeloRecMonitors v2r12:
+  . minor bugfixes
+  . added VeloIPResolutionMonitor to standard VELO monitoring sequence
+  . removed obsolete histogramming code from VeloIPResolutionMonitorNT
 
 </PRE><H1><A NAME=v10r4>2010-08-26 RecSys v10r4</A></H1><PRE>
 This version uses Gaudi v21r10p1 and LHCb v31r5
