@@ -4,6 +4,7 @@
 // from Gaudi
 #include "Kernel/DVAlgorithm.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
+//#include "GaudiAlg/GaudiTupleAlg.h"
 
 /** @class HighPtJetSelection HighPtJetSelection.h
  *
@@ -27,12 +28,15 @@ public:
 private:
   const IJetMaker* m_jetMaker;
   std::string m_jetMakerName;
-  std::string m_inputPVs;
+  std::string m_inputPVsName;
+  LHCb::RecVertices* m_inputPVs;
   double m_minChargedPartPt;
+  double m_minChargedPartP;
   double m_minNeutralPartE;
   double m_min1stJetPt;
   double m_min2ndJetPt;
   unsigned int m_jetMult;
+  double m_maxRPV;
 
 };
 #endif // HighPtJetSelection_H

@@ -1,4 +1,9 @@
 // Include files:
+// STL
+#include <string>
+#include <vector>
+// GSL                   
+#include "gsl/gsl_math.h"
 //from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -38,12 +43,15 @@ HighPtJetSelection::HighPtJetSelection(const std::string& name,
   : DVAlgorithm(name,pSvcLocator)
 {
   declareProperty("JetMakerName",m_jetMakerName = "LoKi::FastJetMaker");
-  declareProperty("InputPVs",m_inputPVs = LHCb::RecVertexLocation::Primary);
-  declareProperty("MinPartPt", m_minChargedPartPt = 0.1); // [GeV]
-  declareProperty("MinPartE", m_minNeutralPartE = 2.0);   // [GeV]
-  declareProperty("Min1stJetPt", m_min1stJetPt = 10.0);   // [GeV]
-  declareProperty("Min2ndJetPt", m_min2ndJetPt = 0.0);    // [GeV]
-  declareProperty("JetMult", m_jetMult = 1);
+  declareProperty("InputPVs",m_inputPVsName = 
+                             LHCb::RecVertexLocation::Primary);
+  declareProperty("MinPartPt",   m_minChargedPartPt = 0.2);  // [GeV]
+  declareProperty("MinPartP",    m_minChargedPartP  = 1.0);  // [GeV]
+  declareProperty("MinPartE",    m_minNeutralPartE  = 2.0);  // [GeV]
+  declareProperty("Min1stJetPt", m_min1stJetPt      = 10.0); // [GeV]
+  declareProperty("Min2ndJetPt", m_min2ndJetPt      = 7.0);  // [GeV]
+  declareProperty("JetMult",     m_jetMult          = 2);
+  declareProperty("MaxRPV",      m_maxRPV           = 1.0);   // [mm]
 }
 
 //=============================================================================
@@ -69,49 +77,75 @@ StatusCode HighPtJetSelection::execute() {
   if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
   // Check if there is reconstructed PV
-  if(exist<LHCb::RecVertices>(m_inputPVs)) {
-    // Select particles for fastJet
-    Particle::ConstVector inputParts = desktop()->particles();
-    Particle::ConstVector jetParts;
-    for(Particle::ConstVector::const_iterator ip = inputParts.begin();
-        ip != inputParts.end(); ip++) {
-      bool takePart = false;
-      if((*ip)->charge()) {
-        if((*ip)->momentum().pt() / Gaudi::Units::GeV > m_minChargedPartPt) {
-          takePart = true;
-        }
-      } else {
-        if((*ip)->momentum().e() / Gaudi::Units::GeV > m_minNeutralPartE) {
-          takePart = true;
-        }  
-      }
-      if(takePart) jetParts.push_back((*ip));
+  if(exist<LHCb::RecVertices>(m_inputPVsName)) {
+    m_inputPVs = get<LHCb::RecVertices>(m_inputPVsName);
+    // Find PVs
+    int nrPVs = 0;
+    for(std::vector<LHCb::RecVertex*>::const_iterator iv = m_inputPVs->begin();
+        iv != m_inputPVs->end(); ++iv) {
+      double rPV = sqrt((*iv)->position().x() * (*iv)->position().x() +
+                        (*iv)->position().y() * (*iv)->position().y());
+      if(rPV < m_maxRPV) nrPVs++;
     }
-    // Find jets
-    IJetMaker::Input jetInputs(jetParts.begin(),jetParts.end());
-    IJetMaker::Jets jets;
-    StatusCode sc = m_jetMaker->makeJets(jetInputs,jets);
-    if(sc.isFailure()) {
-      setFilterPassed(false);
-    } else {
-      if(jets.size() >= m_jetMult) {
-        bool highPtJet = false;
-        unsigned int twoHighPtJets = 0;
-        for(Particles::iterator ij = jets.begin(); jets.end() != ij; ij++) {
-          if((*ij)->pt() / Gaudi::Units::GeV > m_min2ndJetPt) {
-            twoHighPtJets++;
-            if((*ij)->pt() / Gaudi::Units::GeV > m_min1stJetPt) {
-              highPtJet = true;
-            }
+    // Only events with 1 PV
+    if(nrPVs == 1) { 
+      Particle::ConstVector inputParts = desktop()->particles();
+      Particle::ConstVector jetParts;
+      for(Particle::ConstVector::const_iterator ip = inputParts.begin();
+          ip != inputParts.end(); ip++) {
+        bool takePart = false;
+        if((*ip)->proto()) {
+          if((*ip)->proto()->track()) {
+            const Track * trk = (*ip)->proto()->track();
+            if(trk) {
+              if(trk->chi2PerDoF() < 10.0) {
+                if((*ip)->charge()) {
+                  if(((*ip)->pt() / Gaudi::Units::GeV > m_minChargedPartPt) &&
+                     ((*ip)->p() / Gaudi::Units::GeV > m_minChargedPartP)) {
+                    takePart = true;
+                  }
+                }  
+              }
+            }  
           }
         }
-        if(highPtJet && (twoHighPtJets >= m_jetMult)) setFilterPassed(true);
+        if(!((*ip)->charge())) {
+          if((*ip)->momentum().e() / Gaudi::Units::GeV > 
+             m_minNeutralPartE) {
+            takePart = true;
+          }  
+        }
+        if(takePart) jetParts.push_back((*ip));
       }
-    }  
+      // Find jets
+      IJetMaker::Input jetInputs(jetParts.begin(),jetParts.end());
+      IJetMaker::Jets jets;
+      StatusCode sc = m_jetMaker->makeJets(jetInputs,jets);
+      if(sc.isFailure()) {
+        setFilterPassed(false);
+      } else {
+        if(jets.size() >= m_jetMult) {
+          bool highPtJet = false;
+          unsigned int twoHighPtJets = 0;
+          for(Particles::iterator ij = jets.begin(); jets.end() != ij; ij++) {
+            if((*ij)->pt() / Gaudi::Units::GeV > m_min2ndJetPt) {
+              twoHighPtJets++;
+              if((*ij)->pt() / Gaudi::Units::GeV > m_min1stJetPt) {
+                highPtJet = true;
+              }
+            }
+          }
+          if(highPtJet && (twoHighPtJets >= m_jetMult)) {
+            setFilterPassed(true);
+          }
+        }
+      }
+    }
   }
 
   return StatusCode::SUCCESS;
 }
+
 
 //=============================================================================
 // Finalization
