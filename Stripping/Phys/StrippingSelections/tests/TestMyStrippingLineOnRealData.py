@@ -45,10 +45,7 @@ from Configurables import LoKi__HDRFilter
 filterHLT = LoKi__HDRFilter("FilterHLT",Code = regexp )
 
 seq = GaudiSequencer("TagSeq")
-seq.Members = [
-    filterHLT,
-    tag
-    ]
+seq.Members = [tag]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -65,6 +62,7 @@ DaVinci().PrintFreq = 500
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
 DaVinci().EvtMax = 100
+DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().MoniSequence += [ seq ]                     # Append the TagCreator to DaVinci

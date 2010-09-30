@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-09-30 - Greig Cowan
+ - Updated TestMyStrippingLineOnRealData.py to put the HltFilter in the
+   DaVinci EventPreFilter so that the event is skipped. This means that 
+   the ETC and the StrippingReport have the same statistics. Thanks to Vanya
+   for the suggestion.
+
 ! 2010-09-29 - Greig Cowan
  - Modified TestMyStrippingLineOnRealData.py to reflect the same options as
    are used in production. Also added HltFilter to remove microbias, beam gas
