@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-09-30 - Chris Jones
+ - Fix silly bug in environment variable name used to find parameter files.
+
 ! 2010-09-28 - Chris Jones
  - First import. New PID package that adds ANN information to each 
    ProtoParticle, using the NeuroBayes package.

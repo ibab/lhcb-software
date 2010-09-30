@@ -83,8 +83,8 @@ namespace ANNGlobalPID
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      ANNHelper( const ChargedProtoANNPIDBase::IntInputs inputs,
-                 const ChargedProtoANNPIDBase *          parent )
+      ANNHelper( const ChargedProtoANNPIDBase::IntInputs& inputs,
+                 const ChargedProtoANNPIDBase *           parent )
         : m_inputs ( inputs ),
           m_parent ( parent ) { }
       /// Destructor

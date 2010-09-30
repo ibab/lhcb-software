@@ -54,8 +54,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 #ifdef __GNUC__
 
   // ParamFile root
-  const std::string paramEnv = "CHARGEDPROTOANNPIDPARAM";
-  if ( !getenv(paramEnv.c_str()) ) return Error( paramEnv+" not set" );
+  const std::string paramEnv = "CHARGEDPROTOANNPIDPARAMROOT";
+  if ( !getenv(paramEnv.c_str()) ) return Error( "$"+paramEnv+" not set" );
   const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
                                   "/data/" + m_netVersion + "/" );
 
@@ -193,7 +193,8 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     LHCb::ProtoParticle * proto = *iP;
 
     // Select ProtoParticles
-    if ( !proto->track() ) { return Error( "Charged ProtoParticle has NULL Track pointer" ); }
+    if ( !proto->track() ) 
+    { return Error( "Charged ProtoParticle has NULL Track pointer" ); }
     if ( !m_trSel->accept(*(proto->track())) ) continue;
 
     // Track Pre-selection
