@@ -4,7 +4,10 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
-!========================== CaloReco v1r0  2010-09-24 =======================
+!========================== CaloReco v1r0  2010-09-30 =======================
+! 2010-09-30 - Rob Lambert
+ - fix warning about converting double to int
+
 ! 2010-09-20 - Roel Aaij
  - Use UpdateManagerSvc in HltRateMonitor
 

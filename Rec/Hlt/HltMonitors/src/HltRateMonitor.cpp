@@ -184,8 +184,8 @@ StatusCode HltRateMonitor::i_updateConditions()
       error() << "Condition does not contain RunNumber " << endmsg;
       return StatusCode::FAILURE;
    }
- 
-   m_startOfRun = 1e6 * numeric_cast< long long unsigned int >
+   //multiply by 1e6
+   m_startOfRun = 1000000 * numeric_cast< long long unsigned int >
       ( m_runParameters->param< int >( "RunStartTime" ) );
    m_runNumber = numeric_cast< unsigned int >
       ( m_runParameters->param< int >( "RunNumber" ) );
