@@ -500,15 +500,15 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   mins=timeInfo->tm_min;
   int secs;
   secs=timeInfo->tm_sec;
-  if (((mins==0)||(mins==15)||(mins==30)||(mins==45))&& (secs<31))save=true;
+  if ((mins==0)||(mins==15)||(mins==30)||(mins==45)) save=true;
   bool endofrun=false;
-
-  for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
+ // save=true;
+ /* for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {   
      for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
         it->second->loadMonObject();
      }
-  }
+  }*/
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {   
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
@@ -545,57 +545,66 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
         for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
            std::string serverName = Misc::splitString(it->first, "/")[1];
            if(0 == it->second->monObject()) continue;
-           std::string type = it->second->monObject()->typeName();	   
+           std::string type = it->second->monObject()->typeName();
+	   std::string histogramname=it->second->dimInfo()->getName();	   
            std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");    
-           if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-              it->second->loadMonObject();
-              it->second->monObject()->loadObject();
-	      std::string histdir=fileName+":";
-	      int previous=0;
-	      for (int i=3;i<(int)HistoFullName.size()-1;i++) {
-	      	 TDirectory *dir=0; 
-	         histdir=histdir+"/"+HistoFullName[i];
-	         if (i>3) {   
-		    bool dirfound=false;
-                    for (int j5=0;j5<(int)dirs.size();j5++){
-		       if (!strcmp(dirs[j5]->GetPath(),histdir.c_str())){ 		          
-		         dirs[j5]->GetDirectory(histdir.c_str());
-			 dirs[j5]->cd();
-			 dirfound=true;
-			 previous=j5;
+           if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||("MonP1" == type)) {
+	      if ((taskName=="Brunel")||(histogramname.find("HltRoutingBitsWriter")!= std::string::npos)||(histogramname.find("HltGlobalMonitor")!= std::string::npos)){
+                 it->second->loadMonObject();
+                 it->second->monObject()->loadObject();
+	         std::string histdir=fileName+":";
+	         int previous=0;
+	
+	         for (int i=3;i<(int)HistoFullName.size()-1;i++) {
+	      	    TDirectory *dir=0; 
+	            histdir=histdir+"/"+HistoFullName[i];
+	            if (i>3) {   
+		       bool dirfound=false;
+                       for (int j5=0;j5<(int)dirs.size();j5++){
+		          if (!strcmp(dirs[j5]->GetPath(),histdir.c_str())){ 		          
+		            dirs[j5]->GetDirectory(histdir.c_str());
+			    dirs[j5]->cd();
+			  //  msg << MSG::DEBUG << " histdir found " << histdir.c_str() << endreq;
+			    dirfound=true;
+			    previous=j5;
+		          }
 		       }
-		    }
-		    if (!dirfound) {
-		       dir=dirs[previous]->mkdir(HistoFullName[i].c_str()); 
-		       dir->cd();
-		       dirs.push_back(dir);
-		       previous=dirs.size()-1;
-		    } 	
-	         }   		    		 
-	         else {
-		    bool dirfound=false;
-	            if (dirs.size()>0) {		     
-                       for (int j6=0;j6<(int)dirs.size();j6++){
-			 if (!strcmp(dirs[j6]->GetPath(),histdir.c_str())){ 
-		           dirs[j6]->GetDirectory(histdir.c_str());
-			   dirs[j6]->cd();
-			   dirfound=true;
-			   previous=j6;
-			 }
-		       }      
-		    }    
-		    if (!dirfound) {
-		      dir=f->mkdir(HistoFullName[i].c_str());
-		      dirs.push_back(dir);
-		      previous=dirs.size()-1;
-		      dir->cd();	      
-		    }   
-	         }
-              }   
-              it->second->monObject()->write();
+		       if (!dirfound) {
+		         // msg << MSG::DEBUG << " making directory " << HistoFullName[i].c_str() << endreq;
+		          dir=dirs[previous]->mkdir(HistoFullName[i].c_str()); 
+		          dir->cd();
+		          dirs.push_back(dir);
+		          previous=dirs.size()-1;
+		       } 	
+	            }   		    		 
+	            else {
+		       bool dirfound=false;
+	               if (dirs.size()>0) {		     
+                          for (int j6=0;j6<(int)dirs.size();j6++){
+			     if (!strcmp(dirs[j6]->GetPath(),histdir.c_str())){ 
+		                dirs[j6]->GetDirectory(histdir.c_str());
+			        dirs[j6]->cd();
+			      //  msg << MSG::DEBUG << " histdir found  (i<3) " << histdir.c_str() << endreq;
+			        dirfound=true;
+			        previous=j6;
+			     }
+		          }      
+		       }    
+		       if (!dirfound) {
+		      //    msg << MSG::DEBUG << " making directory (i<3) " << HistoFullName[i].c_str() << endreq;
+		          dir=f->mkdir(HistoFullName[i].c_str());
+		          dirs.push_back(dir);
+		          previous=dirs.size()-1;
+		          dir->cd();      
+		       }   
+	            }
+                 }   
+		// msg << MSG::DEBUG << " saving histogram " << it->second->dimInfo()->getName() << endreq;
+		 it->second->monObject()->write();  
+              }		
            }
            else {
-            msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
+            msg << MSG::DEBUG << "MonObject of type " << type << " can not be written."<< endreq; 
            }
 	   HistoFullName.clear();
         } 
@@ -647,7 +656,7 @@ bool BaseServiceMap::add() {
     }
  //    msg << MSG::INFO << "Adding: " << m_dimInfoIt->first << endreq;       
      m_dimSrv[m_dimInfoIt->first].second->reset();
-
+  //   if (m_processMgr->publishRates()) { if (m_monRateDecoder->RunChange()) reset();}
      int eors=0;
      int inactive=0;
      for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
@@ -739,6 +748,7 @@ bool BaseServiceMap::add() {
 void BaseServiceMap::reset() {
   MsgStream msg(msgSvc(), name());
   std::map<std::string, DimInfoMonObject*>::iterator it;
+  msg << MSG::DEBUG << "runchanged. resetting histograms. " << endreq;
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
      m_dimSrv[m_dimInfoIt->first].second->reset();     
