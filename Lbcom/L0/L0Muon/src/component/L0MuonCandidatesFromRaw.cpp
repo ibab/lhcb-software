@@ -128,10 +128,11 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   }
 
   int ntae = 0;
+  std::string originalRootInTes = rootInTES();
   for (int itae = -1*tae_size; itae<=tae_size; ++itae){
     std::string rootInTes = m_tae_items[itae];
 
-    sc = setProperty("RootInTES",rootInTes);
+    sc = setProperty("RootInTES",originalRootInTes + rootInTes);
     if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
 
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
@@ -150,6 +151,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
                      ,StatusCode::SUCCESS,50);
       sc = m_outputTool->releaseRegisters();
       if ( sc.isFailure() ) {
+        sc = setProperty("RootInTES",originalRootInTes );
         return Warning("Fail to release registers - skip the rest of event"
                        ,StatusCode::SUCCESS,50);
       }
@@ -170,6 +172,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
                        ,StatusCode::SUCCESS,50);
         sc = m_outputTool->releaseRegisters();
         if ( sc.isFailure() ) {
+          sc = setProperty("RootInTES",originalRootInTes );
           return Warning("Fail to release registers - skip the rest of event"
                          ,StatusCode::SUCCESS,50);
         }
@@ -186,6 +189,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
                        ,StatusCode::SUCCESS,50);
         sc = m_outputTool->releaseRegisters();
         if ( sc.isFailure() ) {
+          sc = setProperty("RootInTES",originalRootInTes );
           return Warning("Fail to release registers - skip the rest of event"
                          ,StatusCode::SUCCESS,50);
         }
@@ -196,6 +200,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Release registers used by the converters
     sc = m_outputTool->releaseRegisters();
     if ( sc.isFailure() ) {
+      sc = setProperty("RootInTES",originalRootInTes );
       return Warning("Fail to release registers - skip the rest of event"
                      ,StatusCode::SUCCESS,50);
     }
@@ -206,6 +211,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
     ++ntae;
   } // End of loop over time slots
+  sc = setProperty("RootInTES",originalRootInTes );
   if (ntae==0) return Error("No valid time slice found",StatusCode::SUCCESS,50);
   
   //   svc->chronoStop("L0MuonCandidatesFromRaw Execute");

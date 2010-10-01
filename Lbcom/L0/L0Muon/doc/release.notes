@@ -3,6 +3,10 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2010-10-01 - Julien Cogan
+ - L0MuonCandidatesFromRaw : better use of rootInTes to allow to decode banks
+   saved in MicroDSTs
+
 !========================= L0Muon v9r1p1 2010-06-21 ==========================
 ! 2010-06-16 - Julien Cogan
  - Fix windows compilation warnings
