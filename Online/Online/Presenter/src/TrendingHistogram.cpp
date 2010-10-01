@@ -1,4 +1,4 @@
-// $Id: TrendingHistogram.cpp,v 1.3 2010-08-13 16:51:51 robbep Exp $
+// $Id: TrendingHistogram.cpp,v 1.4 2010-10-01 12:54:12 frankb Exp $
 // This class
 #include "TrendingHistogram.h" 
 
@@ -6,15 +6,8 @@
 #include <iostream>
 
 // ROOT
-#ifdef WIN32
-#  pragma warning( push )
-#  pragma warning( disable : 4800 )
-#endif
 #include <TGraph.h>
 #include <TCanvas.h>
-#ifdef WIN32
-#  pragma warning( pop )
-#endif
 
 // Trending
 #include "Trending/ITrendingTool.h" 

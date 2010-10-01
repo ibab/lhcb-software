@@ -1,4 +1,4 @@
-// $Id: Elog.cpp,v 1.3 2010-08-24 05:29:01 ocallot Exp $
+// $Id: Elog.cpp,v 1.4 2010-10-01 12:52:26 frankb Exp $
 // Include files
 /********************************************************************\
 This file is a stripped version of the original Elog, made c++;
@@ -7,7 +7,7 @@ This file is a stripped version of the original Elog, made c++;
 
   Contents:     Electronic logbook utility
 
-  $Id: Elog.cpp,v 1.3 2010-08-24 05:29:01 ocallot Exp $
+  $Id: Elog.cpp,v 1.4 2010-10-01 12:52:26 frankb Exp $
 
 \********************************************************************/
 
@@ -15,7 +15,7 @@ This file is a stripped version of the original Elog, made c++;
 #define __USE_XOPEN             /* needed for crypt() */
 #endif
 
-#ifdef _MSC_VER
+#ifdef WIN32
 #include <windows.h>
 #include <io.h>
 #else
@@ -402,7 +402,7 @@ int Elog::submit( std::string text ) {
 /* SHA256-based Unix crypt implementation.
    Released into the Public Domain by Ulrich Drepper <drepper@redhat.com>.
    Adapted for MS Windows by Stefan Ritt <stefan.ritt@psi.ch> 
-   $Id: Elog.cpp,v 1.3 2010-08-24 05:29:01 ocallot Exp $ */
+   $Id: Elog.cpp,v 1.4 2010-10-01 12:52:26 frankb Exp $ */
 
 #ifdef _MSC_VER
 #include <stdio.h>

@@ -1,21 +1,14 @@
-// $Id: CreateTrendingHistogramDialog.cpp,v 1.3 2010-08-19 16:11:08 ggiacomo Exp $
+// $Id: CreateTrendingHistogramDialog.cpp,v 1.4 2010-10-01 12:52:26 frankb Exp $
 
 #include <iostream>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TGButton.h>
 #include <TGLabel.h>
 #include <TGTextEntry.h>
 #include <TGFileDialog.h>
 #include <TGMsgBox.h>
 #include <TGComboBox.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Boost
 #include <boost/filesystem.hpp>

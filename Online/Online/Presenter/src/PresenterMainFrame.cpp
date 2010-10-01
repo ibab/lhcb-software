@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.340 2010-09-20 18:41:27 robbep Exp $
+// $Id: PresenterMainFrame.cpp,v 1.341 2010-10-01 12:54:11 frankb Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -8,10 +8,6 @@
 #include <vector>
 
 // ROOT include
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TApplication.h>
 #include <TDirectory.h>
 #include <TFile.h>
@@ -49,9 +45,6 @@
 #include <TRootHelpDialog.h>
 #include <TBenchmark.h> 
 #include <TGraph.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // BOOST
 #include <boost/algorithm/string/split.hpp>

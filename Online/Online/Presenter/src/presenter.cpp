@@ -1,23 +1,16 @@
-// $Id: presenter.cpp,v 1.83 2010-09-19 20:31:12 robbep Exp $
+// $Id: presenter.cpp,v 1.84 2010-10-01 12:54:12 frankb Exp $
 // STL
 #include <iostream>
 #include <fstream>
 #include <malloc.h>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TSystem.h>
 #include <TSysEvtHandler.h>
 #include <TApplication.h>
 #include <TStyle.h>
 #include <TString.h>
 #include <TPRegexp.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // boost
 #include <boost/program_options.hpp>

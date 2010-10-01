@@ -1,19 +1,12 @@
-// $Id: HistogramIdentifier.cpp,v 1.38 2010-07-31 11:27:37 ggiacomo Exp $
+// $Id: HistogramIdentifier.cpp,v 1.39 2010-10-01 12:54:11 frankb Exp $
 // STL
 #include <iostream>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TString.h>
 #include <TPRegexp.h>
 #include <TObjString.h>
 #include <TObjArray.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Online
 #include "Gaucho/MonObject.h"

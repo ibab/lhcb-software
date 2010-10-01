@@ -1,12 +1,8 @@
-// $Id: HistoPropDialog.cpp,v 1.22 2010-05-16 18:09:12 robbep Exp $
+// $Id: HistoPropDialog.cpp,v 1.23 2010-10-01 12:52:26 frankb Exp $
 // STL 
 #include <iostream>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
@@ -25,9 +21,6 @@
 #include <TGButton.h>
 #include <TGFSComboBox.h>
 #include <TGLabel.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 #include "HistoPropDialog.h"
 #include "PresenterMainFrame.h"

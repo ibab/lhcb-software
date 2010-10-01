@@ -1,12 +1,8 @@
-// $Id: DatabasePagePathDialog.cpp,v 1.3 2010-06-03 21:27:39 robbep Exp $
+// $Id: DatabasePagePathDialog.cpp,v 1.4 2010-10-01 12:52:26 frankb Exp $
 // STL 
 #include <map>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
@@ -23,9 +19,6 @@
 #include <TObjArray.h>
 #include <TH1.h>
 #include <TH2.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Online
 #include "OnlineHistDB/OnlineHistDB.h"

@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.183 2010-09-26 04:36:13 frankb Exp $
+// $Id: DbRootHist.cpp,v 1.184 2010-10-01 12:52:26 frankb Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -7,10 +7,6 @@
 #include <cmath>
 
 // ROOT
-#ifdef WIN32
-#  pragma warning( push )
-#  pragma warning( disable : 4800 )
-#endif
 #include <TPad.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -27,9 +23,6 @@
 #include <TCanvas.h>
 #include <TKey.h>
 #include <TImage.h>
-#ifdef WIN32
-#  pragma warning( pop )
-#endif
 
 // boost
 #include <boost/thread/recursive_mutex.hpp>

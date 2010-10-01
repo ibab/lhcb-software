@@ -1,11 +1,7 @@
-// $Id: ReferencePicker.cpp,v 1.19 2010-06-03 21:27:53 robbep Exp $
+// $Id: ReferencePicker.cpp,v 1.20 2010-10-01 12:54:12 frankb Exp $
 #include "ReferencePicker.h"
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TGButton.h>
 #include <TCanvas.h>
 #include <TGLabel.h>
@@ -14,9 +10,6 @@
 #include <TFile.h>
 #include <TH1.h>
 #include <TList.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Boost
 #include <boost/filesystem.hpp>

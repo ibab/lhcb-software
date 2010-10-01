@@ -1,18 +1,11 @@
-// $Id: ParallelWait.cpp,v 1.26 2010-08-12 15:43:00 robbep Exp $
+// $Id: ParallelWait.cpp,v 1.27 2010-10-01 12:54:11 frankb Exp $
 #include "ParallelWait.h"
 
 // STL
 #include <vector>
 
 // ROOT include
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TGStatusBar.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Boost
 #include <boost/thread/thread.hpp>

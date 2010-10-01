@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.88 2010-09-20 18:41:27 robbep Exp $
+// $Id: Archive.cpp,v 1.89 2010-10-01 12:52:26 frankb Exp $
 // This Class
 #include "Archive.h"
 
@@ -12,10 +12,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 // ROOT
-#ifdef WIN32
-#pragma warning( push )
-#pragma warning( disable : 4800 )
-#endif
 #include <TFile.h>
 #include <TH1.h>
 #include <TList.h>
@@ -25,9 +21,6 @@
 #include <TObjArray.h>
 #include <TSystem.h>
 #include <TGMsgBox.h>
-#ifdef WIN32
-#pragma warning( pop )
-#endif
 
 // Online
 #include "OnlineHistDB/OnlineHistogram.h"
