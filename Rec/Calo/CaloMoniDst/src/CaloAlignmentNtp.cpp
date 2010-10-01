@@ -50,7 +50,7 @@ CaloAlignmentNtp::CaloAlignmentNtp( const std::string& name,
   declareProperty("DeltaBin" , m_bin   = 150 );
   declareProperty("DeltaMin" , m_min   = -150. );
   declareProperty("DeltaMax" , m_max   = +150. );
-  declareProperty("ThetaBin" , m_thBin = 14. );
+  declareProperty("ThetaBin" , m_thBin = 14 );
   
 }
 //=============================================================================
