@@ -10,6 +10,8 @@ from Gaudi.Configuration import *
 #--- switch on xml summary
 from Configurables import LHCbApp
 LHCbApp().XMLSummary = 'summary.xml'
+#-- set explicit CondDB tag
+LHCbApp().CondDBtag = 'head-20100826'
 
 #--- determine application to run
 from LumiAlgs.LumiFsrWriterConf import LumiFsrWriterConf as LumiFsrWriter
@@ -28,5 +30,6 @@ LumiFsrWriter().EvtMax =  1000
 LumiFsrWriter().OutputLevel =  INFO
 EventSelector().PrintFreq = 1000
 
-from Configurables import CondDB
-CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")
+#-- to test layer uncomment these lines
+# from Configurables import CondDB
+# CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")
