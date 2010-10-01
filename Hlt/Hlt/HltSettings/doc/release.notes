@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v4r1  2010-10-01 ===================
 ! 2010-09-30 - Gerhard Raven
  - Muons_Retention50_Oct10: Go to 'tight' settings for mu-track
  - More tweaking of Oct10 (Hans+Vava+Johannes+Gerhard)
