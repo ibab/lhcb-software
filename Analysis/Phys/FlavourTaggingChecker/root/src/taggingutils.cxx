@@ -72,7 +72,7 @@ bool isinTextFile(int run, int evt) {
       filevec_name=listfile.at(0);
     }
 
-    debug()<<"\nReading list "<< filevec_name <<endmsg;
+    info()<<"\nReading list "<< filevec_name <<endmsg;
     filevec.clear(); lock_filevec=true; 
 
     ifstream indata; 
@@ -93,10 +93,14 @@ bool isinTextFile(int run, int evt) {
   }//end init
 
   pair< int, int > value(run,evt);
-  vector< pair< int, int > >::const_iterator location = 
+  vector< pair< int, int > >::iterator location = 
     find(filevec.begin(), filevec.end(), value);
 
-  if (location != filevec.end()) return true;
+  if (location != filevec.end()) {
+    filevec.erase(location);
+    return true;
+  }
+  
   return false;
 
 }
@@ -203,7 +207,8 @@ TString readString(TString varname) { //< function parsing the tag.opts file
   // assumes empty line at eof!
   while (!line.ReadLine(indata).eof()) { 
     if(line.BeginsWith("#")) continue; //comments out whole line by # sign
-
+    if(line.BeginsWith("EndOfOptions")) break;
+    
     TObjArray * words = line.Tokenize(" ,;:");
     int nwords = words->GetEntriesFast();
 

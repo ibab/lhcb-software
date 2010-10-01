@@ -1,76 +1,112 @@
-  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  
-  THIS A PLAIN TEXT OPTION FILE parsed by the Tools!
-  Separators like ,;//>: or "" are ignored
-  # as first char can be used to comment out a specific line
+#  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#  THIS A PLAIN TEXT OPTION FILE parsed by the Tools
+#  Separators like ,;//>: or "" are ignored
+#  # as first char can be used to comment out a specific line
 
-  >>>>>>>>>>>>>>>>>>>>>> DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+#  >>>>>>>>>>>>>>>>>>>>>> DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
   
-  This is the file/directory that you want to run (LAST ONE IS TAKEN):
-   if a directory is given all root files in it will be read:
+#  This is the file/directory that you want to run (LAST ONE IS TAKEN):
+#   if a directory is given all root files in it will be read:
 
    datafile = .
-   datafile = /afs/cern.ch/user/m/musy/public/analysis.root
-
    datafile = data/v25r2_retune/bsdspi_seed2
    datafile = data/v25r2_retune/bdkp_seed2
    datafile = data/v25r2_retune/bujpsik_seed2
-   datafile = data/MC10/bsjpsiphi_seed2
-
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsjpsiphi_nu1
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/dstarmunu/dstarmu_s7.root
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bdjpsiks
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
+   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/dstarmunu/last
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
 
-
-  >>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#  >>>>>>>>>>>>>>>>>>>>>> CONTROLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    DBGLEVEL    =  3
-   Nmax        = -1    // events to run, -1 means all
+   Nmax        = -1    Events to run, -1 means all
 
-   requireL0   = 0     // Trigger
+   requireL0   = 0     Trigger
    requireHlt1 = 0 
    requireHlt2 = 0 
    requireTis  = 0
    requireTos  = 0
-   checkDV     = 0     // compare outcome from DaVinci package
+   checkDV     = 0     Compare outcome from DaVinci, warns if different
 
-   IsControlChannel = 0     // take as the true flavour the reconsted B
    UseObsoleteSV    = 0
-   NNetTrain        = none  // "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
+   IsControlChannel = 0     Take as the true flavour the reconsted B
+   NNetTrain        = none  "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
    ViewOptionLHCb   = -1
 
-   ////check that event is present in a list of run event numbers 
-   EventListFileName = ./file.eventlist //just look in this file
-   //look in the same data directory for ONE file with .eventlist extension:
-   EventListFileName = DATAFILE  
-   EventListFileName = none             //ignore any list
+#  Check that event is present in a list of run event numbers 
+   EventListFileName = ./myfile.eventlist  Use this file for run-event nr
+#  look in the same data directory for ONE file with .eventlist extension:
+   EventListFileName = DATAFILE
+   EventListFileName = none                Ignore any list
 
 
-  >>>>>>>>>>>>>>>>>>>>>> OVERRIDE CUTS >>>>>>>>>>>>>>>>>>>>>>>>>>>
+#EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 
-#  ------------- common cuts -------------
-#   IPPU_cut   = 3.0, distPhi_cut = 0.005
-#   omegascale = 0.06, omegamaxbin = 0.36
-#
-#  ------------- muons -------------
-#   Muon_Pt_cut = 1.1, Muon_P_cut = 0; 
-#  
-#  ------------- elect -------------
-#   Ele_Pt_cut = 1.1, Ele_P_cut = 0;
-# 
-#  ------------- OS kaons -------------
-#   Kaon_Pt_cut = 0.4, Kaon_P_cut = 4, 
-#
-#  ------------- SS Kaons -------------
-#   KaonSame_Pt_cut = 0.45
-#
-#  ------------- SS Pions -------------
-#   PionSame_Pt_cut = 0.6, PionSame_P_cut = 0
-#   PionSame_dQ_cut = 3.0
-#
-#  ------------- Vertex Charge -------------
-#   VchPowerK = 0.35, MinimumVCharge = 0.12;
- 
+
+#>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>
+#--- cuts optimized for MC2010:
+#(the default ones have been tuned on first semileptonic D*munu)
+
+IPPU_cut = 3.0
+
+Muon_Pt_cut   = 1.1
+Muon_P_cut    = 0.0 
+Muon_lcs_cut  = 2.2
+Muon_PIDm_cut = 2.0
+ProbMin_muon  = 0.0
+
+Ele_Pt_cut    = 1.1
+Ele_P_cut     = 0.0
+Ele_lcs_cut   = 2.5
+Ele_ghost_cut =-15.0
+VeloChargeMin = 0.0 
+VeloChargeMax = 1.3
+EoverP        = 0.85
+Ele_PIDe_cut  = 4.0
+ProbMin_ele   = 0.0
+
+Kaon_Pt_cut                = 0.4
+Kaon_P_cut                 = 4.0
+Kaon_IPs_cut               = 3.8
+Kaon_IP_cut                = 1.5
+Kaon_LCS_cut               = 2.5
+Kaon_PIDk                  =  0.0
+Kaon_PIDkp                 = -1.0
+Kaon_ghost_cut             =-14.0
+Kaon_LongTrack_IP_cut      = 999.0
+Kaon_upstreamTrack_IP_cut  = 999.0
+ProbMin_kaon               = 0.0
+
+KaonSame_Pt_cut  = 0.45
+KaonSame_P_cut   = 4.0
+KaonSame_IP_cut  = 3.0
+KaonSame_Phi_cut = 1.1
+KaonSame_Eta_cut = 1.0
+KaonSame_dQ_cut  = 1.6
+KaonS_LCS_cut    = 2.0
+KaonSPID_kS_cut  = 1.0
+KaonSPID_kpS_cut = -1.0
+ProbMin_kaonS    = 0.0
+
+PionSame_Pt_cut       = 0.6
+PionSame_P_cut        = 0.0
+PionSame_IPs_cut      = 3.5
+PionS_LCS_cut         = 2.0
+PionSame_dQ_cut       = 3.0
+PionSame_dQ_extra_cut = 1.5 
+Pion_ghost_cut        = -999.0
+PionSame_PIDNoK_cut   = 3.0
+PionSame_PIDNoP_cut   = 10.0
+PionProbMin           = 0.55
+
+PowerK        = 0.35
+MinimumVCharge= 0.12
+ProbMin_vtx   = 0.52
+P0            = 5.255669e-01
+P1            =-3.251661e-01
+Gt075         = 0.35
+TracksEq2     = 0.4141
+TracksGt2     = 0.3250
+

@@ -171,7 +171,7 @@ void taginit() {
   declareProperty( "Nmax",    Nmax    = -1 ); 
   declareProperty( "checkDV", checkDV =  0 );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut    = 4.0 );
+  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
@@ -186,7 +186,7 @@ void taginit() {
   if(Nmax==-1) Nmax=10000000;
 
   if(checkDV) cout<<ROJO<<flush
-		<<"Using results of DaVinci src/FlavourTagging!\n"<<ENDC;
+		<<"Comparing results of DaVinci src/FlavourTagging!\n"<<ENDC;
   cout<<VERDE<<"Using "<<MLPtype
       <<", Triggers required: "<<ENDC<<SUBVERDE
       <<(requireL0?" L0 ":"")

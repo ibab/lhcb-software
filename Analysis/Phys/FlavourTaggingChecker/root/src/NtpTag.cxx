@@ -54,7 +54,6 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
   TLorentzVector OppoB(0,0,0,0);
   if(enableMC) OppoB = build4V( BOP, BOP*sin(BOthe), BOphi, BOMas );
 
-  
   Particle* partOB = new Particle(OppoB, BOID);
   if(enableMC) partOB->setEndVertexPosition(TVector3(BOx,BOy,BOz));
   if(enableMC) partOB->setHasOscillated(BOosc);
@@ -167,18 +166,18 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
   /////////////////////////////////////////////////////////////////
   //build Secondary Vertex object (ONLY THE SEED)
 
-  Vertices allSeeds;
+  Vertices  allSeeds;
   Particles parts_in_Seed; parts_in_Seed.clear();
 
   for ( int iv=0; iv<V; iv++ ) {
     int i_seed1=-1, i_seed2=-1; 
-    for ( int i=0; i<N; i++ ) {
+    for ( int i=0; i< (int)parts.size(); i++ ) {
       if(!vFlag[i]) continue;
       if(SecVtx_pt1[iv]==Pt[i]) i_seed1=i; //N-block index 
       if(SecVtx_pt2[iv]==Pt[i]) i_seed2=i;
     }
     if( i_seed1==-1 || i_seed2==-1 )  {
-      warning()<<"could not find 2 seeds "<<endmsg;
+      debug()<<"could not find 2 seeds "<<endmsg;
       continue;//info missing in N-block
     }
 

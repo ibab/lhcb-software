@@ -3,7 +3,7 @@
 # Example Options for BTaggingAnalysis algorithm
 #
 # @author Marco Musy
-# @date 2010-02-11
+# @date 2010-09-07
 #
 ########################################################################
 from Gaudi.Configuration import *
@@ -29,8 +29,6 @@ location = "Phys/CheatedSelection"
 tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
 
-tag.OutputLevel  = 3
-
 tag.addTool( PhysDesktop )
 tag.PhysDesktop.OutputLevel = 4
 tag.addTool( TriggerTisTos )
@@ -50,8 +48,6 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 
 tag.BTaggingTool.OutputLevel = 3
 
-#tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
-
 
 #Import cuts for MC2010
 #importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
@@ -63,7 +59,7 @@ tag.BTaggingTool.OutputLevel = 3
 tagcheck = BTaggingChecker("BTaggingChecker")
 tagcheck.InputLocations = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
-tagcheck.OutputLevel = 4
+tagcheck.OutputLevel = 3
 
 ########################################################################
 # BTaggingAnalysis ntuple creation
@@ -123,7 +119,7 @@ DaVinci().CondDBtag  = "sim-20100429-vc-md100"
 
 DaVinci().MoniSequence = [ cheatsel,
                            tag,
-#                           tagcheck,
+                           #tagcheck,
                            tagana
                            ]  # The algorithms
 

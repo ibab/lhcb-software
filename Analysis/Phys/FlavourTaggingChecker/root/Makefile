@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # Makefile for Tagging Analysis and Tuning
 #
-# Author: Marco Musy (Universitat de Barcelona), 17/07/2010
+# Author: Marco Musy (Universitat de Barcelona), 07/09/2010
 #------------------------------------------------------------------------------
 
 ROOTCONFIG   := root-config
@@ -55,7 +55,7 @@ debug:
 	@mv *.o lib
 	$(LD) $(ROOTLDFLAGS) ./lib/*.o $(LIBS) -o $(EXECUTABLE)
 	@echo "gdb ./tag.exe program OK."
-	@echo "\n\n\nType r and then bt inside gdb to dump debug info!\n\n\n"
+	@echo " *** Type r and then bt inside gdb to dump debug info!"
 	gdb ./$(EXECUTABLE) | tee $(OUTPUTLOG)
 #	valgrind --leak-check=yes ./$(EXECUTABLE) &> $(OUTPUTLOG)
 

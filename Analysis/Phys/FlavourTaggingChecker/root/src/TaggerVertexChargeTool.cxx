@@ -34,6 +34,8 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
 Tagger* TaggerVertexChargeTool::tag(Event& event) {
   tVch->reset();
 
+  verbose()<<"--VertexCharge Tagger--"<<endreq;
+
   Particles parts = event.particles();
   Particles::iterator i, ip;
   Particles Pfit; Pfit.clear();
@@ -129,13 +131,13 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     omega = 1 - nnet.MLPvtx( NNinputs );
   }
 
-  debug() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-          <<", omega= "<< omega <<endmsg;
+  verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
+            <<", omega= "<< omega <<endmsg;
 
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 
-  debug()<<"Vtx passed"<<endreq;
+  verbose()<<"Vtx passed"<<endreq;
 
   tVch->setDecision( Vch>0 ? -1 : 1 );
   tVch->setRawNNetOutput( nnet.m_rnet_vtx );

@@ -33,7 +33,7 @@ class TaggerPionSameTool  : public GenericTool {
 
  private:
 
-  double  m_ProbMin, m_Pt_cut_pionS, m_P_cut_pionS, m_IPs_cut_pionS, 
+  double  m_PionProbMin, m_Pt_cut_pionS, m_P_cut_pionS, m_IPs_cut_pionS, 
     m_lcs_cut,m_dQcut_pionS,  m_dQcut_extra_pionS, m_ghost_cut;
   NNetTool_MLP nnet;
   Tagger* tpionS;

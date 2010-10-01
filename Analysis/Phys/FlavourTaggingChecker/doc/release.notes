@@ -6,6 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+
+! 2010-09-30 - Marco Musy, Marc Grabalosa
+  . updated cuts from D*munu, MC2010 is kept as an option in /root
+
 ! 2010-09-29 - Marco Musy
   . modified kaon oppo cuts to adapt to latest data in /root,
   cuts are always accessible through properties.

@@ -2,12 +2,19 @@
 -----------
 - To quickly run:
 
+0. SetupProject Gaudi ROOT (if at Cern)
+
 1. modify tag.opts to point to the ntuple or ntuple 
    directory that you want to use.
 
 2. type "make" 
 
 3. have fun :)
+
+By default the program will pick up the test ntuple:
+/afs/cern.ch/user/m/musy/public/analysis.root
+This was produced by:
+gaudirun.py $FLAVOURTAGGINGCHECKEROPTS/DVBTaggingAnalysis.py
 
 You can find documentation about this program at
 https://cern.ch/musy/tagging

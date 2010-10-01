@@ -2,15 +2,16 @@
 
 TaggerElectronTool::TaggerElectronTool() {
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1.1 * GeV );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
   declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999.0 );
-  declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
-  declareProperty( "EoverP",       m_EoverP     = 0.85 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut   = 4.0 );
-  declareProperty( "ProbMin_ele",  m_ProbMin_ele = 0. ); //no cut
+  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 0. );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
+  declareProperty( "VeloChargeMin",m_VeloChMin     = 0.0 );
+  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.3 );
+  declareProperty( "EoverP",       m_EoverP        = 0.85 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 5.5 );
+  declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
 
   NNetTool_MLP nnet;
   tele = new Tagger();
@@ -31,21 +32,25 @@ TaggerElectronTool::TaggerElectronTool() {
 Tagger* TaggerElectronTool::tag(Event& event) {
   tele->reset();
 
+  verbose()<<"-- Electron Tagger --"<<endreq;
+
   Particle* iele=NULL;
   double ptmaxe=-999, ncand=0;
   Particles::iterator ipart;
   Particles vtags = event.particles();
   for (ipart=vtags.begin(); ipart!=vtags.end(); ++ipart) {
 
-    if(!checkPIDhypo(Particle::electron, *ipart)) continue;
-
     Particle* axp = (*ipart);
+
+    if(!checkPIDhypo(Particle::electron, axp)) continue;
+    verbose() << " Ele PIDe="<< axp->PIDe() <<endmsg;
 
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
     double P = axp->p();
     if( P < m_P_cut_ele )  continue;
+    verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
     if( axp->LCS() > m_lcs_cut_ele ) continue;
 
@@ -56,16 +61,21 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     double tsa = axp->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
+    verbose() << " Ele lcs="<< axp->LCS() <<" tsa="<<tsa<<endmsg;
+    //calculate signed IP wrt RecVert
+    double IPsig = axp->IPs();
+    if(IPsig < m_IPs_cut_ele ) continue;
+ 
     double eOverP = axp->eOverP();
     if(eOverP > m_EoverP || eOverP<-100) {
-  
-      double veloch = axp->VeloCharge();
+      verbose() << " Elec E/P=" << eOverP <<endreq;
 
+      double veloch = axp->VeloCharge();
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-        
+        verbose() << " Elec veloch=" << veloch << endreq;
+
         ncand++;
 
-        verbose()<<" Electron cand, Pt="<<Pt<<endmsg;
         hcut_ele_pidk->Fill(axp->PIDe());
         hcut_ele_pt  ->Fill(Pt);
         hcut_ele_p   ->Fill(P);
@@ -75,7 +85,7 @@ Tagger* TaggerElectronTool::tag(Event& event) {
         hcut_ele_velo->Fill(veloch);
         hcut_ele_ippu->Fill(axp->IPPU());
         hcut_ele_N   ->Fill(event.multiplicity());
-        hcut_ele_ips ->Fill(axp->IPs());
+        hcut_ele_ips ->Fill(IPsig);
 
         if( Pt > ptmaxe ) { 
           iele = (*ipart);
@@ -97,6 +107,7 @@ Tagger* TaggerElectronTool::tag(Event& event) {
   NNinputs.at(9) = ncand;
 
   double pn = nnet.MLPe( NNinputs );
+  verbose() << " Elec pn=" << pn << endreq;
 
   if( pn < m_ProbMin_ele ) return tele;
 

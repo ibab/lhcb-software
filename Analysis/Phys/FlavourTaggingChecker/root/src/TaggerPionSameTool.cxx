@@ -2,17 +2,17 @@
 
 TaggerPionSameTool::TaggerPionSameTool() {
 
-  declareProperty( "ProbMin",         m_ProbMin       = 0.55);
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.6 *GeV );
+  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
+  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
   declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 5.0 );
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
+  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
   declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
-
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
+
 
   NNetTool_MLP nnet;
   tpionS = new Tagger();
@@ -31,6 +31,8 @@ TaggerPionSameTool::TaggerPionSameTool() {
 Tagger* TaggerPionSameTool::tag(Event& event) {
   tpionS->reset();
 
+  verbose()<<"--Pion SS Tagger--"<<endreq;
+
   TLorentzVector ptotB = event.signalB()->momentum();
   double B0mass = ptotB.M();
 
@@ -42,21 +44,26 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
     if(!checkPIDhypo(Particle::pion, *ipart)) continue;
+    verbose()<<" Pion PIDk="<< (*ipart)->PIDk() <<endreq;
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
     double P  = (*ipart)->p();
     if( P  < m_P_cut_pionS )  continue;
+    verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
-    if( (*ipart)->LCS() > m_lcs_cut ) continue;
+    double lcs = (*ipart)->LCS();
+    if( lcs > m_lcs_cut ) continue;
     if( (*ipart)->type() != Particle::Long && 
         (*ipart)->type() != Particle::Matched ) continue;
 
     double tsa = (*ipart)->likelihood();
     if(tsa < m_ghost_cut) continue;
+    verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     double IPsig = (*ipart)->IPs();
     if(IPsig > m_IPs_cut_pionS)  continue;
+    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
@@ -81,6 +88,8 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
 
   double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
   if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
+  verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
+
   hcut_pS_dqe ->Fill(extra_dQ);
 
   //calculate omega
@@ -105,8 +114,9 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
   NNinputs.at(9) = ncand;
 
   double pn = nnet.MLPpS( NNinputs );
+  verbose() << " Pion pn="<< pn <<endmsg;
 
-  if( pn < m_ProbMin ) return tpionS;
+  if( pn < m_PionProbMin ) return tpionS;
 
   int tagdecision = ipionS->charge()>0 ? 1: -1;
   if( event.isBu() ) tagdecision = -tagdecision; //is Bu

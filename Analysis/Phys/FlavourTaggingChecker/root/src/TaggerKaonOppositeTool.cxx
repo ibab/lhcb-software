@@ -2,19 +2,16 @@
 
 TaggerKaonOppositeTool::TaggerKaonOppositeTool() {
 
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.5 *GeV );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 5.0 *GeV );
-  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.8 );
-  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 1.5 );
-
-  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon           = 5 );
-
-  declareProperty( "Kaon_PIDk",     m_PID_k_cut  =  15.0);
-  declareProperty( "Kaon_PIDkp",    m_PIDkp_cut  = -1.0 );
-
-  declareProperty( "Kaon_ghost_cut", m_ghost_cut = -9999.0 );
-
-  declareProperty( "ProbMin_kaon", m_ProbMin_kaon  = 0. ); //no cut
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.9 *GeV );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 4.0 *GeV );
+  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4. );
+  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.5 );
+  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 5 );
+  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  0.0);
+  declareProperty( "Kaon_PIDkp",    m_PIDkp_cut     = -1.0 );
+  declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
+  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut      = 4.0 );
+  declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0. ); //no cut
 
   NNetTool_MLP nnet;
   tkaon = new Tagger();
@@ -35,6 +32,8 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool() {
 Tagger* TaggerKaonOppositeTool::tag(Event& event) {
   tkaon->reset();
 
+  verbose() << "--Kaon Oppsite Tagger--"<<endmsg;
+
   Particle* ikaon=NULL;
   double ptmaxk=-999, ncand=0;
   Particles::iterator ipart;
@@ -49,30 +48,37 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
  
     double pidproton = axp->PIDp();
     if( pidk - pidproton < m_PIDkp_cut ) continue;
-   
+    verbose() << " Kaon PIDk="<< pidk <<" Dkp="<<pidk - pidproton<<endmsg;
+
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
  
     double P = axp->p();
     if( P < m_P_cut_kaon )  continue;
  
+    verbose() << " Kaon P="<< P <<" Pt="<<Pt<<endmsg;
     double lcs = axp->LCS();
     if(lcs > m_lcs_kaon) continue;
  
     double tsa = axp->likelihood();
     if( tsa < m_ghost_cut ) continue;
- 
+    verbose() << " Kaon lcs="<< lcs <<" tsa="<<tsa<<endmsg;
+
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     double IP    = axp->IP();
- 
+    double ipPU  = axp->IPPU();
+    verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" ipPU="<<ipPU<<endmsg;
+
     if(IPsig < m_IPs_cut_kaon ) continue;
  
     if(fabs(IP) > m_IP_cut_kaon ) continue;
 
+    if(ipPU < m_ipPU_cut ) continue;
+
     ncand++;
     
-    hcut_ko_ippu->Fill(axp->IPPU());
+    hcut_ko_ippu->Fill(ipPU);
     hcut_ko_N   ->Fill(event.multiplicity());
     hcut_ko_pidk->Fill(pidk);
     hcut_ko_pidp->Fill(pidproton);

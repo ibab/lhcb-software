@@ -40,6 +40,8 @@ private:
   double m_VeloChMax  ;
   double m_EoverP ;
   double m_ProbMin_ele ;
+  double m_IPs_cut_ele;
+  
 
   NNetTool_MLP nnet;
   Tagger* tele;
