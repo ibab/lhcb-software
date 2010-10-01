@@ -33,7 +33,7 @@ void MonFloat::combine(MonObject * monFloat){
     return;
   }
   add((MonFloat*) monFloat);
-  if (m_comments.find("combine=average") != std::string::npos) (*m_float) = (*m_float)/2.00;
+  if (m_comments.find("combine=average") != std::string::npos) (*m_float) = (*m_float)/2.00f;
 }
 
 void MonFloat::copyFrom(MonObject * monFloat){
