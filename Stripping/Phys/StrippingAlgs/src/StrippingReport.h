@@ -6,6 +6,7 @@
 //#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 /** @class StrippingReport StrippingReport.h
  *  
@@ -15,6 +16,7 @@
  */
 
 class IAlgManager;
+class IIncidentSvc;
 
 /// Report structure
 class ReportStat {
@@ -31,7 +33,8 @@ class ReportStat {
 }; 
 
 
-class StrippingReport : public GaudiTupleAlg {
+class StrippingReport : public GaudiTupleAlg, 
+                        virtual public IIncidentListener {
 public: 
   /// Standard constructor
   StrippingReport( const std::string& name, ISvcLocator* pSvcLocator );
@@ -41,7 +44,9 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
+  
+  virtual void handle ( const Incident& ) ;
+  
 protected:
 
 private:
@@ -60,7 +65,8 @@ private:
   std::vector < ReportStat > m_stat;
   
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
-  IChronoStatSvc* m_chronoSvc; 
+  IChronoStatSvc* m_chronoSvc;           ///< Chrono service
+  IIncidentSvc* m_incSvc;                ///< Incident service
   
   int m_event;                   ///< Event count
   

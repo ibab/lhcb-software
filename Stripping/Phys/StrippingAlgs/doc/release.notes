@@ -5,6 +5,14 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-10-01 - Anton Poluektov
+ - StrippingReport fixes: 
+   * Fixed bug with AcceptBadEvents = False in StrippingConf (bad events were
+     counted as accepted). 
+   * Number of events with event pre-filter is counted correctly (before 
+     prefiltering, not after it). 
+   * Table format compatible with twiki. 
+
 ! 2010-09-20 - Anton Poluektov 
  - StrippingTCK algorithm to set the TCK field in stripping DecReports structure. 
    The integer TCK is given as a property. Example: 

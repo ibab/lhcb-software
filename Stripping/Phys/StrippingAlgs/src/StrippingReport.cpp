@@ -10,10 +10,12 @@
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/ChronoEntity.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "Kernel/SelectionLine.h"
 
 // local
 #include "StrippingReport.h"
-#include "Kernel/SelectionLine.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StrippingReport
@@ -58,6 +60,14 @@ StatusCode StrippingReport::initialize() {
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
   
   m_chronoSvc = svc<IChronoStatSvc> ( "ChronoStatSvc" );
+
+  m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" ); 
+
+  if ( !m_incSvc ) {
+    error() << "Could not retrieve 'IncidentSvc'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_incSvc->addListener ( this , IncidentType::BeginEvent );
   
   std::vector<std::string>::iterator i;
 
@@ -84,64 +94,44 @@ void StrippingReport::report(bool onlyPositive) {
 
   std::vector<ReportStat>::iterator i;
 
-  LHCb::HltDecReports* reports = get<LHCb::HltDecReports>(m_hdrLocation);
-
   char str[128];
   
-  if (reports) {
-    info() << "Configured TCK: " << reports->configuredTCK() << endmsg;
-  }
+  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|%7.7s|%7.7s|%7.7s|", "*Decision name*", "*Rate*", "*Accepted*", "*Mult*","*ms/evt*","*Errs*","*Incds*","*Slow*");
 
-  sprintf(str,"%-51.51s: %8.8s %10.10s %7.7s %7.7s %5.5s %5.5s %5.5s", "Decision name", "Rate", "Accepted", "Mult.","<T>,ms","Errs","Incds","Slow");
-
-  info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
-  info() << str << endmsg;
+  info() << "\n" << str << "\n";
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
-    std::string strippedName = i->name;
-
-    const LHCb::HltDecReport* report = 0;
-    if (reports) { 
-      report = reports->decReport(i->name + "Decision");
-      verbose() << "HDRs found at " << m_hdrLocation << endmsg;
-    }
-    
-    if (report) {
-      if (report->errorBits() & 0x01) i->errors++;
-      if (report->errorBits() & 0x02) i->incidents++;
-      if (report->errorBits() & 0x04) i->slow_events++;
-      verbose() << "HDR " << i->name << " found" << endmsg;
-    } else {
-      verbose() << "HDR " << i->name << " NOT found" << endmsg;    
-    }
 
     double rate = 0.;
     if (m_event > 0) rate = (double)i->decisions/(double)m_event;
 
     if (i->candidates >= 0) {
+      std::string outputName = "!" + i->name;
       double mult = 0;
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %7.3f %5d %5d %5d", strippedName.data(), 
+          sprintf(str," |%-51.51s|%8.6f|%10.1d|%7.3f|%8.3f|%7d|%7d|%7d|", outputName.data(), 
                   rate, i->decisions, mult, i->avgtime, i->errors, i->incidents, i->slow_events);
         else 
-          sprintf(str,"-- %-48.48s: %8.6f %10.1d %7.3f %5d %5d %5d", strippedName.data(), 
+          sprintf(str," |%-51.51s|%8.6f|%10.1d|%7.3f|        |%7d|%7d|%7d|", outputName.data(), 
                   rate, i->decisions, mult, i->errors, i->incidents, i->slow_events);
-        info() << str << endmsg;
+        info() << str << "\n";
       }
     } else if (i->decisions > 0 || !onlyPositive) {
+      std::string outputName = "_" + i->name + "_";
+
       // Not a Selection::Line
       if (i->avgtime > 0) 
-        sprintf(str,"%-51.51s: %8.6f %10.1d         %7.3f", strippedName.data(), rate, i->decisions, i->avgtime);
+        sprintf(str," |%-51.51s|%8.6f|%10.1d|       |%8.3f|       |       |       |", outputName.data(), rate, i->decisions, i->avgtime);
       else 
-        sprintf(str,"%-51.51s: %8.6f %10.1d         ", strippedName.data(), rate, i->decisions);
-      info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
-      info() << str << endmsg;
+        sprintf(str," |%-51.51s|%8.6f|%10.1d|       |        |       |       |       |", outputName.data(), rate, i->decisions);
+      info() << str << "\n";
     }
       
   }
-  info() << "--------------------------------------------------------------------------------------------------------------" << endmsg;
+
+  info() << endmsg;
 
 }
 
@@ -158,6 +148,8 @@ StatusCode StrippingReport::execute() {
 
   char str[128];
 
+  LHCb::HltDecReports* reports = get<LHCb::HltDecReports>(m_hdrLocation);
+
   if (m_everyEvent) { 
     sprintf(str,"%-51.51s: %4s %5s", "Decision name", "Decn", "Cands");
  
@@ -171,6 +163,21 @@ StatusCode StrippingReport::execute() {
     int cand = 0;
     
     i->avgtime = -1;
+
+    const LHCb::HltDecReport* report = 0;
+    if (reports) { 
+      report = reports->decReport(i->name + "Decision");
+      verbose() << "HDRs found at " << m_hdrLocation << endmsg;
+    }
+    
+    if (report) {
+      if (report->errorBits() & 0x01) i->errors++;
+      if (report->errorBits() & 0x02) i->incidents++;
+      if (report->errorBits() & 0x04) i->slow_events++;
+      verbose() << "HDR " << i->name << " found" << endmsg;
+    } else {
+      verbose() << "HDR " << i->name << " NOT found" << endmsg;    
+    }
     
     IAlgorithm* myIAlg(0);
 
@@ -193,8 +200,20 @@ StatusCode StrippingReport::execute() {
         } 
     }
     
-    i->candidates += cand;
-    i->decisions += passed;
+    if (report) {
+
+      // The decision is valid only if the line has been run, i.e. if the corresponding HDR exists. 
+      // Otherwise, it was an event marked as "bad". 
+      i->candidates += cand;
+      i->decisions += passed;
+
+    } else if (cand < 0) {
+
+      // It is a sequencer
+      i->candidates = -1;
+      i->decisions  += passed;
+
+    }
 
     if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) { 
       if (cand >= 0) {
@@ -213,7 +232,6 @@ StatusCode StrippingReport::execute() {
     info() << "----------------------------------------------------------------" << endmsg;
   }
   
-  m_event++;
   if (m_reportFreq > 0 && (m_event % m_reportFreq == 0) ) report(m_onlyPositive);
   
   return result;
@@ -250,12 +268,7 @@ StatusCode StrippingReport::finalize() {
           sprintf(str,"-- %-48.48s", strippedName.data());
           warning() << str << endmsg;
         } 
-      } else {
-        // Not a Selection::Line
-//        sprintf(str,"%-51.51s", strippedName.data());
-//        warning() << "-----------------------------------------------------------------" << endmsg;
-//        warning() << str << endmsg;
-      }
+      } 
     }
     warning() << "-----------------------------------------------------------------" << endmsg;
   }
@@ -280,18 +293,23 @@ StatusCode StrippingReport::finalize() {
           sprintf(str,"-- %-48.48s %8.6f", strippedName.data(), rate);
           warning() << str << endmsg;
         }
-      } else {
-        // Not a Selection::Line
-//        sprintf(str,"%-51.51s", strippedName.data());
-//        warning() << "-----------------------------------------------------------------" << endmsg;
-//        warning() << str << endmsg;
-      }
+      } 
     }
     warning() << "-----------------------------------------------------------------" << endmsg;
   }
 
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
+}
+
+//=======================================================================
+//  Handler for BeginEvent incident: increment event counter. 
+//=======================================================================
+
+void StrippingReport::handle ( const Incident& i ) {
+  if ( IncidentType::BeginEvent == i.type () ) {
+    m_event++;
+  }
 }
 
 //=============================================================================
