@@ -782,7 +782,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
          #  DCombCuts  = DCombCuts + extracuts['CombinationCut']
 
         # Construct a cut string for the vertexed combination.
-        DMotherCuts = """(VFASPF(VCHI2/VDOF)< 20 )
+        DMotherCuts = """(VFASPF(VCHI2PDOF)< 20 )
                           & in_range(1400*MeV, MM, 2200*MeV)
                           & (MIPCHI2DV(PRIMARY) < 4) """ 
             

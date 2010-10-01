@@ -172,8 +172,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (PT>%(PromptJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"\
-                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"%  self.getProps()
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
                                  }
                     , postscale = self.postscale
                     )
@@ -189,9 +188,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (PT>%(PromptJPsiHighPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"\
-                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"%  self.getProps()
-                                 
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
                                  }
                     , postscale = self.postscale
                     )

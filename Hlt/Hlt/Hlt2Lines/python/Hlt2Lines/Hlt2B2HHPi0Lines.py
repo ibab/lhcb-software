@@ -71,7 +71,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             "rho(770)0" : "ALL" % self.getProps()
             ,"pi0"      : "(PT>%(Pi0MinPT_M)s *MeV)" % self.getProps()   
             } 
-            , CombinationCut = "(AM>%(BMinM_M)s *MeV) & (AM<%(BMaxM_M)s *MeV)" % self.getProps()
+            , CombinationCut = "in_range(%(BMinM_M)s *MeV, AM, %(BMaxM_M)s *MeV)" % self.getProps()
             , MotherCut      = "(PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_M)s) & (BPVDIRA>%(BMinDIRA_M)s)" % self.getProps()
             , ParticleCombiners = {'' : 'TrgVertexFitter'}
             , InputLocations = [ Hlt2Rho4HHPi0, MergedPi0s ])
@@ -104,11 +104,10 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             "rho(770)0" : "ALL" % self.getProps()
             ,"pi0"      : "(PT>%(Pi0MinPT_R)s *MeV)" % self.getProps()   
             }
-            , "CombinationCut" : "(AM>%(BMinM_R)s *MeV) & (AM<%(BMaxM_R)s *MeV)" % self.getProps()
+            , "CombinationCut" : "in_range(%(BMinM_R)s *MeV, AM, %(BMaxM_R)s *MeV)" % self.getProps()
             , "MotherCut"      : "(PT>%(BMinPT_R)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_R)s) & (BPVDIRA>%(BMinDIRA_R)s)" % self.getProps()
             , "InputLocations" : [ Hlt2Rho4HHPi0, ResolvedPi0s ]
             }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHPi0_ResolvedDecision" :  self.getProp('HltANNSvcID')['Hlt2B2HHPi0_Resolved'] } )
-
