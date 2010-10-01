@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-01 - Susan Haines
+ - Changed track chi2/dof cuts on long tracks.
+
 ! 2010-10-01 - Georg Krocker
  - Added lifetime unbiased Bs2DsPi line to B2DX lines for proper time resolution
    measurement.
