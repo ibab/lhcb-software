@@ -24,7 +24,7 @@ __version__ = '1.0'
 __all__ = ('NTuple')
 
 class NTuple(object) :
-    '''
+    """
     A simple NTuple class.
     Author: Juan Palacios
 
@@ -33,24 +33,24 @@ class NTuple(object) :
     from ntuple import NTuple
     from math import con, sin, pi
     # instantiate an ntuple with tags 'x', 'y' and 'z'
-    nt = NTuple('x','y','z)
+    nt = NTuple('x','y','z')
     # fill it with some values
     for i in xrange(-50,50) :
-       nt.fill('var_x', 4+0.01*(i**2))
-       nt.fill('s_x', sin(2*pi*i))
-       nt.fill('c_x', cos(2*pi*i))
+       nt.fill('x', 4+0.01*(i**2))
+       nt.fill('y', sin(2*pi*i))
+       nt.fill('z', cos(2*pi*i))
        nt.write()
      # access a column as a list. Apply a cut.
-     sin_x = nt.column('s_x', lambda s : s > 0.)
+     sin_x = nt.column('x', lambda s : s > 0.)
      # merge two NTuples
-     nt2 = NTuple('x','y','z)
+     nt2 = NTuple('x','y','z')
      for i in xrange(200) :
-        nt.fill('var_x', 0.05*(i**2))
-        nt.fill('s_x', sin(2*pi*i))
-        nt.fill('c_x', cos(2*pi*i))
+        nt.fill('x', 0.05*(i**2))
+        nt.fill('y', sin(2*pi*i))
+        nt.fill('z', cos(2*pi*i))
         nt.write()
      nt3 = nt + nt1
-    '''
+    """
     def __init__(self, *tags) :
         self._data = []
         self._newRow = True

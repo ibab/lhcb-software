@@ -6,6 +6,12 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+! 2010-10-01 - Juan Palacios
+ - python/PyAna/pyntuple/ntuple.py
+  .Fix NTuple documentation.
+ - cmt/requirements
+  . Increase to v1r2p1
+
 !======================= AnalysisPyAna v1r2 2010-06-24 =======================
 
 ! 2010-06-17 - Juan Palacios
