@@ -8,7 +8,7 @@ branches doc cmt
 
 use  Moore              v10r2   Hlt
 
-# use HltSettings         v4r0    Hlt
+use HltSettings         v4r1    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
