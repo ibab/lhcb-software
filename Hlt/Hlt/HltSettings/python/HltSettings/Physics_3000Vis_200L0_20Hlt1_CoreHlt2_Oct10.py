@@ -1,8 +1,21 @@
-def __update_conf__( thresholds, conf, d ) :
-        if conf not in thresholds : thresholds.update( { conf : {} } )
-        for (i,j) in d.iteritems() :
-            if i not in thresholds[conf] : thresholds[conf].update({ i : {} })
-            thresholds[conf][i].update( j )
+def __update_conf__( current, extra ) :
+        for (conf,d) in extra.iteritems() :
+            if conf not in current : 
+                current[conf] = d
+                continue
+            cur = current[conf]
+            for (k,v) in d.iteritems() :
+                if k not in cur : 
+                    cur[k] = v
+                    continue
+                print 'Warning: potential collision detected: %s -- %s' % (conf,k)
+                print 'current: %s' % cur[k]
+                print 'request: %s' % v
+                if type(cur[k])==dict :
+                    cur[k].update( v )
+                else :
+                    cur[k] = v
+                print 'result: %s' % cur[k]
 
 
 from  Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 import  Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10
@@ -22,7 +35,7 @@ class Physics_3000Vis_200L0_20Hlt1_CoreHlt2_Oct10           ( Physics_3000Vis_20
     def __init__(self) :
         from HltTracking.HltReco import MinimalVelo 
         velo = MinimalVelo.outputSelection()
-        self.Hlt2DefaultVoidFilter = " CONTAINS( '%s') < 350" %  (velo) 
+        self.Hlt2DefaultVoidFilter = "CONTAINS( '%s') < 350" %  (velo) 
 
     def HltType(self) :
         self.verifyType( Physics_3000Vis_200L0_20Hlt1_CoreHlt2_Oct10 )
@@ -36,16 +49,16 @@ class Physics_3000Vis_200L0_20Hlt1_CoreHlt2_Oct10           ( Physics_3000Vis_20
         # Hlt2
     
         from Muons_Retention50_Oct10 import Muons_Retention50_Oct10
-        thresholds.update( Muons_Retention50_Oct10().Thresholds() )
+        __update_conf__(thresholds,  Muons_Retention50_Oct10().Thresholds() )
 
         from Exclusive_Leptonic import Exclusive_Leptonic
-        thresholds.update( Exclusive_Leptonic().Thresholds() )
+        __update_conf__(thresholds,  Exclusive_Leptonic().Thresholds() )
 
         from Electrons_Minimal_TrackFitted import Electrons_Minimal_TrackFitted
-        thresholds.update( Electrons_Minimal_TrackFitted().Thresholds() )
+        __update_conf__(thresholds,  Electrons_Minimal_TrackFitted().Thresholds() )
 
         from Hadrons_September10 import Hadrons_Minimal
-        thresholds.update( Hadrons_Minimal().Thresholds() )
+        __update_conf__(thresholds,  Hadrons_Minimal().Thresholds() )
     
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         thresholds.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'    : 0.01
