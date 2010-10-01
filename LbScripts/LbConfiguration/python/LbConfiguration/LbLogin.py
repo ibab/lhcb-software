@@ -55,7 +55,7 @@ from LbConfiguration.Version import sortStrings
 from LbUtils.Script import SourceScript
 from LbUtils.CVS import CVS2Version
 from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
-from LbUtils.Path import envPathPrepend
+from LbUtils.Path import envPathPrepend, pathAdd
 import logging
 import shutil
 
@@ -486,10 +486,13 @@ class LbLoginScript(SourceScript):
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
                 ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
+                ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"], 
+                                                 multiPathJoin(opts.mysiteroot, os.path.join("lcg", "app", "releases")),
+                                                 exist_check=True)
                 ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
-                ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["LCG_release_area"]])
+                ev["LHCBPROJECTPATH"] = pathAdd(ev["LHCBRELEASES"], ev["LCG_release_area"])
                 emacsdir = multiPathGetFirst(ev["LHCBRELEASES"], 
                                              os.path.join("TOOLS", "Tools", "Emacs", "pro"))
                 if emacsdir :
