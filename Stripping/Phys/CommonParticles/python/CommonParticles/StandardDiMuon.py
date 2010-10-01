@@ -26,6 +26,9 @@ _locations.update ( locations )
 from CommonParticles.StdVeryLooseDiMuon import *
 _locations.update ( locations )
 
+from CommonParticles.StdLooseDiMuonSameSign import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 

@@ -9,6 +9,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-10-01 - Jibo He
+ - python/CommonParticles/StandardDiMuon.py
+   + Added StdLooseDiMuonSameSign to make it function.
+
+! 2010-10-01 - Jibo He
  - python/CommonParticles/StdLooseDiMuon.py
    . Removed mass cut 
  - python/CommonParticles/StdLooseDiMuonSameSign.py

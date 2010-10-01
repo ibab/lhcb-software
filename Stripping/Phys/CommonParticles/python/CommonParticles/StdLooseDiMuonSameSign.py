@@ -1,5 +1,5 @@
 """
-Configuration file for Standard Same sign Loose DiMuon 
+Configuration file for Standard Loose DiMuon
 """
 
 from Gaudi.Configuration import *
@@ -12,7 +12,7 @@ import GaudiKernel.SystemOfUnits as Units
 ###########################
 
 StdLooseDiMuonSameSign = CombineParticles("StdLooseDiMuonSameSign")
-StdLooseDiMuonSameSign.DecayDescriptor = "[ J/psi(1S) -> mu+ mu+ ]cc"
+StdLooseDiMuonSameSign.DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
 StdLooseDiMuonSameSign.InputLocations = ["StdLooseMuons"]
 StdLooseDiMuonSameSign.CombinationCut = "(ADOCACHI2CUT(30, ''))"
 StdLooseDiMuonSameSign.MotherCut = "(VFASPF(VCHI2) < 25)"
