@@ -87,7 +87,7 @@ class Muons_Retention50_Oct10 :
                                , 'Hlt2UnbiasedDiMuonLowMass' : 0.002
                                ,'Hlt2DiMuonDY1'              :  0.1
                                ,'Hlt2DiMuonDY2'              :  1
-                               ,'Hlt2DiMuonSameSign'         :  1
+                               ,'Hlt2DiMuonSameSign'         :  0.1
                                ,'Hlt2BiasedDiMuonIP'         :  1
                                }           
             }}
@@ -110,10 +110,10 @@ class Muons_Retention50_Oct10 :
             ,'MuTrackCorMass'      : 7000.0    # MeV
             ,'MuTrackDIRA'         : 0.995       # dimensionless
             ,'Prescale'   : { 'Hlt2MuonFromHLT1'       : 0.001
-                              ,'Hlt2SingleMuon'        : 0.1
+                              ,'Hlt2SingleMuon'        : 0.02 # make sure that Hlt1SingleMuonNoIPL0 * Hlt2SingleMuon = 0.02
                               ,'Hlt2SingleHighPTMuon'  : 1.0
                               ,'Hlt2IncMuTrack'        : 1.0
-                              ,'Hlt2MuTrackNoIP'    : 0.01
+                              ,'Hlt2MuTrackNoIP'       : 0.
                               }
             }}
                   )

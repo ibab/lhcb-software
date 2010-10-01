@@ -80,12 +80,20 @@ class Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 :
                                              , 'HadCompanion_PointingCut': 0.5
                                              , 'HadMain_TrackFitChi2Cut' : 5. # 16.
                                              , 'HadDi_IP' : 0.07
+                                             , 'Prescale' : { 'Hlt1SingleHadron' : 0
+                                                            , 'Hlt1DiHadron'     : 0
+                                                            }
                                              }
                        , Hlt1PhotonLinesConf : { 'Pho_EtCut'        : 4400.0
                                                , 'Pho_IsPho'        : -0.1
                                                , 'Track_IPCut'      : 0.19
                                                , 'Track_PtCut'      : 900
                                                , 'DiTrack_PtCut'    : 500
+                                               , 'Prescale' : { 'Hlt1PhotonDiTrackFromEle' : 0
+                                                              , 'Hlt1PhotonTrackFromEle'   : 0
+                                                              , 'Hlt1PhotonTrack'          : 0
+                                                              , 'Hlt1PhotonDiTrack'        : 0
+                                                              }
                                                }
                        , Hlt1ElectronLinesConf : { 'Ele_EtCut'              : 3000
                                                  , 'Ele_EtCutSingleNoIP'    : 5000
@@ -94,6 +102,9 @@ class Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 :
                                                  , 'EleIPCompanion_PtCut'   : 1000
                                                  , 'EleCompanion_PtCut'     : 1000
                                                  , 'DiEle_HighMassCut'      : -1 # only applied if >0
+                                                 , 'Prescale' : { 'Hlt1SingleElectronWithIP' : 0
+                                                                , 'Hlt1ElectronTrackWithIP'  : 0
+                                                                }
                                                  }
                        , Hlt1MuonLinesConf :  { 'DiMuon_SumPtCut' :  560.0
                                               , 'Muon_DeltaPCut'  :    0  
@@ -122,6 +133,13 @@ class Physics_3000Vis_200L0_20Hlt1_ExpressHlt2_Oct10 :
                                               , 'bmm_fitChi2'   : 5
                                               , 'bmm_IPS'       : 81
                                               , 'bmm_pt'        :3000
+                                              , 'Prescale' : { 'Hlt1DiMuonIPCL0Di'   : 0
+                                                             , 'Hlt1DiMuonIPCL0Seg'  : 0
+                                                             , 'Hlt1DiMuonNoIPL0Seg' : 0
+                                                             , 'Hlt1DiMuonIPC2L0'    : 0
+                                                             , 'Hlt1SingleMuonIPCL0' : 0
+                                                             , 'Hlt1MuTrack'         : 0
+                                                             }
                                               }
 
                        , Hlt1L0LinesConf :{ 'Prescale'  : { 'Hlt1L0Any'            : 0.000001
