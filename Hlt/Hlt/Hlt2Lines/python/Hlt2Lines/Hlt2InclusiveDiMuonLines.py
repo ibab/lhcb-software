@@ -171,8 +171,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(MM>%(PromptJPsiMinMass)s*MeV)"\
                                  "& (PT>%(PromptJPsiPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (TRCHI2DOF < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
+                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"\
+                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"%  self.getProps()
                                  }
                     , postscale = self.postscale
                     )
@@ -187,8 +188,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(MM>%(PromptJPsiMinMass)s*MeV)"\
                                  "& (PT>%(PromptJPsiHighPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2/VDOF)<%(PromptJPsiVChi2)s )"\
-                                 "& (TRCHI2DOF < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
+                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"\
+                                 "& (CHILDCUT((TRCHI2DOF < %(PromptJPsiTrChi2)s),1))"%  self.getProps()
+                                 
                                  }
                     , postscale = self.postscale
                     )
