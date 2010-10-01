@@ -32,6 +32,10 @@
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include <iterator>
 
+// Disable warning on windows about using 'this' in constructors
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloPixV0s

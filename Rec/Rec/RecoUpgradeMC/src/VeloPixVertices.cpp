@@ -118,11 +118,11 @@ StatusCode VeloPixVertices::execute() {
   //always()<<"tag6b"<<endreq;
       for (int jj = 0 ; jj <(int) MothVertex.size(); jj++){
   //always()<<"tag6c"<<endreq;
-        if(part->primaryVertex  ()->key() == MothVertex[jj].first->key()) MothVertex[jj].second += part->pt();
+        if(part->primaryVertex  ()->key() == MothVertex[jj].first->key()) MothVertex[jj].second += (float) part->pt();
   //always()<<"tag6d"<<endreq;
       }
   //always()<<"tag6e"<<endreq;
-      if (!Isfrom) MothVertex.push_back(std::make_pair(part->primaryVertex  (),part->pt()));
+      if (!Isfrom) MothVertex.push_back(std::make_pair(part->primaryVertex  (),(float) part->pt()));
   //always()<<"tag6f"<<endreq;
       part = link.next();
   //always()<<"tag7"<<endreq;
