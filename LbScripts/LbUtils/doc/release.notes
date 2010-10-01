@@ -1,3 +1,7 @@
+2010-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Path.py: added check for existence in the path manipulation functions.
+
 2010-09-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: avoid removing the whole InstallArea on 'clean' (just InstallArea/$CMTCONFIG)

@@ -73,33 +73,53 @@ class CMTProjectPath(Path):
     def __init__(self):
         super(CMTProjectPath, self).__init__("CMTPROJECTPATH")
 
-def pathPrepend(path, dirname):
+def pathPrepend(path, dirname, exist_check=False):
     path_list = path.split(os.pathsep)
-    path_list.insert(0, dirname)
+    if exist_check :
+        if os.path.exists(dirname) :
+            path_list.insert(0, dirname)
+    else :
+        path_list.insert(0, dirname)
     return os.pathsep.join(path_list)
 
-def pathAppend(path, dirname):
+def pathAppend(path, dirname, exist_check=False):
     path_list = path.split(os.pathsep)
-    path_list.append(dirname)
+    if exist_check :
+        if os.path.exists(dirname) :
+            path_list.append(dirname)
+    else :
+        path_list.append(dirname)
     return os.pathsep.join(path_list)
 
-def envPathPrepend(pathname, dirname, env_dict=None):
+def pathAdd(path1, path2, exist_check=False):
+    result = path1
+    for d in path2.split(os.pathsep) :
+        result = pathAppend(result, d, exist_check)
+    return result
+        
+
+def envPathPrepend(pathname, dirname, env_dict=None, exist_check=False):
     if not env_dict :
         env_dict = os.environ
-    env_dict[pathname] = pathPrepend(env_dict[pathname], dirname)
+    env_dict[pathname] = pathPrepend(env_dict[pathname], dirname, exist_check)
 
-def envPathAppend(pathname, dirname, env_dict=None):
+def envPathAppend(pathname, dirname, env_dict=None, exist_check=False):
     if not env_dict :
         env_dict = os.environ
-    env_dict[pathname] = pathAppend(env_dict[pathname], dirname)
+    env_dict[pathname] = pathAppend(env_dict[pathname], dirname, exist_check)
 
-def multiPathJoin(path, subdir):
+def multiPathJoin(path, subdir, exist_check=False):
     pathlist = []
     for d in path.split(os.pathsep) :
-        pathlist.append(os.path.join(d,subdir))
+        jd = os.path.join(d, subdir)
+        if exist_check :
+            if os.path.exists(jd) :
+                pathlist.append(jd)
+        else :
+            pathlist.append(jd)
     return os.pathsep.join(pathlist)
 
-def multiPathUpdate(path, dirlist, interleaved=False):
+def multiPathUpdate(path, dirlist, interleaved=False, exist_check=False):
     """ update the path with the list of subdirectories
     @param path: original path
     @param dirlist: list of subdirectories to be collated to each entry of
@@ -112,11 +132,16 @@ def multiPathUpdate(path, dirlist, interleaved=False):
     pathlist = []
     if not interleaved :
         for d in dirlist :
-            pathlist += multiPathJoin(path, d).split(os.pathsep)
+            pathlist += multiPathJoin(path, d, exist_check).split(os.pathsep)
     else :
         for p in path.split(os.pathsep) :
             for d in dirlist :
-                pathlist.append(os.path.join(p, d))
+                jd = os.path.join(p, d)
+                if exist_check :
+                    if os.path.exists(jd) :
+                        pathlist.append(jd)
+                else :
+                    pathlist.append(jd)
 
     return os.pathsep.join(pathlist)
 
