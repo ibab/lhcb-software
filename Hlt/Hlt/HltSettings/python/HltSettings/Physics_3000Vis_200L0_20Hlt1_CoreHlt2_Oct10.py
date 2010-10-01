@@ -69,8 +69,8 @@ class Physics_3000Vis_200L0_20Hlt1_CoreHlt2_Oct10           ( Physics_3000Vis_20
         ##
         ## muons
         ##
-        from Muons_Retention50 import Muons_Retention50 
-        list.extend( Muons_Retention50().ActiveHlt2Lines() )
+        from Muons_Retention50_Oct10 import Muons_Retention50_Oct10
+        list.extend( Muons_Retention50_Oct10().ActiveHlt2Lines() )
 
 
         from Exclusive_Leptonic import Exclusive_Leptonic
