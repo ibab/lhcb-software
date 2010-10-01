@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-01 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Change structure of sequences set up by DaVinci() such that 
+    DaVinciInit and Lumi stuff run over all events.
+
 ! 2010-09-19 - Juan Palacios
  - Use StrippingSys packages.
  - Increase to v26r2.

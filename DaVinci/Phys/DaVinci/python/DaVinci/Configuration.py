@@ -105,13 +105,13 @@ class DaVinci(LHCbConfigurableUser) :
     ## Known monitoring sequences run by default
     KnownMonitors        = []
 
-    mainSeq = GaudiSequencer("DaVinciMainSequence")
+    mainSeq = GaudiSequencer("DaVinciUserSequence")
     moniSeq = GaudiSequencer("MonitoringSequence")
 
 ################################################################################
 # Check Options are OK
 #
-    def checkOptions(self):
+    def _checkOptions(self):
         """
         Checks options. Changes a few if needed.
         """
@@ -147,7 +147,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Configure slaves
 #
-    def configureSubPackages(self):
+    def _configureSubPackages(self):
         """
         Define DB and so on
         """
@@ -170,62 +170,65 @@ class DaVinci(LHCbConfigurableUser) :
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
+    def _mainSequences(self) :
+        return GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)
 
-    def eventPreFilterSeq(self) :
-        return GaudiSequencer('DaVinciPreFilterSeq',
-                              Members = self.getProp('EventPreFilters'))
+    def _filteredEventSeq(self) :
+        prefilters = self.getProp('EventPreFilters')
+        return GaudiSequencer('FilteredEventSeq',
+                             Members = prefilters +  [self._mainSequences()])
+
 ################################################################################
 # Event Initialisation sequence
 #
-    def initSeq(self):
+    def _dvInit(self):
         """
         Initialisation sequence
         """
-        from Configurables import (GaudiSequencer, DaVinciInit, PhysConf, AnalysisConf, MemoryTool)
-        init = GaudiSequencer("DaVinciInitSeq")
+        from Configurables import (DaVinciInit,
+                                   PhysConf,
+                                   AnalysisConf,
+                                   MemoryTool)
         
-        log.info("Resetting ApplicationMgr")
-        GaudiSequencer('DaVinciSequences').Members = [init] # Note the = here
-#        ApplicationMgr().TopAlg = [ init ]  
-#        init.Members += [ LbAppInit("DaVinciAppInit") ]
         di = DaVinciInit()
         di.addTool(MemoryTool)
         di.MemoryTool.HistoSize = 5000
-        init.Members += [ DaVinciInit() ]
-        init.IgnoreFilterPassed = True
+        self._init()
+        
+        return di
 
-        if ( self.getProp( "Lumi" )):
-            # luminosity
-            log.info("Creating Lumi Algorithms")
-            tupleFile = self.getProp('TupleFile')
-            if tupleFile == '' :
-                log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
-            lumi = self.lumi()
-            init.Members += lumi
+    def _init(self):
+
         # Phys
         inputType = self.getProp( "InputType" ).upper()
+
         if inputType != 'MDST' :
             if (( inputType != "MDF" ) & (inputType != "DIGI")) :
                 physinit = PhysConf().initSequence()         # PhysConf initSequence
-                init.Members += [ physinit ]
+                self._mainSequences().Members += [ physinit ]
                 # Analysis
                 AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
                 analysisinit = AnalysisConf().initSequence()
-                init.Members += [ analysisinit ]
+                self._mainSequences().Members += [ analysisinit ]
         if inputType == 'RDST' :
             log.info('Setting HltDecReportsDecoder().InputRawEventLocation to "pRec/RawEvent"')
             from Configurables import HltDecReportsDecoder, ANNDispatchSvc
             HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
             ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 
+
 ################################################################################
 # Lumi setup
 #
-    def lumi(self):
+    def _lumi(self):
         """
         read FSR and accumulate event and luminosity data
         calculate normalization - toolname:
         """
+        log.info("Creating Lumi Algorithms")
+        tupleFile = self.getProp('TupleFile')
+        if tupleFile == '' :
+            log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
         seq = []
         self.setOtherProps(LumiAlgsConf(),["DataType","InputType"])
         # add touch-and-count sequence
@@ -242,7 +245,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Decode DecReports
 #
-    def decReports(self):
+    def _decReports(self):
         from Configurables import L0SelReportsMaker, L0DecReportsMaker
         DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
         DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )        
@@ -259,7 +262,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # HLT setup
 #
-    def hlt(self):
+    def _hlt(self):
         """
         Define HLT. Make sure it runs first.
         """
@@ -295,7 +298,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # L0 setup
 #
-    def l0(self):
+    def _l0(self):
         """
         Define L0. Make sure it runs before HLT.
         """
@@ -343,16 +346,18 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?
 #
-    def defineMonitors(self):
+    def _defineMonitors(self):
         """
         Define monitors
         """
-        from Configurables import (ApplicationMgr,AuditorSvc,SequencerTimerTool)
+        from Configurables import (ApplicationMgr,
+                                   AuditorSvc,
+                                   SequencerTimerTool)
+        
         ApplicationMgr().ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
         ApplicationMgr().AuditAlgorithms = True
         AuditorSvc().Auditors += [ 'TimingAuditor' ]
         SequencerTimerTool().OutputLevel = 4
-#        MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
         # Do not print event number at every event
         printfreq = self.getProp("PrintFreq")
         if ( printfreq == 0 ):
@@ -363,7 +368,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # set EvtMax
 #
-    def defineEvents(self):
+    def _defineEvents(self):
         """
         Define number of events
         """
@@ -382,7 +387,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Defines input
 #
-    def defineInput(self):
+    def _defineInput(self):
         """
         Define Input
         """
@@ -402,7 +407,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Tune initialisation
 #
-    def configureInput(self):
+    def _configureInput(self):
         """
         Tune initialisation 
         """
@@ -440,7 +445,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Ntuple files
 #
-    def rootFiles(self):
+    def _rootFiles(self):
         """
         output files
         """
@@ -469,7 +474,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # ETC
 #
-    def etc(self,etcFile):
+    def _etc(self,etcFile):
         """
         write out an ETC
         """
@@ -494,7 +499,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # ETC + FSR - write fsr to etc file
 #
-    def etcfsr(self, fsrFile):
+    def _etcfsr(self, fsrFile):
         """
         write out the FSR
         it is IMPERATIVE to define the FSR outputstream before the etc
@@ -513,7 +518,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # FSR (general requirements)
 #
-    def fsr(self):
+    def _fsr(self):
         """
         general facilities to write out the FSR - DO NOT DEFINE OUTPUTSTREAM HERE
 
@@ -537,7 +542,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Main sequence
 #
-    def mainSequence(self):
+    def _mainSequence(self):
         """
         Main Sequence
         """
@@ -567,7 +572,7 @@ class DaVinci(LHCbConfigurableUser) :
 ################################################################################
 # Monitoring sequence
 #
-    def moniSequence(self):
+    def _moniSequence(self):
         """
         Monitoring sequence
         """
@@ -590,7 +595,8 @@ class DaVinci(LHCbConfigurableUser) :
             self.moniSeq.Members += [ alg ]
 
     def sequence(self) :
-        return GaudiSequencer('DaVinciSequence')
+        return GaudiSequencer('DaVinciEventSeq',
+                              IgnoreFilterPassed = True)
                     
 ################################################################################
 # Apply configuration
@@ -602,31 +608,35 @@ class DaVinci(LHCbConfigurableUser) :
         log.info("Applying DaVinci configuration")
         log.info( self )
 
-        self.checkOptions()
+        self._checkOptions()
         self.sequence().Members = [
-            self.eventPreFilterSeq()  ,
-            GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)
+            self._dvInit(),
+            self._filteredEventSeq()
             ]
+        
+        if ( self.getProp( "Lumi" )):
+            self.sequence().Members += self._lumi()
+            
         ApplicationMgr().TopAlg = [self.sequence()]
-        self.configureSubPackages()
+        self._configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
-        inputType = self.configureInput()
+        inputType = self._configureInput()
         # start with init
-        self.initSeq()
+
         if inputType != 'MDST' :
-            self.l0()
-            self.hlt()
-            self.decReports()
+            self._l0()
+            self._hlt()
+            self._decReports()
             self._hltCondDBHack()
-        self.defineMonitors()
-        self.defineEvents()
-        self.defineInput()
+        self._defineMonitors()
+        self._defineEvents()
+        self._defineInput()
         if ( self.getProp("WriteFSR") ):
-            self.fsr()
-        self.rootFiles()
+            self._fsr()
+        self._rootFiles()
         
         # Add main sequence to TopAlg
-        self.mainSequence()
+        self._mainSequence()
         # monitoring
-        self.moniSequence()
+        self._moniSequence()
         
