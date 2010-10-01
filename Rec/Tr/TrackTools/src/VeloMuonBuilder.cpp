@@ -226,7 +226,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	State* monitorstate = ((*veloIter)->firstState()).clone();
 	float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
 	float m_ptkickConstant = 1265;
-	float qp = xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet);
+	float qp = float(xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet));
 	qp = -qp * m_fieldfactor;
 	aCopy = new LHCb::Track();
 	aCopy->addToAncestors(*veloIter);

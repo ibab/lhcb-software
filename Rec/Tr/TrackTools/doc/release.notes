@@ -4,7 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-!======================== TrackTools v3r35 2010-09-27 =======================
+!======================== TrackTools v3r35 2010-10-01 =======================
+! 2010-10-01 - Rob Lambert
+ - Fix windows warnings, converting double to float
+
 ! 2010-09-27 - Victor Coco
  - modify initialisation of m_veloFitter in TrackStateInitTool, to be able to 
    modify via configurables.

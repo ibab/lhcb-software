@@ -34,11 +34,11 @@ VeloCaloBuilder::VeloCaloBuilder( const std::string& name, ISvcLocator* pSvcLoca
   declareProperty( "OutputTracks", m_outputTracksName = "Rec/Track/VeloCalo");
 
   // -- those now taken from N.Zwahlen's code. m_zKick also used for momentum
-  declareProperty("PtkickConstant", m_ptkickConstant = 1.263*Gaudi::Units::GeV);
+  declareProperty("PtkickConstant", m_ptkickConstant = (float) 1.263*Gaudi::Units::GeV);
   declareProperty("zKick", m_zKick   = 525.0);
-  declareProperty("eRes0", m_eres[0] = 0.60 );
-  declareProperty("eRes1", m_eres[1] = 0.70 );
-  declareProperty("eCorrect", m_eCorrect = 1.2 );
+  declareProperty("eRes0", m_eres[0] = (float) 0.60 );
+  declareProperty("eRes1", m_eres[1] = (float) 0.70 );
+  declareProperty("eCorrect", m_eCorrect = (float) 1.2 );
   
 }
 
@@ -152,7 +152,7 @@ StatusCode VeloCaloBuilder::execute()
 	  if (quality < m_qualimodi ) {
 	    // ... the momentum is calculated
 	    float kick = float(mytrack->firstState().x() + mytrack->firstState().tx() * (calotrack->firstState().z() - mytrack->firstState().z()) - calotrack->firstState().x());
-	    float qp = -kick/9950000. * m_field; // m_field corrects up/down field configuration
+	    float qp = float(-kick/9950000. * m_field); // m_field corrects up/down field configuration
 	    float corrtx = float(calotrack->firstState().x()-mytrack->firstState().x()-mytrack->firstState().tx()*(10*m_zKick - mytrack->firstState().z()));
 	    corrtx = corrtx / (float(calotrack->firstState().z()) - m_zKick*10);
 	   
@@ -259,12 +259,12 @@ float VeloCaloBuilder::matchchi(LHCb::Track* velo, LHCb::Track* calo) {
   }
   
   const LHCb::State& state = calo->firstState();
-  float x      = (float)state.x()/Gaudi::Units::cm;
-  float y      = (float)state.y()/Gaudi::Units::cm;
-  float z      = (float)state.z()/Gaudi::Units::cm;   // Shower Max
-  float ex     = (float)2.*cell_size/Gaudi::Units::cm;
+  float x      = (float)(state.x()/Gaudi::Units::cm);
+  float y      = (float) (state.y()/Gaudi::Units::cm);
+  float z      = (float) (state.z()/Gaudi::Units::cm);   // Shower Max
+  float ex     = (float) (2.*cell_size/Gaudi::Units::cm);
   float ey     = ex;
-  float e      = (float)calo->pt()/Gaudi::Units::GeV;
+  float e      = (float) (calo->pt()/Gaudi::Units::GeV);
 
   e *= m_eCorrect;
  
