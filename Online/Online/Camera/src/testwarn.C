@@ -31,17 +31,17 @@ int main(int  /*argc*/ , char ** argv)
   out.add("TTELLIPSE","0.5 0.5 0.25 0.25");
   float f[4];
 
-  f[0] = .75;
-  f[1] = .75;
-  f[2] = .1;
-  f[3] = .1;
+  f[0] = .75f;
+  f[1] = .75f;
+  f[2] = .1f;
+  f[3] = .1f;
 
   out.add("TELLIPSE",f,4*sizeof(float));
 
-  f[0] = .25;
-  f[1] = .75;
-  f[2] = .1;
-  f[3] = .1;
+  f[0] = .25f;
+  f[1] = .75f;
+  f[2] = .1f;
+  f[3] = .1f;
 
   out.add("TELLIPSE",f,4*sizeof(float));
 

@@ -52,7 +52,7 @@ macro_append ROOT_linkopts " `root-config --glibs` " \
                            WIN32 " libCore.lib libCint.lib libRIO.lib libNet.lib libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libTree.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMathCore.lib libThread.lib libGui.lib"
 
 macro_remove cppflags "-pedantic "
-
+macro_append cppflags "" WIN32 ' /wd4800 '
 # Linker library.
 library CameraLib -import=ROOT \
 		  camline.C container.C container_ROOT.C display.C proto.C

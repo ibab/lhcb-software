@@ -1,4 +1,4 @@
-// $Id: CameraTestAlg.cpp,v 1.2 2009-08-26 10:49:34 rogers Exp $
+// $Id: CameraTestAlg.cpp,v 1.3 2010-10-01 13:31:34 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -71,16 +71,16 @@ StatusCode CameraTestAlg::execute() {
   info()<<"Event number "<<m_evt<<endreq;
   
   
-  float r = (float)rand()/((float)RAND_MAX) *2 -1;
-  float a = (float)rand()/((float)RAND_MAX) *2 *3.141;
+  float r = (float)rand()/((float)RAND_MAX) *2.f -1.f;
+  float a = (float)rand()/((float)RAND_MAX) *2.f *3.141f;
 
   Hflat->Fill(r);
   
   
-  Hangled->Fill(acos(r)/3.141 - .5);
+  Hangled->Fill(acos(r)/3.141f - .5f);
   
 
-  H2d->Fill(2*fabs(r)*sin(a),2*fabs(r)*cos(a));
+  H2d->Fill(2.f*fabs(r)*sin(a),2.f*fabs(r)*cos(a));
 
   H2d2->Fill(sin(a),cos(a));
   

@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.16 2010-05-13 13:56:36 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.17 2010-10-01 13:31:34 frankb Exp $
 // Include files
 
 // local
@@ -662,20 +662,20 @@ int CameraTool::Append(TH1D * H, const char * opts)
     int nXBins = H->GetNbinsX();
     int size = (5+2*(nXBins+2));
     float * data = new float[size];
-    data[0] = 1;
-    data[1]=nXBins;
-    data[2]=(H->GetBinLowEdge(1));
-    data[3]=(H->GetBinLowEdge(nXBins+1));
-    data[4]=H->GetEntries();
-    for (int i=5; i<2*(nXBins+2); i++) data[i]=0.0;
+    data[0] = 1.f;
+    data[1]=float(nXBins);
+    data[2]=float(H->GetBinLowEdge(1));
+    data[3]=float(H->GetBinLowEdge(nXBins+1));
+    data[4]=float(H->GetEntries());
+    for (int i=5; i<2*(nXBins+2); i++) data[i]=0.0f;
     int  iData = 5;
-    data[iData++]= H->GetBinContent(0);
+    data[iData++]= float(H->GetBinContent(0));
     for (int ixBin=1; ixBin<=nXBins; ixBin++)
-      data[iData++]=  H->GetBinContent(ixBin);
-    data[iData++]= H->GetBinContent(nXBins+1);
+      data[iData++]=  float(H->GetBinContent(ixBin));
+    data[iData++]= float(H->GetBinContent(nXBins+1));
     
     for (int ixBin=0; ixBin<=nXBins+1; ixBin++)
-      data[iData++]= H->GetBinError(ixBin);
+      data[iData++]= float(H->GetBinError(ixBin));
     
     m_out.add("DIM1D"+s,data,size*sizeof(float));
     
@@ -702,64 +702,64 @@ int CameraTool::Append(TH2D * H, const char * opts)
     int size = (8+2*(nXBins+2)*(nYBins+2));
     float * data = new float[size];
     
-    data[0]=2.;
-    data[1]=nXBins;
-    data[2]=(H->GetBinLowEdge(1));
-    data[3]=(H->GetBinLowEdge(nXBins+1));
-    data[4]=nYBins;
-    data[5]=(H->GetYaxis())->GetXmin();
-    data[6]=H->GetYaxis()->GetXmax();
-    data[7]=H->GetEntries();
-    for (int i=8; i<2*(nXBins+2)*(nYBins+2); i++) data[i]=0.0;
+    data[0]=2.f;
+    data[1]=float(nXBins);
+    data[2]=float(H->GetBinLowEdge(1));
+    data[3]=float(H->GetBinLowEdge(nXBins+1));
+    data[4]=float(nYBins);
+    data[5]=float(H->GetYaxis()->GetXmin());
+    data[6]=float(H->GetYaxis()->GetXmax());
+    data[7]=float(H->GetEntries());
+    for (int i=8; i<2*(nXBins+2)*(nYBins+2); i++) data[i]=0.0f;
     
     int iData = 8;
     
     
-    data[iData++]= H->GetBinContent(0,0);
+    data[iData++]= float(H->GetBinContent(0,0));
     
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= H->GetBinContent(0,iyBin);
+      data[iData++]= float(H->GetBinContent(0,iyBin));
     }
-    data[iData++]= H->GetBinContent(0, nYBins+1);
+    data[iData++]= float(H->GetBinContent(0, nYBins+1));
     
     for (int ixBin=1; ixBin<=nXBins; ixBin++){
-      data[iData++]= H->GetBinContent(ixBin,0);
+      data[iData++]= float(H->GetBinContent(ixBin,0));
       for (int iyBin=1; iyBin<=nYBins; iyBin++){
-        data[iData++]= H->GetBinContent(ixBin,iyBin);
+        data[iData++]= float(H->GetBinContent(ixBin,iyBin));
       }
-      data[iData++]= H->GetBinContent(ixBin,nYBins+1);
+      data[iData++]= float(H->GetBinContent(ixBin,nYBins+1));
     }
     
-    data[iData++]= H->GetBinContent(nXBins+1,0);
+    data[iData++]= (float)H->GetBinContent(nXBins+1,0);
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= H->GetBinContent(nXBins+1,iyBin);
+      data[iData++]= (float)H->GetBinContent(nXBins+1,iyBin);
     }
-    data[iData++]= H->GetBinContent(nXBins+1,nYBins+1);
+    data[iData++]= (float)H->GetBinContent(nXBins+1,nYBins+1);
     
     
     //===== ERRORS======
     
     
-    data[iData++]= H->GetBinError(0,0);
+    data[iData++]= (float)H->GetBinError(0,0);
     
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= H->GetBinError(0,iyBin);
+      data[iData++]= (float)H->GetBinError(0,iyBin);
     }
-    data[iData++]= H->GetBinError(0, nYBins+1);
+    data[iData++]= (float)H->GetBinError(0, nYBins+1);
     
     for (int ixBin=1; ixBin<=nXBins; ixBin++){
-      data[iData++]= H->GetBinError(ixBin,0);
+      data[iData++]= (float)H->GetBinError(ixBin,0);
       for (int iyBin=1; iyBin<=nYBins; iyBin++){
-        data[iData++]= H->GetBinError(ixBin,iyBin);
+        data[iData++]= (float)H->GetBinError(ixBin,iyBin);
       }
-      data[iData++]= H->GetBinError(ixBin,nYBins+1);
+      data[iData++]= (float)H->GetBinError(ixBin,nYBins+1);
     }
     
-    data[iData++]= H->GetBinError(nXBins+1,0);
+    data[iData++]= (float)H->GetBinError(nXBins+1,0);
     for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= H->GetBinError(nXBins+1,iyBin);
+      data[iData++]= (float)H->GetBinError(nXBins+1,iyBin);
     }
-    data[iData++]= H->GetBinError(nXBins+1,nYBins+1);
+    data[iData++]= (float)H->GetBinError(nXBins+1,nYBins+1);
     
     m_out.add("DIM2D"+s,(void *)data,size*sizeof(float));
     

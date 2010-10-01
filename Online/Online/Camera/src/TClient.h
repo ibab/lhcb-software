@@ -104,7 +104,7 @@ int client::rd(char * buf,int n){
 
 int client::wr(const char * buf,int n){
   if (sock==NULL) return -1;
-  sock->SendRaw(buf,n);
+  return sock->SendRaw(buf,n);
 }
 
 void client::shutwr(){
