@@ -35,8 +35,11 @@ stream = StrippingStream("Bhadron")
 MyStrippingBs2PhiPhiConf =  StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiPhiConf.config_Sept2010 )
 stream.appendLines( MyStrippingBs2PhiPhiConf.lines )
 
+stream.appendLines( Hb2Charged2BodyLines().lines() )
+
+
 stream.appendLines( [ 
-		        Hb2Charged2BodyLines().lines(),
+    #	       
 	                _StrippingBu2D0h_D02KShh_NoPIDConf.Line_LL,  
 		        _StrippingBu2D0h_D02KShh_NoPIDConf.Line_DD,
                         StrippingB2KShhConf().B2KSLLhh(),

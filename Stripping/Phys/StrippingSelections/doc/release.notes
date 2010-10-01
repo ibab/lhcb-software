@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-01 - Thomas Blake	
+ - Fixed bug in Bhadron stream definition
+
 ! 2010-09-30 - Greig Cowan
  - Updated TestMyStrippingLineOnRealData.py to include the default tracking
    cuts that will be used for the next round of processing.
