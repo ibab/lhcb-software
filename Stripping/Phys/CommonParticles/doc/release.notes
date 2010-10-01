@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-01 - Jibo He
+ - python/CommonParticles/StdLooseDiMuon.py
+   . Removed mass cut 
+ - python/CommonParticles/StdLooseDiMuonSameSign.py
+   + Added same sign loose dimuon
+
 ! 2010-09-21 - Rob Lambert
  - Made CommonParticles depend on Tr/TrackTools, now that Phys depends on Rec.
 
