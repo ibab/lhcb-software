@@ -13,10 +13,7 @@ line = 'DiMuonIncLine'
 location = '/Event/Dimuon/Phys/'+line 
 
 MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
-from Configurables import DaVinci, PrintDecayTree, GaudiSequencer
-from Configurables import LoKi__HDRFilter   as StripFilter
-MySequencer = GaudiSequencer('Sequence')
-pt = PrintDecayTree(InputLocations = [ location ])
+from Configurables import DaVinci
 
 # get classes to build the SelectionSequence
 from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
@@ -52,13 +49,13 @@ tuple.ToolList +=  [
     , "TupleToolPropertime"
     ]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
-tuple.InputLocations = [ pt, JpsiSeq.outputLocation() ]
+tuple.InputLocations = [ JpsiSeq.outputLocation() ]
 tuple.addTool(TupleToolTISTOS)
 tuple.TupleToolTISTOS.TriggerList = [ "Hlt2DiMuonUnbiasedJPsiDecision" ]
 tuple.TupleToolTISTOS.VerboseHlt2 = True
 ##################
 
-DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) # pt
+DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) 
 EventSelector().Input   = [
 "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00007956/0000/00007956_00000294_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
