@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-10-01 - Anton Poluektov 
+ - StrippingReport: option NormalizeByGoodEvents, if set to True (default) - 
+   use the number of good events (after pre-filter) to calculate rates. 
+   If False, use the total number of events. 
+
 ! 2010-10-01 - Anton Poluektov
  - StrippingReport fixes: 
    * Fixed bug with AcceptBadEvents = False in StrippingConf (bad events were

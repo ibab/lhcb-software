@@ -41,6 +41,7 @@ StrippingReport::StrippingReport( const std::string& name,
   declareProperty("PrintNonResponding", m_printNonResponding = true);
   declareProperty("PrintHot", m_printHot = true);
   declareProperty("HotThreshold", m_hotThreshold = 0.5);
+  declareProperty("NormalizeByGoodEvents", m_normalizeByGoodEvents = true);
 }
 
 //=============================================================================
@@ -83,6 +84,7 @@ StatusCode StrippingReport::initialize() {
   }
   
   m_event = 0;
+  m_goodEvent = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -98,12 +100,18 @@ void StrippingReport::report(bool onlyPositive) {
   
   sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|%7.7s|%7.7s|%7.7s|", "*Decision name*", "*Rate*", "*Accepted*", "*Mult*","*ms/evt*","*Errs*","*Incds*","*Slow*");
 
-  info() << "\n" << str << "\n";
+  info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
 
     double rate = 0.;
-    if (m_event > 0) rate = (double)i->decisions/(double)m_event;
+    
+    if (m_normalizeByGoodEvents) {
+      if (m_goodEvent > 0) rate = (double)i->decisions/(double)m_goodEvent;
+    }
+    else {
+      if (m_event > 0) rate = (double)i->decisions/(double)m_event;
+    }
 
     if (i->candidates >= 0) {
       std::string outputName = "!" + i->name;
@@ -232,6 +240,8 @@ StatusCode StrippingReport::execute() {
     info() << "----------------------------------------------------------------" << endmsg;
   }
   
+  m_goodEvent++;
+  
   if (m_reportFreq > 0 && (m_event % m_reportFreq == 0) ) report(m_onlyPositive);
   
   return result;
@@ -286,7 +296,12 @@ StatusCode StrippingReport::finalize() {
       std::string strippedName = i->name;
 
       double rate = 0.;
-      if (m_event > 0) rate = (double)i->decisions/(double)m_event;
+      if (m_normalizeByGoodEvents) {
+        if (m_goodEvent > 0) rate = (double)i->decisions/(double)m_goodEvent;
+      }
+      else {
+        if (m_event > 0) rate = (double)i->decisions/(double)m_event;
+      }
 
       if (i->candidates >= 0) {
         if (rate > m_hotThreshold) {

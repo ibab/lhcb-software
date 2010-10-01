@@ -61,6 +61,7 @@ private:
   bool m_printNonResponding;     ///< If true, show non-responding (with zero events selected) lines 
   bool m_printHot;               ///< If true, show hot (with rate above threshold) lines
   double m_hotThreshold;         ///< Rate threshold for hot lines
+  bool m_normalizeByGoodEvents;  ///< If true, use good event number (after pre-filter) to calculate rates
   
   std::vector < ReportStat > m_stat;
   
@@ -68,7 +69,8 @@ private:
   IChronoStatSvc* m_chronoSvc;           ///< Chrono service
   IIncidentSvc* m_incSvc;                ///< Incident service
   
-  int m_event;                   ///< Event count
+  long m_event;                   ///< Event count
+  long m_goodEvent;               ///< Good event count (after pre-filter)
   
 };
 
