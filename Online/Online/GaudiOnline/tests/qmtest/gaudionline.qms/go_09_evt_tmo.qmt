@@ -9,4 +9,5 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="reference"><text>../refs/go_evt_tmo.ref</text></argument>
+  <argument name="exit_code"><integer>3</integer></argument>
 </extension>
