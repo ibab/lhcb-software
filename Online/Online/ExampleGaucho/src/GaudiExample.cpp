@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.16 2009-08-31 13:04:43 evh Exp $
+// $Id: GaudiExample.cpp,v 1.17 2010-10-01 13:43:45 frankb Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -195,7 +195,7 @@ StatusCode GaudiExample::execute() {
     Histo2D_ID = "2D"+boost::lexical_cast<std::string>(i);
     HistoProf_ID= "Prof"+boost::lexical_cast<std::string>(i);
     
-    float dice1=random1();
+    float dice1 = float(random1());
     if(dice1 > 0.9 )      eventtype=0; // To test UNDERFLOW
     if(dice1 > 0.5 )      eventtype=1;
     else if(dice1 > 0.4)  eventtype=2;
