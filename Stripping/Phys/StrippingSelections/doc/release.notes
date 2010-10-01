@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-01 - Nicola Mangiafave
+ - Tightened Bu2KJpsiPiPiLooseLine to reach < 0.05% retention.
+
 ! 2010-10-01 - Thomas Blake	
  - Fixed bug in Bhadron stream definition
 

@@ -22,29 +22,33 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
     Definition of Bd->K J/psi(MuMu) Pi Pi stripping.
     """
     __slots__ = { 
-    			"PionMIPCHI2DVLoose"	: 2.0	# adimensional
-                ,	"PionMIPCHI2DV" 	: 3.0	# adimensional        
+    			"PionMIPCHI2DVLoose"	: 3.0	# adimensional
+                ,	"PionMIPCHI2DV" 	: 4.0	# adimensional        
 		,	"MuonMIPCHI2DVLoose"	: 1.0	# adimensional
 		,	"MuonMIPCHI2DV" 	: 1.0	# adimensional       
-		,	"KaonMIPCHI2DVLoose"	: 2.0	# adimensional
-		,	"KaonMIPCHI2DV"	        : 3.0	# adimensional
+		,	"KaonMIPCHI2DVLoose"	: 3.0	# adimensional
+		,	"KaonMIPCHI2DV"	        : 4.0	# adimensional
                 ,	"MuonPT"   	        : 500.0	# MeV
-                ,	"MuonTRCHI2DOF"         : 10.0	# adimensional
-		,	"JpsiMassWinLoose"   	: 100.0	# MeV
-                ,	"JpsiMassWin"   	: 80.0	# MeV    
+                ,	"MuonTRCHI2DOF"         : 5.0	# adimensional
+                ,	"PionTRCHI2DOF"         : 5.0	# adimensional
+                ,	"KaonTRCHI2DOF"         : 5.0	# adimensional
+		,	"JpsiMassWinLoose"   	: 80.0	# MeV
+                ,	"JpsiMassWin"   	: 70.0	# MeV    
 		,	"JpsiVCHI2VDOF" 	: 15.0	# adimensional
 		,	"JpsiPiPiMassWinLoose"	: 190.0	# MeV
                 ,	"X3872MassWinADA"	: 180.0	# MeV, equal to Psi2S mass window, Used in ADAMASS 
 		,	"X3872MassWin"		: 150.0	# MeV, equal to Psi2S mass window 
 		,	"JpsiPiPiVCHI2VDOFLoose": 10.0	# adimensional
                 ,	"X3872VCHI2VDOF"        : 8.0	# adimensional, equal to Psi2S vertex chi2/dof
-		,	"BuVCHI2DOFLoose" 	: 10.0	# adimensional
-		,	"BuVCHI2DOF" 		: 8.0	# adimensional
-		,	"BuMIPCHI2DVLoose"	: 40.0	# adimensional                        
-		,	"BuMIPCHI2DV"    	: 20.0	# adimensional
-		,	"BuBPVVDCHI2Loose"	: 10.0	# adimensional                        
-		,	"BuBPVVDCHI2"    	: 20.0	# adimensional
-		,	"BuMassWinLoose"	: 500.0	# MeV
+		,	"BuVCHI2DOFLoose" 	: 7.0	# adimensional
+		,	"BuVCHI2DOF" 		: 5.0	# adimensional
+		,	"BuMIPCHI2DVLoose"	: 20.0	# adimensional                        
+		,	"BuMIPCHI2DV"    	: 15.0	# adimensional
+		,	"BuBPVVDCHI2Loose"	: 20.0	# adimensional                        
+		,	"BuBPVVDCHI2"    	: 30.0	# adimensional
+		,	"BuBPVDIRALoose"        : 0.9995# adimensional
+		,	"BuBPVDIRA"    	        : 0.9995# adimensional
+		,	"BuMassWinLoose"	: 430.0	# MeV
 		,	"BuMassWinADA"  	: 430.0	# MeV, used in ADAMASS    
 		,	"BuMassWin"		: 400.0	# MeV
              }
@@ -88,7 +92,8 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
 	_RhoLoose = CombineParticles("Rho2PiPiLoose")
       	_RhoLoose.DecayDescriptor = "rho(770)0 -> pi+ pi-"
         _RhoLoose.CombinationCut = "(AM < 850)"
-        _RhoLoose.DaughtersCuts = { "pi+" : " MIPCHI2DV(PRIMARY) > %(PionMIPCHI2DVLoose)s " % self.getProps()}
+        _RhoLoose.DaughtersCuts = { "pi+" : " (TRCHI2DOF < %(PionTRCHI2DOF)s)" \
+                                            "& (MIPCHI2DV(PRIMARY) > %(PionMIPCHI2DVLoose)s) " % self.getProps()}
         _RhoLoose.MotherCut = "ALL"
         
 	RhoLoose = Selection("SelRho2PiPiForBu2KJpsiPiPiLoose",
@@ -131,10 +136,12 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
         StdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
 	_BuLoose = CombineParticles("Bu2KJpsiPiPiLoose")
       	_BuLoose.DecayDescriptors = ["B+ -> K+ X_1(3872)", "B- -> K- X_1(3872)"]
-        _BuLoose.DaughtersCuts = { "K+" :  "MIPCHI2DV(PRIMARY) > %(KaonMIPCHI2DVLoose)s " % self.getProps() }   
+        _BuLoose.DaughtersCuts = { "K+" :  " (TRCHI2DOF < %(KaonTRCHI2DOF)s)" \
+                                           "& (MIPCHI2DV(PRIMARY) > %(KaonMIPCHI2DVLoose)s) " % self.getProps() }   
         _BuLoose.CombinationCut = "ADAMASS('B+') < %(BuMassWinLoose)s *MeV" % self.getProps()
         _BuLoose.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BuVCHI2DOFLoose)s) "\
                              "& (MIPCHI2DV(PRIMARY) < %(BuMIPCHI2DVLoose)s) "\
+                             "& (abs(BPVDIRA) > %(BuBPVDIRALoose)s) "\
                              "& (BPVVDCHI2 > %(BuBPVVDCHI2Loose)s)" % self.getProps()
 
 	BuLoose = Selection("SelBu2KJpsiPiPiLoose",
@@ -162,6 +169,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
                          "& (MINTREE('K+'==ABSID, MIPCHI2DV(PRIMARY)) > %(KaonMIPCHI2DV)s) " \
                          "& (VFASPF(VCHI2/VDOF) < %(BuVCHI2DOF)s) "\
                          "& (MIPCHI2DV(PRIMARY) < %(BuMIPCHI2DV)s) "\
+                         "& (abs(BPVDIRA) > %(BuBPVDIRA)s) "\
                          "& (BPVVDCHI2 > %(BuBPVVDCHI2)s)" % self.getProps() 
 	Bu = Selection("SelBu2KX3872",
                  	Algorithm = _BuFilter,
@@ -178,7 +186,8 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
         Pi = DataOnDemand(Location = "Phys/StdLoosePions")
         _Psi2S = CombineParticles("Psi2SJPsiPiPi")
         _Psi2S.DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-"
-        _Psi2S.DaughtersCuts = { "pi+" : "MIPCHI2DV(PRIMARY) > %(PionMIPCHI2DV)s" % self.getProps() }
+        _Psi2S.DaughtersCuts = { "pi+" :  " (TRCHI2DOF < %(PionTRCHI2DOF)s)" \
+                                          "& (MIPCHI2DV(PRIMARY) > %(PionMIPCHI2DV)s)" % self.getProps() }
         _Psi2S.CombinationCut = "(ADAMASS('psi(2S)') < %(X3872MassWinADA)s *MeV)" % self.getProps() 
         _Psi2S.MotherCut = "  (MAXTREE('J/psi(1S)'==ABSID, (ADMASS('J/psi(1S)'))) < %(JpsiMassWin)s *MeV)" \
                            "& (ADMASS('psi(2S)') < %(X3872MassWin)s *MeV)" \
@@ -193,10 +202,12 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
         StdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
         _BuPsi2S = CombineParticles("BuBu2KPsi2S")
         _BuPsi2S.DecayDescriptors = ["B+ -> K+ psi(2S)", "B- -> K- psi(2S)"]
-        _BuPsi2S.DaughtersCuts = { "K+" :  "MIPCHI2DV(PRIMARY) > %(KaonMIPCHI2DV)s" % self.getProps() }
+        _BuPsi2S.DaughtersCuts = { "K+" :  " (TRCHI2DOF < %(KaonTRCHI2DOF)s)" \
+                                           "& (MIPCHI2DV(PRIMARY) > %(KaonMIPCHI2DV)s)" % self.getProps() }
         _BuPsi2S.CombinationCut = "(ADAMASS('B+') < %(BuMassWinADA)s *MeV) " % self.getProps()
         _BuPsi2S.MotherCut = " (ADMASS('B+') < %(BuMassWin)s *MeV) "\
                              "& (MIPCHI2DV(PRIMARY) < %(BuMIPCHI2DV)s) "\
+                             "& (abs(BPVDIRA) > %(BuBPVDIRA)s) "\
                              "& (VFASPF(VCHI2/VDOF) < %(BuVCHI2DOF)s) "\
                              "& (BPVVDCHI2 > %(BuBPVVDCHI2)s)" % self.getProps()
           
