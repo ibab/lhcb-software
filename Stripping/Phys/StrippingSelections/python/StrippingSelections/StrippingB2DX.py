@@ -186,6 +186,18 @@ class B2DXLines(object) :
 	      "DIRAMin"            : 0.9998,        # DIRA of the B to the related PV
 	      "CombDMass"          : 500,           # MeV
 	    }, 
+	    "UnbiasedBCuts" : {
+    	      "BachelorChi2Max"    : 5., 
+    	      "BachelorPtMin"      : 500., 
+    	      "BachelorPMin"       : 5000., 
+    	      "BachelorMIPChi2Min" : 0., 
+    	      "DMass" 		   : 100., 
+	      "VtxChi2Max"         : 12.,           # B vertex Chi2
+	      "IPChi2Max"          : 250.,           # chi2 of B impact parameter to the related PV
+	      "LTMin"              : -1000.,           # Chi2 of B vertex separation from the related PV
+	      "DIRAMin"            : 0.9998,        # DIRA of the B to the related PV
+	      "CombDMass"          : 500,           # MeV
+	    }, 
     	    "LambdaCCuts" : {
     	      "DauChi2Max"   : 5., 
     	      "DauPtMin"     : 250., 
@@ -222,6 +234,7 @@ class B2DXLines(object) :
 	      "D2KPiPi0Merged"   : 1., 
 	      "D2KPiPi0Resolved" : 1., 
 	      "Lambda"   : 1., 
+	      "Unbiased"   : 1., 
 	    }, 
 	    "CheckPV"	       : True, 
 	    "MaxTracksInEvent" : 240
@@ -229,7 +242,7 @@ class B2DXLines(object) :
     ) : 
     
 	__configuration_keys__ = ("KstarCuts","PhiCuts","RhoCuts","D2hhCuts","D2hhhCuts","D2hhhhCuts",
-	                          "D2KPiPi0Cuts","D2KshhCuts","BCuts","LambdaCCuts","LambdaBCuts",
+	                          "D2KPiPi0Cuts","D2KshhCuts","BCuts","UnbiasedBCuts","LambdaCCuts","LambdaBCuts",
 	                          "Prescales","CheckPV", "MaxTracksInEvent")
 	                          
 	checkConfig(__configuration_keys__, config)
@@ -335,6 +348,18 @@ class B2DXLines(object) :
                              checkPV = config["CheckPV"]  )
 
     	self.lines.append( line )
+
+	#make unbiased selections
+    	unbiasedSelection = makeUnbiasedBs2DsPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
+ 
+ 	HLT1TIS = makeTISTOSSel("HLT1TISSelForUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
+ 	HLT2TIS = makeTISTOSSel("HLT2TISSelForUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
+
+	line = StrippingLine("UnbiasedBs2DsPiLine", prescale = config["Prescales"]["Unbiased"] , 
+                             algos = [ filterTooManyIP, HLT2TIS ], 
+                             checkPV = config["CheckPV"]  )
+    	self.lines.append( line )
+
     	
 
 def makeD2hh(moduleName, config) : 
@@ -432,6 +457,7 @@ def makeD2hhh(moduleName, config) :
                            RequiredSelections = [ D2pipipiSel, D2KpipiSel, D2KKpiSel, D2piKKSel, D2pipiKSel ] )
 
     return DSel
+
 
 def makeD2Kshh(moduleName, config) : 
 
@@ -795,6 +821,27 @@ def makeB02DPi(moduleName, DName, DSel, config ) :
     return Selection("SelB02DPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
 			RequiredSelections = [ DSel, StdPi ] )
 
+def makeUnbiasedBs2DsPi(moduleName, DName, DSel, config ) : 
+
+    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+#    StdPi  = DataOnDemand(Location = "Phys/StdLoosePions")
+
+    Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
+    "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(BachelorMIPChi2Min)s))" % config
+    
+    Dcut = "(ADMASS('D_s+') < %(DMass)s*MeV)" % config
+
+    B2DPi = CombineParticles("Bs2DsPiWith" + DName + "For" + moduleName)
+    B2DPi.DecayDescriptors = [ "[B_s0 -> D- pi+]cc" ]
+    B2DPi.DaughtersCuts = { "pi+" : Bachelorcut, "D-" : Dcut }
+    B2DPi.CombinationCut = "((ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
+
+    B2DPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & " \
+    "(BPVDIRA > %(DIRAMin)s))" % config
+
+    return Selection("SelBs2DsPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
+			RequiredSelections = [ DSel, StdPi ] )
 
 def makeB02DK(moduleName, DName, DSel, config) : 
 
@@ -961,3 +1008,15 @@ def makeLambdaB2LambdaCK(moduleName, LambdaCSel, config ) :
     return Selection("SelLambdaB2LambdaCKFor" + moduleName, Algorithm = LambdaB2LambdaCK, 
 			RequiredSelections = [ LambdaCSel, StdK ] )
 
+def makeTISTOSSel(name, sel, trigger ) : 
+    from Configurables import TisTosParticleTagger
+    tisTosFilter = TisTosParticleTagger(name + "Filter")
+    tisTosFilter.TisTosSpecs = { trigger : 0}
+    # the rest ist only to speed it up... (TISTOSsing only done with tracking system)
+    tisTosFilter.ProjectTracksToCalo = False
+    tisTosFilter.CaloClustForCharged = False
+    tisTosFilter.CaloClustForNeutral = False
+    tisTosFilter.TOSFrac = { 4:0.0, 5:0.0 }
+
+    return Selection(name, Algorithm = tisTosFilter, RequiredSelections = [ sel ] )
+    
