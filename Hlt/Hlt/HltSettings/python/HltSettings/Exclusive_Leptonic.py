@@ -70,9 +70,9 @@ class Exclusive_Leptonic :
 
         from Hlt2Lines.Hlt2CharmLines import Hlt2CharmLinesConf
 
-        d.update( { Hlt2CharmLinesConf : { 'Prescale' : { 'Hlt2CharmD02PiPiForD02MuMu' : 0.01
-                                                        , 'Hlt2CharmD02KPiForD02MuMu'  : 0.01
-                                                        , 'Hlt2CharmD02KKForD02MuMu'   : 0.01
+        d.update( { Hlt2CharmLinesConf : { 'Prescale' : { 'Hlt2CharmD02PiPiForD02MuMu' : 0.001
+                                                        , 'Hlt2CharmD02KPiForD02MuMu'  : 0.001
+                                                        , 'Hlt2CharmD02KKForD02MuMu'   : 0.001
                                                         } 
                                          } 
                   } 
