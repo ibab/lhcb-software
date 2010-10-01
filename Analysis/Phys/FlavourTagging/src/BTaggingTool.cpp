@@ -21,14 +21,13 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareInterface<IBTaggingTool>(this);
 
-  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); //"CombineTaggersNN"
-  //declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersNN" );
+  declareProperty( "CombineTaggersName", m_CombineTaggersName = "CombineTaggersProbability" ); 
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "PVbyIPs");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = false );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut    = 4.0 );
+  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 ); 
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
 
@@ -125,7 +124,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   //Load vertices and particles
-  const Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
+  Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
   if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts.size() 
                                   <<" Nr Particles: "<<parts.size()<<endreq;
@@ -309,7 +308,8 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       if(m_ChoosePV=="RefitPV") RefitRecVert = newPV;
     }    
     if( ! RecVert ) {
-      err() <<"No Reconstructed Vertex! Skip." <<endreq;
+      err() <<"No Reconstructed Vertex! Skip. " 
+            <<"(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)"<<endreq;
       return PileUpVtx;
     }    
   }
@@ -336,11 +336,11 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 //=============================================================================
 const Particle::ConstVector 
 BTaggingTool::chooseCandidates(const Particle* AXB,
-                               const Particle::Range& parts,
+                               Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx) {
   double distphi;
   Particle::ConstVector vtags(0);
-  Particle::Range::const_iterator ip;
+  Particle::Range::iterator ip;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
   for ( ip = parts.begin(); ip != parts.end(); ip++ ){
@@ -363,10 +363,13 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
     //eliminate from vtags all parts coming from a pileup vtx
-    if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
-
+    if(ippuerr) {
+      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
+      Particle* c = const_cast<Particle*>(*ip);
+      c->addInfo(1, ippu/ippuerr);
+    }
+    
     bool dup=false;
-    //if((*ip)->particleID().abspid()==211) { 
     Particle::ConstVector::const_iterator ik;
     for ( ik = ip+1; ik != parts.end(); ik++) {
       if((*ik)->proto() == proto) { 
@@ -374,7 +377,6 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
         break; 
       }
     }
-    //}
     if(dup) continue; 
  
     //////////////////////////////////

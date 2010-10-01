@@ -24,17 +24,14 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_MLP" );
   declareProperty( "AverageOmega",   m_AverageOmega   = 0.40 );
 
-  declareProperty( "ProbMin",         m_ProbMin       = 0.55);
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.6 *GeV );
+  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
+  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
-
   declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 5.0 );
-  declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -9999.0);
-
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
+  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
-
+  declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
 
@@ -67,8 +64,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tpionS;
   if(!RecVert) return tpionS;
 
-  debug()<<"--Pion SS Tagger--"<<endreq;
-  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+  verbose()<<"--Pion SS Tagger--"<<endreq;
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
   double B0mass = ptotB.M();
@@ -90,11 +86,13 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                      PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
     if( (*ipart)->particleID().abspid() != 211 ) continue;
     if(!pidpass) continue;
-
+    verbose()<<" Pion PIDk="<< PIDk <<endreq;
+    
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
     double P  = (*ipart)->p();
     if( P  < m_P_cut_pionS )  continue;
+    verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
     const Track* track = proto->track();
     double lcs = track->chi2PerDoF();
@@ -104,6 +102,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
+    verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
@@ -112,12 +111,10 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(IPsig > m_IPs_cut_pionS)  continue;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
+    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
     if(dQ > m_dQcut_pionS ) continue;
 
     ncand++;
-
-    debug()<<" Pion Ss cand, P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-           << " IP=" << IP << " dQ=" << dQ<<endreq;
 
     if( Pt <= ptmaxpS ) continue;//equal sign in "<=" is used to kill duplicates
 
@@ -130,6 +127,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
   if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
+  verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
  
   //calculate omega
   double pn = 1-m_AverageOmega;
@@ -162,8 +160,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPpS( NNinputs );
+    verbose() << " Pion pn="<< pn <<endmsg;
 
-    if( pn < m_ProbMin ) return tpionS;
+    if( pn < m_PionProbMin ) return tpionS;
   }
 
   int tagdecision = ipionS->charge()>0 ? 1: -1;

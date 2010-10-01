@@ -75,7 +75,7 @@ tag.BTaggingTool.TaggerPionSameTool.PionSame_dQ_extra_cut = 1.5
 tag.BTaggingTool.TaggerPionSameTool.Pion_ghost_cut        = -999.0
 tag.BTaggingTool.TaggerPionSameTool.PionSame_PIDNoK_cut   = 3.0
 tag.BTaggingTool.TaggerPionSameTool.PionSame_PIDNoP_cut   = 10.0
-tag.BTaggingTool.TaggerPionSameTool.ProbMin               = 0.55
+tag.BTaggingTool.TaggerPionSameTool.PionProbMin           = 0.55
 tag.BTaggingTool.TaggerPionSameTool.AverageOmega          = 0.41
 
 tag.BTaggingTool.addTool ( TaggerVertexChargeTool )

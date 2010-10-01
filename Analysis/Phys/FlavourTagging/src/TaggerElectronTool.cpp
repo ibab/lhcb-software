@@ -25,15 +25,16 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "AverageOmega", m_AverageOmega      = 0.33 );
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1.1 * GeV );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
   declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -9999.0 );
-  declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
-  declareProperty( "EoverP",       m_EoverP     = 0.85 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut   = 4.0 );
-  declareProperty( "ProbMin_ele",  m_ProbMin_ele  = 0. ); //no cut
+  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 0. );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
+  declareProperty( "VeloChargeMin",m_VeloChMin     = 0.0 );
+  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.3 );
+  declareProperty( "EoverP",       m_EoverP        = 0.85 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 5.5 );
+  declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
 
   m_nnet = 0;
   m_util = 0;
@@ -70,8 +71,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tele;
   if(!RecVert) return tele;
 
-  debug()<<"--Electron Tagger--"<<endreq;
-  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+  verbose()<<"-- Electron Tagger --"<<endreq;
 
   //select electron tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -86,12 +86,14 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
     if(pide < m_PIDe_cut ) continue;
+    verbose() << " Ele PIDe="<< pide <<endmsg;
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
     double P = (*ipart)->p();
     if( P < m_P_cut_ele )  continue;
+    verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
@@ -102,24 +104,31 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
+    verbose() << " Ele lcs="<< lcs <<" tsa="<<tsa<<endmsg;
+    //calculate signed IP wrt RecVert
+    double IP, IPerr;
+    m_util->calcIP(*ipart, RecVert, IP, IPerr);
+    if(!IPerr) continue;
+    double IPsig = IP/IPerr;
+    if(fabs(IPsig) < m_IPs_cut_ele) continue;
+
     double eOverP  = -999;
     if( m_electron->set(*ipart) ) { 
       eOverP  = m_electron->eOverP();
     }
  
     if(eOverP > m_EoverP || eOverP<-100) {
-      verbose() << " Elec P="<<P <<" Pt="<<Pt << " E/P=" << eOverP <<endreq;
+      verbose() << " Elec E/P=" << eOverP <<endreq;
 
       double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-        verbose() << "   veloch=" << veloch << endreq;
+        verbose() << " Elec veloch=" << veloch << endreq;
         
         ncand++;
 
         if( Pt > ptmaxe ) { 
           iele = (*ipart);
           ptmaxe = Pt;
-          debug()<<" Electron cand, Pt="<<Pt<<endreq;
         }
       }
     }
@@ -143,6 +152,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPe( NNinputs );
+    verbose() << " Elec pn=" << pn << endreq;
 
     if( pn < m_ProbMin_ele ) return tele;
 

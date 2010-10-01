@@ -57,6 +57,8 @@ private:
   double m_PID_k_cut;
   double m_PIDkp_cut;
   double m_ProbMin_kaon;
+  double m_ipPU_cut;
+
 
 };
 

@@ -63,7 +63,7 @@ private:
 
   const LHCb::Particle::ConstVector 
   chooseCandidates(const LHCb::Particle* AXB,
-                   const LHCb::Particle::Range& parts,
+                    LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
 
   ITaggingUtils* m_util;

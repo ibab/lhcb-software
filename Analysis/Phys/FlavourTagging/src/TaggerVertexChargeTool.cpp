@@ -78,8 +78,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
 
-  debug()<<"--Vertex Tagger--"<<endreq;
-  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+  verbose()<<"--Vertex Tagger--"<<endreq;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
@@ -158,13 +157,13 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     omega = 1 - pn;
   }
 
-  debug() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-	  <<", omega= "<< omega <<endreq;
+  verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
+            <<", omega= "<< omega <<endreq;
 
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 
-  debug()<<"Vtx passed"<<endreq;
+  verbose()<<"Vtx passed"<<endreq;
  
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );

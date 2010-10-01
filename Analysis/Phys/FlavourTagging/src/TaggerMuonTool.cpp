@@ -65,8 +65,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Tagger tmu;
   if(!RecVert) return tmu;
   
-  debug()<<"--Muon Tagger--"<<endreq;
-  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+  verbose()<<"--Muon Tagger--"<<endreq;
   
   //select muon tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -83,24 +82,24 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(!proto->info(ProtoParticle::MuonPIDStatus,0)) continue;
     double pidm=proto->info( ProtoParticle::CombDLLmu, -1000.0 );
     if(pidm < m_PIDm_cut ) continue;
-
+    verbose() << " Muon PIDm="<< pidm <<" muonNSH="<<muonNSH<<endreq;
+    
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_muon ) continue;
 
     double P = axp->p();
     if( P  < m_P_cut_muon ) continue;
+    verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
 
     double lcs = proto->track()->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
-    
+    verbose() << " Muon lcs="<< lcs <<endreq;
+  
     ncand++;
-
-    verbose() << " Muon P="<< P <<" Pt="<< Pt <<" muonNSH="<<muonNSH<<endreq;
 
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = axp;
       ptmaxm = Pt;
-      debug()<<" Muon cand, Pt="<<Pt<<endreq;
     }
   }
   if( ! imuon ) return tmu;
@@ -122,6 +121,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(9) = ncand;
     
     pn = m_nnet->MLPm( NNinputs );
+    verbose() << " Muon pn="<< pn <<endreq;
 
     if( pn < m_ProbMin_muon ) return tmu;
 

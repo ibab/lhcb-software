@@ -57,6 +57,8 @@ private:
   double m_ghost_cut_ele;
   double m_PIDe_cut;
   double m_ProbMin_ele;
+  double m_IPs_cut_ele;
+
 
 };
 

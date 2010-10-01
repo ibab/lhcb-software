@@ -55,7 +55,7 @@ private:
   double m_dQcut_pionS;
   double m_dQcut_extra_pionS;
   double m_AverageOmega;
-  double m_ProbMin, m_lcs_cut;
+  double m_PionProbMin, m_lcs_cut;
   double m_ghost_cut;
   double m_PionSame_PIDNoK_cut;
   double m_PionSame_PIDNoP_cut;
