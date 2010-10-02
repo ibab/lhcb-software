@@ -22,7 +22,7 @@ def addToDB(startTime,rootToFiles,condPath,db):
     stop  = cool.ValidityKeyMax
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
     
-# field Up Alignment
+# Path to alignment files. Expects xml files in the usual areas underneath these directories
 upAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagUp"
 dnAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagDown"
 
