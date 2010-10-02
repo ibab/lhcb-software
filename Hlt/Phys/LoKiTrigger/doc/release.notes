@@ -5,6 +5,14 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-10-02 - Vanya Belyaev
+
+ - add more reasonable treatment of 
+
+     L0Muon   -> Track and
+     L0DiMuon -> MultiTrack conversion algorithms 
+
+
 ! 2010-09-29 - Vanya Belyaev
 
  - small adaptation for new structiure of LoKiCore 
