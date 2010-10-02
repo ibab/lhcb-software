@@ -468,7 +468,7 @@ class DaVinci(LHCbConfigurableUser) :
             
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             if ( self.getProp("WriteFSR") ):
-                self.etcfsr(self.getProp("ETCFile"))
+                self._etcfsr(self.getProp("ETCFile"))
             self.etc(self.getProp("ETCFile"))
 
 ################################################################################
@@ -513,31 +513,6 @@ class DaVinci(LHCbConfigurableUser) :
 
         # Write the FSRs to the same file as the events
         ApplicationMgr().OutStream += [ FSRWriter ]
-        
-
-################################################################################
-# FSR (general requirements)
-#
-    def _fsr(self):
-        """
-        general facilities to write out the FSR - DO NOT DEFINE OUTPUTSTREAM HERE
-
-        this is also needed if e.g. DSTs, selDSTs and so on are written and defined outside
-        the DaVinci configurable
-        make sure the FileRecordCnvSvc is only instantiated once!
-        07-06-2010: Commented out. These lines are already in $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts, and adding FileRecordCnvSvc to ExtSvc breaks FST writing.
-        """
-
-
-        '''
-        FileRecordDataSvc().ForceLeaves         = True
-        FileRecordDataSvc().RootCLID            = 1
-        FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-        ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-                                                  DbType = "POOL_ROOTTREE",
-                                                  ShareFiles = "YES" )
-                                     ]
-        '''
         
 ################################################################################
 # Main sequence
@@ -631,8 +606,6 @@ class DaVinci(LHCbConfigurableUser) :
         self._defineMonitors()
         self._defineEvents()
         self._defineInput()
-        if ( self.getProp("WriteFSR") ):
-            self._fsr()
         self._rootFiles()
         
         # Add main sequence to TopAlg
