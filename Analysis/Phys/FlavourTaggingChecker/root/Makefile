@@ -17,7 +17,7 @@ CXXFLAGS_DBG  = -fPIC -Wall -g3 -gdwarf-2
 LD            = g++
 LDFLAGS       = -O2
 SOFLAGS       = -shared
-EXTRALIBS     = -lMLP -lGeom -lEve
+EXTRALIBS     = -lMLP -lRGL -lGeom -lEve
 EXTRAFLAGS    = -Iinclude -Isrc -Innet 
 
 #------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ doxygen:
 
 #------------------------------------------------------------------------------
 help:
-	@firefox ./output/html/index.html 2> /dev/null &
+	@firefox https://cern.ch/musy/tagging  2> /dev/null &
 
 #------------------------------------------------------------------------------
 #depend: $(SRCS)
