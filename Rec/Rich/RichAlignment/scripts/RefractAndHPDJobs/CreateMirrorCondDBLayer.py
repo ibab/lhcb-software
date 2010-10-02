@@ -26,6 +26,9 @@ def addToDB(startTime,rootToFiles,condPath,db):
 upAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagUp"
 dnAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagDown"
 
+# The following dates are extracted from spreadsheets here
+# http://marwww.in2p3.fr/~legac/LHCb/
+
 # Hardcode the field changes. Format is date of change and the new polarity
 field = { }
 #                          Year   Month  Day   Hour  Min  Sec
