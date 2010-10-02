@@ -28,7 +28,7 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
         Hlt2B2HH = Hlt2Member( CombineParticles 
                                , "Combine"     
                                , DecayDescriptor = "B0 -> pi+ pi-"
-                               , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(doca)s ))" % self.getProps()
+                               , CombinationCut = "(in_range(%(BMassWinLow)s *MeV, AM, %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(doca)s ))" % self.getProps()
                                , DaughtersCuts = { "pi+" : "(PT> %(PionPTmin)s *MeV) & (MIPDV(PRIMARY)> %(PionIPmin)s )" % self.getProps() }
                                , MotherCut = "(BPVIP()< %(BIP)s ) & (BPVVDSIGN> %(BSignDistFlight)s ) & (INTREE ( (ABSID=='pi+') & (PT> %(PionPTmax)s *MeV))) & ( INTREE(( ABSID=='pi+') & (MIPDV(PRIMARY)> %(PionIPmax)s )))" % self.getProps()
                                , InputLocations = [ BiKalmanFittedPions ])
