@@ -23,8 +23,8 @@ def addToDB(startTime,rootToFiles,condPath,db):
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
     
 # field Up Alignment
-upAlign = "/usera/jonesc/AFS/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagUp"
-dnAlign = "/usera/jonesc/AFS/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagDown"
+upAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagUp"
+dnAlign = "/afs/cern.ch/user/m/mcoombes/public/RICHMirrorAlignment27-09-10/RichMirrAlign-HPDNewCentres-MagDown"
 
 # Hardcode the field changes. Format is date of change and the new polarity
 field = { }
