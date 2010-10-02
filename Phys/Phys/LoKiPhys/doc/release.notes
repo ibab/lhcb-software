@@ -5,6 +5,16 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-02 - Vanya Belyaev
+
+ - LoKi/Particles26.h
+     fix the bug with evaluation of DOCAMAXCHI2
+     Thanks to Liming Zhang for reporting the problem
+
+ - cmt/requirements 
+     version inctrement to v9r5 
+
+
 ! ========================== LoKiPhys v9r4 2010-09-29 =========================
 
 ! 2010-09-19 - Vanya Belyaev

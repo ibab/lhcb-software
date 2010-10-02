@@ -108,6 +108,10 @@ namespace LoKi
       ( const LHCb::Particle::ConstVector&    v ) const 
       { return docamax ( v.begin() , v.end() ) ; }
       /// evaluate the max doca
+      inline double docamax
+      ( const LHCb::Particle::Range&          v ) const 
+      { return docamax ( v.begin() , v.end() ) ; }
+      /// evaluate the max doca
       inline double docamax 
       ( const SmartRefVector<LHCb::Particle>& v ) const 
       { return docamax ( v.begin() , v.end() ) ; }
@@ -115,11 +119,15 @@ namespace LoKi
       /// evaluate the max chi2 doca
       inline double docachi2max
       ( const LHCb::Particle::ConstVector&    v ) const 
-      { return docamax ( v.begin() , v.end() ) ; }
+      { return docachi2max ( v.begin() , v.end() ) ; }
+      /// evaluate the max chi2 doca
+      inline double docachi2max
+      ( const LHCb::Particle::Range&           v ) const 
+      { return docachi2max ( v.begin() , v.end() ) ; }
       /// evaluate the max chi2 doca
       inline double docachi2max 
       ( const SmartRefVector<LHCb::Particle>& v ) const 
-      { return docamax ( v.begin() , v.end() ) ; }
+      { return docachi2max ( v.begin() , v.end() ) ; }
       // ======================================================================
     public:
       // ======================================================================
