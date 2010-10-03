@@ -53,6 +53,17 @@
 #   | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
 #   +-----------------------------+-----------+---------------------+--------+
 #
+#  Usage:
+#
+#  @code
+#
+#    from StrippinSelections.StrippingTriMuons import  StrippingTriMuonsConf
+# 
+#    stream.addLined ( StrippingTriMuonsConf ( {} ).lines() )
+#
+#  @endcode
+#
+#
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2010-08-10
 # 
@@ -107,7 +118,14 @@ Strip three-muon events:
    | -- StrippingBc2ThreeMu      | 0.000100  |      10   | 1.000   |  0.057 | 
    | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
    +-----------------------------+-----------+---------------------+--------+
- 
+
+ Usage:
+
+     from StrippinSelections.StrippingTriMuons import  StrippingTriMuonsConf
+     
+     stream.addLined ( StrippingTriMuonsConf ( {} ).lines() )
+
+
 $Revision: 1.3 $
 Last modification $Date: 2010-08-24 11:05:43 $
                by $Author: ibelyaev $
@@ -118,213 +136,49 @@ __date__    = '2010-08-08'
 __version__ = '$Revision: 1.3 $'
 # =============================================================================
 __all__ = (
-    #
-    "StrippingTriMuonsConf"     , ## asked by Tom & Greig
-    #
-    "Selections"                , ## the list of selections
-    #
-    "GoodMuons_Selection"       ,
-    "ThreeGoodMuons_Selection"  ,
-    "TightMuons_Selection"      ,
-    "ThreeTightMuons_Selection" ,
-    "Tau2ThreeMu_Selection"     , 
-    "Bc2ThreeMu_Selection"      ,
-    #
-    "Lines"                     , ## the list of stripping lines
-    #
-    "ThreeMuons_Line"           ,
-    "Tau2ThreeMu_Line"          , 
-    "Bc2ThreeMu_Line"           
+    ##
+    "StrippingTriMuonsConf"      ## asked by Tom & Greig
+    ##
     )
 # =============================================================================
 from PhysSelPython.Wrappers import AutomaticData, Selection, EventSelection 
 from Configurables          import CombineParticles,FilterDesktop, LoKi__VoidFilter 
 
-_LooseMuons      = AutomaticData ( Location = "Phys/StdLooseMuons" )
-##_LooseMuons      = AutomaticData ( Location = "Phys/StdNoPIDsMuons" )
+import logging
+log = logging.getLogger('StrippingTriMuons')
 
-_Preambulo  = [
+
+# =============================================================================
+## Define the default configuration 
+_default_configuration_ = {
+    #
+    # Selection of basic particles 
+    #
+    'GoodMuons'    : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  4 ) " ,
+    'TightMuons'   : " ( PT > 1.5 * GeV )                      & ( BPVIPCHI2 () > 16 ) " ,
+    #
+    # Trigger 
+    #
+    'HLT'          : " HLT_PASS_RE('Hlt.*(MicroBias|Muon|MuMu|DiMu).*Decision') " , 
+    #
+    # Prescale 
+    #
+    '3mu-Prescale' : 1.00 , 
+    'Bc-Prescale'  : 1.00 , 
+    'Tau-Prescale' : 1.00 , 
+    #
+    # Technicalities:
+    #
+    'Preambulo'    : [
     ## shortcut for chi2 of vertex fit 
-    'chi2vx = VFASPF(VCHI2) '                   ,
+    'chi2vx = VFASPF(VCHI2) '                               ,
     ## shortcut for the c*tau
-    "from GaudiKernel.PhysicalConstants import c_light"   ,
-    "ctau    =                  BPVLTIME ( ) * c_light "  ,
-    "ctauBc  = PDGM('B_c+')/M * BPVLTIME ( ) * c_light "  
+    "from GaudiKernel.PhysicalConstants import c_light"     ,
+    "ctau    =                    BPVLTIME ( ) * c_light "  ,
+    "ctauBc  = PDGM('B_c+') / M * BPVLTIME ( ) * c_light "  
     ]
-
-muoncuts      = " ( PT > 250 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () > 4 ) "
-tightmuoncuts = " ( PT > 1.2 * GeV )                      & ( BPVIPCHI2 () > 9 ) "
-
-## helper selection of 'good' muons 
-_GoodMuons = FilterDesktop (
-    ##
-    "GoodMuForTriMuons"  ,
-    ##
-    Code = muoncuts     
-    )
-
-## make (pre)-selection
-GoodMuons_Selection = Selection (
-    ##
-    "GoodMuonsForTriMuons"                 ,
-    ##
-    Algorithm          = _GoodMuons    ,
-    ##
-    RequiredSelections = [ _LooseMuons ]
-    )
-
-## require at least 3 good muons
-ThreeGoodMuons_Selection = EventSelection (
-    ##
-    LoKi__VoidFilter (
-    "ThreeGoodMuons"  ,
-    Code = " CONTAINS('%s') > 2.5 " %  ( GoodMuons_Selection.outputLocation() + "/Particles" ) 
-    ) ,
-    ##
-    RequiredSelection  = GoodMuons_Selection 
-    )
-
-
-## helper selection of 'tight' muons 
-_TightMuons = FilterDesktop (
-    ##
-    "TightMuForTriMuons"  ,
-    ##
-    Code = tightmuoncuts 
-    )
-
-## make (pre)-selection
-TightMuons_Selection = Selection (
-    ##
-    "TightMuonsForTriMuons"             ,
-    ##
-    Algorithm          = _TightMuons    ,
-    ##
-    RequiredSelections = [ GoodMuons_Selection ]
-    )
-
-## require at least 3 good muons
-ThreeTightMuons_Selection = EventSelection (
-    ##
-    LoKi__VoidFilter (
-    "ThreeTightMuons"  ,
-    Code = " CONTAINS('%s') > 2.5 " %  ( TightMuons_Selection.outputLocation() + "/Particles" ) 
-    ) ,
-    ##
-    RequiredSelection  = TightMuons_Selection 
-    )
-
-_Tau2ThreeMu = CombineParticles (
-    ##
-    "CombineTau2ThreeMuons" ,
-    ##
-    DecayDescriptor  = " [ tau+ -> mu+ mu+ mu- ]cc" ,
-    ##
-    Preambulo        = _Preambulo , 
-    ## 
-    DaughtersCuts    = {
-    'mu+'  : muoncuts 
-    } ,
-    ## 
-    CombinationCut  = """
-    ( ADAMASS('tau+') < 250 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
-    """ , ## wide mass-combination + PT-cuts 
-    ##
-    MotherCut       = """
-    ( chi2vx < 25 ) &
-    ( ctau   > 40 * micrometer )
-    """ 
-    )
-
-## make selections
-Tau2ThreeMu_Selection  = Selection (
-    ##
-    "SelTau2ThreeMu" ,
-    ##
-    Algorithm          = _Tau2ThreeMu  ,
-    ##
-    RequiredSelections = [ ThreeGoodMuons_Selection ] 
-    )
-
-_Bc2ThreeMu = CombineParticles (
-    ##
-    "CombineBc2ThreeMuons" ,
-    ##
-    DecayDescriptor = " [B_c+ -> mu+ mu+ mu- ]cc" ,
-    ##
-    Preambulo        = _Preambulo + [
-    ## mass-windows :
-    "mPsi1S = PDGM('J/psi(1S)' ) " , 
-    "mPsi2S = PDGM(  'psi(2S)' ) " ,
-    "l1S    = mPsi1S - 200 * MeV " , 
-    "h1S    = mPsi1S + 200 * MeV " , 
-    "l2S    = mPsi2S - 200 * MeV " , 
-    "h2S    = mPsi2S + 200 * MeV " , 
-    "dm1    = in_range ( l1S , AM13 , h1S ) | in_range ( l2S , AM13 , h2S ) " , 
-    "dm2    = in_range ( l1S , AM23 , h1S ) | in_range ( l2S , AM23 , h2S ) " 
-    ] ,
-    ##
-    DaughtersCuts    = {
-    'mu+'  : muoncuts 
-    } ,
-    ## 
-    CombinationCut  = """
-    ( l1S < AM ) & AHASCHILD( PT > 1.0 * GeV ) & ( dm1 | dm2 )
-    """,
-    ##
-    MotherCut       = " ( chi2vx < 25 ) & ( ctauBc > 20 * micrometer ) " 
-    )
-
-## make selections
-Bc2ThreeMu_Selection  = Selection (
-    ##
-    "SelBc2ThreeMu" ,
-    ##
-    Algorithm          = _Bc2ThreeMu  ,
-    ##
-    RequiredSelections = [ ThreeGoodMuons_Selection ]
-    )
-
-Selections = [
-    GoodMuons_Selection        ,
-    ThreeGoodMuons_Selection   ,
-    TightMuons_Selection       ,
-    ThreeTightMuons_Selection  ,
-    Tau2ThreeMu_Selection      , 
-    Bc2ThreeMu_Selection    
-    ]
-
-# =============================================================================
-## build the stripping lines 
-# =============================================================================
-
-from StrippingConf.StrippingLine import StrippingLine
-
-hlt = " HLT_PASS_RE('Hlt.*(MicroBias|Muon|MuMu|DiMu).*Decision') "
-
-Tau2ThreeMu_Line = StrippingLine (
-    "Tau2ThreeMu" ,
-    HLT     = hlt ,
-    algos   = [ Tau2ThreeMu_Selection     ]
-    )
-
-Bc2ThreeMu_Line  = StrippingLine (
-    "Bc2ThreeMu"  ,
-    HLT     = hlt ,
-    algos   = [ Bc2ThreeMu_Selection      ]
-    )
-
-ThreeMuons_Line  = StrippingLine (
-    "ThreeMuons"  ,
-    HLT     = hlt ,
-    algos   = [ ThreeTightMuons_Selection ]
-    )
-
-Lines = [
-    ThreeMuons_Line  ,
-    Bc2ThreeMu_Line  ,
-    Tau2ThreeMu_Line 
-    ]
+    #
+    }
 
 # =============================================================================
 ## @class  StrippingTriMuonsConf
@@ -333,14 +187,345 @@ Lines = [
 #  @date 2010-09-26
 class StrippingTriMuonsConf(object) :
     """
-    Helper class required by Tom & Greig
+    Helper class to confugiure ``Tri-muon''-lines 
     """
-    
-    def __init__   ( self , config = {} ) : pass
-    def lines      ( self )               : return Lines
-    def selections ( self )               : return Selections 
+    __configuration_keys__ = _default_configuration_ 
 
-   
+    ## get the default configuration 
+    @staticmethod
+    def defaultConfiguration( key = None ) :
+        """
+        Get the defualt configurtaion
+        
+        >>> conf = StrippingTriMuonsConf.defaultConfiguration()
+        
+        
+        Get the elements of default configurtaion:
+        
+        >>> prescale = StrippingTriMuonsConf.defaultConfiguration( '3mu-Prescale' )
+        """
+        from copy import deepcopy
+        _config = deepcopy ( _default_configuration_ )
+        if key : return _config[ key ]
+        return _config
+
+    ## constructor:
+    def __init__   ( self , config = {} ) :
+        """
+        constructor
+        """
+        from copy import deepcopy
+        _config   = deepcopy ( config )
+        
+        keys = _config.keys()
+        for key in keys :
+            
+            if not key in _default_configuration_ :
+                raise KeyError("Invalid key is specified: '%s'" % key )
+            
+            val = _config[key]
+            if val != _default_configuration_ [ key ] : 
+                log.warning ('StrippingTriMuons: new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                
+        self._goodMuonCuts  = _config.pop ( 'GoodMuons'       , _default_configuration_ [ 'GoodMuons'    ] )
+        self._tightMuonCuts = _config.pop ( 'TightMuons'      , _default_configuration_ [ 'TightMuons'   ] )
+        self._hlt           = _config.pop ( 'HLT'             , _default_configuration_ [ 'HLT'          ] )
+        
+        self._3mu_prescale  = _config.pop ( '3mu-Prescale'    , _default_configuration_ [ '3mu-Prescale' ] )
+        self._Bc_prescale   = _config.pop ( 'Bc-Prescale'     , _default_configuration_ [ 'Bc-Prescale'  ] )
+        self._tau_prescale  = _config.pop ( 'Tau-Prescale'    , _default_configuration_ [ 'Tau-Prescale' ] )
+
+        self._preambulo     = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'    ] )
+
+        if _config :
+            raise KeyError('Invalid keys are specified for configuration: %s ' % _config.keys() )
+
+
+    # =========================================================================
+    ## get all striping lines 
+    def lines ( self ) :
+        """
+        Get all stripping lines 
+        """
+        
+        if hasattr ( self , '_Lines' ) : return self._Lines
+
+        from StrippingConf.StrippingLine import StrippingLine
+        
+        self._Lines = [
+            #
+            ## 3 muons
+            #
+            StrippingLine (
+            'ThreeMuons'                  ,
+            HLT      = self._hlt          ,
+            prescale = self._3mu_prescale ,              
+            algos    = [ self.threeTightMuons() ]
+            ) ,
+            #
+            ## Bc -> 3mu 
+            #
+            StrippingLine (
+            "Bc2ThreeMu"                  ,
+            HLT      = self._hlt          ,
+            prescale = self._Bc_prescale  ,
+            algos    = [ self.Bc () ]
+            ) ,            
+            #
+            ## tau -> 3mu 
+            #
+            StrippingLine (
+            "Tau2ThreeMu"                 ,
+            HLT      = self._hlt          ,
+            prescale = self._tau_prescale ,
+            algos    = [ self.tau () ]
+            )            
+            ]
+        
+        return self._Lines 
+    
+    ## get the selections 
+    def selections ( self ) :
+        
+        if hasattr ( self , '_Selections' ) : return self._Selections
+        
+        self._Selections =  [ self.goodMuons       () ,
+                              self.tightMuons      () ,
+                              self.threeGoodMuons  () ,
+                              self.threeTightMuons () ,
+                              self.Bc              () ,
+                              self.tau             () ]
+        
+        return self._Selections
+    
+    
+    def goodMuonCuts   ( self ) : return self._goodMuonCuts
+    def tightMuonCuts  ( self ) : return self._tightMuonCuts
+    def hlt            ( self ) : return self._hlt
+    def preambulo      ( self ) : return self._preambulo 
+    
+    
+    # =========================================================================
+    # get good muons 
+    # =========================================================================
+    def goodMuons      ( self ) :
+        """
+        Get selection for good muons 
+        """
+        if hasattr ( self , 'GoodMuons_Selection' ) :
+            return self.GoodMuons_Selection
+        
+        _LooseMuons      = AutomaticData ( Location = "Phys/StdLooseMuons" )
+        
+        ## helper selection of 'good' muons 
+        _GoodMuons = FilterDesktop (
+            ##
+            "GoodMuForTriMuons"  ,
+            ##
+            Code = self.goodMuonCuts() 
+            )
+        
+        ## make (pre)-selection
+        self.GoodMuons_Selection = Selection (
+            ##
+            "GoodMuonsForTriMuons"                 ,
+            ##
+            Algorithm          = _GoodMuons    ,
+            ##
+            RequiredSelections = [ _LooseMuons ]
+            )
+        
+        return self.GoodMuons_Selection
+
+    # =========================================================================
+    # get three good muons 
+    # =========================================================================
+    def threeGoodMuons      ( self ) :
+        """
+        Get three good muons 
+        """
+        if hasattr ( self , 'ThreeGoodMuons_EventSelection' ) :
+            return self.ThreeGoodMuons_EventSelection
+        
+        _goodmu = self.goodMuons() 
+        ## require at least 3 good muons
+        self.ThreeGoodMuons_EventSelection = EventSelection (
+            ##
+            LoKi__VoidFilter (
+            "ThreeGoodMuons"  ,
+            Code = " CONTAINS('%s') > 2.5 " %  ( _goodmu.outputLocation() + "/Particles" ) 
+            ) ,
+            ##
+            RequiredSelection  = _goodmu
+            )
+        
+        return self.ThreeGoodMuons_EventSelection
+    
+
+    # =========================================================================
+    # get good muons 
+    # =========================================================================
+    def tightMuons ( self ) :
+        """
+        Get tight  muons 
+        """
+        if hasattr ( self , 'TightMuons_Selection' ) :
+            return self.TightMuons_Selection
+        
+        ## helper selection of 'tight' muons 
+        _TightMuons = FilterDesktop (
+            ##
+            "TightMuForTriMuons"  ,
+            ##
+            Code = self.tightMuonCuts() 
+            )
+        
+        ## make selection
+        self.TightMuons_Selection = Selection (
+            ##
+            "TightMuonsForTriMuons"             ,
+            ##
+            Algorithm          = _TightMuons    ,
+            ##
+            ## RequiredSelections = [ self.goodMuons() ]
+            RequiredSelections = [ self.threeGoodMuons() ]
+            )
+
+        return self.TightMuons_Selection
+    
+    # =========================================================================
+    # get three tight muons 
+    # =========================================================================
+    def threeTightMuons      ( self ) :
+        """
+        Get three tight muons 
+        """
+        if hasattr ( self , 'ThreeTightMuons_Selection' ) :
+            return self.ThreeTightMuons_Selection
+        
+        _tightmu = self.tightMuons() 
+        ## require at least 3 good muons
+        if not hasattr ( self , 'ThreeTightMuons_EventSelection' ) :
+            self.ThreeTightMuons_EventSelection = EventSelection (
+                ##
+                LoKi__VoidFilter (
+                "ThreeTightMuons"  ,
+                Code = " CONTAINS( '%s' ) > 2.5 " %  ( _tightmu.outputLocation() + "/Particles" ) 
+                ) ,
+                ##
+                RequiredSelection  = _tightmu
+                )
+            
+        ## helper selection, essentially it is just the cloner of 'tight' muons 
+        _ThreeTightMuons = FilterDesktop (
+            ##
+            "ThreeTightMuForTriMuons"  ,
+            ##
+            Code = ' ALL '
+            )
+        
+        ## make the final selection
+        self.ThreeTightMuons_Selection = Selection (
+            ##
+            "ThreeTightMuonsForTriMuons"             ,
+            ##
+            Algorithm          = _ThreeTightMuons    ,
+            ##
+            RequiredSelections = [ self.ThreeTightMuons_EventSelection ]
+            )
+        return self.ThreeTightMuons_Selection
+        ## return self.ThreeTightMuons_EventSelection
+
+    
+    # =========================================================================
+    # get tau -> 3mu 
+    # =========================================================================
+    def tau ( self ) :
+        """
+        get tau -> 3mu 
+        """
+        
+        if hasattr ( self , 'Tau2ThreeMu_Selection' ) : return self.Tau2ThreeMu_Selection
+        
+        _Tau2ThreeMu = CombineParticles (
+            ##
+            "CombineTau2ThreeMuons" ,
+            ##
+            DecayDescriptor  = " [ tau+ -> mu+ mu+ mu- ]cc" ,
+            ##
+            Preambulo        = self.preambulo() , 
+            ## 
+            ## 
+            CombinationCut  = """
+            ( ADAMASS('tau+') < 250 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+            """ , ## wide mass-combination + PT-cuts 
+            ##
+            MotherCut       = """
+            ( chi2vx < 25 ) &
+            ( ctau   > 40 * micrometer )
+            """ 
+            )
+        
+        ## make selections
+        self.Tau2ThreeMu_Selection  = Selection (
+            ##
+            "SelTau2ThreeMu" ,
+            ##
+            Algorithm          = _Tau2ThreeMu  ,
+            ##
+            RequiredSelections = [ self.threeGoodMuons() ] 
+            )
+        ##
+        return self.Tau2ThreeMu_Selection
+
+    # =========================================================================
+    # get Bc -> ( ``psi'' -> mu mu) mu nu 
+    # =========================================================================
+    def Bc ( self ) :
+        """
+        Get Bc -> ( ``psi'' -> mu mu) mu nu 
+        """
+
+        if hasattr ( self , 'Bc2ThreeMu_Selection' ) : return self.Bc2ThreeMu_Selection 
+        
+        _Bc2ThreeMu = CombineParticles (
+            ##
+            "CombineBc2ThreeMuons" ,
+            ##
+            DecayDescriptor = " [B_c+ -> mu+ mu+ mu- ]cc" ,
+            ##
+            Preambulo        = self.preambulo() + [
+            ## mass-windows :
+            "mPsi1S = PDGM('J/psi(1S)' ) " , 
+            "mPsi2S = PDGM(  'psi(2S)' ) " ,
+            "l1S    = mPsi1S - 200 * MeV " , 
+            "h1S    = mPsi1S + 200 * MeV " , 
+            "l2S    = mPsi2S - 200 * MeV " , 
+            "h2S    = mPsi2S + 200 * MeV " , 
+            "dm1    = in_range ( l1S , AM13 , h1S ) | in_range ( l2S , AM13 , h2S ) " , 
+            "dm2    = in_range ( l1S , AM23 , h1S ) | in_range ( l2S , AM23 , h2S ) " 
+            ] ,
+            ##
+            CombinationCut  = """
+            ( l1S < AM ) & AHASCHILD( PT > 1.0 * GeV ) & ( dm1 | dm2 )
+            """,
+            ##
+            MotherCut       = " ( chi2vx < 25 ) & ( ctauBc > 20 * micrometer ) " 
+            )
+        
+        ## make selections
+        self.Bc2ThreeMu_Selection  = Selection (
+            ##
+            "SelBc2ThreeMu" ,
+            ##
+            Algorithm          = _Bc2ThreeMu  ,
+            ##
+            RequiredSelections = [ self.threeGoodMuons() ] 
+            )
+        
+        return self.Bc2ThreeMu_Selection
+
+    
 # =============================================================================
 if '__main__' == __name__ :
 
@@ -348,11 +533,19 @@ if '__main__' == __name__ :
     print __doc__
     print ' Author :  %s' % __author__
     print ' Date   :  %s' % __date__
-    print ' The output locations : '
-    for l in Lines :
-        print ' \t ', l.outputLocation  () 
+    
     print 80*'*'
-        
+    print ' The default configuration : '
+    for key in _default_configuration_ :
+        print '  %s : %s ' % ( key ,_default_configuration_ [ key ] )  
+    print 80*'*'
+    conf = StrippingTriMuonsConf( config = {} ) 
+    print ' The output locations : '
+    for l in conf.lines()      : 
+        print ' \t ', l.outputLocation  ()         
+    for l in conf.selections() : 
+        print ' \t ', None if not hasattr ( l , 'outputLocation') else l.outputLocation ()         
+    print 80*'*'
 
 # =============================================================================
 # The END 
