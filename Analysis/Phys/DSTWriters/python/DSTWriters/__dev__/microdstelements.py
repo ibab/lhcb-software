@@ -64,15 +64,18 @@ class CloneParticleTrees(MicroDSTElement) :
         confList = ConfigurableList(sel)
         setCloneFilteredParticlesToTrue( confList.flatList() )
 
-        return cloner
+        return [cloner]
 
 class ClonePVs(MicroDSTElement) :
     def __call__(self, sel) :
-        from Configurables import CopyPrimaryVertices
-        cloner=CopyPrimaryVertices(self.personaliseName(sel,
-                                                        'CopyPrimaryVertices'))
-        self.setOutputPrefix(cloner)
-        return [cloner]
+        from Configurables import CopyPrimaryVertices, CopyPVWeights
+        clonePV=CopyPrimaryVertices(self.personaliseName(sel,
+                                                         'CopyPrimaryVertices'))
+        self.setOutputPrefix(clonePV)
+        cloneWeights = CopyPVWeights(self.personaliseName(sel,
+                                                          'CopyPVWeights'))
+        self.setOutputPrefix(cloneWeights)
+        return [clonePV, cloneWeights]
 
 class CloneMCInfo(MicroDSTElement) :
     """

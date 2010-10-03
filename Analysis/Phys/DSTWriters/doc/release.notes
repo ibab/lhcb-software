@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-10-03 - Juan Palacios
+ - DSTWriters.__dev__.microdstelements: ClonePVs now copies PV weights vectors.
+
 ! 2010-09-29 - Juan Palacios
  - python/DSTWriters/__dev__/microdst.py
   . MicroDSTWriter defaults shallow-copy ProtoParticles.
