@@ -4,6 +4,9 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2010-10-03 - Juan Palacios
+ - Add CopyPVWeights, to copy KeyedContainer<LHCb::WeightsVector>.
+
 ! 2010-09-28 - Juan Palacios
  - Add CopyParticle2TisTosDecisions algorithm.
   . Takes cloned Particles, HltDecReports, and creates a 
