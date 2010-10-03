@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: DstExplorer.py,v 1.2 2010-09-17 17:56:12 ibelyaev Exp $ 
+# $Id: DstExplorer.py,v 1.3 2010-10-03 16:20:51 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -43,7 +43,7 @@
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-09-17 17:56:12 $
+#  Last modification $Date: 2010-10-03 16:20:51 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
@@ -77,14 +77,14 @@ Usage:
        >>> run(1)
        >>> ls('/Event') 
 
-Last modification $Date: 2010-09-17 17:56:12 $
+Last modification $Date: 2010-10-03 16:20:51 $
                by $Author: ibelyaev $
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
@@ -181,12 +181,17 @@ if '__main__' == __name__ :
            
     ## Reset all DaVinci sequences 
     def _action ( ) :
-        """ Reset all DaVinci sequences """
+        """
+        Reset all DaVinci sequences
+        """
+        from Gaudi.Configuration import allConfigurables 
         for seq in ( 'DaVinciInitSeq'      ,
                      'DaVinciMainSequence' ,
                      'DaVinciSequence'     ,
-                     'MonitoringSequence'  ) :
-            
+                     'MonitoringSequence'  ,
+                     'FilteredEventSeq'    ) :
+
+            if not seq in allConfigurables : continue 
             cSeq = getConfigurable( seq )
             if cSeq and hasattr ( cSeq , 'Members' ) : cSeq.Members = []
 
