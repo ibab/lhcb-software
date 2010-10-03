@@ -15,10 +15,10 @@ class StrippingBc2JpsiMuXConf(LHCbConfigurableUser):
     Definition of Bc->Jpsi(MuMu)MuX stripping 
     """
     __slots__ = {
-          'BcUpperMass'         : 7000  # MeV, Upper limit for partial rec. 
-        , 'BcLowerMass'         : 3000  # MeV, Lower limit for partial rec.
+          'BcUpperMass'         : 6400  # MeV, Upper limit for partial rec. 
+        , 'BcLowerMass'         : 3200  # MeV, Lower limit for partial rec.
         , 'BcVtxCHI2'           : 9     # adimentional
-        , 'BcPT'                : 0  # MeV, May incrase up to 5000 MeV if needed
+        , 'BcPT'                : 4000  # MeV, May incrase up to 5000 MeV if needed
         , 'JpsiMassWindow'      : 200   # MeV, 10 sigma, may decreased to 150
         , 'JpsiVtxCHI2'         : 9     # adimentional
         , 'MuonJpsiPT'          : 1200  # MeV 

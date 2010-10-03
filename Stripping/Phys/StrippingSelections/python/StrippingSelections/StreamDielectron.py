@@ -10,15 +10,18 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingBd2Kstaree
+from StrippingSelections.StrippingBd2eeKstar import Bd2eeKstarConf
+from StrippingSelections.StrippingBd2JpsieeKstar import Bd2JpsieeKstarConf
+
 #from StrippingSelections.StrippingBu2LLK       import StrippingBu2LLKConf
 from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf  
 from StrippingSelections.StrippingDiElectron   import StrippingDiElectronConf
 
 
 stream = StrippingStream("Dielectron")
-stream.appendLines( [ 
-    StrippingBd2Kstaree.line ,
+stream.appendLines( [
+    Bd2eeKstarConf().line,
+    Bd2JpsieeKstarConf().line,    
 #    StrippingBu2LLKConf().eeK(),
     StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
     StrippingBs2JpsieePhiConf().Signalbox_line(),

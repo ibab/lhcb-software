@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-03 - Jibo He
+ - python/StrippingSelections/StrippingBc2Jpsi*.py
+   . Cuts tightened
+ - python/StrippingSelections/StrippingBd2Kstaree.py
+   . Obsolete and removed 
+
 ! 2010-10-01 - Jibo He
  - python/StrippingSelections/StrippingDiMuonNew.py
    . First commit of new DiMuon lines discussed on FWG meeting of 08/09/2010, 

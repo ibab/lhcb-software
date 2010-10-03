@@ -18,10 +18,10 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
         'BcMassWindow'          : 400   # MeV, Mass window for Bc 
         , 'BcVtxCHI2'           : 9     # adimentional
         , 'BcPT'                : 0     # MeV, May incrase up to 5000 MeV if needed
-        , 'JpsiMassWindow'      : 100   # MeV, 10 sigma, may decreased to 150
+        , 'JpsiMassWindow'      : 100   # MeV, 
         , 'JpsiVtxCHI2'         : 9     # adimentional
-        , 'MuonJpsiPT'          : 800   # MeV 
-        , 'PionPT'              : 1200  # MeV
+        , 'MuonJpsiPT'          : 900   # MeV 
+        , 'PionPT'              : 1500  # MeV
         , 'PionIPCHI2'          : 4     # adimentional
         , 'JpsiIPCHI2'          : -1    # adimentional, choose one  
         , 'MuonIPCHI2'          : -1    # adimentional, choose one 
