@@ -4,6 +4,8 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v1r7 2010-10-03 ==================
+
 ! 2010-09-24 - Juan Palacios
  - Added options/davinci_strip_sdst.py, a script using the newest DST-writing 
    functionality. 
