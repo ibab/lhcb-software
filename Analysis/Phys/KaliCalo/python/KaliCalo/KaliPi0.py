@@ -41,24 +41,26 @@ from   KaliCalo.Configuration    import firstPass, secondPass
 import KaliCalo.Kali             as Kali 
 import KaliCalo.ZipShelve        as ZipShelve 
 
-
-## kali = firstPass (
-##     ## ``Physics''
-##     PtGamma          = 250 * MeV ,
-##     PtPi0            = 400 * MeV ,
-##     ## IO 
-##     NTuple           = "KaliPi0_Tuples_2k+10.root" , 
-##     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
-##     ## general 
-##     DataType         = '2010',
-##     PrintFreq        =  5000 ,
-##     EvtMax           =  -1 
-##     )
+##kali = firstPass (
+##    ## ``Physics''
+##    PtGamma          = 250 * MeV ,
+##    PtPi0            = 550 * MeV ,
+##    Filter           = \
+##    " ( 200 > monitor ( CONTAINS ( 'Raw/Spd/Digits'    ) , '#SPD'   , 1 ) ) & " + \
+##    " ( 2.  > monitor ( CONTAINS ( 'Rec/Vertex/Primary') , '#PV'    , 1 ) ) " ,
+##    ## IO 
+##    NTuple           = "KaliPi0_Tuples_2k+10.root" , 
+##    FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
+##    ## general 
+##    DataType         = '2010',
+##    PrintFreq        =  5000 ,
+##    EvtMax           =  -1
+##    )
 
 kali = secondPass (
     ## ``Physics''
     PtGamma          = 250 * MeV ,
-    PtPi0            = 400 * MeV ,
+    PtPi0            = 550 * MeV ,
     ## IO 
     NTuple           = "KaliPi0_Tuples_2k+10.root" , 
     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
@@ -85,12 +87,10 @@ if '__main__' == __name__ :
     gaudi = AppMgr()
     
     evtSel = gaudi.evtSel()
-    
     castor   =  'castor:/castor/cern.ch/user/d/dsavrina/Real2010/'
     pattern  =  'KaliPi0_20100404_%d.fmDST'
     evtSel.open ( [ castor + pattern % i for i in range(1,3) ] )
-
-    gaudi.run(20000)
+    gaudi.run(10)
     
     from   KaliCalo.Pi0HistoFit import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 

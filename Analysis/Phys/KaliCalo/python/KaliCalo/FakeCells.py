@@ -14,7 +14,7 @@ __date__    = " 2010-04-28 "
 __version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
 # ======================================================================
 from KaliCalo.Cells import CellID, GlobalRow, GlobalCol
-
+import math
 # ======================================================================
 ## the simplest 'cell-func'
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -52,7 +52,7 @@ class Rings(object) :
         return CellID ( cell.calo() ,
                         cell.area() ,
                         row , col   ) 
-    
+
 # =============================================================================
 ## "Rectangular rings"
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
