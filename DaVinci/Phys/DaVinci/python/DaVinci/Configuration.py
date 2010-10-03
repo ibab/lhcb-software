@@ -469,7 +469,7 @@ class DaVinci(LHCbConfigurableUser) :
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             if ( self.getProp("WriteFSR") ):
                 self._etcfsr(self.getProp("ETCFile"))
-            self.etc(self.getProp("ETCFile"))
+            self._etc(self.getProp("ETCFile"))
 
 ################################################################################
 # ETC
