@@ -1,0 +1,405 @@
+! $Id: release.notes,v 1.60 2010-09-06 21:28:21 jpalac Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.60 $
+! -----------------------------------------------------------------------------
+! Package     : Phys/KaliCalo
+! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
+! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
+! -----------------------------------------------------------------------------
+
+! 2010-10-03 - Daria Savrina
+
+ - added the default values for number of PV and SPD hits cuts to KaliPi0.py
+
+!========================== KaliCalo v4r4 2010-09-06 ==========================
+
+! 2010-08-09 - Vanya Belyaev
+
+ - Pi0.cpp reshuffle a bit order of lines
+
+!========================== KaliCalo v4r3 2010-08-20 ==========================
+
+! 2010-08-08 - Vanya Belyaev
+
+ - change the default upper edge for pi-hitsogram fits 
+
+ - add the optional possibility to apply pi0-veto for the first pass 
+
+ - add possibiilty to add even-filters for the first pass 
+
+ - add the example  of the first pass: 
+
+     KaliPi0_1.py 
+
+ - cmt/requirements 
+
+    version increment to v4r3 
+ 
+
+!========================== KaliCalo v4r2p2 2010-05-24 ========================
+
+!========================== KaliCalo v4r2p1 2010-05-09 ========================
+
+! 2010-05-09 - Vanya Belyaev
+
+ - python/KaiCalo/Coniguration.py
+
+    fix postConfigaction 
+
+ - cmt/requirements 
+   
+    version increment to v4r2p1 
+
+!========================== KaliCalo v4r2 2010-05-02 ==========================
+
+! 2010-05-02 - Vanya Belyaev
+
+ - one default fill only 3 hstograms
+
+  to work with 'mirror' bakcground one needs to create 
+     HistoMap as HistoMap ( background = True ) 
+
+  After bug fix with statistics, background is not needed anymore, 
+  and can be easily removed to speed up the program 
+
+! 2010-04-30 - Vanya Belyaev
+
+ - TreeTask.
+     fix a major bug 
+
+! 2010-04-29 - Vanya Belyaev
+
+ - use new 'recalngular-ring' fake cells 
+
+
+! 2010-04-28 - Vanya Belyaev
+
+ - allow to use calibration data-base:
+
+         KaliDB = {
+	        'name' : 'name-of-data-base' ,
+		      'ecal' : 'the key for ecal coefficients in DB' ,
+		      'prs'  : 'the key for prs  coefficients in DB' 
+	       }
+
+		the 'ecal' & 'Coefficients'    are exclusive, 
+		the 'prs'  & 'PrsCoefficients' are exclusive
+	  
+ - put the patch for the picking behaviour..
+
+! 2010-04-28 - Vanya Belyaev
+
+ - src/Destroyer.cpp
+
+    temporary patch for backporting ranges...
+
+
+! 2010-04-26 - Vanya Belyaev
+
+ - python/KaliCalo/KaliPi0.py 
+
+   . update the example to run on 2k+10 fmDSTs, produced  by Dasha 
+	
+
+! 2010-04-16 - Juan Palacios
+
+ - src/Destroyer.cpp
+
+  . Access Particle::Range instead of Particle::Container.
+
+ - cmt/requirements
+
+  . Increase to v4r2.
+
+! 2010-04-11 - Vanya Belyaev
+
+ - few minor correctios to ZipShelve and Kali
+
+! 2010-04-09 - Vanya Belyaev
+
+ - tiny correction in Pi0HistoFill.
+
+
+!========================== KaliCalo v4r1 2010-04-08 ==========================
+
+! 2010-04-06 - Vanya Belyaev
+ - many minor fixes 
+
+
+! 2010-04-01 - Vanya Belyaev
+
+ - many minor fixes for parallel processing 
+
+! 2010-03-28 - Vanya Belyaev
+
+ - Pi0.cpp
+
+    apply cut oon spd-2x3 
+
+
+! 2010-03-26 - Vanya Belyaev
+
+  - make more efficient fit for the histograms 
+    fix few errors 
+
+
+! 2010-03-25 - Vanya Belyaev
+ - there are serious problmems on Grid with LoadMAcro( "xxx.C++" ) 
+  thus: 
+   - remove root/*
+   - add dictionary
+
+! 2010-03-19 - Vanya Belyaev
+
+ - more fixes & developments
+
+
+! 2010-03-18 - Vanya Belyaev
+
+ - many minor fixes and developmemts for real data 
+
+ - cmt/requirements 
+
+     version increment to v4r1 
+
+
+! 2010-03-16 - Vanya Belyaev
+
+ - add the helper functions firstPass & secondPass
+
+   that returns already precionfigured instances of KaliPi0conf 
+
+ - improve a little bit the fitting procedure 
+
+! 2010-03-12 - Albert Puig
+
+ - Pi0.cpp
+     Corrected what was put in the ntuple as pi0 momentum. The sum of photon
+     momenta, as done previously, returned a bad pi0 momentum for background.
+     Changed to use p12 directly, which is correct in case of background.
+
+!========================== KaliCalo v4r0 2010-03-08 ==========================
+
+! 2010-02-25 - Vanya Belyaev
+
+ - significant redesign of the framework
+ - many changes into fitting 
+ - new  (T)selector 
+
+    see new example for calibration with 2k+9 data:  Pi0_2.py
+
+ - cmt/requirements
+
+    versio increment to v4r0 
+
+!========================== KaliCalo v3r3 2010-02-19 ==========================
+
+! 2010-02-19 - Vanya Belyaev
+
+ - fix few bugs , 
+   add MakeDir algorithm 
+   remove KaliUtils 
+
+  
+! 2010-02-18 - Vanya Belyaev
+
+ - Configurable.py
+   
+      Change the default data type & simulation flag.
+      From now the default values are:
+
+            Simulation : False 
+            DataType   : "2009:
+
+      Add possibility to re-recontruct charged particles, 
+      e.g. electrons using flag "RecoAll"
+
+ - Pi0.cpp
+
+     polish a bit the monitoringh stuff.
+     change the type of spd1/spd2 varibales (from 'int' to 'double')
+
+ - Destroyer.cpp
+ 
+      Fix stupid bug...
+
+ - cmt/requirements 
+
+     version increment to v3r3 
+
+
+!========================== KaliCalo v3r2 2010-02-02 ==========================
+
+! 2010-01-06 - Albert Puig
+
+- replaced "cosPhi" variable by distance between photons in cell units
+
+! 2009-12-15 - Albert Puig
+
+- changed energy units to MeV
+
+- changed PrintFreq to 10000 in KaliPi0.py
+
+- added property to make creating of monitoring histograms optional
+
+- added SPD information in Tuple
+
+- added 'grid' folder
+
+!========================== KaliCalo v3r1 2009-12-16 ==========================
+
+! 2009-12-12 - Dasha Savrina
+
+- changed the files for (pi0 -> gamma gamma) N-tuple processing
+
+! 2009-12-12 - Vanya Belyaev
+
+ - Pi0.cpp
+
+     fix a stupid typo in the method name (prevent the proper initialization)
+
+ - cmt/requirements 
+
+      version increment to v3r1 
+
+!========================== KaliCalo v3r0p2 2009-12-01 ========================
+
+! 2009-12-01 - Albert Puig
+
+- Added cosPhi between the two photons to the Pi0 ntuple.
+
+! 2009-11-30 - Vanya Belyaev
+
+ - remove printout to stderr from KaliPi0 example (bug #59009)
+
+! 2009-11-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r0p2
+
+! 2009-11-27 - Albert Puig
+
+- modified Configuration.py to adapt tp PhysDesktop behavior related to PV
+
+!========================== KaliCalo v3r0p1 2009-11-19 ========================
+
+! 2009-11-18 - Vanya Belyaev
+
+ - ElecPresel.cpp is disabled (hopefully temporarily) due to the 
+   compilation error for Win32 platform
+
+!========================== KaliCalo v3r0 2009-11-16 ==========================
+
+! 2009-11-01 - Vanya Belyaev
+
+ - remove the specialized algorithsm Pi02
+ - add property 'Mirror' to Kali::Pi0 algorithm      (Default is false ) 
+ - add property 'Mirror' to KaliPi0Conf Configurable (Default is False )
+
+
+
+! 2009-10-31 - Vanya Belyaev
+ 
+  - add single electrom selection code by Oleg 
+  - add pytho utilities and scripts 
+  - add algorithm to perform Albert's trick
+
+ - cmt/requirements 
+   version increment to v3r0 
+ 
+
+
+!========================== KaliCalo v2r2 2009-10-26 ==========================
+
+! 2009-10-25 - Vanya Belyaev
+
+ - fix (???) the problem with configurables 
+
+! 2009-10-23 - Vanya Belyaev
+
+ - remove the explicit imports from Configurables
+
+! 2009-10-15 - Patrick Koppenburg
+ - HltType -> Hlt
+
+! 2009-10-02 - Vanya BELYAEV
+
+ - MisCalibrate:
+
+     update for "new" LHCb  ( > v28r0 ) 
+
+ - cmt/requirmeents 
+
+     version increment to v2r2 
+
+!========================== KaliCalo v2r1 2009-10-02 ==========================
+
+! 2009-10-02 - Vanya BELYAEV
+  
+ - tag the verison, compatible with LHC_v28r0 
+  
+  but for the configurables "new" CaloReco is required 
+
+
+! 2009-10-01 - Vanya BELYAEV
+
+ - root/calib.f , calibr.kumac  
+  
+       old "TSelector" and kumac for N-tupel processing 
+
+     to be converted to ROOT 
+
+ - src/MisCailbrate 
+
+      make use of new parsing functions for CaloCellCode 
+    
+
+! 2009-09-28 - Vanya Belyaev
+
+ - src/Pi0Calibr.cpp: 
+
+     rename the algorithm:  LoKi::Kali_Pi0 -> Kali::Pi0 
+
+ - remove plain lines, use the regular Configurables, 
+	& improve the embedded documentation
+ 
+ - cmt/requirements
+
+   version increment to v2r1 
+
+!========================== KaliCalo v2r0 2009-09-18 ==========================
+
+! 2009-09-18 - Vanya BELYAEV
+
+ -  many minor fixes 
+
+! 2009-07-31 - Vanya  BELYAEV
+
+ - update the package for MC09
+
+   Two algorithms:
+
+     Pi0Calibr - fill n-tuple for pi0 calibration 
+                *AND* remove all "unused" digits for "(femto)KaliDst"
+
+     Kali::MisCalibrateCalo     
+               - simple algorithm to apply (mis)calibration coefficients
+                 to digits 
+
+    Configurtaion file:
+
+      python/KaliCalo/KailPi0.py 
+
+
+
+ - cmt/requirements
+    version incremen to v2r0 
+
+!========================== KaliCalo v1r0 2005-06-13 ===================
+! 2005-05-31 - Vanya BELYAEV
+ -  new package
+    now constains "iterative pi0" algorihtm and modified NeutralPPs... 
+    energy flow is expected *soon* 
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
