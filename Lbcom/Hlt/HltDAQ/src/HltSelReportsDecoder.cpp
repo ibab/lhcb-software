@@ -6,6 +6,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/HltSelReports.h"
+#include "Event/HltDecReports.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/RawEvent.h"
 
@@ -51,6 +52,8 @@ HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("InputRawEventLocation",
     m_inputRawEventLocation= LHCb::RawEventLocation::Default);
+  declareProperty("HltDecReportsLocation",
+    m_HltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
     m_hltANNSvc = 0;
 
@@ -81,6 +84,8 @@ StatusCode HltSelReportsDecoder::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+
+  HltDecReports* hltDecReports(0);  
 
   // get inputs
   if( !exist<RawEvent>(m_inputRawEventLocation) ){    
@@ -539,6 +544,31 @@ StatusCode HltSelReportsDecoder::execute() {
             break;
           }
         }
+        if( selName == "Dummy" ){          
+          // ANNSvc is not working; try HltDecReports as alternative to decode
+          if( !hltDecReports ){
+            if( exist<HltDecReports>( m_HltDecReportsLocation ) ){
+              hltDecReports = get<HltDecReports>( m_HltDecReportsLocation );
+            }
+          }
+          if( hltDecReports ){
+            unsigned int idu(id);          
+            for( HltDecReports::Container::const_iterator i=hltDecReports->begin();
+                 i!=hltDecReports->end(); ++i){
+              if( (*i).second.intDecisionID() == idu ){
+                selName = (*i).first;
+                break;              
+              }
+            }
+          }
+          if( selName == "Dummy" ){          
+            if( id == 1 ){
+              selName = "Hlt1Global";
+            } else if ( id == 2 ){
+              selName = "Hlt2Global";
+            }
+          }    
+        }        
         break;
       }
     }

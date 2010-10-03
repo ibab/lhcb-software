@@ -42,6 +42,8 @@ private:
   /// location of input
   StringProperty m_inputRawEventLocation;
 
+  /// location of HltDecReports (will not be used unless ANNSvc not working) 
+  StringProperty m_HltDecReportsLocation;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;

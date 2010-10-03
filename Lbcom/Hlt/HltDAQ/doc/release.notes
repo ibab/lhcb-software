@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-10-03 - Tomasz Skwarnicki
+ - Make HltSelReportsDecoder try decision_ID-decision_name mapping from HltDecReports
+   if ANNSvc fails to resolve the ID (this helps if HltDecReports was persisted with
+   strings i.e. not in RawBank)
+
 !========================== HltDAQ v2r3 2010-09-28 ============================
 ! 2010-09-24 - Roel Aaij
  - Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
