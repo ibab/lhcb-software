@@ -1,8 +1,16 @@
 ! -----------------------------------------------------------------------------
+! $Id:$
+! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiNumbers
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
+
+! 2010-10-03 - Vanya Belyaev
+
+ - add missing dictionary for void->vector<double>
+ - cmt/requirements
+   version increment to v9r3 
 
 !========================== LoKiNumbers v9r2 2010-08-25 =======================
 ! 2010-08-02 - Vanya Belyaev

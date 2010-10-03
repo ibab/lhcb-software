@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.14 2010-04-06 20:08:15 ibelyaev Exp $ 
+     * $Id$ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -29,6 +29,9 @@
   <class name = "LoKi::Functor<void,bool>"    />
   <class name = "LoKi::FunctorFromFunctor<void,double>" />
   <class name = "LoKi::FunctorFromFunctor<void,bool>"   />
+
+  <class name = "LoKi::Functor<void,std::vector<double> >"             />
+  <class name = "LoKi::FunctorFromFunctor<void,std::vector<double> >"  />
 
   <class name = "LoKi::Functors::Empty<double>"   />
   <class name = "LoKi::Functors::Size<double>"    />

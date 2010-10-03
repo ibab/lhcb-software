@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: sources.py,v 1.2 2009-12-06 18:24:22 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiNumbers/sources.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -11,7 +11,7 @@
 Few useful objects from LoKiNumbers library
 """
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ " 
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$ " 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
