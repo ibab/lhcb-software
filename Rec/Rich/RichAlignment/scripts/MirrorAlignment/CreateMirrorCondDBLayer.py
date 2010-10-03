@@ -44,6 +44,7 @@ field[ datetime.datetime(  2010,  8,    18,    9,    21,  32 ) ] = upAlign
 field[ datetime.datetime(  2010,  8,    29,   18,    26,   8 ) ] = dnAlign
 field[ datetime.datetime(  2010,  9,    22,   17,     1,  39 ) ] = upAlign
 
+# The CondDB paths to fill
 condPaths = [ "/Conditions/Rich1/Alignment/Mirrors.xml",
               "/Conditions/Rich2/Alignment/Mirrors.xml" ]
 
@@ -55,6 +56,7 @@ db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
 print "Created DB", dbFileName
 for path in condPaths: db.createNode(path)
 
+# Loop over the data and fill the DB slice
 for start in sorted(field.keys()):
     align = field[start]
     print start, align

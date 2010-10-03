@@ -193,7 +193,9 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
                         #extraopts.write("LHCbApp().CondDBtag = \"HEAD\"\n")
                         #mySandBox += ["databases/"+mainLHCbCond]
                         # Additional DB Slices
-                        dbFiles = ["NewRichCKRefIndexCalib"]
+                        dbFiles  = ["NewRichCKRefIndexCalib"]
+                        dbFiles += ["HPDAlignByFill-FullFitAverage"]
+                        dbFiles += ["NewMirrorAlignFieldPolarity"]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
                             mySandBox += ["databases/"+dbFile+".db"]
