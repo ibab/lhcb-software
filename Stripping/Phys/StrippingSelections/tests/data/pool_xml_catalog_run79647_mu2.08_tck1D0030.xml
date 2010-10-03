@@ -2495,4 +2495,11 @@
     <logical/>
   </File>
 
+  <File ID="9CD30530-27CF-DF11-B695-00304867340C">
+    <physical>
+      <pfn filetype="ROOT_All" name="79647.Muons.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

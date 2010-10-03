@@ -43,15 +43,15 @@
 #    - the Hlt-requirements: MicroBias or Muon-trigger
 #         HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 #
-#  Test with 100k events Reco05-Stripping09_SDSTs.py : 
-#   +-----------------------------+-----------+-----------+---------+--------+
-#   | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
-#   +-----------------------------+-----------+-----------+---------+--------+
-#   | StrippingSequenceStreamTest | 0.000360  |      36   |         |  1.029 | 
-#   | -- StrippingThreeMuons      | 0.000140  |      14   | 226.000 |  0.860 | 
-#   | -- StrippingBc2ThreeMu      | 0.000100  |      10   | 1.000   |  0.057 | 
-#   | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
-#   +-----------------------------+-----------+---------------------+--------+
+#  Test wuth RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py
+#  100k input events events, 63350 ``physics''-triggers
+# +----------------------+----------------+----------+-------------------------------------+
+# | Decision name        |    Rate [%]    | Accepted | Mult | ms/evt | Errs | Incds | Slow |
+# +----------------------+----------------+----------+------+--------+---------------------+
+# | StrippingThreeMuons  | 0.017 +- 0.005 |    11    | 3.273|  3.582 |   0  |    0  |  207 |
+# | StrippingBc2ThreeMu  | 0.033 +- 0.007 |    21    | 1.238|  0.061 |   0  |    0  |    0 |
+# | StrippingTau2ThreeMu | 0.032 +- 0.007 |    20    | 1.450|  0.056 |   0  |    0  |    0 |
+# +----------------------+----------------+----------+------+--------+---------------------+
 #
 #  Usage:
 #
@@ -109,15 +109,15 @@ Strip three-muon events:
          HLT_PASS_RE('Hlt.*(MicroBias|Muon).*Decision')
 
 
-   Test with 100k events Reco05-Stripping09_SDSTs.py : 
-   +-----------------------------+-----------+-----------+---------+--------+
-   | Decision name               |     Rate  |  Accepted |  Mult.  | <T>,ms |
-   +-----------------------------+-----------+-----------+---------+--------+
-   | StrippingSequenceStreamTest | 0.000360  |      36   |         |  1.029 | 
-   | -- StrippingThreeMuons      | 0.000140  |      14   | 226.000 |  0.860 | 
-   | -- StrippingBc2ThreeMu      | 0.000100  |      10   | 1.000   |  0.057 | 
-   | -- StrippingTau2ThreeMu     | 0.000120  |      12   | 1.083   |  0.051 | 
-   +-----------------------------+-----------+---------------------+--------+
+    Test wuth RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py
+    100k input events events, 63350 ``physics''-triggers
+   +----------------------+----------------+----------+-------------------------------------+
+   | Decision name        |    Rate [%]    | Accepted | Mult | ms/evt | Errs | Incds | Slow |
+   +----------------------+----------------+----------+------+--------+---------------------+
+   | StrippingThreeMuons  | 0.017 +- 0.005 |    11    | 3.273|  3.582 |   0  |    0  |  207 |
+   | StrippingBc2ThreeMu  | 0.033 +- 0.007 |    21    | 1.238|  0.061 |   0  |    0  |    0 |
+   | StrippingTau2ThreeMu | 0.032 +- 0.007 |    20    | 1.450|  0.056 |   0  |    0  |    0 |
+   +----------------------+----------------+----------+------+--------+---------------------+
 
  Usage:
 

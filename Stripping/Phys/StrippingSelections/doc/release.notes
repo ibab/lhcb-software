@@ -9,6 +9,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 
  - StrippingTriMuons.py
 
+     add performance table into doumentation 
+
+! 2010-10-03 - Vanya Belyaev
+
+ - StrippingTriMuons.py
+
     polishing of cuts & structure 
 
 ! 2010-10-03 - Jibo He
