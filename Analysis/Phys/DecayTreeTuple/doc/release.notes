@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r8 2010-10-10 ==================
+
 ! 2010-09-24 - Patrick Koppenburg
  - Restore ReoutingBits in TupleToolTrigger. They got lost somehow.
 
