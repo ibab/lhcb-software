@@ -47,6 +47,9 @@ use RawBankSizes      v2r8     Online
 use RootCnv           v1r0     Online
 use ROMon             v1r25    Online
 use ROLogger          v0r19    Online
+##macro Stomp_use "" CERN "Stomp v1r2 Online"
+##use $(Stomp_use)
+
 use Trending          v1r1     Online
 use UPI               v1r18    Online
 use UPIR              v1r2     Online
