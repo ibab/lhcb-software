@@ -6,6 +6,7 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r0 2010-10-04 ============
 
 ! 2010-09-30 - Marco Musy, Marc Grabalosa
   . updated cuts from D*munu, MC2010 is kept as an option in /root
