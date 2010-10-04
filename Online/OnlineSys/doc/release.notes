@@ -6,6 +6,14 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r43>2010-10-04 OnlineSys v4r44</A></H1>
+<PRE>
+   Based in Gaudi v21r11.
+   The project now compiles with icc.
+   For this reason all packages required some code changes
+   to fix existing warnings.
+</PRE>
+
 <H1><A NAME=v4r43>2010-07-30 OnlineSys v4r43</A></H1>
 <PRE>
    Based in Gaudi v21r10p1.

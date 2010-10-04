@@ -1,13 +1,21 @@
 #!/usr/bin/python
-import os, sys
+import os, sys, subprocess
+
+def printCmd(cmd):
+  #print cmd
+  pass
 
 def _exec(cmd):
-  print cmd
-  return os.popen(cmd)
+  printCmd(cmd)
+  p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  return p.stdout
+  ##return os.popen(cmd)
 
 def _exec3(cmd):
-  print cmd
-  return os.popen3(cmd)
+  printCmd(cmd)
+  p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,close_fds=True)
+  return (None,p.stdout,p.stderr)
+  ##return os.popen3(cmd)
 
 with_versions = None
 for arg in sys.argv:
@@ -19,8 +27,8 @@ for arg in sys.argv:
     sys.exit(0)
 
 
-lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
-curr_dir = os.popen('pwd').readlines()[0][:-1] ###os.getcwd()
+lines = _exec('cmt show uses | grep -v "#" | grep "use "').readlines()
+curr_dir = _exec('pwd').readlines()[0][:-1] ###os.getcwd()
 
 dir2 = curr_dir[0:curr_dir.rfind('/')]
 if with_versions: dir2 = dir2[0:dir2.rfind('/')-1]
@@ -65,7 +73,7 @@ for line in lines:
       trunk = vsn.replace('/tags/','/trunk/')
       #trunk = trunk[:trunk.rfind('/')]
       #print vsn, tags, trunk
-      lines = os.popen('svn list '+vsn).readlines()
+      lines = _exec('svn list '+vsn).readlines()
       l = len(lines)-1
       if l==1: last_tag=[lines[l][:-1]]
       if l==2: last_tag=[lines[l][:-1],lines[l-1][:-1]]
@@ -73,7 +81,7 @@ for line in lines:
       if l==4: last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1]]
       if l>4:  last_tag=[lines[l][:-1],lines[l-1][:-1],lines[l-3][:-1],lines[l-4][:-1],lines[l-5][:-1]]
     except OSError, X:
-      lines = os.popen('cvs status -v cmt/requirements').readlines()
+      lines = _exec('cvs status -v cmt/requirements').readlines()
       p = 0
       for line in lines:
         if p == 1:
@@ -87,9 +95,9 @@ for line in lines:
           p = 1
     if proto == 'svn':
       #print 'svn diff '+trunk+' '+tags+'/'+version
-      pipe = os.popen3('svn diff '+trunk+' '+tags+'/'+version)
+      pipe = _exec3('svn diff '+trunk+' '+tags+'/'+version)
     else:
-      pipe = os.popen3('cvs diff -r HEAD -r '+version)
+      pipe = _exec3('cvs diff -r HEAD -r '+version)
     diffs = pipe[1].readlines()
     new = pipe[2].readlines()
     changes = 0
