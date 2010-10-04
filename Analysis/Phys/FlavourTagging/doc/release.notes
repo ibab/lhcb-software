@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v12r0 2010-10-04 ==================
+
 ! 2010-09-30 - Marco Musy, Marc Grabalosa
   . updated cuts from D*munu, MC2010 is kept as an option 
 
