@@ -4,6 +4,8 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+!========================== MicroDSTAlgorithm v4r2 2010-10-04 =================
+
 ! 2010-10-03 - Juan Palacios
  - Add CopyPVWeights, to copy KeyedContainer<LHCb::WeightsVector>.
 
