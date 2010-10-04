@@ -7,9 +7,9 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS ==================================================================
-DaVinciInit                                                 SUCCESS 100 events processed
-DaVinciInit                                                 SUCCESS ==================================================================
+DaVinciInitAlg                                              SUCCESS ==================================================================
+DaVinciInitAlg                                              SUCCESS 100 events processed
+DaVinciInitAlg                                              SUCCESS ==================================================================
 """, stdout, result, causes, signature_offset = 1)
 countErrorLines({"FATAL":0})
 </text></argument>

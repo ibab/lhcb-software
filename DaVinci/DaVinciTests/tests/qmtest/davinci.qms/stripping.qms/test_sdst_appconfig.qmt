@@ -12,7 +12,7 @@
     <text>from Configurables import DaVinci; DaVinci().EvtMax=-1; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]; FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']</text>
 </set></argument>  <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS 199 events processed
+DaVinciInitAlg                                              SUCCESS 199 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 countErrorLines({"FATAL":0})
 bad_strings = ["WARNING rawEvent not found at location 'DAQ/RawEvent'", "WARNING L0DUFromRawAlg:: Unable to decode L0DU rawBank", "ERROR RichPIDPacker	Unknown packed data version"]

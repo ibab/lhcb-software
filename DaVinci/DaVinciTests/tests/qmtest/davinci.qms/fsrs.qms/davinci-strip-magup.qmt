@@ -12,7 +12,7 @@
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS 100 events processed
+DaVinciInitAlg                                              SUCCESS 100 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")
 countErrorLines({"FATAL" : 0})
 </text></argument> 
