@@ -1,3 +1,8 @@
+2010-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: set the default ACL for the User_release_area to be "system:anyuser l" 
+	and "cern:z5 rl" in order to enforce the CERN policy about public areas. 
+
 2010-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added support for new component in the CMTPROJECTPATH:

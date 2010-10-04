@@ -609,12 +609,13 @@ class LbLoginScript(SourceScript):
                 newdir = True
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
-                    os.system("fs setacl %s system:anyuser rl" % opts.userarea)
-                    self.addEcho(" --- with public access (readonly)")
+                    os.system("fs setacl %s system:anyuser l" % opts.userarea)
+                    os.system("fs setacl %s cern:z5 rl" % opts.userarea)
+                    self.addEcho(" --- with LHCb public access (readonly)")
                     self.addEcho(" --- use mkprivate to remove public access to the current directory")
                     self.addEcho(" --- use mkpublic to give public access to the current directory")
-                al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
-                al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
+                al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\; ; find . -type d -print -exec fs setacl {} cern:z5 l \\;"
+                al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\; ; find . -type d -print -exec fs setacl {} cern:z5 rl \\;"
         elif ev.has_key("User_release_area") :
             del ev["User_release_area"]
             log.debug("Removed User_release_area from the environment")
