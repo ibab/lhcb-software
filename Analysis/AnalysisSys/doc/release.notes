@@ -3,8 +3,10 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r11>2010-10-04 Analysis v4r11 </A></H1><PRE>
+
 ! 2010-09-18 - Rob Lambert
- - Removed packages which are now in the Stripping project
+ - Removed packages which are now in the Phys or Stripping projects
  - MvaPreSelB2DH, StrippingAlgs, StrippingConf, StrippingSelections
    DisplVertices, HighPtJets, PhysSelPython, CommonParticles
 
