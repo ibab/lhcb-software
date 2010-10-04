@@ -88,7 +88,7 @@ StatusCode L0SelReportsMaker::execute() {
   if( !exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
     return Warning( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );
   }
-  const L0DUReport* pL0DUReport = get<L0DUReport>( L0DUReportLocation::Default );
+  const L0DUReport* pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation );
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " L0 global decision= " << pL0DUReport->decision() << endmsg;
 
   // create output container and put it on TES
