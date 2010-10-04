@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 
+</PRE><H1><A NAME=v21r8>2010-10-04 Boole v21r8</A></H1><PRE>
+This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6, Lbcom v9r7
+ and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r*, AppConfig v3r*
+
 </PRE><H1><A NAME=v21r7>2010-08-26 Boole v21r7</A></H1><PRE>
 This version uses projects LCGCMT 58e, Gaudi v21r10p1, LHCb v31r5, Lbcom v9r6
  and SQLDDDB v5r34, ParamFiles v8r2, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
