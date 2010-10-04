@@ -32,7 +32,7 @@ from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02
 #from StrippingSelections.StrippingD02K3PiForCrossSection import StrippingD02K3PiForCrossSectionConf
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
+#from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
 #from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 #from StrippingSelections.StrippingDstarD02xxForCross import  StrippingDstarD02xxForCrossConf
@@ -112,7 +112,7 @@ stream.appendLines( [
 #        , StrippingD5h.lineD2KPPPP_B_LoosePID_Sig 
         , StrippingDstar_D2KPiPi0.lineRS
         , StrippingDstar_D2KPiPi0.lineWS
-        , StrippingDstarVeryLooseWithD02HHConf().line()
+#        , StrippingDstarVeryLooseWithD02HHConf().line()
         , StrippingD0forBXXConf().D02KPiforBXXLine()
         , StrippingD0forBXXConf().D02K3PiforBXXLine()
         , StrippingDforBSemiConf().DpforBSemiLine()
@@ -159,3 +159,7 @@ stream.appendLines ( Lines.lines() )
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
 stream.appendLines( StrippingD2hhConf().lines() )
+# Calubration line for bbar cross section in Bd->D*munu    from S.Vecchi 04-10-2010
+from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi  
+confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
+stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines ) 

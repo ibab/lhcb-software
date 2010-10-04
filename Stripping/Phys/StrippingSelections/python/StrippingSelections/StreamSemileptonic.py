@@ -10,8 +10,9 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingBd2DstarMuNu
+#from StrippingSelections import StrippingBd2DstarMuNu
 from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
+
 #from StrippingSelections import StrippingBsDsMuNu
 #superceded by B0q2DplusMuX
 from StrippingSelections import Strippingb2DMuX
@@ -22,8 +23,8 @@ from StrippingSelections.StrippingB2DMuNuX import StrippingB2DMuNuXConf
 
 stream = StrippingStream("Semileptonic")
 stream.appendLines( [ 
-		        StrippingBd2DstarMuNu.line, 
-		        StrippingBd2DstarMuNuLooseConf().line(), 
+		        #StrippingBd2DstarMuNu.line, 
+		        #StrippingBd2DstarMuNuLooseConf().line(), 
 		        #StrippingBsDsMuNu.line, 
                         StrippingB2DMuNuXConf().b2D0MuXLine(),
                         StrippingB2DMuNuXConf().b2DpMuXLine(),
@@ -46,3 +47,8 @@ from StrippingSelections import StrippingB0q2DplusMuX #B0q2DplusMuXAllLinesConf,
 confB0q2DplusMuX = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict)
 
 stream.appendLines( confB0q2DplusMuX.Lines ) #StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf(StrippingB0q2DplusMuX.confdict))
+
+# Lines from S.Vecchi # 04-10-2010
+from StrippingSelections import StrippingBd2DstarMuNu 
+confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
+stream.appendLines( confBd2DstarMuNu.Lines ) 
