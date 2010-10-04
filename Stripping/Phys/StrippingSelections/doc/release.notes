@@ -8,6 +8,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-10-04 - Johannes Albrecht
  - Bs2MuMuLines: redo mass cut on fitted mass, 
                  slightly enlarge JPsi mass window
+ - StrippingMuIDCalib: for Gaia: update selection for stripping 11
 
 ! 2010-10-04 - Jibo He
  - python/StrippingSelections/StrippingDiMuonNew.py
