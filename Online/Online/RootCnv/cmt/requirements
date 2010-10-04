@@ -1,6 +1,6 @@
 package RootCnv
 author Markus Frank
-version v1r0
+version v1r1
 
 branches  cmt dict src
 
