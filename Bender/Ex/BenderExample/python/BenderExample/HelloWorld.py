@@ -23,7 +23,7 @@
 #  @date 2006-10-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-08-26 13:34:18 $
+#  Last modification $Date: 2010-10-04 08:46:58 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
@@ -42,13 +42,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-26 13:34:18 $
+Last modification $Date: 2010-10-04 08:46:58 $
                by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2006-10-12 "
-__version__ = " Version $Revision: 1.11 $ "
+__version__ = " Version $Revision: 1.12 $ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 
@@ -121,7 +121,7 @@ if __name__ == '__main__' :
         "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
 
-    configure ( inpudata ) 
+    configure ( inputdata ) 
     ## run the job
     run(50)
     
