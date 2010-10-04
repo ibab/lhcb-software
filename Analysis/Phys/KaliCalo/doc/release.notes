@@ -7,9 +7,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
-! 2010-10-03 - Daria Savrina
+! 2010-10-04 - Daria Savrina
 
- - added the default values for number of PV and SPD hits cuts to KaliPi0.py
+ - added the default values for number of PV and SPD hits cuts to Configuration.py
 
 !========================== KaliCalo v4r4 2010-09-06 ==========================
 

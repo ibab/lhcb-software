@@ -181,7 +181,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## for first pass only
         , 'Pi0VetoDeltaMass'    : -1    ## mass-window for pi0-veto 
         , 'Pi0VetoChi2'         : -1    ## chi2        for pi0-veto
-        , 'Filter'              : ""    ## void filter to be used 
+        , 'Filter'              :" ( 200 > monitor ( CONTAINS ( 'Raw/Spd/Digits'    ) , '#SPD'   , 1 ) ) & " + \
+                                 " ( 2.  > monitor ( CONTAINS ( 'Rec/Vertex/Primary') , '#PV'    , 1 ) ) "        ## event filter
         ## mis/re-calibration
         , 'KaliDB'              : {}    ## the map of { 'dbase' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'}
         , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
