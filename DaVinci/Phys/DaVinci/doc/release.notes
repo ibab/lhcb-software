@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-04 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Fix problems with latest changes. Try to tidy up the horrible mess that
+    DaVinci() is.
+
 ! 2010-10-01 - Juan Palacios
  - python/DaVinci/Configuration.py
   . Change structure of sequences set up by DaVinci() such that 
