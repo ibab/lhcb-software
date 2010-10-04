@@ -180,6 +180,7 @@ def makeDefault(name) :
                                    "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuNoMuID.MotherCut = "(VFASPF(VCHI2/VDOF)<15) "\
+                              "& (ADMASS('B_s0') < 600*MeV )"\
                               "& (BPVDIRA > 0) "\
                               "& (BPVVDCHI2> 225)"\
                               "& (BPVIPCHI2()< 25) "
@@ -223,6 +224,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
                                         "& (AMAXDOCA('')<0.5*mm)"
 
     Bs2MuMuNoMuIDLoose.MotherCut = "(VFASPF(VCHI2/VDOF)<25) "\
+                                   "& (ADMASS('B_s0') < 600*MeV )"\
                                    "& (BPVDIRA > 0) "\
                                    "& (BPVVDCHI2> %(BFDChi2)s)"\
                                    "& (BPVIPCHI2()< %(BIPChi2)s) "% locals()
@@ -258,12 +260,13 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "\
                                     "& (MIPCHI2DV(PRIMARY)> 25.)"}
                                  
-    DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<60*MeV) "\
+    DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
                                    "& (AMAXDOCA('')<0.3*mm)"
 
     DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<15) "\
-                              "& (BPVDIRA > 0) "\
-                              "& (BPVVDCHI2>169)"
+                             "& (ADMASS('J/psi(1S)') < 100*MeV )"\
+                             "& (BPVDIRA > 0) "\
+                             "& (BPVVDCHI2>169)"
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
 
@@ -298,8 +301,9 @@ def makeDetachedJPsiLoose(name) :
                                    "& (AMAXDOCA('')<0.5*mm)"
 
     DetachedJPsiLoose.MotherCut = "(VFASPF(VCHI2)<25) "\
-                              "& (BPVDIRA > 0) "\
-                              "& (BPVVDCHI2>100)"
+                                  "& (ADMASS('J/psi(1S)') < 120*MeV )"\
+                                  "& (BPVDIRA > 0) "\
+                                  "& (BPVVDCHI2>100)"
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
 
@@ -329,10 +333,11 @@ def makePromptJPsi(name) :
     PromptJPsi.ReFitPVs = True
     PromptJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "}
     
-    PromptJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<60*MeV) "\
+    PromptJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
                                 "& (AMAXDOCA('')<0.3*mm)"
     
-    PromptJPsi.MotherCut = "(VFASPF(VCHI2)<15) "
+    PromptJPsi.MotherCut = "(VFASPF(VCHI2)<15) "\
+                           "& (ADMASS('J/psi(1S)') < 100*MeV )"
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
 
