@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! ======================= DisplVerticesMC v1r0 2010-10-04 ====================
+
 ! 2010-09-20 - Neal Gauvin
  - MC-dependent code of the Phys/DisplVertices v6r11 has been moved here.
 	Please refer to the releases.notes of this package for details about 
