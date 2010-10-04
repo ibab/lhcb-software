@@ -1,4 +1,4 @@
-#$Id: StrippingD0ForBXX.py,v 1.4 2010-09-03 02:09:28 lzhang Exp $
+#$Id$
 __author__ = ['Liming Zhang']
 __date__ = '20/05/2010'
 __version__ = '$Revision: 1.4 $'
@@ -10,20 +10,21 @@ from LHCbKernel.Configuration import *
 
 class StrippingD0forBXXConf(LHCbConfigurableUser):
     __slots__ = {
-        "PreScale"       : 0.02   # adimensiional
+         "PreScale"      : 0.02   # adimensiional        
         ,"MINIPCHI2"     : 9.0   # adimensiional
         ,"TRCHI2"        : 5.0   # adimensiional
         ,"KaonPIDK"      : 4.0   # adimensiional
+        ,"PionPIDK"      : 10.0   # adimensiional
         ,"KPiPT"         : 300.0  # MeV
-        ,"D0DIRA"        : 0.9    # adimensiional
+        ,"D0DIRA"        : 0.9999    # adimensiional
         ,"D0DIRAK3Pi"    : 0.9999    # adimensiional        
-        ,"FDCHI2"        : 64.0   # adimensiional
+        ,"FDCHI2"        : 100.0   # adimensiional
         ,"D0AMassWin"    : 100.0   # MeV
         ,"D0MassWin"     : 80.0  # MeV
-        ,"D0IP"          : 7.4    #mm
+        ,"D0IP"          : 0.2    #mm
         ,"D0K3PiIP"      : 0.2    #mm        
         ,"D0VCHI2DOF"    : 6.0   # adimensiional
-        ,"DDocaMax"      : 0.5    #mm
+        ,"DDocaChi2Max" : 20   #adimensiional
         }
 
 
@@ -32,9 +33,9 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
         _d02kpi = CombineParticles("D02KPiForBXX")
         _d02kpi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
         _d02kpi.DecayDescriptor = '[D0 -> pi+ K-]cc'
-        _d02kpi.CombinationCut = "(ADAMASS('D0') < %(D0AMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _d02kpi.CombinationCut = "(ADAMASS('D0') < %(D0AMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.getProps()
         _d02kpi.DaughtersCuts = { "pi+" : "(P>2.0*GeV)&  (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (PT > %(KPiPT)s *MeV) "\
-                                      "& (TRCHI2DOF < %(TRCHI2)s)" % self.getProps(),
+                                      "& (TRCHI2DOF < %(TRCHI2)s) & (PIDK< %(PionPIDK)s)" % self.getProps(),
                               "K+" :  "(P>2.0*GeV)&  (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (PT > %(KPiPT)s *MeV) "\
                                       "& (TRCHI2DOF < %(TRCHI2)s) & (PIDK> %(KaonPIDK)s)" % self.getProps() }
         _d02kpi.MotherCut = "(VFASPF(VCHI2/VDOF) < %(D0VCHI2DOF)s) & (SUMTREE( PT,  ISBASIC )>1400.*MeV)  & (BPVIP()< %(D0IP)s *mm)" \
@@ -46,7 +47,7 @@ class StrippingD0forBXXConf(LHCbConfigurableUser):
         _d02k3pi = CombineParticles("D02K3PiForBXX")
         _d02k3pi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
         _d02k3pi.DecayDescriptor = '[D0 -> K- pi+ pi- pi+]cc'
-        _d02k3pi.CombinationCut = " (ADAMASS('D0') < %(D0AMassWin)s  *MeV) & (APT>1.0*GeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))"  % self.getProps()
+        _d02k3pi.CombinationCut = " (ADAMASS('D0') < %(D0AMassWin)s  *MeV) & (APT>1.0*GeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))"  % self.getProps()
         _d02k3pi.DaughtersCuts = { "pi+" : "  (PT > %(KPiPT)s *MeV) "\
                                       "& (TRCHI2DOF < %(TRCHI2)s)" % self.getProps(),
                               "K+" :  "(P>2.0*GeV)&  (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (PT > %(KPiPT)s *MeV) "\

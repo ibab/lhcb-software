@@ -1,4 +1,4 @@
-# $Id: StrippingDForBSemi.py,v 1.2 2010-09-03 02:09:28 lzhang Exp $
+# $Id$
 __author__ = ['Liming Zhang']
 __date__ = '10/08/2010'
 __version__ = '$Revision: 1.2 $'
@@ -12,17 +12,18 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
     __slots__ = {
         "PreScale"       : 0.02
         ,"PreScaleLc"    : 0.04
-        ,"MINIPCHI2"     : 4.0    # adimensiional
+        ,"MINIPCHI2"     : 6.25    # adimensiional
         ,"TRCHI2"        : 5.0   # adimensiional
         ,"KaonPIDK"      : 4.0    # adimensiional
+        ,"PionPIDK"      : 10.0   # adimensiional
         ,"PT"            : 300.0  # MeV
-        ,"DsDIRA"        : 0.9    # adimensiional
-        ,"DsFDCHI2"      : 64.0   # adimensiional
+        ,"DsDIRA"        : 0.99    # adimensiional
+        ,"DsFDCHI2"      : 100.0   # adimensiional
         ,"DsMassWin"     : 80.0  # MeV
         ,"DsAMassWin"    : 100.0  # MeV
         ,"DsIP"          : 7.4    # mm
         ,"DsVCHI2DOF"    : 6.0    # adimensiional
-        ,"DDocaMax"      : 0.5    # mm        
+        ,"DDocaChi2Max" : 20   #adimensiional
         }
 
     def _Dp2KPiPiFilter( self ):
@@ -31,10 +32,10 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
         _dp2kpipi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
         _dp2kpipi.DecayDescriptors = [ '[D+ -> K- pi+ pi+]cc' ]
         _dp2kpipi.DaughtersCuts = { "pi+" : "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(PT)s *MeV)"\
-                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % self.getProps(),
+                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.getProps(),
                                     "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps() }
-        _dp2kpipi.CombinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV)  & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _dp2kpipi.CombinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV)  & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.getProps()
         _dp2kpipi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) & (ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
         return _dp2kpipi
@@ -45,10 +46,10 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
         _ds2kkpi.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons" ]
         _ds2kkpi.DecayDescriptors = [ '[D+ -> K+ K- pi+]cc' ]
         _ds2kkpi.DaughtersCuts = { "pi+" : "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(PT)s *MeV)"\
-                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % self.getProps(),
+                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.getProps(),
                                     "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps() }
-        _ds2kkpi.CombinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV)  & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+        _ds2kkpi.CombinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV)  & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.getProps()
         _ds2kkpi.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) & (DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                              "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                              "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
@@ -61,12 +62,12 @@ class StrippingDforBSemiConf(LHCbConfigurableUser):
         _lambdac.InputLocations = [ "Phys/StdLoosePions", "Phys/StdLooseKaons", "Phys/StdLooseProtons" ]
         _lambdac.DecayDescriptors = [ '[Lambda_c+ -> K- p+ pi+]cc' ]
         _lambdac.DaughtersCuts = { "pi+" : "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(PT)s *MeV)"\
-                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % self.getProps(),
+                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % self.getProps(),
                                     "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDK> %(KaonPIDK)s)" % self.getProps(),
                                     "p+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(PT)s *MeV) & (P>2.0*GeV) "\
-                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>%(KaonPIDK)s)" % self.getProps()}
-        _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ACUTDOCA( %(DDocaMax)s *mm, ''))" % self.getProps()
+                                    "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.getProps()}
+        _lambdac.CombinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.getProps()
         _lambdac.MotherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                             "& (BPVVDCHI2 > %(DsFDCHI2)s) & (BPVDIRA> %(DsDIRA)s) &   (BPVIP()< %(DsIP)s *mm)"  % self.getProps()
         return _lambdac

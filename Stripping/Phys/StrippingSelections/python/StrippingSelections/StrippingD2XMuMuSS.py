@@ -25,7 +25,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
 #        "MuonPIDK"      : -5.   ,#adimensional
 #        "MuonPIDmu"     : -5.   ,#adimensional
 #        "MuonPIDp"      : -5.   ,#adimensional
-        "MuonMINIPCHI2" : 4     ,#adminensional
+        "MuonMINIPCHI2" : 5     ,#adminensional
         #Xu
         #Pi Channel
         "PionTRCHI2"    : 10.   ,#adimensional
@@ -42,9 +42,9 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
         "KaonPIDK"      : -1.   ,#adimensional
         "KaonMINIPCHI2" : 9     ,#adminensional
         #D
-        "DVCHI2DOF"     : 10   ,#adminensional
-        "DFDCHI2"       : 25   ,#adminensional
-        "DDIRA"         : 0.999 ,#adimensional
+        "DVCHI2DOF"     : 8   ,#adminensional
+        "DFDCHI2"       : 64   ,#adminensional
+        "DDIRA"         : 0.9999 ,#adimensional
         'DMassWin'      : 200,   # MeV, high mass window
         'DMassLow'      : 1760   # MeV, high mass window
         }

@@ -3,14 +3,138 @@ __author__ = ['Phillip Urquijo']
 __date__ = '08/05/2010'
 __version__ = '$Revision: 1.4 $'
 
+
 '''
 B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 '''
+# =============================================================================
+##
+#  B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
+#
+#  Stripping lines for charmless semileptonic B+/B0/Bs decays
+#  to final states with hadron+muon, where the hadron is
+#  either a charged track or decays to 2 or 3 charged tracks.
+#  The charmless hadronic signal modes are:
+#
+#  B0  -> pi+ mu- nu, 
+#  Bs0 -> K+  mu- nu, 
+#  B-  -> rho0 mu- nu, 
+#  Bs0 -> K*+ mu- nu, 
+#
+#  The lines will lead to measurements of SU3 symmetry tests
+#  in B decays, and to the exclusive determination of Vub in
+#  B+/B0/Bs decays. The priority is toward Bs decay
+#  semileptonics.  
+#
+#  The nature of the topology leads to large backgrounds,
+#  hence large data samples are required to accurately
+#  determine the background. We anticipate that this analysis
+#  will require of order 1fb-1.
+#
+#  The lines are as follows with rates, timing and prescale respectively
+#  having used the dsts
+#  (RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py)
+#  for the October 5, 2010 Stripping Deadline, with requirements that the
+#  rate <0.05% and timing <1ms/evt.
+#
+#  LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
+#
+#  Pi line: B0->pi+ mu- nu signal line.
+#  Rate = 0.0265, Timing = 0.055 , Prescale = 0.1
+#
+#  Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
+#  Rate = 0.0142, Timing = 0.048, Prescale = 0.1
+#
+#  K line: Bs0->K+ mu- nu signal line.
+#  Rate = 0.0088, Timing = 0.037, Prescale = 0.1
+#
+#  K SS line:: Bs0->K+ mu+ nu Background to the K line.
+#  Rate = 0.0301, Timing = 0.042, Prescale = 0.1
+#
+#  Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
+#  Rate = 0.0336, Timing = 0.244, Prescale = 0.5
+#
+#  Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
+#  Rate = 0.0248, Timing = 0.089, Prescale=0.5
+#
+#  K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through rho(770).
+#  Rate = 0.0372, Timing = 0.494, Prescale=1
+#
+#  K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the rho line.
+#  Rate = 0.0106, Timing = 0.049, Prescale=0.5
+#
+# =============================================================================
+## 
+
+"""
+Stripping lines for charmless semileptonic B+/B0/Bs decays
+to final states with hadron+muon, where the hadron is
+either a charged track or decays to 2 or 3 charged tracks.
+The charmless hadronic signal modes are:
+
+B0  -> pi+ mu- nu, 
+Bs0 -> K+  mu- nu, 
+B+  -> rho0 mu+ nu, 
+Bs0 -> K*+ mu- nu, 
+
+The lines will lead to measurements of SU3 symmetry tests
+in B decays, and to the exclusive determination of Vub in
+B+/B0/Bs decays. The priority is toward Bs decay
+semileptonics.  
+
+The nature of the topology leads to large backgrounds,
+hence large data samples are required to accurately
+determine the background. We anticipate that this analysis
+will require of order 1fb-1.
+
+The lines are as follows with rates, timing and prescale respectively
+having used the dsts
+(RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py)
+for the October 5, 2010 Stripping Deadline, with requirements that the
+rate <0.05% and timing <1ms/evt.
+
+LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
+
+Pi line: B0->pi+ mu- nu signal line.
+Rate = 0.0265, Timing = 0.055 , Prescale = 0.1
+
+Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
+Rate = 0.0142, Timing = 0.048, Prescale = 0.1
+
+K line: Bs0->K+ mu- nu signal line.
+Rate = 0.0088, Timing = 0.037, Prescale = 0.1
+
+K SS line:: Bs0->K+ mu+ nu Background to the K line.
+Rate = 0.0301, Timing = 0.042, Prescale = 0.1
+
+Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
+Rate = 0.0336, Timing = 0.244, Prescale = 0.5
+
+Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
+Rate = 0.0248, Timing = 0.089, Prescale=0.5
+
+K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through rho(770).
+Rate = 0.0372, Timing = 0.494, Prescale=1
+
+K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the rho line.
+Rate = 0.0106, Timing = 0.049, Prescale=0.5
+
+
+Last modification $Date: 2010-10-04 $
+               by $Author: aborgia $
+"""
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers      import AutomaticData    , Selection
+from PhysSelPython.Wrappers      import EventSelection   , MergedSelection 
+from Configurables               import CombineParticles , FilterDesktop  , LoKi__VoidFilter
+from StrippingConf.StrippingLine import StrippingLine
+
+import logging
+
 
 class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     """
@@ -41,7 +165,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         "KaonTRCHI2"          : 6.   ,#adimensional
         "KaonP"               : 3000. ,#MeV
         "KaonPT"              : 800.  ,#MeV
-        "KaonPIDK"            : 2.    ,#adimensional
+        "KaonPIDK"            : 5.    ,#adimensional // JUST CHANGED THIS
         "KaonPIDmu"           : 0.    ,#adimensional
         "KaonPIDp"            : 0.    ,#adimensional
         #        "KaonMINIP"          : 0.05  ,#mm
@@ -82,6 +206,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         "KstarMuMassLowTight" : 1400. ,#MeV
         #B
         "BVCHI2DOF"           : 4     ,#adminensional
+        "BDIRA"               : 0.99,  #adminensional
         "BFDCHI2LOW"             : 15,   #adimensional
         "BFDCHI2HIGH"             : 225,   #adimensional
         "XMuMassUpper"        : 5500 # MeV
@@ -110,7 +235,17 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import DataOnDemand
         return StrippingLine('Bd2PiMuNuLine',
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
-                             prescale = 1.,
+                             prescale = 0.1,
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
                                       self._Bd2PiMuNu()
@@ -118,16 +253,36 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
     def PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.5,
+        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.1,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
                                       self._Bd2PiMuNuSS()])
 
     def Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bu2RhoMuNuLine', prescale = 1.,
+        return StrippingLine('Bu2RhoMuNuLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._Rho02PiPiFilter(),
                                       self._Bu2RhoMuNu()])
@@ -136,22 +291,52 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bu2RhoMuNuWSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._Rho02PiPiWSFilter(),
                                       self._Bu2RhoMuNuWS()])
     
     def K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuLine', prescale = 1.,
+        return StrippingLine('Bs2KMuNuLine', prescale = 0.1,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._Bs2KMuNu()])
     
     def KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.5,
+        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.1,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._Bs2KMuNuSS()])
@@ -160,6 +345,16 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bs2KstarMuNuLine', prescale = 1.,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._KS02PiPiFilter(),
                                       self._Kstar2KSPiFilter(),
@@ -169,18 +364,32 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bs2KstarMuNuSSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
+                             FILTER = {'Code' :
+                                       """
+                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
+                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiCore.functions    import *' ]
+                                       },
                              algos = [self._muonFilter(),
                                       self._KS02PiPiFilter(),
                                       self._Kstar2KSPiFilter(),
                                       self._Bs2KstarMuNuSS()])
+
+
 
     def _muonFilter( self ):
         from Configurables import FilterDesktop
         _mu = FilterDesktop("Mu_forB2XuMuNu",
                             InputLocations = ["Phys/StdLooseMuons"])
         _mu.Code = self._NominalMuSelection() % self.getProps()
+
         return _mu
 
+    
     def _pionFilter( self ):
         from Configurables import FilterDesktop
         _pi = FilterDesktop("Pi_forB2XuMuNu",
@@ -254,7 +463,8 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _PiMu.DecayDescriptors = ["[B~0 -> pi+ mu-]cc"]
         _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s)" % self.getProps()
+        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
+
         _PiMu.ReFitPVs = True
         return _PiMu
 
@@ -264,7 +474,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _PiMu.InputLocations=["Phys/Pi_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _PiMu.DecayDescriptors = ["[B~0 -> pi- mu-]cc"]
         _PiMu.CombinationCut = "(AM>%(PiMuMassLowLoose)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s)" % self.getProps()
+        _PiMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s ) & (BPVVDCHI2> %(BFDCHI2LOW)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _PiMu.ReFitPVs = True
         return _PiMu
 
@@ -275,7 +485,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _KMu.InputLocations=["Phys/K_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _KMu.DecayDescriptors = ["[B_s~0 -> K+ mu-]cc"]
         _KMu.CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _KMu.ReFitPVs = True
         return _KMu
     
@@ -285,7 +495,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _KMu.InputLocations=["Phys/K_forB2XuMuNu","Phys/Mu_forB2XuMuNu"]
         _KMu.DecayDescriptors = ["[B_s~0 -> K- mu-]cc"]
         _KMu.CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _KMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _KMu.ReFitPVs = True
         return _KMu
         
@@ -295,7 +505,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPi_forB2XuMuNu"]
         _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
         _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _RhoMu.ReFitPVs = True
         return _RhoMu
 
@@ -305,7 +515,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _RhoMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Rho02PiPiWS_forB2XuMuNu"]
         _RhoMu.DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"]
         _RhoMu.CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _RhoMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _RhoMu.ReFitPVs = True
         return _RhoMu
 
@@ -315,7 +525,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
         _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu-]cc"]
         _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _KstarMu.ReFitPVs = True
         return _KstarMu
 
@@ -325,7 +535,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         _KstarMu.InputLocations=["Phys/Mu_forB2XuMuNu","Phys/Kstar2KSPi_forB2XuMuNu"]
         _KstarMu.DecayDescriptors = ["[B_s~0 -> K*(892)+ mu+]cc"]
         _KstarMu.CombinationCut = "(AM>%(KstarMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self.getProps()
-        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )" % self.getProps()
+        _KstarMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self.getProps()
         _KstarMu.ReFitPVs = True
         return _KstarMu
     

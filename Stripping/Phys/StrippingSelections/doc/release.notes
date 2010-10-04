@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-04 - Liming Zhang
+- update StrippingB2DMuNuX.py StrippingD0ForBXX.py StrippingDForBSemi.py
+- update /StrippingB2XuMuNu.py StrippingD2XMuMuSS.py Alessandra Borgia
+
 ! 2010-10-04 - Andrew Powell
 - Modifications to python/StrippingSelections/StrippingV0ForPID.py
 	- Bug fix to DaughtersCuts
