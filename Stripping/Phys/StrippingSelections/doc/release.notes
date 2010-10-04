@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-04 - Andrew Powell
+- Modifications to python/StrippingSelections/StrippingV0ForPID.py
+	- Bug fix to DaughtersCuts
+	- Redefinition of prescales for Stripping 11 
+
 ! 2010-10-04 - Ulrich Kerzel
  - Introduce test file for CP working group Gamma/Loops to run all
    (approved) lines

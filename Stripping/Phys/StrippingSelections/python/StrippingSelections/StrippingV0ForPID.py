@@ -52,16 +52,17 @@ Usage of configurable is fairly trivial:
 
 Get the list of all configured lines for K0S :
 
-  lines_for_K0S     =  v0.K0S()
+  lines_for_K0S_LL     =  v0.K0S_LL_Lines()
+  lines_for_K0S_DD     =  v0.K0S_DD_Lines()
 
 Get the list of all configured lines for Lambda0 :
 
-  lines_for_Lambda0 =  v0.Lambda0 ()
-
+  lines_for_Lambda0_LL =  v0.Lam0_LL_Lines()
+  lines_for_Lambda0_DD =  v0.Lam0_DD_Lines()
 
 Get the list of *ALL* configured lines
     
-   all_lines =  v0.lines ()
+   all_lines =  v0.All_Lines()
     
 
 """
@@ -119,7 +120,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
     
        """
     __slots__ = { 
-        'TrackQuality'           : "TRCHI2DOF < 10"   ## Track quality selection 
+        'TrackQuality'           :  5                 ## Track Chi2/ndof quality 
         , 'VertexChi2'           :  9                 ## Cut on Vertex chi2-quality
         , 'DeltaMassK0S'         :  50 * MeV          ## Mass-window (half)-width for K0S 
         , 'DeltaMassLambda'      :  25 * MeV          ## Mass-window (half)-width for Lambda 
@@ -155,9 +156,9 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         , 'K0SBinC_MaxY_LL'      : 4.2                ## Max Y of K0S in BinC
         , 'K0SBinC_MinY_LL'      : 2.6                ## Min Y of K0S in BinC
         ##
-        , 'K0SBin1_LLPrescale'   : 0.026                ## Prescale K0S LL-combinations in Bin1
-        , 'K0SBin2_LLPrescale'   : 0.039                ## Prescale K0S LL-combinations in Bin2
-        , 'K0SBin3_LLPrescale'   : 0.155                ## Prescale K0S LL-combinations in Bin3
+        , 'K0SBin1_LLPrescale'   : 0.019                ## Prescale K0S LL-combinations in Bin1
+        , 'K0SBin2_LLPrescale'   : 0.029                ## Prescale K0S LL-combinations in Bin2
+        , 'K0SBin3_LLPrescale'   : 0.116                ## Prescale K0S LL-combinations in Bin3
         ##
         , 'Lambda0BinA_MaxPT_LL'     : 1000 * MeV         ## Max PT of Lambda0 in BinA
         , 'Lambda0BinA_MinPT_LL'     : 400 * MeV          ## Min PT of Lambda0 in BinA
@@ -171,9 +172,9 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         , 'Lambda0BinC_MaxY_LL'      : 3.8                ## Max Y of Lambda0 in BinC
         , 'Lambda0BinC_MinY_LL'      : 2.6                ## Min Y of Lambda0 in BinC
         ##
-        , 'Lambda0Bin1_LLPrescale'   : 0.04                ## Prescale Lambda0 LL-combinations in Bin1
-        , 'Lambda0Bin2_LLPrescale'   : 0.06                ## Prescale Lambda0 LL-combinations in Bin2
-        , 'Lambda0Bin3_LLPrescale'   : 0.30                ## Prescale K0S LL-combinations in Bin3
+        , 'Lambda0Bin1_LLPrescale'   : 0.128                ## Prescale Lambda0 LL-combinations in Bin1
+        , 'Lambda0Bin2_LLPrescale'   : 0.179                ## Prescale Lambda0 LL-combinations in Bin2
+        , 'Lambda0Bin3_LLPrescale'   : 0.893                ## Prescale K0S LL-combinations in Bin3
         ##
         , 'K0SBinA_MaxPT_DD'         : 1200 * MeV         ## Max PT of K0S in BinA
         , 'K0SBinA_MinPT_DD'         : 350 * MeV          ## Min PT of K0S in BinA
@@ -183,8 +184,8 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         , 'K0SBinB_MaxY_DD'          : 3.9                ## Max Y of K0S in BinB
         , 'K0SBinB_MinY_DD'          : 2.8                ## Min Y of K0S in BinB
         ##
-        , 'K0SBin1_DDPrescale'       : 0.06                ## Prescale K0S DD-combinations in Bin1   
-        , 'K0SBin2_DDPrescale'       : 0.24                ## Prescale K0S DD-combinations in Bin2   
+        , 'K0SBin1_DDPrescale'       : 0.028                ## Prescale K0S DD-combinations in Bin1   
+        , 'K0SBin2_DDPrescale'       : 0.113                ## Prescale K0S DD-combinations in Bin2   
         ##
         , 'Lambda0BinA_MaxPT_DD'     : 1500 * MeV         ## Max PT of Lambda0 in BinA
         , 'Lambda0BinA_MinPT_DD'     : 600 * MeV          ## Min PT of Lambda0 in BinA
@@ -197,8 +198,8 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         , 'Lambda0BinC_MaxY_DD'      : 3.3                ## Max Y of Lambda0 in BinC
         , 'Lambda0BinC_MinY_DD'      : 2.6                ## Min Y of Lambda0 in BinC
         ##
-        , 'Lambda0Bin1_DDPrescale'   : 0.15                ## Prescale Lambda0 DD-combinations in Bin1
-        , 'Lambda0Bin2_DDPrescale'   : 0.72                ## Prescale Lambda0 DD-combinations in Bin2
+        , 'Lambda0Bin1_DDPrescale'   : 0.134                ## Prescale Lambda0 DD-combinations in Bin1
+        , 'Lambda0Bin2_DDPrescale'   : 0.670                ## Prescale Lambda0 DD-combinations in Bin2
                 
         }
     
@@ -249,6 +250,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             Pions = DataOnDemand( Location = "Phys/StdNoPIDsPions" )
             _K0S = CombineParticles("StripK0S")
             _K0S.DecayDescriptor = "KS0 -> pi+ pi-"
+            _K0S.DaughtersCuts   = self._k0s_daughtersCuts ()
             _K0S.CombinationCut  = "AM < 1.0 * GeV " 
             _K0S.MotherCut       = self._k0s_motherCut()        
             _K0S.Preambulo       = self._preambulo()
@@ -279,6 +281,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             Pions = DataOnDemand( Location = "Phys/StdNoPIDsDownPions" )
             _K0S = CombineParticles("StripK0S_DD")
             _K0S.DecayDescriptor = "KS0 -> pi+ pi-"
+            _K0S.DaughtersCuts   = self._k0s_daughtersCuts () 
             _K0S.CombinationCut  = "AM < 1.0 * GeV " 
             _K0S.MotherCut       = self._k0s_motherCut()        
             _K0S.Preambulo       = self._preambulo()
@@ -310,6 +313,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             Protons = DataOnDemand( Location = "Phys/StdNoPIDsProtons" )
             _Lam0 = CombineParticles("StripLam0")
             _Lam0.DecayDescriptor = "[ Lambda0 -> p+ pi-]cc"
+            _Lam0.DaughtersCuts   = self._lam0_daughtersCuts () 
             _Lam0.CombinationCut  = "AM < 1.5 * GeV " 
             _Lam0.MotherCut       = self._lam0_motherCut()        
             _Lam0.Preambulo       = self._preambulo()
@@ -341,6 +345,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             Protons = DataOnDemand( Location = "Phys/StdNoPIDsDownProtons" )
             _Lam0 = CombineParticles("StripLam0_DD")
             _Lam0.DecayDescriptor = "[ Lambda0 -> p+ pi-]cc"
+            _Lam0.DaughtersCuts   = self._lam0_daughtersCuts () 
             _Lam0.CombinationCut  = "AM < 1.5 * GeV " 
             _Lam0.MotherCut       = self._lam0_motherCut()        
             _Lam0.Preambulo       = self._preambulo()
@@ -371,6 +376,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'K0S_LL_Bin1_Filter' ,
             Code = self._k0s_bin1Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _K0S_LL_Bin1_Filter.Preambulo += self._k0s_histos()
+            _K0S_LL_Bin1_Filter.Monitor = True
+            _K0S_LL_Bin1_Filter.HistoProduce = True
+            _K0S_LL_Bin1_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+            
         K0S_LL_Bin1 = Selection(
             "SelK0S_LL_Bin1",
             Algorithm = _K0S_LL_Bin1_Filter,
@@ -387,6 +403,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'K0S_LL_Bin2_Filter' ,
             Code = self._k0s_bin2Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _K0S_LL_Bin2_Filter.Preambulo += self._k0s_histos()
+            _K0S_LL_Bin2_Filter.Monitor = True
+            _K0S_LL_Bin2_Filter.HistoProduce = True
+            _K0S_LL_Bin2_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         K0S_LL_Bin2 = Selection(
             "SelK0S_LL_Bin2",
             Algorithm = _K0S_LL_Bin2_Filter,
@@ -404,6 +431,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'K0S_LL_Bin3_Filter' ,
             Code = self._k0s_bin3Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _K0S_LL_Bin3_Filter.Preambulo += self._k0s_histos()
+            _K0S_LL_Bin3_Filter.Monitor = True
+            _K0S_LL_Bin3_Filter.HistoProduce = True
+            _K0S_LL_Bin3_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         K0S_LL_Bin3 = Selection(
             "SelK0S_LL_Bin3",
             Algorithm = _K0S_LL_Bin3_Filter,
@@ -469,6 +507,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'K0S_DD_Bin1_Filter' ,
             Code = self._k0s_bin1Cut_DD()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _K0S_DD_Bin1_Filter.Preambulo += self._k0s_histos()
+            _K0S_DD_Bin1_Filter.Monitor = True
+            _K0S_DD_Bin1_Filter.HistoProduce = True
+            _K0S_DD_Bin1_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+
         K0S_DD_Bin1 = Selection(
             "SelK0S_DD_Bin1",
             Algorithm = _K0S_DD_Bin1_Filter,
@@ -485,6 +534,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'K0S_DD_Bin2_Filter' ,
             Code = self._k0s_bin2Cut_DD()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _K0S_DD_Bin2_Filter.Preambulo += self._k0s_histos()
+            _K0S_DD_Bin2_Filter.Monitor = True
+            _K0S_DD_Bin2_Filter.HistoProduce = True
+            _K0S_DD_Bin2_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         K0S_DD_Bin2 = Selection(
             "SelK0S_DD_Bin2",
             Algorithm = _K0S_DD_Bin2_Filter,
@@ -542,7 +602,6 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
 
         lines.append( self.K0S_DD_Bin1_Line() )
         lines.append( self.K0S_DD_Bin2_Line() )
-        #lines.append( self.K0S_DD_Bin3_Line() )
 
         return lines
     
@@ -555,6 +614,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'Lam0_LL_Bin1_Filter' ,
             Code = self._lam0_bin1Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _Lam0_LL_Bin1_Filter.Preambulo += self._lam0_histos()
+            _Lam0_LL_Bin1_Filter.Monitor = True
+            _Lam0_LL_Bin1_Filter.HistoProduce = True
+            _Lam0_LL_Bin1_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         Lam0_LL_Bin1 = Selection(
             "SelLam0_LL_Bin1",
             Algorithm = _Lam0_LL_Bin1_Filter,
@@ -571,6 +641,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'Lam0_LL_Bin2_Filter' ,
             Code = self._lam0_bin2Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _Lam0_LL_Bin2_Filter.Preambulo += self._lam0_histos()
+            _Lam0_LL_Bin2_Filter.Monitor = True
+            _Lam0_LL_Bin2_Filter.HistoProduce = True
+            _Lam0_LL_Bin2_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         Lam0_LL_Bin2 = Selection(
             "SelLam0_LL_Bin2",
             Algorithm = _Lam0_LL_Bin2_Filter,
@@ -588,6 +669,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'Lam0_LL_Bin3_Filter' ,
             Code = self._lam0_bin3Cut_LL()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _Lam0_LL_Bin3_Filter.Preambulo += self._lam0_histos()
+            _Lam0_LL_Bin3_Filter.Monitor = True
+            _Lam0_LL_Bin3_Filter.HistoProduce = True
+            _Lam0_LL_Bin3_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         Lam0_LL_Bin3 = Selection(
             "SelLam0_LL_Bin3",
             Algorithm = _Lam0_LL_Bin3_Filter,
@@ -653,6 +745,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'Lam0_DD_Bin1_Filter' ,
             Code = self._lam0_bin1Cut_DD()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _Lam0_DD_Bin1_Filter.Preambulo += self._lam0_histos()
+            _Lam0_DD_Bin1_Filter.Monitor = True
+            _Lam0_DD_Bin1_Filter.HistoProduce = True
+            _Lam0_DD_Bin1_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         Lam0_DD_Bin1 = Selection(
             "SelLam0_DD_Bin1",
             Algorithm = _Lam0_DD_Bin1_Filter,
@@ -669,6 +772,17 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             'Lam0_DD_Bin2_Filter' ,
             Code = self._lam0_bin2Cut_DD()
             )
+
+        if self.getProp( 'Monitor' ) :
+            _Lam0_DD_Bin2_Filter.Preambulo += self._lam0_histos()
+            _Lam0_DD_Bin2_Filter.Monitor = True
+            _Lam0_DD_Bin2_Filter.HistoProduce = True
+            _Lam0_DD_Bin2_Filter.PostMonitor = """ process ( switch ( LL , massLL , massDD ) )
+            >> process ( switch ( LL , pTLL , pTDD ) )
+            >> process ( switch ( LL , yLL , yDD ) )
+            >> EMPTY
+            """
+        
         Lam0_DD_Bin2 = Selection(
             "SelLam0_DD_Bin2",
             Algorithm = _Lam0_DD_Bin2_Filter,
@@ -726,7 +840,6 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
 
         lines.append( self.Lam0_DD_Bin1_Line() )
         lines.append( self.Lam0_DD_Bin2_Line() )
-        #lines.append( self.Lam0_DD_Bin3_Line() )
 
         return lines
 
@@ -746,7 +859,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
         Define 'DaughtersCuts' for K0S
         """
         cuts = {}
-        cuts [''] = " ( 2.0 * GeV < P) & ( ISLONG | ISDOWN ) & ( %(TrackQuality)s ) & ( MINIPCHI2WITHDV() > %(DaughtersIPChi2)g ) " % self.getProps()
+        cuts [''] = " ( 2.0 * GeV < P) & ( ISLONG | ISDOWN ) & ( TRCHI2DOF < %(TrackQuality)g ) & ( MIPCHI2DV(PRIMARY) > %(DaughtersIPChi2)g ) " % self.getProps()
         return cuts
     
     ## define daughter cuts for Lambda0
@@ -800,9 +913,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             ## define DD-category of K0S 
             "DD =    CHILDCUT ( ISDOWN , 1 ) & CHILDCUT ( ISDOWN , 2 ) " ,
             ## define LL-category of K0S 
-            "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) " ,
-            ## redefine track chi2/nDoF 
-            "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " 
+            "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
             ]
         
     ## define the list of K0S monitoring histograms 
@@ -819,7 +930,7 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             "pTLL       = monitor ( PT / GeV , Histo ( 'K0S, LL-case' , 0.00 , 1.20 , 100 ) , 'pT_LL'   ) " ,
             "yLL        = monitor ( Y , Histo ( 'K0S, LL-case' , 1.60 , 5.40 , 100 ) , 'y_LL'           ) " ,
             ## monitor DD-case
-            "massDD     = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.45 , 0.55 , 100 ) , 'DD'       ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.45 , 0.55 , 100 ) , 'M_DD'       ) " ,
             "pTDD       = monitor ( PT / GeV , Histo ( 'K0S, DD-case' , 0.00 , 2.00 , 100 ) , 'pT_DD'   ) " ,
             "yDD        = monitor ( Y , Histo ( 'K0S, DD-case' , 1.60 , 5.40 , 100 ) , 'y_DD'           ) " ,
             ]
@@ -833,11 +944,11 @@ class StrippingV0ForPIDConf(LHCbConfigurableUser):
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
-            "massLL     = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.090 , 1.140 , 100 ) , 'LL'     ) " ,
+            "massLL     = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.090 , 1.140 , 100 ) , 'M_LL'     ) " ,
             "pTLL       = monitor ( PT / GeV , Histo ( 'Lambda0, LL-case' , 0.00 , 2.00 , 100 ) , 'pT_LL'   ) " ,
             "yLL        = monitor ( Y , Histo ( 'Lambda0, LL-case' , 1.60 , 5.40 , 100 ) , 'y_LL'           ) " ,
             ## monitor DD-case
-            "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'DD'     ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'M_DD'     ) " ,
             "pTDD       = monitor ( PT / GeV , Histo ( 'Lambda0, DD-case' , 0.00 , 2.00 , 100 ) , 'pT_DD'   ) " ,
             "yDD        = monitor ( Y , Histo ( 'Lambda0, DD-case' , 1.60 , 5.40 , 100 ) , 'y_DD'           ) " ,
             ]
