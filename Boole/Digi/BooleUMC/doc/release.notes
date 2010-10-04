@@ -4,10 +4,11 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+!========================== BooleUMC v1r2 2010-10-04 =========================
 ! 2010-09-22 - Victor Coco
  - Add the BuildMCTrackWithVeloPixInfo algorithm
 
-!========================== BooleUMC v1r1 2010-10-23 =========================
+!========================== BooleUMC v1r1 2010-06-23 =========================
 ! 2010-06-23 - Marco Cattaneo
  - Remove obsolete file BooleUMC_dll.cpp
 
