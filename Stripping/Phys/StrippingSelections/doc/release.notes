@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-04 - Eduardo Rodrigues
+ - StrippingB2Charged2Body.py removed. Replaced by StrippingHb2Charged2Body.py
+   now containing 2 lines
+
 ! 2010-10-04 - Stefania Vecchi
  - style and cut revision for Stripping11
  - python/StrippingSelections/StrippingBd2DstarMuNu.py for Loose and Tight selection
