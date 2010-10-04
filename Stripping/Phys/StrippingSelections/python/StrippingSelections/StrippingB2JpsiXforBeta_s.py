@@ -71,6 +71,10 @@ def createCombinationSel( OutputList,
 # define input daughter lists for various B -> J/psi X selections
 JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
 
+NoPIDKaonList = createSubSel( OutputList = "NoPIDKaonsForBToJpsiX",
+                         InputList = DataOnDemand(Location = "Phys/StdNoPIDsKaons"),
+                         Cuts = "(TRCHI2DOF < 5)" )
+
 KaonList = createSubSel( OutputList = "KaonsForBToJpsiX",
                          InputList = DataOnDemand(Location = "Phys/StdLooseKaons"),
                          Cuts = "(TRCHI2DOF < 10) & (PIDK > -5)" )
@@ -139,6 +143,21 @@ Bu2JpsiKUnbiasedLine  = StrippingLine("Bu2JpsiKUnbiasedLine",
                                                               Cuts = "(MINTREE('K+'==ABSID, PT) > 1000.*MeV)") ] )
 
 B2JpsiXLines += [ Bu2JpsiKPrescaledLine, Bu2JpsiKDetachedLine, Bu2JpsiKUnbiasedLine]
+
+##################
+### Bu->Jpsih+ ###
+##################
+Bu2JpsiH = createCombinationSel( OutputList = "Bu2JpsiKNoPID",
+                                 DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
+                                 DaughterLists = [ NoPIDKaonList, JpsiList],
+                                 DaughterCuts  = {"K+": "(PT > 500)"},
+                                 PreVertexCuts = "ADAMASS('B+') < 300",
+                                 PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+Bu2JpsiHDetachedLine  = StrippingLine("Bu2JpsiKNoPIDDetachedLine",
+                                      algos = [ createSubSel( InputList = Bu2JpsiH,
+                                                              OutputList = Bu2JpsiH.name() + "Detached",
+                                                              Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
+B2JpsiXLines += [ Bu2JpsiHDetachedLine ]
 
 ##################
 ### Bs->JpsiPhi ##

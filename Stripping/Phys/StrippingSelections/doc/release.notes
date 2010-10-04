@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-04 - Gareth Rogers
+- update StrippingB2JpsiXforBeta_s.py
+	- Added a new line Bu2JpsiKNoPIDDetached, uses same selection as
+	  Bu2JpsiKDetached however StdNoPIDsKaons are used an input instead of
+	  StdLooseKaons.
+
 ! 2010-10-04 - Ulrich Kerzel for Sam Greigson
  - tighten cuts in StrippingD2KS0h_KS02PiPi 
 
