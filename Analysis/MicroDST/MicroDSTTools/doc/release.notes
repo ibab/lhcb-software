@@ -6,6 +6,8 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+!======================= MicroDSTTools v2r1 2010-10-04 =======================
+
 ! 2010-10-03 - Juan Palacios
  - Added WeightsVectorCloner, cloner for LHCb::WeightsVector.
 
