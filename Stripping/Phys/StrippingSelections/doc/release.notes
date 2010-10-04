@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Andrew Powell
+- Update to python/StrippingSelections/StrippingNoPIDDstarWithD02RSKPi.py
+	- Updated to use Stripping/Selection framework
+	- Now includes tight (+/- 2 MeV) cut on Delta_M distribution
+	- Prescale set to 0.21
+
 ! 2010-10-04 - Gareth Rogers
 - update StrippingB2JpsiXforBeta_s.py
 	- Added a new line Bu2JpsiKNoPIDDetached, uses same selection as
