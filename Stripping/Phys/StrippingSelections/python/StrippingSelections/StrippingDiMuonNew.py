@@ -172,7 +172,7 @@ class DiMuonConf(object):
         'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
 
         # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     1.   ,
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
         'DiMuonSameSign_Postscale'                 :     1.   , 
         
         # DiMuon High Mass line
@@ -229,7 +229,7 @@ class DiMuonConf(object):
         """
         DiMuon line
         """
-        self.SelDiMuon = filterDiMuon( name + 'DiMuon' +'_SelMuMu',
+        self.SelDiMuon = filterDiMuon( name + 'DiMuonInc' +'_SelMuMu',
                                        MuonPT        = config['DiMuon_MuonPT'],
                                        MuonP         = config['DiMuon_MuonP'],
                                        MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],

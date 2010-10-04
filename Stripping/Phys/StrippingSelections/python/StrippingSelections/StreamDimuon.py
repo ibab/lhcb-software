@@ -44,9 +44,17 @@ from StrippingSelections.StrippingDKPiMu import StrippingDKPiMuConf
 from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
 
 from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
-
+from StrippingSelections.StrippingDiMuonNew import DiMuonConf
 
 stream = StrippingStream("Dimuon")
+
+FullDSTDiMuonConf = DiMuonConf( name = 'FullDST', config = DiMuonConf.config_default )
+stream.appendLines( FullDSTDiMuonConf.Lines )
+
+MicroDSTDiMuonConf = DiMuonConf( name = 'MicroDST', config = DiMuonConf.config_microDST )
+stream.appendLines( MicroDSTDiMuonConf.MicroDSTLines )
+
+
 stream.appendLines( [ 
 		        StrippingDiMuonConf().nominal_line(), 
 		        StrippingDiMuonConf().loose_line(), 
