@@ -15,8 +15,6 @@ from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNu
 
 #from StrippingSelections import StrippingBsDsMuNu
 #superceded by B0q2DplusMuX
-from StrippingSelections import Strippingb2DMuX
-
 
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
 from StrippingSelections.StrippingB2DMuNuX import StrippingB2DMuNuXConf
