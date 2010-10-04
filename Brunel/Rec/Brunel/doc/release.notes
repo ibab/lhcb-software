@@ -10,6 +10,8 @@ Purpose: LHCb reconstruction program
     DstConf Configurable in GaudiConf (see Savannah task #17217)
   . Propagate value of Simulation slot to RecMoniConf and LumiAlgsConf, switches
     off LimiAccounting algorithm in case of Simulation=True
+  . Add slot Brunel().CaloPhotonChecker (default False) to switch off this
+    expert checking algorithm while waiting for fix to bug #73392
 
 - Changes to example options
   . In MC09-Files.py, do not set database tag for MC09 DataType, use the default 
@@ -34,6 +36,9 @@ Purpose: LHCb reconstruction program
     . tt-20100820: Fix overlap between outer modules in TTb
     . tt-20101001: Latest TT dead strip map after VCSEL repair
     . rich*-20100906*: New HPD chip alignments, new Rich mirror alignments 
+
+- Changes to QMTests
+  . brunel.brunel-mc09-withtruth now runs over 15 events (was 10)
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 

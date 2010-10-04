@@ -70,6 +70,7 @@ class Brunel(LHCbConfigurableUser):
        ,"SpecialData"     : []
        ,"Context"         : "Offline"
        ,"RawBanksToKill"  : None
+       ,"CaloPhotonChecker" : False
         }
 
 
@@ -103,6 +104,7 @@ class Brunel(LHCbConfigurableUser):
        ,'SpecialData'  : """ Various special data processing options. See RecSys.KnownSpecialData for all options """
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
+       ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
        }
 
     KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI", "ETC" ]
@@ -556,6 +558,10 @@ class Brunel(LHCbConfigurableUser):
                 GaudiSequencer("CheckCALOSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ]
                 importOptions( "$STDOPTS/PreloadUnits.opts" )
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
+                # temporary workaround to bug #73392
+                if not self.getProp("CaloPhotonChecker"):
+                    caloPIDsChecker = GaudiSequencer("CaloPIDsChecker")
+                    caloPIDsChecker.Members.remove("CaloPhotonChecker")
 
             if "PROTO" in checkSeq :
                 from Configurables import GaudiSequencer
