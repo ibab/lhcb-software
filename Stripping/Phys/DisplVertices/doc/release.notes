@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v7r0 2010-10-04 ====================
+
 ! 2010-09-30 - Neal Gauvin
  - Add new cut in RecVertices2Particles : TrackMaxChi2oNDOF
    The max allowed chi2/ndof of daughter track to be kept in the vertex candidate.
