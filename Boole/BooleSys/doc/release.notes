@@ -3,18 +3,38 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-
 </PRE><H1><A NAME=v21r8>2010-10-04 Boole v21r8</A></H1><PRE>
 This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6, Lbcom v9r7
  and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r*, AppConfig v3r*
+
+This is a production version, for use in Upgrade simulations and in preparation
+for 2010 end of year simulation productions
+
+- New tuning:
+  . Upgrade VeloPix MC: add VeloPixDigitsCreator with deadtime, time walk,
+    ToT nonlinearity, electronic noise simulation and bulding MCTrackInfo
+    for VeloPix. 
+  . New tags picked up by default from SQLDDB v5r39 and DDDB v1r36
+    o head-20101003 for DDDB. Changes include:
+      + it-20101001: Fix wrong positioned IT support column in Station 2 Aside
+      + it-20100930: Protection in IT geometry against rounding error
+      + tt-20100820: Fix overlap between outer modules in TTb
+    o MC09-20100921-vc-md100 for SIMCOND (bug fix to previous MC09 default tag)
+    o MC-20101004-vc-md100 for 2009 SIM (bug fix to previous MC 2009 default tag)
+
+- Bug fixes
+  . Bug #71237: GaudiHistos treatment of HistoProduce incomplete (GaudiAlg v13r4)
+  . Less verbosity in unpackers (EventPacker v2r5)
 
 </PRE><H1><A NAME=v21r7>2010-08-26 Boole v21r7</A></H1><PRE>
 This version uses projects LCGCMT 58e, Gaudi v21r10p1, LHCb v31r5, Lbcom v9r6
  and SQLDDDB v5r34, ParamFiles v8r2, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
 
-- This version of Boole is a dummy release to pick up the new LHCb and Lbcom.
-- No other changes have occured.
+- Version to pick up the new LHCb and Lbcom.
 
+- Bug fixes
+  . Fix size of dead region between inner/outer phi zones (VeloDet v13r12)
+  . Remove DeRichSystem initialisation messages (RichDet v15r0)
 
 </PRE><H1><A NAME=v21r6p1>2010-07-28 Boole v21r6p1</A></H1><PRE>
 This version uses projects LCGCMT 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r5p1
