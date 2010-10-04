@@ -3,10 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v37r8>2010-10-01 Brunel v37r8</A></H1><PRE>
+</PRE><H1><A NAME=v37r8>2010-10-04 Brunel v37r8</A></H1><PRE>
 - Changes to Configurable:
   . Remove the ProtoParticle PID cleaning algorithm, that removes Rich and Muon
-    information prior to DST writting. This is now done when needed, via the 
+    information prior to DST writing. This is now done when needed, via the 
     DstConf Configurable in GaudiConf (see Savannah task #17217)
   . Propagate value of Simulation slot to RecMoniConf and LumiAlgsConf, switches
     off LimiAccounting algorithm in case of Simulation=True
@@ -15,11 +15,10 @@ Purpose: LHCb reconstruction program
   . In MC09-Files.py, do not set database tag for MC09 DataType, use the default 
 
 - Changes to references to reflect changes in Brunel v37r8 output
+  . #52124: Added histograms for magnet kick to TrackFitMatchMonitor
   . #54084: PhotonFromMergedRec algorithm removed from Calo Reco sequence, save 
     time by doing it in MergedPi0Rec algorithm
   . #62241: Add Hlt monitoring sequence
-  . Added several histograms to TrackFitMatchMonitor
-  . Fixed untested StatusCode in CaloPhotonIDAlg
   . #82690: Change track selection chi2 for charged ProtoParticles to < 10
   . #86415: Make fit in PatSeedFit more similar to what is used in PatSeeding
   . #86502: Add VeloIPResolutionMonitor to standard monitoring
@@ -27,7 +26,14 @@ Purpose: LHCb reconstruction program
   . #86550: Suppress unnecessary printouts from MuonID
   . #86666: Add TrackPV2HalfAlignMonitor to monitoring sequence, add histograms
             for Velo-Calo matching
-  . #86866: Enable by defaul the running of the new ANN PID algorithms
+  . #86866: Enable by default the running of the new ANN PID algorithms
+  . #87223: New default tags for 2010,2009,2008 data. Changes include:
+    . align-20100902: Tracking alignment v4.1
+    . it-20101001: Fix wrong positioned IT support column in Station 2 Aside
+    . it-20100930: Protection in IT geometry against rounding error
+    . tt-20100820: Fix overlap between outer modules in TTb
+    . tt-20101001: Latest TT dead strip map after VCSEL repair
+    . rich*-20100906*: New HPD chip alignments, new Rich mirror alignments 
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
