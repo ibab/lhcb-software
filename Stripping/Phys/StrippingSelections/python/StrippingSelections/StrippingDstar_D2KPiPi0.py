@@ -7,8 +7,8 @@
 #
 ########################################################################                   
 __author__ = 'Andrea Contu'
-__date__ = '05/09/2010'
-__version__ = '$Revision: 1.4 $'
+__date__ = '04/10/2010'
+__version__ = '$Revision: 1.5 $'
 
 from Configurables import GaudiSequencer, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
@@ -72,11 +72,11 @@ StrippingDstar_D2KPiPi0seqWS.Members.append(Strip_DStar2D0Pi_D02KPiPi0_WS)
 
 # Create 2 distinct lines for WS/RS
 lineRS = StrippingLine('Dstar_D2KPiPi0RS_Line'
-               , prescale = 0.5
+               , prescale = 0.25
                ,  algos = [ StrippingDstar_D2KPiPi0seqRS ]
                )
 							 
 lineWS = StrippingLine('Dstar_D2KPiPi0WS_Line'
-               , prescale = 0.0005  #if we really need to prescale, prescale this one first
+               , prescale = 0.0025  #if we really need to prescale, prescale this one first
                ,  algos = [ StrippingDstar_D2KPiPi0seqWS ]
                )
