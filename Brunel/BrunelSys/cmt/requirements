@@ -11,6 +11,7 @@ branches cmt doc tests
 use Brunel v37r8   Rec
 
 # Add here any component libraries to be added as patches
+use DDDB v1r36 Det
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

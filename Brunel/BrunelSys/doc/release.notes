@@ -3,8 +3,86 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-09-21 - Marco Cattaneo
- - Update configurables.ref for removal of obsolete algorithms from PatPV
+</PRE><H1><A NAME=v37r8>2010-10-04 Brunel v37r8</A></H1><PRE>
+This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r5, Lbcom v9r7,
+ Rec v10r5 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
+
+This is a production version, in preparation for 2010 end of run reprocessing
+
+- New functionality:
+  . Add support for upgrade reconstruction: Brunel().SpecialData += ['upgrade'] 
+    (RecConf v1r3, TrackSys v5r0, RecoUpgrade v2r0, RecoUpgradeMC v1r1, 
+     PatVeloTT v3r15, TrackCheckers v4r11, TrackMCTools v2r27)
+
+- New tuning:
+  . Changed track selection chi2 for charged ProtoParticles to < 10 from <50
+    and removed "earlyData" tuning (GlobalReco v6r33)
+  . Make fit in PatSeedFit more similar to what is in PatSeeding
+    (PatAlgorithms v4r7)
+  . Remove obsolete cut for PV fit in LSAdaptPVFitter, include track weights in
+    vertex chi2 calculation (PatPV v3r18, TrackInterfaces v4r16)
+  . Improve Calo LCorrection (CaloReco v5r7)
+  . PhotonFromMergedRec algorithm removed from Calo Reco sequence, save time by
+    doing it in MergedPi0Rec algorithm (CaloReco v5r7, CaloPIDs v5r8)
+  . New tags picked up by default from SQLDDB v5r39 and DDDB v1r36
+    o head-20101003 for LHCBCOND, head-20101003 for DDDB. Changes include:
+      + align-20100902: Tracking alignment v4.1
+      + it-20101001: Fix wrong positioned IT support column in Station 2 Aside
+      + it-20100930: Protection in IT geometry against rounding error
+      + tt-20100820: Fix overlap between outer modules in TTb
+      + tt-20101001: Latest TT dead strip map after VCSEL repair
+      + rich*-20100906*: New HPD chip alignments, new Rich mirror alignments 
+    o MC09-20100921-vc-md100 for SIMCOND (bug fix to previous MC09 default tag)
+    o MC-20101004-vc-md100 for 2009 SIM (bug fix to previous MC 2009 default tag)
+  . Propagate value of Simulation slot to RecMoniConf and LumiAlgsConf, switches
+    off LumiAccounting algorithm in case of Simulation=True
+
+- Persistency changes:
+  . The new Rich NN based PID algorithms are now run by default (not on Windows).
+    Results are added to DST for further study 
+    (ChargedProtoANNPID v1r0, uses neurobayes_expert from LCGCMT 58f)
+  . Task #17217: ProtoParticle PID cleaning algorithm, that removes Rich and Muon
+    information prior to DST writing is now run only in case of packed DST.
+    (GaudiConf v13r7)
+  . Task #14927: Weights for tracks in each PV are now stored on the DST
+    (PatPV v3r18,EventPacker v2r5,PackedEvent v4r3,RecEvent v2r32,GaudiConf v13r7)
+  . Task #16215: The event time is now stored in RecHeader, avoiding the need to
+    decode the RawEvent to configure the UpdateManagerSvc
+    (RecAlgs v1r11p1, RecEvent v2r32, LHCbAlgs v2r35)
+  . New Calo additional info in neutral and charged ProtoParticles
+    (GlobalReco v6r33, RecEvent v2r32)
+
+- Bug fixes
+  . Fix uninitialised member variables in CaloPhotonChecker (CaloMoniDst v5r4)
+  . Bug #72071: Suppress unnecessary printouts (RichDAQ v3r24)
+  . Bug #64670: Suppress unnecessary printouts (MuonID v7r9p2)
+  . Fix against very rare crashes in the isolated track tool, when photon 
+    Cherenkov phi value is exactly 2.0*M_PI (RichRecTrackTools v1r24p1)
+  . Fix for OT expected hits (TrackTools v3r35)
+  . Fix bug in TrackHitAdder (TrackUtils v1r39)
+  . Fix bug in evaluation of F11 and F12 matrix elements (CaloUtils v9r0)
+  . Bug #71237: GaudiHistos treatment of HistoProduce incomplete (GaudiAlg v13r4)
+
+- Monitoring changes:
+  . ProtoParticle monitor now produces efficiency plots by track type
+    (GlobalReco v6r33)
+  . Added Hlt monitoring sequence, monitors Hlt rate and composition 
+    (HltMonitors v1r0, RecConf v1r3)
+  . Minor improvements in track selection efficiency monitor (RichRecQC v2r46)
+  . Widened window for PV plot (TrackMonitors v1r30)
+  . Add histograms for magnet kick (TrackMonitors v1r30)
+  . Add TrackPV2HalfAlignMonitor to monitoring sequence (TrackMonitors v1r30)
+  . Add histograms for Velo-Calo matching (TrackMonitors v1r30)
+  . Add VeloIPResolutionMonitor to standard monitoring (VeloRecMonitors v2r12)
+  . patches #4299, #4332: Add option for field size in SequencerTimerTool
+    (GaudiAlg v13r4)
+  . Switched off running of expert checking algorithm CaloPhotonChecker, while
+    waiting for fix to bug #73392. Can be switched on by setting
+    Brunel().CaloPhotonChecker = True
+
+- Changes to example options
+  . In MC09-Files.py, do not set database tag for MC09 DataType, use the default 
+
 
 </PRE><H1><A NAME=v37r7>2010-08-25 Brunel v37r7</A></H1><PRE>
 This version uses projects LCG 58e, Gaudi v21r10p1, LHCb v31r4, Lbcom v9r6,
