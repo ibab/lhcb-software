@@ -157,26 +157,16 @@ class DaVinci(LHCbConfigurableUser) :
         type = self.getProp("DataType")
         cb = self.getProp("CondDBtag")
         db = self.getProp("DDDBtag")
-        '''
-        if ( cb == ""):
-            log.info("Changed CondDBtag to "+cb)         
-            cb = LHCbApp().getProp('CondDBtag')
-            self.setProp('CondDBtag', cb)
-        if ( db == ""):
-            db = LHCbApp().getProp("DDDBtag")
-            log.info("Changed DDDBtag to "+db)         
-            self.setProp('DDDBtag', db)
-        '''
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
 
-    def _mainSequences(self) :
-        return GaudiSequencer('DaVinciSequences', IgnoreFilterPassed = True)
+    def _analysisSeq(self) :
+        return GaudiSequencer('DaVinciAnalysisSeq', IgnoreFilterPassed = True)
 
     def _filteredEventSeq(self) :
         prefilters = self.getProp('EventPreFilters')
         return GaudiSequencer('FilteredEventSeq',
-                             Members = prefilters +  [self._mainSequences()])
+                              Members = prefilters +  [self._init(), self._analysisSeq()])
 
 ################################################################################
 # Event Initialisation sequence
@@ -186,36 +176,38 @@ class DaVinci(LHCbConfigurableUser) :
         Initialisation sequence
         """
         from Configurables import (DaVinciInit,
-                                   PhysConf,
-                                   AnalysisConf,
                                    MemoryTool)
         
-        di = DaVinciInit()
+        di = DaVinciInit('DaVinciInitAlg')
         di.addTool(MemoryTool)
         di.MemoryTool.HistoSize = 5000
-        self._init()
-        
         return di
 
     def _init(self):
-
+        from Configurables import (PhysConf,
+                                   AnalysisConf)
+        
         # Phys
         inputType = self.getProp( "InputType" ).upper()
+
+        initSeqs = []
 
         if inputType != 'MDST' :
             if (( inputType != "MDF" ) & (inputType != "DIGI")) :
                 physinit = PhysConf().initSequence()         # PhysConf initSequence
-                self._mainSequences().Members += [ physinit ]
                 # Analysis
                 AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
                 analysisinit = AnalysisConf().initSequence()
-                self._mainSequences().Members += [ analysisinit ]
+                initSeqs = [physinit,analysisinit]
         if inputType == 'RDST' :
             log.info('Setting HltDecReportsDecoder().InputRawEventLocation to "pRec/RawEvent"')
             from Configurables import HltDecReportsDecoder, ANNDispatchSvc
             HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
             ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 
+        return GaudiSequencer('DaVinviEventInitSeq',
+                              Members = initSeqs,
+                              IgnoreFilterPassed = True)
 
 ################################################################################
 # Lumi setup
@@ -289,7 +281,7 @@ class DaVinci(LHCbConfigurableUser) :
             log.warning("Running Hlt. If there are already banks written by Hlt in the data, they will be removed.") 
             bk = bankKiller('KillHltBanks', BankTypes = [ "HltRoutingBits", "HltSelReports", "HltVertexReports", "HltDecReports", "HltLumiSummary" ])
             hltDVSeq.Members = [ physFilter, bk, hltSeq ]
-            GaudiSequencer('DaVinciSequences').Members += [ hltDVSeq ]
+            self._mainSeuqences().Members += [ hltDVSeq ]
 #            ApplicationMgr().TopAlg += [ hltDVSeq ]  
             log.info("Will run Hlt")
             log.info( HltConf() )
@@ -321,8 +313,7 @@ class DaVinci(LHCbConfigurableUser) :
         # done with all warnings. Now do the logic.
         if ( self.getProp("L0") ):
             l0seq = GaudiSequencer("seqL0")
-            GaudiSequencer('DaVinciSequences').Members +=  [ l0seq ]
-#            ApplicationMgr().TopAlg += [ l0seq ]
+            self._analysisSeq().Members +=  [ l0seq ]
             L0Conf().setProp( "L0Sequencer", l0seq )
             L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") )
             L0Conf().setProp( "DataType", self.getProp("DataType"))
@@ -522,8 +513,7 @@ class DaVinci(LHCbConfigurableUser) :
         Main Sequence
         """
         self.mainSeq.IgnoreFilterPassed = True
-        GaudiSequencer('DaVinciSequences').Members += [ self.mainSeq ]
-#        ApplicationMgr().TopAlg += [ self.mainSeq ]
+        self._analysisSeq().Members += [ self.mainSeq ]
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
@@ -553,8 +543,7 @@ class DaVinci(LHCbConfigurableUser) :
         """
         self.moniSeq.IgnoreFilterPassed = True 
         self.moniSeq.Members = self.KnownMonitors
-        GaudiSequencer('DaVinciSequences').Members += [ self.moniSeq ]
-#        ApplicationMgr().TopAlg += [ self.moniSeq ]
+        self._analysisSeq().Members += [ self.moniSeq ]
         log.info("Creating Moni Algorithms")
         self.appendToMoniSequence( self.getProp("MoniSequence") )
 
@@ -584,20 +573,20 @@ class DaVinci(LHCbConfigurableUser) :
         log.info( self )
 
         self._checkOptions()
-        self.sequence().Members = [
-            self._dvInit(),
-            self._filteredEventSeq()
-            ]
-        
-        if ( self.getProp( "Lumi" )):
-            self.sequence().Members += self._lumi()
-            
+
         ApplicationMgr().TopAlg = [self.sequence()]
         self._configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
         inputType = self._configureInput()
-        # start with init
-
+        self.sequence().Members = [
+            self._dvInit()
+            ]
+#        self.sequence().Members += self._init()
+        self.sequence().Members += [self._filteredEventSeq()]
+        
+        if ( self.getProp( "Lumi" )):
+            self.sequence().Members += self._lumi()
+            
         if inputType != 'MDST' :
             self._l0()
             self._hlt()
