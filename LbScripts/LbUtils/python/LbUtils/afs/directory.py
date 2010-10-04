@@ -126,6 +126,10 @@ class Directory(object):
                             dir_acl[g] = dir_acl[g].replace(l,"")
             else :
                 raise NoACL("You cannot remove an empty list for %s" % g)
+        # cleanup groups with empty ACL
+        for g in dir_acl.keys() :
+            if dir_acl[g] == "" :
+                del dir_acl[g]
         self._setACL(dir_acl)
         if recursive :
             for data in os.walk(self._name, topdown=False) :
