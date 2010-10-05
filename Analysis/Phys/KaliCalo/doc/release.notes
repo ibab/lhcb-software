@@ -7,6 +7,8 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================== KaliCalo v4r5 2010-10-05 ==========================
+
 ! 2010-10-05 - Vanya Belyaev
 
  - move the defaul filter from Configurbale to firstPass function
