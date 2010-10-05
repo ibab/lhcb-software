@@ -27,7 +27,7 @@ The selection of displaced vertices is achieved in 3 steps :
 
 __author__ = ['Neal Gauvin','Marcin Kucharczyk']
 __date__ = '22/01/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.4 $'
 
 
 from Gaudi.Configuration import *
@@ -36,9 +36,10 @@ from GaudiKernel.SystemOfUnits import *
 from Configurables import BestPIDParticleMaker
 from CommonParticles.Utils import *
 from Configurables import PatPV3D,PVOfflineTool,PVSeed3DTool,LSAdaptPV3DFitter
-from Configurables import RecVertices2Particles,DisplVertices
+from Configurables import RecVertices2Particles,DisplVertices,FilterDesktop
 from StrippingConf.StrippingLine import StrippingLine
 
+from PhysSelPython.Wrappers import Selection
 
 
 VerticesLocation = "Rec/Vertices/DisplRV"
@@ -78,12 +79,13 @@ PreselDisplVertices = RecVertices2Particles("PreselDisplVertices")
 #PreselDisplVertices.RecVerticesLocation = ["Rec/Vertex/Primary", "Rec/Vertices/DisplRV"]
 PreselDisplVertices.RecVerticesLocation = [VerticesLocation]
 PreselDisplVertices.RCutMethod = RCutMethod
-PreselDisplVertices.PreyMinSumpt = 3.0*GeV
 PreselDisplVertices.PreyMinMass = 3.0*GeV
+PreselDisplVertices.PreyMinSumpt = 3.0*GeV
 PreselDisplVertices.RMin = 0.3*mm
 PreselDisplVertices.NbTracks = 4 
 PreselDisplVertices.RemVtxFromDet = 0
 PreselDisplVertices.UsePartFromTES = False
+PreselDisplVertices.TrackMaxChi2oNDOF = 10.
 
 #####################################################################
 ## Single DisplVertex selection and line
@@ -98,6 +100,31 @@ SingleDV.PreyMinSumpt = 6.0*GeV
 SingleDV.RemVtxFromDet = 0
 
 #####################################################################
+## Single DisplVertex selection and line
+SingleDVHighMass = DisplVertices("SingleDVHighMass")
+SingleDVHighMass.InputLocations = [PreselDisplVertices.getName()]
+SingleDVHighMass.MinNBCands = 1
+SingleDVHighMass.RCutMethod = RCutMethod
+SingleDVHighMass.RMin = 0.3*mm
+SingleDVHighMass.NbTracks = 5
+SingleDVHighMass.PreyMinMass = 15.*GeV
+SingleDVHighMass.PreyMinSumpt = 6.0*GeV
+SingleDVHighMass.RemVtxFromDet = 0
+
+#####################################################################
+## Single DisplVertex selection and line
+SingleDVHighPtMuon = DisplVertices("SingleDVHighPtMuon")
+SingleDVHighPtMuon.InputLocations = [PreselDisplVertices.getName()]
+SingleDVHighPtMuon.MinNBCands = 1
+SingleDVHighPtMuon.RCutMethod = RCutMethod
+SingleDVHighPtMuon.RMin = 0.3*mm
+SingleDVHighPtMuon.NbTracks = 5
+SingleDVHighPtMuon.PreyMinMass = 6.2*GeV
+SingleDVHighPtMuon.PreyMinSumpt = 6.0*GeV
+SingleDVHighPtMuon.RemVtxFromDet = 0
+SingleDVHighPtMuon.MuonpT = 5.5*GeV
+
+#####################################################################
 ## Double DisplVertex selection and line
 DoubleDV = DisplVertices("DoubleDV")
 DoubleDV.InputLocations = [PreselDisplVertices.getName()]
@@ -109,35 +136,29 @@ DoubleDV.PreyMinMass = 3*GeV
 DoubleDV.PreyMinSumpt = 3*GeV
 DoubleDV.RemVtxFromDet = 0
 
-#####################################################################
-## Line for the study of interaction with matter
-## Note : it is presently performed by the SingleDisplVtx and
-##        DoubleDisplVtx lines.
-##        The idea is to have something like the SingleDisplVtx
-##        line, but with looser cuts, larger RMin and pre-scaled.
-IntwMat = DisplVertices("IntWithMat")
-IntwMat.InputLocations = [PreselDisplVertices.getName()]
-IntwMat.RCutMethod = RCutMethod
-IntwMat.RMin = 3*mm
-IntwMat.NbTracks = 5
-IntwMat.PreyMinMass = 4*GeV
-IntwMat.PreyMinSumpt = 2*GeV
-IntwMat.RemVtxFromDet = 0
 
 
 ################################################################
-# Create line for single DisplVertex selection
+## Create line for single DisplVertex selection
 line1 = StrippingLine('SingleDisplVtx'
-                      , prescale = 0.05
+                      , prescale = 0.1
                       , algos = [DisplPatPV3D,PreselDisplVertices,SingleDV]
-                      )
-#
-###############################################################
-# Create line for double DisplVertex selection
+                      ) 
 line2 = StrippingLine('DoubleDisplVtx'
-                      , prescale = 0.05
+                      , prescale = 0.5
                       , algos = [DisplPatPV3D,PreselDisplVertices,DoubleDV]
                       )
+line1highptmuon = StrippingLine('SingleDisplVtxHighPtMuon'
+                      , prescale = 0.5
+                      , algos = [DisplPatPV3D,PreselDisplVertices,SingleDVHighPtMuon]
+                      )
+line1highmass = StrippingLine('SingleDisplVtxHighMass'
+                      , prescale = 1.
+                      , algos = [DisplPatPV3D,PreselDisplVertices,SingleDVHighMass]
+                      )
+
+###############################################################
+# Create line for double DisplVertex selection
 
 ###############################################################
 # Create line for background study selection
@@ -145,7 +166,4 @@ line2 = StrippingLine('DoubleDisplVtx'
 ##              , prescale = 1.0
 ##              , algos = [DisplPatPV3D,PreselDisplVertices,IntwMat]
 ##              )
-
-
-
 
