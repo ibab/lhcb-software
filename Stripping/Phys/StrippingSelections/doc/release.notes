@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Jibo He
+ - python/StrippingSelections/StrippingDiElectronNew.py
+   . Require Hlt2 lines for both biased & unbiased low mass dielectron lines 
+ - python/StrippingSelections/StrippingElectronID.py
+   First commit of Jpsi->ee tag and probe line (lifetime biased) for electronID 
+
 ! 2010-10-05 - James Keaveney
   - Added two lines for low mass Drell-Yan which require HLT2
     decisions. Tightened pre-scales. Removed track qual cut on

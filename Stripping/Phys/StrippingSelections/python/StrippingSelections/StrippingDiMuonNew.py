@@ -1,5 +1,3 @@
-# $Id: StrippingDiMuonNew.py, v 1.0 2010-09-06 16:30:22 jhe Exp $
-
 '''
 Inclusive DiMuon lines based on the lines by Gaia Lanfranchi, Alessio Sarti,
 with inputs from Joel Bressieux, Giulia Manca, Matthew Needham and Patrick Robbe.
@@ -38,7 +36,7 @@ __date__ = '30/09/2010'
 __version__= '$Revision: 1.0 $'
 
 __all__ = (
-    'StrippingDiMuonConf'
+    'DiMuonConf'
     )
 
 from Gaudi.Configuration import *

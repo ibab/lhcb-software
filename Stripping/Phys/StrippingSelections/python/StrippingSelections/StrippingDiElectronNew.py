@@ -1,7 +1,5 @@
 '''
-Inclusive DiElectron lines
-
-Including the following lines:
+Inclusive DiElectron lines, including:
 1. DiElectronLine
    FullDST and MicroDST (loosend selections)
 2. DiElectronLowMassLine
@@ -30,7 +28,7 @@ __date__ = '03/10/2010'
 __version__= '$Revision: 1.0 $'
 
 __all__ = (
-    'StrippingDiElectronConf'
+    'DiElectronConf'
     )
 
 from Gaudi.Configuration import *
@@ -120,12 +118,12 @@ class DiElectronConf(object):
         'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
 
         # DiElectronLowMass line
-        'DiElectronLowMass_Prescale'                    :     0.005  ,
+        'DiElectronLowMass_Prescale'                    :     0.2 ,
         'DiElectronLowMass_Postscale'                   :     1.  ,
         
-        'DiElectronLowMass_ElectronPT'                  :   750.  ,  # MeV
+        'DiElectronLowMass_ElectronPT'                  :  1100.  ,  # MeV
         'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
-        'DiElectronLowMass_ElectronPIDe'                :     2.  , 
+        'DiElectronLowMass_ElectronPIDe'                :     4.  , 
         'DiElectronLowMass_ElectronTRCHI2DOF'           :     5.  , 
         'DiElectronLowMass_MinMass'                     :    30.  ,  # MeV
         'DiElectronLowMass_VCHI2PDOF'                   :    16.  ,       
@@ -145,17 +143,17 @@ class DiElectronConf(object):
         'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
 
         # BiasedDiElectronLowMass line
-        'BiasedDiElectronLowMass_Prescale'              :     0.005  ,
+        'BiasedDiElectronLowMass_Prescale'              :     1.  ,
         'BiasedDiElectronLowMass_Postscale'             :     1.  ,
 
-        'BiasedDiElectronLowMass_ElectronPT'            :   300.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronPIDe'          :    -2.  ,
         'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
         'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     5.  , 
         'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
         'BiasedDiElectronLowMass_VCHI2PDOF'             :    16.  ,
-        'BiasedDiElectronLowMass_PT'                    :  -1000. ,  # MeV, no cut now
+        'BiasedDiElectronLowMass_PT'                    : -1000.  ,  # MeV, no cut now
         
         # Jpsi2ee line
         'Jpsi2ee_Prescale'                              :     1.  ,
@@ -168,7 +166,7 @@ class DiElectronConf(object):
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    : -1500.0    # MeV
+        'Jpsi2ee_PT'                                    :  1500.     # MeV
         }
 
 
@@ -179,7 +177,7 @@ class DiElectronConf(object):
         
         'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
         'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
-        'DiElectron_ElectronPIDe'                       :     4.  ,  
+        'DiElectron_ElectronPIDe'                       :     2.  ,  
         'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
@@ -203,7 +201,7 @@ class DiElectronConf(object):
         
         'BiasedDiElectron_ElectronPT'                   :   500.  ,  # MeV
         'BiasedDiElectron_ElectronP'                    : -8000.  ,  # MeV, no cut now
-        'BiasedDiElectron_ElectronPIDe'                 :     3.  ,
+        'BiasedDiElectron_ElectronPIDe'                 :     2.  ,
         'BiasedDiElectron_ElectronMIPCHI2'              :     4.  , 
         'BiasedDiElectron_ElectronTRCHI2DOF'            :     5.  , 
         'BiasedDiElectron_MinMass'                      :  2000.  ,  # MeV
@@ -281,7 +279,7 @@ class DiElectronConf(object):
                                                       eePT              = config['DiElectronLowMass_PT']
                                                       )
         self.DiElectronLowMassLine = StrippingLine( name + 'DiElectronLowMass' + 'Line',
-                                                    #HLT = "HLT_PASS('Hlt2UnbiasedDiElectronLowMassDecision')",
+                                                    HLT = "HLT_PASS('Hlt2UnbiasedTFDiElectronLowMassDecision')",
                                                     prescale  = config['DiElectronLowMass_Prescale'],
                                                     postscale = config['DiElectronLowMass_Postscale'],
                                                     algos = [ self.SelDiElectronLowMass ]
@@ -324,6 +322,7 @@ class DiElectronConf(object):
             eePT              = config['BiasedDiElectronLowMass_PT']
             )
         self.BiasedDiElectronLowMassLine = StrippingLine( name + 'BiasedIncDiElectronLowMass' + 'Line',
+                                                          HLT = "HLT_PASS('Hlt2BiasedTFDiElectronLowMassDecision')",
                                                           prescale  = config['BiasedDiElectronLowMass_Prescale'],
                                                           postscale = config['BiasedDiElectronLowMass_Postscale'],
                                                           algos = [self.SelBiasedDiElectronLowMass]
