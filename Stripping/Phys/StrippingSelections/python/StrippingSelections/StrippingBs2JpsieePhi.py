@@ -1,6 +1,6 @@
 
 __author__ = 'Artur Ukleja, Jibo He'
-__date__ = '2010/07/16'
+__date__ = '2010/09/23'
 __version__ = '$Revision: 1.5 $'
 
 '''
@@ -26,7 +26,7 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
                 , 'PhiMassMaxLoose'          :  1045.    # MeV
                 , 'BsVertexCHI2pDOFLoose'    :    16.    # adimensional
                 , 'BsMassMinLoose'           :  3500.    # MeV
-                , 'BsMassMaxLoose'           :  7000.    # MeV
+                , 'BsMassMaxLoose'           :  6500.    # MeV
 
                 , 'ElectronPT'          :   800.    # MeV
                 , 'ElectronPID'         :     2.    # adimensional
@@ -121,7 +121,7 @@ class StrippingBs2JpsieePhiConf(LHCbConfigurableUser):
         _Bs = CombineParticles("Bs2JpsieePhiLoose",
                                DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
-                               MotherCut = MC
+                               MotherCut = MC 
                                #ReFitPVs = True
                                )
         Bs = Selection("SelBs2JpsieePhiLoose",
