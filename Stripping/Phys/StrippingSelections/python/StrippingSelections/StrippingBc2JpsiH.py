@@ -20,9 +20,9 @@ class StrippingBc2JpsiHConf(LHCbConfigurableUser):
         , 'BcPT'                : 4000  # MeV, May incrase up to 5000 MeV if needed
         , 'JpsiMassWindow'      : 100   # MeV, 10 sigma, may decreased to 150
         , 'JpsiVtxCHI2'         : 9     # adimentional
-        , 'MuonJpsiPT'          : 1400  # MeV 
-        , 'PionPT'              : 2400  # MeV
-        , 'TrackCHI2DOF'        : 9     # adimentional 
+        , 'MuonJpsiPT'          : 1200  # MeV 
+        , 'PionPT'              : 2000  # MeV
+        , 'TrackCHI2DOF'        : 5     # adimentional 
         }
 
     def MuMu(self):

@@ -22,8 +22,8 @@ class StrippingBc2JpsiMuXConf(LHCbConfigurableUser):
         , 'JpsiMassWindow'      : 200   # MeV, 10 sigma, may decreased to 150
         , 'JpsiVtxCHI2'         : 9     # adimentional
         , 'MuonJpsiPT'          : 1200  # MeV 
-        , 'MuonBcPT'            : 2000  # MeV
-        , 'TrackCHI2DOF'        : 9     # adimentional 
+        , 'MuonBcPT'            : 2500  # MeV
+        , 'TrackCHI2DOF'        : 5     # adimentional 
         }
 
     def MuMu(self):

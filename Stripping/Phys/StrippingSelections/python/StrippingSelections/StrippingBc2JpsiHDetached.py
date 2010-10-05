@@ -17,7 +17,7 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
     __slots__ = {
         'BcMassWindow'          : 400   # MeV, Mass window for Bc 
         , 'BcVtxCHI2'           : 9     # adimentional
-        , 'BcPT'                : 0     # MeV, May incrase up to 5000 MeV if needed
+        , 'BcPT'                : 4000  # MeV, May incrase up to 5000 MeV if needed
         , 'JpsiMassWindow'      : 100   # MeV, 
         , 'JpsiVtxCHI2'         : 9     # adimentional
         , 'MuonJpsiPT'          : 900   # MeV 
@@ -26,7 +26,7 @@ class StrippingBc2JpsiHDetachedConf(LHCbConfigurableUser):
         , 'JpsiIPCHI2'          : -1    # adimentional, choose one  
         , 'MuonIPCHI2'          : -1    # adimentional, choose one 
         , 'BcIPCHI2'            : 25    # adimentional
-        , 'TrackCHI2DOF'        : 9     # adimentional 
+        , 'TrackCHI2DOF'        : 5     # adimentional 
         }
 
     def MuMu(self):
