@@ -352,10 +352,10 @@ class B2DXLines(object) :
 	#make unbiased selections
     	unbiasedSelection = makeUnbiasedBs2DsPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
  
- 	HLT1TIS = makeTISTOSSel("HLT1TISSelForUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
- 	HLT2TIS = makeTISTOSSel("HLT2TISSelForUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
+ 	HLT1TIS = makeTISTOSSel("HLT1TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
+ 	HLT2TIS = makeTISTOSSel("HLT2TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
 
-	line = StrippingLine("UnbiasedBs2DsPiLine", prescale = config["Prescales"]["Unbiased"] , 
+	line = StrippingLine(moduleName + "WithUnbiasedBs2DsPiLine", prescale = config["Prescales"]["Unbiased"] , 
                              algos = [ filterTooManyIP, HLT2TIS ], 
                              checkPV = config["CheckPV"]  )
     	self.lines.append( line )

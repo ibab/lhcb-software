@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Anton Poluektov 
+ - StrippingB2DX.py: changed the name of Bs2DsPi LT-unbiased line to include moduleName
+   (now B2DXWithUnbiasedBs2DsPiLine). No change of cuts. 
+
 ! 2010-10-05 - Wouter Hulsbergen
  - Tightened selections for B2JpsiX
 
