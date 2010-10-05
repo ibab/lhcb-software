@@ -3,10 +3,10 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
+!==================== Phys/HighPtJets v1r2 2010-10-04 =======================
+
 ! 2010-10-05 - Marcin Kucharczyk
  - Add the cut on track quality in TrackClusterFinder algorithm
-
-!==================== Phys/HighPtJets v1r2 2010-10-04 =======================
 
 ! 2010-10-04 - Juan Palacios
  - Many undocumented changes.
