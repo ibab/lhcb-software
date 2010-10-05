@@ -205,7 +205,7 @@ class DaVinci(LHCbConfigurableUser) :
             HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
             ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 
-        return GaudiSequencer('DaVinviEventInitSeq',
+        return GaudiSequencer('DaVinciEventInitSeq',
                               Members = initSeqs,
                               IgnoreFilterPassed = True)
 
