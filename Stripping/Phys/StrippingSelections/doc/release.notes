@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Wouter Hulsbergen
+ - Tightened selections for B2JpsiX
+
 ! 2010-10-05 - Michel De Cian
  - Adding StrippingTrackEffMuonTT.py, which are 8 stripping lines for the 
 measurement of tracking efficiency with a tag-and-probe-method with Muon(TT) tracks.

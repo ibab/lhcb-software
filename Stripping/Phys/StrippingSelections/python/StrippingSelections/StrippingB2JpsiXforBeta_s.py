@@ -60,9 +60,6 @@ def createCombinationSel( OutputList,
                                  MotherCut = PostVertexCuts,
                                  CombinationCut = PreVertexCuts,
                                  ReFitPVs = True)
-    combiner.addTool( OfflineVertexFitter() )
-    combiner.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-    combiner.OfflineVertexFitter.useResonanceVertex = True # the default is actually true
     return Selection ( OutputList,
                        Algorithm = combiner,
                        RequiredSelections = DaughterLists)
@@ -77,15 +74,15 @@ NoPIDKaonList = createSubSel( OutputList = "NoPIDKaonsForBToJpsiX",
 
 KaonList = createSubSel( OutputList = "KaonsForBToJpsiX",
                          InputList = DataOnDemand(Location = "Phys/StdLooseKaons"),
-                         Cuts = "(TRCHI2DOF < 10) & (PIDK > -5)" )
+                         Cuts = "(TRCHI2DOF < 5) & (PIDK > -2)" )
 
 PhiList = createSubSel( OutputList = "Phi2KKForBetaS",
                         InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK"),
                         Cuts = "(ADMASS('phi(1020)') < 20)" \
                         "& (PT > 500) " \
                         "& (VFASPF(VCHI2) < 16)" \
-                        "& (MAXTREE('K+'==ABSID, TRCHI2DOF) <10)" \
-                        "& (MINTREE('K+'==ABSID, PIDK) > -5)" )
+                        "& (MAXTREE('K+'==ABSID, TRCHI2DOF) <5)" \
+                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" )
 
 #KstarList = createSubSel( OutputList = "Kstar2KpiForBetaS",
 #                          InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi"),
@@ -99,7 +96,7 @@ PhiList = createSubSel( OutputList = "Phi2KKForBetaS",
 KstarList = createCombinationSel( OutputList = "Kstar2KpiForBetaS",
                                   DaughterLists = [ KaonList,
                                                     DataOnDemand(Location = "Phys/StdLoosePions") ],
-                                  DaughterCuts = { "pi+" : "(TRCHI2DOF < 10)"},
+                                  DaughterCuts = { "pi+" : "(TRCHI2DOF < 5)"},
                                   DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
                                   PreVertexCuts = "(APT>500*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
                                   PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
@@ -129,10 +126,10 @@ Bu2JpsiK = createCombinationSel( OutputList = "Bu2JpsiK",
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
                                  DaughterLists = [ KaonList, JpsiList],
                                  DaughterCuts  = {"K+": "(PT > 500)" },
-                                 PreVertexCuts = "ADAMASS('B+') < 300",
-                                 PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+                                 PreVertexCuts = "in_range(5000,AM,5650)",
+                                 PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)" )
 
-Bu2JpsiKPrescaledLine = StrippingLine("Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , prescale = 1.00)
+Bu2JpsiKPrescaledLine = StrippingLine("Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , prescale = 0.25)
 Bu2JpsiKDetachedLine  = StrippingLine("Bu2JpsiKDetachedLine",
                                       algos = [ createSubSel( InputList = Bu2JpsiK,
                                                               OutputList = Bu2JpsiK.name() + "Detached",
@@ -147,12 +144,13 @@ B2JpsiXLines += [ Bu2JpsiKPrescaledLine, Bu2JpsiKDetachedLine, Bu2JpsiKUnbiasedL
 ##################
 ### Bu->Jpsih+ ###
 ##################
+# WH: could in fact make lines above a sublist of this one
 Bu2JpsiH = createCombinationSel( OutputList = "Bu2JpsiKNoPID",
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
                                  DaughterLists = [ NoPIDKaonList, JpsiList],
                                  DaughterCuts  = {"K+": "(PT > 500)"},
-                                 PreVertexCuts = "ADAMASS('B+') < 300",
-                                 PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+                                 PreVertexCuts = "in_range(5000,AM,5650)",
+                                 PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)" )
 Bu2JpsiHDetachedLine  = StrippingLine("Bu2JpsiKNoPIDDetachedLine",
                                       algos = [ createSubSel( InputList = Bu2JpsiH,
                                                               OutputList = Bu2JpsiH.name() + "Detached",
@@ -166,8 +164,8 @@ B2JpsiXLines += [ Bu2JpsiHDetachedLine ]
 Bs2JpsiPhi = createCombinationSel( OutputList = "Bs2JpsiPhi",
                                    DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                    DaughterLists  = [ PhiList, JpsiList],
-                                   PreVertexCuts = "ADAMASS('B_s0') < 300",
-                                   PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+                                   PreVertexCuts = "in_range(5000,AM,5650)",
+                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)" )
 
 Bs2JpsiPhiPrescaledLine = StrippingLine("Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , prescale = 1.00)
 
@@ -191,8 +189,8 @@ B2JpsiXLines += [ Bs2JpsiPhiPrescaledLine, Bs2JpsiPhiDetachedLine, Bs2JpsiPhiUnb
 Bd2JpsiKstar = createCombinationSel( OutputList = "Bd2JpsiKstar",
                                      DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
                                      DaughterLists  = [ KstarList, JpsiList ],
-                                     PreVertexCuts = "ADAMASS('B0') < 300",
-                                     PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+                                     PreVertexCuts = "in_range(5000,AM,5650)",
+                                     PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)" )
 
 Bd2JpsiKstarPrescaledLine = StrippingLine("Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , prescale = 0.25)
 Bd2JpsiKstarDetachedLine  = StrippingLine("Bd2JpsiKstarDetachedLine",
@@ -213,8 +211,9 @@ B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKs
 Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc",
                                   DaughterLists  = [ KsList, JpsiList ],
-                                  PreVertexCuts = "ADAMASS('B0') < 500",
-                                  PostVertexCuts = "ALL" #"(VFASPF(VCHI2/VDOF) < 20)"
+                                  PreVertexCuts = "in_range(5000,AM,5650)",
+                                  PostVertexCuts = "in_range(5100,M,5550)"
+                                  #" & (VFASPF(VCHI2/VDOF) < 20)"
                                   )
 
 Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 1.00)
