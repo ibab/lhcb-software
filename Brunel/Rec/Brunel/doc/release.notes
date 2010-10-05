@@ -39,6 +39,8 @@ Purpose: LHCb reconstruction program
 
 - Changes to QMTests
   . brunel.brunel-mc09-withtruth now runs over 15 events (was 10)
+  . brunel.brunel-mc09-withtruth-invfield no longer needs 
+    TrackPrepareVelo().reverseCharge=True
 
 </PRE><H1><A NAME=v37r7>2010-09-03 Brunel v37r7</A></H1><PRE>
 
