@@ -73,9 +73,9 @@ class InclPhiConf(object):
                   'KaonPT'              : 500      # MeV
                 , 'KaonDLL'             : 15       # adimensional
                 , 'PhiMassWindow'       : 30       # MeV
-                , 'HighPtPrescale'      : 0.006    # adimensional
-                , 'LowPtPrescale'       : 0.002    # adimensional
-                , 'LDPrescale'          : 0.0001   # adimensional
+                , 'HighPtPrescale'      : 0.009    # adimensional
+                , 'LowPtPrescale'       : 0.003    # adimensional
+                , 'LDPrescale'          : 0.00001   # adimensional
         	}
 
     config_Sept2010={

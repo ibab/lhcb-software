@@ -9,7 +9,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
  - Replace "old" dimuon/dielectron lines with "new" ones in dimuon/dielectron streams
     
 ! 2010-10-05 - Sebastian Schleich
- - Set prescale for 1/20k in InclPhi lines.
+ - Set prescale for 0.05% retention in InclPhi lines.
 
 ! 2010-10-05 - Mariusz Witek for Katarzyna Senderowska
  - python/StrippingSelections/StrippingBs2EtacPhi.py
