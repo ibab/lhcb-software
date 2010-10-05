@@ -1,3 +1,7 @@
+2010-10-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added security when removing html files.
+
 2010-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: enhanced the message about link creation.

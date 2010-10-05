@@ -852,13 +852,16 @@ def getProjectList(name, version, binary=None, recursive=True):
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
             if name in lcg_tar :
-                log.debug('the required project %s %s %s is not available. Skipping ...' % (name, version, binary))
-                os.remove(tar_file_html)
+                log.debug("The required project %s %s %s is not available. Skipping ..." % (name, version, binary))
+                if os.path.exists(tar_file_html) :
+                    log.debug("Removing %s" % tar_file_html)
+                    os.remove(tar_file_html)
                 return project_list, html_list
             else :
-                log.fatal('the required project %s %s %s is not available' % (name, version, binary))
-                log.info('remove %s and exit ' % tar_file_html)
-                os.remove(tar_file_html)
+                log.fatal("the required project %s %s %s is not available" % (name, version, binary))
+                if os.path.exists(tar_file_html) :
+                    log.info("remove %s and exit" % tar_file_html)
+                    os.remove(tar_file_html)
                 sys.exit(1)
         if fdline.find('HREF=') != -1:
             eq_sign = fdline.find('HREF=')
