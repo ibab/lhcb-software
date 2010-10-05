@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-05 - Wouter Hulsbergen
+ - tightened mass window for StdMassConstrainedJpsi2MuMu
+
 !========================== CommonParticles v7r5 2010-10-04 ===================
 
 ! 2010-10-01 - Jibo He
