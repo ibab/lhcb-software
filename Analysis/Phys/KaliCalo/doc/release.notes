@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Vanya Belyaev
+
+ - move the defaul filter from Configurbale to firstPass function
+ - fix Davinci sequences  
+
 ! 2010-10-04 - Daria Savrina
 
  - added the default values for number of PV and SPD hits cuts to Configuration.py

@@ -49,13 +49,6 @@ kali = firstPass (
     NTuple           = "KaliPi0_Tuples_2k+10.root" , 
     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
     ##
-    Pi0VetoDeltaMass =  20 * MeV  ,
-    Pi0VetoChi2      = -1         ,
-    ##
-    Filter           = \
-    " ( 350 > monitor ( CONTAINS ( 'Raw/Spd/Digits'    ) , '#SPD'   , 1 ) ) & " + \
-    " ( 2.1 > monitor ( CONTAINS ( 'Rec/Vertex/Primary') , '#PV'    , 1 ) ) & " + \
-    " (  80 > monitor ( CONTAINS ( 'Rec/Calo/Photons'  ) , '#Gamma' , 1 ) ) " , 
     ## general 
     DataType         = '2010'   ,
     EvtMax           =  -1 
@@ -76,7 +69,7 @@ if '__main__' == __name__ :
     
     
     files    = [
-        '/lhcb/data/2010/DST/00007199/0000/00007199_00000%03d_2.MiniBias.dst' % n for n in range ( 5, 1000 )
+        '/lhcb/data/2010/MINIBIAS.DST/00007959/0000/00007959_00000%03d_1.minibias.dst' % n for n in range ( 1 , 211 )
         ]
     
     from GaudiPython.Bindings import AppMgr    
@@ -87,7 +80,7 @@ if '__main__' == __name__ :
     castor   =  'castor:/castor/cern.ch/grid'
     evtSel.open ( [ castor + f for f in files ] )
     
-    gaudi.run( 500000 ) 
+    gaudi.run( 1000 ) 
     
     from   KaliCalo.Pi0HistoFit import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 

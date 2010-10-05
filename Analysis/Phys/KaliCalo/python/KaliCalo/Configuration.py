@@ -181,8 +181,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## for first pass only
         , 'Pi0VetoDeltaMass'    : -1    ## mass-window for pi0-veto 
         , 'Pi0VetoChi2'         : -1    ## chi2        for pi0-veto
-        , 'Filter'              :" ( 200 > monitor ( CONTAINS ( 'Raw/Spd/Digits'    ) , '#SPD'   , 1 ) ) & " + \
-                                 " ( 2.  > monitor ( CONTAINS ( 'Rec/Vertex/Primary') , '#PV'    , 1 ) ) "        ## event filter
+        , 'Filter'              : ''    ## event filter
         ## mis/re-calibration
         , 'KaliDB'              : {}    ## the map of { 'dbase' : 'bbase_name' , 'ecal' : 'key for Ecal' , 'prs' : 'key for Prs'}
         , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
@@ -606,6 +605,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         # unpacking is enabled only for first pass on DST 
         unPack = self.getProp (  'FirstPass' )
 
+        fltrs  = []
         if self.getProp('FirstPass' ) :
             _fltr = self.getProp('Filter')
             if _fltr :
@@ -616,16 +616,18 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                     "from LoKiTracks.decorators  import *" , 
                     "from LoKiCore.functions     import *"
                     ]
-                algs = [ fltr ] + algs
-
+                _log.warning('KaliCalo: Event Filter is used \n%s' % _fltr )
+                
                 
         dv = DaVinci (
-            UserAlgorithms = algs                          ,
-            DataType       = self.getProp ( 'DataType'   ) ,
-            Simulation     = self.getProp ( 'Simulation' ) ,
-            EvtMax         = self.getProp ( 'EvtMax'     ) ,
-            PrintFreq      = self.getProp ( 'PrintFreq'  ) ,
-            EnableUnpack   = unPack 
+            EventPreFilters = fltrs                         ,
+            UserAlgorithms  = algs                          ,
+            DataType        = self.getProp ( 'DataType'   ) ,
+            Simulation      = self.getProp ( 'Simulation' ) ,
+            EvtMax          = self.getProp ( 'EvtMax'     ) ,
+            PrintFreq       = self.getProp ( 'PrintFreq'  ) ,
+            Lumi            = False                         ,
+            EnableUnpack    = unPack 
             ) 
 
         ## 7. The configuration of femtoDST
@@ -672,6 +674,10 @@ def firstPass ( **args ) :
         Pi0VetoDeltaMass = args.pop ( 'Pi0VetoDeltaMass' , 15 * MeV ) ,
         Pi0VetoChi2      = args.pop ( 'Pi0VetoChi2'      ,  -1      ) ,
         ##
+        Filter           = args.pop ( 'Filter'           , """
+        ( 200 > monitor ( CONTAINS ( 'Raw/Spd/Digits'    ) , '#SPD'   , 1 ) ) & 
+        ( 2.  > monitor ( CONTAINS ( 'Rec/Vertex/Primary') , '#PV'    , 1 ) )
+        """ ) , ## event filter
         **args
         )
     
@@ -707,25 +713,25 @@ def  action ( ) :
     """
     Reset DV-init sequence. IMPORTANT: It saves a lot of CPU time!!!
     """
-    dvInitSeq = getConfigurable('DaVinciInitSeq')
-    dvInitSeq.Members = []
-        
-    _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
 
-    dvMainSeq = getConfigurable('DaVinciMainSequence')
-    dvMainSeq.IgnoreFilterPassed = False
+    from Gaudi.Configuration import allConfigurables
 
-##     gammaRec = getConfigurable('SinglePhotonRec')
-##     for component in ( gammaRec             ,
-##                        gammaRec.ECorrection ,
-##                        gammaRec.SCorrection ,
-##                        gammaRec.LCorrection ) : 
-##         component.PropertiesPrint = True
-    
+    ## reser DaVinci sequences:
+    for seq in ( 'DaVinciInitSeq'      ,
+                 'DaVinciEventInitSeq' ,
+                 'DaVinviEventInitSeq' ,
+                 'MonitoringSeq'       ,
+                 'LumiSeq'             ,
+                 'IntegratorSeq'       ) : 
+        if not seq in allConfigurables : continue
+        iseq = getConfigurable ( seq )
+        if iseq and hasattr ( iseq , 'Members' ) :
+            iseq.Members = []
+            _log.warning ( 'KaliPi0Conf: Sequence %s is cleared ' % seq )
+            
 # =============================================================================
 ## Important: use Post Config action! 
 appendPostConfigAction ( action )
-
 
 ## temporary solve the problem with atexit/__del__ for AppMgr 
 def _KaliAtExit_ () :
