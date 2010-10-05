@@ -9,6 +9,14 @@ Purpose             : LHCb physics packages
 #                                 PHYS v9r11                                  #
 ###############################################################################
 
+- Based on LHCb v31r6 and Gaudi v21r11. For Stripping11.
+
+ * OfflineVertexFitter has new options includeDauVertexChi2 and applyMomMassConstraint
+ * Bug fix to LoKi::VertexFitter nDoF.
+ * PhysConf takes event time from RecHeader when available.
+ * Typo/bug fixes in LoKiPhys functors.
+ * New package Phys/DaVinciUtils with DaVinci-independent fuctors/functions/guards.
+
 ! 2010-09-24 - Rob Lambert
  - added Phys/TisTosTobbing
 
