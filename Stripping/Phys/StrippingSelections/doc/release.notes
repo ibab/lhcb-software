@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 1010-10-05 - Alexandr Kozlinskiy
+ - Update StrippingD02MuMu lines:
+     * prescale for calibration channels 0.005
+     * tightened cuts on vertex and mass windows
+
 ! 2010-10-05 - Jibo He
  - python/StrippingSelections/StrippingDiElectronNew.py
    . First commit of "new" dielectron lines 

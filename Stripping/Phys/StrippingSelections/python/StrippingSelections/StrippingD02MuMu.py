@@ -12,55 +12,51 @@ Control channels: D0 -> pi+ pi-, K+ K-, K- pi+, K+ pi-
 
 Cuts:
   * Particles input: StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
-  * Track-Chi2/NDOF of the D0 daughters < 10
+  * Track-Chi2/NDOF of the D0 daughters < 5
   * Pt of the D0 daughters > 1 GeV
-  * D0 mass window 100 MeV
-  * Chi2 of the D0 vertex < 100
-  * Chi2 of the D0 life time fit < 100
+  * D0 mass window 50 MeV
+  * Chi2 of the D0 vertex < 25
+  * Chi2 of the D0 life time fit < 36
   * D0 life time > 0.1 ps
-  * Track-Chi2/NDOF of the soft pion from D* < 10
+  * Track-Chi2/NDOF of the soft pion from D* < 5
   * M(D*) - M(D0) < 155 MeV
-  * Chi2 of the D* vertex < 100
+  * Chi2 of the D* vertex < 25
   * HLT = 'Hlt.*(MuMu|MBMicro|Muon).*Decision'
 
-Rates on Reco05-Stripping08_SDSTs:
---------------------------------------------
-Decision name                     : Rate
---------------------------------------------
-StrippingD02MuMu                  :   0.01%
-StrippingDstarWithD02MuMu         : < 0.01%
-StrippingD02HHForD02MuMu          :   0.13%    (prescale = 0.02)
-StrippingDstarWithD02HHForD02MuMu : < 0.03%    (prescale = 0.02)
---------------------------------------------
-
-CPU usage on Reco05-Stripping08_SDSTs:
-  StrippingD02MuMu: 0.7 ms.
-  StrippingDstarWithD02MuMu: 0.1 ms.
-  StrippingD02HHForD02MuMu: 2.2 ms.
-  StrippingDstarWithD02HHForD02MuMu: 1.6 ms.
-
+RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py:
+--------------------------------------------------------------------------------------------
+Decision name                                      :     Rate   Accepted   Mult.  <T>,ms
+--------------------------------------------------------------------------------------------
+StrippingGlobal                                    : 0.000564         15           1.003
+--------------------------------------------------------------------------------------------
+StrippingSequenceStreamTest                        : 0.000564         15           0.997
+-- StrippingD02MuMu                                : 0.000601         16   0.625   0.256
+-- StrippingDstarWithD02MuMu                       : 0.000451         12   0.083   0.117
+-- StrippingD02HHForD02MuMu                        : 0.000714         19   1.368   0.035
+-- StrippingDstarWithD02HHForD02MuMu               : 0.000488         13   0.154   0.034
+--------------------------------------------------------------------------------------------
 """
 
 D0DaughtersCutsMuons = \
-  "(TRCHI2DOF < 10) & (PT > 1 * GeV)"
+  "(TRCHI2DOF < 5) & (PT > 1 * GeV)"
 D0DaughtersCutsPion = \
-  "(TRCHI2DOF < 10) & (PT > 1 * GeV)"
+  "(TRCHI2DOF < 5) & (PT > 1 * GeV)"
 D0DaughtersCutsKaon = \
-  "(TRCHI2DOF < 10) & (PT > 1 * GeV)"
+  "(TRCHI2DOF < 5) & (PT > 1 * GeV)"
 D0CombinationCut = \
-  "(ADAMASS('D0') < 110 * MeV)"
+  "(ADAMASS('D0') < 60 * MeV)"
 D0MotherCut = \
-  "(VFASPF(VCHI2) < 100) & " + \
-  "(ADMASS('D0') < 100 * MeV) & " + \
-  "(BPVLTFITCHI2() < 100) & " + \
+  "(VFASPF(VCHI2) < 25) & " + \
+  "(ADMASS('D0') < 50 * MeV) & " + \
+  "(BPVLTFITCHI2() < 36) & " + \
   "(BPVLTIME() > 0.1 * ps)"
 
 DstarDaughtersCutsPion = \
-  "(TRCHI2DOF < 10)"
+  "(TRCHI2DOF < 5)"
 DstarCombinationCut = \
   "AM - AM1 < 160 * MeV"
 DstarMotherCut = \
-  "(VFASPF(VCHI2) < 100) & " + \
+  "(VFASPF(VCHI2) < 25) & " + \
   "((M - M1) < 155 * MeV)"
 
 from PhysSelPython.Wrappers import DataOnDemand
@@ -106,12 +102,12 @@ lineDstarWithD02MuMu = StrippingLine("DstarWithD02MuMu",
 
 lineD02HHForD02MuMu = StrippingLine("D02HHForD02MuMu",
   algos = [ D02HHSelection ],
-  prescale = 0.02,
+  prescale = 0.005,
   HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
 
 lineDstarWithD02HHForD02MuMu = StrippingLine("DstarWithD02HHForD02MuMu",
   algos = [ DstarWithD02HHSelection ],
-  prescale = 0.02,
+  prescale = 0.005,
   HLT = "(HLT_PASS_RE('Hlt.*(MuMu|MBMicro|Muon).*Decision'))")
 
 lines = [
