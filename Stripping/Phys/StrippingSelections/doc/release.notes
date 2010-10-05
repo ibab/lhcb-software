@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - James Keaveney
+  - Added two lines for low mass Drell-Yan which require HLT2
+    decisions. Tightened pre-scales. Removed track qual cut on
+    Z->mumu line.
+
 ! 2010-10-05 - Victor Coco
   - Update Single and DoubleDisplVertices with track quality cut 
     Add High mass and high pt muon version of SingleDisplVertices 
