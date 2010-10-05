@@ -4,7 +4,12 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
-!========================== MicroDSTAlgorithm v4r2 2010-10-04 =================
+!========================== MicroDSTAlgorithm v4r2 2010-10-05 =================
+
+! 2010-10-05 - Juan Palacios
+ - Added MoveDataObject MicroDSTAlgorithm. Simply moves a DataObject from 
+   "/Event/A/B/C/B" to "/Event/<OutputPrefix>/A/B/C/D", there OutputPrefix
+   is set by the OutputPrefix property.
 
 ! 2010-10-03 - Juan Palacios
  - Add CopyPVWeights, to copy KeyedContainer<LHCb::WeightsVector>.
