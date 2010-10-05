@@ -4,7 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
-! ======================== DSTWriters v1r12 2010-10-03 =======================
+! ======================== DSTWriters v1r12 2010-10-05 =======================
+
+! 2010-10-05 - Juan Palacios
+ - Add DSTWriters.__dev__.microdstelements.MoveObjects.
+  . Move TES object from A to B.
 
 ! 2010-10-03 - Juan Palacios
  - DSTWriters.__dev__.microdstelements: ClonePVs now copies PV weights vectors.

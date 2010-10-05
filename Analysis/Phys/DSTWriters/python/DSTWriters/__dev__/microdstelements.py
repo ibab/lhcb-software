@@ -20,7 +20,8 @@ __all__ = ( 'CloneRecHeader',
             'CloneBackCat',
             'CloneRawBanks',
             'CloneLHCbIDs',
-            'CloneTisTosInfo')
+            'CloneTisTosInfo',
+            'MoveObjects')
 
 from dstwriterutils import (setCloneFilteredParticlesToTrue,
                             ConfigurableList,
@@ -221,6 +222,7 @@ class CloneRawBanks(MicroDSTElement) :
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
         return [rawBankCopy]
 
+
 class CloneBackCat(MicroDSTElement) :
     """
     Generator for list of Particle2BackgroundCategoryRelationsAlg and CopyParticle2BackgroundCategory.
@@ -251,5 +253,24 @@ class CloneTisTosInfo(MicroDSTElement) :
         cloner =  CopyParticle2TisTosDecisions(self.personaliseName(sel,
                                                             'CopyTisTos'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
+        self.setOutputPrefix(cloner)
+        return [cloner]
+
+class MoveObjects(MicroDSTElement) :
+    """
+    Configurable to move DataObject from one location to another.
+    Arguments:
+
+    objects: list of TES locations DataObjects to copy (strings)
+    branch: TES branch of output.
+    """
+    def __init__(self, branch = '', objects = []) :
+        MicroDSTElement.__init__(self, branch)
+        self.objects = list(objects)
+
+    def __call__(self, sel):
+        from Configurables import MoveDataObject
+        cloner = MoveDataObject(self.personaliseName(sel, "MoveContainer"))
+        cloner.InputLocations = self.objects
         self.setOutputPrefix(cloner)
         return [cloner]
