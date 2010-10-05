@@ -27,9 +27,9 @@ StdMassConstrainedJpsi2MuMu = FilterDesktop("StdMassConstrainedJpsi2MuMu")
 StdMassConstrainedJpsi2MuMu.InputLocations =["StdLooseJpsi2MuMu"]
 StdMassConstrainedJpsi2MuMu.Code = "  (ADMASS('J/psi(1S)') < 60.*MeV)" \
                               	   "& (VFASPF(VCHI2) < 16.)" \
+                                   "& (MINTREE('mu+'==ABSID, PIDmu) > 0)" \
 			     	   "& (MFIT)"
 				   #"& (INFO( LHCb.Particle.Chi2OfMassConstrainedFit, 100 ) < 25)"
-                              	   #"& (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdMassConstrainedJpsi2MuMu )
