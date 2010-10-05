@@ -89,17 +89,19 @@ StatusCode TrackClusterFinder::execute() {
       for(Track::Container::const_iterator itr = inputTracks->begin();
           inputTracks->end() != itr; itr++) {
         if((*itr)->states().empty()) continue;
-        trackIndex++;
-        tmpTrack track;
-        track.index = trackIndex;
-        track.weight = 0;
-        track.phi = (*itr)->phi();
-        track.eta = (*itr)->pseudoRapidity();
-        track.pt = (*itr)->pt() / Gaudi::Units::GeV;
-        tmpTracks.push_back(track);
-      }
+        if((*itr)->chi2PerDoF() < 10.0) {
+          trackIndex++;
+          tmpTrack track;
+          track.index = trackIndex;
+          track.weight = 0;
+          track.phi = (*itr)->phi();
+          track.eta = (*itr)->pseudoRapidity();
+          track.pt = (*itr)->pt() / Gaudi::Units::GeV;
+          tmpTracks.push_back(track);
+        }
+        }
       // Allocate weights
-      if(tmpTracks.size() > 0) {   
+      if(tmpTracks.size()) {   
         for(std::vector<tmpTrack>::iterator id1 = tmpTracks.begin(); 
             id1 != tmpTracks.end() - 1; id1++) {
           tmpTrack trk1 = *id1;
