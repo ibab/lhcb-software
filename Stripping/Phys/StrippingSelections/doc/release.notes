@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 Erica Polycarpo
+- Changes to StrippingD2hhh_conf.py
+---> Separate D and Ds lines to optimize S/B
+---> Change cuts in order to align it with the new HLT2
+
 ! 2010-10-05 Steve Blusk
 - Changes to StrippingB2D3H.py (Both allowed because if gain in timing by GECs)
 ---> Increse #long tracks limit from 200 to 300
