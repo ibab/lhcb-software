@@ -14,8 +14,8 @@ from StrippingSelections.StrippingBd2eeKstar import Bd2eeKstarConf
 from StrippingSelections.StrippingBd2JpsieeKstar import Bd2JpsieeKstarConf
 
 #from StrippingSelections.StrippingBu2LLK       import StrippingBu2LLKConf
-from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf  
 from StrippingSelections.StrippingDiElectron   import StrippingDiElectronConf
+from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf
 
 
 stream = StrippingStream("Dielectron")
@@ -23,12 +23,12 @@ stream.appendLines( [
     Bd2eeKstarConf().line,
     Bd2JpsieeKstarConf().line,    
 #    StrippingBu2LLKConf().eeK(),
-    StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
-    StrippingBs2JpsieePhiConf().Signalbox_line(),
     StrippingDiElectronConf().LooseJpsi2ee_line(),
     StrippingDiElectronConf().Jpsi2ee_line(),
     StrippingDiElectronConf().IncDiElectron_line(),
     StrippingDiElectronConf().IncDiElectronLowMass_line(),
     StrippingDiElectronConf().BiasedIncDiElectron_line(),
-    StrippingDiElectronConf().BiasedIncDiElectronLowMass_line()
+    StrippingDiElectronConf().BiasedIncDiElectronLowMass_line(),
+    StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
+    StrippingBs2JpsieePhiConf().Signalbox_line()
     ] )
