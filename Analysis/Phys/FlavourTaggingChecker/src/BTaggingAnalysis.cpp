@@ -35,7 +35,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
 {
   declareProperty( "EnableMC",  m_EnableMC = true ); //deasactivate to run with real data
 
-  declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MaximumPt");
+  declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MinChi2");
   declareProperty( "RequireTrigger",     m_requireTrigger   = true );
   declareProperty( "RequireTisTos",      m_requireTisTos    = true );
   declareProperty( "SaveHlt1Lines",      m_saveHlt1Lines    = false );
@@ -527,6 +527,15 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
       if(!(*ip)->particleID().hasBottom()) continue;
       if(maxptB > (*ip)->pt()) continue; else maxptB=(*ip)->pt();
       AXBS = (*ip);
+    }
+  } else if( m_BHypoCriterium == "MinChi2" ){
+    double minchi2B=99999;
+    Particle::ConstVector::const_iterator jp;
+    for ( jp = parts.begin(); jp != parts.end(); jp++){
+      if(!(*jp)->particleID().hasBottom()) continue;
+      double chi2 = (*jp)->endVertex()->chi2PerDoF();
+      if(minchi2B < chi2) continue; else minchi2B = chi2;
+      AXBS = (*jp);
     }
   } else {
     err()<<"Unknown BHypoCriterium: "<<m_BHypoCriterium<<endreq;
