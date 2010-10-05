@@ -40,16 +40,16 @@ B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 #  LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
 #
 #  Pi line: B0->pi+ mu- nu signal line.
-#  Rate = 0.0265, Timing = 0.055 , Prescale = 0.1
+#  Rate = 0.046, Timing = 0.087 , Prescale = 0.2
 #
 #  Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-#  Rate = 0.0142, Timing = 0.048, Prescale = 0.1
+#  Rate = 0.055, Timing = 0.404, Prescale = 0.5
 #
 #  K line: Bs0->K+ mu- nu signal line.
-#  Rate = 0.0088, Timing = 0.037, Prescale = 0.1
+#  Rate = 0.053, Timing = 0.057, Prescale = 0.5
 #
 #  K SS line:: Bs0->K+ mu+ nu Background to the K line.
-#  Rate = 0.0301, Timing = 0.042, Prescale = 0.1
+#  Rate = 0.053, Timing = 0.059, Prescale = 0.2
 #
 #  Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
 #  Rate = 0.0336, Timing = 0.244, Prescale = 0.5
@@ -96,16 +96,16 @@ rate <0.05% and timing <1ms/evt.
 LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
 
 Pi line: B0->pi+ mu- nu signal line.
-Rate = 0.0265, Timing = 0.055 , Prescale = 0.1
+Rate = 0.046, Timing = 0.087 , Prescale = 0.2
 
 Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-Rate = 0.0142, Timing = 0.048, Prescale = 0.1
+Rate = 0.055, Timing = 0.404, Prescale = 0.5
 
 K line: Bs0->K+ mu- nu signal line.
-Rate = 0.0088, Timing = 0.037, Prescale = 0.1
+Rate = 0.053, Timing = 0.057, Prescale = 0.5
 
 K SS line:: Bs0->K+ mu+ nu Background to the K line.
-Rate = 0.0301, Timing = 0.042, Prescale = 0.1
+Rate = 0.053, Timing = 0.059, Prescale = 0.2
 
 Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
 Rate = 0.0336, Timing = 0.244, Prescale = 0.5
@@ -235,7 +235,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
         from PhysSelPython.Wrappers import DataOnDemand
         return StrippingLine('Bd2PiMuNuLine',
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
-                             prescale = 0.1,
+                             prescale = 0.2,
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -253,7 +253,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
     def PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.1,
+        return StrippingLine('Bd2PiMuNuSSLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -307,7 +307,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
     def K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuLine', prescale = 0.1,
+        return StrippingLine('Bs2KMuNuLine', prescale = 0.5,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """
@@ -325,7 +325,7 @@ class StrippingB2XuMuNuConf(LHCbConfigurableUser):
     
     def KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.1,
+        return StrippingLine('Bs2KMuNuSSLine', prescale = 0.2,
                              HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2MuTrackDecision')",
                              FILTER = {'Code' :
                                        """

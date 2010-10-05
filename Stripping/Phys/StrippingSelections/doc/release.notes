@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Liming Zhang for Alessandra Borgia
+ - reset prescales in StrippingB2XuMuNu.py
+
 ! 2010-10-05 - Jibo He
  - python/StrippingSelections/StrippingDiElectronNew.py
    . Require Hlt2 lines for both biased & unbiased low mass dielectron lines 
@@ -83,7 +86,8 @@ measurement of tracking efficiency with a tag-and-probe-method with Muon(TT) tra
 
 ! 2010-10-04 - Liming Zhang
 - update StrippingB2DMuNuX.py StrippingD0ForBXX.py StrippingDForBSemi.py
-- update /StrippingB2XuMuNu.py StrippingD2XMuMuSS.py Alessandra Borgia
+- update StrippingB2XuMuNu.py StrippingD2XMuMuSS.py for Alessandra Borgia
+- remove obsolete Strippingb2DMuX.py
 
 ! 2010-10-04 - Andrew Powell
 - Modifications to python/StrippingSelections/StrippingV0ForPID.py
