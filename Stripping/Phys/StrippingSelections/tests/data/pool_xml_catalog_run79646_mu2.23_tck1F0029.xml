@@ -2297,4 +2297,11 @@
     <logical/>
   </File>
 
+  <File ID="B4EB12AE-52CF-DF11-A80E-000423D99862">
+    <physical>
+      <pfn filetype="ROOT_All" name="etc.root"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

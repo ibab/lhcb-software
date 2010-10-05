@@ -101,7 +101,20 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MinMass',
         'Jpsi2MuMu_MaxMass',
         'Jpsi2MuMu_VCHI2PDOF',
-        'Jpsi2MuMu_PT'
+        'Jpsi2MuMu_PT',
+        
+        # Tight Psi(2S) line
+        'Psi2MuMu_Prescale',
+        'Psi2MuMu_Postscale',
+
+        'Psi2MuMu_ParticleName', 
+        'Psi2MuMu_MuonPT',
+        'Psi2MuMu_MuonP',
+        'Psi2MuMu_PIDmu',
+        'Psi2MuMu_MuonTRCHI2DOF', 
+        'Psi2MuMu_MassWindow',
+        'Psi2MuMu_VCHI2PDOF',
+        'Psi2MuMu_PT'        
         )
     
     config_default= {
@@ -156,7 +169,20 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
         'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.0     # MeV  
+        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
         }
 
     config_microDST = {
@@ -211,7 +237,21 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
         'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.0     # MeV  
+        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+        
+        'Psi2MuMu_ParticleName'                    :"'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
+        
         }
 
     
@@ -229,7 +269,7 @@ class DiMuonConf(object):
         """
         DiMuon line
         """
-        self.SelDiMuon = filterDiMuon( name + 'DiMuonInc' +'_SelMuMu',
+        self.SelDiMuon = filterDiMuon( name + 'DiMuon',
                                        MuonPT        = config['DiMuon_MuonPT'],
                                        MuonP         = config['DiMuon_MuonP'],
                                        MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],
@@ -238,7 +278,7 @@ class DiMuonConf(object):
                                        MuMuPT        = config['DiMuon_PT']
                                        )
 
-        self.DiMuonLine = StrippingLine( name + 'DiMuon' + 'Line',
+        self.DiMuonLine = StrippingLine( name + 'DiMuonInc' + 'Line',
                                          prescale  = config['DiMuon_Prescale'],
                                          postscale = config['DiMuon_Postscale'],
                                          algos = [self.SelDiMuon]
@@ -247,7 +287,7 @@ class DiMuonConf(object):
         """
         DiMuon same sign line
         """
-        self.SelDiMuonSameSign = filterDiMuonSameSign( name + 'DiMuonSameSign' + '_SelMuMu',
+        self.SelDiMuonSameSign = filterDiMuonSameSign( name + 'DiMuonSameSign',
                                                        MuonPT        = config['DiMuon_MuonPT'],
                                                        MuonP         = config['DiMuon_MuonP'],
                                                        MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],
@@ -265,7 +305,7 @@ class DiMuonConf(object):
         """
         DiMuon High Mass line
         """
-        self.SelDiMuonHighMass = filterDiMuon( name + 'DiMuonHighMass' + '_SelMuMu',
+        self.SelDiMuonHighMass = filterDiMuon( name + 'DiMuonHighMass',
                                                MuonPT        = config['DiMuonHighMass_MuonPT'],
                                                MuonP         = config['DiMuonHighMass_MuonP'],
                                                MuonTRCHI2DOF = config['DiMuonHighMass_MuonTRCHI2DOF'],
@@ -284,7 +324,7 @@ class DiMuonConf(object):
         """
         DiMuon High Mass Same Sign line
         """
-        self.SelDiMuonHighMassSameSign = filterDiMuonSameSign( name + 'DiMuonHighMassSameSign' + '_SelMuMu',
+        self.SelDiMuonHighMassSameSign = filterDiMuonSameSign( name + 'DiMuonHighMassSameSign',
                                                                MuonPT        = config['DiMuonHighMass_MuonPT'],
                                                                MuonP         = config['DiMuonHighMass_MuonP'],
                                                                MuonTRCHI2DOF = config['DiMuonHighMass_MuonTRCHI2DOF'],
@@ -304,7 +344,7 @@ class DiMuonConf(object):
         """
         DiMuon Low Mass line
         """
-        self.SelDiMuonLowMass = filterDiMuon( name + 'DiMuonLowMass' + '_SelMuMu',
+        self.SelDiMuonLowMass = filterDiMuon( name + 'DiMuonLowMass',
                                               MuonPT        = config['DiMuonLowMass_MuonPT'],
                                               MuonP         = config['DiMuonLowMass_MuonP'],
                                               MuonTRCHI2DOF = config['DiMuonLowMass_MuonTRCHI2DOF'],
@@ -322,7 +362,7 @@ class DiMuonConf(object):
         """
         Jpsi-> mumu tight line
         """
-        self.SelJpsi2MuMu = filterJpsi2MuMu( name + 'Jpsi2MuMu' + '_SelMuMu',
+        self.SelJpsi2MuMu = filterJpsi2MuMu( name + 'Jpsi2MuMu',
                                              MuonPT        = config['Jpsi2MuMu_MuonPT'],
                                              MuonP         = config['Jpsi2MuMu_MuonP'],
                                              MuonTRCHI2DOF = config['Jpsi2MuMu_MuonTRCHI2DOF'],
@@ -336,6 +376,27 @@ class DiMuonConf(object):
                                             postscale = config['Jpsi2MuMu_Postscale'],
                                             algos = [self.SelJpsi2MuMu]
                                             )
+
+        """
+        Psi(2S)->mumu tight line
+        """
+        self.SelPsi2MuMu = filterSignal( name + 'Psi2MuMu',
+                                         ParticleName  = config['Psi2MuMu_ParticleName'],
+                                         MuonPT        = config['Psi2MuMu_MuonPT'],
+                                         MuonP         = config['Psi2MuMu_MuonP'],
+                                         MuonPIDmu     = config['Psi2MuMu_PIDmu'],  
+                                         MuonTRCHI2DOF = config['Psi2MuMu_MuonTRCHI2DOF'],
+                                         MuMuMassWindow= config['Psi2MuMu_MassWindow'],                                          
+                                         MuMuVCHI2PDOF = config['Psi2MuMu_VCHI2PDOF'],
+                                         MuMuPT        = config['Psi2MuMu_PT']
+                                         )
+
+        self.Psi2MuMuLine = StrippingLine( name + 'Psi2MuMu' + 'Line',
+                                            prescale  = config['Psi2MuMu_Prescale'],
+                                            postscale = config['Psi2MuMu_Postscale'],
+                                            algos = [self.SelPsi2MuMu]
+                                            )
+            
         
         self.Lines = [
             self.DiMuonLine,
@@ -343,7 +404,8 @@ class DiMuonConf(object):
             self.DiMuonHighMassLine,
             self.DiMuonHighMassSameSignLine,
             self.DiMuonLowMassLine,
-            self.Jpsi2MuMuLine
+            self.Jpsi2MuMuLine,
+            self.Psi2MuMuLine
             ]
         
         self.MicroDSTLines = [
@@ -370,7 +432,7 @@ def filterDiMuon( name,
     _MuMu = FilterDesktop( "_Filter" + name,
                            Code = MuonCut + " & " + MuMuCut )
 
-    return Selection( name,
+    return Selection( name + "_SelMuMu",
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseDiMuon ]
                       )
@@ -389,12 +451,12 @@ def filterDiMuonSameSign( name,
     
     MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
     
-    MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
+    MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *MeV)" % locals()
     
     _MuMu = FilterDesktop( "_Filter" + name,
                            Code = MuonCut + " & " + MuMuCut )
     
-    return Selection( name,
+    return Selection( name + "_SelMuMuSS",
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseDiMuonSameSign ]
                       )
@@ -419,32 +481,33 @@ def filterJpsi2MuMu( name,
     _MuMu = FilterDesktop( "_Filter" + name,
                            Code = MuonCut + " & " + MuMuCut )
     
-    return Selection( name,
+    return Selection( name + "_SelJpsi2MuMu",
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseJpsi2MuMu ]
                       )
 
 
 def filterSignal( name,
+                  ParticleName, 
                   MuonPT,
                   MuonP,
+                  MuonPIDmu,
                   MuonTRCHI2DOF,
-                  MuMuMinMass,
-                  MuMuMaxMass, 
+                  MuMuMassWindow, 
                   MuMuVCHI2PDOF,
                   MuMuPT
                   ):
         
     _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon' )
     
-    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
+    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MINTREE('mu+'==ABSID,PIDmu) > %(MuonPIDmu)s) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
     
-    MuMuCut = "(MM > %(MuMuMinMass)s) & (MM < %(MuMuMaxMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
+    MuMuCut = "(ADMASS(%(ParticleName)s) < %(MuMuMassWindow)s *MeV) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *MeV)" % locals()
     
     _MuMu = FilterDesktop( "_Filter" + name,
                            Code = MuonCut + " & " + MuMuCut )
     
-    return Selection( name,
+    return Selection( name + "_SelP2MuMu",
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseDiMuon ]
                       )

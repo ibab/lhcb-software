@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Jibo He
+ - python/StrippingSelections/StrippingDiMuonNew.py
+   + Added Psi2MuMu line 
+
 ! 2010-10-05 - Andrew Powell for Andrea Contu
 - Update StrippingDstar_D2KPiPi0.py, same selection but different prescaling factor
 
