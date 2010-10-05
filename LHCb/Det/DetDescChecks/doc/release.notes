@@ -7,6 +7,11 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+! 2010-10-05 - Illya Shapoval 
+ - Added tests 'loaddddb-sim-2010.qmt','loaddddb-sim-2009.qmt' and 
+ 'loaddddb-sim-MC09.qmt' for checking latest simulation global and local tags
+ for 2010, 2009 and MC09 data types.
+
 !======================= DetDescChecks v5r3 2010-05-21 =========================
 ! 2010-05-07 - Marco Cattaneo
  - Add a test for 2010 DataType

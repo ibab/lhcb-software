@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from Configurables import DDDBConf, CondDB
 
 DDDBConf(DataType = "2009")
-CondDB().useLatestTags(DataType = "2009")
+CondDB().UseLatestTags = ["2009"]
 </text></argument>
 <argument name="validator"><text>
 countErrorLines()

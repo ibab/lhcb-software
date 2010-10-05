@@ -10,8 +10,9 @@
 from Gaudi.Configuration import *
 from Configurables import DDDBConf, CondDB
 
-DDDBConf(DataType = "2008")
-CondDB().UseLatestTags = ["2008"]
+DDDBConf(DataType = "MC09")
+CondDB().Simulation = True
+CondDB().UseLatestTags = ["MC09"]
 </text></argument>
 <argument name="validator"><text>
 countErrorLines()
