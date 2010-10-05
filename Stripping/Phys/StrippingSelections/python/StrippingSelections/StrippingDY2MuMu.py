@@ -20,18 +20,8 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 
-mucut_1 = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)&(( PIDmu-PIDpi)>-1.0)'
-mucut_1_ps = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
+mucut_1_ps = '(PT>800*MeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)&(( PIDmu-PIDpi)>-3.0)'
 mucut_2 = '(PT>1*GeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
-
-
-_DY1 = CombineParticles(name+"1",
-                         DecayDescriptor = 'Z0 -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut_1 , 
-                                           'mu-' : mucut_1 },
-                         MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
-                         WriteP2PVRelations = False
-                         )
 
 
 
@@ -41,6 +31,24 @@ _DY1_ps = CombineParticles(name+"1_ps",
                          DaughtersCuts = { 'mu+' : mucut_1_ps, 
                                            'mu-' : mucut_1_ps },
                          MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
+                         WriteP2PVRelations = False
+                         )
+
+
+#lines with HLT2 requirements
+_DY1_HLT2 = CombineParticles(name+"1_HLT2",
+                         DecayDescriptor = 'Z0 -> mu+ mu-',
+                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
+                                           'mu-' : mucut_1_ps },
+                         MotherCut = "(MM>2.5*GeV)",
+                         WriteP2PVRelations = False
+                         )
+
+_DY2_HLT2 = CombineParticles(name+"2_HLT2",
+                         DecayDescriptor = 'Z0 -> mu+ mu-',
+                         DaughtersCuts = { 'mu+' : mucut_1_ps, 
+                                           'mu-' : mucut_1_ps },
+                         MotherCut = "(MM>5*GeV)",
                          WriteP2PVRelations = False
                          )
 
@@ -71,14 +79,20 @@ _DY4 = CombineParticles(name+"4",
 
 
 
-                         
-DY1 = Selection( "Sel"+name+"1",
-                  Algorithm = _DY1,
-                  RequiredSelections = [_muons]
-                  )
 
 DY1_ps = Selection( "Sel"+name+"1_ps",
                   Algorithm = _DY1_ps,
+                  RequiredSelections = [_muons]
+                  )
+
+
+DY1_HLT2 = Selection( "Sel"+name+"1_HLT2",
+                  Algorithm = _DY1_HLT2,
+                  RequiredSelections = [_muons]
+                  )
+
+DY2_HLT2 = Selection( "Sel"+name+"2_HLT2",
+                  Algorithm = _DY2_HLT2,
                   RequiredSelections = [_muons]
                   )
 
@@ -99,13 +113,19 @@ DY4 = Selection( "Sel"+name+"4",
 
 
 # build the SelectionSequence
-sequence1 = SelectionSequence("Seq"+name+"1",
-                             TopSelection = DY1
-                             )
 
 sequence1_ps = SelectionSequence("Seq"+name+"1_ps",
                              TopSelection = DY1_ps
                              )
+
+sequence1_HLT2 = SelectionSequence("Seq"+name+"1_HLT2",
+                             TopSelection = DY1_HLT2
+                             )
+
+sequence2_HLT2 = SelectionSequence("Seq"+name+"2_HLT2",
+                             TopSelection = DY2_HLT2
+                             )
+
 sequence2 = SelectionSequence("Seq"+name+"2",
                              TopSelection = DY2
                              )
@@ -118,14 +138,22 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 
 # Define the lines
 ## ############################################################
-line1 = StrippingLine('DY2MuMu1'
-                           , prescale = 1.
-                           , algos = [ sequence1 ]
-                           )
 
 line1_ps = StrippingLine('DY2MuMu1_ps'
-                           , prescale = .1
+                           , prescale = .02
                            , algos = [ sequence1_ps ]
+                           )
+
+line1_HLT2 = StrippingLine('DY2MuMu1_HLT2'
+                           , prescale = .1
+                           , algos = [ sequence1_HLT2 ]
+                           , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
+                           )
+
+line2_HLT2 = StrippingLine('DY2MuMu2_HLT2'
+                           , prescale = .2
+                           , algos = [ sequence2_HLT2 ]
+                           , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
                            )
 
 line2 = StrippingLine('DY2MuMu2'

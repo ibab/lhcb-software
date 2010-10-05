@@ -16,7 +16,6 @@ from StrippingSelections import StrippingWe
 from StrippingSelections import StrippingDY2ee
 from StrippingSelections import StrippingDisplVertices
 from StrippingSelections import StrippingHighPtJets
-
 from StrippingSelections import StrippingMuMuSS
 
 stream = StrippingStream("EW")
@@ -29,8 +28,9 @@ stream.appendLines( [
                         StrippingWMu.line_ps,
                         StrippingWMu.lineloose_ps,
                         StrippingWMu.lineNoPIDs_ps,
-		        StrippingDY2MuMu.line1,
       		        StrippingDY2MuMu.line1_ps,
+                        StrippingDY2MuMu.line1_HLT2,
+                        StrippingDY2MuMu.line2_HLT2,
                         StrippingDY2MuMu.line2,
 		        StrippingDY2MuMu.line3,
 		        StrippingDY2MuMu.line4,
