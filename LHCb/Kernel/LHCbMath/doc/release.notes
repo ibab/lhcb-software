@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-10-05 - Marco Clemencic
+ - Fixed a configuration problem with the Intel compiler.
+
 !========================= LHCbMath v3r20 2010-09-27 =========================
 ! 2010-09-27 - Vanya Belyaev
  - python/LHCbMath/Types.py

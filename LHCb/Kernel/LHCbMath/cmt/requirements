@@ -72,5 +72,6 @@ macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
                      WIN32 ""
 macro_append  GSL_linkopts " -Wl,--as-needed " \
                     Darwin "" \
-                     WIN32 ""
+                     WIN32 "" \
+                target-icc ""
 end_private
