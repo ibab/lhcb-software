@@ -25,8 +25,8 @@ stream.appendLines( [
 		        StrippingLambdaNoPID.line_lambda_ll
 		    ] )
 
-MyInclPhiConf =  InclPhiConf("InclPhi", InclPhiConf.config_Sept2010 )
-stream.appendLines( MyInclPhiConf.lines )
+MyInclPhiConf =  InclPhiConf("InclPhi", InclPhiConf.config_default )
+stream.appendLines( [MyInclPhiConf.InclPhiHighPtLine, MyInclPhiConf.InclPhiLowPtLine ] )
 
 
 stream.appendLines (StrippingHltErrorBits.lines)

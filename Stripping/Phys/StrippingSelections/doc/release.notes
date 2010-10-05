@@ -4,6 +4,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-05 - Sebastian Schleich
+ - Set prescale for 1/20k in InclPhi lines.
 
 ! 2010-10-05 - Mariusz Witek for Katarzyna Senderowska
  - python/StrippingSelections/StrippingBs2EtacPhi.py
