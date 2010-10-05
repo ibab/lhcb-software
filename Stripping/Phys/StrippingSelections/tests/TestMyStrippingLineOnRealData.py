@@ -5,16 +5,20 @@ from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-# Import your stripping lines
-from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
-from StrippingSelections import StrippingBd2DstarMuNu
-from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 
 # Now build the stream
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
-stream.appendLines( [ StrippingDstarVeryLooseWithD02HHConf().line()] )
-stream.appendLines( [ StrippingBd2DstarMuNu.line, StrippingBd2DstarMuNuLooseConf().line() ] )
+
+# Import your stripping lines
+from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi 
+confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
+stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines )
+
+from StrippingSelections import StrippingBd2DstarMuNu
+confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
+stream.appendLines( confBd2DstarMuNu.Lines )
+
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()

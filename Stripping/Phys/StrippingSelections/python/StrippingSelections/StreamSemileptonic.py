@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 #from StrippingSelections import StrippingBd2DstarMuNu
-from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
+#from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
 
 #from StrippingSelections import StrippingBsDsMuNu
 #superceded by B0q2DplusMuX
