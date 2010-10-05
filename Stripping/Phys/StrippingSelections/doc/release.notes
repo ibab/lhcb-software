@@ -5,6 +5,15 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-05 - Mariusz Witek for Katarzyna Senderowska
+ - python/StrippingSelections/StrippingBs2EtacPhi.py
+   . cuts tigtened
+ - python/StrippingSelections/StrippingBs2ChicPhi.py
+   . line removed   
+ - new stripping lines added:
+   . python/StrippingSelections/StrippingBs2ChicPhi_Chic2KKPiPi.py
+   . python/StrippingSelections/StrippingBs2ChicPhi_Chic2PiPiPiPi.py
+
 ! 2010-10-05 - Liming Zhang for Alessandra Borgia
  - reset prescales in StrippingB2XuMuNu.py
 
