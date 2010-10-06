@@ -6,7 +6,9 @@
 #include "Event/Track.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTrackInfo.h"
+#include "Event/VeloCluster.h"
 #include "Linker/LinkedFrom.h"
+#include "Linker/LinkedTo.h"
 
 // local
 #include "DebugTrackingLosses.h"
@@ -28,9 +30,12 @@ DebugTrackingLosses::DebugTrackingLosses( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "VeloRZ",     m_veloRZ    = false );
-  declareProperty( "VeloSpace",  m_veloSpace = false );
-  
+  declareProperty( "VeloRZ",      m_veloRZ      = false );
+  declareProperty( "VeloSpace",   m_veloSpace   = false );
+  declareProperty( "Forward",     m_forward     = false );
+  declareProperty( "Ghost",       m_ghost       = false );
+  declareProperty( "Clone",       m_clone       = false );
+  declareProperty( "FromStrange", m_fromStrange = false );
 }
 //=============================================================================
 // Destructor
@@ -61,6 +66,7 @@ StatusCode DebugTrackingLosses::execute() {
 
   LinkedFrom<LHCb::Track,LHCb::MCParticle> veloRZLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::RZVelo );
   LinkedFrom<LHCb::Track,LHCb::MCParticle> veloSpaceLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Velo );
+  LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
@@ -70,7 +76,21 @@ StatusCode DebugTrackingLosses::execute() {
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
     if ( ! trackInfo.hasVeloAndT( part ) ) continue;
     if ( abs( part->particleID().pid() ) == 11 ) continue; // reject electron    
-    if ( 5000. > fabs( part->p() ) ) continue;
+    if ( m_fromStrange ) {
+      bool isStrange = false;
+      const LHCb::MCParticle* mother = part;
+      while( 0 != mother->originVertex() ) {
+        mother = mother->originVertex()->mother();
+        if ( 0 == mother ) break;
+        if ( mother->particleID().pid() ==   310 ) isStrange = true;
+        if ( mother->particleID().pid() ==  3122 ) isStrange = true;
+        if ( mother->particleID().pid() == -3122 ) isStrange = true;
+      }
+      if ( !isStrange ) continue;
+    } else {
+      if ( 5000. > fabs( part->p() ) ) continue;
+    }
+    
     
     bool hasVeloRZ    = veloRZLinker.first( part ) != NULL;
     bool hasVeloSpace = veloSpaceLinker.first( part ) != NULL;
@@ -82,6 +102,42 @@ StatusCode DebugTrackingLosses::execute() {
       info() << "Missed VeloSpace for MCParticle " << part->key() << " ";
       printMCParticle( part );
     } 
+    if ( m_forward ) {
+      if ( forwardLinker.first(part) == NULL ) {
+        info() << "Missed Forward for MCParticle " << part->key() << " ";
+        printMCParticle( part );
+      } else if ( m_clone && forwardLinker.next( ) != NULL ) {
+        info() << "Forward clone for MCParticle " << part->key() << " ";
+        printMCParticle( part );
+      } 
+    }
+  }
+
+  if ( m_ghost ) {
+    if ( m_forward ) {
+      LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
+      LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
+
+      LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+      for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
+        if ( trackLinker.first( *itT ) == NULL ) {
+          info() << "Forward ghost track, nb " << (*itT)->key() << endmsg;
+          for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin(); 
+                (*itT)->lhcbIDs().end() != itId; ++itId ) {
+            if ( (*itId).isVelo() ) {
+              LHCb::VeloChannelID idV = (*itId).veloID();          
+              info() << format( "   Sensor %2d Strip %4d ", idV.sensor(), idV.strip() );
+              LHCb::MCParticle* part = vLink.first( idV );
+              while ( 0 != part ) {
+                info() << " " << part->key();
+                part = vLink.next();
+              }
+              info() << endmsg;
+            }
+          }
+        }
+      }
+    }
   }
   
   return StatusCode::SUCCESS;
@@ -101,7 +157,7 @@ void DebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
     if ( 0 == pp ) {
       info() << mother->key() << "[" << mother->particleID().pid() <<"]";
     } else {
-      info() << mother->key() << "[" << pp->particle() <<"]";
+      info() << mother->key() << "[" <<  pp->particle() <<"]";
     }
     vert = mother->originVertex();
     if ( 0 == vert ) {

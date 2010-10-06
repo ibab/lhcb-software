@@ -33,5 +33,9 @@ private:
 
   bool m_veloRZ;
   bool m_veloSpace;
+  bool m_forward;
+  bool m_clone;
+  bool m_ghost;
+  bool m_fromStrange;
 };
 #endif // DEBUGTRACKINGLOSSES_H

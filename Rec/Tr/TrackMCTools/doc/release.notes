@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-10-06 - Olivier Callot
+ - New options in DebugTrackingLosses, see the code.
+ - New algorithm MeasureIPResolution to study the Velo internal fit.
+
 !======================= TrackMCTools v2r27 2010-09-27 =======================
 ! 2010-09-21 - Victor Coco
  - replace hardcoded VeloPix locations in LHCbIDs2MCHits to use 

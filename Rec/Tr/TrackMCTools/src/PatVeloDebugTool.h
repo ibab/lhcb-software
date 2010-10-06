@@ -27,6 +27,10 @@ public:
 
   virtual void printKey( MsgStream& msg, LHCb::LHCbID& id );
 
+  virtual double xTrue( int key, double z );
+
+  virtual double yTrue( int key, double z );
+
 protected:
 
 private:

@@ -68,4 +68,28 @@ void PatVeloDebugTool::printKey( MsgStream& msg, LHCb::LHCbID& id ) {
     part = vLink.next();
   }
 }
+
+//=========================================================================
+//  
+//=========================================================================
+double PatVeloDebugTool::xTrue( int key, double z  ) {
+  LHCb::MCParticles* parts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+  LHCb::MCParticle* part = parts->object( key );
+  if ( 0 == part ) return -999.;
+  double tx = part->momentum().px() / part->momentum().pz();
+  Gaudi::XYZPoint origin = part->originVertex()->position();
+  return origin.x() + tx * ( z - origin.z() );
+}
+
+//=========================================================================
+//  
+//=========================================================================
+double PatVeloDebugTool::yTrue( int key, double z  ) {
+  LHCb::MCParticles* parts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+  LHCb::MCParticle* part = parts->object( key );
+  if ( 0 == part ) return -999.;
+  double ty = part->momentum().py() / part->momentum().pz();
+  Gaudi::XYZPoint origin = part->originVertex()->position();
+  return origin.y() + ty * ( z - origin.z() );
+}
 //=============================================================================
