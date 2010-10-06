@@ -1,3 +1,8 @@
+2010-10-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Terminal.py: new file. Added the function to get the size of the terminal. It
+	works both on Linux and windows.
+
 2010-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/directory.py: added a check when removing ACL. The new ACL settings is cleaned of 
