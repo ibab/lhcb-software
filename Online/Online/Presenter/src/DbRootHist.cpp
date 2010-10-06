@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.184 2010-10-01 12:52:26 frankb Exp $
+// $Id: DbRootHist.cpp,v 1.185 2010-10-06 17:37:58 robbep Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -287,9 +287,8 @@ void DbRootHist::initHistogram() {
   if (!m_isAnaHist && (m_retryInit > 0) && m_dimBrowser) {
     // sed partition   
     if (m_onlineHistogram && m_session && (m_retryInit > 1)) {
-      if (pres::TCKinfo != m_effServiceType) {
+      if (pres::TCKinfo != m_effServiceType) 
         m_dimServiceName = m_onlineHistogram->dimServiceName();
-      }
 
       if (m_verbosity >= pres::Verbose) {
         std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;

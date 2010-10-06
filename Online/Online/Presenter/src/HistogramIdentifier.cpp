@@ -1,4 +1,4 @@
-// $Id: HistogramIdentifier.cpp,v 1.39 2010-10-01 12:54:11 frankb Exp $
+// $Id: HistogramIdentifier.cpp,v 1.40 2010-10-06 17:37:58 robbep Exp $
 // STL
 #include <iostream>
 
@@ -84,9 +84,11 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     }
     m_histogramUTGID = (((TObjString *)histogramUrlMatchGroup->At(2))->
       GetString()).Data(); 
+    // Special case for farm monitoring histogram (MEPRx, ...)
+    if ( m_histogramUTGID.find( "HLT" ) == 0 ) 
+      m_histogramUTGID = "LHCb_" + m_histogramUTGID ;
 
     TObjArray* histogramUTGIDMatchGroup = s_histogramUTGIDRegexp.MatchS(m_histogramUTGID);
-
     if (!histogramUTGIDMatchGroup->IsEmpty()) {
       m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
                         GetString()).Data();

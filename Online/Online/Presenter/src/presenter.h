@@ -1,4 +1,4 @@
-// $Id: presenter.h,v 1.107 2010-09-19 18:49:53 robbep Exp $
+// $Id: presenter.h,v 1.108 2010-10-06 17:37:58 robbep Exp $
 #ifndef PRESENTER_H_
 #define PRESENTER_H_
 
@@ -22,7 +22,7 @@
 
 void setSystemEnvironment(const char* environmentVariable, const char* value);
 
-static const std::string s_presenterVersion("v2r2");
+static const std::string s_presenterVersion("v2r3");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_configToken(";");
 
