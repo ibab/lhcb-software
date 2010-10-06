@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-10-06 - Marco Clemencic
+ - Fixed an ICC remark that was mistaken for en error by the nightly build.
+
 ! 2010-10-05 - Marco Clemencic
  - Fixed a configuration problem with the Intel compiler.
 

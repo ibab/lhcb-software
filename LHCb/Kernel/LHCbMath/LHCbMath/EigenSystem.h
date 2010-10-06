@@ -48,7 +48,7 @@ namespace Gaudi
             VectorAllocationFailure     = 102 , 
             WorkspaceAllocationFailure  = 103 , 
             // the actual return value is ErrorFromGSL + error code )
-            ErrorFromGSL                = 199 , ///< ErrorFromGSL + error code
+            ErrorFromGSL                = 199 ///< ErrorFromGSL + error code
           } ;
       public:
         /// Standard constructor
