@@ -4,12 +4,16 @@
 
 CombineTaggersNN::CombineTaggersNN() {
 
-  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
+  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.37 );
   declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
-  declareProperty( "ProbMin_NN",  m_ProbMin     = 0.55 );
+  declareProperty( "ProbMin_NN",  m_ProbMin     = 0.52 );
+  //  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
+  //  declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
+  //  declareProperty( "ProbMin_NN",  m_ProbMin     = 0.55 );
 
-  declareProperty( "P0_NN",   m_P0_NN   = 0.502625 ); 
-  declareProperty( "P1_NN",   m_P1_NN   = 0.504699 );
+  declareProperty( "P0_NN",   m_P0_NN   = 0.988556 ); 
+  declareProperty( "P1_NN",   m_P1_NN   = -0.949637 );
+
 
   theTag = new FlavourTag();
 
@@ -89,6 +93,7 @@ FlavourTag* CombineTaggersNN::combineTaggers( Taggers& vtg ) {
 
     NNcomb net;
     probNN = net.Value(0, pmu,pe,pk,pss,pvtx);
+    //    probNN = net.Value(0, 1-pmu,1-pe,1-pk,1-pss,1-pvtx);
     double probPlus = m_P0_NN + m_P1_NN*(probNN);//tuning NN
 
     if (probPlus>1) probPlus=1;

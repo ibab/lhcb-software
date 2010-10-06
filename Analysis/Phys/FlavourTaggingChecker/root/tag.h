@@ -147,7 +147,7 @@ Type "make", and follow the instruction given by the program itself.
 //some more globals:
 TString NNetTrain, MLPtype, filevec_name;
 int     Nmax, requireL0, requireHlt1, requireHlt2, requireTis;
-bool    IsControlChannel, checkDV, removeFiles;
+bool    IsControlChannel, checkDV, removeFiles, UseModBtime;
 double  m_IPPU_cut, m_thetaMin, m_distphi_cut;
 std::vector<TString> filelist(0);
 clock_t timestart(0);
@@ -174,6 +174,8 @@ void taginit() {
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
+
+  declareProperty( "UseModBtime",  UseModBtime = 0 );
 
 
   //INPUT DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

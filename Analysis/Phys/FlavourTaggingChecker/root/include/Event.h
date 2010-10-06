@@ -36,6 +36,7 @@ public:
     m_RecVertex=m_MCVertex=m_BSVertex=TVector3(0,0,0);
     m_TaggersFromDV=0; m_TaggersDecisionFromDV=0;
     m_SignalB=m_OppositeB=NULL;
+    m_Dstar=m_Mu=NULL;
     m_SignalParts.clear(); 
     m_Particles.clear();   
     m_Seeds.clear();    
@@ -117,6 +118,10 @@ public:
   TVector3 RecVertex()  { return m_RecVertex; }///< retrieve PV position
   TVector3 MCVertex()   { return m_MCVertex; }///< retrieve true PV position
 
+  //Dstar-Mu
+  Particle* Dstar()   { return m_Dstar; }///< retrieve signal B
+  Particle* Mu() { return m_Mu; }///< retrieve opposite B
+
   bool isBs() {  
     if(!m_SignalB) {
       cout<<"SignalB Particle was not set!"<<endmsg;
@@ -192,6 +197,9 @@ public:
   void setParticles(Particles a)  {  m_Particles  = a; }
   void addToSignalParts(Particle* a){ m_SignalParts.push_back(a); }
 
+  void setDstar(Particle* a) {  m_Dstar = a; }
+  void setMu(Particle* a)    {  m_Mu = a; }
+
   void Print() {
     //if(DBGLEVEL<3) {
     cout<< "=================================================== "
@@ -219,6 +227,7 @@ private:
   TVector3  m_RecVertex, m_BSVertex, m_MCVertex;
   Particles m_SignalParts, m_Particles;
   Particle  *m_SignalB, *m_OppositeB;
+  Particle  *m_Dstar, *m_Mu;
   Vertices  m_Seeds, m_SVertices;
   int       m_ProcessNr, m_eventNr, m_runNr;
 

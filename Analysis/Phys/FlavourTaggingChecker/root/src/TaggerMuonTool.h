@@ -34,6 +34,7 @@ class TaggerMuonTool : public GenericTool {
  private:
   double m_P_cut_muon;
   double m_Pt_cut_muon;
+  double m_IPs_cut_muon ;
   double m_lcs_cut_muon ;
   double m_ProbMin_muon;
  

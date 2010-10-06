@@ -65,10 +65,15 @@ void NNTuner::Fill(Event& event, FlavourTag* thetag){
     sum    += abs(taggers.at(4)->decision());
     if(sum<2) return;
     om_muon= taggers.at(0)->omega();
+    if (taggers.at(0)->decision()==1) om_muon = 1 - om_muon;
     om_ele = taggers.at(1)->omega();
+    if (taggers.at(1)->decision()==1) om_ele = 1 - om_ele;
     om_kaon= taggers.at(2)->omega();
+    if (taggers.at(2)->decision()==1) om_kaon = 1 - om_kaon;
     om_same= taggers.at(3)->omega();
+    if (taggers.at(3)->decision()==1) om_same = 1 - om_same;
     om_vtx = taggers.at(4)->omega();
+    if (taggers.at(4)->decision()==1) om_vtx = 1 - om_vtx;
     nntrain->Fill();// <-- fills branch
     return;
   }

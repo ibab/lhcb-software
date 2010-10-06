@@ -17,6 +17,11 @@
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/dstarmunu/last
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+   datafile = ../work/Oscillation/mcdata/bd2dstarmunu.root
+   datafile = ../work/Oscillation/dstarvtx.root
+    datafile = ../work/marco/bsjpsiphi_nu1
+   datafile = ../work/Oscillation/data/dstarmu_s9v.root
+  datafile = ../work/Oscillation/data/dstarmu_s10.root
 
 #  >>>>>>>>>>>>>>>>>>>>>> CONTROLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -30,8 +35,9 @@
    requireTos  = 0
    checkDV     = 0     Compare outcome from DaVinci, warns if different
 
+   UseModBtime      = 0
    UseObsoleteSV    = 0
-   IsControlChannel = 0     Take as the true flavour the reconsted B
+   IsControlChannel = 1     Take as the true flavour the reconsted B
    NNetTrain        = none  "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
    ViewOptionLHCb   = -1
 
@@ -40,9 +46,32 @@
 #  look in the same data directory for ONE file with .eventlist extension:
    EventListFileName = DATAFILE
    EventListFileName = none                Ignore any list
+   EventListFileName = ../work/Oscillation/data/dstarstrip10.txt
+#   EventListFileName = ../work/Oscillation/data/dstarstrip9.txt
 
 
 #EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
+
+#>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>
+#--- cuts optimized for stripping10:
+Muon_IPs_cut = 2.2
+
+Ele_PIDe_cut = 7.25
+
+Kaon_Pt_cut = 1.05
+Kaon_IPs_cut = 2.8
+Kaon_PIDk = 2.
+Kaon_LCS_cut = 2.7
+
+PionSame_IPs_cut = 2.5
+#   PionSame_PIDNoK_cut = 14
+#   PionSame_PIDNoP_cut = 10
+
+ProbMin_vtx = 0.52
+MinimumVCharge = 0.09
+#PowerK = 0.35
+
+EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 
 
 #>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>

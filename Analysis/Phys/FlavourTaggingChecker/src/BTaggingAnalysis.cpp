@@ -1034,7 +1034,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   /// Inclusive Secondary Vertex -------------
   //look for a secondary Vtx due to opposite B
   std::vector<float> pSecVtx_x(0), pSecVtx_y(0), pSecVtx_z(0), pSecVtx_chi2(0),
-    pSecVtx_pt1(0), pSecVtx_pt2(0);
+    pSecVtx_pt1(0), pSecVtx_pt2(0), pSecVtx_zerr(0);
 
   svertices.clear();
   SVpart1=0;
@@ -1077,6 +1077,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
     pSecVtx_x.push_back(tmpseed.position().x()/mm);
     pSecVtx_y.push_back(tmpseed.position().y()/mm);
     pSecVtx_z.push_back(tmpseed.position().z()/mm);
+    pSecVtx_zerr.push_back(tmpseed.covMatrix().At(2,2));
     debug()<<"seed xposition: "<<tmpseed.position().x()/mm<<endreq;
     debug()<<"     yposition: "<<tmpseed.position().y()/mm<<endreq;
     debug()<<"     zposition: "<<tmpseed.position().z()/mm<<endreq;
@@ -1093,6 +1094,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   tuple -> farray ("SecVtx_x",   pSecVtx_x, "V", 100);
   tuple -> farray ("SecVtx_y",   pSecVtx_y, "V", 100);
   tuple -> farray ("SecVtx_z",   pSecVtx_z, "V", 100);
+  tuple -> farray ("SecVtx_zerr",pSecVtx_zerr, "V", 100);
   tuple -> farray ("SecVtx_chi2",pSecVtx_chi2, "V", 100);
 }
 

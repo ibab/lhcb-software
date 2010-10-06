@@ -67,6 +67,8 @@ int main () {
       taggers.push_back(tsame); 
       taggers.push_back(tvtx); 
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
+      //FlavourTag* theTag = combNNtool.combineTaggers( taggers );
+      //FlavourTag* theTag = combPIDool.combineTaggers( taggers );
 
       int TrueTag = event.TrueTag();
       theTag->setTrueTag(TrueTag);
@@ -101,6 +103,28 @@ int main () {
 
       //store first events to visualize
       if(tagdecision && i<10) viewer.storeClone( event );
+
+      //**********************//
+      //**********************//
+      //******Bd2DstarMu******//
+      //**********************//
+      //**********************//
+      if (UseModBtime) {
+	Particle* Dstar = event.Dstar();
+	Particle* Mu    = event.Mu();
+	TLorentzVector DstarMu = Dstar->momentum() + Mu->momentum();
+	double ChiP = DstarMu.P();
+	double ChiM = DstarMu.M();
+	double newChiP = ChiP/(0.283+ChiM*0.1283);
+	TVector3 BSvtx  = event.BSVertex();
+	TVector3 Recvtx = event.RecVertex();
+	double Bdir = (BSvtx-Recvtx).Mag();
+	double MassB  = 5.279; 
+	double NewBtime = Bdir*MassB/newChiP/0.299792458;
+	Btime = NewBtime;
+      }
+      //**********************//
+      //**********************//
 
       //****************************************
       //event histos

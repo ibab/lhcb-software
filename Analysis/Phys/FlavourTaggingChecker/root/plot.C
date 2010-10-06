@@ -4,7 +4,8 @@
    *-----------------------------------------------------------*/
   gROOT->Reset();
   gROOT->ProcessLine(".L plot.h+"); //load some functions defined there
-  TFile fhisto("output/tag.root"); 
+  TFile fhisto("output/tag.root");
+
 
   TCanvas* c = new TCanvas("c","Tagging", 0, 0, 600, 600);
   c->SetBorderMode(0);
@@ -18,24 +19,23 @@
   bool endblock = 1;
   // goto taggercandidates;
   // goto general;
-  // goto asymm;
-  goto nnet;
+  goto asymm;
+  // goto nnet;
   // goto vertex;
   // goto omegapt;
   // goto addseed;
   // goto vtxcharge;
   // goto pid;
-  // goto effeff_cut;
+  goto effeff_cut;
 
- taggercandidates:////////////////////////////////////////////////////
+taggercandidates:////////////////////////////////////////////////////
 
   cout<<"plotting at taggercandidates"<<endl;
 
   //compare same plots on two different root files
-   TString f1 = "output/tag_s7.root";
-   TString f2 = "output/tag_s9.root"; //in red
-//   TString f1 = "output/tag_seed2.root";
-//   TString f2 = "output/tag_last.root"; //in red
+  TString f1 = "output/tag_s9.root"; //in red
+  //  TString f2 = "output/tag_s10.root"; //in red
+  TString f2 = "output/tag.root"; //in red
 
   c->Divide(2,2);
   c->cd(1); plot_taggercut(f1,f2,"h1");
@@ -43,6 +43,9 @@
   c->cd(3); plot_taggercut(f1,f2,"h6");
   c->cd(4); plot_taggercut(f1,f2,"h4");
   c->Print("output/hcut_B.gif"); if(wait())return;
+
+//  goto kotag;
+
 
   c->cd(1); plot_taggercut(f1,f2,"hcut_mu_pid");
   c->cd(2); plot_taggercut(f1,f2,"hcut_mu_pt");
@@ -64,10 +67,16 @@
   c->cd(4); plot_taggercut(f1,f2,"hcut_ele_N");
   c->Print("output/hcut_ele2.gif"); if(wait())return;
 
+kotag:
   c->cd(1); plot_taggercut(f1,f2,"hcut_ko_pidk");
   c->cd(2); plot_taggercut(f1,f2,"hcut_ko_pidp");
   c->cd(3); plot_taggercut(f1,f2,"hcut_ko_pt");
   c->cd(4); plot_taggercut(f1,f2,"hcut_ko_p");
+  c->Print("output/hcut_koppo0.gif"); if(wait())return;
+  c->cd(1); plot_taggercut(f1,f2,"hcut_ko_pidk");
+  c->cd(2); plot_taggercut(f1,f2,"hcut_ko_pidp");
+  c->cd(3); plot_taggercut(f1,f2,"hcut_ko_pidkp");
+  c->cd(4); plot_taggercut(f1,f2,"hcut_ko_N");
   c->Print("output/hcut_koppo1.gif"); if(wait())return;
   c->cd(1); plot_taggercut(f1,f2,"hcut_ko_lcs");
   c->cd(2); plot_taggercut(f1,f2,"hcut_ko_gho");
@@ -76,7 +85,19 @@
   c->Print("output/hcut_koppo2.gif"); if(wait())return;
   c->cd(1); plot_taggercut(f1,f2,"hcut_ko_ippu");
   c->cd(2); plot_taggercut(f1,f2,"hcut_ko_N");
+  c->cd(3); plot_taggercut(f1,f2,"hcut_ko_pt");
+  c->cd(4); plot_taggercut(f1,f2,"hcut_ko_p");
   c->Print("output/hcut_koppo3.gif"); if(wait())return;
+
+  c->cd(1); plot_taggercut(f1,f2,"hcut_pS_pt");
+  c->cd(2); plot_taggercut(f1,f2,"hcut_pS_p");
+  c->cd(3); plot_taggercut(f1,f2,"hcut_pS_lcs");
+  c->cd(4); plot_taggercut(f1,f2,"hcut_pS_IPs");
+  c->Print("output/hcut_pionsame1.gif"); if(wait())return;
+  c->cd(1); plot_taggercut(f1,f2,"hcut_pS_gho");
+  c->cd(2); plot_taggercut(f1,f2,"hcut_pS_dq");
+  c->cd(3); plot_taggercut(f1,f2,"hcut_pS_dqe");
+  c->Print("output/hcut_pionsame2.gif");
 
   c->cd(1); plot_taggercut(f1,f2,"hcut_kS_pidk");
   c->cd(2); plot_taggercut(f1,f2,"hcut_kS_pidp");
@@ -93,16 +114,6 @@
   c->cd(3); plot_taggercut(f1,f2,"hcut_kS_dq");
   c->Print("output/hcut_ksame3.gif"); if(wait())return;
 
-  c->cd(1); plot_taggercut(f1,f2,"hcut_pS_pt");
-  c->cd(2); plot_taggercut(f1,f2,"hcut_pS_p");
-  c->cd(3); plot_taggercut(f1,f2,"hcut_pS_lcs");
-  c->cd(4); plot_taggercut(f1,f2,"hcut_pS_IPs");
-  c->Print("output/hcut_pionsame1.gif"); if(wait())return;
-  c->cd(1); plot_taggercut(f1,f2,"hcut_pS_gho");
-  c->cd(2); plot_taggercut(f1,f2,"hcut_pS_dq");
-  c->cd(3); plot_taggercut(f1,f2,"hcut_pS_dqe");
-  c->Print("output/hcut_pionsame2.gif"); 
-   
   goto end;
 
  omegapt://///////////////////////////////////////////////////////////
@@ -218,6 +229,7 @@
   cout<<"plotting at effeff_cut"<<endl;
   h1->Draw(); //changes dir (stupid root feature)
   plotEffectiveEff(hright, hwrong); if(wait())return;
+goto tag;
 
   plotEffectiveEff(hr_mu_p, hw_mu_p);                if(wait())return;
   plotEffectiveEff(hr_mu_pt, hw_mu_pt);              if(wait())return;
@@ -227,6 +239,8 @@
   plotEffectiveEff(hr_mu_pid, hw_mu_pid);            if(wait())return;
   plotEffectiveEff(hr_mu_tsal, hw_mu_tsal);          if(wait())return;
   plotEffectiveEff(hr_mu_mult, hw_mu_mult, "right2left");if(wait())return;
+
+tag:
 
   plotEffectiveEff(hr_ele_p, hw_ele_p);              if(wait())return;
   plotEffectiveEff(hr_ele_pt, hw_ele_pt);            if(wait())return;
@@ -254,6 +268,8 @@
   plotEffectiveEff(hr_kS_lcs, hw_kS_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_pid, hw_kS_pid, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_tsal, hw_kS_tsal);            if(wait())return;
+//  plotEffectiveEff(hr_kS_dq, hw_kS_dq);                if(wait())return;
+//  plotEffectiveEff(hr_kS_dqe, hw_kS_dqe);              if(wait())return;
   plotEffectiveEff(hr_kS_mult, hw_kS_mult, "right2left");if(wait())return;
   if(endblock) goto end;
 
@@ -271,6 +287,10 @@
   if( ttrue ) {
     ttrue->SetTitle("True; time/ps; Asymmetry"); 
     ttrue->Draw("AP"); ttrue->Fit("cosn");
+    cout<<"all"<<endl;
+    cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+    cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;
+    cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;
     c->Print("output/Truetime.gif");
     if(wait())return;
   }
@@ -286,22 +306,42 @@
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tmu = asymmetry(h2011, h2012, "tmu");
   if(tmu){tmu->SetTitle("MUON; time/ps; Asymmetry"); tmu->Draw("AP"); tmu->Fit("cosn");}
+  cout<<"muon"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;
   c->cd(2);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tel = asymmetry(h2021, h2022, "tel");
   if(tel){tel->SetTitle("ELEC; time/ps; Asymmetry"); tel->Draw("AP"); tel->Fit("cosn");}
+  cout<<"ele"<<endl;  
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(3);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tko = asymmetry(h2031, h2032, "tko");
   if(tko){tko->SetTitle("KOPP; time/ps; Asymmetry"); tko->Draw("AP"); tko->Fit("cosn");}
+  cout<<"kaon"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(4);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tks = asymmetry(h2041, h2042, "tks");
   if(tks){tks->SetTitle("PSAME;time/ps; Asymmetry"); tks->Draw("AP"); tks->Fit("cosn");}
+  cout<<"ss"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(5);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tvtx = asymmetry(h2051, h2052, "tvtx");
   if(tvtx){tvtx->SetTitle("VERTEX;time/ps; Asymmetry");tvtx->Draw("AP");tvtx->Fit("cosn");}
+  cout<<"vtx"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->Print("output/Asymmetry1.gif"); c->cd();
   if(wait())return;
 
@@ -310,26 +350,50 @@
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc5 = asymmetry(h3051, h3052, "tc5");
   if(tc5){tc5->SetTitle("CAT5; time/ps; Asymmetry"); tc5->Draw("AP"); tc5->Fit("cosn");}
+  cout<<"cat5"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(2);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc4 = asymmetry(h3041, h3042, "tc4");
   if(tc4){tc4->SetTitle("CAT4; time/ps; Asymmetry"); tc4->Draw("AP"); tc4->Fit("cosn");}
+  cout<<"cat4"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(3);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc3 = asymmetry(h3031, h3032, "tc3");
   if(tc3){tc3->SetTitle("CAT3; time/ps; Asymmetry"); tc3->Draw("AP"); tc3->Fit("cosn");}
+  cout<<"cat3"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(4);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc2 = asymmetry(h3021, h3022, "tc2");
   if(tc2){tc2->SetTitle("CAT2; time/ps; Asymmetry"); tc2->Draw("AP"); tc2->Fit("cosn");}
+  cout<<"cat2"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(5);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc1 = asymmetry(h3011, h3012, "tc1");
   if(tc1){tc1->SetTitle("CAT1; time/ps; Asymmetry"); tc1->Draw("AP"); tc1->Fit("cosn");}
+  cout<<"cat1"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd(6);
   cosn->SetParameters(0.5, 0.35);
   TGraphErrors* tc = asymmetry(h3061, h3062, "tc");
   if(tc ){tc->SetTitle("ALL CAT;time/ps; Asymmetry"); tc->Draw("AP"); tc->Fit("cosn");}
+  cout<<"all cat"<<endl;
+  cout<<"delta:"<<cosn->GetParameter(0)<<" +- "<<cosn->GetParError(0)<<endl;
+  cout<<"omega:"<<cosn->GetParameter(1)<<" +- "<<cosn->GetParError(1)<<endl;    
+  cout<<"Dilution:"<<1-(2*cosn->GetParameter(1))<<" D^2: "<<pow(1-(2*cosn->GetParameter(1)),2)<<endl;  
   c->cd();c->Print("output/Asymmetry.gif");
 
   if(endblock) goto end;
