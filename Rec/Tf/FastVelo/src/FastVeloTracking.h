@@ -1,0 +1,126 @@
+// $Id: $
+#ifndef FASTVELOTRACKING_H 
+#define FASTVELOTRACKING_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "PatKernel/IPatDebugTool.h"
+
+#include "FastVeloHitManager.h"
+#include "FastVeloTrack.h"
+
+/** @class FastVeloTracking FastVeloTracking.h
+ *  Fast implementation of teh Velo tracking
+ *
+ *  @author Olivier Callot
+ *  @date   2010-09-09
+ */
+class FastVeloTracking : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  FastVeloTracking( const std::string& name, ISvcLocator* pSvcLocator );
+
+  virtual ~FastVeloTracking( ); ///< Destructor
+
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+  void findQuadruplets( unsigned int sens0, bool forward );
+  
+  void findUnusedTriplets( unsigned int sens0, bool forward );
+  
+  FastVeloHit* closestHit( FastVeloHits& hits, double coord, double tol ); 
+
+  FastVeloHit* closestUnusedHit( FastVeloHits& hits, double coord, double tol ); 
+
+  int extendTrack( FastVeloTrack& newTrack, FastVeloSensor* sensor, 
+                   unsigned int zone, bool forward );
+  
+  void addOppositeSideRHits( FastVeloTrack& newTrack, const int &zone,
+                             FastVeloSensor* sensor, bool forward );
+  
+  void makeLHCbTracks( LHCb::Tracks* output );
+ 
+  void makeSpaceTracks( FastVeloTrack& input );
+
+  void mergeSpaceClones();
+
+  void findUnusedPhi();
+
+  void mergeClones( FastVeloTracks& tracks );
+
+  //== Debugging methods
+
+  bool matchKey( const FastVeloHit* hit ) {
+    if ( m_debugTool ) {
+      LHCb::LHCbID id = hit->lhcbID();
+      return m_debugTool->matchKey( id, m_wantedKey );
+    }
+    return false;
+  }
+
+  void printCoord( const FastVeloHit* hit, std::string title );
+
+  void printTrack( FastVeloTrack& track, std::string header = "" );
+
+  void printRTrack( FastVeloTrack& track, std::string header = "" );
+
+  void printCoords( FastVeloHits& hits, std::string header = "" );
+
+protected:
+
+private:
+  std::string m_outputLocation;
+  //== Overall control parameters
+
+  bool   m_makeDummyRZ;
+  bool   m_onlyForward;
+  bool   m_onlyBackward;
+  int    m_minRSensor;
+  bool   m_bestEfficiency;
+
+  //== Paramaters for RZ search  
+  double m_zVertexMin;      ///< Minimal Z of a vertex for forward tracks
+  double m_zVertexMax;      ///< Maximal Z of a vertex for backward tracks
+  double m_maxRSlope;       ///< Maximum RZ slope considered
+  double m_rMatchTol4;      ///< R match tolerance in a quadruplet, in pitch unit
+  double m_rMatchTol3;      ///< R match tolerance in a triplet, in pitch unit
+  double m_rExtraTol;       ///< R match tol. extrapolating, in pitch unit
+  double m_rOverlapTol;     ///< R match in overlap, in pitch unit
+  int    m_maxMissed;       ///< Maximum number of consecutive missed sensors
+  int    m_maxMissedOpp;    ///< Maximum number of consecutive missed sensors in opposite side
+  unsigned int m_minToTag;  ///< Minimum number of hit on track to tag as used
+
+  double m_phiMatchZone;
+  double m_phiCentralZone;
+  double m_fractionFound;
+  double m_maxChi2PerHit;
+  double m_maxChi2ToAdd;
+  double m_maxQFactor;
+  double m_maxQFactor3;
+  double m_deltaQuality;
+  double m_fractionForMerge;
+
+  double m_phiUnusedFirstTol;
+  double m_phiUnusedSecondTol;
+  double m_msFactor;
+  
+  //== Debugging controls
+  std::string      m_debugToolName;
+  int              m_wantedKey;
+  IPatDebugTool*   m_debugTool;
+  bool             m_isDebug;
+  bool             m_debug;
+
+  //== Working variables
+  FastVeloHitManager* m_hitManager;
+  FastVeloTracks  m_tracks;  ///< Vector of tracks used during the processing
+  FastVeloTracks  m_spaceTracks;  ///< Vector of tracks used during the processing
+  FastVeloHits    m_selectedHits;
+  FastVeloHits    m_extraHits;
+  double          m_cosPhi;
+  double          m_sinPhi;
+};
+#endif // FASTVELOTRACKING_H
