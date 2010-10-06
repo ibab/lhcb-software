@@ -224,7 +224,7 @@ extern "C" int run_node_ping(int argc, char** argv) {
     cli.getopt("inventory",3,inventory);
     cli.getopt("input",3,fname);
     if ( fname.empty() ) help_Pinger();
-    ::lib_rtl_install_printer(ro_rtl_print,0);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_INFO);
     dns = strupper(dns);
     node = strlower(node);
     XML::TaskSupervisorParser ts;

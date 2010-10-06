@@ -110,19 +110,40 @@ ostream& ROMon::log() {
 }
 
 void ROMon::print_startup(const char* msg) {
-  log() << ::lib_rtl_timestr() << "> Readout monitor " << msg << " started on " 
+  log() << "> Readout monitor " << msg << " started on " 
         << RTL::nodeNameShort() << " as " << RTL::processName() << endl;
 }
 
-static int s_print_level = -1;
-void ROMon::ro_trl_set_print_level(int lvl) {
-  s_print_level = lvl;
-}
-
-size_t ROMon::ro_rtl_print(void*,int lvl,const char* fmt,va_list args) {
-  if ( lvl >= s_print_level ) {
+size_t ROMon::ro_rtl_print(void* arg,int lvl,const char* fmt,va_list args) {
+  if ( lvl >= long(arg) ) {
     size_t result;
-    string format = fmt;
+    string format;
+    switch(lvl) {
+    case LIB_RTL_VERBOSE:
+      format = "VERBOSE ";
+      break;
+    case LIB_RTL_DEBUG:
+      format = "DEBUG   ";
+      break;
+    case LIB_RTL_INFO:
+      format = "INFO    ";
+      break;
+    case LIB_RTL_WARNING:
+      format = "WARNING ";
+      break;
+    case LIB_RTL_ERROR:
+      format = "ERROR   ";
+      break;
+    case LIB_RTL_FATAL:
+      format = "FATAL   ";
+      break;
+    case LIB_RTL_ALWAYS:
+      format = "ALWAYS  ";
+      break;
+    default:
+      break;
+    }
+    format += fmt;
     format += "\n";
     result = ::vfprintf(stdout, format.c_str(), args);
     ::fflush(stdout);

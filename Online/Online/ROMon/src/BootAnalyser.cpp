@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.6 2010-09-27 08:15:54 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.7 2010-10-06 21:55:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.6 2010-09-27 08:15:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.7 2010-10-06 21:55:00 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -595,7 +595,6 @@ default:
   }
 }
 
-
 static void help() {
   ::printf("You have to supply a file name\n");
   ::exit(0);
@@ -607,18 +606,18 @@ extern "C" int run_boot_analyser(int argc, char *argv[])    {
   string server = "/"+node+"/"+RTL::processName();
   RTL::CLI cli(argc,argv,help);
   s_use_ts = cli.getopt("nots",1)==0;
-  ::lib_rtl_install_printer(ro_rtl_print,0);
-  ro_trl_set_print_level(LIB_RTL_ERROR);
   if ( cli.getopt("VERBOSE",4)!=0 )
-    ro_trl_set_print_level(LIB_RTL_VERBOSE);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_VERBOSE);
   else if ( cli.getopt("DEBUG",4)!=0 )
-    ro_trl_set_print_level(LIB_RTL_DEBUG);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_DEBUG);
   else if ( cli.getopt("INFO",4)!=0 )
-    ro_trl_set_print_level(LIB_RTL_INFO);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_INFO);
   else if ( cli.getopt("WARNING",4)!=0 )
-    ro_trl_set_print_level(LIB_RTL_WARNING);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_WARNING);
   else if ( cli.getopt("ERROR",4)!=0 )
-    ro_trl_set_print_level(LIB_RTL_ERROR);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
+  else
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
 
   BootMonitor mon(server);
   mon.start();

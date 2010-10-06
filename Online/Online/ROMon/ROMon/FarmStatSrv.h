@@ -1,4 +1,4 @@
-// $Id: FarmStatSrv.h,v 1.1 2010-10-06 11:33:24 frankb Exp $
+// $Id: FarmStatSrv.h,v 1.2 2010-10-06 21:55:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,22 +12,19 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatSrv.h,v 1.1 2010-10-06 11:33:24 frankb Exp $
-#ifndef ROMON_FARMMONITOR_H
-#define ROMON_FARMMONITOR_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatSrv.h,v 1.2 2010-10-06 21:55:00 frankb Exp $
+#ifndef ROMON_FARMSTATSRV_H
+#define ROMON_FARMSTATSRV_H 1
 
 // Framework includes
-#include "ROMon/PartitionListener.h"
-#include "ROMon/Constants.h"
-#include "ROMon/Alarm.h"
 #include "CPP/Interactor.h"
 
 // C++ include files
 #include <map>
 #include <ctime>
 #include <vector>
-#include <memory>
 
+// Forward declarations
 class Interactor;
 
 /*
@@ -35,20 +32,21 @@ class Interactor;
  */
 namespace ROMon {
 
-  class MBMPublish;
-  class ProcFarm;
+  // Forward declarations
+  class SubfarmStatCollector;
+  class FarmStatSrv;
   class CPUfarm;
   class Nodeset;
 
-  /**@class MBMInfoSource ROMon.h GaudiOnline/MBMPublish.h
+  /**@class SubfarmStatCollector ROMon.h GaudiOnline/FarmStatSrv.h
    *
    *   Monitor base class handling standard actions.
    *
    *   @author M.Frank
    */
-  class MBMInfoSource : public Interactor   {
+  class SubfarmStatCollector : public Interactor   {
   protected:
-    MBMPublish*       m_parent;
+    FarmStatSrv*      m_parent;
     std::string       m_name;
     std::string       m_mbmData;
     std::string       m_cpuData;
@@ -59,7 +57,7 @@ namespace ROMon {
     bool              m_cpuChanged;
   public:
     /// Access to parent to send interrupts
-    MBMPublish* parent() const          { return m_parent;       }
+    FarmStatSrv* parent() const          { return m_parent;       }
 
     /// Access subfarm name
     const std::string& name() const     { return m_name;         }
@@ -70,13 +68,10 @@ namespace ROMon {
     virtual void check(time_t now);
   public:
     /// Initializing constructor
-    MBMInfoSource(MBMPublish* parent, const std::string& title);
+    SubfarmStatCollector(FarmStatSrv* parent, const std::string& title);
 
     /// Standard destructor
-    virtual ~MBMInfoSource();
-
-    /// Log message with tag
-    std::ostream& log(const std::string& tag,const std::string& node="");
+    virtual ~SubfarmStatCollector();
 
     /// Connect to publishing dim service
     virtual void connect();
@@ -106,58 +101,42 @@ namespace ROMon {
     static void feedString(void* tag, void** address, int* size, int* first);
   };
 
-  /**@class MBMPublish ROMon.h GaudiOnline/MBMPublish.h
+  /**@class FarmStatSrv ROMon.h GaudiOnline/FarmStatSrv.h
    *
    *   Monitoring monitor for the LHCb storage system.
    *
    *   @author M.Frank
    */
-  class MBMPublish : public MBMInfoSource  {
+  class FarmStatSrv : public Interactor  {
   protected:
-    friend class MBMInfoSource;
-
-    enum { HLT_MODE, RECO_MODE, CTRL_MODE };
-    typedef std::map<std::string, MBMInfoSource*> MBMMonitors;
+    typedef std::map<std::string, SubfarmStatCollector*> SubfarmMonitors;
     typedef std::vector<std::string>  Farms;
 
-    std::string                       m_match;
-    std::string*                      m_current;
-    int                               m_time;
-    int                               m_mode;
-    int                               m_update_time_max;
-    MBMMonitors                       m_farmMonitors;
-    Farms                             m_farms;
+    int                               m_dns;
+    lib_rtl_lock_t                    m_lock;
+    bool                              m_haveMBM;
+    bool                              m_haveCPU;
 
-    int                               m_runState;
-    long                              m_farmEvents;
+    std::string                       m_name;
+    std::string                       m_match;
+    SubfarmMonitors                   m_farmMonitors;
+    Farms                             m_farms;
 
 public:
     /// Standard constructor
-    MBMPublish(int argc, char** argv);
+    FarmStatSrv(int argc, char** argv);
 
     /// Standard destructor
-    virtual ~MBMPublish();
+    virtual ~FarmStatSrv();
 
-    /// Access max update time difference
-    int updateTimeMax() const { return m_update_time_max; }
+    /// Access subfarm name
+    const std::string& name() const     { return m_name;     }
 
-    /// Access partition name
-    const std::string& partition() const { return m_name; }
+    /// Access to setup property: haveMBM
+    bool haveMBM() const                { return m_haveMBM;  }
 
-    /// Reset for new initialization
-    virtual void reset() {}
-
-    /// Extract data for monitoring
-    virtual void extractData(const Nodeset& ) {}
-
-    /// Analyse monitored data
-    virtual void analyzeData() {}
-    
-    /// Get farm monitor from cursor position
-    MBMInfoSource* currentMonitor();
-
-    /// Accessor to sub-monitors of main panel
-    MBMMonitors& subMonitors() {  return m_farmMonitors; }
+    /// Access to setup property: haveMBM
+    bool haveCPU() const                { return m_haveCPU;  }
 
     /// Interactor overload: Monitor callback handler
     virtual void handle(const Event& ev);
@@ -166,20 +145,10 @@ public:
     void connect(const std::vector<std::string>& farms);
 
     /// DIM command service callback
-    virtual void update(const void* data);
+    virtual void updateDns(const void* data);
 
     /// DIM command service callback
     static void dnsDataHandler(void* tag, void* address, int* size);
-
-    /// DIM command service callback
-    static void feedData(void* tag, void** address, int* size, int* first);
-
-    /// DIM command service callback
-    static void feedSummary(void* tag, void** address, int* size, int* first);
-
-    /// DIM command service callback
-    static void commandHandler(void* tag, void* address, int* size);
-
   };
 }      // End namespace ROMon
-#endif /* ROMON_FARMMONITOR_H */
+#endif /* ROMON_FARMSTATSRV_H */

@@ -681,7 +681,7 @@ extern "C" int run_tasksupervisor(int argc, char** argv) {
     cli.getopt("dns",2,PUBLISHING_NODE);
     if ( cli.getopt("debug",2) ) s_debug = true;
     if ( fname.empty() ) help_TaskSupervisor();
-    ::lib_rtl_install_printer(ro_rtl_print,0);
+    ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_INFO);
     node = strupper(node);
     XML::TaskSupervisorParser ts;
     ts.parseFile(inventory);
