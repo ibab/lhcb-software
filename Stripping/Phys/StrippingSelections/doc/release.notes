@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v2r1 2010-10-06 ===============
+
 ! 2010-10-06 - Thomas Blake
  - Updated stripping lines to enable cloning of Charm CP stream
    . StrippingDstarPromptWithD02HH.py
