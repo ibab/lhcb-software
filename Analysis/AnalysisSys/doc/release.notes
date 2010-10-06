@@ -5,6 +5,19 @@ Purpose     : LHCb analysis packages
 
 </PRE><H1><A NAME=v4r11>2010-10-04 Analysis v4r11 </A></H1><PRE>
 
+ *** Based on Phys v9r11. Version for Stripping11 ***
+
+  * Important MicroDST changes:
+   - New functionality for copying special containers.
+   - New finctionality for cloning Particle -> TisTos decisions map
+   - New functionality to clone RecVertex track weights vector.
+   - Memory leak prevention in MicroDST relations tables cloning.
+   - Fixes to invalid SmartRefs to Tracks in cloned RecVertices
+  * DSTWriters.__dev__ module
+   - DST content can be configured per stream
+   - Helper code to configure new functionality mentioned above.
+  * Important developments to FlavourTagging.
+
 ! 2010-09-18 - Rob Lambert
  - Removed packages which are now in the Phys or Stripping projects
  - MvaPreSelB2DH, StrippingAlgs, StrippingConf, StrippingSelections
