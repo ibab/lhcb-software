@@ -28,7 +28,7 @@ stream.appendLines( StrippingV0ForPIDConf().All_Lines() )
 
 # Philip Xing D*->D(Kpi)pi
 from StrippingSelections.StrippingNoPIDDstarWithD02RSKPi import StrippingNoPIDDstarWithD02RSKPiConf
-stream.appendLines( StrippingNoPIDDstarWithD02RSKPiConf().lines() )
+stream.appendLines( StrippingNoPIDDstarWithD02RSKPiConf().Lines() )
 
 # Sebastian Schleich
 from StrippingSelections.StrippingInclPhi import InclPhiConf

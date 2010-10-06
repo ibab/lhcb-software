@@ -78,8 +78,9 @@ stream.appendLines( [
     ] )
 
 # Marcin Kucharczyk
-from StrippingSelections import StrippingHighPtJets
-strea.appendLines( [ StrippingHighPtJets.line1 ] )
+from StrippingSelections.StrippingHighPtJets import line1 as HighPtJetsLine
+stream.appendLines( [ HighPtJetsLine ] )
+
 
 from StrippingSelections import StrippingMuMuSS
 stream.appendLines( [
@@ -94,7 +95,5 @@ stream.appendLines( [
 from StrippingSelections import  StrippingDiPhotonDiMuon
 stream.appendLines( [ StrippingDiPhotonDiMuon.line ] )
 
-# Marcin Kucharczyk
-from StrippingSelections.StrippingHighPtJets import line1 as HighPtJetsLine
-stream.appendLines( [ HighPtJetsLine ] )
+
 

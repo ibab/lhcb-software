@@ -62,13 +62,6 @@ stream.appendLines( StrippingDstarD02xxConf().lines() )
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 
-from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
-stream.appendLines( [ StrippingDforBSemiConf().DpforBSemiLine()
-                      , StrippingDforBSemiConf().DsforBSemiLine()
-                      , StrippingDforBSemiConf().LcforBSemiLine()
-                      ] )
-    
-
 
 #
 # Lines from CP Charm WG
@@ -86,17 +79,17 @@ from StrippingSettings.Stripping11.LineConfigDictionaries import PromptCharmConf
 promptCharm = StrippingPromptCharmConf ( config = PromptCharmConfig ) 
 CPLines += promptCharm.lines()
 
-from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-CPLines += StrippingDstarPromptWithD02HHConf().linesDstarOnly()
+#from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+#CPLines += StrippingDstarPromptWithD02HHConf().linesDstarOnly()
 
 from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
 CPLines += [ StrippingD2hhhConf().stripD2PPP(),
-                   StrippingD2hhhConf().stripD2KPP(),
-                   StrippingD2hhhConf().stripD2KKP(),
-                   StrippingD2hhhConf().stripD2KPPos(),
-                   StrippingD2hhhConf().stripD2KKK(),
-                   StrippingD2hhhConf().stripD2hhh_inc(),
-                   ]
+             StrippingD2hhhConf().stripD2KPP(),
+             StrippingD2hhhConf().stripD2KKP(),
+             StrippingD2hhhConf().stripD2KPPos(),
+             StrippingD2hhhConf().stripD2KKK(),
+             StrippingD2hhhConf().stripD2hhh_inc(),
+             ]
 
 from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
 CPLines += StrippingDstarD2KShhConf().MakeLines() 
@@ -118,7 +111,7 @@ from StrippingSettings.Stripping11.LineConfigDictionaries import D02KKpipiRegula
 DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
 CPLines +=  DstarD0KKpipi.lines
 
-fullDSTLines = [ CPLine.clone( CPLine.name()+'Full', prescale = 1.0 ) for CPLine in CPLines ]
+fullDSTLines = [ CPLine.clone( CPLine._name +'Full', prescale = 1.0 ) for CPLine in CPLines ]
 
 stream.appendLines( fullDSTLines )
 

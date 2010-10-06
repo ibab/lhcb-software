@@ -21,8 +21,7 @@ stream = StrippingStream("Semileptonic")
 #
 
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
-
-tream.appendLines( [ StrippingB2XuMuNuConf().Pi_line(),
+stream.appendLines( [ StrippingB2XuMuNuConf().Pi_line(),
                       StrippingB2XuMuNuConf().PiSS_line(),
                       StrippingB2XuMuNuConf().Rho_line(),
                       StrippingB2XuMuNuConf().RhoWS_line(),
