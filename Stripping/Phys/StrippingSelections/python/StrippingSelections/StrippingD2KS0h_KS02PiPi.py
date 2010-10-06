@@ -77,11 +77,10 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         
     def D2KS0h_KS02PiPi( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        KS0ForD2KS0h_KS02PiPi = self.KS0ForD2KS0h_KS02PiPiAlg()                      ## LL and DD
         DForD2KS0h_KS02PiPi = self.DForD2KS0h_KS02PiPiAlg()
         return StrippingLine('D2KS0h_KS02PiPi_stripping_line'
                              , prescale = 1
-                             , algos = [KS0ForD2KS0h_KS02PiPi, DForD2KS0h_KS02PiPi]
+                             , algos = [ DForD2KS0h_KS02PiPi ]
                              , postscale = 1
                              )
 
@@ -97,12 +96,18 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         KS0_DaughterCut = "(ADMASS('KS0')<30*MeV) & (MIPCHI2DV(PRIMARY) > 9) & (VFASPF(VCHI2/VDOF) < 10) & CHILDCUT((TRCHI2DOF < 4),1) & CHILDCUT((TRCHI2DOF < 4),2) &  CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2)"
       
         KS0ForD2KS0h_KS02PiPi = FilterDesktop("StripKS0ForD2KS0h_KS02PiPi")
-        KS0ForD2KS0h_KS02PiPi.InputLocations = [ "StdLooseKsLL", "StdLooseKsDD"]
-
+        #KS0ForD2KS0h_KS02PiPi.InputLocations = [ "StdLooseKsLL", "StdLooseKsDD"]
+        
         # Apply the cuts on the KS0 daughter pions and KS0
         KS0ForD2KS0h_KS02PiPi.Code =  KS0_DaughterCut 
 
-        return KS0ForD2KS0h_KS02PiPi
+        _stdKsLL = DataOnDemand( Location = "Phys/StdLooseKsLL" )
+        _stdKsDD = DataOnDemand( Location = "Phys/StdLooseKsDD" )
+
+        _sel = Selection( "SelKS0ForD2KS0h_KS02PiPi",
+                          RequiredSelections = [_stdKsLL, _stdKsDD], Algorithm = KS0ForD2KS0h_KS02PiPi )
+        
+        return _sel 
         
         ############################################
         # D meson - LL and DD
@@ -119,22 +124,28 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         D_ComboCut = "(AM> 1380*MeV) & (AM < 2120*MeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.6*mm)"
         D_MotherCut = "(VFASPF(VCHI2/VDOF) < 10) & (MM> 1400*MeV) & (MM < 2100*MeV) & (MIPCHI2DV(PRIMARY) < 4)"
 
-       
+
+        
+        _stdPions = DataOnDemand( Location = "Phys/StdLoosePions" )
+        
         DForD2KS0h_KS02PiPi = CombineParticles("StripDForD2KS0h_KS02PiPi")
         DForD2KS0h_KS02PiPi.DecayDescriptor = "[D+ -> KS0 pi+]cc"
-        DForD2KS0h_KS02PiPi.InputLocations =  ["StripKS0ForD2KS0h_KS02PiPi",
-                                                   "StdLoosePions"
-                                                  ]
-        
+        #   DForD2KS0h_KS02PiPi.InputLocations =  ["StripKS0ForD2KS0h_KS02PiPi",
+     #"StdLoosePions"
+      #                                            ]
+      
         DForD2KS0h_KS02PiPi.Preambulo = [ "from LoKiProtoParticles.decorators import *"]
 
       
         DForD2KS0h_KS02PiPi.DaughtersCuts = D_DaughterCut
         DForD2KS0h_KS02PiPi.CombinationCut = D_ComboCut
         DForD2KS0h_KS02PiPi.MotherCut = D_MotherCut
-      
-       
-        return DForD2KS0h_KS02PiPi
+        
+        
+        _sel = Selection( "SelDForD2KS0h_KS02PiPi",
+                          RequiredSelections = [ _stdPions, self.KS0ForD2KS0h_KS02PiPiAlg() ], Algorithm = DForD2KS0h_KS02PiPi )
+        
+        return _sel 
 
 
 ##(AMAXDOCA('') < 0.6*mm)

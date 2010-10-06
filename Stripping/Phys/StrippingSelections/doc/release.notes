@@ -4,6 +4,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2010-10-06 - Thomas Blake
+ - Updated stripping lines to enable cloning of Charm CP stream
+   . StrippingDstarPromptWithD02HH.py
+   . StrippingD2KS0h_KS02PiPi.py
+
 ! 2010-10-06 - Georg Krocker
  - Adding StrippingTrackEffVeloMuon.py and StrippingTrackEffDownMuon.py, for the 
    measurement of tracking efficiency with a tag-and-probe-method with Jpsis.
