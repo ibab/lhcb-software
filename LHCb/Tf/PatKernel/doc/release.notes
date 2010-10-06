@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-10-06 - Olivier Callot
+ - Change IPatDebugTool interface, add new methods to access the position of 
+   a MCParticle specified by key at a specified z position.
+
 !============================= PatKernel v2r3p1 2009-06-03 ===================
 ! 2009-06-02 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
