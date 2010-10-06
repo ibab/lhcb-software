@@ -1,4 +1,4 @@
-// $Id: MBMPublish.cpp,v 1.1 2010-10-06 11:31:23 frankb Exp $
+// $Id: FarmStatSrv.cpp,v 1.1 2010-10-06 11:33:24 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MBMPublish.cpp,v 1.1 2010-10-06 11:31:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.1 2010-10-06 11:33:24 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
