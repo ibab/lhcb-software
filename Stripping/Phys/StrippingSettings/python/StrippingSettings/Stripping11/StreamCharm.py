@@ -15,43 +15,28 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream("Charm")
 
-#
-# Lines from CP Charm WG
-# Marco Gersabeck and Patrick Spradlin
-#
-from StrippingSelections.StrippingD2hh import StrippingD2hhConf
-stream.appendLines( StrippingD2hhConf().lines() )
-
-from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf
-_conf = { "D0Prescale"    : 1.00 ,
-          "DplusPrescale" : 1.00 }
-Lines = StrippingPromptCharmConf( config = _conf )
-stream.appendLines ( Lines.lines() )
-
-from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
-
-from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
-stream.appendLines ( [ StrippingD2hhhConf().stripD2PPP(),
-  StrippingD2hhhConf().stripD2KPP(),
-  StrippingD2hhhConf().stripD2KKP(),
-  StrippingD2hhhConf().stripD2KPPos(),
-  StrippingD2hhhConf().stripD2KKK(),
-  StrippingD2hhhConf().stripD2hhh_inc()
-])
-
-from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
-stream.appendLines ( StrippingDstarD2KShhConf().MakeLines() )
-
-from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
-stream.appendLines ( [ StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ] )
 
 #
-# Lines from RD Charm 
-# Walter Bonevito 
+# Lines from Semileptonic group
+# Rob Lambert
 #
-from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf().lines() )
+# Marta Calvi, Stefania Vecchi
+
+from StrippingSelections.StrippingDstarVeryLooseWithD02Kpi import DstarVeryLooseWithD02KpiAllLinesConf
+from StrippingSelections.StrippingDstarVeryLooseWithD02Kpi import confdict as DstarVeryLooseWithD02KpiConfDict
+
+DstarVeryLooseWithD02Kpi = DstarVeryLooseWithD02KpiAllLinesConf( DstarVeryLooseWithD02KpiConfDict )
+stream.appendLines( DstarVeryLooseWithD02Kpi.Lines )
+
+# Liming Zhang
+from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
+stream.appendLines( [ StrippingD0forBXXConf().D02KPiforBXXLine()
+                      , StrippingD0forBXXConf().D02K3PiforBXXLine() ] )
+
+from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
+stream.appendLines( [ StrippingDforBSemiConf().DpforBSemiLine()
+                      , StrippingDforBSemiConf().DsforBSemiLine()
+                      , StrippingDforBSemiConf().LcforBSemiLine() ] )
 
 #
 # Lines from Gamma from trees
@@ -61,25 +46,80 @@ from StrippingSelections.StrippingDstar_D2KPiPi0 import lineWS, lineRS
 stream.appendLines( [ lineWS, lineRS ] )
 
 #
+# Lines from Charm RD WG
+# Walter Bonivento
+#
+from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
+stream.appendLines( D02MuMuLines )
+
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+stream.appendLines( StrippingDstarD02xxConf().lines() )
+
+#
 # Lines from Flavour WG
-# This line is taking ~0.2%. This is too high.
+#
+
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 
-#
-# Lines from Semileptonic group
-# Rob Lambert
-#
-# Marta Calvi, Stefania Vecchi
-from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
-stream.appendLines( [ StrippingDstarVeryLooseWithD02HHConf().line() ] )
-
-# Liming Zhang
-from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
-stream.appendLines( [ StrippingD0forBXXConf().D02KPiforBXXLine()
-		    , StrippingD0forBXXConf().D02K3PiforBXXLine() ] )
 from StrippingSelections.StrippingDForBSemi import StrippingDforBSemiConf
 stream.appendLines( [ StrippingDforBSemiConf().DpforBSemiLine()
-		    , StrippingDforBSemiConf().DsforBSemiLine()
-        	    , StrippingDforBSemiConf().LcforBSemiLine() ] )
+                      , StrippingDforBSemiConf().DsforBSemiLine()
+                      , StrippingDforBSemiConf().LcforBSemiLine()
+                      ] )
+    
+
+
+#
+# Lines from CP Charm WG
+# Marco Gersabeck and Patrick Spradlin
+#
+
+CPLines = []
+
+from StrippingSelections.StrippingD2hh import StrippingD2hhConf
+CPLines += StrippingD2hhConf().lines()
+
+from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf
+from StrippingSettings.Stripping11.LineConfigDictionaries import PromptCharmConfig
+
+promptCharm = StrippingPromptCharmConf ( config = PromptCharmConfig ) 
+CPLines += promptCharm.lines()
+
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+CPLines += StrippingDstarPromptWithD02HHConf().linesDstarOnly()
+
+from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
+CPLines += [ StrippingD2hhhConf().stripD2PPP(),
+                   StrippingD2hhhConf().stripD2KPP(),
+                   StrippingD2hhhConf().stripD2KKP(),
+                   StrippingD2hhhConf().stripD2KPPos(),
+                   StrippingD2hhhConf().stripD2KKK(),
+                   StrippingD2hhhConf().stripD2hhh_inc(),
+                   ]
+
+from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
+CPLines += StrippingDstarD2KShhConf().MakeLines() 
+
+from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
+CPLines += [ StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ]
+
+from StrippingSelections.StrippingDstarPromptWithD02K3Pi import StrippingDstarPromptWithD02K3PiConf
+DstarPromptWithD02K3Pi = StrippingDstarPromptWithD02K3PiConf(
+    'DstarPromptWithD02K3Pi',
+    config = StrippingDstarPromptWithD02K3PiConf._default_config
+    )
+
+CPLines += DstarPromptWithD02K3Pi.lines
+
+from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
+from StrippingSettings.Stripping11.LineConfigDictionaries import D02KKpipiRegularConfig
+
+DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
+CPLines +=  DstarD0KKpipi.lines
+
+fullDSTLines = [ CPLine.clone( CPLine.name()+'Full', prescale = 1.0 ) for CPLine in CPLines ]
+
+stream.appendLines( fullDSTLines )
+
 

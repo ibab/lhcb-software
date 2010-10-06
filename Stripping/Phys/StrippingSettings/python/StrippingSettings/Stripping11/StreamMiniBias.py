@@ -17,12 +17,12 @@ stream = StrippingStream("MiniBias")
 # Jaap Paanman, Yasmine Amhis, Plamen Hopchev
 #
 from StrippingSelections import StrippingMiniBias 
-stream.appendLines( [ StrippingMiniBias.MBMicroBiasRateLimitedLine, 
-                      StrippingMiniBias.MBMicroBiasNotRateLimitedLine,  
-                      StrippingMiniBias.MBNoBiasLine,
-                      StrippingMiniBias.MBMiniBiasLine,
-                      ] )
+stream.appendLines( [
+    StrippingMiniBias.MBMicroBiasRateLimitedLine, 
+    StrippingMiniBias.MBMicroBiasNotRateLimitedLine,  
+    StrippingMiniBias.MBNoBiasLine,
+    StrippingMiniBias.MBMiniBiasLine,
+    ] )
 
-from StrippingSelections import StrippingBeamGas
-stream.appendLines( [ StrippingBeamGas.lineUnbiased ] )
+
 

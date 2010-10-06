@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-06 - Thomas Blake
+ - Udpated stream definitions for Stripping 11
+
 ! 2010-09-30 - Greig Cowan
  - Copied Sept2010 directory to Stripping11, for initial draft of the stream
    definitions that we will use for processing October data.

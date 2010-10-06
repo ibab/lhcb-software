@@ -17,17 +17,19 @@ stream = StrippingStream("Semileptonic")
 
 #
 # Lines from semileptonic task force
-# Rob Lambert and Kim Vervink
+# Rob Lambert 
 #
+
 from StrippingSelections.StrippingB2XuMuNu import StrippingB2XuMuNuConf
-stream.appendLines( [ StrippingB2XuMuNuConf().K_line()
-                    , StrippingB2XuMuNuConf().Pi_line()
-                    , StrippingB2XuMuNuConf().PiSS_line()
-                    , StrippingB2XuMuNuConf().Rho_line()
-                    , StrippingB2XuMuNuConf().RhoWS_line()
-                    , StrippingB2XuMuNuConf().KSS_line()
-                    , StrippingB2XuMuNuConf().Kstar_line()
-                    , StrippingB2XuMuNuConf().KstarSS_line() ] )
+
+tream.appendLines( [ StrippingB2XuMuNuConf().Pi_line(),
+                      StrippingB2XuMuNuConf().PiSS_line(),
+                      StrippingB2XuMuNuConf().Rho_line(),
+                      StrippingB2XuMuNuConf().RhoWS_line(),
+                      StrippingB2XuMuNuConf().K_line(),
+                      StrippingB2XuMuNuConf().KSS_line(),
+                      StrippingB2XuMuNuConf().Kstar_line(),
+                      StrippingB2XuMuNuConf().KstarSS_line() ] )
 
 from StrippingSelections.StrippingB0q2DplusMuX import B0q2DplusMuXAllLinesConf 
 from StrippingSelections.StrippingB0q2DplusMuX import confdict as B0q2DplusMuXAllConfDict
@@ -39,8 +41,13 @@ stream.appendLines( [ StrippingB2DMuNuXConf().b2D0MuXLine()
                     , StrippingB2DMuNuXConf().b2DsMuXLine()
                     , StrippingB2DMuNuXConf().b2LcMuXLine() ])
 
-from StrippingSelections.StrippingBd2DstarMuNu import line as Bd2DstarMuNuLine
-from StrippingSelections.StrippingBd2DstarMuNuLoose import StrippingBd2DstarMuNuLooseConf
-stream.appendLines( [ Bd2DstarMuNuLine ] )
-stream.appendLines( [ StrippingBd2DstarMuNuLooseConf().line() ] )
+
+
+from StrippingSelections.StrippingBd2DstarMuNu import Bd2DstarMuNuAllLinesConf
+from StrippingSelections.StrippingBd2DstarMuNu import confdict as Bd2DstarMuNuDict 
+
+Bd2DstarMuNu = Bd2DstarMuNuAllLinesConf( Bd2DstarMuNuDict )
+stream.appendLines( Bd2DstarMuNu.Lines )
+
+
 

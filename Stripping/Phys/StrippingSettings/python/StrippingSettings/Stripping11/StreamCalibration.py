@@ -13,28 +13,58 @@ from StrippingConf.StrippingStream import StrippingStream
 # AcceptBadEvents means that events which fail the reconstruction are still written out
 stream = StrippingStream("Calibration", AcceptBadEvents = True)
 
-# Andrew Powell
-from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf
-stream.appendLines( StrippingV0ForPIDConf().All_Lines() )
-
 # Juan Palacios
 from StrippingSelections import StrippingHltErrorBits
 stream.appendLines( StrippingHltErrorBits.lines )
 
-# Sebastian Schleich
-from StrippingSelections.StrippingInclPhi import InclPhiConf
-InclPhiConf = InclPhiConf("InclPhi", InclPhiConf.config_Sept2010 )
-stream.appendLines( InclPhiConf.lines )
+#
+# Lines for RICH PID
+# Andrew Powell 
+#
 
-# Gaia Lanfranchi
-from StrippingSelections import StrippingMuIDCalib
-stream.appendLines( [ StrippingMuIDCalib.jp_line, StrippingMuIDCalib.b_line ] )
+# Andrew Powell
+from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf
+stream.appendLines( StrippingV0ForPIDConf().All_Lines() )
 
 # Philip Xing D*->D(Kpi)pi
 from StrippingSelections.StrippingNoPIDDstarWithD02RSKPi import StrippingNoPIDDstarWithD02RSKPiConf
 stream.appendLines( StrippingNoPIDDstarWithD02RSKPiConf().lines() )
 
-# Regis Lefevre D0 ->Kpipi0 ??
+# Sebastian Schleich
+from StrippingSelections.StrippingInclPhi import InclPhiConf
+InclPhi =  InclPhiConf("InclPhi", InclPhiConf.config_default )
+stream.appendLines( [ InclPhi.InclPhiHighPtLine,
+                      InclPhi.InclPhiLowPtLine ] )
+
+#
+# Lines for Photon / Electron ID
+# Jibo He, Olivier Deschamps
+#
+
+# Regis Lefevre D0 ->Kpipi0
 from StrippingSelections.StrippingD02KPiPi0 import StrippingD02KPiPi0Conf
 stream.appendLines( [ StrippingD02KPiPi0Conf().D02KPiPi0_Merged(), StrippingD02KPiPi0Conf().D02KPiPi0_Resolved() ] )
+
+# Jibo He
+from StrippingSelections.StrippingElectronID import ElectronIDConf
+StrippingElectronIDConf =  ElectronIDConf( name = 'Jpsi2eeForElectronID', config = ElectronIDConf.config_default )
+stream.appendLines( [ StrippingElectronIDConf.line ])
+
+#
+# Lines for Muon ID
+# Gaia Lanfranchi  
+#
+
+from StrippingSelections import StrippingMuIDCalib
+stream.appendLines( [ StrippingMuIDCalib.jp_line, StrippingMuIDCalib.b_line ] )
+
+#
+# Lines for tracking studies
+# Michel de Cian, Georg Kroecker 
+#
+
+from StrippingSelections import StrippingTrackEffMuonTT
+from StrippingSettings.Stripping11.LineConfigDictionaries import TrackEffMuonTTConfig
+MuonTTStripping = StrippingTrackEffMuonTT.StrippingTrackEffMuonTTConf('TrackEffMuonTT', TrackEffMuonTTConfig )
+stream.appendLines( MuonTTStripping.lines )
 
