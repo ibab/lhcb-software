@@ -38,24 +38,17 @@ StatusCode RecVertexClonerWithTracks::initialize()
   
   StatusCode sc = base_class::initialize();
 
+  if (sc.isFailure()) return sc;
+
   debug() << "Going to get TrackCloner" << endmsg;
 
   m_trackCloner = tool<ICloneTrack>(m_trackClonerType, 
                                     this->parent() );
-
-  if (m_trackCloner) {
-    debug() << "Found TrackCloner " << m_trackCloner->name() << endmsg;
-  } else {
-    error() << "Failed to find TrackCloner" << endmsg;
+  if (!m_trackCloner) {
+    return Error("Failed to find TrackCloner");
   }
   return sc;
 
-}
-//=============================================================================
-LHCb::VertexBase* RecVertexClonerWithTracks::operator() (const LHCb::VertexBase* vertex)
-{
-  const LHCb::RecVertex* recVertex = dynamic_cast<const LHCb::RecVertex*>(vertex);
-  return (0 != recVertex) ? this->clone(recVertex) : 0;
 }
 //=============================================================================
 LHCb::RecVertex* RecVertexClonerWithTracks::operator() (const LHCb::RecVertex* vertex)
@@ -73,8 +66,9 @@ LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
 
   if (!tracks.empty()) {
     typedef SmartRefVector<LHCb::Track>::const_iterator tk_iterator;
-    for (tk_iterator iTrack = tracks.begin(); 
-         iTrack != tracks.end();
+    tk_iterator iTrack = tracks.begin(); 
+    tk_iterator iTrackEnd = tracks.end();
+    for (; iTrack != iTrackEnd;
          iTrack++) {
       vertexClone->addToTracks( (*m_trackCloner)( iTrack->target() ) );
     }

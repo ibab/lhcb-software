@@ -5,7 +5,7 @@
 // Include files
 // from Gaudi
 #include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneVertexBase.h>            // Interface
+#include <MicroDST/ICloneRecVertex.h>            // Interface
 
 class ICloneTrack;
 namespace LHCb 
@@ -24,7 +24,7 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class RecVertexClonerWithTracks : public extends1<MicroDSTTool, ICloneVertexBase> {
+class RecVertexClonerWithTracks : public extends1<MicroDSTTool, ICloneRecVertex> {
 public: 
   /// Standard constructor
   RecVertexClonerWithTracks( const std::string& type, 
@@ -33,7 +33,7 @@ public:
 
   virtual ~RecVertexClonerWithTracks( ); ///< Destructor
 
-  virtual LHCb::VertexBase* operator() (const LHCb::VertexBase* vertex);
+  virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 
 
 
@@ -42,8 +42,6 @@ public:
   virtual StatusCode finalize();
 
 private:
-
-  virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 
   LHCb::RecVertex* clone (const LHCb::RecVertex* vertex);
 
