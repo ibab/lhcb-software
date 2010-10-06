@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-06 - Marcin Kucharczyk
+  - Optimize StrippingHighPtJets line cuts 
+
 ! 2010-10-05 - Greig Cowan
  - Changed prescales in the B2JpsiX lines.
 
