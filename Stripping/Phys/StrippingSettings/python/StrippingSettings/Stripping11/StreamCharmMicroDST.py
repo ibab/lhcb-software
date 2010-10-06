@@ -17,4 +17,5 @@ from StrippingSettings.Stripping11.StreamCharm import CPLines
 stream = StrippingStream("CharmMicroDST")
 stream.appendLines( CPLines )
 
-
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+stream.appendLines( StrippingDstarPromptWithD02HHConf('DstarPromptWithD02HHConfMicroDSTStream').linesDstarOnly() )

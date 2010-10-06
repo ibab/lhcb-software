@@ -79,8 +79,6 @@ from StrippingSettings.Stripping11.LineConfigDictionaries import PromptCharmConf
 promptCharm = StrippingPromptCharmConf ( config = PromptCharmConfig ) 
 CPLines += promptCharm.lines()
 
-#from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-#CPLines += StrippingDstarPromptWithD02HHConf().linesDstarOnly()
 
 from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
 CPLines += [ StrippingD2hhhConf().stripD2PPP(),
@@ -111,8 +109,16 @@ from StrippingSettings.Stripping11.LineConfigDictionaries import D02KKpipiRegula
 DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
 CPLines +=  DstarD0KKpipi.lines
 
-fullDSTLines = [ CPLine.clone( CPLine._name +'Full', prescale = 1.0 ) for CPLine in CPLines ]
+# Make a cloned copy of the charm CP lines to be used in the full stream
+# with a set prescale. The CP lines will also appear in StreamCharmMicroDST
 
+fullDSTLines = [ CPLine.clone( 'Full' + CPLine._name , prescale = 1.0 ) for CPLine in CPLines ]
 stream.appendLines( fullDSTLines )
 
 
+# Unfortunate hack to introduce two copies of the StrippingDstarPromptWithD02HH lines. Cloning
+# fails for these lines.
+
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+StrippingDstarPromptWithD02HHConf().LinePrefix = 'FullDstarPrompt'
+stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
