@@ -101,9 +101,12 @@ KstarList = createCombinationSel( OutputList = "Kstar2KpiForBetaS",
                                   PreVertexCuts = "(APT>500*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
                                   PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
 
-KsList = MergedSelection("KsForBetaS",
-                         RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
-                                               DataOnDemand(Location = "Phys/StdLooseKsLL")] )
+KsListLoose = MergedSelection("StdLooseKsMerged",
+                              RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
+                                                    DataOnDemand(Location = "Phys/StdLooseKsLL")] )
+
+KsList = createSubSel(OutputList = "KsForBetaS",
+                      InputList = KsListLoose, Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
 
 f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
                                DaughterLists = [ DataOnDemand(Location = "Phys/StdLoosePions") ],
@@ -117,7 +120,11 @@ f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
 ##################
 
 Jpsi2MuMuForBetasLine =  StrippingLine("Jpsi2MuMuForBetasLine",algos = [ JpsiList ], prescale = 0.5)
-B2JpsiXLines += [ Jpsi2MuMuForBetasLine ]
+Jpsi2MuMuForBetasDetachedLine = StrippingLine("Jpsi2MuMuForBetasDetachedLine",
+                                              algos = [ createSubSel( InputList = JpsiList,
+                                                                      OutputList = JpsiList.name() + "Detached",
+                                                                      Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
+B2JpsiXLines += [ Jpsi2MuMuForBetasLine,Jpsi2MuMuForBetasDetachedLine ]
 
 ##################
 ### Bu->JpsiK+ ###
@@ -211,12 +218,11 @@ B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKs
 Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc",
                                   DaughterLists  = [ KsList, JpsiList ],
-                                  DaughterCuts  = {"KS0": "(VFASPF(VCHI2/VDOF)<20)" },
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 20)"
                                   )
 
-Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 0.25)
+Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 1.00)
 Bd2JpsiKsDetachedLine  = StrippingLine("Bd2JpsiKsDetachedLine",
                                        algos = [ createSubSel( InputList = Bd2JpsiKs,
                                                                OutputList = Bd2JpsiKs.name() + "Detached",
@@ -224,7 +230,7 @@ Bd2JpsiKsDetachedLine  = StrippingLine("Bd2JpsiKsDetachedLine",
 Bd2JpsiKsUnbiasedLine  = StrippingLine("Bd2JpsiKsUnbiasedLine",
                                        algos = [ createSubSel( InputList = Bd2JpsiKs,
                                                                OutputList = Bd2JpsiKs.name() + "Unbiased",
-                                                               Cuts = "ALL") ] )
+                                                               Cuts = "(MINTREE('KS0'==ABSID, PT)> 1000.*MeV)") ] )
 B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbiasedLine ]
 
 ##################
