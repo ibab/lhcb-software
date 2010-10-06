@@ -83,8 +83,8 @@ inline void ST::CommonBase<PBASE>::commonInit(){
 
   m_tracker = 0; 
   m_readoutTool = 0;
-  declareProperty("DetType", m_detType = "TT");
-  declareProperty("ForcedInit", m_forcedInit = false); 
+  this->declareProperty("DetType", m_detType = "TT");
+  this->declareProperty("ForcedInit", m_forcedInit = false); 
   m_readoutToolName = m_detType+"ReadoutTool";
   addToFlipList(&m_readoutToolName);
 }
