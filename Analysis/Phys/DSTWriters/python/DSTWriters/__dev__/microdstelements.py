@@ -68,10 +68,15 @@ class CloneParticleTrees(MicroDSTElement) :
         return [cloner]
 
 class ClonePVs(MicroDSTElement) :
+    def __init__(self, branch='', copyTracks=False) :
+        MicroDSTElement.__init__(self, branch)
+        self._copyTracks = copyTracks
     def __call__(self, sel) :
         from Configurables import CopyPrimaryVertices, CopyPVWeights
         clonePV=CopyPrimaryVertices(self.personaliseName(sel,
                                                          'CopyPrimaryVertices'))
+        if self._copyTracks :
+            clonePV.ClonerType = 'RecVertexClonerWithTracks'
         self.setOutputPrefix(clonePV)
         cloneWeights = CopyPVWeights(self.personaliseName(sel,
                                                           'CopyPVWeights'))
