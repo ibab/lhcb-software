@@ -194,8 +194,8 @@ StatusCode CaloAlignmentNtp::execute() {
     bclusR=Gaudi::XYZPoint( bcluster->position().x() , bcluster->position().y() , bcluster->position().z() );  //cluster 
     bcellR=Gaudi::XYZPoint( m_calo->cellX(bid) , m_calo->cellY(bid), m_calo->cellZ(bid) );                     // seed 
         
-    double dist = sqrt(abs(double(bid.row() - id.row())) * abs(double(bid.row() - id.row()))+
-                       abs(double(bid.col() - id.col())) * abs(double(bid.col() - id.col())));
+    double dist = sqrt(fabs(double(bid.row() - id.row())) * fabs(double(bid.row() - id.row()))+
+                       fabs(double(bid.col() - id.col())) * fabs(double(bid.col() - id.col())));
 
     if( bid.area() == id.area() &&  !inRange( m_dist, dist) )continue; // brem-electron separation
     

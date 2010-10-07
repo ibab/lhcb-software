@@ -153,7 +153,7 @@ StatusCode CaloHypoNtp::execute(){
       if( m_checker ){
         const LHCb::MCParticle* mcp = calo2MC()->from(hypo)->bestMC();
         if( NULL == mcp )continue;
-        if( m_mcID >= 0 && mcp->particleID().abspid()  != m_mcID)continue;        
+        if( m_mcID >= 0 && (int) mcp->particleID().abspid()  != m_mcID)continue;        
       }      
 
       // PrintOut

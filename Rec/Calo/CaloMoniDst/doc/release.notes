@@ -5,6 +5,9 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-07 - Olivier Deschamps
+ - Fix windows warning
+
 ! 2010-10-01 - Rob Lambert
  - Fix windows warning, converting double to int
 
