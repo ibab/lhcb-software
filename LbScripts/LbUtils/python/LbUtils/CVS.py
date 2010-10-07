@@ -1,9 +1,13 @@
 
+from LbUtils.Log import NullHandler
+
 import os
 from subprocess import Popen, PIPE
 import logging
 import shutil
 
+_h = NullHandler()
+logging.getLogger().addHandler(_h)
 
 def CVS2Version(name, revision):
     version = name.replace("$", "").replace("Name:", "").strip()

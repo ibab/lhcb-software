@@ -1,5 +1,7 @@
 2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Log.py: added NullHandler to be used in libraries. This is usefull when the 
+	main application calling the library is not defining any logger.
 	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the 
 	LbRelease.rcs module.
 

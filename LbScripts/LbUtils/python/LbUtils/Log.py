@@ -44,29 +44,39 @@ def addDefaultLogger(parser, format=None):
     parser.set_defaults(log_level="WARNING")
     grp = parser.add_option_group("Logging")
     grp.add_option("--silent",
-                      action="callback",
-                      callback=setLogLevelCallBack, 
-                      dest="log_level",
-                      help="silent mode. Only CRITICALS")
+                   action="callback",
+                   callback=setLogLevelCallBack, 
+                   dest="log_level",
+                   help="silent mode. Only CRITICALS")
     grp.add_option("--quiet",
-                      action="callback",
-                      callback=setLogLevelCallBack, 
-                      dest="log_level",
-                      help="quiet mode. Only ERRORS and CRITICALS")
+                   action="callback",
+                   callback=setLogLevelCallBack, 
+                   dest="log_level",
+                   help="quiet mode. Only ERRORS and CRITICALS")
     grp.add_option("--verbose",
-                      action="callback", 
-                      callback=setLogLevelCallBack, 
-                      dest="log_level",
-                      help="verbose mode. Everything down to INFOS")
+                   action="callback", 
+                   callback=setLogLevelCallBack, 
+                   dest="log_level",
+                   help="verbose mode. Everything down to INFOS")
     grp.add_option("--debug",
-                      action="callback",
-                      callback=setLogLevelCallBack,
-                      dest="log_level",
-                      help="debug mode. Everything")
+                   action="callback",
+                   callback=setLogLevelCallBack,
+                   dest="log_level",
+                   help="debug mode. Everything")
     grp.add_option("--log-level",
-                      action="callback",
-                      callback=setLogLevelCallBack,
-                      nargs=1,
-                      dest="log_level",
-                      help="default log level [default %default]")
+                   action="callback",
+                   callback=setLogLevelCallBack,
+                   nargs=1,
+                   dest="log_level",
+                   help="default log level [default %default]")
     return log
+
+
+class NullHandler(logging.Handler):
+    """ null handler for libraries. This is usefull when a top application doesn't
+    define any logger. This handler has to be added to each library logger like:
+     h = NullHandler()
+     logging.getLogger("foo").addHandler(h)
+    """
+    def emit(self, record):
+        pass
