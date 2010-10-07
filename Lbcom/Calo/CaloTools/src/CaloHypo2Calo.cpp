@@ -60,7 +60,7 @@ StatusCode CaloHypo2Calo::initialize(){
 
 
 //=============================================================================
-const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo){
+const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(const LHCb::CaloHypo &fromHypo, const std::string &toCalo){
 
   if ( msgLevel( MSG::DEBUG) ) debug() << "Matching CaloHypo to " << toCalo << " hypo energy = " << fromHypo.e() << endmsg;
 
@@ -98,7 +98,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
 
 
 
-const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
+const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(const LHCb::CaloCluster &fromCluster, const std::string &toCalo){
   debug() << " toCalo " << toCalo << endmsg;
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
@@ -168,30 +168,30 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
 
 
 
-const std::vector<LHCb::CaloDigit*>& CaloHypo2Calo::digits(LHCb::CaloHypo fromHypo, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& CaloHypo2Calo::digits(const LHCb::CaloHypo &fromHypo, const std::string &toCalo){  
   cellIDs( fromHypo, toCalo);
   return m_digits;
 }  
 
-double CaloHypo2Calo::energy(LHCb::CaloHypo fromHypo, std::string toCalo){
+double CaloHypo2Calo::energy(const LHCb::CaloHypo &fromHypo, const std::string &toCalo){
   cellIDs(fromHypo, toCalo);
   return m_energy;
 }
-const std::vector<LHCb::CaloDigit*>& CaloHypo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& CaloHypo2Calo::digits(const LHCb::CaloCluster &fromCluster, const std::string &toCalo){  
   cellIDs( fromCluster, toCalo);
   return m_digits;
 }  
 
-double CaloHypo2Calo::energy(LHCb::CaloCluster fromCluster, std::string toCalo){
+double CaloHypo2Calo::energy(const LHCb::CaloCluster &fromCluster, const std::string &toCalo){
   cellIDs(fromCluster, toCalo);
   return m_energy;
 }
 
-int CaloHypo2Calo::multiplicity(LHCb::CaloCluster fromCluster, std::string toCalo){
+int CaloHypo2Calo::multiplicity(const LHCb::CaloCluster &fromCluster, const std::string &toCalo){
   cellIDs(fromCluster, toCalo);
   return m_count;
 }
-int CaloHypo2Calo::multiplicity(LHCb::CaloHypo fromHypo, std::string toCalo){
+int CaloHypo2Calo::multiplicity(const LHCb::CaloHypo &fromHypo, const std::string &toCalo){
   cellIDs(fromHypo, toCalo);
   return m_count;
 }

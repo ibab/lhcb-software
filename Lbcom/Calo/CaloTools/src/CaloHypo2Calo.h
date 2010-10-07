@@ -26,25 +26,26 @@ public:
 
   StatusCode initialize();
   // cellIDs
-  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo);
-  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo);
+  const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
+  const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
   const std::vector<LHCb::CaloCellID>& cellIDs(){return m_cells;};
   // digits
-  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloHypo  fromHypo, std::string toCalo);
-  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
+  const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   const std::vector<LHCb::CaloDigit*>& digits(){return m_digits;};
   // energy
-  double energy(LHCb::CaloHypo  fromCluster, std::string toCalo);
-  double energy(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  double energy(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
+  double energy(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   double energy(){return m_energy;};
   // multiplicity
-  int multiplicity(LHCb::CaloHypo   fromHypo     , std::string toCalo);
-  int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  int multiplicity(const LHCb::CaloCluster &fromCluster, const std::string &toCalo);
+  int multiplicity(const LHCb::CaloHypo    &fromHypo,    const std::string &toCalo);
   int multiplicity(){return m_count;};
-  void setCalos(std::string from, std::string to){Calo2Calo::setCalos(from,to); };
+  void setCalos(const std::string &from, const std::string &to){Calo2Calo::setCalos(from,to); };
+
   // external setting
   StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
-  
+
 
 protected:
 
