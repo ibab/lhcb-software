@@ -10,7 +10,7 @@ Please note that most of the functions of the CondDBUI module are used in the co
 browser.
 '''
 
-import os, md5, random, sys, re, time, datetime
+import os, random, sys, re, time, datetime
 
 LOG_FORMAT = "%(levelname)s: (%(name)s) %(message)s"
 
@@ -633,6 +633,7 @@ class CondDB(object):
         outputs:
             md5 object; result from the md5 check sum.
         '''
+        import hashlib
         from PyCool import cool
         assert self.db != None, "No database connected !"
         # retrieve the list of nodes to check
@@ -644,7 +645,7 @@ class CondDB(object):
         if initialMd5Sum:
             md5Sum = initialMd5Sum.copy()
         else:
-            md5Sum = md5.new()
+            md5Sum = hashlib.md5()
 
         if tag == 'ALL':
             raise Exception, "MD5 check over all tags is not yet implemented"

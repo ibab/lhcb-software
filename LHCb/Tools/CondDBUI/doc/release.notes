@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-10-07 - Marco Clemencic
+ - Replaced the usage of module md5 (deprecated since Python 2.6) with hashlib
+   (prevent deprecation warning).
+
 !===================== Tools/CondDBUI v3r5 2010-08-25 =========================
 ! 2010-08-13 - Illya Shapoval
  - The bug is fixed (see Savannah bug #53126) in CondDBUI.PyCoolDiff which 
