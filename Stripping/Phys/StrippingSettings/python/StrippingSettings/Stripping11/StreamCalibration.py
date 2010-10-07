@@ -68,3 +68,8 @@ from StrippingSettings.Stripping11.LineConfigDictionaries import TrackEffMuonTTC
 MuonTTStripping = StrippingTrackEffMuonTT.StrippingTrackEffMuonTTConf('TrackEffMuonTT', TrackEffMuonTTConfig )
 stream.appendLines( MuonTTStripping.lines )
 
+from StrippingSelections.StrippingTrackEffDownMuon import StrippingTrackEffDownMuonConf
+stream.appendLines( [ StrippingTrackEffDownMuonConf().nominal_line() ] )
+
+from StrippingSelections.StrippingTrackEffVeloMuon import StrippingTrackEffVeloMuonConf
+stream.appendLines( [ StrippingTrackEffVeloMuonConf().nominal_line() ] )

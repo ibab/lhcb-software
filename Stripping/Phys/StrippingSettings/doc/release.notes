@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-10-07 - Thomas Blake
+ - Added velo-muon and downstream-muon lines to Calibration stream 
+
+! 2010-10-07 - Thomas Blake
  - Updated definition of Charm stream for Stripping11 
 
 
