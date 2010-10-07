@@ -16,9 +16,7 @@
 // local
 #include "GetIntegratedLuminosity.h"
 #include "LumiIntegrator.h"
-
-
-
+#include "FSRNavigator.h"
 // CondDB
 #include "DetDesc/Condition.h"
 #include "GaudiKernel/IDetDataSvc.h"
@@ -146,9 +144,11 @@ int GetIntegratedLuminosity::check() {
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName;
   
-  
+  // prepare integrator tool
+  IFSRNavigator *navigatorTool = tool<IFSRNavigator>( "FSRNavigator" , "FSRNavigator" );
+
   //touch all EventCountFSRs
-  std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
+  std::vector< std::string > evAddresses = navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
   for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
       iAddr != evAddresses.end() ; ++iAddr ){
     if ( msgLevel(MSG::INFO) ) {
@@ -181,44 +181,4 @@ int GetIntegratedLuminosity::check() {
     }
   }  
   return (checkTheFSR);
-}
-
-//=============================================================================
-std::vector< std::string > GetIntegratedLuminosity::navigate(std::string rootname, std::string tag) {
-  // navigate recursively through the FileRecord store and report addresses which contain the tag
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Explore: " << rootname << " for " << tag << endmsg;
-  std::vector< std::string > addresses;
-  SmartDataPtr<DataObject>   root(m_fileRecordSvc, rootname);
-  if ( root ) {
-    explore(root->registry(), tag, addresses);
-  }
-  return addresses;
-}
-//=============================================================================
-void GetIntegratedLuminosity::explore(IRegistry* pObj, std::string tag, std::vector< std::string >& addresses) {
-  // add the addresses which contain the tag to the list and search through the leaves
-  if ( 0 != pObj )    {
-    std::string name = pObj->name();
-    std::string::size_type f = name.find(tag);
-    std::string id = pObj->identifier();
-
-    // add this address to the list
-    if ( f != std::string::npos ) addresses.push_back(id);
-
-    // search through the leaves
-    SmartIF<IDataManagerSvc> mgr(m_fileRecordSvc);
-    if ( mgr )    {
-      typedef std::vector<IRegistry*> Leaves;
-      Leaves leaves;
-      StatusCode sc = mgr->objectLeaves(pObj, leaves);
-      if ( sc.isSuccess() )  {
-        for ( Leaves::const_iterator iLeaf=leaves.begin(); iLeaf != leaves.end(); iLeaf++ )   {
-          // it is important to redefine leafRoot->registry() way back from the identifier 
-          std::string leafId = (*iLeaf)->identifier();
-          SmartDataPtr<DataObject> leafRoot(m_fileRecordSvc, leafId);
-          explore(leafRoot->registry(), tag, addresses);
-        }
-      }
-    }
-  }
 }

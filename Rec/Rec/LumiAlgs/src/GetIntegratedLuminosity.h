@@ -40,10 +40,6 @@ public:
 protected:
   
   virtual int check( );
-  virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
-  virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
-  
-  
 
   
   IDataProviderSvc* m_fileRecordSvc;

@@ -18,6 +18,9 @@
 #include "Event/EventCountFSR.h"
 #include "Event/TimeSpanFSR.h"
 
+// local
+#include "FSRNavigator.h"
+
 /** @class DumpFSR DumpFSR.h
  *   
  *
@@ -45,28 +48,28 @@ public:
 protected:
   virtual void dump_file( std::string txt = "" ); ///< print the FSRs of one input file
   virtual void write_file();                      ///< write the FSRs as ascii to a file
-  virtual std::string fileID();       ///< get the fileID
-  virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
-  virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
+  virtual std::string fileID();                   ///< get the fileID
 
 protected:
   /// Reference to run records data service
   IDataProviderSvc* m_fileRecordSvc;
 
-  std::string m_rawEventLocation;               // Location where we get the RawEvent
-  std::string m_FileRecordName;                 // location of FileRecords
-  std::string m_FSRName;                        // specific tag of summary data in FSR
-  std::string m_LowFSRName;                     // specific tag of low lumi summary data in FSR
-  std::string m_EventCountFSRName;              // specific tag of event summary data in FSR
-  std::string m_TimeSpanFSRName;                // specific tag of event summary data in FSR
-  std::string m_current_fname;                  // current file ID string 
-  std::string m_ascii_fname;                    // name of ascii file to write FSR data to
-  int         m_count_files;                    // number of files read
-  int         m_count_events;                   // number of events read
-  int         m_events_in_file;                 // events after OpenFileIncident
+  std::string m_rawEventLocation;               ///< Location where we get the RawEvent
+  std::string m_FileRecordName;                 ///< location of FileRecords
+  std::string m_FSRName;                        ///< specific tag of summary data in FSR
+  std::string m_LowFSRName;                     ///< specific tag of low lumi summary data in FSR
+  std::string m_EventCountFSRName;              ///< specific tag of event summary data in FSR
+  std::string m_TimeSpanFSRName;                ///< specific tag of event summary data in FSR
+  std::string m_current_fname;                  ///< current file ID string 
+  std::string m_ascii_fname;                    ///< name of ascii file to write FSR data to
+  std::string m_dumprequests;                   ///< job: E:event F:fini, files: B:begin C:close
+  int         m_count_files;                    ///< number of files read
+  int         m_count_events;                   ///< number of events read
+  int         m_events_in_file;                 ///< events after OpenFileIncident
 
 private:
-  mutable IIncidentSvc* m_incSvc ;                      /// the incident service 
+  IFSRNavigator *m_navigatorTool;               ///< tool to navigate FSR
+  mutable IIncidentSvc* m_incSvc ;              ///< the incident service 
 
 };
 #endif // DUMPFSR_H

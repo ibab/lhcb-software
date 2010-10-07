@@ -50,7 +50,7 @@ DumpFSR::DumpFSR( const std::string& name,
   declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR");
   declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR");
   declareProperty( "AsciiFileName"      , m_ascii_fname       = "");
-
+  declareProperty( "DumpRequests"       , m_dumprequests      = "F");
 }
 //=============================================================================
 // Destructor
@@ -67,6 +67,8 @@ StatusCode DumpFSR::initialize() {
 
   // get the File Records service
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
+  // prepare navigator tool
+  m_navigatorTool = tool<IFSRNavigator>( "FSRNavigator" , "FSRNavigator" );
   // incident service
   m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
   
@@ -100,7 +102,7 @@ StatusCode DumpFSR::execute() {
 
   // wait after exactly one event on a file
   if ( m_events_in_file == 1 ) {
-    dump_file( "After First Event" );
+    if ( m_dumprequests.find("E") != std::string::npos ) dump_file( "After First Event" );
   }
 
   return StatusCode::SUCCESS;
@@ -115,7 +117,7 @@ StatusCode DumpFSR::finalize() {
   info() << "number of files seen: " << m_count_files << endmsg;
   info() << "number of events seen: " << m_count_events << endmsg;
 
-  dump_file("Finalize");
+  if ( m_dumprequests.find("F") != std::string::npos ) dump_file("Finalize");
 
   if ( m_ascii_fname != "" ) {
     write_file();
@@ -137,14 +139,14 @@ void DumpFSR::handle( const Incident& incident )
     if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
     m_count_files++;
     m_events_in_file = 0;
-    dump_file( "BeginInputFile" );
+    if ( m_dumprequests.find("B") != std::string::npos ) dump_file( "BeginInputFile" );
 
   }
   if(incident.type()==IncidentType::EndInputFile)
   {
     m_current_fname = incident.source();
     if ( msgLevel(MSG::DEBUG) ) debug() << "==>from handle " << m_current_fname << endmsg;
-    dump_file( "EndInputFile" );
+    if ( m_dumprequests.find("C") != std::string::npos ) dump_file( "EndInputFile" );
 
   }
 #endif
@@ -158,7 +160,7 @@ void DumpFSR::dump_file( std::string txt ) {
 
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName;
-  std::vector< std::string > addresses = navigate(fileRecordRoot, m_FSRName);
+  std::vector< std::string > addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
   for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
       iAddr != addresses.end() ; ++iAddr ){
     if ( msgLevel(MSG::INFO) ) {
@@ -181,7 +183,7 @@ void DumpFSR::dump_file( std::string txt ) {
   }  
 
   // make an inventory of the FileRecord store (LowLumi)
-  std::vector< std::string > loAddresses = navigate(fileRecordRoot, m_LowFSRName);
+  std::vector< std::string > loAddresses = m_navigatorTool->navigate(fileRecordRoot, m_LowFSRName);
   for(std::vector< std::string >::iterator iAddr = loAddresses.begin() ; 
       iAddr != loAddresses.end() ; ++iAddr ){
     if ( msgLevel(MSG::INFO) ) {
@@ -204,7 +206,7 @@ void DumpFSR::dump_file( std::string txt ) {
   }  
   
   //touch all EventCountFSRs
-  std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
+  std::vector< std::string > evAddresses = m_navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
   for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
       iAddr != evAddresses.end() ; ++iAddr ){
     if ( msgLevel(MSG::INFO) ) {
@@ -224,7 +226,7 @@ void DumpFSR::dump_file( std::string txt ) {
   }  
   
   //touch all TimeSpanFSRs (independently of the LumiFSRs)
-  std::vector< std::string > tsAddresses = navigate(fileRecordRoot, m_TimeSpanFSRName);
+  std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
   for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
       iAddr != tsAddresses.end() ; ++iAddr ){
     if ( msgLevel(MSG::INFO) ) {
@@ -265,7 +267,7 @@ void DumpFSR::write_file( ) {
       // root of store
       std::string fileRecordRoot = m_FileRecordName;
       // make an inventory of the FileRecord store
-      std::vector< std::string > addresses = navigate(fileRecordRoot, m_FSRName);
+      std::vector< std::string > addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
       for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
           iAddr != addresses.end() ; ++iAddr ){
 	std::string lumiRecordAddress = *iAddr;
@@ -283,7 +285,7 @@ void DumpFSR::write_file( ) {
       }
 
       // make an inventory of the FileRecord store (LowLumi)
-      addresses = navigate(fileRecordRoot, m_LowFSRName);
+      addresses = m_navigatorTool->navigate(fileRecordRoot, m_LowFSRName);
       for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
           iAddr != addresses.end() ; ++iAddr ){
 	std::string lumiRecordAddress = *iAddr;
@@ -301,7 +303,7 @@ void DumpFSR::write_file( ) {
       }
   
       // EventCountFSRs
-      std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
+      std::vector< std::string > evAddresses = m_navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
       for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
           iAddr != evAddresses.end() ; ++iAddr ){
 	std::string eventCountRecordAddress = *iAddr;
@@ -317,7 +319,7 @@ void DumpFSR::write_file( ) {
       }  
   
       // TimeSpanFSRs
-      std::vector< std::string > tsAddresses = navigate(fileRecordRoot, m_TimeSpanFSRName);
+      std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
       for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
           iAddr != tsAddresses.end() ; ++iAddr ){
 	std::string timeSpanRecordAddress = *iAddr;
@@ -394,45 +396,4 @@ std::string DumpFSR::fileID() {
                                           << " with RunInfo record: " << event_fname << endmsg;
 
   return event_fname;
-}
-
-//=============================================================================
-std::vector< std::string > DumpFSR::navigate(std::string rootname, std::string tag) {
-  // navigate recursively through the FileRecord store and report addresses which contain the tag
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Explore: " << rootname << " for " << tag << endmsg;
-  std::vector< std::string > addresses;
-  SmartDataPtr<DataObject>   root(m_fileRecordSvc, rootname);
-  if ( root ) {
-    explore(root->registry(), tag, addresses);
-  }
-  return addresses;
-}
-
-//=============================================================================
-void DumpFSR::explore(IRegistry* pObj, std::string tag, std::vector< std::string >& addresses) {
-  // add the addresses which contain the tag to the list and search through the leaves
-  if ( 0 != pObj )    {
-    std::string name = pObj->name();
-    std::string::size_type f = name.find(tag);
-    std::string id = pObj->identifier();
-
-    // add this address to the list
-    if ( f != std::string::npos ) addresses.push_back(id);
-
-    // search through the leaves
-    SmartIF<IDataManagerSvc> mgr(m_fileRecordSvc);
-    if ( mgr )    {
-      typedef std::vector<IRegistry*> Leaves;
-      Leaves leaves;
-      StatusCode sc = mgr->objectLeaves(pObj, leaves);
-      if ( sc.isSuccess() )  {
-        for ( Leaves::const_iterator iLeaf=leaves.begin(); iLeaf != leaves.end(); iLeaf++ )   {
-          // it is important to redefine leafRoot->registry() way back from the identifier 
-          std::string leafId = (*iLeaf)->identifier();
-          SmartDataPtr<DataObject> leafRoot(m_fileRecordSvc, leafId);
-          explore(leafRoot->registry(), tag, addresses);
-        }
-      }
-    }
-  }
 }

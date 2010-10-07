@@ -40,6 +40,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     , "outputFile" :       ''     # output filename
     , "inputFiles" :       [ ]    # input
     , "asciiFile"  :       ''     # ascii output filename for FSR dump
+    , "DumpRequests"  :    'F'    # ascii output filename for FSR dump
     , "userAlgorithms":    [ ]    # put here user algorithms to add
     , "OutputLevel" :      ERROR  #
     }   
@@ -51,6 +52,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     '''
     # dump FSR
     dump =  DumpFSR ('dumpFSR', AsciiFileName = self.getProp('asciiFile'),
+                     DumpRequests = self.getProp('DumpRequests'),
                      OutputLevel = self.getProp("OutputLevel") )
     sequence.Members+=[ dump ]
 

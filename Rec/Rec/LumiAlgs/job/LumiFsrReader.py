@@ -29,5 +29,6 @@ files = [
 LumiFsrReader().inputFiles = files
 LumiFsrReader().EvtMax =  1000
 LumiFsrReader().OutputLevel =  INFO
+LumiFsrReader().DumpRequests =  "EFBC"
 
 EventSelector().PrintFreq = 1000

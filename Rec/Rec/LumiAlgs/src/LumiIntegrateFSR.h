@@ -41,8 +41,6 @@ protected:
   virtual StatusCode add_fsr(LHCb::LumiIntegral* r, 
 			     std::string addr, 
 			     float factor);  ///< add/subtr one FSR for consistent group
-  virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
-  virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
   virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
   virtual StatusCode registerDB();    ///< register DB conditions

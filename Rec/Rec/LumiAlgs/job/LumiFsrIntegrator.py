@@ -11,6 +11,7 @@ from Gaudi.Configuration import *
 
 #--- switch on xml summary
 from Configurables import LHCbApp
+
 LHCbApp().XMLSummary = 'summary.xml'
 #-- set explicit CondDB tag
 LHCbApp().CondDBtag = 'head-20100826'
