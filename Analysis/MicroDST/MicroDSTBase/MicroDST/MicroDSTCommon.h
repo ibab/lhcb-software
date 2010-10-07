@@ -27,7 +27,8 @@ public:
                   ISvcLocator* pSvcLocator )
     : 
     PBASE(name, pSvcLocator),
-    m_outputPrefix("microDST")
+    m_outputPrefix("microDST"),
+    m_rootInTES("/Event/")
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
@@ -144,13 +145,32 @@ protected:
 
   inline const std::string outputTESLocation(const std::string& inputLocation) const
   {
-    return "/Event/"+ this->outputPrefix() + "/" + 
-      MicroDST::niceLocationName(inputLocation);
+//     return m_rootInTES + this->outputPrefix() + "/" + 
+//       niceLocationName(inputLocation);
+    return this->outputPrefix() + "/" + niceLocationName(inputLocation);
+  }
+
+  /**
+   * Remove leading RootInTES from TES locations.
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   *
+   */
+  inline const std::string niceLocationName(const std::string& location) const
+  {
+    std::string tmp(location);
+    const std::string tmpString = m_rootInTES;
+    const std::string::size_type loc       = tmp.find(tmpString);
+    if ( loc != std::string::npos) {
+      tmp.replace(loc, tmpString.length(), "");
+    }
+    return tmp;
   }
 
 private:
 
   std::string m_outputPrefix;
+  std::string m_rootInTES;
   std::string m_fullOutputTESLocation;
   
 };

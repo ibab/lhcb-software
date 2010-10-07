@@ -79,7 +79,7 @@ public:
     
     for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
 
-      const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
+      const std::string inputLocation = niceLocationName(*iLoc);
       const std::string outputLocation = 
         this->outputTESLocation( inputLocation );
         

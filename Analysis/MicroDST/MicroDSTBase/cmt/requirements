@@ -7,7 +7,7 @@
 #==============================================================================
 
 package MicroDST/MicroDSTBase
-version v2r1
+version v3r0
 
 # =============== structure ===================================================
 branches MicroDST src cmt doc

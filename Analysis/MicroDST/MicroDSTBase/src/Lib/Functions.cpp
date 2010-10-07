@@ -13,17 +13,7 @@
 
 namespace MicroDST 
 {
-  //===========================================================================
-  const std::string niceLocationName(const std::string& location)
-  {
-    std::string tmp(location);
-    const std::string tmpString = "/Event/";
-    const std::string::size_type loc       = tmp.find(tmpString);
-    if ( loc != std::string::npos) {
-      tmp.replace(loc, tmpString.length(), "");
-    }
-    return tmp;
-  }
+
   //===========================================================================
   const std::string objectLocation(const DataObject* pObject)
   {

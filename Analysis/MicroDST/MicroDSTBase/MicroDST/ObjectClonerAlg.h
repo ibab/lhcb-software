@@ -59,7 +59,7 @@ namespace MicroDST
       stringIter locEnd = this->inputTESLocations().end();
     
       for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
-        const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
+        const std::string inputLocation = niceLocationName(*iLoc);
         const std::string outputLocation = 
           this->outputTESLocation( inputLocation );
         verbose() << "Going to clone KeyedContainer from " << inputLocation

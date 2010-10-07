@@ -16,6 +16,10 @@ StatusCode MicroDSTCommon<PBASE>::initialize()
 
   this->debug() << "==> Initialize" << endmsg;
 
+  if (!PBASE::rootInTES().empty()) m_rootInTES = PBASE::rootInTES();
+
+  this->debug() << "Set rootInTES to " << m_rootInTES << endmsg;
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -83,7 +87,8 @@ const typename Cloner::Type::Container* MicroDSTCommon<PBASE>::copyKeyedContaine
   typedef typename Cloner::Type _type;
   typedef typename _type::Container _container;
   const std::string location =  MicroDST::objectLocation(from);
-  this->verbose() << "now copy container for location " << location << endmsg;
+  this->verbose() << "now copy container for location " << location 
+                  << " to location " << outputTESLocation(location) << endmsg;
   
   if (!from) {
     this->Warning("copyKeyedContainer found no data at "+ location, 

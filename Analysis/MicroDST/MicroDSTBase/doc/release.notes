@@ -6,6 +6,16 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2010-10-07 - Juan Palacios
+ - Changes to fix clashes between MicroDST outputLocations and RootInTES.
+   Crucial for making MicroDSTs out of MicroDSTs.
+  * niceLocationName is now member of MicroDSTCommon instead of being free
+    function in MicroDST namespace. The behaviour is changed: it now removes
+    the leading RootInTES from a locaiton, instead of assuming it is always 
+    "/Event". Backwards incompatible, so increasing version to v3r0.
+  * MicrodSTCommon::outputTESLocation now returns relative location, without
+    leading RootInTes.
+
 !====================== MicroDSTBase v2r1 2010-10-04 =========================
 
 ! 2010-09-21 - Juan Palacios

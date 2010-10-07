@@ -33,14 +33,6 @@ namespace MicroDST {
   const std::string objectLocation(const DataObject* pObject);
 
   /**
-   * Remove leading "/Event" from TES locations.
-   *
-   * @author Juan Palacios juancho@nikhef.nl
-   *
-   */
-  const std::string niceLocationName(const std::string& location);
-
-  /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
