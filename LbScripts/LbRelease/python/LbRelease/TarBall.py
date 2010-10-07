@@ -618,6 +618,9 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 
 #=========================================================================
+def generateLCGHTML(project, version, cmtconfig=None, input_dir=None):
+    pass
+
 def generateLCGMD5(project, version, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
     prj_conf = Project.getProject(project)
@@ -785,7 +788,7 @@ def generateLCGTar(project, version=None, cmtconfig=None,
                     if md5 :
                         generateLCGMD5(project, version, cmtconfig, output_dir)
                     if html :
-                        pass
+                        generateLCGHTML(project, version, cmtconfig, output_dir)
     #        else :
     #            if md5 :
     #                generateMD5(project, version, cmtconfig, output_dir)

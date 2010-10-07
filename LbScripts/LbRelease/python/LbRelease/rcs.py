@@ -1,46 +1,14 @@
 """
 Module providing the basic functionalities of the GetPack utility.
 """
-import os, re, sys
-from subprocess import Popen, PIPE
-import logging
+from LbUtils.Processes import callCommand, RetryCommand
+
+import os, re
 
 import __builtin__
 if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
     from sets import Set as set
-
-
-_use_shell = sys.platform.startswith("win")
-_call_command_log = logging.getLogger("_call_command")
-def _call_command(cmd, *args, **kwargs):
-    """
-    Simple wrapper to execute a command and return standard output, standard error and return code.
-    """
-    d = {"stdout": PIPE, "stderr": PIPE, "shell": _use_shell}
-    d.update(kwargs)
-    cmd = [cmd] + list(args)
-    _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
-    proc = apply(Popen, (cmd,), d)
-    out, err = proc.communicate()
-    return (out, err, proc.returncode)
-
-class _retry_command(object):
-    """Small wrapper to add a 're-try' feature to _call_command."""
-    def __init__(self, command, check, retries = 3, sleeptime = 30):
-        self._command = command
-        self._check = check
-        self._retries = retries
-        self._sleeptime = sleeptime
-    def __call__(self, *args, **kwargs):
-        from time import sleep
-        retries = self._retries
-        retval = apply(self._command, args, kwargs)
-        while (not self._check(retval)) and (retries > 0):
-            retval = apply(self._command, args, kwargs)
-            retries -= 1
-            sleep(self._sleeptime)
-        return retval
 
 class RCSError(RuntimeError):
     """
@@ -263,8 +231,8 @@ class RevisionControlSystem(object):
         elif not os.path.exists(vers_file):
             open(vers_file, "w").write(version + "\n")
 
-_cvs = lambda *args, **kwargs: apply(_call_command, ("cvs",) + args, kwargs)
-_cvs_retry = _retry_command(_cvs, lambda r: r[2] == 0)
+_cvs = lambda *args, **kwargs: apply(callCommand, ("cvs",) + args, kwargs)
+_cvs_retry = RetryCommand(_cvs, lambda r: r[2] == 0)
 class CVS(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
@@ -448,8 +416,8 @@ def splitlines(text):
              for l in [ l.strip() for l in text.splitlines() ]
              if l and l[0] != "#" ]
 
-_svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
-_svn_retry = _retry_command(_svn, lambda r: r[2] == 0)
+_svn = lambda *args, **kwargs: apply(callCommand, ("svn",) + args, kwargs)
+_svn_retry = RetryCommand(_svn, lambda r: r[2] == 0)
 class SubversionCmd(RevisionControlSystem):
     """
     SVN implementation of RevisionControlSystem.

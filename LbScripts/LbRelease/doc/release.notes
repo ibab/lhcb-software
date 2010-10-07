@@ -1,3 +1,8 @@
+2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/rcs.py: factored out the callCommand and RetryCommand utilities to the 
+	LbUtils.Processes module.
+
 2010-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: minor improvements in the levels of log messages.
