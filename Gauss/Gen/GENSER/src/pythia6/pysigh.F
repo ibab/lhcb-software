@@ -1,4 +1,4 @@
-C $Id: pysigh.F,v 1.2 2008-11-25 14:59:03 robbep Exp $   
+C $Id: pysigh.F,v 1.3 2010-10-07 20:00:56 robbep Exp $   
 C***********************************************************************
  
 C...PYSIGH
@@ -411,6 +411,11 @@ C...Calculate parton distributions
           MINT(105)=MINT(102+I)
           MINT(109)=MINT(106+I)
           VINT(120)=VINT(2+I)
+C...Default is to use standard PDFs, but for interactions after the first
+C...in the new multiple-parton-interactions framework, set which side to
+C...evaluate the MPI-modified PDFs on.
+          MINT(30)=0
+          IF (MINT(31).GE.1) MINT(30)=I
           IF(MSTP(57).LE.1) THEN
             CALL PYPDFU(MINT(10+I),XSF,Q2SF,XPQ)
           ELSE
@@ -454,6 +459,16 @@ C...Calculate alpha_em, alpha_strong and K-factor
         IF(ISTSB.EQ.9.AND.MSTP(82).GE.2) Q2AS=Q2AS+
      &  PARU(112)*PARP(82)*(VINT(1)/PARP(89))**PARP(90)
         AS=PYALPS(Q2AS)
+C...PS (12 Feb 2010)
+C...New options MSTP(33) = 10 and 11
+C...  10: use K-factor = PARP(32) only for process 96 (MPI)
+C...  11: as for 10, but also use K-factor = PARP(31) for other procs
+      ELSEIF(MSTP(33).GE.10) THEN
+        IF (ISUB.EQ.96) THEN
+          FACK = PARP(32)
+        ELSEIF (ISUB.NE.96.AND.MSTP(33).EQ.11) THEN
+          FACK = PARP(31)
+        ENDIF
       ENDIF
       VINT(138)=1D0
       VINT(57)=AEM

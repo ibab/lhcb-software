@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-10-07 - Patrick Robbe
+ - Adapt to Pythia 6.423:
+   * remove src/pythia6/pyevnw.F src/pythia6/pyptfs.F which are not needed
+     anymore
+   * update src/pythia6/pyrand.F src/pythia6/pyscat.F src/pythia6/pysigh.F
+
 ! 2010-09-17 - Gloria CORTI
  - requirements: increase version of pythia6 to 423.2 to allow to check it
    against 421.2

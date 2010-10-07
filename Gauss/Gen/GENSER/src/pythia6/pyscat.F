@@ -1,4 +1,4 @@
-C $Id: pyscat.F,v 1.2 2008-11-25 14:57:56 robbep Exp $   
+C $Id: pyscat.F,v 1.3 2010-10-07 20:00:56 robbep Exp $   
 C*********************************************************************
  
 C...PYSCAT
@@ -61,11 +61,12 @@ C...and UED particle code (5 000 000 + id)
      & 6100011,6100013,6100015,                         
      & 5100012,5100011,5100014,5100013,5100016,5100015, 
      & 5100021,5100022,5100023,5100024/                 
-      SAVE VINTSV 
+      SAVE VINTSV
+ 
 C...Read out process
       ISUB=MINT(1)
       ISUBSV=ISUB
-
+ 
 C...Restore information for low-pT processes
       IF(ISUB.EQ.95.AND.MINT(57).GE.1) THEN
         DO 100 J=41,66
@@ -153,7 +154,11 @@ C...Store incoming partons in their CM-frame. Save pdf value.
         K(I,3)=MINT(83)+2+JT
         P(I,3)=0.5D0*SHUSER*(-1D0)**(JT-1)
         P(I,4)=0.5D0*SHUSER
-        VINT(38+JT)=XSFX(JT,MINT(14+JT))
+        IF(MINT(14+JT).GE.-40.AND.MINT(14+JT).LE.40) THEN
+         VINT(38+JT)=XSFX(JT,MINT(14+JT))
+        ELSE
+         VINT(38+JT)=1D0
+        ENDIF
   150 CONTINUE
  
 C...Copy incoming partons to documentation lines

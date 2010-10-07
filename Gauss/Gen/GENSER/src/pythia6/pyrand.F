@@ -1,4 +1,4 @@
-C $Id: pyrand.F,v 1.3 2008-11-25 14:57:28 robbep Exp $ 
+C $Id: pyrand.F,v 1.4 2010-10-07 20:00:56 robbep Exp $ 
 C*********************************************************************
  
 C...PYRAND
@@ -627,8 +627,8 @@ C...Select mass for GVMD states (rejecting previous assignment).
         DO 240 JT=1,2
           IF(MINT(106+JT).EQ.3) THEN
             PS=VINT(2+JT)**2
-            PMM(JT)=(Q0S+PS)*(Q1S+PS)/
-     &      (Q0S+PYR(0)*(Q1S-Q0S)+PS)-PS
+            PMM(JT)=SQRT((Q0S+PS)*(Q1S+PS)/
+     &      (Q0S+PYR(0)*(Q1S-Q0S)+PS)-PS)
             IF(MINT(102+JT).GE.333) PMM(JT)=PMM(JT)-
      &      PMAS(PYCOMP(113),1)+PMAS(PYCOMP(MINT(102+JT)),1)
           ENDIF
@@ -754,6 +754,7 @@ C...Information to output.
         VINT(64)=PDIF(4)**2
         VINT(283)=PMM(1)**2/4D0
         VINT(284)=PMM(2)**2/4D0
+ 
 C...Note: in the following, by In is meant the integral over the
 C...quantity multiplying coefficient cn.
 C...Choose tau according to h1(tau)/tau, where
@@ -996,8 +997,24 @@ C...Check against user cuts on kinematics at parton level.
         ENDIF
       ENDIF
  
-C...Calculate differential cross-section for different subprocesses.
-      IF(ISTSB.LE.10) CALL PYSIGH(NCHN,SIGS)
+      IF(ISTSB.LE.10) THEN
+C...  If internal process, call PYSIGH
+        CALL PYSIGH(NCHN,SIGS)
+      ELSE
+C...  If external process, still have to set MI starting scale 
+        IF (MSTP(86).EQ.1) THEN
+C...  Limit phase space by xT2 of hard interaction
+C...  (gives undercounting of MI when ext proc != dijets)
+          XT2GMX = VINT(25)
+        ELSE
+C...  All accessible phase space allowed
+C...  (gives double counting of MI when ext proc = dijets)
+          XT2GMX = (1D0-VINT(41))*(1D0-VINT(42))
+        ENDIF
+        VINT(62)=0.25D0*XT2GMX*VINT(2)
+        VINT(61)=SQRT(MAX(0D0,VINT(62)))
+      ENDIF
+      
       SIGSOR=SIGS
       SIGLPT=SIGT(0,0,5)*VINT(315)*VINT(316)
  
@@ -1356,6 +1373,6 @@ C...Format statements for differential cross-section maximum violations.
  5800 FORMAT(1X,'XMAXUP(',I1,') increased to',1P,D11.3)
  5900 FORMAT(1X,'XMAXUP(',I2,') increased to',1P,D11.3)
  6000 FORMAT(1X,'XMAXUP(',I3,') increased to',1P,D11.3)
- 
+
       RETURN
       END
