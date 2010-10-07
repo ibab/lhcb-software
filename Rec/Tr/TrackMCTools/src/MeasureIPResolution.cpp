@@ -46,11 +46,11 @@ StatusCode MeasureIPResolution::initialize() {
 
   m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
-  m_nTracks = 0.;
-  m_averX = 0.;
-  m_averY = 0.;
-  m_nbInCore = 0;
-  m_sumRInCore = 0.;
+  m_nTracks     = 0;
+  m_averX       = 0.;
+  m_averY       = 0.;
+  m_nbInCore    = 0;
+  m_sumRInCore  = 0.;
   m_sumR2InCore = 0.;
   
   return StatusCode::SUCCESS;
