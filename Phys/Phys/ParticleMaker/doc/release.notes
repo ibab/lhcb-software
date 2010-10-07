@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+
+! 2010-10-07 - Olivier Deschamps
+ - PhotonMaker : protect against missing input container 
+
+
 !========================== ParticleMaker v5r8 2010-09-29 =====================
 
 ! 2010-09-01 - Olivier Deschamps

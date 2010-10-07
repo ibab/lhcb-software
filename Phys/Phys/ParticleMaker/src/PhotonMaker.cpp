@@ -173,9 +173,13 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   
 
   // locate input data
-  const LHCb::ProtoParticles* pps = get< LHCb::ProtoParticles > (m_input);
-  if( 0 == pps ) { return StatusCode::FAILURE ; }
-  
+  const LHCb::ProtoParticles* pps = NULL;
+  if ( exist<LHCb::ProtoParticles>( m_input ))
+    pps = get< LHCb::ProtoParticles > (m_input);
+  else 
+    return Warning("No ProtoParticles at " + m_input + " 0 photons created",StatusCode::SUCCESS);  
+  if( NULL == pps)return Warning("ProtoParticles container " + m_input + " points to NULL",StatusCode::SUCCESS);
+
   unsigned long nConverted = 0 ;
   unsigned long nUnconverted = 0 ;
   unsigned long nSelConverted = 0 ;
