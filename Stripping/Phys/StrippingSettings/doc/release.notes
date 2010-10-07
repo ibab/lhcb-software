@@ -4,14 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ========================== StrippingSettings v1r2 2010-10-07 ================
+
 ! 2010-10-07 - Thomas Blake
  - Added velo-muon and downstream-muon lines to Calibration stream 
 
 ! 2010-10-07 - Thomas Blake
  - Updated definition of Charm stream for Stripping11 
-
-
-! ========================== StrippingSettings v1r2 2010-10-06 ================
 
 ! 2010-10-06 - Thomas Blake
  - Udpated stream definitions for Stripping 11
