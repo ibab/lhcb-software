@@ -1469,14 +1469,22 @@ class SetupProject:
         new_prompt = ""
         if os.environ["SP_PROMPT"] == "without_version" or not self.project_info.version:
             if self.shell == "sh" :
-                new_prompt = 'PS1="\\[\\e[1;34m\\][%s]\\[\\e[m\\]$PS1"\n' % self.project_info.name
+                new_prompt  = 'if [[ -n "$PS1" ]]; then\n'
+                new_prompt += '  PS1="\\[\\e[1;34m\\][%s]\\[\\e[m\\]$PS1"\n' % self.project_info.name
+                new_prompt += 'fi\n'
             elif self.shell == "csh" :
-                new_prompt = 'set prompt="%%B%%{\\033[34m%%}[%s]%%{\\033[0m%%}%%b$prompt"\n' % self.project_info.name
+                new_prompt  = 'if ( $?prompt ) then\n'
+                new_prompt += '  set prompt="%%B%%{\\033[34m%%}[%s]%%{\\033[0m%%}%%b$prompt"\n' % self.project_info.name
+                new_prompt += 'endif\n'
         else :
             if self.shell == "sh" :
-                new_prompt = 'PS1="\\[\\e[1;34m\\][%s %s]\\[\\e[m\\]$PS1"\n' % (self.project_info.name, self.project_info.version)
+                new_prompt  = 'if [[ -n "$PS1" ]]; then\n'
+                new_prompt += '  PS1="\\[\\e[1;34m\\][%s %s]\\[\\e[m\\]$PS1"\n' % (self.project_info.name, self.project_info.version)
+                new_prompt += 'fi\n'
             elif self.shell == "csh" :
-                new_prompt = 'set prompt="%%B%%{\\033[34m%%}[%s %s]%%{\\033[0m%%}%%b$prompt"\n' % (self.project_info.name, self.project_info.version)
+                new_prompt  = 'if ( $?prompt ) then\n'
+                new_prompt += '  set prompt="%%B%%{\\033[34m%%}[%s %s]%%{\\033[0m%%}%%b$prompt"\n' % (self.project_info.name, self.project_info.version)
+                new_prompt += 'endif\n'
 
         return new_prompt
 
