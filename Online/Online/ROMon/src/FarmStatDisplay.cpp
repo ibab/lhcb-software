@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.1 2010-10-06 21:55:24 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.2 2010-10-07 14:27:56 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.1 2010-10-06 21:55:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.2 2010-10-07 14:27:56 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -119,11 +119,8 @@ using namespace std;
 
 typedef vector<string>               StringV;
 
-// Max. 15 seconds without update allowed
-#define UPDATE_TIME_MAX    15
 #define BOOTLINE_START      3
 #define BOOTLINE_FIRSTPOS   9
-#define MAX_BOOT_TIME     600
 
 typedef set<string> _SETV;
 
@@ -263,35 +260,17 @@ FarmStatDisplay::FarmStatDisplay(int argc, char** argv)
   m_height -= 2;
   ::scrc_create_display (&m_display, m_height, m_width, NORMAL, ON, m_title.c_str());
   show(2,2);
-  ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
+  ::scrc_put_chars(m_display,"",NORMAL,1,BOOTLINE_START,1);
   ::scrc_put_chars(m_display,"",NORMAL,1,BOOTLINE_START+1,1);
 
-  ::scrc_put_chars(m_display,"Color Legend:",NORMAL,2,3,1);
-  ::scrc_put_chars(m_display,"X",GREEN|INVERSE,3,3,0);
-  ::scrc_put_chars(m_display,"Finished, FMC started",NORMAL,3,7,0);
-  ::scrc_put_chars(m_display,"X",GREEN|BOLD,  3,30,0);
-  ::scrc_put_chars(m_display,"...TCP started",NORMAL|BOLD,3,33,0);
-  ::scrc_put_chars(m_display,"X",BLUE|INVERSE,3,60,0);
-  ::scrc_put_chars(m_display,"...ETH1 started",NORMAL,3,63,0);
-  ::scrc_put_chars(m_display,"X",BLUE|BOLD,3,90,0);
-  ::scrc_put_chars(m_display,"...ETH0 started",NORMAL|BOLD,3,93,0);
-
-  ::scrc_put_chars(m_display,"X",CYAN|INVERSE,4,3,0);
-  ::scrc_put_chars(m_display,"...PCI started",NORMAL,4,7,0);
-  ::scrc_put_chars(m_display,"X",CYAN|BOLD,4,30,0);
-  ::scrc_put_chars(m_display,"...CPU(s) started",NORMAL|BOLD,4,33,0);
-  ::scrc_put_chars(m_display,"X",MAGENTA|BOLD,4,60,0);
-  ::scrc_put_chars(m_display,"...Mounting disks",NORMAL|BOLD,4,63,0);
-
-  ::scrc_put_chars(m_display,"X",MAGENTA|INVERSE,4,90,0);
-  ::scrc_put_chars(m_display,"DHCP request seen",NORMAL,4,93,0);
-  ::scrc_put_chars(m_display,"X",RED|INVERSE|BOLD,5,3,0);
-  ::scrc_put_chars(m_display,"...NOT BOOTED",BOLD,5,7,0);
+  ::scrc_put_chars(m_display,"Press <CTRL-H> for Help, <CTRL-E> to exit",BOLD|BLUE,2,3,1);
+  ::scrc_put_chars(m_display,"Use Arrow keys to select a subfarm.",BOLD|BLUE,3,3,1);
+  ::scrc_put_chars(m_display,"Press <ENTER> or <left-mouse-double-click> to show subfarm display.",BOLD|BLUE,4,3,1);
 
   ::scrc_create_display(&m_header,1, m_width-3, NORMAL, ON, m_title.c_str());
-  ::scrc_put_chars(m_header,"Cluster",BOLD|INVERSE,1,BOOTLINE_START-1,1);
-  ::scrc_put_chars(m_header,"Ctrl-PC",BOLD|INVERSE,1,BOOTLINE_START+10,0);
-  ::scrc_put_chars(m_header,"Cluster members",BOLD|INVERSE,1,BOOTLINE_START+19,1);
+  ::scrc_put_chars(m_header,"Cluster",RED|BOLD|INVERSE,1,BOOTLINE_START-1,1);
+  ::scrc_put_chars(m_header,"Ctrl-PC",RED|BOLD|INVERSE,1,BOOTLINE_START+10,0);
+  ::scrc_put_chars(m_header,"Cluster members",RED|BOLD|INVERSE,1,BOOTLINE_START+19,1);
   ::scrc_set_border(m_header,"",NORMAL);
   ::scrc_paste_display(m_header, m_pasteboard,8,BOOTLINE_START);
 
@@ -506,10 +485,9 @@ void FarmStatDisplay::handle(const Event& ev) {
       }
       for(j=copy.begin(); j != copy.end(); ++j)
 	delete (*j).second;
-      ::sprintf(txt,"Total number of boot clusters:%d %50s",
-		int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
+      ::sprintf(txt,"Total number of subfarms:%d",int(m_clusters.size()));
       ::scrc_begin_pasteboard_update(m_pasteboard);
-      ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
+      ::scrc_put_chars(m_display,txt,BOLD,1,BOOTLINE_START,1);
       ::scrc_end_pasteboard_update(m_pasteboard);
       dim_unlock();
       break;
@@ -587,9 +565,6 @@ void FarmStatDisplay::update(const void* address) {
 	at = strchr(last+1,'/');
       }
       if ( !nodes->empty() ) {
-	static bool ignore = false;
-	if ( ignore ) return;
-	ignore = true;
 	IocSensor::instance().send(this,CMD_CONNECT,nodes.release());
       }
     }
