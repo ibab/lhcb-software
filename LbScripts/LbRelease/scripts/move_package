@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# $Id: $
+""" Script to easy move a SVN package from a project to another """
+
+from LbUtils.Script import Script
+from LbRelease import rcs
+from LbConfiguration.Repository import repositories
+
+import sys
+
+class MovePackageScript(Script):
+    _version = __version__    
+    _description = __doc__
+    
+    def __init__(self):
+        Script.__init__(self, usage = "%prog [options] package project")
+
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.add_option("--user-svn", action = "append",
+                          metavar = "URL",
+                          help = "add a custom subversion repository to the known ones")
+
+
+    def main(self):
+        opts = self.options
+        args = self.args
+        return 0
+
+if __name__ == '__main__':
+    sys.exit(MovePackageScript().run())
