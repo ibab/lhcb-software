@@ -15,7 +15,7 @@ Moore().CheckOdin = False
 Moore().Simulation = True
 Moore().DataType = '2010'
 
-Moore().EvtMax = 1000
+Moore().EvtMax = 100
 
 ###
 # what to write and where? everything?
@@ -23,6 +23,21 @@ Moore().EvtMax = 1000
 Moore().WriterRequires = []
 #Moore().WriterRequires = ['Hlt1MuTrackPostScaler']
 Moore().outputFile = 'tmp.dst'
+
+
+###
+# this shrinks the FOI of the L0 muon emulation
+# use it only if you know what you are doing !!
+#
+## from Configurables import L0Conf
+## L0Conf().IgnoreL0MuonCondDB = True
+## from L0DU.L0Algs import emulateL0Muon
+## l0muon = emulateL0Muon()
+## l0muon.IgnoreCondDB = True
+## l0muon.FoiXSize =[6,5,0,4,8]
+## l0muon.FoiYSize =[0,0,0,1,1]
+## l0muon.OutputLevel=2
+
 
 
 
