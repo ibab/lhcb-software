@@ -638,6 +638,7 @@ FastVeloHit* FastVeloTracking::closestUnusedHit( FastVeloHits& hits, double coor
 void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
 
   for ( FastVeloTracks::iterator itT = m_spaceTracks.begin(); m_spaceTracks.end() != itT; ++itT ) {
+    if ( (*itT).rHits().size() < 3 || (*itT).phiHits().size() < 3 ) (*itT).setValid( false );
     if ( !(*itT).isValid() ) continue;
     LHCb::Track *newTrack = new LHCb::Track();
     newTrack->setType( LHCb::Track::Velo );
@@ -979,6 +980,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   unsigned int nbStations =  abs(lastStation - firstStation) + 1;
   if ( nbStations > input.rHits().size() ) nbStations = input.rHits().size();
   unsigned int minNbPhi = int( m_fractionFound * nbStations );
+  if ( 3 > minNbPhi ) minNbPhi = 3;
 
   FastVeloTracks newTracks;
   //== Search sensors for 'lists' with low angle, i.e. d(global)/dz
@@ -1078,7 +1080,11 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         temp.addBestClusterOtherSensor( goodPhiHits[s1], m_maxChi2ToAdd );
         temp.addBestClusterOtherSensor( goodPhiHits[s2], m_maxChi2ToAdd );
         temp.addBestClusterOtherSensor( goodPhiHits[s3], m_maxChi2ToAdd );
-        temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
+        ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
+        if ( !ok ) {
+          if ( m_debug ) info() << "After adding other side: Not enough phi " << endmsg;
+          continue;
+        }
       }
       temp.updateRParameters();
 
@@ -1196,7 +1202,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
             }
           }
         }
-        temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+        ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
         //== Overall quality should be good enough...
         if ( m_maxQFactor < temp.qFactor() ) {
           if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
