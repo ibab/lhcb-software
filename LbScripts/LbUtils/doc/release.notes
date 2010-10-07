@@ -1,3 +1,8 @@
+2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the 
+	LbRelease.rcs module.
+
 2010-10-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Terminal.py: new file. Added the function to get the size of the terminal. It

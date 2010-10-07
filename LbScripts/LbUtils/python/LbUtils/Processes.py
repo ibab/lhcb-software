@@ -1,4 +1,7 @@
-import os
+from subprocess import Popen, PIPE
+
+import logging
+import os, sys
 import signal
 import commands # subprocess module depends on Python version
 
@@ -132,3 +135,33 @@ def getNumberOfCores():
             return ncpus
     return 1 # Default
 
+_call_command_log = logging.getLogger("_call_command")
+def callCommand(cmd, *args, **kwargs):
+    """
+    Simple wrapper to execute a command and return standard output, standard error and return code.
+    """
+    use_shell = sys.platform.startswith("win")
+    d = {"stdout": PIPE, "stderr": PIPE, "shell": use_shell}
+    d.update(kwargs)
+    cmd = [cmd] + list(args)
+    _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
+    proc = apply(Popen, (cmd,), d)
+    out, err = proc.communicate()
+    return (out, err, proc.returncode)
+
+class RetryCommand(object):
+    """Small wrapper to add a 're-try' feature to _call_command."""
+    def __init__(self, command, check, retries = 3, sleeptime = 30):
+        self._command = command
+        self._check = check
+        self._retries = retries
+        self._sleeptime = sleeptime
+    def __call__(self, *args, **kwargs):
+        from time import sleep
+        retries = self._retries
+        retval = apply(self._command, args, kwargs)
+        while (not self._check(retval)) and (retries > 0):
+            retval = apply(self._command, args, kwargs)
+            retries -= 1
+            sleep(self._sleeptime)
+        return retval
