@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-07 - Jaap Panman
+ - fix qmtests
+ - fix bug in LumiIntegrateFSR: run numbers and FileIDs stored again in integral
+
 !========================== LumiAlgs v4r0p2 2010-10-01 ========================
 ! 2010-10-01 - Jaap Panman
  - fix qmtests

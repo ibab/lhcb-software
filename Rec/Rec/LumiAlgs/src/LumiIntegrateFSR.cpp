@@ -579,6 +579,8 @@ StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
     if ( factor == 0 ) {    
       // primary crossing;
       //(*result) += bxFSR;
+      result->mergeRuns(bxFSR.runNumbers());
+      result->mergeFileIDs(bxFSR.fileIDs());
       result->addNormalized(bxFSR, factor, LHCb::LumiMethods::PoissonOffset);
       if ( msgLevel(MSG::DEBUG) ) debug() << "addPrimary   : " << *result << endmsg;
     } else {
