@@ -8,7 +8,7 @@ from Configurables import ( TrackAssociator, TrackResChecker, TrackOccupChecker,
                             
 def PatChecking():
    
-   if not TrackSys().veloOpen():
+   if not TrackSys().veloOpen() and not TrackSys().fastVelo() :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVeloRZ") ]
 
    GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocVelo"),
@@ -33,7 +33,7 @@ def PatChecking():
    TrackResChecker("TrackResChecker").SplitByType = True;
    ConfigureEffCheckTools(TrackResChecker("TrackResChecker"))
    
-   if not TrackSys().veloOpen():
+   if not TrackSys().veloOpen() and not TrackSys().fastVelo() :
      GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
      
    GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("Velo"),

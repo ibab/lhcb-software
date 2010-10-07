@@ -10,6 +10,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
                             Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
                             Tf__PatVeloTrackTool, Tf__PatVeloGeneric,
+                            FastVeloTracking,
                             RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
                             PatForward,
                             TrackEventFitter,
@@ -64,28 +65,31 @@ def RecoTracking(exclude=[]):
       
    ## Velo tracking
    if "Velo" in trackAlgs :
-      if TrackSys().veloOpen():
-         if TrackSys().beamGas(): 
-           GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
-                                                      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-         else:
-           GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-         Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
-         Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
-         Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
-         if TrackSys().timing() :
-            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
+      if TrackSys().fastVelo():
+          GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
       else:
-         GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
-                                                    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
-                                                    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-         Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-         Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
-         if TrackSys().timing() :
-            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").TimingMeasurement = True;
-            Tf__PatVeloRTracking("PatVeloRTracking").TimingMeasurement = True;
-            Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
-         
+         if TrackSys().veloOpen():
+            if TrackSys().beamGas(): 
+               GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
+                                                          Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+            else:
+               GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
+               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
+               Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
+               if TrackSys().timing() :
+                  Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
+         else:
+            GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
+                                                       Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
+                                                       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+            Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
+            if TrackSys().timing() :
+               Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").TimingMeasurement = True;
+               Tf__PatVeloRTracking("PatVeloRTracking").TimingMeasurement = True;
+               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
+            
          
    ## Special OT decoder for cosmics to merge spills.
    if TrackSys().cosmics():

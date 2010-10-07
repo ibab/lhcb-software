@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-10-07 - Olivier Callot
+ - Add option "FastVelo" in TrackSys to use the new FastVelo package instead of PatVelo
+
 !============================ TrackSys v5r0 2010-08-04 ======================
 ! 2010-09-22 - Victor Coco
  - add a call to the upgrade configurables for reconstruction and Pat checking

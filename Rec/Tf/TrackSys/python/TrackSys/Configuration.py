@@ -26,6 +26,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"OutputType": "" # set to "RDST" for special RDST sequence
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
        , "DataType": "2010" # propagated from Brunel(), used to determine which monitors to run
+       , "FastVelo": False # use the FastVelo package instead of PatVelo
         }
     
     ## Possible expert options
@@ -54,9 +55,11 @@ class TrackSys(LHCbConfigurableUser):
            if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
                self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)
            if len(self.getProp("ExpertTracking")) == 0 :
-               self.setProp("ExpertTracking",self.CosmicExpertTracking)            
+               self.setProp("ExpertTracking",self.CosmicExpertTracking)
                                                                
 
+    ## @brief Shortcut to the FastVelo option
+    def fastVelo(self) : return self.getProp("FastVelo")
     ## @brief Shortcut to the fieldOff option
     def fieldOff(self) : return "fieldOff" in self.getProp("SpecialData")
     ## @brief Shortcut to the veloOpen option
