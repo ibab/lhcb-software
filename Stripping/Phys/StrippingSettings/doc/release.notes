@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-07 - Thomas Blake
+ - Updated definition of Charm stream for Stripping11 
+
+
 ! ========================== StrippingSettings v1r2 2010-10-06 ================
 
 ! 2010-10-06 - Thomas Blake

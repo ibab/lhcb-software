@@ -12,10 +12,14 @@
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
-from StrippingSettings.Stripping11.StreamCharm import CPLines
+from StrippingSettings.Stripping11.StreamCharm import CharmLines
 
 stream = StrippingStream("CharmMicroDST")
-stream.appendLines( CPLines )
+stream.appendLines( CharmLines )
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 stream.appendLines( StrippingDstarPromptWithD02HHConf('DstarPromptWithD02HHConfMicroDSTStream').linesDstarOnly() )
+
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+#CharmLines += StrippingDstarD02xxConf().lines()
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xxMicroDST",LinePrefix="").lines() )

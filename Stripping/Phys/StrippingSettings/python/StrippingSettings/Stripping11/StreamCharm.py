@@ -15,7 +15,6 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream("Charm")
 
-
 #
 # Lines from Semileptonic group
 # Rob Lambert
@@ -42,6 +41,7 @@ stream.appendLines( [ StrippingDforBSemiConf().DpforBSemiLine()
 # Lines from Gamma from trees
 # Tim Gershon, Anton Poluektov, Andrea Contu
 #
+
 from StrippingSelections.StrippingDstar_D2KPiPi0 import lineWS, lineRS
 stream.appendLines( [ lineWS, lineRS ] )
 
@@ -49,11 +49,12 @@ stream.appendLines( [ lineWS, lineRS ] )
 # Lines from Charm RD WG
 # Walter Bonivento
 #
+
 from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
 stream.appendLines( D02MuMuLines )
 
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf().lines() )
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xxFull",LinePrefix="Full").lines() )
 
 #
 # Lines from Flavour WG
@@ -68,20 +69,22 @@ stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
 # Marco Gersabeck and Patrick Spradlin
 #
 
-CPLines = []
+
+CharmLines = []
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
-CPLines += StrippingD2hhConf().lines()
+CharmLines += StrippingD2hhConf().lines()
+
 
 from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf
 from StrippingSettings.Stripping11.LineConfigDictionaries import PromptCharmConfig
 
 promptCharm = StrippingPromptCharmConf ( config = PromptCharmConfig ) 
-CPLines += promptCharm.lines()
+CharmLines += promptCharm.lines()
 
 
 from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
-CPLines += [ StrippingD2hhhConf().stripD2PPP(),
+CharmLines += [ StrippingD2hhhConf().stripD2PPP(),
              StrippingD2hhhConf().stripD2KPP(),
              StrippingD2hhhConf().stripD2KKP(),
              StrippingD2hhhConf().stripD2KPPos(),
@@ -90,10 +93,10 @@ CPLines += [ StrippingD2hhhConf().stripD2PPP(),
              ]
 
 from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
-CPLines += StrippingDstarD2KShhConf().MakeLines() 
+CharmLines += StrippingDstarD2KShhConf().MakeLines() 
 
 from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
-CPLines += [ StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ]
+CharmLines += [ StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ]
 
 from StrippingSelections.StrippingDstarPromptWithD02K3Pi import StrippingDstarPromptWithD02K3PiConf
 DstarPromptWithD02K3Pi = StrippingDstarPromptWithD02K3PiConf(
@@ -101,20 +104,24 @@ DstarPromptWithD02K3Pi = StrippingDstarPromptWithD02K3PiConf(
     config = StrippingDstarPromptWithD02K3PiConf._default_config
     )
 
-CPLines += DstarPromptWithD02K3Pi.lines
+CharmLines += DstarPromptWithD02K3Pi.lines
 
 from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
 from StrippingSettings.Stripping11.LineConfigDictionaries import D02KKpipiRegularConfig
 
 DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
-CPLines +=  DstarD0KKpipi.lines
+CharmLines +=  DstarD0KKpipi.lines
 
 # Make a cloned copy of the charm CP lines to be used in the full stream
 # with a set prescale. The CP lines will also appear in StreamCharmMicroDST
+        
+fullDSTLines = [ CharmLine.clone( 'Full' + CharmLine._name ) for CharmLine in CharmLines ]
 
-fullDSTLines = [ CPLine.clone( 'Full' + CPLine._name , prescale = 1.0 ) for CPLine in CPLines ]
+# clone all lines with a prescale
+# scale = 0.1
+# fullDSTLines = [ CharmLine.clone( 'Full' + CharmLine._name, prescale = scale*CharmLine._prescale ) for CharmLine in CharmLines ]
+
 stream.appendLines( fullDSTLines )
-
 
 # Unfortunate hack to introduce two copies of the StrippingDstarPromptWithD02HH lines. Cloning
 # fails for these lines.
