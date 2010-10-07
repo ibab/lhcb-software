@@ -4,6 +4,17 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2010-10-07 - Juan Palacios
+ ** Requires MicroDST/MicroDSTBase v3r0 or higher.
+ - CopyParticle2PVMap, 
+   CopyParticle2TisTosDecisions, 
+   CopyParticle2LHCbIDs, 
+   MoveDataObject
+  . Adapt to changes in MicoDST/MicroDSTBase: niceLocationName is now member
+    of MicroDSTCommon, not free function.
+ - cmt/requirements
+  . Increase version to v5r0.
+
 !========================== MicroDSTAlgorithm v4r2 2010-10-05 =================
 
 ! 2010-10-05 - Juan Palacios

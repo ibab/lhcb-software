@@ -78,7 +78,7 @@ StatusCode CopyParticle2TisTosDecisions::execute() {
       
   for (; iLoc != locEnd; ++iLoc) {
     
-    const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
+    const std::string inputLocation = niceLocationName(*iLoc);
 
     executeLocation(inputLocation);
 
