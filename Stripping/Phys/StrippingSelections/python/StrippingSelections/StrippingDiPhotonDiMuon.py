@@ -50,7 +50,8 @@ sequence = SelectionSequence("Seq"+name,
 # Define the line
 ## ############################################################
 line = StrippingLine('PP2PPMuMu'
-                           , prescale = 1.
-                           , algos = [ sequence ]
-                           )
+                     , prescale = 1.
+                     , checkPV  = False
+                     , algos = [ sequence ]
+                     )
 

@@ -6,6 +6,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2010-10-07 - Thomas Blake
+ - Bug fix to set checkPV=False for DiPhotonDiMuon line  
+
+! 2010-10-07 - Thomas Blake
  - Updated StrippingDstarD02xx.py to enable cloning of lines
 
 
