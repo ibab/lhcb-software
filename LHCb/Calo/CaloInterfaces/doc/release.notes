@@ -4,6 +4,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2010-10-07 - Dmitry Golubkov
+ - ICaloHypo2Calo : on request of Vanya change from passing values
+		 to const references + increment interface ID
+ - increment version to v8r0 due to changing the interface
+
 !========================= CaloInterfaces v7r19 2010-09-27 ====================
 ! 2010-09-01 - Olivier Deschamps
  - ICaloHypoEstimator/ITrack2Calo : add virtual method + increment interface ID

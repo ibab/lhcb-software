@@ -14,7 +14,7 @@
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
 
-static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 2 );
+static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 3 );
 
 /** @class ICaloHypo2Calo ICaloHypo2Calo.h
  *  
@@ -31,21 +31,21 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloHypo2Calo; }
 
   virtual StatusCode initialize()=0;
-  virtual void setCalos(std::string from, std::string to)=0;
-   virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
-  virtual const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
+  virtual void setCalos(const std::string &from, const std::string &to)=0;
+  virtual const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloHypo     &fromHypo,    const std::string   &toCalo)=0;
+  virtual const std::vector<LHCb::CaloCellID>& cellIDs(const LHCb::CaloCluster  &fromCluster, const std::string   &toCalo)=0;
   virtual const std::vector<LHCb::CaloCellID>& cellIDs()=0;
 
-  virtual const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
-  virtual const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
+  virtual const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloCluster &fromCluster, const std::string   &toCalo)=0;
+  virtual const std::vector<LHCb::CaloDigit*>& digits(const LHCb::CaloHypo    &fromHypo,    const std::string   &toCalo)=0;
   virtual const std::vector<LHCb::CaloDigit*>& digits()=0;
 
-  virtual double energy(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
-  virtual double energy(LHCb::CaloHypo  fromHypo, std::string toCalo)=0;
+  virtual double energy(const LHCb::CaloCluster  &fromCluster, const std::string   &toCalo)=0;
+  virtual double energy(const LHCb::CaloHypo     &fromHypo,    const std::string   &toCalo)=0;
   virtual double energy()=0;
 
-  virtual int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
-  virtual int multiplicity(LHCb::CaloHypo   fromHypo     , std::string toCalo)=0;
+  virtual int multiplicity(const LHCb::CaloCluster  &fromCluster, const std::string   &toCalo)=0;
+  virtual int multiplicity(const LHCb::CaloHypo     &fromHypo,    const std::string   &toCalo)=0;
   virtual int multiplicity()=0;
   virtual StatusCode _setProperty(const std::string&, const std::string&)=0;
 
