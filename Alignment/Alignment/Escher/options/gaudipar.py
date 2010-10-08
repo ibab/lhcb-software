@@ -7,6 +7,8 @@ parser.add_option("-e","--numevents",type="int", dest="numevents",help="number o
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
+parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
+parser.add_option("-c", "--derivativefile",dest="derivativefile",help="name of derivative file",default = "")
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -138,13 +140,14 @@ class AlignmentTask(Task):
                 
   def finalize(self):
      # dump the histograms to a file
-     self.output['histograms'].dump('histograms.root')
-
+     self.output['histograms'].dump(opts.histofile)
+     
      numAlignEvents = self.output['derivatives'].equations().numEvents()
      if numAlignEvents>0 :
         print 'number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
         # write the derivative file
-        self.output['derivatives'].equations().writeToFile("myderivatives.dat")
+        if len(opts.derivativefile)>0 :
+           self.output['derivatives'].equations().writeToFile(derivativefile)
 
         from GaudiPython.Bindings import AppMgr
         appMgr = AppMgr()
