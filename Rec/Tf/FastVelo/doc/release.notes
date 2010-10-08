@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-08 - Olivier Callot
+ - Protect the case of an empty output container when merging clones.
+
 ! 2010-10-06 - Olivier Callot
  - First release of a stand-alone package to make fast space tracks in the Velo
    Efficiency, ghost rate, clone rate and speed are all better than the 
