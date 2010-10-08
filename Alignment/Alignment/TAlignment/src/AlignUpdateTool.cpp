@@ -15,7 +15,8 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "boost/lexical_cast.hpp"
+#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
 #include "TH1D.h"
 
 namespace Al
@@ -46,6 +47,7 @@ namespace Al
     void fillIterProfile( const HistoID& id,const std::string& title,size_t numiter,size_t iter,double val, double err=0) const ;
     StatusCode addDaughterDerivatives(Al::Equations& equations) const ;
     void dumpMostImportantDofs(const Elements& elements,const Al::Equations& equations,std::ostream& logmessage) const ;
+    void dumpWorstSurveyOffenders(const Elements& elements,std::ostream& logmessage) const ;
 
   private:
     std::string                m_matrixSolverToolName;          ///< Name of linear algebra solver tool
@@ -387,6 +389,7 @@ namespace Al
 	       << " --> " << equations.lastTime().format(true,"%F %r") << std::endl
 	       << "Time at initialize [ns] : " << equations.initTime().ns() 
 	       << " --> " << equations.initTime().format(true,"%F %r") << std::endl
+	       << "First/last run number: " << equations.firstRun() << "/" << equations.lastRun() << std::endl
       //<< "Total number of tracks: " << m_nTracks << std::endl
       //<< "Number of covariance calculation failures: " << m_covFailure << std::endl
 	       << "Used " << equations.numVertices() << " vertices for alignment" << std::endl
@@ -406,6 +409,9 @@ namespace Al
     info() << "Adding daughter derivatives" << endreq ;
     sc = addDaughterDerivatives( equations ) ;
     if( !sc.isSuccess() ) return sc ;
+
+    //logmessage << "Most important dofs, excluding survey: " << std::endl ;
+    //dumpMostImportantDofs( elements,equations,logmessage ) ;
 
     if (printDebug()) { 
       size_t index(0) ;
@@ -439,7 +445,8 @@ namespace Al
 	if( (*it)->dofMask().nActive()>0 ) ++numExcluded ;
       }
     }
-
+    
+    logmessage << "Most important dofs, including survey: " << std::endl ;
     dumpMostImportantDofs( elements,equations,logmessage ) ;
 
     if(numParameters>0) {
@@ -539,29 +546,34 @@ namespace Al
 	if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
 	size_t iElem(0u) ;
 	double totalLocalDeltaChi2(0) ; // another figure of merit of the size of the misalignment.
+	std::ostringstream modmessage ;
+
 	for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
 	  const Al::ElementData& elemdata = equations.element(iElem) ;
-	  logmessage << "Alignable: " << (*it)->name() << std::endl
+	  modmessage << "Alignable: " << (*it)->name() << std::endl
 		     << "Global position: " << (*it)->centerOfGravity() << std::endl
 		     << "Number of tracks/hits/outliers seen: " 
 		     << elemdata.numTracks() << " "
 		     << elemdata.numHits() << " "
 		     << elemdata.numOutliers() << std::endl ;
-	  logmessage << "Local-to-global diagonal: " ;
+	  modmessage << "Local-to-global diagonal: " ;
 	  for(int i=0; i<6; ++i)
-	    logmessage << std::setprecision(3) << (*it)->jacobian()(i,i) << " " ;
-	  logmessage << std::endl ;
+	    modmessage << std::setprecision(3) << (*it)->jacobian()(i,i) << " " ;
+	  modmessage << std::endl ;
+
+	  //double d2 = equations.elements()[iElem].M()[iElem]
+	  LHCb::ChiSquare surveychisqbefore = m_chisqconstrainttool->chiSquare( **it ) ;	    
 	  
 	  int offset = (*it)->activeParOffset() ;
 	  if( offset < 0 && (*it)->dofMask().nActive()>0) {
-	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
-	  } else {
+            modmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
+          } else if ( offset>=0 ) {
 	    AlParameters delta( solution, covmatrix, halfD2Chi2dX2, (*it)->dofMask(), offset ) ;
 	    AlParameters reftotaldelta = (*it)->currentActiveTotalDelta() ;
 	    AlParameters refdelta = (*it)->currentActiveDelta() ;
-	    //logmessage << delta ;
+	    //modmessage << delta ;
 	    for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
-	      logmessage << std::setiosflags(std::ios_base::left)
+	      modmessage << std::setiosflags(std::ios_base::left)
 			 << std::setprecision(4)
 			 << std::setw(3)  << delta.activeParName(iactive) << " :" 
 			 << " curtot= " << std::setw(12) << reftotaldelta.parameters()[iactive]
@@ -571,7 +583,7 @@ namespace Al
 			 << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
 	    double contributionToCoordinateError = delta.measurementCoordinateSigma( elemdata.weightR() ) ;
 	    double coordinateError = std::sqrt(elemdata.numHits()/elemdata.weightV()) ;
-	    logmessage << "contribution to hit error (absolute/relative): "
+	    modmessage << "contribution to hit error (absolute/relative): "
 		       << contributionToCoordinateError << " " << contributionToCoordinateError/coordinateError << std::endl ;
 	    
 	    // compute another figure of merit for the change in
@@ -582,26 +594,14 @@ namespace Al
 	    //Gaudi::Vector6 thisAlpha = delta.parameterVector6() ;
 	    double thisLocalDeltaChi2 = ROOT::Math::Similarity(delta.transformParameters(),
 							       equations.element(iElem).d2Chi2DAlpha2() ) ;
-	    logmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
+	    modmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
 	    totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
-	    //double d2 = equations.elements()[iElem].M()[iElem]
-	    LHCb::ChiSquare surveychisqbefore = m_chisqconstrainttool->chiSquare( **it ) ;
-	    
-	    
+
 	    // need const_cast because loki range givess access only to const values 
 	    StatusCode sc = (const_cast<AlignmentElement*>(*it))->updateGeometry(delta) ;
-
-	    // print this one after the update
-	    LHCb::ChiSquare surveychisq = m_chisqconstrainttool->chiSquare( **it ) ;
-	    logmessage << "survey chi2 / dof (before/after): " << surveychisqbefore.chi2() << " "
-		       << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
-	    const AlParameters* survey = m_chisqconstrainttool->surveyParameters( **it ) ;
-	    if( survey != 0 ) {
-	      logmessage << "survey pars:   " << survey->transformParameters() << std::endl ;
-	      logmessage << "survey errors: "<< survey->transformErrors() << std::endl ;
-	    }
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
-	   
+
+
 	    std::string name = (*it)->name(); 
 	    std::string dirname =  "element" + boost::lexical_cast<std::string>( (*it)->index() ) + "/"; //name + "/" ;
 	    fillIterProfile( dirname + boost::lexical_cast<std::string>(10000u),
@@ -623,8 +623,27 @@ namespace Al
 			     "Delta Rx vs iteration for " + name,
 			     maxiteration, iteration, delta.rotation()[2]   , delta.errRotation()[2]);
 	  }
+
+	  // print this one after the update
+	  LHCb::ChiSquare surveychisq = m_chisqconstrainttool->chiSquare( **it ) ;
+	  modmessage << "survey chi2 / dof (before/after): " << surveychisqbefore.chi2() << " "
+		     << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
+	  
+	  AlParameters aligndeltaafter = (*it)->currentDelta() ;
+	  modmessage << "align pars: " << aligndeltaafter.transformParameters() << std::endl ;
+	  const AlParameters* survey = m_chisqconstrainttool->surveyParameters( **it ) ;
+	  if( survey != 0 ) {
+	    modmessage << "survey pars:   " << survey->transformParameters() << std::endl ;
+	    modmessage << "survey errors: "<< survey->transformErrors() << std::endl ;
+	  }
 	}
 	logmessage << "total local delta chi2 / dof: " << totalLocalDeltaChi2 << " / " << numParameters << std::endl ;
+
+	// dump information on the worst survey constraints
+	dumpWorstSurveyOffenders( elements, logmessage ) ;
+	
+	// all the messages from module updates will be at  the end
+	logmessage << modmessage.str() ;
 
 	// fill some histograms
 	fillIterProfile(20, "Total number of used tracks for alignment vs iteration", maxiteration,iteration,equations.numTracks()) ;
@@ -696,20 +715,23 @@ namespace Al
     return StatusCode::SUCCESS;
   }
 
-  struct DofChisq
-  {
-    const AlignmentElement* element ;
-    int dof ;
-    double chi2 ;
-    double par ;
-    double err ;
-  } ;
-
-  bool operator<( const DofChisq& lhs, const DofChisq& rhs)
-  {
-    return lhs.chi2 > rhs.chi2 ;
+  namespace {
+    struct DofChisq
+    {
+      const AlignmentElement* element ;
+      int dof ;
+      double chi2 ;
+      double par ;
+      double sur ;
+      double err ;
+      double surerr ;
+    } ;
+    
+    inline bool operator<( const DofChisq& lhs, const DofChisq& rhs)
+    {
+      return lhs.chi2 > rhs.chi2 ;
+    }
   }
-
   
   void AlignUpdateTool::dumpMostImportantDofs(const Elements& elements,
 					      const Al::Equations& equations,
@@ -735,7 +757,6 @@ namespace Al
       }
     std::sort( dofchi2s.begin(), dofchi2s.end() ) ;
     
-    logmessage << "Most important dofs: " << std::endl ;
     for(size_t i=0; i<10 && i<dofchi2s.size() ; ++i) 
       logmessage << "  " << i << " " << dofchi2s[i].element->name() 
 		 << " dof=" << dofchi2s[i].dof 
@@ -743,5 +764,49 @@ namespace Al
 		 << " delta= " << dofchi2s[i].par << " +/- " << dofchi2s[i].err << std::endl ;
   }
   
+    void AlignUpdateTool::dumpWorstSurveyOffenders(const Elements& elements,
+						   std::ostream& logmessage) const
+    {
+    std::vector<DofChisq> dofchi2s ;
+    dofchi2s.reserve(6*elements.size()) ;
+    DofChisq dofchi2 ;
+    BOOST_FOREACH( const AlignmentElement* element, elements ) {
+      const AlParameters * psurvey = m_chisqconstrainttool->surveyParameters(*element) ;
+      if( psurvey ) {
+	AlParameters::TransformParameters surveypars = psurvey->transformParameters() ;
+	AlParameters::TransformCovariance surveycov = psurvey->transformCovariance() ;
 
+	AlParameters currentdelta = element->currentDelta() ;
+	AlParameters::TransformParameters alignpars  = currentdelta.transformParameters() ;
+	AlParameters::TransformCovariance aligncov  = currentdelta.transformCovariance() ;
+
+	// this should work for both active and inactive parameters
+	AlParameters::TransformParameters residual  = alignpars - surveypars ;
+	AlParameters::TransformCovariance rescov    = surveycov - aligncov ;
+	dofchi2.element = element ;
+	for(unsigned int dof =0; dof<6; ++dof ) {
+	  dofchi2.sur  = surveypars(dof) ;
+	  dofchi2.par  = alignpars(dof) ;
+	  dofchi2.err  = std::sqrt( aligncov(dof,dof) ) ;
+	  dofchi2.surerr  = std::sqrt( surveycov(dof,dof) ) ;
+	  dofchi2.dof  = dof ;
+	  dofchi2.chi2 = residual(dof) * residual(dof) / rescov(dof,dof) ;
+	  dofchi2s.push_back( dofchi2 ) ;
+	}
+      }
+    }
+    std::sort( dofchi2s.begin(), dofchi2s.end() ) ;
+    
+    logmessage << "Survey constraints with largest chisquare contribution: " << std::endl ;
+    for(size_t i=0; i<10 && i<dofchi2s.size() ; ++i) 
+      logmessage << "  " << i << " " 
+		 << std::setw(30) << std::setiosflags(std::ios_base::left) << dofchi2s[i].element->name() 
+		 << " dof=" << dofchi2s[i].dof 
+		 << " active=" << dofchi2s[i].element->dofMask().isActive( dofchi2s[i].dof ) << " "
+		 << " chi2=" << std::setprecision(3) << dofchi2s[i].chi2 << " "
+		 << " survey=" << std::setprecision(3) << dofchi2s[i].sur 
+		 << " delta=" << std::setprecision(3) << dofchi2s[i].par << " "
+		 << " surveyerr=" << std::setprecision(3) << dofchi2s[i].surerr 	
+		 << " deltaerr=" << std::setprecision(3) << dofchi2s[i].err << std::endl ;
+    }
 }
