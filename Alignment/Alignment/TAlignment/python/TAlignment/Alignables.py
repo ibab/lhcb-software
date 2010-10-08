@@ -107,6 +107,7 @@ class Alignables( list ):
         elements.append( "Tracker : " + self.m_tt )
         elements.append( "Tracker : " + self.m_it )
         elements.append( "Tracker : " + self.m_ot )
+        elements.append( "Tracker : " + self.m_muon )
         self.__append( elements, dofs )
 
     def T( self, dofs = "" ) :
