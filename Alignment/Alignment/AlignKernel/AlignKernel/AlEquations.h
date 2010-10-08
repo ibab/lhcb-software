@@ -108,13 +108,16 @@ namespace Al
     void addEventSummary( size_t numtracks, 
 			  size_t numvertices,
 			  size_t numdimuons,
-			  Gaudi::Time time ) {
+			  Gaudi::Time time,
+			  size_t runnr ) {
       ++m_numEvents ;
       m_numTracks += numtracks ;
       m_numVertices += numvertices ;
       m_numDiMuons += numdimuons ;
       if( m_firstTime.ns() > time.ns() ) m_firstTime = time ;
       if( m_lastTime.ns() < time.ns()  ) m_lastTime  = time ;
+      if( m_firstRun > runnr ) m_firstRun = runnr ;
+      if( m_lastRun < runnr  ) m_lastRun  = runnr ;
     }
 
     size_t numTracks() const { return m_numTracks ; }
@@ -124,6 +127,8 @@ namespace Al
     Gaudi::Time firstTime() const { return m_firstTime ; }
     Gaudi::Time lastTime() const { return m_lastTime ; }
     Gaudi::Time initTime() const { return m_initTime ; }
+    size_t firstRun() const { return m_firstRun ; }
+    size_t lastRun() const { return m_lastRun ; }
     size_t numHits() const ;
     double totalChiSquare() const { return m_totalChiSquare ; }
     size_t totalNumDofs() const { return m_totalNumDofs ; }
@@ -156,6 +161,8 @@ namespace Al
     Gaudi::Time      m_firstTime ;
     Gaudi::Time      m_lastTime ;
     Gaudi::Time      m_initTime ;
+    size_t           m_firstRun ;
+    size_t           m_lastRun ;
   };
   
 } ;

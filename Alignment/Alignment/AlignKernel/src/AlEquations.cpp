@@ -102,7 +102,9 @@ namespace Al
       m_totalVertexNumDofs(0u),
       m_firstTime(Gaudi::Time::max()),
       m_lastTime(Gaudi::Time::epoch()),
-      m_initTime(initTime)
+      m_initTime(initTime),
+      m_firstRun(size_t(-1)),
+      m_lastRun(0)
   {
     assert( nElem == m_elements.size() ) ;
   }
@@ -140,7 +142,9 @@ namespace Al
 	   << m_totalVertexNumDofs 
 	   << m_firstTime
 	   << m_lastTime
-	   << m_initTime ;
+	   << m_initTime 
+	   << m_firstRun
+	   << m_lastRun ;
   }
 
   void Equations::readFromBuffer(std::ifstream& buffer)
@@ -158,7 +162,9 @@ namespace Al
 	   >> m_totalVertexNumDofs 
 	   >> m_firstTime
 	   >> m_lastTime
-	   >> m_initTime ;
+	   >> m_initTime  
+	   >> m_firstRun
+	   >> m_lastRun ;
   }
 
   void Equations::writeToFile(const char* filename) const 
@@ -241,6 +247,8 @@ namespace Al
     m_totalVertexNumDofs    += rhs.m_totalVertexNumDofs ;
     if( m_firstTime.ns() > rhs.m_firstTime.ns() ) m_firstTime = rhs.m_firstTime ;
     if( m_lastTime.ns()  < rhs.m_lastTime.ns()  ) m_lastTime  = rhs.m_lastTime ;
+    if( m_firstRun > rhs.m_firstRun ) m_firstRun = rhs.m_firstRun ;
+    if( m_lastRun  < rhs.m_lastRun  ) m_lastRun  = rhs.m_lastRun ;
     
   }
   

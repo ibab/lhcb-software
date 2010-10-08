@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.12 2010-05-03 06:12:52 rlambert Exp $
+! $Id: release.notes,v 1.13 2010-10-08 07:24:39 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2010-10-08 -Wouter Hulsbergen
+ - add runrange to AlEquations
 
 !=========================== AlignKernel v3r3 2010-04-03 ====================
 ! 2010-04-13 -Wouter Hulsbergen
