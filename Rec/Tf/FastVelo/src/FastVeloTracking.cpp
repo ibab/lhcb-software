@@ -375,6 +375,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
 //  Merge space track clones: Test PHI ( m_fractionForMerge) and R >1
 //=========================================================================
 void FastVeloTracking::mergeSpaceClones( ) {
+  if ( m_spaceTracks.size() < 2 ) return;
   for ( FastVeloTracks::iterator itT1 = m_spaceTracks.begin(); m_spaceTracks.end()-1 != itT1; ++itT1 ) {
     if ( (*itT1).backward() ) continue;
     if ( !(*itT1).isValid() ) continue;
