@@ -9,7 +9,7 @@ ROOTCONFIG   := root-config
 PLATFORM     := $(shell $(ROOTCONFIG) --platform)
 ROOTCFLAGS   := $(shell $(ROOTCONFIG) --cflags)
 ROOTLDFLAGS  := $(shell $(ROOTCONFIG) --ldflags)
-ROOTLIBS     := $(shell $(ROOTCONFIG) --libs)
+ROOTLIBS     := $(shell $(ROOTCONFIG) --glibs)
 
 CXX           = g++
 CXXFLAGS      = -O2 -fPIC -W 
@@ -17,7 +17,7 @@ CXXFLAGS_DBG  = -fPIC -Wall -g3 -gdwarf-2
 LD            = g++
 LDFLAGS       = -O2
 SOFLAGS       = -shared
-EXTRALIBS     = -lMLP -lRGL -lGeom -lEve
+EXTRALIBS     = -lMLP  -lRGL -lGeom -lEve -lTreePlayer -lGed -lEG
 EXTRAFLAGS    = -Iinclude -Isrc -Innet 
 
 #------------------------------------------------------------------------------
@@ -57,9 +57,11 @@ debug:
 	@echo " *** Type r and then bt inside gdb to dump debug info!"
 	gdb ./$(EXECUTABLE) | tee $(OUTPUTLOG)
 #	valgrind --leak-check=yes ./$(EXECUTABLE) &> $(OUTPUTLOG)
+#	valgrind --tool=callgrind --dump-instr=yes --trace-jump=yes ./tag.exe
+#	kcachegrind callgrind.out.*
 
 #------------------------------------------------------------------------------
-run:  
+run:  $(EXECUTABLE)
 	@./$(EXECUTABLE) | tee $(OUTPUTLOG)
 
 #------------------------------------------------------------------------------
@@ -82,10 +84,6 @@ zip:
 	@zip -ry ../tagpackage_v$(NROFINSTANCES).zip .
 	@echo "Saved a zipped copy of code to" tagpackage_v$(NROFINSTANCES).zip
 	@ls -ohrt $(PWD)/../*.zip
-
-#------------------------------------------------------------------------------
-setuproot:
-	source `which SetupProject.csh` Gaudi ROOT
 
 #------------------------------------------------------------------------------
 doxygen:

@@ -317,7 +317,7 @@ void declareProperty( const TString& variablename, double& value) {
   double newvalue = read(variablename);
   if( newvalue!=-12345 && newvalue != value ) { //found item to update
     cout<< " *** double " <<variablename << " = "<<value
-        <<"\tchanged to "<<newvalue<<endl;
+        <<"\t\tchanged to "<<newvalue<<endl;
     value = newvalue;
   } else { //not found, leave as it is assigned in called fnc
     //cout<<variablename<<" not found."<<endl;
@@ -336,7 +336,7 @@ void declareProperty( const TString& variablename, int& value) {
   }
   if( newvalue!=-12345 && newvalue != value ) { //found item to update
     cout<< " *** int " <<variablename << " = "<<value
-        <<"\tchanged to "<<newvalue<<endl;
+        <<"\t\tchanged to "<<newvalue<<endl;
     value = newvalue;
   } else { //not found, leave as it is assigned in called fnc
     //cout<<variablename<<" not found."<<endl;
@@ -355,7 +355,7 @@ void declareProperty( const TString& variablename, bool& value) {
   }
   if( newvalue!=-12345 && newvalue != value ) { //found item to update
     cout<< " *** bool " <<variablename << " = "<<value
-        <<"\tchanged to "<<newvalue<<endl;
+        <<"\t\tchanged to "<<newvalue<<endl;
     value = newvalue;
   } else { //not found, leave as it is assigned in called fnc
     //cout<<variablename<<" not found."<<endl;
@@ -374,7 +374,7 @@ void declareProperty( const TString& variablename, TString& value) {
   }
   if( newvalue!="" && newvalue != value ) { //found item to update
     cout<< " *** string " <<variablename << " = "<<value
-        <<"\tchanged to "<<newvalue<<endl;
+        <<"\t\tchanged to "<<newvalue<<endl;
     value = newvalue;
   } else { //not found, leave as it is assigned in called fnc
     //cout<<variablename<<" not found."<<endl;
