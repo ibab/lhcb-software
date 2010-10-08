@@ -3,7 +3,7 @@
 # first parse all options
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
-parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=3)
+parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=1)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=100000)
 parser.add_option("-d", "--aligndb",action="append", dest="aligndb",help="path to file with alignment database layer. you can use this option multiple times")
 (opts, args) = parser.parse_args()
