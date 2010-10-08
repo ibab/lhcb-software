@@ -59,7 +59,8 @@ class SurveyConstraints( LHCbConfigurableUser ):
 
         self.XmlFiles += [ self.defaultSurveyDir() + "OT/ElementsBowingCorrected.xml" ]
         self.XmlUncertainties += [ "OT/T.(X1U|VX2) : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
-                                   "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001"]
+                                   "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
+                                   "OT : 0.5 0.5 0.5 0.001 0.001 0.001" ]
         
     def TT( self ) :
         self.XmlFiles += [ self.defaultSurveyDir() + "TT/Detectors.xml",
@@ -103,6 +104,8 @@ class SurveyConstraints( LHCbConfigurableUser ):
         self.IT()
         self.OT()
         self.MUON()
+        self.Constraints += [ "Tracker : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1",
+                              "T : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1" ]
 
     def configureTool( self, surveyConstraintTool ) :
         surveyConstraintTool.Constraints      = self.Constraints
