@@ -9,6 +9,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v26r2 2010-10-08 =======================
+
 ! 2010-10-04 - Juan Palacios
  - python/DaVinci/Configuration.py
   . Fix problems with latest changes. Try to tidy up the horrible mess that
