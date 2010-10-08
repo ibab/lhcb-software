@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-08 - Marco Clemencic
+ - Minor change to fix an ICC remark tha was appearing in the nightlies as an
+   error.
+
 ! 2010-10-02 - Vanya Belyaev
 
  - LoKi/Particles26.h

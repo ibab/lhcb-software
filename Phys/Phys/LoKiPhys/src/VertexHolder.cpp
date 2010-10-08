@@ -78,7 +78,7 @@ LoKi::Vertices::VertexHolder::position() const
   case _vertex : return vertex()->position()   ; break ; // RETURN
   default      : Error ( s_print ) ; return s_error ; break ; // RETURN   
   }
-  Error ( s_print ) ;
+  // Error ( s_print ) ;
   return s_error ;                                            // RETURN 
 } 
 // ============================================================================
