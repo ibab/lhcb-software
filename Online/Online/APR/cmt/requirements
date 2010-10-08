@@ -10,16 +10,13 @@ include_path none
 macro APR_home '/group/online/dataflow/cmtuser/libraries/apr' \
          WIN32 'C:\Program Files\Apache Software Foundation\Apache2.2'
 
-include_dirs  "$(APR_home)/include/apr-1" \
-target-x86_64 "$(APR_home)/include64/apr-1"
+include_dirs  "$(APR_home)/include"
 
-macro APR_linkopts  "-L$(APR_home)/lib32 -lapr-1 " \
-      target-x86_64 "-L$(APR_home)/lib64 -lapr-1 " \
-      target-winxp  "/LIBPATH:$(APR_home)\lib apr-1.lib "
+macro APR_linkopts  "-L$(APR_home)/.libs -lapr-1 " \
+      target-winxp  "/LIBPATH:$(APR_home)\.libs apr-1.lib "
 
 macro  APR_cppflags ' -DAPR_DECLARE_EXPORT '
 path_remove LD_LIBRARY_PATH '/apr/'
 
-path_append LD_LIBRARY_PATH $(APR_home)/lib32 \
-              target-x86_64 $(APR_home)/lib64 \
+path_append LD_LIBRARY_PATH $(APR_home)/.libs \
               target-winxp  $(APR_home)/lib

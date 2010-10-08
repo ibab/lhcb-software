@@ -5,7 +5,7 @@ var _lhcb = function() {
 };
 var _isInternetExplorer = function() 
 {  return navigator.appName == "Microsoft Internet Explorer"; };
-var _debugLoading = false;
+var _debugLoading = true;
 var _emulateBrowser = function()
 {  return navigator.appCodeName == 'Envjs';                   };
 _loadStatic = function(name)
@@ -42,6 +42,9 @@ if ( _stomp_in_use )  {
   TCPSocket = Orbited.TCPSocket;
   _loadStatic('/static/protocols/stomp/stomp.js');
   _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
+}
+if ( _amq_in_use )  {
+  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
 }
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.constants.cpp');
