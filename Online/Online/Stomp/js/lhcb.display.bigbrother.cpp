@@ -22,8 +22,9 @@ function _loadWidgets() {
     var tr = document.createElement('tr');
     var cell;
 
-    tooltips.set(tab,'Current fill statistics<br>Click to see LHC operations planning page');
+    tooltips.set(tab,'Current fill statistics<br>--Click to see LHC operations<BR>&nbsp;&nbsp;&nbsp;planning page');
     tab.onclick = function() { document.location = lhcb.constants.operations_url('LHCCOORD'); };
+    tab.style.cursor = 'pointer';
 
     tab.className = tb.className   = 'MonitorPage';
     if ( options.fontSize ) {
@@ -218,9 +219,10 @@ function _loadWidgets() {
     var tr = document.createElement('tr');
     var cell;
 
-    tooltips.set(tab,'Current Luminosity statistics<br>Click to see LHC status');
+    tooltips.set(tab,'Current Luminosity statistics<br>--Click to see LHC status');
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
     tab.className = tb.className   = 'MonitorPage';
+    tab.style.cursor = 'pointer';
     if ( options.fontSize ) {
       tab.style.fontSize = tb.style.fontSize = options.fontSize;
     }
@@ -321,9 +323,10 @@ function _loadWidgets() {
     var tr = document.createElement('tr');
     var cell;
 
-    tooltips.set(tab,'Current Interaction rate statistics<br>Click to see Trigger counters');
+    tooltips.set(tab,'Current Interaction rate statistics<br>--Click to see Trigger counters');
     tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("trigger");};
     tab.className = tb.className = 'MonitorPage';
+    tab.style.cursor = 'pointer';
 
     tab.fillNo = -1;
     tab.lumiCalo   = StyledItem('', 'Text-Right','%7.3f &mu;b<sup>-1</sup>/s');
@@ -613,7 +616,7 @@ function _loadWidgets() {
     var cell, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
     
-    tooltips.set(tab,'History of recent fills.');
+    tooltips.set(tab,'History of recent fills.<BR>-- Click on fill number to show the<BR>&nbsp;&nbsp;&nbsp;entry in the run database.');
     tab.className  = tb.className  = 'MonitorPage';
 
     if ( options.fontSize ) {
@@ -709,6 +712,9 @@ function _loadWidgets() {
       }
 
       tr.fillNo = parseInt(v[0]);
+      tr.fill.onclick = function()
+      {	document.location = 'http://lbrundb.cern.ch/rundb/fill/'+v[0]+'/';  };
+      tr.fill.style.cursor = 'pointer';
       tr.fill.innerHTML = v[0];
       tr.date.innerHTML = v[1].substr(v[1].indexOf('-')+1);
 

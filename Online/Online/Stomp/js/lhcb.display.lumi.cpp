@@ -47,7 +47,6 @@ var LumiStatus = function(msg)   {
     this.left.addItem(this.lhcb);
     */
     this.left.addItem(this.run);
-    this.left.addSpacer('30px');
     this.left.addItem(this.shift);
     this.left.addItem(this.plan);
 
@@ -55,8 +54,7 @@ var LumiStatus = function(msg)   {
     this.right.addItem(this.magnet);
     this.right.addItem(this.velo);
     this.right.addItem(this.bkg);
-    //this.right.addItem(this.run);
-    this.right.addSpacer('50px');
+    this.right.addSpacer('90px');
     this.right.addItem(this.effi_1);
     this.right.addItem(this.effi_2);
   };

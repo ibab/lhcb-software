@@ -79,6 +79,7 @@ if ( !lhcb.widgets ) {
   
     tab.className = tb.className = 'MonitorSubHeader';
   
+    tab.body = tb;
     tb.appendChild(tr=document.createElement('tr'));
   
     tr.appendChild(td=document.createElement('td'));
@@ -88,7 +89,7 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.lhcFillNumber);
   
     tr.appendChild(td=document.createElement('td'));
-    td.innerHTML = 'is&nbsp;in&nbsp;state:';
+    td.innerHTML = 'State:';
   
     tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode',null,null);
     tr.appendChild(tab.lhcBeamMode);
@@ -106,6 +107,55 @@ if ( !lhcb.widgets ) {
      */
     tab.subscribe = function(provider) {
       this.lhcBeamMode.subscribe(provider);
+      this.lhcFillNumber.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+ 
+  /** Build table with summary of the LHC
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.LHC_header2 = function() {
+    var tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+  
+    tab.className = tb.className = 'MonitorSubHeader';
+  
+    tab.body = tb;
+    tb.appendChild(tr=document.createElement('tr'));
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'LHC&nbsp;Fill';
+    td.className = 'Text-Right';
+  
+    tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber','Text-Left',null);
+    tr.appendChild(tab.lhcFillNumber);
+  
+    tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode','Text-Right','State:%s&nbsp;/&nbsp;');
+    tr.appendChild(tab.lhcBeamMode);
+
+    tab.lhcMachineMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.MachineMode','Text-Left',null);
+    tr.appendChild(tab.lhcMachineMode);
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = '';
+  
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.lhcBeamMode.subscribe(provider);
+      this.lhcMachineMode.subscribe(provider);
       this.lhcFillNumber.subscribe(provider);
       return this;
     };
@@ -388,7 +438,7 @@ if ( !lhcb.widgets ) {
   lhcb.widgets.Det_Run_Summary = function(opts) {
     var sys = opts.system;
     var logger = opts.logger;
-    var tb, td, tr, tab = document.createElement('table');
+    var tb, td, tr, rates, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
     tab.className  = tb.className = 'MonitorPage';
@@ -396,50 +446,56 @@ if ( !lhcb.widgets ) {
     tb.cellPadding = 0;
 
     tab.runType        = StyledItem('lbWeb.'+sys+'_RunInfo.general.runType',     null,null);
-    tab.runStart       = StyledItem('lbWeb.'+sys+'_RunInfo.general.runStartTime',null,'Started at: %s');
-    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',       null,null);
-    tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers',null,null);
-    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'Now:%8.2f %%');
+    tab.runStart       = StyledItem('lbWeb.'+sys+'_RunInfo.general.runStartTime',null,'Run started at: %s');
+    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',      'Text-Right',null);
+    //tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers',null,null);
+    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'%8.2f %%');
     tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     null,'Run:%8.2f %%');
     tab.trgConfig      = StyledItem('lbWeb.'+sys+'_RunInfo.Trigger.TCKLabel',    null,null);
-    tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                            null,'%7.4f');
+    tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                            'Text-Right','%7.4f');
     tab.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',                     null, null);
     tab.hvState        = StyledItem('lbWeb.LHCb_LHC_HV.FSM.state','MonitorDataHeader',null);
     tab.hvState.conversion = function(data) {  return 'LV & HV:'+(data.split('/')[1]); };
     tab.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position','MonitorDataHeader','VELO %s');
-    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                   null, 'S0:%7.3f');
-    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                  null, '%7.3f');
-    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                   null, 'S1:%7.3f');
-    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                  null, '%7.3f');
-    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',  null, null);
-    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',  null, null);
-    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',  null, null);
-    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP', null, '%7.0f Hz');
+    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                  'Text-Right', 'S0:%7.3f');
+    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                 'Text-Right', '%7.3f');
+    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                  'Text-Right', 'S1:%7.3f');
+    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                 'Text-Right', '%7.3f');
+    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus', 'Text-Right', null);
+    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus', 'Text-Right', null);
+    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus', 'Text-Right', null);
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP','Text-Right','%7.0f Hz');
 
-    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     'Text-Right','%8.0f');
-    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  'Text-Right','%8.0f');
-    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     'Text-Right','%8.0f');
-    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  'Text-Right','%8.0f');
-    tab.physicsRateEx  = StyledItem('lbWeb.LHCB_STATS.PhysEx',  'Text-Right',   '%7.0f');
-    tab.physicsRateIn  = StyledItem('lbWeb.LHCB_STATS.PhysIn',  'Text-Right',   '%7.0f');
-    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',  'Text-Right',   '%7.0f');
-    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',  'Text-Right',   '%7.0f');
-    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',  'Text-Right',   '%7.0f');
-    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',  'Text-Right',   '%7.0f');
-    tab.minbRateEx     = StyledItem('lbWeb.LHCB_STATS.MBiasEx', 'Text-Right',   '%7.0f');
-    tab.minbRateIn     = StyledItem('lbWeb.LHCB_STATS.MBiasIn', 'Text-Right',   '%7.0f');
+    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',    'Text-Right','%6.0f');
+    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate', 'Text-Right','%6.0f');
+    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',    'Text-Right','%4.0f');
+    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate', 'Text-Right','%4.0f');
+    tab.physicsRateEx  = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right',   '%4.0f');
+    tab.physicsRateIn  = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right',   '%4.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right',   '%4.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right',   '%4.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right',   '%4.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right',   '%4.0f');
+    tab.minbRateEx     = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right',   '%4.0f');
+    tab.minbRateIn     = StyledItem('lbWeb.LHCB_STATS.MBiasIn',  'Text-Right',   '%4.0f');
+    tab.BeamGasEx      = StyledItem('lbWeb.LHCB_STATS.BeamGasEx','Text-Right',   '%4.0f');
+    tab.BeamGasIn      = StyledItem('lbWeb.LHCB_STATS.BeamGasIn','Text-Right',   '%4.0f');
+    tab.RandEx         = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right',   '%4.0f');
+    tab.RandIn         = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right',   '%4.0f');
     tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', null, '%7.2f &mu;b<sup>-1</sup>/s');
 
     // Run status
     tb.appendChild(tr=document.createElement('tr'));
+    tab.runType.colSpan = 2;
     tr.appendChild(tab.runType);
-    tab.runStart.colSpan = 5;
+    tab.runStart.colSpan = 6;
     tr.appendChild(tab.runStart);
     tab.runStart.style.textAlign = 'left';
 
     // Magnet status
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Magnet [&nbsp;T&nbsp;]:',2,'MonitorDataHeader'));
+    tr.appendChild(td=Cell('Magnet [&nbsp;T&nbsp;]:',2,'MonitorDataHeader'));
+    td.width = '15%';
     tr.appendChild(tab.magnetField);
     tr.appendChild(Cell('Polarity:',2,'MonitorDataHeader'));
     tr.appendChild(tab.magnetPolarity);
@@ -461,15 +517,15 @@ if ( !lhcb.widgets ) {
     // Beam permits
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Beam Permits:',2,'MonitorDataHeader'));
-    tr.appendChild(td=tab.bcmBeamPermit1);
+    tr.appendChild(tab.bcmBeamPermit1);
+    tr.appendChild(td=tab.bcmBeamPermit2);
     td.colSpan = 2;
-    tr.appendChild(tab.bcmBeamPermit2);
     tr.appendChild(tab.bcmBeamPermit3);
     tr.appendChild(tab.veloPosition);    // Velo position
 
     // Luminosity and interaction information
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Interaction rate:',2,'MonitorDataHeader'));
+    tr.appendChild(Cell('Int.rate:',2,'MonitorDataHeader'));
     tr.appendChild(tab.interActionRate);
     tr.appendChild(Cell('Inst.Lumi:',2,'MonitorDataHeader'));
     tr.appendChild(tab.instantLumi);
@@ -479,50 +535,74 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('L0 Events:',2,'MonitorDataHeader'));
     tr.appendChild(tab.nTriggers);
-    tr.appendChild(Cell('Dead time:',2,'MonitorDataHeader'));
-    //tr.appendChild(tab.hltNTriggers);
+    tr.appendChild(Cell('Dead&nbsp;time:',2,'MonitorDataHeader'));
     tr.appendChild(tab.deadTime);
     tr.appendChild(tab.deadTimeRun);
-    //tab.hltNTriggers.colSpan = 2;
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Rates:',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('L0&nbsp;&nbsp;[Hz]', 1,'MonitorDataHeader'));
-    tr.appendChild(Cell('HLT&nbsp;[Hz]',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Phys [Hz]',2,'MonitorDataHeader'));
-    tr.appendChild(Cell('MinB [Hz]',1,'MonitorDataHeader'));
-    tr.appendChild(Cell('Lumi [Hz]',1,'MonitorDataHeader'));
+    tr.appendChild(rates=document.createElement('td'));
+    rates.style.width='100%';
+    rates.colSpan = 7;
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('TCK:',1,'MonitorDataHeader'));
+    td.width = '5%';
+    tab.trgConfig.colSpan=8;
+    tr.appendChild(tab.trgConfig);
+    tab.appendChild(tb);
+
+
+    var t=document.createElement('table');
+    tb = document.createElement('tbody');
+
+    t.className  = tb.className = 'MonitorPage';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('Rates<BR>Now:<BR>Run:',   1,'MonitorDataHeader'));
+    td.rowSpan = 3;
+    td.width = '12%';
+    tr.appendChild(td=Cell('L0&nbsp;[Hz]',  1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('HLT&nbsp;[Hz]', 1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Phys',2,'MonitorDataHeaderRight'));
+    td.width = '20%';
+    tr.appendChild(td=Cell('MinB',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Lumi',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('BGas',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Rndm',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Now:',1,null));
     tr.appendChild(tab.l0Rate);
     tr.appendChild(tab.hltRate);
-    tr.appendChild(Cell('Incl:', 1,'Text-Left'));
+    tr.appendChild(Cell('Inc&nbsp;[Hz]:', 1,'Text-Left'));
     tr.appendChild(tab.physicsRateIn);
     tr.appendChild(tab.minbRateIn);
     tr.appendChild(tab.LumiRateIn);
+    tr.appendChild(tab.BeamGasIn);
+    tr.appendChild(tab.RandIn);
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('Run:',1,null));
     tr.appendChild(tab.l0RateRun);
     tr.appendChild(tab.hltRateRun);
-    tr.appendChild(Cell('Excl:',1,'Text-Left'));
+    tr.appendChild(Cell('Exc&nbsp;[Hz]:',1,'Text-Left'));
     tr.appendChild(tab.physicsRateEx);
     tr.appendChild(tab.minbRateEx);
     tr.appendChild(tab.LumiRateEx);
-
-    tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('TCK:',1,'MonitorDataHeader'));
-    tab.trgConfig.colSpan=6;
-    tr.appendChild(tab.trgConfig);
-
-    tab.appendChild(tb);
+    tr.appendChild(tab.BeamGasEx);
+    tr.appendChild(tab.RandEx);
+    t.appendChild(tb);
+    rates.appendChild(t);
 
     tab.subscribe = function(provider) {
       provider.subscribeItem(this.runType);
       provider.subscribeItem(this.runStart);
       provider.subscribeItem(this.nTriggers);
-      provider.subscribeItem(this.hltNTriggers);
+      //provider.subscribeItem(this.hltNTriggers);
       provider.subscribeItem(this.l0Rate);
       provider.subscribeItem(this.l0RateRun);
       provider.subscribeItem(this.hltRate);
@@ -553,6 +633,11 @@ if ( !lhcb.widgets ) {
       provider.subscribeItem(this.LumiRateEx);
       provider.subscribeItem(this.minbRateIn);
       provider.subscribeItem(this.minbRateEx);
+      provider.subscribeItem(this.BeamGasEx);    
+      provider.subscribeItem(this.BeamGasIn);    
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
+
       provider.subscribeItem(this.trgConfig);
       return this;
     };
@@ -760,17 +845,27 @@ if ( !lhcb.widgets ) {
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
 
-    tab.runType        = StyledItem('lbWeb.'+sys+'_RunInfo.general.runType',     null,null);
-    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',       null,null);
-    tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers',null,null);
-    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     null,'%8.2f Hz');
-    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  null,'%8.2f Hz');
-    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     null,'%8.2f Hz');
-    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  null,'%8.2f Hz');
-    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'%8.2f %%');
-    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     null,'%8.2f %%');
-    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP', null, '%7.1f Hz');
-    tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', null, '%7.2f Hz/&mu;b');
+    tab.runType        = StyledItem('lbWeb.'+sys+'_RunInfo.general.runType',     null, null);
+    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',       'Text-Right', null);
+    tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers','Text-Right', null);
+    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     'Text-Right','%8.2f Hz');
+    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  'Text-Right','%8.2f Hz');
+    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     'Text-Right','%8.2f Hz');
+    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  'Text-Right','%8.2f Hz');
+    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        'Text-Right','%8.2f %%');
+    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     'Text-Right','%8.2f %%');
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP', 'Text-Right', '%7.1f Hz');
+    tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', 'Text-Right', '%7.2f Hz/&mu;b');
+    tab.physRateEx = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right','%7.0f Hz');
+    tab.physRateIn = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right','%7.0f Hz');
+    tab.minbRateEx = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right','%7.0f Hz');
+    tab.minbRateIn = StyledItem('lbWeb.LHCB_STATS.MBiasIn',  'Text-Right','%7.0f Hz');
+    tab.LumiEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right','%7.0f Hz');
+    tab.LumiIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right','%7.0f Hz');
+    tab.BeamGasEx  = StyledItem('lbWeb.LHCB_STATS.BeamGasEx','Text-Right','%7.0f Hz');
+    tab.BeamGasIn  = StyledItem('lbWeb.LHCB_STATS.BeamGasIn','Text-Right','%7.0f Hz');
+    tab.RandEx     = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right','%7.0f Hz');
+    tab.RandIn     = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right','%7.0f Hz');
 
     if ( options.style ) {
       tb.appendChild(tr=document.createElement('tr'));
@@ -787,6 +882,7 @@ if ( !lhcb.widgets ) {
     // Luminosity and interaction information
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Interaction rate:',null,'MonitorDataHeader'));
+    tab.interActionRate.colSpan = 2;
     tr.appendChild(tab.interActionRate);
     tr.appendChild(Cell('Inst.Lumi:',1,'MonitorDataHeader'));
     tr.appendChild(tab.instantLumi);
@@ -794,37 +890,68 @@ if ( !lhcb.widgets ) {
     // Event processing information
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('L0 Events:',null,'MonitorDataHeader'));
+    tab.nTriggers.colSpan = 2;
     tr.appendChild(tab.nTriggers);
     tr.appendChild(Cell('accepted:',1,'MonitorDataHeader'));
     tr.appendChild(tab.hltNTriggers);
 
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(Cell('',1,null));
-    tr.appendChild(Cell('Now',2,'MonitorDataHeader'));
-    tr.appendChild(Cell('Run',2,'MonitorDataHeader'));
-
-    tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('L0 rate:',1,'MonitorDataHeader'));
-    tab.l0Rate.colSpan = 2;
-    tab.l0RateRun.colSpan = 2;
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
     tr.appendChild(tab.l0Rate);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
     tr.appendChild(tab.l0RateRun);
 
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('HLT rate:',1,'MonitorDataHeader'));
-    tab.hltRate.colSpan = 2;
-    tab.hltRateRun.colSpan = 2;
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
     tr.appendChild(tab.hltRate);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
     tr.appendChild(tab.hltRateRun);
 
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('Dead-time:',null,'MonitorDataHeader'));
-    tab.deadTime.colSpan = 2;
-    tab.deadTimeRun.colSpan = 2;
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
     tr.appendChild(tab.deadTime);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
     tr.appendChild(tab.deadTimeRun);
 
-    tab.appendChild(tb);
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Physics:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.physRateEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.physRateIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Minimum Bias:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.minbRateEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.minbRateIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Beam gas:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.BeamGasEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.BeamGasIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Beam gas:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.LumiEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.LumiIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Beam gas:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.RandEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.RandIn);
+
+   tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
       provider.subscribeItem(this.runType);
@@ -838,6 +965,17 @@ if ( !lhcb.widgets ) {
       provider.subscribeItem(this.deadTimeRun);
       provider.subscribeItem(this.instantLumi);
       provider.subscribeItem(this.interActionRate);
+
+      provider.subscribeItem(this.physRateEx);    
+      provider.subscribeItem(this.physRateIn);    
+      provider.subscribeItem(this.minbRateEx);    
+      provider.subscribeItem(this.minbRateIn);    
+      provider.subscribeItem(this.LumiEx);    
+      provider.subscribeItem(this.LumiIn);    
+      provider.subscribeItem(this.BeamGasEx);    
+      provider.subscribeItem(this.BeamGasIn);    
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
       return this;
     };
     return tab;
@@ -867,7 +1005,6 @@ if ( !lhcb.widgets ) {
     tab.magRead     = StyledItem('lbWeb.LbMagnet.Current',null,'%7.0f A');
     tab.magPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
     tab.magPolarity.conversion = function(data) {      return data>0 ? 'Down' : 'Up';    };
-    tr = document.createElement('tr');
     tr.appendChild(tab.magSet);
     tr.appendChild(tab.magRead);
     tr.appendChild(tab.magPolarity);
@@ -1359,7 +1496,7 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('HV Ready',   1,'MonitorDataHeader'));
       tr.appendChild(Cell('VELO IN',    1,'MonitorDataHeader'));
       tr.appendChild(Cell('DAQ stopped',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('dead time',  1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Dead time',  1,'MonitorDataHeader'));
     }
     tab.hv      = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.HV',null,'%7.2f %%');
     tab.velo    = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.VELO',null,'%7.2f %%');
@@ -1688,9 +1825,9 @@ if ( !lhcb.widgets ) {
     if ( options.legend ) {
       tr = document.createElement('tr');
       tr.appendChild(Cell('Position',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('Opening',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('Center',1,'MonitorDataHeader'));
-      tr.appendChild(Cell('Y:',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('XA',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('XC',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Y',1,'MonitorDataHeader'));
       tb.appendChild(tr);
     }
     if ( options.tips ) {
@@ -1700,9 +1837,9 @@ if ( !lhcb.widgets ) {
       tb.onclick = options.onclick; 
     }
     tab.veloState   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
-    tab.veloOpening = StyledItem('lbWeb.LHCb_RunInfoCond.VELO.CurrentPosition.Opening',null,'%7.2f mm');
-    tab.veloCenter  = StyledItem('lbWeb.LHCb_RunInfoCond.VELO.CurrentPosition.Center',null,'%7.2f mm');
-    tab.veloY       = StyledItem('lbWeb.LHCb_RunInfoCond.VELO.CurrentPosition.Y',null,'%7.2f mm');
+    tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Comm.ResolPos',null,'%7.2f mm');
     tr = document.createElement('tr');
     tr.appendChild(tab.veloState);
     tr.appendChild(tab.veloOpening);
@@ -1779,16 +1916,20 @@ if ( !lhcb.widgets ) {
     var tr = document.createElement('tr');
 
     tab.className = tb.className   = 'MonitorPage';
-    tab.pe411 = StyledItem('lbWeb.veloVac_Meters.PE411.Vacuum', null, "%7.2e");
-    tab.pe412 = StyledItem('lbWeb.veloVac_Meters.PE412.Vacuum', null, "%7.2e");
-    tab.pe421 = StyledItem('lbWeb.veloVac_Meters.PE421.Vacuum', null, "%7.2e");
-    tab.pe422 = StyledItem('lbWeb.veloVac_Meters.PE422.Vacuum', null, "%7.2e");
+    tab.ap411 = StyledItem('lbWeb.veloVac_Barotrons.AP411.Pressure', null, "%7.1f");
+    tab.dp411 = StyledItem('lbWeb.veloVac_Barotrons.DP411.Pressure', null, "%7.1e");
+    tab.pe411 = StyledItem('lbWeb.veloVac_Meters.PE411.Vacuum', null, "%7.1e");
+    tab.pe412 = StyledItem('lbWeb.veloVac_Meters.PE412.Vacuum', null, "%7.1e");
+    tab.pe421 = StyledItem('lbWeb.veloVac_Meters.PE421.Vacuum', null, "%7.1e");
+    tab.pe422 = StyledItem('lbWeb.veloVac_Meters.PE422.Vacuum', null, "%7.1e");
     if ( options.style ) {
-      tr.appendChild(Cell('Velo Vacuum Status: Pressures in [hPa]',4,options.style));
+      tr.appendChild(Cell('Velo Vacuum Status: Pressures in [mbar]',4,options.style));
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
     if ( options.legend ) {
+      tr.appendChild(Cell('AP411',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('DP411',1,'MonitorDataHeader'));
       tr.appendChild(Cell('PE411',1,'MonitorDataHeader'));
       tr.appendChild(Cell('PE412',1,'MonitorDataHeader'));
       tr.appendChild(Cell('PE421',1,'MonitorDataHeader'));
@@ -1802,18 +1943,24 @@ if ( !lhcb.widgets ) {
       tb.onclick = options.onclick; 
     }
     tr = document.createElement('tr');
+    tr.appendChild(tab.ap411);
+    tab.ap411.style.width = '17%';
+    tr.appendChild(tab.dp411);
+    tab.dp411.style.width = '17%';
     tr.appendChild(tab.pe411);
-    tab.pe411.style.width = '25%';
+    tab.pe411.style.width = '17%';
     tr.appendChild(tab.pe412);
-    tab.pe412.style.width = '25%';
+    tab.pe412.style.width = '17%';
     tr.appendChild(tab.pe421);
-    tab.pe421.style.width = '25%';
+    tab.pe421.style.width = '17%';
     tr.appendChild(tab.pe422);
-    tab.pe422.style.width = '25%';
+    tab.pe422.style.width = '17%';
     tb.appendChild(tr);
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
+      provider.subscribeItem(this.ap411);
+      provider.subscribeItem(this.dp411);
       provider.subscribeItem(this.pe411);
       provider.subscribeItem(this.pe412);
       provider.subscribeItem(this.pe421);
@@ -1835,19 +1982,32 @@ if ( !lhcb.widgets ) {
     tab.className = tb.className   = 'MonitorPage';
     tab.motion = FSMItem('lbWeb.VELO_MOTION',options.logger,true);
     tab.vacuum = FSMItem('lbWeb.VELO_VACUUM',options.logger,true);
-    tab.cool   = FSMItem('lbWeb.VELO_COOLING',options.logger,true);
+    //tab.cool   = FSMItem('lbWeb.VELO_COOLING',options.logger,true);
     tab.coolA  = FSMItem('lbWeb.VEA_COOL',options.logger,true);
     tab.coolC  = FSMItem('lbWeb.VEC_COOL',options.logger,true);
-
+    tab.setPA  = StyledItem('lbWeb.VTCS_TL_AC101.SETPOINT',null,'%7.1f <sup>o</sup>C');
+    tab.setPC  = StyledItem('lbWeb.VTCS_TR_AC101.SETPOINT',null,'%7.1f <sup>o</sup>C');
+    tab.T0A    = StyledItem('lbWeb.VeloDpFct_Aside_P_NTC2.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T1A    = StyledItem('lbWeb.VeloDpFct_Aside_P_NTC3.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T0C    = StyledItem('lbWeb.VeloDpFct_Cside_P_NTC2.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T1C    = StyledItem('lbWeb.VeloDpFct_Cside_P_NTC3.Average',null,'%7.1f <sup>o</sup>C');
     if ( options.style ) {
-      tr.appendChild(Cell('Velo Infrastructure State',3,options.style));
+      tr.appendChild(Cell('Velo Infrastructure State',8,options.style));
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
     if ( options.legend ) {
-      tr.appendChild(Cell('Cooling',2,'MonitorDataHeader'));
-      tr.appendChild(Cell('Side A',2,'MonitorDataHeader'));
-      tr.appendChild(Cell('Side C',2,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('Vacuum',2,'MonitorDataHeader'));
+      cell.style.width='15%';
+      tr.appendChild(cell=Cell('A<BR>Side',1,'MonitorDataHeader'));
+      cell.style.width='10%';
+      cell.rowSpan = 2;
+      tr.appendChild(cell=Cell('Cooling',2,'MonitorDataHeader'));
+      cell.style.width='15%';
+      tr.appendChild(Cell('SetPoint',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC0',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC1',1,'MonitorDataHeader'));
+      //tr.appendChild(Cell('Cooling',2,'MonitorDataHeader'));
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
@@ -1857,33 +2017,41 @@ if ( !lhcb.widgets ) {
     if ( options.onclick ) {
       tb.onclick = options.onclick; 
     }
-    tr.appendChild(tab.cool);
-    tr.appendChild(tab.cool.lock);
-    tab.cool.style.width = '33%';
+    //tr.appendChild(tab.cool);
+    //tr.appendChild(tab.cool.lock);
+
+    tr.appendChild(tab.vacuum);
+    tr.appendChild(tab.vacuum.lock);
+    tab.vacuum.lock.style.width = '2%';
     tr.appendChild(tab.coolA);
     tr.appendChild(tab.coolA.lock);
-    tab.coolA.style.width = '33%';
-    tr.appendChild(tab.coolC);
-    tr.appendChild(tab.coolC.lock);
-    tab.coolC.style.width = '33%';
+    tab.coolA.lock.style.width = '2%';
+    tr.appendChild(tab.setPA);
+    tr.appendChild(tab.T0A);
+    tr.appendChild(tab.T1A);
+
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     if ( options.legend ) {
-      tr.appendChild(Cell('Vacuum',2,'MonitorDataHeader'));
       tr.appendChild(Cell('Motion',2,'MonitorDataHeader'));
-      tr.appendChild(Cell('',2,null));
+      tr.appendChild(cell=Cell('C<BR>Side',1,'MonitorDataHeader'));
+      cell.rowSpan = 2;
+      tr.appendChild(Cell('Cooling',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('SetPoint',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC0',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC1',1,'MonitorDataHeader'));
       tb.appendChild(tr);
       tr = document.createElement('tr');
     }
-    tr.appendChild(tab.vacuum);
-    tr.appendChild(tab.vacuum.lock);
-    tab.vacuum.style.width = '30%';
     tr.appendChild(tab.motion);
     tr.appendChild(tab.motion.lock);
-    tab.motion.style.width = '30%';
-    tr.appendChild(cell=Cell('',2,null));
-    cell.style.width='100%';
+    tr.appendChild(tab.coolC);
+    tr.appendChild(tab.coolC.lock);
+    tr.appendChild(tab.setPC);
+    tr.appendChild(tab.T0C);
+    tr.appendChild(tab.T1C);
+    tr.appendChild(cell=Cell('&nbsp;',2,null));
     tb.appendChild(tr);
 
     tab.appendChild(tb);
@@ -1891,9 +2059,15 @@ if ( !lhcb.widgets ) {
     tab.subscribe = function(provider) {
       provider.subscribeItem(this.motion);
       provider.subscribeItem(this.vacuum);
-      provider.subscribeItem(this.cool);
+      //provider.subscribeItem(this.cool);
       provider.subscribeItem(this.coolA);
+      provider.subscribeItem(this.setPA);
+      provider.subscribeItem(this.T0A);
+      provider.subscribeItem(this.T1A);
       provider.subscribeItem(this.coolC);
+      provider.subscribeItem(this.setPC);
+      provider.subscribeItem(this.T0C);
+      provider.subscribeItem(this.T1C);
     };
     return tab;
   };

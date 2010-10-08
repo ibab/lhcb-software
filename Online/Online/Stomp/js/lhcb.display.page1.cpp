@@ -106,13 +106,13 @@ var Page1 = function(msg, sys)   {
     
     td = document.createElement('td');
     td.appendChild(this.LHC_header=lhcb.widgets.LHC_header());
-    td.style.width = '50%';
+    td.style.width = '45%';
     tooltips.set(td,'LHC status summary.<br>Click to see LHC operations page');
     td.onclick     = lhcb.widgets.goto_lhc_operations_page;
     tr.appendChild(td);
     
     td = document.createElement('td');
-    td.style.height = '100%';
+    td.style.height = '55%';
     td.appendChild(this.LHCb_header=lhcb.widgets.Det_Run_header(this.system,this.logger));
     tooltips.set(td,'LHCb run status<br>Click to see full run status information.');
     td.onclick = lhcb.widgets.goto_lhcb_daq_page;
@@ -195,7 +195,7 @@ var page1_body = function()  {
   selector.provider.topic = '/topic/status';
   selector.build();
 
-  if ( null == siz && screen.width>1500 ) siz = 3;
+  if ( null == siz && screen.width>1600 ) siz = 3;
   if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
   else  zoom_changeFontSizeEx(0);
   if ( siz != null ) zoom_changeFontSizeEx(siz);

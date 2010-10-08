@@ -659,6 +659,7 @@ var RunStatusDisplay = function(partition,provider,logger) {
 
   row = document.createElement('tr');
   table.experiment_run_header = document.createElement('td');
+  table.experiment_run_header.innerHTML = '';
   table.experiment_run_header.colSpan = 2;
   row.appendChild(table.experiment_run_header);
   //td = Cell(lhcb_online_picture(),1,null);
@@ -695,6 +696,14 @@ var RunStatusDisplay = function(partition,provider,logger) {
   table.body.appendChild(table.trg_row);
   table._logger.info('RunStatusDisplay.build: Created table...Done.');
 
+  /** Set header row into the display
+   *
+   *  @return Reference to self
+   */
+  table.setHeader = function() {
+    this.experiment_run_header.innerHTML = detector_run_header(this._partition);
+    return this;
+  };
   /** Attach display items. 
    * Note: Display must be "built" before. Otherwise the service updates do not find the
    * necessary html identifiers in in the documents,
@@ -702,7 +711,6 @@ var RunStatusDisplay = function(partition,provider,logger) {
    *  @return Reference to self
    */
   table.attach = function(systems)   {
-    this.experiment_run_header.innerHTML = detector_run_header(this._partition);
     this.statusDisplay = ControlsStatusDisplay(this._partition,this._provider,this._logger);
     this.ctrl_status.appendChild(this.statusDisplay);
 

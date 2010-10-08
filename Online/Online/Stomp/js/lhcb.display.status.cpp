@@ -1,6 +1,7 @@
 _loadScript('lhcb.display.data.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.listener.cpp');
+_loadScript('lhcb.display.widgets.cpp');
 _loadScript('lhcb.display.zoom.cpp');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.status','css');
@@ -119,13 +120,32 @@ var PartitionSelector = function(msg) {
   table.appendChild(table.body);
 
   table.hideInput = function() {
+    /*
     this.row.removeChild(this.update);
     this.change.innerHTML = 'Reload';
     this.change.width = '10%';
     this.row.removeChild(this.select);
     this.row.removeChild(this.label);
-    tooltips.set(table.change,'Click to reload display');
-    table.row.appendChild(table.update=document.createElement('td'));
+    this.row.removeChild(this.change);
+    tooltips.set(this.change,'Click to reload display');
+    this.row.appendChild(this.update=document.createElement('td'));
+    while(this.row.childNodes.length>0) {
+      this.row.removeChild(this.row.childNodes[0]);
+    }
+    */
+    this.body.removeChild(this.row);
+    this.row = null;
+  };
+
+  table.showLHCstate = function() {
+    var td=document.createElement('td');
+    this.row = document.createElement('tr');
+    this.row.appendChild(td);
+    td.colSpan = this.heading.parentNode.childNodes.length+1;
+    this.lhcState = lhcb.widgets.LHC_header2();
+    td.appendChild(this.lhcState);
+    this.body.insertBefore(this.row,this.display.parentNode);
+    this.lhcState.subscribe(this.provider);
   };
 
   table.callbackNo = 3;
@@ -157,6 +177,7 @@ var PartitionSelector = function(msg) {
     this.listener = new DetectorListener(this.logger,this.provider,this.display,this.messages,this);
     this.listener.trace = false;
     this.listener.start(partition,'lbWeb.'+partition+'.FSM.children');
+    this.heading.innerHTML = partition+' Run Status Display';
     setWindowTitle(partition+' Run Status');
   };
 
@@ -231,6 +252,9 @@ var status_body = function()  {
     selector.selectBox.add(sys,sys,true);
     selector.createDisplay(); 
     selector.hideInput();
+    if ( sys == 'LHCb' ) {
+      selector.showLHCstate();
+    }
   }
   selector.provider.start();
 };
