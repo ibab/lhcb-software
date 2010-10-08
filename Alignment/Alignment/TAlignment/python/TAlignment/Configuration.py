@@ -125,11 +125,15 @@ class TAlignment( LHCbConfigurableUser ):
             return allConfigurables.get( "TrackFilterSeq" )
 
     def monitorSeq( self ) :
-        from Configurables import (TrackMonitor,TrackVertexMonitor)
+        from Configurables import (TrackMonitor,TrackVertexMonitor,TrackVeloOverlapMonitor,TrackITOverlapMonitor)
         monitorSeq = GaudiSequencer("AlignMonitorSeq")
-        monitorSeq.Members.append(TrackMonitor())
-        monitorSeq.Members.append(TrackMonitor("AlignTrackMonitor",
-                                               TracksInContainer =self.getProp("TrackLocation")))
+        monitorSeq.Members += [TrackMonitor(),
+                               TrackMonitor("AlignTrackMonitor",
+                                            TracksInContainer =self.getProp("TrackLocation")),
+                               TrackVeloOverlapMonitor("AlignVeloOverlapMonitor",
+                                                       TrackLocation =self.getProp("TrackLocation")),
+                               TrackITOverlapMonitor("AlignITOverlapMonitor",
+                                                     TrackLocation =self.getProp("TrackLocation"))]
         if self.getProp("VertexLocation") != "":
              monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
                                                           PVContainer = self.getProp("VertexLocation")))
