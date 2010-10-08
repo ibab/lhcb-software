@@ -19,14 +19,14 @@
   bool endblock = 1;
   // goto taggercandidates;
   // goto general;
-  goto asymm;
-  // goto nnet;
+  // goto asymm;
+  goto nnet;
   // goto vertex;
   // goto omegapt;
   // goto addseed;
   // goto vtxcharge;
   // goto pid;
-  goto effeff_cut;
+  // goto effeff_cut;
 
 taggercandidates:////////////////////////////////////////////////////
 
@@ -34,8 +34,7 @@ taggercandidates:////////////////////////////////////////////////////
 
   //compare same plots on two different root files
   TString f1 = "output/tag_s9.root"; //in red
-  //  TString f2 = "output/tag_s10.root"; //in red
-  TString f2 = "output/tag.root"; //in red
+  TString f2 = "output/tag_s10.root"; //in red
 
   c->Divide(2,2);
   c->cd(1); plot_taggercut(f1,f2,"h1");
@@ -43,9 +42,6 @@ taggercandidates:////////////////////////////////////////////////////
   c->cd(3); plot_taggercut(f1,f2,"h6");
   c->cd(4); plot_taggercut(f1,f2,"h4");
   c->Print("output/hcut_B.gif"); if(wait())return;
-
-//  goto kotag;
-
 
   c->cd(1); plot_taggercut(f1,f2,"hcut_mu_pid");
   c->cd(2); plot_taggercut(f1,f2,"hcut_mu_pt");
@@ -67,7 +63,6 @@ taggercandidates:////////////////////////////////////////////////////
   c->cd(4); plot_taggercut(f1,f2,"hcut_ele_N");
   c->Print("output/hcut_ele2.gif"); if(wait())return;
 
-kotag:
   c->cd(1); plot_taggercut(f1,f2,"hcut_ko_pidk");
   c->cd(2); plot_taggercut(f1,f2,"hcut_ko_pidp");
   c->cd(3); plot_taggercut(f1,f2,"hcut_ko_pt");

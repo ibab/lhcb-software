@@ -110,18 +110,18 @@ int main () {
       //**********************//
       //**********************//
       if (UseModBtime) {
-	Particle* Dstar = event.Dstar();
-	Particle* Mu    = event.Mu();
-	TLorentzVector DstarMu = Dstar->momentum() + Mu->momentum();
-	double ChiP = DstarMu.P();
-	double ChiM = DstarMu.M();
-	double newChiP = ChiP/(0.283+ChiM*0.1283);
-	TVector3 BSvtx  = event.BSVertex();
-	TVector3 Recvtx = event.RecVertex();
-	double Bdir = (BSvtx-Recvtx).Mag();
-	double MassB  = 5.279; 
-	double NewBtime = Bdir*MassB/newChiP/0.299792458;
-	Btime = NewBtime;
+        Particle* Dstar = event.Dstar();
+        Particle* Mu    = event.Mu();
+        TLorentzVector DstarMu = Dstar->momentum() + Mu->momentum();
+        double ChiP = DstarMu.P();
+        double ChiM = DstarMu.M();
+        double newChiP = ChiP/(0.283+ChiM*0.1283);
+        TVector3 BSvtx  = event.BSVertex();
+        TVector3 Recvtx = event.RecVertex();
+        double Bdir = (BSvtx-Recvtx).Mag();
+        double MassB  = 5.279; 
+        double NewBtime = Bdir*MassB/newChiP/0.299792458;
+        Btime = NewBtime;
       }
       //**********************//
       //**********************//

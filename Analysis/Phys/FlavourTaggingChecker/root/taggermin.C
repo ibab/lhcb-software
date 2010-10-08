@@ -45,7 +45,7 @@ void fcn (Int_t &npar,Double_t *gin,Double_t &f,Double_t *par,Int_t iflag){
   indata.close();
 
   //variable to minimize ///////////////
-  f = -eff_same;
+  f = -eff_kaon;
   ////////////////////////////////////
 
   cout<<"VALUE = "<<-f<<"   \t"<<gin<<" "<<npar<<" "<<iflag<<endl;
@@ -75,15 +75,15 @@ void taggermin() {
   // varnames.push_back("Ele_PIDe_cut");  vstart.push_back(4.0);
 
   //kaon OS, eff_kaon
-  // varnames.push_back( "Kaon_P_cut" );    vstart.push_back(4);
-  // varnames.push_back( "Kaon_Pt_cut" );   vstart.push_back(0.4);
-  // varnames.push_back( "Kaon_IPs_cut" );  vstart.push_back(3.8);
-  // varnames.push_back( "Kaon_IP_cut" );   vstart.push_back(1.5);
-  // varnames.push_back( "Kaon_LCS_cut" );  vstart.push_back(2.5);
-  // varnames.push_back( "Kaon_ipPU_cut" ); vstart.push_back(4);
-  // varnames.push_back( "Kaon_PIDk" );     vstart.push_back(0.0);
-  // varnames.push_back( "Kaon_PIDkp" );    vstart.push_back(-1);
-  // varnames.push_back( "Kaon_ghost_cut" );vstart.push_back(-14);
+  varnames.push_back( "Kaon_P_cut" );    vstart.push_back(4);
+  varnames.push_back( "Kaon_Pt_cut" );   vstart.push_back(0.4);
+  varnames.push_back( "Kaon_IPs_cut" );  vstart.push_back(3.8);
+  varnames.push_back( "Kaon_IP_cut" );   vstart.push_back(1.5);
+  varnames.push_back( "Kaon_LCS_cut" );  vstart.push_back(2.5);
+  varnames.push_back( "Kaon_ipPU_cut" ); vstart.push_back(4);
+  varnames.push_back( "Kaon_PIDk" );     vstart.push_back(0.0);
+  varnames.push_back( "Kaon_PIDkp" );    vstart.push_back(-1);
+  varnames.push_back( "Kaon_ghost_cut" );vstart.push_back(-14);
 
   //kaon SS, eff_same
   // varnames.push_back( "KaonSame_Pt_cut" );   vstart.push_back(0.45);
@@ -97,20 +97,20 @@ void taggermin() {
   // varnames.push_back( "KaonSPID_kpS_cut" );  vstart.push_back(-1.0);
 
   //Pions SS, eff_same
-  varnames.push_back("PionSame_Pt_cut");    vstart.push_back(0.6);
-  varnames.push_back("PionSame_P_cut");     vstart.push_back(0.0);
-  varnames.push_back("PionSame_IPs_cut");   vstart.push_back(3.5);
-  varnames.push_back("PionS_LCS_cut");      vstart.push_back(2.0);
-  varnames.push_back("PionSame_dQ_cut");    vstart.push_back(3.0);
-  varnames.push_back("PionSame_dQ_extra_cut");vstart.push_back(1.5);
-  varnames.push_back("Pion_ghost_cut");     vstart.push_back(-30.0);
-  varnames.push_back("PionSame_PIDNoK_cut");vstart.push_back(3.0);
-  varnames.push_back("PionSame_PIDNoP_cut");vstart.push_back(10.0);
-  varnames.push_back("PionProbMin");        vstart.push_back(0.55);
+//   varnames.push_back("PionSame_Pt_cut");    vstart.push_back(0.6);
+//   varnames.push_back("PionSame_P_cut");     vstart.push_back(0.0);
+//   varnames.push_back("PionSame_IPs_cut");   vstart.push_back(3.5);
+//   varnames.push_back("PionS_LCS_cut");      vstart.push_back(2.0);
+//   varnames.push_back("PionSame_dQ_cut");    vstart.push_back(3.0);
+//   varnames.push_back("PionSame_dQ_extra_cut");vstart.push_back(1.5);
+//   varnames.push_back("Pion_ghost_cut");     vstart.push_back(-30.0);
+//   varnames.push_back("PionSame_PIDNoK_cut");vstart.push_back(3.0);
+//   varnames.push_back("PionSame_PIDNoP_cut");vstart.push_back(10.0);
+//   varnames.push_back("PionProbMin");        vstart.push_back(0.55);
 
   //vertex charge, eff_vtx
-  varnames.push_back("PowerK"); vstart.push_back(0.35);
-  varnames.push_back("MinimumVCharge"); vstart.push_back(0.12);
+  // varnames.push_back("PowerK"); vstart.push_back(0.35);
+  // varnames.push_back("MinimumVCharge"); vstart.push_back(0.12);
 
   ///////////////////////////////////////////////////////////////
   
