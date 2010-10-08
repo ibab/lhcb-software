@@ -3,6 +3,13 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v26r2>2010-10-08 DaVinci v26r2. Version for Stripping11.</A></H1><PRE>
+
+  * Based on LHCb v31r6 stack. Version for October stripping.
+  * Includes many enhancements to MicroDST for Jpsi and Charm working groups.
+  * Major updates to stripping selections.
+  * New functionality and bug fixes. See Phys v9r11, Analysis v4r11, Hlt , Stripping release notes.
+
 </PRE><H1><A NAME=v26r1>2010-09-13 DaVinci v26r1. Version with latest HLT. Equivalent to Reco06-Strippins10 version.</A></H1><PRE>
 
   * Identical to v26r0 but uses HLT v11r1.
