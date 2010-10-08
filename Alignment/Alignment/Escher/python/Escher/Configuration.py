@@ -3,15 +3,14 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.21 2010-05-21 10:01:23 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2010-10-08 07:48:43 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment,
-                            CountingPrescaler )
-from RecConf.Configuration import RecMoniConf
+                            CountingPrescaler, RecMoniConf )
 
 ## @class Escher
 #  Configurable for Escher application
@@ -42,9 +41,8 @@ class Escher(LHCbConfigurableUser):
        , "Simulation"		: False    # set to True to use SimCond
        , "InputType"		: "DST"    # or "DIGI" or "ETC" or "RDST" or "DST"
        , "OutputType"		: "NONE"   # or "RDST" or "NONE". Also forwarded to RecSys
-       , "PackedOutput"		: True     # Flag whether or not to use packed containers
+       , "PackType"		: "TES"    # Flag whether or not to use packed containers
        , "NoWarnings"		: False    # suppress all messages with MSG::WARNING or below 
-       , "TrackContainer" 	: "Long"   # Tracktype to be used for alignment (Long, Seed, VeloTT...)
        , "Detectors" 		: ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
        , "AlignmentLevel" 	: "layers" # level of alignment, stations, layers, quarters, modules, sensors...
        , "Constraints"          : []       # list of constraints
@@ -203,9 +201,9 @@ class Escher(LHCbConfigurableUser):
         """
         if dstType in [ "DST", "RDST" ]:
             writerName = "DstWriter"
-            packedDST  = self.getProp( "PackedOutput" )
+            packType  = self.getProp( "PackType" )
             # Do not pack DC06 DSTs, for consistency with existing productions
-            if self.getProp("DataType") == "DC06": packedDST = False
+            if self.getProp("DataType") == "DC06": packType = "NONE"
 
             dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
@@ -217,7 +215,7 @@ class Escher(LHCbConfigurableUser):
             # Define the file content
             DstConf().Writer     = writerName
             DstConf().DstType    = dstType
-            DstConf().EnablePack = packedDST
+            DstConf().PackType   = packType
 
             from Configurables import TrackToDST
             if dstType == "DST":
@@ -238,10 +236,11 @@ class Escher(LHCbConfigurableUser):
                 
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
-            if packedDST:
+            if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
+                DstConf().AlwaysCreate  = True
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
 
         # Always write an ETC if ETC input
@@ -306,4 +305,5 @@ class Escher(LHCbConfigurableUser):
         log.info( TrackSys() )
         log.info( RecMoniConf() )
         log.info( TAlignment() )
+        log.info( DstConf() )
         GaudiKernel.ProcessJobOptions.PrintOff()
