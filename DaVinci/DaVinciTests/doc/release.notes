@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r5 2010-10-08 =================
+
 ! 2010-10-05 - Juan Palacios
  - tests/qmtest/davinci.qms/stripping.qms/test_bd2kstarmumu_mc09.qmt
   . Efficiencies of some std particles has changed.
