@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.64 2010-08-13 21:06:52 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.65 2010-10-08 07:23:00 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -83,7 +83,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("ProjectorSelector"           , m_projSelectorName   = "TrackProjectorSelector");
   declareProperty("UseCorrelations"             , m_correlation        = true                    );
   declareProperty("UpdateInFinalize"            , m_updateInFinalize   = false                   );
-  declareProperty("OutputDataFile"              , m_outputDataFileName = "alignderivatives.dat" ) ;
+  declareProperty("OutputDataFile"              , m_outputDataFileName = "" ) ;
   declareProperty("InputDataFiles"              , m_inputDataFileNames ) ;
   declareProperty("Chi2Outlier"                 , m_chi2Outlier        = 10000 ) ;
   declareProperty("UpdateTool",m_updatetool) ;
@@ -338,11 +338,13 @@ StatusCode AlignAlgorithm::execute() {
   } 
   
   Gaudi::Time eventtime ;
+  unsigned int runnr(0) ;
   if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
     const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     eventtime = odin->eventTime() ;
+    runnr = odin->runNumber() ;
   }
-  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime ) ;
+  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime, runnr ) ;
     
   return StatusCode::SUCCESS;
 }
@@ -571,9 +573,9 @@ namespace {
     const LHCb::Track* lhs ;
     TrackClonePredicate( const LHCb::Track* tr ) : lhs(tr) {}
     bool operator()(const LHCb::Track* rhs) const {
-      // the requirement is that all LHCbIDs of rhs appear in lhs or vice versa
-      size_t ncommon = lhs->nCommonLhcbIDs( *rhs ) ;
-      return ncommon == lhs->lhcbIDs().size() || ncommon == rhs->lhcbIDs().size() ;
+      // either it is the same tracks, or all LHCbIDs of rhs appear in lhs or vice versa
+      return rhs == lhs ||
+	lhs->nCommonLhcbIDs(*rhs) == std::min(lhs->lhcbIDs().size(),rhs->lhcbIDs().size()) ;
     }
   } ;
   
