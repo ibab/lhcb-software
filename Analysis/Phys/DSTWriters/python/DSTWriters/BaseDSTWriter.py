@@ -17,6 +17,7 @@ class BaseDSTWriter(ConfigurableUser) :
         , "SelectionSequences"       : []
         , "ExtraItems"               : []
         , "WriteFSR"                 : True
+        , "RootInTES"                : '/Event'
         }
 
     _propertyDocDct = {  
@@ -24,12 +25,14 @@ class BaseDSTWriter(ConfigurableUser) :
         , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         , "WriteFSR"           : """ Flags whether to write out an FSR """
+        , "RootInTES"          : """ RootInTES property for sequences and MicroDST output location."""
         }
 
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
                               ModeOR = True, 
-                              ShortCircuit = False)
+                              ShortCircuit = False,
+                              RootInTES = self.getProp('RootInTES'))
 
     def selectionSequences(self) :
         return self.getProp('SelectionSequences')

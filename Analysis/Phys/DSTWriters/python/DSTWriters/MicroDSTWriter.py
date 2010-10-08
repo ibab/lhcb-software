@@ -46,7 +46,7 @@ class MicroDSTWriter(BaseDSTWriter) :
             stream.OptItemList += ["/Event/DAQ/ODIN#1"]
         if self.getProp("CopyRecHeader") :
             stream.OptItemList += ["/Event/Rec/Header#1"]
-        stream.OptItemList += ["/Event/"+ location +"#99"]
+        stream.OptItemList += [self.getProp('RootInTES') + location +"#99"]
 
     def fileExtension(self) :
         return ".mdst"

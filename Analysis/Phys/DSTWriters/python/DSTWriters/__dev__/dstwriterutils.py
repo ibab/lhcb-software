@@ -98,10 +98,13 @@ class MicroDSTElementList(object) :
     returning suitably ordered list of suitably configured Configurables.
     
     """
-    def __init__(self, branch = 'MicroDST', callables = []) :
+    def __init__(self,
+                 branch = 'MicroDST',
+                 callables = [],
+                 rootInTES = '/Event/') :
         self.callables = callables
         self.branch = branch
-        self.output = '/Event/'+branch+'#99'
+        self.output = rootInTES + branch + '#99'
         for c in self.callables :
             c.branch = self.branch
     def __getitem__(self, index) :

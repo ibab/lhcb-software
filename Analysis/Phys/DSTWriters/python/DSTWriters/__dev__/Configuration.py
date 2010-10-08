@@ -76,7 +76,9 @@ class SelDSTWriter(ConfigurableUser) :
         , "SelectionSequences"       : []
         , "WriteFSR"                 : True
         , "StreamConf"               : { 'default' : selDSTStreamConf() }
-        , "MicroDSTElements"         : { 'default' : selDSTElements()   } }
+        , "MicroDSTElements"         : { 'default' : selDSTElements()   }
+        , "RootInTES"                : '/Event'
+        }
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
@@ -84,6 +86,7 @@ class SelDSTWriter(ConfigurableUser) :
         , "WriteFSR"           : """ Flags whether to write out an FSR """
         , "StreamConf"         : """ Output stream configuration """
         , "MicroDSTElements"   : """ List of callables setting up each element to be added to each SelectionSequence and copied to MicroDST partition."""
+        , "RootInTES"          : """ RootInTES property for sequences and MicroDST output location."""
         }
 
     def _buildClonerList(self, selSeq) :
@@ -91,6 +94,7 @@ class SelDSTWriter(ConfigurableUser) :
         Build list of callables that will be used by the BaseDSTWriter.
         '''
         clonerDict = copy(self.getProp('MicroDSTElements'))
+        rootInTES = self.getProp('RootInTES')
         seqName = selSeq.name()
         clonerList = []
         if seqName in clonerDict.keys() :
@@ -98,7 +102,9 @@ class SelDSTWriter(ConfigurableUser) :
         else :
             clonerList = clonerDict['default']
         
-        return MicroDSTElementList(branch = seqName, callables = clonerList)
+        return MicroDSTElementList(branch = seqName,
+                                   callables = clonerList,
+                                   rootInTES = rootInTES)
 
     def _buildStreamConf(self, selSeq) :
         scDict = copy(self.getProp('StreamConf'))
@@ -116,7 +122,8 @@ class SelDSTWriter(ConfigurableUser) :
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
                               ModeOR = True, 
-                              ShortCircuit = False)
+                              ShortCircuit = False,
+                              RootInTES = self.getProp('RootInTES'))
 
     def __apply_configuration__(self) :
         """
