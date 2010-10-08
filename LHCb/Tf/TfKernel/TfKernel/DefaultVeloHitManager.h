@@ -104,11 +104,11 @@ namespace Tf {
   {
     GaudiTool::declareInterface<DefaultVeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
 
-    declareProperty("FromClusters",m_fromClusters=false);
-    declareProperty("IgnoreLowClusters",m_ignoreLowClusters=false);
-    declareProperty("LowThreshold",m_lowThreshold=22.0);
-    declareProperty("ClusterLocation",m_clusterLocation=LHCb::VeloClusterLocation::Default);
-    declareProperty("LiteClusterLocation",m_liteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
+    this->declareProperty("FromClusters",m_fromClusters=false);
+    this->declareProperty("IgnoreLowClusters",m_ignoreLowClusters=false);
+    this->declareProperty("LowThreshold",m_lowThreshold=22.0);
+    this->declareProperty("ClusterLocation",m_clusterLocation=LHCb::VeloClusterLocation::Default);
+    this->declareProperty("LiteClusterLocation",m_liteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
   }
 
   //=============================================================================
