@@ -281,8 +281,7 @@ class DaVinci(LHCbConfigurableUser) :
             log.warning("Running Hlt. If there are already banks written by Hlt in the data, they will be removed.") 
             bk = bankKiller('KillHltBanks', BankTypes = [ "HltRoutingBits", "HltSelReports", "HltVertexReports", "HltDecReports", "HltLumiSummary" ])
             hltDVSeq.Members = [ physFilter, bk, hltSeq ]
-            self._mainSeuqences().Members += [ hltDVSeq ]
-#            ApplicationMgr().TopAlg += [ hltDVSeq ]  
+            self._analysisSeq().Members += [ hltDVSeq ]
             log.info("Will run Hlt")
             log.info( HltConf() )
             
