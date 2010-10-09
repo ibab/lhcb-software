@@ -26,6 +26,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'RateLimitBeam2'          :  5000.
                 , 'L0ChannelBXLonelyBeam1'  : "B1gas"
                 , 'L0ChannelBXLonelyBeam2'  : "B2gas"
+                , 'NoBeamLimiter'           : 'SCALE(0.1)'
                 # , 'L0FilterBeamCrossing'    : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['SPD','PU'] ] )
                 , 'L0FilterBeamCrossing'    : "|".join( [ "(L0_DATA('Spd(Mult)') > 2)" , "(L0_DATA('PUHits(Mult)') > 3)" ] )
                 , 'FractionOfUnusedClusters':  0.23
@@ -100,9 +101,14 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
         mask = L0Mask(channel)
         l0du = "L0_CHANNEL('%s')" % channel
+        odin =  L0Mask2ODINPredicate(mask)
+        nobeam = self.getProp('NoBeamLimiter')
+        if nobeam :
+            import re
+            odin = re.sub('\(([^\)]*NoBeam.*)\)' , 'scale(\g<1>,%s)' % nobeam ,odin)
         lineBeamEmptyBX =  Line( name
                                , prescale = self.prescale
-                               , ODIN  = L0Mask2ODINPredicate(mask)
+                               , ODIN  =odin
                                , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, ratelimit) if ratelimit else l0du
                                , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                                , postscale = self.postscale

@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-10-09 Gerhard Raven
+ - scale the empty-empty beamgas contribution
+
 ! 2010-10-08 Gerhard Raven
  - replace IP in 1Track by |IP|
 
