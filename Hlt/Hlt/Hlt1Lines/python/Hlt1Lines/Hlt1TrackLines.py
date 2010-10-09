@@ -70,7 +70,7 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                     PV3D(), # this pulls in the Velo reconstruction
                     Velo,  # this pulls in the Velo reco + copying to 'Velo' -- but duplicates with the above are eliminated
                     Member ( 'TF', 'OTNEXHIP'
-                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits'),'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut'),'IP_PV3D,>,%s'%ip]
+                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits'),'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut'),'IP_PV3D,||>,%s'%ip]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('IP',0.,1.,100) 
                          ),

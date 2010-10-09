@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-10-08 Gerhard Raven
+ - replace IP in 1Track by |IP|
+
 ! 2010-10-07 Gerhard Raven
  - speed up Hlt1Track by reordering & coalescing trackfilters
 
