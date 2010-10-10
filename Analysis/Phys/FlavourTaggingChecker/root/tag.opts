@@ -1,7 +1,7 @@
 #  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #  THIS A PLAIN TEXT OPTION FILE parsed by the Tools
 #  Separators like ,;//>: or "" are ignored
-#  # as FIRST char can be used to comment out a specific line
+#  # as FIRST char is used to comment out a specific line
 
 #  >>>>>>>>>>>>>>>>>>>>>> DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
   
@@ -9,9 +9,6 @@
 #   if a directory is given all root files in it will be read:
 
    datafile = .
-   datafile = data/v25r2_retune/bsdspi_seed2
-   datafile = data/v25r2_retune/bdkp_seed2
-   datafile = data/v25r2_retune/bujpsik_seed2
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bdjpsiks
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
 
@@ -30,7 +27,7 @@
    checkDV     = 0     Compare outcome from DaVinci, warns if different
 
    UseModBtime      = 0     Correct B proper time for semileptonic channels
-   IsControlChannel = 1     Take as the true flavour the reconsted B
+   IsControlChannel = 0     Take as the true flavour the reconsted B
    NNetTrain        = none  "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
    ViewOptionLHCb   = -1
 
@@ -40,82 +37,12 @@
    EventListFileName = DATAFILE
    EventListFileName = none                Ignore any list
 
+
 #EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 
-
-#>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>
-#--- cuts optimized for stripping10:
-Muon_IPs_cut = 2.2
-Ele_PIDe_cut = 7.25
-Kaon_Pt_cut = 1.05
-Kaon_IPs_cut = 2.8
-Kaon_PIDk = 2.
-Kaon_LCS_cut = 2.7
-PionSame_IPs_cut = 2.5
-ProbMin_vtx = 0.52
-MinimumVCharge = 0.09
-
-EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
+IncludeFile cuts_strip10.opts
+IncludeFile cuts_mc2010.opts
 
 
-#>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>
-#--- cuts optimized for MC2010:
-#(the default ones have been tuned on first semileptonic D*munu)
 
-IPPU_cut = 3.0
 
-Muon_Pt_cut   = 1.1
-Muon_P_cut    = 0.0 
-Muon_lcs_cut  = 2.2
-Muon_PIDm_cut = 2.0
-
-Ele_Pt_cut    = 1.1
-Ele_P_cut     = 0.0
-Ele_lcs_cut   = 2.5
-Ele_ghost_cut =-15.0
-VeloChargeMin = 0.0 
-VeloChargeMax = 1.3
-EoverP        = 0.85
-Ele_PIDe_cut  = 4.0
-
-Kaon_Pt_cut                = 0.4
-Kaon_P_cut                 = 4.0
-Kaon_IPs_cut               = 3.8
-Kaon_IP_cut                = 1.5
-Kaon_ipPU_cut              = 4.
-Kaon_LCS_cut               = 2.5
-Kaon_PIDk                  =  0.0
-Kaon_PIDkp                 = -1.0
-Kaon_ghost_cut             =-14.0
-
-KaonSame_Pt_cut  = 0.45
-KaonSame_P_cut   = 4.0
-KaonSame_IP_cut  = 3.0
-KaonSame_Phi_cut = 1.1
-KaonSame_Eta_cut = 1.0
-KaonSame_dQ_cut  = 1.6
-KaonS_LCS_cut    = 2.0
-KaonSPID_kS_cut  = 1.0
-KaonSPID_kpS_cut = -1.0
-
-PionSame_Pt_cut       = 0.6
-PionSame_P_cut        = 0.0
-PionSame_IPs_cut      = 3.5
-PionS_LCS_cut         = 2.0
-PionSame_dQ_cut       = 3.0
-PionSame_dQ_extra_cut = 1.5 
-Pion_ghost_cut        = -999.0
-PionSame_PIDNoK_cut   = 3.0
-PionSame_PIDNoP_cut   = 10.0
-PionProbMin           = 0.55
-
-PowerK        = 0.35
-MinimumVCharge= 0.12
-ProbMin_vtx   = 0.52
-P0            = 5.255669e-01
-P1            =-3.251661e-01
-Gt075         = 0.35
-TracksEq2     = 0.4141
-TracksGt2     = 0.3250
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

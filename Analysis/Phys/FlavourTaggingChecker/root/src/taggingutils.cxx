@@ -65,7 +65,7 @@ bool isinTextFile(int run, int evt) {
       if(listfile.empty()) {//no existe
         fatal()<< datafile
                <<" (*.eventlist) file does not exist or is empty.\n"
-               <<" You can change DATAFILE to none in tag.opts to disable it."
+               <<" You can change DATAFILE to none to disable it."
                <<endmsg;
         exit(1);
       }
@@ -194,12 +194,31 @@ ostream& fatal()   {if(DBGLEVEL>6) return cnull; else return cout<<ROJO2<<"FATAL
 
 
 //functions/////////////////////////////////////////////////////////////////
-TString readString(TString varname) { //< function parsing the tag.opts file
+TString getword(int i, TString line, TString tok){
+  TObjArray * words = line.Tokenize(tok);
+  int nwords = words->GetEntriesFast();
+  if(nwords<i) {
+    fatal()<<i<<" wrong access in line:\n"<<line<<endmsg;
+    exit(1);
+  }
+  TObjString* tmp= (TObjString*)words->operator[](i);   
+  TString word = tmp->GetString().Data();
+  delete words;
+  return word;
+}
+int getwordnr(TString line, TString tok){
+  TObjArray * words = line.Tokenize(tok);
+  int n = words->GetEntriesFast();
+  delete words;
+  return n;
+}
 
+TString readString(TString varname, 
+                   TString optsfilename) {//< function parsing the opts file
   ifstream indata; 
-  indata.open("tag.opts"); // opens the file
+  indata.open(optsfilename); // opens the file
   if(!indata) { // file couldn't be opened
-    fatal() << " tag.opts could not be opened" << endmsg;
+    fatal() <<optsfilename<< " could not be opened" << endmsg;
     exit(1);
   }
 
@@ -208,43 +227,40 @@ TString readString(TString varname) { //< function parsing the tag.opts file
   while (!line.ReadLine(indata).eof()) { 
     if(line.BeginsWith("#")) continue; //comments out whole line by # sign
     if(line.BeginsWith("EndOfOptions")) break;
-    
-    TObjArray * words = line.Tokenize(" ,;:");
-    int nwords = words->GetEntriesFast();
+    if(line.BeginsWith("IncludeFile") ) {
+      int nwords = getwordnr(line);
+      if(nwords!=2) err()<<"wrong nr of input after include statement"<<endmsg;
+      if(nwords!=2) exit(0);
+      TString word1 = getword(1, line);
+      //cout<<"looking into opts file "<<word1<<endmsg;
+      TString avalue = readString(varname, word1);
+      if(avalue!="") value=avalue;
+    }
+       
+    int nwords = getwordnr(line);
 
     //single object
     if(nwords==1){
-
-      TObjString* tmp1= (TObjString*)words->operator[](0);   
-      TString word1   = tmp1->GetString().Data();
-      if( word1.Contains("=") && !word1.EndsWith("=") && !word1.BeginsWith("=")){
-        TObjArray * subwords = line.Tokenize(" =,;:");
-        if(subwords->GetEntriesFast()!=2) {
+      TString word1 = getword(0, line);
+      if( word1.Contains("=") && 
+          !word1.EndsWith("=") && !word1.BeginsWith("=")){
+        if(getwordnr(line," =,;:")!=2) {
           fatal()<<"Wrong statement: "<<word1<<endmsg;
           exit(1);
         }
-        TObjString* subtmp1= (TObjString*)subwords->operator[](0);   
-        TObjString* subtmp2= (TObjString*)subwords->operator[](1); 
-        TString subword1   = subtmp1->GetString().Data();
-        TString subword2   = subtmp2->GetString().Data();
+        TString subword1   = getword(0,line," =,;:");
+        TString subword2   = getword(1,line," =,;:");
         if(subword1 == varname) value= subword2;
-        delete subwords;
       }
     }
 
     for(int i = 0; i!=nwords-1; i++ ) {
-
-      TObjString* tmp1= (TObjString*)words->operator[](i);   
-      TObjString* tmp2= (TObjString*)words->operator[](i+1); 
-      TString word1   = tmp1->GetString().Data();
-      TString word2   = tmp2->GetString().Data();
-
+      TString word1= getword(0, line);
+      TString word2= getword(1, line);
       if(word2 == "=" && nwords>2) {
-        TObjString* tmp3= (TObjString*)words->operator[](i+2); 
-        TString word3   = tmp3->GetString().Data();
+        TString word3   = getword(2, line);
         if(word1 == varname) value= word3;
       } 
-
       if( (word1.Length()>1 && word1.EndsWith("=") ) ||
           (word2.Length()>1 && word2.BeginsWith("=")) ) {
         word1.ReplaceAll("=","");
@@ -252,14 +268,10 @@ TString readString(TString varname) { //< function parsing the tag.opts file
         if(word1 == varname) value= word2;
       }
     }
-    delete words;
+    //delete words;
   }
-
   indata.close();
-  // if(value=="") {
-  // err()<<"Input "<<varname<<" not found in tag.opts! Stop.\n";
-  // exit(1);
-  //}
+
   return value;
 }
 //======================================

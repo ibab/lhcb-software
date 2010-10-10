@@ -1,0 +1,19 @@
+#>>>>>>>>>>>>>>>>>>>>>> OVERRIDE TAGGING CUTS >>>>>>>>>>>>>>>>>>>
+#--- cuts optimized for stripping10:
+
+Muon_IPs_cut = 2.2
+
+Ele_PIDe_cut = 7.25
+
+Kaon_Pt_cut = 1.05
+Kaon_IPs_cut = 2.8
+Kaon_PIDk = 2.
+Kaon_LCS_cut = 2.7
+
+PionSame_IPs_cut = 2.5
+ProbMin_vtx = 0.52
+
+MinimumVCharge = 0.09
+
+
+
