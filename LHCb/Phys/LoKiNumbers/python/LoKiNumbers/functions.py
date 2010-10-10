@@ -50,13 +50,8 @@ __date__    = ' xxxx-xx-xx '
 __version__ = " version $Revision$ " 
 # =============================================================================
 
-import LoKiCore.decorators as _LoKiCore 
-
 # Namespaces:
-cpp      = _LoKiCore.cpp
-std      = _LoKiCore.std
-LoKi     = _LoKiCore.LoKi
-
+from LoKiCore.basic import cpp, std, LoKi, Gaudi 
 
 _d = 'double'
 ## _v = std.vector( _d ) 
@@ -153,6 +148,12 @@ XEMPTY    = LoKi.Functors.Empty ( 'double' ) ()
 ## @see LoKi::Cuts::XSIZE 
 XSIZE     = LoKi.Functors.Size  ( 'double' ) ()
 
+## blinders
+
+## @see LoKi::Cuts::BLIND 
+BLIND     = LoKi.Random.Blind 
+## @see LoKi::Cuts::XBLIND 
+XBLIND    = LoKi.Random.XBlind 
 
 
 # =============================================================================
@@ -186,6 +187,12 @@ if not hasattr ( XVector , "__iter__" ) :
     XVector. __str__  = _vct_prnt_
     XVector. __repr__ = _vct_prnt_
     
+
+# if not hasattr ( Gaudi.Math , 'blind' ) :
+#        import LHCbMath.Types
+        
+## @see Gaudi::Math::blind
+# blind     = Gaudi.Math.blind
 
 # =============================================================================
 if '__main__' == __name__ :
