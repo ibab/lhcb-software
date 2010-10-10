@@ -230,10 +230,8 @@ TString readString(TString varname,
     if(line.BeginsWith("IncludeFile") ) {
       int nwords = getwordnr(line);
       if(nwords!=2) err()<<"wrong nr of input after include statement"<<endmsg;
-      if(nwords!=2) exit(0);
-      TString word1 = getword(1, line);
-      //cout<<"looking into opts file "<<word1<<endmsg;
-      TString avalue = readString(varname, word1);
+      TString word2 = getword(1, line);
+      TString avalue = readString(varname, word2);
       if(avalue!="") value=avalue;
     }
        
@@ -248,9 +246,8 @@ TString readString(TString varname,
           fatal()<<"Wrong statement: "<<word1<<endmsg;
           exit(1);
         }
-        TString subword1   = getword(0,line," =,;:");
-        TString subword2   = getword(1,line," =,;:");
-        if(subword1 == varname) value= subword2;
+        TString subword1= getword(0,line," =,;:");
+        if(subword1 == varname) value= getword(1,line," =,;:");
       }
     }
 
@@ -268,7 +265,6 @@ TString readString(TString varname,
         if(word1 == varname) value= word2;
       }
     }
-    //delete words;
   }
   indata.close();
 
