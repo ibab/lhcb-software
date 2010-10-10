@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.133 2010-09-13 13:44:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.134 2010-10-10 12:48:29 ibelyaev Exp $ 
 # =============================================================================
 # $URL 
 # =============================================================================
@@ -7,19 +7,19 @@
 #
 #                 LHCb Physics Analysis with Python  
 #
-# Last modification $Date: 2010-09-13 13:44:11 $
+# Last modification $Date: 2010-10-10 12:48:29 $
 #                by $Author: ibelyaev $
 # =============================================================================
 package       BenderSys
-version       v15r0
+version       v15r1
 
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v15r0  Phys 
+use           Bender         v15r1  Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v15r0  Ex
+use           BenderExample  v15r1  Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v15r0  Tutorial

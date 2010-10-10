@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Utils.py,v 1.2 2010-09-17 17:56:12 ibelyaev Exp $ 
+# $Id: Utils.py,v 1.3 2010-10-10 12:45:26 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -26,7 +26,7 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-09-17 17:56:12 $
+#  Last modification $Date: 2010-10-10 12:45:26 $
 #                 by $Author: ibelyaev $ 
 # =============================================================================
 """
@@ -44,13 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-  Last modification $Date: 2010-09-17 17:56:12 $
+  Last modification $Date: 2010-10-10 12:45:26 $
                  by $Author: ibelyaev $  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-00-12"
-__version__ = 'Version $Revision: 1.2 $'
+__version__ = 'Version $Revision: 1.3 $'
 __all__     = (
     ##
     'run'               , 
@@ -174,8 +174,6 @@ def setData ( files , catalogs = [] ) :
             from Bender.DataUtils import extendfile2
             files = [ extendfile2 ( f ) for f in files ]
 
-            print 'I AM FILES' , files
-            
             from Gaudi.Configuration import EventSelector
             EventSelector ( Input = files )
             
@@ -333,18 +331,17 @@ def seekHltDecision ( expr                                 ,
 
 # =============================================================================
 ## seek the decision for the certain stripping line 
-def seekStripDecision ( expr                                 ,
-                        EvtMax     = 10000                   ,
-                        disableAll = False                   ,
-                        location   = '/Event/Hlt/DecReports' ) :
+def seekStripDecision ( expr                                        ,
+                        EvtMax     = 10000                          ,
+                        disableAll = False                          ,
+                        location   = '/Event/Strip/Phys/DecReports' ) 
     """
     Seek the decision for the certain Stripping Line
     """
     return seekHltDecision ( expr       ,
                              EvtMax     ,
                              disableAll , 
-                             '/Event/Strip/Phys/DecReports' ) 
-
+                             location   ) 
     
 # =============================================================================
 ## skip the events 

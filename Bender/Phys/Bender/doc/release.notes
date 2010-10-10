@@ -1,14 +1,20 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.67 2010-10-03 16:20:51 ibelyaev Exp $
+! $Id: release.notes,v 1.68 2010-10-10 12:45:26 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.67 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.68 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v15r1 2010-10-10 ===========================
+
+! 2010-10-10 - Vanya Belyaev
+ 
+- prepare v15r1 
+ 
 ! 2010-10-03 - Vanya Belyaev
 
  - polish a bit dst-explorer 
