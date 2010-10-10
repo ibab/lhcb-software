@@ -259,6 +259,99 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Blind 
+     *  Helper class to 'blind' the data 
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-10
+     */
+    class Blind : public LoKi::Functor<void,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the seed , min & max values 
+      Blind ( const std::string& seed , 
+              const double       minv , 
+              const double       maxv ) ;
+      /// constructor from the seed , min & max values 
+      Blind ( const std::string& seed ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Blind () ;
+      /// MANDATORY: clone method ( "virtual construtor")
+      virtual  Blind* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( /* argument a */ ) const ;
+      /// OPTIONAL: just a nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s  ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default contructor is disabled 
+      Blind () ;                              // default contructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      const std::string& seed () const { return m_seed ; }
+      double             minv () const { return m_min  ; }
+      double             maxv () const { return m_max  ; }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the hidden return value 
+      double      m_result ;                         // the hidden return value 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the seed string 
+      std::string m_seed   ;                         // the seed string 
+      /// the minimal value 
+      double      m_min    ;                         // the minimal value 
+      /// the maximal value 
+      double      m_max    ;                         // the maximal value 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class XBlind 
+     *  Helper class to 'blind' the data 
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-10
+     */
+    class XBlind : public LoKi::BasicFunctors<double>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the seed , min & max values 
+      XBlind ( const std::string& seed , 
+              const double       minv , 
+              const double       maxv ) ;
+      /// constructor from the seed , min & max values 
+      XBlind ( const std::string& seed ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~XBlind () ;
+      /// MANDATORY: clone method ( "virtual construtor")
+      virtual  XBlind* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument      a ) const ;
+      /// OPTIONAL: just a nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default contructor is disabled 
+      XBlind () ;                             // default contructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      const std::string& seed () const { return m_blind.seed () ; }
+      double             minv () const { return m_blind.minv () ; }
+      double             maxv () const { return m_blind.maxv () ; }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual functor 
+      LoKi::Random::Blind m_blind ;                       // the actual functor 
+      // ======================================================================
+    } ;  
+    // ========================================================================
   } // end of namespace LoKi::Random
   // ==========================================================================
   namespace Cuts 
@@ -400,6 +493,50 @@ namespace LoKi
      *  @date 2008-03-19
      */        
     const LoKi::Random::Rand                                    XRAND () ;
+    // ========================================================================
+    /** @typedef BLIND 
+     *  simple 'void'-function useful for varuosu 'blind'-operations
+     *
+     * 
+     *  @code
+     * 
+     *    BLIND blind ( "BlindMyValue" ,  0 , 1  ) ;
+     * 
+     *    double myvalue = ... ;
+     * 
+     *    myvalue += blind() ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Random::Blind
+     *  @see LoKi::Cuts::XBLIND 
+     *  @see Gaudi::Math::blind
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-10
+     */
+    typedef LoKi::Random::Blind                                  BLIND   ;
+    // ==========================================================================
+    /** @typedef XBLIND 
+     *  simple 'void'-function useful for various 'blind'-operations
+     *
+     * 
+     *  @code
+     * 
+     *    XBLIND blind ( "BlindMyValue" ,  0 , 1  ) ;
+     * 
+     *    double myvalue = ... ;
+     * 
+     *    double blindedvalue =  blind( myvalue ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Random::XBlind
+     *  @see LoKi::Cuts::BLIND 
+     *  @see Gaudi::Math::blind
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-10
+     */
+    typedef LoKi::Random::XBlind                                XBLIND   ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

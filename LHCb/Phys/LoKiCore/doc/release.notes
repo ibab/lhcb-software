@@ -16,6 +16,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-10-10 - Vanya Belyaev
+
+ - add new symbols BLIND & XBLIND 
+
+ - cmt/requirements 
+   version increment to v10r5 
+
+
 ! =========================== LoKiCore v10r4 2010-09-27 =======================
 ! 2010-09-27 - Vanya Belyaev
  - remove usage of obsolete python module 'sets'

@@ -11,6 +11,10 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 // ============================================================================
+// LHcbMath
+// ============================================================================
+#include "LHCbMath/Blind.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Services.h"
@@ -254,6 +258,107 @@ std::ostream& LoKi::Random::Rand::fillStream ( std::ostream& s  ) const
 { return s << "XRAND" ; }
 // ============================================================================
 
+
+// =============================================================================
+// constructor from the seed , min & max values 
+// =============================================================================
+LoKi::Random::Blind::Blind 
+( const std::string& seed , 
+  const double       minv , 
+  const double       maxv ) 
+  : LoKi::Functor<void,double> () 
+  , m_result ( Gaudi::Math::blind ( "LoKi::Random::Blind_" + seed , minv , maxv ) ) 
+  , m_seed   ( seed ) 
+  , m_min    ( minv ) 
+  , m_max    ( minv ) 
+{}
+// =============================================================================
+// constructor from the seed , min & max values 
+// =============================================================================
+LoKi::Random::Blind::Blind ( const std::string& seed )  
+  : LoKi::Functor<void,double> () 
+  , m_result ( Gaudi::Math::blind ( "LoKi::Random::Blind_" + seed , -1 , 1 ) ) 
+  , m_seed   ( seed ) 
+  , m_min    ( -1   ) 
+  , m_max    (  1   ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Random::Blind::~Blind(){}
+// ============================================================================
+// MANDATORY: clone method ( "virtual construtor")
+// ============================================================================
+LoKi::Random::Blind*
+LoKi::Random::Blind::clone() const 
+{ return new LoKi::Random::Blind ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Random::Blind::result_type
+LoKi::Random::Blind::operator() ( /* LoKi::Random::Blind::argument a */ ) const 
+{ return m_result ; }
+// ============================================================================
+// OPTIONAL: just a nice printout 
+// ============================================================================
+std::ostream& LoKi::Random::Blind::fillStream ( std::ostream& s  ) const 
+{ 
+  s << " BLIND(" ;
+  Gaudi::Utils::toStream ( m_seed , s ) ;
+  if ( -1 != m_min || 1 != m_max ) { s << " , " << m_min << " , " << m_max ; }
+  // 
+  return s << ") " ;
+}
+// ============================================================================
+
+
+
+// =============================================================================
+// constructor from the seed , min & max values 
+// =============================================================================
+LoKi::Random::XBlind::XBlind 
+( const std::string& seed , 
+  const double       minv , 
+  const double       maxv ) 
+  :  LoKi::BasicFunctors<double>::Function() 
+  , m_blind  ( seed , minv , maxv ) 
+{}
+// =============================================================================
+// constructor from the seed , min & max values 
+// =============================================================================
+LoKi::Random::XBlind::XBlind ( const std::string& seed )  
+  : LoKi::BasicFunctors<double>::Function() 
+  , m_blind  ( seed ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Random::XBlind::~XBlind(){}
+// ============================================================================
+// MANDATORY: clone method ( "virtual construtor")
+// ============================================================================
+LoKi::Random::XBlind*
+LoKi::Random::XBlind::clone() const 
+{ return new LoKi::Random::XBlind ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Random::XBlind::result_type
+LoKi::Random::XBlind::operator() ( LoKi::Random::XBlind::argument a ) const 
+{ return a + m_blind () ; }
+// ============================================================================
+// OPTIONAL: just a nice printout 
+// ============================================================================
+std::ostream& LoKi::Random::XBlind::fillStream ( std::ostream& s  ) const 
+{ 
+  s << " XBLIND(" ;
+  Gaudi::Utils::toStream ( seed() , s ) ;
+  if ( -1 != minv() || 1 != maxv() ) 
+  { s << " , " << minv() << " , " << maxv() ; }
+  // 
+  return s << ") " ;
+}
+// ============================================================================
 
 
 // ============================================================================
