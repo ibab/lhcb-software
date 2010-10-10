@@ -47,7 +47,7 @@ def test_filterMembers() :
     assert line.outputLocation() == 'Phys/FilterMembersTest'
     stream = StrippingStream('stream', Lines = [line])
     conf = StrippingConf('conf', Streams = [stream])
-    assert  [m.name() for m in line.filterMembers()] == ['checkPV',
+    assert  [m.name() for m in line.filterMembers()] == ['checkPVmin1',
                                                          'SelFilterSelection',
                                                          'FilterMembersTest']
 

@@ -353,41 +353,10 @@ class StrippingLine(object):
 
         line = self.subname()
 
-        # most recent output selection
-        self._outputsel = None
-        self._outputloc = None
-        
         self._appended  = False
 
-        # register into the local storage of all created Lines
-        _add_to_stripping_lines_( self ) 
-        
-    def declareAppended( self ) :
-	self._appended = True 
-	
-    def isAppended( self ) : 
-	return self._appended
-
-    def createConfigurable( self, HDRLocation = 'Strip/Phys/DecReports' ) : 
-        # check for forbidden attributes
-        
-        name    = self._name
-        args    = self._args
-        algos   = self._algos
-        checkPV = self._checkPV
-        ODIN    = self._ODIN
-        L0DU    = self._L0DU
-        HLT     = self._HLT
-        FILTER  = self._FILTER
-
-        mdict = {} 
-        for key in args :
-            if key in _protected_ :
-                raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
-            mdict[key] = args[key] 
-
         #start to contruct the sequence        
-        line = self.subname()
+
         self._members = []
         
         # if needed, check Primary Vertex before running all algos
@@ -425,13 +394,34 @@ class StrippingLine(object):
                 self._members.insert ( 0 , fltr )
             else :
     		raise TypeError, "Wrong FILTER attribute: %s " % FILTER
-
             
         # bind members to line
         _boundMembers    = bindMembers( line, algos )
         self._members   += _boundMembers.members()
         self._outputsel  = _boundMembers.outputSelection()
         self._outputloc  = _boundMembers.outputLocation()
+
+        # register into the local storage of all created Lines
+        _add_to_stripping_lines_( self ) 
+        
+    def declareAppended( self ) :
+	self._appended = True 
+	
+    def isAppended( self ) : 
+	return self._appended
+
+    def createConfigurable( self, HDRLocation = 'Strip/Phys/DecReports' ) : 
+        # check for forbidden attributes
+        
+        args    = self._args
+
+        mdict = {} 
+        for key in args :
+            if key in _protected_ :
+                raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
+            mdict[key] = args[key] 
+
+        line = self.subname()
         
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -440,16 +430,16 @@ class StrippingLine(object):
                       , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale ) 
                       } )
 
-        if ODIN   : mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
-        if L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
-        if HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
+        if self._ODIN   : mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
+        if self._L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
+        if self._HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
 
         if self._members : 
-            last = self._members[-1]
-            while hasattr(last,'Members') : 
-                last = getattr(last,'Members')[-1]
+#            last = self._members[-1]
+#            while hasattr(last,'Members') : 
+#                last = getattr(last,'Members')[-1]
 
-            members = self._members
+#            members = self._members
 
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
 #            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
@@ -464,7 +454,7 @@ class StrippingLine(object):
 #                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
 #                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
 
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members ) })
             
         mdict.update( { 'HltDecReportsLocation' : HDRLocation } )
         if (self.outputLocation()) : 
@@ -482,7 +472,7 @@ class StrippingLine(object):
                             MaxCandidates = self.MaxCandidates, 
                             MaxCombinations = self.MaxCombinations ) 
 
-        print '# created StrippingAlg configurable for', name, '\n'
+        print '# created StrippingAlg configurable for', self._name, '\n'
         print self._configurable
 
         return self._configurable
@@ -502,8 +492,8 @@ class StrippingLine(object):
 	    _members = _flattenedMembers
 	    if not _foundSequencer : break
 	    
-#	print "FilterMembers for line %s : " % self.name()
-#	print _members
+	print "FilterMembers for line %s : " % self.name()
+	print _members
 	    
 	return _members
 

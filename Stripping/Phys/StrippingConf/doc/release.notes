@@ -5,6 +5,18 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-10-11 - Anton Poluektov
+
+ - python/StrippingConf/StrippingLine.py
+ 
+   Move determination of outputLocations and filterMembers from createConfigurable to the 
+   constructor of StrippingLine. This allows to get outputLocation and filterMembers for 
+   a line without creating StrippingStream or StrippingConf. 
+   
+ - tests/test_strippingline.py 
+  
+   Changed expected name of default CheckPV algorithm ( checkPV -> checkPVmin1 )
+
 !========================== StrippingConf v3r8 2010-10-04 =================
 
 ! 2010-09-27 - Vanya Belyaev
