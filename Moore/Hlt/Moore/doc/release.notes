@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-10-10 - Gerhard Raven
+ - renice Moore task when running online
+
 !========================== Moore v10r2 2010-09-30 ===================
 ! 2010-09-27 - Gerhard Raven
  - change creation of setup scripts such that 'use OnlineSys' in the

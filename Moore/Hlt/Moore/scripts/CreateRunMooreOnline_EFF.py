@@ -104,6 +104,7 @@ export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/
 # pick up partition specific OnlineEnv module
 export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:${PYTHONPATH}
 # and go for it!
+renice 19 -p $$
 exec -a ${UTGID} ${CLASS1_TASK} -opt=command="import Moore.runOnline; Moore.runOnline.start()"
 
 """%({'setup': setup,'moore':moore}) )
