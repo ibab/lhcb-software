@@ -23,6 +23,7 @@
 #include "LHCbMath/Vector3DWithError.h"
 #include "LHCbMath/LorentzVectorWithError.h"
 #include "LHCbMath/ParticleParams.h"
+#include "LHCbMath/Blind.h"
 #include <vector>
 #include <list>
 namespace Gaudi

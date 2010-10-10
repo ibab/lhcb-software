@@ -49,6 +49,8 @@ application  TestLomont2 ../tests/TestLomontCPU.cpp
 macro_append TestLomont2_dependencies   " LHCbMathLib "
 application  TestEigen   ../tests/TestEigen.cpp 
 macro_append TestEigen_dependencies   " LHCbMathLib "
+application  TestBlind   ../tests/blind.cpp 
+macro_append TestBlind_dependencies   " LHCbMathLib "
 
 # ================= patterns ================================================
 apply_pattern       linker_library library=LHCbMathLib

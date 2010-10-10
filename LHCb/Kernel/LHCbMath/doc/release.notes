@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-10-10 - Vanya Belyaev
+
+   LHCbMath/Blind.h
+
+     add some string->double hashing (useful for blinding) 
+
 ! 2010-10-06 - Marco Clemencic
  - Fixed an ICC remark that was mistaken for en error by the nightly build.
 
