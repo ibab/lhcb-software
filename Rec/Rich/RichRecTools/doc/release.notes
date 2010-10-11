@@ -4,7 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecTools v4r12p1 2010-09-28 =========================
+! 2010-10-11 - Chris Jones
+ - Update Cherenkov cone ray tracing tool to use the new refraction correction
+   tool interface method, that passes the full RichTrackSegment
+
+!====================== RichRecTools v4r12p1 2010-09-28 =======================
 ! 2010-07-26 - Chris Jones
  - add debug printout
 

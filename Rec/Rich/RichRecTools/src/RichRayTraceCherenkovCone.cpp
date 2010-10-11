@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
- *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.28 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -82,8 +79,9 @@ RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
 {
   // do the ray tracing
   const LHCb::RichTraceMode::RayTraceResult result =
-    m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, mode, Rich::top,
-                                 ring->richRecSegment()->trackSegment().avPhotonEnergy() );
+    m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, 
+                                 ring->richRecSegment()->trackSegment(), 
+                                 mode, Rich::top );
 
   // Add a new point
   const Gaudi::XYZPoint & gP = m_photon.detectionPoint();
