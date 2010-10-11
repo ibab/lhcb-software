@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Chris Jones
+ - Update ray tracing an quartic photon reconstruction tools to use new method 
+   in the Snell's law correction interface, that passes the full 
+   RichTrackSegment, and allows the correct effective refractive index to be 
+   used for each track.
+
 !======================= RichRecPhotonTools v1r7p2 2010-09-27 ================
 ! 2010-03-05 - Chris Jones
  - Minor changes in comments

@@ -59,10 +59,11 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );
   declareProperty( "CheckPrimaryMirrorSegments", m_checkPrimMirrSegs );
+  declareProperty( "CorrectAeroRefract", m_applyAeroRefractCorr = true );
   declareProperty( "MinActiveFraction", m_minActiveFrac );
-  m_minSphMirrTolIt[Rich::Aerogel]  = std::pow(0.10 * Gaudi::Units::mm,2);
-  m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow(0.08 * Gaudi::Units::mm,2);
-  m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow(0.05 * Gaudi::Units::mm,2);
+  m_minSphMirrTolIt[Rich::Aerogel]  = std::pow( 0.10 * Gaudi::Units::mm, 2 );
+  m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow( 0.08 * Gaudi::Units::mm, 2 );
+  m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow( 0.05 * Gaudi::Units::mm, 2 );
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
   // default fudge factors for this impl.
@@ -509,7 +510,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Correct Cherenkov theta for refraction at exit of aerogel
   // --------------------------------------------------------------------------------------
-  if ( Rich::Aerogel == radiator )
+  if ( Rich::Aerogel == radiator && m_applyAeroRefractCorr )
   {
     correctAeroRefraction( trSeg, photonDirection, thetaCerenkov );
   }
@@ -692,7 +693,7 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
                        double & thetaCerenkov ) const
 {
   // apply Snell's Law
-  m_snellsLaw->gasToAerogel( photonDirection, trSeg.avPhotonEnergy() );
+  m_snellsLaw->gasToAerogel( photonDirection, trSeg );
   // update CK theta
   const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
   thetaCerenkov = ( ctc>1 ? 0 : acos(ctc) );

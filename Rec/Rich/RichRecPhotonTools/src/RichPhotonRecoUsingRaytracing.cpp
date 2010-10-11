@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
- * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.9 2009-07-30 11:20:00 jonrob Exp $
- *
  * @author Claus P Buszello
  * @date 2008-01-11
  */
@@ -156,8 +153,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     sv = trSeg.vectorAtThetaPhi( predpi, tphi );
 
     const LHCb::RichTraceMode::RayTraceResult result
-      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,m_mode,
-                                    (pixel->panel()).panel(),trSeg.avPhotonEnergy());
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,trSeg,
+                                    m_mode,(pixel->panel()).panel());
     if ( result < LHCb::RichTraceMode::InHPDPanel )
     {
       debug() << "raytracing failed in " << radiator << " : " << result << endmsg;
@@ -263,8 +260,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     sv = trSeg.vectorAtThetaPhi(ttheta,tphi);
 
     const LHCb::RichTraceMode::RayTraceResult result
-      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,
-                                    m_mode,(pixel->panel()).panel(),trSeg.avPhotonEnergy());
+      = m_raytrace->traceToDetector(trSeg.rich(),emissionPoint,sv,m_photon,trSeg,
+                                    m_mode,(pixel->panel()).panel());
 
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
       tphi   *= 0.95;

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.4 2008-05-08 13:21:32 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
  *  @date   2003-11-14
@@ -274,6 +271,9 @@ namespace Rich
        *  Set to false if processing test-beam data
        */
       bool m_useSecMirs;
+
+      /// Flag to turn on/off the aerogel to gas refraction correction for aerogel photons
+      bool m_applyAeroRefractCorr;
 
       /// RICH beampipe object for each radiator
       mutable std::vector<const DeRichBeamPipe*> m_deBeam;

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.7 2009-06-11 11:57:40 jonrob Exp $
- *
  *  @author Claus P Buszello
  *  @date   2008-11-01
  */
