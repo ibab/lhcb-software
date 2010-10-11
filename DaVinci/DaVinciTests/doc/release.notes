@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!============================== DaVinciTests v1r6 2010-10-11 =================
+
 ! 2010-10-11 - Juan Palacios
  - Added davinci.hlt.test_intialise QM test
   . Tests very basic HLT intialisation. Should catch bugs onthe DaVinci
