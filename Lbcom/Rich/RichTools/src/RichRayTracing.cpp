@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichRayTracing
  *
- * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.49 2009-07-30 12:14:16 jonrob Exp $
- *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-11-14
@@ -190,21 +187,84 @@ LHCb::RichTraceMode::RayTraceResult
 Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
                                     const Gaudi::XYZPoint& startPoint,
                                     const Gaudi::XYZVector& startDir,
+                                    Gaudi::XYZPoint& hitPosition,
+                                    const LHCb::RichTrackSegment& trSeg,
+                                    const LHCb::RichTraceMode mode,
+                                    const Rich::Side forcedSide ) const
+{
+  // need to think if this can be done without creating a temp RichGeomPhoton ?
+  LHCb::RichGeomPhoton photon;
+  const LHCb::RichTraceMode::RayTraceResult sc =
+    traceToDetector ( rich, startPoint, startDir, photon, trSeg, mode, forcedSide );
+  hitPosition = photon.detectionPoint();
+  return sc;
+}
+
+//=============================================================================
+// reflect the trajectory on the mirror, and determine the position where
+// it hits the detector plane,
+// take into account the geometrical boundaries of mirrors and detector
+//=============================================================================
+LHCb::RichTraceMode::RayTraceResult
+Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
+                                    const Gaudi::XYZPoint& startPoint,
+                                    const Gaudi::XYZVector& startDir,
                                     LHCb::RichGeomPhoton& photon,
                                     const LHCb::RichTraceMode mode,
                                     const Rich::Side forcedSide,
                                     const double photonEnergy ) const
 {
+  // temporary working objects
   Gaudi::XYZPoint  tmpPos ( startPoint );
   Gaudi::XYZVector tmpDir ( startDir   );
 
   // Correct start point/direction for aerogel refraction, if appropriate
-  // see http://en.wikipedia.org/wiki/Snell's_law for details
-  if ( mode.aeroRefraction() &&
-       Rich::Rich1 == rich   )
+  if ( mode.aeroRefraction() && Rich::Rich1 == rich )
   {
     m_snellsLaw->aerogelToGas(tmpPos,tmpDir,photonEnergy);
   }
+
+  // Do the ray tracing
+  return _traceToDetector( rich, startPoint, tmpPos, tmpDir, photon, mode, forcedSide );
+}
+
+//=============================================================================
+// reflect the trajectory on the mirror, and determine the position where
+// it hits the detector plane,
+// take into account the geometrical boundaries of mirrors and detector
+//=============================================================================
+LHCb::RichTraceMode::RayTraceResult
+Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
+                                    const Gaudi::XYZPoint& startPoint,
+                                    const Gaudi::XYZVector& startDir,
+                                    LHCb::RichGeomPhoton& photon,
+                                    const LHCb::RichTrackSegment& trSeg,
+                                    const LHCb::RichTraceMode mode,
+                                    const Rich::Side forcedSide ) const
+{
+  // temporary working objects
+  Gaudi::XYZPoint  tmpPos ( startPoint );
+  Gaudi::XYZVector tmpDir ( startDir   );
+  
+  // Correct start point/direction for aerogel refraction, if appropriate
+  if ( mode.aeroRefraction() && Rich::Rich1 == rich )
+  {
+    m_snellsLaw->aerogelToGas(tmpPos,tmpDir,trSeg);
+  }
+
+  // Do the ray tracing
+  return _traceToDetector( rich, startPoint, tmpPos, tmpDir, photon, mode, forcedSide );
+}
+
+LHCb::RichTraceMode::RayTraceResult
+Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
+                                     const Gaudi::XYZPoint& startPoint,
+                                     Gaudi::XYZPoint& tmpPos,
+                                     Gaudi::XYZVector& tmpDir,
+                                     LHCb::RichGeomPhoton& photon,
+                                     const LHCb::RichTraceMode mode,
+                                     const Rich::Side forcedSide ) const
+{
 
   // default result is failure
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
@@ -261,6 +321,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 
   // return the result
   return result;
+
 }
 
 //=========================================================================

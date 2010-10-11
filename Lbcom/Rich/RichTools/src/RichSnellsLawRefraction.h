@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::SnellsLawRefraction
  *
- *  CVS Log :-
- *  $Id: RichSnellsLawRefraction.h,v 1.2 2008-11-30 10:43:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
  */
@@ -30,6 +27,9 @@
 
 // RichDet
 #include "RichDet/DeRichRadiator.h"
+
+// Kernel
+#include "RichKernel/RichTrackSegment.h"
 
 namespace Rich
 {
@@ -62,14 +62,36 @@ namespace Rich
 
   public: // methods (and doxygen comments) inherited from interface
 
+    // Correct the direction vector and start point for refraction in going from Aerogel to Rich1Gas
+    void aerogelToGas( Gaudi::XYZPoint & startPoint,
+                       Gaudi::XYZVector &    dir,
+                       const LHCb::RichTrackSegment& trSeg ) const;
+
     // Correct the direction vector from refraction in going from Aerogel to Rich1Gas
     void aerogelToGas( Gaudi::XYZPoint& startPoint,
                        Gaudi::XYZVector &     dir,
                        const double photonEnergy ) const;
 
+    // Correct the direction vector for refraction in going from Rich1Gas to aerogel
+    void gasToAerogel( Gaudi::XYZVector &     dir,
+                       const LHCb::RichTrackSegment& trSeg  ) const;
+
     // Correct the direction vector from refraction in going from Rich1Gas to aerogel
     void gasToAerogel( Gaudi::XYZVector &     dir,
                        const double photonEnergy ) const;
+
+  private:
+
+    // Do the aerogel to gas correction
+    void _aerogelToGas( Gaudi::XYZPoint & startPoint,
+                        Gaudi::XYZVector & dir,
+                        const double photonEnergy,
+                        const double refAero ) const;
+
+    // Do the correction
+    void _gasToAerogel( Gaudi::XYZVector & dir,
+                        const double photonEnergy,
+                        const double refAero ) const;
 
   private:
 

@@ -4,6 +4,14 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Chris Jones
+ - Update the Snells Law refraction correction tool to take properly into
+   account the effective refractive index on a track by track basis. Fixes
+   a by in the correction for the aerogel/gas boundary where the wrong 
+   refractive index was used for most tiles ...
+ - Update the ray tracing tool to use the new refractive index correction
+   methods that pass the track segment.
+
 !=========================== RichTools v2r30 2010-07-20 ======================
 ! 2010-06-24 - Chris Jones
  - Add to RichDetParameters a new method to return the S.D. of the n-1
