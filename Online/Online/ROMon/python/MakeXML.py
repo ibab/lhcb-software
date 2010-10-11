@@ -9,7 +9,12 @@ TOP_LOGGER = 4
 db_dir = '..'+os.sep+'xml'+os.sep
 
 def getNodes(host):
-  lines = os.popen('ssh -q '+host+' "tmLs | grep \"Node:\" | sort" | grep Node')
+  #lines = os.popen('tmLs -N '+host+' | grep \"Node:\" | sort | grep Node')
+  lines=['    Node: "'+host.lower()+'". 10 ']
+  for i in xrange(19):
+    r = '%02d'%(i+1)
+    #print '    Node: "'+host.lower()+r+'". 10 '
+    lines.append('    Node: "'+host.lower()+r+'". 10 ')
   return [l[:-1].replace('"','').replace('.','').replace('  ',' ').split(' ')[3] for l in lines]
 
 def nodeType(typ):
@@ -47,10 +52,23 @@ def createHLT():
   for row in rows.split("'"):
     for column in columns.split("'"):
       create(HLT,'hlt%s%02d'%(row,int(column)))
-if __name__ == "__main__":
+
+def createHLT2():
+  rows = "a'b"
+  columns = "1'2'3'4'6'7'8'9'10'11"
+  for row in rows.split("'"):
+    for column in columns.split("'"):
+      create(HLT,'hlt%s%02d'%(row,int(column)))
+
+def createAll():
   create(STORAGE,'storectl01')
   create(MONITORING,'mona08')
   create(RECONSTRUCTION,'mona09')
   create(RECCTRL,'mona07')
   createHLT()
   print '.........> All Done.'
+  
+if __name__ == "__main__":
+  #createAll()
+  createHLT()
+  print '.........> Done'

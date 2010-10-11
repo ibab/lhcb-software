@@ -1,4 +1,4 @@
-// $Id: FarmStatSrv.cpp,v 1.2 2010-10-06 21:55:01 frankb Exp $
+// $Id: FarmStatSrv.cpp,v 1.3 2010-10-11 06:40:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.2 2010-10-06 21:55:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.3 2010-10-11 06:40:52 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -397,7 +397,7 @@ extern "C" int romon_farmstatsrv(int argc,char** argv) {
   int level = LIB_RTL_INFO;
   RTL::CLI cli(argc,argv,help);
   cli.getopt("printlevel", 2, level);
-  ::lib_rtl_install_printer(ro_rtl_print,(void*)level);
+  ::lib_rtl_install_printer(ro_rtl_print,(void*)long(level));
   FarmStatSrv* disp = new FarmStatSrv(argc,argv);
   IocSensor::instance().run();
   delete disp;

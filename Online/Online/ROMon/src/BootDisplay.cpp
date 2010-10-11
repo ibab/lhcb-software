@@ -1,4 +1,4 @@
-// $Id: BootDisplay.cpp,v 1.4 2010-10-06 21:55:00 frankb Exp $
+// $Id: BootDisplay.cpp,v 1.5 2010-10-11 06:40:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.4 2010-10-06 21:55:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.5 2010-10-11 06:40:52 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootMon.h"
@@ -236,7 +236,7 @@ BootDisplay::BootDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
-  ::lib_rtl_install_printer(ro_rtl_print,(void*)level);
+  ::lib_rtl_install_printer(ro_rtl_print,(void*)long(level));
   s_fd = this;
   m_title = " BOOT monitor display";
   ::scrc_create_pasteboard (&m_pasteboard, 0, &m_height, &m_width);
@@ -285,7 +285,7 @@ BootDisplay::BootDisplay(int argc, char** argv)
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
-  MouseSensor::instance().add(this,this->InternalDisplay::display());
+  //MouseSensor::instance().add(this,this->InternalDisplay::display());
   m_svc = ::dic_info_service((char*)"/BootMonitor/Clusters",MONITORED,0,0,0,dataHandler,(long)this,0,0);
 }
 

@@ -1,6 +1,7 @@
 <TaskInventory>
   <NodeList name="HLTB03">
    <Name>HLTB03</Name>
+   <Node name="hltb03"   type="HLTControl"/>
    <Node name="hltb0301"   type="HLTWorker"/>
    <Node name="hltb0302"   type="HLTWorker"/>
    <Node name="hltb0303"   type="HLTWorker"/>
@@ -12,7 +13,14 @@
    <Node name="hltb0309"   type="HLTWorker"/>
    <Node name="hltb0310"   type="HLTWorker"/>
    <Node name="hltb0311"   type="HLTWorker"/>
-   <Node name="hltb03"   type="HLTControl"/>
+   <Node name="hltb0312"   type="HLTWorker"/>
+   <Node name="hltb0313"   type="HLTWorker"/>
+   <Node name="hltb0314"   type="HLTWorker"/>
+   <Node name="hltb0315"   type="HLTWorker"/>
+   <Node name="hltb0316"   type="HLTWorker"/>
+   <Node name="hltb0317"   type="HLTWorker"/>
+   <Node name="hltb0318"   type="HLTWorker"/>
+   <Node name="hltb0319"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 
