@@ -5,6 +5,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v3r8p1 2010-10-11 =================
+
 ! 2010-10-11 - Anton Poluektov
 
  - python/StrippingConf/StrippingLine.py
