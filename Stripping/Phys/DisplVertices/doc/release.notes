@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Neal Gauvin
+ - RecVertices2Particles : TrackMaxChi2oNDOF set to 10 by default to reflect actual cut on protoparticles.
+
 !========================== DisplVertices v7r0 2010-10-04 ====================
 
 ! 2010-09-30 - Neal Gauvin

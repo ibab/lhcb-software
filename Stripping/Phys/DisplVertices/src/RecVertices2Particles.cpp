@@ -51,7 +51,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   declareProperty("RMin", m_RMin = 0.3*Gaudi::Units::mm );
   declareProperty("RMax", m_RMax = 50.*Gaudi::Units::m );
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks
-  declareProperty("TrackMaxChi2oNDOF", m_TChi2 = 1000. );
+  declareProperty("TrackMaxChi2oNDOF", m_TChi2 = 10. );
   declareProperty("RecVerticesLocation", m_RVLocation );
   //"BlindVertexFitter", "OfflineVertexFitter"
   declareProperty("VertexFitter", m_Fitter = "none"  );
