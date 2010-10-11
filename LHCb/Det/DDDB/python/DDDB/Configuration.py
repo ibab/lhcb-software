@@ -118,7 +118,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101003")
-        self.__set_tag__(["LHCBCOND"], "head-20101003")
+        self.__set_tag__(["LHCBCOND"], "head-20101010")
     
     def __2009_conf__(self):
         """
@@ -126,7 +126,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101003")
-        self.__set_tag__(["LHCBCOND"], "head-20101003")
+        self.__set_tag__(["LHCBCOND"], "head-20101010")
         self.__set_tag__(["SIMCOND"], "MC-20101004-vc15mm-md100")
     
     def __2008_conf__(self):
@@ -135,7 +135,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101003")
-        self.__set_tag__(["LHCBCOND"], "head-20101003")
+        self.__set_tag__(["LHCBCOND"], "head-20101010")
         self.__set_tag__(["SIMCOND"], "sim-20090212")
     
     def __MC09_conf__(self):
@@ -144,7 +144,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "MC09-20090602")
-        self.__set_tag__(["SIMCOND"], "MC09-20101004-vc-md100")
+        self.__set_tag__(["SIMCOND"], "MC09-20100921-vc-md100")
     
     def __Upgrade_conf__(self):
         """
