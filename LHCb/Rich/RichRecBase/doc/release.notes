@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Chris Jones
+ - Update Track creator base class to use new ray tracing methods that pass
+   the full RichTrackSegment (allows for more precise refraction correction
+   at gas/aerogel boundary).
+
 ! 2010-09-22 - Victor Coco
  - Canceled previous modification since VeloPix track type is being suppress 
    from the Track class.

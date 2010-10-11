@@ -248,9 +248,9 @@ namespace Rich
                                            trackPtn,
                                            trackDir,
                                            photon,
+                                           trSeg,
                                            m_traceModeRad[trSeg.radiator()],
-                                           Rich::top,
-                                           trSeg.avPhotonEnergy() );
+                                           Rich::top );
       const bool OK = m_traceModeRad[trSeg.radiator()].traceWasOK(result);
       if ( OK )
       {
@@ -275,9 +275,9 @@ namespace Rich
                                                   trackPtn,
                                                   trackDir,
                                                   photon,
+                                                  trSeg,
                                                   tmpTraceMode,
-                                                  Rich::left,
-                                                  trSeg.avPhotonEnergy() );
+                                                  Rich::left );
         if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
@@ -291,9 +291,9 @@ namespace Rich
                                                   trackPtn,
                                                   trackDir,
                                                   photon,
+                                                  trSeg,
                                                   tmpTraceMode,
-                                                  Rich::right,
-                                                  trSeg.avPhotonEnergy() );
+                                                  Rich::right );
         if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
