@@ -9,7 +9,14 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v26r2 2010-10-08 =======================
+!========================== DaVinci v26r2p1 2010-10-11 =======================
+
+! 2010-10-11 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . Bug fix in HLT initialisation. Only affected DaVinci().Hlt = True.
+ - Increase to v26r2p1
+
+!========================== DaVinci v26r2 2010-10-08 =========================
 
 ! 2010-10-04 - Juan Palacios
  - python/DaVinci/Configuration.py
