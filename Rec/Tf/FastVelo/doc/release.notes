@@ -4,6 +4,13 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Olivier Callot
+ - Fix the updateMgrSvc call to update the geometry.
+ - Add option to measure the internal timing (MeasureTime = false)
+ - Perform the unusedPhi search only if less than MaxRZForExtra = 200 tracks
+   and if the number of space tracks found sofar is higher than half the 
+   number of RZ tracks: Some events have ~ no space and many RZ...
+
 ! 2010-10-08 - Olivier Callot
  - Protect the case of an empty output container when merging clones.
 

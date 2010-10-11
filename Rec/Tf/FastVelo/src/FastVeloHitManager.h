@@ -51,6 +51,9 @@ public:
   double cosPhi( unsigned int zone ) const { return m_cosPhi[zone]; }
   double sinPhi( unsigned int zone ) const { return m_sinPhi[zone]; }
 
+  int nbHits() const { return m_nextInPool - m_pool.begin(); }
+  int maxSize() const { return m_maxSize; }
+
 protected:
 
   StatusCode rebuildGeometry();  ///< Recompute the geometry in case of change
@@ -67,5 +70,6 @@ private:
   std::vector<double> m_cosPhi;
   std::vector<double> m_sinPhi;
   int m_maxSize;
+  bool m_eventReady;
 };
 #endif // FASTVELOHITMANAGER_H

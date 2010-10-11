@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "PatKernel/IPatDebugTool.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "FastVeloHitManager.h"
 #include "FastVeloTrack.h"
@@ -75,11 +76,12 @@ private:
   std::string m_outputLocation;
   //== Overall control parameters
 
-  bool   m_makeDummyRZ;
   bool   m_onlyForward;
   bool   m_onlyBackward;
   int    m_minRSensor;
   bool   m_bestEfficiency;
+  unsigned int m_maxRZForExtra;
+  bool   m_stateAtBeam;
 
   //== Paramaters for RZ search  
   double m_zVertexMin;      ///< Minimal Z of a vertex for forward tracks
@@ -113,6 +115,16 @@ private:
   IPatDebugTool*   m_debugTool;
   bool             m_isDebug;
   bool             m_debug;
+  bool             m_doTiming;
+  ISequencerTimerTool* m_timerTool;
+  int   m_timePrepare;
+  int   m_timeFwd4;
+  int   m_timeBkwd4;
+  int   m_timeFwd3;
+  int   m_timeBkwd3;
+  int   m_timeSpace;
+  int   m_timeUnused;
+  int   m_timeFinal;
 
   //== Working variables
   FastVeloHitManager* m_hitManager;

@@ -51,21 +51,15 @@ StatusCode FastVeloHitManager::initialize() {
   
   // make sure we are up-to-date on populated VELO stations
   registerCondition( m_velo->geometry(), &FastVeloHitManager::rebuildGeometry );
- 
-  // first update
-  sc = updMgrSvc()->update(this);
-  if(!sc.isSuccess()) {
-    error() << "Failed to update station structure." << endreq;
-    return sc;
-  }
-   
-  // invalidate measurement cache at the end of each event
-  //incSvc()->addListener(this, IncidentType::BeginEvent);
+  
+  // invalidate measurements at the beginning of each event
+  incSvc()->addListener(this, IncidentType::BeginEvent);
 
   m_pool.resize( 10000 );
   m_nextInPool = m_pool.begin();
   m_maxSize = 0;
-
+  m_eventReady = false;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -157,6 +151,7 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
 void FastVeloHitManager::handle ( const Incident& incident ) {
   if ( IncidentType::BeginEvent == incident.type() ){
     this->clearHits();
+    m_eventReady = false;
   }
 }
 
@@ -183,11 +178,12 @@ void FastVeloHitManager::clearHits( ) {
 //  Convert the LiteClusters to FastVeloHit
 //=========================================================================
 void FastVeloHitManager::buildFastHits ( ) {
+  if ( m_eventReady ) return;
+  m_eventReady = true;
   LHCb::VeloLiteCluster::FastContainer * liteClusters = 
     GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
 
   if ( liteClusters->size() > m_pool.size() ) m_pool.resize( liteClusters->size() + 100 );
-  clearHits();
 
   LHCb::VeloLiteCluster::FastContainer::iterator iClus;
   unsigned int lastSensor = 9999;

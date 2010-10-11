@@ -25,14 +25,14 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "OutputLocation"  , m_outputLocation   = LHCb::TrackLocation::Velo );
-  declareProperty( "MakeDummyRZ"     , m_makeDummyRZ   = true );
+  declareProperty( "OutputLocation"  , m_outputLocation = LHCb::TrackLocation::Velo );
 
-  declareProperty( "OnlyForward"     , m_onlyForward   = false );
-  declareProperty( "OnlyBackward"    , m_onlyBackward  = false );
-  declareProperty( "MinRSensor"      , m_minRSensor    = 3     );
+  declareProperty( "OnlyForward"     , m_onlyForward    = false );
+  declareProperty( "OnlyBackward"    , m_onlyBackward   = false );
+  declareProperty( "MinRSensor"      , m_minRSensor     = 3     );
   declareProperty( "BestEfficiency"  , m_bestEfficiency = true );
-
+  declareProperty( "MaxRZForExtra"   , m_maxRZForExtra  = 200  );
+  declareProperty( "StateAtBeam"     , m_stateAtBeam    = true );
 
   declareProperty( "ZVertexMin"      , m_zVertexMin     = -170. *Gaudi::Units::mm );
   declareProperty( "ZVertexMax"      , m_zVertexMax     = +120. *Gaudi::Units::mm );
@@ -62,6 +62,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   // Parameters for debugging
   declareProperty( "DebugToolName" ,   m_debugToolName  = ""        );
   declareProperty( "WantedKey"       , m_wantedKey      = -100      );
+  declareProperty( "MeasureTime"     , m_doTiming       = false     );
 }
 //=============================================================================
 // Destructor
@@ -81,6 +82,20 @@ StatusCode FastVeloTracking::initialize() {
   m_debugTool   = 0;
   if ( "" != m_debugToolName ) m_debugTool = tool<IPatDebugTool>( m_debugToolName );
 
+  if ( m_doTiming) {
+    m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool/Timer", this );
+    m_timerTool->increaseIndent();
+    m_timePrepare = m_timerTool->addTimer( "Prepare" );
+    m_timeFwd4    = m_timerTool->addTimer( "Forward quadruplets" );
+    m_timeBkwd4   = m_timerTool->addTimer( "Backward quadruplets" );
+    m_timeFwd3    = m_timerTool->addTimer( "Forward triplets" );
+    m_timeBkwd3   = m_timerTool->addTimer( "Backward triplets" );
+    m_timeSpace   = m_timerTool->addTimer( "Space tracks" );
+    m_timeUnused  = m_timerTool->addTimer( "Unused Phi" );
+    m_timeFinal   = m_timerTool->addTimer( "Store tracks" );
+    m_timerTool->decreaseIndent();
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -90,13 +105,9 @@ StatusCode FastVeloTracking::initialize() {
 StatusCode FastVeloTracking::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  m_isDebug   = msgLevel( MSG::DEBUG   );
+  m_isDebug   = msgLevel( MSG::DEBUG   );  
 
-  //== Backward compatibility, for associators and the rest..
-  if ( m_makeDummyRZ ) {
-    LHCb::Tracks* dummy = new LHCb::Tracks();
-    put( dummy, LHCb::TrackLocation::RZVelo );
-  }
+  if ( m_doTiming ) m_timerTool->start( m_timePrepare );
 
   LHCb::Tracks* outputTracks;
   if ( exist<LHCb::Tracks>( m_outputLocation ) ) {
@@ -127,47 +138,67 @@ StatusCode FastVeloTracking::execute() {
   //== First, look for quadruplets
   double minZ = m_zVertexMin + 200.;  // 200 mrad, 40 mm radius -> 200 mm in z
   double maxZ = m_zVertexMax - 200.;
+  if ( m_doTiming ) m_timerTool->stop( m_timePrepare );
 
   if ( !m_onlyBackward ) {
+    if ( m_doTiming ) m_timerTool->start( m_timeFwd4 );
     for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
       if ( m_hitManager->sensor(sensorNb)->z() < minZ ) break;
       findQuadruplets( sensorNb, true );  // forward
     }
+    if ( m_doTiming ) m_timerTool->stop( m_timeFwd4 );
   }
 
   if ( !m_onlyForward ) {
+    if ( m_doTiming ) m_timerTool->start( m_timeBkwd4 );
     for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
       if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
       findQuadruplets( sensorNb, false );  // backward
     }
+    if ( m_doTiming ) m_timerTool->stop( m_timeBkwd4 );
   }
 
   if ( m_minRSensor < 4 ) {
     if ( !m_onlyBackward ) {
+      if ( m_doTiming ) m_timerTool->start( m_timeFwd3 );
       for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
         if ( m_hitManager->sensor(sensorNb)->z() < minZ ) break;
         findUnusedTriplets( sensorNb, true );  // forward
       }
+      if ( m_doTiming ) m_timerTool->stop( m_timeFwd3 );
     }
-    if ( !m_onlyForward ) {
+    if ( !m_onlyForward ) { 
+      if ( m_doTiming ) m_timerTool->start( m_timeBkwd3 );
       for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
         if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
         findUnusedTriplets( sensorNb, false );  // backward
       }
+      if ( m_doTiming ) m_timerTool->stop( m_timeBkwd3 );
     }
   }
 
+  if ( m_doTiming ) m_timerTool->start( m_timeSpace );
   std::stable_sort( m_tracks.begin(), m_tracks.end(), FastVeloTrack::DecreasingByRLength() );
 
   for ( FastVeloTracks::iterator itT = m_tracks.begin(); m_tracks.end() != itT; ++itT ) {
     makeSpaceTracks( *itT );
   }
+  if ( m_doTiming ) m_timerTool->stop( m_timeSpace );
 
-  if ( m_bestEfficiency ) findUnusedPhi();
+  if ( m_bestEfficiency &&
+       m_maxRZForExtra > m_tracks.size() &&
+       m_tracks.size() * 0.5 <  m_spaceTracks.size() ) {
+    if ( m_doTiming ) m_timerTool->start( m_timeUnused );
+    findUnusedPhi();
+    if ( m_doTiming ) m_timerTool->stop( m_timeUnused );
+  }
 
+  if ( m_doTiming ) m_timerTool->start( m_timeFinal );
   mergeSpaceClones();  // Cleanup tracks with different R, same phis...
 
   makeLHCbTracks( outputTracks );
+
+  if ( m_doTiming ) m_timerTool->stop( m_timeFinal );
 
   if ( 0 <= m_wantedKey ) {
     info() << "*** Final status of hits for Track " << m_wantedKey << endmsg;
@@ -674,22 +705,26 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
 
     double zBeam = (*itT).zBeam();    
 
-    state.setLocation( LHCb::State::ClosestToBeam );
-    state.setState( (*itT).state( zBeam ) );
-    state.setCovariance( (*itT).covariance( zBeam ) );
-    newTrack->addToStates( state );
-
-    state.setLocation( LHCb::State::FirstMeasurement );
-    state.setState( (*itT).state( zMin ) );
-    state.setCovariance( (*itT).covariance( zMin ) );
-    newTrack->addToStates( state );
-
-    (*itT).fitWithWeight( m_msFactor, !fitDirection );
-    state.setLocation( LHCb::State::EndVelo );
-    state.setState( (*itT).state( zMax ) );
-    state.setCovariance( (*itT).covariance( zMax ) );
-    newTrack->addToStates( state );
-
+    if ( m_stateAtBeam ) {
+      state.setLocation( LHCb::State::ClosestToBeam );
+      state.setState( (*itT).state( zBeam ) );
+      state.setCovariance( (*itT).covariance( zBeam ) );
+      newTrack->addToStates( state );
+    } else {
+      state.setLocation( LHCb::State::FirstMeasurement );
+      state.setState( (*itT).state( zMin ) );
+      state.setCovariance( (*itT).covariance( zMin ) );
+      newTrack->addToStates( state );
+    }
+    
+    if ( !(*itT).backward() ) {
+      (*itT).fitWithWeight( m_msFactor, !fitDirection );
+      state.setLocation( LHCb::State::EndVelo );
+      state.setState( (*itT).state( zMax ) );
+      state.setCovariance( (*itT).covariance( zMax ) );
+      newTrack->addToStates( state );
+    }
+    
     outputTracks->insert( newTrack );
   }
 }
@@ -975,6 +1010,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     for ( station = firstStation; lastStation+stationStep != station; station += stationStep ) {
       std::sort( goodPhiHits[station].begin(), goodPhiHits[station].end(), FastVeloHit::LowerByGlobal() );
       printCoords( goodPhiHits[station], "Selected " );
+      if ( stationStep == -1 && station == 0 ) break;
     }
   }
 
@@ -1168,54 +1204,56 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     s1 = firstStation;
     s2 = s1 + stationStep;
     s3 = s2 + stationStep;
-    if ( goodPhiHits[s1].size() +  goodPhiHits[s2].size() +  goodPhiHits[s3].size() < 7 ) { // was 5
-      FastVeloHits all(goodPhiHits[s1]);
-      for ( itH = goodPhiHits[s2].begin(); goodPhiHits[s2].end() != itH; ++itH ) all.push_back( *itH );
-      for ( itH = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH; ++itH ) all.push_back( *itH );
-      FastVeloTrack temp;
-      temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
-      if ( m_debug ) {
-        info() << "+++ Try with all hits on stations " << s1 << " " << s2 << " and " << s3
-               << ", minNbPhi " << minNbPhi << endmsg;
-      }
-      bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
-      if ( ok ) {
-        temp.updateRParameters();
-        double lastZ = temp.phiHits().back()->z();
-        if ( ( stationStep < 0 && lastStation < s3 ) ||
-             ( stationStep > 0 && lastStation > s3 )  ) {
-          for ( unsigned int s = s3 + stationStep; lastStation+stationStep != s; s += stationStep ){
-            if ( goodPhiHits[s].size() != 0 ) {
-              if ( m_debug ) {
-                info() << "Try to add more on station " << s << endmsg;
-                for ( itH = goodPhiHits[s].begin(); goodPhiHits[s].end() != itH; ++itH ) {
-                  info() << format( "Dist%8.3f Chi2%8.2f", temp.distance( *itH ), temp.chi2( *itH ) );
-                  printCoord( *itH, "Selected " );
+    if ( s1 < 21 && s2 < 21 && s3 < 21 ) {  // protect agains access to no existent modules
+      if ( goodPhiHits[s1].size() +  goodPhiHits[s2].size() +  goodPhiHits[s3].size() < 7 ) { // was 5
+        FastVeloHits all(goodPhiHits[s1]);
+        for ( itH = goodPhiHits[s2].begin(); goodPhiHits[s2].end() != itH; ++itH ) all.push_back( *itH );
+        for ( itH = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH; ++itH ) all.push_back( *itH );
+        FastVeloTrack temp;
+        temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
+        if ( m_debug ) {
+          info() << "+++ Try with all hits on stations " << s1 << " " << s2 << " and " << s3
+                 << ", minNbPhi " << minNbPhi << endmsg;
+        }
+        bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
+        if ( ok ) {
+          temp.updateRParameters();
+          double lastZ = temp.phiHits().back()->z();
+          if ( ( stationStep < 0 && lastStation < s3 ) ||
+               ( stationStep > 0 && lastStation > s3 )  ) {
+            for ( unsigned int s = s3 + stationStep; lastStation+stationStep != s; s += stationStep ){
+              if ( goodPhiHits[s].size() != 0 ) {
+                if ( m_debug ) {
+                  info() << "Try to add more on station " << s << endmsg;
+                  for ( itH = goodPhiHits[s].begin(); goodPhiHits[s].end() != itH; ++itH ) {
+                    info() << format( "Dist%8.3f Chi2%8.2f", temp.distance( *itH ), temp.chi2( *itH ) );
+                    printCoord( *itH, "Selected " );
+                  }
                 }
-              }
-              double addChi2 = m_maxChi2ToAdd;
-              if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 150. ) addChi2 = 4 * addChi2;
-              bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
-              if ( ok ) {
-                temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2PerHit );
-                if ( m_debug ) printTrack( temp, "After adding" );
+                double addChi2 = m_maxChi2ToAdd;
+                if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 150. ) addChi2 = 4 * addChi2;
+                bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
+                if ( ok ) {
+                  temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2PerHit );
+                  if ( m_debug ) printTrack( temp, "After adding" );
+                }
               }
             }
           }
-        }
-        ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
-        //== Overall quality should be good enough...
-        if ( m_maxQFactor < temp.qFactor() ) {
-          if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-          ok = false;
-        }
-
-        if ( ok ) {  //== Store it.
-          if ( m_debug ) {
-            info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
-            printTrack( temp );
+          ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+          //== Overall quality should be good enough...
+          if ( m_maxQFactor < temp.qFactor() ) {
+            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+            ok = false;
           }
-          newTracks.push_back( temp );
+          
+          if ( ok ) {  //== Store it.
+            if ( m_debug ) {
+              info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
+              printTrack( temp );
+            }
+            newTracks.push_back( temp );
+          }
         }
       }
     }
