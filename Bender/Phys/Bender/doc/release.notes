@@ -1,13 +1,17 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.68 2010-10-10 12:45:26 ibelyaev Exp $
+! $Id: release.notes,v 1.69 2010-10-11 14:11:33 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.68 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.69 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! 2010-10-11 - Vanya Belyaev
+
+ - fix the problem with the aliases on windows platform
 
 ! ==================== Phys/Bender v15r1 2010-10-10 ===========================
 
