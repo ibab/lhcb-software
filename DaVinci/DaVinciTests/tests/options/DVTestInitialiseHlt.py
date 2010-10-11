@@ -13,6 +13,7 @@ DaVinci().SkipEvents = 0
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = '2010'
 DaVinci().Hlt = True
+DaVinci().HltThresholdSettings = 'Commissioning_PassThrough'
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
