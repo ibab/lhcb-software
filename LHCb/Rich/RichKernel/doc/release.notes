@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-10-11 - Chris Jones
+ - Various changes to tool interfaces to allow full calculation of the
+   aerogel refractive index seen by each track, by updating interfaces
+   to pass the RichTrackSegment.
+
 !====================== RichKernel v7r38 2010-08-25 ====================
 ! 2010-08-19 - Chris Jones
  - Extend SmartID decoding tool interface with methods to return the 

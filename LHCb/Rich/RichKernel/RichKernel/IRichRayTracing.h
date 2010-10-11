@@ -31,6 +31,7 @@
 namespace LHCb
 {
   class RichGeomPhoton;
+  class RichTrackSegment;
 }
 
 /// Static Interface Identification
@@ -46,6 +47,7 @@ namespace Rich
    *  the photo detectors.
    *
    *  @author Antonis Papanestis
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2003-10-28
    */
   //-----------------------------------------------------------------------------
@@ -59,6 +61,51 @@ namespace Rich
      *  @return unique interface identifier
      */
     static const InterfaceID& interfaceID() { return IID_IRichRayTracing; }
+
+    /** For a given detector, ray-traces a given direction from a given point to
+     *  the photo detectors. Returns the result in the form of a RichGeomPhoton
+     *  which contains the full ray tracing information.
+     *
+     *  @param[in]  rich       The RICH detector
+     *  @param[in]  startPoint The start point to use for the ray tracing
+     *  @param[in]  startDir   The direction to ray trace from the start point
+     *  @param[out] photon     The result of the raytracing, encapsulated as a RichGeomPhoton
+     *  @param[in]  trSeg      The track segment associated to the photon direction to update
+     *  @param[in]  mode       The ray tracing mode configuration
+     *  @param[in]  forcedSide If configured to do so, the forced side to use
+     *
+     *  @return Status of the ray tracing
+     */
+    virtual LHCb::RichTraceMode::RayTraceResult
+    traceToDetector ( const Rich::DetectorType rich,
+                      const Gaudi::XYZPoint& startPoint,
+                      const Gaudi::XYZVector& startDir,
+                      LHCb::RichGeomPhoton& photon,
+                      const LHCb::RichTrackSegment& trSeg,
+                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                      const Rich::Side forcedSide    = Rich::top ) const = 0;
+
+    /** For a given detector, raytraces a given direction from a given point to
+     *  the photo detectors. Returns the result in the form of a RichGeomPhoton.
+     *
+     *  @param[in]  rich        The RICH detector
+     *  @param[in]  startPoint  The start point to use for the ray tracing
+     *  @param[in]  startDir    The direction to ray trace from the start point
+     *  @param[out] hitPosition The result of the tracing, the hit point on the HPD panel
+     *  @param[in]  trSeg       The track segment associated to the photon direction to update
+     *  @param[in]  mode        The ray tracing mode configuration
+     *  @param[in]  forcedSide  If configured to do so, the forced side to use
+     *
+     *  @return Status of the ray tracing
+     */
+    virtual LHCb::RichTraceMode::RayTraceResult
+    traceToDetector ( const Rich::DetectorType rich,
+                      const Gaudi::XYZPoint& startPoint,
+                      const Gaudi::XYZVector& startDir,
+                      Gaudi::XYZPoint& hitPosition,
+                      const LHCb::RichTrackSegment& trSeg,
+                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                      const Rich::Side forcedSide    = Rich::top ) const = 0;
 
     /** For a given detector, ray-traces a given direction from a given point to
      *  the photo detectors. Returns the result in the form of a RichGeomPhoton
