@@ -104,6 +104,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 	cm.configureMuonIDAlg(idalg)
 	idalg.TrackLocation = "Rec/Track/"+trackcont
 	idalg.MuonIDLocation = "Rec/Muon/MuonPID/"+trackcont
+	idalg.MuonTrackLocation = "/Rec/Track/MuonFor" +trackcont
 
 	downprotoseq = GaudiSequencer(name+"ProtoPSeq")
 	downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
