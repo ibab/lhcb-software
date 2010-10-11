@@ -3,7 +3,7 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v26r2>2010-10-08 DaVinci v26r2. Version for Stripping11.</A></H1><PRE>
+</PRE><H1><A NAME=v26r2p1>2010-10-11 DaVinci v26r2p1. Version for Stripping11.</A></H1><PRE>
 
   * Based on LHCb v31r6 stack. Version for October stripping.
   * Includes many enhancements to MicroDST for Jpsi and Charm working groups.
