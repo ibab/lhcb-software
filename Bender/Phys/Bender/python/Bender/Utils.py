@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: Utils.py,v 1.3 2010-10-10 12:45:26 ibelyaev Exp $ 
+# $Id: Utils.py,v 1.4 2010-10-11 11:00:28 ibelyaev Exp $ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -26,7 +26,7 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#  Last modification $Date: 2010-10-10 12:45:26 $
+#  Last modification $Date: 2010-10-11 11:00:28 $
 #                 by $Author: ibelyaev $ 
 # =============================================================================
 """
@@ -44,13 +44,13 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-  Last modification $Date: 2010-10-10 12:45:26 $
+  Last modification $Date: 2010-10-11 11:00:28 $
                  by $Author: ibelyaev $  
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-00-12"
-__version__ = 'Version $Revision: 1.3 $'
+__version__ = 'Version $Revision: 1.4 $'
 __all__     = (
     ##
     'run'               , 
@@ -334,7 +334,7 @@ def seekHltDecision ( expr                                 ,
 def seekStripDecision ( expr                                        ,
                         EvtMax     = 10000                          ,
                         disableAll = False                          ,
-                        location   = '/Event/Strip/Phys/DecReports' ) 
+                        location   = '/Event/Strip/Phys/DecReports' ) :
     """
     Seek the decision for the certain Stripping Line
     """
