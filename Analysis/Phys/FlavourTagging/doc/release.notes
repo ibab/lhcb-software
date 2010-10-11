@@ -5,6 +5,13 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-10-11 - Juan Palacios
+ - Add python module FlavourTagging.Utils.
+  . Contains class TaggingParticlesSequenceBuilder, a class to build a
+    selection sequence with the necessary algorithms to produce tagging 
+    particles.
+ - Increase to v12r1.
+
 !========================== FlavourTagging v12r0 2010-10-04 ==================
 
 ! 2010-09-30 - Marco Musy, Marc Grabalosa

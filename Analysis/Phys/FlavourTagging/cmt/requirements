@@ -5,7 +5,7 @@
 #
 #============================================================================
 package           FlavourTagging
-version           v12r0
+version           v12r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,6 +17,8 @@ set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
 
 # Used packages. 
 #============================================================================
+use GaudiPython     v*  
+use PhysSelPython   v*   PhysSel
 use TrackInterfaces v*   Tr
 use PhysEvent       v*   Event
 use DaVinciKernel   v*   Phys
@@ -34,6 +36,9 @@ library          FlavourTagging    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern component_library library=FlavourTagging
+
+#============================================================================
+apply_pattern install_python_modules
 
 # =================== summary application  ==================================
 private 
