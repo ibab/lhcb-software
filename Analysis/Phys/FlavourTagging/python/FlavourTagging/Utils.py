@@ -5,7 +5,7 @@ Selection making tagging particles from individual taggers.
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
-__all__ = ('TaggingParticlesSequenceBuilder')
+__all__ = ('TaggingParticlesSelectionBuilder')
 
 from GaudiConf.Configuration import *
 from Configurables import (CombinedParticleMaker,
@@ -15,17 +15,18 @@ from Configurables import (CombinedParticleMaker,
 
 from PhysSelPython.Wrappers import Selection, MergedSelection, SelectionSequence
 
-class TaggingParticlesSequenceBuilder(object) :
+class TaggingParticlesSelectionBuilder(object) :
 
     """
-    Class to build a SelectionSequence containing all the necessary
+    Class to build a Selection containing all the necessary required
     algorithms to produce particles for flavour tagging. Creates Muons,
     Pions and Electrons and selects them in OR mode. These are passed to
     a FilterDesktop, which places them in outputLocation().
     Example:
-    tagSeqBuilder = TaggingParticlesSequenceBuilder('Tagging')
+    tagSelBuilder = TaggingParticlesSelectionBuilder('Tagging')
     # check locaiton of output:
-    tagSeqBuilder.selectionSequence.outputLocation()
+    tagSelBuilder.selectionSequence.outputLocation()
+    
     """
     
     def __init__(self, name='Tagging') :
@@ -66,7 +67,3 @@ class TaggingParticlesSequenceBuilder(object) :
                                    Algorithm = _taggingParticles,
                                    RequiredSelections = [ allTaggers] )
 
-        self.selectionSequence = SelectionSequence(name + 'ParticlesSeq',
-                                                   TopSelection = self.selection)
-
-        self.gaudiSequencer = self.selectionSequence.sequence()
