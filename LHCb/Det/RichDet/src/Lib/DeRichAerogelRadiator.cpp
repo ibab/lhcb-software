@@ -4,9 +4,6 @@
  *
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.14 2010-02-05 11:54:47 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
  */
