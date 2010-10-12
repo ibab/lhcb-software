@@ -105,7 +105,7 @@ public:
   void   setGlobal( double r )  { m_global = float(r); }
   void   setUsed()              { m_nbUsed++; }
   void   clearUsed()            { m_nbUsed--; }
-  void   setGlobalPosition( float x, float y ) { 
+  void   setGlobalPosition( double x, double y ) { 
     m_xGlobal = float(x); 
     m_yGlobal = float(y);
   }
