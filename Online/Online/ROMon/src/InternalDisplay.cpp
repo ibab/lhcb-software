@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.2 2009-03-26 14:49:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -113,12 +113,14 @@ void InternalDisplay::handle(const Event& ev)    {
       RTL::Lock lock(s_lock);
       Pasteboard* pb = pasteboard();
       unsigned char* ptr = (unsigned char*)ev.data;
-      ::scrc_cursor_off(pb);
-      ::scrc_begin_pasteboard_update (pb);
+      if ( pb ) {
+	::scrc_cursor_off(pb);
+	::scrc_begin_pasteboard_update (pb);
+      }
       update(ptr + sizeof(int), *(int*)ptr);
-      ::scrc_end_pasteboard_update(pb);
+      if ( pb ) ::scrc_end_pasteboard_update(pb);
       if ( parent() ) parent()->set_cursor(this);
-      ::scrc_cursor_on(pb);
+      if ( pb ) ::scrc_cursor_on(pb);
       delete [] ptr;
       break;
     }

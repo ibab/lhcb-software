@@ -1,4 +1,4 @@
-// $Id: BootDisplay.cpp,v 1.5 2010-10-11 06:40:52 frankb Exp $
+// $Id: BootDisplay.cpp,v 1.6 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.5 2010-10-11 06:40:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.6 2010-10-12 17:47:05 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootMon.h"
@@ -93,8 +93,6 @@ public:
 
     const BootClusterLine* currentLine() const       { return m_currLine; }
     void setCurrentLine(const BootClusterLine* line) { m_currLine = line; }
-    /// Set cursor to position
-    virtual void set_cursor(InternalDisplay* disp);
     /// Set cursor to line position
     virtual void set_cursor(const BootClusterLine* line);
     /// Interactor overload: Display callback handler
@@ -280,13 +278,12 @@ BootDisplay::BootDisplay(int argc, char** argv)
 
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_fflush(m_pasteboard);
-  ::scrc_set_cursor(m_display, 2, BOOTLINE_START);
   ::scrc_cursor_off(m_pasteboard);
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
-  MouseSensor::instance().start(pasteboard());
-  //MouseSensor::instance().add(this,this->InternalDisplay::display());
   m_svc = ::dic_info_service((char*)"/BootMonitor/Clusters",MONITORED,0,0,0,dataHandler,(long)this,0,0);
+  MouseSensor::instance().start(pasteboard());
+  MouseSensor::instance().add(this,this->InternalDisplay::display());
 }
 
 /// Standard destructor
@@ -346,15 +343,10 @@ void BootDisplay::display(const BootClusterLine* line) {
     xp += ::strlen(txt)+1;
   }
   ::scrc_put_chars(m_display," ",NORMAL,pos,xp,1);
-  //::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-  if ( pos == m_posCursor ) {
-    ::scrc_set_cursor(m_display,pos,2);
-  }
   if ( m_clusterDisplay.get() && m_clusterDisplay->name() == c->name )  {
     m_clusterDisplay->update(c);
   }
   ::scrc_end_pasteboard_update(pb);
-  ::scrc_cursor_on(pb);
 }
 
 /// Keyboard rearm action
@@ -371,11 +363,6 @@ int BootDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
 }
 
 /// Set cursor to position
-void BootDisplay::set_cursor(InternalDisplay* d) {
-  ::scrc_set_cursor(d->display(),2,2);
-}
-
-/// Set cursor to position
 void BootDisplay::set_cursor(const BootClusterLine* line) {
   const BootClusterLine* curr = currentLine();
   if ( curr )   {
@@ -384,7 +371,7 @@ void BootDisplay::set_cursor(const BootClusterLine* line) {
   setCurrentLine(line);
   if ( line ) {
     ::scrc_put_chars(m_display,line->name().c_str(),BLUE|BOLD|INVERSE,line->position(),BOOTLINE_START,0);
-    ::scrc_set_cursor(m_display,line->position(),2);
+    if ( m_clusterDisplay.get() ) m_clusterDisplay->update(line->cluster());
   }
 }
 
@@ -512,17 +499,10 @@ void BootDisplay::handle(const Event& ev) {
       break;
     case CMD_POSCURSOR:
       if ( !m_helpDisplay.get() ) {
-	m_posCursor = (long)ev.data;
 	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
 	if ( i != m_clusters.end() ) {
 	  DisplayUpdate update(this);
-	  if ( m_clusterDisplay.get() )  {
-	    m_clusterDisplay->update(((*i).second->cluster()));
-	    ::scrc_set_cursor(m_clusterDisplay->display(),2,2);
-	  }
-	  else {
-	    set_cursor((*i).second);
-	  }
+	  set_cursor((*i).second);
 	}
       }
       break;
@@ -540,7 +520,6 @@ void BootDisplay::handle(const Event& ev) {
   }
 }
 
-
 /// DIM command service callback
 void BootDisplay::update(const void* address) {
   if ( address ) {
@@ -556,14 +535,12 @@ void BootDisplay::update(const void* address) {
     ::sprintf(txt,"Total number of boot clusters:%d %50s",
 	      int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
-
   }
 }
 
 // Main entry routine to start the display application
 extern "C" int romon_boot_display(int argc,char** argv) {
-  BootDisplay* disp = new BootDisplay(argc,argv);
+  auto_ptr<BootDisplay> disp(new BootDisplay(argc,argv));
   IocSensor::instance().run();
-  delete disp;
   return 1;
 }

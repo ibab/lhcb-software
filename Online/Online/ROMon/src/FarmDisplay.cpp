@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.43 2010-09-20 18:59:49 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.44 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.43 2010-09-20 18:59:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.44 2010-10-12 17:47:05 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -99,7 +99,7 @@ namespace {
 /// Standard constructor
 FarmDisplay::FarmDisplay(int argc, char** argv)
   : InternalDisplay(0,""), m_subfarmDisplay(0), m_nodeSelector(0), 
-    m_posCursor(0), m_subPosCursor(0), m_anchorX(10), m_anchorY(20), m_mode(HLT_MODE)
+    m_posCursor(0), m_subPosCursor(0), m_anchorX(10), m_anchorY(5), m_mode(HLT_MODE)
 {
   char txt[128];
   string anchor;
@@ -296,8 +296,8 @@ int FarmDisplay::showSubfarm()    {
       m_subfarmDisplay = createRecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      const char* argv[] = {"",svc.c_str(), "-delay=300"};
-      m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      const char* argv[] = {"",svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=28"};
+      m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
     }
     else {
       m_nodeSelector = 0;

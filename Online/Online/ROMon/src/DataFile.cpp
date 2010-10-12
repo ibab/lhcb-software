@@ -1,4 +1,4 @@
-// $Id: DataFile.cpp,v 1.2 2010-09-25 04:40:13 frankb Exp $
+// $Id: DataFile.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.2 2010-09-25 04:40:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
 
 // Framework include files
 #include "RTL/rtl.h"
@@ -80,6 +80,13 @@ void DataFile::close() {
     m_pointer = 0;
     ::memset(&m_stbuff,0,sizeof(m_stbuff));
   }
+}
+
+/// Move file descriptor to the end of the file
+int DataFile::seek_end() {
+  if ( !m_fd ) open();
+  if ( m_fd ) ::lseek(m_fd,0,SEEK_END);
+  return 1;
 }
 
 /// Process file netries line by line using functor object

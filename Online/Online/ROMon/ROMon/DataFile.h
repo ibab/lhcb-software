@@ -1,4 +1,4 @@
-// $Id: DataFile.h,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: DataFile.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/DataFile.h,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/DataFile.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 #ifndef ONLINE_ROMON_DATAFILE_H
 #define ONLINE_ROMON_DATAFILE_H
 
@@ -53,6 +53,8 @@ namespace ROMon {
     virtual ~DataFile();
     /// Access file name
     const std::string& name() const { return m_name; }
+    /// Set file name (ignored if file already opened!)
+    void setFileName(const std::string& fn) { m_name = fn; }
     /// Open the data file
     bool open();
     /// Close the data file
@@ -61,6 +63,8 @@ namespace ROMon {
     bool migrated()  const;
     /// Process file netries line by line using functor object
     int scan(const DataProcessor& functor);
+    /// Move file descriptor to the end of the file
+    int seek_end();
   };
 }      // End namespace ROMon
 

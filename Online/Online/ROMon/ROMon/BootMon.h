@@ -1,4 +1,4 @@
-// $Id: BootMon.h,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Id: BootMon.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/BootMon.h,v 1.1 2010-09-20 19:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/BootMon.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 #ifndef ONLINE_ROMON_BOOTMON_H
 #define ONLINE_ROMON_BOOTMON_H
 
@@ -55,7 +55,8 @@ namespace ROMon {
       ETH0_STARTED     = 1<<4,
       ETH1_STARTED     = 1<<5,
       TCP_STARTED      = 1<<6,
-      FMC_STARTED      = 1<<7
+      FMC_STARTED      = 1<<7,
+      TASKMAN_OK       = 1<<8
     };
 
     /// Default constructor

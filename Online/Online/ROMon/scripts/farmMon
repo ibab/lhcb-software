@@ -1,2 +1,2 @@
 #!/bin/bash
-. `dirname $0`/romonDisplay romon_farm FarmMonitor $*
+. `dirname $0`/romonDisplay romon_farm FarmMonitor -dense $*

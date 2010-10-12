@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.7 2010-10-06 21:55:00 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.8 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.7 2010-10-06 21:55:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.8 2010-10-12 17:47:05 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -30,6 +30,10 @@
 */
 namespace ROMon {
 
+  // Forward declarations
+  class BootMonitor;
+  class SubfarmBootStatus;
+
   /**@class SubfarmBootStatus BootMon.h ROMon/BootMon.h
   *
   * Class which represents the boot status of a subfarm
@@ -42,6 +46,8 @@ namespace ROMon {
     typedef std::map<std::string,BootNodeStatus*> Hosts;
 
   protected:
+    /// Parent object
+    BootMonitor*       m_parent;
     /// List of individual node monitors known to this sub-farm
     BootNodeStatusset* m_status;
     std::string        m_name;
@@ -54,7 +60,7 @@ namespace ROMon {
     int                m_tsID;
   public:
     /// Initializing constructor
-    SubfarmBootStatus(const std::string& n);
+    SubfarmBootStatus(const std::string& n, BootMonitor* parent);
     /// Default destructor
     ~SubfarmBootStatus();
     /// Check status if initialization was successful....
@@ -98,6 +104,8 @@ namespace ROMon {
     std::string            m_name;
     /// DIM service identifier
     int                    m_id;
+    /// Time stamp of the last scan
+    time_t                 m_last;
 
   public:
     /// Initializing constructor
@@ -110,6 +118,10 @@ namespace ROMon {
     virtual void scan();
     /// Handle interaction event
     virtual void handle(const Event& ev);
+    /// Access to object name
+    const std::string& name() const {  return m_name;  }
+    /// Access to last scan timestamp
+    time_t lastScan() const         {   return m_last; }
     /// DIM callback on dis_update_service
     static void feedData(void* tag, void** buf, int* size, int* first);
   };
@@ -289,8 +301,9 @@ struct BootDataProcessor : public DataFile::DataProcessor {
 };
 
 /// Initializing constructor
-SubfarmBootStatus::SubfarmBootStatus(const string& n) 
-: m_status(0), m_name(n), m_file("/clusterlogs/farm/"+n+"/messages"), m_id(0), m_tsID(0)
+SubfarmBootStatus::SubfarmBootStatus(const string& n, BootMonitor* parent) 
+  : m_parent(parent), m_status(0), m_name(n), m_file("/clusterlogs/farm/"+n+"/messages"), 
+    m_id(0), m_tsID(0)
 {}
 
 /// Default destructor
@@ -364,6 +377,10 @@ void SubfarmBootStatus::feedData(void* tag, void** buf, int* size, int* /* first
   ro_gettime(&h->m_status->time,(unsigned int*)&h->m_status->millitm);
   *size = h->m_status->length();
   *buf  = h->m_status;
+  if ( h->m_parent->lastScan()-::time(0) > 3*SCAN_TIMEDIFF ) {
+    ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> Timer for re-scan lost. Rearming timer.");
+    TimeSensor::instance().add(h->m_parent,1,(void*)CMD_DATA);
+  }
 }
 
 /// DIM callback on dic_info_service
@@ -383,7 +400,22 @@ void SubfarmBootStatus::summaryHandler(void* tag, void* buf, int* size) {
       if ( ih != hosts.end() ) {
         BootNodeStatus* n = (*ih).second;
         //cout << (*ni).name << " " << (*ni).state << " " << (*ni).status << endl;
+        //if ( (*ni).status == NodeSummary::OK && (*ni).state == NodeSummary::ALIVE ) {
         if ( (*ni).status == NodeSummary::OK && (*ni).state == NodeSummary::ALIVE ) {
+          n->status = (BootNodeStatus::FMC_STARTED+
+            BootNodeStatus::TASKMAN_OK+
+            BootNodeStatus::TCP_STARTED+
+            BootNodeStatus::ETH1_STARTED+
+            BootNodeStatus::ETH0_STARTED+
+            BootNodeStatus::PCI_STARTED+
+            BootNodeStatus::CPU_STARTED+
+            BootNodeStatus::MOUNT_REQUESTED+
+            BootNodeStatus::DHCP_REQUESTED);
+          if ( n->dhcpReq  <= 0 ) n->dhcpReq  = now;
+          if ( n->mountReq <= 0 ) n->mountReq = now;
+          if ( n->fmcStart <= 0 ) n->fmcStart = now;
+	}
+        else if ( (*ni).state == NodeSummary::ALIVE ) {
           n->status = (BootNodeStatus::FMC_STARTED+
             BootNodeStatus::TCP_STARTED+
             BootNodeStatus::ETH1_STARTED+
@@ -488,6 +520,7 @@ void SubfarmBootStatus::dump() {
 
 /// Initializing constructor
 BootMonitor::BootMonitor(const std::string& n) : m_clusterdata(0), m_name(n), m_id(0) {
+  m_last = ::time(0);
 }
 
 /// Default destructor
@@ -520,7 +553,7 @@ int BootMonitor::start() {
           ::lib_rtl_output(LIB_RTL_INFO,"Loading subfarm boot status of %s.",entry);
           SubfarmBootStatus* sf = 0;
           try {
-            sf = new SubfarmBootStatus(entry);
+            sf = new SubfarmBootStatus(entry,this);
             if ( sf->start() ) {
               if ( sf->scan() ) {
                 sf->dump();
@@ -565,6 +598,7 @@ void BootMonitor::feedData(void* tag, void** buf, int* size, int* /* first */) {
 }
 
 void BootMonitor::scan() {
+  m_last = ::time(0);
   for(Clusters::iterator i=m_clusters.begin(); i!=m_clusters.end(); ++i) {
     ::lib_rtl_output(LIB_RTL_VERBOSE,"Checking subfarm boot status of %s.",(*i).first.c_str());
     (*i).second->check();
@@ -575,16 +609,17 @@ void BootMonitor::scan() {
 void BootMonitor::handle(const Event& ev) {
   try {
     switch(ev.eventtype) {
-case TimeEvent:
-  if (ev.timer_data == (void*)CMD_DATA ) {
-    ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
-      ::lib_rtl_timestr(),int(m_clusters.size()));
-    scan();
-    TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_DATA);
-  }
-  break;
-default:
-  break;
+    case TimeEvent:
+      if (ev.timer_data == (void*)CMD_DATA ) {
+	::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
+			 ::lib_rtl_timestr(),int(m_clusters.size()));
+	scan();
+	TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_DATA);
+	return;
+      }
+      break;
+    default:
+      break;
     }
   }
   catch(const exception& e) {
@@ -593,6 +628,7 @@ default:
   catch(...) {
     ::lib_rtl_output(LIB_RTL_ERROR,"UNKNOWN exception in callback processing.");
   }
+  TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_DATA);
 }
 
 static void help() {

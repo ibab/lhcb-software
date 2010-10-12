@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.4 2010-09-22 18:11:24 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.5 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.4 2010-09-22 18:11:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.5 2010-10-12 17:47:05 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
@@ -63,24 +63,26 @@ void BootClusterDisplay::update(const void* data) {
   ::scrc_put_chars(m_display,"Color Legend:",NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,"  ",GREEN|INVERSE,++line,3,0);
   ::scrc_put_chars(m_display,"Finished, FMC started",NORMAL,  line,7,0);
-  ::scrc_put_chars(m_display,"  ",GREEN,  line,30,0);
-  ::scrc_put_chars(m_display,"...TCP started",NORMAL|BOLD,  line,33,0);
-  ::scrc_put_chars(m_display,"  ",BLUE|INVERSE,  line,60,0);
-  ::scrc_put_chars(m_display,"...ETH1 started",NORMAL,  line,63,0);
-  ::scrc_put_chars(m_display,"  ",BLUE,  line,90,0);
-  ::scrc_put_chars(m_display,"...ETH0 started",NORMAL|BOLD,  line,93,0);
+  ::scrc_put_chars(m_display,"  ",               GREEN,             line,30,0);
+  ::scrc_put_chars(m_display,"...TCP started",   NORMAL|BOLD,       line,33,0);
+  ::scrc_put_chars(m_display,"  ",               BLUE|INVERSE,      line,60,0);
+  ::scrc_put_chars(m_display,"...ETH1 started",  NORMAL,            line,63,0);
+  ::scrc_put_chars(m_display,"  ",               BLUE,              line,90,0);
+  ::scrc_put_chars(m_display,"...ETH0 started",  NORMAL|BOLD,       line,93,0);
 
-  ::scrc_put_chars(m_display,"  ",CYAN|INVERSE,++line,3,0);
-  ::scrc_put_chars(m_display,"...PCI started",NORMAL,  line,7,0);
-  ::scrc_put_chars(m_display,"  ",CYAN,  line,30,0);
-  ::scrc_put_chars(m_display,"...CPU(s) started",NORMAL|BOLD,  line,33,0);
-  ::scrc_put_chars(m_display,"  ",MAGENTA,  line,60,0);
-  ::scrc_put_chars(m_display,"...Mounting disks",NORMAL|BOLD,  line,63,0);
+  ::scrc_put_chars(m_display,"  ",               CYAN|INVERSE,    ++line, 3,0);
+  ::scrc_put_chars(m_display,"...PCI started",   NORMAL,            line, 7,0);
+  ::scrc_put_chars(m_display,"  ",               CYAN,              line,30,0);
+  ::scrc_put_chars(m_display,"...CPU(s) started",NORMAL|BOLD,       line,33,0);
+  ::scrc_put_chars(m_display,"  ",               MAGENTA,           line,60,0);
+  ::scrc_put_chars(m_display,"...Mounting disks",NORMAL|BOLD,       line,63,0);
 
-  ::scrc_put_chars(m_display,"  ",MAGENTA|INVERSE,  line,90,0);
-  ::scrc_put_chars(m_display,"DHCP request seen",NORMAL,  line,93,0);
-  ::scrc_put_chars(m_display,"  ",RED|INVERSE|BOLD,++line,3,0);
-  ::scrc_put_chars(m_display,"...NOT BOOTED",BOLD,  line,7,0);
+  ::scrc_put_chars(m_display,"  ",               MAGENTA|INVERSE,   line,90,0);
+  ::scrc_put_chars(m_display,"DHCP request seen",NORMAL,            line,93,0);
+  ::scrc_put_chars(m_display,"  ",               RED|INVERSE|BOLD,++line, 3,0);
+  ::scrc_put_chars(m_display,"...NOT BOOTED",    BOLD,              line, 7,0);
+  ::scrc_put_chars(m_display,"TMGR",             BOLD,              line,30,0);
+  ::scrc_put_chars(m_display,"TaskSupervisor OK",NORMAL,            line,35,0);
 
 
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
@@ -88,7 +90,7 @@ void BootClusterDisplay::update(const void* data) {
 
   //                       1         2         3         4         5         6         7         8
   //             012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-  ::sprintf(txt,"  Node       DHCP Mount  CPU ETH0 ETH1  PCI  TCP  FMC Flag Times:DHCP     MOUNT       FMC");
+  ::sprintf(txt,"  Node       DHCP Mount  CPU ETH0 ETH1  PCI  TCP  FMC TMGR  Flag Times:DHCP     MOUNT       FMC");
   ::scrc_put_chars(m_display,txt,YELLOW|MAGENTA,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   for(_N::const_iterator i=ns.nodes.begin(); i!=ns.nodes.end(); i=ns.nodes.next(i)) {
@@ -100,10 +102,11 @@ void BootClusterDisplay::update(const void* data) {
     else                ::strcpy(text2,"<Unknown>");
     if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%H:%M:%S",::localtime(&n.fmcStart));
     else                ::strcpy(text3,"<Unknown>");
-    ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s   %02X %10s%10s%10s",
+    ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s %4s   %03X %10s%10s%10s",
 	      n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(ETH0_STARTED),_F(ETH1_STARTED),
-	      _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),st,text1,text2,text3);
-    if      ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
+	      _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),_F(TASKMAN_OK),st,text1,text2,text3);
+    if      ( 0 != (st&BootNodeStatus::TASKMAN_OK)      ) col = GREEN|INVERSE;
+    else if ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::TCP_STARTED)     ) col = GREEN|BOLD;
     else if ( 0 != (st&BootNodeStatus::ETH1_STARTED)    ) col = BLUE|INVERSE;
     else if ( 0 != (st&BootNodeStatus::ETH0_STARTED)    ) col = BLUE|BOLD;

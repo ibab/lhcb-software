@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.15 2010-09-17 09:47:12 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.16 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.15 2010-09-17 09:47:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.16 2010-10-12 17:47:05 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -91,22 +91,30 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   int eb_width = width/3;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
+  m_moores     = 0;
+  m_builders   = 0;
+  m_holders    = 0;
+  m_senders    = 0;
   m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),            Area(width,nodes_height),"Node Information");
-  m_moores     = createSubDisplay(Position(posx,m_nodes->bottom()),          Area(width,moores_height),"Moore Processes");
-  m_builders   = createSubDisplay(Position(posx,m_moores->bottom()),         Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event builders");
-  m_holders    = createSubDisplay(Position(posx+eb_width,m_moores->bottom()),Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event Producers");
-  m_senders    = createSubDisplay(Position(posx+2*eb_width,m_moores->bottom()),Area(width-2*eb_width,posy+m_area.height-m_moores->bottom()),"Event Senders");
+  int bottom = m_nodes->bottom();
+  if ( moores_height > 0 ) {
+    m_moores     = createSubDisplay(Position(posx,bottom),          Area(width,moores_height),"Moore Processes");
+    bottom = m_moores->bottom();
+  }
+  m_builders   = createSubDisplay(Position(posx,bottom),         Area(eb_width,posy+m_area.height-bottom),"Event builders");
+  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(eb_width,posy+m_area.height-bottom),"Event Producers");
+  m_senders    = createSubDisplay(Position(posx+2*eb_width,bottom),Area(width-2*eb_width,posy+m_area.height-bottom),"Event Senders");
   end_update();
 }
 
 /// Standard destructor
 SubfarmDisplay::~SubfarmDisplay()  {
   begin_update();
-  delete m_nodes;
-  delete m_moores;
-  delete m_builders;
-  delete m_holders;
-  delete m_senders;
+  if ( m_nodes    ) delete m_nodes;
+  if ( m_moores   ) delete m_moores;
+  if ( m_builders ) delete m_builders;
+  if ( m_holders  ) delete m_holders;
+  if ( m_senders  ) delete m_senders;
   end_update();
 }
 
@@ -180,14 +188,15 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
   m_holders->draw_line_reverse  (" PRODUCER         Seen   Produced MEP EVT");
   m_senders->draw_line_reverse  (" SENDER            Sent Pend RES         ");
 
-  ::memset(txt,' ',sizeof(txt));
-  for(int i=0; i<3;++i ) {
-    ::sprintf(txt+eb_width*i," MOORE              Seen  Accept EVT RES   ");
-    txt[strlen(txt)] = ' ';
+  if ( m_moores ) {
+    ::memset(txt,' ',sizeof(txt));
+    for(int i=0; i<3;++i ) {
+      ::sprintf(txt+eb_width*i," MOORE              Seen  Accept EVT RES   ");
+      txt[strlen(txt)] = ' ';
+    }
+    txt[3*eb_width+3] = 0;
+    m_moores->draw_line_reverse(txt);
   }
-  txt[3*eb_width+3] = 0;
-  m_moores->draw_line_reverse(txt);
-
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     string prod_name;
@@ -235,15 +244,17 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
             }
             break;
           case MOORE_TASK:
-            //  Normal  and        TAE event processing
-            if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
-              moores[nam].in += cl.events;
-              moores[nam].st_in = cl.state;
-            }
-            else if ( b==RES_BUFFER || b==SND_BUFFER ) {
-              moores[nam].out += cl.events;
-              moores[nam].st_out = cl.state;
-            }
+	    if ( m_moores ) {
+	      //  Normal  and        TAE event processing
+	      if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
+		moores[nam].in += cl.events;
+		moores[nam].st_in = cl.state;
+	      }
+	      else if ( b==RES_BUFFER || b==SND_BUFFER ) {
+		moores[nam].out += cl.events;
+		moores[nam].st_out = cl.state;
+	      }
+	    }
             break;
           default:
             break;
@@ -256,24 +267,26 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
                                   sstat[prod.st_in],sstat[prod.st_out]);
     }
   }
-  ::memset(txt,' ',sizeof(txt));
-  txt[m_area.width] = 0;
-  for(map<string,TaskIO>::const_iterator i=moores.begin(); i!=moores.end();++i) {
-    const TaskIO& m = (*i).second;
-    ::sprintf(txt+eb_width*nTsk," %-12s%11d%8d %3s %3s   ",(*i).first.c_str(),m.in,m.out,sstat[m.st_in],sstat[m.st_out]);
-    if ( ++nTsk == 3 ) {
-      txt[3*eb_width+3] = 0;
-      m_moores->draw_line_normal(txt);
-      ::memset(txt,' ',sizeof(txt));
-      txt[sizeof(txt)-1] = 0;
-      nTsk = 0;
+  if ( m_moores ) {
+    ::memset(txt,' ',sizeof(txt));
+    txt[m_area.width] = 0;
+    for(map<string,TaskIO>::const_iterator i=moores.begin(); i!=moores.end();++i) {
+      const TaskIO& m = (*i).second;
+      ::sprintf(txt+eb_width*nTsk," %-12s%11d%8d %3s %3s   ",(*i).first.c_str(),m.in,m.out,sstat[m.st_in],sstat[m.st_out]);
+      if ( ++nTsk == 3 ) {
+	txt[3*eb_width+3] = 0;
+	m_moores->draw_line_normal(txt);
+	::memset(txt,' ',sizeof(txt));
+	txt[sizeof(txt)-1] = 0;
+	nTsk = 0;
+      }
+      else {
+	txt[strlen(txt)] = ' ';
+      }
     }
-    else {
-      txt[strlen(txt)] = ' ';
-    }
+    txt[m_area.width] = 0;
+    m_moores->draw_line_normal(txt);
   }
-  txt[m_area.width] = 0;
-  if ( nTsk>0 ) m_moores->draw_line_normal(txt);
 }
 
 /// Update header information
@@ -332,20 +345,20 @@ string SubfarmDisplay::nodeName(size_t offset) {
 void SubfarmDisplay::updateDisplay(const Nodeset& ns)   {
   begin_update();
   m_nodes->begin_update();
-  m_moores->begin_update();
-  m_builders->begin_update();
-  m_holders->begin_update();
-  m_senders->begin_update();
+  if ( m_moores   ) m_moores->begin_update();
+  if ( m_builders ) m_builders->begin_update();
+  if ( m_holders  ) m_holders->begin_update();
+  if ( m_senders  ) m_senders->begin_update();
 
   showHeader(ns);
   showNodes(ns);
   showTasks(ns);
 
   m_nodes->end_update();
-  m_moores->end_update();
-  m_builders->end_update();
-  m_holders->end_update();
-  m_senders->end_update();
+  if ( m_moores   ) m_moores->end_update();
+  if ( m_builders ) m_builders->end_update();
+  if ( m_holders  ) m_holders->end_update();
+  if ( m_senders  ) m_senders->end_update();
   end_update();
 }
 

@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.h,v 1.1 2010-10-06 21:55:23 frankb Exp $
+// $Id: FarmStatClusterDisplay.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatClusterDisplay.h,v 1.1 2010-10-06 21:55:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatClusterDisplay.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
 #ifndef ONLINE_ROMON_FARMSTATCLUSTERDISPLAY_H
 #define ONLINE_ROMON_FARMSTATCLUSTERDISPLAY_H
 
@@ -38,7 +38,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmStatClusterLine  {
+  class FarmStatClusterLine : public Interactor  {
   public:
     typedef std::map<std::string,std::map<std::string,std::vector<float> > > _CI;
     typedef std::map<std::string,std::map<std::string,std::vector<int> > >   _MI;
@@ -60,6 +60,12 @@ namespace ROMon {
     const _MI& mbmData() const                { return m_mbmData;   }
     /// The line position in the display
     int position() const                      { return m_position;  }
+    /// Access to parent
+    FarmStatDisplay* parent() const           {  return m_parent;   }
+    /// Start DIM services for this subfarm line
+    int start();
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
     /// DIM command service callback
     static void mbmHandler(void* tag, void* address, int* size);
     /// DIM command service callback

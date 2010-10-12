@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.3 2010-10-11 06:40:52 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.4 2010-10-12 17:47:05 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.3 2010-10-11 06:40:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.4 2010-10-12 17:47:05 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -65,8 +65,6 @@ public:
 
     const FarmStatClusterLine* currentLine() const       { return m_currLine; }
     void setCurrentLine(const FarmStatClusterLine* line) { m_currLine = line; }
-    /// Set cursor to position
-    virtual void set_cursor(InternalDisplay* disp);
     /// Set cursor to line position
     virtual void set_cursor(const FarmStatClusterLine* line);
     /// Interactor overload: Display callback handler
@@ -87,7 +85,6 @@ public:
 }
 
 #include "SCR/MouseSensor.h"
-#include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/Lock.h"
@@ -108,9 +105,9 @@ extern "C" {
 #include <limits>
 #include <cstdio>
 #include <cstdlib>
-#include <cstdarg>
+//#include <cstdarg>
 #include <cstring>
-#include <iostream>
+//#include <iostream>
 #include <algorithm>
 
 using namespace ROMon;
@@ -119,8 +116,8 @@ using namespace std;
 
 typedef vector<string>               StringV;
 
-#define BOOTLINE_START      3
-#define BOOTLINE_FIRSTPOS   9
+#define STATLINE_START      3
+#define STATLINE_FIRSTPOS   9
 
 typedef set<string> _SETV;
 
@@ -149,14 +146,14 @@ namespace {
 	    vals.push_back(_cnvItem(p,(T*)0));
 	    q = e;
 	  }
-	  cout << endl;
+	  //cout << endl;
 	}
       }
     }
   }
     
   void help() {
-    printf("  romon_boot_display -option [-option]\n"
+    printf("  romon_farmstat_display -option [-option]\n"
 	   "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays\n");
   }
 
@@ -166,6 +163,12 @@ namespace {
     bool operator()(const pair<string,FarmStatClusterLine*>& o) 
     {    return o.second->position() == pos;  }
   };
+
+  void startFarmStatLine(const pair<string,FarmStatClusterLine*>& l) 
+  { IocSensor::instance().send(l.second,CMD_CONNECT,l.second);  }
+
+  void displayFarmStatLine(const pair<string,FarmStatClusterLine*>& l) 
+  { l.second->parent()->display(l.second);  }
 
   struct DisplayUpdate {
     Pasteboard* m_pb;
@@ -185,10 +188,7 @@ namespace {
 FarmStatClusterLine::FarmStatClusterLine(FarmStatDisplay* p, int pos, const std::string& n)
   : m_mbm(0), m_cpu(0), m_position(pos), m_parent(p), m_name(n)
 {
-  string svc = "/FarmStats/"+strlower(n)+"/MBM";
-  m_mbm = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,mbmHandler,(long)this,0,0);
-  svc = "/FarmStats/"+strlower(n)+"/CPU";
-  m_cpu = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,cpuHandler,(long)this,0,0);
+  //m_parent->display(this);
 }
 
 FarmStatClusterLine::~FarmStatClusterLine() {
@@ -202,13 +202,39 @@ FarmStatClusterLine::~FarmStatClusterLine() {
   }
 }
 
+/// Start DIM services for this subfarm line
+int FarmStatClusterLine::start() {
+  string svc = "/FarmStats/"+strlower(m_name)+"/MBM";
+  if ( !m_mbm ) m_mbm = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,mbmHandler,(long)this,0,0);
+  svc = "/FarmStats/"+strlower(m_name)+"/CPU";
+  if ( !m_cpu ) m_cpu = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,cpuHandler,(long)this,0,0);
+  return m_cpu !=0 && m_mbm != 0 ? 1 : 0;
+}
+
+/// Interactor overload: Display callback handler
+void FarmStatClusterLine::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case IocEvent:
+    switch(ev.type) {
+    case CMD_CONNECT:
+      start();
+      break;
+    default:
+      break;
+    }
+    break;
+  default:
+    break;
+  }
+}
+
 /// DIM command service callback
 void FarmStatClusterLine::cpuHandler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
     FarmStatClusterLine* l = *(FarmStatClusterLine**)tag;
     l->m_cpuData.clear();
     _cnv((const char*)address, l->m_cpuData);
-    l->m_parent->display(l);
+    IocSensor::instance().send(l->m_parent,CMD_SHOW,l);
   }
 }
 
@@ -218,13 +244,13 @@ void FarmStatClusterLine::mbmHandler(void* tag, void* address, int* size) {
     FarmStatClusterLine* l = *(FarmStatClusterLine**)tag;
     l->m_mbmData.clear();
     _cnv((const char*)address, l->m_mbmData);
-    l->m_parent->display(l);
+    IocSensor::instance().send(l->m_parent,CMD_SHOW,l);
   }
 }
 
 /// Standard constructor
 FarmStatDisplay::FarmStatDisplay(int argc, char** argv)
-  : InternalDisplay(0,""), m_posCursor(BOOTLINE_FIRSTPOS), m_anchorX(10), m_anchorY(10), m_currLine(0)
+  : InternalDisplay(0,""), m_posCursor(STATLINE_FIRSTPOS), m_anchorX(10), m_anchorY(10), m_currLine(0)
 {
   string anchor;
   RTL::CLI cli(argc,argv,help);
@@ -252,35 +278,38 @@ FarmStatDisplay::FarmStatDisplay(int argc, char** argv)
   }
   s_fd = this;
   m_title = " MBM/CPU statistics display";
+
   ::scrc_create_pasteboard (&m_pasteboard, 0, &m_height, &m_width);
   ScrDisplay::setPasteboard(m_pasteboard);
   ScrDisplay::setBorder(BLUE|INVERSE);
   m_width -= 2;
   m_height -= 2;
+
   ::scrc_create_display (&m_display, m_height, m_width, NORMAL, ON, m_title.c_str());
-  show(2,2);
-  ::scrc_put_chars(m_display,"",NORMAL,1,BOOTLINE_START,1);
-  ::scrc_put_chars(m_display,"",NORMAL,1,BOOTLINE_START+1,1);
+  for(int i=1;i<m_height;++i) ::scrc_put_chars(m_display," ",NORMAL,1,i,1);
+  ::scrc_put_chars(m_display," ",NORMAL,1,STATLINE_START,1);
+  ::scrc_put_chars(m_display," ",NORMAL,1,STATLINE_START+1,1);
+  ::scrc_put_chars(m_display,"Press <CTRL-H> for Help, <CTRL-E> to exit",BOLD|BLUE,2,STATLINE_START,1);
+  ::scrc_put_chars(m_display,"Use Arrow keys to select a subfarm.",BOLD|BLUE,3,STATLINE_START,1);
+  ::scrc_put_chars(m_display,"Press <ENTER> or <left-mouse-double-click> to show subfarm display.",BOLD|BLUE,4,STATLINE_START,1);
 
-  ::scrc_put_chars(m_display,"Press <CTRL-H> for Help, <CTRL-E> to exit",BOLD|BLUE,2,BOOTLINE_START,1);
-  ::scrc_put_chars(m_display,"Use Arrow keys to select a subfarm.",BOLD|BLUE,3,BOOTLINE_START,1);
-  ::scrc_put_chars(m_display,"Press <ENTER> or <left-mouse-double-click> to show subfarm display.",BOLD|BLUE,4,BOOTLINE_START,1);
-
-  ::scrc_create_display(&m_header,1, m_width-3, NORMAL, ON, m_title.c_str());
-  ::scrc_put_chars(m_header,"Cluster",RED|BOLD|INVERSE,1,BOOTLINE_START-1,1);
-  ::scrc_put_chars(m_header,"Ctrl-PC",RED|BOLD|INVERSE,1,BOOTLINE_START+10,0);
-  ::scrc_put_chars(m_header,"Cluster members",RED|BOLD|INVERSE,1,BOOTLINE_START+19,1);
+  ::scrc_create_display(&m_header,1, m_width-3, NORMAL, ON, "Legend");
+  ::scrc_put_chars(m_header,"Cluster",RED|BOLD|INVERSE,1,STATLINE_START-1,1);
+  ::scrc_put_chars(m_header,"Ctrl-PC",RED|BOLD|INVERSE,1,STATLINE_START+10,0);
+  ::scrc_put_chars(m_header,"Cluster members",RED|BOLD|INVERSE,1,STATLINE_START+19,1);
   ::scrc_set_border(m_header,"",NORMAL);
-  ::scrc_paste_display(m_header, m_pasteboard,8,BOOTLINE_START);
 
+  ::scrc_paste_display(m_display, m_pasteboard, 2, 2);
+  ::scrc_paste_display(m_header,  m_pasteboard,8,STATLINE_START);
+
+  ::scrc_cursor_off(m_pasteboard);
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_fflush(m_pasteboard);
-  ::scrc_set_cursor(m_display, BOOTLINE_FIRSTPOS, BOOTLINE_START);
-  ::scrc_cursor_off(m_pasteboard);
+
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
-  //MouseSensor::instance().add(this,this->InternalDisplay::display());
+  MouseSensor::instance().add(this,this->InternalDisplay::display());
   m_svc = ::dic_info_service((char*)"/FarmStats/SERVICE_LIST",MONITORED,0,0,0,dataHandler,(long)this,0,0);
 }
 
@@ -302,34 +331,22 @@ FarmStatDisplay::~FarmStatDisplay()  {
 
 // Display cluster information in line form
 void FarmStatDisplay::display(const FarmStatClusterLine* line) {
-  typedef FarmStatClusterLine::_CI _CI;
-  size_t pos = line->position();
+  size_t len = 0, pos = line->position();
   int col = NORMAL;
-  Pasteboard* pb = pasteboard();
+  char txt[1024];
   const char *nam = line->name().c_str();
-
-  RTL::Lock lock(screenLock());
-  ::scrc_cursor_off(pb);
-  ::scrc_begin_pasteboard_update (pb);
-  ::scrc_put_chars(m_display,nam,(pos==m_posCursor?BLUE|INVERSE:NORMAL)|BOLD,pos,BOOTLINE_START,0);
-  int xp = 11+BOOTLINE_START;
-  for(_CI::const_iterator ci=line->cpuData().begin(); ci != line->cpuData().end(); ++ci)  {
-    char txt[64];
+  txt[0] = 0;
+  for(FarmStatClusterLine::_CI::const_iterator ci=line->cpuData().begin(); ci != line->cpuData().end(); ++ci)  {
     const char* n = (*ci).first.c_str();
-    ::sprintf(txt," %s ",n+(::strncmp(n,nam,::strlen(nam)+2) ? ::strlen(n)-2 : 0));
-    ::scrc_put_chars(m_display,txt,col,pos,xp,0);
-    xp += ::strlen(txt)+1;
+    bool is_ctrl = ::strncmp(n,nam,::strlen(nam)+2) == 0;
+    ::sprintf(txt+len," %s ",n+(is_ctrl ? 0 : ::strlen(n)-2));
+    len = ::strlen(txt);
   }
-  ::scrc_put_chars(m_display," ",NORMAL,pos,xp,1);
-  if ( m_clusterDisplay.get() && m_clusterDisplay->name() == nam )  {
-    m_clusterDisplay->update(line);
+  ::scrc_put_chars(m_display,nam,(pos==m_posCursor?BLUE|INVERSE:NORMAL)|BOLD,pos,STATLINE_START,0);
+  ::scrc_put_chars(m_display,txt,col,pos,11+STATLINE_START,1);
+  if ( m_clusterDisplay.get() && m_clusterDisplay->name() == line->name() )  {
+    m_clusterDisplay->update(line);    
   }
-  ::scrc_end_pasteboard_update(pb);
-  //if ( pos == m_posCursor ) {
-  if ( !m_clusterDisplay.get() )  {
-    ::scrc_set_cursor(m_display,m_posCursor,BOOTLINE_START);
-  }
-  ::scrc_cursor_on(pb);
 }
 
 /// Keyboard rearm action
@@ -346,24 +363,13 @@ int FarmStatDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
 }
 
 /// Set cursor to position
-void FarmStatDisplay::set_cursor(InternalDisplay* d) {
-  if ( d ) {
-    if ( d->display() ) {
-      ::scrc_set_cursor(d->display(),2,BOOTLINE_START);
-    }
-  }
-}
-
-/// Set cursor to position
 void FarmStatDisplay::set_cursor(const FarmStatClusterLine* line) {
   const FarmStatClusterLine* curr = currentLine();
-  if ( curr )   {
-    ::scrc_put_chars(m_display,curr->name().c_str(),NORMAL|BOLD,curr->position(),BOOTLINE_START,0);
-  }
+  if ( curr ) ::scrc_put_chars(m_display,curr->name().c_str(),NORMAL|BOLD,curr->position(),STATLINE_START,0);
   setCurrentLine(line);
-  if ( line ) {
-    ::scrc_put_chars(m_display,line->name().c_str(),BLUE|BOLD|INVERSE,line->position(),BOOTLINE_START,0);
-    ::scrc_set_cursor(m_display,line->position(),2);
+  if ( line )  {
+    ::scrc_put_chars(m_display,line->name().c_str(),BLUE|BOLD|INVERSE,line->position(),STATLINE_START,0);
+    if ( m_clusterDisplay.get() ) m_clusterDisplay->update(line);
   }
 }
 
@@ -428,11 +434,11 @@ int FarmStatDisplay::handleKeyboard(int key)    {
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,m_posCursor);
       return WT_SUCCESS;
     case MOVE_UP:
-      if( m_posCursor>BOOTLINE_FIRSTPOS ) --m_posCursor;
+      if( m_posCursor>STATLINE_FIRSTPOS ) --m_posCursor;
       IocSensor::instance().send(this,CMD_POSCURSOR,m_posCursor);
       break;
     case MOVE_DOWN:
-      if( m_posCursor < m_clusters.size()+BOOTLINE_FIRSTPOS ) ++m_posCursor;
+      if( m_posCursor < m_clusters.size()+STATLINE_FIRSTPOS ) ++m_posCursor;
       IocSensor::instance().send(this,CMD_POSCURSOR,m_posCursor);
       break;
     default:
@@ -447,6 +453,8 @@ int FarmStatDisplay::handleKeyboard(int key)    {
 /// Interactor overload: Display callback handler
 void FarmStatDisplay::handle(const Event& ev) {
   const MouseEvent* m = 0;
+  Clusters::iterator i;
+  Pasteboard* pb = pasteboard();
 
   RTL::Lock lock(screenLock());
   switch(ev.eventtype) {
@@ -456,84 +464,57 @@ void FarmStatDisplay::handle(const Event& ev) {
       IocSensor::instance().send(this,CMD_SHOWHELP,this);
     }
     else if ( m->msec != (unsigned int)-1 ) {
-      if ( m_helpDisplay.get() ) {
+      if ( m_helpDisplay.get() )
         IocSensor::instance().send(this,CMD_SHOWHELP,this);
-      }
-      else {
+      else
         IocSensor::instance().send(this,CMD_SHOWSUBFARM,m->y-1);
-      }
     }
     return;
   case TimeEvent:
-    return;
+    break;
   case IocEvent:
     switch(ev.type) {
-    case CMD_CONNECT: {
-      char txt[256];
-      Clusters copy = m_clusters;
-      Clusters::iterator j;
-      auto_ptr<_SETV> nodes((_SETV*)ev.data);
-      dim_lock();
-      m_clusters.clear();
-      m_posCursor = BOOTLINE_FIRSTPOS;
-      for(_SETV::const_iterator i=nodes->begin(); i!=nodes->end(); ++i) {
-	const string& n = *i;
-	if ( (j=copy.find(n)) == copy.end() ) {
-	  FarmStatClusterLine* l = new FarmStatClusterLine(this,m_clusters.size()+BOOTLINE_FIRSTPOS,n);
-	  if ( !m_currLine ) m_currLine = l;
-	  m_clusters.insert(make_pair(n,l));
-	}
-	else {
-	  m_clusters.insert(make_pair(n,(*j).second));
-	  copy.erase(j);
-	}
-      }
-      for(j=copy.begin(); j != copy.end(); ++j)
-	delete (*j).second;
-      ::sprintf(txt,"Total number of subfarms:%d",int(m_clusters.size()));
-      ::scrc_begin_pasteboard_update(m_pasteboard);
-      ::scrc_put_chars(m_display,txt,BOLD,1,BOOTLINE_START,1);
-      ::scrc_end_pasteboard_update(m_pasteboard);
-      ::scrc_set_cursor(m_display, BOOTLINE_FIRSTPOS, BOOTLINE_START);
-      dim_unlock();
+    case CMD_UPDATE:
+      update((char*)ev.data + sizeof(int));
       break;
-    }
-
-    case CMD_UPDATE: {
-      unsigned char* ptr = (unsigned char*)ev.data;
-      this->update(ptr + sizeof(int));
-      break;
-    }
     case CMD_HANDLE_KEY:
       handleKeyboard(int((long)ev.data));
       break;
+    case CMD_SHOW: {
+      char txt[256];
+      time_t now = ::time(0);
+      size_t len = ::sprintf(txt,"Total number of subfarms:%d",int(m_clusters.size()));
+      ::strftime(&txt[len],sizeof(txt)-len,"    %H:%M:%S",::localtime(&now));      
+      ::scrc_begin_pasteboard_update (pb);
+      ::scrc_put_chars(m_display,txt,BOLD,1,STATLINE_START,1);
+      dim_lock();
+      for_each(m_clusters.begin(),m_clusters.end(),displayFarmStatLine);
+      dim_unlock();
+      set_cursor(currentLine());
+      ::scrc_end_pasteboard_update(pb);
+      return;
+    }
     case CMD_SHOWHELP:
       showHelpWindow();
       break;
     case CMD_SHOWSUBFARM:
       if ( !m_helpDisplay.get() ) {
 	m_posCursor = (long)ev.data;
-	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
-	if ( i != m_clusters.end() ) {
-	  showClusterWindow((*i).second);
-	  IocSensor::instance().send(this,CMD_POSCURSOR,m_posCursor);
-	}
+	i= find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
+	if ( i != m_clusters.end() )  showClusterWindow((*i).second);
       }
       break;
-
     case CMD_POSCURSOR:
       if ( !m_helpDisplay.get() ) {
 	m_posCursor = (long)ev.data;
-	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
+	i = find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
 	if ( i != m_clusters.end() ) {
+	  FarmStatClusterLine* line = (*i).second;
 	  DisplayUpdate update(this);
-	  if ( m_clusterDisplay.get() )  {
-	    m_clusterDisplay->update((*i).second);
-	    ::scrc_set_cursor(m_clusterDisplay->display(),2,2);
-	  }
-	  else {
-	    set_cursor((*i).second);
-	  }
+	  set_cursor(line);
+	  dim_lock();
+	  display(line);
+	  dim_unlock();
 	}
       }
       break;
@@ -571,7 +552,32 @@ void FarmStatDisplay::update(const void* address) {
 	at = strchr(last+1,'/');
       }
       if ( !nodes->empty() ) {
-	IocSensor::instance().send(this,CMD_CONNECT,nodes.release());
+	Clusters::iterator j;
+	FarmStatClusterLine* l;
+	Clusters copy = m_clusters;
+	m_clusters.clear();
+	m_posCursor = STATLINE_FIRSTPOS;
+	for(_SETV::const_iterator i=nodes->begin(); i!=nodes->end(); ++i) {
+	  const string& n = *i;
+	  if ( (j=copy.find(n)) == copy.end() ) {
+	    l = new FarmStatClusterLine(this,m_clusters.size()+STATLINE_FIRSTPOS,n);
+	    m_clusters.insert(make_pair(n,l));
+	  }
+	  else {
+	    l = (*j).second;
+	    m_clusters.insert(make_pair(n,(*j).second));
+	    copy.erase(j);
+	  }
+	  if ( !m_currLine )   {
+	    m_currLine = l;
+	    m_posCursor = l->position();
+	  }
+	}
+	for(j=copy.begin(); j != copy.end(); ++j)
+	  delete (*j).second;
+	for_each(m_clusters.begin(),m_clusters.end(),startFarmStatLine);
+	for_each(m_clusters.begin(),m_clusters.end(),displayFarmStatLine);
+	IocSensor::instance().send(this,CMD_SHOW,(void*)0);
       }
     }
   }
@@ -579,9 +585,8 @@ void FarmStatDisplay::update(const void* address) {
 
 // Main entry routine to start the display application
 extern "C" int romon_farmstat_display(int argc,char** argv) {
-  FarmStatDisplay* disp = new FarmStatDisplay(argc,argv);
+  auto_ptr<FarmStatDisplay> disp(new FarmStatDisplay(argc,argv));
   IocSensor::instance().run();
-  delete disp;
   return 1;
 }
 
