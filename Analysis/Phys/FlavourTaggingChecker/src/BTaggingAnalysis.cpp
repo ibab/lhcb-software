@@ -187,6 +187,7 @@ StatusCode BTaggingAnalysis::execute() {
     debug() <<"Unselected. Skip." <<endreq;
     return StatusCode::SUCCESS;
   }
+  tuple -> column ("minBChi2", AXBS->endVertex()->chi2PerDoF());
   //----------------------------------------------
 
   //---------------------------------------

@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 - Marco Musy
+ . added in btagginganalysis the variable minchi2 of B hypo
+
 ! 2010-10-10 - Marco Musy
  . added the possibility to include external file into options
    in /root option file tag.opts
