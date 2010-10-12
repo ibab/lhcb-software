@@ -3,7 +3,48 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 !=============================================================================
-</PRE><H1><A NAME="v38r8">2010-08-13 - GaussSys v38r8</A></H1><PRE>
+</PRE><H1><A NAME="v38r9">2010-10-12 - GaussSys v38r9</A></H1><PRE>
+<H2><A NAME="Note">Development for 2010 data. 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v31r6 (and Gaudi v21r11)</b>
+   AppConfig v3r*,
+   <b>DecFiles v23r*</b>, 
+   ParamFiles v8r3, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   pythia6 421.2, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   <b>Geant4 v92r4 (based on geant4.9.2.p04)</b> and Geant4Files v92r0
+   XmlVis v1r12,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 130,
+</A></H3>
+
+!========================= Gauss v38r9 2010-10-12 ============================
+! 2010-10-12 - Gloria CORTI
+ - Use latest DDDB and SIMCOND tags for 2010 data (head-20101003 and
+   sim-20101008-vc-md100) in Gauss-DEV.py
+ - Use latest DecFiles major version v23r*
+
+! 2010-09-21 - Silvia Miglioranzi
+ - Corrected the QMTest gauss-dev.qmt to pick up the $GAUSSOPTS/Gauss-DEV.py 
+   (latest tags).
+ - removed wrong options:
+   $GAUSSROOT/test/options/Gauss-DEV.py
+
+!========================= EvtGen v11r10 2010-10-12 ==========================
+! 2010-10-12 - Patrick Robbe
+ - EvtPythia.cpp: correct destructor to reset vector of Pythia commands
+   bcvegpy (LHCb build)
+
+!====================== EvtGenExtras v2r5p1 2010-10-12 =======================
+! 2010-23-09 - Nikolai Nikitin
+ - Some minor bug fixes
+
+!=============================================================================
+</PRE><H1><A NAME="v38r8">2010-09-13 - GaussSys v38r8</A></H1><PRE>
 <H2><A NAME="Note">Development for 2010 data. 
    </A></H2>
 <H3><A NAME="Use">This version uses:
