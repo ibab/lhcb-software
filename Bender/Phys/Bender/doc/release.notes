@@ -9,6 +9,12 @@
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
 
+
+! ==================== Phys/Bender v15r1p1 2010-10-12 =========================
+
+! 2010-10-12 - Vanya Belyaev
+ - prepare v15r1p1 
+
 ! 2010-10-11 - Vanya Belyaev
 
  - fix the problem with the aliases on windows platform
