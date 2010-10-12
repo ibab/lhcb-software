@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= EvtGen v11r10 2010-10-12 ==========================
 ! 2010-10-12 - Patrick Robbe
  - EvtPythia.cpp: correct destructor to reset vector of Pythia commands
 
