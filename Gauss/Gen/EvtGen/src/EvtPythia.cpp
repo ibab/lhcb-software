@@ -126,7 +126,7 @@ EvtPythia::~EvtPythia(){
   
   delete [] commands ;
   commands = 0 ;
-  ncommands = 0 ;
+  ncommand = 0 ;
   
   delete [] jetsetdecays ;
   jetsetdecays = 0 ;
