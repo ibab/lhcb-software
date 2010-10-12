@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 - Vanya Belyaev
+
+ - tests/blind.cpp
+
+    fix for win32 platform 
+
 ! 2010-10-10 - Vanya Belyaev
 
    LHCbMath/Blind.h

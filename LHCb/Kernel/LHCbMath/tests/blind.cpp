@@ -61,7 +61,7 @@ int main()
   std::cout 
     << " Counter entries      : " << cnt.nEntries() << std::endl 
     << "         mean         : " << cnt.mean () << " +- " << cnt.meanErr() << std::endl 
-    << "         RMS*sqrt(12) : " << cnt.rms  () * std::sqrt ( 12 )         << std::endl 
+    << "         RMS*sqrt(12) : " << cnt.rms  () * std::sqrt ( 12.0 )       << std::endl 
     << "         min/max      : " << cnt.min  () << " / "  << cnt.max ()    << std::endl ;
   
   // ==========================================================================
