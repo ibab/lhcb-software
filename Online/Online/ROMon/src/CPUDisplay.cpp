@@ -1,4 +1,4 @@
-// $Id: CPUDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
+// $Id: CPUDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -76,21 +76,21 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
     ::sprintf(txt,"      Node:%-8s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
               cs.name,cs.family,text,cores.size(),cs.ctxtRate);
     ::scrc_put_chars(m_display,txt,INVERSE,++line,3,1);
-    ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-              "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
+    ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f",
+              "",avg.user,avg.system,avg.nice,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ);
     ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
 
     if ( strcasecmp(m_node.c_str(),cs.name) != 0 && !found ) continue;
     // No does not look that good.... 
     //found = true;
-    ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %10s %9s %9s %9s",
-              "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
+    ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %9s %10s %9s %9s",
+              "Clock","Cache","Mips","User[%]","System[%]","Nice[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ");
     ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
     for(_C::const_iterator ic=cores.begin(); ic!=cores.end(); ic=cores.next(ic)) {
       const CPU& c = *ic;
-      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-                ++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.idle,
-                c.stats.iowait,c.stats.IRQ,c.stats.softIRQ,c.stats.nice);
+      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f",
+                ++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.nice,c.stats.idle,
+                c.stats.iowait,c.stats.IRQ,c.stats.softIRQ);
       ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     }
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);

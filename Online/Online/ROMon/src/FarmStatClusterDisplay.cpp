@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.cpp,v 1.2 2010-10-07 14:27:56 frankb Exp $
+// $Id: FarmStatClusterDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.2 2010-10-07 14:27:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmStatClusterDisplay.h"
@@ -63,9 +63,9 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
     for(_Node::const_iterator ni=n.begin();ni!=n.end();++ni) {
       const vector<float>& v = (*ni).second;
       if ( (*ni).first == "Avg" ) {
-	::sprintf(txt,"%5.1f%5.1f%6.1f%7.2f ",v[0], v[1], v[2], v[3]);
+	::sprintf(txt,"%5.1f%5.1f%6.1f%6.1f%7.2f ",v[0], v[1], v[2], v[3], v[4]);
 	cpu[(*i).first] += txt;
-	::sprintf(ctxt," %9s %-24s","CPU [%]:","  User Sys  Idle IOwait");
+	::sprintf(ctxt," %9s %-30s","CPU [%]:","  User Sys  Nice  Idle IOwait ");
       }
       else {
 	::sprintf(txt,"%4.0f",v[0]+v[1]);
@@ -97,7 +97,7 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   //                       1         2         3         4         5         6         7         8
   //             012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-  ::sprintf(txt," %-9s %-s","Node Name","-- CPU Average Values ------ User + System CPU usage of individual cores in [%]");
+  ::sprintf(txt," %-9s %-s","Node Name","----- CPU Average Values --------- User + System +Nice CPU usage of individual cores in [%]");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,2,1);
   ::scrc_put_chars(m_display,ctxt,MAGENTA,++line,2,1);
   for(map<string,string>::const_iterator j, i=cpu.begin(); i!=cpu.end();++i) {

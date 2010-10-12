@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.4 2010-10-12 17:47:05 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.5 2010-10-12 18:44:51 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.4 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.5 2010-10-12 18:44:51 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -489,8 +489,8 @@ void FarmStatDisplay::handle(const Event& ev) {
       ::scrc_put_chars(m_display,txt,BOLD,1,STATLINE_START,1);
       dim_lock();
       for_each(m_clusters.begin(),m_clusters.end(),displayFarmStatLine);
-      dim_unlock();
       set_cursor(currentLine());
+      dim_unlock();
       ::scrc_end_pasteboard_update(pb);
       return;
     }
@@ -511,9 +511,9 @@ void FarmStatDisplay::handle(const Event& ev) {
 	if ( i != m_clusters.end() ) {
 	  FarmStatClusterLine* line = (*i).second;
 	  DisplayUpdate update(this);
-	  set_cursor(line);
 	  dim_lock();
 	  display(line);
+	  set_cursor(line);
 	  dim_unlock();
 	}
       }
