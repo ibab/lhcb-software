@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 Gerhard Raven
+ - fix GEC configuration: the code assumed a private tool, when it actually
+   is a public one...
+
 ! 2010-10-09 Gerhard Raven
  - scale the empty-empty beamgas contribution
 
