@@ -126,6 +126,7 @@ EvtPythia::~EvtPythia(){
   
   delete [] commands ;
   commands = 0 ;
+  ncommands = 0 ;
   
   delete [] jetsetdecays ;
   jetsetdecays = 0 ;
@@ -1319,14 +1320,15 @@ void EvtPythia::pythiaInit(int /*dummy*/){
         }
       }
     }
-
-    for(int i=0;i<ncommand;i++)
+    
+    for(int i=0;i<ncommand;i++) {
 #ifdef WIN32
       PYGIVE(commands[i].c_str(),strlen(commands[i].c_str()));
 #else
       pygive_(commands[i].c_str(),strlen(commands[i].c_str()));
 #endif
-
+    }
+    
     char fname[200];
     
     strcpy( fname , std::tmpnam( NULL ) ) ;

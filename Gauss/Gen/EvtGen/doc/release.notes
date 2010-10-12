@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 - Patrick Robbe
+ - EvtPythia.cpp: correct destructor to reset vector of Pythia commands
+
 !========================== EvtGen v11r9 2010-07-08 ==========================
 ! 2010-06-24 - Mark Whitehead
  - EvtModelReg.cpp Turned EvtBToDDalitzCPK model back on

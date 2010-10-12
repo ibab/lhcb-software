@@ -399,146 +399,146 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       ipar=EvtPDL::getId(parent);
 
       if (ipar==EvtId(-1,-1)) {
-	report(ERROR,"EvtGen") <<"Unknown particle name:"<<parent.c_str()
-			       <<" on line "
-			       <<parser.getLineofToken(itoken-1)<<endl;
-	report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
-	::abort();
+        report(ERROR,"EvtGen") <<"Unknown particle name:"<<parent.c_str()
+                               <<" on line "
+                               <<parser.getLineofToken(itoken-1)<<endl;
+        report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+        ::abort();
       }
 
       if (_decaytable[ipar.getAlias()].getNMode()!=0) {
-	report(DEBUG,"EvtGen") <<"Redefined decay of "
-			       <<parent.c_str()<<endl;
-	_decaytable[ipar.getAlias()].removeDecay();
+        report(DEBUG,"EvtGen") <<"Redefined decay of "
+                               <<parent.c_str()<<endl;
+        _decaytable[ipar.getAlias()].removeDecay();
       }
 
 
       do{
-
+        
         token=parser.getToken(itoken++);
-
+        
         if (token!="Enddecay"){
-
-	  i=0;
-	  while (token.c_str()[i++]!=0){
-	    if (isalpha(token.c_str()[i])){
-	      report(ERROR,"EvtGen") << 
-		"Expected to find a branching fraction or Enddecay "<<
-		"but found:"<<token.c_str()<<" on line "<<
-		parser.getLineofToken(itoken-1)<<endl;
-	      report(ERROR,"EvtGen") << "Possibly to few arguments to model "<<
-		"on previous line!"<<endl;
-	      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
-	      ::abort();
-	    }
-	  }
-	  
+          
+          i=0;
+          while (token.c_str()[i++]!=0){
+            if (isalpha(token.c_str()[i])){
+              report(ERROR,"EvtGen") << 
+                "Expected to find a branching fraction or Enddecay "<<
+                "but found:"<<token.c_str()<<" on line "<<
+                parser.getLineofToken(itoken-1)<<endl;
+              report(ERROR,"EvtGen") << "Possibly to few arguments to model "<<
+                "on previous line!"<<endl;
+              report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+              ::abort();
+            }
+          }
+          
           brfr=atof(token.c_str());
-
-	  int isname=EvtPDL::getId(parser.getToken(itoken)).getId()>=0;
+          
+          int isname=EvtPDL::getId(parser.getToken(itoken)).getId()>=0;
           int ismodel=modelist.isModel(parser.getToken(itoken));
-
+          
           if (!(isname||ismodel)){
-	    //see if this is an aliased model
-	    for(size_t iAlias=0;iAlias<modelAliasList.size();iAlias++){
-	      if ( modelAliasList[iAlias].matchAlias(parser.getToken(itoken)) ) {
-		ismodel=2;
-		break;
-	      }
-	    }
-	  }
-
+            //see if this is an aliased model
+            for(size_t iAlias=0;iAlias<modelAliasList.size();iAlias++){
+              if ( modelAliasList[iAlias].matchAlias(parser.getToken(itoken)) ) {
+                ismodel=2;
+                break;
+              }
+            }
+          }
+          
           if (!(isname||ismodel)){
-
-	    report(INFO,"EvtGen") << parser.getToken(itoken).c_str()
-	     << " is neither a particle name nor "
-	     << "the name of a model. "<<endl;
-	    report(INFO,"EvtGen") << "It was encountered on line "<<
-	      parser.getLineofToken(itoken)<<" of the decay file."<<endl;
-	    report(INFO,"EvtGen") << "Please fix it. Thank you."<<endl;
-	    report(INFO,"EvtGen") << "Be sure to check that the "
-	     << "correct case has been used. \n";
-	    report(INFO,"EvtGen") << "Terminating execution. \n";
-	    ::abort();
-
-	    itoken++;
-	  }
-
+            
+            report(INFO,"EvtGen") << parser.getToken(itoken).c_str()
+                                  << " is neither a particle name nor "
+                                  << "the name of a model. "<<endl;
+            report(INFO,"EvtGen") << "It was encountered on line "<<
+              parser.getLineofToken(itoken)<<" of the decay file."<<endl;
+            report(INFO,"EvtGen") << "Please fix it. Thank you."<<endl;
+            report(INFO,"EvtGen") << "Be sure to check that the "
+                                  << "correct case has been used. \n";
+            report(INFO,"EvtGen") << "Terminating execution. \n";
+            ::abort();
+            
+            itoken++;
+          }
+          
           n_daugh=0;
-
-	  while(EvtPDL::getId(parser.getToken(itoken)).getId()>=0){
+          
+          while(EvtPDL::getId(parser.getToken(itoken)).getId()>=0){
             sdaug=parser.getToken(itoken++);
             daught[n_daugh++]=EvtPDL::getId(sdaug);
-	    if (daught[n_daugh-1]==EvtId(-1,-1)) {
-	      report(ERROR,"EvtGen") <<"Unknown particle name:"<<sdaug.c_str()
-				     <<" on line "<<parser.getLineofToken(itoken)<<endl;
-	      report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
-	      ::abort();
-	    }
+            if (daught[n_daugh-1]==EvtId(-1,-1)) {
+              report(ERROR,"EvtGen") <<"Unknown particle name:"<<sdaug.c_str()
+                                     <<" on line "<<parser.getLineofToken(itoken)<<endl;
+              report(ERROR,"EvtGen") <<"Will terminate execution!"<<endl;
+              ::abort();
+            }
           }
-
-	  
+          
+          
           model=parser.getToken(itoken++);
-
-
+          
+          
           int photos=0;
           int verbose=0;
           int summary=0;
-	  
-	  do{
-	    if (model=="PHOTOS"){
-	      photos=1;
-	      model=parser.getToken(itoken++);
-	    }
-	    if (model=="VERBOSE"){
-	      verbose=1;
-	      model=parser.getToken(itoken++);
-	    }
-	    if (model=="SUMMARY"){
-	      summary=1;
-	      model=parser.getToken(itoken++);
-	    }
-	  }while(model=="PHOTOS"||
-		 model=="VERBOSE"||
-		 model=="SUMMARY");
-
-	  //see if this is an aliased model
-	  int foundAnAlias=-1;
-	  for(size_t iAlias=0;iAlias<modelAliasList.size();iAlias++){
-	    if ( modelAliasList[iAlias].matchAlias(model) ) {
-	      foundAnAlias=iAlias;
-	      break;
-	    }
-	  }
-
-	  if ( foundAnAlias==-1 ) {
-	    if(!modelist.isModel(model)){
-	      report(ERROR,"EvtGen") << 
-		"Expected to find a model name,"<<
-		"found:"<<model.c_str()<<" on line "<<
-		parser.getLineofToken(itoken)<<endl;
-	      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
-	      ::abort();
-	    }
-	  }
-	  else{
-	    model=modelAliasList[foundAnAlias].getName();
-	  }
-
-	  temp_fcn_new_model=model;
-	  temp_fcn_new=modelist.getFcn(model);
-
-
+          
+          do{
+            if (model=="PHOTOS"){
+              photos=1;
+              model=parser.getToken(itoken++);
+            }
+            if (model=="VERBOSE"){
+              verbose=1;
+              model=parser.getToken(itoken++);
+            }
+            if (model=="SUMMARY"){
+              summary=1;
+              model=parser.getToken(itoken++);
+            }
+          }while(model=="PHOTOS"||
+                 model=="VERBOSE"||
+                 model=="SUMMARY");
+          
+          //see if this is an aliased model
+          int foundAnAlias=-1;
+          for(size_t iAlias=0;iAlias<modelAliasList.size();iAlias++){
+            if ( modelAliasList[iAlias].matchAlias(model) ) {
+              foundAnAlias=iAlias;
+              break;
+            }
+          }
+          
+          if ( foundAnAlias==-1 ) {
+            if(!modelist.isModel(model)){
+              report(ERROR,"EvtGen") << 
+                "Expected to find a model name,"<<
+                "found:"<<model.c_str()<<" on line "<<
+                parser.getLineofToken(itoken)<<endl;
+              report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+              ::abort();
+            }
+          }
+          else{
+            model=modelAliasList[foundAnAlias].getName();
+          }
+          
+          temp_fcn_new_model=model;
+          temp_fcn_new=modelist.getFcn(model);
+          
+          
           if (photos){
-	    temp_fcn_new->setPHOTOS();
-	  }
+            temp_fcn_new->setPHOTOS();
+          }
           if (verbose){
-	    temp_fcn_new->setVerbose();
-	  }
+            temp_fcn_new->setVerbose();
+          }
           if (summary){
-	    temp_fcn_new->setSummary();
-	  }
-	  
+            temp_fcn_new->setSummary();
+          }
+          
 
 	  std::vector<std::string> temp_fcn_new_args;
 
