@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r9 2010-10-12 ============================
+! 2010-10-12 - Gloria CORTI
+ - Use latest DDDB and SIMCOND tags for 2010 data (head-20101003 and
+   sim-20101008-vc-md100) in Gauss-DEV.py
+ - Use latest DecFiles major version v23r*
+
 ! 2010-09-21 - Silvia Miglioranzi
  - Corrected the QMTest gauss-dev.qmt to pick up the $GAUSSOPTS/Gauss-DEV.py 
    (latest tags).

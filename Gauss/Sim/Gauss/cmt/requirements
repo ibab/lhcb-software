@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v38r8
+version v38r9
 
 #============================================================================
 #-- Structure
@@ -17,7 +17,7 @@ branches src doc options cmt job python
 use DDDB               v*     Det            -no_auto_imports
 use ParamFiles         v8r3                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v22r*  Gen            -no_auto_imports
+use DecFiles           v23r*  Gen            -no_auto_imports
 use Geant4Files	       v92r0	             -no_auto_imports
 use MIBData            v3r*                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
