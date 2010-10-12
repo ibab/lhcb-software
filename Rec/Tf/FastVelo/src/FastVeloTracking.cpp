@@ -827,7 +827,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   }
   int nbLeft  = 0;
   int nbRight = 0;
-  unsigned int lowSensor = 1000.;
+  unsigned int lowSensor = 1000;
   unsigned int highSensor = 0;
 
   for ( itH = input.rHits().begin(); input.rHits().end() != itH; ++itH ) {
@@ -1014,7 +1014,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     }
   }
 
-  unsigned int nbStations =  abs(lastStation - firstStation) + 1;
+  unsigned int nbStations =  abs( int(lastStation) - int(firstStation) ) + 1;
   if ( nbStations > input.rHits().size() ) nbStations = input.rHits().size();
   unsigned int minNbPhi = int( m_fractionFound * nbStations );
   if ( 3 > minNbPhi ) minNbPhi = 3;

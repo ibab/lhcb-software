@@ -43,13 +43,15 @@ public:
 
   FastVeloLineParams lineParams(  unsigned int strip, double frac ) const {
     if ( 0. == frac ) return  m_lineParams[strip];
-    FastVeloLineParams first = m_lineParams[strip];
-    FastVeloLineParams sec   = m_lineParams[strip+1];
-    return FastVeloLineParams( (1-frac)*first.a() + frac * sec.a(),
-                               (1-frac)*first.b() + frac * sec.b(),
-                               (1-frac)*first.c() + frac * sec.c(),
-                               (1-frac)*first.xs() + frac * sec.xs(),
-                               (1-frac)*first.ys() + frac * sec.ys());
+    const FastVeloLineParams& first = m_lineParams[strip];
+    const FastVeloLineParams& sec   = m_lineParams[strip+1];
+    float wf = float( 1.-frac );
+    float ws = float( frac );
+    return FastVeloLineParams( wf*first.a()  + ws * sec.a(),
+                               wf*first.b()  + ws * sec.b(),
+                               wf*first.c()  + ws * sec.c(),
+                               wf*first.xs() + ws * sec.xs(),
+                               wf*first.ys() + ws * sec.ys());
   }
                            
   double rPitch( double r ) const { return m_rSensor->rPitch( r ); }

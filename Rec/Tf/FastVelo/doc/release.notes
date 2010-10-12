@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 - Olivier Callot
+ - Fix Windows compilation warnings (I hope...)
+
 ! 2010-10-11 - Olivier Callot
  - Fix the updateMgrSvc call to update the geometry.
  - Add option to measure the internal timing (MeasureTime = false)

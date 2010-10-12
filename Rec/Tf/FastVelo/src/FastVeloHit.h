@@ -6,12 +6,8 @@
 #include "Kernel/LHCbID.h"
 #include "Event/VeloLiteCluster.h"
 
-/** @class FastVeloHit FastVeloHit.h
- *  This defines the Velo hits (R, Phi) to be used in the fast pattern.
- *
- *  @author Olivier Callot
- *  @date   2010-09-08
- */
+//== Auxilliary class to store all parameters in the same memory area, to 
+//== optimise memory access when decoding the Velo data
 
 class FastVeloLineParams {
 public:
@@ -23,20 +19,39 @@ public:
     m_ys = ys;
   };
   
+  FastVeloLineParams( double a, double b, double c, double xs, double ys ) {
+    m_a = float(a);
+    m_b = float(b);
+    m_c = float(c);
+    m_xs = float(xs);
+    m_ys = float(ys);
+  };
+  
   ~FastVeloLineParams() {};
   
-  float a() const { return m_a; }
-  float b() const { return m_b; }
-  float c() const { return m_c; }
-  float  xs() const { return m_xs; }
-  float  ys() const { return m_ys; }
+  float a()  const { return m_a; }
+  float b()  const { return m_b; }
+  float c()  const { return m_c; }
+  float xs() const { return m_xs; }
+  float ys() const { return m_ys; }
 private:  
   float m_a;
   float m_b;
   float m_c;
-  float  m_xs;
-  float  m_ys;
+  float m_xs;
+  float m_ys;
 };
+
+/** @class FastVeloHit FastVeloHit.h
+ *  This defines the Velo hits (R, Phi) to be used in the fast pattern.
+ *
+ * The internal represenattion is FLOAT to decrease the amount of memory,
+ * and keep it in cache. This speeds up the FastVelo tracking by 10% on certain 
+ * processors. The interface is only double, to be LHCb standard.
+ *
+ *  @author Olivier Callot
+ *  @date   2010-09-08
+ */
 
 class FastVeloHit {
 public:
@@ -53,16 +68,16 @@ public:
 
   void setHit( const LHCb::VeloLiteCluster clus,
                const unsigned int zone,
-               const float z,
-               const float rLocal,
-               const float weight ) {
+               const double z,
+               const double rLocal,
+               const double weight ) {
     m_cluster   = clus;
     m_zone      = zone;
-    m_z         = z;
-    m_rLocal    = rLocal;
-    m_global    = rLocal;
-    m_weight    = weight;
-    m_phiWeight = weight;
+    m_z         = float(z);
+    m_rLocal    = float(rLocal);
+    m_global    = float(rLocal);
+    m_weight    = float(weight);
+    m_phiWeight = float(weight);
     m_nbUsed    = 0;
     m_sensor    = clus.channelID().sensor();
     m_a         = 0.;
@@ -78,28 +93,28 @@ public:
 
   LHCb::LHCbID lhcbID() const { return m_cluster.channelID();  }
   LHCb::VeloLiteCluster cluster() const { return m_cluster;  }
-  float global()        const { return m_global; }
-  float weight()        const { return m_weight; }
-  float z()             const { return m_z;      }
+  double global()       const { return m_global; }
+  double weight()       const { return m_weight; }
+  double z()            const { return m_z;      }
   unsigned int sensor() const { return m_sensor; }
   unsigned int zone()   const { return m_zone; }
   unsigned int nbUsed() const { return m_nbUsed; }
-  float xGlobal()       const { return m_xGlobal; }
-  float yGlobal()       const { return m_yGlobal; }
+  double xGlobal()      const { return m_xGlobal; }
+  double yGlobal()      const { return m_yGlobal; }
 
-  void   setGlobal( float r )  { m_global = r; }
+  void   setGlobal( double r )  { m_global = float(r); }
   void   setUsed()              { m_nbUsed++; }
   void   clearUsed()            { m_nbUsed--; }
   void   setGlobalPosition( float x, float y ) { 
-    m_xGlobal = x; 
-    m_yGlobal = y;
+    m_xGlobal = float(x); 
+    m_yGlobal = float(y);
   }
-  void   setZ( float z )  { m_z = z; }
-  void   setSensorCentre( float x, float y ) { m_xCentre = x; m_yCentre = y; }
+  void   setZ( double z )  { m_z = float(z); }
+  void   setSensorCentre( double x, double y ) { m_xCentre = float(x); m_yCentre = float(y); }
 
-  float a() const { return m_a; }
-  float b() const { return m_b; }
-  float c() const { return m_c; }
+  double a() const { return m_a; }
+  double b() const { return m_b; }
+  double c() const { return m_c; }
 
   void setLineParameters( FastVeloLineParams params ) {
     m_a  = params.a();
@@ -109,22 +124,22 @@ public:
     m_yStripCentre = params.ys();
   }
 
-  float distance( float x, float y ) const { return m_a * x + m_b * y + m_c; }
+  double distance( double x, double y ) const { return m_a * float(x) + m_b * float(y) + m_c; }
 
-  float chi2( float x, float y ) const {
-    float d = distance( x, y );
+  double chi2( double x, double y ) const {
+    double d = distance( x, y );
     return m_weight * d * d;
   }
 
-  float xStripCentre () const { return m_xStripCentre; }
-  float yStripCentre () const { return m_yStripCentre; }
+  double xStripCentre () const { return m_xStripCentre; }
+  double yStripCentre () const { return m_yStripCentre; }
 
   void setZone( unsigned int zone )  { m_zone = zone; }
 
-  void setStartingPoint(  float x, float y ) {
+  void setStartingPoint(  double x, double y ) {
     // x and y in global. Not necessarily on the strip, but define the direction.
-    float dx = x - m_xCentre;
-    float dy = y - m_yCentre;
+    float dx = float(x) - m_xCentre;
+    float dy = float(y) - m_yCentre;
     float norm = sqrt( dx*dx + dy*dy );
     m_a = dx / norm;
     m_b = dy / norm;
@@ -133,7 +148,7 @@ public:
     m_c = - ( xOnStrip * m_a + yOnStrip * m_b );
   }  
 
-  void setPhiWeight( float r ) { m_weight = m_phiWeight/(r*r); }
+  void setPhiWeight( double r ) { m_weight = m_phiWeight/float(r*r); }
 
   struct DecreasingByZ  {
     bool operator() (const FastVeloHit* lhs, const FastVeloHit* rhs) const { return lhs->z() > rhs->z(); }
