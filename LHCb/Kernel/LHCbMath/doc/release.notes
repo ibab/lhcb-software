@@ -7,6 +7,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-10-12 - Vanya Belyaev
+ - LHCbMath/Lomont.h
+    make use of Lomont from GaudiKernel
+ - src/Lomont.cpp 
+    remove the file...
+
+! 2010-10-12 - Vanya Belyaev
 
  - tests/blind.cpp
 
