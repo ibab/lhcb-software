@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-10-13 - Chris Jones
+ - Update the Snells Law refraction tool to load detector elements on demand.
+   Needed to allow the tool to be instanciated even when the Aerogel detector
+   is completely removed.
+
 ! 2010-10-11 - Chris Jones
  - Update the Snells Law refraction correction tool to take properly into
    account the effective refractive index on a track by track basis. Fixes

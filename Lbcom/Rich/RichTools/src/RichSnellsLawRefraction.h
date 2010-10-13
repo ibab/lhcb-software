@@ -82,36 +82,64 @@ namespace Rich
 
   private:
 
-    // Do the aerogel to gas correction
+    /// Access on demand the Rich radiator detector elements
+    inline const DeRichRadiator * deRad( const Rich::RadiatorType rad ) const
+    {
+      if ( !m_radiators[rad] ) loadRadiator(rad);
+      return m_radiators[rad];
+    }
+
+    /// Load the detector element for the given radiator
+    void loadRadiator( const Rich::RadiatorType rad ) const;
+
+    /// Do the aerogel to gas correction
     void _aerogelToGas( Gaudi::XYZPoint & startPoint,
                         Gaudi::XYZVector & dir,
                         const double photonEnergy,
                         const double refAero ) const;
 
-    // Do the correction
+    /// Do the gas to aerogel correction
     void _gasToAerogel( Gaudi::XYZVector & dir,
                         const double photonEnergy,
                         const double refAero ) const;
 
-  private:
+    /// Create information for the aerogel exit plane
+    void buildAeroPlaneInfo() const;
 
-    /// Radiator tool (for intersections)
-    const IRadiatorTool * m_radiatorTool;
+    /// Access on demand the aerogel plane normal
+    inline const Gaudi::XYZVector& aeroNormVect() const
+    {
+      if ( !m_planeInfoMade ) buildAeroPlaneInfo();
+      return m_aeroNormVect;
+    }
+
+    /// Access on demand the aerogel exit plane
+    inline const Gaudi::Plane3D& aeroExitPlane() const
+    {
+      if ( !m_planeInfoMade ) buildAeroPlaneInfo();
+      return m_aeroExitPlane;
+    }
+
+
+  private:
 
     /// Pointer to general refractive index tool
     const IRefractiveIndex * m_refIndex;
 
     /// aerogel exit plane (for refraction correction)
-    Gaudi::Plane3D m_aeroExitPlane;
+    mutable Gaudi::Plane3D m_aeroExitPlane;
 
     /// Vector normal to aerogel exit plane (for refraction correction)
-    Gaudi::XYZVector m_aeroNormVect;
+    mutable Gaudi::XYZVector m_aeroNormVect;
+
+    /// Flag to say if the aerogel plane information has been constructed or not
+    mutable bool m_planeInfoMade;
 
     /// z point for plane
-    double m_minZaero;
+    mutable double m_minZaero;
 
     /// Vector of radiators
-    std::vector<const DeRichRadiator*> m_radiators;
+    mutable std::vector<const DeRichRadiator*> m_radiators;
 
     /// Flag to say if we are in HLT mode or not
     bool m_hltMode;
