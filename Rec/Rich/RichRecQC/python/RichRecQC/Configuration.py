@@ -488,18 +488,19 @@ class RichRecQCConf(RichConfigurableUser):
             sequence.Members += [mon]
 
         # ----------------------------------------------------------------
-            # Specially tuned aerogel monitor
-            trackType = ['Forward','Match']
-            name = "RiAeroMoni" + self.trackSelName(trackType)
-            aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
-            aeroMoni.HistoPrint = False
-            aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
-            #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
-            aeroMoni.CheckAeroGasPhots = True
-            aeroMoni.TrackSelector.MinPCut = 10
-            # Add to sequence
-            sequence.Members += [aeroMoni]
-
+        # Specially tuned aerogel monitor
+        #trackType = ['Forward','Match']
+        #name = "RiAeroMoni" + self.trackSelName(trackType)
+        #aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
+        #aeroMoni.HistoPrint = False
+        #aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
+        #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
+        #aeroMoni.TrackSelector.MinPCut = 10
+        #aeroMoni.MinBeta = self.getProp("MinTrackBeta")
+        # Add to sequence
+        #sequence.Members += [aeroMoni]
+        # ----------------------------------------------------------------
+            
     ## Ion Feedback monitor
     def ionfeedbackMoni(self, sequence):
         from Configurables import Rich__Mon__HPDIonFeedbackMoni

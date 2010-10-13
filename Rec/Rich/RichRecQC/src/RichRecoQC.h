@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
- *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.28 2009-07-27 20:35:28 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
@@ -114,10 +111,6 @@ namespace Rich
 
         std::vector<unsigned int> m_minRadSegs; ///< Minimum segments per radiator
         std::vector<unsigned int> m_maxRadSegs; ///< Maximum segments per radiator
-
-        /** Flag to turn on the rejection of aerogel photons if they share the same
-         *  pixel with a Rich1Gas photon */
-        bool m_checkAeroGas;
 
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;

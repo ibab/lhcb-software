@@ -52,14 +52,13 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = list_of(0.325)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
-                   m_ckResRange = list_of(0.025)(0.006)(0.004) );
+                   m_ckResRange = list_of(0.025)(0.008)(0.004) );
+  // m_ckResRange = list_of(0.025)(0.006)(0.004) );
 
   declareProperty( "Radiators", m_rads = list_of(true)(true)(true) );
 
   declareProperty( "MinRadSegs", m_minRadSegs = list_of (0)       (0)       (0)       );
   declareProperty( "MaxRadSegs", m_maxRadSegs = list_of (9999999) (9999999) (9999999) );
-
-  declareProperty( "CheckAeroGasPhots", m_checkAeroGas = false );
 
   setProperty( "NBins2DHistos", 100 );
 }
@@ -290,23 +289,6 @@ StatusCode RecoQC::execute()
 
       // count photons
       ++photsPerRad[rad];
-
-      // If turned on, reject aerogel photons for which the same pixel made a gas photon
-      if ( Rich::Aerogel == rad && m_checkAeroGas )
-      {
-        const LHCb::RichRecPixel::Photons & assocPhots = photon->richRecPixel()->richRecPhotons();
-        for ( LHCb::RichRecPixel::Photons::const_iterator iP = assocPhots.begin();
-              iP != assocPhots.end(); ++iP )
-        {
-          if ( *iP != photon )
-          {
-            if ( Rich::Rich1Gas == (*iP)->richRecSegment()->trackSegment().radiator() )
-            {
-              continue;
-            }
-          }
-        }
-      }
 
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-10-13 - Chris Jones
+ - Remove aerogel specific monitor
+
 !======================= RichRecQC v2r46 2010-09-24 ========================
 ! 2010-09-23 - Chris Jones
  - Some minor improvements to the Track selection efficiency monitor
