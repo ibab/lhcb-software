@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-10-12 - Marco Cattaneo
+ - Fix one more windows warning, converting double to float
+
 !======================== TrackTools v3r35 2010-10-01 =======================
 ! 2010-10-01 - Rob Lambert
  - Fix windows warnings, converting double to float

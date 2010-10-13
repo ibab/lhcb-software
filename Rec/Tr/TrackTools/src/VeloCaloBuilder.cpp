@@ -34,11 +34,11 @@ VeloCaloBuilder::VeloCaloBuilder( const std::string& name, ISvcLocator* pSvcLoca
   declareProperty( "OutputTracks", m_outputTracksName = "Rec/Track/VeloCalo");
 
   // -- those now taken from N.Zwahlen's code. m_zKick also used for momentum
-  declareProperty("PtkickConstant", m_ptkickConstant = (float) 1.263*Gaudi::Units::GeV);
+  declareProperty("PtkickConstant", m_ptkickConstant = 1.263f*(float)Gaudi::Units::GeV);
   declareProperty("zKick", m_zKick   = 525.0);
-  declareProperty("eRes0", m_eres[0] = (float) 0.60 );
-  declareProperty("eRes1", m_eres[1] = (float) 0.70 );
-  declareProperty("eCorrect", m_eCorrect = (float) 1.2 );
+  declareProperty("eRes0", m_eres[0] = 0.60f );
+  declareProperty("eRes1", m_eres[1] = 0.70f );
+  declareProperty("eCorrect", m_eCorrect = 1.2f );
   
 }
 
