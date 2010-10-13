@@ -168,6 +168,22 @@
     border-width:     1px;
     border-color:     #000000;
 }
+.MonitorDataHeaderRight  {
+    background-color: #DDDDDD;
+    color:            #000000;
+    text-align:       right;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+.MonitorDataHeaderLeft  {
+    background-color: #DDDDDD;
+    color:            #000000;
+    text-align:       left;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
 .MonitorSmallHeader  {
     background-color: #DDDDDD;
     color:            #000000;

@@ -5,7 +5,7 @@ var _lhcb = function() {
 };
 var _isInternetExplorer = function() 
 {  return navigator.appName == "Microsoft Internet Explorer"; };
-var _debugLoading = true;
+var _debugLoading = false;
 var _emulateBrowser = function()
 {  return navigator.appCodeName == 'Envjs';                   };
 _loadStatic = function(name)
@@ -39,13 +39,18 @@ function _loadFileAbs(base,filename, filetype)   {
 function _loadFile(filename, filetype)   {  _loadFileAbs(_fileBase,filename,filetype); };
 
 if ( _stomp_in_use )  {
+
   TCPSocket = Orbited.TCPSocket;
+  //var org_transport = Orbited.util.chooseTransport;
+  //Orbited.util.chooseTransport = function() {
+  //  return Orbited.CometTransports.LongPoll;
+  //};
   _loadStatic('/static/protocols/stomp/stomp.js');
   _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
 }
-if ( _amq_in_use )  {
-  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
-}
+//if ( _amq_in_use )  {
+//  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
+//}
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.constants.cpp');
 

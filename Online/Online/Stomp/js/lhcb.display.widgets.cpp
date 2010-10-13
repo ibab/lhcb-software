@@ -558,8 +558,7 @@ if ( !lhcb.widgets ) {
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
     tb.appendChild(tr=document.createElement('tr'));
-    tr.appendChild(td=Cell('Rates<BR>Now:<BR>Run:',   1,'MonitorDataHeader'));
-    td.rowSpan = 3;
+    tr.appendChild(td=Cell('Rates',   1,'MonitorDataHeader'));
     td.width = '12%';
     tr.appendChild(td=Cell('L0&nbsp;[Hz]',  1,'MonitorDataHeaderRight'));
     td.width = '12%';
@@ -577,9 +576,13 @@ if ( !lhcb.widgets ) {
     td.width = '12%';
 
     tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('Now:<BR>Run:',   1,'MonitorDataHeader'));
+    td.rowSpan = 2;
     tr.appendChild(tab.l0Rate);
     tr.appendChild(tab.hltRate);
-    tr.appendChild(Cell('Inc&nbsp;[Hz]:', 1,'Text-Left'));
+    tr.appendChild(td=Cell('Inc&nbsp;[Hz]:<BR>Exc&nbsp;[Hz]:', 1,'MonitorDataHeaderLeft'));
+    td.rowSpan = 2;
+    td.style.width = '10%';
     tr.appendChild(tab.physicsRateIn);
     tr.appendChild(tab.minbRateIn);
     tr.appendChild(tab.LumiRateIn);
@@ -589,7 +592,6 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(tab.l0RateRun);
     tr.appendChild(tab.hltRateRun);
-    tr.appendChild(Cell('Exc&nbsp;[Hz]:',1,'Text-Left'));
     tr.appendChild(tab.physicsRateEx);
     tr.appendChild(tab.minbRateEx);
     tr.appendChild(tab.LumiRateEx);

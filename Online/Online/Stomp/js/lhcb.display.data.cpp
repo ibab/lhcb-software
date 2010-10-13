@@ -492,8 +492,8 @@ var DataProvider = function(logger)  {
   /// Disconnect to item topics and force first update
   this.disconnect = function()  {
     this.unsubscribeAll();
-    this.service.reset();
     this.service.disconnect();
+    this.service.reset();
   };
 
   //this.start();
@@ -502,9 +502,10 @@ var DataProvider = function(logger)  {
 
 var dataProviderReset = function() {
   if ( null != _dataProvider ) {
-    _dataProvider.unsubscribeAll();
-    _dataProvider.reset();
     _dataProvider.needConnection = false;
+    _dataProvider.unsubscribeAll();
+    _dataProvider.isConnected = true;
+    _dataProvider.reset();
   }
 };
 
