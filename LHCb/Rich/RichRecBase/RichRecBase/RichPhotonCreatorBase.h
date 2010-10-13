@@ -238,6 +238,11 @@ namespace Rich
       /// Delete all photon cross references
       void deleteAllCrossReferences() const;
 
+    private: // methods
+
+      /// Printout the photon creation statistics
+      void printStats() const;
+
     protected: // data
 
       /// Flag to indicate if the tool has been used in a given event
@@ -287,6 +292,9 @@ namespace Rich
       /// Flag to turn on or off the book keeping features to save cpu time.
       bool m_bookKeep;
 
+      /// Flag to turn on or off the rejection of aerogel photons based on gas photons
+      bool m_rejAeroPhotsIfGas;
+
       /// Pointer to RichRecPhotons
       mutable LHCb::RichRecPhotons * m_photons;
 
@@ -307,11 +315,6 @@ namespace Rich
 
       /// Maximum number of photon candidates
       unsigned int m_maxPhotons;
-
-    private: // methods
-
-      /// Printout the photon creation statistics
-      void printStats() const;
 
     };
 
