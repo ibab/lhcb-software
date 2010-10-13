@@ -1,4 +1,4 @@
-from GaudiTest import RegexpReplacer
+from GaudiTest import RegexpReplacer, LineSkipper
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 
 preprocessor = LHCbPreprocessor + \
