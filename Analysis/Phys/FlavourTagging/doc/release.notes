@@ -5,6 +5,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-10-13 - Marc Grabalosa
+ - Add tool for combination of taggers using a NN
+ - More option files for stripping cuts
+ - Added IPs in muon tagger
+
 ! 2010-10-11 - Juan Palacios
  - Add python module FlavourTagging.Utils.
   . Contains class TaggingParticlesSequenceBuilder, a class to build a

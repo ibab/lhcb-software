@@ -20,7 +20,8 @@ tag.BTaggingTool.IPPU_cut = 3.0
 
 tag.BTaggingTool.addTool ( TaggerMuonTool )
 tag.BTaggingTool.TaggerMuonTool.Muon_Pt_cut   = 1.1
-tag.BTaggingTool.TaggerMuonTool.Muon_P_cut    = 0.0 
+tag.BTaggingTool.TaggerMuonTool.Muon_P_cut    = 0.0
+tag.BTaggingTool.TaggerMuonTool.Muon_IPs_cut  = 0.0 
 tag.BTaggingTool.TaggerMuonTool.Muon_lcs_cut  = 2.2
 tag.BTaggingTool.TaggerMuonTool.Muon_PIDm_cut = 2.0
 tag.BTaggingTool.TaggerMuonTool.ProbMin_muon  = 0.0
@@ -30,6 +31,7 @@ tag.BTaggingTool.addTool ( TaggerElectronTool )
 tag.BTaggingTool.TaggerElectronTool.Ele_Pt_cut    = 1.1
 tag.BTaggingTool.TaggerElectronTool.Ele_P_cut     = 0.0
 tag.BTaggingTool.TaggerElectronTool.Ele_lcs_cut   = 2.5
+tag.BTaggingTool.TaggerElectronTool.Ele_IPs_cut   = 0
 tag.BTaggingTool.TaggerElectronTool.Ele_ghost_cut =-15.0
 tag.BTaggingTool.TaggerElectronTool.VeloChargeMin = 0.0 
 tag.BTaggingTool.TaggerElectronTool.VeloChargeMax = 1.3
@@ -39,18 +41,17 @@ tag.BTaggingTool.TaggerElectronTool.ProbMin_ele   = 0.0
 tag.BTaggingTool.TaggerElectronTool.AverageOmega  = 0.33
 
 tag.BTaggingTool.addTool ( TaggerKaonOppositeTool )
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut                = 0.4
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P_cut                 = 4.0
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IPs_cut               = 3.8
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IP_cut                = 1.5
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_LCS_cut               = 2.5
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_PIDk                  =  0.0
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_PIDkp                 = -1.0
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_ghost_cut             =-14.0
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_LongTrack_IP_cut      = 999.0
-tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_upstreamTrack_IP_cut  = 999.0
-tag.BTaggingTool.TaggerKaonOppositeTool.ProbMin_kaon               = 0.0
-tag.BTaggingTool.TaggerKaonOppositeTool.AverageOmega               = 0.33
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_Pt_cut   = 0.4
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_P_cut    = 4.0
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IPs_cut  = 3.8
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_IP_cut   = 1.5
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_LCS_cut  = 2.5
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_PIDk     = 0.0
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_PIDkp    = -1.0
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_ghost_cut= -14.0
+tag.BTaggingTool.TaggerKaonOppositeTool.Kaon_ipPU_cut = 4.0
+tag.BTaggingTool.TaggerKaonOppositeTool.ProbMin_kaon  = 0.0
+tag.BTaggingTool.TaggerKaonOppositeTool.AverageOmega  = 0.33
 
 tag.BTaggingTool.addTool ( TaggerKaonSameTool )
 tag.BTaggingTool.TaggerKaonSameTool.KaonSame_Pt_cut  = 0.45

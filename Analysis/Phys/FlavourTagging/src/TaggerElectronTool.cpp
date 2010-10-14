@@ -105,6 +105,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(tsa < m_ghost_cut_ele) continue;
 
     verbose() << " Ele lcs="<< lcs <<" tsa="<<tsa<<endmsg;
+
     //calculate signed IP wrt RecVert
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);

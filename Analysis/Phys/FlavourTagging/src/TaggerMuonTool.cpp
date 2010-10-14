@@ -27,6 +27,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
 
   declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
+  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 *GeV );
   declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
   declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
@@ -95,6 +96,13 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(lcs>m_lcs_cut_muon) continue;
     verbose() << " Muon lcs="<< lcs <<endreq;
   
+    //calculate signed IP wrt RecVert
+    double IP, IPerr;
+    m_util->calcIP(*ipart, RecVert, IP, IPerr);
+    if(!IPerr) continue;
+    double IPsig = IP/IPerr;
+    if(fabs(IPsig) < m_IPs_cut_muon) continue;
+
     ncand++;
 
     if( Pt > ptmaxm ) { //Pt ordering

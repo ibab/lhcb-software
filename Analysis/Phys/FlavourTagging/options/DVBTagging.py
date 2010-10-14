@@ -45,12 +45,16 @@ tag.addTool( BackgroundCategory )
 tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
-tag.BTaggingTool.ChoosePVCriterium = "PVbyIP"#needed by CheatedSel
-tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
+tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+#tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
 tag.BTaggingTool.OutputLevel    = 3
 
 #Import cuts for MC2010
-#importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
+importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
+#Import cuts for Stripping9
+#importOptions('$FLAVOURTAGGINGOPTS/Stripping9_cuts.py')
+#Import cuts for Stripping10
+#importOptions('$FLAVOURTAGGINGOPTS/Stripping10_cuts.py')
 
 
 ######################################################################\
@@ -61,7 +65,6 @@ tagcheck = BTaggingChecker("BTaggingChecker")
 tagcheck.InputLocations = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
 tagcheck.OutputLevel = 4
-
 
 ########################################################################
 #
