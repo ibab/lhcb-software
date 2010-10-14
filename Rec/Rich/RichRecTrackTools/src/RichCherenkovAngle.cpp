@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
- *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.6 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -26,13 +23,14 @@ DECLARE_TOOL_FACTORY( CherenkovAngle );
 CherenkovAngle::CherenkovAngle ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
+  : ToolBase        ( type, name, parent ),
     m_signal        ( NULL ),
     m_richPartProp  ( NULL ),
     m_refIndex      ( NULL ),
     m_smartIDTool   ( NULL ),
     m_rayTrace      ( NULL ),
-    m_tkIndex       ( NULL )
+    m_tkIndex       ( NULL ),
+    m_nomCK         ( Rich::NRadiatorTypes, -1.0 )
 {
   // interface
   declareInterface<ICherenkovAngle>(this);
@@ -41,30 +39,16 @@ CherenkovAngle::CherenkovAngle ( const std::string& type,
 StatusCode CherenkovAngle::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",          m_rayTrace     );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true  );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
-
-  // Get the nominal refractive index for the given radiator
-
-  const double refAero     = m_refIndex->refractiveIndex( Rich::Aerogel  );
-  if ( !(refAero>0) )      return Error( "Aerogel nominal refractive index < 0"  );
-  m_nomCK[Rich::Aerogel]   = acos(1.0/refAero);
-
-  const double refRich1Gas = m_refIndex->refractiveIndex( Rich::Rich1Gas );
-  if ( !(refRich1Gas>0) )  return Error( "Rich1Gas nominal refractive index < 0" );
-  m_nomCK[Rich::Rich1Gas]  = acos(1.0/refRich1Gas);
-
-  const double refRich2Gas = m_refIndex->refractiveIndex( Rich::Rich2Gas );
-  if ( !(refRich2Gas>0) )  return Error( "Rich2Gas nominal refractive index < 0" );
-  m_nomCK[Rich::Rich2Gas]  = acos(1.0/refRich2Gas);
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endmsg;
@@ -132,6 +116,12 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment ) const
 double
 CherenkovAngle::nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const
 {
+  if ( m_nomCK[rad] < 0 )
+  {
+    // fill on demand, to avoid loading radiator detector elements until really needed
+    const double refIn = m_refIndex->refractiveIndex( rad );
+    m_nomCK[rad] = std::acos(1.0/refIn);
+  }
   return m_nomCK[rad];
 }
 
@@ -165,8 +155,8 @@ void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
     const double ckTheta = avgCherenkovTheta(segment,*hypo);
 
     // Set the value
-    const float C = 
-      static_cast<LHCb::RichRecSegment::FloatType>(rMax*(ckTheta/m_nomCK[segment->trackSegment().radiator()]));
+    const double nomCK = nominalSaturatedCherenkovTheta(segment->trackSegment().radiator());
+    const float C = static_cast<LHCb::RichRecSegment::FloatType>(rMax*(ckTheta/nomCK));
     segment->setAverageCKRadiusLocal( *hypo, C );
 
   }
@@ -240,9 +230,10 @@ double CherenkovAngle::satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
   if ( segment->avSaturatedRadiusLocal() < 0 )
   {
     // Get radius for saturated angle
+    const double nomCK = nominalSaturatedCherenkovTheta(segment->trackSegment().radiator());
     const float R = 
       static_cast<LHCb::RichRecSegment::FloatType>( avCKRingRadiusLocal( segment,
-                                                                         m_nomCK[segment->trackSegment().radiator()],
+                                                                         nomCK,
                                                                          nSamples ) );
     segment->setAvSaturatedRadiusLocal( R );
   }

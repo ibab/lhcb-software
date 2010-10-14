@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
- * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.11 2009-12-08 10:28:37 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
@@ -25,9 +22,9 @@ using namespace Rich::Rec;
 
 DECLARE_TOOL_FACTORY( DetailedTrSegMakerFromRecoTracks );
 
-//=============================================================================
+//===============================================================================
 // Standard constructor, initializes variables
-//=============================================================================
+//===============================================================================
 DetailedTrSegMakerFromRecoTracks::
 DetailedTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
@@ -123,10 +120,10 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
-  // get the radiators
-  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
-  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
-  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
+  // Radiators
+  m_radiators.push_back( usedRads(Rich::Aerogel)  ? getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : NULL );
+  m_radiators.push_back( usedRads(Rich::Rich1Gas) ? getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : NULL );
+  m_radiators.push_back( usedRads(Rich::Rich2Gas) ? getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
 
   if ( m_extrapFromRef )
   {
@@ -189,14 +186,14 @@ constructSegments( const ContainedObject * obj,
 
   // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
-        radiator != m_radiators.end();
-        ++radiator )
+        radiator != m_radiators.end(); ++radiator )
   {
+
+    // is this radiator active ?
+    if ( ! *radiator ) continue; // Means not in use
 
     // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
-    // is this radiator in use ?
-    if ( !usedRads(rad) ) continue;
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << " Considering radiator " << rad << endmsg;
@@ -756,18 +753,21 @@ void
 DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State *& state,
                                                          const LHCb::State * refState ) const
 {
-  RichRadIntersection::Vector intersections;
-  if ( 0 < getRadIntersections ( state->position(),
-                                 state->slopes(),
-                                 m_radiators[Rich::Aerogel],
-                                 intersections ) )
+  if ( m_radiators[Rich::Aerogel] )
   {
-    const Gaudi::XYZPoint & aerogelExitPoint = intersections.back().exitPoint();
-    if ( aerogelExitPoint.z() > state->z() )
+    RichRadIntersection::Vector intersections;
+    if ( 0 < getRadIntersections ( state->position(),
+                                   state->slopes(),
+                                   m_radiators[Rich::Aerogel],
+                                   intersections ) )
     {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endmsg;
-      const bool sc = moveState( state, aerogelExitPoint.z(), refState );
-      if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" ).ignore();
+      const Gaudi::XYZPoint & aerogelExitPoint = intersections.back().exitPoint();
+      if ( aerogelExitPoint.z() > state->z() )
+      {
+        if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endmsg;
+        const bool sc = moveState( state, aerogelExitPoint.z(), refState );
+        if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" ).ignore();
+      }
     }
   }
 }

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.3 2008-08-15 14:45:28 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */
@@ -154,7 +151,7 @@ namespace Rich
                              Gaudi::XYZPoint & midPoint,
                              Gaudi::XYZVector & midMomentum,
                              LHCb::RichTrackSegment::StateErrors & errors ) const;
-
+      
     private: // data
 
       /// Ray tracing tool
@@ -169,9 +166,9 @@ namespace Rich
       /// Rich1 and Rich2 detector elements
       DeRich* m_rich[Rich::NRiches];
 
-      /// typedef of array of DeRichRadiators
-      typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
-      /// Array of radiators
+      /// Type for pointers to RICH radiator detector elements
+      typedef std::vector<const DeRichRadiator*> Radiators;
+      /// Pointers to RICH radiator detector elements
       Radiators m_radiators;
 
       /// Allowable tolerance on state z positions

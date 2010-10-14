@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
- *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.4 2009-01-20 15:49:30 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -14,6 +11,9 @@
 
 #ifndef RICHRECTOOLS_RICHCHERENKOVANGLE_H
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
+
+// STL
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -49,6 +49,8 @@ namespace Rich
     /** @class CherenkovAngle RichCherenkovAngle.h
      *
      *  Tool calculating the expected Cherenkov angle
+     *
+     *  @todo Update this tool to properly handle refractive index changes on the fly ...
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
@@ -129,7 +131,7 @@ namespace Rich
       const ITrackEffectiveRefractiveIndex * m_tkIndex;
 
       /// Storage for nominal saturated Cherenkov angles
-      boost::array< double, Rich::NRadiatorTypes > m_nomCK;
+      mutable std::vector<double> m_nomCK;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

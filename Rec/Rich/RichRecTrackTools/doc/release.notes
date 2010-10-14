@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Chris Jones
+ - Various changes to avoid loading radiator detector elements until they
+   are actually needed.
+
 !======================== RichRecTrackTools v1r24p1 2010-09-01 ================
 ! 2010-09-01 - Chris Jones
  - Fix against very rare crashed caused by an array index going out of range
