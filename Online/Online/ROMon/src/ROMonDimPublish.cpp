@@ -1,4 +1,4 @@
-// $Id: ROMonDimPublish.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonDimPublish.cpp,v 1.7 2010-10-14 08:15:47 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.7 2010-10-14 08:15:47 frankb Exp $
 // C++ include files
 #include <stdexcept>
 
@@ -69,6 +69,12 @@ void ROMonDimPublish::feedData(void* tag, void** buf, int* size, int* first) {
       break;
     case NodeStats::TYPE:
       *size  = cpu.node->length();
+      break;
+    case Connectionset::TYPE:
+      *size  = cpu.connections->length();
+      break;
+    case SubfarmSummary::TYPE:
+      *size  = cpu.subfarmSummary->length();
       break;
     default:
       *size = 0;

@@ -505,6 +505,7 @@ SubfarmTaskMon::SubfarmTaskMon(const string& nam, Inventory* inv)
   Inventory::NodeCollectionMap::const_iterator i = inventory()->nodecollections.find(name());
   if ( i != inv->nodecollections.end() ) {    
     m_nodeList = (*i).second.nodes;
+    m_data = "";
     return;
   }
   string msg = "No setup information present for subfarm task monitor "+name();
@@ -618,9 +619,9 @@ int SubfarmTaskMon::publish() {
 }
 
 /// DIM callback on dis_update_service
-void SubfarmTaskMon::feedData(void* tag, void** buf, int* size, int* first) {
+void SubfarmTaskMon::feedData(void* tag, void** buf, int* size, int* /* first */) {
   SubfarmTaskMon* h = *(SubfarmTaskMon**)tag;
-  *size = *first ? 0 : h->m_data.length()+1;
+  *size = h->m_data.length()+1;
   *buf = (void*)h->m_data.c_str();
 }
 
@@ -628,7 +629,7 @@ void SubfarmTaskMon::feedData(void* tag, void** buf, int* size, int* first) {
 void SubfarmTaskMon::feedSummary(void* tag, void** buf, int* size, int* first) {
   SubfarmTaskMon* h = *(SubfarmTaskMon**)tag;
   ro_gettime(&h->m_summary->time,(unsigned int*)&h->m_summary->millitm);
-  *size = *first ? 0 : h->m_summary->length()+1;
+  *size = h->m_summary->length();
   *buf = (void*)h->m_summary;
 }
 

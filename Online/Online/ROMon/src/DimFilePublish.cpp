@@ -1,4 +1,4 @@
-// $Id: DimFilePublish.cpp,v 1.5 2010-09-03 14:47:46 frankb Exp $
+// $Id: DimFilePublish.cpp,v 1.6 2010-10-14 08:15:47 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.5 2010-09-03 14:47:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.6 2010-10-14 08:15:47 frankb Exp $
 
 #include <string>
 #include <ctime>
@@ -117,18 +117,15 @@ int DimFilePublish::readFile(void** pptr, int* size)    {
     return 1;
   }
   cout << "Data on file " << m_file << " Do not exist!" << endl;
+  *size = 0;
+  *pptr = m_buff;
   return 0;
 }
 
 /// Data callback for DIM
-void DimFilePublish::feedData(void* tag, void** buf, int* size, int* first)    {
-  static const char* empty = "";
-  if ( !(*first) ) {
-    DimFilePublish* h = *(DimFilePublish**)tag;
-    if ( h->readFile(buf,size) ) return;
-  }
-  *size = 0;
-  *buf = (void*)empty;
+void DimFilePublish::feedData(void* tag, void** buf, int* size, int* /* first */) {
+  DimFilePublish* h = *(DimFilePublish**)tag;
+  h->readFile(buf,size);
 }
 
 /// Publish the collected information

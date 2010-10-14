@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.8 2010-10-14 08:15:47 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.8 2010-10-14 08:15:47 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -37,7 +37,6 @@ typedef RODimListener::Clients Clients;
 static std::string PUBLISHING_NODE = "ECS03";
 
 namespace {
-  static const char* s_empty = "";
   template <class T> struct _Svc : public NodeStatsPublisher::_BaseSvc {
     int id, flag;
     size_t buffLen;
@@ -48,6 +47,7 @@ namespace {
       : id(0), flag(flg), buffLen(l), buff(0), name(nam), info(i) {
       buffLen *= (1024*8); // *8 for 64 node farms
       buff = new char[buffLen];
+      ((T*)buff)->reset();
     }
     virtual ~_Svc() {
       ::dis_remove_service(id);
@@ -76,15 +76,10 @@ namespace {
       }
     }
     /// Feed data to DIS when updating data
-    static void feed(void* tag, void** buf, int* size, int* first) {
+    static void feed(void* tag, void** buf, int* size, int* /* first */) {
       _Svc<T>* h = *(_Svc<T>**)tag;
-      if ( !(*first) ) {
-        *buf = h->buff;
-        *size  = ((T*)h->buff)->length();
-        return;
-      }
-      *size = 0;
-      *buf = (void*)s_empty;
+      *buf = h->buff;
+      *size  = ((T*)h->buff)->length();
     }
   };
 
@@ -175,17 +170,19 @@ namespace {
 NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv) 
 : m_needUpdate(true)
 {
-  string match = "*", svc, nam;
+  string match = "*", svc, nam, from=RTL::nodeNameShort(), to=PUBLISHING_NODE;
   RTL::CLI cli(argc, argv, NodeStatsPublisher::help);
-  cli.getopt("match",3,match);
+  cli.getopt("to",   3, to);
+  cli.getopt("from", 3, from);
+  cli.getopt("match",3, match);
   cli.getopt("publish",   2, svc);
   m_print   = cli.getopt("print",2) != 0;
   m_verbose = cli.getopt("verbose",1) != 0;
   cli.getopt("statDelay", 5, m_statDelay);
   cli.getopt("mbmDelay",  4, m_mbmDelay);
 
-  ::dic_set_dns_node((char*)RTL::nodeNameShort().c_str());
-  ::dis_set_dns_node((char*)PUBLISHING_NODE.c_str());
+  ::dic_set_dns_node((char*)from.c_str());
+  ::dis_set_dns_node((char*)to.c_str());
   m_service[0] = new _Svc<Nodeset> (m_mbm,  64,svc);
   m_service[1] = new _Svc<CPUfarm> (m_stat, 10,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
@@ -219,7 +216,13 @@ NodeStatsPublisher::~NodeStatsPublisher() {
 
 /// Help printout in case of -h /? or wrong arguments
 void NodeStatsPublisher::help() {
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"cpumon_collect -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_syspublish -opt [-opt]\n"
+		   "             -from=<string>         Node which offers the data service(s)\n"
+		   "             -to=<string>           Node to publish the data to.\n"
+		   "             -verbose               Switch to verbose mode.\n"
+		   "             -match=<string>        String to match service names.\n"
+		   "             -publish=<string>      Service name to publish results.\n"
+		   );
 }
 
 /// Start monitoring activity
