@@ -5,6 +5,15 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . New module PhysSelPython.Utils. Contains classes to transform selection-like
+    objects into selections with an output location completely bound to a new
+    name. Needed for stripping, where the stripping line is created from a selection
+    object.
+ - tests/test_utils.py
+  . Add tests for new functionality.
+
 !==================== PhysSel/PhysSelPython v5r6 2010-08-20 ================
 
 ! 2010-08-11 - Vanya Belyaev
