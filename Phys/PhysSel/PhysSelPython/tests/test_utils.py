@@ -45,15 +45,23 @@ def test_dummy_selection() :
     assert newData.outputLocation() == newData.selection().outputLocation() == 'Phys/NewSel01'
     assert len(newData.members()) == 3
 
-def test_eventSelection():
+def test_eventSelection_with_no_output():
     alg = DummyAlgorithm('evtSel')
     evtSel = EventSelection(alg)
     newSel = dummy('NewEvtSel', evtSel)
-    assert newSel.selection().name() == 'NewEvtSel'
+    assert newSel.selection().name() == 'evtSel'
     assert newSel.outputLocation() == ''
     assert len(newSel.members()) == 1
 
-
+def test_eventSelection_with_output():
+    alg = DummyAlgorithm('evtSel')
+    data0 = AutomaticData(Location='Phys/Data0')
+    evtSel = EventSelection(alg, RequiredSelection = data0)
+    newSel = dummy('NewEvtSel', evtSel)
+    assert newSel.selection().name() == 'NewEvtSel'
+    assert newSel.outputLocation() == 'Phys/NewEvtSel'
+    assert len(newSel.members()) == 1
+                            
 
 if '__main__' == __name__ :
 
