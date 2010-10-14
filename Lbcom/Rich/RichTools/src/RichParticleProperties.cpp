@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::ParticleProperties
  *
- *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.8 2009-07-30 12:14:16 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -32,15 +29,13 @@ Rich::ParticleProperties::ParticleProperties ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
   : RichToolBase ( type, name, parent ),
+    m_refIndex   ( NULL               ),
     m_pidTypes   ( Rich::particles()  )
 {
-
   // declare interface
   declareInterface<IParticleProperties>(this);
-
   // PID types
   declareProperty( "ParticleTypes", m_pidTypesJO );
-
 }
 
 StatusCode Rich::ParticleProperties::initialize()
@@ -51,8 +46,7 @@ StatusCode Rich::ParticleProperties::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  const IRefractiveIndex * refIndex;
-  acquireTool( "RichRefractiveIndex", refIndex );
+  acquireTool( "RichRefractiveIndex", m_refIndex );
 
   // Retrieve particle property service
   LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
@@ -74,23 +68,14 @@ StatusCode Rich::ParticleProperties::initialize()
   // Informational Printout
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endmsg;
 
-  // Setup momentum thresholds
+  // Initialise momentum thresholds
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
-    const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
-    debug() << " Particle thresholds (MeV/c^2) : " << rad << " : ";
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      const double index = refIndex->refractiveIndex(rad);
-      m_momThres[iRad][iHypo]  = m_particleMass[iHypo]/sqrt(index*index - 1.0);
-      m_momThres2[iRad][iHypo] = m_momThres[iRad][iHypo]*m_momThres[iRad][iHypo];
-      debug() << m_momThres[iRad][iHypo] << " ";
+      m_momThres[iRad][iHypo] = -1.0;
     }
-    debug() << endmsg;
   }
-
-  // release tool
-  releaseTool(refIndex);
 
   // release service
   sc = release(ppSvc);
@@ -123,17 +108,11 @@ StatusCode Rich::ParticleProperties::initialize()
   return sc;
 }
 
-StatusCode Rich::ParticleProperties::finalize()
-{
-  // Execute base class method
-  return RichToolBase::finalize();
-}
-
 double Rich::ParticleProperties::beta( const double ptot,
                                        const Rich::ParticleIDType id ) const
 {
   const double Esquare  = ptot*ptot + m_particleMassSq[id];
-  return ( Esquare > 0 ? ptot/sqrt(Esquare) : 0 );
+  return ( Esquare > 0 ? ptot/std::sqrt(Esquare) : 0 );
 }
 
 double Rich::ParticleProperties::mass( const Rich::ParticleIDType id ) const
@@ -149,13 +128,19 @@ double Rich::ParticleProperties::massSq( const Rich::ParticleIDType id ) const
 double Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
                                                     const Rich::RadiatorType rad ) const
 {
+  if ( m_momThres[rad][id] < 0 ) 
+  {
+    // fill on demand, to avoid loading radiator detector elements until really needed
+    const double index = m_refIndex->refractiveIndex(rad);
+    m_momThres[rad][id] = mass(id) / std::sqrt(index*index - 1.0);
+  }
   return m_momThres[rad][id];
 }
 
 double Rich::ParticleProperties::thresholdMomentumSq( const Rich::ParticleIDType id,
                                                       const Rich::RadiatorType rad ) const
 {
-  return m_momThres2[rad][id];
+  return std::pow( thresholdMomentum(id,rad), 2 );
 }
 
 const Rich::Particles & Rich::ParticleProperties::particleTypes() const

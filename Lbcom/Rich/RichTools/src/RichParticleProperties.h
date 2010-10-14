@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::ParticleProperties
  *
- *  CVS Log :-
- *  $Id: RichParticleProperties.h,v 1.7 2009-01-20 16:00:55 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -59,9 +56,6 @@ namespace Rich
     // Initialize method
     StatusCode initialize();
 
-    // Finalize method
-    StatusCode finalize();
-
   public: // methods (and doxygen comments) inherited from public interface
 
     // Returns 'beta' for given particle hypothesis
@@ -86,6 +80,9 @@ namespace Rich
 
   private:  // Private data
 
+    /// Refractive index tool
+    const IRefractiveIndex * m_refIndex;
+
     /// Array containing particle masses
     boost::array<double,Rich::NParticleTypes> m_particleMass;
 
@@ -93,10 +90,7 @@ namespace Rich
     boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
     /// Momentum thresholds
-    double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
-
-    /// Momentum thresholds squared (cached for speed)
-    double m_momThres2[Rich::NRadiatorTypes][Rich::NParticleTypes];
+    mutable double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
 
     /// Particle ID types to consider in the likelihood minimisation (JO)
     std::vector<std::string> m_pidTypesJO;
