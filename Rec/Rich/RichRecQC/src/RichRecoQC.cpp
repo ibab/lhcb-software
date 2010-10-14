@@ -86,18 +86,23 @@ StatusCode RecoQC::initialize()
 
 StatusCode RecoQC::prebookHistograms()
 {
-  // Aerogel DetElem
-  const DeRichMultiSolidRadiator * aerogel 
-    = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
 
-  // List of active Aerogel tile IDs
+  // Get aerogel tile IDs, if active
   std::vector<int> tileIDs;
-  for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
-        dRad != aerogel->radiators().end(); ++dRad )
+  if ( m_rads[Rich::Aerogel] )
   {
-    const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
-    if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
-    tileIDs.push_back( d->tileID() );
+    // Aerogel DetElem
+    const DeRichMultiSolidRadiator * aerogel 
+      = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
+    
+    // List of active Aerogel tile IDs
+    for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
+          dRad != aerogel->radiators().end(); ++dRad )
+    {
+      const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
+      if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
+      tileIDs.push_back( d->tileID() );
+    }
   }
 
   // Loop over radiators

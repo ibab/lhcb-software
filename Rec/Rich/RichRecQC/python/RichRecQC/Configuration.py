@@ -145,7 +145,23 @@ class RichRecQCConf(RichConfigurableUser):
        ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
+       ,"Radiators"       : None         # The radiators to use
         }
+
+    ## Initialize 
+    def initialize(self):
+        self.setRichDefault("Radiators","Offline", ["Aerogel","Rich1Gas","Rich2Gas"] )
+        self.setRichDefault("Radiators","HLT",     ["Aerogel","Rich1Gas","Rich2Gas"] )
+
+    ## @brief The RICH radiators to use
+    #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
+    def usedRadiators(self):
+        usedRads = [ False, False, False ]
+        for rad in self.getProp("Radiators"):
+            if rad == "Aerogel"  : usedRads[0] = True
+            if rad == "Rich1Gas" : usedRads[1] = True
+            if rad == "Rich2Gas" : usedRads[2] = True
+        return usedRads
 
     ## Access the alignment Configurable
     def alignmentConf(self):
@@ -469,7 +485,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Reconstruction performance
     def recPerf(self,sequence):
 
-        from Configurables import ( Rich__Rec__MC__RecoQC )
+        from Configurables import Rich__Rec__MC__RecoQC
 
         # Track Types
         for trackType in self.getHistoOptions("RecoTrackTypes") :
@@ -483,6 +499,9 @@ class RichRecQCConf(RichConfigurableUser):
             
             # cuts
             mon.MinBeta = self.getProp("MinTrackBeta")
+
+            # Radiators
+            mon.Radiators = self.usedRadiators()
         
             # Add to sequence
             sequence.Members += [mon]

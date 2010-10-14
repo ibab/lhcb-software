@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Chris Jones
+ - Various updates to avoid loading radiator detector elements unless they
+   are actively in use.
+
 ! 2010-10-13 - Chris Jones
  - Remove aerogel specific monitor
 
