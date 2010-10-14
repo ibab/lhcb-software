@@ -11,7 +11,6 @@
  *
  *  The noise per strip of the TELL1s is calculated for all TELL1s.  
  *  Implements abstract methods of STNoiseToolBase class.
- *  The noise values are stored in a map which is accessed via the source ID of the TELL1.
  *
  *  @author J. van Tilburg, N. Chiapolini
  *  @date   10/02/2009
