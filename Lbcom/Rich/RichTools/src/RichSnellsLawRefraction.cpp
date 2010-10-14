@@ -29,7 +29,8 @@ SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
     m_refIndex      ( NULL ),
     m_planeInfoMade ( false ),
     m_minZaero      ( 0     ),
-    m_radiators     ( Rich::NRadiatorTypes, (const DeRichRadiator *)NULL ),
+    m_radiators     ( Rich::NRadiatorTypes, 
+                      (const DeRichRadiator *)(NULL) ),
     m_hltMode       ( false )
 {
   // interface
