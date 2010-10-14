@@ -7,6 +7,7 @@
 ! 2010-10-14 - Chris Jones
  - Various updates to avoid loading radiator detector elements unless they
    are actively in use.
+ - Tune CK theta resolution histogram limits for improved resolutions in data
 
 ! 2010-10-13 - Chris Jones
  - Remove aerogel specific monitor
