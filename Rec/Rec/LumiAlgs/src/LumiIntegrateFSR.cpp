@@ -3,9 +3,6 @@
  
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/StatEntity.h"
 
 // event model
@@ -112,7 +109,6 @@ StatusCode LumiIntegrateFSR::initialize() {
   m_calibRevolutionFrequency = 1.;
   m_calibCollidingBunches = 1;
   m_calibRandomFrequencyBB = 1.;
-
 
   // get the detectorDataSvc
   m_dds = detSvc();
@@ -405,118 +401,89 @@ StatusCode LumiIntegrateFSR::add_file() {
   std::string fileRecordRoot = m_FileRecordName; 
   std::vector< std::string > addresses = navigatorTool->navigate(fileRecordRoot, m_FSRName);
   for(std::vector< std::string >::iterator iAddr = addresses.begin() ; iAddr != addresses.end() ; ++iAddr ){
-  	if ( msgLevel(MSG::DEBUG) ) debug() << "address: " << (*iAddr) << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "address: " << (*iAddr) << endmsg;
   }  
 
   // a file can contain multiple sets of LumiFSRs - typically after reprocessing multiple input files
   // look first for a primary BX in the list and then look for the corresponding background types
   std::string primaryFileRecordAddress("undefined");
-  for(std::vector< std::string >::iterator a = addresses.begin() ; 
-      a!= addresses.end() ; ++a ){  
+  for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
     if ( a->find(m_FSRName + m_PrimaryBXType) != std::string::npos ) {
       // a primary BX is found
       primaryFileRecordAddress = (*a);   
-      // search for the TimeSpanFSR 
-      std::string timeSpanRecordAddress(primaryFileRecordAddress);
-      timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
-      timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
-
-
-      // read TimeSpanFSR to prepare DB access 
-      ulonglong t0(0);
-      ulonglong t1(0);
-      if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
-        //Error("A timeSpan FSR was not found").ignore();
-        if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
+      if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress) ) {
+        Warning("Primary fileRecord FSR was not found").ignore();
+        if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << " not found" << endmsg ;
       } else {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
-        LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
-        // look at all TimeSpanFSRs (normally only one)
-        LHCb::TimeSpanFSRs::iterator tsfsr;
-        for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *(*tsfsr) << endmsg;
-          t0 = (*tsfsr)->earliest();
-          t1 = (*tsfsr)->latest();
-          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " interval: " << t0 << "-" << t1 << endmsg;
-        }
-
-        // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
-        m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
-        debug() << " creating new event " << endmsg;
-        StatusCode sc = updMgrSvc()->newEvent();
-        if (sc.isFailure()) {
-	  m_statusScale = 0;        // invalid luminosity
-	  error() << "ERROR updating luminosity constants from DB " << endmsg;
-	}
-      }    
-
-      // initialize with the primary BX
-      LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
-      add_fsr(result, primaryFileRecordAddress, 0);
-      // get the background to be subtracted/added
-      std::string fileRecordAddress("undefined");
-      // get all FSR objects - this is anyway needed to instantiate them on the TDS
-      for(std::vector< std::string >::iterator bx = m_BXTypes.begin() ; bx!= m_BXTypes.end() ; ++bx ){  
-        // construct the right name of the containers
-	std::string fileRecordAddress(primaryFileRecordAddress);
-	fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
-      	if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
-        float factor = 0;  // indicates the primary BX - already used
-        if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
-          factor = 1.;
-        if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) 
-          factor = -1.;
-        if ( factor != 0) {
-	  StatusCode sc =  add_fsr(result, fileRecordAddress, factor);
-	  if (sc.isFailure()) {
-	    m_statusScale = 0;        // invalid luminosity
-	    error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
+        LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress);
+        if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << " found" << endmsg ;
+	for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
+	  // trigger database update using the timeSpan FSR
+	  StatusCode sc = trigger_event(primaryFileRecordAddress, fkey);
+      	  // initialize integral with the primary BX
+      	  LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
+      	  add_fsr(result, primaryFileRecordAddress, 0, fkey);
+      	  // get the background to be subtracted/added
+      	  std::string fileRecordAddress("undefined");
+      	  for ( std::vector< std::string >::iterator bx = m_BXTypes.begin() ; bx!= m_BXTypes.end() ; ++bx ){  
+      	    // construct the right name of the containers
+	    std::string fileRecordAddress(primaryFileRecordAddress);
+	    fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
+	    if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
+      	    float factor = 0;     // indicates the primary BX - already used
+      	    if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
+      	      factor = 1.;
+      	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) 
+      	      factor = -1.;
+      	    if ( factor != 0) {
+	      StatusCode sc =  add_fsr(result, fileRecordAddress, factor, fkey);
+	      if (sc.isFailure()) {
+		m_statusScale = 0;    // invalid luminosity
+		error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
+	      }
+	    }
 	  }
+
+      	// apply calibration
+      	debug() << "Result for this file (before calibration): " << *result << endmsg;
+      	result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
+      	verbose() << "Result for this file (after calibration): " << *result << endmsg;
+      	// simple summing per counter
+      	if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
+      		m_statusScale = 0;        // invalid luminosity
+      		error() << "ERROR summing result using tool " << endmsg;
+      	}
+      	// summing of integral
+      	long old_n_runs = n_runs;
+      	if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
+	else n_runs = 0;
+      	double old_scale = rel_scale;
+      	rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
+      	if ( old_scale != rel_scale || old_n_runs != n_runs ) {
+      	  info() << "run: " << result->runNumbers()
+      	         << " Revolution frequency " << m_calibRevolutionFrequency 
+      	         << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
+		 << " CollidingBunches " << m_calibCollidingBunches 
+		 << endmsg;
+      	}
+      	if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
+      								    m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
+      						rel_scale ) == StatusCode::FAILURE ) {
+      		m_statusScale = 0;        // invalid luminosity
+      		error() << "ERROR integrating luminosity result" << endmsg;
+      	}
+      	delete result;
 	}
       }
-
-      // apply calibration
-      debug() << "Result for this file (before calibration): " << *result << endmsg;
-      result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
-      verbose() << "Result for this file (after calibration): " << *result << endmsg;
-      // simple summing per counter
-      if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
-	m_statusScale = 0;        // invalid luminosity
-	error() << "ERROR summing result using tool " << endmsg;
-      }
-      // summing of integral
-      long old_n_runs = n_runs;
-      if ( result->runNumbers().size() ) {
-	n_runs = result->runNumbers()[0];
-      } else {
-	n_runs = 0;
-      }
-      double old_scale = rel_scale;
-      rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
-      if ( old_scale != rel_scale || old_n_runs != n_runs ) {
-        info() << "run: " << result->runNumbers()
-               << " Revolution frequency " << m_calibRevolutionFrequency 
-               << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
-	       << " CollidingBunches " << m_calibCollidingBunches 
-	       << endmsg;
-      }
-      if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
-							    m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
-					rel_scale ) == StatusCode::FAILURE ) {
-	m_statusScale = 0;        // invalid luminosity
-	error() << "ERROR integrating luminosity result" << endmsg;
-      }
-      delete result;
 
       // set absolute scales for tool
       double abs_scale = m_statusScale * m_calibScale;
       m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
       debug() << "Intermediate Integrated luminosity: " << m_integratorTool->lumiValue() << endmsg;
-
     }
   }
   // set absolute scales for tool
+  if ( !m_statusScale ) m_statusScale = -999999.;
   double abs_scale = m_statusScale * m_calibScale;
   m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
   info() << "Luminosity scale used: " << m_calibScale << " relative uncertainty " << m_calibScaleError << endmsg;
@@ -534,12 +501,54 @@ StatusCode LumiIntegrateFSR::add_file() {
 
 }
 
+//=============================================================================
+StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress, unsigned int fkey ) {
+  StatusCode sc = StatusCode::SUCCESS;
+
+  // search for the TimeSpanFSR 
+  std::string timeSpanRecordAddress(primaryFileRecordAddress);
+  timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
+  timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
+
+  // read TimeSpanFSR to prepare DB access 
+  if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+    if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
+    return StatusCode::FAILURE;
+  } else {
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+    LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+
+    // pick the TimeSpanFSR
+    LHCb::TimeSpanFSRs::iterator tsfsr = timeSpanFSRs->begin();
+    LHCb::TimeSpanFSR* timeSpanFSR = tsfsr[fkey];
+    ulonglong t0 = timeSpanFSR->earliest();
+    ulonglong t1 = timeSpanFSR->latest();
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *timeSpanFSR << endmsg;
+      debug() << timeSpanRecordAddress << " interval: " << t0 << "-" << t1 << endmsg;
+    }
+    if ( t0 == 0 && t1 == 0 ) {
+      m_statusScale = 0;        // invalid luminosity: no time span
+      error() << "ERROR: no time span defined " << endmsg;
+      return StatusCode::FAILURE;
+    }
+    // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
+    m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
+    debug() << " creating new event " << endmsg;
+    sc = updMgrSvc()->newEvent();
+    if (sc.isFailure()) {
+      m_statusScale = 0;        // invalid luminosity
+      error() << "ERROR updating luminosity constants from DB " << endmsg;
+    }
+  }    
+  return sc;
+}
 
 //=============================================================================
 StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 
 			       std::string fileRecordAddress, 
-			       float factor ) {
-
+				     float factor, unsigned int fkey ) {
 
   // read LumiFSR 
   if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
@@ -547,41 +556,38 @@ StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
     if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " not found" << endmsg ;
   } else {
     LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
-    debug() << fileRecordAddress << " found" << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " found" << endmsg ;
 
     // prepare an empty summary for this BXType
     LHCb::LumiFSR bxFSR;
-    // look at all FSRs for the BXType (normally only one)
-    LHCb::LumiFSRs::iterator fsr;
-    for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); fsr++ ) {
-      // print the FSR just retrieved from TS
-      if ( msgLevel(MSG::VERBOSE) ) {
-        // print also the contents using the builtin lookup tables
-        LHCb::LumiFSR::ExtraInfo::iterator infoIter;
-        LHCb::LumiFSR::ExtraInfo  fsrInfo = (*fsr)->extraInfo();
-        for (infoIter = fsrInfo.begin(); infoIter != fsrInfo.end(); infoIter++) {
-  	// get the key and value of the input info
-  	int key = infoIter->first;
-  	LHCb::LumiFSR::ValuePair values = infoIter->second;
-  	int incr = values.first;
-  	longlong count = values.second;
-  	const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
-  	int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
-  	verbose() << "READ key: " << key 
-  		  << " name: " << keyName << " KeyInt: " << keyInt 
-  		  << " increment: " << incr << " integral: " << count << endmsg;
-        }
-      } else {
-        if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << "READ FSR: " << *(*fsr) << endmsg; 
+    // pick the right fsr at fkey
+    LHCb::LumiFSRs::iterator fsr = lumiFSRs->begin();
+    LHCb::LumiFSR* lumiFSR = fsr[fkey];
+    bxFSR = (*lumiFSR);
+    // debug output
+    if ( msgLevel(MSG::VERBOSE) ) {
+      // print also the contents using the builtin lookup tables
+      LHCb::LumiFSR::ExtraInfo::iterator infoIter;
+      LHCb::LumiFSR::ExtraInfo  fsrInfo = lumiFSR->extraInfo();
+      for (infoIter = fsrInfo.begin(); infoIter != fsrInfo.end(); infoIter++) {
+    	// get the key and value of the input info
+    	int key = infoIter->first;
+    	LHCb::LumiFSR::ValuePair values = infoIter->second;
+    	int incr = values.first;
+    	longlong count = values.second;
+    	const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
+    	int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
+    	verbose() << "READ key: " << key 
+    		  << " name: " << keyName << " KeyInt: " << keyInt 
+    		  << " increment: " << incr << " integral: " << count << endmsg;
       }
-      // sum all FSRs per input file (should normally be one only)
-      bxFSR += (*fsr);
+    } else {
+      if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " READ FSR: " << *lumiFSR << endmsg; 
     }
+
     // add or subtract the normalized result
     if ( factor == 0 ) {    
       // primary crossing;
-      //(*result) += bxFSR;
       result->mergeRuns(bxFSR.runNumbers());
       result->mergeFileIDs(bxFSR.fileIDs());
       result->addNormalized(bxFSR, factor, LHCb::LumiMethods::PoissonOffset);

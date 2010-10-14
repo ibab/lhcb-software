@@ -29,9 +29,9 @@ LumiMergeFSR::LumiMergeFSR( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
-  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
+  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords" );
   declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
-  declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = LHCb::TimeSpanFSRLocation::Default );
+  declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR" ); //LHCb::TimeSpanFSRLocation::Default );
   declareProperty( "PrimaryBXType"      , m_PrimaryBXType     = "BeamCrossing" );
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
   declareProperty( "NavigatorToolName"  , m_ToolName          = "FSRNavigator" );
@@ -65,20 +65,6 @@ StatusCode LumiMergeFSR::initialize() {
     info() << "Subtract BXType " << (*bx) << endmsg;
     if ( (*bx) != "None" ) m_BXTypes.push_back(*bx);
   }
-
-  // prepare TDS for FSR
-  for ( unsigned int ibx = 0 ; ibx < m_BXTypes.size() ; ++ibx ){  
-    std::string bx = m_BXTypes[ibx];
-    info() << "BXType " << bx << endmsg;
-    LHCb::LumiFSRs* fsrs = new LHCb::LumiFSRs(); // keyed container for FSRs
-    m_lumiFSRsVec.push_back(fsrs);               // vector of keyed containers
-    std::string name = "LumiFSR" + bx;           // 
-    m_FSRNameVec.push_back(name);                // vector of names
-    put(m_fileRecordSvc, fsrs, name);            // TS address of keyed container
-  }
-  // prepare TDS for TimeSpanFSR
-  m_timeSpanFSRs = new LHCb::TimeSpanFSRs();
-  put(m_fileRecordSvc, m_timeSpanFSRs, m_TimeSpanFSRName);
 
   // get the File Records service
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
@@ -115,49 +101,72 @@ StatusCode LumiMergeFSR::finalize() {
 //  merge the FSR data
 //=============================================================================
 StatusCode LumiMergeFSR::merge() {
+  // a file can contain multiple sets of LumiFSRs - typically after reprocessing multiple input files
   // merge the FSRs of all input files at the same time
 
   // make an inventory of the FileRecord store
   std::string fileRecordRoot = m_FileRecordName; 
   std::vector< std::string > addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
   // print
-  for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
-  	  iAddr != addresses.end() ; ++iAddr ){
-  	if ( msgLevel(MSG::DEBUG) ) debug() << "address: " << (*iAddr) << endmsg;
-  }  
+  if ( msgLevel(MSG::DEBUG) ) {
+    for(std::vector< std::string >::iterator iAddr = addresses.begin() ; iAddr != addresses.end() ; ++iAddr ){
+      debug() << "address: " << (*iAddr) << endmsg;
+    }
+  }
+  // get timespans for later removal
+  std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
+  if ( msgLevel(MSG::DEBUG) ) {
+    for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
+      debug() << "address: " << (*iAddr) << endmsg;
+    }
+  }
 
-  // a file can contain multiple sets of LumiFSRs - typically after reprocessing multiple input files
+  // prepare TDS for FSR
+  for ( unsigned int ibx = 0 ; ibx < m_BXTypes.size() ; ++ibx ){  
+    std::string bx = m_BXTypes[ibx];
+    debug() << "BXType " << bx << endmsg;
+    LHCb::LumiFSRs* fsrs = new LHCb::LumiFSRs(); // keyed container for FSRs
+    fsrs->reserve(100);
+    m_lumiFSRsVec.push_back(fsrs);               // vector of keyed containers
+    std::string name = m_FSRName + bx;           // 
+    m_FSRNameVec.push_back(name);                // vector of names
+    put(m_fileRecordSvc, fsrs, m_FileRecordName + name); // TS address of keyed container
+  }
+  // prepare TDS for TimeSpanFSR
+  m_timeSpanFSRs = new LHCb::TimeSpanFSRs();
+  m_timeSpanFSRs->reserve(100);
+  put(m_fileRecordSvc, m_timeSpanFSRs, m_FileRecordName + m_TimeSpanFSRName);
+
   // look first for a primary BX in the list and then look for the corresponding background types
   std::string primaryFileRecordAddress("undefined");
-  for(std::vector< std::string >::iterator a = addresses.begin() ; 
-      a!= addresses.end() ; ++a ){  
+  for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
     if ( a->find(m_FSRName + m_PrimaryBXType) != std::string::npos ) {
-      // a primary BX is found
-      primaryFileRecordAddress = (*a);   
+      primaryFileRecordAddress = (*a);   // a primary BX is found
       // search for the TimeSpanFSR 
       std::string timeSpanRecordAddress(primaryFileRecordAddress);
       timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
       timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
-
       // read TimeSpanFSR 
       unsigned long n_tsFSR = 0;
       if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
         if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
       } else {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+        //if ( msgLevel(MSG::VERBOSE) ) 
+	if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
         LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
         // look at all TimeSpanFSRs (normally only one)
         LHCb::TimeSpanFSRs::iterator tsfsr;
         for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " FOUND TimeSpanFSR: " << *(*tsfsr) << endmsg;
-	  // put a copy in TS container
+	  // prepare new time span FSR and put in TS
 	  n_tsFSR++;
 	  LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
-	  *timeSpanFSR = **tsfsr;
-	  m_timeSpanFSRs->insert(timeSpanFSR);
+	  *timeSpanFSR = *(*tsfsr);
+	  m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
         }
-	info() << timeSpanRecordAddress << "number of FSRs: " << n_tsFSR << " successfully copied" << endmsg; 
+	if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_tsFSR 
+					    << " successfully copied - total is now " 
+	                                    << m_timeSpanFSRs->size() << endmsg; 
       }    
 
       // now handle all Lumi FSRs
@@ -166,7 +175,7 @@ StatusCode LumiMergeFSR::merge() {
       for ( unsigned int ibx = 0; ibx < m_BXTypes.size() ; ++ibx ){  
 	std::string bx = m_BXTypes[ibx];
 	debug() << "BXType " << bx << endmsg;
-	LHCb::LumiFSRs* fsrs = m_lumiFSRsVec[ibx];         // vector of keyed containers
+	LHCb::LumiFSRs* fsrs = m_lumiFSRsVec[ibx]; 
 	unsigned long n_lumiFSR = 0;
         // construct the right name of the containers
 	std::string fileRecordAddress(primaryFileRecordAddress);
@@ -178,27 +187,88 @@ StatusCode LumiMergeFSR::merge() {
   	} else {
   	  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
   	  if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
-  	  debug() << fileRecordAddress << " found" << endmsg ;
   	  // look at all FSRs for the BXType (normally only one)
   	  LHCb::LumiFSRs::iterator fsr;
-  	  for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); fsr++ ) {
-  	    // print the FSR just retrieved from TS
-	    if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << "READ FSR: " << *(*fsr) << endmsg; 
+  	  for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); ++fsr ) {
 	    // create a new FSR and append to TS
 	    n_lumiFSR++;
 	    LHCb::LumiFSR* lumiFSR = new LHCb::LumiFSR();
-	    *lumiFSR = **fsr;
-	    fsrs->insert(lumiFSR);
+	    *lumiFSR = *(*fsr);
+	    fsrs->insert(lumiFSR); // insert in TS
   	  }
 	  if ( n_tsFSR == n_lumiFSR ) {
-	    info() << fileRecordAddress << ": number of FSRs: " << n_lumiFSR << " successfully copied" << endmsg; 
+	    if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << ": " << n_lumiFSR 
+						<< " successfully copied - total is now " 
+		                                << fsrs->size() << endmsg; 
 	  } else {
-	    fatal() << fileRecordAddress << ": number of FSRs: " << n_lumiFSR 
+	    error() << fileRecordAddress << ": number of FSRs: " << n_lumiFSR 
 		    << " did not match expected number: " << n_tsFSR << endmsg; 
 	  }
 	}
       }
     }
   }
+
+  // read back lumiFSR from TS
+  for ( unsigned int ibx = 0 ; ibx < m_BXTypes.size() ; ++ibx ){  
+    LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, m_FileRecordName + m_FSRNameVec[ibx]);
+    info() << m_FileRecordName + m_FSRNameVec[ibx] << " " << lumiFSRs->size() << " FSRs" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) {
+      LHCb::LumiFSRs::iterator fsr;
+      for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); ++fsr ) {
+	debug() << *(*fsr) << endmsg; 
+      }
+    }
+  }
+  // read back timeSpanFSR from TS
+  LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, m_FileRecordName + m_TimeSpanFSRName);
+  info() << m_FileRecordName + m_TimeSpanFSRName << " " << timeSpanFSRs->size() << " FSRs" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    LHCb::TimeSpanFSRs::iterator tsfsr;    
+    for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); ++tsfsr ) {
+      debug() << *(*tsfsr) << endmsg; 
+    }
+  }
+
+  // clean up original FSRs
+  for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
+    // get FSR as keyed object and cleanup the original ones - this only cleans lumiFSRs
+    std::string fileRecordAddress = (*a);   
+    if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
+      if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
+    } else {
+      LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
+      lumiFSRs->erase(lumiFSRs->begin(), lumiFSRs->end());  // release storage
+      m_fileRecordSvc->unlinkObject( *a ).ignore();         // get it out of TS
+    }
+  }
+
+  // clean up original tsFSRs
+  for(std::vector< std::string >::iterator a = tsAddresses.begin() ; a!= tsAddresses.end() ; ++a ){  
+    // get FSR as keyed object and cleanup the original ones - this only cleans tsFSRs
+    std::string fileRecordAddress = (*a);   
+    if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
+      if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
+    } else {
+      LHCb::TimeSpanFSRs* tsFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, fileRecordAddress);
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
+      tsFSRs->erase(tsFSRs->begin(), tsFSRs->end());  // release storage
+      m_fileRecordSvc->unlinkObject( *a ).ignore();   // get it out of TS
+    }
+  }
+
+  // make a new inventory of the FileRecord store
+  addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
+  // print
+  for(std::vector< std::string >::iterator iAddr = addresses.begin() ; iAddr != addresses.end() ; ++iAddr ){
+    debug() << "address: " << (*iAddr) << endmsg;
+  }
+  // get timespans 
+  tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
+  for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
+    debug() << "address: " << (*iAddr) << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 }

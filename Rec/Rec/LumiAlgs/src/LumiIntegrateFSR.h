@@ -40,7 +40,8 @@ protected:
   virtual StatusCode add_file();            ///< add the FSRs of one input file
   virtual StatusCode add_fsr(LHCb::LumiIntegral* r, 
 			     std::string addr, 
-			     float factor);  ///< add/subtr one FSR for consistent group
+			     float factor, unsigned int key);           ///< add/subtr one FSR for consistent group
+  virtual StatusCode trigger_event(std::string addr, unsigned int key); ///< trigger database update
   virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
   virtual StatusCode registerDB();    ///< register DB conditions
