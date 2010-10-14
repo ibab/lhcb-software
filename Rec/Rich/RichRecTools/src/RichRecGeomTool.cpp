@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
- *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.19 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -34,7 +31,6 @@ GeomTool::GeomTool( const std::string& type,
     m_ckAngle       ( NULL ),
     m_radScale      ( Rich::NRadiatorTypes, 0 )
 {
-
   // interface
   declareInterface<IGeomTool>(this);
 
@@ -43,7 +39,6 @@ GeomTool::GeomTool( const std::string& type,
   m_radScale[Rich::Rich1Gas] =  0.017;
   m_radScale[Rich::Rich2Gas] = -0.014;
   declareProperty( "RadOpticalCorrections", m_radScale );
-
 }
 
 StatusCode GeomTool::initialize()

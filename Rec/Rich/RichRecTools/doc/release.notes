@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-10-14 - Chris Jones
+ - Changes to avoid loading the radiator detector elements until they are 
+   actually needed
+
 ! 2010-10-11 - Chris Jones
  - Update Cherenkov cone ray tracing tool to use the new refraction correction
    tool interface method, that passes the full RichTrackSegment
