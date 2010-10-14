@@ -5,16 +5,18 @@
 // Include files
 #include "Event/STTELL1Data.h"
 
-#include "boost/lexical_cast.hpp"
-
 // from Gaudi
-#include "STNoiseCalculationToolBase.h" // Base class for 
+#include "STNoiseToolBase.h" // Base class for 
 #include "Kernel/ISTNoiseCalculationTool.h"            // Interface
 
 /** @class STCMSNoiseCalculationTool STCMSNoiseCalculationTool.h
  *
+ *  This tool can be used to calculate raw noise from the input data.  It then has various 
+ *  different methods which can be used to perform pedestal and common mode subtraction on
+ *  the raw ADC values.  The algorithm should *not* be used with round robin events.  It is 
+ *  useful to compare CMS algorithms when the full NZS data is available for each TELL1.
  *
- *  The noise values are stored in a map which is accessed via the source ID of the TELL1.
+ *  The following options can be configured for this algorithm:
  *
  *  @author J. van Tilburg, N. Chiapolini
  *  @date   10/02/2009
@@ -25,7 +27,7 @@
  *  @date   2009-10-01
  */
 namespace ST { 
-  class STCMSNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseCalculationToolBase {
+  class STCMSNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseToolBase {
   private:
 
     friend class ToolFactory<ST::STCMSNoiseCalculationTool>;
@@ -57,24 +59,8 @@ namespace ST {
     void divPedestals();
 
     unsigned int m_pedestalBuildup;///< Number of events used to build pedestals
-    bool m_readPedestals;///< Read pedestals from conditions database
-    std::string m_condPath; ///< Set the condition path from where pedestals will be read
-    
-    /** data values for 8 pedestal value 
-        tellID to access map
-        vector of 8 PCN/header combinations
-        pair<pedestal, n events> */
-    typedef std::map<int, std::vector< std::vector<std::pair<double, int> > > > PedestalMaps;
-    PedestalMaps m_pedestalMaps;
-
     
     bool m_skipCMS;///< Skip calculation of CMS noise
-
-    typedef std::map<unsigned int, std::vector<double> > DataMap;  
-    DataMap m_cmsMeanMap;            ///< Local calculation of mean of ADCs
-    DataMap m_cmsMeanSqMap;          ///< Local calculation of mean of ADCs squared
-    DataMap m_cmsNoiseMap;           ///< Internal map of the raw noise
-    std::map<unsigned int, std::vector<unsigned int> > m_cmsNEvents;///< Number of events in raw noise calculation
 
   public:
     virtual std::vector<double> rawMean(const unsigned int TELL) const;
@@ -87,42 +73,20 @@ namespace ST {
     virtual std::vector<double> cmsNoise(const unsigned int TELL) const;
     virtual std::vector<unsigned int> cmsN(const unsigned int TELL) const;
     
-  public:
-    /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the CMS RMS noise on the last channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsNoiseEnd(const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanBegin( const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the CMS mean ADC value for the last channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanEnd( const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the CMS mean squared ADC value for the last channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsBegin( const unsigned int TELL1SourceID ) const;
-
-    /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsEnd( const unsigned int TELL1SourceID ) const;
-
-
   private:
     /// Calculate the pedestal substracted ADC values for one beetle
     void substractPedestals(const std::vector<signed int>& BeetleADCs, 
-                           int tellID, signed int beetle,
-                           std::vector<std::pair <double, bool> >& pedSubADC,
-                           std::vector<double>& BeetleMeans);
+                            std::vector<double>::const_iterator rawMeanIt,
+                            std::vector<double>::const_iterator rawNoiseIt,
+                            const signed int beetle,
+                            std::vector<std::pair <double, bool> >& pedSubADC,
+                            std::vector<double>& BeetleMeans);
     
     /// Remove PCN/Header corrected pedestals from raw adcs
-    void substractPCNPedestals( std::vector<signed int>& RawADCs, int tellID, signed int beetle,
-				std::vector<signed int>& PedSubADCs);
+    void substractPCNPedestals( const std::vector<signed int>& RawADCs, 
+                                const std::vector< std::vector<std::pair<double, int> > >* pedestals, 
+                                const signed int beetle,
+                                std::vector<signed int>& PedSubADCs);
 
     /// Calculate the CM suppressed values for the strips given
     void cmsSimple(std::vector<std::pair <double, bool> >& BeetleTmpADCs, std::vector<double>& BeetleMeans);

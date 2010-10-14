@@ -13,12 +13,11 @@
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
-// Detector description for access to conditions
-#include "DetDesc/Condition.h"
-
 // standard
 #include "gsl/gsl_math.h"
 #include<bitset>
+
+#include "boost/lexical_cast.hpp"
 
 // STTELL1Event
 #include "Event/STTELL1Data.h"
@@ -43,15 +42,9 @@ namespace ST {
 ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
-  : ST::STNoiseCalculationToolBase ( type, name , parent )
+  : ST::STNoiseToolBase ( type, name , parent )
 {
   declareInterface<ST::ISTNoiseCalculationTool>(this);
-
-  declareSTConfigProperty("InputData" , m_dataLocation,
-                          LHCb::STTELL1DataLocation::TTFull);
-  declareProperty("FollowPeriod", m_followingPeriod = 2000);
-  declareProperty("ResetRate", m_resetRate = -1);  
-  declareProperty("SkipEvents", m_skipEvents = -1 );
 
   /// Which CMS algorithm should be used
   declareProperty( "CMSAlg", m_cmsAlg = "Simple" );
@@ -65,16 +58,12 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
   
   // Read pedestal values from conditions database
   declareProperty("PedestalsFromDB", m_readPedestals = true);
-  declareProperty("CondPath",m_condPath = "CondDB");
 
   // Use integer algebra in calculations
   declareProperty("UseIntegers", m_useInts=false );
 
   // Remove outliers
-
-  // TO DO: Outlier flagging is different as the rmsMap is *ALWAYS* zero in STCMSMonitor 
-  // Set RAW threshold to 50 such that we get the same result 
-  declareProperty("RawThreshold",     m_rawThreshold    = 50/*4*/);
+  declareProperty("RawThreshold",     m_rawThreshold    = 4);
   declareProperty("RawOutliers",      m_rawOutliers     = true); 
   declareProperty("RawOutliersCMS",   m_rawOutliersCMS  = false); 
 
@@ -93,20 +82,13 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
 StatusCode ST::STCMSNoiseCalculationTool::initialize() {
 
   debug() << "initialize" << endmsg;
-  StatusCode sc = ST::STNoiseCalculationToolBase::initialize();
+  StatusCode sc = ST::STNoiseToolBase::initialize();
   if (sc.isFailure()) return sc;
 
   // 4 ports per Beetle
   m_portHeader.resize(4, 0);
 
   m_printAlgError = true;
-
-  // Select small number of TELL1s
-  m_selectedTells = false;
-  if ( m_limitToTell.size() > 0 ) {
-    m_selectedTells = true;
-    sort(m_limitToTell.begin(), m_limitToTell.end());
-  }
 
   m_skipCMS   = true;
 
@@ -117,33 +99,14 @@ StatusCode ST::STCMSNoiseCalculationTool::initialize() {
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int TELL1SourceID = (*itT).first;
-    m_cmsMeanMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsNEvents[TELL1SourceID].resize(4,0);
-    
     // 8 pedestal configs for each TELL1
-    if(m_readPedestals) {
-      m_pedestalBuildup = 0;
-      m_pedestalMaps[TELL1SourceID].resize(1);
-      std::string condPath = m_condPath + "/" + "TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
-      debug() << "Getting condition: " << condPath << endmsg;
-      Condition* condition = getDet<Condition>(condPath);
-      std::vector<int> pedestalValues;
-      if(condition != 0) {
-        pedestalValues = condition->param<std::vector<int> >("pedestal");
-        std::vector<int>::iterator itPed = pedestalValues.begin();
-        for(; itPed != pedestalValues.end(); ++itPed) {
-          m_pedestalMaps[TELL1SourceID][0].push_back(std::make_pair((*itPed), 1));
-        }
-      } else {
-        error() << "No condition: " << condPath << endmsg;
-      }
-    } else {
+    if(!m_readPedestals) {
       m_pedestalMaps[TELL1SourceID].resize(8);
       for (int i = 0; i < 8; i++) {
         m_pedestalMaps[TELL1SourceID][i].resize(3072, std::make_pair(0.0, 0));
       }
+    } else {
+      //      m_pedestalBuildup = 0;
     }
     
   }
@@ -182,70 +145,6 @@ ST::STCMSNoiseCalculationTool::~STCMSNoiseCalculationTool() {}
 //
 //========================================================================================================================
 
-/// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsNoiseBegin( const unsigned int TELL1SourceID ) const {
-  if(m_cmsNoiseMap.find(TELL1SourceID) == m_cmsNoiseMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsNoiseMap.find(TELL1SourceID)->second.begin();
-}
-
-/// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsNoiseEnd( const unsigned int TELL1SourceID ) const {
-  if(m_cmsNoiseMap.find(TELL1SourceID) == m_cmsNoiseMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsNoiseMap.find(TELL1SourceID)->second.end();
-}
-
-/// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsMeanBegin( const unsigned int TELL1SourceID ) const {
-  if(m_cmsMeanMap.find(TELL1SourceID) == m_cmsMeanMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsMeanMap.find(TELL1SourceID)->second.begin();
-}
-
-/// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsMeanEnd( const unsigned int TELL1SourceID ) const {
-  if(m_cmsMeanMap.find(TELL1SourceID) == m_cmsMeanMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsMeanMap.find(TELL1SourceID)->second.end();
-}
-
-/// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const {
-  if(m_cmsMeanSqMap.find(TELL1SourceID) == m_cmsMeanSqMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsMeanSqMap.find(TELL1SourceID)->second.begin();
-}
-
-/// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
-std::vector<double>::const_iterator ST::STCMSNoiseCalculationTool::cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const {
-  if(m_cmsMeanSqMap.find(TELL1SourceID) == m_cmsMeanSqMap.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsMeanSqMap.find(TELL1SourceID)->second.end();
-}
-
-/// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-std::vector<unsigned int>::const_iterator ST::STCMSNoiseCalculationTool::cmsNEventsBegin( const unsigned int TELL1SourceID ) const {
-  if(m_cmsNEvents.find(TELL1SourceID) == m_cmsNEvents.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsNEvents.find(TELL1SourceID)->second.begin();
-}
-
-/// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-std::vector<unsigned int>::const_iterator ST::STCMSNoiseCalculationTool::cmsNEventsEnd( const unsigned int TELL1SourceID ) const {
-  if(m_cmsNEvents.find(TELL1SourceID) == m_cmsNEvents.end()) {
-    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
-  }
-  return m_cmsNEvents.find(TELL1SourceID)->second.end();
-}
-
 std::vector<double> ST::STCMSNoiseCalculationTool::rawMean(const unsigned int TELL) const {
   return m_rawMeanMap.find(TELL)->second;
 }
@@ -256,7 +155,7 @@ std::vector<double> ST::STCMSNoiseCalculationTool::rawNoise(const unsigned int T
   return m_rawNoiseMap.find(TELL)->second;
 } 
 std::vector<unsigned int> ST::STCMSNoiseCalculationTool::rawN(const unsigned int TELL) const {
-  return m_rawNEvents.find(TELL)->second;
+  return m_rawNEventsPP.find(TELL)->second;
 }
 
 std::vector<double> ST::STCMSNoiseCalculationTool::cmsMean(const unsigned int TELL) const {
@@ -269,7 +168,7 @@ std::vector<double> ST::STCMSNoiseCalculationTool::cmsNoise(const unsigned int T
   return m_cmsNoiseMap.find(TELL)->second;
 }
 std::vector<unsigned int> ST::STCMSNoiseCalculationTool::cmsN(const unsigned int TELL) const {
-  return m_cmsNEvents.find(TELL)->second;
+  return m_cmsNEventsPP.find(TELL)->second;
 }
 
 //=====================================================================================================================
@@ -290,16 +189,16 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
 
   // Calculate the PCN/Header combinations for each Beetle port
   calcPCNConfigs(data);
-  if(!m_readPedestals) {
-    if (m_pedestalBuildup > 0) {
+  if (m_pedestalBuildup > 0) {
+    if(!m_readPedestals) {
       sumPedestals(data);
       if (m_pedestalBuildup == 1) {
         divPedestals();
         info() << "Pedestals ready, starting noise calc." << endmsg;
       }
-      m_pedestalBuildup--;
-      return StatusCode::SUCCESS;
     }
+    m_pedestalBuildup--;
+    return StatusCode::SUCCESS;
   }
 
   m_evtNumber++;
@@ -338,15 +237,17 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
     std::vector<double>* cmsMean = &m_cmsMeanMap[tellID];
     std::vector<double>* cmsMeanSq = &m_cmsMeanSqMap[tellID];
     std::vector<double>* cmsNoise = &m_cmsNoiseMap[tellID];
-    std::vector<unsigned int>* cmsNEvents = &m_cmsNEvents[tellID];
+    std::vector<unsigned int>* cmsNEvents = &m_cmsNEventsPP[tellID];
 
     // Need to store raw noise: needed for outlier removal in pedestal sub.
     std::vector<double>* rawMean = &m_rawMeanMap[tellID];
     std::vector<double>* rawMeanSq = &m_rawMeanSqMap[tellID];
     std::vector<double>* rawNoise = &m_rawNoiseMap[tellID];
-    std::vector<unsigned int>* rawNEvents = &m_rawNEvents[tellID];
+    std::vector<unsigned int>* rawNEvents = &m_rawNEventsPP[tellID];
     
     std::vector<double>* rawPedestal = &m_rawPedestalMap[tellID];
+
+    std::vector< std::vector<std::pair<double, int> > >* pedestals = &m_pedestalMaps[tellID];
 
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
@@ -388,19 +289,15 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
 
         dumpBeetleADCs( dataValues[beetle], "raw: " );
         
-        // TO DO: MC OCCUPANCY?
-        //         if (!m_skipCMS && ( m_addMcOccupancy > 0) ) {
-        //           mcHitsInTell += addMcOccupancy(dataValues[beetle], rawADC);
-        //         } else {
         copy(dataValues[beetle].begin(), dataValues[beetle].end(), rawADC.begin());
-        //         }
+
         std::vector<signed int> pedSubADCs;
         if ( m_pedestalBuildup == 0 ) {
-          substractPCNPedestals(rawADC, tellID, beetle, pedSubADCs);
+          substractPCNPedestals(rawADC, pedestals, beetle, pedSubADCs);
         }
 	    
         if (!m_skipCMS) {
-          substractPedestals(pedSubADCs, tellID, beetle, 
+          substractPedestals(pedSubADCs, rawMean->begin(), rawNoise->begin(), beetle, 
                              tmpADC, meanPerPort );
           
           if (beetle == m_printCMSSteps) {
@@ -442,7 +339,7 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           double valueRaw  = *dataStrip;
           double valueCMS  = tmpStrip->first;
           double valuePed = *rawADCStrip;
-          if ( m_rawOutliers & tmpStrip->second ) {
+          if ( m_rawOutliers & tmpStrip->second & (m_evtNumber > m_followingPeriod) ) {
             valueRaw = *rawMeanStrip;
             if ( m_rawOutliersCMS ) {
               valueCMS  = *cmsMeanStrip;
@@ -499,12 +396,12 @@ void ST::STCMSNoiseCalculationTool::calcPCNConfigs( const LHCb::STTELL1Datas* da
       binary.set(0,(header[0][iPort*3+2] >= 129));
       binary.set(1,(header[0][iPort*3+1] >= 129));
       binary.set(2,(header[0][2] >= 129));
-      m_portHeader[iPort] = (char)binary.to_ulong();
+      m_portHeader[iPort] = binary.to_ulong();
     } else {
       binary.set(0,0);
       binary.set(1,0);
       binary.set(2,0);
-      m_portHeader[iPort] = (char)binary.to_ulong();
+      m_portHeader[iPort] = binary.to_ulong();
     }
   }
 }
@@ -544,7 +441,6 @@ void ST::STCMSNoiseCalculationTool::sumPedestals(const LHCb::STTELL1Datas* data 
         int iPort;
         for ( iPort = 0; iPort < 4; iPort++ ) {
           int header = m_portHeader[iPort];
-          // TO DO: MAYBE ADD SECOND LOCAL VECTOR HERE????
           unsigned int iStrip = 0;
           for ( ; iStrip < LHCbConstants::nStripsInPort ; ++iStrip) {
             int strip = iStrip + iPort*LHCbConstants::nStripsInPort + beetle*LHCbConstants::nStripsInBeetle;
@@ -583,6 +479,7 @@ void ST::STCMSNoiseCalculationTool::divPedestals() {
     }
     it1++;
   }
+  plotPedestals();
 }
 
 void ST::STCMSNoiseCalculationTool::plotPedestals() {
@@ -611,15 +508,15 @@ void ST::STCMSNoiseCalculationTool::plotPedestals() {
 // Substract pedetals from ADC values..
 /// Calculate the pedestal substracted ADC values for one beetle
 void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed int>& BeetleADCs, 
-                                                       int tellID, signed int beetle,
+                                                       std::vector<double>::const_iterator rawMeansIt,
+                                                       std::vector<double>::const_iterator rawNoiseIt,
+                                                       const signed int beetle,
                                                        std::vector<std::pair <double, bool> >& pedSubADC,
                                                        std::vector<double>& BeetleMeans) {
 
   int stripOffset = beetle * LHCbConstants::nStripsInBeetle;  
-  std::vector<double>::iterator meanMapIt = m_rawMeanMap[tellID].begin() 
-    + stripOffset;
-  std::vector<double>::iterator rmsMapIt  = m_rawNoiseMap[tellID].begin()  
-    + stripOffset;
+  std::vector<double>::const_iterator meanMapIt = rawMeansIt + stripOffset;
+  std::vector<double>::const_iterator rmsMapIt  = rawNoiseIt + stripOffset;
 
   std::vector<signed int>::const_iterator adcIt    = BeetleADCs.begin();
   std::vector<std::pair <double, bool> >::iterator pedSubIt = pedSubADC.begin();
@@ -627,8 +524,9 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
   int iPort;
   for ( iPort = 0 ; iPort < 4; iPort++) {
     double mean = 0;
-      
+    
     unsigned int iStrip;
+
     for ( iStrip = 0; iStrip < LHCbConstants::nStripsInPort; iStrip++) {
       // substract pedestal
       if ( m_useInts ) {
@@ -636,16 +534,16 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
       } else {
         pedSubIt->first = *adcIt - *meanMapIt;
       }
-	
+      
       // add ADC value to pedestal substracted mean
       mean += pedSubIt->first;
-	
+      
       // flag outliers
       if ((*rmsMapIt > 0.01) && 
           (fabs(pedSubIt->first) > m_rawThreshold * (*rmsMapIt))) {
         pedSubIt->second = true;
       }
-      
+
       // advance to next channel
       adcIt++; pedSubIt++; meanMapIt++; rmsMapIt++;
     }
@@ -656,22 +554,24 @@ void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed 
 //==============================================================================
 // Substract the PCN dependent pedestals
 //==============================================================================
-void ST::STCMSNoiseCalculationTool::substractPCNPedestals( std::vector<signed int>& RawADCs,
-                                                           int tellID, signed int beetle, 
+void ST::STCMSNoiseCalculationTool::substractPCNPedestals( const std::vector<signed int>& RawADCs,
+                                                           const std::vector< std::vector<std::pair<double, int> > >* pedestals,
+                                                           const signed int beetle, 
                                                            std::vector<signed int>& PedSubADCs ) {
 
   int stripOffset = beetle * LHCbConstants::nStripsInBeetle;  
   
-  std::vector<signed int>::iterator adcIt    = RawADCs.begin();
+  std::vector<signed int>::const_iterator adcIt    = RawADCs.begin();
   
   int iPort;
-  std::vector< std::vector<std::pair<double, int> > >* pedMap = &m_pedestalMaps[tellID];
+  const std::vector< std::vector<std::pair<double, int> > >* pedMap = pedestals;
   for ( iPort = 0 ; iPort < 4; iPort++) {
-    std::vector<std::pair<double, int> >::iterator pedIt = 
-      (*pedMap)[m_portHeader[iPort]].begin() + stripOffset;
+    std::vector<std::pair<double, int> >::const_iterator pedIt = (*pedMap)[m_portHeader[iPort]].begin() + stripOffset;
     
     unsigned int iStrip;
     for ( iStrip = 0; iStrip < LHCbConstants::nStripsInPort; iStrip++) {
+
+
       PedSubADCs.push_back(*adcIt - (int)floor(pedIt->first+0.5));
 
       adcIt++; pedIt++; 
@@ -840,7 +740,7 @@ void ST::STCMSNoiseCalculationTool::stIteration( std::vector<std::pair <double, 
 
 }
 
-/// ZERO hits ? ? does what?? TO DO
+/// ZERO hits
 void ST::STCMSNoiseCalculationTool::zeroHitsUseRawNoise( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs ) {
   unsigned int i;
   if (m_zeroNeighbours) {
@@ -874,7 +774,8 @@ void ST::STCMSNoiseCalculationTool::zeroHitsUseRawNoise( std::vector<std::pair <
 }
 
 
-void ST::STCMSNoiseCalculationTool::zeroHitsNormal( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, double threshold) {
+void ST::STCMSNoiseCalculationTool::zeroHitsNormal( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, 
+                                                    double threshold) {
   unsigned int i;
   double val;
   if (m_zeroNeighbours) {
@@ -914,7 +815,8 @@ void ST::STCMSNoiseCalculationTool::zeroHitsNormal( std::vector<std::pair <doubl
 }
 
 
-void ST::STCMSNoiseCalculationTool::zeroHits( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, double threshold) {
+void ST::STCMSNoiseCalculationTool::zeroHits( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, 
+                                              double threshold) {
   if ( threshold < 0 ) {
     zeroHitsUseRawNoise( itBeetleTmpADCs );
   } else {

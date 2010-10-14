@@ -2,6 +2,15 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-10-14 Mark Tobin
+ - All changes below related to noise calculation tool.
+ - Renamed noise calculation base class to STNoiseToolBase
+ - Implement all data accessors in base class
+ - Add new algorithm STOnlineNoiseCalculationTool to be used in online
+ monitoring. It takes the raw and lcms adc values and calculates the noise with
+ the correct outlier removal.
+ - Fixed bug in outlier rejection for CMS noise tool.
+
 !=========================== STTools v4r4 2010-08-25 ==========================
 ! 2010-08-06 M Needham 
  - Add STSelectChannelIDOnTrack tool [selects channels that are on tracks] 

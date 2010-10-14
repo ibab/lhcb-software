@@ -1,32 +1,58 @@
-// $Id: STNoiseCalculationToolBase.h,v 1.3 2009-11-25 11:25:11 mtobin Exp $
-#ifndef STCMNOISECALCULATIONTOOLBASE_H 
-#define STCMNOISECALCULATIONTOOLBASE_H 1
+// $Id: STNoiseToolbase.h,v 1.3 2009-11-25 11:25:11 mtobin Exp $
+#ifndef STCMNOISETOOLBASE_H 
+#define STCMNOISETOOLBASE_H 1
 
 // Include files
+
 // from Gaudi
 #include "Kernel/STHistoToolBase.h"
 #include "Kernel/ISTNoiseCalculationTool.h"            // Interface
 
-/** @class STNoiseCalculationToolBase STNoiseCalculationToolBase.h
+/** @class STNoiseToolBase STNoiseToolBase.h
  *
- *  Base class for calculation of noise tools.  Implements all data accessors
+ *  Base class for noise calculation tools.  Implements all data accessors
  *  to the noise and job options of the derived tools.  Data is stored internally 
- *  using the TELL1 source ID.
+ *  using the TELL1 source ID.  The noise is calculated in each derived class using a
+ *  cumulative average or an exponential moving average which can be configured as
+ *  described below.   
+ *
+ *  The following options are configured via the base class
+ *  - \b InputData: The default input data is the full NZS bank
+ *  - \b FollowPeriod: This is the period of the exponential moving average. It
+ *    determines the lifetime of the averages (in number of events). As long as
+ *    the number of processed events is smaller than FollowPeriod the average
+ *    is a cumulative average. Set this to -1 to always use a cumulative
+ *    averaging.
+ *  - \b ResetRate: Rate at which the counters for the noise calculation are reset
+ *    (in number of events). Set to -1 to do no reset (default).
+ *  - \b SkipEvents: Number of events to be skipped. Useful when running over
+ *     common-mode-subtracted data where the pedestals have not been calculated.
+ *  - \b PedestalsFromDB: read the pedestals from the conditions database.
+ *  - \b ThresholdsFromDB: read the hit tresholds for outlier removal from the 
+ *    conditions data base.
+ *  - \b CondPath: The pedestals and hit thresholds are not in the standard LHCBCOND 
+ *    so they must be read from an additional DB slice.  The location in the database
+ *    can be specified via CondPath
+ *  - \b LimitToTell: the noise calculations limited to certain TELL1s.  The input here
+ *    is the actual TELL1 number (TT 1-48, IT 1-42).  The conversion to the TELL1 source ID is 
+ *    performed internally.
+ *  - \b UseEventsPerStrip: the number of events used in the noise calculation can be stored per
+ *    strip.  The default calculation assumes uses number of events per PP.
  *
  *  @author Mark Tobin
  *  @date   2009-10-01
  */
 namespace ST { 
-  class STNoiseCalculationToolBase : virtual public ST::ISTNoiseCalculationTool, public ST::HistoToolBase {
+  class STNoiseToolBase : virtual public ST::ISTNoiseCalculationTool, public ST::HistoToolBase {
   private:
 
   public: 
     /// Standard constructor
-    STNoiseCalculationToolBase( const std::string& type, 
+    STNoiseToolBase( const std::string& type, 
                             const std::string& name,
                             const IInterface* parent);
 
-    virtual ~STNoiseCalculationToolBase( ); ///< Destructor
+    virtual ~STNoiseToolBase( ); ///< Destructor
 
     virtual StatusCode initialize(); ///< Tool initialisation
 
@@ -57,34 +83,50 @@ namespace ST {
     virtual std::vector<double>::const_iterator rawMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator rawNEventsBegin( const unsigned int TELL1SourceID ) const;
+    virtual std::vector<unsigned int>::const_iterator rawNEventsPPBegin( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator rawNEventsEnd( const unsigned int TELL1SourceID ) const;
+    virtual std::vector<unsigned int>::const_iterator rawNEventsPPEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsNoiseEnd(const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsNoiseEnd(const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanBegin( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsMeanBegin( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanEnd( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsMeanEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
-    virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsBegin( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPBegin( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsEnd( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const;
+
+    /** Return an iterator corresponding to the number of events used in the noise calculations
+        for the first channel of a given TELL1 source ID 
+        - 1st is number of events used in RAW noise calculation after outlier removal
+        - 2nd is number of events used in CMS noise calculation after outlier removal
+    **/
+    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) 
+      const;
+
+    /** Return an iterator corresponding to the number of events used in the noise calculations
+        for the last channel of a given TELL1 source ID 
+        - 1st is number of events used in RAW noise calculation after outlier removal
+        - 2nd is number of events used in CMS noise calculation after outlier removal
+    **/
+    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
+      const;
 
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
     virtual int followPeriod() const {return m_followingPeriod;};
@@ -125,8 +167,20 @@ namespace ST {
     DataMap m_rawMeanSqMap;          ///< Internal map of the pedestal^2
     DataMap m_rawNoiseMap;           ///< Internal map of the current noise
 
-    /// Internal map of number of events per tell1 and FPGA-PP used in the calculation of the RAW noise.
-    std::map<unsigned int, std::vector<unsigned int> > m_rawNEvents;
+    DataMap m_cmsMeanMap;            ///< Local calculation of mean of ADCs after Common Mode Suppression
+    DataMap m_cmsMeanSqMap;          ///< Local calculation of mean of ADCs squared after Common Mode Suppression
+    DataMap m_cmsNoiseMap;           ///< Internal map of the noise after Common Mode Suppression
+
+    /// Internal map of number of events per tell1 and FPGA-PP used in the calculation of the noise.
+    std::map<unsigned int, std::vector<unsigned int> > m_rawNEventsPP;///< Number of events in RAW noise calculation
+    std::map<unsigned int, std::vector<unsigned int> > m_cmsNEventsPP;///< Number of events in CMS noise calculation
+
+    // Use number of events per strip in noise calculations
+    bool m_evtsPerStrip;
+    /** Internal map of number of events per tell1 channel the calculation of the RAW (first) 
+        and CMS (second) noise. **/
+    typedef std::map<unsigned int, std::vector<std::pair<unsigned int, unsigned int> > > EventCountMap;
+    EventCountMap m_nEvents;
 
     // jobOptions:
 
@@ -154,16 +208,34 @@ namespace ST {
     bool m_countRoundRobin;///< True if you want to plot number of events per PP in round robin
     void countRoundRobin(unsigned int TELL1SourceID, unsigned int PP);///< Plot histogram of number of round robin events
 
+    bool m_readPedestals;///< Read pedestals from conditions database
+    bool m_readThresholds;///< Read hit thresholds from conditions database
+    std::string m_condPath; ///< Set the condition path in the database
+    
+    /** data values for up to 8 pedestal values 
+        - tellID to access map
+        - vector of 8 PCN/header combinations
+        - pair<pedestal, n events> */
+    typedef std::map<int, std::vector< std::vector<std::pair<double, int> > > > PedestalMaps;
+    PedestalMaps m_pedestalMaps;
+
+    /// Strip thresholds for outlier rejection: first=raw, second=CMS
+    typedef std::map<int, std::vector< std::pair<double, double> > > ThresholdMap;
+    ThresholdMap m_thresholdMap;
+
   private:
     virtual StatusCode calculateNoise() = 0;
 
     bool m_firstEvent;///< First call to noise calculation
-    ulonglong  m_eventNumber;///< Current event number
+    unsigned int m_eventNumber;///< Current event number
     unsigned int m_runNumber;///< Current run number
 
     /// Keep running total of number of PPs which send the NZS banks
     AIDA::IHistogram2D* m_2d_nEventsPerPP;
     
+    // Read the TELL1 parameters from the conditions database
+    void readTELL1Parameters(const unsigned int TELL1SourceID);
+
   };
 }
-#endif // STCMNOISECALCULATIONTOOLBASE_H
+#endif // STCMNOISETOOLBASE_H

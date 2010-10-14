@@ -36,22 +36,23 @@ namespace ST {
 ST::STNoiseCalculationTool::STNoiseCalculationTool( const std::string& type,
                                                     const std::string& name,
                                                     const IInterface* parent )
-  : ST::STNoiseCalculationToolBase ( type, name , parent )
+  : ST::STNoiseToolBase ( type, name , parent )
 {
   declareInterface<ST::ISTNoiseCalculationTool>(this);
-
-  declareSTConfigProperty("InputData" , m_dataLocation,
-                          LHCb::STTELL1DataLocation::TTFull);
-  declareProperty("FollowPeriod", m_followingPeriod = 2000);
-  declareProperty("ResetRate", m_resetRate = -1);  
-  declareProperty("SkipEvents", m_skipEvents = -1 );
 
 }
 
 StatusCode ST::STNoiseCalculationTool::initialize() {
   debug() << "intialize" << endmsg;
-  StatusCode sc = ST::STNoiseCalculationToolBase::initialize();
+  StatusCode sc = ST::STNoiseToolBase::initialize();
   if (sc.isFailure()) return sc;
+
+  // CMS maps not used in this tool so clear.
+  m_cmsMeanMap.clear();
+  m_cmsMeanSqMap.clear();
+  m_cmsNoiseMap.clear();
+  m_cmsNEventsPP.clear();
+    
 
   return StatusCode::SUCCESS;
 }
@@ -65,11 +66,6 @@ ST::STNoiseCalculationTool::~STNoiseCalculationTool() {}
 StatusCode ST::STNoiseCalculationTool::calculateNoise() {
   m_evtNumber++;
   
-  // Skip first m_skipEvents. Useful when running over CMS data.
-  if( m_evtNumber < m_skipEvents ) {
-    return StatusCode::SUCCESS;
-  }
- 
   // Skip if there is no Tell1 data
   if (!exist<LHCb::STTELL1Datas>(m_dataLocation)) {
     return StatusCode::SUCCESS;
@@ -95,7 +91,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
     std::vector<double>* meanTELL = &m_rawMeanMap[tellID];
     std::vector<double>* meanSqTELL = &m_rawMeanSqMap[tellID];
     std::vector<double>* noiseTELL = &m_rawNoiseMap[tellID];
-    std::vector<unsigned int>* nEvents = &m_rawNEvents[tellID];
+    std::vector<unsigned int>* nEventsPP = &m_rawNEventsPP[tellID];
 
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
@@ -104,12 +100,12 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
       unsigned int pp = *iPP;
       
       // Count the number of events per PP
-      (*nEvents)[pp]++;
+      (*nEventsPP)[pp]++;
       if(m_countRoundRobin) this->countRoundRobin(tellID, pp);
 
       // Cumulative average up to m_followingPeriod; after that
       // exponential moving average
-      int nEvt = (*nEvents)[pp];
+      int nEvt = (*nEventsPP)[pp];
       if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
         nEvt = m_followingPeriod;
     
@@ -136,7 +132,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
       
       // Resets the event counter
       if( m_resetRate > 0  && nEvt%m_resetRate == 0 ) {
-        (*nEvents)[pp] = 0;
+        (*nEventsPP)[pp] = 0;
       }
     } // FPGA-PP
   } // boards
@@ -192,19 +188,20 @@ std::vector<double>::const_iterator ST::STNoiseCalculationTool::cmsMeanSquaredEn
 }
 
 /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-std::vector<unsigned int>::const_iterator ST::STNoiseCalculationTool::cmsNEventsBegin( const unsigned int TELL1SourceID ) const {
-  if(m_rawNEvents.find(TELL1SourceID) == m_rawNEvents.end()) {
+std::vector<unsigned int>::const_iterator ST::STNoiseCalculationTool::cmsNEventsPPBegin
+( const unsigned int TELL1SourceID ) const {
+  if(m_rawNEventsPP.find(TELL1SourceID) == m_rawNEventsPP.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
-  return m_rawNEvents.find(TELL1SourceID)->second.begin();
+  return m_rawNEventsPP.find(TELL1SourceID)->second.begin();
 }
 
 /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-std::vector<unsigned int>::const_iterator ST::STNoiseCalculationTool::cmsNEventsEnd( const unsigned int TELL1SourceID ) const {
-  if(m_rawNEvents.find(TELL1SourceID) == m_rawNEvents.end()) {
+std::vector<unsigned int>::const_iterator ST::STNoiseCalculationTool::cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const {
+  if(m_rawNEventsPP.find(TELL1SourceID) == m_rawNEventsPP.end()) {
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
-  return m_rawNEvents.find(TELL1SourceID)->second.end();
+  return m_rawNEventsPP.find(TELL1SourceID)->second.end();
 }
 
 std::vector<double> ST::STNoiseCalculationTool::rawMean(const unsigned int TELL) const {
@@ -217,7 +214,7 @@ std::vector<double> ST::STNoiseCalculationTool::rawNoise(const unsigned int TELL
   return m_rawNoiseMap.find(TELL)->second;
 }
 std::vector<unsigned int> ST::STNoiseCalculationTool::rawN(const unsigned int TELL) const {
-  return m_rawNEvents.find(TELL)->second;
+  return m_rawNEventsPP.find(TELL)->second;
 }
 
 std::vector<double> ST::STNoiseCalculationTool::cmsMean(const unsigned int TELL) const {
@@ -230,5 +227,5 @@ std::vector<double> ST::STNoiseCalculationTool::cmsNoise(const unsigned int TELL
   return m_rawNoiseMap.find(TELL)->second;
 }
 std::vector<unsigned int> ST::STNoiseCalculationTool::cmsN(const unsigned int TELL) const {
-  return m_rawNEvents.find(TELL)->second;
+  return m_rawNEventsPP.find(TELL)->second;
 }

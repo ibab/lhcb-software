@@ -4,24 +4,13 @@
 
 // Include files
 // from Gaudi
-#include "STNoiseCalculationToolBase.h"
+#include "STNoiseToolBase.h"
 #include "Kernel/ISTNoiseCalculationTool.h"            // Interface
 
 /** @class STNoiseCalculationTool STNoiseCalculationTool.h
  *
  *  The noise per strip of the TELL1s is calculated for all TELL1s.  
- *  Implements abstract methods of STNoiseCalculationToolBase class.
- *  There are options for calculating the noise:
- *  - \b FollowPeriod: This is the period of the exponential moving average. It
- *    determines the lifetime of the averages (in number of events). As long as
- *    the number of processed events is smaller than FollowPeriod the average
- *    is a cumulative average. Set this to -1 to always use a cumulative
- *    averaging.
- *  - \b ResetRate: Rate at which the counters for the noise calculation are reset
- *    (in number of events). Set to -1 to do no reset (default).
- *  - \b SkipEvents: Number of events to be skipped. Useful when running over
- *     common-mode-subtracted data where the pedestals have not been calculated.
- *
+ *  Implements abstract methods of STNoiseToolBase class.
  *  The noise values are stored in a map which is accessed via the source ID of the TELL1.
  *
  *  @author J. van Tilburg, N. Chiapolini
@@ -33,7 +22,7 @@
  *  @date   2009-10-01
  */
 namespace ST { 
-  class STNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseCalculationToolBase {
+  class STNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseToolBase {
   private:
 
     friend class ToolFactory<ST::STNoiseCalculationTool>;
@@ -82,10 +71,10 @@ namespace ST {
     virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsBegin( const unsigned int TELL1SourceID ) const;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPBegin( const unsigned int TELL1SourceID ) const;
 
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsEnd( const unsigned int TELL1SourceID ) const;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const;
 
   protected:
 
