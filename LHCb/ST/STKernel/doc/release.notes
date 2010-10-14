@@ -3,6 +3,10 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2010-10-14 Mark Tobin
+ - Add method in ISTNoiseCalculationTool to return the number of events used per
+ strip in the calculation of the noise.
+ 
 ! 2010-10-06 - Marco Clemencic
  - Fix for ICC.
 

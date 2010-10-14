@@ -49,10 +49,10 @@ namespace ST {
     virtual std::vector<double>::const_iterator rawMeanSquaredEnd( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator rawNEventsBegin( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator rawNEventsPPBegin( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator rawNEventsEnd( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator rawNEventsPPEnd( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const = 0;
@@ -73,10 +73,26 @@ namespace ST {
     virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsBegin( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPBegin( const unsigned int TELL1SourceID ) const = 0;
 
     /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
-    virtual std::vector<unsigned int>::const_iterator cmsNEventsEnd( const unsigned int TELL1SourceID ) const = 0;
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsPPEnd( const unsigned int TELL1SourceID ) const = 0;
+
+    /** Return an iterator corresponding to the number of events used in the noise calculations
+        for the first channel of a given TELL1 source ID 
+        - 1st is number of events used in RAW noise calculation after outlier removal
+        - 2nd is number of events used in CMS noise calculation after outlier removal
+    **/
+    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsBegin( const unsigned int TELL1SourceID ) 
+      const = 0;
+
+    /** Return an iterator corresponding to the number of events used in the noise calculations
+        for the last channel of a given TELL1 source ID 
+        - 1st is number of events used in RAW noise calculation after outlier removal
+        - 2nd is number of events used in CMS noise calculation after outlier removal
+    **/
+    virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
+      const = 0;
 
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
     virtual int followPeriod() const = 0;
