@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2010-10-14 - Marco Cattaneo
+ - Start v37r9 (remove DDDB v1r36)
+
 </PRE><H1><A NAME=v37r8>2010-10-04 Brunel v37r8</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r5, Lbcom v9r7,
  Rec v10r5 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
