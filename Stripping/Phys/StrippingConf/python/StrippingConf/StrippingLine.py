@@ -141,16 +141,14 @@ class bindMembers (object) :
         seq = alg.clone('StrippingSeq'+line, TopSelection = topSel)
         gaudiSeq = seq.sequence()
         members = gaudiSeq.Members
-        for a in members :
-            self._members += [a]
+        self._members += members
         loc = seq.outputLocations()[0]
         self._outputsel = loc
         self._outputloc = loc
 
     def _handleSelectionType(self, line, sel) :
         members = FlatSelectionListBuilder(sel).selectionList
-        for a in members :
-            self._members += [a]
+        self._members += members
         loc = sel.outputLocation()
         self._outputsel = loc
         self._outputloc = loc
@@ -174,16 +172,6 @@ class bindMembers (object) :
         from PhysSelPython.Wrappers import MergedSelection
         sel = MergedSelection(line, RequiredSelections = [alg])
         self._handleSelectionType( line, sel )
-
-
-    def _handle_SelSequence(self, line, alg) :
-        gaudiSeq = alg.sequence()
-        members = gaudiSeq.Members
-        for a in members :
-            self._members += [a]
-        loc = alg.outputLocations()[0]
-        self._outputsel = loc
-        self._outputloc = loc
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :

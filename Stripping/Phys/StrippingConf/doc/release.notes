@@ -5,6 +5,16 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-10-14 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . Constructor from PhysSelPython.Wrappers.EvenrSelection takes care that 
+    algorithm's name is bound to stripping line's name, for cases where
+    EventSelection produces data.
+  . Remove StrippingLine ctor from obsolete SelSequence
+  . Simplify some loops.
+ - cmt/requirements
+  . Increase to v3r8p2.
+
 !========================== StrippingConf v3r8p1 2010-10-11 =================
 
 ! 2010-10-11 - Anton Poluektov
