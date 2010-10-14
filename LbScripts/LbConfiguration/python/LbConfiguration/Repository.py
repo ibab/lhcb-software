@@ -3,7 +3,8 @@ Module for handling of software repository informations.
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
-__all__ = ["RepositoryInfo", "SVNReposInfo", "CVSReposInfo", "repositories"]
+__all__ = ["RepositoryInfo", "SVNReposInfo", "CVSReposInfo", "repositories",
+           "getRepositories"]
 
 ## Small class for the generic manipulation of RevisionControlSystem URLs
 class RepositoryInfo(object):
@@ -32,6 +33,7 @@ class RepositoryInfo(object):
             self._path = path
     ## Property for the validation of the path
     path = property(_get_path, _set_path)
+    
 
 ## Subversion specific implementation of RepositoryInfo
 class SVNReposInfo(RepositoryInfo):
@@ -73,3 +75,28 @@ repositories = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", 
 # Define default repositories
 for k in repositories:
     repositories[k]["default"] = repositories[k]["ssh"]
+
+
+def getRepositories(user_svn=None, user_cvs=None, protocol="default"):
+    from urllib import splittype, splituser, splithost
+    reps = {}
+    for r in repositories :
+        if repositories[r].haskey(protocol) :
+            reps[r] = repositories[r][protocol]
+    i = 0
+    for r in user_svn:
+        # FIXME: need some error checking
+        protocol, rest = splittype(r)
+        rest, path = splithost(rest)
+        user, host = splituser(rest)
+        reps["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
+        i += 1
+    i = 0
+    for r in user_cvs:
+        # FIXME: need some error checking
+        dummy, protocol, rest, path = r.split(":")
+        user, host = splituser(rest)
+        reps["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
+        i += 1    
+    return reps
+

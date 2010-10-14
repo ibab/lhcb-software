@@ -1,3 +1,8 @@
+2010-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Repository.py: added the getRepositories function
+	 fitered against a protocol string (Marco Cl.).
+
 2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed the setting of the prompt in batch mode (where there is
