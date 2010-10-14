@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Jaap Panman
+ - LumiFSR: correct operator=, needed for LumiMergeFSR
+
 !======================== LumiEvent v3r0p1 2010-08-25 ========================
 ! 2010-08-25 - Rob Lambert
  - Marco reverted the undocumented change from Pere.

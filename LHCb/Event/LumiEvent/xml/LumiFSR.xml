@@ -68,9 +68,14 @@
 	<arg name="rhs" type="LHCb::LumiFSR" const='TRUE'/>
         <code>
    if ( this != &amp;rhs ) {
+   <!--
       m_runNumbers        = rhs.m_runNumbers;
       m_fileIDs           = rhs.m_fileIDs;
       m_extraInfo         = rhs.m_extraInfo;
+     -->
+      mergeRuns( rhs.m_runNumbers );
+      mergeFileIDs ( rhs.m_fileIDs );
+      mergeInfo( rhs.m_extraInfo );
    }
    return *this;
         </code>

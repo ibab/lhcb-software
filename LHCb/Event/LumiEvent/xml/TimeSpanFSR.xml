@@ -43,6 +43,23 @@
         init="0"
        />
 
+
+      <method
+        desc="Assignment operator"
+        name="operator="
+        type="LHCb::TimeSpanFSR&amp;"
+	>
+	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>   
+        <code>
+   if ( this != &amp;rhs ) {
+     m_earliest = rhs.m_earliest;
+     m_latest = rhs.m_latest;
+   }
+     
+   return *this;
+        </code>
+      </method>
+
       <method
 	type = "void"
 	name = "addTime"
