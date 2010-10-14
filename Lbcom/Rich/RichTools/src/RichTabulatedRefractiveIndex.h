@@ -100,6 +100,18 @@ namespace Rich
     // for all visable photon energies.
     double refractiveIndexSD ( const RichRadIntersection::Vector & intersections ) const;
 
+  private:
+
+    /// Access on demand the Rich radiator detector elements
+    inline const DeRichRadiator * deRad( const Rich::RadiatorType rad ) const
+    {
+      if ( !m_radiators[rad] ) loadRadiator(rad);
+      return m_radiators[rad];
+    }
+
+    /// Load the detector element for the given radiator
+    void loadRadiator( const Rich::RadiatorType rad ) const;
+
   private: // Private data
 
     /// Pointers to RICHes
@@ -109,7 +121,7 @@ namespace Rich
     const IDetParameters * m_detParams;
 
     /// Pointers to RICH radiator detector elements
-    std::vector<DeRichRadiator *> m_deRads;
+    mutable std::vector<const DeRichRadiator*> m_radiators;
 
     /// Flag to say if we are in HLT mode or not
     bool m_hltMode;

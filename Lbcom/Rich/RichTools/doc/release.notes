@@ -6,6 +6,7 @@
 
 ! 2010-10-14 - Chris Jones
  - Fix for compilation problem on windows
+ - Update refractive index tool to load radiator detector elements on demand
 
 ! 2010-10-13 - Chris Jones
  - Update the Snells Law refraction tool to load detector elements on demand.

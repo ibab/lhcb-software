@@ -26,7 +26,8 @@ TabulatedRefractiveIndex ( const std::string& type,
   : RichToolBase  ( type, name, parent         ),
     m_riches      ( Rich::NRiches              ),
     m_detParams   ( NULL                       ),
-    m_deRads      ( Rich::NRadiatorTypes       ),
+    m_radiators   ( Rich::NRadiatorTypes, 
+                    (const DeRichRadiator *)(NULL) ),
     m_hltMode     ( false                      )
 {
   // interface
@@ -42,11 +43,6 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   // Get tools
   acquireTool( "RichDetParameters", m_detParams );
 
-  // Get the RICH radiators
-  m_deRads[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
-  m_deRads[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
-  m_deRads[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
-
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
@@ -60,7 +56,7 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                         const double energy ) const
 {
-  return m_deRads[rad]->refractiveIndex(energy,m_hltMode);
+  return deRad(rad)->refractiveIndex(energy,m_hltMode);
 }
 
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
@@ -148,4 +144,19 @@ refractiveIndex ( const RichRadIntersection::Vector & intersections ) const
     totPathL += pLength;
   }
   return ( totPathL>0 ? refIndex/totPathL : refIndex );
+}
+
+void 
+Rich::TabulatedRefractiveIndex::loadRadiator( const Rich::RadiatorType rad ) const
+{
+  if      ( Rich::Aerogel  == rad ) 
+  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Aerogel  ); }
+  else if ( Rich::Rich1Gas == rad ) 
+  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas ); }
+  else if ( Rich::Rich2Gas == rad ) 
+  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas ); }
+  else
+  {
+    Exception( "Cannot load DetElem for radiator type "+Rich::text(rad) );
+  }
 }
