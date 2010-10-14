@@ -403,7 +403,7 @@ class GetPack(Script):
         reps = self.packages[package]
         if len(reps) > 1:
             if self.options.batch:
-            	# never ask for a repository in batch mode
+                #never ask for a repository in batch mode
                 raise Skip
             lst = []
             for k in reps:
