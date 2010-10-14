@@ -309,6 +309,26 @@
   <ConnectionList name="StorageReceiver"/>
 </NodeType>
 
+<NodeType name="CALControl">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogGaudiSumSrv"/>
+  <Task name="LogRecoSumSrv"/>
+  <Task name="LogPVSS"/>
+  <Task name="LogPVSSSrv"/>
+  <ConnectionList name="ControlsPC"/>
+  <Project name="&lt;NODE&gt;"/>
+</NodeType>
+
+<NodeType name="CALWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <Task name="MBMMON_0"/>
+  <ConnectionList name="Standard"/>
+</NodeType>
+
 <NodeType name="MonitoringControl">
   <TaskList name="FMC"/>
   <TaskList name="ControlsPC"/>
@@ -382,7 +402,10 @@
 -->
   <Task name="FarmStomp"/>
   <Task name="StatusStomp"/>
-  <Task name="OrbitedSrv"/>
+  <Task name="OrbitedSrv_0"/>
+  <Task name="OrbitedSrv_1"/>
+  <Task name="OrbitedSrv_2"/>
+  <Task name="ActiveMQ"/>
   <Task name="ElogPublish"/>
   <Task name="ElogExtract"/>
 <!--
@@ -393,6 +416,31 @@
   <Task name="LHCb_ErrorLog_0"/>
 -->
   <ConnectionList name="Standard"/>
+</NodeType>
+
+<NodeType name="ECS04Node">
+  <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="pcSrv_u"/>
+  <Task name="TANServ"/>
+  <Task name="ROcollect"/>
+  <Task name="TaskSupervisor"/>
+  <Task name="condDBServerLOG"/>
+  <Task name="condDBServer"/>
+  <Task name="LogDef"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogGaudiSrv"/>
+  <Task name="LogGaudiSumSrv"/>
+  <Task name="LogSumDefSrv"/>
+  <Task name="LogReco"/>
+  <Task name="LogRecoSrv"/>
+  <Task name="LogRecoSumSrv"/>
+  <Project name="LBECSINFO"/>
+  <Connection name="ecs01"/>
+  <Connection name="ecs03"/>
+  <Connection name="mona08"/>
+  <Connection name="storectl01"/>
 </NodeType>
 
 </TaskInventory>

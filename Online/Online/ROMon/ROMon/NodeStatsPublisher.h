@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.h,v 1.2 2008-11-13 12:13:32 frankb Exp $
+// $Id: NodeStatsPublisher.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/NodeStatsPublisher.h,v 1.2 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/NodeStatsPublisher.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
 #ifndef ROMON_NODESTATSPUBLISHER_H
 #define ROMON_NODESTATSPUBLISHER_H 1
 
@@ -59,7 +59,7 @@ namespace ROMon {
     /// Start monitoring activity
     virtual int monitor();
     /// Update handler
-    virtual void update();
+    virtual void update(void* param);
     /// Help printout in case of -h /? or wrong arguments
     static void help();
   };

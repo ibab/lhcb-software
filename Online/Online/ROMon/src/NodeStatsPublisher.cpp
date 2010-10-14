@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.6 2010-07-06 11:52:21 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.6 2010-07-06 11:52:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -246,7 +246,7 @@ int NodeStatsPublisher::monitor() {
 }
 
 /// Update handler
-void NodeStatsPublisher::update()   {
+void NodeStatsPublisher::update(void* /* param */)   {
   m_needUpdate = true;
 }
 

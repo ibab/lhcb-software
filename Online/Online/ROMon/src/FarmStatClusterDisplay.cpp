@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
+// $Id: FarmStatClusterDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmStatClusterDisplay.h"
@@ -25,10 +25,6 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-namespace { const char* _flg(int v, int msk)  {  return (v&msk)==msk ? "OK" : "--"; } }
-#define _F(x)   _flg(n.status,FarmStatNodeStatus::x)
-//namespace { bool _ok(int v, int msk)        { return (v&msk)==msk; }  }
-//#define _BAD(x) _ok(n.status,FarmStatNodeStatus::x)
 namespace { template <class T> float _frac(T a,T b) {return 100.f*float(float(a)/float(b));} }
 
 #define MAX_FARMSTAT_TIME   600

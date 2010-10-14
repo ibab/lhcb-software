@@ -1,4 +1,4 @@
-// $Id: FarmStatSrv.cpp,v 1.4 2010-10-12 18:44:51 frankb Exp $
+// $Id: FarmStatSrv.cpp,v 1.5 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.4 2010-10-12 18:44:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.5 2010-10-14 06:44:04 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -44,6 +44,8 @@ using namespace ROMon;
 using namespace std;
 
 typedef vector<string> StringV;
+
+static string s_svcPrefix = "/";
 
 static void help() {
   cout << "  romon_farmSummary -option [-option]" << endl
@@ -80,17 +82,17 @@ SubfarmStatCollector::~SubfarmStatCollector() {
 
 /// Connect to publishing dim service
 void SubfarmStatCollector::connect() {
-  string svc, svc0 = "/"+strlower(m_name);
+  string svc, svc0 = s_svcPrefix+strlower(m_name);
   if ( m_parent->haveMBM() ) {
     svc = svc0 + "/ROpublish";
     m_mbm = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,mbmHandler,(long)this,0,0);
-    svc = m_parent->name() + svc0 + "/MBM";
+    svc = m_parent->name() + "/" + strlower(m_name) + "/MBM";
     m_mbmSvc = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedString,(long)&m_mbmData);
   }
   if ( m_parent->haveCPU() ) {
     svc = svc0 + "/ROpublish/CPU";
     m_cpu = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,cpuHandler,(long)this,0,0);
-    svc = m_parent->name() + svc0 + "/CPU";
+    svc = m_parent->name() + "/" +strlower(m_name) + "/CPU";
     m_cpuSvc = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedString,(long)&m_cpuData);
   }
   ::lib_rtl_output(LIB_RTL_DEBUG,"FarmStatSrv> Connected to subfarm: %s",name().c_str());
@@ -237,6 +239,7 @@ FarmStatSrv::FarmStatSrv(int argc, char** argv) : m_dns(0), m_lock(0), m_name("/
   cli.getopt("target",    2, out_node);
   cli.getopt("match",     2, m_match = "*");
   cli.getopt("service",   2, m_name);
+  cli.getopt("prefix",    2, s_svcPrefix);
   m_haveMBM = cli.getopt("mbm",2) != 0;
   m_haveCPU = cli.getopt("cpu",2) != 0;
 

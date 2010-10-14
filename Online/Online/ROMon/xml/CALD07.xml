@@ -1,0 +1,8 @@
+<TaskInventory>
+  <NodeList name="CALD07">
+   <Name>CALD07</Name>
+   <Node name="cald07"     type="CALControl"/>
+   <Node name="cald0701"   type="CALWorker"/>
+  </NodeList>
+</TaskInventory>
+

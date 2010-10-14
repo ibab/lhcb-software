@@ -1,4 +1,4 @@
-// $Id: ProcessDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
+// $Id: ProcessDisplay.cpp,v 1.3 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.3 2010-10-14 06:44:04 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -34,7 +34,7 @@ ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, const s
   : InternalDisplay(parent, title), m_flag(flag)
 {
   size_t i;
-  string svc = "/";
+  string svc = svcPrefix();
   m_name = "";
   for(i=0; i<title.length() && title[i]!='.';++i)
     m_name += ::tolower(title[i]);

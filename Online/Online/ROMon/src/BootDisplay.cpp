@@ -1,4 +1,4 @@
-// $Id: BootDisplay.cpp,v 1.6 2010-10-12 17:47:05 frankb Exp $
+// $Id: BootDisplay.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.6 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootDisplay.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootMon.h"
@@ -94,7 +94,7 @@ public:
     const BootClusterLine* currentLine() const       { return m_currLine; }
     void setCurrentLine(const BootClusterLine* line) { m_currLine = line; }
     /// Set cursor to line position
-    virtual void set_cursor(const BootClusterLine* line);
+    virtual void pos_cursor(const BootClusterLine* line);
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
     /// DIM command service callback
@@ -185,7 +185,7 @@ namespace {
 BootClusterLine::BootClusterLine(BootDisplay* p, int pos, const std::string& n)
   : m_name(n), m_svc(0), m_position(pos), m_parent(p), m_ptr(0)
 {
-  string svc = "/"+strlower(n)+"/BootMonitor";
+  string svc = InternalDisplay::svcPrefix()+strlower(n)+"/BootMonitor";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
 }
 
@@ -363,7 +363,7 @@ int BootDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
 }
 
 /// Set cursor to position
-void BootDisplay::set_cursor(const BootClusterLine* line) {
+void BootDisplay::pos_cursor(const BootClusterLine* line) {
   const BootClusterLine* curr = currentLine();
   if ( curr )   {
     ::scrc_put_chars(m_display,curr->name().c_str(),NORMAL|BOLD,curr->position(),BOOTLINE_START,0);
@@ -502,7 +502,7 @@ void BootDisplay::handle(const Event& ev) {
 	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
 	if ( i != m_clusters.end() ) {
 	  DisplayUpdate update(this);
-	  set_cursor((*i).second);
+	  pos_cursor((*i).second);
 	}
       }
       break;

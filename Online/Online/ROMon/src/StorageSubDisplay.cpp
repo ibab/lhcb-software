@@ -57,6 +57,7 @@ namespace ROMon {
 #include "CPP/IocSensor.h"
 #include "SCR/MouseSensor.h"
 #include "SCR/scr.h"
+#include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
@@ -79,9 +80,7 @@ StorageSubDisplay::StorageSubDisplay(FarmDisplay* parent, const string& title, b
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
   init(bad);
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
+  string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
   MouseSensor::instance().add(this,m_display);

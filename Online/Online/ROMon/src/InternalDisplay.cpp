@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -29,7 +29,7 @@ using namespace SCR;
 using namespace std;
 
 static lib_rtl_lock_t    s_lock = 0;
-
+static string            s_prefix = "/";
 
 /// Global screen lock shared by all displays
 lib_rtl_lock_t InternalDisplay::screenLock() {
@@ -58,6 +58,16 @@ void InternalDisplay::close() {
     ::scrc_delete_display(m_display);
     m_display = 0;
   }
+}
+
+/// Return service prefix for usage of the bridge
+const string& InternalDisplay::svcPrefix() {
+  return s_prefix;
+}
+
+/// Set service prefix for usage of the bridge
+void InternalDisplay::setSvcPrefix(const string& pref) {
+  s_prefix = pref;
 }
 
 void InternalDisplay::disconnect() {

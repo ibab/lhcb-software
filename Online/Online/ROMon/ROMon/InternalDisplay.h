@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.h,v 1.2 2010-09-20 18:59:49 frankb Exp $
+// $Id: InternalDisplay.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.2 2010-09-20 18:59:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
 #ifndef ROMON_INTERNALDISPLAY_H
 #define ROMON_INTERNALDISPLAY_H 1
 
@@ -73,6 +73,10 @@ namespace ROMon {
     virtual ~InternalDisplay();
     /// Global screen lock shared by all displays
     static lib_rtl_lock_t screenLock();
+    /// Return service prefix for usage of the bridge
+    static const std::string& svcPrefix();
+    /// Set service prefix for usage of the bridge
+    static void setSvcPrefix(const std::string& pref);
     /// Draw bar to show occupancies
     size_t draw_bar(int x, int y, float f1, int scale);
     /// Show the display on the main panel

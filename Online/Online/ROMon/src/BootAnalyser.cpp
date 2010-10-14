@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.8 2010-10-12 17:47:05 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.9 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.8 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.9 2010-10-14 06:44:04 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -168,6 +168,7 @@ using namespace std;
 #define DHCP_BOOT_DIFF            200
 
 static bool s_use_ts = true;
+static string s_svcPrefix = "/";
 
 namespace ROMon {
   class BootLogLine {
@@ -342,7 +343,7 @@ int SubfarmBootStatus::start() {
     const Inventory::NodeCollection::NodeList& nl = (*ni).second.nodes;
     Inventory::NodeCollection::NodeList::const_iterator niter = nl.begin();
     m_status = new(new char[sizeof(BootNodeStatus)*(nl.size()+1)+sizeof(BootNodeStatusset)]) BootNodeStatusset(name());
-    string svc_name = "/"+strupper(name())+"/TaskSupervisor/Summary";
+    string svc_name = s_svcPrefix+strupper(name())+"/TaskSupervisor/Summary";
     if ( s_use_ts ) {
       m_tsID = ::dic_info_service((char*)svc_name.c_str(),TIMED,15,0,0,summaryHandler,(long)this,0,0);
       dic_add_error_handler(error_user_routine);
@@ -640,7 +641,9 @@ static void help() {
 extern "C" int run_boot_analyser(int argc, char *argv[])    {
   string node = RTL::nodeNameShort();
   string server = "/"+node+"/"+RTL::processName();
+  
   RTL::CLI cli(argc,argv,help);
+  cli.getopt("prefix",2,s_svcPrefix);
   s_use_ts = cli.getopt("nots",1)==0;
   if ( cli.getopt("VERBOSE",4)!=0 )
     ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_VERBOSE);
@@ -654,7 +657,7 @@ extern "C" int run_boot_analyser(int argc, char *argv[])    {
     ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
   else
     ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
-
+  
   BootMonitor mon(server);
   mon.start();
   TimeSensor::instance().add(&mon,1,(void*)CMD_DATA);

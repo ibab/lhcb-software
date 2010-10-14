@@ -1,4 +1,4 @@
-// $Id: CPUDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
+// $Id: CPUDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.3 2010-10-12 18:44:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -33,7 +33,7 @@ using namespace std;
 CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, const string& node, int height, int width)
   : InternalDisplay(parent, title), m_node(node)
 {
-  string svc = "/";
+  string svc = svcPrefix();
   for(size_t i=0; i<title.length() && title[i]!='.';++i) svc += ::tolower(title[i]);
   svc += "/ROpublish/CPU";
   m_title = "CPU monitor on "+m_title+" Service:"+svc;

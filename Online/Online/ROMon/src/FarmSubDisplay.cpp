@@ -57,6 +57,7 @@ namespace ROMon {
 #include "CPP/IocSensor.h"
 #include "SCR/MouseSensor.h"
 #include "SCR/scr.h"
+#include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
@@ -65,8 +66,7 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 // Max. 15 seconds without update allowed
-#define UPDATE_TIME_MAX 15
-
+#define UPDATE_TIME_MAX 35
 
 namespace {
   const char* _procNam(const char* nam) {
@@ -89,9 +89,7 @@ FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const string& title, bool ba
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
   init(bad);
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
+  string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
   MouseSensor::instance().add(this,m_display);
@@ -106,8 +104,8 @@ FarmSubDisplay::~FarmSubDisplay() {
 void FarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
-  ::sprintf(txt,"%-4s%9s %3s%10s %2s%4s%9s%5s",
-            "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
+  ::sprintf(txt,"%-4s%9s%5s%11s%6s%9s%4s",
+            "","MEP","Sl","EVENT","Sl","SEND","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   //::scrc_put_chars(m_display,txt,col|BOLD,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
@@ -184,7 +182,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   char txt[128], text[128];
   int evt_prod[3]    = {0,0,0}, min_prod[3]  = {INT_max,INT_max,INT_max};
   int free_space[3]  = {0,0,0}, min_space[3] = {INT_max,INT_max,INT_max};
-  int used_slots[3]  = {0,0,0}, min_slots[3] = {INT_max,INT_max,INT_max};
+  int free_slots[3]  = {0,0,0}, min_slots[3] = {INT_max,INT_max,INT_max};
   int buf_clients[3] = {0,0,0};
   float fspace[3]    = {FLT_max,FLT_max,FLT_max};
   float fslots[3]    = {FLT_max,FLT_max,FLT_max};
@@ -223,7 +221,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
-      used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
+      free_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
       buf_clients[idx] += ctrl.i_users;
       if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
         bad_nodes.insert((*n).name);
@@ -260,7 +258,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   }
   char b1[64];
   Nodeset::TimeStamp frst=ns.firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
+  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0), prev_update=m_lastUpdate;
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
             m_name.c_str(),b1,numNodes,numBuffs,numClients);
@@ -271,7 +269,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
-  if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
+  if ( prev_update-m_lastUpdate > UPDATE_TIME_MAX ) {
     setTimeoutError();
   }
   else if ( numNodes == 0 ) {
@@ -340,20 +338,20 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   m_totSent   = evt_prod[2];
 
   if ( evt_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%10d%3d%4d%9d%5d",
-              evt_prod[0],used_slots[0],
-              evt_prod[1],buf_clients[1],used_slots[1],
-              evt_prod[2],used_slots[2]);
+    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
+              evt_prod[0],free_slots[0],
+              evt_prod[1],free_slots[1],
+              evt_prod[2],free_slots[2]);
   else
-    ::sprintf(txt,"%9s%4s%10s%7s%9s%5s","--","--","--","--","--","--");
+    ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( min_prod[0] != INT_max )
-    ::sprintf(txt,"%9d%4d%10d%7d%9d%5d",
+    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
               min_prod[0],min_slots[0],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
   else
-    ::sprintf(txt,"%9s%4s%10s%7s%9s%5s","--","--","--","--","--","--");
+    ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }

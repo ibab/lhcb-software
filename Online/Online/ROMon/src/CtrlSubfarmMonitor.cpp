@@ -43,14 +43,14 @@ namespace ROMon {
   }
 }
 
+#include "ROMonDefs.h"
+
 /// Initializing constructor
 CtrlSubfarmMonitor::CtrlSubfarmMonitor(FarmMonitor* parent, const string& title) 
 : InternalMonitor(parent, title)
 {
   m_lastUpdate = time(0);
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::toupper(title[i]);
-  svc += "/TaskSupervisor/Status";
+  string svc = svcPrefix()+strupper(title)+"/TaskSupervisor/Status";
   log("INFO") << "Connecting to service " << svc << endl;
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
 }

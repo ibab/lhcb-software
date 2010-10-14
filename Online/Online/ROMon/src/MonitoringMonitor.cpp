@@ -72,6 +72,7 @@ namespace ROMon {
 #include "ROMon/ROMon.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
+#include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
@@ -143,9 +144,8 @@ MonitoringMonitor::MonitoringMonitor(FarmMonitor* parent, const string& title)
   m_steer &= ~COUNT_TASKS;
   m_steer &= ~COUNT_EVENTS;
   m_isReco = false;
-  string svc = "/", node;
-  for(size_t i=0; i<title.length();++i) node += ::tolower(title[i]);
-  svc = "/"+node+"/ROpublish";
+  string svc, node=strlower(title);
+  svc = svcPrefix()+node+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_title = svc;
   if ( node.substr(0,6) == "mona09" )   {

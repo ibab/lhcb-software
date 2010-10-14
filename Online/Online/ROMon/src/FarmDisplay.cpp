@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.44 2010-10-12 17:47:05 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.45 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.44 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.45 2010-10-14 06:44:04 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -102,12 +102,13 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
     m_posCursor(0), m_subPosCursor(0), m_anchorX(10), m_anchorY(5), m_mode(HLT_MODE)
 {
   char txt[128];
-  string anchor;
+  string anchor, prefix;
   RTL::CLI cli(argc,argv,help);
   bool all = 0 != cli.getopt("all",2);
   bool xml = 0 != cli.getopt("xml",2);
   cli.getopt("partition",   2, m_name = "ALL");
   cli.getopt("match",       2, m_match = "*");
+  cli.getopt("prefix",      2, prefix);
   m_dense = 0 != cli.getopt("dense",2);
   m_mode  = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
@@ -125,6 +126,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
+  if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
   s_fd = this;
   if ( m_mode == RECO_MODE && all && m_match=="*" )
     ::sprintf(txt," Reconstruction farm display of all known subfarms ");
@@ -270,10 +272,10 @@ int FarmDisplay::showSubfarm()    {
   }
   else if ( (d=currentDisplay()) != 0 ) {
     string dnam = d->name();
-    string svc = "-servicename=/"+dnam+"/ROpublish";
+    string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish";
     string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
-      svc = "-servicename=/"+strupper(dnam)+"/TaskSupervisor/Status";
+      svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }

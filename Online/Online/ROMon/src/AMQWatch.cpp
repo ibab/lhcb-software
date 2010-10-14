@@ -1,4 +1,4 @@
-// $Id: AMQWatch.cpp,v 1.1 2010-10-12 17:47:21 frankb Exp $
+// $Id: AMQWatch.cpp,v 1.2 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AMQWatch.cpp,v 1.1 2010-10-12 17:47:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AMQWatch.cpp,v 1.2 2010-10-14 06:44:04 frankb Exp $
 #ifndef ONLINE_ROMON_AMQWATCH_H
 #define ONLINE_ROMON_AMQWATCH_H
 
@@ -189,15 +189,17 @@ bool AMQWatch::checkOk()  const {
     nCounts += (*i).count;
     nErrs += (*i).errors;
   }
-  ::lib_rtl_output(LIB_RTL_DEBUG,"%s> Found %d errors within %d scanned messages. Action necessary:%s",
-		   m_name.c_str(), nErrs, nCounts, nErrs <= m_maxErrors ?  "NO" : "YES");
+  ::lib_rtl_output(nErrs <= m_maxErrors ? LIB_RTL_DEBUG : LIB_RTL_ALWAYS,
+		   "%s> %s: Found %d errors within %d scanned messages. Action necessary:%s",
+		   m_name.c_str(), ::lib_rtl_timestr(), nErrs, nCounts, nErrs <= m_maxErrors ?  "NO" : "YES");
   return nErrs <= m_maxErrors;
 }
 
 /// Invoke corrective action
 int AMQWatch::executeAction() {
   string cmd = m_test ? "echo "+m_command : m_command;
-  ::lib_rtl_output(LIB_RTL_ERROR,"%s> Executing %s action:%s",m_name.c_str(),m_test ? "TEST" : "",cmd.c_str());
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"%s> Corrective action required:%s",m_name.c_str(),::lib_rtl_timestr());
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"%s> Executing %s action:%s",m_name.c_str(),m_test ? "TEST" : "",cmd.c_str());
   if ( ::system(cmd.c_str()) != -1 ) {
     m_errors.clear();
     return 1;

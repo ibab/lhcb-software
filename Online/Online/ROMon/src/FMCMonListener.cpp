@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.cpp,v 1.6 2008-11-19 11:07:57 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.6 2008-11-19 11:07:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -107,6 +107,6 @@ void FMCMonListener::infoHandler(void* tag, void* address, int* size) {
     Descriptor* d = it->data<Descriptor>();
     RODimListener* l = (RODimListener*)it->object;
     d->copy(address,*size);
-    if ( l && l->updateHandler() ) l->updateHandler()->update();
+    if ( l && l->updateHandler() ) l->updateHandler()->update(it);
   }
 }

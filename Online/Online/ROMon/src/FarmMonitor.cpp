@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.9 2010-09-03 14:47:46 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.10 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.9 2010-09-03 14:47:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.10 2010-10-14 06:44:04 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -47,6 +47,7 @@ using namespace std;
 typedef vector<string> StringV;
 
 static lib_rtl_lock_t    s_lock;
+static string            s_prefix = "/";
 
 namespace ROMon {
   class Alarm;
@@ -248,6 +249,16 @@ InternalMonitor::~InternalMonitor() {
   disconnect();
 }
 
+/// Return service prefix for usage of the bridge
+const string& InternalMonitor::svcPrefix() {
+  return s_prefix;
+}
+
+/// Set service prefix for usage of the bridge
+void InternalMonitor::setSvcPrefix(const std::string& pref) {
+  s_prefix = pref;
+}
+
 /// Log message with tag
 ostream& InternalMonitor::log(const string& tag,const string& node) {
   char txt[32];
@@ -391,8 +402,9 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
   bool all = false;
   bool xml = false;
   char txt[128];
-  string service;
+  string service, prefix;
   RTL::CLI cli(argc,argv,help);
+  cli.getopt("prefix",    2, prefix);
   cli.getopt("partition", 2, m_name = "ALL");
   cli.getopt("match",     2, m_match = "*");
   cli.getopt("update",    2, m_update_time_max);
@@ -402,6 +414,8 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
   xml = 0 != cli.getopt("xml",2);
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
+
+  if ( !prefix.empty() ) InternalMonitor::setSvcPrefix(prefix);
 
   ::lib_rtl_create_lock(0,&s_lock);
   if ( m_mode == RECO_MODE && all && m_match=="*" )

@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Id: FarmMonitor.h,v 1.9 2010-10-14 06:44:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.8 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.9 2010-10-14 06:44:04 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -101,6 +101,12 @@ namespace ROMon {
     /// Standard destructor
     virtual ~InternalMonitor();
 
+    /// Return service prefix for usage of the bridge
+    static const std::string& svcPrefix();
+
+    /// Return service prefix for usage of the bridge
+    static void setSvcPrefix(const std::string& pref);
+    
     /// Log message with tag
     std::ostream& log(const std::string& tag,const std::string& node="");
 

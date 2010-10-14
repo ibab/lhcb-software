@@ -2,6 +2,7 @@
 #include "SCR/MouseSensor.h"
 #include "CPP/IocSensor.h"
 #include "SCR/scr.h"
+#include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
@@ -58,7 +59,6 @@ namespace ROMon {
   }
 }
 
-
 #define UPDATE_TIME_MAX 30
 #define DISP_WIDTH      48
 
@@ -72,9 +72,7 @@ CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const string& title,
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,DISP_WIDTH,NORMAL,ON,m_title.c_str());
   init(bad);
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::toupper(title[i]);
-  svc += "/TaskSupervisor/Status";
+  string svc = svcPrefix()+strupper(title)+"/TaskSupervisor/Status";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
   MouseSensor::instance().add(this,m_display);

@@ -77,6 +77,7 @@ namespace ROMon {
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
+#include "ROMonDefs.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 extern "C" {
@@ -147,9 +148,7 @@ void SubfarmMonitor::NodeMon::reset() {
 SubfarmMonitor::SubfarmMonitor(FarmMonitor* parent, const string& title) 
 : InternalMonitor(parent,title)
 {
-  string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
+  string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_title = svc;
   cout << "Connecting to subfarm " << title << " with service " << m_title << endl;

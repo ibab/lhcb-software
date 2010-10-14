@@ -1,2 +1,2 @@
 #!/bin/bash
-. `dirname $0`/romonDisplay romon_farm FarmMonitor -dense $*
+. `dirname $0`/romonDisplay romon_farm FarmMonitor -dense ${RO_SVC_PREFIX} $*
