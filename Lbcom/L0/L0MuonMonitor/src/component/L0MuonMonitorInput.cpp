@@ -37,7 +37,8 @@ L0MuonMonitorInput::L0MuonMonitorInput( const std::string& name,
   declareProperty( "UseNZS",     m_useNZS    = false );
   declareProperty( "L0Context" , m_l0Context = ""  );
   declareProperty( "Offline"   , m_offline   = false );
-
+  std::vector<std::string> forcedOL;
+  declareProperty( "MaskedOptLinks" ,m_forcedOL = forcedOL);
 }
 //================================================================================================================================
 // Destructor
@@ -109,6 +110,18 @@ StatusCode L0MuonMonitorInput::initialize() {
     }
   }
 
+  // Build list of forced optical links
+  for (std::vector<std::string>::iterator itol=m_forcedOL.begin();itol<m_forcedOL.end();++itol){
+    LHCb::MuonTileID mid(*itol);
+    m_optlinksForced.push_back(mid);
+  }
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug()<<"List of optical links forced to one"<<endmsg;
+    for (std::vector<LHCb::MuonTileID>::iterator itol=m_optlinksForced.begin();itol<m_optlinksForced.end();++itol) {
+      debug()<<"\tForced OL: "<<itol->toString()<<endmsg;
+    }
+  }
+  
   
   return StatusCode::SUCCESS;
 }
@@ -376,15 +389,37 @@ StatusCode L0MuonMonitorInput::getMuonTiles(std::vector<LHCb::MuonTileID> & tile
 bool L0MuonMonitorInput::areDifferent(std::vector<LHCb::MuonTileID> & muontiles, std::vector<LHCb::MuonTileID> & l0muontiles)
 {
   bool difference = false;
-
   std::vector<LHCb::MuonTileID> muontiles_tmp;
+
+  // 0. remove tiles from optical links forced to 1 
+  std::vector<LHCb::MuonTileID> l0muontiles_tmp;
+  l0muontiles_tmp.reserve(l0muontiles.size());
+  for (std::vector<LHCb::MuonTileID>::iterator itl0muon=l0muontiles.begin(); itl0muon<l0muontiles.end();++itl0muon){
+    bool discard = false;
+    for (std::vector<LHCb::MuonTileID>::iterator itol=m_optlinksForced.begin();itol<m_optlinksForced.end();++itol) {
+      LHCb::MuonTileID inter = itol->intercept(*itl0muon);
+      if (inter.isValid()) {
+        discard = true;
+        break;
+      }
+    }
+    if (not discard) l0muontiles_tmp.push_back(*itl0muon);
+  }
+  l0muontiles = l0muontiles_tmp;
 
   // 1. check that all muon hits are match to a l0muon hit
   for (std::vector<LHCb::MuonTileID>::iterator itmuon=muontiles.begin(); itmuon<muontiles.end();++itmuon){
     
-    // Discard the tile if it belongs to an optical link in error.
+    // Discard the tile if it belongs to an optical link either in error or forced to 1
     bool discard = false;
     for (std::vector<LHCb::MuonTileID>::iterator itol=m_optlinks.begin();itol<m_optlinks.end();++itol) {
+      LHCb::MuonTileID inter = itol->intercept(*itmuon);
+      if (inter.isValid()) {
+        discard = true;
+        break;
+      }
+    }
+    for (std::vector<LHCb::MuonTileID>::iterator itol=m_optlinksForced.begin();itol<m_optlinksForced.end();++itol) {
       LHCb::MuonTileID inter = itol->intercept(*itmuon);
       if (inter.isValid()) {
         discard = true;

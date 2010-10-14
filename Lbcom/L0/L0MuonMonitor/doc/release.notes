@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2010-10-14 - Julien Cogan
+ - L0MuonMonitorInput : take care of forced optical links (new property added)
+
 !========================== L0MuonMonitor v2r1 2010-09-28 ===================
 ! 2010-09-27 - Julien Cogan
  - L0MuonMoniError : report tell1 errors (type J2 and K2) in the summary plot.
