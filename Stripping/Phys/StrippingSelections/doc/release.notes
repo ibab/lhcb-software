@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-14 - Georg Krocker
+ - Fixed small bug regarding container names in TrackEffDownMuon line  
+
 ! 2010-10-11 - Georg Krocker
  - Fixed Warning in TrackEffDownMuon line  
 

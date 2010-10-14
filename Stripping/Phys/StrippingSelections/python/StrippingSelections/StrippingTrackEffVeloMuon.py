@@ -52,7 +52,7 @@ class StrippingTrackEffVeloMuonConf(LHCbConfigurableUser):
         # ################################################################
         # Hlt2 PreFilter for Jpsis and Upsilons (IP cut)
         tisTosPreFilterHlt2Jpsi = TisTosParticleTagger("tisTosPreFilterHlt2JpsiForVeloMuonTrackEffLine")
-        tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1Jpsi" ]
+        tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1JpsiForVeloMuonTrackEffLine" ]
         tisTosPreFilterHlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuonDecision%TOS" : 0}
         tisTosPreFilterHlt2Jpsi.ProjectTracksToCalo = False
         tisTosPreFilterHlt2Jpsi.CaloClustForCharged = False

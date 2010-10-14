@@ -54,7 +54,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
         # ################################################################
         # Hlt2 PreFilter for Jpsis and Upsilons (IP cut)
         tisTosPreFilterHlt2Jpsi = TisTosParticleTagger("tisTosPreFilterHlt2JpsiForDownTrackEffLine")
-        tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1Jpsi" ]
+        tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1JpsiForDownTrackEffLine" ]
         tisTosPreFilterHlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuonDecision%TOS" : 0}
         tisTosPreFilterHlt2Jpsi.ProjectTracksToCalo = False
         tisTosPreFilterHlt2Jpsi.CaloClustForCharged = False
@@ -104,7 +104,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 	cm.configureMuonIDAlg(idalg)
 	idalg.TrackLocation = "Rec/Track/"+trackcont
 	idalg.MuonIDLocation = "Rec/Muon/MuonPID/"+trackcont
-	idalg.MuonTrackLocation = "/Rec/Track/MuonFor" +trackcont
+	idalg.MuonTrackLocation = "Rec/Track/MuonFor" +trackcont
 
 	downprotoseq = GaudiSequencer(name+"ProtoPSeq")
 	downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
