@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Marco Cattaneo
+ - Add a QMTest LumiAlgsExclusions file, to avoid failing tests when just the
+   LHCBCOND or DDDB path or default tag changes. 
+
 ! 2010-10-14 - Jaap Panman
  - add LumiMergeFSR: collects FSRs from the FileRecord leaves in one
    keyed container per type and makes sure the original ones are unlinked 
