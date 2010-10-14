@@ -14,7 +14,8 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                  "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
-                 "LHCbDirac", "Integration", "Erasmus", "Feicim" ]
+                 "LHCbDirac", "Integration", "Erasmus", "Feicim",
+                 "Stripping" ]
 
 # ------------------------------------------------------------------------------------
 
@@ -413,6 +414,10 @@ Phys.setFullSize(2000000)#IGNORE:E0602
 
 # Rec
 Rec.setFullSize(6000000)#IGNORE:E0602
+
+# Stripping
+Stripping.setFullSize(6000000)#IGNORE:E0602
+Stripping.setAFSVolumeName("STRIP")#IGNORE:E0602
 
 # VanDerMeer
 VanDerMeer.setFullSize(50000)#IGNORE:E0602
