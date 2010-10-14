@@ -4,6 +4,11 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Olivier Callot
+ - As suggested by Manuel Schiller, the linear system is now solved using the
+   Cholesky decomposition he wrote and which is now in ROOT. \
+   This gains another ~7% of speed.
+
 ! 2010-10-12 - Olivier Callot
  - Fix Windows compilation warnings (I hope...)
 
