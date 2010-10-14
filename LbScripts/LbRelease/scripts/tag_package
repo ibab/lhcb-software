@@ -3,7 +3,7 @@ import os, sys, re
 
 from LbUtils.Script import Script
 from LbRelease import rcs
-from LbConfiguration.Repository import repositories
+from LbConfiguration.Repository import getRepositories
 
 class TagPackage(Script):
     def __init__(self):
@@ -39,38 +39,10 @@ class TagPackage(Script):
         """
         Find the repository that contains the requested package.
         """
-        global repositories
         if self._packageRepos is None:
             # Add user-defined repositories to the known ones
-            if self.options.user_svn or self.options.user_cvs:
-                # we modify the global dictionary here
-                from urllib import splittype, splituser, splithost
-                from LbConfiguration.Repository import SVNReposInfo, CVSReposInfo
-                # add user-defined repositories
-                i = 0
-                for rep in self.options.user_svn:
-                    # FIXME: need some error checking
-                    protocol, rest = splittype(rep)
-                    rest, path = splithost(rest)
-                    user, host = splituser(rest)
-                    repositories["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
-                    i += 1
-                i = 0
-                for rep in self.options.user_cvs:
-                    # FIXME: need some error checking
-                    dummy, protocol, rest, path = rep.split(":")
-                    user, host = splituser(rest)
-                    repositories["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
-                    i += 1
-            # Loop over the known repositories to find the package
-            for name in repositories:
-                if name not in self.options.exclude:
-                    url = str(repositories[name]["ssh"]) # the protocol is forced (anyway we need to write)
-                    self.log.info("Looking for package '%s' in '%s' (%s)", self.package, name, url)
-                    repos = rcs.connect(url)
-                    if self.package in repos.packages:
-                        self._packageRepos = repos
-                        break
+            reps = getRepositories(self.options.user_svn, self.options.user_cvs, protocol="ssh")
+            self._packageRepos = rcs.getPackageRepo(self.package, reps, self.options.exclude)[0]                
         return self._packageRepos
     
     def isValidVersion(self):

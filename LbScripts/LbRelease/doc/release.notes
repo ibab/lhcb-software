@@ -1,3 +1,8 @@
+2010-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/rcs.py: added getPackageRepo and getProjectRepo functions to get the
+	repositories containing the package/project.
+
 2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/move_package: added skeleton of the script

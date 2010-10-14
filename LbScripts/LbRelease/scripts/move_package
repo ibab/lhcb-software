@@ -2,9 +2,9 @@
 # $Id: $
 """ Script to easy move a SVN package from a project to another """
 
-from LbUtils.Script import Script
-from LbRelease import rcs
+from LbRelease.rcs import moveSVNPackage
 from LbConfiguration.Repository import repositories
+from LbUtils.Script import Script
 
 import sys
 
@@ -18,15 +18,28 @@ class MovePackageScript(Script):
 
     def defineOpts(self):
         parser = self.parser
+        parser.set_defaults(user_svn=[])
         parser.add_option("--user-svn", action = "append",
                           metavar = "URL",
                           help = "add a custom subversion repository to the known ones")
+        parser.set_defaults(dry_run=False)
+        parser.add_option("--dry-run", action = "store_true",
+                          help = "show the command that would be run, but not call it")
 
 
     def main(self):
         opts = self.options
         args = self.args
-        return 0
+        
+        status = 0
+        
+        if len(args) != 2:
+            self.parser.error("Wrong number of arguments. Use -h for more information.")
+        package, project = args
+
+        status = moveSVNPackage(package, project, user_svn, opts.dry_run)
+        
+        return status
 
 if __name__ == '__main__':
     sys.exit(MovePackageScript().run())

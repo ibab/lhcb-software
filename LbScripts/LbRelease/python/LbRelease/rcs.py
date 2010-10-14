@@ -1,7 +1,10 @@
 """
 Module providing the basic functionalities of the GetPack utility.
 """
+from LbConfiguration.Repository import getRepositories
 from LbUtils.Processes import callCommand, RetryCommand
+
+import logging
 
 import os, re
 
@@ -944,3 +947,28 @@ def connect(repository):
         if impl.canHandle(repository):
             return impl(repository)
     return None
+
+
+def getPackageRepo(package, reps, exclude=None):
+    log = logging.getLogger()
+    for name in reps:
+        if name not in exclude:
+            url = str(reps[name]) # the protocol is forced (anyway we need to write)
+            log.info("Looking for package '%s' in '%s' (%s)", package, name, url)
+            repo = connect(url)
+            if package in repo.packages:
+                yield repo
+
+
+def getProjectRepo(project, reps, exclude=None):
+    log = logging.getLogger()
+    for name in reps:
+        if name not in exclude:
+            url = str(reps[name]) # the protocol is forced (anyway we need to write)
+            log.info("Looking for project '%s' in '%s' (%s)", project, name, url)
+            repo = connect(url)
+            if project in repo.projects:
+                yield repo
+
+def moveSVNPackage(package, project, user_repos, dry_run):
+    pass
