@@ -55,7 +55,7 @@ StatusCode ST::STNoiseCalculation::initialize() {
 //=============================================================================
 StatusCode ST::STNoiseCalculation::execute() {
 
-  //  debug() << "==> Execute" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   StatusCode sc = m_noiseTool->updateNoise();
   return sc;//StatusCode::SUCCESS;
 }

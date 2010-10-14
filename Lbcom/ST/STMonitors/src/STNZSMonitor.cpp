@@ -146,14 +146,10 @@ StatusCode STNZSMonitor::execute() {
     unsigned int sourceID = (*itT);
 
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
-    std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsBegin(sourceID);
-    for(; itEvts != m_noiseTool->cmsNEventsEnd(sourceID); ++itEvts) {
+    std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsPPBegin(sourceID);
+    for(; itEvts != m_noiseTool->cmsNEventsPPEnd(sourceID); ++itEvts) {
       
-      // Cumulative average up to m_followingPeriod; after that
-      // exponential moving average
       int nEvt = (*itEvts);
-      if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
-        nEvt = m_followingPeriod;
 
       // Check if at least one of the PPs requires to update the histogram
       if( m_updateRate > 0 && nEvt%m_updateRate == 0 && nEvt != 0 ) {
