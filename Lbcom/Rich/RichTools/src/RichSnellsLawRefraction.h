@@ -74,7 +74,7 @@ namespace Rich
 
     // Correct the direction vector for refraction in going from Rich1Gas to aerogel
     void gasToAerogel( Gaudi::XYZVector &     dir,
-                       const LHCb::RichTrackSegment& trSeg  ) const;
+                       const LHCb::RichTrackSegment& trSeg ) const;
 
     // Correct the direction vector from refraction in going from Rich1Gas to aerogel
     void gasToAerogel( Gaudi::XYZVector &     dir,
