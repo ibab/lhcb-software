@@ -32,9 +32,7 @@ typedef std::map<const TString, const TString > propertyStringMap;
 bool isinTextFile(int run, int evt, TString& s);
 bool isinTextFile(int run, int evt);
 
-int getwordnr(TString line, TString tok=" ,;:");
-TString getword(int i, TString line, TString tok=" ,;:");
-TString readString(TString varname,TString optsfilename="tag.opts");
+TString readString(TString varname);
 double  read(TString varname) ;
 double  read(const char* varname  ) ;
 

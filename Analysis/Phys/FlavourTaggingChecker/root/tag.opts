@@ -13,13 +13,14 @@
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
+   datafile = /afs/cern.ch/user/m/mgrabalo/scratch0/bd2dstarmunu/dstar
 
 #  >>>>>>>>>>>>>>>>>>>>>> CONTROLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    DBGLEVEL    =  3
    Nmax        = -1    Events to run, -1 means all
 
-   requireL0   = 0     Trigger
+   requireL0   = 1     Trigger
    requireHlt1 = 0 
    requireHlt2 = 0 
    requireTis  = 0
@@ -28,6 +29,7 @@
 
    UseModBtime      = 0     Correct B proper time for semileptonic channels
    IsControlChannel = 0     Take as the true flavour the reconsted B
+   UseObsoleteSV    = 0     Use old likelihood for vtx                                                                 
    NNetTrain        = none  "muon" "ele" "kaon" "kaonS" "pionS" "vtx" "comb"
    ViewOptionLHCb   = -1
 
@@ -36,11 +38,12 @@
 #  look in the same data directory for ONE file with .eventlist extension:
    EventListFileName = DATAFILE
    EventListFileName = none                Ignore any list
-
+   EventListFileName = ./dstarstrip9.txt
 
 #EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 
 IncludeFile cuts_strip10.opts
+IncludeFile cuts_strip9.opts
 IncludeFile cuts_mc2010.opts
 
 

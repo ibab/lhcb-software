@@ -260,7 +260,8 @@ NtpTag::NtpTag(TString& filename)
 
   TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename);
   if (!f) {
-    f = new TFile(filename);
+    //f = new TFile(filename);
+    f = TFile::Open(filename); 
   }
   tree = (TTree*)gDirectory->Get("BTaggingAnalysis/mytagging");
   

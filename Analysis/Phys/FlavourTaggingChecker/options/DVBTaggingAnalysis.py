@@ -44,14 +44,15 @@ tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
-#tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN"#combine taggers with NN
-
-tag.BTaggingTool.OutputLevel = 3
-
+#tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
+tag.BTaggingTool.OutputLevel = 2
 
 #Import cuts for MC2010
-#importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
-
+importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
+#Import cuts for Stripping9
+#importOptions('$FLAVOURTAGGINGOPTS/Stripping9_cuts.py')
+#Import cuts for Stripping10
+#importOptions('$FLAVOURTAGGINGOPTS/Stripping10_cuts.py')
 
 ########################################################################
 # Flavour tagging Checker:
@@ -59,7 +60,7 @@ tag.BTaggingTool.OutputLevel = 3
 tagcheck = BTaggingChecker("BTaggingChecker")
 tagcheck.InputLocations = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
-tagcheck.OutputLevel = 3
+tagcheck.OutputLevel = 2
 
 ########################################################################
 # BTaggingAnalysis ntuple creation
@@ -74,10 +75,9 @@ tagana.InputLocations = [ location,
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
+tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
 tagana.RequireTisTos = True #TisTosTool
-#tagana.RequireTisTos = False #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
-
 tagana.OutputLevel = 3
 
 tagana.addTool( PhysDesktop )

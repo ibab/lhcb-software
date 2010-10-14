@@ -31,7 +31,7 @@ class CombineTaggersNN {
  private:
 
   double m_ProbMin;
-  double m_P0_NN, m_P1_NN;
+  double m_P0_NN, m_P1_NN, m_P2_NN;
   double m_omegascale, m_omegamaxbin;
 
   TString getPath(std::string);

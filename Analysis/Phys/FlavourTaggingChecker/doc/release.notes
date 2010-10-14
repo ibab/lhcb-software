@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-10-14 - Marc Grabalosa
+ . modification of /root code, new variables in taggers, new option cuts
+
 ! 2010-10-12 - Marco Musy
  . added in btagginganalysis the variable minchi2 of B hypo
 
@@ -14,8 +17,7 @@
    in /root option file tag.opts
  . cleanup root/taggingutils.cxx 
 
-
-! 2010-09-30 - Marco Musy
+! 2010-10-09 - Marco Musy
   . added root/taggermin.C to maximise taggers effective eff
     with minuit wrt to kinematic cuts
 

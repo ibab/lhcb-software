@@ -1,8 +1,7 @@
-#include <Riostream.h>
+#include "PerformanceMonitor.h"
 #include "globals.h"
 #include "Tagger.h"
 #include "taggingutils.h"
-#include "PerformanceMonitor.h"
 
 using namespace std;
 
@@ -184,9 +183,6 @@ void PerformanceMonitor::printStats() {
 
   if(nsele==0) { warning()<<"No events selected."<<endmsg; return; }
 
-  //dump file for optimization
-  ofstream indata; indata.open("output/logperf.txt"); 
-
   cout <<BOLD<<"\n=========================================================\n";  
   cout <<ENDC<<setprecision(3);
   cout <<"Trigger eff: L0="<<setw(5)<<ntrigL0/nsele*100
@@ -288,10 +284,7 @@ void PerformanceMonitor::printStats() {
     if(it==maxnrofcat+5){cats =  "  VertexCh"; rtag = nrtag[4]; wtag = nwtag[4]; }
     //if(it==maxnrofcat+6){cats =  "  Fragment"; rtag = nrtag[5]; wtag = nwtag[5]; }
  
-    if(rtag+wtag == 0) {
-      if(it>maxnrofcat) indata << 0.0 <<endl;//dump tagger
-      continue; //empty category
-    }
+    if(rtag+wtag == 0) continue; //empty category
 
     utag = nsele-rtag-wtag;       // untagged
     double omtag = wtag/(rtag+wtag);
@@ -325,7 +318,6 @@ void PerformanceMonitor::printStats() {
         <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
         <<" "<<setw(7)<< (int) wtag<<ENDC
         << endl;
-    if(it>maxnrofcat) indata << epsil*100 <<endl;//dump tagger
   }
 
   //calculate global tagging performances -------------------------------
@@ -347,8 +339,6 @@ void PerformanceMonitor::printStats() {
        << "    (Events = " << int(nsele) <<")"<<ENDC<< endl;
   cout <<BOLD<< 
     "=========================================================\n\n"<<ENDC;
-  indata << effe_tot*100 <<endl;
-  indata.close(); 
 
 }
 

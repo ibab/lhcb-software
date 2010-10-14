@@ -188,6 +188,8 @@ StatusCode BTaggingAnalysis::execute() {
     return StatusCode::SUCCESS;
   }
   tuple -> column ("minBChi2", AXBS->endVertex()->chi2PerDoF());
+  tuple -> column ("Bmass", AXBS->measuredMass()/GeV);
+  tuple -> column ("Bid", AXBS->particleID().pid());
   //----------------------------------------------
 
   //---------------------------------------

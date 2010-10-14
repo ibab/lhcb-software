@@ -63,7 +63,7 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
 
     double IPsig = (*ipart)->IPs();
     if(IPsig > m_IPs_cut_pionS)  continue;
-    //verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
+    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
