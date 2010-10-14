@@ -589,9 +589,7 @@ void PhotonCreatorBase::deleteAllCrossReferences() const
         iSeg != richSegments()->end(); ++iSeg )
   {
     (*iSeg)->setRichRecPixels  ( LHCb::RichRecSegment::Pixels()  );
-
     (*iSeg)->setRichRecPhotons ( LHCb::RichRecSegment::Photons() );
-
   }
   // loop over pixels
   for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
