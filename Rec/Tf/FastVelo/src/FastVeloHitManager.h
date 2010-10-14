@@ -54,9 +54,9 @@ public:
   int nbHits() const { return m_nextInPool - m_pool.begin(); }
   int maxSize() const { return m_maxSize; }
 
-protected:
-
   StatusCode rebuildGeometry();  ///< Recompute the geometry in case of change
+
+protected:
 
 private:
   DeVelo* m_velo;
@@ -71,5 +71,7 @@ private:
   std::vector<double> m_sinPhi;
   int m_maxSize;
   bool m_eventReady;
+  double m_lastXOffsetRight;
+  double m_lastXOffsetLeft;
 };
 #endif // FASTVELOHITMANAGER_H

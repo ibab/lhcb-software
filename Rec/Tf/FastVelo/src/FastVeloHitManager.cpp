@@ -47,11 +47,18 @@ StatusCode FastVeloHitManager::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_velo          = getDet<DeVelo>( DeVeloLocation::Default );
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
   
   // make sure we are up-to-date on populated VELO stations
   registerCondition( m_velo->geometry(), &FastVeloHitManager::rebuildGeometry );
   
+  // first update
+  sc = updMgrSvc()->update(this);
+  if(!sc.isSuccess()) {
+    error() << "Failed to update station structure." << endreq;
+    return sc;
+  }
+
   // invalidate measurements at the beginning of each event
   incSvc()->addListener(this, IncidentType::BeginEvent);
 
@@ -68,8 +75,11 @@ StatusCode FastVeloHitManager::initialize() {
 //=========================================================================
 StatusCode FastVeloHitManager::rebuildGeometry ( ) {
 
-  info() << "(re)building the geometry..." << endmsg;
+  info() << "Updating the geometry... " << endmsg;
 
+  m_lastXOffsetRight = m_velo->halfBoxOffset(0).x();
+  m_lastXOffsetLeft  = m_velo->halfBoxOffset(1).x();
+  
   for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;
   }
@@ -180,6 +190,14 @@ void FastVeloHitManager::clearHits( ) {
 void FastVeloHitManager::buildFastHits ( ) {
   if ( m_eventReady ) return;
   m_eventReady = true;
+
+  //== As the updateManagerSvc seems to not obey, force an update when opening has changed
+  if ( m_lastXOffsetRight != m_velo->halfBoxOffset(0).x() ||
+       m_lastXOffsetLeft  != m_velo->halfBoxOffset(1).x()    ) {
+    info() << "Velo has moved, rebuild geometry" << endmsg;
+    rebuildGeometry();
+  }  
+
   LHCb::VeloLiteCluster::FastContainer * liteClusters = 
     GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
 

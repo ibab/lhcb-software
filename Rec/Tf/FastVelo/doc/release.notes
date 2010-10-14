@@ -8,6 +8,7 @@
  - As suggested by Manuel Schiller, the linear system is now solved using the
    Cholesky decomposition he wrote and which is now in ROOT. \
    This gains another ~7% of speed.
+ - Force the update of teh geometry of the X offset of teh Velo halves has changed
 
 ! 2010-10-12 - Olivier Callot
  - Fix Windows compilation warnings (I hope...)
