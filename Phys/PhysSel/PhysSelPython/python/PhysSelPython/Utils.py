@@ -19,7 +19,7 @@ def _mergedSelection(sel, name) :
     return MergedSelection(name, RequiredSelections = [sel])
 
 def _eventSelection(sel, name) :
-    if len(sel.outputLocation) == 0 :
+    if sel.outputLocation() == '' :
         return sel
     else :
         return _mergedSelection(sel, name)
