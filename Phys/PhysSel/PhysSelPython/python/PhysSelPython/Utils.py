@@ -61,31 +61,3 @@ class dummy(object) :
     def selection(self) :
         return self._sel
 
-def _getAlgoAsList(sel) :
-    return [sel.algorithm()]
-
-def _handleGenericSelectionType(self, name, sel) :
-    self._members += _getAlgoList(sel)
-    loc = sel.outputLocation()
-    self._outputsel = loc
-    self._outputloc = loc
-    
-def _handle_Selection(self, name, alg) :
-    sel = alg.clone(name)
-    self._handleGenericSelectionType( name, sel )
-
-def _handle_EventSelection(self, name, alg) :
-    sel = MergedSelection(name, RequiredSelections = [alg])    
-    self._handleGenericSelectionType( name, sel )
-
-def _handle_MergedSelection(self, name, alg) :
-    sel = alg.clone(name)
-    self._members += _getAlgoAsList(sel)
-    loc = sel.outputLocation()
-    self._outputsel = loc
-    self._outputloc = loc
-    
-def _handle_AutomaticData(self, name, alg) :
-    sel = MergedSelection(name, RequiredSelections = [alg])
-    self._handleGenericSelectionType( name, sel )
-                                                                                                                                                                                                                                        
