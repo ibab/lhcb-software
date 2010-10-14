@@ -1,4 +1,4 @@
-// $Id: ROMonBridge.cpp,v 1.1 2010-10-14 06:44:20 frankb Exp $
+// $Id: ROMonBridge.cpp,v 1.2 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonBridge.cpp,v 1.1 2010-10-14 06:44:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonBridge.cpp,v 1.2 2010-10-14 13:30:09 frankb Exp $
 #ifndef ROMON_ROMONBRIDGE_H
 #define ROMON_ROMONBRIDGE_H 1
 
@@ -87,7 +87,7 @@ namespace ROMon {
 }      // End namespace ROMon
 #endif /* ROMON_ROMONBRIDGE_H */
 
-// $Id: ROMonBridge.cpp,v 1.1 2010-10-14 06:44:20 frankb Exp $
+// $Id: ROMonBridge.cpp,v 1.2 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -100,7 +100,7 @@ namespace ROMon {
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonBridge.cpp,v 1.1 2010-10-14 06:44:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonBridge.cpp,v 1.2 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -180,11 +180,11 @@ void ClusterListener::update(void* param) {
 }
 
 /// Feed data to DIS when updating data
-void ClusterListener::feed(void* tag, void** buff, int* size, int* first) {
-  static char* data = "";
+void ClusterListener::feed(void* tag, void** buff, int* size, int* /* first */) {
+  static const char* data = "";
   Item* it = *(Item**)tag;
   Descriptor* d = it->data<Descriptor>();
-  *buff = d->data ? d->data : data;
+  *buff = (void*)(d->data ? d->data : data);
   *size = d->actual;
 }
 
@@ -192,14 +192,14 @@ void ClusterListener::feed(void* tag, void** buff, int* size, int* first) {
 ROMonBridge::ROMonBridge(int argc, char** argv) : m_print(LIB_RTL_WARNING)  {
   string PUBLISHING_NODE = "ECS03", from=PUBLISHING_NODE, to=PUBLISHING_NODE;
   RTL::CLI cli(argc, argv, ROMonBridge::help);
-
+  long prt;
   m_name = "/"+RTL::nodeNameShort()+"/"+RTL::processName();
   cli.getopt("publish",2, m_prefix="/Farm");
   cli.getopt("print",2,m_print);
   cli.getopt("from",2, from);
   cli.getopt("to",2, to);
 
-  ::lib_rtl_install_printer(ro_rtl_print,(void*)m_print);
+  ::lib_rtl_install_printer(ro_rtl_print,(void*)(prt=m_print));
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
   PartitionListener p(this,"Subfarms",true);

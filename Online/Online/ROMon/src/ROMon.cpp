@@ -163,3 +163,16 @@ string ROMon::strlower(const string& n) {
   for(size_t i=0; i<r.length();++i) r[i]=char(::tolower(r[i]));
   return r;
 }
+
+extern "C" {
+#include "dic.h"
+}
+
+DimLock::DimLock() {
+  dim_lock();
+}
+
+DimLock::~DimLock() {
+  dim_unlock();
+}
+

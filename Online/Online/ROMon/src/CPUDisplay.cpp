@@ -1,4 +1,4 @@
-// $Id: CPUDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Id: CPUDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -60,41 +60,47 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
   char txt[255], text[64];
   int cnt = 0;
   int line = 1;
-  bool found = false;
   time_t t1 = f.time;
   ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
   ::sprintf(txt,"      CPU farm:%s %s  [%d nodes]",f.name,text,f.nodes.size());
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
   ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+  ::scrc_put_chars(m_display,"Mtot:Total memory in MByte  Mfree: Free memory in MB",NORMAL,++line,3,1);
+  ::sprintf(txt," %-8s %8s %15s %5s %5s %5s %9s %8s %9s %8s %8s %10s %8s %8s",
+	    "Node","Update","Familiy","Cores","Mtot","Mfree","CtxtRate","User[%]",
+	    "System[%]","Nice[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ");
+  ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
+  for(_N::const_iterator i=f.nodes.begin(); i!=f.nodes.end(); i=f.nodes.next(i)) {
+    const CPUset& cs = (*i);
+    const CPU::Stat& avg = cs.averages;
+    t1 = cs.time;
+    ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
+    ::sprintf(txt," %-8s %8s %15s %5d %5.0f %5.0f %6.0f Hz %8.3f %9.3f %8.3f %8.3f %10.2f %8.3f %8.3f",
+              cs.name,text,cs.family,cs.cores.size(),cs.memory/1024,cs.memfree/1024,cs.ctxtRate,avg.user,avg.system,
+	      avg.nice,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ);
+    ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+  }
+
   for(_N::const_iterator i=f.nodes.begin(); i!=f.nodes.end(); i=f.nodes.next(i)) {
     const CPUset& cs = (*i);
     const _C& cores = cs.cores;
-    const CPU::Stat& avg = cs.averages;
-    t1 = cs.time;
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
-    ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
-    ::sprintf(txt,"      Node:%-8s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
-              cs.name,cs.family,text,cores.size(),cs.ctxtRate);
-    ::scrc_put_chars(m_display,txt,INVERSE,++line,3,1);
-    ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f",
-              "",avg.user,avg.system,avg.nice,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ);
-    ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-
-    if ( strcasecmp(m_node.c_str(),cs.name) != 0 && !found ) continue;
-    // No does not look that good.... 
-    //found = true;
-    ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %9s %10s %9s %9s",
+    if ( strcasecmp(m_node.c_str(),cs.name) != 0 ) continue;
+    ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+    ::scrc_put_chars(m_display,(" Detailed information for node:"+m_node).c_str() ,INVERSE,++line,3,1);
+    ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %9s %10s %8s %8s",
               "Clock","Cache","Mips","User[%]","System[%]","Nice[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ");
     ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
     for(_C::const_iterator ic=cores.begin(); ic!=cores.end(); ic=cores.next(ic)) {
       const CPU& c = *ic;
-      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f",
+      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %9.3f %10.3f %8.3f %8.3f",
                 ++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.nice,c.stats.idle,
                 c.stats.iowait,c.stats.IRQ,c.stats.softIRQ);
       ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     }
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   }
+
   if ( 0 == f.nodes.size() ) {
     t1 = ::time(0);
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);

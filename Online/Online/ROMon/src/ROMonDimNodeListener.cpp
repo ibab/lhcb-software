@@ -1,4 +1,4 @@
-// $Id: ROMonDimNodeListener.cpp,v 1.2 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonDimNodeListener.cpp,v 1.3 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimNodeListener.cpp,v 1.2 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimNodeListener.cpp,v 1.3 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -31,19 +31,18 @@ using namespace ROMon;
 RODimNodeListener::~RODimNodeListener() {
   delete m_dns;
   m_dns = 0;
-  dim_lock();
+  DimLock lock;
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     Item* it = (*i).second;
     ::dic_release_service(it->id);
     it->data<Descriptor>()->release();
     it->release();
   }
-  dim_unlock();
 }
 
 /// Add handler for a given message source
 void RODimNodeListener::addHandler(const std::string& node,const std::string& svc) {
-  dim_lock();
+  DimLock lock;
   Clients::iterator i=m_clients.find(svc);
   if ( i == m_clients.end() )  {
     if ( ::str_match_wild(svc.c_str(), m_match.c_str()) )  {
@@ -54,12 +53,11 @@ void RODimNodeListener::addHandler(const std::string& node,const std::string& sv
                              << svc << "@" << node << " id=" << itm->id << std::endl;
     }
   }
-  dim_unlock();
 }
 
 /// Remove handler for a given message source
 void RODimNodeListener::removeHandler(const std::string& node, const std::string& svc)   {
-  dim_lock();
+  DimLock lock;
   Clients::iterator i=m_clients.find(svc);
   if ( i != m_clients.end() ) {
     Item* it = (*i).second;
@@ -72,7 +70,6 @@ void RODimNodeListener::removeHandler(const std::string& node, const std::string
     it->release();
     m_clients.erase(i);
   }
-  dim_unlock();
 }
 
 /// DimInfo overload to process messages

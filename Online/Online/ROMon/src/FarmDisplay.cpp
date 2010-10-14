@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.45 2010-10-14 06:44:04 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.46 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.45 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.46 2010-10-14 13:30:09 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -69,6 +69,8 @@ namespace ROMon {
   InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createBootDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
   ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
@@ -265,6 +267,8 @@ int FarmDisplay::showSubfarm()    {
     m_subfarmDisplay = 0;
     m_cpuDisplay = auto_ptr<CPUDisplay>(0);
     m_mbmDisplay = auto_ptr<BufferDisplay>(0);
+    m_bootDisplay = auto_ptr<InternalDisplay>(0);
+    m_statsDisplay = auto_ptr<InternalDisplay>(0);
     m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
     m_procDisplay = auto_ptr<ProcessDisplay>(0);
     m_subPosCursor = 8;
@@ -325,6 +329,16 @@ int FarmDisplay::showHelpWindow() {
   if ( m_helpDisplay.get() ) {
     MouseSensor::instance().remove(this,m_helpDisplay->display());
     m_helpDisplay = auto_ptr<HelpDisplay>(0);
+  }
+  else if ( m_bootDisplay.get() ) {
+    string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
+    string fin = input+"/doc/bootMon.hlp";
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","boot-subfarm",fin));
+  }
+  else if ( m_statsDisplay.get() ) {
+    string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
+    string fin = input+"/doc/farmStats.hlp";
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","boot-subfarm",fin));
   }
   else if ( m_mbmDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
@@ -426,6 +440,44 @@ int FarmDisplay::showCpuWindow() {
   return WT_SUCCESS;
 }
 
+/// Show window with CPU information of a given subfarm
+int FarmDisplay::showBootWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_bootDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_bootDisplay->display());
+    m_bootDisplay = auto_ptr<InternalDisplay>(0);
+  }
+  else if ( m_subfarmDisplay ) {
+    string cluster_name = m_subfarmDisplay->clusterName();
+    m_bootDisplay = auto_ptr<InternalDisplay>(createBootDisplay(this,cluster_name));
+    m_bootDisplay->show(m_anchorY+5,m_anchorX+12);
+    m_bootDisplay->connect();
+    MouseSensor::instance().add(this,m_bootDisplay->display());
+    return WT_SUCCESS;
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with CPU information of a given subfarm
+int FarmDisplay::showStatsWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_statsDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_statsDisplay->display());
+    m_statsDisplay = auto_ptr<InternalDisplay>(0);
+  }
+  else if ( m_subfarmDisplay ) {
+    string cluster_name = m_subfarmDisplay->clusterName();
+    m_statsDisplay = auto_ptr<InternalDisplay>(createFarmStatsDisplay(this,cluster_name));
+    m_statsDisplay->show(m_anchorY+5,m_anchorX+12);
+    m_statsDisplay->connect();
+    MouseSensor::instance().add(this,m_statsDisplay->display());
+    return WT_SUCCESS;
+  }
+  return WT_SUCCESS;
+}
+
 /// DIM command service callback
 void FarmDisplay::update(const void* address) {
   char *msg = (char*)address;
@@ -499,6 +551,9 @@ int FarmDisplay::handleKeyboard(int key)    {
     case 'H':
     case CTRL_H:
       return showHelpWindow();
+    case 'b':
+    case 'B':
+      return showBootWindow();
     case 'c':
     case 'C':
       return showCpuWindow();
@@ -525,6 +580,9 @@ int FarmDisplay::handleKeyboard(int key)    {
       return showProcessWindow(4);
     case CTRL_M:
       return WT_SUCCESS;      
+    case 's':
+    case 'S':
+      return showStatsWindow();
 
     case RETURN_KEY:
     case ENTER:
@@ -644,6 +702,10 @@ void FarmDisplay::handle(const Event& ev) {
         IocSensor::instance().send(this,CMD_SHOWPROCS,this);
       else if ( m_cpuDisplay.get() )//&& m_cpuDisplay->display() == m->display )
         IocSensor::instance().send(this,CMD_SHOWCPU,this);
+      else if ( m_bootDisplay.get() )
+        IocSensor::instance().send(this,CMD_SHOWBOOT,this);
+      else if ( m_statsDisplay.get() )
+        IocSensor::instance().send(this,CMD_SHOWSTATS,this);
       else
         IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
     }
@@ -677,6 +739,12 @@ void FarmDisplay::handle(const Event& ev) {
       showSubfarm();
       return;
     }
+    case CMD_SHOWBOOT:
+      showBootWindow();
+      return;
+    case CMD_SHOWSTATS:
+      showStatsWindow();
+      return;
     case CMD_SHOWCPU:
       showCpuWindow();
       return;

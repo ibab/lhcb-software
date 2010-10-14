@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.7 2010-10-14 08:15:47 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.8 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.7 2010-10-14 08:15:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.8 2010-10-14 13:30:09 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -93,31 +93,41 @@ void NodeStatsCollector::help() {
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* /* first */) {
+void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first) {
+  static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  *size = 0;
-  *buf = h->m_statBuffer;
-  if ( h->m_sys ) {
-    CPUMonData cpu(h->m_statBuffer);
-    *size  = cpu.node->length();
-    if ( h->m_verbose ) {
-      log() << "[NodeStatsCollector] Published " << *size 
-	    << " Bytes of Stat data @" << *buf << std::endl;
+  if ( !(*first) ) {
+    if ( h->m_sys ) {
+      CPUMonData cpu(h->m_statBuffer);
+      *buf = h->m_statBuffer;
+      *size  = cpu.node->length();
+      if ( h->m_verbose ) {
+	log() << "[NodeStatsCollector] Published " << *size 
+	      << " Bytes of Stat data @" << *buf << std::endl;
+      }
+      return;
     }
-    return;
   }
+  *size = 0;
+  *buf = (void*)empty;
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* /* first */) {
+void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* first) {
+  static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  ROMonData ro(h->m_mbmBuffer);
-  *buf = h->m_mbmBuffer;
-  *size  = ro.node->length();
-  if ( h->m_verbose ) {
-    log() << "[NodeStatsCollector] Published " << *size 
-	  << " Bytes of data MBM @" << *buf << std::endl;
+  if ( !(*first) ) {
+    ROMonData ro(h->m_mbmBuffer);
+    *buf = h->m_mbmBuffer;
+    *size  = ro.node->length();
+    if ( h->m_verbose ) {
+      log() << "[NodeStatsCollector] Published " << *size 
+            << " Bytes of data MBM @" << *buf << std::endl;
+    }
+    return;
   }
+  *size = 0;
+  *buf = (void*)empty;
 }
 
 /// Monitor Node statistics information

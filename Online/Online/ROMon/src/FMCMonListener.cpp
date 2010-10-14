@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.8 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.7 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.8 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -50,19 +50,18 @@ FMCMonListener::FMCMonListener(bool verbose)
 FMCMonListener::~FMCMonListener() {
   delete m_dns;
   m_dns = 0;
-  dim_lock();
+  DimLock lock;
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     Item* it = (*i).second;
     ::dic_release_service(it->id);
     it->data<Descriptor>()->release();
     it->release();
   }
-  dim_unlock();
 }
 
 /// Add handler for a given message source
 void FMCMonListener::addHandler(const std::string& node,const std::string& svc) {
-  dim_lock();
+  DimLock lock;
   Clients::iterator i=m_clients.find(node);
   if ( i == m_clients.end() )  {
     if ( ::str_match_wild(svc.c_str(),m_match.c_str()) )  {
@@ -77,12 +76,11 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
     else if ( m_verbose ) log() << "[FMCMonListener] IGNORE DimInfo:" 
 				<< svc << "@" << node << std::endl;
   }
-  dim_unlock();
 }
 
 /// Remove handler for a given message source
 void FMCMonListener::removeHandler(const std::string& node, const std::string& svc)   {
-  dim_lock();
+  DimLock lock;
   Clients::iterator i=m_clients.find(node);
   if ( i != m_clients.end() ) {
     if ( ::str_match_wild(svc.c_str(),m_match.c_str()) )  {
@@ -97,7 +95,6 @@ void FMCMonListener::removeHandler(const std::string& node, const std::string& s
       m_clients.erase(i);
     }
   }
-  dim_unlock();
 }
 
 /// DimInfo overload to process messages

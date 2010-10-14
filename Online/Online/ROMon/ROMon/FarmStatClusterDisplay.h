@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
+// $Id: FarmStatClusterDisplay.h,v 1.3 2010-10-14 13:30:08 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatClusterDisplay.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmStatClusterDisplay.h,v 1.3 2010-10-14 13:30:08 frankb Exp $
 #ifndef ONLINE_ROMON_FARMSTATCLUSTERDISPLAY_H
 #define ONLINE_ROMON_FARMSTATCLUSTERDISPLAY_H
 
@@ -45,14 +45,17 @@ namespace ROMon {
   protected:
     int                m_mbm, m_cpu;
     size_t             m_position;
-    FarmStatDisplay*   m_parent;
+    Interactor*        m_parent;
     std::string        m_name;
     _CI                m_cpuData;
     _MI                m_mbmData;
 
   public:
-    FarmStatClusterLine(FarmStatDisplay* p, int pos, const std::string& n);
+    /// Initializing constructor
+    FarmStatClusterLine(Interactor* p, int pos, const std::string& n);
+    /// Standard destructor
     virtual ~FarmStatClusterLine();
+    /// Access to cluster name
     const std::string& name() const           { return m_name;      }
     /// Access to CPU data information
     const _CI& cpuData() const                { return m_cpuData;   }
@@ -61,7 +64,7 @@ namespace ROMon {
     /// The line position in the display
     int position() const                      { return m_position;  }
     /// Access to parent
-    FarmStatDisplay* parent() const           {  return m_parent;   }
+    Interactor* parent() const                {  return m_parent;   }
     /// Start DIM services for this subfarm line
     int start();
     /// Interactor overload: Display callback handler
@@ -80,7 +83,9 @@ namespace ROMon {
    */
   class FarmStatClusterDisplay : public InternalDisplay {
     /// Node name
-    std::string  m_name;
+    std::string          m_name;
+    /// Re-use cluster line as information provider
+    FarmStatClusterLine* m_line;
   public:
     /// Initializing constructor
     FarmStatClusterDisplay(InternalDisplay* parent, const std::string& node, int height=60,int width=172);
@@ -88,11 +93,18 @@ namespace ROMon {
     virtual ~FarmStatClusterDisplay();
     /// Access display by cluster name
     const std::string& name() const { return m_name; }
+    /// Explicit connect to data services
+    virtual void connect();
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
+
+  /// External creator function
+  InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const std::string& title);
 
 }      // End namespace ROMon
 #endif /* ONLINE_ROMON_FARMSTATCLUSTERDISPLAY_H */

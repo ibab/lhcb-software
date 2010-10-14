@@ -466,10 +466,9 @@ const string& NodeTaskMon::updateConnections() {
           << ( (*j).second<5 ? "OK" : "Not OK") << "\"/>" << endl;
     }
     xml << "\t\t</Connections>";
-    ::dim_lock();
+    DimLock lock;
     m_connUpdate = time(0);
     m_connStatus = xml.str();
-    ::dim_unlock();
     return m_connStatus;
   }
   return m_connStatus;
@@ -576,36 +575,36 @@ int SubfarmTaskMon::publish() {
         << "\" nodes=\"" << m_nodes.size()
         << "\">" << endl;
 
-    ::dim_lock();
-    m_summary->time = ::time(0);
-    for(i=m_nodes.begin(), ni=m_summary->nodes.begin(); i!=m_nodes.end(); ++i, ni=m_summary->nodes.next(ni)) {
-      NodeTaskMon* n=(*i).second;
-      n->publish();
-      ::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
-      xml << "\t<Node name=\"" << n->name() 
-          << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
-          << "\" time=\"" << time_buf
-          << "\">" << endl;
-      if ( n->state() == NodeTaskMon::ALIVE ) {
-        xml << n->taskStatus() << endl
-            << n->connectionStatus() << endl;
-	(*ni).state = NodeSummary::ALIVE;
-	(*ni).numBadTasks = n->numBadTasks();
-	(*ni).numBadConnections = n->numBadConnections();
-	(*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
+    { DimLock lock;
+      m_summary->time = ::time(0);
+      for(i=m_nodes.begin(), ni=m_summary->nodes.begin(); i!=m_nodes.end(); ++i, ni=m_summary->nodes.next(ni)) {
+	NodeTaskMon* n=(*i).second;
+	n->publish();
+	::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
+	xml << "\t<Node name=\"" << n->name() 
+	    << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
+	    << "\" time=\"" << time_buf
+	    << "\">" << endl;
+	if ( n->state() == NodeTaskMon::ALIVE ) {
+	  xml << n->taskStatus() << endl
+	      << n->connectionStatus() << endl;
+	  (*ni).state = NodeSummary::ALIVE;
+	  (*ni).numBadTasks = n->numBadTasks();
+	  (*ni).numBadConnections = n->numBadConnections();
+	  (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
+	}
+	else {
+	  (*ni).state = NodeSummary::DEAD;
+	  (*ni).status = NodeSummary::BAD;
+	  (*ni).numBadTasks = 1;
+	  (*ni).numBadConnections = 1;
+	}
+	(*ni).time = n->taskUpdate();
+	xml << "\t</Node>\n";
       }
-      else {
-	(*ni).state = NodeSummary::DEAD;
-	(*ni).status = NodeSummary::BAD;
-	(*ni).numBadTasks = 1;
-	(*ni).numBadConnections = 1;
-      }
-      (*ni).time = n->taskUpdate();
-      xml << "\t</Node>\n";
+      xml << "</Cluster>\n";
+      m_data = xml.str();
     }
-    xml << "</Cluster>\n";
-    m_data = xml.str();
-    ::dim_unlock();
     if ( s_debug ) {
       cout << txt << "> Publish monitoring information for cluster " << name() << endl
            << "'" << endl << m_data  << endl << "'" << endl;
@@ -626,7 +625,7 @@ void SubfarmTaskMon::feedData(void* tag, void** buf, int* size, int* /* first */
 }
 
 /// DIM callback on dis_update_service
-void SubfarmTaskMon::feedSummary(void* tag, void** buf, int* size, int* first) {
+void SubfarmTaskMon::feedSummary(void* tag, void** buf, int* size, int* /* first */) {
   SubfarmTaskMon* h = *(SubfarmTaskMon**)tag;
   ro_gettime(&h->m_summary->time,(unsigned int*)&h->m_summary->millitm);
   *size = h->m_summary->length();

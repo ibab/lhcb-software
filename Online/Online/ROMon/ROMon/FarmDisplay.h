@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.21 2010-09-20 18:59:49 frankb Exp $
+// $Id: FarmDisplay.h,v 1.22 2010-10-14 13:30:08 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.21 2010-09-20 18:59:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.22 2010-10-14 13:30:08 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -58,7 +58,7 @@ namespace ROMon {
     int m_flag;
   public:
     /// Initializing constructor
-    ProcessDisplay(FarmDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=55,int width=120);
+    ProcessDisplay(FarmDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=60,int width=132);
     /// Standard destructor
     virtual ~ProcessDisplay();
     /// Update display content
@@ -80,7 +80,7 @@ namespace ROMon {
     std::string  m_node;
   public:
     /// Initializing constructor
-    CPUDisplay(FarmDisplay* parent, const std::string& title, const std::string& node, int height=55,int width=120);
+    CPUDisplay(FarmDisplay* parent, const std::string& title, const std::string& node, int height=60,int width=132);
     /// Standard destructor
     virtual ~CPUDisplay();
     /// Update display content
@@ -156,6 +156,8 @@ namespace ROMon {
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
+    std::auto_ptr<InternalDisplay>   m_bootDisplay;
+    std::auto_ptr<InternalDisplay>   m_statsDisplay;
     ScrDisplay*                      m_nodeSelector;
     std::string                      m_partition;
     std::string                      m_match;
@@ -207,6 +209,10 @@ public:
     int showCpuWindow();
     /// Show window with buffer information of a given node
     int showMbmWindow();
+    /// Show window with boot information of the subfarm
+    int showBootWindow();
+    /// Show window with boot information of the subfarm
+    int showStatsWindow();
     /// Show window with node control information
     int showCtrlWindow();
     /// DIM command service callback

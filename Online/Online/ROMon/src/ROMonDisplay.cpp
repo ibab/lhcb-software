@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.9 2008-09-12 18:56:50 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.9 2008-09-12 18:56:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -21,6 +21,7 @@
 #include "CPP/IocSensor.h"
 
 #define MBM_IMPLEMENTATION
+#include "ROMonDefs.h"
 #include "ROMon/ROMon.h"
 #include "ROMon/ROMonDisplay.h"
 #include "dic.hxx"
@@ -84,16 +85,14 @@ void ROMonDisplay::update()   {
   const Nodeset* ns = m_data.data<const Nodeset>();
   if ( ns && m_data.actual>0 ) {
     if ( ns->type == Nodeset::TYPE ) {
-      dim_lock();
+      DimLock dim_lock;
       RTL::Lock lock(m_lock);
       updateDisplay(*ns);
-      dim_unlock();
     }
     else if ( ns->type == Node::TYPE ) {
-      dim_lock();
+      DimLock dim_lock;
       RTL::Lock lock(m_lock);
       updateDisplay(*m_data.data<const Node>());
-      dim_unlock();
     }
   }
 }

@@ -2,15 +2,11 @@
 
 <common>
 Note: Help is context sensitive
-
 You receive different help content depending on the current window:
--- Help on subfarm summary window
--- Help on expanded subfarm summary
--- Help on MBM buffer monitor of a single node.
--- Help on DAQ processes executing on a given node
--- Help on the CPU content of a given subfarm.
--- Help on the task control status of a given subfarm (-taskmon option only)
-
+-- Help on subfarm summary window                        -- Help on expanded subfarm summary
+-- Help on MBM buffer monitor of a single node.          -- Help on DAQ processes executing on a given node
+-- Help on the CPU content of a given subfarm.           -- Help on the task control status of a given subfarm 
+-- Help on BOOT information of a subfarm                    (-taskmon option only)
 </common>
 
 <farm>
@@ -39,8 +35,7 @@ If any of the node names is in red, either tasks are missing or the connection s
 </farm>
 
 <subfarm>
-Extended subfarm display
-
++++ Extended subfarm display
 The subfarm display shows all nodes and tasks executing in one subfarm.
 The top display shows the buffer status on all nodes.
 The middle display shows all known MOORE tasks and their event consumption.
@@ -56,16 +51,20 @@ also close all associated lower level windows mentioned above.
 +++ Show process displays (a la top):
 p or P displays all processes, which have the UTGID environment set. 
        These are typically processes used by the LHCb data aquisition.
-CTRL-V displays all system tasks.
-CTRL-B displays all non-system tasks
-CTRL-P shows all PVSS processes.
-CTRL-N displays all driver tasks.
+CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
+CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
 
++++ Show BOOT information:
+b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
+
++++ Show farm statistics:
+s or S displays the statistics summary of a given subfarm (CPU+MBM). Once invoked, type H for further help.
+
+Invokation of the same command again closes the window.
 </subfarm>
 
 <subfarm_ctrl>
 +++ Extended subfarm display for task/node control monitoring
-
 The subfarm display shows for all nodes the tasks executing and the status of basic
 connection checks. Also displayed is the resource usage and boot information.
 
@@ -79,16 +78,19 @@ also close all associated lower level windows mentioned above.
 +++ Show process displays (a la top):
 p or P displays all processes, which have the UTGID environment set. 
        These are typically processes used by the LHCb data aquisition.
-CTRL-V displays all system tasks.
-CTRL-B displays all non-system tasks
-CTRL-P shows all PVSS processes.
-CTRL-N displays all driver tasks.
-
-Invokation of the same command again closes the window.
+CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
+CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
 
 +++ Show CPU usage of a node:
 c or C displays the CPU summary of a given node. For space reasons not all nodes are expanded.
 
++++ Show BOOT information:
+b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
+
++++ Show farm statistics:
+s or S displays the statistics summary of a given subfarm (CPU+MBM). Once invoked, type H for further help.
+
+Invokation of the same command again closes the window.
 </subfarm_ctrl>
 
 <subfarm_reco>
@@ -104,6 +106,13 @@ To close the window double-click with the mouse on the header section of the ext
 subfarm dislay. Alternatively type ENTER or KPD-ENTER. Closing this window will
 also close all associated lower level windows mentioned above.
 
++++ Show BOOT information:
+b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
+
++++ Show farm statistics:
+s or S displays the statistics summary of a given subfarm (CPU+MBM). Once invoked, type H for further help.
+
+Invokation of the same command again closes the window.
 </subfarm_reco>
 
 <ctrl>
@@ -120,7 +129,6 @@ This displayed is partitioned into three sections:
 Nothing more to say. If you don't understand this display you are hopeless anyway. 
 
 </ctrl>
-
 
 <mbm>
 MBM buffer dispay for a single node
@@ -140,10 +148,8 @@ Nothing more to say.
 There are different flavors of this display present:
 p or P displays all processes, which have the UTGID environment set. 
        These are typically processes used by the LHCb data aquisition.
-CTRL-V displays all system tasks.
-CTRL-B displays all non-system tasks
-CTRL-P shows all PVSS processes.
-CTRL-N displays all driver tasks.
+CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
+CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
 
 Invokation of the same command again closes the window.
 </procs>
@@ -159,24 +165,19 @@ Nothing more to say.
 
 <common>
 Common keyboard commands:
-
--- To select a subfarm use the arrow keys
--- To invoke/hide the help display type CTRL-H or h or H.
--- To exit the application         type CTRL-E or E
--- To show the subfarm menu        type ENTER or KPD-ENTER
+-- To select a subfarm use the arrow keys                      -- To invoke/hide the help display type CTRL-H or h or H.
+-- To exit the application         type CTRL-E or E            -- To show the subfarm menu        type ENTER or KPD-ENTER
 
 To be invoked from the extended subfarm display:
--- To show the MBM monitor         type KPD-PERIOD or .
--- To show the CPU monitor         type c or C
--- To show the process monitor     type CTRL-P or p or P
+-- To show the MBM monitor         type KPD-PERIOD or .        -- To show the CPU monitor     type c or C
+-- To show the process monitor     type CTRL-P or p or P       -- To show BOOT display        type b or B
+-- To show the farm statistics     type s or S
 
 </common>
 
 <common>
 Mouse commands:
-
-Double-click MOUSE-LEFT:    show/hide the subfarm menu
-Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
+Double-click MOUSE-LEFT:    show/hide the subfarm menu         Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
 Single-click MOUSE-RIGHT    show/hide this help window
 
 </common>

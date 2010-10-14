@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.5 2010-10-12 18:44:51 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.5 2010-10-12 18:44:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -167,9 +167,11 @@ namespace {
   void startFarmStatLine(const pair<string,FarmStatClusterLine*>& l) 
   { IocSensor::instance().send(l.second,CMD_CONNECT,l.second);  }
 
-  void displayFarmStatLine(const pair<string,FarmStatClusterLine*>& l) 
-  { l.second->parent()->display(l.second);  }
-
+  struct DisplayFarmStatLine {
+    FarmStatDisplay* disp;
+    DisplayFarmStatLine(FarmStatDisplay* d) : disp(d) {}
+    void operator()(const pair<string,FarmStatClusterLine*>& l)  { disp->display(l.second);  }
+  };
   struct DisplayUpdate {
     Pasteboard* m_pb;
     bool m_flush;
@@ -185,10 +187,9 @@ namespace {
 
 
 // Standard constructor
-FarmStatClusterLine::FarmStatClusterLine(FarmStatDisplay* p, int pos, const std::string& n)
+FarmStatClusterLine::FarmStatClusterLine(Interactor* p, int pos, const std::string& n)
   : m_mbm(0), m_cpu(0), m_position(pos), m_parent(p), m_name(n)
 {
-  //m_parent->display(this);
 }
 
 FarmStatClusterLine::~FarmStatClusterLine() {
@@ -485,13 +486,11 @@ void FarmStatDisplay::handle(const Event& ev) {
       time_t now = ::time(0);
       size_t len = ::sprintf(txt,"Total number of subfarms:%d",int(m_clusters.size()));
       ::strftime(&txt[len],sizeof(txt)-len,"    %H:%M:%S",::localtime(&now));      
-      ::scrc_begin_pasteboard_update (pb);
+      DisplayUpdate update(this);
       ::scrc_put_chars(m_display,txt,BOLD,1,STATLINE_START,1);
-      dim_lock();
-      for_each(m_clusters.begin(),m_clusters.end(),displayFarmStatLine);
+      DimLock lock;
+      for_each(m_clusters.begin(),m_clusters.end(),DisplayFarmStatLine(this));
       set_cursor(currentLine());
-      dim_unlock();
-      ::scrc_end_pasteboard_update(pb);
       return;
     }
     case CMD_SHOWHELP:
@@ -511,10 +510,9 @@ void FarmStatDisplay::handle(const Event& ev) {
 	if ( i != m_clusters.end() ) {
 	  FarmStatClusterLine* line = (*i).second;
 	  DisplayUpdate update(this);
-	  dim_lock();
+	  DimLock lock;
 	  display(line);
 	  set_cursor(line);
-	  dim_unlock();
 	}
       }
       break;
@@ -576,7 +574,7 @@ void FarmStatDisplay::update(const void* address) {
 	for(j=copy.begin(); j != copy.end(); ++j)
 	  delete (*j).second;
 	for_each(m_clusters.begin(),m_clusters.end(),startFarmStatLine);
-	for_each(m_clusters.begin(),m_clusters.end(),displayFarmStatLine);
+	for_each(m_clusters.begin(),m_clusters.end(),DisplayFarmStatLine(this));
 	IocSensor::instance().send(this,CMD_SHOW,(void*)0);
       }
     }

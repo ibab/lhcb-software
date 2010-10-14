@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -68,6 +68,9 @@ const string& InternalDisplay::svcPrefix() {
 /// Set service prefix for usage of the bridge
 void InternalDisplay::setSvcPrefix(const string& pref) {
   s_prefix = pref;
+}
+
+void InternalDisplay::connect() {
 }
 
 void InternalDisplay::disconnect() {

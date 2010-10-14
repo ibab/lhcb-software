@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
+// $Id: InternalDisplay.h,v 1.4 2010-10-14 13:30:08 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.3 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.4 2010-10-14 13:30:08 frankb Exp $
 #ifndef ROMON_INTERNALDISPLAY_H
 #define ROMON_INTERNALDISPLAY_H 1
 
@@ -84,9 +84,11 @@ namespace ROMon {
     /// Hide the display from the panel
     void hide();
     /// Close the display
-    void close();
+    virtual void close();
+    /// Empty placeholder: Connect to data resources
+    virtual void connect();
     /// Disconnect from services: Only destructor may be called afterwards
-    void disconnect();
+    virtual void disconnect();
     /// Update display content
     virtual void update(const void* data) = 0;
     /// Update display content

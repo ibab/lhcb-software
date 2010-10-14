@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.5 2010-10-12 17:47:05 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,12 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.5 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
 #include "ROMon/BootMon.h"
 #include "SCR/scr.h"
+extern "C" {
+#include "dic.h"
+}
 
 // C++ include files
 #include <cstdlib>
@@ -27,21 +30,36 @@ using namespace std;
 
 namespace { const char* _flg(int v, int msk)  {  return (v&msk)==msk ? "OK" : "--"; } }
 #define _F(x)   _flg(n.status,BootNodeStatus::x)
-//namespace { bool _ok(int v, int msk)        { return (v&msk)==msk; }  }
-//#define _BAD(x) _ok(n.status,BootNodeStatus::x)
 
 #define MAX_BOOT_TIME   600
 
+/// External creator function
+InternalDisplay* ROMon::createBootDisplay(InternalDisplay* parent, const string& title) {
+  return new BootClusterDisplay(parent,title);
+}
+
+/// Initializing constructor
 BootClusterDisplay::BootClusterDisplay(InternalDisplay* parent, const string& title, int height, int width)
   : InternalDisplay(parent, title), m_name(title)
 {
   m_title = "Boot monitor on "+m_title;
   ::scrc_create_display(&m_display,height,width,INVERSE,ON,m_title.c_str());
   ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE|BOLD);
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
 }
 
+/// Standard destructor
 BootClusterDisplay::~BootClusterDisplay() {
+}
+
+/// Explicit connect to data services
+void BootClusterDisplay::connect() {
+  if ( m_svc == 0 ) {
+    string svc = "/";
+    for(size_t i=0; i<m_name.length() && m_name[i]!='.';++i) svc += ::tolower(m_name[i]);
+    svc += "/BootMonitor";
+    m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
+  }
 }
 
 /// Update display content

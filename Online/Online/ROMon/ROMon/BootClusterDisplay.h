@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.h,v 1.2 2010-10-12 17:47:04 frankb Exp $
+// $Id: BootClusterDisplay.h,v 1.3 2010-10-14 13:30:08 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/BootClusterDisplay.h,v 1.2 2010-10-12 17:47:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/BootClusterDisplay.h,v 1.3 2010-10-14 13:30:08 frankb Exp $
 #ifndef ONLINE_ROMON_BOOTCLUSTERDISPLAY_H
 #define ONLINE_ROMON_BOOTCLUSTERDISPLAY_H
 
@@ -43,11 +43,14 @@ namespace ROMon {
     virtual ~BootClusterDisplay();
     /// Access display by cluster name
     const std::string& name() const { return m_name; }
+    /// Explicit connect to data services
+    void connect();
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
-
+  /// External creator function
+  InternalDisplay* createBootDisplay(InternalDisplay* parent, const std::string& title);
 }      // End namespace ROMon
 #endif /* ONLINE_ROMON_BOOTCLUSTERDISPLAY_H */

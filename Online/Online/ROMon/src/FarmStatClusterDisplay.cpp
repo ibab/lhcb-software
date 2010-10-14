@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Id: FarmStatClusterDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,10 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.4 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmStatClusterDisplay.h"
+#include "ROMon/Constants.h"
+#include "ROMonDefs.h"
+#include "CPP/Event.h"
 #include "SCR/scr.h"
 
 // C++ include files
@@ -29,16 +32,50 @@ namespace { template <class T> float _frac(T a,T b) {return 100.f*float(float(a)
 
 #define MAX_FARMSTAT_TIME   600
 
+/// External creator function
+InternalDisplay* ROMon::createFarmStatsDisplay(InternalDisplay* parent, const string& title) {
+  return new FarmStatClusterDisplay(parent,title);
+}
+
 FarmStatClusterDisplay::FarmStatClusterDisplay(InternalDisplay* parent, const string& title, int height, int width)
-  : InternalDisplay(parent, title), m_name(title)
+  : InternalDisplay(parent, title), m_name(title), m_line(0)
 {
   m_title = "FarmStat monitor on "+m_title;
   ::scrc_create_display(&m_display,height,width,INVERSE,ON,m_title.c_str());
   ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE|BOLD);
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
 }
 
 FarmStatClusterDisplay::~FarmStatClusterDisplay() {
+  if ( m_line ) delete m_line;
+  m_line = 0;
+}
+
+/// Explicit connect to data services
+void FarmStatClusterDisplay::connect() {
+  if ( m_line == 0 ) {
+    m_line = new FarmStatClusterLine(this,0,m_name);
+    m_line->start();
+  }
+}
+
+/// Interactor overload: Display callback handler
+void FarmStatClusterDisplay::handle(const Event& ev)    {
+  switch(ev.eventtype) {
+  case IocEvent:
+    switch(ev.type) {
+    case CMD_SHOW: {
+      DimLock lock;
+      if ( m_line ) update(m_line);
+      return;
+    }
+    default:
+      break;
+    }
+  default:
+    break;
+  }
+  InternalDisplay::handle(ev);
 }
 
 /// Update display content
@@ -84,7 +121,7 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
     }
   }
 
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE|BOLD);
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
   ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&now));
   ::sprintf(txt,"      Subfarm Statistics of:%s   %s  [%d nodes]",cl->name().c_str(),text1,int(ci.size()));
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);

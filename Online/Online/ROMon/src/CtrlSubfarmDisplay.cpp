@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.9 2010-02-22 15:03:44 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.9 2010-02-22 15:03:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -19,6 +19,7 @@
 
 // Framework include files
 #include "RTL/Lock.h"
+#include "ROMonDefs.h"
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "TaskSupervisorParser.h"
 
@@ -144,14 +145,12 @@ void CtrlSubfarmDisplay::update()   {
   try {
     int result = 0;
     XML::TaskSupervisorParser ts;
-    dim_lock();
-    if ( m_data.actual>0 ) {
-      const char* ptr = m_data.data<const char>();
-      result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
-      //printf("XML:%d\n%s\n\n",result,ptr);
-      //::exit(0);
+    {  DimLock lock;
+      if ( m_data.actual>0 ) {
+	const char* ptr = m_data.data<const char>();
+	result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
+      }
     }
-    dim_unlock();
     RTL::Lock lock(m_lock);
     begin_update();
     m_nodes->begin_update();

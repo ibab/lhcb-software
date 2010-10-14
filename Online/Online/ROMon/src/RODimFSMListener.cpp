@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.8 2010-09-07 13:42:11 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.9 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.8 2010-09-07 13:42:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.9 2010-10-14 13:30:09 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -37,14 +37,13 @@ using namespace std;
 
 /// Standard destructor
 RODimFSMListener::~RODimFSMListener() {
-  dim_lock();
+  DimLock lock;
   delete m_dns;
   m_dns = 0;
   for (Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i) {
     ::dic_release_service((*i).second->id);
     (*i).second->release();
   }
-  dim_unlock();
 }
 
 /// Add handler for a given message source
@@ -54,8 +53,8 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
   if ( ::strncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
     if ( ::strncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
       if ( ::strncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
+	DimLock lock;
         string nam = svc+"/fsm_status";
-        dim_lock();
         Clients::iterator i=m_clients.find(nam);
         if ( i == m_clients.end() )  {
           Item*    itm = Item::create<FSMTask>(this);
@@ -70,7 +69,6 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
             log() << "Create DimInfo:" << nam << " id:" << itm->id << endl;
           }
         }
-        dim_unlock();
       }
     }
   }
@@ -78,8 +76,8 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
 
 /// Remove handler for a given message source
 void RODimFSMListener::removeHandler(const string& /* node */, const string& svc)   {
+  DimLock lock;
   string nam = svc+"/fsm_status";
-  dim_lock();
   Clients::iterator i=m_clients.find(nam);
   if ( i != m_clients.end() ) {
     Item* it = (Item*)(*i).second;
@@ -90,7 +88,6 @@ void RODimFSMListener::removeHandler(const string& /* node */, const string& svc
     it->release();
     m_clients.erase(i);
   }
-  dim_unlock();
 }
 
 /// DimInfo overload to process messages

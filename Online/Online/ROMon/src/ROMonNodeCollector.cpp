@@ -1,4 +1,4 @@
-// $Id: ROMonNodeCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonNodeCollector.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -66,7 +66,7 @@ int ROMonNodeCollector::monitor() {
           break;
         }
         else {
-          dim_lock();
+	  DimLock lock;
           for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
             typedef RODimNodeListener::Descriptor DSC;
             DSC* d = (*ic).second->data<DSC>();
@@ -78,7 +78,6 @@ int ROMonNodeCollector::monitor() {
             ::memcpy(it,d->data,d->actual);
             it = nodes.add(it);
           }
-          dim_unlock();
         }
       }
       if ( m_print ) {
