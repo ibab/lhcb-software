@@ -17,6 +17,7 @@
 
 // Rich Kernel
 #include "RichKernel/BoostArray.h"
+#include "RichKernel/RichTrackSegment.h"
 
 // base class
 #include "RichKernel/RichToolBase.h"
@@ -24,6 +25,10 @@
 // interfaces
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichKernel/IRichRefractiveIndex.h"
+
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 
 namespace Rich
 {
@@ -71,9 +76,9 @@ namespace Rich
     double thresholdMomentum( const Rich::ParticleIDType id,
                               const Rich::RadiatorType rad ) const;
 
-    // Returns the threshold momentum squared for a given hypothesis in a given radiator
-    double thresholdMomentumSq( const Rich::ParticleIDType id,
-                                const Rich::RadiatorType rad ) const;
+    // Calculates the threshold momentum for a given mass hypothesis
+    double thresholdMomentum( const Rich::ParticleIDType id,
+                              const LHCb::RichTrackSegment& trSeg ) const;
 
     // Vector of the mass hypotheses to be considered
     const Rich::Particles & particleTypes() const;
@@ -88,9 +93,6 @@ namespace Rich
 
     /// Array containing square of particle masses
     boost::array<double,Rich::NParticleTypes> m_particleMassSq;
-
-    /// Momentum thresholds
-    mutable double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
 
     /// Particle ID types to consider in the likelihood minimisation (JO)
     std::vector<std::string> m_pidTypesJO;

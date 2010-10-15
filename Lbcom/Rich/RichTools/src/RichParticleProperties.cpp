@@ -12,7 +12,7 @@
 // local
 #include "RichParticleProperties.h"
 
-// From LHCb 
+// From LHCb
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 
@@ -68,15 +68,6 @@ StatusCode Rich::ParticleProperties::initialize()
   // Informational Printout
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endmsg;
 
-  // Initialise momentum thresholds
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
-  {
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
-    {
-      m_momThres[iRad][iHypo] = -1.0;
-    }
-  }
-
   // release service
   sc = release(ppSvc);
 
@@ -125,22 +116,23 @@ double Rich::ParticleProperties::massSq( const Rich::ParticleIDType id ) const
   return m_particleMassSq[id];
 }
 
-double Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
-                                                    const Rich::RadiatorType rad ) const
+double
+Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
+                                             const Rich::RadiatorType rad ) const
 {
-  if ( m_momThres[rad][id] < 0 ) 
-  {
-    // fill on demand, to avoid loading radiator detector elements until really needed
-    const double index = m_refIndex->refractiveIndex(rad);
-    m_momThres[rad][id] = mass(id) / std::sqrt(index*index - 1.0);
-  }
-  return m_momThres[rad][id];
+  const double index = m_refIndex->refractiveIndex(rad);
+  return ( index > 1.0 ? mass(id)/std::sqrt((index*index)-1.0) : 
+           boost::numeric::bounds<double>::highest() );
 }
 
-double Rich::ParticleProperties::thresholdMomentumSq( const Rich::ParticleIDType id,
-                                                      const Rich::RadiatorType rad ) const
+double
+Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
+                                             const LHCb::RichTrackSegment& trSeg ) const
 {
-  return std::pow( thresholdMomentum(id,rad), 2 );
+  const double index = m_refIndex->refractiveIndex( trSeg.radIntersections(),
+                                                    trSeg.avPhotonEnergy() );
+  return ( index > 1.0 ? mass(id)/std::sqrt((index*index)-1.0) : 
+           boost::numeric::bounds<double>::highest() );
 }
 
 const Rich::Particles & Rich::ParticleProperties::particleTypes() const

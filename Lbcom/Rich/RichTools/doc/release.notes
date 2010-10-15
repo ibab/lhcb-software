@@ -4,6 +4,13 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Chris Jones
+ - Removing the caching of the threshold momentum values in the particle
+   properties tool, as it doesn't save much CPU, and is not valid if the
+   refractive indices are updated on the fly in a running job.
+ - Add a new method to allow the threshold momentum to be calculated taking
+   into account the radiator media a track segment actually crosses.
+
 ! 2010-10-14 - Chris Jones
  - Fix for compilation problem on windows
  - Various updates to avoid loading all radiator detector elements by default
