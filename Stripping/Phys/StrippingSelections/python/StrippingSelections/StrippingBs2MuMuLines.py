@@ -4,6 +4,7 @@ Module for construction of Bs-->MuMu stripping selections and lines
 Exported symbols (use python help!):
    - Bs2MuMuLinesConf
    - makeDefault
+   - makeBs2mmWide
    - makeLoose
    - makeDetachedJPsi
    - makeDetachedJPsiLoose
@@ -16,6 +17,7 @@ __version__ = '$Revision: 1.2 $'
 
 __all__ = ('Bs2MuMuLinesConf',
            'makeDefault',
+           'makeBs2mmWide',
            'makeLoose',
            'makeDetachedJPsi',
            'makeDetachedJPsiLoose',
@@ -61,6 +63,8 @@ class Bs2MuMuLinesConf(object) :
                               'BFDChi2_loose',
                               'DefaultLinePrescale',
                               'DefaultLinePostscale',
+                              'Bs2mmWideLinePrescale',
+                              'Bs2mmWideLinePostscale',
                               'LooseLinePrescale',
                               'LooseLinePostscale',
                               'JPsiLinePrescale',
@@ -75,6 +79,8 @@ class Bs2MuMuLinesConf(object) :
     config_default={
         'DefaultLinePrescale'    : 1,
         'DefaultLinePostscale'   : 1,
+        'Bs2mmWideLinePrescale'  : 1,
+        'Bs2mmWideLinePostscale'  : 1,
         'LooseLinePrescale'      : 0.001,
         'LooseLinePostscale'     : 1,
         'JPsiLinePrescale'       : 1,
@@ -101,12 +107,15 @@ class Bs2MuMuLinesConf(object) :
                     config)
 
         default_name='Bs2MuMuNoMuID'
+        wide_name = 'Bs2MuMuWideMass'
         loose_name='Bs2MuMuNoMuIDLoose'
         jPsi_name='DetachedJPsi'
         jPsiLoose_name='DetachedJPsiLoose'
         jPsiPrompt_name='DetachedJPsi_noDetached'
 
         self.selDefault = makeDefault(default_name)
+
+        self.selWide = makeBs2mmWide(wide_name)
 
         self.selLoose = makeLoose(loose_name,
                                   MuIPChi2=config['MuIPChi2_loose'],
@@ -126,6 +135,13 @@ class Bs2MuMuLinesConf(object) :
                                             postscale = config['DefaultLinePostscale'],
                                             algos = [ self.selDefault ]
                                             )
+        
+        self.wideLine = StrippingLine(wide_name+"Line",
+                                      prescale = config['Bs2mmWideLinePrescale'],
+                                      postscale = config['Bs2mmWideLinePostscale'],
+                                      algos = [ self.selWide ]
+                                      )
+        
         self.looseLine = StrippingLine(loose_name+"Line",
                                             prescale = config['LooseLinePrescale'],
                                             postscale = config['LooseLinePostscale'],
@@ -152,7 +168,7 @@ class Bs2MuMuLinesConf(object) :
 
 
 
-        self.lines = [ self.defaultLine, self.looseLine,
+        self.lines = [ self.defaultLine, self.wideLine, self.looseLine,
                        self.jPsiLine, self.jPsiLooseLine,  self.jPsiPromptLine ]
 
 
@@ -190,6 +206,42 @@ def makeDefault(name) :
     return Selection (name,
                       Algorithm = Bs2MuMuNoMuID,
                       RequiredSelections = [ _stdNoPIDsMuons])
+
+
+def makeBs2mmWide(name) :
+    """
+    Bs2mumu selection object (tighter selection a la roadmap)
+    with muon Id and wide mass window (1.2GeV)
+    starts from Phys/StdLooseMuons
+
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    Bs2MuMuWideMass = CombineParticles("StripBs2MuMuWideMass")
+    Bs2MuMuWideMass.DecayDescriptor = "B_s0 -> mu+ mu-"
+    Bs2MuMuWideMass.InputLocations = ["Phys/StdLooseMuons"]
+    Bs2MuMuWideMass.addTool( OfflineVertexFitter() )
+    Bs2MuMuWideMass.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
+    Bs2MuMuWideMass.ReFitPVs = True
+    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 5 )" }
+    Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
+                                     "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<15) "\
+                                "& (ADMASS('B_s0') < 1200*MeV )"\
+                                "& (BPVDIRA > 0) "\
+                                "& (BPVVDCHI2> 225)"\
+                                "& (BPVIPCHI2()< 25) "
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons")
+
+    return Selection (name,
+                      Algorithm = Bs2MuMuWideMass,
+                      RequiredSelections = [ _stdLooseMuons])
 
 
 
