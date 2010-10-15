@@ -4,7 +4,11 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
-!========================== CaloReco v1r0  2010-09-30 =======================
+! 2010-10-15 - Roel Aaij
+ - Fill rate histograms with correct weight such that the y-axis scale is
+   always seconds.
+
+!========================== HltMonitors v1r0  2010-09-30 =======================
 ! 2010-09-30 - Rob Lambert
  - fix warning about converting double to int
 

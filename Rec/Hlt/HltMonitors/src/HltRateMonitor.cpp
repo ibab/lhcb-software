@@ -138,6 +138,9 @@ StatusCode HltRateMonitor::execute() {
       const string& expression = it->first;
       end = dbr.upper_bound( expression );
 
+      // Calculate the weight which ensures the y axis makes sense.
+      double weight = double( 1 ) / ( m_secondsPerBin );
+
       unsigned int total = 0;
       for ( ; it != end; ++it ) {
          const string& decision = it->second;
@@ -145,7 +148,7 @@ StatusCode HltRateMonitor::execute() {
          if ( decReport && decReport->decision() ) {
             ++total;
             string title = decision.substr( 0, decision.size() - 8 ) + "Rate";
-            plot( time, title, 0., 9000, 9000 / m_secondsPerBin );
+            plot( time, title, 0., 9000, 9000 / m_secondsPerBin, weight );
          }
       }
 
@@ -153,7 +156,7 @@ StatusCode HltRateMonitor::execute() {
       // regex.
       string title = "Total" + expression + "Rate";
       for ( unsigned int i = 0; i < total; ++i )
-         plot( time, title, 0., 9000, 9000 / m_secondsPerBin );
+         plot( time, title, 0., 9000, 9000 / m_secondsPerBin, weight );
    }
 
    setFilterPassed( true );
