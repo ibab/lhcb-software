@@ -31,8 +31,7 @@ PhotonRecoUsingRaytracing( const std::string& type,
     m_raytrace      ( NULL ),
     m_ERLSet        (Rich::NRadiatorTypes),
     m_maxdiff       (Rich::NRadiatorTypes),
-    m_maxiter       (Rich::NRadiatorTypes),
-    m_satCKtheta    (Rich::NRadiatorTypes)
+    m_maxiter       (Rich::NRadiatorTypes)
 {
 
   // Update default CK theta correction values
@@ -80,14 +79,6 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true  );
   acquireTool( "RichCherenkovAngle",  m_ckAngle          );
   acquireTool( "RichRayTracing",      m_raytrace         );
-
-  // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
-  {
-    // Cache saturated CK theta values
-    m_satCKtheta[*rad]  = m_ckAngle->nominalSaturatedCherenkovTheta(*rad);
-  }
 
   // ray tracing mode
   m_mode.setAeroRefraction(true);
@@ -147,8 +138,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   double ERL(0);
   if (m_ERL<0)
   {
-    //const double predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
-    const double predpi = m_satCKtheta[radiator];
+    const double predpi = m_ckAngle->saturatedCherenkovTheta(segment);
 
     sv = trSeg.vectorAtThetaPhi( predpi, tphi );
 

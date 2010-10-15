@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Chris Jones
+ - Update the ray Tracing photon reconstruction tool to use the new method
+   in the Chereknov Angle tool to get the saturated CK theta value on a 
+   segment by segment basis, taking into account the radiator volumes 
+   traversed.
+
 ! 2010-10-11 - Chris Jones
  - Update ray tracing an quartic photon reconstruction tools to use new method 
    in the Snell's law correction interface, that passes the full 

@@ -103,8 +103,6 @@ namespace Rich
       std::vector<double> m_maxdiff;
       std::vector<int> m_maxiter;
 
-      std::vector<double> m_satCKtheta;
-
       double m_ERL;
 
       bool m_failiter;
@@ -114,10 +112,6 @@ namespace Rich
 
       /// cached ray tracing mode
       LHCb::RichTraceMode m_mode;
-
-      //mutable int m_itersA[100];
-      //mutable int m_iters1[100];
-      //mutable int m_iters2[100];
 
     };
 

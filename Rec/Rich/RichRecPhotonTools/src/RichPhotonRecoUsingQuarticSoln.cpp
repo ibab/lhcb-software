@@ -623,13 +623,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = static_cast<float>(std::fabs( sphReflPoint1.y() / (sphReflPoint1.y() - sphReflPoint2.y()) ));
+      fraction = static_cast<float>(std::fabs(sphReflPoint1.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = static_cast<float>(std::fabs( sphReflPoint2.y() / (sphReflPoint1.y() - sphReflPoint2.y()) ));
+      fraction = static_cast<float>(std::fabs(sphReflPoint2.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
@@ -651,13 +651,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = static_cast<float>(std::fabs( sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x()) ));
+      fraction = static_cast<float>(std::fabs(sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = static_cast<float>(std::fabs( sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x()) ));
+      fraction = static_cast<float>(std::fabs(sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
@@ -696,7 +696,7 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
   m_snellsLaw->gasToAerogel( photonDirection, trSeg );
   // update CK theta
   const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
-  thetaCerenkov = ( ctc>1 ? 0 : acos(ctc) );
+  thetaCerenkov = ( ctc>1 ? 0 : std::acos(ctc) );
 }
 
 //=========================================================================
@@ -728,7 +728,6 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   const double d        = std::sqrt(d2);
   const double cosgamma = evec.Dot(dvec) / (e*d);
   const double singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
-  //const double singamma = sin( acos(cosgamma) );
   const double dx       = d * cosgamma;
   const double dy       = d * singamma;
   const double r2       = radius * radius;
