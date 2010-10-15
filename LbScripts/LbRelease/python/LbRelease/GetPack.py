@@ -37,6 +37,23 @@ class LHCbVersionFilter(object):
         return None
 rcs.setVersionFilter(LHCbVersionFilter())
 
+def guessDefaultVersion(package):
+    """
+    Return the most appropriate version of a package if cmt can locate it.
+
+    If called from within a project, "cmt show versions <package>" return a list
+    of possible versions of a package. We take the first one, if present.
+    """
+    out = Popen(["cmt", "show", "versions", package],
+                stdout = PIPE, stderr = PIPE).communicate()[0]
+    try:
+        # Second element of the first line:
+        # "Hat/Package version project_dir" -> version
+        version = out.splitlines()[0].split()[1]
+    except IndexError: # if there is no output
+        version = None
+    return version
+
 ## Class used as exception to allow a "quit" in any moment
 class Quit:
     pass
@@ -130,34 +147,34 @@ try:
             self.selection = initsel
             self.offset = 0
             self._draw()
-        
+
         def _maxwidth(self):
             if self.ysize < (self._count-1):
                 return self.xsize - 1
             else:
                 return self.xsize
-        
+
         def _draw(self):
             self._pad.erase()
             maxwidth = self._maxwidth()
             for i in range(self._count):
                 self._pad.addnstr(i, 0, self.data[i], maxwidth)
             self._highlight(self.selection)
-            
+
         def _highlight(self, idx, highlighted = True):
             maxwidth = self._maxwidth()
             if highlighted:
                 self._pad.addnstr(idx, 0, self.data[idx], maxwidth, curses.A_REVERSE)
             else:
                 self._pad.addnstr(idx, 0, self.data[idx], maxwidth)
-            
+
         def refresh(self):
             # ensure selection is visible
             if self.selection < self.offset:
                 self.offset = self.selection
             elif self.selection > (self.offset + self.ysize):
                 self.offset = self.selection - self.ysize
-            
+
             pad = self._pad
             if self.ysize < (self._count-1):
                 # update scroll bar
@@ -171,13 +188,13 @@ try:
                 cursor = int(round((bottom - top - 2) *
                                    float(self.selection) / (self._count-1)))
                 pad.addch(top + cursor + 1, right, curses.ACS_BLOCK)
-            
+
             # paint
             pad.refresh(self.offset, 0,
                         self.ypos, self.xpos,
                         self.ypos + min(self.ysize, self._count),
                         self.xpos + self.xsize)
-            
+
         def moveByLines(self, offset):
             self._highlight(self.selection, False)
             self.selection += offset
@@ -199,22 +216,22 @@ try:
                 self._pad = curses.newpad(self._count + 1, self.xsize)
             self.moveByLines(0)
             self._draw()
-    
+
     ## Class to display a sort of selection dialog using curses
     class Dialog(object):
         def __init__(self, screen, message, data):
             self.scr = screen
             self.min_y, self.min_x = 0, 0
             self.max_y, self.max_x = self.scr.getmaxyx()
-    
+
             self.message = message
             self.listbox = ListBox(data,
                                    self.min_y + 3, self.min_x + 1,
                                    self.max_y - 7, self.max_x - 2)
-            
+
             curses.curs_set(0)
             self._draw()
-    
+
         def _draw(self):
             self.scr.addnstr(1, 1, self.message, self.max_x - 1)
             self.scr.box()
@@ -225,13 +242,13 @@ try:
                              self.max_x - 2)
             self.scr.refresh()
             self.listbox.refresh()
-            
+
         def resize(self):
             self.min_y, self.min_x = 0, 0
             self.max_y, self.max_x = self.scr.getmaxyx()
             self.scr.erase()
             self.listbox.resize(self.max_y - 7, self.max_x - 2)
-        
+
         def run(self):
             while True:
                 try:
@@ -254,7 +271,7 @@ try:
                     break
                 self._draw()
             return None
-    
+
     ## Display a dialog with the passed message and return the index of the
     #  element selected in the list.
     #  (the argument 'bars' is used only by the fall-back version)
@@ -361,12 +378,14 @@ class GetPack(Script):
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
 
-    def _askVersion(self, versions):
+    def _askVersion(self, versions, default = None):
         if self.options.batch:
             # never ask for a version in batch mode
             raise Skip
         ans = None
-        default = versions[0]
+        if (default is None) or (default not in versions):
+            # take the first version if not specified or not available
+            default = versions[0]
         while not ans:
             sys.stdout.write("Select a version (%s, (h)ead, (q)uit [%s]): "%
                              (", ".join(versions),default))
@@ -403,7 +422,7 @@ class GetPack(Script):
         reps = self.packages[package]
         if len(reps) > 1:
             if self.options.batch:
-                #never ask for a repository in batch mode
+                # never ask for a repository in batch mode
                 raise Skip
             lst = []
             for k in reps:
@@ -433,15 +452,15 @@ class GetPack(Script):
                         self.log.warning("Version '%s' not found for package '%s', using '%s'" % (version, package, vers))
                         version = vers
                     else:
-                        # Since the version is not in the filtered list and it is not a "-pre" 
+                        # Since the version is not in the filtered list and it is not a "-pre"
                         # try to ask to the repository if it knows about it.
                         if not rep.hasVersion(package, version):
                             # No way to match the version string using any of the rules
                             self.log.warning("Version '%s' not found for package '%s'" % (version, package))
-                            version = self._askVersion(versions)
+                            version = self._askVersion(versions, guessDefaultVersion(package))
             else:
                 self.log.warning("Version not specified for package '%s'" % package)
-                version = self._askVersion(versions)
+                version = self._askVersion(versions, guessDefaultVersion(package))
         # Fix the case of the special version "head"
         if version.lower() == "head":
             version = version.lower()
@@ -588,7 +607,7 @@ class GetPack(Script):
             if self.selected_repository:
                 rep = self.selected_repository.lower()
                 if rep not in self.repositories:
-                    self.log.error("Uknown repository alias '%s' (allowed: %r)",
+                    self.log.error("Unknown repository alias '%s' (allowed: %r)",
                                    self.selected_repository, self.repositories.keys())
                     return 1
                 repos = { rep: self.repositories[rep] }
@@ -660,7 +679,7 @@ class GetPack(Script):
         if self.options.really_recursive or self.options.recursive_head:
             # recursion is implied by the aboves
             self.options.recursive = True
-        
+
         if self.options.no_curses:
             global selectFromList
             selectFromList = selectFromListPlain
@@ -775,7 +794,7 @@ class GetPack(Script):
                 self.project_name = None
         if self.project_name is None:
             self.project_name = self.askProject()
-        
+
         proj = self.checkoutProject(self.project_name, self.project_version)
         # create a project Makefile for the checked out project (if not present)
         createProjectMakefile(os.path.join(proj[2], "Makefile"))

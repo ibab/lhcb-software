@@ -1,3 +1,8 @@
+2010-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: Use the same version as the one already used by a project
+	as default choice for a package.
+
 2010-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/rcs.py: added getPackageRepo and getProjectRepo functions to get the
@@ -6,7 +11,7 @@
 2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/move_package: added skeleton of the script
-	* python/LbRelease/rcs.py: factored out the callCommand and RetryCommand utilities to the 
+	* python/LbRelease/rcs.py: factored out the callCommand and RetryCommand utilities to the
 	LbUtils.Processes module.
 
 2010-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
