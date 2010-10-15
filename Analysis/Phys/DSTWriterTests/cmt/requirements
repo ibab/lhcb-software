@@ -3,12 +3,12 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           DSTWriterTests
-version           v1r7
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc scripts tests options
+branches          cmt doc scripts tests options python
 #============================================================================
 use       GaudiPolicy    v*                             
 use       Python         v*   LCG_Interfaces 
@@ -16,4 +16,5 @@ use       PhysSelPython  v*   PhysSel
 use       AnalysisPython v*   Phys
 include_path      none
 # =============================================================================
-
+apply_pattern install_python_modules
+# =============================================================================

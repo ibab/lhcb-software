@@ -3,8 +3,9 @@ Standard set of command line options for scripts analysing DSTs.
 Options:
 
 -v, --verbose
--o, --output  : Output file name to which summary is written [default 'dst_summary.txt
--r, --root    : TES root where scan of contents begins [default '/Event']
+-o, --output    : Output file name to which summary is written [default 'dst_summary.txt
+-r, --root      : TES root where scan of contents begins [default '/Event']
+-n, --nevents   : Number of events to run over [default -1, all]
 
 Usage:
 from DSTWriterTests.default_args import parser
@@ -29,3 +30,4 @@ parser.add_option('-r', '--root', type='string', dest='root', default='/Event', 
 
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose')
 
+parser.add_option('-n', '--nevents', type='int', dest='nevents', default=-1, help='TES root to explore [default: %default]')

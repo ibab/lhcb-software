@@ -2,7 +2,8 @@
 '''
 Check some TES locations in a DST and print a summary of the number of events selected by each line.
 Useage:
-./check_dst_contents.py --input <some file name> --location <location of trunk - defailt "/Event"> --output <output file name>
+./check_dst_contents.py <dst name> [options]
+./check_dst_contents.py --help
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -19,23 +20,18 @@ if __name__ == '__main__' :
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
-    import sys, getopt
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='dst_contents.txt')
+    (options, args) = parser.parse_args()
 
-    filename = ''
-    locationRoot = '/Event'
-    output = 'dst_contents.txt'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
 
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        elif o in ("-l", "--location") :
-            locationRoot = a
-        elif o in ('-o', '--output') :
-            output = a
-
-    assert(filename != '')
-
+    filename = args[0]
+    locationRoot = options.root
+    output = options.output
+    verbose = options.verbose
+    
     outputFile = open(output, 'w')
 
     lhcbApp = LHCbApp(DDDBtag = 'default',
@@ -75,14 +71,16 @@ if __name__ == '__main__' :
     nObjects.keys().sort()
     length = len(sorted(nObjects.keys(), cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
 
-    print '----------------------------------------------------------------------------------'
-    print "Analysed ", nEvents, " events"
+    if verbose :
+        print '----------------------------------------------------------------------------------'
+        print "Analysed ", nEvents, " events"
 
     for loc in nObjects.keys() :
         if nObjects[loc] > 0 :
             message = loc.ljust(length) + str('Events: '+ str(nSelEvents[loc])+'. Objects: '+ str(nObjects[loc])).rjust(10)
             outputFile.write(message+'\n')
-            print message
-    print '----------------------------------------------------------------------------------'
-    print 'Wrote summary to', output
+            if verbose : print message
+    if verbose :
+        print '----------------------------------------------------------------------------------'
+        print 'Wrote summary to', output
     outputFile.close()
