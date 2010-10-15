@@ -15,7 +15,6 @@ def addEntry(self, key, value) :
 
 if __name__ == '__main__' :
 
-    import sys, getopt
     from GaudiConf.Configuration import *
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
@@ -41,23 +40,7 @@ if __name__ == '__main__' :
     
     particleLoc = locationRoot + '/' + branch + '/Particles'
     particleLoc = particleLoc.replace('//', '/')
-    particleLoc = particleLoc.replace('/Particles/Particles', '/Particles')
-#    particleLocation = '/Event/Dimuon/Phys/StdVeryLooseMuons/Particles'
-    particleLocation = ''
-    filename = ''
-
-    opts, args = getopt.getopt(sys.argv[1:], "l:i", ["input=", "location="])
-
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        if o in ("-l", "--location") :
-            particleLocation = a
-            
-    assert(filename != '')
-    assert(particleLocation != '')
-#    lhcbApp = LHCbApp(DDDBtag = 'default',
-#                      CondDBtag = 'default')
+    particleLocation = particleLoc.replace('/Particles/Particles', '/Particles')
 
     from Configurables import DaVinci
     dv = DaVinci()
