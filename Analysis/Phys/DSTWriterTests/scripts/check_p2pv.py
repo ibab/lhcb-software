@@ -26,23 +26,24 @@ if __name__ == '__main__' :
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
-    import sys, getopt
+    from DSTWriterTests.default_args import parser
+    parser.add_option('--p2pvmap', type='string', dest='p2pvmap', default='Particle2VertexRelations', help='Name Particle -> PV relations table containers [default: %default]')
+    parser.remove_option('--branch')
+    parser.set_defaults(output='p2pv.txt')
 
-    filename = ''
-    location = '/Event'
-    output = 'p2pv.txt'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
+    (options, args) = parser.parse_args()
 
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        elif o in ("-l", "--location") :
-            location = a
-        elif o in ('-o', '--output') :
-            output = a
-            
-    assert(filename != '')
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
 
+    filename = args[0]
+    location = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    p2pvmapname = '/' + options.p2pvmap
+    p2pvmapname.replace('//', '/')
+    
     outputFile = open(output, 'w')
 
     lhcbApp = LHCbApp(DDDBtag = 'default',
@@ -59,7 +60,7 @@ if __name__ == '__main__' :
 
     evtSel = appMgr.evtSel()
 
-    nextEvent = Functors.NextEvent(appMgr)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     evtSel.open(filename)
 
@@ -78,20 +79,23 @@ if __name__ == '__main__' :
             if particles :
                 p2pvSummaries[leaf] = P2PVSummaryInfo(particles.size())
                 p2pvloc = leaf.replace('/Particles',
-                                       '/Particle2VertexRelations')
+                                       p2pvmapname)
                 p2pv = evtSvc[p2pvloc]
                 if p2pv :
-                    print 'Found Particle->PV', p2pv.relations().size(), 'relations in', p2pvloc
+                    if verbose :
+                        print 'Found Particle->PV', p2pv.relations().size(), 'relations in', p2pvloc
                     for p in particles :
                         rng = p2pv.relations(p)
                         if not rng.empty():
-                            print 'Found a relation'
+                            if verbose :
+                                print 'Found a relation'
                             for rel in rng :
                                 pv = rel.to()
                                 pvLoc = pv.parent().registry().identifier()
                                 p2pvSummaries[leaf].addEntry(pvLoc, 1)
                         else :
-                            print 'Particle->PV relations empty'
+                            if verbose :
+                                print 'Particle->PV relations empty'
     print '==================================================================='
     message = 'Analysed ' + str(nEvents) + ' in location ' + location
     outputFile.write(message+'\n')

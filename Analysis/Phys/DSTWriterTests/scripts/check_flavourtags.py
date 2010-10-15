@@ -34,25 +34,24 @@ def analyseParticlesAndFlavTags(particles, flavTags) :
         
 if __name__ == '__main__' :
 
-    locationRoot = '/Event/Bu2JpsiK'
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='flavtags.txt')
 
-    microDSTFile = ['']
+    (options, args) = parser.parse_args()
+        
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
 
-    opts, args = getopt.getopt(sys.argv[1:], "i:r:h", ["input=", "root=", "help"])
+    filename = args[0]
+    locationRoot = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    branch  = options.branch                                    
 
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            printHelp()
-        elif o in ("-i", "--input"):
-            microDSTFile=a
-        elif o in ("-r", "--root"):
-            locationRoot = a
+    particleLoc = locationRoot + '/' + branch + '/Particles'
+    flavTagLoc= locationRoot + '/' + branch + '/FlavourTags'
 
-#    particleLoc = locationRoot + '/Dimuon/Phys/StdLooseMuons/Particles'
-    particleLoc = locationRoot + '/Dimuon/Phys/Bu2JpsiKLine/Particles'
-    flavTagLoc= locationRoot + '/Dimuon/Phys/Bu2JpsiKLine/FlavourTags'
-#    pvLoc       = locationRoot +  '/Rec/Vertex/Primary'
-#    pvLoc       = locationRoot +  '/Phys/SelBs2Jpsi2MuMuPhi2KK/ReFitPVs_SeqBs2Jpsi2MuMuPhi2KK_PVs'
     # Configuration
 
     from GaudiConf.Configuration import *
@@ -83,10 +82,10 @@ if __name__ == '__main__' :
     tsvc= appMgr.toolsvc()
 
     from AnalysisPython import Functors
-    nextEvent = Functors.NextEvent(appMgr, EvtMax=10)
+    nextEvent = Functors.NextEvent(appMgr, EvtMax=nevents)
 
     # open a DST or MicroDST
-    evtSel.open(microDSTFile)
+    evtSel.open(filename)
 
     nEvents=0
 

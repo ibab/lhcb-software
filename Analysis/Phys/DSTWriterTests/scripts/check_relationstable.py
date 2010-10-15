@@ -2,7 +2,7 @@
 '''
 Check standard TES locations with Particle->PV relations in a DST and print a summary of the number relations for each From, To TES location pair. Uses stored Particle->PV relations tables.
 Useage:
-./check_p2pvtable.py --input <some file name> --location <location of trunk - default "/Event"> --table-name <Name of relations table. Default: Particle2VertexRelations> --output <output file name>
+./check_p2pvtable.py --help
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -19,28 +19,20 @@ if __name__ == '__main__' :
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
-    import sys, getopt
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='relations.txt')
 
-    filename = ''
-    location = '/Event'
-    tablename = 'Particle2VertexRelations'
-    output = 'relations.txt'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i:t:o", ["input=",
-                                                       "location=",
-                                                       "table-name=",
-                                                       "output="])
+    (options, args) = parser.parse_args()
 
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        if o in ("-l", "--location") :
-            location = a
-        if o in ("-t", "--table-name") :
-            tablename = a
-        elif o in ('-o', '--output') :
-            output = a
-            
-    assert(filename != '')
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
+
+    filename = args[0]
+    location = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    tablename  = options.branch                                        
 
     outputFile = open(output, 'w')
 
@@ -58,7 +50,7 @@ if __name__ == '__main__' :
 
     evtSel = appMgr.evtSel()
 
-    nextEvent = Functors.NextEvent(appMgr)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     evtSel.open(filename)
 
@@ -77,7 +69,8 @@ if __name__ == '__main__' :
             if p2pv :
                 rels = p2pv.relations()
                 if not rels.empty() :
-                    print 'Found Particle->PV', rels.size(), 'relations in', leaf
+                    if verbose :
+                        print 'Found Particle->PV', rels.size(), 'relations in', leaf
                     for r in rels :
                         pv = r.to()
                         p = r._from()
@@ -85,23 +78,30 @@ if __name__ == '__main__' :
                         pLoc = p.parent().registry().identifier()
                         addEntry(p2pvSummaries, (pLoc, pvLoc), 1 )
                 else :
-                    print 'Particle->PV relations', leaf, 'empty'
+                    if verbose :
+                        print 'Particle->PV relations', leaf, 'empty'
 
-    print '==================================================================='
-    message = 'Analysed ' + str(nEvents) + ' events in location ' + location
-    outputFile.write(message+'\n')
-    print message
+    _printMessage = '===================================================================\n'
+    message = 'Analysed ' + str(nEvents) + ' events in location ' + location + ', ' + tablename +'\n'
+    _printMessage += message
+    outputFile.write(message)
+    _printMessage += message
     for key, value in p2pvSummaries.iteritems() :
-        separator = '-----------------------------------------------------------------'
-        outputFile.write(separator+'\n')
-        print separator
+        separator = '-----------------------------------------------------------------\n'
+        outputFile.write(separator)
+        _printMessage += separator
         message = str( key ) + ' : ' + str( value ) + ' entries'
         outputFile.write(message+'\n')
-        print message
+        _printMessage += message
         outputFile.write(separator+'\n')
-        print separator
+        _printMessage += separator
 
     outputFile.write(separator+'\n')
-    print separator
-    print 'Wrote summary to', output
+
+    _printMessage += separator
+    _printMessage += 'Wrote summary to' + output
+
+    if verbose :
+        print _printMessage
+        
     outputFile.close()
