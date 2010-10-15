@@ -22,7 +22,9 @@ __all__ = ('parser')
 
 from optparse import OptionParser
 
-parser = OptionParser()
+_usage = "%prog filename [options]"
+
+parser = OptionParser(_usage)
 
 parser.add_option('-o', '--output', type='string', dest='output', default='dst_summary.txt', help='Name of output file with contents summary [default: %default]')
 
