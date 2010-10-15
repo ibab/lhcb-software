@@ -1,4 +1,4 @@
-// $Id: CPUDisplay.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
+// $Id: CPUDisplay.cpp,v 1.7 2010-10-15 08:06:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.7 2010-10-15 08:06:25 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -79,7 +79,7 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
     t1 = cs.time;
     ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
     ::sprintf(txt," %-8s %8s %15s %5d %5.0f %5.0f %5.0f %8.3f %9.3f %8.3f %8.3f %10.2f %8.3f %8.3f",
-              cs.name,text,cs.family,cs.cores.size(),float(cs.memory/1024),float(cs.memfree/1024),
+              cs.name,text,cs.family,cs.cores.size(),double(cs.memory/1024),double(cs.memfree/1024),
 	      cs.ctxtRate,avg.user,avg.system,avg.nice,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ);
     ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
   }

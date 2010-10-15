@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.47 2010-10-15 07:42:00 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.48 2010-10-15 08:06:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.47 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.48 2010-10-15 08:06:25 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -800,7 +800,7 @@ void FarmDisplay::handle(const Event& ev) {
         if ( m_subfarmDisplay->numNodes()>pos ) {
           RTL::Lock unlock(screenLock(),true);
           m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
-          handleKeyboard(m->button == 0 ? KPD_PERIOD : 'P');
+          handleKeyboard(m->button == 0 ? int(KPD_PERIOD) : int('P'));
         }
       }
     }
@@ -851,9 +851,8 @@ void FarmDisplay::handle(const Event& ev) {
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
         InternalDisplay* d = (*k).second;
         if ( d == ev.data )  {
-          RTL::Lock unlock(screenLock(),true);
           m_posCursor = cnt;
-          showSubfarm();
+	  IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
           return;
         }
       }
@@ -870,7 +869,7 @@ void FarmDisplay::handle(const Event& ev) {
       break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay )   {
-        IocSensor::instance().send(m_subfarmDisplay,ROMonDisplay::CMD_UPDATEDISPLAY,this);
+        IocSensor::instance().send(m_subfarmDisplay,  ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_sysDisplay.get() )   {
         IocSensor::instance().send(m_sysDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
@@ -888,18 +887,18 @@ void FarmDisplay::handle(const Event& ev) {
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
     case CMD_ADD:
-      i = find(m_farms.begin(),m_farms.end(),*(string*)ev.data);
+      i = find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>());
       if ( i == m_farms.end() ) {
-        m_farms.push_back(*(string*)ev.data);
+        m_farms.push_back(*ev.iocPtr<string>());
         connect(m_farms);
       }
-      delete (string*)ev.data;
+      delete ev.iocPtr<string>();
       return;
     case CMD_CONNECT: {
       DisplayUpdate update(this,false);
-      m_farms = *(StringV*)ev.data;
+      m_farms = *ev.iocPtr<StringV>();
       connect(m_farms);
-      delete (StringV*)ev.data;
+      delete ev.iocPtr<StringV>();
       return;
     }
     case CMD_CHECK: {
