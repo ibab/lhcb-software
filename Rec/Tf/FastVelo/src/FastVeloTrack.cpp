@@ -1,8 +1,5 @@
 // $Id: $
 // Include files 
-#include <cmath>
-#include <algorithm>
-#include "Math/CholeskyDecomp.h"
 
 // local
 #include "FastVeloTrack.h"
@@ -272,31 +269,38 @@ void FastVeloTrack::fitTrack ( ) {
 //  Thanks to Manule Schiller (Heidelberg) for the hint
 //=========================================================================
 void FastVeloTrack::solve() {
+  // Now solve the system...
+  double a1 = m_sa2z  * m_sa2z  - m_sa2   * m_sa2z2;
+  double a2 = m_sa2z  * m_sab   - m_sa2   * m_sabz ;
+  double a3 = m_sa2z  * m_sabz  - m_sa2   * m_sabz2;
+  double ac = m_sa2z  * m_sac   - m_sa2   * m_sacz ;
+  
+  double b1 = m_sab   * m_sa2z  - m_sa2   * m_sabz ;
+  double b2 = m_sab   * m_sab   - m_sa2   * m_sb2  ;
+  double b3 = m_sab   * m_sabz  - m_sa2   * m_sb2z ;
+  double bc = m_sab   * m_sac   - m_sa2   * m_sbc  ;
+  
+  double c1 = m_sabz  * m_sa2z  - m_sa2   * m_sabz2;
+  double c2 = m_sabz  * m_sab   - m_sa2   * m_sb2z ;
+  double c3 = m_sabz  * m_sabz  - m_sa2   * m_sb2z2;
+  double cc = m_sabz  * m_sac   - m_sa2   * m_sbcz ;
+  
+  //== now 3 equations...
 
-  double m[10];
-  m[0] = m_sa2;
-  m[1] = m_sa2z;
-  m[2] = m_sa2z2;
-  m[3] = m_sab;
-  m[4] = m_sabz;
-  m[5] = m_sb2;
-  m[6] = m_sabz;
-  m[7] = m_sabz2;
-  m[8] = m_sb2z;
-  m[9] = m_sb2z2;
-  double s[4];
-  s[0] = m_sac;
-  s[1] = m_sacz;
-  s[2] = m_sbc;
-  s[3] = m_sbcz;
-
-  ROOT::Math::CholeskyDecomp<double,4> decomp( m );
-
-  decomp.Solve( s );
-  m_x0 = m[0];
-  m_tx = s[1];
-  m_y0 = s[2];
-  m_ty = s[3];
+  double d1 = b1 * a2 - a1 * b2;
+  double d2 = b1 * a3 - a1 * b3;
+  double dc = b1 * ac - a1 * bc;
+  
+  double e1 = c1 * a2 - a1 * c2;
+  double e2 = c1 * a3 - a1 * c3;
+  double ec = c1 * ac - a1 * cc;
+  
+  double den = 1./(e1 * d2 - d1 * e2);
+  
+  m_ty =  ( d1 * ec - e1 * dc ) * den;
+  m_y0 =  ( e2 * dc - d2 * ec ) * den;
+  m_tx = - ( ac  + a2   * m_y0 + a3  * m_ty ) / a1;
+  m_x0 = - ( m_sac + m_sa2z * m_tx + m_sab * m_y0 + m_sabz * m_ty ) / m_sa2;
 }
 
 //=========================================================================

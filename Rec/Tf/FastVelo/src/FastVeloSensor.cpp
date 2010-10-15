@@ -15,7 +15,7 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-FastVeloSensor::FastVeloSensor( DeVeloRType* rSensor ) : 
+FastVeloSensor::FastVeloSensor( DeVeloRType* rSensor, double xBeam, double yBeam ) : 
   m_next( -1 ),
   m_previous(-1),
   m_isRSensor( true ),
@@ -23,7 +23,7 @@ FastVeloSensor::FastVeloSensor( DeVeloRType* rSensor ) :
   m_phiSensor( NULL )  
 {
   m_sensor = dynamic_cast<DeVeloSensor*>( rSensor );
-  setGeometry( rSensor );
+  setGeometry( rSensor, xBeam, yBeam );
 
   //== Create four vector for the hits
   FastVeloHits dum;
@@ -36,7 +36,7 @@ FastVeloSensor::FastVeloSensor( DeVeloRType* rSensor ) :
 //=========================================================================
 //  Constructor for Phi sensors
 //=========================================================================
-FastVeloSensor::FastVeloSensor( DeVeloPhiType* phiSensor ) :
+FastVeloSensor::FastVeloSensor( DeVeloPhiType* phiSensor, double xBeam, double yBeam ) :
   m_next( -1 ),
   m_previous(-1),
   m_isRSensor( false ),
@@ -44,7 +44,7 @@ FastVeloSensor::FastVeloSensor( DeVeloPhiType* phiSensor ) :
   m_phiSensor( phiSensor )  
 {
   m_sensor = dynamic_cast<DeVeloSensor*>( phiSensor );
-  setGeometry( phiSensor );
+  setGeometry( phiSensor, xBeam, yBeam );
 
   //== Create two vector for the hits
   FastVeloHits dum;
@@ -72,7 +72,7 @@ FastVeloSensor::FastVeloSensor( DeVeloPhiType* phiSensor ) :
 //=========================================================================
 //  Set the geometry, i.e. cache information
 //=========================================================================
-void FastVeloSensor::setGeometry ( DeVeloSensor* sensor ) {
+void FastVeloSensor::setGeometry ( DeVeloSensor* sensor, double xBeam, double yBeam ) {
   m_number  = sensor->sensorNumber();
   m_isRight = sensor->isRight();
   m_z       = sensor->z();
@@ -84,16 +84,19 @@ void FastVeloSensor::setGeometry ( DeVeloSensor* sensor ) {
   m_dzDy = ( temp.z() - m_centre.z() ) / ( temp.y() - m_centre.y() );
 
   m_rOffset.clear();
+  double xOffset = m_centre.x() - xBeam;
+  double yOffset = m_centre.y() - yBeam;
+  
   if ( m_isRight ) {
-    m_rOffset.push_back( -cos( -.375 * Gaudi::Units::pi ) * m_centre.x() - sin(-.375 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back( -cos( -.125 * Gaudi::Units::pi ) * m_centre.x() - sin(-.175 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back( -cos(  .125 * Gaudi::Units::pi ) * m_centre.x() - sin( .175 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back( -cos(  .375 * Gaudi::Units::pi ) * m_centre.x() - sin( .375 * Gaudi::Units::pi ) * m_centre.y() );
+    m_rOffset.push_back( -cos( -.375 * Gaudi::Units::pi ) * xOffset - sin(-.375 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back( -cos( -.125 * Gaudi::Units::pi ) * xOffset - sin(-.175 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back( -cos(  .125 * Gaudi::Units::pi ) * xOffset - sin( .175 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back( -cos(  .375 * Gaudi::Units::pi ) * xOffset - sin( .375 * Gaudi::Units::pi ) * yOffset );
   } else {
-    m_rOffset.push_back(  cos( -.375 * Gaudi::Units::pi ) * m_centre.x() + sin(-.375 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back(  cos( -.125 * Gaudi::Units::pi ) * m_centre.x() + sin(-.175 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back(  cos(  .125 * Gaudi::Units::pi ) * m_centre.x() + sin( .175 * Gaudi::Units::pi ) * m_centre.y() );
-    m_rOffset.push_back(  cos(  .375 * Gaudi::Units::pi ) * m_centre.x() + sin( .375 * Gaudi::Units::pi ) * m_centre.y() );
+    m_rOffset.push_back(  cos( -.375 * Gaudi::Units::pi ) * xOffset + sin(-.375 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back(  cos( -.125 * Gaudi::Units::pi ) * xOffset + sin(-.175 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back(  cos(  .125 * Gaudi::Units::pi ) * xOffset + sin( .175 * Gaudi::Units::pi ) * yOffset );
+    m_rOffset.push_back(  cos(  .375 * Gaudi::Units::pi ) * xOffset + sin( .375 * Gaudi::Units::pi ) * yOffset );
   }
 }
 //=============================================================================

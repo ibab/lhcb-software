@@ -15,9 +15,9 @@
 class FastVeloSensor {
 public: 
   /// Standard constructor
-  FastVeloSensor( DeVeloRType* rSensor ); 
+  FastVeloSensor( DeVeloRType* rSensor, double xBeam, double yBeam ); 
 
-  FastVeloSensor( DeVeloPhiType* phiSensor ); 
+  FastVeloSensor( DeVeloPhiType* phiSensor, double xBeam, double yBeam ); 
 
   virtual ~FastVeloSensor( ) {}; ///< Destructor
 
@@ -60,7 +60,7 @@ public:
 
 protected:
 
-  void setGeometry ( DeVeloSensor* sensor );
+  void setGeometry ( DeVeloSensor* sensor, double xBeam, double yBeam );
 
 private:
   unsigned int    m_number;

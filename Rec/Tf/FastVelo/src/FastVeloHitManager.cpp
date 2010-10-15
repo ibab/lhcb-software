@@ -75,11 +75,14 @@ StatusCode FastVeloHitManager::initialize() {
 //=========================================================================
 StatusCode FastVeloHitManager::rebuildGeometry ( ) {
 
-  info() << "Updating the geometry... " << endmsg;
-
   m_lastXOffsetRight = m_velo->halfBoxOffset(0).x();
   m_lastXOffsetLeft  = m_velo->halfBoxOffset(1).x();
+
+  double xBeam = .5 * ( m_velo->halfBoxOffset(0).x() + m_velo->halfBoxOffset(1).x() );
+  double yBeam = .5 * ( m_velo->halfBoxOffset(0).y() + m_velo->halfBoxOffset(1).y() );
   
+  info() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam << endmsg;
+
   for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;
   }
@@ -94,7 +97,7 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
   for ( std::vector<DeVeloRType*>::const_iterator itR = m_velo->rSensorsBegin();
         m_velo->rSensorsEnd() > itR; ++itR ) {
     if ( !(*itR)->isReadOut() ) continue;
-    FastVeloSensor* sens = new FastVeloSensor( *itR );
+    FastVeloSensor* sens = new FastVeloSensor( *itR, xBeam, yBeam );
     while ( m_sensors.size() < sens->number() ) {
       m_sensors.push_back( 0 );
     }
@@ -115,7 +118,7 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
   for ( std::vector<DeVeloPhiType*>::const_iterator itP = m_velo->phiSensorsBegin();
         m_velo->phiSensorsEnd() > itP; ++itP ) {
     if ( !(*itP)->isReadOut() ) continue;
-    FastVeloSensor* sens = new FastVeloSensor( *itP );
+    FastVeloSensor* sens = new FastVeloSensor( *itP, xBeam, yBeam );
     while ( m_sensors.size() < sens->number() ) {
       m_sensors.push_back( 0 );
     }

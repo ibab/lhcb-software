@@ -4,6 +4,12 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Olivier Callot
+ - In fact the linear system was not properly solved, and once fixed the Cholesky
+   method is slower. I then put back the previous code.
+ - Use the beam position as reference frame for RZ tracking, by correcting the 
+   sensor offsets by the beam position.
+
 ! 2010-10-14 - Olivier Callot
  - As suggested by Manuel Schiller, the linear system is now solved using the
    Cholesky decomposition he wrote and which is now in ROOT. \
