@@ -111,8 +111,6 @@ CaloDLLs.Members +=
     , "HcalPIDmuAlg/HcalPIDmu" 
   };
 
-//#include "$CALORECOOPTS/CaloPIDs.opts" // Histogram file defined in RecSysConf()
-#include "$CALORECOOPTS/NeutralPIDs.opts"
 
 CaloDigits.MeasureTime     = true ;
 CaloClusters.MeasureTime   = true ;

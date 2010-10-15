@@ -6,6 +6,10 @@
 
 ! -----------------------------------------------------------------------------
 
+- 2010-10-15 - Olivier Deschamps :
+ - Clean obsolete options file
+
+
 !========================== CaloReco v5r7  2010-09-24 =======================
 - 2010-09-24 - Olivier Deschamps :
  - Uncomment correction
