@@ -7,6 +7,8 @@
 ! 2010-10-15 - Juan Palacios
  - Add module DSTWriterTests.default_args
   . Contains parser, an OptionParser with defaults for DST analysis scripts.
+ - scripts/*.py
+  . Use new OptionsParser. Produce meaningful output with x.py --help.
  - Increase to v2r0.
 
 ! ========================== DstwriterTests v1r7 2010-10-03 ==================
