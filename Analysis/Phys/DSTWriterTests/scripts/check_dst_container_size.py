@@ -2,13 +2,10 @@
 '''
 Check some TES locations in a DST and print a summary of the number of events selected by each line.
 Useage:
-./check_dst_contents.py --input <some file name> --location <TES root of selected particles> --output <output file name>
+./check_dst_contents.py --help
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
-
-from GaudiConf.Configuration import *
-from ROOT import TFile, TTree, TObject, TList
 
 class TreeInfo(object) :
     def __init__(self, tree) :
@@ -19,7 +16,7 @@ class TreeInfo(object) :
         self.entries = tree.GetEntries()
 
 def getTreeInfo( filename, trunk ) :
-
+    from ROOT import TFile
     file = TFile.Open(filename)
     summary = []
     if file :
@@ -31,6 +28,7 @@ def getTreeInfo( filename, trunk ) :
                     summary.append( TreeInfo( tree ) )
     else :
         print 'ERROR: Could not open file', filename
+    file.Close()
     return summary
 
    
@@ -39,7 +37,9 @@ if __name__ == '__main__' :
     from DSTWriterTests.default_args import parser
     parser.set_defaults(output='dst_sizes.txt')
     parser.set_defaults(location='/')
-
+    parser.remove_option('--nevents')
+    parser.remove_option('--branch')
+    
     (options, args) = parser.parse_args()
 
     if len(args) != 1 :
