@@ -51,7 +51,7 @@ namespace ST {
 
     /// Calculate the different PCN/header configuration for each Beetle port
     void calcPCNConfigs( const LHCb::STTELL1Datas* data );
-    std::vector<char> m_portHeader;/// PCN/Header configuration for each port in this event
+    std::vector<unsigned long> m_portHeader;/// PCN/Header configuration for each port in this event
 
     /// Calculation of pedestals
     void sumPedestals(const LHCb::STTELL1Datas* data );

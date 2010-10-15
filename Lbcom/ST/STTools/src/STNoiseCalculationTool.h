@@ -10,7 +10,11 @@
 /** @class STNoiseCalculationTool STNoiseCalculationTool.h
  *
  *  The noise per strip of the TELL1s is calculated for all TELL1s.  
- *  Implements abstract methods of STNoiseToolBase class.
+ *  Implements abstract methods of STNoiseToolBase class.  The noise
+ *  is calculated from the ADCs given in the InputData location.
+ *  In this tool, the CMS noise returned is identical to the raw noise.
+ *  There is no outlier rejection performed yet so this tool should only 
+ *  be used to look at the noise in low occupancy events.
  *
  *  @author J. van Tilburg, N. Chiapolini
  *  @date   10/02/2009

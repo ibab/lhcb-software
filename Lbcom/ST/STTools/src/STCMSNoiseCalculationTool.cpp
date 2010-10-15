@@ -440,7 +440,7 @@ void ST::STCMSNoiseCalculationTool::sumPedestals(const LHCb::STTELL1Datas* data 
 	
         int iPort;
         for ( iPort = 0; iPort < 4; iPort++ ) {
-          int header = m_portHeader[iPort];
+          unsigned long header = m_portHeader[iPort];
           unsigned int iStrip = 0;
           for ( ; iStrip < LHCbConstants::nStripsInPort ; ++iStrip) {
             int strip = iStrip + iPort*LHCbConstants::nStripsInPort + beetle*LHCbConstants::nStripsInBeetle;

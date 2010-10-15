@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-10-15 Mark Tobin
+ - Fix windows compilation error and (hopefully) some warnings.
+ - Clarified some documentation in the code.
+
 ! 2010-10-14 Mark Tobin
  - All changes below related to noise calculation tool.
  - Renamed noise calculation base class to STNoiseToolBase

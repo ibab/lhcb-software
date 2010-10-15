@@ -127,7 +127,7 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
 
 
     // Local copy of pedestal and thresholds used on the TELL1
-    std::vector<std::pair<double, int> >* pedestals = &m_pedestalMaps[tellID][0];
+    //    std::vector<std::pair<double, int> >* pedestals = &m_pedestalMaps[tellID][0];
     std::vector<std::pair<double, double> >* thresholds = &m_thresholdMap[tellID];
 
     // Loop over the PPs that have sent data
@@ -157,7 +157,7 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
           bool updateCMS=true;
           if(m_removeOutliers) {
             //            if(fabs(rawValue-(*pedestals)[strip].first) > (*thresholds)[strip].first) updateRaw=false;
-            if(fabs(lcmsValue) > (*thresholds)[strip].second) updateCMS=false;
+            if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
           }
           // Calculate the pedestal and the pedestal squared
           if(updateRaw) {

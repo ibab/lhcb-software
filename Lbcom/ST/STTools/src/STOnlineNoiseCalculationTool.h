@@ -9,26 +9,10 @@
 
 /** @class STOnlineNoiseCalculationTool STOnlineNoiseCalculationTool.h
  *
- *  The noise per strip of the TELL1s is calculated for all TELL1s.  
- *  Implements abstract methods of STNoiseToolBase class.
- *  There are options for calculating the noise:
- *  - \b FollowPeriod: This is the period of the exponential moving average. It
- *    determines the lifetime of the averages (in number of events). As long as
- *    the number of processed events is smaller than FollowPeriod the average
- *    is a cumulative average. Set this to -1 to always use a cumulative
- *    averaging.
- *  - \b ResetRate: Rate at which the counters for the noise calculation are reset
- *    (in number of events). Set to -1 to do no reset (default).
- *  - \b SkipEvents: Number of events to be skipped. Useful when running over
- *     common-mode-subtracted data where the pedestals have not been calculated.
- *
- *  The noise values are stored in a map which is accessed via the source ID of the TELL1.
- *
- *  @author J. van Tilburg, N. Chiapolini
- *  @date   10/02/2009
+ *  Calculation of the raw and CMS noise optimised for round robin NZS data 
+ *  processed using the TELL1 emulator.  The tool calculates the raw and cms noise
+ *  using two input locations.
  *  
- *  Reimplementation of noise calculation in STNZSMonitor as a Tool
- *
  *  @author Mark Tobin
  *  @date   2009-10-01
  */
