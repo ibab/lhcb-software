@@ -91,7 +91,9 @@ void B2DHMvaPreSelectionCutsTool::setBs2DsKCutValues() {
   m_dllProtonSecCut_Bs2DsK = -50.0;
   m_dllKaonMinusProtonSecCut_Bs2DsK= -20.0;
   
-  m_fisherDCutValue_Bs2DsK=0.75;
+  //  m_fisherDCutValue_Bs2DsK=0.75; // cut in probability value
+  m_fisherDCutValue_Bs2DsK=-0.04; // cut in response value
+  
   
 
 }
@@ -137,7 +139,9 @@ void B2DHMvaPreSelectionCutsTool::setBs2DsPiCutValues(){
   m_ipsBachelorCutValue_Bs2DsPi=3.0;
   
 
-  m_fisherDCutValue_Bs2DsPi =0.55;
+  //  m_fisherDCutValue_Bs2DsPi =0.55; // cut in probability value
+  m_fisherDCutValue_Bs2DsPi =-0.04; // cut in response value
+
   
 }
 void B2DHMvaPreSelectionCutsTool::setCutFlags_Common(){
@@ -218,7 +222,9 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsK(){
   m_massWindowSel_Bs2DsK= m_massBsWindowSel_Bs2DsK && m_massDsWindowSel_Bs2DsK;
  
 
-  m_fisher_Sel_Bs2DsK =  m_B2DHMvaPreSelectionParamTool-> getfisherDProbValue() > m_fisherDCutValue_Bs2DsK;
+  m_fisher_Sel_Bs2DsK =  m_B2DHMvaPreSelectionParamTool->  getfisherDResponseVal() > m_fisherDCutValue_Bs2DsK;
+
+  //  m_fisher_Sel_Bs2DsK =  m_B2DHMvaPreSelectionParamTool-> getfisherDProbValue() > m_fisherDCutValue_Bs2DsK;
 
   //  info()<<" Aux settings  auxCutBs2DsK= "<<m_auxCut_Bs_Bs2DsK <<"  m_auxCut_Dll_Bs2DsK=   " 
   //      <<m_auxCut_Dll_Bs2DsK  << " fisher Cut =  "<< m_fisher_Sel_Bs2DsK <<endmsg;
@@ -301,7 +307,9 @@ void B2DHMvaPreSelectionCutsTool::setCutFlags_Bs2DsPi(){
                   (m_B2DHMvaPreSelectionParamTool-> dvtxchisq() < m_vtxDsChisqCutValue_Bs2DsPi);
 
   
-   m_fisher_Sel_Bs2DsPi =  m_B2DHMvaPreSelectionParamTool-> getfisherDProbValue() > m_fisherDCutValue_Bs2DsPi;
+   m_fisher_Sel_Bs2DsPi =  m_B2DHMvaPreSelectionParamTool-> getfisherDResponseVal() > m_fisherDCutValue_Bs2DsPi;
+
+   //   m_fisher_Sel_Bs2DsPi =  m_B2DHMvaPreSelectionParamTool-> getfisherDProbValue() > m_fisherDCutValue_Bs2DsPi;
   
 }
 bool B2DHMvaPreSelectionCutsTool::ApplyPreTrainSel() {

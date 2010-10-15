@@ -11,6 +11,8 @@
 // local
 #include "B2DHMvaPreSelectionParamTool.h"
 
+//#include "TMVAnalysis_Bd2DH_F621Sph_FisherD.class.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : B2DHMvaPreSelectionParamTool
 //
@@ -68,7 +70,11 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
     m_bProtonSecDll(std::vector<double> (0))
 {
   declareInterface<IB2DHMvaPreSelectionParamTool>(this);
-     m_B2DHFisherDReader=new TMVA::Reader();
+
+
+
+  //     m_B2DHFisherDReader=new TMVA::Reader();
+
 
 }
 //=============================================================================
@@ -119,14 +125,19 @@ StatusCode B2DHMvaPreSelectionParamTool::BookMvaForFisherD(std::string WeightFil
   
   sc = sc && getFisherDStringVar();
  
-  for(int i=0; i< m_numFisherDParam; ++i ) {
-    m_B2DHFisherDReader->AddVariable( m_FisherDStringVarList[i], &m_FisherDParamListInFloat[i]);
-  }
-  info()<<" B2DHSelectionParamTool : Now the Selection weights are from "<<WeightFileName
+  //  for(int i=0; i< m_numFisherDParam; ++i ) {
+  //  m_B2DHFisherDReader->AddVariable( m_FisherDStringVarList[i], &m_FisherDParamListInFloat[i]);
+  // }
+
+  m_B2DHFisherDReader=new ReadFisherD(m_FisherDStringVarList);
+  
+
+    info()<<" B2DHSelectionParamTool : Now the Selection weights are from StandAlone class for "<<WeightFileName
         << ", for the classifier "<<ClassifierMethodName 
         <<  "for Channel number  " <<m_current_B2DH_channel_Number<<  endmsg;
 
-   m_B2DHFisherDReader->BookMVA(m_classifierName ,WeightFileName );
+
+    // m_B2DHFisherDReader->BookMVA(m_classifierName ,WeightFileName );
    
 
    info()<<" B2DHSelectionParamTool : Booked Fisher method "<<endmsg;
@@ -135,6 +146,9 @@ StatusCode B2DHMvaPreSelectionParamTool::BookMvaForFisherD(std::string WeightFil
   
   return sc;  
 }
+
+
+
 StatusCode B2DHMvaPreSelectionParamTool::getFisherDStringVar() {
    StatusCode sc = StatusCode::SUCCESS;
 
@@ -154,11 +168,11 @@ StatusCode B2DHMvaPreSelectionParamTool::getFisherDStringVar() {
   
   
     
-   m_FisherDStringVarList[0]= "log(FSBs+100)";
-   m_FisherDStringVarList[1]= "log(IpsPiKBachlor/IpsBs)";
+   m_FisherDStringVarList[0]= "log(FSBd+100)";
+   m_FisherDStringVarList[1]= "log(IpsPiKBachlor/IpsBd)";
    m_FisherDStringVarList[2]= "log(MomPiKBachlor)";
-   m_FisherDStringVarList[3]= "log(BMomentum*sin(acos(CosBs)))";
-   m_FisherDStringVarList[4]= "log((IpsPiSec_0*IpsPiSec_1*IpsPiSec_2)/IpsBs)";
+   m_FisherDStringVarList[3]= "log(BMomentum*sin(acos(CosBd)))";
+   m_FisherDStringVarList[4]= "log((IpsPiSec_0*IpsPiSec_1*IpsPiSec_2)/IpsBd)";
    m_FisherDStringVarList[5]= "log(PtPiSec_0*PtPiSec_1*PtPiSec_2)";
    m_FisherDStringVarList[6]= "log(dvtxchi2)";
    m_FisherDStringVarList[7]= "log(bvtxchi2)";
@@ -212,10 +226,16 @@ StatusCode B2DHMvaPreSelectionParamTool::acquireSelectionParams(const LHCb::Part
     for(int i=0; i< m_numFisherDParam; ++i ) {
       m_FisherDParamListInFloat[i] = static_cast <Float_t> (m_FisherDParamList[i]);
     }
-  
-    double afisherProb = evaluateFisherDProb();
-    verbose()<<" CurrentfisherProb Value "<<afisherProb<<endmsg;
+    
+    const std::vector<double> aFisherDParamListInDouble =m_FisherDParamList;
+    
+    double afisherMVa = evaluateFisherResponseValWithStandAlone( aFisherDParamListInDouble );
+    
+      //    double afisherProb = evaluateFisherDProb();
+      //verbose()<<" CurrentfisherProb Value "<<afisherProb<<endmsg;
 
+      verbose()<< " Current Fisher Mva Value is "<<afisherMVa<<endmsg;
+    
 
   
 
@@ -587,28 +607,38 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionCutsParamsForSecondaryDaugh
 double B2DHMvaPreSelectionParamTool::evaluateFisherDProb() {
 
   
-  m_responseValue = evaluateFisherResponseVal();
+  // m_responseValue = evaluateFisherResponseVal();
 
-  m_probValue = m_B2DHFisherDReader->GetProba ( m_classifierName);
+  //  m_probValue = m_B2DHFisherDReader->GetProba ( m_classifierName);
   //info()<<" Channel num FisherResponse prob Val "<<m_current_B2DH_channel_Number
   //       <<"   "<<  m_responseValue<<"  "<< m_probValue  << endmsg;
   
 
   return  m_probValue  ;
   
-  // return m_probValue;
+  // return m_probValue;data/2010/SDST/00006563
 }
 double B2DHMvaPreSelectionParamTool::evaluateFisherResponseVal(){
   
   //info()<<" evalresponse current channel classifier "<<  m_current_B2DH_channel_Number <<"   "
   //      <<  m_classifierName<<endmsg;
   
-  double aresponseVal =  m_B2DHFisherDReader->EvaluateMVA( m_classifierName);
+  //  double aresponseVal =  m_B2DHFisherDReader->EvaluateMVA( m_classifierName);
   //info()<< "current response value "<<aresponseVal<<endmsg;
+  double aresponseVal=0.0;
   
   return aresponseVal;
   
   }
+
+double B2DHMvaPreSelectionParamTool::evaluateFisherResponseValWithStandAlone(const std::vector<double>& aParamList )
+{
+  double m_responseValue  = m_B2DHFisherDReader->GetMvaValue (aParamList );
+  
+  return  m_responseValue;
+  
+}
+
 void B2DHMvaPreSelectionParamTool::setfisherDProbValue(double aProbVal) {
   
   m_probValue=aProbVal;

@@ -32,6 +32,8 @@ public:
   virtual double evaluateFisherDProb()=0;
   virtual double getfisherDProbValue()=0;
   virtual double getfisherDResponseVal()=0;
+  virtual double evaluateFisherResponseValWithStandAlone(const std::vector<double>& aParamList )=0;
+  
   virtual  std::string get_classifierName()=0;
   virtual  std::string get_weightFileName()=0;
   

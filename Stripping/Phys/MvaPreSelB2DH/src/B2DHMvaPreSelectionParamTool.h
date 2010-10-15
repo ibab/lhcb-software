@@ -8,9 +8,11 @@
 #include "IB2DHMvaPreSelectionParamTool.h"            // Interface
 
 #include "Kernel/IDistanceCalculator.h"
-#include <TMVA/Reader.h>
+//#include <TMVA/Reader.h>
 
 #include "IB2DHPreselMvaUtilityTool.h"      // Interface
+//#include "IClassifierReader.h"
+#include "TMVAnalysis_Bd2DH_F621Sph_FisherD.class.h"
 
 class IDistanceCalculator;
 class DVAlgorithm;
@@ -79,6 +81,9 @@ public:
   virtual double getfisherDResponseVal()
   {  return m_responseValue;}
 
+  virtual double evaluateFisherResponseValWithStandAlone(const std::vector<double>& aParamList );
+  
+
   virtual  std::string get_classifierName(){  return m_classifierName;}
   virtual  std::string get_weightFileName(){  return m_weightFileName;}
   
@@ -121,7 +126,7 @@ public:
   virtual std::vector<double> bProtonSecDll(){ return  m_bProtonSecDll;}
 
   virtual std::vector<double> FisherDParamList(){  return m_FisherDParamList;}
-
+  
 
 protected:
 
@@ -133,8 +138,9 @@ private:
   IB2DHPreselMvaUtilityTool * m_B2DHPreselMvaUtilityTool;
 
   
-  
-   TMVA::Reader * m_B2DHFisherDReader;
+  IClassifierReader*   m_B2DHFisherDReader;
+
+  //   TMVA::Reader * m_B2DHFisherDReader;
   
   int m_maxNumPhysicsChannelsToSelect;
   

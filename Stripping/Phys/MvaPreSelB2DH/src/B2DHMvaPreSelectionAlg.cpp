@@ -107,15 +107,17 @@ StatusCode B2DHMvaPreSelectionAlg::execute() {
          partsBs =get<LHCb::Particles>( (*iLoc) + "/Particles" );
 
          // partsBs =get<LHCb::Particles>(m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel));
+           verbose()<<" Current Bs Location partsBs "<<m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel)<<" "
+                 <<partsBs<< "   "<<endmsg;
 
           if(partsBs) {
             int aSize= (int) partsBs->size();
             resetEventSelectionParams(aSize);
           
-           //info()<<" Current Bs Location partsBs NumCand "<<m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel)<<" "
-           //      <<partsBs<< "   "<< aSize<< endmsg;
+           debug()<<" Current Bs Location partsBs NumCand "<<m_B2DHPreselMvaUtilityTool -> getcurrentBsLocation( m_curDecayChannel)<<" "
+                 <<partsBs<< "   "<< aSize<< endmsg;
           
-           // info()<<" Current Bs Location partsBs and size  "<<(*iLoc) + "/Particles" <<"   "<<(int) partsBs->size()<<  endmsg;
+            debug()<<" Current Bs Location partsBs and size  "<<(*iLoc) + "/Particles" <<"   "<<(int) partsBs->size()<<  endmsg;
 
           if ( aSize > 0 ) {
              m_numEvWithBs++;
@@ -136,13 +138,13 @@ StatusCode B2DHMvaPreSelectionAlg::execute() {
     if(  selCurEv ) {  // event is selected.
             m_numSelectedEvCounter++;
              setFilterPassed(true);  
-             // info()<<" This event is selected by FisherD+cuts  "<<endmsg;
+              debug()<<" This event is selected by FisherD+cuts  "<<endmsg;
 
     }else {
 
             m_numNotSelectedEvCounter++;
              setFilterPassed(false);  
-             //info()<<" This event not Selected by FisherD+cuts "<<endmsg;
+             debug()<<" This event not Selected by FisherD+cuts "<<endmsg;
     }
 
 
@@ -152,7 +154,7 @@ StatusCode B2DHMvaPreSelectionAlg::execute() {
      partsBs=0;
      setFilterPassed(false);  // Mandatory. Set to true if event is accepted. 
 
-      info()<<" No Preselected Bs in this event , possibly no BsLocation present "<<endmsg; 
+      debug()<<" No Preselected Bs in this event , possibly no BsLocation present "<<endmsg; 
    }
 
    //    info()<< "End of the current event in B2DHMvaPreSelectionAlg  "<<endmsg;
@@ -219,25 +221,25 @@ const LHCb::Particle* B2DHMvaPreSelectionAlg::performB2DHSelection ( const LHCb:
            if( m_B2DHMvaPreSelectionCutsTool ->  ApplyPreTrainSel()) {
              m_PreLimSelCandInEv++;
              m_fCandPrelimSel.push_back(curIndex);
-             //info()<<"Preselection successful for this candidate "<<endmsg;
+             debug()<<"Preselection successful for this candidate "<<endmsg;
              if(m_B2DHMvaPreSelectionCutsTool  -> ApplyFisherSel(m_curDecayChannel) ) {
                 m_FisherSelCandInEv++;
                 m_fCandFisherSel.push_back(curIndex);
 
-                //info()<< " Selected by FisherD "<<endmsg;
+                debug()<< " Selected by FisherD "<<endmsg;
                 if((m_ActivateStrippingSelection) ||  
                    ( m_B2DHMvaPreSelectionCutsTool -> ApplyAuxCuts(m_curDecayChannel)) ) {
                   m_AuxCutSelCandInEv++;
                   m_fCandAuxSel.push_back(curIndex);
-                  //info()<<" Selected by Auxiliary cuts "<<endmsg;
+                  debug()<<" Selected by Auxiliary cuts "<<endmsg;
                   if((m_ActivateStrippingSelection) ||  
                      ( m_B2DHMvaPreSelectionCutsTool  ->ApplyMassWindowCuts(m_curDecayChannel))) {
-                    //info()<<"Within Mass Windows "<<endmsg;
+                    debug()<<"Within Mass Windows "<<endmsg;
                         m_AllSelCandBeforeL0InEv++;
                         m_fCandAuxMassSel.push_back(curIndex);
                         
                         if( (m_ActivateStrippingSelection) || ( aL0Selected ) ) {
-                          //info()<<" L0 Selected "<<endmsg;
+                          debug()<<" L0 Selected "<<endmsg;
 
 
                            m_AllSelCandWithL0InEv++;      
