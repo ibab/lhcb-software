@@ -22,6 +22,7 @@ if __name__ == '__main__' :
 
     from DSTWriterTests.default_args import parser
     parser.set_defaults(output='dst_contents.txt')
+
     (options, args) = parser.parse_args()
 
     if len(args) != 1 :
@@ -31,6 +32,7 @@ if __name__ == '__main__' :
     locationRoot = options.root
     output = options.output
     verbose = options.verbose
+    nevents = options.nevents
     
     outputFile = open(output, 'w')
 
@@ -48,7 +50,7 @@ if __name__ == '__main__' :
 
     evtSel = appMgr.evtSel()
 
-    nextEvent = Functors.NextEvent(appMgr)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     evtSel.open(filename)
 
