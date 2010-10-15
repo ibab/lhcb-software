@@ -15,25 +15,35 @@ def addEntry(self, key, value) :
 
 if __name__ == '__main__' :
 
-    import sys, getopt
     from GaudiConf.Configuration import *
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
+    from DSTWriterTests.default_args import parser
 
-    decReportsLocation = '/Event/Strip/Phys/DecReports'
-    filename = ''
-    output = 'decreports.txt'
-    opts, args = getopt.getopt(sys.argv[1:], "l:i:o", ["input=", "location=", "output="])
 
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        elif o in ('-l', '--location') :
-            decReportsLocation = a
-        elif o in ('-o', '--output') :
-            output = a
+    
 
-    assert(filename != '')
+
+    parser.set_defaults(output='decreports.txt')
+    parser.set_defaults(branch='Strip/Phys/DecReports')
+    
+    (options, args) = parser.parse_args()
+
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
+
+    filename = args[0]
+    locationRoot = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    decReportsLocation = locationRoot + '/' + options.branch                                
+    decReportsLocation.replace('//', '/')
+
+    if verbose :
+        print 'will look for DecReports in', decReportsLocation
+        print 'nevents', nevents
+        print 'output file', output
     
     outputFile = open(output, 'w')
 
@@ -70,13 +80,18 @@ if __name__ == '__main__' :
                 if decision :
                     addEntry(decReportSummary, decName, decision.decision())
 
-    print '======================================================================================'
-    print 'Found', nDecReports, 'DecReports in', nEvents, 'events'
-    print '======================================================================================'
+    _printMessage = ''
     for decs in decReportSummary.iteritems() :
-        message = str(decs[0]) + " : " + str(decs[1])
-        print message
-        outputFile.write(message+'\n')
-    print '======================================================================================'
-    print 'Wrote summary to', output
+        message = str(decs[0]) + " : " + str(decs[1]) + '\n'
+        _printMessage += message
+        outputFile.write(message)
+
+    if verbose :
+        print '======================================================================================'
+        print 'Found', nDecReports, 'DecReports in', nEvents, 'events'    
+        print '======================================================================================'
+        print _printMessage
+        print '======================================================================================'
+        print 'Wrote summary to', output
+
     outputFile.close()

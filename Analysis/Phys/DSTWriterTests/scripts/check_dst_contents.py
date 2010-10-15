@@ -73,16 +73,18 @@ if __name__ == '__main__' :
     nObjects.keys().sort()
     length = len(sorted(nObjects.keys(), cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
 
-    if verbose :
-        print '----------------------------------------------------------------------------------'
-        print "Analysed ", nEvents, " events"
+    _printMessage = ''
 
     for loc in nObjects.keys() :
         if nObjects[loc] > 0 :
-            message = loc.ljust(length) + str('Events: '+ str(nSelEvents[loc])+'. Objects: '+ str(nObjects[loc])).rjust(10)
-            outputFile.write(message+'\n')
-            if verbose : print message
+            message = loc.ljust(length) + str('Events: '+ str(nSelEvents[loc])+'. Objects: '+ str(nObjects[loc])).rjust(10) + '\n'
+            outputFile.write(message)
+            _printMessage += message
+            
     if verbose :
+        print '----------------------------------------------------------------------------------'
+        print "Analysed ", nEvents, " events"
+        print _printMessage
         print '----------------------------------------------------------------------------------'
         print 'Wrote summary to', output
     outputFile.close()
