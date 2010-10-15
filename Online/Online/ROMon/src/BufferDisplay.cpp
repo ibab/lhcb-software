@@ -1,4 +1,4 @@
-// $Id: BufferDisplay.cpp,v 1.4 2010-09-03 14:47:45 frankb Exp $
+// $Id: BufferDisplay.cpp,v 1.5 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.4 2010-09-03 14:47:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.5 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmDisplay.h"
@@ -41,13 +41,13 @@ BufferDisplay::BufferDisplay(FarmDisplay* parent, const string& title)
 
 void BufferDisplay::update(const void* data) {
   const Nodeset* ns = (const Nodeset*)data;
+  char txt[1024], name[128];
+  int line = 0, node = 0;
   if ( 0 != ns ) {
     string key;
     map<string,string> entries;
     StringV lines;
     string nam;
-    int line = 0, node = 0;
-    char txt[1024], name[128];
     char *p, *cnam;
     Nodes::const_iterator n;
 
@@ -150,9 +150,11 @@ void BufferDisplay::update(const void* data) {
       }
       ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
     }
-    ::memset(txt,' ',m_display->cols);
-    txt[m_display->cols-1]=0;
-    while(line<m_display->rows)
-      ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
   }
+  ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
+  ::scrc_put_chars(m_display,"      << Mouse-Left-Double-Click down here to close the window >>",NORMAL,++line,2,1);
+  ::memset(txt,' ',m_display->cols);
+  txt[m_display->cols-1]=0;
+  while(line<m_display->rows)
+    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 }

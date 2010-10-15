@@ -1,4 +1,4 @@
-// $Id: BootClusterDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
+// $Id: BootClusterDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootClusterDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/BootClusterDisplay.h"
@@ -70,7 +70,7 @@ void BootClusterDisplay::update(const void* data) {
   time_t t1 = ns.time, now = ::time(0);
   int line = 1;
 
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE|BOLD);
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
   ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(txt,"      Boot status of farm:%s %s  [%d nodes]",ns.name,text1,ns.nodes.size());
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);

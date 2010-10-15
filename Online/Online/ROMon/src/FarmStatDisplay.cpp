@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.6 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -455,9 +455,8 @@ int FarmStatDisplay::handleKeyboard(int key)    {
 void FarmStatDisplay::handle(const Event& ev) {
   const MouseEvent* m = 0;
   Clusters::iterator i;
-  Pasteboard* pb = pasteboard();
-
   RTL::Lock lock(screenLock());
+
   switch(ev.eventtype) {
   case ScrMouseEvent:
     m = ev.get<MouseEvent>();

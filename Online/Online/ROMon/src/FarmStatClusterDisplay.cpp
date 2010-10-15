@@ -1,4 +1,4 @@
-// $Id: FarmStatClusterDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
+// $Id: FarmStatClusterDisplay.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatClusterDisplay.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmStatClusterDisplay.h"
@@ -101,7 +101,7 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
 	::sprintf(ctxt," %9s %-30s","CPU [%]:","  User Sys  Nice  Idle IOwait ");
       }
       else {
-	::sprintf(txt,"%4.0f",v[0]+v[1]);
+	::sprintf(txt,"%4.0f",v[0]+v[1]+v[2]);
 	cpu[(*i).first] += txt;
 	::sprintf(txt,"%4d",++numCore);
 	::strcat(ctxt,txt);
@@ -130,7 +130,7 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   //                       1         2         3         4         5         6         7         8
   //             012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-  ::sprintf(txt," %-9s %-s","Node Name","----- CPU Average Values --------- User + System +Nice CPU usage of individual cores in [%]");
+  ::sprintf(txt," %-9s %-s","Node Name","----- CPU Average Values --------- [User + System + Nice] CPU usage of individual cores in [%]");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,2,1);
   ::scrc_put_chars(m_display,ctxt,MAGENTA,++line,2,1);
   for(map<string,string>::const_iterator j, i=cpu.begin(); i!=cpu.end();++i) {

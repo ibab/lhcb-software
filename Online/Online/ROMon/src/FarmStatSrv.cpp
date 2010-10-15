@@ -1,4 +1,4 @@
-// $Id: FarmStatSrv.cpp,v 1.5 2010-10-14 06:44:04 frankb Exp $
+// $Id: FarmStatSrv.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.5 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatSrv.cpp,v 1.6 2010-10-15 07:42:00 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -135,7 +135,7 @@ void SubfarmStatCollector::updateCPU(const CPUfarm& f) {
   for(CPUfarm::Nodes::const_iterator i=f.nodes.begin(); i!=f.nodes.end(); i=f.nodes.next(i)) {
     const CPUset& cs = (*i);
     const CPU::Stat& avg = cs.averages;
-    ::sprintf(text,"[%s:{Avg:%.2f#%.2f#%.2f#%.2f#%.2f}",cs.name,avg.user,avg.system,avg.idle,avg.nice,avg.iowait);
+    ::sprintf(text,"[%s:{Avg:%.2f#%.2f#%.2f#%.2f#%.2f}",cs.name,avg.user,avg.system,avg.nice,avg.idle,avg.iowait);
     result += text;
     for(ic=cs.cores.begin(),cnt=0; ic!=cs.cores.end(); ic=cs.cores.next(ic),++cnt) {
       const CPU& c = *ic;

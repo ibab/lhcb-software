@@ -191,7 +191,7 @@ int StatusProcess::read(int proc_id) {
       if ( 0 == p ) continue;
       ++p;
       switch(++nitem) {
-      case 1:        ::sscanf(p,"%s",comm);          break;
+      case 1:   ::sscanf(p,"%s",comm);          break;
       case 2:   ::sscanf(p,"%c",&state);        break;
       case 3:   ::sscanf(p,"%d%%",&sleepAvg);   break;
       case 4:   ::sscanf(p,"%d",&tgid);         break;
@@ -200,25 +200,29 @@ int StatusProcess::read(int proc_id) {
       case 8:   ::sscanf(p,"%d",&uid);          break;
       case 9:   ::sscanf(p,"%d",&gid);          break;
       case 10:  ::sscanf(p,"%d",&fdSize);       break;
-      case 12:  ::sscanf(p,"%d",&vmSize);       break;
-      case 13:  ::sscanf(p,"%d",&vmLock);       break;
-      case 14:  ::sscanf(p,"%d",&vmRSS);        break;
-      case 15:  ::sscanf(p,"%d",&vmData);       break;
-      case 16:  ::sscanf(p,"%d",&vmStack);      break;
-      case 17:  ::sscanf(p,"%d",&vmExe);        break;
-      case 18:  ::sscanf(p,"%d",&vmLib);        break;
-      case 19:  ::sscanf(p,"%08lx",&staBrk);    break;
-      case 20:  ::sscanf(p,"%08lx",&brk);       break;
-      case 21:  ::sscanf(p,"%08lx",&staStk);    break;
-      case 22:  ::sscanf(p,"%d",&nThreads);     break;
-      case 23:  ::sscanf(p,"%016lx",&sigPend);  break;
-      case 24:  ::sscanf(p,"%016lx",&shdPend);  break;
-      case 25:  ::sscanf(p,"%016lx",&sigBlk);   break;
-      case 26:  ::sscanf(p,"%016lx",&sigIgn);   break;
-      case 27:  ::sscanf(p,"%016lx",&sigCgt);   break;
-      case 28:  ::sscanf(p,"%016lx",&capInh);   break;
-      case 29:  ::sscanf(p,"%016lx",&capPrm);   break;
-      case 30:  ::sscanf(p,"%016lx",&capEff);   break;
+      case 12:  ::sscanf(p,"%d",&vmPeak);       break;
+      case 13:  ::sscanf(p,"%d",&vmSize);       break;
+      case 14:  ::sscanf(p,"%d",&vmLock);       break;
+      case 15:  ::sscanf(p,"%d",&vmRSS);        break;
+      case 16:  ::sscanf(p,"%d",&vmHWM);        break;
+      case 17:  ::sscanf(p,"%d",&vmData);       break;
+      case 18:  ::sscanf(p,"%d",&vmStack);      break;
+      case 19:  ::sscanf(p,"%d",&vmExe);        break;
+      case 20:  ::sscanf(p,"%d",&vmLib);        break;
+      case 21:  ::sscanf(p,"%d",&vmPTE);        break;
+      case 22:  ::sscanf(p,"%08lx",&staBrk);    break;
+      case 23:  ::sscanf(p,"%08lx",&brk);       break;
+      case 24:  ::sscanf(p,"%08lx",&staStk);    break;
+      case 25:  ::sscanf(p,"%d",&nThreads);     break;
+      case 26:  break; // SigQ
+      case 27:  ::sscanf(p,"%016lx",&sigPend);  break;  // Fmt: SigCgt: 00000001808044e9
+      case 28:  ::sscanf(p,"%016lx",&shdPend);  break;
+      case 29:  ::sscanf(p,"%016lx",&sigBlk);   break;
+      case 30:  ::sscanf(p,"%016lx",&sigIgn);   break;
+      case 31:  ::sscanf(p,"%016lx",&sigCgt);   break;
+      case 32:  ::sscanf(p,"%016lx",&capInh);   break;
+      case 33:  ::sscanf(p,"%016lx",&capPrm);   break;
+      case 34:  ::sscanf(p,"%016lx",&capEff);   break;
       default:                                  break;
       }
     }
@@ -238,13 +242,16 @@ void StatusProcess::print() const {
            Uid:      \t%8d\n\
            Gid:      \t%8d\n\
            FDSize:   \t%8d\n\
+           VmPeak:   \t%8d kB\n\
            VmSize:   \t%8d kB\n\
            VmLck:    \t%8d kB\n\
+           VmHWM:    \t%8d kB\n\
            VmRSS:    \t%8d kB\n\
            VmData:   \t%8d kB\n\
            VmStk:    \t%8d kB\n\
            VmExe:    \t%8d kB\n\
            VmLib:    \t%8d kB\n\
+           VmPTE:    \t%8d kB\n\
            StaBrk:   \t%08lx kB\n\
            Brk:      \t%08lx kB\n\
            StaStk:   \t%08lx kB\n\
@@ -258,8 +265,8 @@ void StatusProcess::print() const {
            CapPrm:   \t%016lx\n\
            CapEff:   \t%016lx\n",
            comm, state, sleepAvg, tgid, pid, ppid, uid, gid,
-           fdSize, vmSize, vmLock, vmRSS, vmData, vmStack,
-           vmExe, vmLib, staBrk, brk, staStk, nThreads, sigPend,
+           fdSize, vmPeak, vmSize, vmLock, vmHWM, vmRSS, vmData, vmStack,
+           vmExe, vmLib, vmPTE, staBrk, brk, staStk, nThreads, sigPend,
            shdPend, sigBlk, sigIgn, sigCgt, capInh, capPrm, capEff);
 }
 
@@ -671,5 +678,10 @@ extern "C" int test_systemUptime(int,char**) {
 extern "C" int test_systemUtgid(int,char**) {
   UtgidProcess p;
   if ( 0 != p.read(::lib_rtl_pid()) ) p.print();
+  return 1;
+}
+extern "C" int test_system_memory(int,char**) {
+  Memory m;
+  if ( 0 != read(m) ) cout << m << endl;
   return 1;
 }

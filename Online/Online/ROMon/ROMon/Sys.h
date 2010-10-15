@@ -1,4 +1,4 @@
-// $Id: Sys.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Id: Sys.h,v 1.4 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/10/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.4 2010-10-15 07:42:00 frankb Exp $
 #ifndef ONLINE_ROMON_SYS_H
 #define ONLINE_ROMON_SYS_H
 
@@ -74,13 +74,16 @@ namespace ROMon {
     int    uid;
     int    gid;
     int    fdSize;
+    int    vmPeak;
     int    vmSize;
     int    vmLock;
+    int    vmHWM;
     int    vmRSS;
     int    vmData;
     int    vmStack;
     int    vmExe;
     int    vmLib;
+    int    vmPTE;
     long   staBrk;
     long   brk;
     long   staStk;

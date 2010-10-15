@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.9 2010-10-14 06:44:04 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.10 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.9 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.10 2010-10-15 07:42:00 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -136,8 +136,10 @@ namespace ROMon {
 #include "RTL/readdir.h"
 #include "NET/defs.h"
 #include "CPP/Event.h"
+#include "CPP/IocSensor.h"
 #include "CPP/TimeSensor.h"
 #include "ROMon/CPUMon.h"
+#include "ROMon/Constants.h"
 #include "ROMonDefs.h"
 
 // C++ include files
@@ -161,8 +163,7 @@ using namespace std;
 #define LHCB_NODE_LIST "/group/online/hltip.txt"
 #define CLUSTERLOGS_FARMS "/clusterlogs/farm"
 
-#define MIN_LINE_LENGTH 15
-#define CMD_DATA                   12345
+#define MIN_LINE_LENGTH            15
 #define SCAN_TIMEDIFF              15
 #define PUBLISH_TIMEDIFF           15
 #define DHCP_BOOT_DIFF            200
@@ -246,7 +247,7 @@ struct BootDataProcessor : public DataFile::DataProcessor {
   BootNodeStatus* updateStatus(BootNodeStatus* boot, int flag) const {
     if ( boot )   {
       if ( 0 == (boot->status&flag) ) {
-        ::lib_rtl_output(LIB_RTL_INFO,"%s> Set flag %s [%08X] -> %08X",
+        ::lib_rtl_output(LIB_RTL_DEBUG,"%s> Set flag %s [%08X] -> %08X",
           boot->name,BootNodeStatus::flagName(flag).c_str(),flag,boot->status);
         boot->status |= flag;
       }
@@ -289,11 +290,11 @@ struct BootDataProcessor : public DataFile::DataProcessor {
       if ( i != status.nodes().end() ) {
         (*i).second->status = BootNodeStatus::DHCP_REQUESTED;
         (*i).second->dhcpReq = line.time();
-        ::lib_rtl_output(LIB_RTL_INFO,"%s> %s Found DHCP request for node:%s",
+        ::lib_rtl_output(LIB_RTL_DEBUG,"%s> %s Found DHCP request for node:%s",
           status.name().c_str(),::lib_rtl_timestr(),host);
       }
       else {
-        ::lib_rtl_output(LIB_RTL_INFO,"%s> %s Unknown DHCP request for node:%s",
+        ::lib_rtl_output(LIB_RTL_DEBUG,"%s> %s Unknown DHCP request for node:%s",
           status.name().c_str(),::lib_rtl_timestr(),host);
       }
     }
@@ -361,8 +362,8 @@ int SubfarmBootStatus::start() {
         nodes()[addr] = n;
         hosts()[node] = n;
         n = new(m_status->nodes.add(n)) BootNodeStatus();
-        ::lib_rtl_output(LIB_RTL_DEBUG,"...%s> Added node %-10s with address:%-12s [%s]",
-          name().c_str(),node.c_str(),addr.c_str(),::inet_ntoa(*ina));
+        ::lib_rtl_output(LIB_RTL_VERBOSE,"...%s> Added node %-10s with address:%-12s [%s]",
+			 name().c_str(),node.c_str(),addr.c_str(),::inet_ntoa(*ina));
       }
     }
     string svc = "/"+strlower(name())+"/BootMonitor";
@@ -379,8 +380,8 @@ void SubfarmBootStatus::feedData(void* tag, void** buf, int* size, int* /* first
   *size = h->m_status->length();
   *buf  = h->m_status;
   if ( h->m_parent->lastScan()-::time(0) > 3*SCAN_TIMEDIFF ) {
-    ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> Timer for re-scan lost. Rearming timer.");
-    TimeSensor::instance().add(h->m_parent,1,(void*)CMD_DATA);
+    ::lib_rtl_output(LIB_RTL_WARNING,"BootMonitor> Timer for re-scan lost. Rearming timer.");
+    TimeSensor::instance().add(h->m_parent,1,(void*)CMD_CHECK);
   }
 }
 
@@ -551,13 +552,13 @@ int BootMonitor::start() {
       if ( 0 == ::stat(dnam.c_str(),&statbuff) ) {
         if ( S_ISDIR(statbuff.st_mode) ) {
           //if ( dnam.find("hltd08") == string::npos ) continue;
-          ::lib_rtl_output(LIB_RTL_INFO,"Loading subfarm boot status of %s.",entry);
+          ::lib_rtl_output(LIB_RTL_DEBUG,"Loading subfarm boot status of %s.",entry);
           SubfarmBootStatus* sf = 0;
           try {
             sf = new SubfarmBootStatus(entry,this);
             if ( sf->start() ) {
               if ( sf->scan() ) {
-                sf->dump();
+                //sf->dump();
                 m_clusters[entry] = sf;
                 continue;
               }
@@ -611,14 +612,22 @@ void BootMonitor::handle(const Event& ev) {
   try {
     switch(ev.eventtype) {
     case TimeEvent:
-      if (ev.timer_data == (void*)CMD_DATA ) {
-	::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
-			 ::lib_rtl_timestr(),int(m_clusters.size()));
-	scan();
-	TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_DATA);
+      if (ev.timer_data == (void*)CMD_CHECK ) {
+	IocSensor::instance().send(this,CMD_CHECK,this);
 	return;
       }
       break;
+    case IocEvent:
+    switch(ev.type) {
+    case CMD_CHECK:
+      ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
+		       ::lib_rtl_timestr(),int(m_clusters.size()));
+      scan();
+      break;
+    default:
+      break;
+    }
+    break;
     default:
       break;
     }
@@ -629,7 +638,7 @@ void BootMonitor::handle(const Event& ev) {
   catch(...) {
     ::lib_rtl_output(LIB_RTL_ERROR,"UNKNOWN exception in callback processing.");
   }
-  TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_DATA);
+  TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_CHECK);
 }
 
 static void help() {
@@ -660,7 +669,7 @@ extern "C" int run_boot_analyser(int argc, char *argv[])    {
   
   BootMonitor mon(server);
   mon.start();
-  TimeSensor::instance().add(&mon,1,(void*)CMD_DATA);
+  TimeSensor::instance().add(&mon,1,(void*)CMD_CHECK);
   ::dis_start_serving((char*)server.c_str());
   TimeSensor::instance().run();
   return 1;

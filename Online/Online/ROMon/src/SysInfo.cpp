@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.7 2010-09-07 13:42:11 frankb Exp $
+// $Id: SysInfo.cpp,v 1.8 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.7 2010-09-07 13:42:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.8 2010-10-15 07:42:00 frankb Exp $
 
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
@@ -91,6 +91,7 @@ int SysInfo::combineCPUInfo() {
   cr.ctxtRate          = (float)((cn.ctxtRate-cl.ctxtRate)*1e3/d_tot);
   cr.memory            = m_mem.memTotal;
   cr.memfree           = m_mem.memFree;
+  //cout << m_mem << endl;
   for( ; i != cn.cores.end(); i=cn.cores.next(i), j=cl.cores.next(j), m=cr.cores.next(m) ) {
     d_user    = (*i).stats.user    - (*j).stats.user;
     d_system  = (*i).stats.system  - (*j).stats.system;
@@ -177,7 +178,9 @@ int SysInfo::init() {
 /// Update changing object data items
 int SysInfo::update() {
   newReading();
-  read(statistics()->memory);
+  read(m_mem);
+  //cout << m_mem << endl;
+  ::memcpy(&statistics()->memory,&m_mem,sizeof(Memory));
   read(*cpuNow()->reset(),CPUINFO_SIZE);
   //readStat(*cpuNow(), CPUINFO_SIZE, m_numCores);
   read(*procsNow()->reset(), PROCINFO_SIZE);

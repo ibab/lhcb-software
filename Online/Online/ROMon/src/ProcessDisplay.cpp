@@ -1,4 +1,4 @@
-// $Id: ProcessDisplay.cpp,v 1.3 2010-10-14 06:44:04 frankb Exp $
+// $Id: ProcessDisplay.cpp,v 1.4 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.3 2010-10-14 06:44:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.4 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -144,7 +144,9 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
 	::scrc_put_chars(m_display,"The display shows PVSS tasks",NORMAL,++line,10,1);
       else if ( m_flag == 4 )
 	::scrc_put_chars(m_display,"The display shows DRIVER tasks",NORMAL,++line,10,1);
-      ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s   %s",
+      ::scrc_put_chars(m_display,"Type 'P' or Mouse-Left-Double-Click to close the window",NORMAL,++line,10,1);
+
+      ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s %s",
 		"UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
@@ -178,15 +180,19 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
 	  ::strncpy(text,p.cmd,sizeof(text));
 	  text[27] = 0;
 	  text[26]=text[25]=text[24]='.';
-	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d   %s",
+	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
 		    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
 	}
 	else {
-	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d   %s",
+	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
 		    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
 	}
 	::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
       }
+      ::memset(txt,' ',m_display->cols);
+      txt[m_display->cols-1]=0;
+      while(line<m_display->rows)
+	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
       return;
     }
   }
@@ -197,5 +203,9 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
   ::strftime(txt,sizeof(txt),"         %H:%M:%S",::localtime(&t1));
   ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,5,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
+  ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
+  ::memset(txt,' ',m_display->cols);
+  txt[m_display->cols-1]=0;
+  while(line<m_display->rows)
+    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 }

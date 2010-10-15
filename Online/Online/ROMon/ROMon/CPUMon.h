@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.13 2010-09-25 04:40:12 frankb Exp $
+// $Id: CPUMon.h,v 1.14 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.13 2010-09-25 04:40:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.14 2010-10-15 07:42:00 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -481,6 +481,18 @@ namespace ROMon {
   };
 }
 #include "RTL/Unpack.h"
+
+#include <iostream>
+std::ostream& operator<<(std::ostream& os, const ROMon::Memory& m);
+std::ostream& operator<<(std::ostream& os, const ROMon::CPU::Stat& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::CPU& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::CPUset& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::CPUfarm& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::Process& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::Procset& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::NodeStats& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
 
 #endif /* ROMON_CPUMON_H */
 

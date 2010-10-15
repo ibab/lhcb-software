@@ -1,4 +1,4 @@
-// $Id: CtrlNodeDisplay.cpp,v 1.6 2010-09-08 07:42:18 frankb Exp $
+// $Id: CtrlNodeDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,16 +11,22 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.6 2010-09-08 07:42:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
+#include "TaskSupervisorParser.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
+#include "ROMonDefs.h"
 #include "CPP/Event.h"
+#include "CPP/IocSensor.h"
 #include "SCR/scr.h"
 // C++ include files
 #include <cstdlib>
+extern "C" {
+#include "dic.h"
+}
 
 using namespace ROMon;
 using namespace SCR;
@@ -32,6 +38,33 @@ CtrlNodeDisplay::CtrlNodeDisplay(FarmDisplay* parent, const string& title)
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");
 }
 
+/// Connect display to data sources
+void CtrlNodeDisplay::connect(const string& node) {
+  if ( 0 == m_svc ) {
+    m_nodeName = node;
+    string svc = svcPrefix()+strupper(node)+"/TaskSupervisor/Status";
+    m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,tsDataHandler,(long)this,0,0);  
+    ::scrc_set_border(m_display,("Connecting to:"+node).c_str(),INVERSE|RED|BOLD);
+  }
+}
+
+/// DIM command service callback
+void CtrlNodeDisplay::tsDataHandler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    CtrlNodeDisplay* d = *(CtrlNodeDisplay**)tag;
+    XML::TaskSupervisorParser ts;
+    const char* data = (char*)address;
+    if ( ts.parseBuffer(d->m_nodeName, data,::strlen(data)+1) ) {
+      char* p = new char[sizeof(Cluster)+sizeof(int)];
+      *(int*)(p+sizeof(int)) = sizeof(Cluster)+sizeof(int);
+      Cluster* c = ::new(p+sizeof(int)) Cluster();
+      c->nodes.clear();
+      ts.getClusterNodes(*c);
+      IocSensor::instance().send(d,CMD_UPDATE,p);
+    }
+  }
+}
+
 void CtrlNodeDisplay::update(const void* data) {
   char txt[255], name[255];
   time_t tim = ::time(0);
@@ -39,11 +72,10 @@ void CtrlNodeDisplay::update(const void* data) {
   Cluster* c = (Cluster*)data;
   if ( c ) {
     const Cluster::Nodes& ns = c->nodes;
-    //const char* fmt = "  %-24s %12s %17zd / %-5zd     %17zd / %-5zd      %s";
-
-    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-    ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
+    ::sprintf(txt,"  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+    ::scrc_put_chars(m_display," Mouse-Left-Double-Click to close the window",NORMAL,++line,2,1);
+
     for(Cluster::Nodes::const_iterator i=ns.begin(); i!=ns.end();++i, ++node) {
       if ( node == m_node ) {
         const Cluster::Node& n = (*i).second;
@@ -147,6 +179,7 @@ void CtrlNodeDisplay::update(const void* data) {
     ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,1,1);
     ::scrc_set_border(m_display,"Unknown Node. No data found.",INVERSE|RED|BOLD);
   }
+
   ::memset(txt,' ',m_display->cols);
   txt[m_display->cols-1]=0;
   while(line<m_display->rows)

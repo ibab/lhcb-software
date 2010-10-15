@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.22 2010-10-14 13:30:08 frankb Exp $
+// $Id: FarmDisplay.h,v 1.23 2010-10-15 07:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.22 2010-10-14 13:30:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.23 2010-10-15 07:42:00 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -124,6 +124,8 @@ namespace ROMon {
   protected:
     /// Node number in node set
     int m_node;
+    /// Node name if running standalone
+    std::string m_nodeName;
   public:
     /// Initializing constructor
     CtrlNodeDisplay(FarmDisplay* parent, const std::string& title);
@@ -131,10 +133,14 @@ namespace ROMon {
     virtual ~CtrlNodeDisplay() {}
     /// Set the node number for the display
     void setNode(int which) { m_node = which; }
+    /// Connect display to data sources
+    virtual void connect(const std::string& node);
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
+    /// DIM command service callback
+    static void tsDataHandler(void* tag, void* address, int* size);
   };
 
   /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -151,6 +157,8 @@ namespace ROMon {
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
     ClusterDisplay*                  m_subfarmDisplay;
+    ClusterDisplay*                  m_subfarmDisplay2;
+    std::auto_ptr<ClusterDisplay>    m_sysDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
@@ -209,6 +217,8 @@ public:
     int showCpuWindow();
     /// Show window with buffer information of a given node
     int showMbmWindow();
+    /// Show window with SYSTEM information of a given subfarm
+    int showSysWindow();
     /// Show window with boot information of the subfarm
     int showBootWindow();
     /// Show window with boot information of the subfarm
