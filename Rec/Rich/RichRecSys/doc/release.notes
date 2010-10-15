@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Chris Jones
+ - Fine tune the photon creator selection cuts to take into account the better
+   gas resolutions in the latest database updates.
+
 !====================== RichRecSys v3r32 2010-07-26 ==========================
 ! 2010-09-09 - Chris Jones
  - Add new "Wide" photon selection, that enlarges the selection a bit, in 

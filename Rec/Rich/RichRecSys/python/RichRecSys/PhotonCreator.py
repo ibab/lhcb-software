@@ -82,7 +82,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Predictor cuts
             # ================================================================
             # No # sigma cut 
-            creator.Predictor.NSigma         = [  17,    8,     12    ]
+            creator.Predictor.NSigma         = [  17,     6,    10    ]
             # Min and max search window for track centre - hit seperation
             creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
             creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
@@ -95,7 +95,31 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
             creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
             # No # sigma cut
-            creator.NSigma                   = [ 9,    6.5,   5.5   ]
+            creator.NSigma                   = [ 9.0,   5.25,  5.0   ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
+            # ================================================================
+
+        elif selMode == "OldTight" :
+            
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # No # sigma cut 
+            creator.Predictor.NSigma         = [  17,     8,    12    ]
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
+            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
+            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
+            creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
+            # No # sigma cut
+            creator.NSigma                   = [ 9.0,   6.5,   5.5   ]
             # Any probability
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
