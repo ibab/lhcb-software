@@ -21,6 +21,7 @@ if __name__ == '__main__' :
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
     from DSTWriterTests.default_args import parser
+    parser.remove_option('--branch')
     parser.set_defaults(output='dst_contents.txt')
 
     (options, args) = parser.parse_args()
