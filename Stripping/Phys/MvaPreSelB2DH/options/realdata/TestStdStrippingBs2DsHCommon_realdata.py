@@ -36,12 +36,16 @@ from Configurables import HistogramPersistencySvc
 
 from Configurables import SelDSTWriter
 from StrippingConf.Configuration import StrippingConf
+from Configurables import CheckPV
+from Configurables import LoKi__VoidFilter as TesFilter
+from Configurables import LoKi__HDRFilter as HDRFilter  
 
 
 from StrippingSelections.StartupOptions import veloNZSKiller, redoPV
 from Configurables import CondDB
 
 #CondDB(UseOracle = True)
+importOptions("$APPCONFIGOPTS/UseOracle.py")
 ##############################################################
 # EventClockSvc(InitialTime = 1)
 ###############################################################
@@ -54,7 +58,7 @@ from HltConf.Configuration import *
 
 #some steering options
 #Number of events to process
-NumEvents=100000
+NumEvents=1200
 #NumEvents=10000
 
 #NumEvents=-1
@@ -62,12 +66,15 @@ NumEvents=100000
 
 
 #refit PV 
-PVRefit=True
+PVRefit=False
 
 
 activateBs2DsPi=True
 activateBs2DsK=False
 activateBd2DdPi=False
+useStrippedDataForB=True
+
+
 ########################
 ###################################################
 # import predefined sequences as options file
@@ -77,6 +84,7 @@ activateBd2DdPi=False
 #############################################################
 #some definitions
 dv=DaVinci()
+StrippedDataMasterLocation=""
 MasterLocation="Phys/"
 BsLocalLocationA="PreSelCombBs2DsK"
 BsLocalLocationB="PreSelCombBs2DsPi"
@@ -86,6 +94,16 @@ mainOutputLocationB=MasterLocation+BsLocalLocationB
 mainOutputLocationC=MasterLocation+BsLocalLocationC
 AuxiliaryOutputLocationDs=MasterLocation+"CombineDs2KKPiLoosePreSel"
 AuxiliaryOutputLocationDd=MasterLocation+"CombineDd2KPiPiLoosePreSel"
+if(useStrippedDataForB):
+    StrippedDataMasterLocation="Hadronic/"    
+    MasterLocation="Hadronic/Phys/"
+    mainOutputLocationA=MasterLocation+"B2DXChi2LooseWithD2hhhLine"
+    mainOutputLocationB=MasterLocation+"B2DXChi2LooseWithD2hhhLine"
+    mainOutputLocationC=MasterLocation+"B2DXChi2LooseWithD2hhhLine"
+
+tesFilter=TesFilter('TESFilter',
+                  Code="CONTAINS('/Event/Hadronic/Phys/B2DXChi2LooseWithD2hhhLine/Particles')>0")
+
 #########################
 # apply all the required options
 #
@@ -99,6 +117,9 @@ dv.RedoMCLinks=False
 dv.L0=True
 
 ########################################
+CheckPV1=CheckPV('PV1',MinPVs=1)
+dv.EventPreFilters +=[CheckPV1]
+dv.EventPreFilters += [tesFilter]
 
 #importOptions("$MVAPRESELB2DHROOT/options/realdata/Bs2DsPiLoosePreSelection_RealData.py")
 importOptions("$MVAPRESELB2DHROOT/options/realdata/Bs2DHLoosePreSelection_RealData.py")
@@ -114,6 +135,7 @@ SeqMvASelection.Members += [veloNZSKiller() ]
 
 
 Bs2DH_B2DHMvaPreSelectionAlg = B2DHMvaPreSelectionAlg ("Bs2DH_B2DHMvaPreSelectionAlg" )
+Bs2DH_B2DHMvaPreSelectionAlg.InputLocations = [BsLocalLocationB]
 Bs2DH_B2DHMvaPreSelectionParamTool=B2DHMvaPreSelectionParamTool("Bs2DH_B2DHMvaPreSelectionParamTool")
 Bs2DH_B2DHPreselMvaFisherDMonitorHistoTool = B2DHPreselMvaFisherDMonitorHistoTool("Bs2DH_B2DHPreselMvaFisherDMonitorHistoTool")
 B2DHPreselMvaUtilityTool = B2DHPreselMvaUtilityTool()
@@ -121,6 +143,7 @@ B2DHMvaPreSelectionCutsTool = B2DHMvaPreSelectionCutsTool()
 B2DHPreselMvaUtilityTool.PathToWeightsFileForBs2DsPi= os.path.join("$MVAPRESELB2DHROOT","src","weights","FisherD_Bs2DsH/")
 B2DHPreselMvaUtilityTool.FisherWeightsLocalFileNameForBs2DsPi="TMVAnalysis_Bs2DsH_F601Sph_FisherD.weights.xml"
 B2DHPreselMvaUtilityTool.Bs2DsPiReconDir=BsLocalLocationB+"/"
+B2DHPreselMvaUtilityTool.StandardPVLocation = StrippedDataMasterLocation+"Rec/Vertex/Primary"
 # Channel number label for Bs2DsK is 0 and that for Bs2DsPi is 1.
 #Bs2DsPi_B2DHSelectionParamTool.CurrentB2DHDecayChannelNumber=1; 
 
@@ -170,13 +193,33 @@ dv.HistogramFile = "/afs/cern.ch/user/s/seaso/scratch0/DavinciData/histoMva/BsDs
 #importOptions ("$MVAPRESELB2DHROOT/dataFiles/realdata/LHCb_Collision10_429155_RealData+RecoStripping-04_90000000__BHADRONDST_MagDown_Test_PFN.py" )
 #importOptions ("$MVAPRESELB2DHROOT/dataFiles/realdata/StdStrippingTestFilesJuly2010_PFN_Test.py")
 #importOptions ("$MVAPRESELB2DHROOT/dataFiles/realdata/StdStrippingTestFilesJuly2010_LFN.py")
+#DaVinci().Input   = [
+#"   DATAFILE='LFN:/lhcb/data/2010/SDST/00008037/0000/00008037_00001700_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='LFN:/lhcb/data/2010/SDST/00008037/0000/00008037_00001702_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='LFN:/lhcb/data/2010/SDST/00008037/0000/00008037_00001703_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='LFN:/lhcb/data/2010/SDST/00008037/0000/00008037_00001706_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+#DaVinci().Input   = [
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000011_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000012_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000013_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000014_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000015_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000016_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000017_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000018_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000019_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#"   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/MINIBIAS.DST/00007574/0000/00007574_00000020_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
 DaVinci().Input   = [
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002181_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002182_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002183_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002199_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002294_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002308_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='LFN:/lhcb/data/2010/SDST/00006563/0000/00006563_00002347_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"
-]
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000001_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'",  
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000002_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'",  
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000003_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'",  
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000006_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'",  
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000007_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'",  
+  "   DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_00000008_1.hadronic.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    ]
+
+
+    
+
 FileCatalog().Catalogs= ["xmlcatalog_file:pool_xml_catalog.xml"]

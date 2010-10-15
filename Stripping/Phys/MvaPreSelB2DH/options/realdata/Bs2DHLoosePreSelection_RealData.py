@@ -4,6 +4,10 @@ from Configurables import GaudiSequencer
 from Configurables import CombineParticles, PhysDesktop, FilterToFixOppositeBFractions
 
 SeqSelBs2DsH = GaudiSequencer("SeqSelBs2DsH")
+#storeExp = StoreExplorerAlg()
+#SeqSelBs2DsH.Members += [storeExp ]
+#storeExp.Load = 1
+#storeExp.PrintFreq = 1.0
 
 #FilterToFixOppositeBFractionsAlg=FilterToFixOppositeBFractions("FilterToFixOppositeBFractions")
 #SeqSelBs2DsH.Members += ["FilterToFixOppositeBFractions"]
