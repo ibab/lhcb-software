@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2010-10-15 - Julien Cogan
+ - L0MuonMonitorInput : fix Windows compilation error (not -> !)
+
 ! 2010-10-14 - Julien Cogan
  - L0MuonMonitorInput : take care of forced optical links (new property added)
 

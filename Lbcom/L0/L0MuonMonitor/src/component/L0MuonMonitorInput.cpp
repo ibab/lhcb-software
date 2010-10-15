@@ -403,7 +403,7 @@ bool L0MuonMonitorInput::areDifferent(std::vector<LHCb::MuonTileID> & muontiles,
         break;
       }
     }
-    if (not discard) l0muontiles_tmp.push_back(*itl0muon);
+    if (!discard) l0muontiles_tmp.push_back(*itl0muon);
   }
   l0muontiles = l0muontiles_tmp;
 
