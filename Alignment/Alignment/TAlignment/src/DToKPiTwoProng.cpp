@@ -154,9 +154,9 @@ LHCb::TwoProngVertex* DToKPiTwoProng::refittedMass(LHCb::Track* track1,
 						   LHCb::Track* track2,
                                                    const double zVert ) const{
   
-  LHCb::State* state1 = track1->stateAt(LHCb::State::FirstMeasurement);
+  LHCb::State* state1 = track1->stateAt(LHCb::State::ClosestToBeam);
   m_trackExtrapolator->propagate(*state1, zVert);
-  LHCb::State* state2 =track2->stateAt(LHCb::State::FirstMeasurement);
+  LHCb::State* state2 =track2->stateAt(LHCb::State::ClosestToBeam);
   m_trackExtrapolator->propagate(*state2, zVert);
   return m_vertexer->fit(*state1,*state2);
  

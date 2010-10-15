@@ -4,6 +4,10 @@ Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
 </PRE><H1><A NAME=v5r2>2010-10-08 TAlignment v5r2</A></H1><PRE> 
+
+! 2010-10-15 M Needham
+ - Use state closest to beamine in DToKPiTwoProng
+
 ! 2010-09-08 M Needham
   - Modify the vertex residual tool to deal with any one level resonance
   - Add  DToKPiTwoProng.h/cpp [makes two prongs from D candidates ] 
