@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.23 2010-10-15 07:42:00 frankb Exp $
+// $Id: FarmDisplay.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.23 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -157,7 +157,6 @@ namespace ROMon {
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
     ClusterDisplay*                  m_subfarmDisplay;
-    ClusterDisplay*                  m_subfarmDisplay2;
     std::auto_ptr<ClusterDisplay>    m_sysDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
@@ -187,18 +186,31 @@ namespace ROMon {
 public:
     /// Standard constructor
     FarmDisplay(int argc, char** argv);
+
     /// Standard destructor
     virtual ~FarmDisplay();
-    /// Show subfarm display
-    int showSubfarm();
+
+    /// Get the name of the currently selected cluster
+    std::string selectedCluster() const;
+
+    /// Get the name of the currently selected cluster and node
+    std::pair<std::string,std::string> selectedNode() const;
+
+    /// Number of sub-nodes in a cluster
+    size_t selectedClusterSize() const;
+
     /// Handle keyboard interrupts
     int handleKeyboard(int key);
+
     /// Get farm display from cursor position
-    InternalDisplay* currentDisplay();
+    InternalDisplay* currentDisplay()  const;
+
     /// Accessor to sub-displays of main panel
     SubDisplays& subDisplays() {  return m_farmDisplays; }
+
     /// Set cursor to position
     virtual void set_cursor();
+
     /// Set cursor to position
     virtual void set_cursor(InternalDisplay* updater);
     /// Interactor overload: Display callback handler
@@ -209,6 +221,9 @@ public:
     virtual void update(const void* data);
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
+
+    /// Show subfarm display
+    int showSubfarm();
     /// Show context dependent help window
     int showHelpWindow();
     /// Show window with processes on a given node

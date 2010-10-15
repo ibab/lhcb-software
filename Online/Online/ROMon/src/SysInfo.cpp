@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.8 2010-10-15 07:42:00 frankb Exp $
+// $Id: SysInfo.cpp,v 1.9 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.8 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.9 2010-10-15 10:53:54 frankb Exp $
 
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
@@ -41,8 +41,7 @@ SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
 : m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)
 {
   int j;
-  string match, n = RTL::nodeNameShort();
-  for(size_t i=0; i<n.length();++i) n[i]=char(::toupper(n[i]));
+  string match, n = strupper(RTL::nodeNameShort());
   match = "/FMC/"+n+"/task_manager";
   log() << "SysInfo: Listening to service:" << match << endl;
   m_cpuInfo = new char*[m_nBuffs];

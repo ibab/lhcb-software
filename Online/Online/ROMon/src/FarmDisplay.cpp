@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.48 2010-10-15 08:06:25 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.49 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.48 2010-10-15 08:06:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.49 2010-10-15 10:53:54 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -78,6 +78,21 @@ namespace ROMon {
   ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }
 namespace {
+  ScrDisplay* swapMouseSelector(Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
+    if ( from ) {
+      MouseSensor::instance().remove(from->display());
+      ScrDisplay* d = dynamic_cast<ScrDisplay*>(from->nodeDisplay());
+      if ( d ) MouseSensor::instance().remove(d->display());
+    }
+    if ( to ) {
+      ScrDisplay* d = dynamic_cast<ScrDisplay*>(to->nodeDisplay());
+      MouseSensor::instance().add(ia,to->display());
+      if ( d )  MouseSensor::instance().add(ia,d->display());
+      return d;
+    }
+    return 0;
+  }
+
   struct DisplayUpdate {
     Pasteboard* m_pb;
     bool m_flush;
@@ -184,11 +199,12 @@ FarmDisplay::~FarmDisplay()  {
   ::scrc_begin_pasteboard_update(m_pasteboard);
   m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
   m_mbmDisplay = auto_ptr<BufferDisplay>(0);
+  if ( m_nodeSelector ) {
+    MouseSensor::instance().remove(m_nodeSelector->display());
+    m_nodeSelector = 0;
+  }
   if ( m_subfarmDisplay ) {
     MouseSensor::instance().remove(m_subfarmDisplay->display());
-    if ( m_nodeSelector ) {
-      MouseSensor::instance().remove(m_nodeSelector->display());
-    }
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
@@ -208,6 +224,38 @@ void FarmDisplay::dnsDataHandler(void* tag, void* address, int* size) {
     FarmDisplay* disp = *(FarmDisplay**)tag;
     disp->update(address);
   }
+}
+
+/// Get the name of the currently selected cluster
+string FarmDisplay::selectedCluster() const {
+  if ( m_sysDisplay.get() )
+    return m_sysDisplay->clusterName();
+  else if ( m_subfarmDisplay )
+    return m_subfarmDisplay->clusterName();
+  else if ( currentDisplay() )
+    return currentDisplay()->name();
+  return "";
+}
+
+/// Get the name of the currently selected cluster and node
+pair<string,string> FarmDisplay::selectedNode() const {
+  string node_name, cl = selectedCluster();
+  if ( !cl.empty() ) {
+    if ( m_sysDisplay.get() )
+      node_name = m_sysDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    else if ( m_subfarmDisplay )
+      node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+  }
+  return make_pair(cl,node_name);
+}
+
+/// Number of sub-nodes in a cluster
+size_t FarmDisplay::selectedClusterSize() const {
+  if ( m_sysDisplay.get() )
+    return m_sysDisplay->numNodes();
+  else if ( m_subfarmDisplay )
+    return m_subfarmDisplay->numNodes();
+  return 0;
 }
 
 /// Keyboard rearm action
@@ -245,11 +293,10 @@ void FarmDisplay::set_cursor() {
 }
 
 /// Get farm display from cursor position
-InternalDisplay* FarmDisplay::currentDisplay() {
+InternalDisplay* FarmDisplay::currentDisplay()  const {
   size_t cnt;
-  SubDisplays::iterator k;
-  SubDisplays& sd = subDisplays();
-  for(k=sd.begin(), cnt = 0; k != sd.end(); ++k, ++cnt) {
+  SubDisplays::const_iterator k;
+  for(k=m_farmDisplays.begin(), cnt=0; k != m_farmDisplays.end(); ++k, ++cnt) {
     if ( cnt == m_posCursor ) {
       return (*k).second;
     }
@@ -260,12 +307,10 @@ InternalDisplay* FarmDisplay::currentDisplay() {
 /// Show subfarm display
 int FarmDisplay::showSubfarm()    {
   InternalDisplay* d = 0;
+  RTL::Lock unlock(screenLock(),true);
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
-    MouseSensor::instance().remove(m_subfarmDisplay->display());
-    if ( m_nodeSelector ) {
-      MouseSensor::instance().remove(m_nodeSelector->display());
-    }
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_sysDisplay.get());
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
@@ -277,7 +322,6 @@ int FarmDisplay::showSubfarm()    {
     m_statsDisplay = auto_ptr<InternalDisplay>(0);
     m_ctrlDisplay  = auto_ptr<CtrlNodeDisplay>(0);
     m_subPosCursor = 8;
-    m_nodeSelector = 0;
   }
   else if ( (d=currentDisplay()) != 0 ) {
     string dnam = d->name();
@@ -315,13 +359,9 @@ int FarmDisplay::showSubfarm()    {
       m_subfarmDisplay = 0;
       return WT_SUCCESS;
     }
-    m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     m_subfarmDisplay->initialize();
     ::lib_rtl_sleep(200);
-    MouseSensor::instance().add(this,m_subfarmDisplay->display());
-    if ( m_nodeSelector )   {
-      MouseSensor::instance().add(this,m_nodeSelector->display());
-    }
+    m_nodeSelector = swapMouseSelector(this,m_sysDisplay.get(),m_subfarmDisplay);
     IocSensor::instance().send(this,CMD_UPDATE,m_subfarmDisplay);
     m_subPosCursor = SUBFARM_NODE_OFFSET;
   }
@@ -415,23 +455,15 @@ int FarmDisplay::showCtrlWindow() {
 
 /// Show window with processes on a given node
 int FarmDisplay::showProcessWindow(int flag) {
-  string cluster_name, node_name;
   if ( m_procDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_procDisplay->display());
     m_procDisplay = auto_ptr<ProcessDisplay>(0);
     return WT_SUCCESS;
   }
-  if ( m_sysDisplay.get() ) {
-    cluster_name = m_sysDisplay->clusterName();
-    node_name = m_sysDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
-  }
-  else if ( m_subfarmDisplay ) {
-    cluster_name = m_subfarmDisplay->clusterName();
-    node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
-  }
-  if ( !node_name.empty() ) {
-    m_procDisplay = auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node_name,cluster_name,flag));
+  pair<string,string> node = selectedNode();
+  if ( !node.second.empty() ) {
+    m_procDisplay = auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node.second,node.first,flag));
     m_procDisplay->show(m_anchorY+5,m_anchorX+12);
     MouseSensor::instance().add(this,m_procDisplay->display());
   }
@@ -441,23 +473,15 @@ int FarmDisplay::showProcessWindow(int flag) {
 /// Show window with CPU information of a given subfarm
 int FarmDisplay::showCpuWindow() {
   DisplayUpdate update(this,true);
-  string cluster_name, node_name;
   if ( m_cpuDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_cpuDisplay->display());
     m_cpuDisplay = auto_ptr<CPUDisplay>(0);
     return WT_SUCCESS;
   }
-  if ( m_sysDisplay.get() ) {
-    cluster_name = m_sysDisplay->clusterName();
-    node_name = m_sysDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
-  }
-  else if ( m_subfarmDisplay ) {
-    cluster_name = m_subfarmDisplay->clusterName();
-    node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
-  }
-  if ( !node_name.empty() ) {
-    m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,cluster_name,node_name));
+  pair<string,string> node = selectedNode();
+  if ( !node.second.empty() ) {
+    m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,node.first,node.second));
     m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
     MouseSensor::instance().add(this,m_cpuDisplay->display());
   }
@@ -467,20 +491,13 @@ int FarmDisplay::showCpuWindow() {
 /// Show window with CPU information of a given subfarm
 int FarmDisplay::showBootWindow() {
   DisplayUpdate update(this,true);
-  string cluster_name;
   if ( m_bootDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_bootDisplay->display());
     m_bootDisplay = auto_ptr<InternalDisplay>(0);
     return WT_SUCCESS;
   }
-  if ( m_sysDisplay.get() )
-    cluster_name = m_sysDisplay->clusterName();
-  else if ( m_subfarmDisplay )
-    cluster_name = m_subfarmDisplay->clusterName();
-  else if ( currentDisplay() )
-    cluster_name = currentDisplay()->name();
-
+  string cluster_name = selectedCluster();
   if ( !cluster_name.empty() ) {
     m_bootDisplay = auto_ptr<InternalDisplay>(createBootDisplay(this,cluster_name));
     m_bootDisplay->show(m_anchorY+5,m_anchorX+12);
@@ -493,20 +510,13 @@ int FarmDisplay::showBootWindow() {
 /// Show window with CPU information of a given subfarm
 int FarmDisplay::showStatsWindow() {
   DisplayUpdate update(this,true);
-  string cluster_name;
+  string cluster_name = selectedCluster();
   if ( m_statsDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_statsDisplay->display());
     m_statsDisplay = auto_ptr<InternalDisplay>(0);
     return WT_SUCCESS;
   }
-  if ( m_sysDisplay.get() )
-    cluster_name = m_sysDisplay->clusterName();
-  else if ( m_subfarmDisplay )
-    cluster_name = m_subfarmDisplay->clusterName();
-  else if ( currentDisplay() )
-    cluster_name = currentDisplay()->name();
-
   if ( !cluster_name.empty() ) {
     m_statsDisplay = auto_ptr<InternalDisplay>(createFarmStatsDisplay(this,cluster_name));
     m_statsDisplay->show(m_anchorY+5,m_anchorX+12);
@@ -518,36 +528,23 @@ int FarmDisplay::showStatsWindow() {
 
 /// Show window with SYSTEM information of a given subfarm
 int FarmDisplay::showSysWindow() {
-  InternalDisplay* d = 0;
   DisplayUpdate update(this,true);
   if ( m_sysDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_sysDisplay->display());
     m_sysDisplay->finalize();
-    if ( m_nodeSelector )  {
-      MouseSensor::instance().remove(m_nodeSelector->display());
-    }
-    m_nodeSelector = 0;
-    if ( m_subfarmDisplay )  {
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
-      if ( m_nodeSelector )  {
-	MouseSensor::instance().add(this,m_nodeSelector->display());
-      }
-    }
+    m_nodeSelector = swapMouseSelector(this,m_sysDisplay.get(),m_subfarmDisplay);
     m_sysDisplay = auto_ptr<ClusterDisplay>(0);
+    return WT_SUCCESS;
   }
-  else if ( (d=currentDisplay()) != 0 ) {
-    string dnam = d->name();
+  string dnam = selectedCluster();
+  if ( !dnam.empty() ) {
     string svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
     const char* argv[] = {"",svc.c_str(), "-delay=300"};
     ClusterDisplay* disp = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX+3,m_anchorY,3,(char**)argv);
     m_sysDisplay = auto_ptr<ClusterDisplay>(disp);
     m_sysDisplay->initialize();
-    MouseSensor::instance().add(this,m_sysDisplay->nodeDisplay());
-    m_nodeSelector = dynamic_cast<ScrDisplay*>(m_sysDisplay->nodeDisplay());
-    if ( m_nodeSelector )   {
-      MouseSensor::instance().add(this,m_nodeSelector->display());
-    }
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_sysDisplay.get());
   }
   return WT_SUCCESS;
 }
@@ -620,7 +617,7 @@ int FarmDisplay::handleKeyboard(int key)    {
     case CTRL_E:
       delete this;
       ::exit(0);
-      return WT_SUCCESS;
+      break;
     case 'h':
     case 'H':
     case CTRL_H:
@@ -634,17 +631,17 @@ int FarmDisplay::handleKeyboard(int key)    {
     case 'k':
     case 'K':
       IocSensor::instance().send(this,CMD_SHOWCTRL,this);
-      return WT_SUCCESS;
+      break;
     case 'l':
     case 'L':
       IocSensor::instance().send(this,CMD_SHOWSYS,this);
-      return WT_SUCCESS;
+      break;
     case 'm':
     case 'M':
     case '.':
     case KPD_PERIOD:
-      IocSensor::instance().send(this,m_sysDisplay.get() ? CMD_SHOWCTRL : CMD_SHOWMBM,this);
-      return WT_SUCCESS;
+      IocSensor::instance().send(this,m_sysDisplay.get()?CMD_SHOWCTRL:CMD_SHOWMBM,this);
+      break;
     case 'p':
     case 'P':
       return showProcessWindow(0);
@@ -657,17 +654,28 @@ int FarmDisplay::handleKeyboard(int key)    {
     case CTRL_N:
       return showProcessWindow(4);
     case CTRL_M:
-      return WT_SUCCESS;      
+      break;      
     case 's':
     case 'S':
       return showStatsWindow();
-
     case RETURN_KEY:
     case ENTER:
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
-      return WT_SUCCESS;
+      break;
+    case MOVE_UP:
+      if( 0 == m_nodeSelector && m_posCursor > 0 )
+        --m_posCursor;
+      else if( m_nodeSelector && m_subPosCursor > SUBFARM_NODE_OFFSET )
+        --m_subPosCursor;
+      break;
+    case MOVE_DOWN:
+      if( 0 == m_nodeSelector && m_posCursor < subDisplays().size()-1 )
+        ++m_posCursor;
+      else if( m_nodeSelector && selectedClusterSize() > (m_subPosCursor-SUBFARM_NODE_OFFSET) )
+        ++m_subPosCursor;
+      break;
     case MOVE_LEFT:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
+      if( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
         SubDisplays::reverse_iterator k;
         col = d ? d->display()->col : 2;
         row = d ? d->display()->row : 2;
@@ -684,7 +692,7 @@ int FarmDisplay::handleKeyboard(int key)    {
       }
       break;
     case MOVE_RIGHT:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
+      if( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
         SubDisplays::iterator k;
         col = d ? d->display()->col : 2;
         row = d ? d->display()->row : 2;
@@ -700,24 +708,8 @@ int FarmDisplay::handleKeyboard(int key)    {
         }
       }
       break;
-    case MOVE_UP:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && m_posCursor > 0 )
-        --m_posCursor;
-      else if ( 0 != m_subfarmDisplay && m_subPosCursor > SUBFARM_NODE_OFFSET )
-        --m_subPosCursor;
-      else if ( 0 != m_sysDisplay.get() && m_subPosCursor > SUBFARM_NODE_OFFSET )
-        --m_subPosCursor;
-      break;
-    case MOVE_DOWN:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && m_posCursor < subDisplays().size()-1 )
-        ++m_posCursor;
-      else if ( 0 != m_subfarmDisplay && m_subfarmDisplay->numNodes()>(m_subPosCursor-SUBFARM_NODE_OFFSET) )
-        ++m_subPosCursor;
-      else if ( 0 != m_sysDisplay.get() && m_subPosCursor > SUBFARM_NODE_OFFSET )
-        --m_subPosCursor;
-      break;
     case PAGE_UP:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
+      if ( 0 == m_nodeSelector && (d=currentDisplay()) ) {
         SubDisplays::reverse_iterator k;
         col = d ? d->display()->col : 2;
         row = d ? d->display()->row : 2;
@@ -727,13 +719,14 @@ int FarmDisplay::handleKeyboard(int key)    {
             if ( d1->row == min(d1->row,row) ) {
               row = d1->row;
               m_posCursor = cnt;
+	      return WT_SUCCESS;
             }
           }
         }
       }
       break;
     case PAGE_DOWN:
-      if ( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
+      if ( 0 == m_nodeSelector && (d=currentDisplay()) ) {
         SubDisplays::iterator k;
         col = d ? d->display()->col : 2;
         row = d ? d->display()->row : 0;
@@ -743,6 +736,7 @@ int FarmDisplay::handleKeyboard(int key)    {
             if ( d1->row == max(d1->row,row) ) {
               row = d1->row;
               m_posCursor = cnt;
+	      return WT_SUCCESS;
             }
           }
         }
@@ -762,6 +756,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 void FarmDisplay::handle(const Event& ev) {
   int cnt = 0;
   time_t now = time(0);
+  InternalDisplay* d = 0;
   Farms::iterator i;
   SubDisplays::iterator k;
   const MouseEvent* m = 0;
@@ -793,14 +788,14 @@ void FarmDisplay::handle(const Event& ev) {
       else
         IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
     }
-    else if ( m_subfarmDisplay && m->msec == (unsigned int)-1 ) {
+    else if ( m_nodeSelector && m->msec == (unsigned int)-1 ) {
       Display* disp = m_nodeSelector->display();
       if ( m->display == disp ) {
         size_t pos = m->y - disp->row - 2;
-        if ( m_subfarmDisplay->numNodes()>pos ) {
-          RTL::Lock unlock(screenLock(),true);
+        if ( selectedClusterSize()>pos ) {
+	  int cmd = m->button==0 ? m_sysDisplay.get() ? CMD_SHOWCTRL : CMD_SHOWMBM : CMD_SHOWPROCS;
           m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
-          handleKeyboard(m->button == 0 ? int(KPD_PERIOD) : int('P'));
+	  IocSensor::instance().send(this,cmd,this);
         }
       }
     }
@@ -818,11 +813,9 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_HANDLE_KEY:
       handleKeyboard(int((long)ev.data));
       break;
-    case CMD_SHOWSUBFARM: {
-      RTL::Lock unlock(screenLock(),true);
+    case CMD_SHOWSUBFARM:
       showSubfarm();
       return;
-    }
     case CMD_SHOWBOOT:
       showBootWindow();
       return;
@@ -849,8 +842,7 @@ void FarmDisplay::handle(const Event& ev) {
       return;
     case CMD_SHOW:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
-        InternalDisplay* d = (*k).second;
-        if ( d == ev.data )  {
+        if ( (d=(*k).second) == ev.data )  {
           m_posCursor = cnt;
 	  IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
           return;
@@ -859,8 +851,7 @@ void FarmDisplay::handle(const Event& ev) {
       break;
     case CMD_POSCURSOR:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
-        InternalDisplay* d = (*k).second;
-        if ( d == ev.data )  {
+        if ( (d=(*k).second) == ev.data )  {
           m_posCursor = cnt;
           set_cursor();
           return;
@@ -887,26 +878,21 @@ void FarmDisplay::handle(const Event& ev) {
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
     case CMD_ADD:
-      i = find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>());
-      if ( i == m_farms.end() ) {
+      if ( (i=find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>())) == m_farms.end() ) {
         m_farms.push_back(*ev.iocPtr<string>());
         connect(m_farms);
       }
       delete ev.iocPtr<string>();
       return;
-    case CMD_CONNECT: {
-      DisplayUpdate update(this,false);
+    case CMD_CONNECT:
       m_farms = *ev.iocPtr<StringV>();
       connect(m_farms);
       delete ev.iocPtr<StringV>();
       return;
-    }
     case CMD_CHECK: {
       DisplayUpdate update(this,true);
-      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
-        InternalDisplay* d = (*k).second;
-        if ( d != ev.data ) d->check(now);
-      }
+      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
+        if ( (d=(*k).second) != ev.data ) d->check(now);
       if ( m_sysDisplay.get() ) m_sysDisplay->update();
       break;
     }
@@ -928,6 +914,7 @@ void FarmDisplay::connect(const vector<string>& farms) {
   SubDisplays::iterator k;
   SubDisplays copy;
   char txt[128];
+  DisplayUpdate update(this,false);
 
   ::sprintf(txt,"Total number of subfarms:%d %50s",int(farms.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
   ::scrc_put_chars(m_display,txt,NORMAL,1,2,1);

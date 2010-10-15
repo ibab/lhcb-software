@@ -1,4 +1,4 @@
-// $Id: ProcessDisplay.cpp,v 1.4 2010-10-15 07:42:00 frankb Exp $
+// $Id: ProcessDisplay.cpp,v 1.5 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,12 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.4 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.5 2010-10-15 10:53:54 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
+#include "ROMonDefs.h"
 #include "CPP/Event.h"
 #include "SCR/scr.h"
 extern "C" {
@@ -29,18 +30,12 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-
-ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, const string& cluster, int flag, int height, int width)
-  : InternalDisplay(parent, title), m_flag(flag)
+ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& node, const string& cluster, int flag, int height, int width)
+  : InternalDisplay(parent, node), m_flag(flag)
 {
-  size_t i;
-  string svc = svcPrefix();
-  m_name = "";
-  for(i=0; i<title.length() && title[i]!='.';++i)
-    m_name += ::tolower(title[i]);
-  for(i=0; i<cluster.length() && cluster[i]!='.';++i)
-    svc += ::tolower(cluster[i]);
+  string svc = svcPrefix()+strlower(cluster);
   svc += (flag ? "/ROpublish/Tasks" : "/ROpublish/ROTasks");
+  m_name  = strlower(node);
   m_title = "Process monitor on "+m_title+" Service:"+svc;
   ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
   ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);

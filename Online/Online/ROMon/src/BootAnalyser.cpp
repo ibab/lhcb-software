@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.10 2010-10-15 07:42:00 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.11 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.10 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.11 2010-10-15 10:53:54 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -143,7 +143,6 @@ namespace ROMon {
 #include "ROMonDefs.h"
 
 // C++ include files
-#include <fstream>
 #include <cerrno>
 #include <fcntl.h>
 
@@ -166,9 +165,8 @@ using namespace std;
 #define MIN_LINE_LENGTH            15
 #define SCAN_TIMEDIFF              15
 #define PUBLISH_TIMEDIFF           15
-#define DHCP_BOOT_DIFF            200
 
-static bool s_use_ts = true;
+static bool   s_use_ts = true;
 static string s_svcPrefix = "/";
 
 namespace ROMon {
@@ -328,6 +326,7 @@ SubfarmBootStatus::~SubfarmBootStatus() {
 static void error_user_routine (int severity, int error_code, char* message) {
   ::lib_rtl_output(LIB_RTL_ERROR,"Error handler called: %d %d %s.",severity,error_code,message);
 }
+
 // Start the sub-farm monitor
 int SubfarmBootStatus::start() {
   ROMon::Inventory inv;
@@ -335,7 +334,6 @@ int SubfarmBootStatus::start() {
   string fname = "file://" + root + "/" + strupper(name()) + ".xml";
   string nam = strupper(name());
   XML::TaskSupervisorParser ts;
-  //::lib_rtl_output(LIB_RTL_ALWAYS,"Parsing file %s with DOM.",fname.c_str());
 
   ts.parseFile(fname);
   ts.getInventory(inv);
@@ -456,8 +454,9 @@ int SubfarmBootStatus::scan() {
 /// Start subfarm boot monitoring
 int SubfarmBootStatus::check() {
   BootDataProcessor proc(*this);
-  int res = m_file.scan(proc);
+  int nb, res = m_file.scan(proc);
   if ( res ) {
+    char text[2048];
     if ( m_file.migrated() ) {
       m_file.close();
       res = m_file.scan(proc);
@@ -470,17 +469,12 @@ int SubfarmBootStatus::check() {
         if ( n->status&BootNodeStatus::DHCP_REQUESTED ) {
           if ( n->status&BootNodeStatus::TCP_STARTED ) {
             if ( 0 == (n->status&BootNodeStatus::FMC_STARTED) ) {
-              //if ( abs(time(0)-n->dhcpReq) > DHCP_BOOT_DIFF ) {
               string cmd = "/bin/ping -c 1 -w 1 -s 2 ";
               cmd += n->name;
               ::lib_rtl_output(LIB_RTL_ERROR,"Executing command:%s",cmd.c_str());
               FILE* f = ::lib_rtl_pipe_open(cmd.c_str(),"r");
               if ( f ) {
-                char text[2048];
-                //memset(text,0,sizeof(text));
-                int nb = ::fread(text,1,sizeof(text)-1,f);
-                //::lib_rtl_output(LIB_RTL_ERROR,text);
-                if ( nb > 0 ) {
+                if ( (nb=::fread(text,1,sizeof(text)-1,f)) > 0 ) {
                   text[nb] = 0;
                   if ( ::strstr(text," 0% packet loss") == 0 ) {
                     n->status = 0;
@@ -488,7 +482,8 @@ int SubfarmBootStatus::check() {
                   }
                 }
                 else {
-                  ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,::lib_rtl_error_message(::lib_rtl_get_error()));
+                  ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,
+				   ::lib_rtl_error_message(::lib_rtl_get_error()));
                 }
                 ::lib_rtl_pipe_close(f);
               }
@@ -496,7 +491,6 @@ int SubfarmBootStatus::check() {
                 ::lib_rtl_output(LIB_RTL_ERROR,"Error:%s.",::lib_rtl_error_message(::lib_rtl_get_error()));
               }
             }
-            //}
           }
         }
       }
@@ -516,7 +510,7 @@ void SubfarmBootStatus::dump() {
     ::strftime(t1,sizeof(t1),"%F %H:%M:%S",::localtime(&n->dhcpReq));
     ::strftime(t2,sizeof(t2),"%F %H:%M:%S",::localtime(&n->mountReq));
     ::lib_rtl_output(LIB_RTL_INFO,"%s> Node %-10s with address:%-15s DHCP:%s Mount:%s",
-      name().c_str(),n->name,::inet_ntoa(ina), t2,t1);
+		     name().c_str(),n->name,::inet_ntoa(ina), t2,t1);
   }
 }
 
@@ -538,6 +532,7 @@ BootMonitor::~BootMonitor() {
 
 /// Start the BOOT monitor service for all subfarms known
 int BootMonitor::start() {
+  size_t len;
   string dnam;
   struct dirent* dp;
   struct stat statbuff;
@@ -551,7 +546,6 @@ int BootMonitor::start() {
       dnam += entry;
       if ( 0 == ::stat(dnam.c_str(),&statbuff) ) {
         if ( S_ISDIR(statbuff.st_mode) ) {
-          //if ( dnam.find("hltd08") == string::npos ) continue;
           ::lib_rtl_output(LIB_RTL_DEBUG,"Loading subfarm boot status of %s.",entry);
           SubfarmBootStatus* sf = 0;
           try {
@@ -577,7 +571,8 @@ int BootMonitor::start() {
       }
     }
     ::closedir(dir);
-    m_clusterdata = (BootClusterCollection*)new char[(m_clusters.size()+1)*sizeof(BootClusterItem)+sizeof(BootClusterCollection)];
+    len = (m_clusters.size()+1)*sizeof(BootClusterItem)+sizeof(BootClusterCollection);
+    m_clusterdata = (BootClusterCollection*)new char[len];
     BootClusterCollection::iterator ci=m_clusterdata->reset();
     for(Clusters::const_iterator i=m_clusters.begin(); i!=m_clusters.end();++i) {
       ::strncpy((*ci).name,(*i).second->name().c_str(),sizeof((*ci).name));
@@ -633,10 +628,12 @@ void BootMonitor::handle(const Event& ev) {
     }
   }
   catch(const exception& e) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"Exception in callback processing:%s",e.what());
+    ::lib_rtl_output(LIB_RTL_ERROR,"BootMonitor> %s Exception in callback processing:%s",
+		     ::lib_rtl_timestr(),e.what());
   }
   catch(...) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"UNKNOWN exception in callback processing.");
+    ::lib_rtl_output(LIB_RTL_ERROR,"BootMonitor> %s UNKNOWN exception in callback processing.",
+		     ::lib_rtl_timestr());
   }
   TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_CHECK);
 }
