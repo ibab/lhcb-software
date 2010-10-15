@@ -31,3 +31,5 @@ parser.add_option('-r', '--root', type='string', dest='root', default='/Event', 
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose')
 
 parser.add_option('-n', '--nevents', type='int', dest='nevents', default=-1, help='TES root to explore [default: %default]')
+
+parser.add_option('-b', '--branch', type='string', dest='branch', default='', help='TES branch to explore [default: %default]')
