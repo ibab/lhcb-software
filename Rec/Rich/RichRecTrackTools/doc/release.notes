@@ -4,6 +4,19 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Chris Jones
+ - Remove caching of refractive indices in CherenkovAngle tool. Doesn't 
+   really save any cpu time, and breaks whenever the refractive index is
+   updated on the fly.
+ - Add a new method saturatedCherenkovTheta that returns the saturated CK theta
+   angle for a given track segment.
+ - Update the expected track signal tool to use new refractive index interface 
+   method that returns the threshold momentum for a track segment, taking into
+   account the radiator volumes traversed.
+ - Add a scale factor job option to the expected signal tool that scales the
+   threshold momentum when used to determine if a track is above or below 
+   threshold. Potentially useful to allow a little leaway in the decision.
+
 ! 2010-10-14 - Chris Jones
  - Various changes to avoid loading radiator detector elements until they
    are actually needed.

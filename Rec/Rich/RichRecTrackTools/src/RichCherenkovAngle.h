@@ -50,8 +50,6 @@ namespace Rich
      *
      *  Tool calculating the expected Cherenkov angle
      *
-     *  @todo Update this tool to properly handle refractive index changes on the fly ...
-     *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
      */
@@ -87,6 +85,9 @@ namespace Rich
 
       // Computes the nominal saturated Cherenkov angle for a given radiator medium
       double nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const;
+
+      // Computes the saturated Cherenkov angle for the radiator associated to the given track segment
+      double saturatedCherenkovTheta( const LHCb::RichRecSegment * segment ) const;
 
       // Computes the average ring radius on the detector plane, in local HPD coordinates,
       // for the given mass hypothesis.
@@ -129,9 +130,6 @@ namespace Rich
 
       /// Track effective refractive index tool
       const ITrackEffectiveRefractiveIndex * m_tkIndex;
-
-      /// Storage for nominal saturated Cherenkov angles
-      mutable std::vector<double> m_nomCK;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

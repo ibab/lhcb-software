@@ -29,8 +29,7 @@ CherenkovAngle::CherenkovAngle ( const std::string& type,
     m_refIndex      ( NULL ),
     m_smartIDTool   ( NULL ),
     m_rayTrace      ( NULL ),
-    m_tkIndex       ( NULL ),
-    m_nomCK         ( Rich::NRadiatorTypes, -1.0 )
+    m_tkIndex       ( NULL )
 {
   // interface
   declareInterface<ICherenkovAngle>(this);
@@ -76,7 +75,8 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     {
 
       // Beta for this segment
-      const double beta = m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id);
+      const double beta = 
+        m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id);
       if ( beta > 0 )
       {
         // loop over energy bins
@@ -86,7 +86,7 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
         {
           const double temp = 
             beta * m_tkIndex->refractiveIndex( segment, sigSpectra.binEnergy(iEnBin) );
-          angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
+          angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? std::acos(1/temp) : 0 );
         }
 
         // normalise the angle
@@ -97,7 +97,9 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     } // unscat > 0
 
     // Don't save in the segment if the emitted spectra was used
-    if ( !useEmittedSpectrum ) segment->setAverageCKTheta( id, static_cast<LHCb::RichRecSegment::FloatType>(angle) );
+    if ( !useEmittedSpectrum ) 
+      segment->setAverageCKTheta( id, 
+                                  static_cast<LHCb::RichRecSegment::FloatType>(angle) );
     
     // return the newly calculated value
     return angle;
@@ -116,13 +118,15 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment ) const
 double
 CherenkovAngle::nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const
 {
-  if ( m_nomCK[rad] < 0 )
-  {
-    // fill on demand, to avoid loading radiator detector elements until really needed
-    const double refIn = m_refIndex->refractiveIndex( rad );
-    m_nomCK[rad] = std::acos(1.0/refIn);
-  }
-  return m_nomCK[rad];
+  const double refIn = m_refIndex->refractiveIndex( rad );
+  return ( refIn > 0 ? std::acos( 1.0/refIn ) : 0 );
+}
+
+double 
+CherenkovAngle::saturatedCherenkovTheta( const LHCb::RichRecSegment * segment ) const
+{
+  const double refIn = m_tkIndex->refractiveIndex( segment );
+  return ( refIn > 0 ? std::acos( 1.0/refIn ) : 0 );
 }
 
 double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
@@ -211,8 +215,8 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
       if ( ( iRad != Rich::Rich2Gas && hitPointLocal.y()*tkPoint.y() > 0. ) ||
            ( iRad == Rich::Rich2Gas && hitPointLocal.x()*tkPoint.x() > 0. ) )
       {
-        rSum += sqrt( gsl_pow_2(hitPointLocal.x() - tkPoint.x()) +
-                      gsl_pow_2(hitPointLocal.y() - tkPoint.y()) );
+        rSum += std::sqrt( gsl_pow_2( hitPointLocal.x() - tkPoint.x() ) +
+                           gsl_pow_2( hitPointLocal.y() - tkPoint.y() ) );
         ++nUsed;
       }
 

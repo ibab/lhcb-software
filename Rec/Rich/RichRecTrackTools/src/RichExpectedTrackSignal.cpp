@@ -38,6 +38,7 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
   // interface
   declareInterface<IExpectedTrackSignal>(this);
   // JOS
+  declareProperty( "ThresholdMomentumScaleFactor", m_pThresScale = 1.0 );
   declareProperty( "MinNumPhotonsPerRad",
                    m_minPhotonsPerRad,
                    "Minimum number of photons in each radiator for a radiator segment to be considered as having RICH information" );
@@ -560,16 +561,17 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
   const double P = std::sqrt(tkSeg.bestMomentum().mag2());
   // Adjust momentum to account for a 1 sigma fluctuation,
   // so segment is really above threshold but measured below
-  const double Perr = tkSeg.middleErrors().errP();
+  //const double Perr = tkSeg.middleErrors().errP();
 
   // is this momentum above the cherenkov threshold momentum
-  const double pthres = m_richPartProp->thresholdMomentum(type,tkSeg.radiator());
-  const bool above = ( P > pthres );
-  //const bool above = ( P+Perr > pthres );
-  //const bool above = ( P-Perr > pthres );
+  const double pthres = m_richPartProp->thresholdMomentum( type, tkSeg );
+  const bool above = ( P > pthres*m_pThresScale );
+  //const bool above = ( P+Perr > pthres*m_pThresScale );
+  //const bool above = ( P-Perr > pthres*m_pThresScale );
 
   if ( msgLevel(MSG::DEBUG) )
   {
+    const double Perr = tkSeg.middleErrors().errP();
     debug() << "  -> Threshold check : " << tkSeg.radiator() << " " << type
             << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres
             << " : above=" << above << endmsg;

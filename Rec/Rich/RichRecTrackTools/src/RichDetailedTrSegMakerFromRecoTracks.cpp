@@ -121,9 +121,12 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // Radiators
-  m_radiators.push_back( usedRads(Rich::Aerogel)  ? getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : NULL );
-  m_radiators.push_back( usedRads(Rich::Rich1Gas) ? getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : NULL );
-  m_radiators.push_back( usedRads(Rich::Rich2Gas) ? getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
+  m_radiators.push_back( usedRads(Rich::Aerogel)  ? 
+                         getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : NULL );
+  m_radiators.push_back( usedRads(Rich::Rich1Gas) ? 
+                         getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : NULL );
+  m_radiators.push_back( usedRads(Rich::Rich2Gas) ? 
+                         getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
 
   if ( m_extrapFromRef )
   {

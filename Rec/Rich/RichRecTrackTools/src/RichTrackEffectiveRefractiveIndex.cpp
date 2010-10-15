@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::TrackEffectiveRefractiveIndex
  *
- * CVS Log :-
- * $Id: RichTrackEffectiveRefractiveIndex.cpp,v 1.1 2008-11-30 11:02:23 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   27/11/2008
  */
@@ -47,34 +44,27 @@ TrackEffectiveRefractiveIndex::
 refractiveIndex ( const LHCb::RichRecSegment * segment,
                   const double energy ) const
 {
-  const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
-  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
-  return m_refIndex->refractiveIndex( rads, energy );
+  return m_refIndex->refractiveIndex( segment->trackSegment().radIntersections(), energy );
 }
 
 double 
 TrackEffectiveRefractiveIndex::
 refractiveIndex ( const LHCb::RichRecSegment * segment ) const
 {
-  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
-  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
-  return m_refIndex->refractiveIndex( rads );
+  return m_refIndex->refractiveIndex( segment->trackSegment().radIntersections(), 
+                                      segment->trackSegment().avPhotonEnergy() );
 }
 
 double 
 TrackEffectiveRefractiveIndex::
 refractiveIndexRMS ( const LHCb::RichRecSegment * segment ) const
 {
-  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
-  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
-  return m_refIndex->refractiveIndexRMS( rads );
+  return m_refIndex->refractiveIndexRMS( segment->trackSegment().radIntersections() );
 }
 
 double 
 TrackEffectiveRefractiveIndex::
 refractiveIndexSD ( const LHCb::RichRecSegment * segment ) const
 {
-  const LHCb::RichTrackSegment     & tkSeg = segment->trackSegment();
-  const RichRadIntersection::Vector & rads = tkSeg.radIntersections();
-  return m_refIndex->refractiveIndexSD( rads );
+  return m_refIndex->refractiveIndexSD( segment->trackSegment().radIntersections() );
 }
