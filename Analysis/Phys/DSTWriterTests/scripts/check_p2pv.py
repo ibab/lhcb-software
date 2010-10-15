@@ -42,7 +42,7 @@ if __name__ == '__main__' :
     verbose = options.verbose
     nevents = options.nevents
     p2pvmapname = '/' + options.p2pvmap
-    p2pvmapname.replace('//', '/')
+    p2pvmapname = p2pvmapname.replace('//', '/')
     
     outputFile = open(output, 'w')
 

@@ -1,15 +1,4 @@
 #!/usr/bin/env python
-import sys, getopt
-#==============================================================================
-def printHelp():
-    print "Usage: python -i MicroDSTReadingExample [options]"
-    print "Options:\n"
-    print "\t--input         Input MicroDST file"
-    print "                  Default ''"
-    print "                  Default 'DC06selBs2JpsiPhi_unbiased'"
-    print "\t--root          TES root of everything."
-    print "                  Default 'Event/MultiDiMuon'"
-
 
 def analyseParticle(particle) :
     if particle :
@@ -34,9 +23,14 @@ def analyseParticlesAndFlavTags(particles, flavTags) :
         
 if __name__ == '__main__' :
 
+    _usage = """
+    \t%prog filename [options]
+    \tSearches in ROOT/BRANCH/Particles and ROOT/BRANCH/FlavourTags to get the FlavourTag corresponding to each Particle."""
+    
+
     from DSTWriterTests.default_args import parser
     parser.set_defaults(output='flavtags.txt')
-
+    parser.set_usage(_usage)
     (options, args) = parser.parse_args()
         
     if len(args) != 1 :

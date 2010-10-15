@@ -2,7 +2,7 @@
 '''
 Check a Particle location in a DST and look for ProtoParticles.
 Useage:
-./check_protoparticles.py --input <some file name> --location <TES location of Particles>
+./check_protoparticles.py --help
 '''
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
@@ -20,6 +20,28 @@ if __name__ == '__main__' :
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 
+    _usage = """
+    \t%prog filename [options]
+    \tGets Particles from ROOT/BRANCH/Partilces and follows their ProtoParticle SmartRefs."""
+
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='dst_contents.txt')
+    parser.set_usage(_usage)
+    (options, args) = parser.parse_args()
+
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
+
+    filename = args[0]
+    locationRoot = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    branch = options.branch
+    
+    particleLoc = locationRoot + '/' + branch + '/Particles'
+    particleLoc = particleLoc.replace('//', '/')
+    particleLoc = particleLoc.replace('/Particles/Particles', '/Particles')
 #    particleLocation = '/Event/Dimuon/Phys/StdVeryLooseMuons/Particles'
     particleLocation = ''
     filename = ''
@@ -53,7 +75,7 @@ if __name__ == '__main__' :
 
     evtSel = appMgr.evtSel()
 
-    nextEvent = Functors.NextEvent(appMgr)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     evtSel.open(filename)
 
@@ -72,7 +94,8 @@ if __name__ == '__main__' :
                 if protoParticle :
                     nProtoParticles += 1
 
-    print '======================================================================================'
-    print 'Checked location', particleLocation
-    print 'Found', nParticles, 'Particles and', nProtoParticles, 'ProtoParticles in', nEvents, 'events'
-    print '======================================================================================'
+    if verbose :
+        print '======================================================================================'
+        print 'Checked location', particleLocation
+        print 'Found', nParticles, 'Particles and', nProtoParticles, 'ProtoParticles in', nEvents, 'events'
+        print '======================================================================================'

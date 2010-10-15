@@ -1,15 +1,4 @@
 #!/usr/bin/env python
-import sys, getopt
-#==============================================================================
-def printHelp():
-    print "Usage: python -i MicroDSTReadingExample [options]"
-    print "Options:\n"
-    print "\t--input         Input MicroDST file"
-    print "                  Default ''"
-    print "                  Default 'DC06selBs2JpsiPhi_unbiased'"
-    print "\t--root          TES root of everything."
-    print "                  Default 'Event/MultiDiMuon'"
-
 
 def analyseParticle(particle) :
     if particle :
@@ -40,25 +29,28 @@ def analyseParticlesAndLHCbIDs(particles, lhcbidmap) :
         
 if __name__ == '__main__' :
 
-    locationRoot = '/Event/DiMuonInc'
+    _usage = """
+    \t%prog filename [options]
+    \tSearches in ROOT/BRANCH/Partilces and ROOT/BRANCH/Particle2LHCbIDMap to get the LHCbIDs corresponding to each particle."""
 
-    microDSTFile = ['']
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='dst_contents.txt')
+    parser.set_usage(_usage)
+    (options, args) = parser.parse_args()
 
-    opts, args = getopt.getopt(sys.argv[1:], "i:r:h", ["input=", "root=", "help"])
+    if len(args) != 1 :
+        parser.error('expected one positional argument')
 
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            printHelp()
-        elif o in ("-i", "--input"):
-            microDSTFile=a
-        elif o in ("-r", "--root"):
-            locationRoot = a
+    filename = args[0]
+    locationRoot = options.root
+    output = options.output
+    verbose = options.verbose
+    nevents = options.nevents
+    branch = options.branch
+    
+    particleLoc = locationRoot + '/' + branch + '/Particles'
+    p2lhcbidLoc= locationRoot + '/' + branch + '/Particle2LHCbIDMap'
 
-#    particleLoc = locationRoot + '/Dimuon/Phys/StdLooseMuons/Particles'
-    particleLoc = locationRoot + '/Dimuon/Phys/SelDiMuonInc/Particles'
-    p2lhcbidLoc= locationRoot + '/Dimuon/Phys/SelDiMuonInc/Particle2LHCbIDMap'
-#    pvLoc       = locationRoot +  '/Rec/Vertex/Primary'
-#    pvLoc       = locationRoot +  '/Phys/SelBs2Jpsi2MuMuPhi2KK/ReFitPVs_SeqBs2Jpsi2MuMuPhi2KK_PVs'
     # Configuration
 
     from GaudiConf.Configuration import *
@@ -89,14 +81,15 @@ if __name__ == '__main__' :
     tsvc= appMgr.toolsvc()
 
     from AnalysisPython import Functors
-    nextEvent = Functors.NextEvent(appMgr, EvtMax=10)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     # open a DST or MicroDST
-    evtSel.open(microDSTFile)
+    evtSel.open(filename)
 
     nEvents=0
 
     while ( nextEvent() ) :
         nEvents+=1
-#        print "Event ", nEvents, ". Getting data from ", particleLoc, p2lhcbidLoc
+        if verbose :
+            print "Event ", nEvents, ". Getting data from ", particleLoc, p2lhcbidLoc
         analyseParticlesAndLHCbIDs(evtSvc[particleLoc], evtSvc[p2lhcbidLoc])

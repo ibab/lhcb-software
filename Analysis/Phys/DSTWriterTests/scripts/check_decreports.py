@@ -20,12 +20,14 @@ if __name__ == '__main__' :
     from GaudiPython.Bindings import gbl, AppMgr, Helper
     from DSTWriterTests.default_args import parser
 
-
-    
-
-
+    parser.remove_option('--branch')
+    parser.remove_option('--root')
+    parser.add_option('-l', '--location',
+                      type='string',
+                      dest='location',
+                      default= '/Event/Strip/Phys/DecReports',
+                      help='TES Location of DecReports container [default: %default]')
     parser.set_defaults(output='decreports.txt')
-    parser.set_defaults(branch='Strip/Phys/DecReports')
     
     (options, args) = parser.parse_args()
 
@@ -33,15 +35,13 @@ if __name__ == '__main__' :
         parser.error('expected one positional argument')
 
     filename = args[0]
-    locationRoot = options.root
+    location = options.location
     output = options.output
     verbose = options.verbose
     nevents = options.nevents
-    decReportsLocation = locationRoot + '/' + options.branch                                
-    decReportsLocation.replace('//', '/')
 
     if verbose :
-        print 'will look for DecReports in', decReportsLocation
+        print 'will look for DecReports in', location
         print 'nevents', nevents
         print 'output file', output
     
@@ -61,7 +61,7 @@ if __name__ == '__main__' :
 
     evtSel = appMgr.evtSel()
 
-    nextEvent = Functors.NextEvent(appMgr)
+    nextEvent = Functors.NextEvent(appMgr, nevents)
 
     evtSel.open(filename)
 
@@ -72,7 +72,7 @@ if __name__ == '__main__' :
 
     while ( nextEvent() ) :
         nEvents+=1
-        decReports = evtSvc[decReportsLocation]
+        decReports = evtSvc[location]
         if decReports :
             nDecReports += 1
             for decName in decReports.decisionNames() :
