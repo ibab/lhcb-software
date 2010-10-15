@@ -23,9 +23,9 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-parser.add_option('-o', '--output', type='string', dest='output_file', default='dst_summary.txt', help='Name of output file with contents summary [default: %default]')
+parser.add_option('-o', '--output', type='string', dest='output', default='dst_summary.txt', help='Name of output file with contents summary [default: %default]')
 
-parser.add_option('-r', '--root', type='string', dest='tes_root', default='/Event', help='TES root to explore [default: %default]')
+parser.add_option('-r', '--root', type='string', dest='root', default='/Event', help='TES root to explore [default: %default]')
 
 parser.add_option('-v', '--verbose', action='store_true', dest='verbose')
 
