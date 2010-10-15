@@ -4,8 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::IParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.6 2007-08-09 15:43:48 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -17,6 +15,12 @@
 // Kernel
 #include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
+
+// Event Model
+namespace LHCb
+{
+  class RichTrackSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichParticleProperties( "Rich::IParticleProperties", 1, 0 );
@@ -81,17 +85,17 @@ namespace Rich
     virtual double thresholdMomentum( const Rich::ParticleIDType id,
                                       const Rich::RadiatorType rad ) const = 0;
 
-    /** Calculates the square of the threshold momentum for a given mass hypothesis
-     *  in a given radiator
+    /** Calculates the threshold momentum for a given mass hypothesis
+     *  for the given RichTrackSegment
      *
-     *  @param id The mass hypothesis
-     *  @param rad The radiator medium
+     *  @param id    The mass hypothesis
+     *  @param trSeg The track segment
      *
-     *  @return The momentum threshold squared, below which no Cherenkov radiation
+     *  @return The momentum threshold value, below which no Cherenkov radiation
      *          can be emitted
      */
-    virtual double thresholdMomentumSq( const Rich::ParticleIDType id,
-                                        const Rich::RadiatorType rad ) const = 0;
+    virtual double thresholdMomentum( const Rich::ParticleIDType id,
+                                      const LHCb::RichTrackSegment& trSeg ) const = 0;
 
     /// Vector of the mass hypotheses to be considered
     virtual const Rich::Particles & particleTypes() const = 0;

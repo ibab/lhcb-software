@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.255 2010-02-12 17:18:13 cattanem Exp $
+!-----------------------------------------------------------------------
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2010-10-15 - Chris Jones
+ - Extend the particle properties tool interface to take a track segment
+   for the threshold momentum method. Allows the actual radiators the
+   thre track traversed to be taken into account properly.
 
 ! 2010-10-11 - Chris Jones
  - Various changes to tool interfaces to allow full calculation of the
