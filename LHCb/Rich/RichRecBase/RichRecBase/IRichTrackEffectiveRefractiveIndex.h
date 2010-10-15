@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::Rec::ITrackEffectiveRefractiveIndex
  *
- *  CVS Log :-
- *  $Id: IRichTrackEffectiveRefractiveIndex.h,v 1.1 2008-11-30 10:36:14 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/11/2008
  */

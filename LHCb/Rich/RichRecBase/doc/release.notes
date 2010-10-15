@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-10-15 - Chris Jones
+ - Add a new method to the Cherenkov angle tool interface to calculate the
+   saturated CK theta angle for a give track segment (assuming it has infinite
+   momentum). Takes into account the actual radiator media the track segment
+   traversed.
+
 ! 2010-10-13 - Chris Jones
  - Update Photon Creator base class to allow rejection of aerogel photon
    candidates due to the presence of a good gas photon candidate for the same

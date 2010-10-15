@@ -86,6 +86,14 @@ namespace Rich
        */
       virtual double nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const = 0;
 
+      /** Computes the saturated Cherenkov angle for the radiator associated to the given track segment
+       *
+       *  @param segment The RichRecSegment for which to coumpute the expected CK angle
+       *
+       *  @return The saturated Cherenkov angle
+       */
+      virtual double saturatedCherenkovTheta( const LHCb::RichRecSegment * segment ) const = 0;
+
       /** Computes the average ring radius on the detector plane, in local HPD coordinates,
        *  for the given mass hypothesis.
        *
