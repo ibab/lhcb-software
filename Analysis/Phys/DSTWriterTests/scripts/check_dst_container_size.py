@@ -7,7 +7,6 @@ Useage:
 
 __author__ = "Juan PALACIOS juan.palacios@cern.ch"
 
-import sys, getopt
 from GaudiConf.Configuration import *
 from ROOT import TFile, TTree, TObject, TList
 
@@ -36,31 +35,37 @@ def getTreeInfo( filename, trunk ) :
 
    
 if __name__ == '__main__' :
-    filename = ''
-    location = '/'
-    output = 'dst_container_sizes.txt'    
-    opts, args = getopt.getopt(sys.argv[1:], "o:i:l", ["input=", "output=", "location="])
 
-    for o, a in opts:
-        if o in ("-i", "--input"):
-            filename = a
-        elif o in ('-o', '--output') :
-            output = a
-        elif o in ("-l", "--location") :
-            location = a
-            
-    assert(filename != '')
+    from DSTWriterTests.default_args import parser
+    parser.set_defaults(output='dst_sizes.txt')
+    parser.set_defaults(location='/')
+
+    (options, args) = parser.parse_args()
+
+    if len(args) != 1 :
+        parser.error('expected one positional argument')        
+
+    filename = args[0]
+    location = options.root
+    output = options.output
+    verbose = options.verbose
 
     outputFile = open(output, 'w')
 
     stats = getTreeInfo(filename, location)
 
     length = len(sorted([s.location for s in stats], cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
-    print '----------------------------------------------------------------------------------'
+    _printMessage = ''
+
     for s in stats :
-        message = s.location.ljust(length) + str(str(s.sizeInKB)+' KB / '+ str(s.entries)+' Entries.').rjust(10)
-        print message
-        outputFile.write(message+'\n')
-    print '----------------------------------------------------------------------------------'
-    print 'Wrote summary to', output
+        message = s.location.ljust(length) + str(str(s.sizeInKB)+' KB / '+ str(s.entries)+' Entries.').rjust(10) + '\n'
+        _printMessage += message
+        outputFile.write(message)
+
+    if verbose :
+        print '----------------------------------------------------------------------------------'
+        print _printMessage
+        print '----------------------------------------------------------------------------------'
+        print 'Wrote summary to', output
+        
     outputFile.close()
