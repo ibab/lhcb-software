@@ -3,6 +3,10 @@
 ! Responsible : Sajan EASO
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+-2010-10-15 - Sajan Easo
+  Removed the use of the interface to TMVA. Now using the standalone
+  class available from training. It has less functionality, but avoids
+  the problem of compilation problems on Windows.
 -2010-09-01 - Sajan Easo
  - To compile on windows removed the _dll.cpp and _load.cpp files.
    the conversion from doubel to Float_t sone with a static_cast in
