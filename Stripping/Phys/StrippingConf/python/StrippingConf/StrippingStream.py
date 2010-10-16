@@ -15,7 +15,6 @@ from copy import copy
 
 class StrippingStream ( object ) :
 
-
     def __init__ ( self,
                    name = 'StrippingStream',
                    Lines =  [],                                    # List of stream lines
@@ -37,18 +36,24 @@ class StrippingStream ( object ) :
         self.algs = []
         self.seq = None
         self._name = name
-        self.streamLine = None
-        self.eventSelectionLine = None
+        self.streamLine = None                   # Line with OR of all stream lines, created in createConfigurables()
+        self.eventSelectionLine = None           # Line to mark bad events, created in createConfigurables()
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
-        self.TESPrefix = 'Strip'
-        self.HDRLocation = 'Phys/DecReports'
+        self.TESPrefix = 'Strip'                 # Prefix for DecReports location, configured when appending to StrippingConf
+        self.HDRLocation = 'Phys/DecReports'     # DecReports location, configured when appending to StrippingConf
 
     def name(self) :
         return self._name
 
+    def clone(self, name) : 
+	return StrippingStream(name, Lines = copy(self.lines), 
+	                       BadEventSelection = self.BadEventSelection, 
+	                       AcceptBadEvents = self.AcceptBadEvents, 
+	                       MaxCandidates = self.MaxCandidates, 
+	                       MaxCombinations = self.MaxCombinations)
 
     def appendLines (self, lines) : 
 	for line in lines : 
@@ -56,34 +61,32 @@ class StrippingStream ( object ) :
 	    line.declareAppended()
 	    
 
-    def createConfigurables(self, TES = False) :
+    def createConfigurables(self, TES = None) :
         from Configurables import StrippingCheck
 
         # Create configurables
         
+        if TES == True : 
+    	    raise Exception("\nTES=True option in StrippingStream is not supported. Use TupleToolStripping. ")
+	elif TES == False : 
+	    print "WARNING: TES option in StrippingStream is not supported. "
+        
 	for line in self.lines : 
-	    if TES :
-                print "ADDINGXX", alg.configurable(), "name ", alg.name(), "to StrippingStream.lines" 
-                alg = StrippingCheck(line.name(),
-                                     InputLocation = "/Event/" + self.TESPrefix + "/" + line.outputLocation() + "/Particles")
-                self.algs.append( alg )
-	    else :  
-
-	        if line.MaxCandidates == "Override" : 
-	    	    line.MaxCandidates = self.MaxCandidates
-	        if line.MaxCombinations == "Override" : 
-	    	    line.MaxCombinations = self.MaxCombinations
+	    if line.MaxCandidates == "Override" : 
+	    	line.MaxCandidates = self.MaxCandidates
+	    if line.MaxCombinations == "Override" : 
+	    	line.MaxCombinations = self.MaxCombinations
 	    	    
-		line.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
-                print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
-                self.algs.append(line.configurable())
+	    line.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
+            print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
+            self.algs.append(line.configurable())
 
         # Make the line for stream decision (OR of all stream lines)
 
 	linesSeq = GaudiSequencer("StrippingStreamSeq"+self.name(),
-                                      ModeOR = True,
-                                      #ShortCircuit = False,
-                                      Members = self.algs)
+                                  ModeOR = True,
+                                  #ShortCircuit = False,
+                                  Members = self.algs)
 
 	from StrippingLine import StrippingLine
 

@@ -5,6 +5,16 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-10-16 - Anton Poluektov 
+ - python/StrippingConf/StrippingStream.py 
+
+   * Removed support for TES=True option in StrippingStream (used previously to produce ETC, 
+     not needed anymore with DecReport and TupleToolStripping). 
+     TES=True raises exception, TES=False issues warning. 
+   
+   * Added "clone()" method for StrippingStream
+
+
 ! 2010-10-14 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
   . Constructor from PhysSelPython.Wrappers.EvenrSelection takes care that 

@@ -19,7 +19,7 @@ class StrippingConf ( object ) :
 
     def __init__( self,
                   name = "",
-                  TES = False,
+                  TES = None,
                   TESPrefix = 'Strip', 
                   HDRLocation = 'Phys/DecReports', 
                   Streams = [], 
@@ -33,7 +33,12 @@ class StrippingConf ( object ) :
             self._name = "StrippingGlobal"
         else :
             self._name = name
-        self.TES = TES
+
+        if TES == True : 
+    	    raise Exception("\nTES=True option in StrippingConf is not supported. Use TupleToolStripping. ")
+	elif TES == False : 
+	    print "WARNING: TES option in StrippingConf is not supported. "
+
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
@@ -144,7 +149,7 @@ class StrippingConf ( object ) :
         if stream.MaxCombinations == "Override" : 
     	    stream.MaxCombinations = self.MaxCombinations
         
-	stream.createConfigurables( TES = self.TES )
+	stream.createConfigurables()
 	self._streams.append(stream)
         self._appendSequencer(stream)
         
