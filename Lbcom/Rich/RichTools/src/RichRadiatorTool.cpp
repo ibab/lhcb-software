@@ -2,10 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichRadiatorTool.cpp
  *
- *  Implementation file for tool : RichRadiatorTool
- *
- *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.11 2009-07-30 12:14:16 jonrob Exp $
+ *  Implementation file for tool : Rich::RadiatorTool
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DAQ::HighOccHPDSuppressionTool
  *
- *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.2 2009-10-10 18:28:42 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

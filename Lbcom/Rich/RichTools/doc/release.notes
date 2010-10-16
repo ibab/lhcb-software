@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-10-16 - Chris Jones
+ - Remove private methods in Snells law and refractive index tools that load
+   the correct radiator DetElem for a given enum type. Instead use new method
+   from RichDet.
+
 ! 2010-10-15 - Chris Jones
  - Removing the caching of the threshold momentum values in the particle
    properties tool, as it doesn't save much CPU, and is not valid if the

@@ -26,10 +26,10 @@ SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : ToolBase        ( type, name, parent ),
-    m_refIndex      ( NULL ),
+    m_refIndex      ( NULL  ),
     m_planeInfoMade ( false ),
     m_minZaero      ( 0     ),
-    m_radiators     ( Rich::NRadiatorTypes, 
+    m_radiators     ( Rich::NRadiatorTypes,
                       (const DeRichRadiator *)(NULL) ),
     m_hltMode       ( false )
 {
@@ -100,20 +100,6 @@ void SnellsLawRefraction::buildAeroPlaneInfo() const
   m_planeInfoMade = true;
 }
 
-void SnellsLawRefraction::loadRadiator( const Rich::RadiatorType rad ) const
-{
-  if      ( Rich::Aerogel  == rad ) 
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Aerogel  ); }
-  else if ( Rich::Rich1Gas == rad ) 
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas ); }
-  else if ( Rich::Rich2Gas == rad ) 
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas ); }
-  else
-  {
-    Exception( "Cannot load DetElem for radiator type "+Rich::text(rad) );
-  }
-}
-
 void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
                                         const LHCb::RichTrackSegment& trSeg ) const
@@ -132,7 +118,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
     {
 
       // get the aerogel ref index for the track segment intersections
-      const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(), 
+      const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
                                                           photonEnergy );
 
       // do the correction
@@ -157,7 +143,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
       // get the average aerogel ref index
       Warning( "Approximate Aerogel refractive index used. Will be wrong..." ).ignore();
       const double refAero = deRad(Rich::Aerogel)->refractiveIndex( photonEnergy,
-                                                                          m_hltMode );
+                                                                    m_hltMode );
 
       // do the correction
       _aerogelToGas( startPoint, dir, photonEnergy, refAero );
@@ -198,7 +184,7 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const LHCb::RichTrackSegment& trSeg ) const
 {
   // check track segment is for aerogel ...
-  if ( trSeg.radiator() != Rich::Aerogel ) 
+  if ( trSeg.radiator() != Rich::Aerogel )
   {
     Exception( "Track segment is not for aerogel !!" );
   }
@@ -209,7 +195,7 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
   {
 
     // get the aerogel ref index for the track segment intersections
-    const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(), 
+    const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
                                                         photonEnergy );
 
     // do the correction

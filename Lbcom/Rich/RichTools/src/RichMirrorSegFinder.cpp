@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::MirrorSegFinder
  *
- * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.28 2009-07-30 12:14:16 jonrob Exp $
- *
  * @date   2003-11-05
  * @author Antonis Papanestis
  */
@@ -44,7 +41,6 @@ Rich::MirrorSegFinder::MirrorSegFinder( const std::string& type,
   declareProperty( "Rich2SphericalMaxDist", m_maxDist[Rich::Rich2][sph] );
   declareProperty( "Rich1SecondaryMaxDist", m_maxDist[Rich::Rich1][sec] );
   declareProperty( "Rich2SecondaryMaxDist", m_maxDist[Rich::Rich2][sec] );
-
 }
 
 //=============================================================================
@@ -79,7 +75,8 @@ StatusCode Rich::MirrorSegFinder::initialize( )
   if ( rich1->exists("SphericalMirrorDetElemLocations") ) // post DC06 description
   {
     // Rich1 spherical mirrors
-    const std::vector<std::string> & r1SphMirLoc = rich1->paramVect<std::string>("SphericalMirrorDetElemLocations");
+    const std::vector<std::string> & r1SphMirLoc = 
+      rich1->paramVect<std::string>("SphericalMirrorDetElemLocations");
     for (unsigned int r1sphm=0; r1sphm<r1SphMirLoc.size(); ++r1sphm)
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( r1SphMirLoc[r1sphm] );
@@ -89,7 +86,8 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_sphMirrors[Rich::Rich1][Rich::bottom].push_back( sm );
     }
     // Rich1 secondary mirrors
-    const std::vector<std::string> & r1SecMirLoc = rich1->paramVect<std::string>("SecondaryMirrorDetElemLocations");
+    const std::vector<std::string> & r1SecMirLoc = 
+      rich1->paramVect<std::string>("SecondaryMirrorDetElemLocations");
     for (unsigned int r1secm=0; r1secm<r1SecMirLoc.size(); ++r1secm)
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( r1SecMirLoc[r1secm] );
@@ -99,7 +97,8 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_secMirrors[Rich::Rich1][Rich::bottom].push_back( secm );
     }
     // Rich2 spherical mirrors
-    const std::vector<std::string> & r2SphMirLoc = rich2->paramVect<std::string>("SphericalMirrorDetElemLocations");
+    const std::vector<std::string> & r2SphMirLoc = 
+      rich2->paramVect<std::string>("SphericalMirrorDetElemLocations");
     for (unsigned int r2sphm=0; r2sphm<r2SphMirLoc.size(); ++r2sphm)
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( r2SphMirLoc[r2sphm] );
@@ -109,7 +108,8 @@ StatusCode Rich::MirrorSegFinder::initialize( )
         m_sphMirrors[Rich::Rich2][Rich::right].push_back( sm );
     }
     // Rich2 secondary mirrors
-    const std::vector<std::string> & r2SecMirLoc = rich2->paramVect<std::string>("SecondaryMirrorDetElemLocations");
+    const std::vector<std::string> & r2SecMirLoc = 
+      rich2->paramVect<std::string>("SecondaryMirrorDetElemLocations");
     for (unsigned int r2secm=0; r2secm<r2SecMirLoc.size(); ++r2secm)
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( r2SecMirLoc[r2secm] );
@@ -190,20 +190,22 @@ StatusCode Rich::MirrorSegFinder::initialize( )
 
 
   // initialise the last found mirror pointers to the first in the vectors
-  {for (int i=0; i<2; ++i)
   {
-    for (int j=0; j<2; ++j)
+    for (int i=0; i<2; ++i)
     {
-      if ( !m_sphMirrors[i][j].empty() )
-      { m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front(); }
-      else
-      { m_lastFoundMirror[i][j][sph] = NULL; }
-      if ( !m_secMirrors[i][j].empty() )
-      { m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front(); }
-      else
-      { m_lastFoundMirror[i][j][sec] = NULL; }
+      for (int j=0; j<2; ++j)
+      {
+        if ( !m_sphMirrors[i][j].empty() )
+        { m_lastFoundMirror[i][j][sph] = m_sphMirrors[i][j].front(); }
+        else
+        { m_lastFoundMirror[i][j][sph] = NULL; }
+        if ( !m_secMirrors[i][j].empty() )
+        { m_lastFoundMirror[i][j][sec] = m_secMirrors[i][j].front(); }
+        else
+        { m_lastFoundMirror[i][j][sec] = NULL; }
+      }
     }
-  }}
+  }
 
   if ( msgLevel(MSG::VERBOSE) )
   {
@@ -221,36 +223,36 @@ StatusCode Rich::MirrorSegFinder::initialize( )
               << endmsg;
 
     {for ( unsigned int r=0; r<2; ++r )
-      for ( unsigned int s=0; s<2; ++s )
-        for ( unsigned int num=0; num<m_sphMirrors[r][s].size(); ++num )
-        {
-          verbose() << "Spherical mirror " << num << " rich=" << r << " side=" << s
-                    << " " << m_sphMirrors[r][s][num]->name()
-                    << " " << m_sphMirrors[r][s][num]->mirrorCentre()
-                    << endmsg;
-          //std::ostringstream title;
-          //title << "Primary mirror Centres : Rich" << r+1 << " side " << s;
-          //plot2D( m_sphMirrors[r][s][num]->mirrorCentre().x(),
-          //        m_sphMirrors[r][s][num]->mirrorCentre().y(),
-          //        title.str(), -maxX[r][sph], maxX[r][sph], -maxY[r][sph], maxY[r][sph],
-          //        50, 50, (double)(num+1) );
-        }
+        for ( unsigned int s=0; s<2; ++s )
+          for ( unsigned int num=0; num<m_sphMirrors[r][s].size(); ++num )
+          {
+            verbose() << "Spherical mirror " << num << " rich=" << r << " side=" << s
+                      << " " << m_sphMirrors[r][s][num]->name()
+                      << " " << m_sphMirrors[r][s][num]->mirrorCentre()
+                      << endmsg;
+            //std::ostringstream title;
+            //title << "Primary mirror Centres : Rich" << r+1 << " side " << s;
+            //plot2D( m_sphMirrors[r][s][num]->mirrorCentre().x(),
+            //        m_sphMirrors[r][s][num]->mirrorCentre().y(),
+            //        title.str(), -maxX[r][sph], maxX[r][sph], -maxY[r][sph], maxY[r][sph],
+            //        50, 50, (double)(num+1) );
+          }
     }
     {for ( unsigned int r=0; r<2; ++r )
-      for ( unsigned int s=0; s<2; ++s )
-        for ( unsigned int num=0; num<m_secMirrors[r][s].size(); ++num )
-        {
-          verbose() << "Secondary mirror " << num << " rich=" << r << " side=" << s
-                    << " " << m_secMirrors[r][s][num]->name()
-                    << " " << m_secMirrors[r][s][num]->mirrorCentre()
-                    << endmsg;
-          //std::ostringstream title;
-          //title << "Secondary mirror Centres : Rich" << r+1 << " side " << s;
-          //plot2D( m_secMirrors[r][s][num]->mirrorCentre().x(),
-          //        m_secMirrors[r][s][num]->mirrorCentre().y(),
-          //        title.str(), -maxX[r][sec], maxX[r][sec], -maxY[r][sec], maxY[r][sec],
-          //        50, 50, (double)(num+1) );
-        }
+        for ( unsigned int s=0; s<2; ++s )
+          for ( unsigned int num=0; num<m_secMirrors[r][s].size(); ++num )
+          {
+            verbose() << "Secondary mirror " << num << " rich=" << r << " side=" << s
+                      << " " << m_secMirrors[r][s][num]->name()
+                      << " " << m_secMirrors[r][s][num]->mirrorCentre()
+                      << endmsg;
+            //std::ostringstream title;
+            //title << "Secondary mirror Centres : Rich" << r+1 << " side " << s;
+            //plot2D( m_secMirrors[r][s][num]->mirrorCentre().x(),
+            //        m_secMirrors[r][s][num]->mirrorCentre().y(),
+            //        title.str(), -maxX[r][sec], maxX[r][sec], -maxY[r][sec], maxY[r][sec],
+            //        50, 50, (double)(num+1) );
+          }
     }
 
   } // verbose
@@ -363,18 +365,15 @@ Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
       if ( test_mirror != mirror )
       {
         m_maxDist[rich][sec] *= m_tuneScale;
-        info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endmsg;
+        info() << "Decreasing " << rich << " secondary parameter to "
+               << m_maxDist[rich][sec] << endmsg;
         mirror = test_mirror;
       }
     }
   }
 
-  //if ( msgLevel(MSG::VERBOSE) )
-  // verbose() << "Found secondary mirror " << mirror << endmsg;
-
   // return found mirror
   return mirror;
-
 }
 
 //=========================================================================
@@ -407,7 +406,7 @@ Rich::MirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
 }
 
 //=========================================================================
-//
+// DC06 compatibility
 //=========================================================================
 StatusCode Rich::MirrorSegFinder::getMirrors_old( )
 {
@@ -417,75 +416,79 @@ StatusCode Rich::MirrorSegFinder::getMirrors_old( )
 
   // find all the mirrors in Rich1
   const IDetectorElement::IDEContainer& detelemsR1 = rich1->childIDetectorElements();
-  {for ( IDetectorElement::IDEContainer::const_iterator det_it =  detelemsR1.begin();
-         det_it != detelemsR1.end();
-         ++det_it )
   {
-    const std::string & detName = (*det_it)->name();
-
-    if ( detName.find("Mirror1") != std::string::npos )
+    for ( IDetectorElement::IDEContainer::const_iterator det_it =  detelemsR1.begin();
+          det_it != detelemsR1.end();
+          ++det_it )
     {
-      const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if ( sm->mirrorCentre().y() > 0.0 )
+      const std::string & detName = (*det_it)->name();
+
+      if ( detName.find("Mirror1") != std::string::npos )
       {
-        m_sphMirrors[Rich::Rich1][Rich::top].push_back( sm );
+        const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
+        if ( sm->mirrorCentre().y() > 0.0 )
+        {
+          m_sphMirrors[Rich::Rich1][Rich::top].push_back( sm );
+        }
+        else
+        {
+          m_sphMirrors[Rich::Rich1][Rich::bottom].push_back( sm );
+        }
       }
-      else
+
+      if ( detName.find("Mirror2") != std::string::npos )
       {
-        m_sphMirrors[Rich::Rich1][Rich::bottom].push_back( sm );
+        const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
+        if ( secm->mirrorCentre().y() > 0.0 )
+        {
+          m_secMirrors[Rich::Rich1][Rich::top].push_back( secm );
+        }
+        else
+        {
+          m_secMirrors[Rich::Rich1][Rich::bottom].push_back( secm );
+        }
+
       }
+
     }
-
-    if ( detName.find("Mirror2") != std::string::npos )
-    {
-      const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if ( secm->mirrorCentre().y() > 0.0 )
-      {
-        m_secMirrors[Rich::Rich1][Rich::top].push_back( secm );
-      }
-      else
-      {
-        m_secMirrors[Rich::Rich1][Rich::bottom].push_back( secm );
-      }
-
-    }
-
-  }}
+  }
 
   // find all the mirrors in Rich2
   const IDetectorElement::IDEContainer & detelemsR2 = rich2->childIDetectorElements();
-  {for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR2.begin();
-         det_it != detelemsR2.end();
-         ++det_it )
   {
-    const std::string & detName = (*det_it)->name();
-
-    if ( detName.find("SphMirror") != std::string::npos )
+    for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR2.begin();
+          det_it != detelemsR2.end();
+          ++det_it )
     {
-      const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if ( sm->centreOfCurvature().x() > 0.0 )
-      {
-        m_sphMirrors[Rich::Rich2][Rich::left].push_back( sm );
-      }
-      else
-      {
-        m_sphMirrors[Rich::Rich2][Rich::right].push_back( sm );
-      }
-    }
+      const std::string & detName = (*det_it)->name();
 
-    if ( detName.find("SecMirror") != std::string::npos )
-    {
-      const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if ( secm->mirrorCentre().x() > 0.0 )
+      if ( detName.find("SphMirror") != std::string::npos )
       {
-        m_secMirrors[Rich::Rich2][Rich::left].push_back( secm );
+        const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
+        if ( sm->centreOfCurvature().x() > 0.0 )
+        {
+          m_sphMirrors[Rich::Rich2][Rich::left].push_back( sm );
+        }
+        else
+        {
+          m_sphMirrors[Rich::Rich2][Rich::right].push_back( sm );
+        }
       }
-      else
-      {
-        m_secMirrors[Rich::Rich2][Rich::right].push_back( secm );
-      }
-    }
 
-  }}
+      if ( detName.find("SecMirror") != std::string::npos )
+      {
+        const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
+        if ( secm->mirrorCentre().x() > 0.0 )
+        {
+          m_secMirrors[Rich::Rich2][Rich::left].push_back( secm );
+        }
+        else
+        {
+          m_secMirrors[Rich::Rich2][Rich::right].push_back( secm );
+        }
+      }
+
+    }
+  }
   return StatusCode ::SUCCESS;
 }

@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::RadiatorTool
  *
- *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.7 2007-03-09 17:40:29 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
  */

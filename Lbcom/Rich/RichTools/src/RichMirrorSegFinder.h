@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::MirrorSegFinder
  *
- *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.17 2008-01-10 17:17:34 papanest Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */

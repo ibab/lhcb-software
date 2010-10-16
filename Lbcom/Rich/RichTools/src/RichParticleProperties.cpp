@@ -49,7 +49,8 @@ StatusCode Rich::ParticleProperties::initialize()
   acquireTool( "RichRefractiveIndex", m_refIndex );
 
   // Retrieve particle property service
-  LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  LHCb::IParticlePropertySvc * ppSvc = 
+    svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   // Retrieve particle masses
   m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/Gaudi::Units::MeV;

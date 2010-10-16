@@ -148,18 +148,3 @@ refractiveIndexSD ( const RichRadIntersection::Vector & intersections ) const
   }
   return ( totPathL>0 ? refIndexSD/totPathL : refIndexSD );
 }
-
-void
-Rich::TabulatedRefractiveIndex::loadRadiator( const Rich::RadiatorType rad ) const
-{
-  if      ( Rich::Aerogel  == rad )
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Aerogel  ); }
-  else if ( Rich::Rich1Gas == rad )
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas ); }
-  else if ( Rich::Rich2Gas == rad )
-  { m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas ); }
-  else
-  {
-    Exception( "Cannot load DetElem for radiator type "+Rich::text(rad) );
-  }
-}

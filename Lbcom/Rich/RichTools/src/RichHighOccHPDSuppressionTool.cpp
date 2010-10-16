@@ -4,9 +4,6 @@
  *
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
- * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.3 2009-10-10 18:28:42 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
  */

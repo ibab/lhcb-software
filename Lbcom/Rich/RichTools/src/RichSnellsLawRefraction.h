@@ -85,12 +85,12 @@ namespace Rich
     /// Access on demand the Rich radiator detector elements
     inline const DeRichRadiator * deRad( const Rich::RadiatorType rad ) const
     {
-      if ( !m_radiators[rad] ) loadRadiator(rad);
+      if ( !m_radiators[rad] ) 
+      {
+        m_radiators[rad] = getDet<DeRichRadiator>( DeRichLocations::location(rad) );
+      }
       return m_radiators[rad];
     }
-
-    /// Load the detector element for the given radiator
-    void loadRadiator( const Rich::RadiatorType rad ) const;
 
     /// Do the aerogel to gas correction
     void _aerogelToGas( Gaudi::XYZPoint & startPoint,
@@ -119,7 +119,6 @@ namespace Rich
       if ( !m_planeInfoMade ) buildAeroPlaneInfo();
       return m_aeroExitPlane;
     }
-
 
   private:
 
