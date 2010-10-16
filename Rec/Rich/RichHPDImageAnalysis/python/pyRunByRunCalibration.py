@@ -378,7 +378,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
 
     fitType = "CppFit"
     if fullFit : fitType = "FullFit"
-    avType = "Full"
+    avType = "FollowMovements"
     if forceAverages : avType = "Average"
         
     # Load the list of root files
@@ -485,6 +485,13 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     printCanvas('[')
 
     for hpd,data in plotData.iteritems():
+
+        # HPD copy number
+        copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpd)
+        # HPD SmartID
+        smartID = richSystem().richSmartID(copyNumber)
+        # HPD ID string
+        idS = str(hpd) + " " + smartID.toString()
 
         # Min max flag values
         minMaxFlag = [999,-999]
@@ -605,7 +612,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             linearFitOff.SetLineColor(alignColorOff)
             
             plotX = TGraphErrors( len(vflag), vflag, vshiftX, vflagerr, vshiftXerr )
-            plotX.SetTitle( "X Shift HPD Copy Number "+str(hpd) )
+            plotX.SetTitle( "X Shift HPD Copy Number "+idS )
             plotX.GetXaxis().SetTitle(type+" Number")
             plotX.GetYaxis().SetTitle("X Offset / mm" )
             plotX.SetMarkerColor(alignColor)
@@ -639,7 +646,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             printCanvas()
             
             plotY = TGraphErrors( len(vflag), vflag, vshiftY, vflagerr, vshiftYerr )
-            plotY.SetTitle( "Y Shift HPD Copy Number "+str(hpd) )
+            plotY.SetTitle( "Y Shift HPD Copy Number "+idS )
             plotY.GetXaxis().SetTitle(type+" Number")
             plotY.GetYaxis().SetTitle("Y Offset / mm" )
             plotY.SetMarkerColor(alignColor)
@@ -685,7 +692,7 @@ def calibration(rootfiles,type,fullFit,forceAverages):
                 averageShifts['MagOff'][hpd] = [avXOff,avYOff]
 
             plotR = TGraphErrors( len(vflag), vflag, vshiftR, vflagerr, vshiftRerr )
-            plotR.SetTitle( "R Shift HPD Copy Number "+str(hpd) )
+            plotR.SetTitle( "R Shift HPD Copy Number "+idS )
             plotR.GetXaxis().SetTitle(type+" Number")
             plotR.GetYaxis().SetTitle("sqrt(xOff^2+yOff^2) / mm" )
             plotR.SetMarkerColor(alignColor)

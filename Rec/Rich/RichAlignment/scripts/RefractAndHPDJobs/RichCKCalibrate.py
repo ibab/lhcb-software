@@ -4,6 +4,7 @@ imageFileName = ''
 canvas        = None
 runInfoCacheName = "RunInfoCache.pck"
 runInfoCache  = { }
+runInfoCacheUpdated = False
 
 # ====================================================================================
 # Main Methods
@@ -194,7 +195,8 @@ def submitRecoJobs(name,BrunelVer,pickedRunsList,jobType):
                         #mySandBox += ["databases/"+mainLHCbCond]
                         # Additional DB Slices
                         dbFiles  = ["NewRichCKRefIndexCalib"]
-                        dbFiles += ["HPDAlignByFill-FullFitAverage"]
+                        #dbFiles += ["HPDAlignByFill-FullFitAverage"]
+                        dbFiles += ["HPDAlignByFill-CppFitAverage"]
                         dbFiles += ["NewMirrorAlignFieldPolarity"]
                         for dbFile in dbFiles:
                             extraopts.write("CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n")
@@ -250,8 +252,11 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     if len(jobs) == 0 : return
 
+    # File name root
+    fileNameRoot = rad+"_"+getJobCaliName(jobs[0])
+
     # Start a PDF file
-    globals()["imageFileName"] = rad+"_"+getJobCaliName(jobs[0])+".pdf"
+    globals()["imageFileName"] = fileNameRoot+".pdf"
     printCanvas('[')
 
     # Dictionary to store the calibration data
@@ -301,6 +306,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # 1D Plot of Fitted CK resolutions
     ckResHist = TH1F( "ckRes", rad+" Delta CK Theta Resolution",
                       100, 0.99*minMaxCKRes[0], 1.001*minMaxCKRes[1] )
+
+    # Open text file for shifts
+    textShifts = open(fileNameRoot+"_Shifts.txt",'w')
   
     # For plots (manually make sure sorted by run)
     runs      = array('d')
@@ -326,6 +334,8 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         # Fill 1D histo(s)
         scaleHist.Fill(scale[0])
         ckResHist.Fill(cksigma[0])
+        # Write to text file
+        writeInfoToTextFile(textShifts,run,scale[0])
 
     # Make the plots
     if len(runs) > 0 :
@@ -370,7 +380,12 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     printCanvas(']')
 
     if nFailedFits > 0 :
-        print "WARNING :", nFailedFits, " histogram fits failed"
+        print "WARNING :", nFailedFits, "histogram fits failed"
+
+def writeInfoToTextFile(file,run,var):
+    runInfo = getRunInformation(run)
+    text = str(run) + " " + runInfo['RunStart'] + " " + runInfo['RunEnd'] + " " + str(var)
+    file.write(text+"\n")
     
 def refractiveIndexControl(jobs,rad='Rich1Gas'):
     
@@ -505,7 +520,6 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 
         run = int(getInfoFromJob(j,'Run'))
 
-        print "Fitting job", rad, "Run =", run
         fitResult = fitCKThetaHistogram(j,rad,'thetaRec')
 
         if fitResult['OK'] :
@@ -575,13 +589,15 @@ def pickleDict(filename,data):
 
 def loadRunInfoCache():
     cachename = globals()["runInfoCacheName"]
-    print "Loading Run Info cache -", cachename
+    #print "Loading Run Info cache -", cachename
     globals()["runInfoCache"] = loadDict(cachename)
 
 def saveRunInfoCache():
-    cachename = globals()["runInfoCacheName"]
-    print "Saving Run Info cache  -", cachename
-    pickleDict(cachename,globals()["runInfoCache"])
+    if globals()["runInfoCacheUpdated"]:
+        cachename = globals()["runInfoCacheName"]
+        print "Saving Run Info cache  -", cachename
+        pickleDict(cachename,globals()["runInfoCache"])
+        globals()["runInfoCacheUpdated"] = False
 
 def getRunInformation(run):
 
@@ -600,6 +616,7 @@ def getRunInformation(run):
         if len(res.keys()) > 0 and res.has_key('OK'):
             if res['OK']:
                 runInfoCache[run] = res
+                globals()["runInfoCacheUpdated"] = True
 
     # return the result
     info = { }
