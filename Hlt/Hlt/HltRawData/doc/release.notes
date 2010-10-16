@@ -5,6 +5,10 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2010-10-16 - Tomasz Skwarnicki
+ - Get full list of L0MuonCandidates from BCSU location if possible in L0SelReportsMaker
+   since the Default location contains truncated list
+
 !========================== HltRawData v2r8p2 2010-10-04 ===================
 ! 2010-10-04 - Tomasz Skwarnicki
  - Fix typo in L0SelReportsMaker for non-standard L0DU location

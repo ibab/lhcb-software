@@ -100,8 +100,48 @@ StatusCode L0SelReportsMaker::execute() {
   put( m_objectSummaries, m_outputHltSelReportsLocation.value() + "/Candidates" );
   
   // translate all L0MuonCandidates into Object Summaries
-  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) )
+
+
+  // do not remove this code; it serves triggering DataOnDemand service: need to ask for Default to get BCSU...
+  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) ){
+    if ( msgLevel(MSG::VERBOSE) ){      
+      verbose() << " L0MuonCandidates exist at default location " << endmsg;
+    }
+  }
+
+  // BCSU is the full list of candidates; while Default is 6 best; try BCSU first
+  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::BCSU ) )
   {    
+    HltObjectSummary selSumOut;    
+    selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+    const std::string selName="L0MuonCandidates";
+     
+    // integer selection id 
+    static boost::hash<std::string> hasher;
+    selSumOut.addToInfo("0#SelectionID", float( hasher(selName) )  ); // fake: cannot make them persistent
+
+    L0MuonCandidates* pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::BCSU );
+    for(L0MuonCandidates::const_iterator ic=pL0MuonCandidates->begin();ic!=pL0MuonCandidates->end();++ic){      
+      const HltObjectSummary* hos = store<LHCb::L0MuonCandidate>(*ic);
+      if( !hos ){
+        Error( " Could not store HltObjectSummary of L0MuonCandidate" , StatusCode::SUCCESS, 10 ); 
+      } else {        
+        selSumOut.addToSubstructure(hos);
+      }
+    }
+
+    // insert selection into the container
+    if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
+      Warning(" Failed to add Hlt selection name "+selName
+              +" to its container ",StatusCode::SUCCESS, 10 );        
+    }        
+
+
+  } else if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) )  {    
+
+    Warning(" No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " using truncated list from "
+            +  L0MuonCandidateLocation::Default, StatusCode::SUCCESS, 5 );        
+
     HltObjectSummary selSumOut;    
     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
     const std::string selName="L0MuonCandidates";
@@ -124,11 +164,11 @@ StatusCode L0SelReportsMaker::execute() {
     if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
       Warning(" Failed to add Hlt selection name "+selName
               +" to its container ",StatusCode::SUCCESS, 10 );        
-    }        
-
+    }
 
   } else {
-    Warning( " No L0MuonCandidates at " + L0MuonCandidateLocation::Default , StatusCode::SUCCESS, 10 ); 
+    Warning( " No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " nor at " + L0MuonCandidateLocation::Default
+             , StatusCode::SUCCESS, 10 ); 
   }
       
   // translate all L0CaloCandidates into Object Summaries
