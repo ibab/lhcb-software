@@ -4,9 +4,15 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-10-16 - Chris Jones
+ - Add a couple utility methods to the DeRichLocations namespace that return
+   the DDDB location of the detector element for a given radiator or detector
+   type enum.
+ - Remove CVS doxygen comments
+
 !======================== RichDet v15r0 2010-08-25 ===========================
 
-!2010-08-19 - Sajan Easo
+! 2010-08-19 - Sajan Easo
  - Refractive index of CF4 corrected by using the correct reference
    temperature. This fine tunes the refractive index by shifting n-1 by about
    7 percent. This can be used with older versions of DDDB.

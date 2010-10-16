@@ -4,8 +4,6 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.56 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -38,7 +36,7 @@
 
 class DeRichSystem;
 
-/** @class DeRichHPDPanel DeRichHPDPanel.h
+/** @class DeRichHPDPanel RichDet/DeRichHPDPanel.h
  *
  * DeRichHPDPanel provides geometry information for the HPD panels, converts
  * RichSmartIDs to space points and finds intersections with the HPDs

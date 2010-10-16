@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRichSystem
  *
- *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.15 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
  */
@@ -31,7 +28,7 @@
 // External declarations
 extern const CLID CLID_DERichSystem;
 
-/** @class DeRichSystem DeRichSystem.h
+/** @class DeRichSystem RichDet/DeRichSystem.h
  *
  * Class for generic info about the Rich system. In particular
  * to provide conversions and mappings between the various

@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichGasRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichGasRadiator.h,v 1.8 2009-12-10 16:47:42 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
  */
@@ -21,7 +18,7 @@
 // External declarations
 extern const CLID CLID_DeRichGasRadiator;
 
-/** @class DeRichGasRadiator DeRichGasRadiator.h RichDet/DeRichGasRadiator.h
+/** @class DeRichGasRadiator RichDet/DeRichGasRadiator.h
  *
  *  Detector element for gaseous radiator volumes
  *

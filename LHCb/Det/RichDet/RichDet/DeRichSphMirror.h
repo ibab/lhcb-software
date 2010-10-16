@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRichSphMirror
  *
- *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.19 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -25,7 +22,7 @@
 // External declarations
 extern const CLID CLID_DeRichSphMirror;
 
-/** @class DeRichSphMirror DeRichSphMirror.h
+/** @class DeRichSphMirror RichDet/DeRichSphMirror.h
  *
  * Detector element for spherical mirrors providing geometry info
  *

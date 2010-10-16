@@ -4,8 +4,6 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.23 2010-02-05 11:54:47 papanest Exp $
- *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
  */

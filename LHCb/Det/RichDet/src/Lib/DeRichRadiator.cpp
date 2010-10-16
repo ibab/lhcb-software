@@ -4,8 +4,6 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.20 2009-11-11 17:27:30 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */

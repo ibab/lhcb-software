@@ -3,9 +3,6 @@
  *
  *  Header file for utility class : Rich::MirrorSegPosition
  *
- *  CVS Log :-
- *  $Id: RichMirrorSegPosition.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-30
  */
@@ -19,7 +16,7 @@
 namespace Rich
 {
 
-  /** @class MirrorSegPosition RichMirrorSegPosition.h RichDet/RichMirrorSegPosition.h
+  /** @class MirrorSegPosition RichDet/RichMirrorSegPosition.h
    *
    *  Helper class to pack together row/column information for the mirror
    *  segment position.

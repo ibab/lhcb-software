@@ -1,8 +1,25 @@
-// $Id: DeRichLocations.h,v 1.4 2008-06-24 09:12:35 jonrob Exp $
+
+//----------------------------------------------------------------------------
+/** @file DeRichLocations.h
+ *
+ *  Header file that defines the DDDB locations of the various RICH
+ *  detector elements, and various utility methods to help access these
+ *  locations
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2006-03-02
+ */
+//----------------------------------------------------------------------------
+
 #ifndef RICHDET_DERICHHPDPANELLOCATIONS_H
 #define RICHDET_DERICHHPDPANELLOCATIONS_H 1
 
-// ************************************************************************************************************
+// LHCbKernel
+#include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichDetectorType.h"
+
+// *******************************************************************************************
 
 /** @namespace DeRichLocations
  *
@@ -10,10 +27,13 @@
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
- *
  */
 namespace DeRichLocations
 {
+
+  // ----------------------------------------------------------------------------------------
+  // Location Strings
+  // ----------------------------------------------------------------------------------------
 
   /// Rich1 location in transient detector store
   static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
@@ -58,6 +78,22 @@ namespace DeRichLocations
   static const std::string& Rich1BeamPipe = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe";
   /// Rich2 Beampipe location in TDS
   static const std::string& Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";
+
+  // ----------------------------------------------------------------------------------------
+  // Utility methods
+  // ----------------------------------------------------------------------------------------
+
+  /** Gives the DDDB location of the detector element for the given radiator type
+   *  @param rad The radiator type
+   *  @return The DDDB location of the detector element
+   */
+  const std::string& location( const Rich::RadiatorType rad );
+
+  /** Gives the DDDB location of the detector element for the given radiator type
+   *  @param det The RICH detector type
+   *  @return The DDDB location of the detector element
+   */
+  const std::string& location( const Rich::DetectorType det );
 
 }
 

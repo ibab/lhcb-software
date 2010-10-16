@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : Rich::TabulatedProperty1D
  *
- *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.12 2009-08-03 09:22:37 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
  */

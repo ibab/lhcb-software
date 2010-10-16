@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRichBeamPipe
  *
- *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.9 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
  */
@@ -26,7 +23,7 @@
 // External declarations
 extern const CLID CLID_DERichBeamPipe;
 
-/** @class DeRichBeamPipe DeRichBeamPipe.h
+/** @class DeRichBeamPipe RichDet/DeRichBeamPipe.h
  *
  * Class for generic description of the BeamPipe (equivalent) in the Rich
  *

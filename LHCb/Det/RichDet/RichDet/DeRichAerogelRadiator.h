@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichAerogelRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.h,v 1.5 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
  */
@@ -18,7 +15,7 @@
 // Include files
 #include "RichDet/DeRichSingleSolidRadiator.h"
 
-/** @class DeRichAerogelRadiator DeRichAerogelRadiator.h RichDet/DeRichAerogelRadiator.h
+/** @class DeRichAerogelRadiator RichDet/DeRichAerogelRadiator.h
  *
  *  Detector element for aerogel radiator volumes
  *

@@ -20,6 +20,7 @@
 #include "RichDet/Rich1DTabFunc.h"
 #include "RichDet/Rich1DTabProperty.h"
 #include "RichDet/RichMirrorSegPosition.h"
+#include "RichDet/DeRichLocations.h"
 
 // ============================================================================
 #endif // RICHDET_DETDICT_H

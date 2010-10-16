@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.27 2009-11-11 17:27:29 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -39,7 +36,7 @@
 #include "RichDet/DeRichLocations.h"
 
 //----------------------------------------------------------------------------
-/** @class DeRichRadiator DeRichRadiator.h
+/** @class DeRichRadiator RichDet/DeRichRadiator.h
  *
  * DeRichRadiator provides information about the Rich radiators.
  *

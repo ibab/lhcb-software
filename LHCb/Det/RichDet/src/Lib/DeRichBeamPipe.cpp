@@ -3,8 +3,6 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.7 2009-07-26 18:13:18 jonrob Exp $
- *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
  */

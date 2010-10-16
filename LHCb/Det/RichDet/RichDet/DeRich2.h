@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRich2
  *
- *  CVS Log :-
- *  $Id: DeRich2.h,v 1.17 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -20,7 +17,7 @@
 extern const CLID CLID_DERich2;
 
 
-/** @class DeRich2 DeRich2.h
+/** @class DeRich2 RichDet/DeRich2.h
  *
  * This is the DeRich detector element for Rich2
  *

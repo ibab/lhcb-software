@@ -3,9 +3,6 @@
  *
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.16 2009-11-11 17:27:29 papanest Exp $
- *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -20,7 +17,7 @@
 // External declarations
 extern const CLID CLID_DeRichMultiSolidRadiator;
 
-/** @class DeRichMultiSolidRadiator DeRichMultiSolidRadiator.h
+/** @class DeRichMultiSolidRadiator RichDet/DeRichMultiSolidRadiator.h
  *
  * Implementation of the DeRichRadiator for a radiator with multiple solids.
  * WARNING: The detector element is attached to the physical volume that

@@ -3,8 +3,6 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.25 2009-08-03 09:22:37 jonrob Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */

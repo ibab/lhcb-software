@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichHPD
  *
- *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.20 2010-02-05 11:54:46 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
  */
@@ -37,7 +34,7 @@ class ILHCbMagnetSvc;
 // External declarations
 extern const CLID CLID_DERichHPD;
 
-/** @class DeRichHPD DeRichHPD.h
+/** @class DeRichHPD RichDet/DeRichHPD.h
  *
  * Class for generic info about HPDs
  *

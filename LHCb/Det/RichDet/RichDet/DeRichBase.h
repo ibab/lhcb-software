@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichBase
  *
- *  CVS Log :-
- *  $Id: DeRichBase.h,v 1.1 2009-07-26 18:13:17 jonrob Exp $
- *
  *  @author Chris Jones    jonesc@hep.phy.cam.ac.uk
  *  @date   26-07-2009
  */

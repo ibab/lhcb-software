@@ -4,9 +4,6 @@
  *
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
- *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.19 2009-11-11 17:27:29 papanest Exp $
- *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
@@ -22,7 +19,7 @@
 extern const CLID CLID_DeRichSingleSolidRadiator;
 
 //----------------------------------------------------------------------------
-/** @class DeRichSingleSolidRadiator DeRichSingleSolidRadiator.h
+/** @class DeRichSingleSolidRadiator RichDet/DeRichSingleSolidRadiator.h
  *
  * Implementation of DeRichRadiator for single solids (can be boolean solids)
  *

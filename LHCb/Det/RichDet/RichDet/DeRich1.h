@@ -1,9 +1,7 @@
+
 /** @file DeRich1.h
  *
  *  Header file for detector description class : DeRich1
- *
- *  CVS Log :-
- *  $Id: DeRich1.h,v 1.17 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -19,7 +17,7 @@
 // External declarations
 extern const CLID CLID_DERich1;
 
-/** @class DeRich1 DeRich1.h
+/** @class DeRich1 RichDet/DeRich1.h
  *
  *  This is the DeRich detector element for Rich1
  *

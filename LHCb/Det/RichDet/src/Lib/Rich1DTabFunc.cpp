@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : Rich::TabulatedFunction1D
  *
- *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.10 2007-12-04 13:50:34 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
