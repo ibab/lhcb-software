@@ -2,6 +2,9 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2010-10-16 - Gerhard Raven
+ - ANNSvc.cpp: boost 1.44 deduces wrong return type, explicitly specify to
+   avoid compilation failure...
 
 !============ Kernel/HltInterfaces v4r1 2010-06-18 ============================
 ! 2010-06-02 - Gerhard Raven

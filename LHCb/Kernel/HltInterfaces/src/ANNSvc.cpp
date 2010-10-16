@@ -234,6 +234,10 @@ ANNSvc::majors() const {
     std::transform( m_maps.begin(), 
                     m_maps.end(),
                     std::back_inserter(r), 
-                    bl::bind(&maps_type::value_type::first,bl::_1) );
+                    // add return specification to avoid boost 1.44 to try and assign
+                    // const string& to string&.... 
+                    // no idea why the deduced return type misses cv, it worked fine with
+                    // boost 1.42 and earlier
+                    bl::ret<const major_key_type&>(bl::bind(&maps_type::value_type::first,bl::_1)) ); 
     return r;
 }
