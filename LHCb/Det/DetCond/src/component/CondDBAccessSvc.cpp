@@ -177,11 +177,11 @@ StatusCode CondDBAccessSvc::initialize(){
     log << MSG::FATAL << "Cannot use direct XML mapping without cache (YET)" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   if (!m_heartBeatCondition.empty()) {
     log << MSG::DEBUG << "Using heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
   }
-  
+
   return sc;
 }
 
@@ -863,7 +863,7 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
 
   cool::ValidityKey vk_when = timeToValKey(when);
   cool::ValidityKey vk_since = 0, vk_until = 0;
-  
+
   // This is not in i_getObjectFromDB because I need to ensure that m_latestHeartBeat
   // is correctly set even when using the cache.
   if (vk_when >= i_latestHeartBeat()) {
@@ -1003,8 +1003,28 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
 
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
-          folders.push_back(f->substr(f->rfind('/')+1));
+          cool::IFolderPtr folder = database()->getFolder(*f);
+          if (folder->versioningMode() == cool::FolderVersioning::MULTI_VERSION){
+            try{
+              folder->resolveTag(tag());
+              folders.push_back(f->substr(f->rfind('/')+1));
+            } catch (cool::TagRelationNotFound &e){
+              log << MSG::DEBUG << "Tag '" << tag() << "' relation was not found for folder: "<< *f << endmsg;
+            } catch (cool::NodeRelationNotFound) {
+              // to be ignored: it means that the tag exists, but it is not in the
+              // node '/'.
+            } catch (coral::AttributeException) { // FIXME: COOL bug #38422
+              // to be ignored: it means that the tag exists, but it is not in the
+              // node '/'.
+            } catch (coral::Exception &e) {
+              MsgStream log(msgSvc(),name());
+              report_exception(log,"got CORAL exception",e);
+            }
+          } else { // add folder if it is single version without tag verification
+            folders.push_back(f->substr(f->rfind('/')+1));
+          }
         }
+
         for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
           foldersets.push_back(f->substr(f->rfind('/')+1));
@@ -1039,51 +1059,11 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
 //=========================================================================
 StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
 
-  MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
-
-  node_names.clear();
-
-  try {
-
-    if (!m_noDB) { // If I have the DB I always use it!
-      DataBaseOperationLock dbLock(this);
-      if (database()->existsFolderSet(path)) {
-        log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
-
-        cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
-
-        std::vector<std::string> fldr_names = folderSet->listFolders();
-        std::vector<std::string> fldrset_names = folderSet->listFolderSets();
-
-        for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
-          log << MSG::DEBUG << *f << endmsg;
-          node_names.push_back(f->substr(f->rfind('/')+1));
-        }
-        for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
-          log << MSG::DEBUG << *f << endmsg;
-          node_names.push_back(f->substr(f->rfind('/')+1));
-        }
-
-        log << MSG::DEBUG << "got " << node_names.size() << " sub folders" << endmsg;
-      } else {
-        // cannot get the sub-nodes of a folder!
-        return StatusCode::FAILURE;
-      }
-    } else if (m_useCache) {
-      // if no db, but cache, let's assume we know everything is in there
-      m_cache->getSubNodes(path,node_names);
-    } else {
-      // no cache and no db
-      return StatusCode::FAILURE;
-    }
-  } catch ( cool::FolderNotFound /*&e*/) {
-    //log << MSG::ERROR << e << endmsg;
-    return StatusCode::FAILURE;
-  } catch (coral::Exception &e) {
-    report_exception(log,"got CORAL exception",e);
-  }
-  return StatusCode::SUCCESS;
+  std::vector<std::string> temp;
+  StatusCode sc = getChildNodes(path, node_names, temp);
+  if (sc.isSuccess())
+    node_names.insert(node_names.end(), temp.begin(), temp.end());
+  return sc;
 
 }
 

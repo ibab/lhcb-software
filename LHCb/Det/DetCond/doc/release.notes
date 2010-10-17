@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-10-17 - Illya Shapoval
+ - CondDBAccessSvc method getChildNodes is modified to load only those Online 
+ folders in SIMCOND which are tagged with a tag being set to load db.
+ Modification is done in a binary backwards compatible way.
+
 !===================== Det/DetCond v12r15 2010-09-28 =========================
 ! 2010-09-28 - Marco Clemencic
  - Updated tests to expect the return codes of Gaudi (v21r11).
