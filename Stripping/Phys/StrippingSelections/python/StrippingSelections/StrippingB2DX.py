@@ -229,6 +229,7 @@ class B2DXLines(object) :
 	    "Prescales" : {
 	      "D2hh"     : 1., 
 	      "D2hhh"    : 1., 
+	      "D2hhhWS"  : 0.2, 
 	      "D2hhhh"   : 1., 
 	      "D2Kshh"   : 1., 
 	      "D2KPiPi0Merged"   : 1., 
@@ -273,12 +274,13 @@ class B2DXLines(object) :
 	LambdaC = makeLambdaC(moduleName, config["LambdaCCuts"])
 
         DSelections = {
-          "D2hh"   : D2hh, 
-          "D2hhh"  : D2hhh, 
-          "D2hhhh" : D2hhhh,
+          "D2hh"     : D2hh, 
+          "D2hhh"    : D2hhh, 
+          "D2hhhWS"  : D2hhh, 
+          "D2hhhh"   : D2hhhh,
           "D2KPiPi0Merged"   : D2KPiPi0Merged, 
           "D2KPiPi0Resolved" : D2KPiPi0Resolved, 
-          "D2Kshh" : D2Kshh
+          "D2Kshh"   : D2Kshh
         }
                 	
 	KstarNoMW = makeKstarNoMW(moduleName, config["KstarCuts"])
@@ -302,6 +304,10 @@ class B2DXLines(object) :
 	    if name in ["D2hhh"] : 
     		selection1 = makeB02DK(moduleName, name, dsel, config["BCuts"])
     		selection2 = makeB02DPi(moduleName, name, dsel, config["BCuts"])
+    		list += [ selection1, selection2]
+	    elif name in ["D2hhhWS"] : 
+    		selection1 = makeB02DKWS(moduleName, name, dsel, config["BCuts"])
+    		selection2 = makeB02DPiWS(moduleName, name, dsel, config["BCuts"])
     		list += [ selection1, selection2]
 	    else : 
     		selection1 = makeB2D0K(moduleName, name, dsel, config["BCuts"])
@@ -821,6 +827,27 @@ def makeB02DPi(moduleName, DName, DSel, config ) :
     return Selection("SelB02DPiWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
 			RequiredSelections = [ DSel, StdPi ] )
 
+def makeB02DPiWS(moduleName, DName, DSel, config ) : 
+
+    StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+#    StdPi  = DataOnDemand(Location = "Phys/StdLoosePions")
+
+    Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
+    "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(BachelorMIPChi2Min)s))" % config
+
+    B2DPi = CombineParticles("B02DPiWSWith" + DName + "For" + moduleName)
+    B2DPi.DecayDescriptors = [ "[B0 -> D- pi-]cc" ]
+    B2DPi.DaughtersCuts = { "pi+" : Bachelorcut }
+    B2DPi.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
+
+    B2DPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
+    "(BPVDIRA > %(DIRAMin)s))" % config
+
+    return Selection("SelB02DPiWSWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
+			RequiredSelections = [ DSel, StdPi ] )
+
 def makeUnbiasedBs2DsPi(moduleName, DName, DSel, config ) : 
 
     StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
@@ -864,6 +891,27 @@ def makeB02DK(moduleName, DName, DSel, config) :
     return Selection("SelB02DKWith" + DName + "For" + moduleName, Algorithm = B2DK, 
 			RequiredSelections = [ DSel, StdK ] )
 
+
+def makeB02DKWS(moduleName, DName, DSel, config) : 
+
+    StdK  = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+#    StdK  = DataOnDemand(Location = "Phys/StdLooseKaons")
+
+    Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
+    "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(BachelorMIPChi2Min)s))" % config
+
+    B2DK = CombineParticles("B02DKWSWith" + DName + "For" + moduleName)
+    B2DK.DecayDescriptors = [ "[B0 -> D- K-]cc" ]
+    B2DK.DaughtersCuts = { "K+" : Bachelorcut }
+    B2DK.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
+
+    B2DK.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s)  & " \
+    "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(LTMin)s*ps)  & " \
+    "(BPVDIRA > %(DIRAMin)s))" % config
+
+    return Selection("SelB02DKWSWith" + DName + "For" + moduleName, Algorithm = B2DK, 
+			RequiredSelections = [ DSel, StdK ] )
 
 
 def makeB02D0Kstar(moduleName, DName, KstarSel, D0Sel, config) :
