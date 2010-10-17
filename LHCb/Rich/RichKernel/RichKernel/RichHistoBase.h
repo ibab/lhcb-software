@@ -67,6 +67,14 @@ namespace Rich
     /// Destructor
     virtual ~HistoBase( );
 
+  private:
+
+    /// Histogram Constructor initisalisations
+    void initRichHistoConstructor();
+
+    /// Tuple Constructor initisalisations
+    void initRichTupleConstructor();
+
   public:
 
     /// System initialize

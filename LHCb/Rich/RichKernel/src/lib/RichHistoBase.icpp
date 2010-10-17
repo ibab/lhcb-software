@@ -26,6 +26,28 @@ using namespace Gaudi::Utils::Histos;
 #include "RichCommonBase.icpp"
 
 //=============================================================================
+// Histogram Constructor initisalisations
+//=============================================================================
+template <class PBASE>
+void Rich::HistoBase<PBASE>::initRichHistoConstructor()
+{
+  m_histosAreBooked = false;
+  this -> declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
+  this -> declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+  this -> setProperty     ( "HistoTopDir",  "RICH/" );
+}
+
+//=============================================================================
+// Tuple Constructor initisalisations
+//=============================================================================
+template <class PBASE>
+void Rich::HistoBase<PBASE>::initRichTupleConstructor()
+{
+  this -> setProperty ( "NTupleTopDir", "RICH/" );
+  this -> setProperty ( "NTupleLUN",    "RICHTUPLE1" );
+}
+
+//=============================================================================
 // Destructor
 //=============================================================================
 template <class PBASE>

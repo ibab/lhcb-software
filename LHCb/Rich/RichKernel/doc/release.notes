@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-10-17 - Chris Jones
+ - Clean up the base class constructors, moving all initialisations
+   into one place in methods called from the constructors.
+
 ! 2010-10-15 - Chris Jones
  - Extend the particle properties tool interface to take a track segment
    for the threshold momentum method. Allows the actual radiators the

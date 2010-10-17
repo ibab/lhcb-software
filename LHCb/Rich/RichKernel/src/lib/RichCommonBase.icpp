@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH base class : Rich::CommonBase
  *
- *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.3 2009-09-29 08:31:40 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
  */
@@ -27,6 +24,19 @@
 #ifdef _WIN32
 #pragma warning ( disable:4661 ) // incomplete explicit templates
 #endif
+
+//=============================================================================
+// Constructor initialisation
+//=============================================================================
+template <class PBASE>
+void Rich::CommonBase<PBASE>::initRichCommonConstructor()
+{
+  m_toolReg = NULL;
+  m_jos     = NULL;
+  m_regName = ( this->context().empty() ?
+                "RichToolRegistry" : this->context()+"_RichToolRegistry" );
+  this->declareProperty( "ToolRegistryName", m_regName, "Tool Registry Name" );
+}
 
 //=============================================================================
 // Destructor

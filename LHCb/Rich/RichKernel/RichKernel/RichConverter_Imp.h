@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : Rich::Converter_Imp
  *
- *  CVS Log :-
- *  $Id: RichConverter_Imp.h,v 1.6 2009-09-30 08:25:59 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
  */
@@ -266,6 +263,16 @@ namespace Rich
     {
       m_name = newName;
     }
+
+  protected:
+
+    /** 'Dummy' implementation of property setting method
+     *  @todo Extend to a full implementation if needed 
+     */
+    template < class TYPE >
+    void declareProperty ( const std::string & /* name */,
+                           TYPE & /* property */,
+                           const std::string & /* doc = "none" */ ) { }
 
   private:
 

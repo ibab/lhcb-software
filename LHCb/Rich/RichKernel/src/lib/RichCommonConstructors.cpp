@@ -4,9 +4,6 @@
  *
  *  Implementation of templated constructors for Rich::CommonBase
  *
- *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.2 2009-09-24 12:35:33 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
  */
@@ -32,13 +29,9 @@ namespace Rich
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-    : GaudiAlgorithm ( name, pSvcLocator             ),
-      m_toolReg      ( NULL                          ),
-      m_jos          ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiAlgorithm ( name, pSvcLocator )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
@@ -66,14 +59,9 @@ namespace Rich
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
                                          ISvcLocator* pSvcLocator )
-    : GaudiHistoAlg  ( name, pSvcLocator             ),
-      m_toolReg      ( NULL                          ),
-      m_jos          ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiHistoAlg ( name, pSvcLocator )
   {
-    declareProperty ( "ToolRegistryName", m_regName );
-    setProperty     ( "HistoTopDir",  "RICH/" );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
@@ -97,11 +85,9 @@ namespace Rich
   template <>
   HistoBase<GaudiHistoAlg>::HistoBase( const std::string& name,
                                        ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiHistoAlg> ( name, pSvcLocator  ),
-      m_histosAreBooked(false)
+    : CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
   {
-    declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-    declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+    this -> initRichHistoConstructor();
   }
   template <>
   HistoBase<GaudiHistoAlg>::HistoBase( const std::string& type,
@@ -121,16 +107,9 @@ namespace Rich
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
                                          ISvcLocator* pSvcLocator )
-    : GaudiTupleAlg  ( name, pSvcLocator             ),
-      m_toolReg      ( NULL                          ),
-      m_jos          ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiTupleAlg ( name, pSvcLocator )
   {
-    declareProperty ( "ToolRegistryName", m_regName );
-    setProperty     ( "HistoTopDir",  "RICH/" );
-    setProperty     ( "NTupleTopDir", "RICH/" );
-    setProperty     ( "NTupleLUN",    "RICHTUPLE1" );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
@@ -154,11 +133,10 @@ namespace Rich
   template <>
   HistoBase<GaudiTupleAlg>::HistoBase( const std::string& name,
                                        ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiTupleAlg> ( name, pSvcLocator  ),
-      m_histosAreBooked(false)
+    : CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
   {
-    declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-    declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+    this -> initRichHistoConstructor();
+    this -> initRichTupleConstructor();
   }
   template <>
   HistoBase<GaudiTupleAlg>::HistoBase( const std::string& type,
@@ -179,13 +157,9 @@ namespace Rich
   CommonBase<GaudiTool>::CommonBase( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-    : GaudiTool   ( type, name, parent            ),
-      m_toolReg   ( NULL                          ),
-      m_jos       ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiTool ( type, name, parent )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
@@ -213,14 +187,9 @@ namespace Rich
   CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-    : GaudiHistoTool ( type, name, parent            ),
-      m_toolReg      ( NULL                          ),
-      m_jos          ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiHistoTool ( type, name, parent )
   {
-    declareProperty ( "ToolRegistryName", m_regName );
-    setProperty     ( "HistoTopDir",  "RICH/" );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
@@ -244,11 +213,9 @@ namespace Rich
   HistoBase<GaudiHistoTool>::HistoBase( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-    : CommonBase<GaudiHistoTool> ( type, name, parent ),
-      m_histosAreBooked(false)
+    : CommonBase<GaudiHistoTool> ( type, name, parent )
   {
-    declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-    declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+    this -> initRichHistoConstructor();
   }
   template <>
   HistoBase<GaudiHistoTool>::HistoBase( const std::string& name ,
@@ -268,16 +235,9 @@ namespace Rich
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-    : GaudiTupleTool ( type, name, parent            ),
-      m_toolReg      ( NULL                          ),
-      m_jos          ( NULL                          ),
-      m_regName      ( context().empty() ?
-                       "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : GaudiTupleTool ( type, name, parent )
   {
-    declareProperty ( "ToolRegistryName", m_regName );
-    setProperty     ( "HistoTopDir",  "RICH/" );
-    setProperty     ( "NTupleTopDir", "RICH/" );
-    setProperty     ( "NTupleLUN",    "RICHTUPLE1" );
+    this -> initRichCommonConstructor();
   }
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
@@ -301,11 +261,10 @@ namespace Rich
   HistoBase<GaudiTupleTool>::HistoBase( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-    : CommonBase<GaudiTupleTool> ( type, name, parent ),
-      m_histosAreBooked(false)
+    : CommonBase<GaudiTupleTool> ( type, name, parent )
   {
-    declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-    declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+    this -> initRichHistoConstructor();
+    this -> initRichTupleConstructor();
   }
   template <>
   HistoBase<GaudiTupleTool>::HistoBase( const std::string& name ,
@@ -342,14 +301,9 @@ namespace Rich
   CommonBase< Rich::Converter_Imp >::CommonBase( long storage_type,
                                                  const CLID &class_type,
                                                  ISvcLocator *svc )
-    : Rich::Converter_Imp ( storage_type, class_type, svc ),
-      m_toolReg           ( NULL                          ),
-      m_jos               ( NULL                          ),
-      m_regName           ( context().empty() ?
-                            "RichToolRegistry" : context()+"_RichToolRegistry" )
+    : Rich::Converter_Imp ( storage_type, class_type, svc )
   {
-    // to do ...
-    // declareProperty ( "ToolRegistryName", m_regName );
+    this -> initRichCommonConstructor();
   }
   //=============================================================================
 

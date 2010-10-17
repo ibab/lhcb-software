@@ -4,9 +4,6 @@
  *
  *  Header file for RICH base class : Rich::CommonBase
  *
- *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.17 2009-09-24 12:35:33 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
  */
@@ -274,6 +271,11 @@ namespace Rich
      *  @retval FALSE Setting failed
      */
     bool setProperties( const std::string & name ) const;
+
+  private:
+
+    /// Common Constructor initisalisations
+    void initRichCommonConstructor();
     
   private: // data
 
