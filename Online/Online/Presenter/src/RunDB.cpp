@@ -1,4 +1,4 @@
-// $Id: RunDB.cpp,v 1.3 2010-09-19 18:49:53 robbep Exp $
+// $Id: RunDB.cpp,v 1.4 2010-10-18 07:37:58 marcocle Exp $
 // local 
 #include "RunDB.h"
 
@@ -11,6 +11,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/regex.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RunDB

@@ -1,4 +1,4 @@
-// $Id: ProblemDB.cpp,v 1.6 2010-09-19 18:49:53 robbep Exp $
+// $Id: ProblemDB.cpp,v 1.7 2010-10-18 07:37:58 marcocle Exp $
 
 // Include files 
 // This file
@@ -14,6 +14,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/regex.hpp>
 
 // Presenter
 #include "RunDB.h"

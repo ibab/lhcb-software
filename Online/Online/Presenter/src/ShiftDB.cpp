@@ -1,4 +1,4 @@
-// $Id: ShiftDB.cpp,v 1.4 2010-03-25 14:41:49 ocallot Exp $
+// $Id: ShiftDB.cpp,v 1.5 2010-10-18 07:37:58 marcocle Exp $
 // Include files
 
 // local
@@ -15,6 +15,7 @@
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/regex.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ShiftDB
