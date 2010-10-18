@@ -12,6 +12,7 @@
 ! 2010-10-18 - Juan Palacios
  - python/DaVinci/Configuration.py
   . User sequence now understands SelectionSequence, MergedSelectionSequence.
+  . Set IODataManager().AgeLimit to 1 for ETC, RDST, SDST and 0 otherwise.
  - Increase to v26r3
 
 !========================== DaVinci v26r2p1 2010-10-11 =======================

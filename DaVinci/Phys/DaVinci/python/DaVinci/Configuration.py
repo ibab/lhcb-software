@@ -566,7 +566,19 @@ class DaVinci(LHCbConfigurableUser) :
     def sequence(self) :
         return GaudiSequencer('DaVinciEventSeq',
                               IgnoreFilterPassed = True)
-                    
+
+
+    def ancestorDepth(self) :
+        """
+        Calculate depth of ancestry for input files.
+        Return 1 for InputType = 'ETC', 'RDST' or 'SDST' and 0 for others.
+        If DaVinci().FileAncestorDepth explicitly set to 0 or larger, return FileAncestorDepth.
+        """
+        inputType = self.getProp('InputType').upper()
+        if inputType in ('ETC', 'RDST', 'SDST') :
+            return 1
+        return 0
+
 ################################################################################
 # Apply configuration
 #
@@ -578,6 +590,8 @@ class DaVinci(LHCbConfigurableUser) :
         log.info( self )
 
         self._checkOptions()
+
+        IODataManager().AgeLimit = self.ancestorDepth()
 
         ApplicationMgr().TopAlg = [self.sequence()]
         self._configureSubPackages()
