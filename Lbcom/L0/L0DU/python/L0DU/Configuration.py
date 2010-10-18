@@ -365,6 +365,7 @@ class L0Conf(LHCbConfigurableUser) :
             DataOnDemandSvc().AlgMap["Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
             if self.getProp("FullL0MuonDecoding"):
                 DataOnDemandSvc().AlgMap["Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
+                DataOnDemandSvc().AlgMap["Trig/L0/MuonBCSU"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
             DataOnDemandSvc().AlgMap["Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName
