@@ -362,7 +362,7 @@ def destroyTmpDirectory():
 
 def cleanTmpDirectory():
     log = logging.getLogger()
-    log.info('     Cleaning up %s' % getTmpDirectory())
+    log.debug('     Cleaning up %s' % getTmpDirectory())
     tmpdir = getTmpDirectory()
     for f in os.listdir(tmpdir) :
         removeAll(os.path.join(tmpdir, f))
@@ -1927,7 +1927,7 @@ def untarFile(fname):
 
     retcode = 0
 
-    log.info('%s on %s ' % (fname, os.getcwd()))
+    log.info("untarring %s in %s" % (fname, os.getcwd()))
 
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
