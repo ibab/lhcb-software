@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-18 - Mariusz Witek
+- new tool to remove tracks from PV and recalculate PV params without a fit
+
 !========================= PatPV v3r18 2010-09-27 =========================
 ! 2010-09-24 - Mariusz Witek
 - include track weights in vertex chi2 calculation

@@ -11,6 +11,7 @@
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "IPVFitter.h"
 #include "IPVSeeding.h"
+#include "PVOfflineRecalculate.h"
 // Track info
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -54,6 +55,10 @@ public:
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			         LHCb::RecVertex& outvtx);
 
+  void removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
+                                    std::vector<const LHCb::Track*>& tracks2remove,
+                                    LHCb::RecVertex& vtx);
+  
 
 
 private:
@@ -66,6 +71,8 @@ private:
   // Tools
   IPVFitter* m_pvfit;                // PV fitting tool
   IPVSeeding* m_pvSeedTool;              // Seeding tool
+  PVOfflineRecalculate* m_pvRecalc;
+  
   // Member functions
   std::vector<std::string> m_inputTracks;
   std::string m_pvFitterName;

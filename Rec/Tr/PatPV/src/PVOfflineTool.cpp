@@ -62,6 +62,15 @@ StatusCode PVOfflineTool::initialize()
     err() << "Unable to retrieve the PV seeding tool " << m_pvSeedingName << endmsg;
     return  StatusCode::FAILURE;
   }
+  // Access PVOFflineRecalculate tool
+  m_pvRecalc = tool<PVOfflineRecalculate>("PVOfflineRecalculate", this);
+  //  m_pvRecalc = tool<PVOfflineRecalculateWG1>("PVOfflineRecalculateWG1", this);
+  if(!m_pvRecalc) {
+    err() << "Unable to retrieve the PV recalculation tool " << endmsg;
+    return  StatusCode::FAILURE;
+  }
+  
+
   // Input tracks
   if(m_inputTracks.size() == 0) { 
     m_inputTracks.push_back(LHCb::TrackLocation::Default);
@@ -537,6 +546,13 @@ StatusCode PVOfflineTool::matchVtxByTracks(const LHCb::RecVertex& invtx,
   outvtx = *itbest;
   debug() << " vtx succesfully matched at tracks rate: " << lastrate << endmsg;
   return StatusCode::SUCCESS;
+}
+
+void PVOfflineTool::removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
+                                                 std::vector<const LHCb::Track*>& tracks2remove,
+                                                 LHCb::RecVertex& vtx) 
+{
+  m_pvRecalc->RecalculateVertex(pvin, tracks2remove, vtx);  
 }
 
 
