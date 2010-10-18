@@ -49,7 +49,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v37r7' ) )
+                j = Job( application = Brunel( version = 'v37r8' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -95,11 +95,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v37r7",pickedRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v37r8",pickedRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickedRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v37r7",pickedRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v37r8",pickedRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickedRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -650,15 +650,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     if cacheLoaded : saveRunInfoCache()
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v37r7",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v37r8",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
