@@ -446,6 +446,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
+        from HltLine.Hlt2Monitoring import Hlt2Monitor
 
         codestr = "(BPVDIRA > %(OSTFPointLL_2Body)s )" % self.getProps()
         if extracode :
@@ -454,6 +455,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                              , 'TFFilter'
                              , InputLocations = inputSeq
                              , Code = codestr
+                             , PreMonitor  =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_in',nbins=101) 
+                             , PostMonitor =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_out',nbins=101)   
                            )
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
@@ -496,7 +499,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
-        
+        from HltLine.Hlt2Monitoring import Hlt2Monitor       
+ 
         codestr = "( BPVIPCHI2() < %(OSTFDIPChi2UL_3Body)s )" % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
@@ -504,6 +508,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                              , 'TFFilter'
                              , InputLocations = inputSeq
                              , Code = codestr
+                             , PreMonitor  =  Hlt2Monitor( "M","M(K#pi#pi)",1910.,100,'M_in',nbins=101) 
+                             , PostMonitor =  Hlt2Monitor( "M","M(K#pi#pi)",1910.,100,'M_out',nbins=101)
                            )
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
