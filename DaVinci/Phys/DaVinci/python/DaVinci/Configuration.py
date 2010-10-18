@@ -519,7 +519,6 @@ class DaVinci(LHCbConfigurableUser) :
         else :
             log.info("No MainOptions specified. DaVinci() will import no options file!")
         log.info("Creating User Algorithms")
-#        print '##### User',  self.getProp("UserAlgorithms")
         self.appendToMainSequence( self.getProp("UserAlgorithms")  )        
 
 ################################################################################
@@ -568,16 +567,17 @@ class DaVinci(LHCbConfigurableUser) :
                               IgnoreFilterPassed = True)
 
 
-    def ancestorDepth(self) :
+    def _setAncestorDepth(self) :
         """
-        Calculate depth of ancestry for input files.
-        Return 1 for InputType = 'ETC', 'RDST' or 'SDST' and 0 for others.
-        If DaVinci().FileAncestorDepth explicitly set to 0 or larger, return FileAncestorDepth.
+        Calculate depth of ancestry for input files and set IODataManager().AgeLimit accordingly.
+        Set to 1 for InputType = 'ETC', 'RDST' or 'SDST' and 0 for others.
         """
-        inputType = self.getProp('InputType').upper()
-        if inputType in ('ETC', 'RDST', 'SDST') :
-            return 1
-        return 0
+        if not IODataManager().isPropertySet('AgeLimit') :
+            depthMap = { 'ETC'  : 1,
+                         'RDST' : 1,
+                         'SDST' : 1  }
+            inputType = self.getProp('InputType').upper()
+            IODataManager().setProp('AgeLimit', depthMap.get(inputType, 0))
 
 ################################################################################
 # Apply configuration
@@ -591,7 +591,7 @@ class DaVinci(LHCbConfigurableUser) :
 
         self._checkOptions()
 
-        IODataManager().AgeLimit = self.ancestorDepth()
+        self._setAncestorDepth()
 
         ApplicationMgr().TopAlg = [self.sequence()]
         self._configureSubPackages()
