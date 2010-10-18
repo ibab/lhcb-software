@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/FarmMonitor
+! Responsible : Olivier Callot
+! Purpose     : Monitor the tasks in the online farm
+!-----------------------------------------------------------------------------
+
+! 2010-10-18 - Olivier Callot
+ - Forst official release.
+ - Relies on Markus's RO publishers
+ - Format information for PVSS display, one service per line
+ - Restrict to LHCb and FEST partitions.

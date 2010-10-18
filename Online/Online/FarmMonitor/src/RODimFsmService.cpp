@@ -1,4 +1,4 @@
-// $Id: RODimFsmService.cpp,v 1.1 2009-04-03 09:16:40 ocallot Exp $
+// $Id: RODimFsmService.cpp,v 1.2 2010-10-18 06:25:08 ocallot Exp $
 // Include files
 
 // local
@@ -18,7 +18,7 @@ RODimFsmService::RODimFsmService( std::string part, int nb ) {
   m_dimBuffer.number = nb;
   char serviceName[100];
   sprintf( serviceName, "FarmMonitor/%s/Fsm%02d", part.c_str(), nb );
-  char* format="I:2;C:12;C:128";
+  char format[30]="I:2;C:12;C:128";
   m_service = new DimService( serviceName, format, (void*) &m_dimBuffer, 160 );
 }
 //=============================================================================

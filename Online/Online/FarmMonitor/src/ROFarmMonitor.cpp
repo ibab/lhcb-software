@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.3 2010-03-24 08:37:59 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.4 2010-10-18 06:25:08 ocallot Exp $
 // Include files
 // C++ include files
 #include <netdb.h>
@@ -64,7 +64,13 @@ void ROFarmMonitor::initialize ( ) {
   DimBrowser dbr;
   char* service, *format;
 
-  dbr.getServices( "*/ROpublish" );
+  m_shifter = new ROShifter();
+  char fmt[10] = "C";
+  m_dimShiftLeader = new DimService( "FarmMonitor/Shifter/ShiftLeader", fmt, m_shiftLeader, 80 );
+  m_dimDataManager = new DimService( "FarmMonitor/Shifter/DataManager", fmt, m_dataManager, 80 );
+  
+  
+  dbr.getServices( "/RO/*/ROpublish" );
   while ( dbr.getNextService( service, format ) ) {
     std::string myService( service );
     m_names.push_back( myService );
@@ -84,6 +90,8 @@ void ROFarmMonitor::initialize ( ) {
     std::string myService( service );
     std::string part = myService.substr(  myService.find( "/" )+1 );
     part = part.substr( 0, part.find("/") );
+    if ( "LHCb" != part && "FEST" != part ) continue;
+    
     PartitionDesc* myPart = new PartitionDesc( part );
 
     if ( 1 < m_print ) std::cout << "Connect to service " << service << std::endl;
@@ -249,6 +257,18 @@ void ROFarmMonitor::nodeInfoHandler(void* tag, void* address, int* size) {
 //=========================================================================
 void ROFarmMonitor::update( )   {
   dim_lock(); // Avoid being interrupted now...
+
+
+  //== Check the shift crew
+  if ( m_shifter->hasChanged() ) {
+    strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
+    strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
+    m_dimShiftLeader->updateService();
+    m_dimDataManager->updateService();
+    
+    std::cout << "Shift Leader " << m_shiftLeader << std::endl;
+    std::cout << "DataManager " << m_dataManager << std::endl;
+  }
 
   longlong now = System::currentTime( System::microSec );
   float dt = .000001 * double( now - m_lastTime );

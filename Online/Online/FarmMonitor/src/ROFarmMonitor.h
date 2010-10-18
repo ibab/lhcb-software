@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.h,v 1.2 2010-03-24 07:44:00 ocallot Exp $
+// $Id: ROFarmMonitor.h,v 1.3 2010-10-18 06:25:08 ocallot Exp $
 #ifndef ROFARMMONITOR_H
 #define ROFARMMONITOR_H 1
 
@@ -7,6 +7,7 @@
 #include "RODimLineService.h"
 #include "RODimFsmService.h"
 #include "RONodeCounter.h"
+#include "ROShifter.h"
 #include "dim/dic.hxx"
 #include "dim/dis.hxx"
 
@@ -85,5 +86,10 @@ private:
  
   DimServer*                   m_dimServer;
   std::vector<PartitionDesc*>  m_partitions;  /// list of partitions
+  ROShifter*               m_shifter;   /// tool to get the shifter name
+  char                     m_shiftLeader[80];
+  char                     m_dataManager[80];
+  DimService*              m_dimShiftLeader;
+  DimService*              m_dimDataManager;
 };
 #endif // ROFARMMONITOR_H
