@@ -5,6 +5,11 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+
+! 2010-10-18 - Neal Gauvin
+ - options/myJob.py adapated to new reconstruction scheme agreed on 15th october (Jets/Exotica WG).
+
+
 ! 2010-10-11 - Neal Gauvin
  - RecVertices2Particles : TrackMaxChi2oNDOF set to 10 by default to reflect actual cut on protoparticles.
 
