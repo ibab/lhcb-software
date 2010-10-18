@@ -70,6 +70,7 @@ HltANNSvc().Hlt1SelectionID = {
     # MU Hlt1(Single|Di)Muon.*Decision
     "Hlt1SingleMuonNoIPL0Decision"          :  100,
     "Hlt1SingleMuonNoIPGECDecision"         :  101,
+    "Hlt1NoPVPassThroughDecision"           :  102,
     "Hlt1SingleMuonIPCL0Decision"           :  105,
     "Hlt1SingleMuonIPCGECDecision"          :  106,
     "Hlt1DiMuonNoIPL0DiDecision"            :  110,
