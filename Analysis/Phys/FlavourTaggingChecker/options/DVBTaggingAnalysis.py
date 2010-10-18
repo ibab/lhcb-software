@@ -45,7 +45,7 @@ tag.BackgroundCategory.OutputLevel = 4
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
-tag.BTaggingTool.OutputLevel = 2
+tag.BTaggingTool.OutputLevel = 3
 
 #Import cuts for MC2010
 importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
@@ -60,7 +60,7 @@ importOptions('$FLAVOURTAGGINGOPTS/MC2010_cuts.py')
 tagcheck = BTaggingChecker("BTaggingChecker")
 tagcheck.InputLocations = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
-tagcheck.OutputLevel = 2
+tagcheck.OutputLevel = 3
 
 ########################################################################
 # BTaggingAnalysis ntuple creation
@@ -78,18 +78,18 @@ tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
-tagana.OutputLevel = 3
+tagana.OutputLevel = 4
 
 tagana.addTool( PhysDesktop )
-tagana.PhysDesktop.OutputLevel = 4
+tagana.PhysDesktop.OutputLevel = 5
 tagana.addTool( TriggerTisTos )
-tagana.TriggerTisTos.OutputLevel = 4
+tagana.TriggerTisTos.OutputLevel = 5
 tagana.addTool( TaggingUtilsChecker )
-tagana.TaggingUtilsChecker.OutputLevel = 4
+tagana.TaggingUtilsChecker.OutputLevel = 5
 tagana.addTool( MCMatchObjP2MCRelator )
-tagana.MCMatchObjP2MCRelator.OutputLevel = 4
+tagana.MCMatchObjP2MCRelator.OutputLevel = 5
 tagana.addTool( BackgroundCategory )
-tagana.BackgroundCategory.OutputLevel = 4
+tagana.BackgroundCategory.OutputLevel = 5
 
 #################################################################
 # Triger information
@@ -105,7 +105,7 @@ DaVinci().Hlt = False
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 500                        # Number of events
+DaVinci().EvtMax     = 100                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "analysis.root"     # Ntuple
@@ -118,7 +118,7 @@ DaVinci().DDDBtag    = "head-20100407"
 DaVinci().CondDBtag  = "sim-20100429-vc-md100"
 
 DaVinci().MoniSequence = [ cheatsel,
-                           tag,
+                           #tag,
                            #tagcheck,
                            tagana
                            ]  # The algorithms
