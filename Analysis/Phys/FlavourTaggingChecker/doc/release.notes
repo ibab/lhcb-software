@@ -8,6 +8,7 @@
 
 ! 2010-10-14 - Marc Grabalosa
  . modification of /root code, new variables in taggers, new option cuts
+ - Raise to v6r1  
 
 ! 2010-10-12 - Marco Musy
  . added in btagginganalysis the variable minchi2 of B hypo
@@ -35,7 +36,6 @@
   . modified kaon oppo cuts to adapt to latest data in /root,
   cuts are always accessible through properties.
   (p,pt,IPPU)
-
 
 ! 2010-09-27 - Marco Musy
   . dropped cuts on ghost likelihood and loosen chi2 cut to 5     
