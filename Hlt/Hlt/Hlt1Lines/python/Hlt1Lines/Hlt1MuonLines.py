@@ -102,6 +102,12 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltReco import Velo
         from HltTracking.HltPVs  import PV3D
 
+        # First the pass-through NoPV line
+        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
+                                        , prescale = self.prescale
+                                        , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Muon,lowMult','DiMuon,lowMult'] ] )
+                                        , postscale = self.postscale)  
+
         # It already Prepare the muon segments with proper error calling the tool MuonSeedTool
         RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
                                 , OutputMuonTracksName='Hlt/Track/MuonSegmentForL0Single'
