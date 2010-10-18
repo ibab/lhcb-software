@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2010-10-18 - Mariusz Witek
+ - New method removeTracksAndRecalculatePV to remove tracks and 
+   recalculate PV parameters without refitting
+
 ! 2010-09-29 - Marco Cattaneo
  - Add dictionary for IVeloExpectation::Info. Required trivial modification to
    IVeloExpectation.h

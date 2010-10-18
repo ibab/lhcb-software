@@ -67,6 +67,11 @@ class IPVOfflineTool : virtual public IAlgTool {
   virtual StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			                 LHCb::RecVertex& outvtx)=0;
 
+  /// Remove tracks from PV and recalculate PV parameters without a fit 
+  virtual void removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
+                                            std::vector<const LHCb::Track*>& tracks2remove,
+                                            LHCb::RecVertex& vtx)=0;
+  
 
 };
 #endif // IPVOFFLINETOOL_H
