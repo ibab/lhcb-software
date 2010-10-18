@@ -1,3 +1,7 @@
+2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Repository.py: fixed a few syntax warnings
+
 2010-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Repository.py: added the getRepositories function

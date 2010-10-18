@@ -9,9 +9,7 @@ from LbUtils.Script import Script
 import sys
 
 class MovePackageScript(Script):
-    _version = __version__    
-    _description = __doc__
-    
+    _description = __doc__    
     def __init__(self):
         Script.__init__(self, usage = "%prog [options] package project")
 
@@ -22,10 +20,6 @@ class MovePackageScript(Script):
         parser.add_option("--user-svn", action = "append",
                           metavar = "URL",
                           help = "add a custom subversion repository to the known ones")
-        parser.set_defaults(dry_run=False)
-        parser.add_option("--dry-run", action = "store_true",
-                          help = "show the command that would be run, but not call it")
-
 
     def main(self):
         opts = self.options
@@ -37,7 +31,7 @@ class MovePackageScript(Script):
             self.parser.error("Wrong number of arguments. Use -h for more information.")
         package, project = args
 
-        status = moveSVNPackage(package, project, user_svn, opts.dry_run)
+        status = moveSVNPackage(package, project, opts.user_svn)
         
         return status
 

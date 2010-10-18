@@ -1,3 +1,9 @@
+2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/rcs.py: 
+	* scripts/move_package: 
+	* scripts/tag_package: fixed syntax warnings.
+
 2010-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: Use the same version as the one already used by a project

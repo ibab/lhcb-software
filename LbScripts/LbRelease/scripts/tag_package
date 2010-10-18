@@ -42,7 +42,7 @@ class TagPackage(Script):
         if self._packageRepos is None:
             # Add user-defined repositories to the known ones
             reps = getRepositories(self.options.user_svn, self.options.user_cvs, protocol="ssh")
-            self._packageRepos = rcs.getPackageRepo(self.package, reps, self.options.exclude)[0]                
+            self._packageRepos = list(rcs.getPackageRepo(self.package, reps, self.options.exclude))[0]                
         return self._packageRepos
     
     def isValidVersion(self):

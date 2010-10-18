@@ -192,6 +192,10 @@ class RevisionControlSystem(object):
         Retursn the error code of the underlying command.
         """
         return 0
+    
+    def move(self, package, project):
+        """ Move a package from one project to another """
+        return 0
 
     def _getRequirements(self, module, version = "head"):
         """
@@ -393,6 +397,12 @@ class CVS(RevisionControlSystem):
         options = ("-d", self.repository, "rtag", version, module)
         _, _, retcode = apply(_cvs, options, {"stdout": None, "stderr": None})
         return retcode
+    
+    def move(self, package, project):
+        """ Move a package from one project to another """
+        log = logging.getLogger()
+        log.debug("The move action is not supported on CVS repositories")
+        return 1
 
     def _getRequirements(self, module, version = "head"):
         """
@@ -915,7 +925,23 @@ class SubversionCmd(RevisionControlSystem):
                                                             module, version),
                              trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
+    
+    def move(self, package, project):
+        """ move a package from one project to another """
+        log = logging.getLogger()
+        status = 0
+        if package not in self.packages :
+            status = 1
+            log.error("The package %s is not in the %s repository" % (package, self))
+        elif project not in self.projects :
+            status = 1
+            log.error("The project %s is not in the %s repository" % (project, self) )
+        elif self.modules[package] == project :
+            log.warning("The package %s is already in the %s project. Nothing to do" % (package, project))
+        else :
+            print "toto"
 
+        return status
 
     def _getRequirements(self, module, version = "head"):
         """
@@ -951,6 +977,8 @@ def connect(repository):
 
 def getPackageRepo(package, reps, exclude=None):
     log = logging.getLogger()
+    if exclude is None :
+        exclude = []
     for name in reps:
         if name not in exclude:
             url = str(reps[name]) # the protocol is forced (anyway we need to write)
@@ -962,6 +990,8 @@ def getPackageRepo(package, reps, exclude=None):
 
 def getProjectRepo(project, reps, exclude=None):
     log = logging.getLogger()
+    if exclude is None :
+        exclude = []
     for name in reps:
         if name not in exclude:
             url = str(reps[name]) # the protocol is forced (anyway we need to write)
@@ -970,5 +1000,26 @@ def getProjectRepo(project, reps, exclude=None):
             if project in repo.projects:
                 yield repo
 
-def moveSVNPackage(package, project, user_repos, dry_run):
-    pass
+def moveSVNPackage(package, project, user_repos):
+    log = logging.getLogger()
+    status = 0
+    reps = getRepositories(user_repos, protocol="ssh")
+    repo_list = list(getPackageRepo(package, reps))
+    if repo_list :
+        repo = repo_list[0]
+    else :
+        repo = None
+        log.error("No Repository found for %s" % package)
+    proj_repo_list = list(getProjectRepo(project, reps))
+    if proj_repo_list :
+        proj_repo = proj_repo_list[0]
+    else :
+        proj_repo = None
+        log.error("No Repository found for %s" % project)
+    if repo != proj_repo :
+        log.error("%s is not in the same SVN repository as %s" % (package, project))
+        log.debug("%s : %s %s : %s" % (package, repo, project, proj_repo))
+        status = 1
+    else :
+        repo.move(package, project)
+    return status

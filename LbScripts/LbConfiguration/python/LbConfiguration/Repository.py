@@ -81,22 +81,24 @@ def getRepositories(user_svn=None, user_cvs=None, protocol="default"):
     from urllib import splittype, splituser, splithost
     reps = {}
     for r in repositories :
-        if repositories[r].haskey(protocol) :
+        if repositories[r].has_key(protocol) :
             reps[r] = repositories[r][protocol]
-    i = 0
-    for r in user_svn:
-        # FIXME: need some error checking
-        protocol, rest = splittype(r)
-        rest, path = splithost(rest)
-        user, host = splituser(rest)
-        reps["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
-        i += 1
-    i = 0
-    for r in user_cvs:
-        # FIXME: need some error checking
-        dummy, protocol, rest, path = r.split(":")
-        user, host = splituser(rest)
-        reps["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
-        i += 1    
+    if user_svn :
+        i = 0
+        for r in user_svn :
+            # FIXME: need some error checking
+            protocol, rest = splittype(r)
+            rest, path = splithost(rest)
+            user, host = splituser(rest)
+            reps["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
+            i += 1
+    if user_cvs :
+        i = 0
+        for r in user_cvs :
+            # FIXME: need some error checking
+            dummy, protocol, rest, path = r.split(":")
+            user, host = splituser(rest)
+            reps["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
+            i += 1    
     return reps
 
