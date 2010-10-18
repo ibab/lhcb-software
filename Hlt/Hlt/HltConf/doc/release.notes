@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-10-18 - Vladimir Gligorov
+ - add Hlt1NoPVPassThroughDecision to HltInit  
+
 !========================== HltConf v8r5 2010-09-29 ===================
 ! 2010-09-29 - Gerhard Raven
  - add Hlt2BeamGasLinesConf to list of used configurables
