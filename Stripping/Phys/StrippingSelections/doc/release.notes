@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-18 - Vladimir Gligorov
+ - Add StrippingD2hhLTUnbiasedMBNB.py, a D->hh stripping line without
+   any IP cuts which runs on MB/NB events, to be used for calibrating IP
+   cuts on multiple interaction events for 2011.
+
 ! 2010-10-17 - Anton Poluektov 
  - python/StrippingSelections/StrippingB2DX.py: 
      Added wrong sign line (B2DXWithDhhhWSLine) to B2DX module. 
