@@ -3,22 +3,20 @@
 // Include files 
 #include <algorithm>
 #include <sstream>
+#include "boost/algorithm/string/replace.hpp"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
-#include "GaudiKernel/Plane3DTypes.h"
-
+#include "GaudiKernel/IRegistry.h"
+#include "Kernel/Particle2LHCbIDs.h"
 
 // local
 #include "TriggerSelectionTisTos.h"
 
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
-
-#include "Kernel/CaloCellCode.h"
-
 
 using namespace LHCb;
 
@@ -48,6 +46,9 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                   m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default); 
   declareProperty("HltSelReportsLocation",
                   m_HltSelReportsLocation = LHCb::HltSelReportsLocation::Default);
+ 
+  // values: 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively;
+  declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 0 );
  
   m_cached_SelectionNames.reserve(500);
   m_cached_tisTosTob.reserve(500);
@@ -152,7 +153,45 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 //    Particle input -----------------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle )
 {
-  if( addToSignal( particle ) )clearCache();
+  if( !m_useParticle2LHCbIDs ){
+    if( addToSignal( particle ) )clearCache();    
+  } else {
+    const DataObject* container = particle.parent();
+    if( container ){
+      IRegistry* registry =  container->registry();
+      if( registry ){
+          std::string path = registry->identifier();
+          boost::replace_last(path,"/Particles","/Particle2LHCbIDMap");
+          if( exist< DaVinci::Map::Particle2LHCbIDs >(path) ){
+            DaVinci::Map::Particle2LHCbIDs* p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path);
+            if( p2lhcbids ){
+              std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
+              if ( msgLevel(MSG::VERBOSE) ) 
+                verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
+              addToOfflineInput( hits );
+              return;
+            }
+          }
+      }
+    }
+    std::vector<const LHCb::Particle*> daughters = particle.daughtersVector(); 
+    if( daughters.size() >0 ){
+      for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
+        if(*p){
+          const LHCb::Particle & part = *(*p);
+          if ( msgLevel(MSG::VERBOSE) ) 
+            verbose() << " addToOfflineSignal Particle via daughter " << endmsg;
+          addToOfflineInput( part );
+        }
+      }
+    } else if( m_useParticle2LHCbIDs == 1 ){
+      if( addToSignal( particle ) )clearCache();
+    } else if( m_useParticle2LHCbIDs == 2 ){
+      Error(" No /Particle2LHCbIDMap available for Particle with no daughters nor for mother",
+              StatusCode::FAILURE, 10).setChecked();
+      clearCache();
+    }
+  }
 }
 
 

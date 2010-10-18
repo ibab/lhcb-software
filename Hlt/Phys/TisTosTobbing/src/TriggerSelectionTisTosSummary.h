@@ -1,6 +1,6 @@
-// $Id: TriggerSelectionTisTos.h,v 1.15 2010-07-21 21:22:17 tskwarni Exp $
-#ifndef TRIGGERSELECTIONTISTOS_H 
-#define TRIGGERSELECTIONTISTOS_H 1
+// $Id: TriggerSelectionTisTosSummary.h,v 1.15 2010-07-21 21:22:17 tskwarni Exp $
+#ifndef TRIGGERSELECTIONTISTOSSUMMARY_H 
+#define TRIGGERSELECTIONTISTOSSUMMARY_H 1
 
 // Include files
 // from Gaudi
@@ -10,7 +10,6 @@
  
 #include "Event/HltObjectSummary.h"
 #include "Event/Particle.h"
-#include "Event/RecVertex.h"
 #include "Event/Track.h"
 
 #include "GaudiKernel/IIncidentListener.h"
@@ -18,29 +17,28 @@
 
 namespace LHCb {
   class HltDecReports;
-  class HltSelReports;
 };
   
-/** @class TriggerSelectionTisTos TriggerSelectionTisTos.h
+/** @class TriggerSelectionTisTosSummary TriggerSelectionTisTosSummary.h
  *  
  *  @author Tomasz Skwarnicki
- *  @date   2007-08-06
+ *  @date   2010-10-18
  *
- *  Hit based implementation of Tis,Tos'ing Trigger Selection(s).
+ *  Precalculated TisTosSummary implementation of Tis,Tos'ing Trigger Selection(s).
  *  @sa  ITriggerSelectionTisTos docs for more explanation.
  *  This interface also defines inlined shortcuts to set Offline Input and get an output in one call. 
  */
-class TriggerSelectionTisTos : public ParticleTisTos,
+class TriggerSelectionTisTosSummary : public ParticleTisTos,
                                virtual public IIncidentListener, 
                                virtual public ITriggerSelectionTisTos {
 public: 
 
   /// Standard constructor
-  TriggerSelectionTisTos( const std::string& type, 
+  TriggerSelectionTisTosSummary( const std::string& type, 
                           const std::string& name,
                           const IInterface* parent);
 
-  virtual ~TriggerSelectionTisTos( ); ///< Destructor
+  virtual ~TriggerSelectionTisTosSummary( ); ///< Destructor
 
 
   virtual StatusCode         initialize();
@@ -51,7 +49,7 @@ public:
   /// erase previous input 
   void setOfflineInput( ); 
  
-  ///    Detector hit input 
+  ///    Detector hit input - can add TisTosSummary by passing fake LHCbID vector  
   void addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist );
 
   ///    Track input 
@@ -83,7 +81,7 @@ public:
 
  // ------------ auxiliary outputs ---------------------------------
 
-  /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
+  /// return cached TisTosSummary as fake LHCbID vector
   std::vector<LHCb::LHCbID> offlineLHCbIDs(); 
 
 
@@ -94,8 +92,6 @@ public:
                                                                           unsigned int tpsRequirement      = kAnything );
 
 
-
-
 protected:
 
   /// get Hlt Summary and configuration
@@ -103,18 +99,22 @@ protected:
   
   /// Hlt summary reports
   LHCb::HltDecReports* m_hltDecReports;
-  LHCb::HltSelReports* m_hltSelReports;
+  LHCb::HltDecReports* m_hltDecReportsL0;
   
-  /// Location of Hlt Reports
-  StringProperty m_HltSelReportsLocation;
+  /// Location of Hlt Summary
   StringProperty m_HltDecReportsLocation;
-
-  /// Switch to activate using Particle2LHCbIDsMap 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively; 
-  unsigned int m_useParticle2LHCbIDs;  
+  StringProperty m_HltDecReportsLocationL0;
   
   bool m_newEvent;
 
 private:
+
+  ///    add TisTosSummary to the cached result;
+  bool addTisTosSummary( std::vector< unsigned int > & tisTosSummary );
+
+  ///    Look for TisTosSummary of OfflineInput; add it to the cached result;
+  bool addParticleTisTosSummary( const LHCb::Particle & object );
+
 
   // internal Cache of results used as long as the Offline Input remains the same (cache only full classifications)
  
@@ -149,4 +149,4 @@ private:
   
 
 };
-#endif // TRIGGERSELECTIONTISTOS_H
+#endif // TRIGGERSELECTIONTISTOSSUMMARY_H

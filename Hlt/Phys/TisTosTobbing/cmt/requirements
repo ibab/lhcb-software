@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           TisTosTobbing
-version           v6r0
+version           v6r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -23,6 +23,7 @@ use HltInterfaces       v*    Kernel
 use CaloDet             v*    Det 
 
 use DaVinciKernel       v*    Phys
+use DaVinciMaps         v*    Phys 
 
 use Boost               v*    LCG_Interfaces
 
