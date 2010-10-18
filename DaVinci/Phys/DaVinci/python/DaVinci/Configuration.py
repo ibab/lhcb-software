@@ -531,8 +531,14 @@ class DaVinci(LHCbConfigurableUser) :
         """
         log.info("Append to Main Sequence has been called")
         for alg in algs:
-            self.mainSeq.Members += [ alg ]
-                    
+            configurable = self._configurable(alg)
+            self.mainSeq.Members += [ configurable ]
+
+    def _configurable(self, obj) :
+        _obj2ConfMap = { 'SelectionSequence'         : lambda x : x.sequence(),
+                         'MultiSelectionSequence'    : lambda x : x.sequence() }
+        return _obj2ConfMap.get(type(obj).__name__, lambda x : x)(obj)
+
 ################################################################################
 # Monitoring sequence
 #

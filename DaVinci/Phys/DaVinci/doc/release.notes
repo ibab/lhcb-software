@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-18 - Juan Palacios
+ - python/DaVinci/Configuration.py
+  . User sequence now understands SelectionSequence, MergedSelectionSequence.
+ - Increase to v26r3
+
 !========================== DaVinci v26r2p1 2010-10-11 =======================
 
 ! 2010-10-11 - Juan Palacios
