@@ -48,6 +48,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
   declareProperty("ForceBankVersion",m_forcedBankVersion=0);
+  declareProperty("ErrorCount",m_errorCount=0);
 
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
 }
@@ -375,7 +376,9 @@ void DecodeVeloRawBuffer::failEvent(const std::string &ErrorText,
     getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
   pStat->addAlgorithmStatus("DecodeVeloRawBuffer",
 			    "VELO",ProcText,status,procAborted);
-  unsigned int msgCount = 1;
-  if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
-  Error(ErrorText,StatusCode::SUCCESS,msgCount).ignore();
+  if( m_errorCount > 0 || msgLevel(MSG::DEBUG) ) {
+    unsigned int msgCount = m_errorCount;
+    if ( msgLevel(MSG::DEBUG) ) msgCount += 10;
+    Error(ErrorText,StatusCode::SUCCESS,msgCount).ignore();
+  }
 }

@@ -118,5 +118,10 @@ private:
   /// is detected, defaults to false for Brunel to keep going
   bool  m_setFilterPass;
 
+  /// m_errorCount is the number of errors per fault to print
+  /// default = 0
+  /// 10 is added to it if the message level is debug
+  unsigned int m_errorCount;
+
 };
 #endif // DECODEVELORAWBUFFER_H
