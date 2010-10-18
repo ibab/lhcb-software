@@ -146,6 +146,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
        ,"Radiators"       : None         # The radiators to use
+       ,"CKThetaResRange" : [ ]
         }
 
     ## Initialize 
@@ -502,6 +503,12 @@ class RichRecQCConf(RichConfigurableUser):
 
             # Radiators
             mon.Radiators = self.usedRadiators()
+
+            # Histogram ranges
+            ckRange = self.getProp("CKThetaResRange")
+            if len(ckRange) > 0 :
+                if len(ckRange) != 3 : raise RuntimeError("ERROR : CK Theta resolution must have 3 entries")
+                mon.CKResHistoRange = ckRange
         
             # Add to sequence
             sequence.Members += [mon]

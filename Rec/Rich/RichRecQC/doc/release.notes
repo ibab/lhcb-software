@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-10-18 - Chris Jones
+ - Add a new option to the python Configurable to allow the CK theta 
+   resolution histogram ranges to be set.
+
 ! 2010-10-14 - Chris Jones
  - Various updates to avoid loading radiator detector elements unless they
    are actively in use.
