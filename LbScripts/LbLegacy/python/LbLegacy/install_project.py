@@ -1196,7 +1196,7 @@ def getProjectTar(tar_list, already_present_list=None):
 
             setInstalled(fname)
         else :
-            log.info('%s already installed' % fname)
+            log.info('%s is already installed' % fname)
             if already_present_list != None:
                 already_present_list.append(tar_list[fname])
 
