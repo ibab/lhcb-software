@@ -1003,24 +1003,28 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
 
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
+          // Check if folder is tagged with a tag set to load db with.
           cool::IFolderPtr folder = database()->getFolder(*f);
           if (folder->versioningMode() == cool::FolderVersioning::MULTI_VERSION){
             try{
               folder->resolveTag(tag());
               folders.push_back(f->substr(f->rfind('/')+1));
-            } catch (cool::TagRelationNotFound &e){
-              log << MSG::DEBUG << "Tag '" << tag() << "' relation was not found for folder: "<< *f << endmsg;
+            } catch (cool::TagRelationNotFound &e) {
+              log << MSG::DEBUG << "Tag '" << tag()
+                  << "' relation was not found for folder: "<< *f << endmsg;
+            } catch (cool::ReservedHeadTag) {
+              //to be ignored: 'HEAD' tag is in every node
+              folders.push_back(f->substr(f->rfind('/')+1));
             } catch (cool::NodeRelationNotFound) {
-              // to be ignored: it means that the tag exists, but it is not in the
-              // node '/'.
-            } catch (coral::AttributeException) { // FIXME: COOL bug #38422
-              // to be ignored: it means that the tag exists, but it is not in the
-              // node '/'.
+              //to be ignored: it means that the tag exists, but it is not in the node '/'.
+            } catch (coral::AttributeException) { // FIXME: COOL bug #38422. To be ignored:
+              //it means that the tag exists, but it is not in the node '/'.
             } catch (coral::Exception &e) {
               MsgStream log(msgSvc(),name());
               report_exception(log,"got CORAL exception",e);
+              folders.push_back(f->substr(f->rfind('/')+1));
             }
-          } else { // add folder if it is single version without tag verification
+          } else { //add folder if it is single version without tag verification
             folders.push_back(f->substr(f->rfind('/')+1));
           }
         }
