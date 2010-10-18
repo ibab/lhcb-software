@@ -8,7 +8,7 @@ for running on MB/NB events. For calibration of IP cuts for 2011.
 '''
 
 from Gaudi.Configuration import *
-from GaudiKernel.SystemOfUnits import MeV, mm
+from GaudiKernel.SystemOfUnits import MeV, mm, ns
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
@@ -18,13 +18,13 @@ class StrippingD2hhLTUnbiasedMBNBConf(LHCbConfigurableUser):
                     'DaugPt'             : 750.*MeV
                   , 'DaugTrkChi2'        : 3
                   , 'DaugKaonPIDK'       : 5 
-                  , 'DaugPionPIDK'       : -5
+                  , 'DaugPionPIDK'       : 5
                   , 'D0Pt'               : 2500.*MeV
                   , 'D0P'                : 5000.*MeV
                   , 'D0VtxChi2Ndof'      : 10
                   , 'D0MassWindowWidth'  : 50.*MeV 
                   , 'D0DOCA'             : 0.1*mm
-                  , 'D0ProperTime'       : 0.0003  
+                  , 'D0ProperTime'       : 0.00015*ns  
                 }
 
     _LTUnbiasedLine = None
@@ -57,7 +57,7 @@ class StrippingD2hhLTUnbiasedMBNBConf(LHCbConfigurableUser):
             D2hhLTUnbiasedMBNBSel = self.D2hhLTUnbiasedMBNBCombPart()
             D2hhLTUnbiasedMBNBSeq = SelectionSequence("SeqD2hhLTUnbiasedMBNB", TopSelection = D2hhLTUnbiasedMBNBSel)
             thisline = StrippingLine(   'D2hhLTUnbiasedMBNBLine', \
-                                        HLT = "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS_RE('Hlt1MBMicro.*RateLimitedDecision')|HLT_PASS_RE('Hlt1MBMicro.*(?<!RateLimited)Decision')",
+                                        HLT = "HLT_PASS_RE('Hlt1MB.*')", \
                                         prescale = 1, \
                                         algos = [D2hhLTUnbiasedMBNBSeq])
             StrippingD2hhLTUnbiasedMBNBConf._LTUnbiasedLine = thisline
