@@ -118,6 +118,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi selection, RICH PID
         ############################################################################
 
+        from HltLine.Hlt2Monitoring import Hlt2Monitor
+    
         # Filter on RICH info
         TfKaonRichPidTf = "(2 == NINGENERATION(('K+'==ABSID) & (PIDK > %(TFKaonRichPID)s), 1))" % self.getProps()
         Hlt2InclusivePhiRich 	= Hlt2Member( CombineParticles
@@ -127,6 +129,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                          , CombinationCut = TfPhiMassCut
                                          , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut + " & " + TfKaonRichPidTf
                                          , InputLocations  = [ BiKalmanFittedRichKaons ]
+                                         , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,20)
                                          )
         Hlt2InclusivePhiRichSB 	= Hlt2Member( CombineParticles
                                            , "RichCombineSB"
