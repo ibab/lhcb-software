@@ -26,16 +26,27 @@
         name="methodKey"
         strTypConv = 'TRUE'
         access="PUBLIC" >
-        <enumval name="NoMethod"      value = "0"   desc="Method undefined"/>
-        <enumval name="L0RateMethod"  value = "1"   desc="L0Rate Method"/>
-        <enumval name="RandomMethod"  value = "2"   desc="Random Method"/>
-        <enumval name="PoissonOffset" value = "50"  desc="Offset for values over threshold "/>
-        <enumval name="Unknown"       value = "98"  desc="unknown value"/>
-        <enumval name="LastGlobal"    value = "99"  desc="User variables should use flags greater than this value"/>
+        <enumval name="NoMethod"       value = "0"   desc="Method undefined"/>
+        <enumval name="L0RateMethod"   value = "1"   desc="L0Rate Method"/>
+        <enumval name="RandomMethod"   value = "2"   desc="Random Method"/>
+        <enumval name="CorrectionFlag" value = "19"  desc="Correction Method Flag"/>
+        <enumval name="PoissonOffset"  value = "50"  desc="Offset for values over threshold "/>
+        <enumval name="Unknown"        value = "98"  desc="unknown value"/>
+        <enumval name="LastGlobal"     value = "99"  desc="User variables should use flags greater than this value"/>
       </enum>
 
-      <!-- readable printout -->
+      <!-- 
+      <enum
+        name="correctionMethod"
+        desc="lookup table for method keys"
+        strTypConv="TRUE"
+        access="PUBLIC" >
+        <enumval name="DefaultMethod"  value = "0"   desc="Default Method"/>
+        <enumval name="IgnoreEEMethod" value = "1"   desc="Ignore empty background subtraction"/>
+      </enum>
+      -->
 
+      <!-- readable printout -->
       <method
         name='fillStream'
         type='std::ostream&amp;'

@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Jaap Panman
+ - LumiMethods: add CorrectionFlag
+
 ! 2010-10-14 - Jaap Panman
  - LumiFSR: correct operator=, needed for LumiMergeFSR
 
