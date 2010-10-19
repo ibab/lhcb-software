@@ -104,7 +104,8 @@ class MicroDSTElementList(object) :
                  rootInTES = '/Event/') :
         self.callables = callables
         self.branch = branch
-        self.output = rootInTES + branch + '#99'
+        self.output = rootInTES + '/' + branch + '#99'
+        self.output = self.output.replace('//', '/')
         for c in self.callables :
             c.branch = self.branch
     def __getitem__(self, index) :

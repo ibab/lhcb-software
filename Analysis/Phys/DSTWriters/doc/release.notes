@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Juan Palacios
+ - DSTWriters.__dev__
+  . Added RootInTES to DSTWriters. Very useful for writing MicroDSTs from MicroDSTs.
+ - Increased to v1r13.
+
 ! ======================== DSTWriters v1r12 2010-10-05 =======================
 
 ! 2010-10-06 - Juan Palacios
