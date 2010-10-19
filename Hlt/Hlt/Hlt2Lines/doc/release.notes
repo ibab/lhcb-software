@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Johannes Albrecht
+ - Add monitoring to dimuons
+
 ! 2010-10-18 - Vladimir Gligorov
  - Add monitoring for the masses to the Charm/IncPhi lines
 
