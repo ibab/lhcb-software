@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.11 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.11 2010-10-19 15:36:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -38,12 +38,12 @@ char* ROMonDisplay::Descriptor::reserve(size_t siz) {
 
 /// Initializing constructor
 ROMonDisplay::ROMonDisplay(int width, int height)
-: ScrDisplay(width,height), m_svcID(0), m_delay(1000), m_lock(0), m_readAlways(false)
+  : ScrDisplay(width,height), m_svcID(0), m_svcID2(0), m_delay(1000), m_lock(0), m_readAlways(false)
 {
 }
 
 /// Standard constructor
-ROMonDisplay::ROMonDisplay() : m_svcID(0), m_delay(1000), m_lock(0), m_readAlways(false)
+ROMonDisplay::ROMonDisplay() : m_svcID(0), m_svcID2(0), m_delay(1000), m_lock(0), m_readAlways(false)
 {
 }
 
@@ -66,6 +66,10 @@ void ROMonDisplay::initialize()   {
 /// Finalize data access
 void ROMonDisplay::finalize()   {
   try {
+    if ( m_svcID2 != 0 ) {
+      ::dic_release_service(m_svcID2);
+      m_svcID2 = 0;
+    }
     if ( m_svcID != 0 ) {
       ::dic_release_service(m_svcID);
       m_svcID = 0;

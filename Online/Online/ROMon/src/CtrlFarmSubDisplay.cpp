@@ -1,11 +1,13 @@
 #include "ROMon/FarmDisplay.h"
 #include "SCR/MouseSensor.h"
 #include "CPP/IocSensor.h"
+#include "RTL/Lock.h"
 #include "SCR/scr.h"
 #include "ROMonDefs.h"
 extern "C" {
 #include "dic.h"
 }
+#include <set>
 
 using namespace ROMon;
 using namespace SCR;
@@ -24,9 +26,13 @@ namespace ROMon {
    *   @author M.Frank
    */
   class CtrlFarmSubDisplay : public InternalDisplay {
+    typedef std::set<std::string> StrSet;
+    /// Flag to indicate probles with entity
     bool                m_hasProblems;
     /// Extracted cluster information for all contained nodes
     Cluster             m_cluster;
+    /// Set of excluded nodes
+    StrSet             m_excluded;
   public:
     /// Access to problem flag
     bool hasProblems() const { return m_hasProblems; }
@@ -72,7 +78,9 @@ CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const string& title,
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,DISP_WIDTH,NORMAL,ON,m_title.c_str());
   init(bad);
-  string svc = svcPrefix()+strupper(title)+"/TaskSupervisor/Status";
+  string svc   = "HLT/ExcludedNodes/"+strupper(title);
+  m_svc2 = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
+  svc = svcPrefix()+strupper(title)+"/TaskSupervisor/Status";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
   MouseSensor::instance().add(this,m_display);
@@ -82,6 +90,7 @@ CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const string& title,
 CtrlFarmSubDisplay::~CtrlFarmSubDisplay() {
   MouseSensor::instance().remove(m_display);
 }
+
 
 /// Initialize default display text
 void CtrlFarmSubDisplay::init(bool) {
@@ -96,8 +105,6 @@ void CtrlFarmSubDisplay::init(bool) {
 void CtrlFarmSubDisplay::update(const void* address) {
   const char* data = (const char*)address;
   try {
-    //scrc_resetANSI();
-    //cout << data << endl;
     m_lastUpdate = time(0);
     XML::TaskSupervisorParser ts;
     if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
@@ -138,6 +145,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       good = good && pvss_ok;
     }
     col = good && n.missTaskCount==0 && n.missConnCount==0 ? GREEN|INVERSE : COL_ALARM;
+    if ( m_excluded.find(n.name) != m_excluded.end() ) col = INVERSE|(col==COL_ALARM ? MAGENTA : BLUE);
     taskCount     += n.taskCount;
     missTaskCount += n.missTaskCount;
     connCount     += n.connCount;
@@ -226,9 +234,10 @@ void CtrlFarmSubDisplay::releaseFocus() {
 
 /// Interactor overload: Display callback handler
 void CtrlFarmSubDisplay::handle(const Event& ev) {
+  const MouseEvent* m;
   switch(ev.eventtype) {
-  case ScrMouseEvent: {
-    const MouseEvent* m = ev.get<MouseEvent>();
+  case ScrMouseEvent:
+    m = ev.get<MouseEvent>();
     if ( m->button == 2 ) {
       IocSensor::instance().send(parent(),CMD_SHOWHELP,this);
       return;
@@ -236,7 +245,15 @@ void CtrlFarmSubDisplay::handle(const Event& ev) {
     setFocus();
     IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
     return;
-  }
+  case IocEvent:
+    switch(ev.type) {
+    case CMD_EXCLUDE:
+      m_excluded = *auto_ptr<StrSet>(ev.iocPtr<StrSet>()).get();
+      return;
+    default:
+      break;
+    }
+    break;
   default:
     break;
   }

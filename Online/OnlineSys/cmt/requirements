@@ -22,8 +22,7 @@ use Camera            v1r19    Online
 use CondDBServer      v1r4     Online
 use DIM               v19r8p4  Online
 use ExampleGaucho     v3r4     Online
-# Does not work on WIN32
-# use FarmMonitor     v1r0     Online
+use FarmMonitor       v2r2     Online
 use Gaucho            v6r30    Online
 use GaudiOnline       v2r45    Online
 use GaudiRootCnvTests v1r0     Online

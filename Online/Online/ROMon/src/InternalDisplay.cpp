@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.6 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.5 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.6 2010-10-19 15:36:26 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -22,6 +22,10 @@
 extern "C" {
 #include "dic.h"
 }
+#include "ROMonDefs.h"
+
+// C++ include files
+#include <set>
 #include <cstring>
 
 using namespace ROMon;
@@ -40,7 +44,7 @@ lib_rtl_lock_t InternalDisplay::screenLock() {
 }
 
 InternalDisplay::InternalDisplay(InternalDisplay* parent, const string& title) 
-: m_pasteboard(0), m_display(0), m_parent(parent), m_name(title), m_title(title), m_svc(0)
+  : m_pasteboard(0), m_display(0), m_parent(parent), m_name(title), m_title(title), m_svc(0), m_svc2(0)
 {
   m_pasteboard = m_parent ? m_parent->pasteboard() : 0;
   m_lastUpdate = time(0);
@@ -73,11 +77,18 @@ void InternalDisplay::setSvcPrefix(const string& pref) {
 void InternalDisplay::connect() {
 }
 
+/// Disconnect from DIM services
 void InternalDisplay::disconnect() {
-  if ( m_svc != 0 ) {
-    ::dic_release_service(m_svc);
-    m_svc = 0;
+  disconnectService(m_svc2);
+  disconnectService(m_svc);
+}
+
+/// Disconnect from DIM service
+void InternalDisplay::disconnectService(int& svc) const {
+  if ( svc != 0 ) {
+    ::dic_release_service(svc);
   }
+  svc = 0;
 }
 
 void InternalDisplay::show(int row, int col) {
@@ -114,6 +125,22 @@ void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
     *(int*)ptr = *size;
     ::memcpy(ptr+sizeof(int),address,*size);
     IocSensor::instance().send(disp,CMD_UPDATE,ptr);
+  }
+}
+
+/// DIM command service callback
+void InternalDisplay::excludedHandler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    InternalDisplay* disp = *(InternalDisplay**)tag;
+    char *p = (char*)address, *end = p+*size;
+    set<string> nodes;
+    while(p<end) {
+      nodes.insert(strlower(p));
+      p += (::strlen(p)+1);
+    }
+    if ( nodes.size() > 0 )  {
+      IocSensor::instance().send(disp,CMD_EXCLUDE,new set<string>(nodes));
+    }
   }
 }
 

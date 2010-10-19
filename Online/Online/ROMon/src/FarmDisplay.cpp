@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.49 2010-10-15 10:53:54 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.50 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.49 2010-10-15 10:53:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.50 2010-10-19 15:36:26 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -169,9 +169,19 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ScrDisplay::setBorder(BLUE|INVERSE);
   m_width -= 2;
   m_height -= 2;
-  ::scrc_create_display (&m_display, m_height, m_width, BOLD, ON, m_title.c_str());
+  ::scrc_create_display (&m_display, m_height, m_width,NORMAL, ON, m_title.c_str());
   show(2,2);
-  ::scrc_put_chars(m_display,txt,NORMAL,1,2,1);
+  ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
+  ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,1,40,0);
+  ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
+  ::scrc_put_chars(m_display,": OK",NORMAL,1,82,0);
+  ::scrc_put_chars(m_display,"nn",RED|INVERSE,1,90,0);
+  ::scrc_put_chars(m_display,": Not OK",NORMAL,1,92,0);
+  ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,1,110,0);
+  ::scrc_put_chars(m_display,": OK/Excluded",NORMAL,1,112,0);
+  ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
+  ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
+
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_fflush(m_pasteboard);
   ::scrc_set_cursor(m_display, 2, 10);
@@ -328,30 +338,31 @@ int FarmDisplay::showSubfarm()    {
     string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish";
     string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
+      string node = "-node="+strupper(dnam);
       svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
-      const char* argv[] = {"",svc.c_str(), "-delay=300"};
-      m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
+      m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
-      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300"};
+      const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
       m_subfarmDisplay = createStorageDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"mona08",6)==0 && m_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
-      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
+      const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
       m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && m_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
-      const char* argv[] = {"",svc.c_str(), part.c_str(), "-delay=300", "-relayheight=14", "-nodeheight=22", relay.c_str()};
+      const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=14", "-nodeheight=22", relay.c_str()};
       m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( m_mode == RECO_MODE ) {
-      const char* argv[] = {"",svc.c_str(), "-delay=300"};
+      const char* argv[] = {"", svc.c_str(), "-delay=300"};
       m_subfarmDisplay = createRecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      const char* argv[] = {"",svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=28"};
+      const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=28"};
       m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
     }
     else {
@@ -539,8 +550,9 @@ int FarmDisplay::showSysWindow() {
   }
   string dnam = selectedCluster();
   if ( !dnam.empty() ) {
+    string node = "-node="+strupper(dnam);
     string svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
-    const char* argv[] = {"",svc.c_str(), "-delay=300"};
+    const char* argv[] = {"", svc.c_str(), node.c_str(), "-delay=300"};
     ClusterDisplay* disp = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX+3,m_anchorY,3,(char**)argv);
     m_sysDisplay = auto_ptr<ClusterDisplay>(disp);
     m_sysDisplay->initialize();
@@ -916,8 +928,8 @@ void FarmDisplay::connect(const vector<string>& farms) {
   char txt[128];
   DisplayUpdate update(this,false);
 
-  ::sprintf(txt,"Total number of subfarms:%d %50s",int(farms.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
-  ::scrc_put_chars(m_display,txt,NORMAL,1,2,1);
+  ::sprintf(txt,"Total number of subfarms:%d    ",int(farms.size()));
+  ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
 
   for( k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
     (*k).second->hide();

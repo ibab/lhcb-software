@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.11 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.10 2010-10-14 13:30:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.11 2010-10-19 15:36:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -26,12 +26,14 @@
 #include "dic.hxx"
 
 using namespace ROMon;
+using namespace std;
+
 static void help() {
-  std::cout <<"  romon_storage -option [-option]" << std::endl
-            <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
-            <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
-            <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
-            << std::endl;
+  cout <<"  romon_storage -option [-option]" << endl
+            <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+            <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+            <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+            << endl;
 }
 
 
@@ -55,11 +57,18 @@ CtrlSubfarmDisplay::CtrlSubfarmDisplay(int argc, char** argv)   {
 
 void CtrlSubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
+  string node;
   int hdr_height;
   cli.getopt("headerheight",  1, hdr_height    =   5);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/HLTE01/TaskSupervisor/Status");
+  cli.getopt("node",          1, node          = "HLTE01");
   m_readAlways = true;
+
+  if ( !node.empty() ) {
+    string svc = "HLT/ExcludedNodes/"+strupper(node);  
+    m_svcID2   = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
+  }
   setup_window();
   int width    = m_area.width;
   int height   = m_area.height;
@@ -86,24 +95,25 @@ void CtrlSubfarmDisplay::showNodes()  {
   MonitorDisplay* disp = m_nodes;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
-  const char* fmt = " %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %3.0f %3.0f %-19s %s";
+  const char* fmt = " %-12s %3s %8s %5zd/%-4zd %5zd/%-5zd %6d %6d %6d %3.0f %3.0f %-19s %s";
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
-  disp->draw_line_bold(   " %-12s %8s    Tasks       Connections  %6s %6s %6s %3s %3s %-19s %s",
-                          "","","RSS","Stack","VSize","CPU","MEM","","");
-  disp->draw_line_bold(   " %-12s %8s found/missing found/missing %6s %6s %6s %3s %3s %-19s %s",
-                          "Node","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
+  disp->draw_line_bold(   " %-12s %3s %8s    Tasks   Connections %6s %6s %6s %3s %3s %-19s %s",
+                          "","","","RSS","Stack","VSize","CPU","MEM","","");
+  disp->draw_line_bold(   " %-12s %3s %8s found/miss found/miss  %6s %6s %6s %3s %3s %-19s %s",
+                          "Node","","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
     const Cluster::Node& n = (*i).second;
     if ( n.status == "DEAD" ) {
-      disp->draw_line_normal(" %-12s %8s %76s",n.name.c_str(),n.status.c_str(),n.time.c_str());
+      disp->draw_line_normal(" %-12s %3s %8s %76s",n.name.c_str(),"",n.status.c_str(),n.time.c_str());
     }
     else {
+      const char* inc_exc = m_excluded.find(n.name)==m_excluded.end() ? "INC" : "EXC";
       taskCount     += n.taskCount;
       missTaskCount += n.missTaskCount;
       connCount     += n.connCount;
       missConnCount += n.missConnCount;
-      disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),
+      disp->draw_line_normal(fmt,n.name.c_str(),inc_exc,n.status.c_str(),
                              n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
                              int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
                              n.perc_cpu, n.perc_mem, n.boot.c_str(),n.time.c_str());
@@ -134,10 +144,31 @@ void CtrlSubfarmDisplay::showNodes()  {
 
 /// Update header information
 void CtrlSubfarmDisplay::showHeader()   {
+  char text[256];
+  text[0] = 0;
+  if ( !m_excluded.empty() ) ::sprintf(text,"%d node(s) excluded",int(m_excluded.size()));    
   draw_line_normal ("");
-  draw_line_reverse("         Task control monitoring on %s   [%s]", m_cluster.name.c_str(), ::lib_rtl_timestr());    
+  draw_line_reverse("         Task control monitoring on %s   [%s]  %s", 
+		    m_cluster.name.c_str(), ::lib_rtl_timestr(), text);
   draw_line_reverse("         Information service:%s data size:%zd", m_svcName.c_str(),m_data.actual);
   draw_line_normal ("");
+}
+
+/// DIM command service callback
+void CtrlSubfarmDisplay::excludedHandler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    CtrlSubfarmDisplay* disp = *(CtrlSubfarmDisplay**)tag;
+    char *p = (char*)address, *end = p+*size;
+    set<string> nodes;
+    while(p<end) {
+      nodes.insert(strlower(p));
+      p += (::strlen(p)+1);
+    }
+    if ( nodes.size() > 0 )  {
+      RTL::Lock lock(disp->m_lock);
+      disp->m_excluded = nodes;
+    }
+  }
 }
 
 /// Update all displays
@@ -175,7 +206,7 @@ void CtrlSubfarmDisplay::update()   {
       break;
     }
   }
-  catch(const std::exception& e) {
+  catch(const exception& e) {
     m_nodes->draw_line_normal ("");
     m_nodes->draw_line_bold("   ..... Exception during data parsing: %s",e.what());
     m_nodes->draw_line_normal ("");
@@ -190,18 +221,16 @@ void CtrlSubfarmDisplay::update()   {
 }
 
 /// Retrieve cluster name from cluster display
-std::string CtrlSubfarmDisplay::clusterName() const {
+string CtrlSubfarmDisplay::clusterName() const {
   return m_cluster.name;
 }
 
 /// Retrieve node name from cluster display by offset
-std::string CtrlSubfarmDisplay::nodeName(size_t offset) {
+string CtrlSubfarmDisplay::nodeName(size_t offset) {
   size_t cnt = 0;
   const Cluster::Nodes& nodes = m_cluster.nodes;
-  //::printf("\n\nSubfarm display:%ld %ld %ld\n\n",offset,nodes.size(),cnt);
   for (Cluster::Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); ++n, ++cnt)  {
-    //::printf("-->%s %s\n",(*n).first.c_str(),(*n).second.name.c_str());
-    if ( cnt == offset ) return std::string((*n).first);
+    if ( cnt == offset ) return string((*n).first);
   }
   return "";
 }

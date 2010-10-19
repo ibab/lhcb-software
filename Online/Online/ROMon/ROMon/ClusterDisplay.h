@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.h,v 1.2 2008-11-12 19:22:11 frankb Exp $
+// $Id: ClusterDisplay.h,v 1.3 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ClusterDisplay.h,v 1.2 2008-11-12 19:22:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ClusterDisplay.h,v 1.3 2010-10-19 15:36:26 frankb Exp $
 #ifndef ROMON_CLUSTERDISPLAY_H
 #define ROMON_CLUSTERDISPLAY_H 1
 
@@ -55,7 +55,7 @@ namespace ROMon {
     ClusterDisplay(int width, int height) : ROMonDisplay(width,height){}
 
     /// Standard destructor
-    virtual ~ClusterDisplay() {}
+    virtual ~ClusterDisplay() {   finalize();  }
 
     /// Number of nodes in the dataset
     virtual size_t numNodes() = 0;

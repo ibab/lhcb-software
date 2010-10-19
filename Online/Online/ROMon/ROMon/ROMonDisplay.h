@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
+// $Id: ROMonDisplay.h,v 1.7 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.7 2010-10-19 15:36:26 frankb Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
@@ -60,6 +60,8 @@ namespace ROMon {
     std::string    m_svcName;
     /// DIC Client identifier
     int            m_svcID;
+    /// Second DIC Client identifier
+    int            m_svcID2;
     /// Time delay in milliseconds between 2 updates
     int            m_delay;
     /// Handle to display lock

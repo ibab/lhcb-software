@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.h,v 1.3 2009-04-17 13:16:37 frankb Exp $
+// $Id: CtrlSubfarmDisplay.h,v 1.4 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,16 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CtrlSubfarmDisplay.h,v 1.3 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CtrlSubfarmDisplay.h,v 1.4 2010-10-19 15:36:26 frankb Exp $
 #ifndef ROMON_CTRLSUBFARMDISPLAY_H
 #define ROMON_CTRLSUBFARMDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/ClusterDisplay.h"
 #include "ROMon/TaskSupervisor.h"
+
+// C++ include files
+#include <set>
 
 /*
  *   ROMon namespace declaration
@@ -33,6 +36,8 @@ namespace ROMon {
    */
   class CtrlSubfarmDisplay : public ClusterDisplay  {
   protected:
+    /// Typedef for exclded nodes container
+    typedef std::set<std::string> StrSet;
 
     /// reference to the node display
     MonitorDisplay*      m_nodes;
@@ -43,8 +48,12 @@ namespace ROMon {
     /// Variable size data buffer
     Descriptor           m_clusterData;
 
+    /// Excluded nodes
+    StrSet               m_excluded;
+
     /// Initialize window
     void init(int argc, char** arv);
+
   public:
     /// Initializing constructor
     CtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
@@ -84,6 +93,9 @@ namespace ROMon {
 
     /// Update all displays
     virtual void update();
+
+    /// DIM command service callback
+    static void excludedHandler(void* tag, void* address, int* size);
   };
   /// Static abstract object creator.
   ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);

@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.17 2010-10-15 07:42:00 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.18 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.17 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.18 2010-10-19 15:36:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -86,7 +86,8 @@ void SubfarmDisplay::init(int argc, char** argv)   {
 
   setup_window();
   int width    = m_area.width;
-  int eb_width = width/3;
+  int eb_width = width/2-6;
+  int pr_width = width/3-3;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
   m_moores     = 0;
@@ -96,12 +97,12 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),            Area(width,nodes_height),"Node Information");
   int bottom = m_nodes->bottom();
   if ( moores_height > 0 ) {
-    m_moores     = createSubDisplay(Position(posx,bottom),          Area(width,moores_height),"Moore Processes");
-    bottom = m_moores->bottom();
+    m_moores   = createSubDisplay(Position(posx,bottom),          Area(width,moores_height),"Moore Processes");
+    bottom     = m_moores->bottom();
   }
   m_builders   = createSubDisplay(Position(posx,bottom),         Area(eb_width,posy+m_area.height-bottom),"Event builders");
-  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(eb_width,posy+m_area.height-bottom),"Event Producers");
-  m_senders    = createSubDisplay(Position(posx+2*eb_width,bottom),Area(width-2*eb_width,posy+m_area.height-bottom),"Event Senders");
+  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(pr_width,posy+m_area.height-bottom),"Event Producers");
+  m_senders    = createSubDisplay(Position(posx+eb_width+pr_width,bottom),Area(width-eb_width-pr_width,posy+m_area.height-bottom),"Event Senders");
   end_update();
 }
 
@@ -175,16 +176,17 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
 
 /// Show the event builder information
 void SubfarmDisplay::showTasks(const Nodeset& ns) {
-  map<string,TaskIO> moores;
+  map<string,TaskIO> moores, builders;
   string nam;
   char txt[1024];
   int nTsk = 0;
   int eb_width = m_area.width/3;
 
-  m_builders->draw_line_reverse (" EVENTBUILDER     Produced [%] MEP       ");
-  //m_holders->draw_line_reverse(" HOLDER            Free                  ");
-  m_holders->draw_line_reverse  (" PRODUCER         Seen   Produced MEP EVT");
-  m_senders->draw_line_reverse  (" SENDER            Sent Pend RES         ");
+  //m_builders->draw_line_reverse (" EVENTBUILDER   Produced [%] MEP       ");
+  m_builders->draw_line_reverse (" EVENTBUILDERS  1/Prod MEP      2/Prod MEP      3/Prod MEP       ");
+  //m_holders->draw_line_reverse(" HOLDER          Free                  ");
+  m_holders->draw_line_reverse  (" PRODUCER       Seen   Produced MEP EVT");
+  m_senders->draw_line_reverse  (" SENDER          Sent Pend RES         ");
 
   if ( m_moores ) {
     ::memset(txt,' ',sizeof(txt));
@@ -199,6 +201,7 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
     const Buffers& buffs = *(*n).buffers();
     string prod_name;
     TaskIO prod;
+    builders.clear();
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const Buffers::value_type::Control& c = (*ib).ctrl;
       const Clients& clients = (*ib).clients;
@@ -209,8 +212,11 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
           string nn = (*n).name;
           nn += '_';
           nn += cl.name+5;
-          float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
-          m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
+	  builders[cl.name+5].in = c.tot_produced;
+	  builders[cl.name+5].out = cl.events;
+	  builders[cl.name+5].st_out = cl.state;
+          //float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
+          //m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
           continue;
         }
         char* p = strchr(cl.name,'_');
@@ -223,12 +229,12 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
           switch(*p) {
           case SENDER_TASK:
             if ( b==RES_BUFFER || b==SND_BUFFER ) {
-              m_senders->draw_line_normal( " %-12s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
+              m_senders->draw_line_normal(" %-10s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
             }
             break;
           case 'E':
             if ( b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
-              // m_holders->draw_line_normal( " %-12s %9d        ",nam.c_str(),cl.events);
+              // m_holders->draw_line_normal( " %-10s %9d        ",nam.c_str(),cl.events);
             }
             else if ( b==MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
               prod_name = nam;
@@ -261,9 +267,17 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
       }
     }
     if ( !prod_name.empty() ) {
-      m_holders->draw_line_normal(" %-12s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
+      m_holders->draw_line_normal(" %-10s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
                                   sstat[prod.st_in],sstat[prod.st_out]);
     }
+    txt[0] = 0;
+    ::sprintf(txt," %-8s  ", builders.size()>0 ? (*n).name : "");
+    for(map<string,TaskIO>::const_iterator bb=builders.begin(); bb != builders.end(); ++bb) {
+      const string& n = (*bb).first;
+      const TaskIO& m = (*bb).second;
+      ::sprintf(txt+strlen(txt)-1," %11d %3s ",m.out,sstat[m.st_out]);
+    }
+    m_builders->draw_line_normal(txt);
   }
   if ( m_moores ) {
     ::memset(txt,' ',sizeof(txt));

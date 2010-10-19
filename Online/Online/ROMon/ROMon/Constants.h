@@ -8,6 +8,7 @@ namespace ROMon {
     CMD_CHECK_CTRL,
     CMD_DELETE,
     CMD_UPDATE,
+    CMD_EXCLUDE,
     CMD_SETCURSOR,
     CMD_POSCURSOR,
     CMD_SHOW,

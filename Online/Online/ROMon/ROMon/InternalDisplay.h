@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.h,v 1.4 2010-10-14 13:30:08 frankb Exp $
+// $Id: InternalDisplay.h,v 1.5 2010-10-19 15:36:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.4 2010-10-14 13:30:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/InternalDisplay.h,v 1.5 2010-10-19 15:36:26 frankb Exp $
 #ifndef ROMON_INTERNALDISPLAY_H
 #define ROMON_INTERNALDISPLAY_H 1
 
@@ -43,12 +43,18 @@ namespace ROMon {
    */
   class InternalDisplay : public Interactor   {
   protected:
+    /// Reference to SCR pasteboard structure
     SCR::Pasteboard*  m_pasteboard;
+    /// Reference to SCR display structure
     SCR::Display*     m_display;
     InternalDisplay*  m_parent;
     std::string       m_name;
     std::string       m_title;
+    /// Primary DIM service ID. Disconnected on disconnect
     int               m_svc;
+    /// Second DIM service ID. Disconnected on disconnect
+    int               m_svc2;
+    /// Timestamp with last update
     time_t            m_lastUpdate;
   public:
 
@@ -89,6 +95,8 @@ namespace ROMon {
     virtual void connect();
     /// Disconnect from services: Only destructor may be called afterwards
     virtual void disconnect();
+    /// Disconnect from DIM service
+    virtual void disconnectService(int& svc) const;
     /// Update display content
     virtual void update(const void* data) = 0;
     /// Update display content
@@ -101,10 +109,12 @@ namespace ROMon {
     virtual void setFocus() {}
     /// Release the focus of this display
     virtual void releaseFocus() {}
-    /// DIM command service callback
-    static void dataHandler(void* tag, void* address, int* size);
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
+    /// DIM command service callback
+    static void dataHandler(void* tag, void* address, int* size);
+    /// DIM command service callback
+    static void excludedHandler(void* tag, void* address, int* size);
   };
 }      // End namespace ROMon
 #endif /* ROMON_INTERNALDISPLAY_H */
