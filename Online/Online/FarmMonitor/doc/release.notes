@@ -4,6 +4,9 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Olivier Callot
+ - Compiles now under Windows.
+
 ! 2010-10-18 - Olivier Callot
  - Forst official release.
  - Relies on Markus's RO publishers
