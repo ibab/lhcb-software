@@ -1,4 +1,4 @@
-// $Id: RONodeCounter.h,v 1.2 2010-10-19 14:05:29 ocallot Exp $
+// $Id: RONodeCounter.h,v 1.3 2010-10-19 14:34:47 ocallot Exp $
 #ifndef RONODECOUNTER_H 
 #define RONODECOUNTER_H 1
 
@@ -71,7 +71,7 @@ public:
 
   void increment( RONodeCounter& cnt, double newTime ) {
     float invTime = 0.;
-    if ( cnt.lastTime() < newTime ) invTime = 1. / float(newTime - cnt.lastTime() );
+    if ( cnt.lastTime() < newTime ) invTime = float( 1. / (newTime - cnt.lastTime() );
     m_lastTime = newTime;
     m_mepRate = invTime * ( m_mep - cnt.mep() );
     if ( 0 > m_mepRate ) m_mepRate = 0.;

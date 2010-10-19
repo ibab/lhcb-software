@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.8 2010-10-19 14:20:10 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.9 2010-10-19 14:34:47 ocallot Exp $
 // Include files
 // C++ include files
 
@@ -282,7 +282,7 @@ void ROFarmMonitor::update( )   {
   }
 
   longlong now = System::currentTime( System::microSec );
-  float dt = .000001 * float( now - m_lastTime );
+  float dt = float( .000001 * ( now - m_lastTime ) );
   m_lastTime = now;
   if ( 1 < m_print ) std::cout << "dt " << dt << std::endl;  
 
