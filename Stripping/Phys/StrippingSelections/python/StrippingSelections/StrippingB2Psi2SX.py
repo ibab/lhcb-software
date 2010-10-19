@@ -182,7 +182,7 @@ B2Psi2SXLines += [ Bd2Psi2SKstarPrescaledLine, Bd2Psi2SKstarDetachedLine, Bd2Psi
 ### Bd->Psi(2S)KS ###
 #####################
 Bd2Psi2SKs = createCombinationSel( OutputList = "Bd2Psi2SKS",
-                                  DecayDescriptor = "[B0 -> psi(2S) KS0]cc",
+                                  DecayDescriptor = "B0 -> psi(2S) KS0",
                                   DaughterLists  = [ KsList, Psi2SList ],
                                   PreVertexCuts = "ADAMASS('B0') < 500",
                                   PostVertexCuts = "ALL" #"(VFASPF(VCHI2/VDOF) < 20)"
