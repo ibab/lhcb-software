@@ -186,6 +186,10 @@ private:
     return;
   }
 
+  void checkRelations(const Particle2Vertex::Table::Range::const_iterator begin,
+                      const Particle2Vertex::Table::Range::const_iterator end) const;
+
+
   /**
    * 
    * Store a range of Particle -> VertexBase relations in the local

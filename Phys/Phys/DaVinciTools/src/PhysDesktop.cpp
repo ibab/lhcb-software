@@ -301,8 +301,6 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   const std::string location( m_outputLocn+"/Particles");
   put(particlesToSave,location);
 
-  LHCb::RecVertex::ConstVector verticesToSave;
-
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "Going to save " 
               << pToSave.size() << " particles" << endmsg;
@@ -313,25 +311,16 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
     if (  !DaVinci::inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
       if (0!=*icand) particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
-      // store the related PV and the table. All relaitons and PVs should
-      // already be "kept". On;y do it if PV is not in TES.
-      const LHCb::VertexBase* vb = i_relatedVertexFromTable(*icand);
-      if ( !DaVinci::inTES(vb) ) {
-        const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(vb);
-        if (0!=pv) verticesToSave.push_back(pv);
-      }
     } else {
       if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
   }
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saved " << particlesToSave->size()
                                         << " new particles in " << location << " from " << pToSave.size()
                                         << " total particles in desktop " << endmsg;
 
-  // now save re-fitted vertices
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
-                                        << " to saveReFittedPVs" << endmsg;
-  saveRefittedPVs(verticesToSave);
+
   // now save relations table
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
 
@@ -411,6 +400,8 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
     { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
     return ;
   }
+
+  LHCb::RecVertex::ConstVector verticesToSave;
   
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
 
@@ -418,21 +409,27 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
 
   put(table, location);
   
-  if ( usingP2PV() ) { // relations should be in table
+  for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
 
-    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
-      Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
-      Particle2Vertex::Table::Range::const_iterator i = r.begin() ;
-      for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
-    }
-  } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Recalculating P->PV table since not using P->PV internally" << endmsg ;
-    counter("Recalculating P->PV table")++;
-    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
-      const LHCb::VertexBase* pv = m_dva->_getRelatedPV(*p);
-      if ( 0 != pv ) table->relate( *p, pv );
+    const LHCb::VertexBase* vb = ( usingP2PV() ) ? i_relatedVertexFromTable(*p)
+      : m_dva->_getRelatedPV(*p);
+      
+    if (0!=vb) {
+      const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(vb);
+      if (0!=pv) {
+        verticesToSave.push_back(pv);
+        table->relate( *p, pv );
+      } else {
+        Error("VertexBase to RecVertex dynamic cast FAILED").ignore();
+      }
     }
   }
+
+  // now save re-fitted vertices                                                                                                                                    
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
+                                        << " to saveReFittedPVs" << endmsg;
+
+  saveRefittedPVs(verticesToSave);
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" 
@@ -673,6 +670,9 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
       
       const Particle2Vertex::Table* table = get<Particle2Vertex::Table>( *iloc );
       const Particle2Vertex::Table::Range all = table->relations();
+
+      if (msgLevel(MSG::DEBUG)) checkRelations(all.begin(), all.end());
+
       overWriteRelations(all.begin(), all.end());
     } 
     else 
@@ -685,6 +685,24 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
   }
 
   return StatusCode::SUCCESS ; // could be sc
+}
+void PhysDesktop::checkRelations(const Particle2Vertex::Table::Range::const_iterator begin,
+                                 const Particle2Vertex::Table::Range::const_iterator end) const
+{
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "checkInputRelations: checking " << end-begin << " P->PV relations" << endmsg;
+  
+  for ( Particle2Vertex::Table::Range::const_iterator i = begin ; i!= end ; ++i){
+    
+    if (0==i->from()->parent()) {
+      Error("checkRelations From is not in TES").ignore();
+    }
+
+    if (0==i->to()->parent()) {
+      Error("checkRelations To is not in TES").ignore();
+    }    
+  }
+  
 }
 //=============================================================================
 // Write an empty container if needed

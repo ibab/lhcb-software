@@ -4,6 +4,13 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2010-10-19 - Juan Palacios
+ - PhysDesktop
+  . Important bug-fix. New related PVs for particles that were already on
+    the TES (typically input particles) were not being put on the TES.
+    This should only affect relations written to a DST.
+ - Increase to v21r6p1
+
 !========================== DaVinciTools v21r6 2010-08-25 ===================
 
 ! 2010-08-25 - Juan Palacios
