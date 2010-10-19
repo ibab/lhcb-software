@@ -1,8 +1,15 @@
-// $Id: ROFarmMonitor.cpp,v 1.4 2010-10-18 06:25:08 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.5 2010-10-19 13:54:59 ocallot Exp $
 // Include files
 // C++ include files
+
+#ifdef _MSC_VER
+#include <windows.h>
+#include <io.h>
+#else
 #include <netdb.h>
 #include <arpa/inet.h>
+#endif
+
 #include <cstdlib>
 #include <iostream>
 #include "GaudiKernel/Timing.h"
@@ -448,6 +455,8 @@ void ROFarmMonitor::update( )   {
               errorTasks.push_back( &(*it) );
             } else {
               otherTasks.push_back( &(*it) );
+              std::cout << "UNKNOWN task on Node " << (*n).name << " task '" << (*it).name 
+                        << "' state :" << (*it).state << std::endl;
             }
           }
         }
