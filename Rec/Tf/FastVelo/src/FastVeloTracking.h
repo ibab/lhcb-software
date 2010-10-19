@@ -130,8 +130,6 @@ private:
   FastVeloHitManager* m_hitManager;
   FastVeloTracks  m_tracks;  ///< Vector of tracks used during the processing
   FastVeloTracks  m_spaceTracks;  ///< Vector of tracks used during the processing
-  FastVeloHits    m_selectedHits;
-  FastVeloHits    m_extraHits;
   double          m_cosPhi;
   double          m_sinPhi;
 };

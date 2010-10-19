@@ -4,6 +4,12 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Olivier Callot
+ - Fix the R error estimate on the RZ track
+ - Final cleanup of the track, checking enough R and Phi after outlier removal
+ - Change tolearnce to 16 (4 sigma) per hit, 40 to add a hit.
+   All that gives a slight improvement in efficiency and hit efficiency.
+
 ! 2010-10-15 - Olivier Callot
  - In fact the linear system was not properly solved, and once fixed the Cholesky
    method is slower. I then put back the previous code.

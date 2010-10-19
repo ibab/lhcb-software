@@ -20,8 +20,7 @@ public:
 
   virtual ~FastVeloTrack( ); ///< Destructor
 
-  inline double rSlope()            const { return m_rSlope; }
-  inline double rPred( double z )   const { return m_r0 + z * m_rSlope; }
+  inline double rPred( double z )   const { return m_r0 + z * m_tr; }
   inline bool backward()            const { return m_backward; }
   inline unsigned int zone()        const { return m_zone; }
   inline unsigned int nbUsedRHits() const { return m_nbUsedRHits; }
@@ -29,12 +28,12 @@ public:
   inline int nbMissedSensors()      const { return m_missedSensors; }
   inline FastVeloHits& rHits()            { return m_rHits; }
   inline FastVeloHits& phiHits()          { return m_phiHits; }
-  inline double rErr2( double z )   const { double dz = z-m_sz / m_s0; return m_errR2 + dz * dz * m_rSlopeErr2; }
+  inline double rErr2( double z )   const { double dz = z-m_sz / m_s0; return m_trErr2 + dz * dz * m_trErr2; }
 
   double rChi2() {
     double chi2 = 0.;
     for ( FastVeloHits::const_iterator itH = m_rHits.begin(); m_rHits.end() != itH; ++itH ) {
-      double d = m_r0 + (*itH)->z() * m_rSlope - (*itH)->global();
+      double d = m_r0 + (*itH)->z() * m_tr - (*itH)->global();
       chi2 += (*itH)->weight() * d * d;
     }
     return chi2/(m_rHits.size()-2 );
@@ -71,8 +70,8 @@ public:
   void setSpaceParametersFromR( double cosPhi, double sinPhi ) {
     m_x0 = m_r0 * cosPhi;
     m_y0 = m_r0 * sinPhi;
-    m_tx = m_rSlope * cosPhi;
-    m_ty = m_rSlope * sinPhi;
+    m_tx = m_tr * cosPhi;
+    m_ty = m_tr * sinPhi;
   }
   
   void setPhiClusters( FastVeloTrack& track,
@@ -255,9 +254,9 @@ private:
   unsigned int  m_zone;
   bool          m_backward;  
   double        m_r0;
-  double        m_rSlope;
-  double        m_errR2;
-  double        m_rSlopeErr2;
+  double        m_tr;
+  double        m_r0Err2;
+  double        m_trErr2;
 
   int           m_nbUsedRHits;
   FastVeloHits  m_rHits;

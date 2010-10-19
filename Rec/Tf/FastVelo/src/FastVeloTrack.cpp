@@ -22,9 +22,9 @@ FastVeloTrack::FastVeloTrack(  ) :
   m_zone(0),
   m_backward(false),
   m_r0    (-999.),
-  m_rSlope(-999.),
-  m_errR2( 999. ),
-  m_rSlopeErr2( 999. )
+  m_tr    (-999.),
+  m_r0Err2( 999.),
+  m_trErr2( 999.)
 {
   m_rHits.reserve( 20 );
   m_nbUsedRHits = 0;
@@ -60,10 +60,10 @@ void FastVeloTrack::addRHit ( FastVeloHit* hit ) {
   if( m_rHits.size() > 2 ){
     double den = ( m_sz2 * m_s0 - m_sz * m_sz );
     if ( fabs(den) < 10e-10 ) den = 1.;
-    m_rSlope = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
+    m_tr     = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
     m_r0     = ( m_sr  * m_sz2 - m_srz * m_sz ) / den;
-    m_rSlopeErr2 = m_s0 / den;
-    m_errR2  = 1./m_s0;
+    m_trErr2 = m_s0 / den;
+    m_r0Err2 = m_sz2 / den;
   }
 }
 //=========================================================================
@@ -85,10 +85,10 @@ void FastVeloTrack::removeRHit ( FastVeloHit* hit ) {
   if( m_rHits.size() > 2 ){
     double den = ( m_sz2 * m_s0 - m_sz * m_sz );
     if ( fabs(den) < 10e-10 ) den = 1.;
-    m_rSlope = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
+    m_tr     = ( m_srz * m_s0  - m_sr  * m_sz ) / den;
     m_r0     = ( m_sr  * m_sz2 - m_srz * m_sz ) / den;
-    m_rSlopeErr2 = m_s0 / den;
-    m_errR2  = 1./m_s0;
+    m_trErr2 = m_s0 / den;
+    m_r0Err2 = m_sz2 / den;
   }
 }
 //=========================================================================
@@ -266,7 +266,6 @@ void FastVeloTrack::fitTrack ( ) {
 
 //=========================================================================
 //  Solve the system of 4 equation to obtain the track parameters
-//  Thanks to Manule Schiller (Heidelberg) for the hint
 //=========================================================================
 void FastVeloTrack::solve() {
   // Now solve the system...
@@ -391,6 +390,7 @@ bool FastVeloTrack::removeWorstRAndPhi( double maxChi2, unsigned int minExpected
       }
     }
     if ( highest < maxChi2 ) break;  // includes no bad hit
+    subtractToFit( *worst );
     if ( worstIsPhi ) {
       m_phiHits.erase( worst );
       if ( m_phiHits.size() < 3 ) break;
@@ -480,29 +480,32 @@ bool FastVeloTrack::addBestClusterOtherSensor( FastVeloHits& hitList, double max
 //  Add the best R cluster(closest R)  of a sensor. Select zone also...
 //=========================================================================
 bool FastVeloTrack::addBestRCluster ( FastVeloSensor* sensor, double maxChi2 ) {
-    double x = xAtZ( sensor->z() );
-    double y = yAtZ( sensor->z() );
-    int  zone = 0;
-    if ( fabs(x) > fabs(y) ) zone = 1;
-    if ( x * y > 0 ) zone = 3 - zone;    
-    double rPred = sqrt( x*x + y*y);
-    FastVeloHit* best = NULL;
-    for ( FastVeloHits::const_iterator itH = sensor->hits(zone).begin();
-          sensor->hits(zone).end() != itH; ++itH ) {
-      double dist = fabs( rPred - (*itH)->global() );
-      double chi2 = (*itH)->weight() * dist * dist;
-      if ( chi2 < maxChi2 ) {
-        maxChi2 = chi2;
-        best    = *itH;
-      }
+  double x = xAtZ( sensor->z() ) - sensor->xCentre();
+  double y = yAtZ( sensor->z() ) - sensor->yCentre();
+  if (  sensor->isRight() && x >  1. ) return false;
+  if ( !sensor->isRight() && x < -1. ) return false;
+  
+  int  zone = 0;
+  if ( fabs(x) > fabs(y) ) zone = 1;
+  if ( x * y > 0 ) zone = 3 - zone;
+  double rPred = sqrt( x*x + y*y);
+  FastVeloHit* best = NULL;
+  for ( FastVeloHits::const_iterator itH = sensor->hits(zone).begin();
+        sensor->hits(zone).end() != itH; ++itH ) {
+    double dist = fabs( rPred - (*itH)->rLocal() );
+    double chi2 = (*itH)->weight() * dist * dist;
+    if ( chi2 < maxChi2 ) {
+      maxChi2 = chi2;
+      best    = *itH;
     }
-    if ( NULL == best ) return false;                  
-    m_rHits.push_back( best );
-    best->setStartingPoint( m_x0 + best->z() * m_tx, m_y0 + best->z() * m_ty );
-    addToFit( best );
-    solve();
-    updateRParameters();
-    return true;
+  }
+  if ( NULL == best ) return false;                  
+  m_rHits.push_back( best );
+  best->setStartingPoint( m_x0 + best->z() * m_tx, m_y0 + best->z() * m_ty );
+  addToFit( best );
+  solve();
+  updateRParameters();
+  return true;
 }
 
 //=========================================================================

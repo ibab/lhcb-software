@@ -101,6 +101,7 @@ public:
   unsigned int nbUsed() const { return m_nbUsed; }
   double xGlobal()      const { return m_xGlobal; }
   double yGlobal()      const { return m_yGlobal; }
+  double rLocal()       const { return m_rLocal; }
 
   void   setGlobal( double r )  { m_global = float(r); }
   void   setUsed()              { m_nbUsed++; }

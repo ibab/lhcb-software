@@ -48,8 +48,8 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "PhiMatchZone"    , m_phiMatchZone   = 0.410  );   // sin(22.5 degrees) = 0.38, some tolerance
   declareProperty( "PhiCentralZone"  , m_phiCentralZone = 0.040  );   // in overlap...
   declareProperty( "FractionFound"   , m_fractionFound  = 0.70   );
-  declareProperty( "MaxChi2PerHit"   , m_maxChi2PerHit  = 10.    );
-  declareProperty( "MaxChi2ToAdd"    , m_maxChi2ToAdd   = 50.    );
+  declareProperty( "MaxChi2PerHit"   , m_maxChi2PerHit  = 16.    );
+  declareProperty( "MaxChi2ToAdd"    , m_maxChi2ToAdd   = 40.    );
   declareProperty( "MaxQFactor"      , m_maxQFactor     = 6.     );
   declareProperty( "MaxQFactor3"     , m_maxQFactor3    = 3.     );
   declareProperty( "DeltaQuality"    , m_deltaQuality   = 0.5    );
@@ -105,7 +105,7 @@ StatusCode FastVeloTracking::initialize() {
 StatusCode FastVeloTracking::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  m_isDebug   = msgLevel( MSG::DEBUG   );  
+  m_isDebug   = msgLevel( MSG::DEBUG   );
 
   if ( m_doTiming ) m_timerTool->start( m_timePrepare );
 
@@ -167,7 +167,7 @@ StatusCode FastVeloTracking::execute() {
       }
       if ( m_doTiming ) m_timerTool->stop( m_timeFwd3 );
     }
-    if ( !m_onlyForward ) { 
+    if ( !m_onlyForward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeBkwd3 );
       for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
         if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
@@ -365,19 +365,6 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           if ( forward && ( sens0 <= 33 && sens0 >= 30 ) ) {  // large Z gap -> may need to recover...
             extendTrack( newTrack, sensor0, zone, !forward );
           }
-          
-          //== Filter on bad hits. Remove until all goods or less than 4
-          for ( FastVeloHits::iterator itH = newTrack.rHits().begin(); newTrack.rHits().end() != itH ; ++itH ) {
-            double d = newTrack.rPred( (*itH)->z() )-(*itH)->global();
-            if ( m_maxChi2PerHit < d * d * (*itH)->weight() ) {
-              newTrack.removeRHit( *itH );
-              if ( newTrack.nbRHits() < 4 ) break;
-              itH = newTrack.rHits().begin() -1;
-            }
-          }
-          if ( newTrack.nbRHits() < 4 ) continue;
-          //== 
-
 
           if ( forward ) {
             std::sort( newTrack.rHits().begin(), newTrack.rHits().end(), FastVeloHit::IncreasingByZ() );
@@ -397,8 +384,6 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
         }
       }
     }
-    //== Try to find two tracks which are compatible
-
   }
 }
 
@@ -416,8 +401,7 @@ void FastVeloTracking::mergeSpaceClones( ) {
       if ( (*itT1).zone() != (*itT2).zone () ) continue;
       if ( (*itT2).backward() ) continue;
       if ( !(*itT2).isValid() ) continue;
-      //if ( (*itT1).phiHits().size() > (*itT2).phiHits().size()+1 ||
-      //     (*itT1).phiHits().size() < (*itT2).phiHits().size()-1 ) continue;
+
       unsigned int minWanted = (*itT1).phiHits().size();
       if ( (*itT2).phiHits().size() <  minWanted ) minWanted = (*itT2).phiHits().size();
       unsigned int nCommon = 0;
@@ -435,7 +419,7 @@ void FastVeloTracking::mergeSpaceClones( ) {
           if ( std::find( (*itT1).rHits().begin(), (*itT1).rHits().end(), *itH ) !=  (*itT1).rHits().end() ) nRCommon++;
         }
         if ( 2 > nRCommon ) continue;
-        
+
         if (  (*itT1).phiHits().size() > minWanted ) {
           badSecond = true;
         } else if (  (*itT2).phiHits().size() > minWanted ) {
@@ -448,7 +432,7 @@ void FastVeloTracking::mergeSpaceClones( ) {
           }
         }
         if ( m_debug ) {
-          info() << "Compare track " << itT1 - m_spaceTracks.begin() << " to " <<  itT2 - m_spaceTracks.begin() 
+          info() << "Compare track " << itT1 - m_spaceTracks.begin() << " to " <<  itT2 - m_spaceTracks.begin()
                  << ", found " << nCommon << " common hits for " << minWanted << endmsg;
         }
         if ( badFirst ) {
@@ -685,7 +669,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
 
     double zMin = 1.e9;
     double zMax = -1.e9;
-    
+
     for ( FastVeloHits::iterator itR = (*itT).rHits().begin();
           (*itT).rHits().end() != itR; ++itR ) {
       newTrack->addToLhcbIDs( (*itR)->lhcbID() );
@@ -703,7 +687,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     bool fitDirection = !(*itT).backward();
     (*itT).fitWithWeight( m_msFactor, fitDirection );
 
-    double zBeam = (*itT).zBeam();    
+    double zBeam = (*itT).zBeam();
 
     if ( m_stateAtBeam ) {
       state.setLocation( LHCb::State::ClosestToBeam );
@@ -716,7 +700,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       state.setCovariance( (*itT).covariance( zMin ) );
       newTrack->addToStates( state );
     }
-    
+
     if ( !(*itT).backward() ) {
       (*itT).fitWithWeight( m_msFactor, !fitDirection );
       state.setLocation( LHCb::State::EndVelo );
@@ -724,7 +708,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       state.setCovariance( (*itT).covariance( zMax ) );
       newTrack->addToStates( state );
     }
-    
+
     outputTracks->insert( newTrack );
   }
 }
@@ -896,8 +880,6 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   //== Define the sine of the distance as measure of the track. Store those in the correct range
   FastVeloSensor* sensor = first;
   int firstSensorWithHit = -1;
-  m_selectedHits.clear();
-  m_extraHits.clear();
 
   std::vector< FastVeloHits > goodPhiHits(21, FastVeloHits() );
 
@@ -1080,9 +1062,9 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
       FastVeloHit* best3 = NULL;
       for ( itH3 = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH3; ++itH3 ) {
         if ( 0 == iCase && 0 != (*itH3)->nbUsed() ) continue;
-        if ( 1 == iCase && 
-             0 == (*itH1)->nbUsed() && 
-             0 == (best2)->nbUsed() &&  
+        if ( 1 == iCase &&
+             0 == (*itH1)->nbUsed() &&
+             0 == (best2)->nbUsed() &&
              0 == (*itH3)->nbUsed()) continue;  // already tried in iCase = 0.
         double dist = (*itH3)->chi2( x0 + (*itH3)->z() * tx, y0 + (*itH3)->z() * ty );
         if ( minDelta3 > dist ) {
@@ -1246,7 +1228,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
             if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
             ok = false;
           }
-          
+
           if ( ok ) {  //== Store it.
             if ( m_debug ) {
               info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
@@ -1340,6 +1322,13 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         }
         continue;
       }
+    }
+    if ( !(*itTr).removeWorstRAndPhi( m_maxChi2PerHit, 6 ) ) {
+      if ( m_debug ) {
+        info() << "Track with less than 3 R or Phi after cleanup" << endmsg;
+        printTrack( *itTr );
+      }
+      continue;
     }
 
     if ( m_debug ) {
@@ -1484,6 +1473,15 @@ void FastVeloTracking::findUnusedPhi( ) {
                     FastVeloSensor* phiSensor = m_hitManager->sensor( s->number() + 64 );
                     if ( !temp.addBestPhiCluster( phiSensor->hits(zone), m_maxChi2ToAdd ) ) break;
                   }
+
+                  if ( !temp.removeWorstRAndPhi( m_maxChi2PerHit, 6 ) ) {
+                    if ( m_debug ) {
+                      info() << "Track with less than 3 R or Phi after cleanup" << endmsg;
+                      printTrack( temp );
+                    }
+                    continue;
+                  }
+
                   if ( m_debug ) {
                     info() << "*** Good track, qFactor " << temp.qFactor() << endmsg;
                     printTrack( temp );
@@ -1501,11 +1499,12 @@ void FastVeloTracking::findUnusedPhi( ) {
   }
   m_debug = m_isDebug;
 }
+
 //=========================================================================
 //  Debug tool: Print the coordinate
 //=========================================================================
 void FastVeloTracking::printCoord( const FastVeloHit* hit, std::string title ) {
-  
+
   info() << "  " << title
          << format( " sensor %3d z%7.1f zone%2d strip%5d coord%8.3f size%2d frac %5.2f used%2d ",
                     hit->sensor(), hit->z(), hit->zone(), hit->cluster().channelID().strip(), hit->global(),
