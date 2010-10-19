@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.26 2010-07-06 17:01:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.27 2010-10-19 13:30:54 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -293,6 +293,8 @@ void OMAlib::doFitFuncList() {
                      fdesc.str(),
                      true);
   }
+
+  // special derived classes 
   OMAFitFunction * newff;
   // gauss + poly background
   for (unsigned int degree=0 ; degree<3; degree++) {
@@ -306,6 +308,8 @@ void OMAlib::doFitFuncList() {
   // custom functions
   OMAFitFunction * richfit = new OMAFitTH2withSinCosC();
   m_fitfunctions[richfit->name()] = richfit;
+  OMAFitHLTjpsi * jpsifit = new OMAFitHLTjpsi();
+  m_fitfunctions[jpsifit->name()] = jpsifit;
 
 }
 

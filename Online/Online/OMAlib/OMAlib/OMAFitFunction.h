@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.h,v 1.8 2010-04-20 12:20:48 ggiacomo Exp $
+// $Id: OMAFitFunction.h,v 1.9 2010-10-19 13:30:53 ggiacomo Exp $
 #ifndef OMALIB_OMAFITFUNCTION_H 
 #define OMALIB_OMAFITFUNCTION_H 1
 #include <string>
@@ -26,6 +26,9 @@ public:
                  bool predefined); 
   virtual ~OMAFitFunction( ); ///< Destructor
 
+  virtual OMAFitFunction* clone() {
+    return (new OMAFitFunction(*this));
+  }
   inline std::string& name() {return m_name;}
   inline int np(){return m_parNames.size();}
   inline int ninput(){return m_inputNames.size();}
@@ -59,6 +62,9 @@ class OMAFitDoubleGaus : public OMAFitFunction {
 public: 
   OMAFitDoubleGaus();
   virtual ~OMAFitDoubleGaus() {}
+  virtual OMAFitFunction* clone() {
+    return (OMAFitFunction*) (new OMAFitDoubleGaus(*this));
+  }
 protected:
   virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
 };
@@ -67,6 +73,9 @@ class OMAFitGausPlusBkg : public OMAFitFunction {
 public: 
   OMAFitGausPlusBkg(unsigned int degree);
   virtual ~OMAFitGausPlusBkg() {}
+  virtual OMAFitFunction* clone() {
+    return (OMAFitFunction*) (new OMAFitGausPlusBkg(*this));
+  }
 protected:
   virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
   unsigned int m_degree;
@@ -76,10 +85,27 @@ class OMAFitTH2withSinCosC: public OMAFitFunction {
  public: 
   OMAFitTH2withSinCosC();
   virtual ~OMAFitTH2withSinCosC();
+  virtual OMAFitFunction* clone() {
+    return (OMAFitFunction*) (new OMAFitTH2withSinCosC(*this));
+  }
   virtual void fit(TH1* histo, std::vector<float>* initValues);
 private:
   TF1 GausP1;
 };
  
+class OMAFitHLTjpsi: public OMAFitFunction {
+ public: 
+  OMAFitHLTjpsi();
+  virtual ~OMAFitHLTjpsi();
+  virtual OMAFitFunction* clone() {
+    return (OMAFitFunction*) (new OMAFitHLTjpsi(*this));
+  }
+  virtual void fit(TH1* histo, std::vector<float>* initValues);
+private:
+  TF1 m1;
+  TF1 m2;
+  TF1 m3;
+};
+
 
 #endif // OMALIB_OMAFITFUNCTION_H

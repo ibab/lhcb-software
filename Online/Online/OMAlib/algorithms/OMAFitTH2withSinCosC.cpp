@@ -41,10 +41,9 @@ OMAFitTH2withSinCosC::OMAFitTH2withSinCosC() :
 OMAFitTH2withSinCosC::~OMAFitTH2withSinCosC() {
 }
 
-void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* initValues) {
+void OMAFitTH2withSinCosC::fit(TH1* histo, std::vector<float>* ) {
   //int startrun;
   //std::string DataType;
-  initValues= initValues; // avoid compilation warning
 
   //Definition of Histogram, RICH.
   TH2* inHist = dynamic_cast<TH2*>(histo);

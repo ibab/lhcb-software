@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivideByReference.cpp,v 1.2 2010-06-11 16:28:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivideByReference.cpp,v 1.3 2010-10-19 13:30:54 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -73,7 +73,22 @@ TH1* OMADivideByReference::exec( const std::vector<TH1*> *sources,
     out->SetNameTitle(outName.data(), outTitle.data());
   }
   
-  out->Divide(ref);
+  for (int ix=1 ; ix<= orig->GetNbinsX(); ix++) {
+    for (int iy=1 ; iy<= orig->GetNbinsY(); iy++) {
+      double cont = out->GetBinContent(ix,iy);
+      double cref = ref->GetBinContent(ix,iy);
+      double ratio=1.;
+      // check empty bins in reference
+      if (cref ==0.) {
+        if (cont >  0.) ratio= 9999.;  
+        if (cont <  0.) ratio=-9999.;  
+        if (cont == 0.) ratio=    1.;  // set 0/0=1
+      }
+      else 
+        ratio=cont/cref;
+      out->SetBinContent(ix,iy,ratio);
+    }
+  }
   out->SetBit(TH1::kIsAverage);
   return  out;
 }

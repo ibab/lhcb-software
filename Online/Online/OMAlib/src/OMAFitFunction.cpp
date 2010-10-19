@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.cpp,v 1.7 2010-04-13 09:05:01 robbep Exp $
+// $Id: OMAFitFunction.cpp,v 1.8 2010-10-19 13:30:54 ggiacomo Exp $
 #include <sstream>
 #include <cmath>
 #include <TH1.h>
@@ -31,7 +31,6 @@ OMAFitFunction::OMAFitFunction(std::string Name,
 
 OMAFitFunction::~OMAFitFunction() {
 } 
-
 
 
 void OMAFitFunction::checkDefValues() {
