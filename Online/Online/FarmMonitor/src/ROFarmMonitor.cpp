@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.6 2010-10-19 13:59:59 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.7 2010-10-19 14:05:29 ocallot Exp $
 // Include files
 // C++ include files
 
@@ -230,6 +230,9 @@ void ROFarmMonitor::infoHandler ( ) {
 //  Convert a node address in a C string to a node name
 //=========================================================================
 std::string ROFarmMonitor::nodeNameFromAddress ( char* add ) {
+#ifdef _MSC_VER
+  return "?";
+#endif
   char nodeName[100];
   int nodeLen = 99;
   struct sockaddr_in sa;
@@ -278,7 +281,7 @@ void ROFarmMonitor::update( )   {
   }
 
   longlong now = System::currentTime( System::microSec );
-  float dt = .000001 * double( now - m_lastTime );
+  float dt = .000001 * float( now - m_lastTime );
   m_lastTime = now;
   if ( 1 < m_print ) std::cout << "dt " << dt << std::endl;  
 
