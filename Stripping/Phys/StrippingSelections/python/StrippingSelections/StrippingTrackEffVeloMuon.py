@@ -28,10 +28,10 @@ class StrippingTrackEffVeloMuonConf(LHCbConfigurableUser):
     Definition of tag and probe JPsi stripping.
     """
     __slots__ = {
-			"TrChi2Mu":		5.	# adimensional
-		,	"JpsiPt":		1.	# GeV
-		,	"TrPt":			800.	# MeV
-		,	"VertChi2":		5.	# adimensional
+			"TrChi2Mu":		10.	# adimensional
+		,	"JpsiPt":		0.5	# GeV
+		,	"TrPt":			100.	# MeV
+		,	"VertChi2":		25.	# adimensional
 		,	"MassPreComb":		1000.	# MeV
 		,	"MassPostComb":		400.	# MeV
 		}

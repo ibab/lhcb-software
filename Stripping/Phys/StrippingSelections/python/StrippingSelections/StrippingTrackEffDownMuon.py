@@ -28,39 +28,18 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
     Definition of Downstream J/Psi stripping.
     """
     __slots__ = {
-			"MuMom":		5000.	# MeV
-		,	"MuTMom":		500.	# MeV
+			"MuMom":		1000.	# MeV
+		,	"MuTMom":		100.	# MeV
 		,	"TrChi2":		10.	# MeV
 		,	"MassPreComb":		2000.	# MeV
 		,	"MassPostComb":		200.	# MeV
 		,	"Doca":			5.	# mm
-		,	"VertChi2":		5.	# adimensional
+		,	"VertChi2":		25.	# adimensional
 		}
 
     def nominal_line( self ):
 	PatAlgConf.DownstreamConf().configureAlg()
 	
-	from Configurables import TisTosParticleTagger
-        # ################################################################
-        # Hlt1 PreFilter for Jpsi and Upsilons 
-        tisTosPreFilterHlt1Jpsi = TisTosParticleTagger("tisTosPreFilterHlt1JpsiForDownTrackEffLine")
-        tisTosPreFilterHlt1Jpsi.InputLocations = [ "Phys/StdLooseMuons" ]
-        tisTosPreFilterHlt1Jpsi.TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
-        tisTosPreFilterHlt1Jpsi.ProjectTracksToCalo = False
-        tisTosPreFilterHlt1Jpsi.CaloClustForCharged = False
-        tisTosPreFilterHlt1Jpsi.CaloClustForNeutral = False
-        tisTosPreFilterHlt1Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
-        tisTosPreFilterHlt1Jpsi.NoRegex = True
-        # ################################################################
-        # Hlt2 PreFilter for Jpsis and Upsilons (IP cut)
-        tisTosPreFilterHlt2Jpsi = TisTosParticleTagger("tisTosPreFilterHlt2JpsiForDownTrackEffLine")
-        tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1JpsiForDownTrackEffLine" ]
-        tisTosPreFilterHlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuonDecision%TOS" : 0}
-        tisTosPreFilterHlt2Jpsi.ProjectTracksToCalo = False
-        tisTosPreFilterHlt2Jpsi.CaloClustForCharged = False
-        tisTosPreFilterHlt2Jpsi.CaloClustForNeutral = False
-        tisTosPreFilterHlt2Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
-        tisTosPreFilterHlt2Jpsi.NoRegex = True
 
 	#FIXME: Only necessary if Downstream tracking is not defined in a Configurable
 	
@@ -93,6 +72,10 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 
 	return StrippingLine('TrackEffDownMuonJpsiLine', prescale = 1., algos=algos)
 
+    def trackEffValid_line( self ):
+        algos =[tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi]
+
+	return StrippingLine('TrackEffDownValidLine', prescale = 0.5, algos=algos)
 
     def makeMyMuons(self, name, trackcont):
 	unpacker = UnpackTrack(trackcont+"UnpackTrack")
@@ -168,8 +151,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 	selseq.ShortCircuit = False
 	selseq.IgnoreFilterPassed = False
 	return selseq	
-
-	
+    
 #########################################################################################
     def getProps(self) :
         """
@@ -180,4 +162,30 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
         for (k,v) in self.getDefaultProperties().iteritems() :
             d[k] = getattr(self,k) if hasattr(self,k) else v
         return d
+	
+"""
+Define TisTos Prefilters
 
+"""
+
+from Configurables import TisTosParticleTagger
+# ################################################################
+# Hlt1 PreFilter for Jpsi and Upsilons 
+tisTosPreFilterHlt1Jpsi = TisTosParticleTagger("tisTosPreFilterHlt1JpsiForDownTrackEffLine")
+tisTosPreFilterHlt1Jpsi.InputLocations = [ "Phys/StdLooseMuons" ]
+tisTosPreFilterHlt1Jpsi.TisTosSpecs = { "Hlt1TrackMuonDecision%TOS" : 0}
+tisTosPreFilterHlt1Jpsi.ProjectTracksToCalo = False
+tisTosPreFilterHlt1Jpsi.CaloClustForCharged = False
+tisTosPreFilterHlt1Jpsi.CaloClustForNeutral = False
+tisTosPreFilterHlt1Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
+tisTosPreFilterHlt1Jpsi.NoRegex = True
+# ################################################################
+# Hlt2 PreFilter for Jpsis and Upsilons (IP cut)
+tisTosPreFilterHlt2Jpsi = TisTosParticleTagger("tisTosPreFilterHlt2JpsiForDownTrackEffLine")
+tisTosPreFilterHlt2Jpsi.InputLocations = [ "Phys/tisTosPreFilterHlt1JpsiForDownTrackEffLine" ]
+tisTosPreFilterHlt2Jpsi.TisTosSpecs = { "Hlt2SingleMuonDecision%TOS" : 0}
+tisTosPreFilterHlt2Jpsi.ProjectTracksToCalo = False
+tisTosPreFilterHlt2Jpsi.CaloClustForCharged = False
+tisTosPreFilterHlt2Jpsi.CaloClustForNeutral = False
+tisTosPreFilterHlt2Jpsi.TOSFrac = { 4:0.0, 5:0.0 }
+tisTosPreFilterHlt2Jpsi.NoRegex = True
