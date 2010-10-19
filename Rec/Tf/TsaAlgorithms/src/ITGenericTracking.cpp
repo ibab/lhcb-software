@@ -713,7 +713,7 @@ bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::
   BOOST_FOREACH(CandidateHits::value_type can, tracks ){
 
     if (testCand.size() == can.size() && equal(can.begin(), can.end(),testCand.begin(),
-         ret<const Gaudi::XYZPoint&>(bind(&yInfo::second,_1)) == ret<const Gaudi::XYZPoint&>(bind(&yInfo::second,_2))) == true) {
+         ret<const yInfo::second_type&>(bind(&yInfo::second,_1)) == ret<const yInfo::second_type&>(bind(&yInfo::second,_2))) == true) {
       newCan = false;
       break;
      }
