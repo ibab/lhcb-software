@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-10-19 - Gerhard Raven
+ - fix ANNSvc for compilation error with boost 1.44.
+
 ! 2010-10-03 - Tomasz Skwarnicki
  - Make HltSelReportsDecoder try decision_ID-decision_name mapping from HltDecReports
    if ANNSvc fails to resolve the ID (this helps if HltDecReports was persisted with

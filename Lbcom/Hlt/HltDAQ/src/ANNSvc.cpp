@@ -234,6 +234,6 @@ ANNSvc::majors() const {
     std::transform( m_maps.begin(), 
                     m_maps.end(),
                     std::back_inserter(r), 
-                    bl::bind(&maps_type::value_type::first,bl::_1) );
+                    bl::ret<const maps_type::value_type::first_type&>(bl::bind(&maps_type::value_type::first,bl::_1)) );
     return r;
 }
