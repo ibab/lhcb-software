@@ -1,9 +1,9 @@
-// $Id: ROFarmMonitor.cpp,v 1.5 2010-10-19 13:54:59 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.6 2010-10-19 13:59:59 ocallot Exp $
 // Include files
 // C++ include files
 
 #ifdef _MSC_VER
-#include <windows.h>
+//#include <windows.h>
 #include <io.h>
 #else
 #include <netdb.h>
