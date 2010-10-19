@@ -4,6 +4,14 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Jaap Panman
+ - LumiMergeFSR: add EventCountFSR handling
+ - LumiIntegrateFSR: add "ignoreEE" method
+ - add LumiCheckCondDB to help checking the database
+ - Configuration.py: disentangle Merge ans Lumi options
+ - IntegratorConf: minor changes
+ - qmtest: add tests of CondDB
+
 ! 2010-10-14 - Marco Cattaneo
  - Add a QMTest LumiAlgsExclusions file, to avoid failing tests when just the
    LHCBCOND or DDDB path or default tag changes. 

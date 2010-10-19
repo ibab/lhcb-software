@@ -1,0 +1,178 @@
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r5/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
+# FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+# FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
+# FileRecordCnvSvc.ShareFiles           = "YES";
+# FileRecordDataSvc.ForceLeaves         = true;
+# FileRecordDataSvc.EnableFaultHandler  = true;
+# FileRecordDataSvc.RootCLID            =    1;
+# PoolRootEvtCnvSvc.EnableIncident      =    1;
+# PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
+# PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r5/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-DataType    = '2009'
+# |-TimeStamp   = False
+# |-SkipEvents  = 0
+# |-OutputLevel = 3
+# |-EvtMax      = -1
+# |-Simulation  = False
+# |-Monitors    = []  (default: [])
+# |-XMLSummary  = None
+# |-CondDBtag   = 'head-20100826'  (default: '')
+# |-DDDBtag     = ''
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag head-20100826 for partition DDDB
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType   = '2009'
+# |-DbRoot     = 'conddb:/lhcb.xml'
+# |-Simulation = False
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# skipping configuration of XMLSummary
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
+# |-Tags                      = {}  (default: {})
+# |-Overrides                 = []  (default: [])
+# |-DisableLFC                = False
+# |-Simulation                = False
+# |-SQLiteLocalCopiesDir      = ''
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
+# |-Online                    = False
+# |-UseOracle                 = False
+# |-LogFile                   = ''
+# |-UseLatestTags             = []  (default: [])
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxplus205.cern.ch on Tue Oct 19 14:41:17 2010
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+CheckDB              INFO Member list: LumiCheckCondDB/CheckCondDB
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "head-20100826"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "head-20100826"
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'  OPT='REC'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+RootDBase.open    SUCCESS testFSRout.dst File version:52600
+PoolRootTreeEvt...   INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC'
+RootDBase.open    SUCCESS testFSRout0.dst File version:52600
+PoolRootTreeEvt...   INFO Records token:[DB=80F7B06F-18D2-DF11-92B1-003048D2BD0C][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
+EventSelector     SUCCESS Reading Event record 1001. Record number within stream 2: 1
+EventLoopMgr         INFO No more events in event selection
+ApplicationMgr       INFO Application Manager Stopped successfully
+CheckCondDB          INFO ========== Probe DB: START ==========
+CheckCondDB          INFO  t0 1269077209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1269077209.0
+CheckCondDB          INFO  t0 1269682009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1269682009.0
+CheckCondDB          INFO  t0 1270286809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1270286809.0
+CheckCondDB          INFO  t0 1270891609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1270891609.0
+CheckCondDB          INFO  t0 1271496409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1271496409.0
+CheckCondDB          INFO  t0 1272101209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1272101209.0
+CheckCondDB          INFO  t0 1272706009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1272706009.0
+CheckCondDB          INFO  t0 1273310809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1273310809.0
+CheckCondDB          INFO  t0 1273915609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1273915609.0
+CheckCondDB          INFO  t0 1274520409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1274520409.0
+CheckCondDB          INFO  t0 1275125209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1275125209.0
+CheckCondDB          INFO  t0 1275730009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1275730009.0
+CheckCondDB          INFO  t0 1276334809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1276334809.0
+CheckCondDB          INFO  t0 1276939609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1276939609.0
+CheckCondDB          INFO  t0 1277544409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1277544409.0
+CheckCondDB          INFO  t0 1278149209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1278149209.0
+CheckCondDB          INFO  t0 1278754009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1278754009.0
+CheckCondDB          INFO  t0 1279358809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1279358809.0
+CheckCondDB          INFO  t0 1279963609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1279963609.0
+CheckCondDB          INFO  t0 1280568409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1280568409.0
+CheckCondDB          INFO  t0 1281173209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1281173209.0
+CheckCondDB          INFO  t0 1281778009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1281778009.0
+CheckCondDB          INFO  t0 1282382809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1282382809.0
+CheckCondDB          INFO  t0 1282987609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1282987609.0
+CheckCondDB          INFO  t0 1283592409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1283592409.0
+CheckCondDB          INFO  t0 1284197209 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1284197209.0
+CheckCondDB          INFO  t0 1284802009 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1284802009.0
+CheckCondDB          INFO  t0 1285406809 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1285406809.0
+CheckCondDB          INFO  t0 1286011609 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1286011609.0
+CheckCondDB          INFO  t0 1286616409 Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1 Calib [0.0891377, 0.0313008, 0.108481, 0, 0, 0, 0.0087314, 0.0001468, 0, 0, 1.11619, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.5]
+CheckCondDB          INFO  tfound 1286616409.0
+CheckCondDB          INFO ========== Probe DB: END   ==========
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO CheckDB                       |     0.002 |     0.003 |    0.003       0.0 |    2000 |     0.006 |
+ToolSvc.Sequenc...   INFO   CheckCondDB                 |     0.001 |     0.002 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootTreeEvt...   INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C[testFSRout0.dst]
+PoolRootTreeEvt...   INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

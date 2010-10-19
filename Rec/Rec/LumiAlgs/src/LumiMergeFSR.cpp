@@ -6,6 +6,7 @@
 // event model
 #include "Event/LumiFSR.h"
 #include "Event/TimeSpanFSR.h"
+#include "Event/EventCountFSR.h"
 
 // local
 #include "LumiMergeFSR.h"
@@ -29,12 +30,13 @@ LumiMergeFSR::LumiMergeFSR( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
-  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords" );
-  declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
-  declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR" ); //LHCb::TimeSpanFSRLocation::Default );
-  declareProperty( "PrimaryBXType"      , m_PrimaryBXType     = "BeamCrossing" );
+  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"   );
+  declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"       );
+  declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR"   ); //LHCb::TimeSpanFSRLocation::Default );
+  declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR" ); //LHCb::EventCountFSRLocation::Default );
+  declareProperty( "PrimaryBXType"      , m_PrimaryBXType     = "BeamCrossing"   );
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
-  declareProperty( "NavigatorToolName"  , m_ToolName          = "FSRNavigator" );
+  declareProperty( "NavigatorToolName"  , m_ToolName          = "FSRNavigator"   );
   
 }
 //=============================================================================
@@ -260,13 +262,40 @@ StatusCode LumiMergeFSR::merge() {
 
   // make a new inventory of the FileRecord store
   addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
-  // print
   for(std::vector< std::string >::iterator iAddr = addresses.begin() ; iAddr != addresses.end() ; ++iAddr ){
     debug() << "address: " << (*iAddr) << endmsg;
   }
   // get timespans 
   tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
   for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
+    debug() << "address: " << (*iAddr) << endmsg;
+  }
+
+  // check if the original EventCount FSRs can be retrieved from the TS
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
+    LHCb::EventCountFSR* readFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, LHCb::EventCountFSRLocation::Default);
+    debug() << "READ FSR: " << *readFSR << endmsg; 
+  }
+
+  // clean up eventCountFSRs, except the top level
+  std::vector< std::string > evAddresses = m_navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
+  for(std::vector< std::string >::iterator a = evAddresses.begin() ; a!= evAddresses.end() ; ++a ){  
+    // get FSR as keyed object and cleanup the original ones - this only cleans evFSRs
+    std::string fileRecordAddress = (*a);   
+    debug() << "address in list: " << (*a) << endmsg;
+    if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, fileRecordAddress) ) {
+      if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
+    } else {
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
+      // the toplevel EventCountFSR should survive
+      if ( fileRecordAddress.find(LHCb::EventCountFSRLocation::Default) == std::string::npos ) {
+	m_fileRecordSvc->unlinkObject( *a ).ignore();   // get it out of TS
+      }
+    }
+  }
+  evAddresses = m_navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
+  for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; iAddr != evAddresses.end() ; ++iAddr ){
     debug() << "address: " << (*iAddr) << endmsg;
   }
 

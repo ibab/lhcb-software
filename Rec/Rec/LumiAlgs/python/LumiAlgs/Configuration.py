@@ -35,6 +35,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"DataType"      : "2010"     # Data type, can be ['DC06','2008','MC09','2009','2010']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
+       ,"MergeFSR"      : False      # merge FSRs into one container (incompatible with Integrate)
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types
@@ -48,6 +49,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009','2010']"
        ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
+       ,"MergeFSR"      : "False, merge the FSRs into one container"
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
        ,"BXTypes"       : "bunch crossing types [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] "
@@ -190,6 +192,14 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                            IntegratorToolName = "LumiLowIntegrator", 
                                            OutputLevel = self.getProp("OutputLevel") )
         return [ odin, readingFSR, readingLumiLowFSR ]
+
+    def mergeFSR(self):
+        ''' create merge sequence '''
+        # Input data type - should not be a raw type
+        seqMembers=[]
+        seqMembers.append( LumiMergeFSR('MergeFSR'))
+
+        return seqMembers
     
     ## Apply the configuration to the given sequence
     def __apply_configuration__(self):
@@ -208,6 +218,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         forced=self.getProp("ForceFullSequence")
         status=self.getProp("SetFSRStatus")
+        merge=self.getProp("MergeFSR")
         
         if inputType == 'MDF' or forced:
             # create the FSRs
@@ -228,17 +239,20 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         # create the Event FSR
         EvMembers=self.fillEventFSR(status)
-
-        #finally configure the sequence
         sequence.Members += EvMembers
         
-        # Touch all FSRs so they are always copied
+        # actions on DSTs only
         if inputType != 'MDF':
+	    # touching is no longer needed
+            # Touch all FSRs so they are always copied
             #TouchMembers=self.touchFSR()
             #sequence.Members += TouchMembers
-	    # this is no longer needed
-	    pass
+            if merge:
+                # merge FSRs (typically done in MERGING and MDST production)
+                # must be done after Event accounting
+                sequence.Members += self.mergeFSR()
         
+        #finally configure the sequence
         sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False

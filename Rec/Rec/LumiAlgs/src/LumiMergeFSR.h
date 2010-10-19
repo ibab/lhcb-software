@@ -39,7 +39,8 @@ protected:
 
   std::string m_FileRecordName;                 ///< location of FileRecords
   std::string m_FSRName;                        ///< specific tag of summary data in FSR
-  std::string m_TimeSpanFSRName;                ///< specific tag of event summary data in FSR
+  std::string m_TimeSpanFSRName;                ///< specific tag of time summary data in FSR
+  std::string m_EventCountFSRName;              ///< specific tag of event summary data in FSR
   std::string m_ToolName;                       ///< name of tool for normalization
   std::string m_PrimaryBXType;                  ///< BXType to normalize
   std::vector<std::string> m_BXTypes;           ///< list of bunch crossing types

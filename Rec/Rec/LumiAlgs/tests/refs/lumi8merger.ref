@@ -46,7 +46,7 @@
 # WARNING: file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts' already included, ignored.
 # /***** User LumiMergeFSRConf/LumiMergeFSRConf ******************************************************
 # |-outputFile    = 'mergeout.dst'  (default: '')
-# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x2af8f80>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x2012090>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiMergeFSRConf/LumiMergeFSRConf) ---------------------------------------------
 # applying configuration of XMLSummary
@@ -75,23 +75,23 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus215.cern.ch on Mon Oct 11 17:24:41 2010
+                                          running on lxplus235.cern.ch on Fri Oct 15 01:37:07 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 CounterSummarySvc    INFO Wrote xml file summary.xml
-LumiMergeSeq         INFO Member list: LumiMergeFSR/MergeFSR
+LumiMergeSeq         INFO Member list: EventAccounting/EventAccount, LumiMergeFSR/MergeFSR
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
+FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 MergeFSR             INFO Primary  BXType BeamCrossing
 MergeFSR             INFO Subtract BXType Beam1
 MergeFSR             INFO Subtract BXType Beam2
 MergeFSR             INFO Subtract BXType NoBeam
-FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
@@ -125,11 +125,12 @@ FsrWriter            INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.001 |     0.003 |    0.003       0.0 |    2000 |     0.006 |
-ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.002 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.004 |     0.004 |    0.004       0.0 |    2000 |     0.009 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.001       0.0 |    2000 |     0.003 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

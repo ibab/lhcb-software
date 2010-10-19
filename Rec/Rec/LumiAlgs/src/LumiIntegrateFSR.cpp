@@ -121,7 +121,7 @@ StatusCode LumiIntegrateFSR::initialize() {
   StatusCode sc0 = registerDB(); // must be executed first
   if ( sc0.isFailure() ) return sc0;  // error printed already
 
-  return StatusCode::SUCCESS;
+  return runUpdate();
 }
 
 //=============================================================================
@@ -433,8 +433,12 @@ StatusCode LumiIntegrateFSR::add_file() {
       	    float factor = 0;     // indicates the primary BX - already used
       	    if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
       	      factor = 1.;
-      	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) 
+      	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) {
       	      factor = -1.;
+	      if ( m_calibRelative[LHCb::LumiMethods::CorrectionFlag] != 0) {
+		factor = 0;      // no subtraction of EE
+	      }
+	    }
       	    if ( factor != 0) {
 	      StatusCode sc =  add_fsr(result, fileRecordAddress, factor, fkey);
 	      if (sc.isFailure()) {
@@ -542,7 +546,7 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
       error() << "ERROR updating luminosity constants from DB " << endmsg;
     }
   }    
-  return sc;
+  return runUpdate();
 }
 
 //=============================================================================

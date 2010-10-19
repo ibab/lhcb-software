@@ -10,6 +10,7 @@ from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence
 from Configurables import LumiMergeFSR
+from Configurables import EventAccounting
 
 import GaudiKernel.ProcessJobOptions
 
@@ -80,10 +81,12 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     '''
     sequence = self.getProp("LumiSequencer")
     if sequence == None : raise RuntimeError("ERROR : Lumi Sequencer not set")
+    seqMembers=[]
     # Input data type - should not be a raw type
     if self.getProp("InputType") in ["MDF","RAW"]: return
-    # normalization of BeamCrossing
-    seqMembers=[]
+    # event accounting
+    seqMembers.append( EventAccounting('EventAccount', OutputLevel = INFO ) )
+    # merge FSRs
     seqMembers.append( LumiMergeFSR('MergeFSR'))
     sequence.Members = seqMembers
     sequence.MeasureTime = True

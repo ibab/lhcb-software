@@ -46,9 +46,7 @@ class LumiIntegratorConf(LHCbConfigurableUser):
                                                  IntegratorToolName = 'IntegrateBeamCrossing',
                                                  WriteCountersDetails = False
                                                  ))
-    #seqMembers.append( LumiReadBackFSR('IntegrateReadBackBeamCrossing',
-    #                                   IntegratorToolName = 'IntegrateBeamCrossing',
-    #                                   ))
+
     sequence.Members = seqMembers
     sequence.MeasureTime = True
     sequence.ModeOR = False

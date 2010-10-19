@@ -29,11 +29,12 @@
 # |-DataType          = '2010'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 3  (default: 3)
+# |-MergeFSR          = False
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x5a96cb0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xb28faa0>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
@@ -52,7 +53,7 @@
 # applying configuration of LumiIntegratorConf
 # /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
 # |-TupleFile     = ''
-# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x5ac2b50>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0xb2fbc60>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
 # applying configuration of DDDBConf
@@ -88,7 +89,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus215.cern.ch on Mon Oct 11 22:32:27 2010
+                                          running on lxplus205.cern.ch on Tue Oct 19 14:54:04 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -99,7 +100,7 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.04 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
 IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
@@ -113,7 +114,6 @@ DDDB                 INFO Using TAG "head-20100826"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "head-20100826"
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC'
@@ -127,35 +127,35 @@ FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 ApplicationMgr       INFO Application Manager Stopped successfully
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
-IntegrateBeamCr...   INFO run: [80355] Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches 1
+IntegrateBeamCr...   INFO run: [80355] Revolution frequency 11245 RandomFrequencyBB 697.9 CollidingBunches -99999
 IntegrateBeamCr...   INFO Luminosity scale used: 1.634e-11 relative uncertainty 0.1
-IntegrateBeamCr...   INFO counter PUMult: 0 350 505.329
-IntegrateBeamCr...   INFO counter RZVelo: 1 350 526.048
-IntegrateBeamCr...   INFO counter RZVeloBW: 2 350 485.56
-IntegrateBeamCr...   INFO counter SPDMult: 6 350 478.413
-IntegrateBeamCr...   INFO counter CaloEt: 7 350 442.86
+IntegrateBeamCr...   INFO counter PUMult: 0 350 502.977
+IntegrateBeamCr...   INFO counter RZVelo: 1 350 514.842
+IntegrateBeamCr...   INFO counter RZVeloBW: 2 350 486.239
+IntegrateBeamCr...   INFO counter SPDMult: 6 350 506.538
+IntegrateBeamCr...   INFO counter CaloEt: 7 350 479.061
 IntegrateBeamCr...   INFO counter TTIP: 8 350 0
-IntegrateBeamCr...   INFO counter PV3D: 11 350 0
+IntegrateBeamCr...   INFO counter PV3D: 11 350 618.868
 IntegrateBeamCr...   INFO counter Random: 21 350 0
-IntegrateBeamCr...   INFO counter PoissonPUMult: 50 350 587.406
+IntegrateBeamCr...   INFO counter PoissonPUMult: 50 350 583.608
 IntegrateBeamCr...   INFO counter PoissonRZVelo: 51 350 503.682
-IntegrateBeamCr...   INFO counter PoissonRZVeloBW: 52 350 482.294
-IntegrateBeamCr...   INFO counter PoissonSPDMult: 56 350 559.65
-IntegrateBeamCr...   INFO counter PoissonCaloEt: 57 350 509.305
+IntegrateBeamCr...   INFO counter PoissonRZVeloBW: 52 350 526.87
+IntegrateBeamCr...   INFO counter PoissonSPDMult: 56 350 552.74
+IntegrateBeamCr...   INFO counter PoissonCaloEt: 57 350 522.151
 IntegrateBeamCr...   INFO counter PoissonTTIP: 58 350 0
-IntegrateBeamCr...   INFO counter PoissonPV3D: 61 350 0
+IntegrateBeamCr...   INFO counter PoissonPV3D: 61 350 608.009
 IntegrateBeamCr...   INFO counter PoissonRandom: 71 350 0
-IntegrateBeamCr...   INFO Integrated luminosity: 1.25957e-07 +/- 1.25957e-08 [pb-1]
+IntegrateBeamCr...   INFO Integrated luminosity: -0.013336 +/- -0.0013336 [pb-1]
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: END ==========
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.04 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSeq                       |     0.002 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.001 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.002 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
 ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.000 |     0.001 |    0.001       0.0 |    1000 |     0.001 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...

@@ -20,6 +20,10 @@ LHCbApp().CondDBtag = 'head-20100826'
 from Configurables import LumiAlgsConf, DumpFSR
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 
+# clock service for CondDB
+from Configurables import EventClockSvc
+EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
+
 # standard sequence from configurable
 LumiAlgsConf().LumiSequencer = GaudiSequencer("LumiSeq", ShortCircuit = False )
 LumiAlgsConf().InputType = 'DST'
