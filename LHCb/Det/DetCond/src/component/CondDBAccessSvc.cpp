@@ -1009,9 +1009,9 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
             try{
               folder->resolveTag(tag());
               folders.push_back(f->substr(f->rfind('/')+1));
-            } catch (cool::TagRelationNotFound &e) {
+            } catch (cool::TagRelationNotFound) {
               log << MSG::DEBUG << "Tag '" << tag()
-                  << "' relation was not found for folder: "<< *f << endmsg;
+                  << "' relation was not found for ': "<< *f << "' folder" << endmsg;
             } catch (cool::ReservedHeadTag) {
               //to be ignored: 'HEAD' tag is in every node
               folders.push_back(f->substr(f->rfind('/')+1));
