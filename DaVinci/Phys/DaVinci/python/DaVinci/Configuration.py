@@ -40,6 +40,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "TupleFile"          : ""              # Name of output Tuple file
         , "ETCFile"            : ""              # Name of output ETC file
         , "WriteFSR"           : True            # Flags whether to write out an FSR
+        , "MergeFSR"           : False           # Flags whether to merge the FSRs into one container
         # Monitoring
         , "MoniSequence"       : []              # Add your monitors here
         # DaVinci Options
@@ -48,7 +49,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
         , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
         , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
-        , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
+        , "Lumi"               : False           # Run Lumi accounting (should normally be True for user jobs)
         # Trigger running
         , "L0"                 : False           # Run L0.
         , "Hlt"                : False           # Run Hlt
@@ -73,6 +74,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "TupleFile"          : """ Write name of output Tuple file """
         , "ETCFile"            : """ Write name of output ETC file."""
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
+        , "MergeFSR"           : """ Flags whether to merge the FSRs into one container """
         , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
@@ -143,6 +145,11 @@ class DaVinci(LHCbConfigurableUser) :
         if self.getProp("Simulation") and self.getProp('Lumi') :
             log.warning('Lumi not valid for Simulation. Setting Lumi = False')
             self.setProp('Lumi', False )
+
+        if self.getProp("MergeFSR"):
+            if self.getProp('TupleFile'):
+                self.setProp('TupleFile', False)
+                log.warning('MergeFSR option selected. No Lumi ntuple will be produced.')
 
 ################################################################################
 # Configure slaves
@@ -218,20 +225,27 @@ class DaVinci(LHCbConfigurableUser) :
         calculate normalization - toolname:
         """
         log.info("Creating Lumi Algorithms")
-        tupleFile = self.getProp('TupleFile')
-        if tupleFile == '' :
-            log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
         seq = []
-        self.setOtherProps(LumiAlgsConf(),["DataType","InputType"])
-        # add touch-and-count sequence
+        self.setOtherProps(LumiAlgsConf(),["DataType","InputType","MergeFSR"])
+
+        # add merge, touch-and-count sequence
         lumiSeq = GaudiSequencer("LumiSeq")
         LumiAlgsConf().LumiSequencer = lumiSeq
         seq += [ lumiSeq ]
-        # add integrator for normalization
-        self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
-        lumiInt = GaudiSequencer("IntegratorSeq")
-        LumiIntegratorConf().LumiSequencer = lumiInt
-        seq += [ lumiInt ]
+
+        if self.getProp( "Lumi" ):            
+            tupleFile = self.getProp('TupleFile')
+            if self.getProp("MergeFSR"):
+                log.warning('MergeFSR option selected, no Lumi integral will be produced.')
+            else:
+                # no integration during merge
+                if tupleFile == '' :
+                    log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
+                # add integrator for normalization
+                self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
+                lumiInt = GaudiSequencer("IntegratorSeq")
+                LumiIntegratorConf().LumiSequencer = lumiInt
+                seq += [ lumiInt ]
         return seq
         
 ################################################################################
@@ -603,8 +617,8 @@ class DaVinci(LHCbConfigurableUser) :
 #        self.sequence().Members += self._init()
         self.sequence().Members += [self._filteredEventSeq()]
         
-        if ( self.getProp( "Lumi" )):
-            self.sequence().Members += self._lumi()
+        # _lumi handles event count, lumi integration and merging independently
+        self.sequence().Members += self._lumi()
             
         if inputType != 'MDST' :
             self._l0()

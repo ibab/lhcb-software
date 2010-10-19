@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Jaap Panman
+ - python/DaVinci/Configuration.py
+  . redo logic between Lumi, MergeFSR and TupleFile options: all are False by 
+    default.  Merge switches off Lumi.  TupleFile needs Lumi.
+
 ! 2010-10-18 - Juan Palacios
  - python/DaVinci/Configuration.py
   . User sequence now understands SelectionSequence, MergedSelectionSequence.
