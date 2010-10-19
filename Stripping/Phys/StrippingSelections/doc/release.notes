@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-14 - Georg Krocker
+ - Added B0 to the UnbiasedBs2DsPi linde in the B2DX module
+ - Renamed line to unbiasedB2DXWithD2hhhLine
+ - introduced PID cuts to the unbiased line to keep the rate under control
+
 ! 2010-10-18 - Vladimir Gligorov
  - Modify some cuts in StrippingD2hhLTUnbiasedMBNB.py and simplify
    the code tying it to the MB/NB triggers. 

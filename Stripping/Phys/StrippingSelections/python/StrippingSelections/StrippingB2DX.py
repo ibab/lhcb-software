@@ -356,16 +356,15 @@ class B2DXLines(object) :
     	self.lines.append( line )
 
 	#make unbiased selections
-    	unbiasedSelection = makeUnbiasedBs2DsPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
+    	unbiasedSelection = makeUnbiasedB2DPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
  
  	HLT1TIS = makeTISTOSSel("HLT1TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
  	HLT2TIS = makeTISTOSSel("HLT2TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
 
-	line = StrippingLine(moduleName + "WithUnbiasedBs2DsPiLine", prescale = config["Prescales"]["Unbiased"] , 
+	line = StrippingLine(moduleName + "WithUnbiasedB2DPiLine", prescale = config["Prescales"]["Unbiased"] , 
                              algos = [ filterTooManyIP, HLT2TIS ], 
                              checkPV = config["CheckPV"]  )
     	self.lines.append( line )
-
     	
 
 def makeD2hh(moduleName, config) : 
@@ -848,7 +847,7 @@ def makeB02DPiWS(moduleName, DName, DSel, config ) :
     return Selection("SelB02DPiWSWith" + DName + "For" + moduleName, Algorithm = B2DPi, 
 			RequiredSelections = [ DSel, StdPi ] )
 
-def makeUnbiasedBs2DsPi(moduleName, DName, DSel, config ) : 
+def makeUnbiasedB2DPi(moduleName, DName, DSel, config ) : 
 
     StdPi  = DataOnDemand(Location = "Phys/StdNoPIDsPions")
 #    StdPi  = DataOnDemand(Location = "Phys/StdLoosePions")
@@ -857,12 +856,12 @@ def makeUnbiasedBs2DsPi(moduleName, DName, DSel, config ) :
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
     "(MIPCHI2DV(PRIMARY) > %(BachelorMIPChi2Min)s))" % config
     
-    Dcut = "(ADMASS('D_s+') < %(DMass)s*MeV)" % config
-
+#    Dcut = "(ADMASS('D_s+') < %(DMass)s*MeV)" % config
+    Dcut = "((MINTREE(ABSID=='K+',PIDK)>0) & (MAXTREE(ABSID=='pi+',PIDK)<5))"
     B2DPi = CombineParticles("Bs2DsPiWith" + DName + "For" + moduleName)
     B2DPi.DecayDescriptors = [ "[B_s0 -> D- pi+]cc" ]
     B2DPi.DaughtersCuts = { "pi+" : Bachelorcut, "D-" : Dcut }
-    B2DPi.CombinationCut = "((ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
+    B2DPi.CombinationCut = "((ADAMASS('B0') < %(CombDMass)s *MeV) | (ADAMASS('B_s0') < %(CombDMass)s *MeV))" % config
 
     B2DPi.MotherCut = "((VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & " \
     "(BPVDIRA > %(DIRAMin)s))" % config
