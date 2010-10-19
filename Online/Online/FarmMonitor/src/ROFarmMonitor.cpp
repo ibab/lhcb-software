@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.7 2010-10-19 14:05:29 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.8 2010-10-19 14:20:10 ocallot Exp $
 // Include files
 // C++ include files
 
@@ -232,7 +232,7 @@ void ROFarmMonitor::infoHandler ( ) {
 std::string ROFarmMonitor::nodeNameFromAddress ( char* add ) {
 #ifdef _MSC_VER
   return "?";
-#endif
+#else
   char nodeName[100];
   int nodeLen = 99;
   struct sockaddr_in sa;
@@ -243,6 +243,7 @@ std::string ROFarmMonitor::nodeNameFromAddress ( char* add ) {
   std::string address(nodeName);
   address = address.substr( 0, address.find( "-" ) );
   return address;
+#endif
 }
 //=========================================================================
 /// Routine called when one of the node's information is updated
