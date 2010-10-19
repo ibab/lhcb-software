@@ -1,4 +1,4 @@
-// $Id: PresenterMainFrame.cpp,v 1.341 2010-10-01 12:54:11 frankb Exp $
+// $Id: PresenterMainFrame.cpp,v 1.342 2010-10-19 13:25:42 ggiacomo Exp $
 // This class
 #include "PresenterMainFrame.h"
 
@@ -930,7 +930,7 @@ void PresenterMainFrame::buildGUI() {
                                                         kLHintsExpandY,
                                                         0, 0, 0, 0));
     if(m_alarmDisplayEnabled) {
-      m_alarmDisplay = new AlarmDisplay( this , m_alarmHistogramTreeList ) ;
+      m_alarmDisplay = new AlarmDisplay( this , &m_presenterInfo, m_alarmHistogramTreeList ) ;
     }
     //=========================================================================
     // List of known problems
@@ -4376,18 +4376,22 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
          ( ( pres::History == m_presenterInfo.presenterMode()) || 
            ( pres::EditorOffline == m_presenterInfo.presenterMode()))) {
       if ( "last 8 hours" == history_entry ) {
+        m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("08:00:00") ) ;
         m_message = "History for last 8 hours";
       } else if ( "last 1 hour" == history_entry ) {
+        m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("01:00:00") ) ;
         m_message = "History for last hour";
       } else if ( "preset file" == history_entry ) {
+        m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
         m_message = m_savesetFileName;
       } else if ( "set file" == history_entry ) {
+        m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
         m_message = m_savesetFileName;

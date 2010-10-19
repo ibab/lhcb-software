@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-10-19 - Giacomo Graziani
+- fix problem with conflicting history modes (history from files and alarm display were not
+  working after using history by run)
+- fix problem with fit functions derived from OMAFitFunction (requires latest OMAlib)
+
 ! 2010-10-18 - Marco Clemencic
  - Fixed compilation problem with Boost 1.44 (explicit inclusion of regex.hpp
    required).

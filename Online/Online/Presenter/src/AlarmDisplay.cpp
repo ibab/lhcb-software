@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.3 2010-08-12 15:42:03 robbep Exp $
+// $Id: AlarmDisplay.cpp,v 1.4 2010-10-19 13:25:41 ggiacomo Exp $
 
 #include <vector>
 #include <iostream>
@@ -7,6 +7,7 @@
 
 #include "AlarmDisplay.h"
 #include "PresenterMainFrame.h"
+#include "PresenterInformation.h"
 #include "PageDescriptionTextView.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
@@ -107,7 +108,9 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
       else {
         std::string previousSaveset = m_mainFrame->savesetFileName();
         m_mainFrame->setSavesetFileName(message.saveSet());
-        
+        bool globalHistoryByRunFlag =  m_presenterInfo-> globalHistoryByRun();
+        m_presenterInfo->setGlobalHistoryByRun(false) ;
+
         m_mainFrame->setStatusBarText(message.saveSet().c_str(),2);
         const pres::PresenterMode prevPresenterMode = m_mainFrame->presenterMode();
         m_mainFrame->setPresenterModeVariable(History);
@@ -121,7 +124,8 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
         
         m_mainFrame->setPresenterModeVariable(prevPresenterMode);
         m_mainFrame->setSavesetFileName(previousSaveset); 
-        
+        m_presenterInfo->setGlobalHistoryByRun(globalHistoryByRunFlag) ;
+
         m_mainFrame->pageDescriptionView()->Clear();
         std::string messageText = message.msgtext();
         messageText += "\n----------------------------------------------------\n";

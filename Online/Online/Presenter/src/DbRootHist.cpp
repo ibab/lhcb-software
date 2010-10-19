@@ -1,4 +1,4 @@
-// $Id: DbRootHist.cpp,v 1.185 2010-10-06 17:37:58 robbep Exp $
+// $Id: DbRootHist.cpp,v 1.186 2010-10-19 13:25:42 ggiacomo Exp $
 #include "DbRootHist.h"
 
 // STL 
@@ -844,13 +844,14 @@ void DbRootHist::fillHistogram() {
       }
     }
   }
+  
   if( m_onlineHistogram) {
     if (m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && 
-	false == m_isEmptyHisto) {
+        false == m_isEmptyHisto) {
       // trick to update fit w/o redrawing
       TF1* newfit = new TF1(*(m_fitfunction->fittedfun())); // clone fit TF1
       newfit->SetRange( m_rootHistogram->GetXaxis()->GetXmin(),
-      			m_rootHistogram->GetXaxis()->GetXmax() );
+                        m_rootHistogram->GetXaxis()->GetXmax() );
       m_rootHistogram->GetListOfFunctions()->Add(newfit); // attach newfit to histo, which now owns it
       m_rootHistogram->Fit(newfit,"QN"); // fit w/o drawing/storing
       for (int ip=0; ip <newfit->GetNpar(); ip++) {
@@ -859,6 +860,8 @@ void DbRootHist::fillHistogram() {
       }
     }
   }
+
+  
   if (m_onlineHistogram ) { setTH1FromDB(); }
   if (0 != m_hostingPad) m_hostingPad->Modified();
   
@@ -1069,7 +1072,7 @@ void DbRootHist::setPadMarginsFromDB(TPad * pad) {
 //===============================================================================
 // Fit histogram
 //===============================================================================
-void DbRootHist::fit() {
+void DbRootHist::fit(){
   if ( 0 == m_onlineHistogram ) return ;
   if ( ( m_onlineHistogram->hasFitFunction() ) && ( 0 != m_rootHistogram ) ) {
     std::string Name;
@@ -1093,7 +1096,7 @@ void DbRootHist::fit() {
       }
       
       // clone to own it and be thread-safe
-      m_fitfunction = new OMAFitFunction(*requestedFit);
+      m_fitfunction = requestedFit->clone();
     }
     m_fitfunction->fit(m_rootHistogram, &initValues);
   }
@@ -1213,6 +1216,11 @@ void DbRootHist::setDrawOptionsFromDB(TPad* pad) {
     
     if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt) ) {
       if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
+      if (m_fitfunction) { // remove HIST option that disables showing the fit
+        if (sopt.find("HIST") <sopt.size()) {
+          sopt.erase(sopt.find("HIST"), 4);
+        }
+      }
       m_rootHistogram->SetDrawOption(sopt.c_str());
     }
     if (m_onlineHistogram->getDisplayOption("LOGX", &iopt)) pad->SetLogx(1);

@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.h,v 1.3 2010-08-12 15:42:03 robbep Exp $
+// $Id: AlarmDisplay.h,v 1.4 2010-10-19 13:25:42 ggiacomo Exp $
 #ifndef ALARMDISPLAY_H 
 #define ALARMDISPLAY_H 1
 /** @class AlarmDisplay AlarmDisplay.h
@@ -14,15 +14,18 @@
 class TGListTree;
 class TGListTreeItem;
 class PresenterMainFrame;
+class PresenterInformation;
 
 class AlarmDisplay : public DimInfo {
  public: 
   /// Constructor 
   AlarmDisplay(PresenterMainFrame* mainFrame,
+               PresenterInformation* presInfo,
                TGListTree* listView) : 
     DimInfo((const char*) "OMA/DBDrivenAnalysisTask/LHCb/MESSAGES", 
 	    (char*) ""),
     m_mainFrame(mainFrame),
+    m_presenterInfo(presInfo),
     m_enabled(false),
     m_listView(listView),
     m_filterCriteria(AllHistograms),
@@ -41,6 +44,7 @@ class AlarmDisplay : public DimInfo {
     
  private:
     PresenterMainFrame* m_mainFrame;
+    PresenterInformation* m_presenterInfo ;
     bool m_enabled;
     TGListTree* m_listView;
     FilterCriteria m_filterCriteria;
