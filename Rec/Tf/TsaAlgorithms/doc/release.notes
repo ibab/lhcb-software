@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2010-10-19 Marco Clemencic
+ - Fixed compilation problem with Boost 1.44.
+
 !======================= TsaAlgorithms v3r23 2010-08-25 ====================
 ! 2010-07-29 New tuning of seeding for early data [see Tracking meeting 29/07)
 
