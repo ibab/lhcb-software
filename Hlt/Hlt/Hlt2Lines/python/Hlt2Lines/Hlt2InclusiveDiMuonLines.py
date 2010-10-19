@@ -173,6 +173,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 , 'PostMonitor' :
+                                   Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  }
                     , postscale = self.postscale
                     )
@@ -189,6 +191,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  "& (MINTREE('mu-'==ABSID,PT)>%(PromptJPsiMuPt)s*MeV) "\
                                  "& (VFASPF(VCHI2PDOF)<%(PromptJPsiVChi2)s )"\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(PromptJPsiTrChi2)s )"%  self.getProps()
+                                 , 'PostMonitor' :
+                                    Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
                                  }
                     , postscale = self.postscale
                     )
@@ -243,7 +247,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<%(UnbiasedPsi2SMassWindow)s*MeV) "\
                                  "& (PT>%(UnbiasedPsi2SPt)s*MeV) "\
                                  "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedPsi2SMuPt)s*MeV) "\
-                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() }
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() 
+                                 , 'PostMonitor' :
+                                    Hlt2Monitor( "M","M(#mu#mu)",3686,200,'M_out',nbins=25)
+                                 }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedPsi2SDecision": 50202 } )
@@ -255,7 +262,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonUnbiasedBmm'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedBmmMinMass)s*MeV) "\
-                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedBmmVertexChi2)s )"  %  self.getProps() }
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedBmmVertexChi2)s )"  %  self.getProps() 
+                                 , 'PostMonitor' :
+                                   Hlt2Monitor( "M","M(#mu#mu)",5300,700,'M_out',nbins=25)
+                                 }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedBmmDecision":   50203 } )
@@ -281,7 +291,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         line.clone( 'DiMuonUnbiasedZmm'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>%(UnbiasedZmmMinMass)s*MeV) "\
-                                 "& (PT>%(UnbiasedZmmPt)s*MeV) "% self.getProps() }
+                                 "& (PT>%(UnbiasedZmmPt)s*MeV) "% self.getProps() 
+                                 , 'PostMonitor' :
+                                 Hlt2Monitor( "M","M(#mu#mu)",90000,10000,'M_out',nbins=25)
+                                 }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedZmmDecision":   50205 } )
