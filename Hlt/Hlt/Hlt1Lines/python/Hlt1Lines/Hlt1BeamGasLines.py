@@ -105,7 +105,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         nobeam = self.getProp('NoBeamLimiter')
         if nobeam :
             import re
-            odin = re.sub('\(([^\)]*NoBeam.*)\)' , 'scale(\g<1>,%s)' % nobeam ,odin)
+            odin = re.sub('\(([^\)]*NoBeam) *\)' , 'scale(\g<1>, %s )' % nobeam, odin)
+
         lineBeamEmptyBX =  Line( name
                                , prescale = self.prescale
                                , ODIN  =odin
