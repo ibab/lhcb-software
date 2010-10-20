@@ -5,6 +5,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-10-20 - Marc Grabalosa
+  . changed naming convention for cuts files in /options
+  . default is stripping9
+
 ! 2010-10-13 - Marc Grabalosa
  - Add tool for combination of taggers using a NN
  - More option files for stripping cuts
