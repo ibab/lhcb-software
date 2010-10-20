@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-20 - Yasmine Amhis 
+ - Add Lambda_b  in the beta_s line.
+   . Merge the old LL and DD line into one unbiased line.  
 ! 2010-10-19 - Greig Cowan
  - Fixed buggy decay descriptor in beta_s line.
 

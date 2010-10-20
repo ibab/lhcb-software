@@ -105,8 +105,15 @@ KsListLoose = MergedSelection("StdLooseKsMerged",
                               RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
                                                     DataOnDemand(Location = "Phys/StdLooseKsLL")] )
 
+
+
+
+
 KsList = createSubSel(OutputList = "KsForBetaS",
                       InputList = KsListLoose, Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
+
+
+
 
 f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
                                DaughterLists = [ DataOnDemand(Location = "Phys/StdLoosePions") ],
@@ -114,6 +121,15 @@ f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
                                DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 10)"},
                                PreVertexCuts = "(APT>900*MeV) & (ADAMASS('f_0(980)') < 500*MeV) & (AMAXDOCA('') < 0.5*mm)",
                                PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
+
+LambdaListLoose = MergedSelection("StdLooseLambdaMerged",
+                                  RequiredSelections =  [DataOnDemand(Location = "Phys/StdLooseLambdaDD"),
+                                                         DataOnDemand(Location = "Phys/StdLooseLambdaLL")])
+LambdaList =  createSubSel(OutputList = "LambdaForBetaS",
+                           InputList = LambdaListLoose ,
+                           Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV)&(ADMASS('Lambda0')< 15 *MeV)& (VFASPF(VCHI2)<20)")
+
+
 
 ##################
 ### Inlusive J/psi. We keep it for as long as we can.
@@ -222,6 +238,10 @@ Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 20)"
                                   )
 
+
+
+
+
 Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 1.00)
 Bd2JpsiKsDetachedLine  = StrippingLine("Bd2JpsiKsDetachedLine",
                                        algos = [ createSubSel( InputList = Bd2JpsiKs,
@@ -232,6 +252,12 @@ Bd2JpsiKsUnbiasedLine  = StrippingLine("Bd2JpsiKsUnbiasedLine",
                                                                OutputList = Bd2JpsiKs.name() + "Unbiased",
                                                                Cuts = "(MINTREE('KS0'==ABSID, PT)> 1000.*MeV)") ] )
 B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbiasedLine ]
+
+
+
+
+
+
 
 ##################
 ### Bs->Jpsif0 ##
@@ -247,13 +273,22 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 #
 #B2JpsiXLines += [ Bs2Jpsif0Line ]
 
-###################
+###############################
 ### Lambdab->JpsiLambda ###
-##################
+##############################“
+# Added by Yasmine
+Lambdab2JpsiLambda = createCombinationSel( OutputList = "Lambdab2JpsiLambda",
+                                  DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc",
+                                  DaughterLists  = [ LambdaList, JpsiList ],
+                                  PreVertexCuts = "in_range(5120,AM,6120)",
+                                  PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < 20)"
+                                  )
 
-# to be done
 
 
+Lambdab2JpsiLambdaUnbiasedLine = StrippingLine("Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ])
+
+B2JpsiXLines += [Lambdab2JpsiLambdaUnbiasedLine ]
 
 ############
 ### Todo ###
@@ -261,7 +296,7 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 #
 # Bd->JpsiKS
 # Bs->Jpsif0
-# Lambdab->JpsiLambda
+# Lambdab->JpsiLambda 
 # Jpsi inclusive
 # common combined particles (like phi, K*)?
 # everything in one file
