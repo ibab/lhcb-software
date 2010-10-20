@@ -6,6 +6,8 @@ from LbRelease.rcs import moveSVNPackage
 from LbConfiguration.Repository import repositories
 from LbUtils.Script import Script
 
+import logging
+
 import sys
 
 class MovePackageScript(Script):
@@ -22,6 +24,7 @@ class MovePackageScript(Script):
                           help = "add a custom subversion repository to the known ones")
 
     def main(self):
+        log = logging.getLogger()
         opts = self.options
         args = self.args
         
@@ -32,6 +35,10 @@ class MovePackageScript(Script):
         package, project = args
 
         status = moveSVNPackage(package, project, opts.user_svn)
+        if status == 0 :
+            log.debug("%s to %s move succeeded" % (package, project))
+        else :
+            log.error("%s to %s move failed" % (package, project))
         
         return status
 

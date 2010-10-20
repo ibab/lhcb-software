@@ -3,6 +3,7 @@ Module providing the basic functionalities of the GetPack utility.
 """
 from LbConfiguration.Repository import getRepositories
 from LbUtils.Processes import callCommand, RetryCommand
+from LbUtils.Temporary import TempDir
 
 import logging
 
@@ -551,7 +552,8 @@ class SubversionCmd(RevisionControlSystem):
         If no path is specified, the root of the repository is used.
         """
         if path:
-            if path[0] == "/": del path[0] # we need relative path
+            if path[0] == "/": # we need relative path 
+                path = path[1:]
             path = "/".join([self.repository, path])
         else:
             path = self.repository
@@ -832,6 +834,50 @@ class SubversionCmd(RevisionControlSystem):
                 dst = os.path.join(dst, "cmt")
         return src, dst
 
+
+    def _getPackagePath(self, module, key="trunk"):
+        log = logging.getLogger()
+        result = None, None
+        root = self.modules[module]
+        purl = "/".join([self.repository, root, key, module])
+        pdir = os.path.join(root, key, module)
+        if self._exists(pdir) :
+            result = (purl, pdir)
+        else :
+            log.debug("%s doesn't exist" % purl)
+        return result
+
+    def _getAllPackagePaths(self, module):
+        pkg_paths = []
+        for m in ["trunk", "tags", "branches"] :
+            purl, pdir = self._getPackagePath(module, m)
+            if pdir :
+                pkg_paths.append((purl, pdir))
+        return pkg_paths
+
+
+
+    def _getProjectPath(self, module, key="trunk"):
+        log = logging.getLogger()
+        result = None, None
+        root = module
+        purl = "/".join([self.repository, root, key])
+        pdir = os.path.join(root, key)
+        if self._exists(pdir) :
+            result = (purl, pdir)
+        else :
+            log.debug("%s doesn't exist" % purl)
+        return result
+
+    def _getAllProjectPaths(self, module):
+        prj_paths = []
+        for m in ["trunk", "tags", "branches"] :
+            purl, pdir = self._getProjectPath(module, m)
+            if pdir :
+                prj_paths.append((purl, pdir))
+        return prj_paths
+
+
     def url(self, module, version = "trunk", isProject = False):
         """
         Return the full URL to the module in the repository.
@@ -926,6 +972,33 @@ class SubversionCmd(RevisionControlSystem):
                              trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
     
+    def _updatePath(self, pth, root_dir):
+        pthlist = []
+        for p in pth.split("/") :
+            pthlist.append(p)
+            _svn("update", "-N", os.sep.join(pthlist), cwd=root_dir)
+            
+    def _createPath(self, pth, root_dir):
+        pthlist = []
+        for p in pth.split("/") :
+            pthlist.append(p)
+            if not self._exists("/".join(pthlist)) :
+                _svn("mkdir", os.sep.join(pthlist), cwd=root_dir)
+            else :
+                _svn("update", "-N", os.sep.join(pthlist), cwd=root_dir)
+
+    def _getPackageProperty(self):
+        packprop = "### Package Project\n"
+        formt = "%%-%ds%%s\n" % (max([len(x) for x in self.modules.keys()]) + 5)
+        pairs = sorted([(proj, pack) for pack, proj in self.modules.items()])
+        prev = None
+        for proj, pack in pairs:
+            if proj != prev :
+                packprop += "#\n"
+                prev = proj
+            packprop += formt % (pack, proj)
+        return packprop
+
     def move(self, package, project):
         """ move a package from one project to another """
         log = logging.getLogger()
@@ -933,14 +1006,53 @@ class SubversionCmd(RevisionControlSystem):
         if package not in self.packages :
             status = 1
             log.error("The package %s is not in the %s repository" % (package, self))
-        elif project not in self.projects :
+        elif project not in self.projects + [ "packages", "obsolete" ] :
             status = 1
             log.error("The project %s is not in the %s repository" % (project, self) )
         elif self.modules[package] == project :
             log.warning("The package %s is already in the %s project. Nothing to do" % (package, project))
         else :
-            print "toto"
+            tmpdir = TempDir("movepak_%s_%s" % (package.replace("/", "_"), project))
+            tmpdir_name = tmpdir.getName()
+            log.debug("The temporary directory used is %s" % tmpdir_name)
+            _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name)
+            root_dir  = os.path.join(tmpdir_name, self.repository.split("/")[-1])
+            
+            # package full checkout
+            for k in ["trunk", "tags", "branches"] :
+                _, pdir = self._getPackagePath(package, k)
+                if pdir :
+                    _, prdir = self._getProjectPath(project, k)
+                    ppdir = os.sep.join([prdir] + package.split("/"))
+                    if self._exists(ppdir) :
+                        status = 1
+                        log.fatal("%s directory already exists" % ppdir)
+                    else :
+                        log.info("Updating the path %s" % pdir)
+                        self._updatePath(pdir, root_dir)
+                        for d in _svn("ls", pdir, cwd = root_dir)[0].splitlines() :
+                            ddir = os.path.join(pdir, d)
+                            _, _, _ = _svn("update", ddir, cwd=root_dir)
+    
+                        ppdir = prdir
+                        pkglist = package.split("/")[:-1]
+                        if pkglist :
+                            ppdir = os.sep.join([prdir] + pkglist)
+                        log.info("Creating the path %s" % ppdir)
+                        self._createPath(ppdir, root_dir)
+                        log.info("Moving %s to %s" %(pdir, ppdir))
+                        _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir)
 
+            self.modules[package] = project
+            modlist = os.path.join(tmpdir_name,"packages.list") 
+            f = open(modlist, "w")
+            f.write(self._getPackageProperty())
+            f.close()
+            log.info("Setting the new packages property")
+            _svn("propset", "--file", modlist, "packages", root_dir)
+            log.info("Committing the changes.")
+            _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir)
+                
         return status
 
     def _getRequirements(self, module, version = "head"):
@@ -985,10 +1097,11 @@ def getPackageRepo(package, reps, exclude=None):
             log.info("Looking for package '%s' in '%s' (%s)", package, name, url)
             repo = connect(url)
             if package in repo.packages:
+                log.debug("Found package %s in %s" % (package, name))
                 yield repo
 
 
-def getProjectRepo(project, reps, exclude=None):
+def getProjectRepo(project, reps, exclude=None, extended=False):
     log = logging.getLogger()
     if exclude is None :
         exclude = []
@@ -997,7 +1110,11 @@ def getProjectRepo(project, reps, exclude=None):
             url = str(reps[name]) # the protocol is forced (anyway we need to write)
             log.info("Looking for project '%s' in '%s' (%s)", project, name, url)
             repo = connect(url)
-            if project in repo.projects:
+            projs = repo.projects
+            if extended and name == "lbsvn" :
+                projs += [ "packages", "obsolete" ]
+            if project in projs:
+                log.debug("Found project %s in %s" % (project, name))
                 yield repo
 
 def moveSVNPackage(package, project, user_repos):
@@ -1009,17 +1126,22 @@ def moveSVNPackage(package, project, user_repos):
         repo = repo_list[0]
     else :
         repo = None
-        log.error("No Repository found for %s" % package)
-    proj_repo_list = list(getProjectRepo(project, reps))
+        log.fatal("No Repository found for %s" % package)
+        status = 1
+        return status
+    proj_repo_list = list(getProjectRepo(project, reps, extended=True))
     if proj_repo_list :
         proj_repo = proj_repo_list[0]
     else :
         proj_repo = None
-        log.error("No Repository found for %s" % project)
-    if repo != proj_repo :
-        log.error("%s is not in the same SVN repository as %s" % (package, project))
+        log.fatal("No Repository found for %s" % project)
+        status = 1
+        return status
+    if repo.repository != proj_repo.repository :
+        log.fatal("%s is not in the same SVN repository as %s" % (package, project))
         log.debug("%s : %s %s : %s" % (package, repo, project, proj_repo))
         status = 1
+        return status
     else :
         repo.move(package, project)
     return status

@@ -1,3 +1,8 @@
+2010-10-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/move_package: 
+	* python/LbRelease/rcs.py: finished the implementation of the move_package utility.
+
 2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/rcs.py: 
