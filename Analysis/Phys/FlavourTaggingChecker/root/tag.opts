@@ -13,7 +13,6 @@
    datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
-   datafile = /afs/cern.ch/user/m/mgrabalo/scratch0/bd2dstarmunu/dstar
 
 #  >>>>>>>>>>>>>>>>>>>>>> CONTROLS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -38,13 +37,13 @@
 #  look in the same data directory for ONE file with .eventlist extension:
    EventListFileName = DATAFILE
    EventListFileName = none                Ignore any list
-   EventListFileName = ./dstarstrip9.txt
+
 
 EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
 
+IncludeFile cuts_mc2010.opts
 IncludeFile cuts_strip10.opts
 IncludeFile cuts_strip9.opts
-IncludeFile cuts_mc2010.opts
 
 
 

@@ -208,6 +208,12 @@ TString readString(TString varname) { //< function parsing the tag.opts file
   while (!line.ReadLine(indata).eof()) { 
     if(line.BeginsWith("#")) continue; //comments out whole line by # sign
     if(line.BeginsWith("EndOfOptions")) break;
+    if(line.BeginsWith("IncludeFile")) {
+      
+      exit(0);
+      
+
+    }
     
     TObjArray * words = line.Tokenize(" ,;:");
     int nwords = words->GetEntriesFast();
