@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2010-10-20 - Marco Cattaneo
+ - Move ANNSvc to HltInterfaces
+
 ! 2010-10-19 - Gerhard Raven
  - fix ANNSvc for compilation error with boost 1.44.
 
