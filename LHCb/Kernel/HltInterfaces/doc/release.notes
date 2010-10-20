@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2010-10-20 - Marco Cattaneo
+ - Put ANNSvc back. Needed in more than one package (e.g. TrackUtils) so 
+   cannot sit inside HltDAQ
+
 ! 2010-10-19 - Gerhard Raven
  - remove ANNSvc from HltInterfaces altogether -- it also lives in HltDAQ, and 
    that seems to better fit the pattern as it is not an interface, but a mix-in
