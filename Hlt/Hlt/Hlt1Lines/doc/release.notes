@@ -19,9 +19,6 @@
 ! 2010-10-08 Gerhard Raven
  - replace IP in 1Track by |IP|
 
-! 2010-10-07 Gerhard Raven
- - speed up Hlt1Track by reordering & coalescing trackfilters
-
 !========================== Hlt1Lines v5r2   2010-09-29 ===================
 ! 2010-09-29 Gerhard Raven
  - canonicalize L0TCK so that both '0x002a' and '0x002A' are properly treated...

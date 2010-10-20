@@ -4,7 +4,6 @@
 #  @@author Vladimir Gligorov vladimir.gligorov@@cern.ch
 #  @@date 2010-08-16
 # =============================================================================
-import math
 """
  script to configure One Track trigger lines
 """
@@ -67,18 +66,32 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
             from Hlt1Lines.Hlt1GECs import Hlt1GEC
             from HltTracking.Hlt1TrackUpgradeConf import Forward
             return [ Hlt1GEC(),
-                    PV3D(), # this pulls in the Velo reconstruction
-                    Velo,  # this pulls in the Velo reco + copying to 'Velo' -- but duplicates with the above are eliminated
-                    Member ( 'TF', 'OTNEXHIP'
-                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits'),'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut'),'IP_PV3D,||>,%s'%ip]
+                    Velo,PV3D().ignoreOutputSelection(),
+                    Member ( 'TF', 'OTIP'
+                           , InputSelection = 'Velo' 
+                           , FilterDescriptor = [ 'IP_PV3D,||>,%s'%ip]
                            , HistogramUpdatePeriod = 1
                            , HistoDescriptor  = histosfilter('IP',0.,1.,100) 
                          ),
+                    Member ( 'TF', 'OTNH'
+                           , FilterDescriptor = [ 'NumberOfTrackHits,>,%s'%self.getProp('Velo_NHits')]
+                         ),
+                    Member ( 'TF', 'OTEXH'
+                           , FilterDescriptor = [ 'MissedVeloHits,||<,%s'%self.getProp('Velo_Qcut')]
+                         ),
                     DecodeIT,
-                    Member ( 'TU', 'Forward' , RecoName = Forward.splitName()[-1]),
-                    Member ( 'TF' , 'OTPT' , FilterDescriptor = ['PT,>,%s'%pt,'P,>,%s'%p]
+                    Member ( 'TU', 'Forward'
+                           , RecoName = Forward.splitName()[-1]
+                           ),
+                    Member ( 'TF' , 'OTPT' ,
+                            FilterDescriptor = ['PT,>,%s'%pt]
                             , HistogramUpdatePeriod = 1 
-                            , HistoDescriptor  = dict( histosfilter('PT',0.,8000.,200).items() + histosfilter('P',0.,80000.,200).items() )
+                            , HistoDescriptor  = histosfilter('PT',0.,8000.,200)
+                            ),
+                    Member ( 'TF' , 'OTMom' ,
+                            FilterDescriptor = ['P,>,%s'%p]
+                            , HistogramUpdatePeriod = 1 
+                            , HistoDescriptor  = histosfilter('P',0.,80000.,200)
                             )
                    ]
 
@@ -99,8 +112,8 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
                           MinIPCHI2 = ipchi2
                          )
                 #, Member ('TF','FFT'
-                #         , OutputSelection = "%Decision"
-                #         , FilterDescriptor = [ "FitIPS_PV3D,>,%s"%math.sqrt(ipchi2) ] )
+                #         , OutputSelection = "%Decision",
+                #         , FilterDescriptor = [ "FitIPS_PV3D,>,%s"%ipchi2 ] )
                 ]
 
         def muonAfterburn(chi2,ipchi2) :
@@ -150,18 +163,13 @@ class Hlt1TrackLinesConf(HltLinesConfigurableUser) :
 
             input = 'Phys/%s/Particles' % Hlt1Muons.getName()
 
-            after += [   VoidFilter('Hlt1_MuonFilter' , Code = " CONTAINS('%s') > 0 "%input)  
-                     ,   Member ('HltFilterFittedParticles', 'FFT'
+            after += [    VoidFilter('Hlt1_MuonFilter' , Code = " CONTAINS('%s') > 0 "%input)  
+                     ,    Member ('HltFilterFittedParticles', 'FFT'
                                  , OutputSelection = "%Decision"
                                  , InputSelection1 = 'TES:/Event/%s' % input
                                  , InputSelection2 = 'PV3D'
                                  , MinIPCHI2 = '%s'%ipchi2
                                  )   
-                     #,  Member ('TF','FFT'  ### BZZZT: need tracks, not particles...
-                     #          , OutputSelection = "%Decision"
-                     #          , InputSelection = 'TES:/Event/%s' % input
-                     #          , FilterDescriptor = [ "FitIPS_PV3D,>,%s"%math.sqrt(ipchi2) ] 
-                     #          )
                      ]
             return after
 
