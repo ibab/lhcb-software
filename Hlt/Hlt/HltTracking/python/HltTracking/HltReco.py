@@ -30,18 +30,22 @@
 # which 'skips' Velo for the daisychaining (but will insert the right configurables)
 #
 
-__all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
+__all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
           , 'MinimalVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
           )
+############################################################################################
+# Option to decide which pattern to use
+############################################################################################
+useFastVelo = False
 #############################################################################################
 # Import Configurables
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV3D
-from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking
+from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, FastVeloTracking
 from Configurables import PVOfflineTool
 from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
@@ -85,12 +89,16 @@ from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
 
-recoVelo         = Tf__PatVeloSpaceTracking('Hlt1And2RecoVelo'
-                                   , InputTracksName  = "Hlt/Track/RZVelo" 
-                                   , OutputTracksName = "Hlt/Track/Velo" )
-    
-recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
+if useFastVelo :
+    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = "Hlt/Track/Velo" )
+    recoVelo.MinRSensor = 4
+    recoVelo.BestEfficiency = False
+else :
+   recoVelo         = Tf__PatVeloSpaceTracking('Hlt1And2RecoVelo'
+                                               , InputTracksName  = "Hlt/Track/RZVelo" 
+                                               , OutputTracksName = "Hlt/Track/Velo" )
+   recoVelo.addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+   recoVelo.PatVeloSpaceTool.MarkClustersUsed=True
 
 ##### Hlt selections
 from Configurables import HltTrackFilter
@@ -114,7 +122,12 @@ from Configurables import DecodeVeloRawBuffer
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
-MinimalVelo     = bindMembers( None, [       MinimalRZVelo , recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+
+if useFastVelo :
+    MinimalVelo     = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+else :
+    MinimalVelo     = bindMembers( None, [MinimalRZVelo, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
+
 Velo            = bindMembers( None, [                    MinimalVelo, prepare3DVelo ] ).setOutputSelection('Velo')
 
 from Configurables import PatSeeding

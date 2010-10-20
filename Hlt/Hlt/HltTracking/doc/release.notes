@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-10-20 - Olivier Callot
+ - Add a flag to use FastVeloTracking in HltReco.py
+   Default is False
+
 !========================== HltTracking v7r0p1 2010-09-30 ===================
 ! 2010-09-30 - Gerhard Raven
  - fix typo in requirements
