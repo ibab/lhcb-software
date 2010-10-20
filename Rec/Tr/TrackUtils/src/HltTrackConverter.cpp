@@ -8,7 +8,7 @@
 #include "Event/HltSelReports.h"
 #include "Event/HltDecReports.h"
 #include "Event/HltObjectSummary.h"
-#include "Kernel/ANNSvc.h"
+#include "Kernel/IANNSvc.h"
 
 // local
 #include "HltTrackConverter.h"
