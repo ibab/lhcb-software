@@ -146,7 +146,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
        ,"Radiators"       : None         # The radiators to use
-       ,"CKThetaResRange" : [ ]
+       ,"CKThetaResRange" : [ ] # The CK theta range to use in resolution plots. Empty means defaults
         }
 
     ## Initialize 

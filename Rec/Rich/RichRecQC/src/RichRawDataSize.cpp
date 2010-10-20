@@ -173,7 +173,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
               std::ostringstream title, ID;
               title << "Data Size (32bit words) : HPDHardwareID " << hpdHardID;
               ID << "hpds/HPDHardwareID" << hpdHardID;
-              richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill( nHPDwords );
+              richHisto1D( ID.str(), title.str(), -0.5, 100.5, 101 ) -> fill( nHPDwords );
             }
             catch ( const GaudiException & excpt )
             {
