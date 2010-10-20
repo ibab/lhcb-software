@@ -238,7 +238,17 @@ class B2DXLines(object) :
 	      "Unbiased"   : 1., 
 	    }, 
 	    "CheckPV"	       : True, 
-	    "MaxTracksInEvent" : 240
+	    "MaxTracksInEvent" : {
+	      "D2hh"     : 240, 
+	      "D2hhh"    : 400, 
+	      "D2hhhWS"  : 400, 
+	      "D2hhhh"   : 240, 
+	      "D2Kshh"   : 240, 
+	      "D2KPiPi0Merged"   : 240, 
+	      "D2KPiPi0Resolved" : 240, 
+	      "Lambda"   : 240, 
+	      "Unbiased"   : 240
+	    }
     	}
     ) : 
     
@@ -253,11 +263,6 @@ class B2DXLines(object) :
 	modules = CoreFactory('CoreFactory').Modules
 	for i in ['LoKiTrigger.decorators']:
           if i not in modules : modules.append(i)
-
-	filterTooManyIP = VoidFilter(
-          'FilterNTracks'
-          ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTracksInEvent)s )" % config
-        )
 
 	D2hh = makeD2hh(moduleName, config["D2hhCuts"])
 	D2hhh = makeD2hhh(moduleName, config["D2hhhCuts"])
@@ -333,6 +338,11 @@ class B2DXLines(object) :
 
             BSidebandSel = Selection(moduleName + "With" + name, Algorithm = B2DXSideband, RequiredSelections = [ BSel ] ) 
 
+	    filterTooManyIP = VoidFilter(
+              'FilterNTracksFor' + name
+              ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name]
+            )
+
     	    line = StrippingLine(BSidebandSel.name()+"Line", prescale = config["Prescales"][name] , 
                                  algos = [ filterTooManyIP, BSidebandSel ], 
                                  checkPV = config["CheckPV"]  )
@@ -349,6 +359,11 @@ class B2DXLines(object) :
         LambdaBSidebandSel = Selection(moduleName + "WithLambda", Algorithm = B2DXSideband, 
                                        RequiredSelections = [ LambdaBSel ] ) 
 
+	filterTooManyIP = VoidFilter(
+            'FilterNTracksForLambda'
+            ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"]
+        )
+
     	line = StrippingLine(LambdaBSidebandSel.name()+"Line", prescale = config["Prescales"]["Lambda"] , 
                              algos = [ filterTooManyIP, LambdaBSidebandSel ], 
                              checkPV = config["CheckPV"]  )
@@ -357,6 +372,11 @@ class B2DXLines(object) :
 
 	#make unbiased selections
     	unbiasedSelection = makeUnbiasedB2DPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
+ 
+	filterTooManyIP = VoidFilter(
+            'FilterNTracksForUnbiased'
+            ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"]
+        )
  
  	HLT1TIS = makeTISTOSSel("HLT1TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
  	HLT2TIS = makeTISTOSSel("HLT2TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
