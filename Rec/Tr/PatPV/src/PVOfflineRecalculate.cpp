@@ -36,7 +36,10 @@ PVOfflineRecalculate::~PVOfflineRecalculate() {}
 
 StatusCode PVOfflineRecalculate::finalize()
 {
-  print_stats();
+  if ( m_counter_count[0] > 0 ) {  
+    print_stats();
+  }
+  
   return GaudiTool::finalize();  
 }
 

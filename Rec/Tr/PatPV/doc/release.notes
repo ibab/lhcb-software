@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-20 - Mariusz Witek
+- supress final printout of statistics in PVOfflineRecalculate 
+  if tool instantiated but not used
+
 ! 2010-10-18 - Mariusz Witek
 - new tool to remove tracks from PV and recalculate PV params without a fit
 
