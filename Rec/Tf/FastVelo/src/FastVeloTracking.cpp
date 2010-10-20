@@ -25,7 +25,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "OutputLocation"  , m_outputLocation = LHCb::TrackLocation::Velo );
+  declareProperty( "OutputTracksName" , m_outputLocation = LHCb::TrackLocation::Velo );
 
   declareProperty( "OnlyForward"     , m_onlyForward    = false );
   declareProperty( "OnlyBackward"    , m_onlyBackward   = false );
