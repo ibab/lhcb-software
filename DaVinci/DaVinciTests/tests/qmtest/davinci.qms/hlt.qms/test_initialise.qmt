@@ -57,8 +57,6 @@ TimingAuditor.TIMER                                            INFO     DaVinciU
 TimingAuditor.TIMER                                            INFO     MonitoringSequence        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   LumiSeq                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO    EventAccount               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   IntegratorSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    IntegrateBeamCrossing      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO --------------------------------------------------------------------------------------------------
 """, stdout, result, causes, signature_offset = 0, id='rest')
 countErrorLines({"FATAL":0})

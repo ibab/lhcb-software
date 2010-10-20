@@ -19,6 +19,7 @@ DaVinci().EvtMax = 0 # No running
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = '2009'
+DaVinci().Lumi = True
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
