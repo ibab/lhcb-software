@@ -1,0 +1,12 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/StrippingNeuroBayes
+! Responsible : Ulrich Kerzel
+! Purpose     : Stripping algorithms based on the NeuroBayes neural network
+!-----------------------------------------------------------------------------
+
+! 2010-10-20 - Ulrich Kerzel
+ - first version: DiMuon
+   -> J/Psi-> MuMu in tight J/Psi mass region, to be compared against cut based
+      tight J/Psi line, network contains kinematic cuts, calorimeter, PID
+   -> MuMu, trained on J/Psi, applied to all masses between 0 ... 12 GeV
+      uses IP Chi2 variables in addition

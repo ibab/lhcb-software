@@ -1,0 +1,66 @@
+#============================================================================
+# Created    : 2010-10-15
+# Maintainer : Ulrich Kerzel
+#============================================================================
+package           StrippingNeuroBayes
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src python
+
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package          v1r*    Hat
+
+
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
+
+# Databases
+use DDDB               v*    Det            -no_auto_imports
+use ParamFiles         v*                   -no_auto_imports
+use FieldMap           v*                   -no_auto_imports
+use AppConfig          v*                   -no_auto_imports
+#use HltTCK             v*  TCK              -no_auto_imports
+
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports
+
+# From LHCB project
+use LinkerInstances    v*    Event
+
+#-- Lbcom
+use LbcomSys    v*
+
+#-- Rec
+use RecSys      v*
+
+# -- Analysis
+use AnalysisSys v*
+
+
+
+# NeuroBayes
+# NB is currently only supported on linux GCC (WIN32 libs in preparation)
+macro use_NB_expert "neurobayes_expert v* LCG_Interfaces" WIN32 ""
+use $(use_NB_expert)
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          StrippingNeuroBayes    ../src/*.cpp 
+
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=StrippingNeuroBayes
