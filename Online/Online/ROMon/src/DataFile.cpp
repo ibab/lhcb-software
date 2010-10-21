@@ -1,4 +1,4 @@
-// $Id: DataFile.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
+// $Id: DataFile.cpp,v 1.4 2010-10-21 06:19:04 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.3 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.4 2010-10-21 06:19:04 frankb Exp $
 
 // Framework include files
 #include "RTL/rtl.h"
@@ -67,8 +67,9 @@ bool DataFile::open() {
       return true;
     }
     ::close(m_fd);
-    m_fd = 0;
   }
+  m_fd = 0;
+  m_pointer = 0;
   return false;
 }
 
@@ -76,10 +77,10 @@ bool DataFile::open() {
 void DataFile::close() {
   if ( m_fd ) {
     ::close(m_fd);
-    m_fd = 0;
-    m_pointer = 0;
-    ::memset(&m_stbuff,0,sizeof(m_stbuff));
   }
+  ::memset(&m_stbuff,0,sizeof(m_stbuff));
+  m_fd = 0;
+  m_pointer = 0;
 }
 
 /// Move file descriptor to the end of the file
@@ -99,6 +100,7 @@ int DataFile::scan(const DataProcessor& functor) {
       ::lib_rtl_output(LIB_RTL_ERROR,"Failed to stat %s",name().c_str());
       return 0;
     }
+    if ( stbuff.st_size < m_pointer ) m_pointer = 0;
     size_t bytes = stbuff.st_size-m_pointer;
     if ( bytes > 0 ) {
       int count = 0;

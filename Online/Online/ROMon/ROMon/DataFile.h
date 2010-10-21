@@ -1,4 +1,4 @@
-// $Id: DataFile.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
+// $Id: DataFile.h,v 1.3 2010-10-21 06:19:03 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/DataFile.h,v 1.2 2010-10-12 17:47:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/DataFile.h,v 1.3 2010-10-21 06:19:03 frankb Exp $
 #ifndef ONLINE_ROMON_DATAFILE_H
 #define ONLINE_ROMON_DATAFILE_H
 
@@ -37,7 +37,7 @@ namespace ROMon {
     /// The stat information for the file
     struct stat   m_stbuff;
     /// Current read pointer within the file
-    size_t        m_pointer;
+    long          m_pointer;
 
   public:
     /// @class DataProcessor BootMon.h ROMon/BootMon.h
