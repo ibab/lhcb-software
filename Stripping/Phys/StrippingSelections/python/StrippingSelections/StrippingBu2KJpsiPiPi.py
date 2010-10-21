@@ -13,7 +13,7 @@ Bu->K Psi(2S)(J/psi(MuMu)PiPi) and one tighter line for each channel.
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -227,8 +227,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
         if StrippingBu2KJpsiPiPiConf.Bu_Loose == None:
             self.Bu2KX3872Loose()
         from StrippingConf.StrippingLine import StrippingLine
-	Bu2KJpsiPiPiLooseSeq = SelectionSequence("SeqBu2KJpsiPiPiLoose", TopSelection = StrippingBu2KJpsiPiPiConf.Bu_Loose)
-	return StrippingLine('Bu2KJpsiPiPiLooseLine', prescale = 1, algos = [Bu2KJpsiPiPiLooseSeq])
+	return StrippingLine('Bu2KJpsiPiPiLooseLine', prescale = 1, algos = [StrippingBu2KJpsiPiPiConf.Bu_Loose])
     
     def X3872_line( self ):
         '''
@@ -238,8 +237,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
             self.Bu2KX3872Loose()
         from StrippingConf.StrippingLine import StrippingLine
 	Bu2KX3872Sel = self.Bu2KX3872()
-	Bu2KX3872Seq = SelectionSequence("SeqBu2KX3872", TopSelection = Bu2KX3872Sel)
-        return StrippingLine('Bu2KX3872Line', prescale = 1, algos = [Bu2KX3872Seq])
+        return StrippingLine('Bu2KX3872Line', prescale = 1, algos = [Bu2KX3872Sel])
 
     def Psi2S_line( self ):
         '''
@@ -249,8 +247,7 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
             self.Bu2KX3872Loose()
         from StrippingConf.StrippingLine import StrippingLine
         Bu2KPsi2SSel = self.Bu2KPsi2S()
-	Bu2KPsi2SSeq = SelectionSequence("SeqBu2KPsi2S", TopSelection = Bu2KPsi2SSel)
-        return StrippingLine('Bu2KPsi2SLine', prescale = 1, algos = [Bu2KPsi2SSeq])
+        return StrippingLine('Bu2KPsi2SLine', prescale = 1, algos = [Bu2KPsi2SSel])
 
 
     def getProps(self) :

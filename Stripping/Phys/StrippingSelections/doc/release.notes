@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-21 -Nicola Mangiafave
+  - StrippingBu2KJpsiPiPi.py: StrippingLines now built from Selection
+	instead of SelectionSequence.
+
 ! 2010-10-21 -Yasmine Amhis 
   -update Lambda_b mass window before vertexing in  beta_s lines
 
