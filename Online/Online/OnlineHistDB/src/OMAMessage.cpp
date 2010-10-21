@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.22 2010-09-20 18:48:35 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.23 2010-10-21 10:16:46 ggiacomo Exp $
 #include <time.h>
 #include <sstream>
 #include <cstring>
@@ -29,9 +29,9 @@ OMAMessage::OMAMessage( std::string& HistName,
   m_noccur(1), m_nsolved(0), m_nretrig(0),
   m_anaComment(""), m_isAbort(false), m_confirmed(true), m_dbsync(false), m_hassysname(false)
 {
-  m_histo_null = m_histo.empty() ? 1 : 0;
-  m_taskName_null = m_taskName.empty() ? 1 : 0;
-  m_ananame_null = m_ananame.empty() ? 1 : 0; 
+  m_histo_null = m_histo.empty() ? isnull : isnotnull;
+  m_taskName_null = m_taskName.empty() ? isnull : isnotnull;
+  m_ananame_null = m_ananame.empty() ? isnull : isnotnull; 
   if (anaID) {
     // add specific analysis message (if defined) to message text
     if ( getAnaComment(anaID) ) {
@@ -56,9 +56,9 @@ OMAMessage::OMAMessage( std::string& HistName,
   m_noccur(1), m_nsolved(0), m_nretrig(0), m_anaComment(""),
   m_isAbort(false), m_confirmed(true), m_dbsync(false), m_hassysname(false)
 {
-  m_histo_null = m_histo.empty() ? 1 : 0;
-  m_taskName_null = m_taskName.empty() ? 1 : 0;
-  m_ananame_null = m_ananame.empty() ? 1 : 0;
+  m_histo_null = m_histo.empty() ? isnull : isnotnull;
+  m_taskName_null = m_taskName.empty() ? isnull : isnotnull;
+  m_ananame_null = m_ananame.empty() ? isnull : isnotnull;
 }
 
 // constructor from DB
@@ -139,8 +139,8 @@ void OMAMessage::load() {
         m_anaTaskName = m_anaTaskName_null ? "" : std::string((const char *) ANATASK);
         m_msgtext= m_msgtext_null ? "" : std::string((const char *) MESSAGE);
         setLevelFromString((const char *) LEVEL);
-        m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
-        m_active = (bool) isactive;
+        m_ananame = std::string(m_ananame_null!=0 ? "" : (const char*)ANANAME);
+        m_active = (isactive != 0);
         m_dbsync=true;
         m_isAbort=false;
         if (!m_anaid_null)
@@ -248,32 +248,20 @@ void OMAMessage::unsetPadColor() {
 }
 
 const char* OMAMessage::levelString() {
-  switch(m_level) {
-  case ALARM:
-    return "ALARM";
-    break;
-  case WARNING:
-    return "WARNING";
-    break;
-  case NOSTAT:
-    return "NOSTAT";
-    break;
-  case INFO:
-  default:
-    return "INFO";
-    break;
-  }
-  return "INFO";
+  int ilevel=(int) m_level;
+  if (ilevel  <0 || ilevel >= nmsglevel) ilevel=0;
+  return (msglevelName[ilevel]).c_str();
 }
 
 void OMAMessage::setLevelFromString(const char* slevel) {
   std::string st(slevel);
-  if (st == "ALARM")
-    m_level = ALARM;
-  else if(st == "WARNING")
-    m_level = WARNING;
-  else
-    m_level = INFO;
+  for (int il=0; il<nmsglevel ; il++) {
+    if (st == msglevelName[il]) {
+      m_level = (OMAMsgLevel) il;
+      return;
+    }
+  }
+  m_level = INFO; // default
 }
 
 char * OMAMessage::humanTime() {

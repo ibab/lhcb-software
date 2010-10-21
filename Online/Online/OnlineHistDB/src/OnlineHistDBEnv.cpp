@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.23 2010-06-10 16:57:50 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.24 2010-10-21 10:16:46 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -209,7 +209,7 @@ void OnlineHistDBEnv::warningMessage(std::string Error) const {
 void OnlineHistDBEnv::toUpper(std::string& str) {
   std::string::iterator i;
   for (i = str.begin() ; i != str.end() ; i++) {
-    *i = toupper(*i);
+    *i = (char) toupper(*i);
   }
 }
 

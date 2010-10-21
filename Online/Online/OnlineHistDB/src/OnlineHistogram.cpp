@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.49 2010-06-10 16:57:50 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.50 2010-10-21 10:16:46 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1658,8 +1658,8 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
         floatVarrayToVector(inps, *inputs);
       }
       statusbits = statusbits_null ? -1 : stb;
-      minstat = minstat_null ? -1. : mst;
-      minstatfrac = minstatfrac_null ? -1. : msf;
+      minstat = minstat_null ? -1.f : mst;
+      minstatfrac = minstatfrac_null ? -1.f : msf;
     }
     else {
       out=false;

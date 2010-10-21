@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.61 2010-09-27 07:53:24 ggiacomo Exp $
+! $Id: release.notes,v 1.62 2010-10-21 10:16:45 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20101021
+- fix some compilation warnings from icc and windoz
 
 ! 20100920 v7r3
 - fix some problems with loading non-standard messages
