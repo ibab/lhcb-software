@@ -20,14 +20,13 @@ OMAIfbMonitor::OMAIfbMonitor(OMAlib* Env) :
 }
 
 void OMAIfbMonitor::exec(TH1 &Histo,
-                             std::vector<float> & warn_thresholds,
-                             std::vector<float> & alarm_thresholds,
-                             std::vector<float> & input_pars,
-                             unsigned int anaID,
-                         TH1* Ref) {
+                         std::vector<float> & warn_thresholds,
+                         std::vector<float> & alarm_thresholds,
+                         std::vector<float> & input_pars,
+                         unsigned int anaID,
+                         TH1* ) {
    
    if( input_pars.size() < m_ninput) return;
-   Ref = NULL;
    warn_thresholds.empty(); // avoid compil. warning
    alarm_thresholds.empty(); // avoid compil. warning
    input_pars = input_pars; // avoid compil. warning
@@ -136,9 +135,3 @@ Int_t OMAIfbMonitor::ID2Ynum2(Int_t ID)
     num=num-1;
     return num;
 }
-  
- 
-
-
-
-    

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.11 2010-08-31 16:54:11 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.12 2010-10-21 10:17:33 ggiacomo Exp $
 #include <cmath>
 #include <cstdlib>
 #include <TH1F.h>
@@ -65,11 +65,11 @@ TH1* OMAEfficiency::exec(TH1* okH,
       Float_t* eyh= (Float_t*) malloc(nb * sizeof(Float_t)); 
       double central;
       for (Int_t i=0;i<nb;i++) {
-        *(x+i) = outHist->GetXaxis()->GetBinCenter(i+1);
-        *(exl+i) = *(exh+i) = (outHist->GetBinWidth(i+1))/2.05;
+        *(x+i) = (float) (outHist->GetXaxis()->GetBinCenter(i+1));
+        *(exl+i) = *(exh+i) = (float) ((outHist->GetBinWidth(i+1))/2.05);
         double c = okH->GetBinContent(i+1);
         double n = allH->GetBinContent(i+1);
-        if (n==0.) {
+        if ( iszero(n) ) {
           central = *(eyl+i) = *(eyh+i) =.5; 
         }
         else {
@@ -77,10 +77,10 @@ TH1* OMAEfficiency::exec(TH1* okH,
           // use the score confidence interval Agresti-Coull formula for more reasonable binomial errors  
           double pstar= (c+2.)/(n+4.);
           double error = sqrt(pstar*(1-pstar)/(n+4.));
-          *(eyl+i) = TMath::Max(0.,central-(pstar-error));
-          *(eyh+i) = TMath::Max(0.,(pstar+error)-central);
+          *(eyl+i) = (float) TMath::Max(0.,central-(pstar-error));
+          *(eyh+i) = (float) TMath::Max(0.,(pstar+error)-central);
         }
-        *(y+i)=central;
+        *(y+i)=(float) central;
         outHist->SetBinContent(i+1,central);
         outHist->SetBinError(i+1,0);
       }

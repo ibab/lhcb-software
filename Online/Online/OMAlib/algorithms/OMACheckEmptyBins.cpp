@@ -16,13 +16,11 @@ OMACheckEmptyBins::OMACheckEmptyBins(OMAlib* Env) :
 void OMACheckEmptyBins::exec(TH1 &Histo,
                              std::vector<float> & warn_thresholds,
                              std::vector<float> & alarm_thresholds,
-                             std::vector<float> & input_pars,
+                             std::vector<float> & ,
                              unsigned int anaID,
-                             TH1* Ref) {
+                             TH1* ) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
-  input_pars.empty(); // avoid compil. warning
-  Ref = NULL; // avoid compil. warning
 
   int NemptyBins=0;
   for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {

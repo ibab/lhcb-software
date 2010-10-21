@@ -1,4 +1,4 @@
-// $Id: OMAEnv.h,v 1.20 2010-10-19 13:30:53 ggiacomo Exp $
+// $Id: OMAEnv.h,v 1.21 2010-10-21 10:17:32 ggiacomo Exp $
 #ifndef OMALIB_OMAENV_H 
 
 #define OMALIB_OMAENV_H 1
@@ -49,6 +49,8 @@ protected:
   std::string VirtualTaskName(std::string& taskname) {
     return (taskname+"_ANALYSIS");
   }
+
+  
 
   int m_debug;
   std::string m_anaTaskname;

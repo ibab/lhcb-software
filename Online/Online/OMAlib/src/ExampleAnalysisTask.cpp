@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.8 2009-06-16 17:39:49 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.9 2010-10-21 10:17:33 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
@@ -11,7 +11,7 @@
 #include <TH1.h>
 #include <TKey.h>
 
-DECLARE_ALGORITHM_FACTORY( ExampleAnalysisTask );
+DECLARE_ALGORITHM_FACTORY( ExampleAnalysisTask )
 
 ExampleAnalysisTask::~ExampleAnalysisTask()
 {

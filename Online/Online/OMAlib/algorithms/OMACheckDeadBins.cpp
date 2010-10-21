@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.6 2010-08-16 14:54:37 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.7 2010-10-21 10:17:32 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -62,12 +62,12 @@ void OMACheckDeadBins::exec(TH1 &Histo,
   int nempty=0;
   for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {
     for (int ihy=1 ; ihy<= Histo.GetNbinsY() ; ihy++) {
-      if( Histo.GetBinContent(ihx,ihy) < OMAconstants::epsilon) {
+      if( iszero(Histo.GetBinContent(ihx,ihy)) ) {
         // empty bin, see if significant
         // (to avoid fake alarms, take reference - 3 sigma_reference as expected value)
         if (useRef) {
-          expValue = k2counts * (Ref->GetBinContent(ihx,ihy) -3.*Ref->GetBinError(ihx,ihy)) 
-            * Histo.Integral() / Ref->Integral();
+          expValue = k2counts * (Ref->GetBinContent(ihx,ihy) -3.*Ref->GetBinError(ihx,ihy));
+          if (normalize) expValue *= Histo.Integral() / Ref->Integral();
         }
         else {
           expValue = k2counts * Histo.Integral()/( Histo.GetNbinsX()*Histo.GetNbinsY() );

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.12 2010-07-06 17:01:11 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.13 2010-10-21 10:17:33 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -104,8 +104,8 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
     }
   }
   double normK= normCont * k;
-  if (multiply && normK != 0.) normK = 1./normK;
-  if (scaledHist && normK != 0.)
+  if (multiply && iszero(normK) == false) normK = 1./normK;
+  if (scaledHist && iszero(normK) == false)
     scaledHist->Scale(1./normK);
   
   return  scaledHist;

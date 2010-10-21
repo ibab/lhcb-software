@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.18 2010-06-11 13:00:11 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.19 2010-10-21 10:17:33 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -6,7 +6,7 @@
 #include <TH1.h>
 #include <TFile.h>
 
-DECLARE_ALGORITHM_FACTORY( DBDrivenAnalysisTask );
+DECLARE_ALGORITHM_FACTORY( DBDrivenAnalysisTask )
 
 DBDrivenAnalysisTask::~DBDrivenAnalysisTask()
 {

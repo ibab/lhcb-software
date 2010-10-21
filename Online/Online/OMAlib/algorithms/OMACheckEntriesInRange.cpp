@@ -1,4 +1,4 @@
-// $Id: OMACheckEntriesInRange.cpp,v 1.6 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMACheckEntriesInRange.cpp,v 1.7 2010-10-21 10:17:32 ggiacomo Exp $
 #include <TH1F.h>
 #include <TF1.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -24,10 +24,9 @@ void OMACheckEntriesInRange::exec(TH1 &Histo,
                              std::vector<float> & alarm_thresholds,
                              std::vector<float> & input_pars,
                              unsigned int anaID,
-                             TH1* Ref) {
+                             TH1*) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
-  Ref = NULL; // avoid compil. warning
   double xmin= input_pars.size() > 0 ? input_pars[0] : m_inputDefValues[0];
   double xmax= input_pars.size() > 1 ? input_pars[1] : m_inputDefValues[1];
   float fopt = input_pars.size() > 2 ? input_pars[2] : m_inputDefValues[2];

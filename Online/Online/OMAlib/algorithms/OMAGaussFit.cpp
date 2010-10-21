@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.8 2010-02-12 14:25:39 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.9 2010-10-21 10:17:33 ggiacomo Exp $
 
 #include <TH1.h>
 #include <TH2.h>
@@ -27,10 +27,9 @@ void OMAGaussFit::exec(TH1 &Histo,
                        std::vector<float> & alarm_thresholds,
                        std::vector<float> & input_pars,
                        unsigned int anaID,
-                       TH1* Ref) {
+                       TH1* ) {
   float confidence=m_inputDefValues[0];
   int axis=(int) (m_inputDefValues[1]+0.1);
-  Ref = NULL; // avoid compil. warning
 
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;

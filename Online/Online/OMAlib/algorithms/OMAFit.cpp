@@ -1,4 +1,4 @@
-// $Id: OMAFit.cpp,v 1.4 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMAFit.cpp,v 1.5 2010-10-21 10:17:33 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -27,10 +27,9 @@ void OMAFit::exec(TH1 &Histo,
                   std::vector<float> & alarm_thresholds,
                   std::vector<float> & input_pars,
                   unsigned int anaID,
-                  TH1* Ref) {
-  Ref=NULL;
+                  TH1* ) {
   if (input_pars.size() < 1) return;
-  if (0 == Histo.GetEntries()) return; //skip empty histograms
+  if (0 == (int) Histo.GetEntries()) return; //skip empty histograms
 
   // get requested fit function
   std::string fitfunName = 

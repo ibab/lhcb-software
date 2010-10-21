@@ -1,4 +1,4 @@
-// $Id: OMAFitFunction.cpp,v 1.8 2010-10-19 13:30:54 ggiacomo Exp $
+// $Id: OMAFitFunction.cpp,v 1.9 2010-10-21 10:17:33 ggiacomo Exp $
 #include <sstream>
 #include <cmath>
 #include <TH1.h>
@@ -131,8 +131,8 @@ void OMAFitDoubleGaus::init(std::vector<float>* initValues, TH1* histo) {
       (initValues->at(0)*initValues->at(2) + initValues->at(3)*initValues->at(5));
     if (integ > 0) {
       double k = histo->Integral("width")/integ;  
-      initValues->at(0) *= k;
-      initValues->at(3) *= k;
+      initValues->at(0) *= (float) k;
+      initValues->at(3) *= (float) k;
     }
     for (Int_t ip=0; ip < np() ; ip++)
       SetParameter(ip, (double) initValues->at(ip));
@@ -185,9 +185,9 @@ void OMAFitGausPlusBkg::init(std::vector<float>* initValues, TH1* histo) {
     }
     if (integ > 0) {
       double k = histo->Integral("width")/integ;  
-      initValues->at(0) *= k;
+      initValues->at(0) *= (float) k;
       for (deg=3 ; deg <= 3+m_degree; deg++) {
-        initValues->at(deg) *= k;
+        initValues->at(deg) *= (float) k;
       }
     }
     for (Int_t ip=0; ip < np() ; ip++)

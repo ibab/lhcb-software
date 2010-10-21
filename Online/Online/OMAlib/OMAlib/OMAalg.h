@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.15 2010-06-11 13:00:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.16 2010-10-21 10:17:32 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -51,6 +51,14 @@ class OMAalg
   virtual bool refMissing(TH1* ref,
                           std::vector<float> &) {
     return ( m_needRef && !ref); // default implementation
+  }
+  bool iszero(double x) {
+    int ix = (int) (x*1.e30);
+    return (ix == 0);
+  }
+  bool iszero(float x) {
+    int ix = (int) (x*1.e20);
+    return (ix == 0);
   }
   bool getBinLabels(TH1 &Histo);
 

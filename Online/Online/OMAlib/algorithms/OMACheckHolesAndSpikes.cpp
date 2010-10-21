@@ -35,7 +35,7 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars 
       || input_pars.size() <m_ninput )
     return;
-  if (Histo.GetEntries() == 0)
+  if ( (int) Histo.GetEntries() == 0)
     return; // do nothing for empty histograms
   if (input_pars[0] < 0.) input_pars[0]= -99.;
   int ipoly= (int)(input_pars[0] + .1 );
