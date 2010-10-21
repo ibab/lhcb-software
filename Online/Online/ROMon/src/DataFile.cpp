@@ -1,4 +1,4 @@
-// $Id: DataFile.cpp,v 1.4 2010-10-21 06:19:04 frankb Exp $
+// $Id: DataFile.cpp,v 1.5 2010-10-21 06:46:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.4 2010-10-21 06:19:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DataFile.cpp,v 1.5 2010-10-21 06:46:18 frankb Exp $
 
 // Framework include files
 #include "RTL/rtl.h"
@@ -116,13 +116,13 @@ int DataFile::scan(const DataProcessor& functor) {
 	if ( q ) {
 	  *q = 0;
 	  ++count;
-	  m_pointer += q+1-p;
 	  if ( !functor(p) ) break;
 	  p = q+1;
 	  continue;
 	}
 	break;
       }
+      m_pointer += bytes;
       delete [] buff;
       ::lib_rtl_output(LIB_RTL_VERBOSE,"DataFile::scan> Read %d records from file:%s",count,name().c_str());
     }

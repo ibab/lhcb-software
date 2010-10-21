@@ -1,4 +1,4 @@
-// $Id: BootAnalyser.cpp,v 1.11 2010-10-15 10:53:54 frankb Exp $
+// $Id: BootAnalyser.cpp,v 1.12 2010-10-21 06:46:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 20/09/2010
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.11 2010-10-15 10:53:54 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BootAnalyser.cpp,v 1.12 2010-10-21 06:46:18 frankb Exp $
 
 #ifndef ONLINE_ROMON_BOOTANALYZER_H
 #define ONLINE_ROMON_BOOTANALYZER_H
@@ -163,8 +163,7 @@ using namespace std;
 #define CLUSTERLOGS_FARMS "/clusterlogs/farm"
 
 #define MIN_LINE_LENGTH            15
-#define SCAN_TIMEDIFF              15
-#define PUBLISH_TIMEDIFF           15
+#define SCAN_TIMEDIFF              10
 
 static bool   s_use_ts = true;
 static string s_svcPrefix = "/";
