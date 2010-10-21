@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.18 2010-10-19 15:36:26 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.19 2010-10-21 06:04:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.18 2010-10-19 15:36:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.19 2010-10-21 06:04:22 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -273,7 +273,7 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
     txt[0] = 0;
     ::sprintf(txt," %-8s  ", builders.size()>0 ? (*n).name : "");
     for(map<string,TaskIO>::const_iterator bb=builders.begin(); bb != builders.end(); ++bb) {
-      const string& n = (*bb).first;
+      //const string& n = (*bb).first;
       const TaskIO& m = (*bb).second;
       ::sprintf(txt+strlen(txt)-1," %11d %3s ",m.out,sstat[m.st_out]);
     }

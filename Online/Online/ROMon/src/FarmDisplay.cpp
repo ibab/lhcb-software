@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.50 2010-10-19 15:36:26 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.51 2010-10-21 06:04:22 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.50 2010-10-19 15:36:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.51 2010-10-21 06:04:22 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -171,17 +171,18 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   m_height -= 2;
   ::scrc_create_display (&m_display, m_height, m_width,NORMAL, ON, m_title.c_str());
   show(2,2);
-  ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
-  ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,1,40,0);
-  ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
-  ::scrc_put_chars(m_display,": OK",NORMAL,1,82,0);
-  ::scrc_put_chars(m_display,"nn",RED|INVERSE,1,90,0);
-  ::scrc_put_chars(m_display,": Not OK",NORMAL,1,92,0);
-  ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,1,110,0);
-  ::scrc_put_chars(m_display,": OK/Excluded",NORMAL,1,112,0);
-  ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
-  ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
-
+  if ( m_mode == CTRL_MODE ) {
+    ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
+    ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,1,40,0);
+    ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
+    ::scrc_put_chars(m_display,": OK",NORMAL,1,82,0);
+    ::scrc_put_chars(m_display,"nn",RED|INVERSE,1,90,0);
+    ::scrc_put_chars(m_display,": Not OK",NORMAL,1,92,0);
+    ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,1,110,0);
+    ::scrc_put_chars(m_display,": OK/Excluded",NORMAL,1,112,0);
+    ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
+    ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
+  }
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_fflush(m_pasteboard);
   ::scrc_set_cursor(m_display, 2, 10);
