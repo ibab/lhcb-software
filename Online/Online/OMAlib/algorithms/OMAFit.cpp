@@ -1,4 +1,4 @@
-// $Id: OMAFit.cpp,v 1.5 2010-10-21 10:17:33 ggiacomo Exp $
+// $Id: OMAFit.cpp,v 1.6 2010-10-21 10:50:24 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -16,8 +16,8 @@ OMAFit::OMAFit(OMAlib* Env) :
   m_parnames.push_back("Min_chi2_prob"); m_parDefValues.push_back(0.);
 
   m_ninput = 2;
-  m_inputNames.push_back("Fit_function"); m_inputDefValues.push_back(1);
-  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95);
+  m_inputNames.push_back("Fit_function"); m_inputDefValues.push_back(1.f);
+  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95f);
   m_doc = "Fit histogram with a given function and check chi2 and/or output parameters";
   m_doc +=  " with a given normal confidence level (default is 0.95)";
 }
@@ -56,7 +56,7 @@ void OMAFit::exec(TH1 &Histo,
   if (!fit)
     fit = Histo.GetFunction(fitfun->name().c_str());
   if (fit) {
-    float confidence=0.95;
+    float confidence=0.95f;
     if (input_pars.size() > 1)
       confidence=input_pars[1];
     

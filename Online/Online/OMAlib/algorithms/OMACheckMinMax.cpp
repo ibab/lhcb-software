@@ -1,4 +1,4 @@
-// $Id: OMACheckMinMax.cpp,v 1.1 2010-06-11 13:00:10 ggiacomo Exp $
+// $Id: OMACheckMinMax.cpp,v 1.2 2010-10-21 10:50:24 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
@@ -7,7 +7,7 @@
 OMACheckMinMax::OMACheckMinMax(OMAlib* Env) : 
   OMACheckAlg("CheckMinMax", Env) {
   m_ninput = 1;
-  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(0.95);
+  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(0.95f);
   m_npars = 2;
   m_parnames.push_back("Min"); m_parDefValues.push_back(-999999.);
   m_parnames.push_back("Max"); m_parDefValues.push_back(+999999.);

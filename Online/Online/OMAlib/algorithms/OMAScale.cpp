@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.13 2010-10-21 10:17:33 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.14 2010-10-21 10:50:24 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -33,11 +33,11 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
   if (sources->size() <2) return out;
   double k=m_parDefValues[0];
   int normbin = intParam(m_parDefValues[1]);
-  bool multiply = (bool) intParam(m_parDefValues[2]);
+  bool multiply = (intParam(m_parDefValues[2]) == 1);
   if (params) {
     if (params->size()>0) k=params->at(0);
     if (params->size()>1) normbin=intParam(params->at(1));
-    if (params->size()>2)  multiply = (bool) intParam(params->at(2));
+    if (params->size()>2)  multiply = (intParam(params->at(2)) == 1);
   }
   TH1* H = sources->at(0);
   TH1* scalefactorH = sources->at(1);

@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.9 2010-10-21 10:17:33 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.10 2010-10-21 10:50:24 ggiacomo Exp $
 
 #include <TH1.h>
 #include <TH2.h>
@@ -10,13 +10,13 @@ using namespace TMath;
 OMAGaussFit::OMAGaussFit(OMAlib* Env) : 
   OMACheckAlg("GaussFit", Env) {
   m_npars = 4;
-  m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.);
-  m_parnames.push_back("MaxMean"); m_parDefValues.push_back(+999999.);
-  m_parnames.push_back("MinSigma"); m_parDefValues.push_back(-999999.);
-  m_parnames.push_back("MaxSigma"); m_parDefValues.push_back(+999999.);
+  m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.f);
+  m_parnames.push_back("MaxMean"); m_parDefValues.push_back(+999999.f);
+  m_parnames.push_back("MinSigma"); m_parDefValues.push_back(-999999.f);
+  m_parnames.push_back("MaxSigma"); m_parDefValues.push_back(+999999.f);
   m_ninput = 2;
-  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95);
-  m_inputNames.push_back("axis");       m_inputDefValues.push_back(1.);
+  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95f);
+  m_inputNames.push_back("axis");       m_inputDefValues.push_back(1.f);
   m_doc = "Fit histogram with a gaussian and check that average and sigma are in the specified ranges";
   m_doc +=  " with a given normal confidence level (default is 0.95).";
   m_doc +=  " For 2d histograms, fit is performed on X(axis=1) or Y(axis=2) projection.";

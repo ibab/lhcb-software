@@ -7,9 +7,9 @@
 OMACompareToReference::OMACompareToReference(OMAlib* Env) : 
   OMACheckAlg("CompareToReference", Env) {
   m_ninput = 1;
-  m_inputNames.push_back("Test"); m_inputDefValues.push_back(1.);
+  m_inputNames.push_back("Test"); m_inputDefValues.push_back(1.f);
   m_npars = 1;
-  m_parnames.push_back("Min_p-value"); m_parDefValues.push_back(.01);
+  m_parnames.push_back("Min_p-value"); m_parDefValues.push_back(.01f);
   m_doc = "Compares histogram to reference performing a Kolmogorov (Test=1, default) or chi2 (Test=2) test.";
   m_needRef = true;
 }

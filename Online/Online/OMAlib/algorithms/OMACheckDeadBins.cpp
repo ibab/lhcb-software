@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.7 2010-10-21 10:17:32 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.8 2010-10-21 10:50:24 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -15,7 +15,7 @@ OMACheckDeadBins::OMACheckDeadBins(OMAlib* Env) :
   m_inputNames.push_back("Normalize");  m_inputDefValues.push_back(1.);
   m_npars = 1;
   m_parnames.push_back("Confidence");
-  m_parDefValues.push_back(.95);
+  m_parDefValues.push_back(.95f);
   m_needRef = true;
   m_doc = "Check for empty bins indicating a dead something. ";
   m_doc += "The expected content of each bin is taken from the normalized reference histogram (UseRef=1, default) ";
@@ -30,14 +30,14 @@ void OMACheckDeadBins::exec(TH1 &Histo,
                             std::vector<float> & input_pars,
                             unsigned int anaID,
                             TH1* Ref) {
-  bool useRef=(bool) intParam(m_parDefValues[0]);
+  bool useRef= (intParam(m_parDefValues[0]) == 1);
   double expValue=0.,triggeringExpValue=0.;
   int normalize = intParam(m_parDefValues[1]);
   double k2counts=1.;
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
     return;
   if( input_pars.size() > 0) 
-    useRef = (bool) intParam(input_pars[0]);
+    useRef = (intParam(input_pars[0]) == 1);
   if( input_pars.size() > 1) 
     normalize = intParam(input_pars[1]);
 
@@ -108,6 +108,6 @@ void OMACheckDeadBins::exec(TH1 &Histo,
 bool OMACheckDeadBins::refMissing(TH1* ref,
                                   std::vector<float> & input_pars) {
   if(input_pars.size() <m_ninput) return false; 
-  bool useRef = (bool) ((int) (input_pars[0]+.1));
+  bool useRef = (intParam(input_pars[0]) == 1);
   return (useRef &&  !ref);
 }

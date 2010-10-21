@@ -1,4 +1,4 @@
-// $Id: OMACheckEntriesInRange.cpp,v 1.7 2010-10-21 10:17:32 ggiacomo Exp $
+// $Id: OMACheckEntriesInRange.cpp,v 1.8 2010-10-21 10:50:24 ggiacomo Exp $
 #include <TH1F.h>
 #include <TF1.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -8,9 +8,9 @@
 OMACheckEntriesInRange::OMACheckEntriesInRange(OMAlib* Env) : 
   OMACheckAlg("CheckEntriesInRange", Env) {
   m_ninput = 3;
-  m_inputNames.push_back("Xmin");  m_inputDefValues.push_back(-9.E20);
-  m_inputNames.push_back("Xmax");  m_inputDefValues.push_back(+9.E20);
-  m_inputNames.push_back("CheckFraction"); m_inputDefValues.push_back(1.);
+  m_inputNames.push_back("Xmin");  m_inputDefValues.push_back(-9.E20f);
+  m_inputNames.push_back("Xmax");  m_inputDefValues.push_back(+9.E20f);
+  m_inputNames.push_back("CheckFraction"); m_inputDefValues.push_back(1.f);
   m_npars = 1;
   m_parnames.push_back("MaxEntries");
   m_parDefValues.push_back(1.);
@@ -30,7 +30,7 @@ void OMACheckEntriesInRange::exec(TH1 &Histo,
   double xmin= input_pars.size() > 0 ? input_pars[0] : m_inputDefValues[0];
   double xmax= input_pars.size() > 1 ? input_pars[1] : m_inputDefValues[1];
   float fopt = input_pars.size() > 2 ? input_pars[2] : m_inputDefValues[2];
-  bool FracOption = (bool) ((int) (fopt+0.1));
+  bool FracOption = (intParam(fopt) == 1); 
 
   int Nent=0;
   for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {

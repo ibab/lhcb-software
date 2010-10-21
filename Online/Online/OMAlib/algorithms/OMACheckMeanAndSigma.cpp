@@ -1,4 +1,4 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.8 2010-06-11 13:00:10 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.9 2010-10-21 10:50:24 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
@@ -8,13 +8,13 @@ using namespace TMath;
 OMACheckMeanAndSigma::OMACheckMeanAndSigma(OMAlib* Env) : 
   OMACheckAlg("CheckMeanAndSigma", Env) {
   m_npars = 4;
-  m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.);
-  m_parnames.push_back("MaxMean"); m_parDefValues.push_back(+999999.);
-  m_parnames.push_back("MinSigma"); m_parDefValues.push_back(-999999.);
-  m_parnames.push_back("MaxSigma"); m_parDefValues.push_back(+999999.);
+  m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.f);
+  m_parnames.push_back("MaxMean"); m_parDefValues.push_back(+999999.f);
+  m_parnames.push_back("MinSigma"); m_parDefValues.push_back(-999999.f);
+  m_parnames.push_back("MaxSigma"); m_parDefValues.push_back(+999999.f);
   m_ninput = 2;
-  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(0.95);
-  m_inputNames.push_back("axis");       m_inputDefValues.push_back(1.);
+  m_inputNames.push_back("confidence"); m_inputDefValues.push_back(0.95f);
+  m_inputNames.push_back("axis");       m_inputDefValues.push_back(1.f);
   m_doc = "Check that the Histogram average and standard deviation of X(axis=1)";
   m_doc +=  " or Y(axis=2) variable are in the specified ranges";
   m_doc +=  " with a given normal confidence level (default is 0.95)";
