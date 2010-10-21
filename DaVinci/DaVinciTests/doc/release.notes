@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-10-21 - Juan Palacios
+ - davinci.fixedfile tests updated for changes in tracking chi2 cuts.
+
+! 2010-10-20 - Juan Palacios
+ - Lumi no longer run by default changes timing table.
+
 !============================== DaVinciTests v1r6 2010-10-11 =================
 
 ! 2010-10-11 - Juan Palacios

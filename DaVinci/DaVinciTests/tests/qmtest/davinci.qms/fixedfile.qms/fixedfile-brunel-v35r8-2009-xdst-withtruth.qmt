@@ -11,10 +11,10 @@
 findReferenceBlock("""
 BachelorMuForTestsSUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
- | "#input"                                        |         9 |          9 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- |*"#passed"                                       |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
- |*"efficiency"                                    |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
+ |*"#accept"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
+ | "#input"                                        |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#passed"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
+ |*"efficiency"                                    |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
