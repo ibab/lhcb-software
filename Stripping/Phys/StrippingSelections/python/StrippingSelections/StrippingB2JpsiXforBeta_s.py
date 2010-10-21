@@ -280,7 +280,7 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 Lambdab2JpsiLambda = createCombinationSel( OutputList = "Lambdab2JpsiLambda",
                                   DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc",
                                   DaughterLists  = [ LambdaList, JpsiList ],
-                                  PreVertexCuts = "in_range(5120,AM,6120)",
+                                  PreVertexCuts = "in_range(5020,AM,6220)",
                                   PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < 20)"
                                   )
 

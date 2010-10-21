@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-21 -Yasmine Amhis 
+  -update Lambda_b mass window before vertexing in  beta_s lines
+
 ! 2010-10-21 - Mat Charles, on behalf of Sebastian Bachmann
  - Added python/StrippingSelections/StrippingX2D0D0.py
 
