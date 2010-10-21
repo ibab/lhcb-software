@@ -11,7 +11,7 @@ function detector_header(part)
 function lhcb_logo(url)
 { return '<IMG SRC="'+url+'" HEIGHT="50"></IMG>';   };
 function lhcb_online_picture() 
-{ return lhcb_logo("http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.PNG");   };
+{ return lhcb_logo("/Online/Images/lhcb-online-logo.png");   };
 
 function setWindowTitle(title) {
   try {

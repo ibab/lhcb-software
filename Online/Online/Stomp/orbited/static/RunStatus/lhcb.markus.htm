@@ -1,0 +1,33 @@
+<html id="html_top">
+<head>
+  <meta HTTP-EQUIV="Pragma"         CONTENT="no-cache"></meta>
+  <meta HTTP-EQUIV="CACHE-CONTROL"  CONTENT="no-cache"></meta>
+  <meta HTTP-EQUIV="Expires"        CONTENT="0"></meta>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+  <meta name="description" content="Status displays for the LHCb experiment"></meta>
+
+  <script language="JavaScript">
+  if ( document.domain=='comet' )  {
+    var loc = 'http://comet.lbdaq.cern.ch'+document.location.href.substring(12);
+    document.location = loc;
+  }
+  else if ( document.domain=='lbcomet' )  {
+    var loc = 'http://lbcomet.cern.ch'+document.location.href.substring(14);
+    document.location = loc;
+  }
+  var _stomp_in_use = true;
+  var _fileBase = '/Online';
+  var _lhcbScriptBase = _fileBase;
+  var _javascriptType = 'text/javascript';
+  </script>
+  <script language="JavaScript" src="/static/Orbited.js"></script>
+  <script language="JavaScript" src="/Online/lhcb.display.select.cpp">
+  </script>
+
+</head>
+<body onunload="the_displayObject.unload()">
+ <script language="javascript"> 
+   the_displayObject.body();
+ </script>
+</body>
+</html>

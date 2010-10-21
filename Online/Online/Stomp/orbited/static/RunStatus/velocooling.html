@@ -1,34 +1,32 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<HTML> 
-<HEAD> 
-  <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"> 
-  <META HTTP-EQUIV="Expires" CONTENT="0"> 
-  <META http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></META> 
-  <META name="description" content="Status displays for the LHCb experiment"></META> 
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Pragma"  CONTENT="no-cache">
+  <META HTTP-EQUIV="Expires" CONTENT="0">
+  <META http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></META>
+  <META name="description" content="Status displays for the LHCb experiment"></META>
 
-  <SCRIPT language="JavaScript"> 
-  if ( document.domain=='comet' )  { 
-    var loc = 'http://comet.lbdaq.cern.ch'+document.location.href.substring(12); 
-    document.location = loc; 
-  } 
-  else if ( document.domain=='lbcomet' )  { 
-    var loc = 'http://lbcomet.cern.ch'+document.location.href.substring(14); 
-    document.location = loc; 
-  } 
-  var _stomp_in_use = true; 
-  var _fileBase = 'http://www.cern.ch/sdecapua/VELO'; 
-  var _lhcbScriptBase = 'http://cern.ch/frankm/Online'; 
+  <SCRIPT language="JavaScript">
+  if ( document.domain=='comet' )  {
+    var loc = 'http://comet.lbdaq.cern.ch'+document.location.href.substring(12);
+    document.location = loc;
+  }
+  else if ( document.domain=='lbcomet' )  {
+    var loc = 'http://lbcomet.cern.ch'+document.location.href.substring(14);
+    document.location = loc;
+  }
+  var _stomp_in_use = true;
+  var _fileBase = 'http://www.cern.ch/sdecapua/VELO';
+  var _lhcbScriptBase = '/Online';
   var _javascriptType = 'text/javascript';
-
-  </SCRIPT> 
-  <SCRIPT language="JavaScript" src="/static/Orbited.js"></SCRIPT> 
-  <SCRIPT language="JavaScript" src="http://cern.ch/frankm/Online/lhcb.display.select.cpp"></SCRIPT>
-
-</HEAD> 
-<BODY onunload="the_displayObject.unload()"> 
- <SCRIPT language="javascript"> 
-   the_displayObject.body(); 
- </SCRIPT> 
-</BODY> 
-</HTML> 
+  </SCRIPT>
+  <SCRIPT language="JavaScript" src="/static/Orbited.js"></SCRIPT>
+  <SCRIPT language="JavaScript" src="/Online/lhcb.display.select.cpp"></SCRIPT>
+</HEAD>
+<BODY onunload="the_displayObject.unload()">
+ <SCRIPT language="javascript">
+   the_displayObject.body();
+ </SCRIPT>
+</BODY>
+</HTML>

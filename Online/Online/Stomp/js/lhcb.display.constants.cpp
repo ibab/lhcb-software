@@ -6,7 +6,11 @@ if ( !_lhcb().constants ) {
     if ( this._loc.indexOf('/frankm/')>0 ) this._url = 'http://www.cern.ch/frankm/Online';
     if ( this._loc.indexOf('/lhcbproject/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
     if ( this._loc.indexOf('/static/RunStatus/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
-    this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };
+    if ( this._loc.indexOf('/comet.lbdaq.')>0 ) this._url = '/Online';
+    if ( this._loc.indexOf('/lbcomet')>0 ) this._url = '/Online';
+    if ( this._loc.indexOf('/lbtncomet')>0 ) this._url = '/Online';
+    //this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };
+    this.lhcb_comet_url   = function()     {    return '/static/RunStatus';                  };
     this.lhcb_base_url    = function()     {    return this._url;                                                  };
     if ( this._loc.indexOf('/frankm/')>0 ) {
       this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name;     };
@@ -48,7 +52,7 @@ if ( !_lhcb().constants ) {
 
       twiki:            this.mkStaticImage('twiki.gif'),
       lhcb:             this.mkAbsImage('http://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
-      lhcb_online:      this.mkAbsImage('http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.png'),
+      lhcb_online:      this.mkAbsImage('Images/lhcb-online-logo.png'),
       dirac:            this.mkStaticImage('DIRAC.png'),
       magnet:           this.mkImage('LHCb/Magnet_Icon','png'),
       magnet_big:       this.mkStaticImage('LHCb/Magnet.jpg'),

@@ -229,7 +229,7 @@ var MagnetStatus = function(msg)   {
     var trh   = document.createElement('tr');
     var trp   = document.createElement('tr');
     var plot  = document.createElement('td');
-    var url   = 'http://lbmagnet.cern.ch/data/plots/highres/';
+    var url   = '/Online/Images/magnet/';
     this.img  = document.createElement('img');
 
     tab.style.width = tb.style.width = '100%';

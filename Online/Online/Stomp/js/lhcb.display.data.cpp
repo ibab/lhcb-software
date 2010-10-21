@@ -270,15 +270,54 @@ var DataProvider = function(logger)  {
   this.isConnected = false;
   this.needConnection = false;
   this.topic = '/topic/home';
+  this.sessionKey = null;
   _dataProvider = this;
 
   // set up stomp client.
   var stomp = new STOMPClient();
   this.logger.info("Created STOMP client....");
+  stomp.parent = this;
   this.service = stomp;
+
+  // Setup subscription options for ActiveMQ
+  this.connectOpts = {};
+  this.subscribeOpts = {};
+  this.subscribeOpts['exchange'] = '';
+  this.subscribeOpts['activemq.maximumPendingMessageLimit']=5;
+  this.subscribeOpts['activemq.dispatchAsync']=true;
+  this.subscribeOpts['activemq.prefetchSize']=2;
+
+  var clid = '';
+  try {
+    var hostname, address, b, l, s = ''+document.location, d = new Date();
+    s = s.replace(/type=/g,'');
+    if ( (b=s.lastIndexOf('/')+1) < 1 ) b = 0;
+    if ( (l=s.indexOf('&'))       < 0 ) l = s.length;
+    clid = s.substring(b,l)+'--'+d.getFullYear()+'.'+d.getMonth()+'.'+d.getDate()+'--'+
+                                 d.getHours()+':'+ d.getMinutes()+':'+d.getSeconds()+'.'+
+                                 d.getMilliseconds()+'--'+Math.floor(Math.random()*100);
+    clid = clid.replace(/\?/g,'-');
+
+    var sock = new java.net.Socket();
+    sock.bind(new java.net.InetSocketAddress('0.0.0.0',0));
+    sock.connect(new java.net.InetSocketAddress(document.domain,(!document.location.port)?80:document.location.port));
+    hostname = sock.getLocalAddress().getHostName();
+    address  = sock.getLocalAddress().getHostAddress(); 
+    sock.close();
+    clid = address+'--'+clid;
+  }
+  catch (e) {
+  }
+  this.connectOpts['client-id'] = 'ID:'+clid;
+
 
   stomp.onopen = function() {
     _dataProvider.logger.info("Transport opened");
+    try {
+      this.parent.sessionKey = this.transport.session.sessionKey;
+    }
+    catch (e) {
+    }
   };
 
   stomp.onclose = function(code) {
@@ -300,14 +339,12 @@ var DataProvider = function(logger)  {
 
     if ( _dataProvider.needConnection ) {
       this.reconnectHandler = function() {
-	//alert('Starting reconnect timer');
 	_dataProvider.logger.info('Starting reconnect timer');
 	if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
 	  _dataProvider.reconnect();
 	  setTimeout(reconnectHandler,5000);
 	}
       };
-      //this.reconnectHandler._dataProvider = _dataProvider;
       _dataProvider.logger.info('Starting reconnection timer');
       setTimeout(this.reconnectHandler,5000);
     }
@@ -362,7 +399,7 @@ var DataProvider = function(logger)  {
    */
   this.start = function() {
     this.logger.info("Connecting STOMP client....");
-    this.service.connect('localhost', 61613, 'guest', 'guest');
+    this.service.connect('localhost', 61613, 'guest', 'guest', this.connectOpts);
     this.needConnection = true;
     this.logger.info("Connecting STOMP client....Done");
   };
@@ -395,6 +432,7 @@ var DataProvider = function(logger)  {
     return this.subscribe(item.name,item);
   };
 
+
   /** Pre-Subscribe to data items
    *  @param item      Name of stomp topic to subscribe to
    *  @param callback  Object implementing "set" method when new data is received.
@@ -417,7 +455,7 @@ var DataProvider = function(logger)  {
       var msg = 'SUBSCRIBE:'+svc;
       if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
       this.logger.info('Subscribe STOMP service:'+svc);
-      this.service.subscribe(svc,{exchange:''});
+      this.service.subscribe(svc,this.subscribeOpts);
       this.service.send(msg,this.topic,{exchange:''});
     }
     return this;
@@ -480,11 +518,9 @@ var DataProvider = function(logger)  {
     this.logger.info("Connecting all pending data leaves to services ..");
     for (var i=0; i < this.calls.length; ++i) {
       var svc = this.calls[i];
-      var msg = 'SUBSCRIBE:'+svc;
       if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
       this.logger.info('Subscribe STOMP service:'+svc);
-      this.service.subscribe(svc,{exchange:''});
-      //this.service.subscribe(this.calls[i],{exchange:''});
+      this.service.subscribe(svc,this.subscribeOpts);
     }
     this.update();
   };
