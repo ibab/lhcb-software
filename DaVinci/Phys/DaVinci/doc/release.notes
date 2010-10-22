@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-22 - Jaap Panman
+ - python/DaVinci/Configuration.py
+  . remove MergeFSR option from DaVinci, should be switched on directly in 
+  LumiAlgsConf
+
 ! 2010-10-19 - Jaap Panman
  - python/DaVinci/Configuration.py
   . redo logic between Lumi, MergeFSR and TupleFile options: all are False by 
