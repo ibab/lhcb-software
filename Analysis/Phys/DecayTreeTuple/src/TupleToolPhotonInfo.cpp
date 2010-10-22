@@ -57,6 +57,7 @@ StatusCode TupleToolPhotonInfo::fill(const Particle* , const Particle* P
       filltuple &= tuple->column( prefix+"_Prs", prs );
       filltuple &= tuple->column( prefix+"_Matching", match );
       filltuple &= tuple->column( prefix+"_PID", pid );
+      filltuple &= tuple->column( prefix+"_CL" , P->confLevel() );
       filltuple &= tuple->column( prefix+"_ShowerShape", shape );
       
       

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-10-22 - Olivier Deschamps
+ - TupleToolPhotonInfo : add photon->ConfLevel() info
+
 !========================== DecayTreeTuple v3r8 2010-10-10 ==================
 
 ! 2010-09-24 - Patrick Koppenburg
