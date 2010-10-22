@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.10 2009-06-02 16:45:36 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1

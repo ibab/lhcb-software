@@ -1,4 +1,4 @@
-// $Id: NodesPIDs.h,v 1.4 2010-01-04 16:43:48 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef PARTPROP_NODESPID_H 
 #define PARTPROP_NODESPID_H 1

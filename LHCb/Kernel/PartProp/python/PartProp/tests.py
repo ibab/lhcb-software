@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.4 2008-12-11 15:23:05 gcorti Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file PartProp/tests.py
 #  The set of basic tests for objects from Kernel/PartProp package 
@@ -12,7 +12,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$" 
 # =============================================================================
 
 from PartProp.decorators import *

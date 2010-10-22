@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.5 2009-07-18 13:01:49 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file PartProp/decorators.py
 #  The set of basic decorator for objects from Kernel/PartProp package 
@@ -12,7 +12,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$" 
 # =============================================================================
 
 import PyCintex

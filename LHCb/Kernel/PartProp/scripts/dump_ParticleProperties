@@ -1,19 +1,24 @@
-#!/usr/bin/env python
+#!/bin/zsh 
 # =============================================================================
-## @file PartProp/__init__.py
-#  Helper file/module for Kernel/PartProp package
+# $Id:$ 
+# =============================================================================
+# $URL$ 
+# =============================================================================
+## @file dump_ParticleProperties
+#
+#  Trivial script to dump the particle properties 
+#
+#  @date   2010-10-22
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  date 2008-12-01
-# =============================================================================
-"""
-Helper file/module for Kernel/PartProp package
-"""
-# =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
+#
+#  Last modification $Date: 2010-09-10 14:04:49 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 
+python $PARTPROPROOT/python/PartProp/DumpParticleProperties.py
 
 # =============================================================================
 # The END 
 # =============================================================================
+
+

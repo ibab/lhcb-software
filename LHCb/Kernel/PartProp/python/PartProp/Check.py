@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Check.py,v 1.2 2009-07-18 13:01:49 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file PartProp/Check.py
 #  the trivial example to inspect the particle data table from the data base
@@ -12,7 +12,7 @@ The trivial example to inspect the particle data table from the data base
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV vanya@nikhef.nl"
-__verison__ = "CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
+__verison__ = "CVS tag $Name: not supported by cvs2svn $ , version $Revision$ "
 # =============================================================================
 
 from Gaudi.Configuration import *

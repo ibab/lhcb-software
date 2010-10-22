@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.cpp,v 1.4 2010-01-06 09:24:23 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -204,28 +204,28 @@ std::ostream& LHCb::ParticleProperties::printAsTable_
   }
   //
   fmt += "| %|-18.18s|"   ;  // the name
-  fmt += "| %|10d| "      ;  // PDGID
+  fmt += "| %|12d| "      ;  // PDGID
   fmt += "| %|=4s| "      ;  // charge
   fmt += "| %|7.4g|"      ;  // mass
   fmt +=   " %|-3s| "     ;  // unit
   fmt += "| %|10.4g|"     ;  // lifetime/gamma/ctau
   fmt +=   " %|-3s| "     ;  // unit
   fmt += "| %|=10.4g| "   ;  // maxwidth
-  fmt += "| %|=18.18s|"   ;  // evtgen name
-  fmt += " | %|=9d| |"    ;  // pythia ID
-  fmt += " %|=18.18d| |"  ;  // antiparticle
+  fmt += "| %|=20.20s|"   ;  // evtgen name
+  fmt += " | %|=10d| |"    ;  // pythia ID
+  fmt += " %|=20.20d| |"  ;  // antiparticle
   //
   hdr += "| %|=18.18s|"   ;  // the name
-  hdr += "| %|=10.10s| "  ;  // PDGID
+  hdr += "| %|=12.12s| "  ;  // PDGID
   hdr += "| %|=4.4s| "    ;  // charge
   hdr += "| %|=12.12s|"   ;  // mass
   // hdr +=   "%|=5.5s|"     ;  // unit
   hdr += "| %|=15.15s|"   ;  // lifetime/gamma/ctau
   //hdr +=   "%|=5.5s|"     ;  // unit
   hdr += "| %|=10.10g| "  ;  // maxwidth
-  hdr += "| %|=18.18s|"   ;  // evtgen name
-  hdr += " | %|=9.9s| |"  ;  // pythia ID
-  hdr += " %|=18.18d| |"   ;  // antiparticle
+  hdr += "| %|=20.20s|"   ;  // evtgen name
+  hdr += " | %|=10.10s| |"  ;  // pythia ID
+  hdr += " %|=20.20d| |"   ;  // antiparticle
   
   boost::format header ( hdr ) ;
   header.exceptions ( boost::io::all_error_bits ^
@@ -294,9 +294,11 @@ std::ostream& LHCb::ParticleProperties::printAsTable_
     if      ( 3600 * Gaudi::Units::second   < ltime       )
     { line % "stable"  % ""   ; }
     else if ( 1   * Gaudi::Units::second    < ltime       )
-    { line % ( ltime / Gaudi::Units::second            ) % "s"   ; }
+    { line % ( ltime / Gaudi::Units::second     ) % "s"   ; }
     else if ( 1   * Gaudi::Units::meter        < ctau  )
-    { line % ( ltime / Gaudi::Units::ns         ) % "ns"  ; }
+    { line % ( ctau / Gaudi::Units::meter       ) % "m"   ; }
+    else if ( 1   * Gaudi::Units::cm          < ctau  )
+    { line % ( ctau / Gaudi::Units::cm          ) % "cm"  ; }
     else if ( 0.5 * Gaudi::Units::mm          < ctau  )
     { line % ( ctau  / Gaudi::Units::mm         ) % "mm"  ; }
     else if ( 0.1 * Gaudi::Units::micrometer  < ctau  )
@@ -307,7 +309,7 @@ std::ostream& LHCb::ParticleProperties::printAsTable_
     { line % ( width / Gaudi::Units::MeV        ) % "MeV" ; }
     else if ( 1   * Gaudi::Units::keV         < width )
     { line % ( width / Gaudi::Units::keV        ) % "keV" ; }
-    else if ( 1   * Gaudi::Units::eV         < width )
+    else if ( 1   * Gaudi::Units::eV          < width )
     { line % ( width / Gaudi::Units::eV         ) % "eV"  ; }
     else
     { line % ( ltime / Gaudi::Units::ns         ) % "ns"  ; }

@@ -1,4 +1,4 @@
-// $Id: CC.h,v 1.1 2008-12-13 14:48:22 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef PARTPROP_KERNEL_CC_H 
 #define PARTPROP_KERNEL_CC_H 1

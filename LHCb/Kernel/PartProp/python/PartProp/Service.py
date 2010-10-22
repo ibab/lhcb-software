@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Service.py,v 1.5 2009-07-18 13:01:49 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file PartProp/Service.py
 #  Useful decorator for LHcb::(I)ParticlePropertySvc
@@ -14,7 +14,7 @@ Useful decorator for LHCb::(I)ParticlePropertySvc
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 __all__ = ( 'iParticlePropertySvc', )
 # =============================================================================
