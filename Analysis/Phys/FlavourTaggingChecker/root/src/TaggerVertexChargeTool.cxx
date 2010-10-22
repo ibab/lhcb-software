@@ -61,7 +61,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
 
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
-  debug()<<"--- SVTOOL buildVertex returns "
+  debug()<<"--- SVTOOL buildVertex returns vertex"
          <<" with "<<Pfit.size()<<"tracks"<<endreq;
   debug()<<" -- likelihood seed "<<maxprobf<<endreq;
 

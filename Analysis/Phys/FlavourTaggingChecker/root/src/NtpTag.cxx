@@ -40,6 +40,7 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
 
   evt.setL0TisTos(L0TisTos); 
   evt.setHltTisTos(HltTisTos);
+  evt.setBmass(Bmass)  ;
   evt.setBtau(tau)  ;
   evt.setBtauErr(tauErr);
   evt.setTauChi2(ctChi2);

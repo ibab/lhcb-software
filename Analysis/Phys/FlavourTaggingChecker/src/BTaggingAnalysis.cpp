@@ -269,7 +269,7 @@ StatusCode BTaggingAnalysis::execute() {
   ///------------------------------------------------------- Fill Tagger info
   std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), 
     piperr(0), pipPU(0);
-  std::vector<float> ptrtyp(0), plcs(0), ptsal(0), pdistPhi(0), pveloch(0), 
+  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), 
     pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
@@ -293,6 +293,8 @@ StatusCode BTaggingAnalysis::execute() {
     double dQ  = ((AXBS->momentum() + axp->momentum()).M()
                   - AXBS->momentum().M()) /GeV;
     double lcs = track->chi2PerDoF();
+    double cloneDist = track->info(LHCb::Track::CloneDist, -1.) ;
+      
     long trtyp = track->type();
     if (track->checkHistory(Track::TrackMatching) == true) trtyp=7;
 
@@ -339,6 +341,7 @@ StatusCode BTaggingAnalysis::execute() {
     piperr.push_back(IPerr);
     pipPU .push_back(IPPU);
     plcs     .push_back(lcs);
+    pcloneDist.push_back(cloneDist);
     pdistPhi .push_back(distphi);
     pIPSV    .push_back(ipSV);
     pIPSVerr .push_back(iperrSV);
@@ -476,6 +479,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("trtyp",   ptrtyp, "N", 200);
   tuple -> farray ("lcs",     plcs, "N", 200);
+  tuple -> farray ("cloneDist", pcloneDist, "N", 200);
   tuple -> farray ("tsal",    ptsal, "N", 200);
   tuple -> farray ("distPhi", pdistPhi, "N", 200);
   tuple -> farray ("veloch",  pveloch, "N", 200);

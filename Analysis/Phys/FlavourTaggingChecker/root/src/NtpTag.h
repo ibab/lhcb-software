@@ -71,6 +71,7 @@ public :
    Float_t         RVx;
    Float_t         RVy;
    Float_t         RVz;
+   Float_t         Bmass;
    Float_t         tau;
    Float_t         tauErr;
    Float_t         ctChi2;

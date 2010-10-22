@@ -108,14 +108,25 @@ int main () {
       //**********************//
       //******Bd2DstarMu******//
       //**********************//
-      //**********************//
+      //*****to be check******//
       if (UseModBtime) {
         Particle* Dstar = event.Dstar();
         Particle* Mu    = event.Mu();
         TLorentzVector DstarMu = Dstar->momentum() + Mu->momentum();
+        //*****crash here******//
         double ChiP = DstarMu.P();
         double ChiM = DstarMu.M();
-        double newChiP = ChiP/(0.283+ChiM*0.1283);
+        double newChiP = 0;
+        if (UseModBtime==1) newChiP = ChiP/(0.283+ChiM*0.1283);
+        //Stefania
+        if (UseModBtime==2){
+          double kFactor = (0.9947-0.197*event.Bmass()+0.0375*pow(event.Bmass(),2));
+          double BPcor = ChiP/kFactor;
+          double BinvPcor = 1./BPcor;
+          double kBias = 0.067416 - 0.000564778*BPcor/1000 + 9.55013e-07*pow(BPcor/1000.,2);
+          BinvPcor =  (1 - kBias)*BinvPcor;
+          newChiP = 1./BinvPcor;
+        }
         TVector3 BSvtx  = event.BSVertex();
         TVector3 Recvtx = event.RecVertex();
         double Bdir = (BSvtx-Recvtx).Mag();

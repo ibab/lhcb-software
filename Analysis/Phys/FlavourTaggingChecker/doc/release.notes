@@ -6,6 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-10-22 - Marc Grabalosa
+  . added cloneDist in BTaggingAnalysis
+  . added UseModBtime in FTC/root with 2 kind of kfactor 
+  
 ! 2010-10-20 - Marc Grabalosa
   . changed naming convention for cuts files in /root
   . default is stripping9

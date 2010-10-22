@@ -31,7 +31,7 @@ public:
     m_hasOscillated=0, m_Multiplicity=0;
     m_eventType=0; m_L0=0; m_Hlt1=0; m_Hlt2=0; m_TrueTag=0;
     m_L0TisTos=0; m_HltTisTos=0; m_backgroundCat=-1;
-    m_StdOmega=0.5; m_StdTag=0; m_StdTagCat=0; m_Btau=0; m_BtauErr=-1; 
+    m_StdOmega=0.5; m_StdTag=0; m_StdTagCat=0; m_Btau=0; m_Bmass=0; m_BtauErr=-1; 
     m_SecVtxChi2=0; m_SecVtxCharge=0; m_pileup=0;
     m_RecVertex=m_MCVertex=m_BSVertex=TVector3(0,0,0);
     m_TaggersFromDV=0; m_TaggersDecisionFromDV=0;
@@ -84,6 +84,7 @@ public:
 
   int    pileup(){ return m_pileup; }///< number of extra primary vertices
 
+  double Bmass()     { return m_Bmass; } ///< Bmeasured mass
   double Btau()      { return m_Btau; } ///< lifetime value from fitter
   double BtauErr()   { return m_BtauErr; } ///< lifetime error from fitter
   double tauChi2()   { return m_TauChi2 ; } ///< chi2 of lifetime
@@ -171,6 +172,7 @@ public:
   void setHlt1(int a )  { m_Hlt1=a; }
   void setHlt2(int a )  { m_Hlt2=a; }
 
+  void setBmass(double a)     {  m_Bmass = a; }
   void setBtau(double a)      {  m_Btau = a; }
   void setBtauErr(double a)   {  m_BtauErr = a; };
 
@@ -222,7 +224,7 @@ private:
   int       m_eventType, m_L0, m_Hlt1, m_Hlt2, m_TrueTag, m_pileup;
   int       m_L0TisTos, m_HltTisTos, m_backgroundCat, m_Multiplicity;
   int       m_TaggersFromDV, m_TaggersDecisionFromDV;
-  double    m_StdOmega, m_StdTag, m_StdTagCat, m_Btau, m_BtauErr; 
+  double    m_StdOmega, m_StdTag, m_StdTagCat, m_Btau, m_Bmass, m_BtauErr; 
   double    m_SecVtxChi2, m_SecVtxCharge, m_TauChi2;
   TVector3  m_RecVertex, m_BSVertex, m_MCVertex;
   Particles m_SignalParts, m_Particles;
