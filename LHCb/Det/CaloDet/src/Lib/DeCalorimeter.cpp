@@ -136,20 +136,31 @@ StatusCode DeCalorimeter::initialize()
   if( !loadCondition( m_hardware, "Hardware" , mandatory) )return StatusCode::FAILURE;
   updMgrSvc()->registerCondition(this, m_hardware.path(), &DeCalorimeter::updHardware);
 
-
   // IGeometry condition (MUST EXIST)
   if( 0 == geometry() )return StatusCode::FAILURE;
-  updMgrSvc()->registerCondition(this, geometry(),&DeCalorimeter::updGeometry );
-  
+  updMgrSvc()->registerCondition(this, geometry(),&DeCalorimeter::updGeometry );  
+
+  // condition : 'Reco' (MUST exist)
+  if( !loadCondition( m_reco, "Reco" , mandatory) )return StatusCode::FAILURE;
+  updMgrSvc()->registerCondition(this, m_reco.path(), &DeCalorimeter::updReco);  
+
+  // condition : 'Readout' (MUST EXIST : SPD points onto PRS readout in recent DDDB)
+  if( !loadCondition( m_readout, "Readout", mandatory ) )return StatusCode::FAILURE;
+  updMgrSvc()->registerCondition(this, m_readout.path(), &DeCalorimeter::updReadout);  
+
   // condition : 'Gain' (MUST EXIST)
   if( !loadCondition( m_gain, "Gain",mandatory  ) )return StatusCode::FAILURE;
   updMgrSvc()->registerCondition(this, m_gain.path(), &DeCalorimeter::updGain);  
+
+  // condition : 'Monitoring" (FACULTATIF)
+  if( loadCondition( m_monitor, "Monitoring" ) )
+    updMgrSvc()->registerCondition(this, m_monitor.path(), &DeCalorimeter::updMonitor);
 
   // condition : 'Calibration' (FACULTATIF)
   if( loadCondition( m_calib, "Calibration" ) )
     updMgrSvc()->registerCondition(this, m_calib.path(), &DeCalorimeter::updCalib);
 
-  // condition : 'Calibration' (FACULTATIF)
+  // condition : 'NumericsGains' (FACULTATIF)
   if( loadCondition( m_numericGains, "NumericGains" ) )
     updMgrSvc()->registerCondition(this, m_numericGains.path(), &DeCalorimeter::updNumGains);
 
@@ -165,17 +176,7 @@ StatusCode DeCalorimeter::initialize()
   if( loadCondition( m_l0calib, "L0Calibration" ) )
     updMgrSvc()->registerCondition(this, m_l0calib.path(), &DeCalorimeter::updL0Calib);
 
-  // condition : 'Reco' (MUST exist)
-  if( !loadCondition( m_reco, "Reco" , mandatory) )return StatusCode::FAILURE;
-  updMgrSvc()->registerCondition(this, m_reco.path(), &DeCalorimeter::updReco);  
 
-  // condition : 'Readout' (MUST EXIST : SPD points onto PRS readout in recent DDDB)
-  if( !loadCondition( m_readout, "Readout", mandatory ) )return StatusCode::FAILURE;
-  updMgrSvc()->registerCondition(this, m_readout.path(), &DeCalorimeter::updReadout);  
-
-  // condition : 'Monitoring" (FACULTATIF)
-  if( loadCondition( m_monitor, "Monitoring" ) )
-    updMgrSvc()->registerCondition(this, m_monitor.path(), &DeCalorimeter::updMonitor); 
   
   // ================= INITIALIZE ALL CONDITIONS
   
@@ -185,8 +186,8 @@ StatusCode DeCalorimeter::initialize()
 
   if ( sc.isSuccess() ) {
     m_initialized = true;
-    // DEBUG
 
+    // DEBUG
     msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endmsg;
     msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endmsg;
     msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endmsg;
@@ -206,13 +207,20 @@ StatusCode DeCalorimeter::initialize()
     MsgStream msg1( msgSvc(), m_caloDet + ".Gain" );
     MsgStream msg2( msgSvc(), m_caloDet + ".L0Gain" );
     MsgStream msg3( msgSvc(), m_caloDet + ".Cells" );
+    unsigned int nGain=0;
     for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
       LHCb::CaloCellID id = (*ic).cellID() ;
+
+      unsigned int Area   = id.area ( ) ;    
+      double thGain = ( maxEtInCenter(Area) / m_cells[id].sine() ) + maxEtSlope(Area);
+      thGain        /= (double) adcMax() ;
+
       msg1 << MSG::VERBOSE << "Expected gain   : " << id << " => " 
            <<  cellGain(id) <<  " MeV/ADC " 
            << " = (nominal * calib * shift) = " 
-           << m_cells[id].nominalGain() << " x " << m_cells[id].calibration() << " x" << m_cells[id].gainShift()
+           << m_cells[id].nominalGain() << " x " << m_cells[id].calibration() << " x " << m_cells[id].gainShift() << "   | Theoretical nominal gain [" << thGain << "]" 
            << endmsg;
+      if( cellGain( id ) <= 0 && !id.isPin() )nGain++;
       if( m_caloDet == "EcalDet" || m_caloDet == "HcalDet"){
         double ect = cellGain(id) *  m_cells[id].sine() / m_l0Et *1024;
         double act = (double) m_cells[id].l0Constant();
@@ -224,14 +232,16 @@ StatusCode DeCalorimeter::initialize()
              << endmsg;
       } 
     }
-    // Verbosity
+    // Check gain
+    msg << MSG::INFO << "Found " << nGain << " channel(s) with null gain " << endmsg;
+    // Verbosity 
     msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
-         << " channels " << " ----------- " << endmsg;
-    long k = 1;
+         << " channels " << " ----------- " << endmsg; 
+    long k = 1; 
     for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
-      msg3 << MSG::VERBOSE << k << " : " << (*ic).cellID() 
-           << " pos : (" << (*ic).x() << "," << (*ic).y() << "," << (*ic).z() 
-           << ") "<< " #neigh " << (*ic).neighbors().size() << " | ";
+      msg3 << MSG::VERBOSE << k << " : " << (*ic).cellID()  
+           << " pos : (" << (*ic).x() << "," << (*ic).y() << "," << (*ic).z()  
+           << ") "<< " #neigh " << (*ic).neighbors().size() << " | "; 
       if( k%2 == 0) msg3 << MSG::VERBOSE <<endmsg;  
       k++;
     } 
@@ -1086,6 +1096,8 @@ StatusCode DeCalorimeter::getQuality( )  {
   std::vector<double> data = m_quality->paramAsDoubleVect( "data" );
 
   int count = 0;
+  int bad = 0;
+  int badLED=0;
   for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
     int ll = size*kk;
     double cell       = data[ll];
@@ -1106,12 +1118,34 @@ StatusCode DeCalorimeter::getQuality( )  {
           << ledData << " +- " << ledDataRMS <<endmsg;
       msg << MSG::VERBOSE << "    current <PMT/PIN> +- RMS  from LED signal " 
           << ledMoni << " +- " << ledMoniRMS <<endmsg;
+      if( CaloCellQuality::OK != (int) qFlag ){
+        msg << MSG::DEBUG << "Quality " << id << " : " << m_cells[id].cellStatus() << endmsg;
+        int iFlag = (int) qFlag;
+        bool bLed = false;
+        bool b = false;
+        int  d = 1;
+        while( iFlag > 0){
+          if( (iFlag & 0x1) == 1){
+            if(CaloCellQuality::Name[d].find("LED") != std::string::npos )
+              bLed = true;
+            else
+              b = true;
+          }
+          iFlag /= 2;
+          d += 1;
+        }
+        if( bLed )badLED++;
+        if( b    )bad++;
+      }
+      
       count++;
     }else{
       msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endmsg;
     }
   }
   msg << MSG::DEBUG << "Quality constant added for " << count << " channel(s) " << endmsg;
+  msg << MSG::INFO << "Found  " << bad << " channel(s) with problematic readout" << endmsg;
+  msg << MSG::INFO << "Found  " << badLED << " channel(s) with problematic LED monitoring" << endmsg;
   return StatusCode::SUCCESS;  
 }
 

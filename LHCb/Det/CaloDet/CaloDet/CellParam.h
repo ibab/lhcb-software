@@ -41,8 +41,17 @@ namespace CaloCellQuality
     Shifted       = 4 ,
     DeadLED       = 8,
     VeryNoisy     = 16,
-    VeryShifted   = 32
+    VeryShifted   = 32,
+    LEDSaturated  = 64,
+    BadLEDTiming  = 128,
+    VeryBadLEDTiming = 256,
+    BadLEDRatio      = 512,
+    BadLEDOpticBundle=1024,
+    UnstableLED      =2048,
+    StuckADC         =4096
   } ;
+  static const int Number = 14;
+  static const std::string Name[Number] = {"OK","Dead","Noisy","Shifted","DeadLED","VeryNoisy","VeryShifted","LEDSaturated","BadLEDTiming","VeryBadLEDTiming","BadLEDRatio","BadLEDOpticBundle","UnstableLED","StuckADC"};
   // ==========================================================================
 }
 // ============================================================================
@@ -78,8 +87,8 @@ public:
   double                ledDataRMS    () const { return m_ledDataRMS    ; } // RMS(LED) from Quality condition  (current T)
   double                ledMoni       () const { return m_ledMoni       ; } // <LED/PIN> data from Quality condition (current T)
   double                ledMoniRMS    () const { return m_ledMoniRMS    ; } // RMS(LED/PIN) from Quality condition (current T)
-  double                ledDataShift  () const { return ( ledDataRef() > 0 ) ? ledData()/ledDataRef() : 1; }
-  double                gainShift     () const { return ( ledMoniRef() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
+  double                ledDataShift  () const { return ( ledDataRef() > 0 && ledData() > 0 ) ? ledData()/ledDataRef() : 1; }
+  double                gainShift     () const { return ( ledMoniRef() > 0 && ledMoni() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
   double                gain          () const { return nominalGain() * calibration() * gainShift() ;}  
   int                   numericGain   () const { return m_nGain         ; }  // for Prs only
     
@@ -135,6 +144,20 @@ public:
   void setCalibration  (double calib)          { m_calibration = calib;           }
   void setL0Constant   (int    cte)            { m_l0constant  = cte;             }
   void setNumericGain  (int    ng)             {  m_nGain = ng        ; }  // for Prs only
+
+  std::string cellStatus(){
+    using namespace CaloCellQuality;
+    if( (Flag) m_quality == OK )return Name[OK];
+    int iflag = 1;
+    std::ostringstream s("");
+    s << "| ";
+    for(int i = 1  ; i < CaloCellQuality::Number; i++){
+      if( m_quality & iflag ) s << Name[i] << " | ";
+      iflag = iflag << 1;
+    }
+    return s.str();
+  }
+  
 
   
   bool operator==( const CellParam& c2 ) const { 

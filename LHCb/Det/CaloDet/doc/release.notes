@@ -4,6 +4,12 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+
+! 2010-10-22 - Olivier Deschamps
+  - add new CaloCellQuality flag
+  - CaloCellParam/DeCalorimeter : add missing protection against unvalid Quality/LEDReference parameters
+
+
 !======================== CaloDet v10r6 2010-08-25 ============================
 ! 2010-08-16 - Olivier Deschamps
  - new condition : LEDReference (no longer in Calibration.xml)
