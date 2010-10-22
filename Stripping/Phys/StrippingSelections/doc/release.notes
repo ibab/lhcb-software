@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-23 M Needham
+ - Add Bs->J/psi eta line from A. Sparkes
+
 ! 2010-10-22 Harry Cliff
 - add StrippingD2hhLTUnbiased.py
   lifetime unbiased stripping for untagged D2hh

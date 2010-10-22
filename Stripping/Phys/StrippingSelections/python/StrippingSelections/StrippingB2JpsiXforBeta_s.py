@@ -130,6 +130,12 @@ LambdaList =  createSubSel(OutputList = "LambdaForBetaS",
                            Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV)&(ADMASS('Lambda0')< 15 *MeV)& (VFASPF(VCHI2)<20)")
 
 
+EtaList = createSubSel( OutputList = "EtaForBetaS",
+			InputList = DataOnDemand(Location = "Phys/StdLooseResolvedEta"),
+			Cuts = "(PT > 1500)"\
+			"& (MINTREE('Gamma'==ABSID, PT) >300)")
+
+
 
 ##################
 ### Inlusive J/psi. We keep it for as long as we can.
@@ -289,6 +295,29 @@ Lambdab2JpsiLambda = createCombinationSel( OutputList = "Lambdab2JpsiLambda",
 Lambdab2JpsiLambdaUnbiasedLine = StrippingLine("Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ])
 
 B2JpsiXLines += [Lambdab2JpsiLambdaUnbiasedLine ]
+
+
+##################
+## Bs->Jpsi Eta ##
+##################
+Bs2JpsiEta = createCombinationSel( OutputList = "Bs2JpsiEta",
+                                  DecayDescriptor = "[B_s0 -> J/psi(1S) eta]cc",
+                                  DaughterLists  = [ EtaList, JpsiList ],
+                                  PreVertexCuts = "in_range(5000,AM,5650)",
+                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)"
+                                  )
+
+Bs2JpsiEtaPrescaledLine = StrippingLine("Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = 1.00)
+Bs2JpsiEtaDetachedLine  = StrippingLine("Bs2JpsiEtaDetachedLine",
+                                       algos = [ createSubSel( InputList = Bs2JpsiEta,
+                                                               OutputList = Bs2JpsiEta.name() + "Detached",
+                                                               Cuts = "(BPVLTIME()>0.15*ps)" )] )
+Bs2JpsiEtaUnbiasedLine  = StrippingLine("Bs2JpsiEtaUnbiasedLine",
+                                       algos = [ createSubSel( InputList = Bs2JpsiEta,
+                                                               OutputList = Bs2JpsiEta.name() + "Unbiased",
+                                                               Cuts = "(MINTREE('eta'==ABSID, PT) > 1000.*MeV)") ] )
+B2JpsiXLines += [ Bs2JpsiEtaPrescaledLine, Bs2JpsiEtaDetachedLine, Bs2JpsiEtaUnbiasedLine ]
+
 
 ############
 ### Todo ###
