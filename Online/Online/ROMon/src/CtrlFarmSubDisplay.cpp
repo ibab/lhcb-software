@@ -125,6 +125,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   bool twoline = false;
   char txt[128];
   string val;
+  bool cl_good = true;
   Cluster& c = m_cluster;
   Cluster::Nodes::const_iterator i, e;
   int col = NORMAL, pos = 0, line=3;
@@ -137,7 +138,8 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   ::scrc_put_chars(m_display,"", NORMAL,4,1,1);
   for(i=c.nodes.begin(), e=c.nodes.end(), pos=1; i!=e;++i) {
     const Cluster::Node& n = (*i).second;
-    bool good = n.status == "ALIVE";
+    bool excl = m_excluded.find(n.name) != m_excluded.end();
+    bool good = (n.status == "ALIVE");
     for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q) {
       bool pvss_ok = (*q).eventMgr && (*q).dataMgr && (*q).distMgr;
       if ( pvss_ok && pvss_status<2 ) pvss_status=1;
@@ -145,11 +147,15 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       good = good && pvss_ok;
     }
     col = good && n.missTaskCount==0 && n.missConnCount==0 ? GREEN|INVERSE : COL_ALARM;
-    if ( m_excluded.find(n.name) != m_excluded.end() ) col = INVERSE|(col==COL_ALARM ? MAGENTA : BLUE);
-    taskCount     += n.taskCount;
-    missTaskCount += n.missTaskCount;
-    connCount     += n.connCount;
-    missConnCount += n.missConnCount;
+    if ( excl )  {
+      col = INVERSE|(col==COL_ALARM ? MAGENTA : BLUE);
+    }
+    else {
+      taskCount     += n.taskCount;
+      missTaskCount += n.missTaskCount;
+      connCount     += n.connCount;
+      missConnCount += n.missConnCount;
+    }
     val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2));
     if ( twoline && pos > DISP_WIDTH-4 ) {
       ::scrc_put_chars(m_display,"...",col,line,pos,0);
@@ -163,8 +169,9 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       pos=1;
       twoline=true;
     }
+    cl_good |= (good || excl);
   }
-  col = (c.status=="ALIVE") ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
+  col = (c.status=="ALIVE" || cl_good) ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   ::sprintf(txt,"%-40s",c.time.c_str());
   ::scrc_put_chars(m_display,txt,NORMAL,1,1,0);
   ::sprintf(txt,"%-19s  %-18s %s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "",
@@ -178,14 +185,14 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,4,1,1);    
     ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
   }
-  else if ( c.status == "DEAD" ) {
+  else if ( !cl_good && c.status == "DEAD" ) {
     ::scrc_put_chars(m_display,"",NORMAL,1,1,0);
     ::scrc_put_chars(m_display,"",NORMAL,3,1,0);
     ::scrc_put_chars(m_display,"",NORMAL,4,1,0);
     ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,4,1,1);    
     ::scrc_set_border(m_display,m_title.c_str(),COL_ALARM);
   }
-  else if ( c.status == "MIXED" ) {
+  else if ( !cl_good && c.status == "MIXED" ) {
     ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,4,1,1);    
     ::scrc_set_border(m_display,m_title.c_str(),col);
   }
