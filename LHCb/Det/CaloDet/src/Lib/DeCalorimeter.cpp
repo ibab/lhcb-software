@@ -218,7 +218,7 @@ StatusCode DeCalorimeter::initialize()
       msg1 << MSG::VERBOSE << "Expected gain   : " << id << " => " 
            <<  cellGain(id) <<  " MeV/ADC " 
            << " = (nominal * calib * shift) = " 
-           << m_cells[id].nominalGain() << " x " << m_cells[id].calibration() << " x " << m_cells[id].gainShift() << "   | Theoretical nominal gain [" << thGain << "]" 
+           << m_cells[id].nominalGain() << " x " << m_cells[id].calibration() << " / " << m_cells[id].gainShift() << "   | Theoretical nominal gain [" << thGain << "]" 
            << endmsg;
       if( cellGain( id ) <= 0 && !id.isPin() )nGain++;
       if( m_caloDet == "EcalDet" || m_caloDet == "HcalDet"){

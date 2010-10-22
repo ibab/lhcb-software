@@ -6,6 +6,10 @@
 
 
 ! 2010-10-22 - Olivier Deschamps
+  - CellParam : fix direction of the gainShift correction 
+
+
+! 2010-10-22 - Olivier Deschamps
   - add new CaloCellQuality flag
   - CaloCellParam/DeCalorimeter : add missing protection against unvalid Quality/LEDReference parameters
 

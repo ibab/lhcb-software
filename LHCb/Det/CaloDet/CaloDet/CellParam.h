@@ -89,7 +89,7 @@ public:
   double                ledMoniRMS    () const { return m_ledMoniRMS    ; } // RMS(LED/PIN) from Quality condition (current T)
   double                ledDataShift  () const { return ( ledDataRef() > 0 && ledData() > 0 ) ? ledData()/ledDataRef() : 1; }
   double                gainShift     () const { return ( ledMoniRef() > 0 && ledMoni() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
-  double                gain          () const { return nominalGain() * calibration() * gainShift() ;}  
+  double                gain          () const { return nominalGain() * calibration() / gainShift() ;}  
   int                   numericGain   () const { return m_nGain         ; }  // for Prs only
     
 
