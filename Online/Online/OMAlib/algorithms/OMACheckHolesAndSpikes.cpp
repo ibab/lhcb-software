@@ -81,7 +81,12 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
     return;
   }
   
+  // get bin labels if available
+  bool hasLabels=getBinLabels(Histo);
+
   double MinDelta=9999., MaxDelta=-9999.;
+  std::vector<int> holebins;
+  std::vector<int> peakbins;
   int minbin=-1,maxbin=-1;
   // now compare bin contents with reference
   for (int ihx=1 ; ihx<= nBx ; ihx++) {
@@ -108,6 +113,10 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
       default:
         break;
       }
+      if (delta < warn_thresholds[0]) 
+        holebins.push_back(Histo.GetBin(ihx,ihy));
+      if (delta > warn_thresholds[1]) 
+        peakbins.push_back(Histo.GetBin(ihx,ihy));
       if(delta < MinDelta) {
         MinDelta=delta;
         minbin = Histo.GetBin(ihx,ihy);
@@ -122,24 +131,39 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   std::stringstream message;
   std::string hname(Histo.GetName());
   OMAMessage::OMAMsgLevel level=OMAMessage::INFO;
-  if ( MinDelta < alarm_thresholds[0]) {
-    message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    level= OMAMessage::ALARM;
-  }
-  else if( MinDelta < warn_thresholds[0]) {
-    message << "Hole detected for x="<<Histo.GetBinCenter(minbin)<< " delta="<<MinDelta;
-    level= OMAMessage::WARNING;
+
+  if( MinDelta < warn_thresholds[0]) {
+    message << "Hole detected for ";
+    if(hasLabels) message<<Histo.GetXaxis()->GetBinLabel(minbin);
+    else message << "x="<<Histo.GetBinCenter(minbin);
+    message << " (delta="<<MinDelta<<") ";
+    level= (MinDelta < alarm_thresholds[0] ? OMAMessage::ALARM :OMAMessage::WARNING);
+    if (holebins.size() >1) {
+      message << " and also for bins: ";
+      for (unsigned int ib=0; ib<holebins.size(); ib++) {
+        if (holebins[ib] != minbin) {
+          if(hasLabels) message<<" "<<Histo.GetXaxis()->GetBinLabel(holebins[ib]);
+          else message << " x="<<Histo.GetBinCenter(holebins[ib]);
+        }
+      }
+    }
   }
 
-  if ( MaxDelta > alarm_thresholds[1]) {
-    if (level > OMAMessage::INFO) message << std::endl;
-    message << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    level= OMAMessage::ALARM;
-  }
-  else if ( MaxDelta > warn_thresholds[1]) {
-    if (level > OMAMessage::INFO) message << std::endl;
-    message << "Spike detected for x="<<Histo.GetBinCenter(maxbin)<< " delta="<<MaxDelta;
-    level= OMAMessage::WARNING;
+  if( MaxDelta > warn_thresholds[1]) {
+    message << "Spike detected for ";
+    if(hasLabels) message<<Histo.GetXaxis()->GetBinLabel(maxbin);
+    else message << "x="<<Histo.GetBinCenter(maxbin);
+    message << " (delta="<<MaxDelta<<") ";
+    level= (MaxDelta > alarm_thresholds[1] ? OMAMessage::ALARM :OMAMessage::WARNING);
+    if (peakbins.size() >1) {
+      message << " and also for bins: ";
+      for (unsigned int ib=0; ib<peakbins.size(); ib++) {
+        if (peakbins[ib] != maxbin) {
+          if(hasLabels) message<<" "<<Histo.GetXaxis()->GetBinLabel(peakbins[ib]);
+          else message << " x="<<Histo.GetBinCenter(peakbins[ib]);
+        }
+      }
+    }
   }
 
   if(level > OMAMessage::INFO) {

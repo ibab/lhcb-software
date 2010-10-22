@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.39 2010-09-21 10:39:50 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.40 2010-10-22 10:54:28 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
 #include <time.h>
@@ -132,9 +132,9 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
         if( false == (*iM)->confirmed()) {
           lowerAlarm( (**iM) );
           unpublishMessage(*iM);
+          (*iM)->disable();
           if (m_histDB) {
             if (m_histDB->canwrite() && m_logToHistDB) {
-              (*iM)->disable();
               (*iM)->store();
               m_histDB->commit();
             }

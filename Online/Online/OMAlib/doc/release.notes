@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.62 2010-10-21 10:50:24 ggiacomo Exp $
+! $Id: release.notes,v 1.63 2010-10-22 10:54:27 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
 
 ! 20101021 GG
-- remove compilation warnings from icc and windoz
+ - remove compilation warnings from icc and windoz
+ - minor improvements to alarm messages
 
 ! 20101019 GG
  - add OMAFitFunction::clone() method to correctly clone fit functions from the Presenter
