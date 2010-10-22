@@ -1,11 +1,12 @@
-'''
+T'''
 Module for construction of D0->K3Pi tagged (from prompt D*) and untagged selections.
 Provides functions to build tagged and untagged selections for physics analysis.
 At present, the untagged lines are not included. This may change in the future 
-Provides classes StrippingPromptDstarWithD02K3PiConf, which construct the selections and stripping lines given a configuration dictionary.
+Provides class DstarPromptWithD02K3PiAllLinesConf, which constructs the selections and stripping lines given a configuration dictionary.
 Exported symbols (use python help):
-  - D02K3PiConf
+  - DstarPromptWithD02K3PiAllLinesConf
   - makeD02K3Pi
+  - makeD02K3PiDCS
   - makePromptDstar
 '''
 
@@ -13,9 +14,11 @@ __author__ = ['Philip Hunt']
 __date__ = '03/09/2010'
 __version__ = '$Revision: 1.2 $'
 
-__all__ = ('StrippingDstarPromptWithD02K3PiConf', 'makeD02K3Pi'
-    'makeD02K3PiDCS'
-            'makePromptDstar')
+__all__ = (
+    'DstarPromptWithD02K3PiAllLinesConf'
+    ,'makeD02K3Pi'
+    ,'makeD02K3PiDCS'
+    'makePromptDstar')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID
@@ -23,7 +26,39 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils import checkConfig
 
-class StrippingDstarPromptWithD02K3PiConf(object):
+confdict = {
+  'DMassLower'             : -7.5     #MeV
+  ,'DMassUpper'             : 15     #MeV 
+  ,'D0MassWin'              : 75     #MeV
+                            
+  ,'DstarDOCA'                : 0.45    # mm
+  ,'D0MaxDOCA'           : 0.5    # mm
+                          
+  ,'D0DaughterPt'                    : 0.3   # GeV
+  ,'D0DaughterP'                     : 3.0      # GeV
+  ,'D0Pt' : 3 # GeV
+  ,'DstarPt' : 3 # GeV
+  ,'SlowPionPt' : 0.07 # GeV
+
+  ,'DstarVtxChi2DOF' : 20
+  ,'D0VtxChi2DOF' : 10
+
+  ,'D0DaughterMaxIPChi2' : 30
+  ,'D0DaughterIPChi2' : 1.7
+  
+  ,'D0FDChi2' : 48
+  ,'D0IPChi2' : 30
+  ,'D0DIRA' : 0.9998
+  ,'TrackChi2DOF'                    : 5
+
+  ,'KaonPIDK' : 0
+  ,'PionPIDK' : 3 # pions from D0 only, not the bachelor
+  
+  ,'Prescale'         : 1
+  ,'Postscale'        : 1
+  }
+
+class DstarPromptWithD02K3PiAllLinesConf(object):
   """
   Constructor of D*->D0(K3Pi)pi stripping selection / stripping line for
   physics analysis.
@@ -40,21 +75,19 @@ class StrippingDstarPromptWithD02K3PiConf(object):
     selD02K3Pi    : nominal D0 -> K3Pi Selection object 
     selDstar2Dpi   : nominal D*+ -> D0(K-pi+pi-pi+)pi+  Selection object
 
-    line_untagged : StrippingLine made out of selD02K3Pi
     line_tagged : StrippingLine made out of selDstar2Dpi
-    lines                  : List of lines, [line_untagged                                            
-                                            ,line_tagged]
+    Lines                  : List of lines, [line_tagged]
 
     Exports as class data member:
-    StrippingPromptDstarWithD02K3PiConf.__configuration_keys__ : List of required configuration parameters.
+    DstarPromptWithD02K3PiAllLinesConf.__configuration_keys__ : List of required configuration parameters.
     """
   __configuration_keys__ = ('D0MassWin'
                             ,'DMassLower'
                             ,'DMassUpper'
-                                                    
+                            
                             ,'DstarDOCA'
                             ,'D0MaxDOCA'
-
+                            
                             ,'D0DaughterPt'
                             ,'D0DaughterP'
                             ,'D0Pt'
@@ -63,7 +96,8 @@ class StrippingDstarPromptWithD02K3PiConf(object):
                             
                             ,'DstarVtxChi2DOF'
                             ,'D0VtxChi2DOF'
-
+                            
+                            ,'D0DaughterMaxIPChi2'
                             ,'D0DaughterIPChi2'
                             ,'D0FDChi2'
                             ,'D0IPChi2'
@@ -71,54 +105,19 @@ class StrippingDstarPromptWithD02K3PiConf(object):
                             ,'D0DIRA'
                             
                             ,'TrackChi2DOF'
-                         
+
+                            ,'KaonPIDK'
+                            ,'PionPIDK'
+                            
                             ,'Prescale'
                             ,'Postscale'
                                 
                             )
   
-  """Configuration for the cross-section lines. Some cuts, e.g. the mass windows, pt and IP chi2 cuts, are applied to the combinations before the vertex fitting, and again after the fitting. List of cuts used in this configuration:
-   - D0 mass window = 100 MeV/c^2
-  - D0 max DOCA < 0.5 mm
-  - D0 daughter pt > 160 MeV/c
-  - D0 daughter momentum > 3.2 GeV/c
-  - Delta mass window (lower, upper) = -7.5 +15 MeV/c^2
-  - D* DOCA < 0.5 mm
-  - Track vertex chi2 / d.o.f. < 10
-  - D0 daughter kaon DLL(K-pi)>0
-  - D0 daughter pion DLL(K-pi)<0
-  """
-  _default_config = {    
-    'DMassLower'             : -7.5     #MeV
-    ,'DMassUpper'             : 15     #MeV 
-    ,'D0MassWin'              : 75     #MeV
-                            
-    ,'DstarDOCA'                : 0.5    # mm
-    ,'D0MaxDOCA'           : 0.5    # mm
-                            
-    ,'D0DaughterPt'                    : 0.3   # GeV
-    ,'D0DaughterP'                     : 5.0      # GeV
-    ,'D0Pt' : 2.0 # GeV
-    ,'DstarPt' : 2.0 # GeV
-    ,'SlowPionPt' : 0.2 # GeV
-
-    ,'DstarVtxChi2DOF' : 50
-    ,'D0VtxChi2DOF' : 9
-
-    ,'D0DaughterIPChi2' : 0.5 
-    ,'D0FDChi2' : 36
-    ,'D0IPChi2' : 30
-    , 'D0DIRA' : 0.9999
-    ,'TrackChi2DOF'                    : 4
-   
-    ,'Prescale'         : 1
-    ,'Postscale'        : 1
-   }
-
   def __init__(self
                ,name='DstarPromptWithD02K3Pi'
-               ,config=None):
-    checkConfig(StrippingDstarPromptWithD02K3PiConf.__configuration_keys__
+               ,config=confdict):
+    checkConfig(DstarPromptWithD02K3PiAllLinesConf.__configuration_keys__
                 , config)
     self.name=name
     
@@ -130,12 +129,15 @@ class StrippingDstarPromptWithD02K3PiConf(object):
       , pt = config['D0Pt']
       , daughterPt = config['D0DaughterPt']
       , daughterMom = config['D0DaughterP']
-      , vertexChi2DOF = config['D0VtxChi2DOF']
+      , vtxChi2DOF = config['D0VtxChi2DOF']
       , FDChi2 = config['D0FDChi2'] 
       , IPChi2 = config['D0IPChi2']
-      , daughterIPChi2 = config['D0DaughterIPChi2']
+      , dauMaxIPChi2 = config['D0DaughterMaxIPChi2']
+      , dauIPChi2 = config['D0DaughterIPChi2']
       , DIRA = config['D0DIRA']
       , trackChi2DOF = config['TrackChi2DOF']
+      , kaonPIDK = config['KaonPIDK']
+      , pionPIDK = config['PionPIDK']
       )
 
     self.selD02K3PiDCS = makeD02K3PiDCS(name+'D0DCS', self.selD02K3Pi)
@@ -161,7 +163,7 @@ class StrippingDstarPromptWithD02K3PiConf(object):
       ,algos=[self.selPromptDstar]
       )
    
-    self.lines = [self.line_tagged
+    self.Lines = [self.line_tagged
                   ]
 
 def makeD02K3PiDCS(
@@ -186,12 +188,15 @@ def makeD02K3Pi (
   , pt
   , daughterPt
   , daughterMom
-  , vertexChi2DOF
+  , vtxChi2DOF
   , FDChi2
   , IPChi2
-  , daughterIPChi2
+  , dauMaxIPChi2
+  , dauIPChi2
   , DIRA
   , trackChi2DOF
+  , kaonPIDK
+  , pionPIDK
   ):
   """Creates a D0->K3Pi Selection object
 , with cuts for physics analysis.
@@ -204,25 +209,35 @@ Arguments:
   - pt : minimum transverse momentum of D0 (GeV/c)
   - daughterPt : minimum transverse momentum of D0 daughters (GeV/c)
   - daughterMom : minimum momentum of D0 daughters (GeV/c)
-  - vertexChi2DOF : maximum vertex chi2 / d.o.f.
+  - vtxChi2DOF : maximum vertex chi2 / d.o.f.
   - FDChi2 : minimum vertex chi2
-  - IPChi2 : maximum IP chi2 
-  - daughterIPChi2 : minimum IP chi2 of D0 daughters
+  - IPChi2 : maximum IP chi2
+  - dauMaxIPChi2 :require at leat one D0 daughter with IP chi2 greather than this value
+  - dauIPChi2 : minimum IP chi2 of D0 daughters
   - DIRA : cosine of angle sustended by momentum and flight direction vectors of D0
   - trackChi2DOF : maximum track chi2 / d.o.f. of D0 daughters (unitless)
+  - kaonPIDK : DLL(K-pi) cut applied to kaon (only cut of >0 will have any affect)
+  - pionPIDK : DLL(K-pi) cut applied to pions (only cut of <5 will have any affect)
+
 Note: There is a hard-coded cut on the pion DLL(K-pi) of < 0    
   """
-  _prefitMassCut = "(ADAMASS('D0')<%(massWin)s*MeV)" %locals()
-  _postfitMassCut = "(ADMASS('D0')<%(massWin)s*MeV)" %locals()
+  
+  _prefitCuts = "(ADAMASS('D0')<%(massWin)s*MeV) & (APT>%(pt)s*GeV)" \
+   " & (AMAXDOCA('')<%(maxDOCA)s*mm)" \
+   " & (AHASCHILD(((ABSID=='K+') | (ABSID=='pi+')) & (MIPCHI2DV(PRIMARY)>%(dauMaxIPChi2)s)))" \
+   %locals()
 
-  _prefitPtCuts = "(APT>%(pt)s*GeV) & (ANUM(PT>%(daughterPt)s*GeV)==4) & (ANUM(P>%(daughterMom)s*GeV)==4)" %locals()
- 
-  _prefitCuts = _prefitMassCut + " & (ADOCAMAX('')<%(maxDOCA)s*mm)" %locals()
-  _prefitCuts += " & %s" %(_prefitPtCuts)
+  _motherCuts =  "(VFASPF(VCHI2/VDOF)<%(vtxChi2DOF)s)" \
+                " & (BPVVDCHI2>%(FDChi2)s) & (BPVIPCHI2()<%(IPChi2)s)" \
+                " & (BPVDIRA>%(DIRA)s) & (ADMASS('D0')<%(massWin)s*MeV)" \
+                " & (PT>%(pt)s*GeV)" %locals()
 
-  _motherCuts = _postfitMassCut + " & (PT>%(pt)s*GeV) & (BPVDIRA>%(DIRA)s) & (BPVVDCHI2>%(FDChi2)s) & (BPVIPCHI2()<%(IPChi2)s) & (VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s) " %locals()
-
-  _daughterCuts = "(PT>%(daughterPt)s*GeV) & (P>%(daughterMom)s*GeV) & (BPVIPCHI2()>%(daughterIPChi2)s) & (TRCHI2DOF<%(trackChi2DOF)s)" %locals()
+  _daughterCuts = "(TRCHI2DOF<%(trackChi2DOF)s)" \
+                  " &(PT>%(daughterPt)s*GeV)&(P>%(daughterMom)s*GeV)" \
+                  " & (MIPCHI2DV(PRIMARY)>%(dauIPChi2)s)" \
+                  %locals()
+  _kaonPIDCuts = " & (PIDK>%(kaonPIDK)s)" %locals()
+  _pionPIDCuts = " & (PIDK<%(pionPIDK)s)" %locals()
 
   _stdTightKaons = DataOnDemand(Location="Phys/StdTightKaons")
   _stdTightPions = DataOnDemand(Location="Phys/StdTightPions")
@@ -233,8 +248,9 @@ Note: There is a hard-coded cut on the pion DLL(K-pi) of < 0
                           ,DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc"
                           ,CombinationCut = _prefitCuts
                           ,MotherCut = _motherCuts
-                          ,DaughtersCuts = { "K+" : _daughterCuts
-                                             ,"pi+" : _daughterCuts+" & (PIDK<0)"} )
+                          ,DaughtersCuts = {
+                                "K+" : _daughterCuts+_kaonPIDCuts
+                                ,"pi+" : _daughterCuts+_pionPIDCuts} )
 
   return Selection ( name
                      ,Algorithm = _d0
@@ -268,13 +284,14 @@ def makePromptDstar(
  - trackChi2DOF : track chi2 / d.o.f. of the bachelor pion (unitless)
 Note that the delta mass is defined here as the difference between the D* and D0 reconstructed masses subtracted from the PDG value for the D* - D0 mass difference.
   """
-  _prefitMassCut = "(AM-AM1-145.5*MeV>%(DMassLower)s*MeV) & (AM-AM1-145.5*MeV<%(DMassUpper)s*MeV)" %locals()
-  _postfitMassCut = "(M-M1-145.5*MeV>%(DMassLower)s*MeV) & (M-M1-145.5*MeV<%(DMassUpper)s*MeV)" %locals()
      
-  _prefitCuts = _prefitMassCut + " & (APT>%(pt)s*GeV) & (ADOCAMAX('')<%(DOCA)s*mm)" %locals()
+  _prefitCuts = "(AM-AM1-145.5*MeV>%(DMassLower)s*MeV)" \
+    " & (AM-AM1-145.5*MeV<%(DMassUpper)s*MeV)" \
+    " & (APT>%(pt)s*GeV)" \
+    " & (AMAXDOCA('')<%(DOCA)s*mm)" %locals()
  
-  _motherCuts = _postfitMassCut + " & (PT>%(pt)s*GeV) & (VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s)" %locals()
-  _slowPionCuts = "(PT>%(slowPionPt)s) & (TRCHI2DOF<%(trackChi2DOF)s)" %locals()
+  _motherCuts = "(VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s)" %locals()
+  _slowPionCuts = "(TRCHI2DOF<%(trackChi2DOF)s) & (PT>%(slowPionPt)s)" %locals()
 
   # long tracks
   _stdNoPIDsPions = DataOnDemand(Location="Phys/StdNoPIDsPions")

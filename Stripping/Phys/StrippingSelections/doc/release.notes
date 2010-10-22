@@ -4,6 +4,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-22 -Philip Hunt
+  - python/StrippingDstarPromptWothD02K3Pi.py
+    Modified cut selection and ordering of cuts to reduce retention rate 
+    and processing time. 
 
 ! 2010-10-21 -Paul Schaacl
 	-added StrippingBs2MuMuPhi.py Stripping line
