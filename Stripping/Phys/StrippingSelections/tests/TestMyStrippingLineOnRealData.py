@@ -11,14 +11,11 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Import your stripping lines
-from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi 
-confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
-stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines )
+from StrippingSelections.StrippingD2hh import StrippingD2hhConf
+stream.appendLines( StrippingD2hhConf().lines() )
 
-from StrippingSelections import StrippingBd2DstarMuNu
-confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
-stream.appendLines( confBd2DstarMuNu.Lines )
-
+from StrippingSelections.StrippingD2hhLTUnbiased import StrippingD2hhLTUnbiasedConf
+stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
@@ -69,7 +66,7 @@ CondDB().IgnoreHeartBeat = True
 DaVinci().PrintFreq = 500
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 50000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

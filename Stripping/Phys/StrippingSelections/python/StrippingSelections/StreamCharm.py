@@ -159,6 +159,10 @@ stream.appendLines ( Lines.lines() )
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
 stream.appendLines( StrippingD2hhConf().lines() )
+
+from StrippingSelections.StrippingD2hhLTUnbiased import StrippingD2hhLTUnbiasedConf
+stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
+
 # Calubration line for bbar cross section in Bd->D*munu    from S.Vecchi 04-10-2010
 from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi  
 confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)

@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-22 Harry Cliff
+- add StrippingD2hhLTUnbiased.py
+  lifetime unbiased stripping for untagged D2hh
+
 ! 2010-10-22 - Ulrich Kerzel
 - add StrippingNeuroBayesMuMu.py,
   currently for testing NeuroBayes based stripping for J/Psi->mumu
