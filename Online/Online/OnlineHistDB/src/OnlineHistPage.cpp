@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.26 2009-06-22 09:17:27 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.27 2010-10-22 17:41:15 robbep Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
@@ -61,6 +61,8 @@ void OnlineHistPage::load() {
         int INSTANCE[Nfetch];
         int SHID[Nfetch];
         int MOTHERH[Nfetch];
+	for (int k = 0 ; k < Nfetch ; ++k ) 
+	  MOTHERH[ k ] = 0 ;
         int IOVERLAP[Nfetch];
         myOCIDefineString(lstmt, 1, NAME[0]  ,VSIZE_NAME);
         myOCIDefineFloat (lstmt, 2, PADMIN_X[0]);

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.62 2010-10-21 10:16:45 ggiacomo Exp $
+! $Id: release.notes,v 1.63 2010-10-22 17:41:14 robbep Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20101022 
+- OnlineHistPage.cpp: set to 0 integer arrays to avoid unitialized memory problems
 
 ! 20101021
 - fix some compilation warnings from icc and windoz
