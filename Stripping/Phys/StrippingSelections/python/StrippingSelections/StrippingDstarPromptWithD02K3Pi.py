@@ -18,7 +18,7 @@ __all__ = (
     'DstarPromptWithD02K3PiAllLinesConf'
     ,'makeD02K3Pi'
     ,'makeD02K3PiDCS'
-    'makePromptDstar')
+    ,'makePromptDstar')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID
