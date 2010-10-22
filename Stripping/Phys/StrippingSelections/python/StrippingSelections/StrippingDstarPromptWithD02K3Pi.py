@@ -1,4 +1,4 @@
-T'''
+'''
 Module for construction of D0->K3Pi tagged (from prompt D*) and untagged selections.
 Provides functions to build tagged and untagged selections for physics analysis.
 At present, the untagged lines are not included. This may change in the future 
@@ -14,8 +14,7 @@ __author__ = ['Philip Hunt']
 __date__ = '03/09/2010'
 __version__ = '$Revision: 1.2 $'
 
-__all__ = (
-    'DstarPromptWithD02K3PiAllLinesConf'
+__all__ = ('DstarPromptWithD02K3PiAllLinesConf'
     ,'makeD02K3Pi'
     ,'makeD02K3PiDCS'
     ,'makePromptDstar')
