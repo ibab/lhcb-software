@@ -522,7 +522,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
       for( ; iVtx != iVtxend; ++iVtx ){
         //debug()<<"Key "<< (*iVtx)->key() <<" type "
         //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
-        if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
+        if( !TestTrack( *iVtx ) ) continue;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
 
@@ -559,7 +559,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //debug()<<"Mom should be the same "<< (*iVtx)->momentum() <<" "
           //       << pp->track()->momentum() << endmsg;
           //Make a Particle with best PID 
-          if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
+          if( !TestTrack( *iVtx ) ) continue;
           const Particle * part = MakeParticle( pp );
           tmpVtx.addToOutgoingParticles ( part );
           tmpPart.addToDaughters( part );
@@ -577,7 +577,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
         const Track * tk = (*j)->proto()->track();
-
+        if( !TestTrack( tk ) ) continue;
         while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
           ++iVtx;
         }
@@ -587,7 +587,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //       << tk->momentum() << endmsg;
           //debug() <<"Track type "<< tk->type() << endmsg;
           if( (*iVtx)->key() != endkey ) ++iVtx; 
-          if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
+          
           tmpVtx.addToOutgoingParticles ( *j );
           tmpPart.addToDaughters( *j );
           mom += (*j)->momentum();
@@ -646,7 +646,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         //     << tk->momentum() << endmsg;
         //debug() <<"Track type "<< tk->type() << endmsg;
         if( (*iVtx)->key() != endkey ) ++iVtx; 
-        if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
+        if( !TestTrack( *iVtx ) ) continue;
         Daughters.push_back( *j );
         continue;
       }
@@ -1247,6 +1247,24 @@ bool RecVertices2Particles::TestMass( const Particle * part ){
   if( mass > m_PreyMinMass && mass < m_PreyMaxMass ) return true;
   return false;
 }
+
+//=============================================================================
+// Apply some quality cuts on the track
+//=============================================================================
+bool RecVertices2Particles::TestTrack( const Track * t ){
+  
+  //If the track has chi^2/ndof greater than max, remove it !
+  if( t->chi2PerDoF() > m_TChi2 ) return false;
+
+  //We want to avoid tracks with "infinite" momentum, i.e. straight lines.
+  //When Q/P ~ err( Q/P ), P become arbitrary...
+  //Velo tracks gets default momentum, so are safe to keep.
+  if( t->checkType(Track::Velo) ) return true;
+  double sQoP = t->firstState().qOverP() / t->firstState().errQOverP2();
+  if( fabs(sQoP) < 20 ) return false;
+  return true;
+}
+
 
 //=============================================================================
 // Is the point in the RF-Foil ?

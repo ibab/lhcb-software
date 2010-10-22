@@ -73,6 +73,7 @@ private:
                       double range = 1*Gaudi::Units::mm );
   bool TestMass( const LHCb::Particle * );  ///< Cut on the mass
   bool TestMass( LHCb::Particle & );  ///< Cut on the mass
+  bool TestTrack( const LHCb::Track * ); ///< Quality cuts on track
   /// Cut on the RF-Foil position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );

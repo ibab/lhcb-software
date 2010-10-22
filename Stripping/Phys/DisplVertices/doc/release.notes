@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-22 - Neal Gauvin
+ - RecVertices2Particles : Require non Velo tracks to have Q/P significance 
+   not in [-20, 20] to enter the Particle fit.
 
 ! 2010-10-18 - Neal Gauvin
  - options/myJob.py adapated to new reconstruction scheme agreed on 15th october (Jets/Exotica WG).
