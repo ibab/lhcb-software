@@ -34,7 +34,7 @@ jPsiNB.PlotHisto          = True
 jPsiNB.PlotMassMin        =  3.0
 jPsiNB.PlotMassMax        =  3.2
 jPsiNB.PlotNBins          = 120
-jPsiNB.Expertise          = 'Muon/mumu_net_noip.nb' 
+jPsiNB.Expertise          = 'mumu_net_noip.nb' 
 jPsiNB.NetworkVersion     = "TuneSep2010"
 jPsiNB.NetworkCut         = 0.75
 
@@ -45,7 +45,7 @@ mumuNB.PlotHisto          = True
 mumuNB.PlotMassMin        =  0.0
 mumuNB.PlotMassMax        = 12.0
 mumuNB.PlotNBins          = 1000
-mumuNB.Expertise          = 'Muon/mumu_net_full.nb' 
+mumuNB.Expertise          = 'mumu_net_full.nb' 
 mumuNB.NetworkVersion     = "TuneSep2010"
 mumuNB.NetworkCut         = 0.95
 
@@ -71,11 +71,43 @@ SeqJPsi      = SelSeqJPsi.sequence()
 SeqMuMu      = SelSeqMuMu.sequence()
 
 
+########################################################################
+#
+# NTupling
+#
+from Configurables import DecayTreeTuple, PhysDesktop
+tupleMuMu                =  DecayTreeTuple("tupleMuMu")
+tupleMuMu.InputLocations = [SelSeqMuMu.outputLocation()]
+tupleMuMu.Decay          = "J/psi(1S) -> ^mu+ ^mu-"
+tupleMuMu.ToolList      += [
+    "TupleToolGeometry"
+    , "TupleToolKinematic"
+    , "TupleToolPrimaries"
+    , "TupleToolTrackInfo"
+    , "TupleToolPid"
+    , "TupleToolEventInfo"
+    , "TupleToolPropertime"
+    ,"LoKi::Hybrid::TupleTool/LoKiTupleJpsi" 
+     ]
+from Configurables import LoKi__Hybrid__TupleTool
+LoKiTupleMuMu = LoKi__Hybrid__TupleTool("LoKiTupleMuMu")
+LoKiTupleMuMu.Variables = {
+    "Charge" : "Q" ,
+    "DOCA" : "DOCA(1,2)",
+    "DOCAMAX" : "DOCAMAX"
+    }
+tupleMuMu.addTool(LoKiTupleMuMu)
 
 ########################################################################
 #
 # DaVinci
 #
+
+from Configurables import CondDB
+CondDB().IgnoreHeartBeat = True
+CondDB(UseOracle = True)
+importOptions("$APPCONFIGOPTS/DisableLFC.py")
+
 
 # Remove the microbias and beam gas etc events before doing the tagging step
 regexp = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"
@@ -96,13 +128,20 @@ DaVinci().EvtMax                     = -1;
 DaVinci().DataType                   = "2010"
 
 DaVinci().Simulation                 = False
-DaVinci().UserAlgorithms             = [ SeqJPsi, SeqMuMu ]
+DaVinci().UserAlgorithms             = [ SeqJPsi, SeqMuMu,
+                                         tupleMuMu]
 
 DaVinci().DataType                   = "2010"
-DaVinci().InputType                  = 'SDST'
+#DaVinci().InputType                  = 'SDST'
+DaVinci().InputType                  = 'DST'
 
 DaVinci().DDDBtag                    = "head-20101003" #"head-20100518" # "head-20100407"
 DaVinci().CondDBtag                  = "head-20101010" #"head-20100730" # "head-20100509"
+
+#DaVinci().SkipEvents = 20100
+#EventSelector().Input   = [
+#    "DATAFILE='PFN:/work/kerzel/00007574_00000133_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+#    ]
 
 #EventSelector().Input   = [
 #    "   DATAFILE='LFN:/lhcb/data/2010/SDST/00007951/0000/00007951_00001135_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
