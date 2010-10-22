@@ -1,26 +1,28 @@
-# $Id: StrippingD2hhh_conf.py,v 1.0 2010/09/06 
+# $Id: StrippingD2hhh_conf.py,v 1.0 2010/07/22 
 '''
 Module for construction of D->hhh stripping Selections and StrippingLines.
 
-TODO: maybe need different stripping lines for signal and background mass windows
 TODO: Cut on more global event variables (ntracks is done, nPVs is to-do) and pion hasRich
 
-On RecoStripping08:
-mean CPU (INC)
-Retention rate
+On Reco06-Stripping12:
+StrippingReport                                                INFO Event 100000, Good event 56518
+ |                                    *Decision name*|  *Rate*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |0.028009|      1583|       |  17.811|       |       |       |
+ |_StrippingSequenceStreamTest_                      |0.028009|      1583|       |  17.806|       |       |       |
+ |!StrippingD2PPP                                    |0.012421|       702|  1.221|   6.747|      0|      0|    146|
+ |!StrippingD2KPP                                    |0.008599|       486|  1.058|   2.793|      0|      0|      0|
+ |!StrippingD2KKP                                    |0.004494|       254|  1.134|   4.086|      0|      0|      0|
+ |!StrippingD2KPPos                                  |0.003468|       196|  1.179|   1.726|      0|      0|      0|
+ |!StrippingD2KKK                                    |0.000690|        39|  1.026|   1.410|      0|      0|      0|
+ |!StrippingD2hhh_inc                                |0.002459|       139|  1.568|   0.518|      0|      0|      0|
 
- - modified by Erica to use CombineParticles. In the next release we should use stdDplus
- - In this release the same cuts are being used
- - all stripping lines use the same cut variables, apart from KKK (although not necessarily the same values)
- - I have tried to include all cut variables that could possibly be useful in all stripping lines where they can be used. 
-   Their configurable values can be set to zero if we decide not to cut on this variable, but it should make the lines more flexible. 
-   Can remove if there are CPU time issues
+ - all stripping lines use the same cut variables, although not necessarily the same values.
 
 '''
 
 __author__ = ['Hamish  Gordon']
-__date__ = '06/09/2010'
-__version__ = '$Revision: 1.3 $'
+__date__ = '09/06/2010'
+__version__ = '$Revision: 1.0 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -36,250 +38,148 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
    Definitions
    """
    __slots__ = {
-      'DaugTrkCHI2'     : 5.0      #StdLooseDplus cut at 10 
-      , 'DaugPTexc'     : 250.0    # min track PT cut for lines using StdLooseDplus - StdLooseDplus already cuts at PT > 250 so no point going looser than this
-      , 'DaugPTinc'     : 250.0    # min track PT cut for inclusive line
-      , 'DaugPTpid'     : 250.0    # min track PT cut for KKP and KKK (the 'pid' modes)
-      , 'DaugP'         : 2000.0   #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
-      , 'DaugIPCHI2ppp' : 12.0     # track IP chi2 cut for lines using StdLooseDplus - StdLooseDplus already cuts at IPchi2 > 4 so no point going looser than this
-      , 'DaugIPCHI2'    : 4.0      # track IP chi2 cut for inclusive line
-      , 'DaugIPCHI2pid' : 2.0      # Should set looser IPChi2 cut for KKP and KKK (the 'pid' modes)
+      'DaugTrkCHI2'     : 5.0       #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
+      , 'DaugPTexc'     : 250.0     # min track PT cut - StdLooseDplus already cuts at PT > 250 so no point going looser than this
+      , 'DaugPTinc'     : 250.0     # min track PT cut for inclusive line
+      , 'DaugPTpid'     : 250.0     # min track PT cut for KKP and KKK (the 'pid' modes)
+      , 'DaugP'         : 2000.0    # same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
+      , 'DaugIPCHI2ppp' : 4.0       # track IP chi2 cut for ppp line - StdLooseDplus already cuts at IPchi2 > 4 so no point going looser than this
+      , 'DaugIPCHI2'    : 4.0       # track IP chi2 cut - StdLooseDplus already cuts at IPchi2 > 4 so no point going looser than this
+      , 'DaugIPCHI2pid' : 2.0       # Should set looser IPChi2 cut for KKK (the 'pid' modes)
       
-      , 'KPIDKmin'      : 5.0      # Minimum kaon PIDK (StdTightKaons uses 0.0)
-      , 'piPIDKmax'     : 5.0      # Maximum pion PIDK - also need to require hasRich
+      , 'KPIDKmin'      : 3.0      # Minimum kaon PIDK (StdTightKaons uses 0.0)
+      , 'piPIDKmax'     : 10.0     # Maximum pion PIDK - also need to require hasRich
       
       , 'Daug2IPCHI2'   : 10.0     # Require 2 out of 3 tracks to have IPchi2 greater than this value
-      , 'Daug2IPCHI2pid': 4.0      # Should set looser cut for KKP and KKK (the 'pid' modes)
-      , 'Daug1IPCHI2'   : 10.0      # Require 1 out of 3 tracks to have IPchi2 greater than this value. Currently only used in KKP and KKK lines
-      , 'Daug2PT'       : 350.0      # Require 2 out of 3 tracks to have PT greater than this value
-      , 'SumDaugPT'     : 2000.0   # Algebraic (scalar) sum of track PT. StdLooseDplus cuts at 1000 on APT as CombinationCut - I think the cut variable (sum (daughter PT) is equivalent
-      , 'DaugDOCA'      : 30       # I don't know how to implement DOCA in FilterDesktop, so we don't have this cut in lines that use StdLooseDplus
+      , 'Daug2IPCHI2pid': 4.0      # Should set looser cut for KKK (the 'pid' modes)
+      , 'Daug1IPCHI2'   : 10.0     # Require 1 out of 3 tracks to have IPchi2 greater than this value. Currently only used in KKK line
+      , 'Daug2PT'       : 250.0    # Require 2 out of 3 tracks to have PT greater than this value
+      , 'SumDaugPT'     : 1800.0   # Algebraic (scalar) sum of track PT. 
+      , 'DaugDOCA'      : 50       # For KKK and hhh. StdLooseDplus uses 50 
       
-      , 'DPT'           : 1000.0    # PT of D+ (2000 is used at HLT2?)
-      , 'DIPCHI2'       : 15.0     # IP Chi2 of D+ 
-      , 'DFDCHI2'       : 130.0    # FD chi2 of D+ ,used also for dcaSVPV 
-      , 'DFDCHI2t'      : 220.0    # FD chi2 for 3pi
-      , 'POINT'         : 1.0      # Pointing variable (0.2 already at HLT2)
+      , 'DPT'           : 1000.0   # PT of D+ (StdDplus uses 1000)
+      , 'DIPCHI2'       : 15.0     # IPCHI2 of D+
+      , 'DFDCHI2'       : 100.0    # FD chi2 of D+ wrt ALL PV
       , 'DDIRA'         : 0.0      # Angle of track to PV
-      , 'DVtxCHI2NDOF'  : 8.0      # Vertex chi2/NDOF
+      , 'DVtxCHI2NDOF'  : 10.0      # Vertex chi2/NDOF - StdLooseDplus already cuts at <10 so no point going looser than this
       
-      , 'MinMassPreFitinc'  : 1000.0
-      , 'MinMassPostFitinc' : 1100.0
-      , 'MinMassPreFitpid'  : 1769.0 #same as StdLooseDplus cut - but can go looser without loosening StdLooseDplus cut
-      , 'MinMassPreFitos'   : 1800.0   
-      , 'MaxMassPreFitos'   : 1940.0          
-      , 'MinMassPostFitDs'  : 1920.0 #lower bound of Ds mass window
-      , 'MinMassPostFitkpp' : 1800.0 #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
-      , 'MinMassPostFitppp' : 1810.0 #lower bound for D+ -> 3pi
-      , 'MinMassPostFitkkp' : 1810.0 #lower bound for D+ -> KKpi
-      , 'MinMassPostFitexc' : 1800.0
-      , 'MaxMassPreFit'     : 2170.0 #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
-      , 'MaxMassPostFit'    : 2020.0
-      , 'MaxMassPostFitkpp' : 1940.0 #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
-      , 'MaxMassPostFitppp' : 1930.0 #upper bound for D+ -> 3pi
-      , 'MaxMassPostFitkkp' : 1930.0 #upper boung for D+ -> KKpi
-      , 'MaxMassPostFitDs'  : 2020.0 #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
-      , 'MaxMassPostFitinc' : 2070.0 #same as StdLooseDplus cut - don't go looser without loosening StdLooseDplus cut
+      , 'MinMassPreFitinc'  : 1000.0 # For D2hhh only
+      , 'MaxMassPreFitinc'  : 2170.0 #
+      , 'MinMassPostFitinc' : 1100.0 # For D2hhh only
+      , 'MaxMassPostFitinc' : 2070.0 #
+      , 'MinMassPreFit'     : 1769.0 # For KKK only
+      , 'MaxMassPreFit'     : 2170.0 #
+      , 'MinMassPostFit'    : 1800.0 # For all exclusive modes using StdDplus
+      , 'MaxMassPostFit'    : 1940.0 # For KPP mode only
+      , 'MinMassPostFitDs'  : 1940.0 # not used now
+      , 'MaxMassPostFitDs'  : 2040.0 # For all exclusive modes using StdDplus, except to KPP
 
-      , 'MaxTracksInEvent'  : 350.0 # this is tight enough to have a significant effect on the rate without killing lines altogether
+      , 'MaxTracksInEvent'  : 350.0  # this is tight enough to have a significant effect on the rate without killing lines altogether
       , 'CutOnTracksInEvent': True
       
       , 'prescale_PPP'   : 1.0
-      , 'prescale_KPP'   : 0.3
-      , 'prescale_KPPos' : 0.3
+      , 'prescale_KPP'   : 1.0
+      , 'prescale_KPPos' : 0.4
       , 'prescale_KKP'   : 1.0
       , 'prescale_KKK'   : 1.0
       , 'prescale_inc'   : 0.04
       }
    
 
-   #de exclusive stripping lines, all use PID where possible, including PPP
+   #define exclusive stripping lines, all use PID where possible, including PPP
    def stripD2PPP(self) :
       algos = [] 
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeD2PPP())
+      algos.append(self.getD2PPP())
       lineD2PPP = StrippingLine('D2PPP', prescale = "%(prescale_PPP)s" % self.getProps(), algos = algos)
       return lineD2PPP
-      
-   def stripDs2PPP(self) :
-      algos = [] 
-      if self.getProp("CutOnTracksInEvent"):
-         algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeDs2PPP())
-      lineDs2PPP = StrippingLine('Ds2PPP', prescale = "%(prescale_PPP)s" % self.getProps(), algos = algos)
-      return lineDs2PPP
-      
    def stripD2KPP(self) :
       algos = [] 
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeD2KPP())
+      algos.append(self.getD2KPP())
       lineD2KPP = StrippingLine('D2KPP', prescale = "%(prescale_KPP)s" % self.getProps(), algos = algos)
       return lineD2KPP
-      
+   # built with the same cuts as other exclusive modes 
    def stripD2KKP(self) :
       algos = [] 
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeD2KKP())
+      algos.append(self.getD2KKP())
       lineD2KKP = StrippingLine('D2KKP', prescale = "%(prescale_KKP)s" % self.getProps(), algos = algos)
       return lineD2KKP
-      
-   def stripDs2KKP(self) :
-      algos = [] 
-      if self.getProp("CutOnTracksInEvent"):
-         algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeDs2KKP())
-      lineDs2KKP = StrippingLine('Ds2KKP', prescale = "%(prescale_KKP)s" % self.getProps(), algos = algos)
-      return lineDs2KKP
-      
    def stripD2KPPos(self) :
       algos = [] 
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeD2KPPos())
+      algos.append(self.getD2KPPos())
       lineD2KPPos = StrippingLine('D2KPPos', prescale = "%(prescale_KPPos)s" % self.getProps(), algos = algos)
       return lineD2KPPos
-      
-   def stripDs2KPPos(self) :
-      algos = [] 
-      if self.getProp("CutOnTracksInEvent"):
-         algos.append(self._filterNTracksInEvent())
-      algos.append(self.makeDs2KPPos())
-      lineDs2KPPos = StrippingLine('Ds2KPPos', prescale = "%(prescale_KPPos)s" % self.getProps(), algos = algos)
-      return lineDs2KPPos
-        
    def stripD2KKK(self) :
-      algos = [] 
+      algos = []
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
       algos.append(self.makeD2KKK())
       lineD2KKK = StrippingLine('D2KKK', prescale = "%(prescale_KKK)s" % self.getProps(), algos = algos)
       return lineD2KKK
-      
-   
+     
    #define inclusive stripping line, which uses no PID
    def stripD2hhh_inc(self) :
-      algos = [] 
+      algos = []
       if self.getProp("CutOnTracksInEvent"):
          algos.append(self._filterNTracksInEvent())
       algos.append(self.makeD2hhhinc())
       lineD2hhh_inc = StrippingLine('D2hhh_inc', prescale = "%(prescale_inc)s" % self.getProps(), algos = algos)
       return lineD2hhh_inc
 
-   
-   # Make D2PPP 
-   def makeD2PPP(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2ppp)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitppp)s) & (M < %(MaxMassPostFitppp)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2t)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2t)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineD2PPP"
-                                , DecayDescriptor =  '[D+ -> pi- pi+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' } 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-                                )
-      selD2PPP = Selection("selD2PPP", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi] )
+   # Get D2PPP from StdLooseDplus
+   def getD2PPP(self):
+      StdDplusPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi")
+      str_cutsDaug_Pi =  "(MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDKmax)s ) & (MINTREE('pi+'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2ppp)s ) & (MAXTREE('pi+'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('pi+'==ABSID, P ) > %(DaugP)s) & (MINTREE('pi+'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsComb_PPP =" (2 <= NINGENERATION((PT > %(Daug2PT)s * MeV ) , 1)) & (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) , 1)) & (SUMTREE( ISBASIC , PT ) > %(SumDaugPT)s*MeV) "% self.getProps()
+      str_cutsMoth_PPP = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s)" % self.getProps()
+      str_cutsMassPostFit_pid = "(M > %(MinMassPostFit)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
+      filterPPP = FilterDesktop('filterPPP', Code = '('+str_cutsDaug_Pi+'&'+str_cutsMoth_PPP+'&'+str_cutsComb_PPP+'&'+ str_cutsMassPostFit_pid+')') 
+      selD2PPP = Selection("selD2PPP", Algorithm = filterPPP, RequiredSelections = [StdDplusPPP] )
       return selD2PPP
-    
-   # Make Ds2PPP 
-   def makeDs2PPP(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2ppp)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitDs)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineDs2PPP"
-                                , DecayDescriptor =  '[D+ -> pi- pi+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' } 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-                                )
-      selDs2PPP = Selection("selDs2PPP", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi] )
-      return selDs2PPP
-    
-   # Make D2KPP
-   def makeD2KPP(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      StdTightPIDsK = DataOnDemand(Location = "Phys/StdTightKaons")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitkpp)s) & (M < %(MaxMassPostFitkpp)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2t)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2t)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s)" % self.getProps()
-      cbpinc = CombineParticles("CombineD2KPP"
-                                , DecayDescriptor =  '[D+ -> K- pi+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' ,  "K-" : '(' + str_cutsDaug_inc+ '&' + str_cutsDaug_pidK+')'} 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-                                )
-      selD2KPP = Selection("selD2KPP", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi, StdTightPIDsK] )
+
+   # Get D2KPP from StdLooseDplus
+   def getD2KPP(self):
+      StdDplusKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi")
+      str_cutsDaug_K =  "(MINTREE('K-'==ABSID, PIDK-PIDpi) > %(KPIDKmin)s ) & (MINTREE('K-'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) & (MAXTREE('K-'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('K-'==ABSID, P ) > %(DaugP)s) & (MINTREE('K-'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsDaug_Pi =  "(MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDKmax)s ) &  (MINTREE('pi+'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) & (MAXTREE('pi+'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('pi+'==ABSID, P ) > %(DaugP)s) & (MINTREE('pi+'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsComb_KPP =" (2 <= NINGENERATION((PT > %(Daug2PT)s * MeV ) , 1)) & (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) , 1)) & (SUMTREE( ISBASIC , PT ) > %(SumDaugPT)s*MeV) "% self.getProps()
+      str_cutsMoth_KPP = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s)" % self.getProps()
+      str_cutsMassPostFit_pid = "(M > %(MinMassPostFit)s) & (M < %(MaxMassPostFit)s)" % self.getProps()
+      filterKPP = FilterDesktop('filterKPP', Code ='('+str_cutsDaug_K+'&'+str_cutsDaug_Pi+'&'+str_cutsMoth_KPP+'&'+str_cutsComb_KPP+'&'+ str_cutsMassPostFit_pid+')') 
+      
+      selD2KPP = Selection("selD2KPP", Algorithm = filterKPP, RequiredSelections = [StdDplusKPP] )
       return selD2KPP
 
-   # Make D2KKP
-   def makeD2KKP(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      StdTightPIDsK = DataOnDemand(Location = "Phys/StdTightKaons")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = "(ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitkkp)s) & (M < %(MaxMassPostFitkkp)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2t)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2t)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineD2KKP"
-                                , DecayDescriptor =  '[D+ -> K- K+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc + '&' + str_cutsDaug_pidpi +')' ,  "K-" : '(' + str_cutsDaug_inc+ '&' + str_cutsDaug_pidK+')'} 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-                                )
-      selD2KKP = Selection("selD2KKP", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi, StdTightPIDsK] )
+   # Get D2KKP from StdLooseDplus
+   def getD2KKP(self):
+      StdDplusKKP = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi")
+      str_cutsDaug_Pi =  "(MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDKmax)s ) &  (MINTREE('pi+'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) & (MAXTREE('pi+'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('pi+'==ABSID, P ) > %(DaugP)s) & (MINTREE('pi+'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsDaug_K =  "(MINTREE('K-'==ABSID, PIDK-PIDpi) > %(KPIDKmin)s ) & (MINTREE('K-'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) & (MAXTREE('K-'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('K-'==ABSID, P ) > %(DaugP)s) & (MINTREE('K-'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsComb_KKP =" (2 <= NINGENERATION((PT > %(Daug2PT)s * MeV ) , 1)) & (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) , 1)) & (SUMTREE( ISBASIC , PT ) > %(SumDaugPT)s*MeV) "% self.getProps()
+      str_cutsMoth_KKP = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
+      str_cutsMassPostFit_pid = "(M > %(MinMassPostFit)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
+      filterKKP = FilterDesktop('filterKKP', Code ='('+str_cutsDaug_K+'&'+str_cutsDaug_Pi+'&'+str_cutsMoth_KKP+'&'+str_cutsComb_KKP+'&'+ str_cutsMassPostFit_pid+')') 
+      selD2KKP = Selection("selD2KKP", Algorithm = filterKKP, RequiredSelections = [StdDplusKKP] )
       return selD2KKP
 
-   # Make Ds2KKP
-   def makeDs2KKP(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      StdTightPIDsK = DataOnDemand(Location = "Phys/StdTightKaons")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = "(ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitDs)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineDs2KKP"
-                                , DecayDescriptor =  '[D+ -> K- K+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' ,  "K-" : '(' + str_cutsDaug_inc+ '&' + str_cutsDaug_pidK+')'} 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-                                )
-      selDs2KKP = Selection("selDs2KKP", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi, StdTightPIDsK] )
-      return selDs2KKP
-
-   def makeD2hhhinc(self):
-      StdNoPIDsPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
-      str_cutsDaug_inc ="((MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTinc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) )"  % self.getProps()
-      str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit_inc = "(AM > %(MinMassPreFitinc)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit_inc = "(M > %(MinMassPostFitinc)s) & (M < %(MaxMassPostFitinc)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2t)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineD2hhh_inc"
-                                , DecayDescriptor =  '[D+ -> pi- pi+ pi+]cc'
-                                , DaughtersCuts = { "pi+" : str_cutsDaug_inc }
-                                , CombinationCut = '(' + str_cutsComb_inc +'&' + str_cutsMassPreFit_inc +')'
-                                , MotherCut = '(' + str_cutsMoth_inc + '&' + str_cutsMassPostFit_inc + ')'
-                                )
-      selD2hhhinc = Selection("selD2hhhinc", Algorithm = cbpinc, RequiredSelections = [StdNoPIDsPi] )
-      return selD2hhhinc
+   # Get opposite-sign D2KPP from StdLooseDplus
+   def getD2KPPos(self):
+      StdDplusKPPos = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi")
+      str_cutsDaug_K =  "(MINTREE('K+'==ABSID, PIDK-PIDpi) > %(KPIDKmin)s ) &  (MINTREE('K+'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) &(MAXTREE('K+'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('K+'==ABSID, P ) > %(DaugP)s) & (MINTREE('K-'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsDaug_Pi =  "(MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDKmax)s ) & (MINTREE('K-'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaugIPCHI2)s ) & (MAXTREE('pi+'==ABSID,TRCHI2DOF) < %(DaugTrkCHI2)s) & (MINTREE('pi+'==ABSID, P ) > %(DaugP)s) & (MINTREE('pi+'==ABSID, PT) > %(DaugPTexc)s )" % self.getProps()
+      str_cutsComb_KPP =" (2 <= NINGENERATION((PT > %(Daug2PT)s * MeV ) , 1)) & (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) , 1)) & (SUMTREE( ISBASIC , PT ) > %(SumDaugPT)s*MeV)"% self.getProps()
+      str_cutsMoth_KPP = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
+      str_cutsMassPostFit_pid = "(M > %(MinMassPostFit)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
+      filterKPP = FilterDesktop('filterKPP', Code = '('+str_cutsDaug_K+'&'+str_cutsDaug_Pi+'&'+str_cutsMoth_KPP+'&'+str_cutsComb_KPP+'&'+ str_cutsMassPostFit_pid+')') 
+      selD2KPPos = Selection("selD2KPPos", Algorithm = filterKPP, RequiredSelections = [StdDplusKPPos] )
+      return selD2KPPos
 
    #make new particles for KKK(with PID cuts on tracks)
    def makeD2KKK(self):
@@ -287,9 +187,9 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
       str_cutsDaug_pid = "( (MIPCHI2DV(PRIMARY) > %(DaugIPCHI2pid)s) & (PT > %(DaugPTpid)s *MeV) & (P > %(DaugP)s *MeV) & (TRCHI2DOF < %(DaugTrkCHI2)s) )" % self.getProps()
       str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
       str_cutsComb_pid = "(ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2pid)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daug1IPCHI2)s))" % self.getProps()
-      str_cutsMassPreFit_pid = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit_pid = "(M > %(MinMassPostFitexc)s) & (M < %(MaxMassPostFit)s)" % self.getProps()
-      str_cutsMoth_pid = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
+      str_cutsMassPreFit_pid = "(AM > %(MinMassPreFit)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
+      str_cutsMassPostFit_pid = "(M > %(MinMassPostFit)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
+      str_cutsMoth_pid = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
       cbppid = CombineParticles("CombineD2KKK"
                                 , DecayDescriptor =  '[D+ -> K- K+ K+]cc'
                                 , DaughtersCuts = { "K+" : '(' + str_cutsDaug_pidK +'&' + str_cutsDaug_pid +  ')' }
@@ -298,48 +198,22 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
                                  )
       selD2KKK = Selection("selD2KKK", Algorithm = cbppid, RequiredSelections = [StdTightK] )
       return selD2KKK
-
-   # make D2KPP with opposite sign
-   def makeD2KPPos(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      StdTightPIDsK = DataOnDemand(Location = "Phys/StdTightKaons")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
+     
+   def makeD2hhhinc(self):
+      StdNoPIDsPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+      str_cutsDaug_inc ="((MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTinc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) )"  % self.getProps()
       str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitos)s) & (AM < %(MaxMassPreFitos)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitkpp)s) & (M < %(MaxMassPostFitkpp)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2t)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2t)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineD2KPPos"
-                                , DecayDescriptor =  '[D+ -> pi- pi+ K+]cc'
-                                , DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' ,  "K-" : '(' + str_cutsDaug_inc+ '&' + str_cutsDaug_pidK+')'} 
-                                , CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-                                , MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
+      str_cutsMassPreFit_inc = "(AM > %(MinMassPreFitinc)s) & (AM < %(MaxMassPreFitinc)s)" % self.getProps()
+      str_cutsMassPostFit_inc = "(M > %(MinMassPostFitinc)s) & (M < %(MaxMassPostFitinc)s)" % self.getProps()
+      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
+      cbpinc = CombineParticles("CombineD2hhh_inc"
+                                , DecayDescriptor =  '[D+ -> pi- pi+ pi+]cc'
+                                , DaughtersCuts = { "pi+" : str_cutsDaug_inc }
+                                , CombinationCut = '(' + str_cutsComb_inc +'&' + str_cutsMassPreFit_inc +')'
+                                , MotherCut = '(' + str_cutsMoth_inc + '&' + str_cutsMassPostFit_inc + ')'
                                 )
-      selD2KPPos = Selection("selD2KPPos", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi, StdTightPIDsK] )
-      return selD2KPPos
-
-   # make Ds2KPP with opposite sign
-   def makeDs2KPPos(self):
-      StdLoosePIDsPi = DataOnDemand(Location = "Phys/StdLoosePions")
-      StdTightPIDsK = DataOnDemand(Location = "Phys/StdTightKaons")
-      str_cutsDaug_inc ="(MIPCHI2DV(PRIMARY) > %(DaugIPCHI2)s) & (PT > %(DaugPTexc)s *MeV) &  (P > %(DaugP)s *MeV) &  (TRCHI2DOF < %(DaugTrkCHI2)s) "  % self.getProps()
-      str_cutsDaug_pidK = "(PIDK-PIDpi > %(KPIDKmin)s )"  % self.getProps()
-      str_cutsDaug_pidpi = "(PIDK-PIDpi < %(piPIDKmax)s )"  % self.getProps()
-      str_cutsComb_inc = " (ADOCACHI2CUT( %(DaugDOCA)s , '' )) & (ANUM(PT > %(Daug2PT)s ) >= 2) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daug2IPCHI2)s ) >= 2) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(SumDaugPT)s*MeV)" % self.getProps()
-      str_cutsMassPreFit = "(AM > %(MinMassPreFitpid)s) & (AM < %(MaxMassPreFit)s)" % self.getProps()
-      str_cutsMassPostFit = "(M > %(MinMassPostFitDs)s) & (M < %(MaxMassPostFitDs)s)" % self.getProps()
-      str_cutsMoth_inc = "(BPVDIRA > %(DDIRA)s) & (BPVVDCHI2 > %(DFDCHI2)s) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DFDCHI2)s) & (VFASPF(VCHI2/VDOF) < %(DVtxCHI2NDOF)s) & (PT > %(DPT)s) & (BPVTRGPOINTINGWPT < %(POINT)s) & (BPVIPCHI2() < %(DIPCHI2)s) " % self.getProps()
-      cbpinc = CombineParticles("CombineDs2KPPos"
-				, DecayDescriptor =  '[D+ -> pi- pi+ K+]cc'
-				, DaughtersCuts = { "pi+" : '(' +str_cutsDaug_inc+ '&' + str_cutsDaug_pidpi +')' ,  "K-" : '(' + str_cutsDaug_inc+ '&' + str_cutsDaug_pidK+')'} 
-				, CombinationCut ='('+ str_cutsComb_inc +'&' + str_cutsMassPreFit +')'
-				, MotherCut ='('+ str_cutsMoth_inc + '&' + str_cutsMassPostFit + ')'
-				)
-      selDs2KPPos = Selection("selDs2KPPos", Algorithm = cbpinc, RequiredSelections = [StdLoosePIDsPi, StdTightPIDsK] )
-      return selDs2KPPos
-
-
+      selD2hhhinc = Selection("selD2hhhinc", Algorithm = cbpinc, RequiredSelections = [StdNoPIDsPi] )
+      return selD2hhhinc
 
    def _filterNTracksInEvent(self):
       '''
@@ -370,3 +244,4 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
       for (k,v) in self.getDefaultProperties().iteritems() :
          d[k] = getattr(self,k) if hasattr(self,k) else v
       return d
+

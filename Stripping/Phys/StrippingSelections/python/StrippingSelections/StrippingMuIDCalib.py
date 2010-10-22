@@ -50,7 +50,7 @@ jp_line = StrippingLine('JpsiNoPID'
 # Create b -> Jpsi -> mumu candidates out of no pid muons
 ## ############################################################
 #Muons common cut
-mucocut = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & (P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) &(MIPDV(PRIMARY)>0.050)'
+mucocut = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & (P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<5) & (ISLONG) &(MIPDV(PRIMARY)>0.050)'
 #Tag and probe cuts: 
 #   TAG:: IsMuon and P>6Gev and Pt>1.5 GeV
 #   PROBE:: Ecal (-10,1000) and Hcal (1000,4000) energy filtered
