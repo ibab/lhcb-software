@@ -6,6 +6,9 @@
 
 ! 2010-10-22 - Ulrich Kerzel
 - fix requirements file, add StrippingNeuroBayesParam to requirements
+- add options file to test networks (for mumu)
+- read expertise from correct package
+
 
 ! 2010-10-20 - Ulrich Kerzel
  - first version: DiMuon

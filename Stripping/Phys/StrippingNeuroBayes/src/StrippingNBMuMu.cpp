@@ -89,10 +89,8 @@ StatusCode StrippingNBMuMu::initialize() {
   const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
                                   "/data/" + m_netVersion + "/" );
 
-  //std::string fullPath = paramRoot+m_ExpertiseName;
-  std::string fullPath = m_ExpertiseName;
-
-   
+  std::string fullPath = paramRoot+m_ExpertiseName;
+     
   // FPE Guard for NB call
   FPE::Guard guard(true);
   m_NBExpert = new Expert(fullPath.c_str()); 
