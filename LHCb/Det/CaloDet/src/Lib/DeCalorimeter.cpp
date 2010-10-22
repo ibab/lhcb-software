@@ -1098,6 +1098,7 @@ StatusCode DeCalorimeter::getQuality( )  {
   int count = 0;
   int bad = 0;
   int badLED=0;
+  int masked =0;
   for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
     int ll = size*kk;
     double cell       = data[ll];
@@ -1122,30 +1123,34 @@ StatusCode DeCalorimeter::getQuality( )  {
         msg << MSG::DEBUG << "Quality " << id << " : " << m_cells[id].cellStatus() << endmsg;
         int iFlag = (int) qFlag;
         bool bLed = false;
-        bool b = false;
+        bool bRO = false;
+        bool bMask = false;
         int  d = 1;
         while( iFlag > 0){
           if( (iFlag & 0x1) == 1){
-            if(CaloCellQuality::Name[d].find("LED") != std::string::npos )
+            if(CaloCellQuality::qName(d).find("LED") != std::string::npos )
               bLed = true;
+            else if( (CaloCellQuality::Flag) iFlag == CaloCellQuality::OfflineMask)
+              bMask = true;
             else
-              b = true;
+              bRO = true;
           }
           iFlag /= 2;
           d += 1;
         }
         if( bLed )badLED++;
-        if( b    )bad++;
-      }
-      
+        if( bRO    )bad++;
+        if( bMask )masked++;
+      }      
       count++;
     }else{
       msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endmsg;
     }
   }
   msg << MSG::DEBUG << "Quality constant added for " << count << " channel(s) " << endmsg;
-  msg << MSG::INFO << "Found  " << bad << " channel(s) with problematic readout" << endmsg;
-  msg << MSG::INFO << "Found  " << badLED << " channel(s) with problematic LED monitoring" << endmsg;
+  msg << MSG::INFO << "Found  " << bad << " problematic readout channel(s)" << endmsg;
+  msg << MSG::INFO << "Found  " << masked << " channel(s) to be masked offline " << endmsg;
+  msg << MSG::INFO << "Found  " << badLED << " channel(s) with 'LED monitoring problem'" << endmsg;
   return StatusCode::SUCCESS;  
 }
 

@@ -6,8 +6,10 @@
 
 
 ! 2010-10-22 - Olivier Deschamps
-  - CellParam : fix direction of the gainShift correction 
+  - CellParam : protect CaloCellQuality::Name against unexpected quality flag.
 
+! 2010-10-22 - Olivier Deschamps
+  - CellParam : fix direction of the gainShift correction 
 
 ! 2010-10-22 - Olivier Deschamps
   - add new CaloCellQuality flag

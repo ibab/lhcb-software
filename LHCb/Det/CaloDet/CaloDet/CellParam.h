@@ -30,8 +30,7 @@ typedef LHCb::CaloCellID::Vector CaloNeighbors ;
  *
  */
 // ============================================================================
-namespace CaloCellQuality
-{
+namespace CaloCellQuality{
   // ==========================================================================
   enum Flag 
     {
@@ -48,10 +47,15 @@ namespace CaloCellQuality
     BadLEDRatio      = 512,
     BadLEDOpticBundle=1024,
     UnstableLED      =2048,
-    StuckADC         =4096
+    StuckADC         =4096,
+    OfflineMask      =8192
   } ;
-  static const int Number = 14;
-  static const std::string Name[Number] = {"OK","Dead","Noisy","Shifted","DeadLED","VeryNoisy","VeryShifted","LEDSaturated","BadLEDTiming","VeryBadLEDTiming","BadLEDRatio","BadLEDOpticBundle","UnstableLED","StuckADC"};
+  static const int Number = 15;
+  static const std::string Name[Number] = {"OK","Dead","Noisy","Shifted","DeadLED","VeryNoisy","VeryShifted","LEDSaturated","BadLEDTiming","VeryBadLEDTiming","BadLEDRatio","BadLEDOpticBundle","UnstableLED","StuckADC","OfflineMask"};
+  static const std::string qName(int i){
+    if( i < Number && i >=0)return Name[i];
+    return std::string("??");
+  }
   // ==========================================================================
 }
 // ============================================================================
@@ -146,19 +150,18 @@ public:
   void setNumericGain  (int    ng)             {  m_nGain = ng        ; }  // for Prs only
 
   std::string cellStatus(){
-    using namespace CaloCellQuality;
-    if( (Flag) m_quality == OK )return Name[OK];
-    int iflag = 1;
+    if( (CaloCellQuality::Flag) m_quality == CaloCellQuality::OK )return CaloCellQuality::qName(CaloCellQuality::OK);
     std::ostringstream s("");
     s << "| ";
-    for(int i = 1  ; i < CaloCellQuality::Number; i++){
-      if( m_quality & iflag ) s << Name[i] << " | ";
-      iflag = iflag << 1;
+    int q = m_quality;
+    int d=1;
+    while( q > 0 ){
+      if( (q & 0x1) == 1 ) s << CaloCellQuality::qName( d ) << " | "; 
+      d +=1;
+      q /= 2;
     }
     return s.str();
   }
-  
-
   
   bool operator==( const CellParam& c2 ) const { 
     return center() == c2.center() && size() == c2.size(); }
