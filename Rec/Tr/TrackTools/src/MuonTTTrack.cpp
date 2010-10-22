@@ -24,13 +24,13 @@ MuonTTTrack::MuonTTTrack( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("ToolName", m_trackToolName = "MuonNNetRec");
-  declareProperty( "Extrapolator"        , m_extrapolatorName        = "TrackMasterExtrapolator"  );
-  declareProperty( "MC"      , m_MC      = false      );
-  declareProperty( "AddTTHits"      , m_addTTHits      = true      );
-  declareProperty( "FillMuonStubInfo"      , m_fillMuonStubInfo      = false      );
-  declareProperty( "OutputLocation"      , m_outputLoc      = "Rec/Track/MuonStandalone"      );
-  declareProperty( "MinNTTHits", m_minNumberTTHits = 2 );
+  declareProperty("ToolName",             m_trackToolName     = "MuonNNetRec"             );
+  declareProperty( "Extrapolator",        m_extrapolatorName  = "TrackMasterExtrapolator" );
+  declareProperty( "MC",                  m_MC                = false                     );
+  declareProperty( "AddTTHits",           m_addTTHits         = true                      );
+  declareProperty( "FillMuonStubInfo",    m_fillMuonStubInfo  = false                     );
+  declareProperty( "OutputLocation",      m_outputLoc         = "Rec/Track/MuonTTTracks"  );
+  declareProperty( "MinNTTHits",          m_minNumberTTHits   = 2                         );
 }
 //=============================================================================
 // Destructor
@@ -99,10 +99,10 @@ StatusCode MuonTTTrack::execute() {
       std::vector<MuonHit*> muonHits = (*it)->getHits();
       bestMCPart = assocMCParticle(muonHits);
       if(bestMCPart != NULL){
-	truePx = bestMCPart->momentum().X();
-	truePy = bestMCPart->momentum().Y();
-	truePz = bestMCPart->momentum().Z();
-	trueP = bestMCPart->p();
+        truePx = bestMCPart->momentum().X();
+        truePy = bestMCPart->momentum().Y();
+        truePz = bestMCPart->momentum().Z();
+        trueP = bestMCPart->p();
       }
     }
     // ---------------------------------------------------------------
@@ -149,7 +149,7 @@ StatusCode MuonTTTrack::execute() {
       // -- Add the TT hits
       for(PatTTHits::iterator itHit = ttHits.begin(); itHit != ttHits.end(); ++itHit){
 	
-	track->addToLhcbIDs( (*itHit)->hit()->lhcbID() );
+        track->addToLhcbIDs( (*itHit)->hit()->lhcbID() );
 	
       }
     }
@@ -200,9 +200,17 @@ StatusCode MuonTTTrack::execute() {
  
   if(msgLevel(MSG::INFO)) info() << "Filling " << tracks->size() << " tracks in " << m_outputLoc << endmsg;
 
+  
+  bool filterPassed = false;
+
   if(tracks->size() !=0){
     put( tracks, m_outputLoc );
+    filterPassed = true;
   }
+
+
+  // -- Only go on if MuonTT tracks have been reconstructed
+  setFilterPassed( filterPassed );
 
   return StatusCode::SUCCESS;
  
@@ -230,7 +238,7 @@ StatusCode MuonTTTrack::fillPVs(std::vector<double>& PVPos){
 
       //-- If more than one PV, take the one closer to 0
       if( (*it)->position().Z() < zPVmax ){
-	zPVmax = (*it)->position().Z();
+        zPVmax = (*it)->position().Z();
       }
       
       PVPos[0] = (*it)->position().X();

@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2010-10-22 - Michel De Cian
+ - Added "setFilterPassed" to MuonTTTrack.cpp
 
 ! 2010-10-12 - Marco Cattaneo
  - Fix one more windows warning, converting double to float
