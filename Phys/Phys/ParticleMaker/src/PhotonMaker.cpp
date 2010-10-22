@@ -349,7 +349,8 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
   // PhotonID estimator
   if( m_usePhotonID ){
     if( pp->hasInfo(LHCb::ProtoParticle::PhotonID  )){
-      CL *= pp->info(LHCb::ProtoParticle::PhotonID, 1.  ) ;
+      double pid = pp->info(LHCb::ProtoParticle::PhotonID, 1.  ) ;
+      CL *= 0.5*(tanh(pid)+1);
     }
     else{ 
       Warning("confLevel(): PhotonID is not available" ) ; }

@@ -4,6 +4,9 @@
 !==============================================================================
 
 
+! 2010-10-22 - Olivier Deschamps
+ - PhotonMaker : convert new photonID into confLevel
+
 ! 2010-10-07 - Olivier Deschamps
  - PhotonMaker : protect against missing input container 
 
