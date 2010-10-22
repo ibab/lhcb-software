@@ -69,6 +69,13 @@ StatusCode StrippingNBMuMu::initialize() {
   info() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
   info() <<  "PlotNBins      " <<  m_PlotNBins     << endmsg;
 
+  //
+  // get location of primary vertices
+  //
+  const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
+  m_pvLocation = oo->primaryVertexLocation();
+  info() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
+
 
   //
   // setup NeuroBayes
@@ -82,14 +89,15 @@ StatusCode StrippingNBMuMu::initialize() {
     return Error( "No NeuroBayes Expertise specified" );
 
   // Expertise are in PARAM group of packages
-  const std::string paramEnv = "STRIPPINGNEUROBAYESPARAMROOT";
-  if ( !getenv(paramEnv.c_str()) ) 
-    return Error( "$"+paramEnv+" not set" );
-  
-  const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
-                                  "/data/" + m_netVersion + "/" );
+  //const std::string paramEnv = "STRIPPINGNEUROBAYESPARAMROOT";
+  //if ( !getenv(paramEnv.c_str()) ) 
+  //  return Error( "$"+paramEnv+" not set" );
+  //
+  //const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
+  //                                "/data/" + m_netVersion + "/" );
 
-  std::string fullPath = paramRoot+m_ExpertiseName;
+  //std::string fullPath = paramRoot+m_ExpertiseName;
+  std::string fullPath = m_ExpertiseName;
      
   // FPE Guard for NB call
   FPE::Guard guard(true);
@@ -246,6 +254,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
         return StatusCode::FAILURE;
   }// if
 
+
+  
   //
   // get input variables, move "spikes" to -999
   //
@@ -258,6 +268,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   const Gaudi::XYZVector v1 = muPlus ->momentum().Vect().Unit();
   const Gaudi::XYZVector v2 = muMinus->momentum().Vect().Unit();
 
+  
+  
   //
   // apply the same soft pre-cuts as
   // during the evaluation of the sWeights
@@ -297,6 +309,9 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   if (muminusPIDp > -0.01 && muminusPIDp < 0.01)
     muminusPIDp = -999;
   
+  
+
+  
   double muplusChi2 = muPlus->proto()->track()->probChi2();
   if (muplusChi2 < 0.001) {
     muplusChi2 = -999;
@@ -307,10 +322,20 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
     muminusChi2 = -999;
   }
 
-  const LHCb::VertexBase *relatedPV = this->bestPV(&particle);
-  Gaudi::XYZVector        A         = particle.momentum().Vect();
-  Gaudi::XYZVector        B         = particle.endVertex()->position() - relatedPV->position();  
-  double                  jPsiDira  = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
+  double jPsiDira                      = -999;
+  const LHCb::RecVertex::Container* PV =    0;
+  if (exist<LHCb::RecVertex::Container>(m_pvLocation)) {
+    PV = get<LHCb::RecVertex::Container>(m_pvLocation);
+    if (PV != NULL && PV->size() >0) {
+      const LHCb::VertexBase *relatedPV = this->bestPV(&particle);
+      Gaudi::XYZVector        A         = particle.momentum().Vect();
+      Gaudi::XYZVector        B         = particle.endVertex()->position() - relatedPV->position();  
+      jPsiDira  = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
+  } else {
+    info() << "No primary vertices found" << endmsg;
+    } // else if NULL
+  } // if exist
+
 
 
 
@@ -319,7 +344,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   // 
 
   
-
+  info() << "==========================> TEST 5 " << std::endl;
   //
   // fill input array
   //
@@ -387,6 +412,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 
     filledInput = true;
   } // if NoIP net
+
+  info() << "==========================> TEST 6 " << std::endl;
 
   if (!filledInput) {
     warning() << "StrippingNBMuMu::getInputVar: Input variables not filled - which network?" << endmsg;

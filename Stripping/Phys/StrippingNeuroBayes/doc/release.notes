@@ -8,6 +8,7 @@
 - fix requirements file, add StrippingNeuroBayesParam to requirements
 - add options file to test networks (for mumu)
 - read expertise from correct package
+- protect against no PV, set DIRA=-999
 
 
 ! 2010-10-20 - Ulrich Kerzel
