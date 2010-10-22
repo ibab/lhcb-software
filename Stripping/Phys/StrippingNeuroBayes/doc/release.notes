@@ -4,6 +4,9 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2010-10-22 - Ulrich Kerzel
+- fix requirements file, add StrippingNeuroBayesParam to requirements
+
 ! 2010-10-20 - Ulrich Kerzel
  - first version: DiMuon
    -> J/Psi-> MuMu in tight J/Psi mass region, to be compared against cut based

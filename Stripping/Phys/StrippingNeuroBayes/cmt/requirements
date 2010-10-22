@@ -18,34 +18,8 @@ branches          cmt doc src python
 # use   Package          v1r*    Hat
 
 
-# Packages needed to compile and link the application
-use GaudiConf          v*                   -no_auto_imports
-use GaudiKernel        v*
-
-# Databases
-use DDDB               v*    Det            -no_auto_imports
-use ParamFiles         v*                   -no_auto_imports
-use FieldMap           v*                   -no_auto_imports
-use AppConfig          v*                   -no_auto_imports
-#use HltTCK             v*  TCK              -no_auto_imports
-
-# From GAUDI project
-use GaudiSvc           v*                   -no_auto_imports
-use GaudiPoolDb        v*                   -no_auto_imports
-use GaudiPython        v*                   -no_auto_imports
-
-# From LHCB project
-use LinkerInstances    v*    Event
-
-#-- Lbcom
-use LbcomSys    v*
-
-#-- Rec
-use RecSys      v*
-
-# -- Analysis
-use AnalysisSys v*
-
+use DaVinciKernel              v*      Phys
+use StrippingNeuroBayesParam   v*
 
 
 # NeuroBayes
