@@ -16,6 +16,8 @@
 #include "LoKi/Vertices1.h"
 #include "LoKi/AuxDesktopBase.h"
 #include "LoKi/PhysTypes.h"
+#include "LoKi/Particles4.h"
+#include "LoKi/Particles20.h"
 // ============================================================================
 /** @file LoKi/Particles37.h
  *  Collection of functors to calculate the decay length
@@ -91,7 +93,7 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class DecayLengthSignificanceDV LoKi/Particles37.h
+    /** @class DecayLengthSignificanceDV
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the decay length significance.
      *  @see DecayLengthSignificance
@@ -131,6 +133,308 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class PathDistance
+     *  get the path distance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path 
+     *  @see LoKi::Cuts::PATHDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistance : public LoKi::Particles::ImpPar 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the primary vertex & tool 
+      PathDistance 
+      ( const LHCb::VertexBase*                        pv     , 
+        const IDistanceCalculator*                     tool   ) ;
+      /// constructor from the primary vertex & tool 
+      PathDistance ( const LoKi::Vertices::ImpParBase& tool   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistance() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistance* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// The default constructor is disabled 
+      PathDistance() ;                   // The default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PathDistanceChi2
+     *  get the path distance chi2  
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::PathDistance 
+     *  @see LoKi::Cuts::PATHDISTCHI2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistanceChi2 : public LoKi::Particles::PathDistance 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the primary vertex & tool 
+      PathDistanceChi2 
+      ( const LHCb::VertexBase*                        pv     , 
+        const IDistanceCalculator*                     tool   ) ;
+      /// constructor from the primary vertex & tool 
+      PathDistanceChi2 ( const LoKi::Vertices::ImpParBase& tool   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistanceChi2() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistanceChi2* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// The default constructor is disabled 
+      PathDistanceChi2 () ;              // The default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PathDistanceSignificance
+     *  get the path distance significnace  
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::PathDistance 
+     *  @see LoKi::Particles::PathDistanceChi2 
+     *  @see LoKi::Cuts::PATHDISTSIGNIFICANCE  
+     *  @see LoKi::Cuts::PDS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistanceSignificance 
+      : public LoKi::Particles::PathDistanceChi2
+    {
+    public:
+      // ======================================================================
+      /// constructor from the primary vertex & tool 
+      PathDistanceSignificance
+      ( const LHCb::VertexBase*                        pv     , 
+        const IDistanceCalculator*                     tool   ) ;
+      /// constructor from the primary vertex & tool 
+      PathDistanceSignificance ( const LoKi::Vertices::ImpParBase& tool   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistanceSignificance () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistanceSignificance* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// The default constructor is disabled 
+      PathDistanceSignificance () ;      // The default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ProjDistance
+     *  get the ''projected-distance''
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @see LoKi::Cuts::PROJDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class ProjectedDistance : public LoKi::Particles::PathDistance 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the primary vertex & tool 
+      ProjectedDistance 
+      ( const LHCb::VertexBase*                        pv     , 
+        const IDistanceCalculator*                     tool   ) ;
+      /// constructor from the primary vertex & tool 
+      ProjectedDistance ( const LoKi::Vertices::ImpParBase& tool   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ProjectedDistance () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ProjectedDistance* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// The default constructor is disabled 
+      ProjectedDistance () ;             // The default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ProjectedDistanceSignificance
+     *  get the ''projected-distance'' significance 
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @see LoKi::Cuts::PROJDS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class ProjectedDistanceSignificance 
+      : public LoKi::Particles::ProjectedDistance
+    {
+    public:
+      // ======================================================================
+      /// constructor from the primary vertex & tool 
+      ProjectedDistanceSignificance 
+      ( const LHCb::VertexBase*                        pv     , 
+        const IDistanceCalculator*                     tool   ) ;
+      /// constructor from the primary vertex & tool 
+      ProjectedDistanceSignificance ( const LoKi::Vertices::ImpParBase& tool   ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ProjectedDistanceSignificance () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ProjectedDistanceSignificance* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// The default constructor is disabled 
+      ProjectedDistanceSignificance () ; // The default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PathDistanceWithBestPV
+     *  get the path distance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path 
+     *  @see LoKi::Cuts::BPVPATHDIST
+     *  @see LoKi::Cuts::BPVPATHDIST_
+     *  @see LoKi::Cuts::PATHDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistanceWithBestPV : public LoKi::Particles::ImpParWithTheBestPV  
+    {
+    public:
+      // ======================================================================
+      /// constructor from tool nickname 
+      PathDistanceWithBestPV ( const std::string& geo = "" )  ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistanceWithBestPV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistanceWithBestPV* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PathDistanceChi2WithBestPV
+     *  get the path distance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path 
+     *  @see LoKi::Cuts::BPVPATHDISTCHI2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistanceChi2WithBestPV 
+      : public LoKi::Particles::PathDistanceWithBestPV 
+    {
+    public:
+      // ======================================================================
+      /// constructor from tool nickname 
+      PathDistanceChi2WithBestPV ( const std::string& geo = "" )  ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistanceChi2WithBestPV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistanceChi2WithBestPV* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PathDistanceSignificanceWithBestPV
+     *  get the path distance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path 
+     *  @see LoKi::Cuts::BPVPDS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class PathDistanceSignificanceWithBestPV 
+      : public LoKi::Particles::PathDistanceChi2WithBestPV 
+    {
+    public:
+      // ======================================================================
+      /// constructor from tool nickname 
+      PathDistanceSignificanceWithBestPV ( const std::string& geo = "" )  ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PathDistanceSignificanceWithBestPV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  PathDistanceSignificanceWithBestPV* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ProjectedDistanceWithBestPV
+     *  get the path distance 
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @see LoKi::Cuts::BPVPROJDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class ProjectedDistanceWithBestPV 
+      : public LoKi::Particles::PathDistanceWithBestPV
+    {
+    public:
+      // ======================================================================
+      /// constructor from tool nickname 
+      ProjectedDistanceWithBestPV ( const std::string& geo = "" )  ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ProjectedDistanceWithBestPV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ProjectedDistanceWithBestPV* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ProjectedDistanceSignificanceWithBestPV
+     *  get the path distance 
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @see LoKi::Particles::ImpPar::path 
+     *  @see LoKi::Cuts::BPVPROJDS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-23
+     */
+    class ProjectedDistanceSignificanceWithBestPV 
+      : public LoKi::Particles::ProjectedDistanceWithBestPV
+    {
+    public:
+      // ======================================================================
+      /// constructor from tool nickname 
+      ProjectedDistanceSignificanceWithBestPV ( const std::string& geo = "" )  ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ProjectedDistanceSignificanceWithBestPV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ProjectedDistanceSignificanceWithBestPV* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                        end of namespace LoKi:: Particles
   // ==========================================================================
   namespace Cuts 
@@ -139,14 +443,14 @@ namespace LoKi
     /** @typedef DLS
      *  Functor which calculates the decay length significance of a
      *  particle with respect to a primary vertex.
-     *  @see DecayLengthSignificance
+     *  @see LoKi::Particles::DecayLengthSignificance
      *
      *  @code
      *    
-     *    LHCb::VertexBase* pv = ...;
+     *    const LHCb::VertexBase* pv = ...;
      *
      *    // get the DLS functor
-     *    const DLS_FUN p1 = DLS( pv );
+     *    const DLS p1 = DLS( pv );
      *
      *    const LHCb::Particle* B = ...;
      *  
@@ -162,24 +466,305 @@ namespace LoKi
     /** @typedef BPVDLS
      *  Functor which uses the best primary vertex from the
      *  PhysDesktop to calculate the decay length significance.
-     *  @see DecayLengthSignificance
-     *  @see DecayLengthSignificanceDV
-     *
-     *  @code
-     *    
-     *    // get the DLS functor
-     *    const DLS_FUN fun = DLS();
-     *
-     *    const LHCb::Particle* B = ...;
-     *  
-     *    const double dls = fun ( B );
-     *
-     *  @endcode 
+     *  @see LoKi::Particles::DecayLengthSignificance
+     *  @see LoKi::Particles::DecayLengthSignificanceDV
      *
      *  @author Roel Aaij
      *  @date   2010-05-07
      */
     typedef LoKi::Particles::DecayLengthSignificanceDV                 BPVDLS ;
+    // ========================================================================
+    /** @typedef PATHDIST 
+     *  Functor which calculates the 'path-distance'
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the PATHDIST functor
+     *    const PATHDIST  fun = PATHDIST( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double distance = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::PathDistance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistance                            PATHDIST ;
+    // ========================================================================
+    /** @typedef PATHDISTCHI2 
+     *  Functor which calculates the chi2 for 'path-distance'
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the PATHDISTCHI2 functor
+     *    const PATHDISTCHI2  fun = PATHDISTCHI2 ( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double chi2 = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::PathDistanceChi2
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST 
+     *  @see LoKi::Cuts::PATHDISTSIGNIFICANCE  
+     *  @see LoKi::Cuts::PDS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceChi2                    PATHDISTCHI2 ;
+    // ========================================================================
+    /** @typedef PATHDISTSIGNIFICANCE
+     *  Functor which calculates the significance for 'path-distance'
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the functor
+     *    const PATHDISTSIGNIFICANCE  fun = PATHDISTSIGNIFICANCE ( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double chi2 = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::PathDistanceSignificance
+     *  @see LoKi::Particles::PathDistanceChi2
+     *  @see LoKi::Particles::PathDistance
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST 
+     *  @see LoKi::Cuts::PATHDISTCHI2 
+     *  @see LoKi::Cuts::PDS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceSignificance    PATHDISTSIGNIFICANCE ;
+    // ========================================================================
+    /** @typedef PDS
+     *  Functor which calculates the significance for 'path-distance'
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the functor
+     *    const PDS  fun = PDS ( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double chi2 = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::PathDistanceSignificance
+     *  @see LoKi::Particles::PathDistanceChi2
+     *  @see LoKi::Particles::PathDistance
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST 
+     *  @see LoKi::Cuts::PATHDISTCHI2 
+     *  @see LoKi::Cuts::PATHDISTANCESIGNIFICANCE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceSignificance                     PDS ;
+    // ========================================================================
+    /** @typedef PROJDIST 
+     *  Functor which calculates the 'projected-distance'
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the functor
+     *    const PROJDIST  fun = PROJDIST( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double distance = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ProjectedDistance 
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::ProjectedDistance                       PROJDIST ;
+    // ========================================================================
+    /** @typedef PROJDS 
+     *  Functor which calculates the 'projected-distance' significance 
+     *  particle with respect to a primary vertex.
+     *
+     *  @code
+     *    
+     *    const LHCb::VertexBase* pv = ...;
+     *
+     *    // get the functor
+     *    const PROJDS  fun = PROJDS ( pv );
+     *
+     *    const LHCb::Particle* B = ...;
+     *  
+     *    const double distance = fun ( B );
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::ProjectedDistanceSignificance 
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::ProjectedDistanceSignificance             PROJDS ;
+    // ========================================================================
+    /** @var BPVPATHDIST
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     *
+     *  @see LoKi::Particles::PathDistanceWithBestPV 
+     *  @see LoKi::Particles::PathDistance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST
+     *  @see LoKi::Cuts::BPVPATHDIST_
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    const LoKi::Particles::PathDistanceWithBestPV                 BPVPATHDIST ;
+    // ========================================================================
+    /** @typedef BPVPATHDIST_
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     
+     *
+     *  @see LoKi::Particles::PathDistanceWithBestPV 
+     *  @see LoKi::Particles::PathDistance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST
+     *  @see LoKi::Cuts::BPVPATHDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceWithBestPV              BPVPATHDIST_ ;
+    // ========================================================================
+    /** @var BPVPATHDISTCHI2 
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     *
+     *  @see LoKi::Particles::PathDistanceChi2WithBestPV 
+     *  @see LoKi::Particles::PathDistanceChi2 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    const LoKi::Particles::PathDistanceChi2WithBestPV         BPVPATHDISTCHI2 ;
+    // ========================================================================
+    /** @typedef BPVPATHDISTCHI2_
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     *
+     *  @see LoKi::Particles::PathDistanceChi2WithBestPV 
+     *  @see LoKi::Particles::PathDistanceChi2 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST
+     *  @see LoKi::Cuts::BPVPATHDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceChi2WithBestPV      BPVPATHDISTCHI2_ ;
+    // ========================================================================
+    /** @var BPVPDS 
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     *
+     *  @see LoKi::Particles::PathDistanceSiginficanceWithBestPV 
+     *  @see LoKi::Particles::PathDistanceSignificance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    const LoKi::Particles::PathDistanceSignificanceWithBestPV          BPVPDS ;
+    // ========================================================================
+    /** @typedef BPVPDS_
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the decay length significance.
+     *
+     *  @see LoKi::Particles::PathDistanceSignificanceWithBestPV 
+     *  @see LoKi::Particles::PathDistanceSignificance 
+     *  @see IDistanceCalculator::pathDistance 
+     *  @see LoKi::Particles::ImpPar::path
+     *  @see LoKi::Cuts::PATHDIST
+     *  @see LoKi::Cuts::BPVPATHDIST
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::PathDistanceSignificanceWithBestPV       BPVPDS_ ;
+    // ========================================================================
+    /** @var BPVPROJDIST
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the projected disatnce 
+     *
+     *  @see LoKi::Particles::ProjectedDistanceWithBestPV
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    const LoKi::Particles::ProjectedDistanceWithBestPV            BPVPROJDIST ;
+    // ========================================================================
+    /** @typedef BPVPROJDIST_ 
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the projected disatnce 
+     *
+     *  @see LoKi::Particles::ProjectedDistanceWithBestPV
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::ProjectedDistanceWithBestPV         BPVPROJDIST_ ;
+    // ========================================================================
+    /** @var BPVPROJDS
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the sigibnficance of projected distance 
+     *
+     *  @see LoKi::Particles::ProjectedDistanceSignificanceWithBestPV
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    const LoKi::Particles::ProjectedDistanceSignificanceWithBestPV BPVPROJDS ;
+    // ========================================================================
+    /** @typedef BPVPROJDS_ 
+     *  Functor which uses the best primary vertex from the
+     *  PhysDesktop to calculate the significance of projected distance 
+     *
+     *  @see LoKi::Particles::ProjectedDistanceWithBestPV
+     *  @see IDistanceCalculator::projectedDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-10-23
+     */
+    typedef LoKi::Particles::ProjectedDistanceSignificanceWithBestPV BPVPROJDS_ ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

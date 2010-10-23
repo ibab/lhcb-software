@@ -97,6 +97,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
+      // ======================================================================
       /** the "default" constructor,
        *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
@@ -113,6 +114,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      const std::string& geo () const { return  m_geo ; }  
+      // ======================================================================
     private:
       // ======================================================================
       /// the nick name or type name of the IDistanceCalculator
@@ -121,7 +126,7 @@ namespace LoKi
     };
     // ========================================================================
     /** @class ImpParChi2WithTheBestPV
-     *  The special version of LoKi::Particles::ImpParChi2 functor
+     *  The special version of LoKi::Particles::ImpParChi2  functor
      *  which gets the related primary vertex from IPhysDesktop tool
      *
      *  @see LoKi::Cuts::BPVIPCHI2
@@ -137,9 +142,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class ImpParChi2WithTheBestPV
-      : public LoKi::Particles::ImpParChi2 
-      , public virtual LoKi::AuxDesktopBase 
+    class ImpParChi2WithTheBestPV : public ImpParWithTheBestPV 
     {
     public:
       // ======================================================================
@@ -158,11 +161,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the nick name or type name of the IDistanceCalculator
-      std::string                   m_geo ;
       // ======================================================================
     };
     // ========================================================================
@@ -185,6 +183,7 @@ namespace LoKi
      */
     class MinImpParWithSource : public LoKi::Particles::MinImpPar 
     {
+    protected:
       // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
@@ -226,7 +225,7 @@ namespace LoKi
     public:
       // ======================================================================
       // get the nickname of full type/name of IDistanceCalculator tool
-      const std::string& geo() const { return m_geo ; }
+      const std::string& geo    () const { return m_geo    ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -435,16 +434,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2WithSource : public LoKi::Particles::MinImpParChi2
+    class MinImpParChi2WithSource : public LoKi::Particles::MinImpParWithSource
     {
-      // ======================================================================
-      // the source of vertices 
-      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
-      // ======================================================================
     public:
       // ======================================================================
       /** constructor from the source and nickname or full type/name of 
@@ -465,22 +456,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
-    public:
-      // ======================================================================
-      // get the nickname of full type/name of IDistanceCalculator tool
-      const std::string& geo() const { return m_geo ; }
-      // ======================================================================
     private:
       // ======================================================================
       /// no default constructor 
       MinImpParChi2WithSource () ; // no default constructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the source 
-      LoKi::Assignable<_Source>::Type    m_source ; // the source 
-      /// the nickname or type/name of IDistanceCalculator tool 
-      std::string                        m_geo    ; // IDistanceCalculator tool
       // ======================================================================
     } ;
     // ========================================================================
@@ -1407,9 +1386,9 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi   
+} //                                                      end of namespace LoKi   
 // ============================================================================
 // The end 
 // ============================================================================

@@ -31,6 +31,7 @@
  */
 // ============================================================================
 /// anonymous namespace to hide some pure technical stuff
+// ============================================================================
 namespace
 {
   // ==========================================================================
@@ -47,57 +48,11 @@ namespace
   /// "invalid" vertex 
   const LHCb::VertexBase* const s_VERTEX = 0 ;
   // ==========================================================================
-  /** get the IDistanceCalculator tool from IDVAlgorith
-   *  @param tool to be updated 
-   *  @param loki service 
-   *  @param name nickname of full type/name of the tool
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date 2008-01-16
-   */  
-  inline 
-  const IDistanceCalculator* 
-  loadTool 
-  ( const LoKi::Vertices::ImpactParamTool& tool      ,
-    const LoKi::ILoKiSvc*                  loki      ,
-    const std::string&                     name = "" ) 
-  {
-    if ( 0 == loki ) { return 0 ; }                            // RETURN
-    const IDistanceCalculator* geo = 
-      LoKi::GetTools::distanceCalculator ( loki , name ) ;
-    // set the tool 
-    tool.setTool ( geo ) ;
-    return geo ;                           // RETURN
-  }
-  // ==========================================================================
-  /** get ILifetimeFitter tool from IDVAlgorithm
-   *  @param func functor to be updated 
-   *  @param loki service 
-   *  @param name full type/name of the tool
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date 2008-01-16
-   */
-  template <class TYPE>
-  inline 
-  const ILifetimeFitter*
-  loadFitter  
-  ( const TYPE&           func , 
-    const LoKi::ILoKiSvc* loki ,
-    const std::string&    name )
-  {
-    if ( 0 == loki ) { return  0 ; }                           // RETURN 
-    //
-    const ILifetimeFitter* fitter = 
-      LoKi::GetTools::lifetimeFitter ( loki , name ) ;
-    //
-    func.setTool ( fitter ) ;
-    return fitter ;                                            // RETURN 
-  }
-  // ==========================================================================
   /// the finder for the primary vertices:
   const LoKi::Vertices::IsPrimary s_PRIMARY = LoKi::Vertices::IsPrimary () ;
   // ==========================================================================
   /// the default name of Lifetime fitter:
-  const std::string s_LIFETIME = "PropertimeFitter/properTime:PUBLIC" ;
+  const std::string s_LIFETIME = "LoKi::LifetimeFitter/lifetime:PUBLIC" ;
   // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
@@ -164,7 +119,8 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from IDVAlgorithm 
-  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo() ) ) ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
@@ -177,14 +133,13 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::ImpParWithTheBestPV::fillStream 
 ( std::ostream& s ) const { return s << "BPVIP ('" <<  m_geo << "')"; }
+
 // ============================================================================
 // the default constructor, creates the object in invalid state 
 // ============================================================================
 LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV 
 ( const std::string& geo ) 
-  : LoKi::AuxDesktopBase()
-  , LoKi::Particles::ImpParChi2 ( s_VERTEX , s_IPTOOL ) 
-  , m_geo ( geo )   
+  : LoKi::Particles::ImpParWithTheBestPV ( geo ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -205,19 +160,20 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from IDVAlgorithm 
-  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() )
+  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo() ) ) ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
   setVertex ( bestVertex ( p ) ) ;
   //
-  return chi2 ( p ) ;
+  return ipchi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
 // ============================================================================
 std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream 
-( std::ostream& s ) const { return s << "BPVIPCHI2 ('" <<  m_geo << "')"; }
+( std::ostream& s ) const { return s << "BPVIPCHI2 ('" <<  geo() << "')"; }
 // ============================================================================
 /*  constructor from the source and nickname or full type/name of 
  *  IDistanceCalculator tool
@@ -252,14 +208,17 @@ LoKi::Particles::MinImpParWithSource::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from IDVAlgorithm 
-  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() )
+  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo() ) ) ; }
+  // check it!
+  Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;      
   // check the event 
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
     clear() ;
     // get the primary vertices from the source 
-    LHCb::VertexBase::ConstVector primaries = m_source() ;
+    LHCb::VertexBase::ConstVector primaries = source()() ;  // NB! 
     // fill the functor with primary vertices:
     addObjects ( primaries.begin() , primaries.end () ) ;
     if ( empty() ) 
@@ -275,7 +234,7 @@ LoKi::Particles::MinImpParWithSource::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::MinImpParWithSource::fillStream 
 ( std::ostream& s ) const 
-{ return s << "MIPSOURCE ('" <<  m_source << ", " << m_geo << "')"; }
+{ return s << "MIPSOURCE ('" <<  source() << ", " << geo() << "')"; }
 // ============================================================================
 /* the "default" constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -477,9 +436,7 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
 LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource 
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source ,
   const std::string&                                          geo    ) 
-  : LoKi::Particles::MinImpParChi2 ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
-  , m_source ( source )   
-  , m_geo    ( geo    )
+  : LoKi::Particles::MinImpParWithSource ( source , geo ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -500,14 +457,17 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from IDVAlgorithm 
-  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::distanceCalculator ( *this , geo() ) ) ; }
+  // check it!
+  Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // check the event 
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
     clear() ;
     // get the primary vertices from the source 
-    LHCb::VertexBase::ConstVector primaries = m_source() ;
+    LHCb::VertexBase::ConstVector primaries = source()() ; // NB!!
     // fill the functor with primary vertices:
     addObjects ( primaries.begin() , primaries.end () ) ;
     if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
@@ -522,7 +482,7 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream 
 ( std::ostream& s ) const 
-{ return s << "MIPCHI2SOURCE ('" <<  m_source << ", " << m_geo << "')"; }
+{ return s << "MIPCHI2SOURCE ('" <<  source() << ", " << geo() << "')"; }
 // ============================================================================
 /* the "default" constructor,
  *  gets the IDistanceCalculator tool from IDVAlgorithm by nickname or 
@@ -889,10 +849,10 @@ LoKi::Particles::LifeTimeDV::operator()
     return LoKi::Constants::InvalidTime ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  //
   // get the vertex from desktop
   const LHCb::VertexBase* vx = bestVertex ( p ) ;
   if ( 0 == vx ) 
@@ -947,7 +907,8 @@ LoKi::Particles::LifeTimeChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
@@ -1002,9 +963,10 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidChi2") ;
     return LoKi::Constants::InvalidChi2 ;
-  }    
+  }
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
@@ -1060,9 +1022,10 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidChi2") ;
     return LoKi::Constants::InvalidChi2 ;
-  }    
+  }
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 
@@ -1117,7 +1080,8 @@ LoKi::Particles::LifeTimeErrorDV::operator()
     return LoKi::Constants::InvalidTime ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
+  if ( 0 == tool() ) 
+  { setTool ( LoKi::GetTools::lifetimeFitter ( *this , fitter() ) ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // get the vertex from desktop 

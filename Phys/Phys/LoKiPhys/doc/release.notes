@@ -7,6 +7,35 @@
 
 ! 2010-10-23 - Vanya Belyaev
 
+ - new functors (similar to ``decay-length-significance'' by Roel & wouter, 
+    but based on IDistanceCalculator::(path|projected)Distance methods) 
+
+  ``Path-Distance''-related 
+
+       PATHDIST      - distance 
+       PATHDISTCHI2  - chi2 
+       PDS           - significance 
+
+       BPVPATHDIST 
+       BPVPATHDIST_
+       BPVPATHDISTCHI2 
+       BPVPATHDISTCHI2_
+       BPVPDS 
+       BPVPDS_
+
+  ``Projected-Distance''-related 
+
+       PROJDIST  - distance 
+       PROJDS    - significance 
+
+       BPVPROJDIST 
+       BPVPROJDIST_ 
+       BPVPROJDS
+       BPVPROJDS_
+ 
+
+! 2010-10-23 - Vanya Belyaev
+
  - new functors ( see task #17418 )
     	
     a family of functors (thanks to Mike Williams) to deal with 'corrected mass'

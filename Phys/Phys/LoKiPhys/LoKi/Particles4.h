@@ -38,6 +38,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -52,6 +53,9 @@ namespace LoKi
      *  @see LHCb::Particle
      *  @see LHCb::Vertex
      *  @see LoKi::Cuts::IP
+     *
+     *  Actually it is a common base class for all functors, dealing with
+     *  IDistanceCalculator 
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
@@ -98,8 +102,41 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s <<  "IP" ; }
-      /// the actual evaluator 
-      result_type ip ( argument p ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the actual evaluator of impact parameter 
+      double ip     ( argument p ) const ;
+      /// the actual evaluator of impact parameter chi2 
+      double ipchi2 ( argument p ) const ;
+      /** the actual evaluation of 'path-distance'
+       *  @see IDistanceCalculator::pathDistance 
+       *  @param p        (INPUT) the particle 
+       *  @param distance (OUTPUT) the distance 
+       *  @param error    (OUTPUT) the error 
+       *  @param chi2     (OUTPUT) the chi2 
+       *  @return status code 
+       */
+      StatusCode  path      ( argument p        , 
+                              double&  distance , 
+                              double&  error    , 
+                              double&  chi2     ) const ;
+      /** the actual evaluation of 'projected-distance'
+       *  @see IDistanceCalculator::projectedDistance 
+       *  @param p        (INPUT) the particle 
+       *  @param distance (OUTPUT) the distance 
+       *  @param error    (OUTPUT) the error 
+       *  @return status code 
+       */
+      StatusCode  projected ( argument p        , 
+                              double&  distance , 
+                              double&  error    ) const ;
+      /** the actual evaluation of 'projected-distance'
+       *  @see IDistanceCalculator::projectedDistance 
+       *  @param p        (INPUT) the particle 
+       *  @return the distance 
+       */
+      double     projected ( argument p        ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -164,13 +201,11 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  ImpParChi2* clone() const {return new ImpParChi2(*this) ;} ;
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const { return chi2( p ) ; }
+      virtual result_type operator() ( argument p ) const 
+      { return ipchi2( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s <<  "IPCHI2" ; }
-      /// the actual evaluator 
-      result_type   chi2 ( argument p ) const { return ipchi2 ( p ) ; }
-      result_type ipchi2 ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -362,8 +397,13 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const { return mip( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
+      /// the actual evaluator 
+      result_type mipchi2 ( argument p ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -416,7 +456,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MinImpParChi2 : public LoKi::Particles::ImpParChi2 
+    class MinImpParChi2 : public LoKi::Particles::MinImpPar
     {
     public:
       /// constructor from vertices and the tool
@@ -550,8 +590,7 @@ namespace LoKi
       ( VERTEX                                 first , 
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
-        : LoKi::Particles::ImpParChi2 ( (const LHCb::VertexBase*) 0 , tool )
-        , LoKi::Keeper<LHCb::VertexBase>( first , last )
+        : LoKi::Particles::MinImpPar ( first , last , tool ) 
       {}
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
@@ -564,8 +603,7 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         VERTEX                                 first , 
         VERTEX                                 last  ) 
-        : LoKi::Particles::ImpParChi2 ( (const LHCb::VertexBase*) 0 , tool )
-        , LoKi::Keeper<LHCb::VertexBase>( first , last )
+        : LoKi::Particles::MinImpPar ( tool , first , last , tool ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParChi2(){} ;
@@ -577,44 +615,17 @@ namespace LoKi
       { return mipchi2( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-      /// the actual evaluator 
-      result_type mipchi2 ( argument p ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      const LoKi::Keeper<LHCb::VertexBase>& keeper  () const { return m_keeper ; }
-      const LoKi::Keeper<LHCb::VertexBase>& vertices() const { return m_keeper ; }
-      operator const LoKi::Keeper<LHCb::VertexBase>&() const { return m_keeper ; }
-      LoKi::Keeper<LHCb::VertexBase>::const_iterator begin () const 
-      { return m_keeper.begin () ; }
-      LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
-      { return m_keeper.end   () ; }      
-      bool   empty () const { return m_keeper.empty () ; }
-      size_t size  () const { return m_keeper.size  () ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      void clear () const { m_keeper.clear() ; }
-      // ======================================================================
-      template <class VERTEX>
-      size_t addObjects ( VERTEX first , VERTEX last ) const
-      { return m_keeper.addObjects ( first , last ) ; }
       // ======================================================================
     private:
       // ======================================================================
       // default constructor is private 
       MinImpParChi2();
       // ======================================================================
-    public:
-      // ======================================================================
-      /// keeper for the vertices 
-      mutable LoKi::Keeper<LHCb::VertexBase> m_keeper ;
-      // ======================================================================
     };
     // ========================================================================    
-  } // end of namespace LoKi::Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

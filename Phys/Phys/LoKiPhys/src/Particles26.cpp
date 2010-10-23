@@ -530,7 +530,7 @@ LoKi::Particles::ChildIPChi2::operator()
   //
   m_eval.setVertex (   vertex ) ;
   
-  const double chi2 = m_eval.chi2 ( daughter ) ;
+  const double chi2 = m_eval.ipchi2 ( daughter ) ;
   
   m_eval.setVertex ( s_VERTEX ) ; // reset the vertex 
   

@@ -819,13 +819,54 @@ DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance
 
 
 # =============================================================================
-# Decay length significance functors from Wouter Hulsbergen
+## Decay length significance functors & related
+# @thanks Wouter Hulsbergen
+# @thanks Roel Aaij
 # =============================================================================
 
 ## @see LoKi::Cuts::DLS
 DLS                  = LoKi.Particles.DecayLengthSignificance
 ## @see LoKi::Cuts::BPVDLS
 BPVDLS               = LoKi.Particles.DecayLengthSignificanceDV ()
+
+## @see LoKi::Cuts::PATHDIST
+PATHDIST             = LoKi.Particles.PathDistance 
+## @see LoKi::Cuts::PATHDISTCHI2 
+PATHDISTCHI2         = LoKi.Particles.PathDistanceChi2 
+## @see LoKi::Cuts::PATHDISTSIGNIFICANCE
+PATHDISTSIGNIFICANCE = LoKi.Particles.PathDistanceSignificance 
+## @see LoKi::Cuts::PDS
+PDS                  = LoKi.Particles.PathDistanceSignificance
+
+## @see LoKi::Cuts::BPVPATHDIST
+BPVPATHDIST          = LoKi.Particles.PathDistanceWithBestPV()
+## @see LoKi::Cuts::BPVPATHDIST_
+BPVPATHDIST_         = LoKi.Particles.PathDistanceWithBestPV
+## @see LoKi::Cuts::BPVPATHDISTCHI2
+BPVPATHDISTCHI2      = LoKi.Particles.PathDistanceChi2WithBestPV()
+## @see LoKi::Cuts::BPVPATHDISTCHI2_
+BPVPATHDISTCHI2_     = LoKi.Particles.PathDistanceChi2WithBestPV
+## @see LoKi::Cuts::BPVPDS
+BPVPDS               = LoKi.Particles.PathDistanceSignificanceWithBestPV()
+## @see LoKi::Cuts::BPVPATHDISTCHI2_
+BPVPDS_              = LoKi.Particles.PathDistanceSignificanceWithBestPV
+
+## @see LoKi::Cuts::PROJDIST 
+PROJDIST             = LoKi.Particles.ProjectedDistance
+## @see LoKi::Cuts::PROJDS  
+PROJDS               = LoKi.Particles.ProjectedDistanceSignificance
+
+## @see LoKi::Cuts::BPVPROJDIST 
+BPVPROJDIST          = LoKi.Particles.ProjectedDistanceWithBestPV ()
+## @see LoKi::Cuts::BPVPROJDIST_ 
+BPVPROJDIST_         = LoKi.Particles.ProjectedDistanceWithBestPV
+
+## @see LoKi::Cuts::BPVPROJDS 
+BPVPROJDS            = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV ()
+## @see LoKi::Cuts::BPVPROJDS_ 
+BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
+
+
 
 # =============================================================================
 ## Collection of functions for 'corrected mass' variable by Mike Williams, 
