@@ -1001,9 +1001,47 @@ LoKi::Particles::TransverseMomentumRel::operator()
     return LoKi::Constants::InvalidMomentum ;
   }
   // use the function
-  return LoKi::Kinematics::transverseMomentumDir( p->momentum() , 
-                                                  m_momentum );
-} 
+  return ptDir ( p->momentum() , m_momentum    ) ;
+}
+// ============================================================================
+/*  evaluate the transverse momentum versus the direction 
+ *  @param p (INPUT) the 4-momentum
+ *  @param d (INPUT) the 3-direction 
+ *  @return the transverse momentum versus the direction 
+ */
+// ============================================================================
+double LoKi::Particles::TransverseMomentumRel::ptDir 
+( const LoKi::LorentzVector& p , 
+  const LoKi::ThreeVector&   d ) const 
+{
+  // use the function
+  return LoKi::Kinematics::transverseMomentumDir( p , d ) ;
+}
+// ============================================================================
+/*  evaluate the 'corrected' mass of the particle 
+ *  \f[  \vec{i} = \sqrt{ M^2 + 
+ *            \left|p_{T}^{\prime}\right|^2 } +
+ *            \left|p_{T}^{\prime}\right|, \f] 
+ *  where \f$ \left|p_{T}^{\prime}\right|\f$ stands for the 
+ *  transverse momentum relative to the fligth direction 
+ *
+ *  @param p  (INPUT) the 4-momentum
+ *  @param d  (INPUT) the 3-direction 
+ *  @return the corrected mass
+ *  @see LoKi::TransverseMomentumFlight::ptDir 
+ *  @see LoKi::TransverseMomentumRel::ptDir 
+ */
+// ============================================================================
+double LoKi::Particles::TransverseMomentumRel::mCorrDir
+( const LoKi::LorentzVector& p  , 
+  const LoKi::ThreeVector&   d  ) const 
+{
+  //
+  const double m2 = p.M2() ;
+  const double pt = ptDir ( p , d ) ; 
+  //
+  return std::sqrt ( m2 + pt*pt ) + pt ;
+}
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================

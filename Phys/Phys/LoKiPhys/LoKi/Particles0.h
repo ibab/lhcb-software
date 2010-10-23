@@ -1223,6 +1223,35 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      /** evaluate the transverse momentum versus the direction 
+       *  @param p (INPUT) the 4-momentum
+       *  @param d (INPUT) the 3-direction 
+       *  @reutrn the transverse momentum versus the direction 
+       */
+      double ptDir 
+      ( const LoKi::LorentzVector& p , 
+        const LoKi::ThreeVector&   d ) const ;
+      // ======================================================================
+      /** evaluate the 'corrected' mass of the particle 
+       *  \f[  \vec{i} = \sqrt{ M^2 + 
+       *            \left|p_{T}^{\prime}\right|^2 } +
+       *            \left|p_{T}^{\prime}\right|, \f] 
+       *  where \f$ \left|p_{T}^{\prime}\right|\f$ stands for the 
+       *  transverse momentum relative to the fligth direction 
+       *
+       *  @param p  (INPUT) the 4-momentum
+       *  @param d  (INPUT) the 3-direction 
+       *  @return the corrected mass
+       *  @see LoKi::TransverseMomentumFlight::ptDir 
+       *  @see LoKi::TransverseMomentumRel::ptDir 
+       *  @thanks Mike Williams
+       */
+      double mCorrDir
+      ( const LoKi::LorentzVector& p  , 
+        const LoKi::ThreeVector&   d  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// set new momentum 
       void setMomentum  ( const LoKi::ThreeVector&   vct ) 
       { m_momentum = vct ; }

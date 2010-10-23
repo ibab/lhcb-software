@@ -58,17 +58,6 @@ DecayLengthSignificance::DecayLengthSignificance
 
 }
 
-//=============================================================================
-// copy constructor
-//=============================================================================
-DecayLengthSignificance::DecayLengthSignificance
-( const DecayLengthSignificance& other )
-   : LoKi::AuxFunBase( other ),
-     LoKi::BasicFunctors< const LHCb::Particle* >::Function( other )
-   , LoKi::Vertices::VertexHolder( other )
-{
-
-}
 
 //=============================================================================
 // MANDATORY: virtual destructor
@@ -173,18 +162,6 @@ std::ostream& DecayLengthSignificance::fillStream( std::ostream& stream ) const
 DecayLengthSignificanceDV::DecayLengthSignificanceDV()
    : LoKi::AuxDesktopBase(),
      DecayLengthSignificance( LoKi::Point3D() )
-{
-
-}
-
-//=============================================================================
-// copy constructor
-//=============================================================================
-DecayLengthSignificanceDV::DecayLengthSignificanceDV
-( const DecayLengthSignificanceDV& other )
-   : LoKi::AuxFunBase( other ),
-     LoKi::AuxDesktopBase( other ),
-     DecayLengthSignificance( other )
 {
 
 }

@@ -41,6 +41,8 @@
 #include "LoKi/Particles34.h"
 #include "LoKi/Particles35.h"
 #include "LoKi/Particles36.h"
+#include "LoKi/Particles37.h"
+#include "LoKi/Particles38.h"
 // ============================================================================
 /** @file
  *

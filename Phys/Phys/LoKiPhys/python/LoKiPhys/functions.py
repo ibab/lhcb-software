@@ -818,13 +818,37 @@ DTF_CTAUERR          = LoKi.Particles.ChildCTauErr
 DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance 
 
 
-
+# =============================================================================
 # Decay length significance functors from Wouter Hulsbergen
+# =============================================================================
 
 ## @see LoKi::Cuts::DLS
 DLS                  = LoKi.Particles.DecayLengthSignificance
 ## @see LoKi::Cuts::BPVDLS
-BPVDLS               = LoKi.Particles.DecayLengthSignificanceDV()
+BPVDLS               = LoKi.Particles.DecayLengthSignificanceDV ()
+
+# =============================================================================
+## Collection of functions for 'corrected mass' variable by Mike Williams, 
+#  see <a href="http://indico.cern.ch/conferenceDisplay.py?confId=104542">
+#  Mike's slides at Trigger meeting 28 September 2k+10 </a> and 
+#   <a href="http://savannah.cern.ch/task/?17418">Savannah task #17418</a>
+#  @thanks Mike Williams
+#  @see LoKi::Cuts::PTFLIGHT 
+#  @see LoKi::Cuts::BPVPTFLIGHT 
+#  @see LoKi::Cuts::CORRM
+#  @see LoKi::Cuts::BPVCORRM
+# =============================================================================
+
+## @see LoKi::Cuts::PTFLIGHT 
+PTFLIGHT    = LoKi.Particles.PtFlight
+## @see LoKi::Cuts::BPVPTFLIGHT 
+BPVPTFLIGHT = LoKi.Particles.PtFlightWithBestVertex () 
+## @see LoKi::Cuts::CORRM
+CORRM       = LoKi.Particles.MCorrected 
+## @see LoKi::Cuts::BPVCORRM
+BPVCORRM    = LoKi.Particles.MCorrectedWithBestVertex ()  
+
+
 
 # =============================================================================
 # Functional part: 

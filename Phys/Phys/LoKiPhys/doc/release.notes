@@ -5,6 +5,28 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-23 - Vanya Belyaev
+
+ - new functors ( see task #17418 )
+    	
+    a family of functors (thanks to Mike Williams) to deal with 'corrected mass'
+    ( for definition of 'corrected mass' see Mike's presentation 
+       at Trigger Session  28 September 2010 ) 
+
+     PTFLIGHT    ( type     ) - evaluate the transverse momentum with respect 
+                                to the particle fligth direction 
+     BPVPTFLIGHT ( instance ) - evaluate the transverse momentum with respect 
+                                to particle fligth direction using 
+                                'the best primary vertex' as origin vertex 
+                               for the particle  
+     CORRM       ( type     ) - evaluate the 'corrected mass' with respect 
+                                to the particle fligth direction 
+     BPVCORRM    ( instance ) - evaluate the 'corrected mass' with respect 
+                                to particle fligth direction using 
+                                'the best primary vertex' as origin vertex 
+                                for the particle  
+
+
 ! 2010-10-08 - Marco Clemencic
  - Minor change to fix an ICC remark tha was appearing in the nightlies as an
    error.
