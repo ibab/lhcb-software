@@ -5,6 +5,30 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+
+ - VertexFitter:
+
+    - remove some duplicated lines 
+    - make use of Gaudi::Math::sigmamass 
+    - fill 'MeasuredMass' and 'MeasuredMassErr' fields as 
+
+        mass from 4-momenta sum of all daughters, properly 
+        extrapolated to the veretx position.
+
+        NB: It is *NOT* equal to the mass evaluted from 4-momenta of mother particle.
+
+    - add the special treatment of converted photons 
+
+        NB: GammaC is LONG-LIVED-PARTICLE 
+  
+    - preparation for the special treatment of di-gamma
+        
+ - cmt/requirements 
+
+    version increment to v3r1 
+
+
 !========================== LoKiFitters v3r1 2010-09-29 =====================
 
 ! 2010-09-26 - Vanya Belyaev

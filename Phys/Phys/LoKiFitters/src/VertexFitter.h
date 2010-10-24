@@ -29,7 +29,13 @@
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
+// PartProp
+// ============================================================================
 #include "Kernel/NodesPIDs.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/IDecay.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -587,6 +593,8 @@ namespace LoKi
     mutable Gaudi::SymMatrix4x4        m_cmom     ;
     mutable Gaudi::Matrix4x4           m_cmom1    ;
     mutable Gaudi::Matrix4x3           m_mpcov    ;
+    // for measured mass 
+    mutable Gaudi::SymMatrix4x4        m_mm_c     ;
     // ========================================================================
   private:
     // ========================================================================
@@ -598,8 +606,23 @@ namespace LoKi
     mutable Decays::Nodes::ShortLived_        m_shortLived   ;
     /// Gamma-like particles 
     mutable Decays::Nodes::Pid                m_gammaLike    ;
+    /// GammaC-like particles (gamma-> e+ e-)
+    mutable Decays::IDecay::Tree              m_gammaCLike   ;
+    /// Di-Gamma-like particles ( pi0 -> gamma gamma , eta -> gamma gamma ) 
+    mutable Decays::IDecay::Tree              m_digammaLike  ;
+    // ========================================================================
+    /// decay descriptor for gammaC-like particles:
+    std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
+    /// decay descriptor for di-gamma-like particles:
+    std::string m_dd_digamma ;  // decay descriptor for di-gamma-like particles
+    // ========================================================================
+  private:
+    // ========================================================================
     /// Unclassified particles 
     mutable std::set<LHCb::ParticleID>        m_unclassified ;
+    mutable std::set<LHCb::ParticleID>        m_gamma_like   ;
+    mutable std::set<LHCb::ParticleID>        m_gammaC_like  ;
+    mutable std::set<LHCb::ParticleID>        m_digamma_like ;
     // ========================================================================
   } ;
   // ==========================================================================

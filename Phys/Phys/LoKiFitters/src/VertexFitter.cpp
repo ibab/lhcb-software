@@ -28,8 +28,13 @@
 // ============================================================================
 // LHCbMath
 // ============================================================================
+#include "LHCbMath/Kinematics.h"
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/Trees.h"
 // ============================================================================
 // ROOT/Mathlib
 // ============================================================================
@@ -367,13 +372,20 @@ StatusCode LoKi::VertexFitter::fit
   Gaudi::Math::setToScalar ( m_cmom  , 0.0 ) ;
   Gaudi::Math::setToScalar ( m_cmom1 , 0.0 ) ;
   Gaudi::Math::setToScalar ( m_mpcov , 0.0 ) ;
+  Gaudi::Math::setToScalar ( m_mm_c  , 0.0 ) ;
   //
-  Gaudi::LorentzVector vct   ;
+  // 1. for true kinematics: 
+  Gaudi::LorentzVector       vct   ;
   const Gaudi::SymMatrix3x3& pos = particle.posCovMatrix() ;
+  // 2. for "measured-mass":
+  Gaudi::LorentzVector       mm_v  ;
   for ( EIT i = m_entries.begin() ; m_entries.end() != i ; ++i ) 
   {
     Gaudi::Math::add ( vct , i->m_parq ) ;
     m_cmom  += i->m_d ;
+    // for measured mass: blind sum of 4-momenta for extrapolated daughters 
+    mm_v   += i->m_p.momentum     () ;
+    m_mm_c += i->m_p.momCovMatrix () ;
     //
     if ( i->special() ) { continue ; } // gamma & digamma
     //
@@ -388,15 +400,15 @@ StatusCode LoKi::VertexFitter::fit
   particle.setMomentum        ( vct     ) ;
   particle.setMomCovMatrix    ( m_cmom  ) ;
   particle.setPosMomCovMatrix ( m_mpcov ) ;
-  // mass & error in mass 
-  const double mass = particle.momentum().M() ;
-  if ( 0 > mass ) { _Warning ( "fit(): mass is negative!"       ) ; }
-  Gaudi::Vector4 dmdp (  -vct.X() , -vct.Y() , -vct.Z() , vct.E() ) ;
-  dmdp /= mass ;
-  const double merr = Similarity ( dmdp , m_cmom ) ;
-  if ( 0 > merr ) { _Warning ( "fit(): mass error is negative " ) ; }  
-  particle.setMeasuredMass    ( mass             ) ;
-  particle.setMeasuredMassErr ( ::sqrt ( ::fabs ( merr  ) ) ) ;
+  //
+  // measured mass & error in measured mass 
+  //
+  const double mmass =  mm_v.M() ;
+  if ( 0 >= mmass ) { _Warning ( "fit(): measured mass       is non-positive" ) ; }
+  const double mmerr = Gaudi::Math::sigmamass ( mm_v , m_mm_c ) ;
+  if ( 0 >= mmerr ) { _Warning ( "fit(): measured mass error is non-positive" ) ; }  
+  particle.setMeasuredMass    ( mmass ) ;
+  particle.setMeasuredMassErr ( mmerr ) ;
   //
   // play a bit with extra-info:
   particle.addInfo 
@@ -533,11 +545,11 @@ LoKi::VertexFitter::VertexFitter
   const std::string& name   , 
   const IInterface*  parent ) 
   : base_class ( type , name , parent )
-  /// maximal number of iteration for vertex fit  
+/// maximal number of iteration for vertex fit  
   , m_nIterMaxI           ( 10 ) // maximal number of iteration for vertex fit  
-  /// maximal number of iteration for "add" 
+/// maximal number of iteration for "add" 
   , m_nIterMaxII          (  5 ) // maximal number of iteration for "add" 
-  /// maximal number of iteration for "remove"    
+/// maximal number of iteration for "remove"    
   , m_nIterMaxIII         (  5 ) // maximal number of iteration for "remove"    
   , m_DistanceMax         ( 1.0 * Gaudi::Units::micrometer ) 
   , m_DistanceChi2        ( 1.0 * Gaudi::Units::perCent    ) 
@@ -546,18 +558,38 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmin            ( -1.5 * Gaudi::Units::meter      ) 
   , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
-  /// Use the sepcial branch for two-body decays 
+/// Use the special branch for two-body decays 
   , m_use_twobody_branch  ( false   ) // Use the sepcial branch for two-body decays?
-  /// The transport tolerance  
+/// The transport tolerance  
   , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
-  /// number of prints 
+/// number of prints 
   , m_prints              ( 10 )
-//
+/// pure technical stuff: 
+  , m_entries (   ) 
+  , m_vertex  ( 0 )
+  , m_seed    (   ) 
+  , m_seedci  (   )
+  , m_cixy    (   ) 
+  , m_cmom    (   ) 
+  , m_cmom1   (   ) 
+  , m_mpcov   (   ) 
+  , m_mm_c    (   )
+/// particle classification: 
   , m_ppSvc               (  0      ) 
   , m_longLived           (         ) 
   , m_shortLived          (         ) 
   , m_gammaLike           ( "gamma" )
-    //
+  , m_gammaCLike          ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
+  , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
+//
+  , m_dd_gammaC  (" gamma -> e+ e- ")
+  , m_dd_digamma (" [ ( pi0-> gamma gamma ) , ( eta -> gamma gamma ) ] ")
+///
+  , m_unclassified  ()
+  , m_gamma_like    ()
+  , m_gammaC_like   ()
+  , m_digamma_like  ()
+///
 {
   // ==========================================================================
   declareProperty 
@@ -610,6 +642,16 @@ LoKi::VertexFitter::VertexFitter
     ( "Transporter"      , 
       m_transporterName  , 
       "The typename of tranporter to bee used" ) ;
+  // ==========================================================================
+  declareProperty 
+    ( "GammaCDecays"  , 
+      m_dd_gammaC     , 
+      "The gammaC-decays" ) ;
+  declareProperty 
+    ( "DiGammaDecays" , 
+      m_dd_digamma    , 
+      "The di-gamma-decays" ) ;
+  // ==========================================================================
 } 
 // ============================================================================
 // desctructor 
@@ -636,6 +678,53 @@ StatusCode LoKi::VertexFitter::initialize()
   sc = m_gammaLike.validate  ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Unable to validate Gamma-Like  particles" , sc ) ; }
+  //
+  const StatusCode ok = StatusCode( StatusCode::SUCCESS , true ) ;
+  //
+  // GammaC ? 
+  //
+  if ( !m_dd_gammaC.empty() )
+  { 
+    // construct gamma_c descriptor
+    Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
+    //
+    m_gammaCLike =  decay->tree ( m_dd_gammaC ) ;
+    if ( !m_gammaCLike.valid() ) 
+    { return Error ( "Unable to decode Gamma_c: '" + m_dd_gammaC  + "'" ) ; }
+    //
+    debug () << " Gamma_c  descriptor : " << m_gammaCLike << endmsg ;
+    //
+    release ( decay ) ;
+  }
+  else 
+  {
+    // disable gamma_c treatment
+    m_gammaCLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
+    m_gammaCLike = Decays::Trees::Not_<const LHCb::Particle*>( m_gammaCLike ) ;
+    Warning ( "The special treatment of Gamma_c is disabled" , ok ) ;
+  }
+  //
+  // DiGamma  ? 
+  //
+  if ( !m_dd_digamma.empty() )
+  { // construct digamma descriptors
+    Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
+    //
+    m_digammaLike =  decay->tree ( m_dd_digamma ) ;
+    if ( !m_digammaLike.valid() ) 
+    { return Error ( "Unable to decode DiGamma: '" + m_dd_digamma + "'" ) ; }
+    //
+    debug () << " Di-Gamma descriptor : " << m_digammaLike << endmsg ;
+    //
+    release ( decay ) ;
+  }
+  else 
+  {
+    // disable gamma_c treatment
+    m_digammaLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
+    m_digammaLike = Decays::Trees::Not_<const LHCb::Particle*>( m_digammaLike ) ;
+    Warning ( "The special treatment of DiGamma is disabled" , ok ) ;
+  }
   //
   if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
   {
@@ -666,10 +755,34 @@ StatusCode LoKi::VertexFitter::finalize()
       LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
       log << endmsg ;
     }
+    //
     log << "Gamma-like  particles : " << std::endl ;
     log << m_gammaLike ;
     log << endmsg ;
+    //
+    // GammaC 
+    if ( !m_gammaC_like.empty() ) 
+    {
+      std::vector<LHCb::ParticleID> parts ( m_gammaC_like.begin() , 
+                                            m_gammaC_like.end  () ) ;
+      
+      log << "GammaC-like   particles : " << m_gammaCLike << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    // DiGamma 
+    if ( !m_digamma_like.empty() ) 
+    {
+      std::vector<LHCb::ParticleID> parts ( m_digamma_like.begin() , 
+                                            m_digamma_like.end  () ) ;
+      
+      log << "DiGamma-like  particles : " << m_digammaLike << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    //
   }
+  //
   if ( !m_unclassified.empty() ) 
   {
     MsgStream& log = warning() ;
@@ -683,6 +796,8 @@ StatusCode LoKi::VertexFitter::finalize()
   m_ppSvc = 0 ;
   m_shortLived . setService ( m_ppSvc ) ;
   m_longLived  . setService ( m_ppSvc ) ;
+  m_gammaCLike   = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
+  m_digammaLike  = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
   //
   return GaudiTool::finalize () ;
 }
@@ -695,8 +810,17 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
   //
   if      ( 0 == p ) 
   { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
+  else if ( m_gammaCLike  ( p ) )
+  { 
+    m_gammaC_like.insert ( p->particleID () ) ;
+    // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
+    return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN 
+  } 
   else if ( m_gammaLike  ( p->particleID () ) )
-  { return LoKi::KalmanFilter::GammaLikeParticle   ; }  // RETURN 
+  { 
+    m_gamma_like.insert  ( p->particleID () ) ;
+    return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN 
+  } 
   else if ( m_longLived  ( p->particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
   else if ( m_shortLived ( p->particleID () ) )
