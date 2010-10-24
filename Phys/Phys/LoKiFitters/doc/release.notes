@@ -7,6 +7,14 @@
 
 ! 2010-10-24 - Vanya Belyaev
 
+ - VertexFitter
+
+      make use of decay descriptor for stable particles in 
+      for gamma and digamma definiitons 
+
+
+! 2010-10-24 - Vanya Belyaev
+
  - VertexFitter:
 
     - remove some duplicated lines 

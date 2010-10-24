@@ -384,8 +384,8 @@ StatusCode LoKi::VertexFitter::fit
     Gaudi::Math::add ( vct , i->m_parq ) ;
     m_cmom  += i->m_d ;
     // for measured mass: blind sum of 4-momenta for extrapolated daughters 
-    mm_v   += i->m_p.momentum     () ;
-    m_mm_c += i->m_p.momCovMatrix () ;
+    mm_v    += i->m_p.momentum     () ;
+    m_mm_c  += i->m_p.momCovMatrix () ;
     //
     if ( i->special() ) { continue ; } // gamma & digamma
     //
@@ -583,7 +583,7 @@ LoKi::VertexFitter::VertexFitter
   , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
 //
   , m_dd_gammaC  (" gamma -> e+ e- ")
-  , m_dd_digamma (" [ ( pi0-> gamma gamma ) , ( eta -> gamma gamma ) ] ")
+  , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
 ///
   , m_unclassified  ()
   , m_gamma_like    ()
@@ -689,7 +689,7 @@ StatusCode LoKi::VertexFitter::initialize()
     Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
     //
     m_gammaCLike =  decay->tree ( m_dd_gammaC ) ;
-    if ( !m_gammaCLike.valid() ) 
+    if ( !m_gammaCLike.valid() )   
     { return Error ( "Unable to decode Gamma_c: '" + m_dd_gammaC  + "'" ) ; }
     //
     debug () << " Gamma_c  descriptor : " << m_gammaCLike << endmsg ;
@@ -810,17 +810,14 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
   //
   if      ( 0 == p ) 
   { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
-  else if ( m_gammaCLike  ( p ) )
+  else if ( m_gammaCLike ( p ) )
   { 
     m_gammaC_like.insert ( p->particleID () ) ;
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
     return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN 
   } 
-  else if ( m_gammaLike  ( p->particleID () ) )
-  { 
-    m_gamma_like.insert  ( p->particleID () ) ;
-    return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN 
-  } 
+  else if ( m_gammaLike  ( p ) )
+  { return LoKi::KalmanFilter::GammaLikeParticle   ; }  // RETURN 
   else if ( m_longLived  ( p->particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
   else if ( m_shortLived ( p->particleID () ) )

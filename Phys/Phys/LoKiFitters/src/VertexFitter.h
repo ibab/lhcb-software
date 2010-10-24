@@ -36,6 +36,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/IDecay.h"
+#include "LoKi/Trees.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -605,7 +606,7 @@ namespace LoKi
     /// Short-lived particles 
     mutable Decays::Nodes::ShortLived_        m_shortLived   ;
     /// Gamma-like particles 
-    mutable Decays::Nodes::Pid                m_gammaLike    ;
+    mutable Decays::Trees::Stable_<const LHCb::Particle*> m_gammaLike    ;
     /// GammaC-like particles (gamma-> e+ e-)
     mutable Decays::IDecay::Tree              m_gammaCLike   ;
     /// Di-Gamma-like particles ( pi0 -> gamma gamma , eta -> gamma gamma ) 
