@@ -26,6 +26,10 @@ from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
 from StrippingSelections import StrippingBu2hhh
 from StrippingSelections.StrippingB2KShh import StrippingB2KShhConf
 
+# B-> hhh (for testing)
+from StrippingSelections import StrippingBu3hFrom2h
+
+
 # B -> hhpi0
 from StrippingSelections.StrippingB2HHPi0 import StrippingB2HHPi0Conf
 
@@ -42,6 +46,10 @@ stream.appendLines( Hb2Charged2BodyLines().lines() )
 stream.appendLines( [StrippingB2KShhConf().B2KSLLhh(),
                      StrippingB2KShhConf().B2KSDDhh(),
                      StrippingBu2hhh.line
+                     ])
+
+stream.appendLines( [StrippingBu3hFrom2h.line1,
+                     StrippingBu3hFrom2h.line2
                      ])
 
 stream.appendLines( [B2hhLTUnbiased().StripB2hhLTUnbiasedLoose(),

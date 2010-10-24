@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-25 Ulrich Kerzel
+- Update test file TestCPGammaLoop.py to include new B->hhh stripping lines for testing
+
 ! 20-10-25 M Needham
  - Add  Bs->J/psi eta line
 
