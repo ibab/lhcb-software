@@ -31,6 +31,8 @@ stream.appendLines( [
       		        StrippingDY2MuMu.line1_ps,
                         StrippingDY2MuMu.line1_HLT2,
                         StrippingDY2MuMu.line2_HLT2,
+                        StrippingDY2MuMu.line1_HLT2_a,
+                        StrippingDY2MuMu.line2_HLT2_a,
                         StrippingDY2MuMu.line2,
 		        StrippingDY2MuMu.line3,
 		        StrippingDY2MuMu.line4,
