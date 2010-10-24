@@ -25,7 +25,7 @@ from StrippingSelections.Utils import checkConfig
 defaultConfig = {
     'BsIPCHI2'             : 9.0           # dimensionless
     , 'BsLT'               : 0.0002        # ns
-    , 'BsVertexCHI2'       : 36.0          # dimensionless
+    , 'BsVertexCHI2'       : 40.0          # dimensionless
     , 'KaonPIDK'           : 0             # dimensionless
     , 'KaonMINIPCHI2'      : 9.0           # dimensionless
     , 'MuonMINIPCHI2'      : 9.0           # dimensionless
@@ -120,7 +120,7 @@ class StrippingBs2MuMuPhiConf(object):
         """      
         _bs2KKmumu = CombineParticles("Combine_"+self.name)
         _bs2KKmumu.DecayDescriptor = "B_s0 -> K+ K- mu+ mu-"
-        _bs2KKmumu.CombinationCut = "(ADAMASS('B_s0') < 1000.0 *MeV) & (AM12 < 1050.0 *MeV)"
+        _bs2KKmumu.CombinationCut = "(ADAMASS('B_s0') < 1000.0 *MeV) & (AM12 < 1070.0 *MeV)"
         _bs2KKmumu.MotherCut = self.__BsCuts__(conf)
         
         SelBS2KKMUMU = Selection( "Selection_"+self.name,
@@ -138,27 +138,4 @@ class StrippingBs2MuMuPhiConf(object):
                                       algos = [ self.Bs ]
                                       )
         return [ self.line ] 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -10,12 +10,36 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
-# Import your stripping lines
-from StrippingSelections.StrippingD2hh import StrippingD2hhConf
-stream.appendLines( StrippingD2hhConf().lines() )
 
-from StrippingSelections.StrippingD2hhLTUnbiased import StrippingD2hhLTUnbiasedConf
-stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
+
+
+
+
+#---->
+# Import your stripping lines
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import StrippingBd2KstarMuMuConf
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultConfig as Bd2KstarMuMuConfig
+from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as Bd2KstarMuMuLines
+Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config= Bd2KstarMuMuConfig, activeLines=Bd2KstarMuMuLines )
+stream.appendLines(Bd2KstarMuMuConf.lines())
+
+#
+from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
+stream.appendLines([StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine()])
+
+#
+from StrippingSelections.StrippingBs2MuMuPhi import StrippingBs2MuMuPhiConf
+from StrippingSelections.StrippingBs2MuMuPhi import defaultConfig as Bs2MuMuPhiConfig
+Bs2MuMuPhiConf = StrippingBs2MuMuPhiConf(config = Bs2MuMuPhiConfig)
+stream.appendLines(Bs2MuMuPhiConf.lines())
+
+#<----
+
+
+
+
+
+
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
@@ -60,18 +84,37 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
 
+
+
+
+#---->
+# vanyas suggestion of correlation matrix here:
+from Configurables import AlgorithmCorrelationsAlg
+ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
+#<----
+
+
+
+
+
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
 
-DaVinci().PrintFreq = 500
+DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 50000
+DaVinci().EvtMax = 200000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-DaVinci().MoniSequence += [ seq ]                     # Append the TagCreator to DaVinci
+DaVinci().appendToMainSequence( [ ac ] )
+DaVinci().MoniSequence += [ seq ]            # Append the TagCreator to DaVinci
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py")
+#more statistics (need to add += in the data .py file):
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_79647_RealData+Reco06-Stripping10_90000000_SDST.py")
+
+
+#DaVinci().Simulation = True
 
