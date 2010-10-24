@@ -1092,5 +1092,29 @@ bool Decays::Trees::GenPhotosOptional::operator()
 // ============================================================================
 
 // ============================================================================
+// treat properly the stable trees
+// ============================================================================
+template <> bool Decays::Trees::Stable_<const HepMC::GenParticle*>::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
+{
+  //
+  if ( 0 == p                                        ) { return false ; }
+  if ( !valid()                                      ) { return false ; }
+  if ( !m_head ( LHCb::ParticleID ( p->pdg_id () ) ) ) { return false ; }
+  //
+  HepMC::GenVertex* ev = p -> end_vertex() ;
+  if ( 0 == ev         ) { return true ; }                           // RETURN 
+  //
+  return
+    ev->particles_begin ( HepMC::children ) == 
+    ev->particles_end   ( HepMC::children ) || 
+    0 == std::distance 
+    ( ev->particles_begin ( HepMC::children ) , 
+      ev->particles_end   ( HepMC::children ) ) ;
+}
+
+
+
+// ============================================================================
 // The END 
 // ============================================================================

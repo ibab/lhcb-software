@@ -75,7 +75,9 @@
   <class name = "std::vector<const HepMC::GenParticle*>"  />
   <class name = "std::vector<const HepMC::GenVertex*>"    />  
   
-  <class name = "Decays::Trees::Any_<const HepMC::GenParticle*>"   />
+  <class name = "Decays::Trees::Any_<const HepMC::GenParticle*>"    />
+  <class name = "Decays::Trees::None_<const HepMC::GenParticle*>"   />
+  <class name = "Decays::Trees::Stable_<const HepMC::GenParticle*>" />
   <class name = "Decays::Trees::GenExclusive" />
   <class name = "Decays::Trees::GenInclusive" />
   <class name = "Decays::Trees::GenOptional"  />

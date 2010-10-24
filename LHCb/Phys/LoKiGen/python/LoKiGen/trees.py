@@ -38,9 +38,11 @@ Decays   = cpp.Decays
 _GP = 'const HepMC::GenParticle*'
 
 _decorated = _LoKiCore.decorateTrees (
-    ( Decays.iTree_      ( _GP ) ,
-      Decays.Tree_       ( _GP ) ,
-      Decays.Trees.Any_  ( _GP ) ,
+    ( Decays.iTree_        ( _GP ) ,
+      Decays.Tree_         ( _GP ) ,
+      Decays.Trees.Any_    ( _GP ) ,
+      Decays.Trees.None_   ( _GP ) ,
+      Decays.Trees.Stable_ ( _GP ) ,
       Decays.Trees.GenExclusive  ,
       Decays.Trees.GenInclusive  ,
       Decays.Trees.GenOptional   ,
@@ -50,9 +52,11 @@ _decorated = _LoKiCore.decorateTrees (
 print dir( LoKi.Dicts.TreeOps(_GP) )
 
 ## decay trees
-iGTree             = Decays.iTree_       ( _GP )
-GTree              = Decays.Tree_        ( _GP )
-GAny               = Decays.Trees.Any_   ( _GP ) () ## instance!!!
+iGTree             = Decays.iTree_        ( _GP )
+GTree              = Decays.Tree_         ( _GP )
+GAny               = Decays.Trees.Any_    ( _GP ) () ## instance!!!
+GNone              = Decays.Trees.None_   ( _GP ) () ## instance!!!
+GStable            = Decays.Trees.Stable_ ( _GP ) 
 GenExclusive       = Decays.Trees.GenExclusive
 GenInclusive       = Decays.Trees.GenInclusive
 GenOptional        = Decays.Trees.GenOptional

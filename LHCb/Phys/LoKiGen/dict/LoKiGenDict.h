@@ -430,8 +430,10 @@ namespace
     LoKi::Functors::Size<const HepMC::GenVertex*>    m_si2 ;    
     // decay funders:
     Decays::Tree_<const HepMC::GenParticle*>           m_tree1 ;
-    Decays::Trees::Any_<const HepMC::GenParticle*>     m_tree3 ;
-    LoKi::Dicts::TreeOps<const HepMC::GenParticle*>   m_trops ;
+    Decays::Trees::Any_<const HepMC::GenParticle*>     m_tree2 ;
+    Decays::Trees::None_<const HepMC::GenParticle*>    m_tree3 ;
+    Decays::Trees::Stable_<const HepMC::GenParticle*>  m_tree4 ;
+    LoKi::Dicts::TreeOps<const HepMC::GenParticle*>    m_trops ;
     // ========================================================================
     // Decay Finder 
     // ========================================================================

@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+ - add concept of stable particle in decay descriptors 
+ - cmt/requirements
+     version incrment to v9r2 
+
+
 !========================== LoKiGen v9r2 2010-09-28 ===========================
 ! 2010-09-28 - Vanya Belyaev
  - LoKiGen/trees.py
