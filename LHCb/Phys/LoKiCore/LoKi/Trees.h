@@ -136,6 +136,33 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class None_
+     *  the most trivial pseudo-tree, which does not matches to *any* tree
+     *  @author Vanya BELYAEV Ivan.B3lyaev@nikhef.nl
+     *  @date 2010-10-24
+     */
+    template <class PARTICLE>
+    class None_ : public Decays::Trees::Any_<PARTICLE>
+    {
+    private:
+      // ======================================================================
+      /// get the actual argument type form the base 
+      typedef typename  Decays::iTree_<PARTICLE>::argument   argument   ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~None_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  None_* clone() const { return new None_(*this) ; }
+      /// MANDATORY: the only one essential method:
+      virtual bool operator() ( argument /* p */ ) const { return false ; }
+      /// MANDATORY: the printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " None "; }
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Invalid_
      *  helper class to represent the invalid tree 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -174,6 +201,64 @@ namespace Decays
       virtual size_t collect ( Collection& /* output */ ) const { return 0 ; }
       /// has marked elements in the tree ? 
       virtual bool marked() const { return false ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Stable_
+     *  Simple class to represent the stable tree 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-05-08
+     */
+    template <class PARTICLE>
+    class Stable_ : public Decays::iTree_<PARTICLE>
+    {
+    private:
+      // ======================================================================
+      /// get the actual argument type form the base 
+      typedef typename  Decays::iTree_<PARTICLE>::argument         argument   ;
+      /// get the actual collection type form the base 
+      typedef typename  Decays::iTree_<PARTICLE>::Collection       Collection ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the decay head 
+      Stable_ ( const Decays::iNode&    head ) ;
+      /// constructor from the decay head 
+      Stable_ ( const std::string&      head ) ;
+      /// constructor from the decay head 
+      Stable_ ( const LHCb::ParticleID& head ) ;
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Stable_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Stable_* clone() const { return new Stable_( *this ) ; }
+      /// MANDATORY: the only one essential method:
+      virtual bool operator() 
+        ( typename  Decays::iTree_<PARTICLE>::argument p ) const ;
+      /// MANDATORY: the printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      /// Check the validity 
+      virtual bool valid() const ; 
+      /// validate it
+      virtual StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const ;
+      /// reset the collection cache 
+      virtual void reset () const {} ;
+      /// collect the marked elements 
+      virtual size_t collect 
+      ( typename  Decays::iTree_<PARTICLE>::Collection& /* output */ ) const
+      { return 0 ; }
+      /// has marked elements in the tree ? 
+      virtual bool marked() const { return false ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Stable_() ;                        // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual decay head
+      Decays::Node m_head ;                            // the actual decay head
       // ======================================================================
     } ;
     // ========================================================================
@@ -695,7 +780,7 @@ namespace Decays
     {
     public:
       // ======================================================================
-      /// constructor from the node 
+      /// constructor from the tree 
       Not_ ( const Decays::iTree_<PARTICLE>& tree ) 
         : Decays::iTree_<PARTICLE> () 
         , m_tree ( tree ) 
@@ -883,13 +968,16 @@ namespace Decays
      *  @date 2008-04-30
      */        
     enum Errors {
-      InvalidArrow      = 200 , // Invalid arrow type 
-      InclusiveOptional       , // Inclusive & Optional in conflict 
-      InclusivePhotos         , // Inclusive & Photos   in conflict 
-      InvalidDecayOnly        , // Invalid 'Decay-Only' flag 
-      InvalidOscillated       , // Invalid 'Oscillated' flag 
-      InvalidPhotos           , // Invalid 'Photos'     flag 
-      InvalidBranch             // Invalid combination of flags 
+      InvalidArrow      = 200  , // Invalid arrow type 
+      InclusiveOptional        , // Inclusive & Optional in conflict 
+      InclusivePhotos          , // Inclusive & Photos   in conflict 
+      InvalidDecayOnly         , // Invalid 'Decay-Only' flag 
+      InvalidOscillated        , // Invalid 'Oscillated' flag 
+      InvalidPhotos            , // Invalid 'Photos'     flag 
+      ChildrenForStable        , // Children   for Stable  
+      OptionalForStable        , // Optional   for Stable  
+      InclusiveForStable       , // Inclusive  for Stable  
+      InvalidBranch              // Invalid combination of flags 
     };
     // ========================================================================
   } //                                           end of namespace Decays::Trees 

@@ -16,6 +16,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+
+ - add the concept of 'stable' particle in decay tree 
+
 ! 2010-10-10 - Vanya Belyaev
 
  - add new symbols BLIND & XBLIND 

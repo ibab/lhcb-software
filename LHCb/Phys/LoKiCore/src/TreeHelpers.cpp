@@ -35,13 +35,16 @@ Decays::Parsers::Tree::Tree()
   , m_inclusive  ( false                    )                 
   , m_negated    ( false                    )                 
   , m_marked     ( false                    )                 
+  , m_stable     ( false                    )                 
   , m_children () 
   , m_optional ()
 {}
 // ============================================================================
 // constructor from the decay head  
 // ============================================================================
-Decays::Parsers::Tree::Tree( const Decays::iNode& head ) 
+Decays::Parsers::Tree::Tree
+( const Decays::iNode& head   , 
+  const bool           stable ) 
   : m_head ( head ) 
   , m_or    ()
   , m_and   ()
@@ -50,6 +53,7 @@ Decays::Parsers::Tree::Tree( const Decays::iNode& head )
   , m_inclusive  ( false                    )                 
   , m_negated    ( false                    )                 
   , m_marked     ( false                    )                 
+  , m_stable     ( stable                   )                 
   , m_children () 
   , m_optional ()
 {}
@@ -95,7 +99,10 @@ Decays::Parsers::Tree::operator/= ( const bool marked  )
 // ============================================================================
 Decays::Parsers::Tree& 
 Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree& tree ) 
-{ m_children.push_back ( tree ) ;  return *this ; }
+{ 
+  m_children.push_back ( tree ) ; 
+  return *this ; 
+}
 // ============================================================================
 // add to daughters 
 // ============================================================================
@@ -110,7 +117,10 @@ Decays::Parsers::Tree::operator+= ( const Decays::Parsers::Tree::Trees& trees )
 // ============================================================================
 Decays::Parsers::Tree& 
 Decays::Parsers::Tree::operator+= ( const Decays::iNode& tree ) 
-{ m_children.push_back ( tree ) ;  return *this ; }
+{ 
+  m_children.push_back ( tree ) ; 
+  return *this ; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -238,10 +248,11 @@ std::ostream& Decays::Parsers::Tree::fillStream ( std::ostream& s ) const
   }
   
   if ( m_children.empty() && m_optional.empty() ) { return s << m_head  ; } // RETURN
-
+  
+  
+  if  ( m_stable  ) { return s << "<"  << m_head << ">" ; }   // RETURN
 
   s << " (" ;
-  
   switch  ( m_oscillated ) 
   {
   case Decays::Trees::Oscillated    : 

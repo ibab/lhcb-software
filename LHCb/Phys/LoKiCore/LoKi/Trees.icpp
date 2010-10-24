@@ -5,7 +5,13 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & STL 
+// ============================================================================
 #include <limits>
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/NodesPIDs.h"
 // ============================================================================
 /** @file
  *  The implementation file for the objects form the file Trees.h
@@ -111,6 +117,57 @@ Decays::Trees::Marked_<PARTICLE>::collect
 // ============================================================================
 
 
+// ============================================================================
+// Stable_ 
+// ============================================================================
+// constructor from the decay head 
+// ============================================================================
+template <class PARTICLE> 
+inline Decays::Trees::Stable_<PARTICLE>::Stable_ 
+( const Decays::iNode&    head ) 
+  : Decays::iTree_<PARTICLE> () 
+  , m_head ( head ) 
+{}
+// ============================================================================
+// constructor from the decay head 
+// ============================================================================
+template <class PARTICLE> 
+inline Decays::Trees::Stable_<PARTICLE>::Stable_ 
+( const std::string&      head ) 
+  : Decays::iTree_<PARTICLE> () 
+  , m_head ( Decays::Nodes::Pid ( head ) ) 
+{}
+// ============================================================================
+// constructor from the decay head 
+// ============================================================================
+template <class PARTICLE> 
+inline Decays::Trees::Stable_<PARTICLE>::Stable_ 
+( const LHCb::ParticleID& head ) 
+  : Decays::iTree_<PARTICLE> () 
+  , m_head ( Decays::Nodes::Pid ( head ) ) 
+{}
+// ============================================================================
+// MANDATORY: the printout 
+// ============================================================================
+template <class PARTICLE> 
+inline std::ostream& 
+Decays::Trees::Stable_<PARTICLE>::fillStream ( std::ostream& s ) const 
+{ return s << " <" << m_head << "> "; }
+// ============================================================================
+// Check the validity 
+// ============================================================================
+template <class PARTICLE>
+inline bool Decays::Trees::Stable_<PARTICLE>::valid() const 
+{ return m_head.valid() ; }
+// ============================================================================
+// validate it
+// ============================================================================
+template <class PARTICLE>
+inline StatusCode 
+Decays::Trees::Stable_<PARTICLE>::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
+{ return m_head.validate ( svc ) ; }
+// ============================================================================
 
 // ============================================================================
 // _Tree_

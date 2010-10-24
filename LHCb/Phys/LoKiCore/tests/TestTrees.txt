@@ -9,8 +9,9 @@ X
 ( [X(3872)+]cc ) 
 ( ( X ) )
 ( ( [X(3872)+]cc ) ) 
-
 (l+ -> Nu Beauty chi_10 ~chi_10 ... )
+(l+ -> Nu <Beauty> chi_10 ~chi_10 ... )
+
 
 
 

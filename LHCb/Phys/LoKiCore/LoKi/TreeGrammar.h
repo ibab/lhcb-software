@@ -69,12 +69,13 @@ namespace Decays
         {
           
           head = 
-            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1 ) ] >> "]nos" )
+            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1        ) ] >> "]nos" )
             [ head.tree += Decays::Trees::NotOscillated ] |  
-            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1 ) ] >> "]os"  )
+            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1        ) ] >> "]os"  )
             [ head.tree += Decays::Trees::Oscillated    ] |  
-            (               node [ head.tree = construct_<Tree_> ( arg1 ) ]           ) ;
-
+            ( str_p("<") >> node [ head.tree = construct_<Tree_> ( arg1 , true ) ] >> ">"    ) 
+            | (             node [ head.tree = construct_<Tree_> ( arg1        ) ] ) ;
+          
           expression = 
             // node      [ expression.tree = construct_<Tree_> ( arg1 )  ] |
             tree      [ expression.tree = arg1 ] | 
