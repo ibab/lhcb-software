@@ -6,6 +6,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 
+! 2010-10-25 Paul Schaack
+- increased mass window for Phi in the selection Bs2MuMuPhi.py (<1070MeV)
+- looser BsVertexCHI2 (<40)  
+
 ! 2010-10-24 James Keaveney
 - Added lines for two lowest mass Drell-Yan regions, (from A.Bursche) 
 - Slight changes to W->Mu lines.
