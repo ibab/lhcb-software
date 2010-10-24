@@ -1,4 +1,4 @@
-# $Id: StrippingInclPhi.py,v 1.7 2010-09-04 13:03:54 schleich Exp $
+# $Id: StrippingInclPhi.py, 2010-10-25  01:15:00 schleich Exp $
 
 '''
 Inclusive phi -> K+ K- stripping selection(s) for phi cross section measurement and RICH performance studies.
@@ -73,19 +73,11 @@ class InclPhiConf(object):
                   'KaonPT'              : 500      # MeV
                 , 'KaonDLL'             : 15       # adimensional
                 , 'PhiMassWindow'       : 30       # MeV
-                , 'HighPtPrescale'      : 0.009    # adimensional
-                , 'LowPtPrescale'       : 0.003    # adimensional
+                , 'HighPtPrescale'      : 0.0015    # adimensional
+                , 'LowPtPrescale'       : 0.0005    # adimensional
                 , 'LDPrescale'          : 0.00001   # adimensional
-        	}
-
-    config_Sept2010={
-                  'KaonPT'              : 500      # MeV
-                , 'KaonDLL'             : 15       # adimensional
-                , 'PhiMassWindow'       : 30       # MeV
-                , 'HighPtPrescale'      : 0.240    # adimensional
-                , 'LowPtPrescale'       : 0.080    # adimensional
-                , 'LDPrescale'          : 0.0012   # adimensional
                 }
+
 
 
     def __init__(self, name = 'InclPhi', config= None) :

@@ -33,7 +33,7 @@ from StrippingSelections.StrippingB2D3H import StrippingB2D3HConf, StrippingB2D3
 stream = StrippingStream("Bhadron")
 
 
-MyStrippingBs2PhiPhiConf =  StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiPhiConf.config_Sept2010 )
+MyStrippingBs2PhiPhiConf =  StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiPhiConf.config_default )
 stream.appendLines( MyStrippingBs2PhiPhiConf.lines )
 
 stream.appendLines( Hb2Charged2BodyLines().lines() )

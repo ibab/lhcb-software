@@ -1,4 +1,4 @@
-# $Id: StrippingBs2PhiPhi.py,v 1.6 2010-09-05 09:31:37 schleich Exp $
+# $Id: StrippingBs2PhiPhi.py, 2010-10-25 01:15 schleich Exp $
 
 '''
 Bs -> phi phi stripping selection.
@@ -14,8 +14,7 @@ Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name a
 '''
 
 __author__  = [ 'Sebastian Schleich' ]
-__date__    = '2010/09/04'
-__version__ = '$Revision: 1.6 $'
+__date__    = '2010/10/25'
 
 
 '''
@@ -44,6 +43,19 @@ class StrippingBs2PhiPhiConf(object):
                 , 'BsMassWindow'              # MeV/cc
                 , 'WidePrescale'              # adimensional
                 )
+
+    config_default = {
+                  'KaonPT'              : 500      # MeV/c
+                , 'KaonIPCHI2'          : 3.5      # adimensional
+                , 'PhiPT'               : 900      # MeV/c
+                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                , 'PhiVertexCHI2pDOF'   : 25       # adimensional
+                , 'PhiMassWindow'       : 25       # MeV/cc
+                , 'PhiMassMax'          : 1090     # MeV/cc
+                , 'BsVertexCHI2pDOF'    : 25       # adimensional
+                , 'BsMassWindow'        : 300      # MeV/cc
+                , 'WidePrescale'        : 0.05     # adimensional
+                }
 
     config_Sept2010 = {
                   'KaonPT'              : 500      # MeV/c
