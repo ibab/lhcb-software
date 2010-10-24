@@ -680,6 +680,22 @@ void Decays::Trees::Optional::setOptional
 }
 // ============================================================================
 
+// ============================================================================
+// treat properly the stable trees
+// ============================================================================
+template <> bool Decays::Trees::Stable_<const LHCb::Particle*>::operator() 
+  ( Decays::iTree_<const LHCb::Particle*>::argument p ) const 
+{
+  //
+  if ( 0 == p                      ) { return false ; }
+  if ( !valid()                    ) { return false ; }
+  if ( !m_head ( p->particleID() ) ) { return false ; }
+  //
+  return p->daughters().empty() && 0 == p->endVertex() ;
+}
+
+
+
 
 
 // ============================================================================

@@ -32,18 +32,17 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import LoKiCore.decorators    as      _LoKiCore
 
 # Namespaces:
-_global  = _LoKiCore._global
-cpp      = _global
-std      = cpp.std
+from LoKiCore.basic import cpp, std, LoKi 
 Decays   = cpp.Decays
-LoKi     = cpp.LoKi
 
 _RCP = 'const LHCb::Particle*'
 
 _decorated = _LoKiCore.decorateTrees (
-    ( Decays.iTree_     ( _RCP ) ,
-      Decays.Tree_      ( _RCP ) ,
-      Decays.Trees.Any_ ( _RCP ) ,
+    ( Decays.iTree_        ( _RCP ) ,
+      Decays.Tree_         ( _RCP ) ,
+      Decays.Trees.Any_    ( _RCP ) ,
+      Decays.Trees.None_   ( _RCP ) ,
+      Decays.Trees.Stable_ ( _RCP ) ,
       Decays.Trees.Exclusive ,
       Decays.Trees.Inclusive ,
       Decays.Trees.Optional  ) ,
@@ -53,6 +52,8 @@ _decorated = _LoKiCore.decorateTrees (
 iTree     = Decays.iTree_       ( _RCP )
 Tree      = Decays.Tree_        ( _RCP )
 PAny      = Decays.Trees.Any_   ( _RCP ) () # instance!!
+PNone     = Decays.Trees.None_  ( _RCP ) () # instance!!  
+PStable   = Decays.Trees.None_  ( _RCP )  
 Exclusive = Decays.Trees.Exclusive
 Inclusive = Decays.Trees.Inclusive
 Optional  = Decays.Trees.Optional

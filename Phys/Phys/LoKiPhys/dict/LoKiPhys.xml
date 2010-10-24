@@ -24,16 +24,26 @@
   <class pattern   = "Gaudi::NamedRange_<*LHCb::Particle*>" />
   <class pattern   = "LoKi::RangeList_<*LHCb::Particle*>"   />
   
-  <class pattern   = "LoKi::Keeper<LHCb::Particle*>"        />
-  <class pattern   = "LoKi::UniqueKeeper<LHCb::Particle*>"  />
+  <class name = "LoKi::Keeper<LHCb::Particle>"            />
+  <class name = "LoKi::Keeper<LHCb::VertexBase>"          />
+  <class name = "LoKi::Keeper<LHCb::RecVertex>"           />
+  <class name = "LoKi::Keeper<LHCb::Vertex>"              />
+  <class name = "LoKi::Keeper<LHCb::ProtoParticle>"       />
+  <class name = "LoKi::Keeper<LHCb::Track>"               />
+
+  <class name = "LoKi::UniqueKeeper<LHCb::Particle>"      />
+  <class name = "LoKi::UniqueKeeper<LHCb::VertexBase>"    />
+  <class name = "LoKi::UniqueKeeper<LHCb::RecVertex>"     />
+  <class name = "LoKi::UniqueKeeper<LHCb::Vertex>"        />
+  <class name = "LoKi::UniqueKeeper<LHCb::ProtoParticle>" />
+  <class name = "LoKi::UniqueKeeper<LHCb::Track>"         />
+
   <class pattern   = "LoKi::Interface<*>"           />
   
   <class pattern   = "Gaudi::Range_<*LHCb::*Vertex*>"       />
   <class pattern   = "Gaudi::NamedRange_<*LHCb::*Vertex*>"  />
   <class pattern   = "LoKi::RangeList_<*LHCb::*Vertex*>"   />
   
-  <class pattern   = "LoKi::Keeper<LHCb::*Vertex*>"        />
-  <class pattern   = "LoKi::UniqueKeeper<LHCb::*Vertex*>"  />
   
   <class pattern   = "LoKi::Functor<*LHCb::Pa*>" />
   <class pattern   = "LoKi::Functor<*LHCb::Ve*>" />
@@ -51,9 +61,6 @@
   <class pattern   = "LoKi::TheSame<*LHCb::*>" />
   <class pattern   = "LoKi::Functors::Empty<*LHCb::*>" />
   <class pattern   = "LoKi::Functors::Size<*LHCb::*>"  />
-  
-  <class pattern   = "LoKi::Particles::*"                />
-  <class pattern   = "LoKi::Vertices::*"                 />
   
   <function pattern = "LoKi::Kinematics::*"              />
   <function pattern = "LoKi::PrintPhys::*"               />
@@ -85,18 +92,13 @@
   
   <class name = "LoKi::SelectVertex"  />
   
-  <class pattern   = "LoKi::*Keeper<*LHCb::Vertex*>"        />
-  <class pattern   = "LoKi::*Keeper<*LHCb::RecVertex*>"     />
-  <class pattern   = "LoKi::*Keeper<*LHCb::Particle*>"      />
-  <class pattern   = "LoKi::*Keeper<*LHCb::ProtoParticle*>" />
-  <class pattern   = "LoKi::*Keeper<*LHCb::Track*>"         />
 
-  <class pattern   = "LoKi::Legacy::*"     />
-  
   <class name = "LoKi::AuxFunBase"  />
   <class name = "LoKi::AuxDTFBase"  />
 
-  <class name = "Decays::Trees::Any_<const LHCb::Particle*>" />
+  <class name = "Decays::Trees::Any_<const LHCb::Particle*>"    />
+  <class name = "Decays::Trees::None_<const LHCb::Particle*>"   />
+  <class name = "Decays::Trees::Stable_<const LHCb::Particle*>" />
   <class name = "Decays::Trees::Exclusive" />
   <class name = "Decays::Trees::Inclusive" />
   <class name = "Decays::Trees::Optional"  />
@@ -108,7 +110,6 @@
   <class name = "Decays::TreeList_<const LHCb::Particle*>::Trees_" />
 
   <class name = "LoKi::Child::Selector"  />
-
 
   <class name = "Decays::IDecay"         />
   <class name = "Decays::IDecay::Finder" />
@@ -124,19 +125,8 @@
   
   <exclusion>
     
-    <class name="LoKi::Particles::InvariantMass::Indices" /> 
     <class name="LoKi::Interface<IDataProviderSvc>" /> 
     <class name="LoKi::Interface<LoKi::ILoKiSvc>"   /> 
-
-    <class pattern="LoKi::Particles::*">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Vertices::*">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Legacy::*">
-      <method name="=" />
-    </class>
 
     <class pattern="LoKi::Dicts::*">
       <method name="=" />

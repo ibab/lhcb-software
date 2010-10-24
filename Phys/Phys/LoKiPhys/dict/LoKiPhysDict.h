@@ -352,6 +352,8 @@ namespace
     // decay funders:
     Decays::Tree_<const LHCb::Particle*>                m_tree1 ;
     Decays::Trees::Any_<const LHCb::Particle*>          m_tree2 ;
+    Decays::Trees::None_<const LHCb::Particle*>         m_tree3 ;
+    Decays::Trees::Stable_<const LHCb::Particle*>       m_tree4 ;
     LoKi::Dicts::TreeOps<const LHCb::Particle*>         m_trops ;
     // =======================================================================
     Decays::IDecay::Finder m_finder ;

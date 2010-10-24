@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+
+ - introduce the concept of stable particle in decay descriptors
+ - split Reflex dictionary into two libraries 
+
+
 ! 2010-10-23 - Vanya Belyaev
 
  - new functors (similar to ``decay-length-significance'' by Roel & wouter, 
