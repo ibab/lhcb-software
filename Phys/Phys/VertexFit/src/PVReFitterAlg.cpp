@@ -265,23 +265,34 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                             const LHCb::Particle* p  ) const
 {
 
-  LHCb::RecVertex* reFittedVertex = 
-    m_useIPVOfflineTool ? new LHCb::RecVertex() : new LHCb::RecVertex(*v) ;
+  LHCb::RecVertex* reFittedVertex(0);
+
   StatusCode sc(StatusCode::SUCCESS);
 
   if (m_useIPVOfflineTool) {
     LHCb::Track::ConstVector tracks;
     getTracks(p, tracks);
-    sc = m_pvOfflineTool->reDoSinglePV(v->position(), 
-                                       tracks, 
-                                       *reFittedVertex );
-  }
-
-  if (m_useIPVReFitter && sc==StatusCode::SUCCESS) {
+    if ( ! tracks.empty() ) {
+      reFittedVertex = new LHCb::RecVertex();
+      sc = m_pvOfflineTool->reDoSinglePV(v->position(), 
+                                         tracks, 
+                                         *reFittedVertex );
+    } else {
+      reFittedVertex = new LHCb::RecVertex(*v);
+    }
+  } else {
+    reFittedVertex = new LHCb::RecVertex(*v);
     sc = m_pvReFitter->remove(p, reFittedVertex);
   }
   
-  return (sc==StatusCode::SUCCESS) ? reFittedVertex : 0;
+  if ( sc == StatusCode::SUCCESS && 0!= reFittedVertex )  {
+    return reFittedVertex;
+  } else {
+    delete reFittedVertex;
+    return 0;
+  }
+  
+  
 }
 //=============================================================================
 void PVReFitterAlg::getTracks(const LHCb::Particle* p,

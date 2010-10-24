@@ -4,6 +4,12 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2010-10-24 - Juan Palacios
+ - src/PVReFitterAlg.cpp
+  . Fix memory leak. New PVs not deleted when re-fitting fails.
+ - cmt/requirements
+  . Increase to v6r5p1
+
 !========================== VertexFit v6r5 2010-09-29 ======================
 
 ! 2010-09-26 - Yuehong Xie
