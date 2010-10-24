@@ -70,8 +70,6 @@ sc = StrippingConf( Streams = [ stream ],
                     BadEventSelection = filterBadEvents )
 sc.OutputType = "ETC"                    # Can be either "ETC" or "DST"
 
-from Configurables import CondDB
-CondDB().IgnoreHeartBeat = True
 
 # Mimic the new default tracking cuts
 from CommonParticles.Utils import DefaultTrackingCuts
@@ -106,13 +104,19 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
 
+# correlation plot
+from Configurables import AlgorithmCorrelationsAlg
+ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
+
+
 DaVinci().PrintFreq = 500
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 100000
+DaVinci().EvtMax = 500000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
+DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().MoniSequence += [ seq ]                     # Append the TagCreator to DaVinci
 DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
