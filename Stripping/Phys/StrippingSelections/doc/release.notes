@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 R Coutinho	
+- Update on StrippingBu2hhh for signal optimization
+- Add new Selection StrippingBu3hFrom2h for next year studies
+for cuts with prescale
+ 
 ! 2010-10-22 E Polycarpo 
 - Change TrckChi2NDOF cut for b_line in StrippingMuIDCalibration.py 
 - New StrippingD2hhh_conf.py with looser cuts for micro-dst

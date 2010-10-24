@@ -18,6 +18,7 @@ from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
 from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import _StrippingBu2D0h_D02KShh_NoPIDConf
 from StrippingSelections import StrippingBu2hhh
+from StrippingSelections import StrippingBu3hFrom2h
 from StrippingSelections.StrippingB2KShh import StrippingB2KShhConf
 from StrippingSelections import StrippingTopo
 #from StrippingSelections import StrippingBs2Kst0Kst0
@@ -44,7 +45,9 @@ stream.appendLines( [
 		        _StrippingBu2D0h_D02KShh_NoPIDConf.Line_DD,
                         StrippingB2KShhConf().B2KSLLhh(),
                         StrippingB2KShhConf().B2KSDDhh(),
-     		        StrippingBu2hhh.line,   
+     		        StrippingBu2hhh.line,
+                        StrippingBu3hFrom2h.line1,
+                        StrippingBu3hFrom2h.line2,
 			StrippingTopo.line1,
                         StrippingTopo.line2, 
                         StrippingBs2KstKstConf().nominall(),
