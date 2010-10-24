@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-24 - Mariusz Witek
+- change of argument type to const in removeTracksAndRecalculatePV of IPVOfflineTool interface
+
 ! 2010-10-20 - Mariusz Witek
 - supress final printout of statistics in PVOfflineRecalculate 
   if tool instantiated but not used

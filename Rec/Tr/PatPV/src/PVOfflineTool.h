@@ -56,7 +56,7 @@ public:
 			         LHCb::RecVertex& outvtx);
 
   void removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
-                                    std::vector<const LHCb::Track*>& tracks2remove,
+                                    const std::vector<const LHCb::Track*>& tracks2remove,
                                     LHCb::RecVertex& vtx);
   
 

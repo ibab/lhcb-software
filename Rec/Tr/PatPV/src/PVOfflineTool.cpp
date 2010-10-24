@@ -549,7 +549,7 @@ StatusCode PVOfflineTool::matchVtxByTracks(const LHCb::RecVertex& invtx,
 }
 
 void PVOfflineTool::removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
-                                                 std::vector<const LHCb::Track*>& tracks2remove,
+                                                 const std::vector<const LHCb::Track*>& tracks2remove,
                                                  LHCb::RecVertex& vtx) 
 {
   m_pvRecalc->RecalculateVertex(pvin, tracks2remove, vtx);  

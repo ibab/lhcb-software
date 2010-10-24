@@ -81,7 +81,7 @@ StatusCode PVOfflineRecalculate::initialize()
 
 //=============================================================================
 void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
-                                             std::vector<const LHCb::Track*>& tracks2remove,
+                                             const std::vector<const LHCb::Track*>& tracks2remove,
                                              LHCb::RecVertex& vtx) 
 { 
    m_counter_count[0] += 1;    
@@ -121,7 +121,7 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   // Collect tracks to remove together with their weights. If no weight found track is skipped.
   std::vector<const LHCb::Track*> trin;
   std::vector<double> wgin;
-  for (std::vector<const LHCb::Track*>::iterator itr = tracks2remove.begin(); itr != tracks2remove.end(); itr++) {
+  for (std::vector<const LHCb::Track*>::const_iterator itr = tracks2remove.begin(); itr != tracks2remove.end(); itr++) {
     for ( unsigned int iw = 0; iw < the_weights.size() ; iw++ ) {
       if ( (*itr)->key() == the_weights[iw].first ) {
         trin.push_back(*itr);
