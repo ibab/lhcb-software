@@ -140,7 +140,9 @@ namespace
     LoKi::Functors::Size<const LHCb::MCVertex*>     m_s2 ;    
     /// decay related stuff 
     Decays::Tree_<const LHCb::MCParticle*>           m_tree1 ;
-    Decays::Trees::Any_<const LHCb::MCParticle*>     m_tree3 ;
+    Decays::Trees::Any_<const LHCb::MCParticle*>     m_tree2 ;
+    Decays::Trees::None_<const LHCb::MCParticle*>    m_tree3 ;
+    Decays::Trees::Stable_<const LHCb::MCParticle*>  m_tree4 ;
     LoKi::Dicts::TreeOps<const LHCb::MCParticle*>    m_trops ;   
     // ========================================================================
     // Decay Finder 

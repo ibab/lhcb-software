@@ -777,9 +777,14 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Decays::Trees
+    // treat properly the stable trees
+    // ========================================================================
+    template <> bool Stable_<const LHCb::MCParticle*>::operator() 
+      ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const ;
+    // ========================================================================
+  } //                                           end of namespace Decays::Trees
   // ==========================================================================
-} // end of namespace DaVinci::Graphs
+} //                                                    end of namespace Decays
 // ============================================================================
 
 

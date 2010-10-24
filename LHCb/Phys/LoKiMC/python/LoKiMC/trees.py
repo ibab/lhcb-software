@@ -42,9 +42,11 @@ Decays   = cpp.Decays
 _MCP = 'const LHCb::MCParticle*'
 
 _decorated = _LoKiCore.decorateTrees (
-    ( Decays.iTree_      ( _MCP ) ,
-      Decays.Tree_       ( _MCP ) ,
-      Decays.Trees.Any_  ( _MCP ) ,
+    ( Decays.iTree_        ( _MCP ) ,
+      Decays.Tree_         ( _MCP ) ,
+      Decays.Trees.Any_    ( _MCP ) ,
+      Decays.Trees.None_   ( _MCP ) ,
+      Decays.Trees.Stable_ ( _MCP ) ,
       Decays.Trees.MCExclusive    ,
       Decays.Trees.MCInclusive    ,
       Decays.Trees.MCOptional     ,
@@ -53,9 +55,11 @@ _decorated = _LoKiCore.decorateTrees (
 
 
 ## decay trees
-iMCTree             = Decays.iTree_       ( _MCP )
-MCTree              = Decays.Tree_        ( _MCP )
-MCAny               = Decays.Trees.Any_   ( _MCP ) () ## instance!!!
+iMCTree             = Decays.iTree_        ( _MCP )
+MCTree              = Decays.Tree_         ( _MCP )
+MCAny               = Decays.Trees.Any_    ( _MCP ) () ## instance!!!
+MCNone              = Decays.Trees.None_   ( _MCP ) () ## instance!!!
+MCStable            = Decays.Trees.Stable_ ( _MCP ) 
 MCExclusive         = Decays.Trees.MCExclusive
 MCInclusive         = Decays.Trees.MCInclusive
 MCOptional          = Decays.Trees.MCOptional

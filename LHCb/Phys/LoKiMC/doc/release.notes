@@ -15,6 +15,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+
+ - add concept of 'stable' particle into decay descriptors 
+
+ - cmt/requirements
+    version increment to v9r3 
+
 !========================== LoKiMC v9r2 2010-09-28 ============================
 ! 2010-09-28 - Vanya Belyaev
  - LoKiMC/trees.py

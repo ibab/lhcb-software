@@ -72,8 +72,10 @@
   
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />
-
-  <class name = "Decays::Trees::Any_<const LHCb::MCParticle*>"   />
+  
+  <class name = "Decays::Trees::Any_<const LHCb::MCParticle*>"    />
+  <class name = "Decays::Trees::None_<const LHCb::MCParticle*>"   />
+  <class name = "Decays::Trees::Stable_<const LHCb::MCParticle*>" />
   <class name = "Decays::Trees::MCExclusive" />
   <class name = "Decays::Trees::MCInclusive" />
   <class name = "Decays::Trees::MCOptional"  />

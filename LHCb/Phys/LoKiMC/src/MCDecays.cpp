@@ -1065,5 +1065,42 @@ bool Decays::Trees::PhotosOptional::operator()
 // ============================================================================
 
 // ============================================================================
+// treat properly the stable trees
+// ============================================================================
+template <> bool Decays::Trees::Stable_<const LHCb::MCParticle*>::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
+{
+  //
+  if ( 0 == p                      ) { return false ; }
+  if ( !valid()                    ) { return false ; }
+  if ( !m_head ( p->particleID() ) ) { return false ; }
+  //
+  typedef SmartRefVector<LHCb::MCVertex> MCVs ;
+  const MCVs& vertices = p->endVertices() ;
+  if ( vertices.empty() ) { return true ; }   // RETURN 
+  //
+  for ( MCVs::const_iterator imcv = vertices.begin() ; 
+        vertices.end() != imcv ; ++imcv ) 
+  {
+    const LHCb::MCVertex* mcv = *imcv ;
+    if ( 0 == mcv ) { continue ; }
+    //
+    switch ( mcv->type() ) 
+    {
+    case LHCb::MCVertex::DecayVertex        : return false ;
+    case LHCb::MCVertex::OscillatedAndDecay : return false ;
+    default                                 : continue     ;
+    }
+    //
+  }  
+  return true ; // true ? 
+}
+
+
+
+
+
+
+// ============================================================================
 // The END 
 // ============================================================================
