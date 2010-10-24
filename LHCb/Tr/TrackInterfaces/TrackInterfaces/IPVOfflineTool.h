@@ -69,7 +69,7 @@ class IPVOfflineTool : virtual public IAlgTool {
 
   /// Remove tracks from PV and recalculate PV parameters without a fit 
   virtual void removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
-                                            std::vector<const LHCb::Track*>& tracks2remove,
+                                            const std::vector<const LHCb::Track*>& tracks2remove,
                                             LHCb::RecVertex& vtx)=0;
   
 
