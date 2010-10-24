@@ -24,9 +24,8 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 _muons =  DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 
-mucut =  '(PT>15*GeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
-mucut_tight =  '(PT>20*GeV)&(TRPCHI2>0.001)&(MIPDV(PRIMARY)/ MIPCHI2DV(PRIMARY)< 5)'
-
+mucut =  '(PT>15*GeV)'
+mucut_tight =  '(PT>20*GeV)'
 
 
 _W_ps = FilterDesktop(name+"_ps"
