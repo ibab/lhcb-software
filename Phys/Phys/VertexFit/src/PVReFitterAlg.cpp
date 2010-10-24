@@ -194,76 +194,99 @@ void PVReFitterAlg::executeForLocation(const std::string& particleLocation,
   LHCb::RecVertex::Container* vertexContainer = 
     new  LHCb::RecVertex::Container();
 
-  verbose() << "Storing re-fitted vertices in " 
-            << vertexOutputLocation << endmsg;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Storing re-fitted vertices in " 
+              << vertexOutputLocation << endmsg;
 
+  }
+  
   put(vertexContainer, vertexOutputLocation);  
 
   Particle2Vertex::Table* newTable = new Particle2Vertex::Table();
 
-  verbose() << "Storing Particle->Refitted Vtx relations table in "
-            << particle2VertexRelationsOutputLocation << endmsg;
-
+  if (msgLevel(MSG::VERBOSE)) {  
+    verbose() << "Storing Particle->Refitted Vtx relations table in "
+              << particle2VertexRelationsOutputLocation << endmsg;
+  }
+  
   put( newTable, particle2VertexRelationsOutputLocation);
 
-  verbose() << "Loop over " << particles.size() << " particles" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Loop over " << particles.size() << " particles" << endmsg;
+  }
+  
+  LHCb::Particle::Range::const_iterator itP = particles.begin();
+  LHCb::Particle::Range::const_iterator itPEnd = particles.end();
 
-  for ( LHCb::Particle::Range::const_iterator itP = particles.begin();
-        itP != particles.end(); 
-        ++itP) {
+  for ( ; itP != itPEnd; ++itP) {
     
-    for (LHCb::RecVertex::Range::const_iterator itPV = vertices.begin();
-         itPV != vertices.end();
-         ++itPV) {
+    LHCb::RecVertex::Range::const_iterator itPV = vertices.begin();
+    LHCb::RecVertex::Range::const_iterator itPVEnd = vertices.end();
+
+    for ( ; itPV != itPVEnd; ++itPV) {
+
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << "Re-fitting vertex for particle\n" 
+                  << *(*itP) << endmsg;
+      }
       
-      verbose() << "Re-fitting vertex for particle\n" 
-                << *(*itP) << endmsg;
       LHCb::RecVertex* refittedVertex = refitVertex(*itPV, *itP);
+
       if (0!=refittedVertex) {
-        verbose() << "Storing vertex with key " << refittedVertex->key()
-                  << " into container slot with key " << (*itPV)->key() 
-                  << endmsg;
+
+        if (msgLevel(MSG::VERBOSE)) {
+          verbose() << "Storing vertex with key " << refittedVertex->key()
+                    << " into container slot with key " << (*itPV)->key() 
+                    << endmsg;
+          verbose() << "Re-fitted vertex " << *(*itPV) << "\n as\n"
+                    << *refittedVertex << endmsg;
+        }
+        
         vertexContainer->insert(refittedVertex);
         newTable->relate(*itP, refittedVertex);
-        verbose() << "Re-fitted vertex " << *(*itPV) << "\n as\n"
-                  << *refittedVertex << endmsg;
+
       }
+
     }
   }
 
-  // check output.
-  if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )
-  {  
-    const LHCb::RecVertex::Container* vertices = 
-      get<LHCb::RecVertex::Container>(vertexOutputLocation);
-    verbose() << "CHECK: stored " 
-              << vertices->size()
-              << " re-fitted vertices in " 
-              << m_vertexOutputLocation << endmsg;
-  } else {
-    Error("No re-fitted vertices at "+
-          m_vertexOutputLocation,
-          StatusCode::SUCCESS,
-          0).ignore();
+  if (msgLevel(MSG::VERBOSE)) {
+    // check output.
+    if (exist<LHCb::RecVertex::Container>(vertexOutputLocation) )
+    {  
+      const LHCb::RecVertex::Container* vertices = 
+        get<LHCb::RecVertex::Container>(vertexOutputLocation);
+      verbose() << "CHECK: stored " 
+                << vertices->size()
+                << " re-fitted vertices in " 
+                << m_vertexOutputLocation << endmsg;
+    } else {
+      Error("No re-fitted vertices at "+
+            m_vertexOutputLocation,
+            StatusCode::SUCCESS,
+            0).ignore();
+    }
+
+
+    if (exist<Particle2Vertex::Table>(particle2VertexRelationsOutputLocation) )
+    {  
+      verbose() << "CHECK: table is at " 
+                << particle2VertexRelationsOutputLocation << endmsg;
+    } else {
+      Error("No LHCb::Particle->LHCb::RecVertex table found at "+
+            m_particle2VertexRelationsOutputLocation,
+            StatusCode::SUCCESS,
+            0).ignore();
+    }
   }
-
-
-  if (exist<Particle2Vertex::Table>(particle2VertexRelationsOutputLocation) )
-  {  
-    verbose() << "CHECK: table is at " 
-              << particle2VertexRelationsOutputLocation << endmsg;
-  } else {
-    Error("No LHCb::Particle->LHCb::RecVertex table found at "+
-          m_particle2VertexRelationsOutputLocation,
-          StatusCode::SUCCESS,
-          0).ignore();
-  }
-
+  
 }
 //=============================================================================
 LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                             const LHCb::Particle* p  ) const
 {
+
+  if (0==v || 0==p) return 0;
 
   LHCb::RecVertex* reFittedVertex(0);
 
