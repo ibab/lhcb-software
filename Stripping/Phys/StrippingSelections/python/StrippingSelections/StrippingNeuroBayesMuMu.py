@@ -35,9 +35,9 @@ class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
         , 'JPsiMassMax'           :    3.14 # GeV
         , 'VertexChi2'            :   25.0
         , 'NBCutJPsi'             :    0.75
-        , 'ExpertiseJPsi'         : 'mumu_net_noip.nb'
+        , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
         , 'NBCutMuMu'             :    0.95
-        , 'ExpertiseMuMu'         : 'mumu_net_full.nb'        
+        , 'ExpertiseMuMu'         : 'Muon/mumu_net_full.nb'        
         , 'NetworkVersion'        : "TuneSep2010"
         }
 
