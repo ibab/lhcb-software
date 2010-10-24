@@ -241,7 +241,7 @@ Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   DecayDescriptor = "B0 -> J/psi(1S) KS0",
                                   DaughterLists  = [ KsList, JpsiList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
-                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 20)"
+                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
                                   )
 
 
