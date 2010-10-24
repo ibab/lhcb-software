@@ -133,7 +133,7 @@ LambdaList =  createSubSel(OutputList = "LambdaForBetaS",
 EtaList = createSubSel( OutputList = "EtaForBetaS",
 			InputList = DataOnDemand(Location = "Phys/StdLooseResolvedEta"),
 			Cuts = "(PT > 1500)"\
-			"& (MINTREE('Gamma'==ABSID, PT) >300)")
+			"& (MINTREE('gamma'==ABSID, PT) >300)")
 
 
 

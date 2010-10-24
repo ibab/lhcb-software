@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 20-10-25 M Needham
+ - Add  Bs->J/psi eta line
+
 ! 2010-10-24 R Coutinho	
 - Update on StrippingBu2hhh for signal optimization
 - Add new Selection StrippingBu3hFrom2h for next year studies
