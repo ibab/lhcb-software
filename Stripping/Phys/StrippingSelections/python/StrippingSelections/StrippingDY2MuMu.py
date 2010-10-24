@@ -53,6 +53,7 @@ _DY2_HLT2 = CombineParticles(name+"2_HLT2",
                          )
 
 
+
 _DY2 = CombineParticles(name+"2",
                          DecayDescriptor = 'Z0 -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut_2 , 
@@ -155,6 +156,20 @@ line2_HLT2 = StrippingLine('DY2MuMu2_HLT2'
                            , algos = [ sequence2_HLT2 ]
                            , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
                            )
+
+
+line1_HLT2_a = StrippingLine('DY2MuMu1_HLT2_a'
+                          , prescale = .1
+                          , algos = [ sequence1_HLT2 ]
+                          , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
+                          )
+
+line2_HLT2_a = StrippingLine('DY2MuMu2_HLT2_a'
+                          , prescale = .2
+                          , algos = [ sequence2_HLT2 ]
+                          , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
+                          )
+
 
 line2 = StrippingLine('DY2MuMu2'
                            , prescale = 1.
