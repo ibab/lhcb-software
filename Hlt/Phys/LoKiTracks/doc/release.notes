@@ -5,6 +5,16 @@
 ! Purpose     : tarcj-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-24 - Vanya Belyaev
+
+   - add new symbol TrNUM ( void -> double ) 
+
+      Code = " TrNUM ( 'Rec/Track/Best' , TerLONG ) < 200 "
+
+ - cmt/requirements
+     version increment to v1r3 
+
+
 !========================== LoKiTracks v1r2 2010-10-04 ===================
 ! 2010-09-29 - Vanya Belyaev
  - fix for new structire of modules in LoKiCore 

@@ -167,6 +167,8 @@ TrTES          = LoKi.Tracks.SourceTES
 TrEMPTY        = LoKi.Functors.Empty ( _T ) ()
 TrSIZE         = LoKi.Functors.Size  ( _T ) ()
 
+TrNUM          = LoKi.Tracks.TESCounter
+
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120

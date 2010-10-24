@@ -120,9 +120,28 @@ def _decorate ( name = _name  ) :
         name                                            , ## module name
         TrFunc                                          , ## the base 
         LoKi.Dicts.InfoOps (_pt)                        ) ## methods
-    ## 
-    return _decorated                            ## RETURN
+    ##
 
+    ## void-stuff
+    _d = 'double'
+    _b = 'bool'
+    _v = 'void'
+    # void -> double 
+    _decorated  |= _LoKiCore.getAndDecorateFunctions  (
+        name                                             , ## module name 
+        LoKi.Functor        (_v,_d)                      , ## the base 
+        LoKi.Dicts.FunCalls (_v)                         , ## call-traits 
+        LoKi.Dicts.FuncOps  (_v,_v)                      ) ## operators
+    
+    # void -> bool 
+    _decorated  |= _LoKiCore.getAndDecoratePredicates (
+        name                                             , ## module name 
+        LoKi.Functor        (_v,_b)                      , ## the base 
+        LoKi.Dicts.CutCalls (_v)                         , ## call-traits 
+        LoKi.Dicts.CutsOps  (_v,_v)                      ) ## operators
+    
+    
+    return _decorated                            ## RETURN
 
 
 # =============================================================================

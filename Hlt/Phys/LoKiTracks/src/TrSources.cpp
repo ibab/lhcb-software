@@ -23,6 +23,7 @@
 #include "LoKi/Services.h"
 #include "LoKi/select.h"
 #include "LoKi/apply.h"
+#include "LoKi/Algs.h"
 // ============================================================================
 /** @file 
  *  Implementation file for various sources
@@ -141,6 +142,11 @@ LoKi::Tracks::SourceTES::SourceTES
 // ============================================================================
 LoKi::Tracks::SourceTES::~SourceTES(){}
 // ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::SourceTES* LoKi::Tracks::SourceTES::clone() const 
+{ return new SourceTES(*this) ; }
+// ============================================================================
 // MANDATORY: the only essential method:
 // ============================================================================
 LoKi::Tracks::SourceTES::result_type 
@@ -177,8 +183,17 @@ LoKi::Tracks::SourceTES::operator() () const
 // get the particles from the certain  TES location 
 // ============================================================================
 LHCb::Track::Range LoKi::Tracks::SourceTES::get
-( const std::string& location ) const 
+( const std::string& location , 
+  const bool         exc      ) const 
 {
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }
+  //  
   Gaudi::Utils::GetData<LHCb::Track::Range> data ;
   //
   SmartDataPtr<LHCb::Track::Selection> tracks_1 ( m_dataSvc , location ) ;
@@ -187,7 +202,10 @@ LHCb::Track::Range LoKi::Tracks::SourceTES::get
   SmartDataPtr<LHCb::Track::Container> tracks_2 ( m_dataSvc , location ) ;
   if ( !(!tracks_2) ) { return data.make_range ( tracks_2 ) ; }
   //
-  Exception ( "No valid data is found at location '" + location + "'") ;
+  if ( exc ) 
+  { Exception ( "No valid data is found at location '" + location + "'") ; }
+  else 
+  { Error     ( "No valid data is found at location '" + location + "'") ; }
   //
   return LHCb::Track::Range() ;
 }
@@ -199,6 +217,68 @@ LoKi::Tracks::SourceTES::fillStream ( std::ostream& o ) const
 { return o << "TrSOURCE(" 
            << Gaudi::Utils::toString( m_path ) << "," << m_cut << ")" ; }
 // ============================================================================
+
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Tracks::TESCounter::TESCounter 
+( const std::string&              path , 
+  const LoKi::TrackTypes::TrCuts& cuts )
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Tracks::TESCounter::TESCounter 
+( const std::vector<std::string>& path                    , 
+  const LoKi::TrackTypes::TrCuts& cuts )
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Tracks::TESCounter::~TESCounter(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Tracks::TESCounter*
+LoKi::Tracks::TESCounter::clone() const 
+{ return new LoKi::Tracks::TESCounter( *this ) ; }
+// ============================================================================
+// MANDATORY: the only essential method:
+// ============================================================================
+LoKi::Tracks::TESCounter::result_type 
+LoKi::Tracks::TESCounter::operator() ( /* argument */ ) const 
+{
+  unsigned long num = 0 ;
+  
+  typedef std::vector<std::string> List ;
+  const List& paths = m_source.paths() ;
+  for ( List::const_iterator iaddr = paths.begin() ; 
+        paths.end() != iaddr ; ++iaddr ) 
+  {
+    // get tracks 
+    LHCb::Track::Range r = m_source.get ( *iaddr , false ) ;
+    // count tracks 
+    num += LoKi::Algs::count_if ( r.begin () , r.end () , m_source.cut() ) ;
+  }
+  //
+  return num ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& 
+LoKi::Tracks::TESCounter::fillStream ( std::ostream& o ) const 
+{ return o << "TrNUM(" 
+           << Gaudi::Utils::toString( m_source.paths() ) 
+           << "," << m_source.cut() << ")" ; }
+// ============================================================================
+
+
+
 
 
 // ============================================================================
