@@ -50,7 +50,7 @@ jp_line = StrippingLine('JpsiNoPID'
 # Create b -> Jpsi -> mumu candidates out of no pid muons
 ## ############################################################
 #Muons common cut
-mucocut = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & (P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<5) & (ISLONG) &(MIPDV(PRIMARY)>0.050)'
+mucocut = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & (P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) &(MIPDV(PRIMARY)>0.050)'
 #Tag and probe cuts: 
 #   TAG:: IsMuon and P>6Gev and Pt>1.5 GeV
 #   PROBE:: Ecal (-10,1000) and Hcal (1000,4000) energy filtered
@@ -84,4 +84,31 @@ b_line = StrippingLine('JpsiFromBNoPID'
                         , algos = [ JpsiFromBCombine ]
                         )
 
+
+# Create b -> Jpsi -> mumu candidates out of no pid muons without mip cuts
+## ############################################################
+#Muons common cut
+mucocut = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & (P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<5) & (ISLONG) & (MIPCHI2DV(PRIMARY)>4)'
+#Tag and probe cuts: 
+#   TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
+
+tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
+tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+
+JpsiFromBNoMipCombine = StrippingMember( CombineParticles
+                                    , 'FromBNoMipCombine'
+                                    , InputLocations = [ 'StdNoPIDsMuons' ]
+                                    , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+                                    , DaughtersCuts = { 'mu+' : mucocut ,
+                                                        'mu-' : mucocut }
+                                    , CombinationCut = "(ADAMASS('J/psi(1S)')<150*MeV)"
+                                    , MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | ("
+                                                                                  + tag2cuts + " ) ) "
+                                    )
+# Define the line
+## ############################################################
+bnomip_line = StrippingLine('JpsiFromBNoPIDNoMip'
+                        , prescale = 0.25
+                        , algos = [ JpsiFromBNoMipCombine ]
+                        )
 
