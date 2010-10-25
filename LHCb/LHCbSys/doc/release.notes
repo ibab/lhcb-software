@@ -5,6 +5,26 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+
+</PRE><H1><A NAME=v31r6p1>2010-10-25 LHCbSys v31r6p1</A></H1><PRE>
+This version uses Gaudi v21r11 and LCG_58f
+
+- The base version on which we will run the 2010 winter reprocessing
+
+- Only minor patches/additions over the v31r6 stack
+
+- Packages modified:
+    Calo/CaloInterfaces	v8r0, DAQ/MDF v3r27, DAQ/MDF_ROOT v1r4, Det/CaloDet v10r7,
+    Det/DDDB v1r37, Det/DetCond v12r16, Det/DetDescChecks v5r4, Det/DetDescSvc	v3r0,
+    Det/RichDet v15r1, Event/DAQEvent v9r2, Event/LumiEvent v3r0p2, GaudiObjDesc v11r10p2, 
+    Kernel/HltInterfaces v4r1p1, Kernel/LHCbMath v3r21, Kernel/PartProp v1r7,
+    Muon/MuonInterfaces v1r2p1, Phys/LoKiCore v10r5, Phys/LoKiGen v9r3, Phys/LoKiMC v9r3,
+    Phys/LoKiNumbers v9r4, Rich/RichKernel v7r39, Rich/RichRecBase v4r1, 
+    ST/STKernel v2r5, Tf/PatKernel v2r3p2, Tf/TfKernel v2r19, Tools/CondDBUI v3r5p1,
+    Tr/TrackInterfaces v4r17
+
+
+
 </PRE><H1><A NAME=v31r6>2010-09-28 LHCbSys v31r6</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
 
