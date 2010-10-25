@@ -14,6 +14,9 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
+// RichKernel
+#include "RichKernel/RichHPDIdentifier.h"
+
 // DetDesc
 #include "DetDesc/Condition.h"
 
@@ -166,7 +169,16 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
                                 numbers->paramVect<int>("HPDCopyNumbers") :
                                 defaultCopyN );
   // inactive HPDs
-  const CondData & inacts = numbers->paramVect<int>("InactiveHPDs");
+  const CondData & inactsHuman = numbers->paramVect<int>("InactiveHPDs");
+  CondData inacts;
+  for (unsigned int inHpd=0; inHpd<inactsHuman.size(); ++inHpd)
+  {
+    LHCb::RichSmartID myID( Rich::DAQ::HPDIdentifier(inactsHuman[inHpd]).smartID() );
+    if ( myID.isValid() ) inacts.push_back( myID );
+    else
+      error() << "Invalid smartID in the list of inactive HPDs "
+              << inactsHuman[inHpd] << endmsg;
+  }
 
   // check consistency
   if ( nHPDs != softIDs.size() ||
@@ -238,7 +250,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
     // set up mappings etc.
 
-    if ( std::find( inacts.begin(), inacts.end(), *iHard ) == inacts.end() )
+    if ( std::find( inacts.begin(), inacts.end(), *iSoft ) == inacts.end() )
     {
       m_smartIDs.push_back(hpdID);
       m_hardIDs.push_back(hardID);
@@ -272,9 +284,9 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   // build inative lists
   for ( CondData::const_iterator iInAct = inacts.begin(); iInAct != inacts.end(); ++iInAct )
   {
-    const Rich::DAQ::HPDHardwareID hardID ( *iInAct );
-    const LHCb::RichSmartID        hpdID  ( richSmartID(hardID) );
-    if ( !hpdIsActive(hardID) )
+    const LHCb::RichSmartID        hpdID  ( *iInAct );
+    const Rich::DAQ::HPDHardwareID hardID ( hardwareID(hpdID) );
+    if ( !hpdIsActive(hpdID) )
     {
       error() << "HPD " << hpdID << " hardID " << hardID
               << " listed twice in INACTIVE HPD list !" << endmsg;
