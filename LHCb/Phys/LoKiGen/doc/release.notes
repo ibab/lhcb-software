@@ -14,6 +14,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v9r3 2010-10-25 =========================
+
 ! 2010-10-24 - Vanya Belyaev
  - add concept of stable particle in decay descriptors 
  - cmt/requirements
