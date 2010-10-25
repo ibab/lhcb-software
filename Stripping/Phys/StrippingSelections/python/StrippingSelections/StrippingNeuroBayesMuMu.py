@@ -34,7 +34,7 @@ class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
         , 'JPsiMassMin'           :    3.04 # GeV
         , 'JPsiMassMax'           :    3.14 # GeV
         , 'VertexChi2'            :   25.0
-        , 'NBCutJPsi'             :    0.75
+        , 'NBCutJPsi'             :    0.7
         , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
         , 'NBCutMuMu'             :    0.95
         , 'ExpertiseMuMu'         : 'Muon/mumu_net_full.nb'        
@@ -79,7 +79,7 @@ class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
 
         mumuNB                    = StrippingNBMuMu("mumuNB"+id)
         #mumuNB.OutputLevel        = 2
-        mumuNB.PlotHisto          = True
+        mumuNB.PlotHisto          = False
         mumuNB.PlotMassMin        = min
         mumuNB.PlotMassMax        = max
         mumuNB.PlotNBins          = nBins
