@@ -127,9 +127,10 @@ private:
    * if = 1  : remove reco vtx if in detector material
    * if = 2  : remove reco vtx if rad length from decay pos - DetDist 
    *           to decay pos + DetDist along momentum is > threshold
-   * if = 3 : remove reco vtx if rad length along 
+   * if = 3 :  remove reco vtx if rad length along 
    *                             +- DetDist * PositionCovMatrix
-   * if = 4 : 3 but range+3 if in RF foil.
+   * if = 4 :  3 but range+3 if in RF foil.
+   * if = 5 :  if in home-made description of detector.
    ******************************************************************/
   int m_RemVtxFromDet;    
   double m_DetDist;          ///< Min distance to det material 
