@@ -76,7 +76,7 @@
 #
 #   from StrippingSelections.StirppingPromptCharm import StrippingPromptCharmConf
 #
-#   conf = { 'D0Prescale' : 0.25 , 'DplusPrescale' : 0.25 }
+#   conf = {}
 #
 #   promtCharm = StrippingPromptCharmConf ( config = conf ) 
 #
@@ -160,7 +160,7 @@ Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 
     >>> from StrippingSelections.StirppingPromptCharm import StrippingPromptCharmConf
 
-    >>> conf = { 'D0Prescale' : 0.25 , 'DplusPrescale' : 0.25 }
+    >>> conf = {}
 
     >>> promtCharm = StrippingPromptCharmConf ( config = conf ) 
     
@@ -549,7 +549,7 @@ class StrippingPromptCharmConf(object) :
             ##
             Code      = """
             ( PT             > 2.0 * GeV  ) & 
-            ( ADMASS( 'D0' ) < 50  * MeV  ) &
+            ( ADMASS( 'D0' ) < 75  * MeV  ) &
             ( kk | kpi )                    &
             ( ctau > 100 * micrometer )
             """ ,
