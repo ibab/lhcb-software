@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.54 2010-10-21 10:16:45 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.55 2010-10-25 14:09:28 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -64,9 +64,6 @@ namespace OnlineHistDBEnv_constants {
   static std::string unknown = "unknown";
   static const sb2 isnull = 1;
   static const sb2 isnotnull = 0;
-  
-  static const int nmsglevel=6;
-  static std::string msglevelName[nmsglevel] = {"", "", "NOSTAT", "INFO", "WARNING", "ALARM"};
 }
 
 

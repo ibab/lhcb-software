@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.46 2010-08-19 16:12:58 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.47 2010-10-25 14:09:28 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -661,7 +661,7 @@ bool OnlineHistDB::deleteAllMessages() {
       out=true;
     }
   }
-  return true;
+  return out;
 }
 
 bool OnlineHistDB::deleteOldMessages(int expTime, std::string &anaTask) {

@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.13 2010-09-20 18:48:34 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.14 2010-10-25 14:09:28 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -14,6 +14,12 @@
  *  @author Giacomo GRAZIANI
  *  @date   2008-08-14
  */
+
+namespace OnlineHistDBEnv_constants {
+  static const int nmsglevel=6;
+  static std::string msglevelName[nmsglevel] = {"", "", "NOSTAT", "INFO", "WARNING", "ALARM"};
+}
+
 class OMAMessage : public OnlineHistDBEnv {
 public: 
   typedef enum { NOSTAT=2, INFO=3, WARNING, ALARM} OMAMsgLevel;

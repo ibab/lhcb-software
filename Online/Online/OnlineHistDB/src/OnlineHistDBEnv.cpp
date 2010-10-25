@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.24 2010-10-21 10:16:46 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.25 2010-10-25 14:09:28 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -115,7 +115,7 @@ OnlineHistDBEnv::~OnlineHistDBEnv() {
     if (m_envhp)
       OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
   }
-};
+}
 
 void OnlineHistDBEnv::initOCIBinds() {
   for (int i=0; i<20 ;++i)
