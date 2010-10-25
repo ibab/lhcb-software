@@ -14,8 +14,8 @@ This version uses Gaudi v21r11 and LHCb v31r6p1
 
 - Packages updated:
     Calo/CaloTools v6r0, Hlt/HltDAQ v2r4, L0/L0DU v10r10, L0/L0Muon v9r2, 
-    L0/L0MuonMonitor v2r1p1, Rich/RichTools v2r31, ST/STMonitors v3r3, 
-    ST/STTools v4r5, Velo/VeloDAQ v6r0p1
+    L0/L0MuonMonitor v2r1p1, Rich/RichTools v2r31, ST/STAlgorithms v4r4,
+    ST/STDAQ v3r25, ST/STMonitors v3r3, ST/STTools v4r5, Velo/VeloDAQ v6r0p1
 
 </PRE><H1><A NAME=v9r7>2010-08-26 LbcomSys v9r7</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6
