@@ -76,8 +76,8 @@ StatusCode MCBd2KstarMuMuAngleCalculator::daughters( const LHCb::MCParticle* mot
      int pid = (*iter)->particleID().pid() ;
     int absid = (*iter)->particleID().abspid() ;
 
-    if ( 13 == pid ) m_pMuMinus = (*iter);
-    else if ( -13 == pid ) m_pMuPlus = (*iter);
+    if ( 13 == pid || 11 == pid ) m_pMuMinus = (*iter);
+    else if ( -13 == pid || -11 == pid ) m_pMuPlus = (*iter);
     else if ( 321 == absid ) m_pK = (*iter);
     else if ( 211 == absid ) m_pPi = (*iter);
   }
