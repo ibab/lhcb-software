@@ -4,6 +4,8 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r31 2010-10-25 =========================
+
 ! 2010-10-16 - Chris Jones
  - Remove private methods in Snells law and refractive index tools that load
    the correct radiator DetElem for a given enum type. Instead use new method
