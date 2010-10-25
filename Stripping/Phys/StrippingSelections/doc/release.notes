@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-25 - Georg Krocker
+ - added lt unbiased line to B2D3H lines
+
 ! 2010-10-25 - Anton Poluektov 
  * StrippingB2DX.py: 
    - Added wrong-sign D+- combinations to D2hhhWS line

@@ -99,13 +99,16 @@ class StrippingB2D3HConf( object ):
     __configuration_keys__ = ("PionMinP",
                               "PionMaxP", 
                               "PionMinPT",
+                              "PionMinPTtight",
                               "KaonMinP" ,
                               "KaonMaxP" ,
                               "KaonMinPT",
+                              "KaonMinPTtight",
                               "PionMinIPChisq",
                               "KaonMinIPChisq",
                               "MinPT",
                               "TrkChisq",
+                              "TrkChisqtight",
                               "Bach3HMassWindow",    
                               "Bach3HDocaMax",
                               "Bach3HVtxChisq",      
@@ -201,8 +204,56 @@ class StrippingB2D3HConf( object ):
                                    KaonMinPT = config['KaonMinPT'],
                                    KaonMinIPChisq = config['KaonMinIPChisq'],
                                    TrkChisq = config['TrkChisq'])
+
+	#Filter Pions and Kaons with tighter PID cuts
+	# First filter pions
+        self.selTightPions = makeTightPions( 'TightPionsForB2D3H'+name,
+                                    PionMinP = config['PionMinP'],
+                                    PionMaxP = config['PionMaxP'],
+                                    PionMinPT = config['PionMinPT'],
+                                    PionMinIPChisq = config['PionMinIPChisq'],
+                                    TrkChisq = config['TrkChisq'])
+        # First filter kaons
+        self.selTightKaons = makeTightKaons( 'TightKaonsForB2D3H'+name,
+                                   KaonMinP = config['KaonMinP'],
+                                   KaonMaxP = config['KaonMaxP'],
+                                   KaonMinPT = config['KaonMinPT'],
+                                   KaonMinIPChisq = config['KaonMinIPChisq'],
+                                   TrkChisq = config['TrkChisq'])
         
-        # Now make the PiPiPi bachelor
+	# Filter Pions and Kaons with higher PT/Chi2 cut and without IP
+        # First filter pions
+        self.selUnbiasedPions = makePions( 'UnbiasedPionsForB2D3H'+name,
+                                    PionMinP = config['PionMinP'],
+                                    PionMaxP = config['PionMaxP'],
+                                    PionMinPT = config['PionMinPTtight'],
+                                    PionMinIPChisq = 0, #should never change
+                                    TrkChisq = config['TrkChisqtight'])
+        # First filter kaons
+        self.selUnbiasedKaons = makeKaons( 'UnbiasedKaonsForB2D3H'+name,
+                                   KaonMinP = config['KaonMinP'],
+                                   KaonMaxP = config['KaonMaxP'],
+                                   KaonMinPT = config['KaonMinPTtight'],
+                                   KaonMinIPChisq = 0, #should never change  
+                                   TrkChisq = config['TrkChisqtight'])
+
+        # Now make the LT unbiased PiPiPi bachelor
+        self.selUnbiasedPiPiPi = makePiPiPi( 'UnbiasedPiPiPiForB2D3H'+name,
+                                     pionSel = self.selUnbiasedPions,
+                                     MinPT = config['MinPT'],
+                                     Bach3HMassWindow = config['Bach3HMassWindow'],
+                                     Bach3HDocaMax = config['Bach3HDocaMax'],
+                                     Bach3HMinPT = config['Bach3HMinPT'],
+                                     Bach3HIP2PV = 0, #should never change  
+                                     Bach3HIPChisq2PV = 0, #should never change 
+                                     Bach3HVtxChisq = config['Bach3HVtxChisq'],
+                                     Bach3HVtxSepChisq = config['Bach3HVtxSepChisq'],
+                                     Bach3HDiraPV = config['Bach3HDiraPV'],
+                                     Bach3HZVtxSep = config['Bach3HZVtxSep'],
+                                     Bach3HDRPV = 0  #should never change      
+                                     )
+        
+	# Now make the PiPiPi bachelor
         self.selPiPiPi = makePiPiPi( 'PiPiPiForB2D3H'+name,
                                      pionSel = self.selPions,
                                      MinPT = config['MinPT'],
@@ -234,6 +285,23 @@ class StrippingB2D3HConf( object ):
                                    Bach3HDRPV = config['Bach3HDRPV']      
                                    )
 
+        # Filter LT Unbiased D+, the children don't suffer from lifetime biases since also prompt D's have a lifetime
+        self.selUnbiasedDch = makeDMeson( 'UnbiasedForB2D3H'+name,
+                                  pionSel = self.selTightPions,
+                                  kaonSel = self.selTightKaons,
+                                  DMassWindow = config['DMassWindow'],
+                                  DsMassWindow = config['DsMassWindow'],
+                                  DDocaMax = config['DDocaMax'],
+                                  DMinPT = config['DMinPT'],
+                                  MinPT = config['MinPT'],
+                                  DIP2PV = 0, #should never change  
+                                  DIPChisq2PV = 0, #should never change  
+                                  DVtxChisq = config['DVtxChisq'],
+                                  DVtxSepChisq = 0, #should never change 
+                                  DDiraPV = config['DDiraPV'],
+                                  DZVtxSep = 0, #should never change  
+                                  DDRPV = 0 #should never change       
+                                  )
         # Filter D+
         self.selDch = makeDMeson( 'ForB2D3H'+name,
                                   pionSel = self.selPions,
@@ -345,10 +413,32 @@ class StrippingB2D3HConf( object ):
                                    decayDesc = "[B0 -> D- a_1(1260)+]cc",
                                    parentB = "B0")
 
+        # Make LT unbiased B- --> D- (pipipi)+
+        name4 = 'UnbiasedB2DPiPiPi' + name
+        self.UnbiasedB2DPiPiPi = makeB2D3H(name4,
+                                   dSel = self.selUnbiasedDch,
+                                   hhhSel = self.selUnbiasedPiPiPi,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = 100000, #should never change
+                                   BIPChisq2PV = 100000, #should never change   
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = 0, #should never change
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = 0, #should never change
+                                   BDZVtxSep = 0, #should never change
+                                   BDRPV = 0, #should never change
+                                   decayDesc = "[B0 -> D- a_1(1260)+]cc",
+                                   parentB = "B0")
+
+	#Filter LT unbiased B's for HLT1 and HLT2 TIS
+ 	self.UnbiasedB2DPiPiPiHLT1TIS = makeTISTOSSel("HLT1TISSelFor" + name + "WithUnbiasedB2DPiPiPi", self.UnbiasedB2DPiPiPi, "Hlt1Global%TIS")
+ 	self.UnbiasedB2DPiPiPiHLT1HLT2TIS = makeTISTOSSel("HLT2TISSelFor" + name + "WithUnbiasedB2DPiPiPi", self.UnbiasedB2DPiPiPiHLT1TIS, "Hlt2Global%TIS")
 
         # Make B0 --> D- (Kpipi)+
-        name4 = 'B2DKPiPi' + name
-        self.B2DKPiPi = makeB2D3H(name4,
+        name5 = 'B2DKPiPi' + name
+        self.B2DKPiPi = makeB2D3H(name5,
                                   dSel = self.selDch,
                                   hhhSel = self.selKPiPi,
                                   BMassWindow = config['BMassWindow'],
@@ -366,8 +456,8 @@ class StrippingB2D3HConf( object ):
                                   parentB = "B0")
 
         # Make B- --> D*- (pipipi)+
-        name5 = 'B2DStarPiPiPi' + name
-        self.B2DStarPiPiPi = makeB2D3H(name5,
+        name6 = 'B2DStarPiPiPi' + name
+        self.B2DStarPiPiPi = makeB2D3H(name6,
                                        dSel = self.selDStar,
                                        hhhSel = self.selPiPiPi,
                                        BMassWindow = config['BMassWindow'],
@@ -387,8 +477,8 @@ class StrippingB2D3HConf( object ):
 
 
         # Make B0 --> D*- (Kpipi)+
-        name6 = 'B2DStarKPiPi' + name
-        self.B2DStarKPiPi = makeB2D3H(name6,
+        name7 = 'B2DStarKPiPi' + name
+        self.B2DStarKPiPi = makeB2D3H(name7,
                                       dSel = self.selDStar,
                                       hhhSel = self.selKPiPi,
                                       BMassWindow = config['BMassWindow'],
@@ -408,8 +498,8 @@ class StrippingB2D3HConf( object ):
 
 
         # Make B- --> D_(s)- D_(s)+
-        name7 = 'B2DD' + name
-        self.B2DD = makeB2D3H(name7,
+        name8 = 'B2DD' + name
+        self.B2DD = makeB2D3H(name8,
                                    dSel = self.selDch,
                                    hhhSel = self.selDch,
                                    BMassWindow = config['BMassWindow'],
@@ -427,8 +517,8 @@ class StrippingB2D3HConf( object ):
                                    parentB = "B0")
 
         # Make B- --> D_(s)- D_(s)+
-        name8 = 'B2DStarD' + name
-        self.B2DStarD = makeB2D3H(name8,
+        name9 = 'B2DStarD' + name
+        self.B2DStarD = makeB2D3H(name9,
                                    dSel = self.selDStar,
                                    hhhSel = self.selDch,
                                    BMassWindow = config['BMassWindow'],
@@ -529,6 +619,12 @@ class StrippingB2D3HConf( object ):
                                                      algos = [ self.EventFilter, self.B2D0KPiPi]
                                                      )
 
+        self.StrippingAllUnbiasedB2DPiPiPiLine = StrippingLine('AllUnbiasedB2DPiPiPiLine'+name,
+                                                    prescale = config['B2DPiPiPiAll_Prescale'],
+                                                    postscale = config['B2DPiPiPiAll_Postscale'],
+                                                    algos = [ self.EventFilter, self.UnbiasedB2DPiPiPiHLT1HLT2TIS]
+                                                    )
+
         self.StrippingAllB2DPiPiPiLine = StrippingLine('AllB2DPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiAll_Prescale'],
                                                     postscale = config['B2DPiPiPiAll_Postscale'],
@@ -617,6 +713,7 @@ class StrippingB2D3HConf( object ):
 
         self.lines = [ self.StrippingAllB2D0PiPiPiLine,
                        self.StrippingAllB2D0KPiPiLine,
+                       self.StrippingAllUnbiasedB2DPiPiPiLine,
                        self.StrippingAllB2DPiPiPiLine,
                        self.StrippingAllB2DKPiPiLine,
                        self.StrippingAllB2DStarPiPiPiLine,
@@ -654,6 +751,18 @@ def MyEventFilter(name, MaxTracks):
 
     return _eventFilter
 
+def makeTISTOSSel(name, sel, trigger ) : 
+    from Configurables import TisTosParticleTagger
+    tisTosFilter = TisTosParticleTagger(name + "Filter")
+    tisTosFilter.TisTosSpecs = { trigger : 0}
+    # the rest ist only to speed it up... (TISTOSsing only done with tracking system)
+    tisTosFilter.ProjectTracksToCalo = False
+    tisTosFilter.CaloClustForCharged = False
+    tisTosFilter.CaloClustForNeutral = False
+    tisTosFilter.TOSFrac = { 4:0.0, 5:0.0 }
+
+    return Selection(name, Algorithm = tisTosFilter, RequiredSelections = [ sel ] )
+
 def makePions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq):
 
     """
@@ -676,6 +785,28 @@ def makePions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq):
                       Algorithm = _pionFilter,
                       RequiredSelections = [_stdLoosePions])
 
+def makeTightPions(name, PionMinP, PionMaxP, PionMinPT, PionMinIPChisq, TrkChisq):
+
+    """
+    Create and return Pion Selection object by Filterinf StdTightPions
+    #
+    Arguments:
+    name                  : name of the Selection.
+    PionMinP              : Pion minimum momentum
+    PionMaxP              : Pion maximum momentum
+    PionMinPT             : Pion minimum pT
+    PionMinIPChisq        : Pion minimum IP Chisq
+    TrkChisq              : Cut on Track Chisq/DOF
+    """
+
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdTightPions")
+    _pionFilter = FilterDesktop("_filterFor"+name)
+    _pionFilter.Code = "( (P > %(PionMinP)s *MeV) & (P < %(PionMaxP)s *MeV) & (PT> %(PionMinPT)s *MeV) & (TRCHI2DOF < %(TrkChisq)s ) " \
+                       "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(PionMinIPChisq)s )  ) " %locals()
+    return Selection (name,
+                      Algorithm = _pionFilter,
+                      RequiredSelections = [_stdLoosePions])
+
 def makeKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq):
 
     """
@@ -691,6 +822,28 @@ def makeKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq):
     """
 
     _stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons")
+    _kaonFilter = FilterDesktop("_filterFor"+name)
+    _kaonFilter.Code = "( (P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV) & (TRCHI2DOF < %(TrkChisq)s ) " \
+                       "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s )  ) " %locals()
+    return Selection (name,
+                      Algorithm = _kaonFilter,
+                      RequiredSelections = [_stdLooseKaons])
+
+def makeTightKaons(name, KaonMinP, KaonMaxP, KaonMinPT, KaonMinIPChisq, TrkChisq):
+
+    """
+    Create and return Kaon Selection object by Filtering StdTightKaons
+    #
+    Arguments:
+    name                  : name of the Selection.
+    KaonMinP              : Kaon minimum momentum
+    KaonMaxP              : Kaon maximum momentum
+    KaonMinPT             : Kaon minimum pT
+    KaonMinIPChisq        : Kaon minimum IP Chisq
+    TrkChisq              : Cut on Track Chisq/DOF
+    """
+
+    _stdLooseKaons = DataOnDemand(Location = "Phys/StdTightKaons")
     _kaonFilter = FilterDesktop("_filterFor"+name)
     _kaonFilter.Code = "( (P > %(KaonMinP)s *MeV) & (P < %(KaonMaxP)s *MeV) & (PT> %(KaonMinPT)s *MeV) & (TRCHI2DOF < %(TrkChisq)s ) " \
                        "& (MIPDV(PRIMARY)>0.045*mm)  & (MIPCHI2DV(PRIMARY)> %(KaonMinIPChisq)s )  ) " %locals()
@@ -1152,13 +1305,16 @@ def StrippingB2D3HLoose(name='Loose') :
         "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
         "PionMinPT"            : 200.,
+        "PionMinPTtight"       : 500.,
         "KaonMinP"             : 2000.,
         "KaonMaxP"             : 500000.,
         "KaonMinPT"            : 200.,
+        "KaonMinPTtight"       : 500.,
         "PionMinIPChisq"       : 6.5,
         "KaonMinIPChisq"       : 6.5,
         "MinPT"                : 300.,
         "TrkChisq"             : 6.0,
+        "TrkChisqtight"        : 5.0,
         "Bach3HMassWindow"     : 400,
         "Bach3HDocaMax"        : 0.4,
         "Bach3HVtxChisq"       : 8.0,
@@ -1241,13 +1397,16 @@ def StrippingB2D3HNominal(name="Def") :
         "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
         "PionMinPT"            : 200.,
+        "PionMinPTtight"       : 500.,
         "KaonMinP"             : 2000.,
         "KaonMaxP"             : 500000.,
         "KaonMinPT"            : 200.,
+        "KaonMinPTtight"       : 500.,
         "PionMinIPChisq"       : 6.25,
         "KaonMinIPChisq"       : 6.25,
         "MinPT"                : 300.,
         "TrkChisq"             : 6.0,
+        "TrkChisqtight"        : 5.0,
         "Bach3HMassWindow"     : 400,
         "Bach3HDocaMax"        : 0.35,
         "Bach3HVtxChisq"       : 7.0,
