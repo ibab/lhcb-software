@@ -20,26 +20,27 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
            'B_Mlow'          :  200. 
         ,  'B_Mhigh'         :  280.   
         ,  'B_dira'          :  0.999   
-        ,  'B_FDpvsv'        :  2.0   
-        ,  'B_Vchi2'         :  10.   
+        ,  'B_FDpvsv'        :  1.0   
+        ,  'B_Vchi2'         :  12.   
         ,  'B_IPPTmax'       :  0.05   
-        ,  'B_pointpt'       :  0.14   
-        ,  'B_IPsumhh'       :  0.08 
+        ,  'B_pointpt'       :  0.16   
+        ,  'B_IPsumhh'       :  0.0 
 	,  'TrackCHI2DOF'    :  5. 
         ,  'DOCAhh'          :  0.3   
         ,  'KS_Mwindow'      :  30.   
-        ,  'B_IP_LL'         :  0.05   
-        ,  'B_PTmed_LL'      :  500.   
-        ,  'B_PTsum_LL'      :  4300.   
+        ,  'B_IP_LL'         :  0.08   
+        ,  'B_PTmed_LL'      :  800.   
+        ,  'B_PTsum_LL'      :  4000.   
         ,  'B_FDchi2_LL'     :  40.   
-        ,  'KS_FDCHI2opv_LL' :  60.    
-        ,  'KS_VCHI2_LL'     :  10.    
+        ,  'KS_FDCHI2opv_LL' :  50.    
+        ,  'KS_VCHI2_LL'     :  12.    
         ,  'B_IP_DD'         :  0.08   
         ,  'B_PTmed_DD'      :  800.   
         ,  'B_PTsum_DD'      :  4300.
-        ,  'B_FDchi2_DD'     :  50.   
-        ,  'KS_FDCHI2opv_DD' :  40.   
-        ,  'KS_VCHI2_DD'     :  10.   
+        ,  'B_FDchi2_DD'     :  30.   
+        ,  'KS_FDCHI2opv_DD' :  50.   
+        ,  'KS_VCHI2_DD'     :  12.   
+        ,  'KS_P_DD'         :  6000.   
         }
 
     _propertyDocDct = {
@@ -66,7 +67,7 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         ,  'B_FDchi2_DD'     : """ B flight distance - for candidates  with KSDD"""    
         ,  'KS_FDCHI2opv_DD' : """ KS flight distance CHI2 wrt PV - for candidates  with KSDD"""    
         ,  'KS_VCHI2_DD'     : """ KS vetex CHI2  - for candidates  with KSDD"""    
-
+        ,  'KS_P_DD'         : """ KS momentum  - for candidates  with KSDD"""    
         }
 
     ###############################################
@@ -106,7 +107,7 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         # Define the GEC on number of tracks, needed in order to control
         # the time for the combinatorics
         B2KShh_StrippingNumTracksGEC = VoidFilter('B2KShh_StrippingNumTracksGEC'
-                                     , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )"
+                                     , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 250 )"
                                            )
         return B2KShh_StrippingNumTracksGEC
 
@@ -135,6 +136,7 @@ class StrippingB2KShhConf(LHCbConfigurableUser):
         from Configurables import FilterDesktop
         import GaudiKernel.SystemOfUnits as Units
         KSDD_FilterCuts="(ADMASS('KS0')<%(KS_Mwindow)s *MeV) \
+	                & (P > %(KS_P_DD)s *MeV) \
 	                & (BPVVDCHI2 > %(KS_FDCHI2opv_DD)s) \
 		        & (VFASPF(VCHI2)<%(KS_VCHI2_DD)s)"% self.getProps()
 

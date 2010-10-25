@@ -4,6 +4,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-25 Jussara Miranda
+ update to StrippingB2KShh.py
 
 ! 2010-10-25 - Jibo He
  - python/StrippingSelections/StrippingDiMuonNew.py
