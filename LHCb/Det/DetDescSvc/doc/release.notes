@@ -5,6 +5,12 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2010-10-25 - Marco Clemencic
+ - Fixed bug #74255: UpdateMgrSvc fails to query CondDB at requested timeStamp
+                     (during finalize)
+   Problem introduced with the fix to bug #66497.
+   Logic fixed.
+
 !========================= DetDescSvc v2r6 2010-09-27 =========================
 ! 2010-09-27 - Marco Clemencic
  - Fixed an untested SatusCode in UpdateManagerSvc::Item::update().

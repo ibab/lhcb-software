@@ -380,7 +380,8 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   Item::ItemList::iterator it;
 
   // We are in the initialization phase if we are not yet "STARTED"
-  const bool inInit = FSMState() <= Gaudi::StateMachine::INITIALIZED;
+  const bool inInit = (FSMState() <= Gaudi::StateMachine::INITIALIZED) &&
+                      (targetFSMState() > Gaudi::StateMachine::INITIALIZED);
   // The head list may change while updating, I'll loop until it's stable (or a problem occurs)
   bool head_has_changed = false;
   do {
@@ -437,7 +438,8 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
       if (item) {
         StatusCode sc;
         // We are in the initialization phase if we are not yet "STARTED"
-        const bool inInit = FSMState() <= Gaudi::StateMachine::INITIALIZED;
+        const bool inInit = (FSMState() <= Gaudi::StateMachine::INITIALIZED) &&
+                            (targetFSMState() > Gaudi::StateMachine::INITIALIZED);
         MsgStream item_log(msgSvc(),name()+"::Item");
         sc = item->update(dataProvider(), detDataSvc()->eventTime(), item_log, inInit);
         if (sc.isSuccess()) {
