@@ -4,6 +4,8 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v15r1 2010-10-25 =========================
+
 ! 2010-10-16 - Chris Jones
  - Add a couple utility methods to the DeRichLocations namespace that return
    the DDDB location of the detector element for a given radiator or detector
