@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+!========================= CaloTools v6r0 2010-10-25 =========================
+
 ! 2010-10-07 - Dmitry Golubkov
  - CaloHypo2Calo: change passing parameteres by value to const references
  - increment version to v6r0 due to the change in the interface
