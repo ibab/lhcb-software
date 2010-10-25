@@ -5,6 +5,8 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r5p1 2010-10-25 =========================
+
 ! 2010-10-07 - Marco Clemencic
  - Replaced the usage of module md5 (deprecated since Python 2.6) with hashlib
    (prevent deprecation warning).
