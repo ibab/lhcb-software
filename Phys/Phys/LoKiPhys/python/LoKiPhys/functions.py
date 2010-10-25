@@ -940,6 +940,9 @@ SOURCEDESKTOP  = LoKi.Particles.SourceDesktop
 VSOURCE        = LoKi.Vertices.SourceTES
 VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
+NUMBER         = LoKi.Particles.TESCounter
+VNUMBER        = LoKi.Vertices.TESCounter
+
 ## adapters
 ## @see LoKi::Cuts::PCUTA 
 PCUTA   = LoKi.Particles.PCutA

@@ -22,6 +22,7 @@
 #include "LoKi/PhysSources.h"
 #include "LoKi/Services.h"
 #include "LoKi/select.h"
+#include "LoKi/Algs.h"
 // ============================================================================
 /** @file 
  *  Implementation file for various sources
@@ -181,13 +182,34 @@ namespace
                    std::back_inserter ( out ) , cut ) ;
     return out.size() - n ;
   } 
+  // ==========================================================================  
+  template <class CONTAINER, class PREDICATE>
+  inline std::size_t _count_ 
+  ( CONTAINER& cnt , 
+    const PREDICATE& cut ) 
+  {
+    return LoKi::Algs::count_if ( cnt->begin () , 
+                                  cnt->end   () , 
+                                  cut          ) ;
+  } 
   // ==========================================================================
 }
+// ============================================================================
+// get the particles from the certain  TES location 
 // ============================================================================
 std::size_t LoKi::Particles::SourceTES::get 
 ( const std::string&           location , 
   LHCb::Particle::ConstVector& output   ) const 
 {
+  //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }
+  //
   //
   SmartDataPtr<LHCb::Particle::Selection> parts1 ( m_dataSvc , location ) ;
   if ( !(!parts1) ) { return _fill_ ( parts1 , output , m_cut.func() ) ; }
@@ -204,6 +226,36 @@ std::size_t LoKi::Particles::SourceTES::get
   return 0 ;
 }
 // ============================================================================
+// count the particles from the certain  TES location 
+// ============================================================================
+std::size_t LoKi::Particles::SourceTES::count
+( const std::string&           location ) const 
+{
+  //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }
+  //
+  //
+  SmartDataPtr<LHCb::Particle::Selection> parts1 ( m_dataSvc , location ) ;
+  if ( !(!parts1) ) { return _count_ ( parts1 , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::Particle::Container> parts2 ( m_dataSvc , location ) ;
+  if ( !(!parts2) ) { return _count_ ( parts2 , m_cut.func() ) ; }
+  
+  // check the suffix of type "/Particles" and add if needed
+  static const std::string s_particles = "/Particles" ;
+  if ( location.size() != location.rfind ( s_particles ) + s_particles.size() ) 
+  { return count ( location + s_particles ) ; }
+  //
+  Error ( "No valid data is found at location '" + location + "'" ) ;
+  //
+  return 0 ;
+}
+// ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& 
@@ -211,6 +263,61 @@ LoKi::Particles::SourceTES::fillStream ( std::ostream& o ) const
 { return o << "SOURCE(" 
            << Gaudi::Utils::toString( m_path ) << "," << m_cut << ")" ; }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Particles::TESCounter::TESCounter 
+( const std::string&           path , 
+  const LoKi::PhysTypes::Cuts& cuts ) 
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Particles::TESCounter::TESCounter 
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::Cuts&    cuts ) 
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::TESCounter::~TESCounter () {}
+// ============================================================================
+// MANDATORY: the only essential method:
+// ============================================================================
+LoKi::Particles::TESCounter::result_type 
+LoKi::Particles::TESCounter::operator() ( /* argument */ ) const 
+{
+  //
+  unsigned int num = 0 ;
+  //
+  typedef std::vector<std::string> List ;
+  //
+  const List& paths = m_source.paths() ;
+  for ( List::const_iterator item = paths.begin() ; paths.end() != item ; ++item ) 
+  {
+    num += m_source.count ( *item ) ;
+  }
+  //
+  return num ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TESCounter::fillStream ( std::ostream& o ) const 
+{ return o << "NUMBER(" 
+           << Gaudi::Utils::toString( m_source.paths() )
+           << "," << m_source.cut() << ")" ; }
+// ============================================================================
+
+
+
 
 
 // ============================================================================
@@ -427,6 +534,14 @@ std::size_t LoKi::Vertices::SourceTES::get
   LHCb::VertexBase::ConstVector& output   ) const 
 {
   //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }  
+  //
   SmartDataPtr<LHCb::RecVertex::Container>  v1 ( m_dataSvc , location ) ;
   if (  !(!v1) ) { return _fill_ ( v1 , output , m_cut.func() ) ; }
   SmartDataPtr<LHCb::RecVertex::Selection>  v2 ( m_dataSvc , location ) ;
@@ -446,6 +561,43 @@ std::size_t LoKi::Vertices::SourceTES::get
   { return get ( location + s_vertices , output ) ; }
   //
   Assert ( false , "No valid data is found at location '" + location + "'") ;
+  //
+  return 0 ; 
+}
+// ============================================================================
+// get the vertices from the certain  TES location 
+// ============================================================================
+std::size_t LoKi::Vertices::SourceTES::count 
+( const std::string&           location ) const 
+{
+  //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }  
+  //
+  SmartDataPtr<LHCb::RecVertex::Container>  v1 ( m_dataSvc , location ) ;
+  if (  !(!v1) ) { return _count_ ( v1 , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::RecVertex::Selection>  v2 ( m_dataSvc , location ) ;
+  if (  !(!v2) ) { return _count_ ( v2 , m_cut.func() ) ; }
+  //
+  SmartDataPtr<LHCb::Vertex::Selection>     v3 ( m_dataSvc , location ) ;
+  if (  !(!v3) ) { return _count_ ( v3 , m_cut.func() ) ; }
+  SmartDataPtr<LHCb::Vertex::Container>     v4 ( m_dataSvc , location ) ;
+  if (  !(!v4) ) { return _count_ ( v4 , m_cut.func() ) ; }
+  //
+  SmartDataPtr<LHCb::VertexBase::Container> v5 ( m_dataSvc , location ) ;
+  if (  !(!v5) ) { return _count_ ( v5 , m_cut.func() ) ; }
+  //
+  // check the suffix of type "/Vertices" and add if needed
+  static const std::string s_vertices = "/Vertices" ;
+  if ( location.size() != location.rfind ( s_vertices ) + s_vertices.size() ) 
+  { return count ( location + s_vertices ) ; }
+  //
+  Error ( "No valid data is found at location '" + location + "'") ;
   //
   return 0 ; 
 }
@@ -536,6 +688,61 @@ LoKi::Vertices::SourceDesktop::fillStream ( std::ostream& o ) const
 // ============================================================================
 // set the  desktop
 // ============================================================================
+
+
+
+
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Vertices::TESCounter::TESCounter 
+( const std::string&            path , 
+  const LoKi::PhysTypes::VCuts& cuts ) 
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::Vertices::TESCounter::TESCounter 
+( const std::vector<std::string>& path , 
+  const LoKi::PhysTypes::VCuts&    cuts ) 
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Vertices::TESCounter::~TESCounter () {}
+// ============================================================================
+// MANDATORY: the only essential method:
+// ============================================================================
+LoKi::Vertices::TESCounter::result_type 
+LoKi::Vertices::TESCounter::operator() ( /* argument */ ) const 
+{
+  //
+  unsigned int num = 0 ;
+  //
+  typedef std::vector<std::string> List ;
+  //
+  const List& paths = m_source.paths() ;
+  for ( List::const_iterator item = paths.begin() ; 
+        paths.end() != item ; ++item ) 
+  { num += m_source.count ( *item ) ; }
+  //
+  return num ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& 
+LoKi::Vertices::TESCounter::fillStream ( std::ostream& o ) const 
+{ return o << "VNUMBER(" 
+           << Gaudi::Utils::toString( m_source.paths() )
+           << "," << m_source.cut() << ")" ; }
+// ============================================================================
+
+
 
 // ============================================================================
 // The END 

@@ -172,6 +172,10 @@ def _decorate ( name = _name ) :
         name                                            , ## module name
         LoKi.Functor       (v,'double')                 , ## the base 
         LoKi.Dicts.InfoOps (v)                          ) ## methods
+
+    ## vid primitives
+    _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name )
+    
     # decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( ID , ABSID ) :
         t = type ( t ) 

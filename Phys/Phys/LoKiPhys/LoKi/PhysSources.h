@@ -112,6 +112,8 @@ namespace LoKi
       /// get the service
       const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
       { return m_dataSvc ; }      
+      /// get the cuts 
+      const LoKi::PhysTypes::Cuts& cut() const { return m_cut ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -126,11 +128,13 @@ namespace LoKi
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
       // ======================================================================
-    protected:
+    public:
       // ======================================================================
       /// get the particles from the certain  TES location 
-      std::size_t get ( const std::string&           location , 
-                        LHCb::Particle::ConstVector& output   ) const ;
+      std::size_t get   ( const std::string&           location , 
+                          LHCb::Particle::ConstVector& output   ) const ;
+      /// count the particles from the certain  TES location 
+      std::size_t count ( const std::string&           location ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -202,6 +206,41 @@ namespace LoKi
       LoKi::PhysTypes::Cut m_cut ;
       // ======================================================================
     } ;    
+    // ========================================================================
+    /** @class TESCounter
+     *  simple functor to count good particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-25
+     */
+    class TESCounter : public LoKi::Functor<void,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::string&           path                                 , 
+        const LoKi::PhysTypes::Cuts& cuts = 
+        LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant(true) ) ; 
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::vector<std::string>& path                                , 
+        const LoKi::PhysTypes::Cuts&    cuts = 
+        LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant(true) ) ;
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~TESCounter () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TESCounter* clone() const { return new TESCounter( *this ) ; }
+      /// MANDATORY: the only essential method:
+      virtual result_type operator() () const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      SourceTES m_source ;
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                         end of namespace LoKi::Particles  
   // ==========================================================================
@@ -289,6 +328,8 @@ namespace LoKi
       const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
       { return m_dataSvc ; }      
       // ======================================================================
+      const LoKi::PhysTypes::VCuts& cut() const { return m_cut ; }
+      // ======================================================================
     public:
       // ======================================================================
       /// set the  paths
@@ -302,12 +343,15 @@ namespace LoKi
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
       // ======================================================================
-    private:
+    public:
       // ======================================================================
-      /// get the particles from the certain  TES location 
+      /// get the vertiecs from the certain  TES location 
       std::size_t get
       ( const std::string&             location , 
         LHCb::VertexBase::ConstVector& output   ) const ;
+      // ======================================================================
+      /// count the vertices from the certain  TES location 
+      std::size_t count ( const std::string& location ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -333,7 +377,6 @@ namespace LoKi
       // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source;
     public:
-      // ======================================================================
       // ======================================================================
       /// constructor from the desktop and cuts 
       SourceDesktop 
@@ -378,6 +421,41 @@ namespace LoKi
       LoKi::PhysTypes::VCut m_cut ;
       // ======================================================================
     } ;    
+    // ========================================================================
+    /** @class TESCounter
+     *  simple functor to count good particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-10-25
+     */
+    class TESCounter : public LoKi::Functor<void,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::string&            path                                 , 
+        const LoKi::PhysTypes::VCuts& cuts = 
+        LoKi::BasicFunctors<const LHCb::VertexBase*>::BooleanConstant(true) ) ; 
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::vector<std::string>& path                                , 
+        const LoKi::PhysTypes::VCuts&   cuts = 
+        LoKi::BasicFunctors<const LHCb::VertexBase*>::BooleanConstant(true) ) ;
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~TESCounter () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TESCounter* clone() const { return new TESCounter( *this ) ; }
+      /// MANDATORY: the only essential method:
+      virtual result_type operator() () const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      SourceTES m_source ;
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                         end of namespace LoKi::Vertices 
   // ==========================================================================
