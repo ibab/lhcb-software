@@ -6,6 +6,8 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r21 2010-10-25 =========================
+
 ! 2010-10-12 - Vanya Belyaev
  - LHCbMath/Lomont.h
     make use of Lomont from GaudiKernel
