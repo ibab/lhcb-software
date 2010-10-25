@@ -25,9 +25,9 @@ The selection of displaced vertices is achieved in 3 steps :
 
 """
 
-__author__ = ['Neal Gauvin','Marcin Kucharczyk']
-__date__ = '22/01/2010'
-__version__ = '$Revision: 1.4 $'
+__author__ = ['Neal Gauvin','Marcin Kucharczyk', 'Victor Coco']
+__date__ = '25/10/2010'
+__version__ = '$Revision: 2.0 $'
 
 
 from Gaudi.Configuration import *
@@ -36,100 +36,100 @@ from GaudiKernel.SystemOfUnits import *
 from Configurables import BestPIDParticleMaker
 from CommonParticles.Utils import *
 from Configurables import PatPV3D,PVOfflineTool,PVSeed3DTool,LSAdaptPV3DFitter
-from Configurables import RecVertices2Particles,DisplVertices,FilterDesktop
+from Configurables import RecVertices2Particles,DisplVertices,FilterDesktop,LoKi__VoidFilter
 from StrippingConf.StrippingLine import StrippingLine
 
 from PhysSelPython.Wrappers import Selection
 
 
 VerticesLocation = "Rec/Vertices/DisplRV"
-RCutMethod = "FromUpstreamPV"
+RCutMethod = "FromBeamLine" 
 
-################################################################
-## Get reconstructed vertices from optimized PatPV3D
+from Configurables import CalibrateIP
+BL = CalibrateIP( "BeamLine" )
+BL.OutputLocation = "/Event/BeamLine"
+BL.OutputLevel = 3
+BL.BeamLineCycle = 100
+BL.MinZ = -400.
+BL.MaxZ = 400.
+BL.MaxY = 1.5
+BL.MaxX = 1.5
+
+
 DisplPatPV3D = PatPV3D("DisplPatPV3D")
 DisplPatPV3D.OutputVerticesName = VerticesLocation
 DisplPatPV3D.addTool(PVOfflineTool)
-#DisplPatPV3D.PVOfflineTool.InputVerticesName = "Rec/Vertex/Primary"
-#DisplPatPV3D.PVOfflineTool.LookForDisplaced = True
 DisplPatPV3D.PVOfflineTool.InputTracks = ["Rec/Track/Best"]
-DisplPatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+DisplPatPV3D.PVOfflineTool.PVsChi2Separation = 0
+DisplPatPV3D.PVOfflineTool.PVsChi2SeparationLowMult = 0
 DisplPatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 DisplPatPV3D.PVOfflineTool.addTool(PVSeed3DTool())
-DisplPatPV3D.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 0.2*mm
 DisplPatPV3D.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 3
-DisplPatPV3D.PVOfflineTool.PVSeed3DTool.zMaxSpread = 1*mm
-DisplPatPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter())
+DisplPatPV3D.PVOfflineTool.addTool( LSAdaptPV3DFitter())
+DisplPatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
 DisplPatPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*mm
 DisplPatPV3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
 
-################################################################
-## Charged Particles with best PID
-## This is not needed anymore. kept for some possible cross-checking.
-## BestPIDParts = BestPIDParticleMaker("BestPIDChargedParts", Particle = 'pion' )
-## # configure the track selector
-## selector = trackSelector(BestPIDParts)
-## selector.TrackTypes = ['Velo','Long','Upstream']
 
-#####################################################################
-## Preselection of candidates
-## Turn RecVertices (candidates) into Particles
 PreselDisplVertices = RecVertices2Particles("PreselDisplVertices")
-#PreselDisplVertices.InputLocations = ["Phys/ChargedPartBest"]
-#PreselDisplVertices.RecVerticesLocation = ["Rec/Vertex/Primary", "Rec/Vertices/DisplRV"]
 PreselDisplVertices.RecVerticesLocation = [VerticesLocation]
 PreselDisplVertices.RCutMethod = RCutMethod
+PreselDisplVertices.BeamLineLocation="/Event/BeamLine"
 PreselDisplVertices.PreyMinMass = 3.0*GeV
 PreselDisplVertices.PreyMinSumpt = 3.0*GeV
 PreselDisplVertices.RMin = 0.3*mm
 PreselDisplVertices.NbTracks = 4 
-PreselDisplVertices.RemVtxFromDet = 0
+PreselDisplVertices.KeepLowestZ = True
+PreselDisplVertices.RemVtxFromDet = 5
 PreselDisplVertices.UsePartFromTES = False
-PreselDisplVertices.TrackMaxChi2oNDOF = 10.
+PreselDisplVertices.TrackMaxChi2oNDOF = 5.
 
-#####################################################################
-## Single DisplVertex selection and line
+## #####################################################################
+## ## Single DisplVertex selection and line
 SingleDV = DisplVertices("SingleDV")
 SingleDV.InputLocations = [PreselDisplVertices.getName()]
 SingleDV.MinNBCands = 1
 SingleDV.RCutMethod = RCutMethod
+SingleDV.BeamLineLocation="/Event/BeamLine"
 SingleDV.RMin = 0.3*mm
 SingleDV.NbTracks = 5
-SingleDV.PreyMinMass = 6.2*GeV
-SingleDV.PreyMinSumpt = 6.0*GeV
+SingleDV.PreyMinMass = 5.*GeV
+SingleDV.PreyMinSumpt = 5.0*GeV
 SingleDV.RemVtxFromDet = 0
 
-#####################################################################
-## Single DisplVertex selection and line
+SingleDVLowMass = DisplVertices("SingleDVLowMass")
+SingleDVLowMass.InputLocations = [PreselDisplVertices.getName()]
+SingleDVLowMass.MinNBCands = 1
+SingleDVLowMass.RCutMethod = RCutMethod
+SingleDVLowMass.BeamLineLocation="/Event/BeamLine"
+SingleDVLowMass.RMin = 0.3*mm
+SingleDVLowMass.NbTracks = 6
+SingleDVLowMass.PreyMinSumpt = 6.0*GeV
+SingleDVLowMass.PreyMinMass = 6.8*GeV
+SingleDVLowMass.PreyMaxMass = 12.*GeV
+SingleDVLowMass.RemVtxFromDet = 5
+
+## #####################################################################
+## ## Single DisplVertex selection and line
 SingleDVHighMass = DisplVertices("SingleDVHighMass")
 SingleDVHighMass.InputLocations = [PreselDisplVertices.getName()]
 SingleDVHighMass.MinNBCands = 1
 SingleDVHighMass.RCutMethod = RCutMethod
+SingleDVHighMass.BeamLineLocation="/Event/BeamLine"
 SingleDVHighMass.RMin = 0.3*mm
 SingleDVHighMass.NbTracks = 5
-SingleDVHighMass.PreyMinMass = 15.*GeV
+SingleDVHighMass.PreyMinMass = 12.*GeV
 SingleDVHighMass.PreyMinSumpt = 6.0*GeV
 SingleDVHighMass.RemVtxFromDet = 0
 
-#####################################################################
-## Single DisplVertex selection and line
-SingleDVHighPtMuon = DisplVertices("SingleDVHighPtMuon")
-SingleDVHighPtMuon.InputLocations = [PreselDisplVertices.getName()]
-SingleDVHighPtMuon.MinNBCands = 1
-SingleDVHighPtMuon.RCutMethod = RCutMethod
-SingleDVHighPtMuon.RMin = 0.3*mm
-SingleDVHighPtMuon.NbTracks = 5
-SingleDVHighPtMuon.PreyMinMass = 6.2*GeV
-SingleDVHighPtMuon.PreyMinSumpt = 6.0*GeV
-SingleDVHighPtMuon.RemVtxFromDet = 0
-SingleDVHighPtMuon.MuonpT = 5.5*GeV
 
-#####################################################################
-## Double DisplVertex selection and line
+## #####################################################################
+## ## Double DisplVertex selection and line
 DoubleDV = DisplVertices("DoubleDV")
 DoubleDV.InputLocations = [PreselDisplVertices.getName()]
 DoubleDV.MinNBCands = 2
 DoubleDV.RCutMethod = RCutMethod
+DoubleDV.BeamLineLocation="/Event/BeamLine"
 DoubleDV.RMin = 0.3*mm
 DoubleDV.NbTracks = 4
 DoubleDV.PreyMinMass = 3*GeV
@@ -138,32 +138,21 @@ DoubleDV.RemVtxFromDet = 0
 
 
 
-################################################################
-## Create line for single DisplVertex selection
 line1 = StrippingLine('SingleDisplVtx'
-                      , prescale = 0.1
-                      , algos = [DisplPatPV3D,PreselDisplVertices,SingleDV]
-                      ) 
-line2 = StrippingLine('DoubleDisplVtx'
-                      , prescale = 0.5
-                      , algos = [DisplPatPV3D,PreselDisplVertices,DoubleDV]
-                      )
-line1highptmuon = StrippingLine('SingleDisplVtxHighPtMuon'
-                      , prescale = 0.5
-                      , algos = [DisplPatPV3D,PreselDisplVertices,SingleDVHighPtMuon]
-                      )
-line1highmass = StrippingLine('SingleDisplVtxHighMass'
+                         , prescale = 0.05
+                         , algos = [BL,DisplPatPV3D,PreselDisplVertices,SingleDV]
+                         ) 
+
+line1LowMass = StrippingLine('SingleDisplVtxLowMass'
                       , prescale = 1.
-                      , algos = [DisplPatPV3D,PreselDisplVertices,SingleDVHighMass]
+                      , algos = [BL,DisplPatPV3D,PreselDisplVertices,SingleDVLowMass])
+
+line1HighMass = StrippingLine('SingleDisplVtxHighMass'
+                      , prescale = 1.
+                      , algos = [BL,DisplPatPV3D,PreselDisplVertices,SingleDVHighMass])
+                      
+line2 = StrippingLine('DoubleDisplVtx'
+                      , prescale = 1.
+                      , algos = [BL,DisplPatPV3D,PreselDisplVertices,DoubleDV]
                       )
-
-###############################################################
-# Create line for double DisplVertex selection
-
-###############################################################
-# Create line for background study selection
-## line3 = StrippingLine('IntwMat'
-##              , prescale = 1.0
-##              , algos = [DisplPatPV3D,PreselDisplVertices,IntwMat]
-##              )
 

@@ -4,6 +4,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+
+! 2010-10-26 - Victor Coco
+StrippingDisplVertices.py updated to the new scheme: SingleVtx (prescaled) SingleLowMassVtx, SingleHighMassVtx, DoubleVtx.
+
 ! 2010-10-25 - Stefania Vecchi
  StrippingBd2DstarMuNu.py and StrippingVeryLooseDstarWithD02Kpi.py
   - dropped TrChi2 cut since it is made a-priori.
