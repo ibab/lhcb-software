@@ -207,12 +207,20 @@ def _decorate ( name = _name ) :
         name                                   , ## module name  
         LoKi.Functor   ('void',_vv)            , ## the base
         LoKi.Dicts.SourceOps(_mcv,_mcv)        ) ## call-traits
-   
+
+
+    ## primitive voids:
+
+    _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name ) 
+    
+    
     ## decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( MCID , MCABSID ) :
         t = type ( t ) 
         _LoKiCore.decoratePID ( t , LoKi.Dicts.PIDOps ( t ) )
         _decorated.add ( t )
+
+        
     return _decorated
 # =============================================================================
 

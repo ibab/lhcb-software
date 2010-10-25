@@ -101,6 +101,23 @@ namespace LoKi
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
       // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the data from TES 
+      std::size_t get 
+      ( const std::string&             location , 
+        LHCb::MCParticle::ConstVector& output   ) const ;                 
+      // ======================================================================
+      /// count data in TES 
+      std::size_t count 
+      ( const std::string&             location ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const LoKi::MCTypes::MCCuts&    cut    () const { return m_cut        ; }
+      const Decays::IMCDecay::Finder& finder () const { return m_finder     ; }
+      bool  use_finder                       () const { return m_use_finder ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// TES location of MCParticles
@@ -113,6 +130,59 @@ namespace LoKi
       bool                      m_use_finder ;            // use decay finder ?
       /// decay finder 
       Decays::IMCDecay::Finder  m_finder     ;            //       decay finder 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TESCounter 
+     *  simple functor to count number of 'good'-objects form TES 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @see LoKi::Cuts::MCNUM
+     *  @date   2010-10-24
+     */
+    class TESCounter 
+      : public LoKi::Functor<void,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::string&           path                    , 
+        const LoKi::MCTypes::MCCuts& cuts = 
+        LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant(true) ) ; 
+      /// constructor from the service, TES location and cuts 
+      TESCounter
+      ( const std::string&              path   ,
+        const Decays::iNode&            node   ) ;
+      /// constructor from the service, TES location and cuts 
+      TESCounter
+      ( const std::string&              path   ,
+        const Decays::IMCDecay::Finder& finder ) ;
+      /// constructor from the service, TES location and cuts 
+      TESCounter
+      ( const std::string&              path   ,
+        const Decays::IMCDecay::iTree&  tree   ) ;
+      /// constructor from the service, TES location and cuts 
+      TESCounter
+      ( const std::string&              path   ,
+        const std::string&              decay  ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~TESCounter() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TESCounter* clone() const ;
+      /// MANDATORY: the only essential method:
+      virtual result_type operator() ( /* argument */ ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TESCounter () ;                    // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual source 
+      SourceTES m_source ;                                 // the actual source 
       // ======================================================================
     } ;
     // ========================================================================

@@ -332,6 +332,8 @@ MCVSource   = LoKi.FunctorFromFunctor  ('void', _vv     )
 
 MCSOURCE    = LoKi.MCParticles . SourceTES
 MCVSOURCE   = LoKi.MCVertices  . SourceTES
+MCNUM       = LoKi.MCParticles . TESCounter
+
 
 MCEMPTY     = LoKi.Functors.Empty ( _MCP ) ()
 MCVEMPTY    = LoKi.Functors.Empty ( _MCV ) ()
