@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-25 - Anton Poluektov 
+ * StrippingB2DX.py: 
+   - Added wrong-sign D+- combinations to D2hhhWS line
+   - Prescale it to 10%
+   - Cut on the number of LONG tracks in GEC (<100 in all lines except for D2hhh with 180) 
+
 ! 2010-10-25 Sebastian Schleich
 - adapted prescale in StrippingInclPhi.py for 1/20k
 - same for StrippingBs2PhiPhi.py 
