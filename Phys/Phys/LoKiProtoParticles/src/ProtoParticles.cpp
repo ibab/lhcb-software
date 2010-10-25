@@ -25,6 +25,7 @@
 #include "LoKi/Interface.h"
 #include "LoKi/Services.h"
 #include "LoKi/select.h"
+#include "LoKi/Algs.h"
 // ============================================================================
 /** @file
  *  Imeplementation file for namespace LoKi:ProtoParticles
@@ -1246,6 +1247,15 @@ namespace
     return out.size() - n ;
   } 
   // ==========================================================================
+  template <class CONTAINER, class PREDICATE>
+  inline std::size_t _count_ 
+  ( CONTAINER& cnt , 
+    const PREDICATE& cut ) 
+  {
+    return LoKi::Algs::count_if ( cnt -> begin () , 
+                                  cnt -> end   () , cut ) ;
+  } 
+  // ==========================================================================
 }
 // ============================================================================
 // get the protoparticles from the certain  TES location 
@@ -1254,9 +1264,38 @@ std::size_t LoKi::ProtoParticles::SourceTES::get
 ( const std::string&                location , 
   LHCb::ProtoParticle::ConstVector& output   ) const 
 {
+  //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }
+  //
   SmartDataPtr<LHCb::ProtoParticle::Container> pps ( m_dataSvc , location ) ;
   if ( !(!pps) ) { return _fill_ ( pps  , output , m_cut.func() ) ; }
   Assert ( false , "No valid data is found at location '" + location + "'") ;
+  return 0 ;
+}
+// ============================================================================
+// count the protoparticles from the certain  TES location 
+// ============================================================================
+std::size_t LoKi::ProtoParticles::SourceTES::count 
+( const std::string&                location ) const 
+{
+  //
+  if ( !m_dataSvc ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance() ;
+    m_dataSvc = svcs.evtSvc() ;
+    Assert ( m_dataSvc.validPointer ( )               ,
+             "Could not locate valid IDataProviderSvc" ) ;
+  }
+  //
+  SmartDataPtr<LHCb::ProtoParticle::Container> pps ( m_dataSvc , location ) ;
+  if ( !(!pps) ) { return _count_ ( pps , m_cut.func() ) ; }
+  Error ( "No valid data is found at location '" + location + "'") ;
   return 0 ;
 }
 // ============================================================================
@@ -1267,6 +1306,65 @@ LoKi::ProtoParticles::SourceTES::fillStream ( std::ostream& o ) const
 { return o << " PP_SOURCE( " 
            << Gaudi::Utils::toString( m_path ) << " , " << m_cut << " ) " ; }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::ProtoParticles::TESCounter::TESCounter 
+( const std::string&              path , 
+  const LoKi::PPTypes::PPCuts& cuts )
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// constructor from the service, TES location and cuts 
+// ============================================================================
+LoKi::ProtoParticles::TESCounter::TESCounter 
+( const std::vector<std::string>& path                    , 
+  const LoKi::PPTypes::PPCuts& cuts )
+  : LoKi::Functor<void,double> () 
+  , m_source ( path , cuts ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::ProtoParticles::TESCounter::~TESCounter(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::ProtoParticles::TESCounter*
+LoKi::ProtoParticles::TESCounter::clone() const 
+{ return new LoKi::ProtoParticles::TESCounter( *this ) ; }
+// ============================================================================
+// MANDATORY: the only essential method:
+// ============================================================================
+LoKi::ProtoParticles::TESCounter::result_type 
+LoKi::ProtoParticles::TESCounter::operator() ( /* argument */ ) const 
+{
+  unsigned long num = 0 ;
+  
+  typedef std::vector<std::string> List ;
+  const List& paths = m_source.paths() ;
+  for ( List::const_iterator iaddr = paths.begin() ; 
+        paths.end() != iaddr ; ++iaddr ) 
+  {
+    // count protoparticles 
+    num += m_source.count ( *iaddr ) ;
+  }
+  //
+  return num ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& 
+LoKi::ProtoParticles::TESCounter::fillStream ( std::ostream& o ) const 
+{ return o << "PP_NUM(" 
+           << Gaudi::Utils::toString( m_source.paths() ) 
+           << "," << m_source.cut() << ")" ; }
+// ============================================================================
+
 
 
 // ============================================================================

@@ -634,6 +634,8 @@ namespace LoKi
       const LoKi::Interface<IDataProviderSvc>& dataSvc() const 
       { return m_dataSvc ; }      
       // ======================================================================
+      const LoKi::PPTypes::PPCuts& cut() const { return m_cut ; }
+      // ======================================================================
     public:
       // ======================================================================
       /// set the  paths
@@ -647,12 +649,15 @@ namespace LoKi
       void setDataSvc ( const LoKi::Interface<IDataProviderSvc>& value ) 
       { m_dataSvc = value ; }
       // ======================================================================
-    protected:
+    public:
       // ======================================================================
       /// get the protoparticles from the certain  TES location 
       std::size_t get
-      ( const std::string&                location , 
-        LHCb::ProtoParticle::ConstVector& output   ) const ;
+      ( const std::string&                   location , 
+        LHCb::ProtoParticle::ConstVector&    output   ) const ;
+      // ======================================================================
+      /// count the protoparticles from the certain  TES location 
+      std::size_t count ( const std::string& location ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -662,6 +667,47 @@ namespace LoKi
       mutable LoKi::Interface<IDataProviderSvc>  m_dataSvc ;
       /// 'on-flight' filter
       LoKi::PPTypes::PPCut m_cut ; // 'on-flight' filter
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class TESCounter 
+     *  simple functor to count number of 'good'-objects form TES 
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @see LoKi::Cuts::PP_NUM
+     *  @date   2010-10-24
+     */
+    class TESCounter : public LoKi::Functor<void,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the service, TES location and cuts 
+      TESCounter 
+      ( const std::string&           path                    , 
+        const LoKi::PPTypes::PPCuts& cuts = 
+        LoKi::BasicFunctors<const LHCb::ProtoParticle*>::BooleanConstant(true) ) ; 
+      /// constructor from the service, TES location and cuts 
+      TESCounter
+      ( const std::vector<std::string>& path                    , 
+        const LoKi::PPTypes::PPCuts&    cuts = 
+        LoKi::BasicFunctors<const LHCb::ProtoParticle*>::BooleanConstant(true) ) ; 
+      /// MANDATORY: virtual destructor 
+      virtual ~TESCounter() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TESCounter* clone() const ;
+      /// MANDATORY: the only essential method:
+      virtual result_type operator() ( /* argument */ ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TESCounter () ;                    // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual source 
+      SourceTES m_source ;                                 // the actual source 
       // ======================================================================
     } ;
     // ======================================================================

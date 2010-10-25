@@ -337,6 +337,8 @@ PPSource    = LoKi.FunctorFromFunctor  ('void', _ppv     )
 
 ## @see LoKi::Cuts::PP_SOURCE 
 PP_SOURCE   = LoKi.ProtoParticles.SourceTES 
+## @see LoKi::Cuts::PP_NUM
+PP_NUM      = LoKi.ProtoParticles.TESCounter 
 
 PP_EMPTY    = LoKi.Functors.Empty ( _PP ) ()
 PP_SIZE     = LoKi.Functors.Size  ( _PP ) ()

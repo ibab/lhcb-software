@@ -114,7 +114,11 @@ def _decorate ( name = _name ) :
         name                                   , ## module name
         LoKi.Functor       ( _pp ,'double')    , ## the base 
         LoKi.Dicts.InfoOps ( _pp )             ) ## methods
-   
+
+
+    # primitive voids :
+    
+    _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name )
     return _decorated
 
 # =============================================================================

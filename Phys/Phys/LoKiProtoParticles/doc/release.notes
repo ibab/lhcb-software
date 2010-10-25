@@ -6,6 +6,14 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2010-10-25 - Vanya Belyaev
+
+ - add new symbol PP_NUM 
+
+ - cmt/requirements 
+    version increment to v1r1 
+
+
 !========================== LoKiProtoParticles v1r0 2010-06-24 ================
 
 ! 2010-06-02 - Vanya Belyaev
