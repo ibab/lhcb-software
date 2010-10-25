@@ -35,7 +35,10 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
     def Nominal_Line(self):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
         StripCcbar2Ppbar = self.combineCcbar()
-        return StrippingLine('Ccbar2Ppbar', prescale = 1,  algos = [ StripCcbar2Ppbar ] )
+        return StrippingLine('Ccbar2Ppbar',
+                             prescale = 1,
+                             checkPV  = False,
+                             algos = [ StripCcbar2Ppbar ] )
 
     
     def Loose_Line(self):

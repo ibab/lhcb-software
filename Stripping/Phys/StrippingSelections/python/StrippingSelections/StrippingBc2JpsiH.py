@@ -28,7 +28,10 @@ class StrippingBc2JpsiHConf(LHCbConfigurableUser):
     def MuMu(self):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
         StripBc2JpsiH = self.combineBc()
-        return StrippingLine('Bc2JpsiH', prescale = 1, algos = [ StripBc2JpsiH ] )        
+        return StrippingLine('Bc2JpsiH',
+                             prescale = 1,
+                             checkPV = False, 
+                             algos = [ StripBc2JpsiH ] )        
     
     def combineBc(self):
         """

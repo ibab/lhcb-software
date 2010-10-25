@@ -12,6 +12,7 @@ Including the following lines:
 5. DiMuonLowMassLine
    Keep Hlt2UnbiasedDiMuonLowMassDecision triggered events 
 6. Jpsi2MuMuLine
+7. Psi2MuMuLine
 
 More details can be found here:
 http://indico.cern.ch/contributionDisplay.py?contribId=2&confId=100755
@@ -51,6 +52,7 @@ class DiMuonConf(object):
         # DiMuon line
         'DiMuon_Prescale',
         'DiMuon_Postscale',
+        'DiMuon_checkPV',
         
         'DiMuon_MuonPT',
         'DiMuon_MuonP',
@@ -62,10 +64,12 @@ class DiMuonConf(object):
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale',
         'DiMuonSameSign_Postscale',
+        'DiMuonSameSign_checkPV',
         
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale',
         'DiMuonHighMass_Postscale',
+        'DiMuonHighMass_checkPV',
         
         'DiMuonHighMass_MuonPT',
         'DiMuonHighMass_MuonP',
@@ -76,11 +80,13 @@ class DiMuonConf(object):
 
         # DiMuon High Mass line
         'DiMuonHighMassSameSign_Prescale',
-        'DiMuonHighMassSameSign_Postscale',                
+        'DiMuonHighMassSameSign_Postscale',
+        'DiMuonHighMassSameSign_checkPV',
 
         # DiMuon Low Mass line
         'DiMuonLowMass_Prescale',
         'DiMuonLowMass_Postscale',
+        'DiMuonLowMass_checkPV',
         
         'DiMuonLowMass_MuonPT',
         'DiMuonLowMass_MuonP',
@@ -92,6 +98,7 @@ class DiMuonConf(object):
         # Tight Jpsi line
         'Jpsi2MuMu_Prescale',
         'Jpsi2MuMu_Postscale',
+        'Jpsi2MuMu_checkPV',
         
         'Jpsi2MuMu_MuonPT',
         'Jpsi2MuMu_MuonP',
@@ -104,6 +111,7 @@ class DiMuonConf(object):
         # Tight Psi(2S) line
         'Psi2MuMu_Prescale',
         'Psi2MuMu_Postscale',
+        'Psi2MuMu_checkPV',
 
         'Psi2MuMu_ParticleName', 
         'Psi2MuMu_MuonPT',
@@ -117,8 +125,9 @@ class DiMuonConf(object):
     
     config_default= {
         # DiMuon line
-        'DiMuon_Prescale'                          :     0.1  ,
-        'DiMuon_Postscale'                         :     1.   ,        
+        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           : False    ,  
         
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
@@ -128,12 +137,14 @@ class DiMuonConf(object):
         'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
 
         # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.01 ,
-        'DiMuonSameSign_Postscale'                 :     1.   , 
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   : False    ,
         
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale'                  :     1.   ,
         'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   : False    ,
         
         'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
         'DiMuonHighMass_MuonP'                     : -8000.   , 
@@ -144,11 +155,13 @@ class DiMuonConf(object):
 
         # DiMuon High Mass Same Sign line
         'DiMuonHighMassSameSign_Prescale'          :     1.   ,
-        'DiMuonHighMassSameSign_Postscale'         :     1.   ,        
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           : False    ,
 
         # DiMuon Low Mass line
         'DiMuonLowMass_Prescale'                   :     1.   ,
         'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    : False    , 
         
         'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
         'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
@@ -160,6 +173,7 @@ class DiMuonConf(object):
         # Jpsi2MuMu line
         'Jpsi2MuMu_Prescale'                       :     1.   ,
         'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        : False    ,
         
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
         'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
@@ -172,6 +186,7 @@ class DiMuonConf(object):
         # Psi2MuMu line
         'Psi2MuMu_Prescale'                        :     1.   ,
         'Psi2MuMu_Postscale'                       :     1.   ,
+        'Psi2MuMu_checkPV'                         : False    ,
 
         'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
@@ -183,10 +198,12 @@ class DiMuonConf(object):
         'Psi2MuMu_PT'                              :  2000.      # MeV  
         }
 
-    config_microDST = {
+
+    config_checkPV= {
         # DiMuon line
-        'DiMuon_Prescale'                          :     1.   ,
-        'DiMuon_Postscale'                         :     1.   ,        
+        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           :  True    ,  
         
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
@@ -197,11 +214,13 @@ class DiMuonConf(object):
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.1  ,
-        'DiMuonSameSign_Postscale'                 :     1.   , 
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   :  True    ,
         
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale'                  :     1.   ,
         'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   :  True    ,
         
         'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
         'DiMuonHighMass_MuonP'                     : -8000.   , 
@@ -212,11 +231,13 @@ class DiMuonConf(object):
 
         # DiMuon High Mass Same Sign line
         'DiMuonHighMassSameSign_Prescale'          :     1.   ,
-        'DiMuonHighMassSameSign_Postscale'         :     1.   ,        
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           :  True    ,
 
         # DiMuon Low Mass line
         'DiMuonLowMass_Prescale'                   :     1.   ,
         'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    :  True    , 
         
         'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
         'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
@@ -228,6 +249,7 @@ class DiMuonConf(object):
         # Jpsi2MuMu line
         'Jpsi2MuMu_Prescale'                       :     1.   ,
         'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        :  True    ,
         
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
         'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
@@ -240,8 +262,9 @@ class DiMuonConf(object):
         # Psi2MuMu line
         'Psi2MuMu_Prescale'                        :     1.   ,
         'Psi2MuMu_Postscale'                       :     1.   ,
-        
-        'Psi2MuMu_ParticleName'                    :"'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_checkPV'                         :  True    ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
         'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
         'Psi2MuMu_PIDmu'                           :     0.   , 
@@ -249,8 +272,84 @@ class DiMuonConf(object):
         'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
         'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMu_PT'                              :  2000.      # MeV  
-        
         }
+
+    
+    config_microDST= {
+        # DiMuon line
+        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Postscale'                         :     1.   ,
+        'DiMuon_checkPV'                           :  True    ,  
+        
+        'DiMuon_MuonPT'                            :   650.   ,  # MeV
+        'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
+        'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
+        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_VCHI2PDOF'                         :    20.   , 
+        'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+
+        # DiMuon Same Sign line
+        'DiMuonSameSign_Prescale'                  :     0.1  ,
+        'DiMuonSameSign_Postscale'                 :     1.   ,
+        'DiMuonSameSign_checkPV'                   :  True    ,
+        
+        # DiMuon High Mass line
+        'DiMuonHighMass_Prescale'                  :     1.   ,
+        'DiMuonHighMass_Postscale'                 :     1.   ,
+        'DiMuonHighMass_checkPV'                   :  True    ,
+        
+        'DiMuonHighMass_MuonPT'                    :  1000.   , # MeV
+        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
+        'DiMuonHighMass_MinMass'                   :  7500.   , # MeV
+        'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
+        'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
+
+        # DiMuon High Mass Same Sign line
+        'DiMuonHighMassSameSign_Prescale'          :     1.   ,
+        'DiMuonHighMassSameSign_Postscale'         :     1.   ,
+        'DiMuonHighMassSameSign_checkPV'           :  True    ,
+
+        # DiMuon Low Mass line
+        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Postscale'                  :     1.   ,
+        'DiMuonLowMass_checkPV'                    :  True    , 
+        
+        'DiMuonLowMass_MuonPT'                     :   650.   ,  # MeV
+        'DiMuonLowMass_MuonP'                      : -8000.   ,  # MeV, no cut now
+        'DiMuonLowMass_MuonTRCHI2DOF'              :     5.   , 
+        'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
+        'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
+        'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+
+        # Jpsi2MuMu line
+        'Jpsi2MuMu_Prescale'                       :     1.   ,
+        'Jpsi2MuMu_Postscale'                      :     1.   ,
+        'Jpsi2MuMu_checkPV'                        :  True    ,
+        
+        'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
+        'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
+        'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
+        'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
+        'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
+        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+
+        # Psi2MuMu line
+        'Psi2MuMu_Prescale'                        :     1.   ,
+        'Psi2MuMu_Postscale'                       :     1.   ,
+        'Psi2MuMu_checkPV'                         :  True    ,
+
+        'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
+        'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_PIDmu'                           :     0.   , 
+        'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
+        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
+        'Psi2MuMu_PT'                              :  2000.      # MeV  
+        }
+
 
     
     def __init__(self,
@@ -279,6 +378,7 @@ class DiMuonConf(object):
         self.DiMuonLine = StrippingLine( name + 'DiMuonInc' + 'Line',
                                          prescale  = config['DiMuon_Prescale'],
                                          postscale = config['DiMuon_Postscale'],
+                                         checkPV   = config['DiMuon_checkPV'],
                                          algos = [self.SelDiMuon]
                                          )
 
@@ -296,6 +396,7 @@ class DiMuonConf(object):
         self.DiMuonSameSignLine = StrippingLine( name + 'DiMuonSameSign' + 'Line',
                                                  prescale  = config['DiMuonSameSign_Prescale'],
                                                  postscale = config['DiMuonSameSign_Postscale'],
+                                                 checkPV   = config['DiMuonSameSign_checkPV'],
                                                  algos = [self.SelDiMuonSameSign]
                                                  )
 
@@ -314,6 +415,7 @@ class DiMuonConf(object):
         self.DiMuonHighMassLine = StrippingLine( name + 'DiMuonHighMass' + 'Line',
                                                  prescale  = config['DiMuonHighMass_Prescale'],
                                                  postscale = config['DiMuonHighMass_Postscale'],
+                                                 checkPV   = config['DiMuonHighMass_checkPV'],
                                                  algos = [self.SelDiMuonHighMass]
                                                  )
 
@@ -334,6 +436,7 @@ class DiMuonConf(object):
         self.DiMuonHighMassSameSignLine = StrippingLine( name + 'DiMuonHighMassSameSign' + 'Line',
                                                          prescale  = config['DiMuonHighMassSameSign_Prescale'],
                                                          postscale = config['DiMuonHighMassSameSign_Postscale'],
+                                                         checkPV   = config['DiMuonHighMassSameSign_checkPV'],
                                                          algos = [self.SelDiMuonHighMassSameSign]
                                                          )
 
@@ -354,6 +457,7 @@ class DiMuonConf(object):
                                                 HLT = "HLT_PASS('Hlt2UnbiasedDiMuonLowMassDecision')",
                                                 prescale  = config['DiMuonLowMass_Prescale'],
                                                 postscale = config['DiMuonLowMass_Postscale'],
+                                                checkPV   = config['DiMuonLowMass_checkPV'],
                                                 algos = [ self.SelDiMuonLowMass ]
                                                 )
         
@@ -372,6 +476,7 @@ class DiMuonConf(object):
         self.Jpsi2MuMuLine = StrippingLine( name + 'Jpsi2MuMu' + 'Line',
                                             prescale  = config['Jpsi2MuMu_Prescale'],
                                             postscale = config['Jpsi2MuMu_Postscale'],
+                                            checkPV   = config['Jpsi2MuMu_checkPV'],
                                             algos = [self.SelJpsi2MuMu]
                                             )
 
@@ -390,10 +495,11 @@ class DiMuonConf(object):
                                          )
 
         self.Psi2MuMuLine = StrippingLine( name + 'Psi2MuMu' + 'Line',
-                                            prescale  = config['Psi2MuMu_Prescale'],
-                                            postscale = config['Psi2MuMu_Postscale'],
-                                            algos = [self.SelPsi2MuMu]
-                                            )
+                                           prescale  = config['Psi2MuMu_Prescale'],
+                                           postscale = config['Psi2MuMu_Postscale'],
+                                           checkPV   = config['Psi2MuMu_checkPV'],
+                                           algos = [self.SelPsi2MuMu]
+                                           )
             
         
         self.Lines = [
@@ -404,6 +510,12 @@ class DiMuonConf(object):
             self.DiMuonLowMassLine,
             self.Jpsi2MuMuLine,
             self.Psi2MuMuLine
+            ]
+
+        self.FullDSTLines = [
+            self.DiMuonLine,
+            self.DiMuonSameSignLine,
+            self.DiMuonLowMassLine
             ]
         
         self.MicroDSTLines = [
