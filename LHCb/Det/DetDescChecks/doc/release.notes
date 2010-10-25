@@ -7,6 +7,8 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!========================= DetDescChecks v5r4 2010-10-25 =========================
+
 ! 2010-10-05 - Illya Shapoval 
  - Added tests 'loaddddb-sim-2010.qmt','loaddddb-sim-2009.qmt' and 
  'loaddddb-sim-MC09.qmt' for checking latest simulation global and local tags
