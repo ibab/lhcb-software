@@ -16,6 +16,7 @@ branches          cmt src options doc
 use DaVinciKernel       v* Phys
 
 use CaloDet             v* Det
+use VeloDet             v* Det
 
 # ============================================================================
 # Eventually set new environnment values

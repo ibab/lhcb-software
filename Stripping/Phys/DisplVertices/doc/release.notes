@@ -5,6 +5,12 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Victor Coco
+ - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
+   beamline distance (avoid DV backward PV)
+   New cut on material, moving with the halfbox frame introduced
+   R wrt beam line stored in extra info 52 and is in material stored in extra info 51
+
 ! 2010-10-22 - Neal Gauvin
  - RecVertices2Particles : Require non Velo tracks to have Q/P significance 
    not in [-20, 20] to enter the Particle fit.

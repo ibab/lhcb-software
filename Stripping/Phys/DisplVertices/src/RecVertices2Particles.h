@@ -18,6 +18,9 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/ITransportSvc.h"
+#include <VeloDet/DeVeloSensor.h>
+#include <VeloDet/DeVeloRType.h>
+#include "VeloDet/DeVelo.h"
 
 #include "Kernel/IProtoParticleFilter.h"
 
@@ -55,7 +58,8 @@ private:
   unsigned int GetNbVeloTracks();
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
-			   LHCb::Particle::ConstVector & );
+			   LHCb::Particle::ConstVector & ,
+			   double r );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
   /// Creates a pion with 400 MeV pt from track slopes.
@@ -73,9 +77,13 @@ private:
                       double range = 1*Gaudi::Units::mm );
   bool TestMass( const LHCb::Particle * );  ///< Cut on the mass
   bool TestMass( LHCb::Particle & );  ///< Cut on the mass
-  bool TestTrack( const LHCb::Track * ); ///< Quality cuts on track
-  /// Cut on the RF-Foil position
+  bool TestTrack( const LHCb::Track *  ); ///< Cut on the track quality
+  /// Cut on the RF-Foil and sensors position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
+  void InitialiseGeoInfo();
+  bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);
+  bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);
+
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
   StatusCode SaveCaloInfos( Tuple & );
   StatusCode GetCaloInfos( std::string, double &, double & );
@@ -154,6 +162,8 @@ private:
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
+  std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
+  std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
 

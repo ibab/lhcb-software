@@ -389,7 +389,7 @@ StatusCode CalibrateIP::execute() {
   
   //Save the beam line on the TES.
   SaveBeamLine();
-
+  setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
 
