@@ -4,6 +4,8 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r16 2010-10-25 =========================
+
 ! 2010-10-25 - Marco Clemencic
  - Added a test to expose bug #74255
    (fake event loop during finalize doesn't work).
