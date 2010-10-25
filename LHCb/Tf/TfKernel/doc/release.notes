@@ -4,6 +4,8 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r19 2010-10-25 =========================
+
 ! 2010-10-08 - Marco Clemencic
  - Fixed compilation error in ICC.
 
