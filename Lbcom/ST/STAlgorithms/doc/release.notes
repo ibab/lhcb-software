@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!========================= STAlgorithms v4r4 2010-10-25 =========================
 ! 2010-09-29 M Needham
  - Add the missing STClusterContainerCopy .cpp
 
