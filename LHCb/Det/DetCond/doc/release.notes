@@ -4,8 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Marco Clemencic
+ - Added a test to expose bug #74255
+   (fake event loop during finalize doesn't work).
+
 ! 2010-10-17 - Illya Shapoval
- - CondDBAccessSvc method getChildNodes is modified to load only those Online 
+ - CondDBAccessSvc method getChildNodes is modified to load only those Online
  folders in SIMCOND which are tagged with a tag being set to load db.
  Modification is done in a binary backwards compatible way.
 
