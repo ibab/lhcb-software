@@ -4,6 +4,8 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r4 2010-10-25 =========================
+
 ! 2010-10-20 - Marco Cattaneo
  - Move ANNSvc to HltInterfaces
 
