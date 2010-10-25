@@ -4,11 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v15r1 2010-10-25 =========================
+
 ! 2010-10-25 - Antonis Papanestis
  - Changed DeRichSystem to accept a list of readable smartIDs for the
    inactive HPDs instead of a list of hardware IDs.
-
-!========================= RichDet v15r1 2010-10-25 =========================
 
 ! 2010-10-16 - Chris Jones
  - Add a couple utility methods to the DeRichLocations namespace that return
