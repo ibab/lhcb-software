@@ -43,7 +43,7 @@ STRawBankMonitor::~STRawBankMonitor(){
 StatusCode STRawBankMonitor::initialize(){
 
   if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }

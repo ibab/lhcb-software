@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2010-10-2 M Needham
+  - Bug fix in STRawBankMonitor 
+
 ! 2010-09-29 M Needham
  - Make raw location a property in encoding
 
