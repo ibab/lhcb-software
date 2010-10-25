@@ -61,18 +61,18 @@ confdict={
                 'Postscale'   : 1.0 ,
                 #kaon parameters
                 'KPT'         : 350,# MeV
-                'KTrChi2'     :  8,
+                #'KTrChi2'     :  8,
                 'KIPChi2'     :  0,
                 'KTrPID'      : -5,
                 #pion parameters
                 'PiPT'        : 350, # MeV
-                'PiTrChi2'    :  8, # 10   # 5
+                #'PiTrChi2'    :  8, # 10   # 5
                 'PiIPChi2'    :  0, # 4    # 4
                 #D0-resonance parameters
                 'D0MassW'     : 60, # 40  # 40 #MeV
                 'D0_BPVVDCHI2': 50,
                 #Dstar-resonance parameters
-                'slowPiTrChi2': 8, # 10 # 5
+                #'slowPiTrChi2': 8, # 10 # 5
                 'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
                 'Dstar_VCHI2' : 25, # 20 # 15
                 'DstarMassW'  : 80 # 50 # 80 MeV
@@ -166,18 +166,18 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         'Postscale',
         #kaon parameters
         'KPT',
-        'KTrChi2',
+        #'KTrChi2',
         'KIPChi2',
         'KTrPID',
         #pion parameters
         'PiPT',
-        'PiTrChi2',
+        #'PiTrChi2',
         'PiIPChi2',
         #D0-resonance parameters
         'D0MassW',
         'D0_BPVVDCHI2',
         #Dstar-resonance parameters
-        'slowPiTrChi2',
+        #'slowPiTrChi2',
         'Dstar_PT',
         'Dstar_VCHI2',
         'DstarMassW'
@@ -200,12 +200,12 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
         ### it's nice to see all the cuts in one place      ###
 
         # Cuts for D0        
-        self.KCut  = " (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & (TRCHI2DOF < %(KTrChi2)s ) & "\
+        self.KCut  = " (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
                      " (MIPDV(PRIMARY) > 0.04*mm) &"\
                      " (MIPCHI2DV(PRIMARY)> %(KIPChi2)s ) & "\
                      " (PIDK >  %(KTrPID)s ) " % config
-        
-        self.PiCut = " (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & (TRCHI2DOF < %(PiTrChi2)s) & "\
+                     
+        self.PiCut = " (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
                      " (MIPDV(PRIMARY) > 0.04*mm) &"\
                      " (MIPCHI2DV(PRIMARY)> %(PiIPChi2)s ) " % config
         
@@ -217,10 +217,9 @@ class DstarVeryLooseWithD02KpiOneLineConf(object):
                                                       # <==== wrt Dstar selection in StrippingBd2DstarMuNu.Loose
 
         # Cuts for Dstar        
-        self.slowPiCut="  (PT>110*MeV) & (ISLONG) &"\
-                    "     (TRCHI2DOF < %(slowPiTrChi2)s) & "\
-                    "     (MIPDV(PRIMARY) > 0.04*mm) " % config        
-        
+        self.slowPiCut= "  (PT>110*MeV) & (ISLONG) & "\
+                        "     (MIPDV(PRIMARY) > 0.04*mm) " % config        
+
         self.DstarCombCut="(ADAMASS('D*(2010)+')< %(DstarMassW)s*MeV) & (APT>%(Dstar_PT)s *MeV) " % config
         
         self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & (M-MAXTREE('D0'==ABSID,M)<160 * MeV)" % config

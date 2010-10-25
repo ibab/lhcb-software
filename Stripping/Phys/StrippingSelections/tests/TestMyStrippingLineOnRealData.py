@@ -33,6 +33,16 @@ from StrippingSelections.StrippingBs2MuMuPhi import defaultConfig as Bs2MuMuPhiC
 Bs2MuMuPhiConf = StrippingBs2MuMuPhiConf(config = Bs2MuMuPhiConfig)
 stream.appendLines(Bs2MuMuPhiConf.lines())
 
+# Import your stripping lines
+from StrippingSelections import StrippingDstarVeryLooseWithD02Kpi 
+confDstarVeryLooseWithD02Kpi = StrippingDstarVeryLooseWithD02Kpi.DstarVeryLooseWithD02KpiAllLinesConf(StrippingDstarVeryLooseWithD02Kpi.confdict)
+stream.appendLines( confDstarVeryLooseWithD02Kpi.Lines )
+
+from StrippingSelections import StrippingBd2DstarMuNu
+confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf(StrippingBd2DstarMuNu.confdict)
+stream.appendLines( confBd2DstarMuNu.Lines )
+
+
 #<----
 
 
