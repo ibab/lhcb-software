@@ -6,6 +6,17 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+
+</PRE><H1><A NAME=v9r7p1>2010-10-25 LbcomSys v9r7p1</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r6p1
+
+- Minor updates for the winter 2010 reprocessing
+
+- Packages updated:
+    Calo/CaloTools v6r0, Hlt/HltDAQ v2r4, L0/L0DU v10r10, L0/L0Muon v9r2, 
+    L0/L0MuonMonitor v2r1p1, Rich/RichTools v2r31, ST/STMonitors v3r3, 
+    ST/STTools v4r5, Velo/VeloDAQ v6r0p1
+
 </PRE><H1><A NAME=v9r7>2010-08-26 LbcomSys v9r7</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6
 
