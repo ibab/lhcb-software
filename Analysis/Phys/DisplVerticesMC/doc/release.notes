@@ -5,6 +5,13 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Neal Gauvin
+ - Propagate modifications done in DisplVertices
+ - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
+   beamline distance (avoid DV backward PV)
+   New cut on material, moving with the halfbox frame introduced
+   R wrt beam line stored in extra info 52 and is in material stored in extra info 51
+
 ! ======================= DisplVerticesMC v1r0 2010-10-04 ====================
 
 ! 2010-09-20 - Neal Gauvin

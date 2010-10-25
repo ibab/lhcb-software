@@ -420,7 +420,9 @@ StatusCode MCDisplVertices::execute(){
     if( m_RemVtxFromAir && IsFromAir(p) ) continue;
 
     //Is the particle close to the detector material ?
-    if( IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) ) continue;
+    if( m_RemVtxFromDet!= 5 && IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) )
+      continue;
+    if( m_RemVtxFromDet== 5 && p->info(51,-1000.)>-900) continue;
 
     //Is the particle decay vertex in the RF-foil ?
     if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
@@ -3218,10 +3220,12 @@ void MCDisplVertices::GetUpstreamPV(){
         i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Apply some cuts
-    if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm))
-      continue;
+    if(m_RCut=="FromBeamLine" && GetRFromBL( pv->position() )> m_RMin){
+       continue;
+    }
+    else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){ continue;}
     double z = pv->position().z();
-    if( abs(z) > 150*mm ) continue;
+    if( abs(z) > 400*mm ) continue;
     if( !HasBackAndForwardTracks( pv ) ) continue;
     //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
     if( msgLevel( MSG::DEBUG ) )
