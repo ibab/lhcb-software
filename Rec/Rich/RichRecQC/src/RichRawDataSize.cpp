@@ -75,6 +75,23 @@ StatusCode RawDataSize::prebookHistograms()
   return StatusCode::SUCCESS;
 }
 
+void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
+{
+  if ( m_hpdPlots )
+  {
+    // clear the map
+    hpdMap.clear();
+    // get list of all active HPDs
+    const LHCb::RichSmartID::Vector & hpds = m_RichSys->activeHPDRichSmartIDs();
+    // Loop over all HPDs and init count to zero
+    for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
+          iHPD != hpds.end(); ++iHPD )
+    {
+      hpdMap[*iHPD] = 0;
+    }
+  }
+}
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -126,6 +143,11 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     // the test is valid
     bool abortSizeCheck = false;
 
+    // HPD word counts
+    HPDWordMap hpdWordMap;
+    // initialise for all active HPDs and L1 to 0
+    initHPDMap(hpdWordMap);
+
     // loop over decoded data
     for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
           iL1Map != l1Map.end(); ++iL1Map )
@@ -150,10 +172,10 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
-          // Only use valid HPD blocks to include data size 
+          // Only use valid HPD blocks to include data size
           const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
           if ( !hpdOK ) abortSizeCheck = true;
-          
+
           // words for this HPD
           const unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
                                            hpdFooter.nFooterWords() +
@@ -162,24 +184,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           // count words per L1 board
           nL1Words += nHPDwords;
 
-          if ( hpdOK && m_hpdPlots )
-          {
-            // use a try block in case of DB lookup errors
-            try
-            {
-              // Get the HPD hardware ID
-              const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(hpdID);
-              // fill plots
-              std::ostringstream title, ID;
-              title << "Data Size (32bit words) : HPDHardwareID " << hpdHardID;
-              ID << "hpds/HPDHardwareID" << hpdHardID;
-              richHisto1D( ID.str(), title.str(), -0.5, 50.5, 51 ) -> fill( nHPDwords );
-            }
-            catch ( const GaudiException & excpt )
-            {
-              Error( excpt.message() ).ignore();
-            }
-          } // do individual HPD plots
+          if ( hpdOK && m_hpdPlots ) { hpdWordMap[hpdID] = nHPDwords; }
 
         } // loop over HPDs
 
@@ -201,6 +206,33 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
     } // loop over L1 boards
 
+    // Fill HPD plots, if requested
+    if ( m_hpdPlots )
+    {
+      // loop over HPDs
+      for ( HPDWordMap::const_iterator iHPD = hpdWordMap.begin();
+            iHPD != hpdWordMap.end(); ++iHPD )
+      {
+        // use a try block in case of DB lookup errors
+        try
+        {
+          // Get the HPD hardware ID
+          const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
+          const Rich::DAQ::Level0ID      l0ID      = m_RichSys->level0ID(iHPD->first);
+          // fill plots
+          std::ostringstream title, ID;
+          title << "# Words (32bit) : "
+                << iHPD->first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
+          ID << "hpds/HPDHardwareID" << hpdHardID;
+          richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( iHPD->second );
+        }
+        catch ( const GaudiException & excpt )
+        {
+          Error( excpt.message() ).ignore();
+        }
+      }
+
+    } // HPD plots
 
   } // raw event exists
 

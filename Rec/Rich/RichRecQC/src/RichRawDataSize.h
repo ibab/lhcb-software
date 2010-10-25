@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::DAQ::RawDataSize
  *
- *  CVS Log :-
- *  $Id: RichRawDataSize.h,v 1.4 2009-09-02 16:24:36 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */
@@ -61,10 +58,18 @@ namespace Rich
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
 
+    private: // definitions
+
+      /// HPD data size map
+      typedef Rich::Map<LHCb::RichSmartID,unsigned int> HPDWordMap;
+
     private:
 
       /// Process an individual TAE event
       StatusCode processTAEEvent( const std::string & taeEvent );
+
+      /// Create an empty map of all active HPDs and data size
+      void initHPDMap( HPDWordMap & hpdMap );
 
     private:
 
