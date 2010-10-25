@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Neal Gauvin
+ - Check consistency of newly added features.
+
 ! 2010-10-25 - Victor Coco
  - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
    beamline distance (avoid DV backward PV)

@@ -133,6 +133,9 @@ StatusCode RecVertices2Particles::initialize() {
             <<"*PosCovMatric from detector material"<< endmsg;
     if( m_RemVtxFromDet == 4 )
       info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+    if( m_RemVtxFromDet == 5 )
+      info()<<"Remove RecVertex if in home-made description of detector"
+            <<" material"<< endmsg;
     info()<<"Remove tracks with Chi2/ndof > "<< m_TChi2<< endmsg;
     info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
     info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
@@ -246,17 +249,20 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     debug() << "==> Execute the RecVertices2Particles algorithm, event "
 	    << counter("Processed evt nb").flag() << endmsg;
 
+  //Check track and Particle content
+  //PrintTrackandParticles();
+
   // Initialize the RCut Method. In both case get the UpPV
   const RecVertex * UpPV = NULL;
+  UpPV = GetUpstreamPV();
+  if( !m_KeepLowestZ && UpPV==NULL){
+    if(msgLevel(MSG::DEBUG))
+      debug() <<"No PV match the requirements" << endmsg;
+    return StatusCode::SUCCESS;
+  }
   //Set the beam line
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particle::Range>( m_BLLoc ) ){
-      UpPV = GetUpstreamPV();
-      if(UpPV==NULL){
-	if(msgLevel(MSG::DEBUG))
-	  debug() <<"No PV match the requierments" << endmsg;
-	return StatusCode::SUCCESS;
-      }
       const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
       m_BeamLine->setReferencePoint( tmp->referencePoint() );
@@ -269,18 +275,12 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
       return StatusCode::SUCCESS;
     }
   } else if( m_RCut=="FromUpstreamPV" ){
-    const RecVertex * UpPV = GetUpstreamPV();
-    if(UpPV==NULL){
-      if(msgLevel(MSG::DEBUG))
-	debug() <<"No PV match the requierments" << endmsg;
-      return StatusCode::SUCCESS;
-    }
     m_BeamLine->setReferencePoint( UpPV->position() );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
     if(msgLevel(MSG::DEBUG))
       debug() <<"Upstream PV position "<< UpPV->position() << endmsg;
   }
-
+  
   if( m_UseMap ){ 
     m_map.clear(); //Re-initialize the map
     m_MapCalled = false; //The map hasn't been called yet.
@@ -303,7 +303,6 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
   RecVertex::ConstVector::const_iterator iend = RV.end();
   for( ; i != iend; ++i) {
     const RecVertex* rv = *i;
-    // If RV is upstream PV skip it
     const SmartRefVector< Track > & Tracks = rv->tracks();
     size = Tracks.size();
     double r = RFromBL( rv->position() ); //R to beam line
@@ -321,12 +320,9 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     //Do not change the PV into a particle ! (if any !)
     if( !m_KeepLowestZ ){
       if( i == RV.begin() ) continue;
-      //Do not keep if before the upPV
-      if( m_RCut=="FromUpstreamPV" && 
-          rv->position().z() < m_BeamLine->referencePoint().z() ) continue;
-    }
-    else{
-      if( rv->position().z() < UpPV->position().z() ) continue;
+      //Do not keep if upstream to the upPV
+      if( m_RCut != "" && 
+          rv->position().z() < UpPV->position().z() ) continue;
     }
 
     //PVs have no backward tracks
@@ -372,7 +368,8 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
       continue;
     }
 
-    if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_RemVtxFromDet==5 || m_SaveTuple ){
+    if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_RemVtxFromDet==5 || 
+        m_SaveTuple ){
       InitialiseGeoInfo();
     }    
     //Turn it into a Particle !
@@ -521,15 +518,15 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpPart.setReferencePoint( point );
     tmpPart.addInfo(52,r ); 
     //Store 51 info if found to be in detector material
-    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) tmpPart.addInfo(51,1.);
+    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
+      tmpPart.addInfo(51,1.);
  
     if( m_UseMap ){
       //Loop on RecVertex daughter tracks and save corresponding Particles
       for( ; iVtx != iVtxend; ++iVtx ){
         //debug()<<"Key "<< (*iVtx)->key() <<" type "
         //    <<(*iVtx)->type()  <<" slope "<< (*iVtx)->slopes() << endmsg;
-        //if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
-	if( !TestTrack( *iVtx ) ) continue;
+        if( !TestTrack( *iVtx ) ) continue;
         const int key = (*iVtx)->key();
         GaudiUtils::VectorMap<int, const Particle *>::const_iterator it;
 
@@ -542,7 +539,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //debug()<<"got Particle from map with slope "
           //     << part->slopes() <<endmsg;
         }
-
+        
         if( it == m_map.end() ) part = DefaultParticle(*iVtx);
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
@@ -566,8 +563,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
           //debug()<<"Mom should be the same "<< (*iVtx)->momentum() <<" "
           //       << pp->track()->momentum() << endmsg;
           //Make a Particle with best PID 
-          //if( (*iVtx)->chi2PerDoF() > m_TChi2 ) continue;
-	  if( !TestTrack( *iVtx ) ) continue;
+          if( !TestTrack( *iVtx ) ) continue;
           const Particle * part = MakeParticle( pp );
           tmpVtx.addToOutgoingParticles ( part );
           tmpPart.addToDaughters( part );
@@ -576,7 +572,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         }
       }      
     } else {
-
+      
       //Find all particles that have tracks in RecVertex
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
@@ -585,7 +581,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
         const Track * tk = (*j)->proto()->track();
-	if( !TestTrack( tk ) ) continue;
+        if( !TestTrack( tk ) ) continue;
         while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
           ++iVtx;
         }
@@ -673,6 +669,10 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
                 << endmsg;
       return false;   
     }
+
+    //Store 51 info if found to be in detector material
+    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
+      tmpPart.addInfo(51,1.);
     
     //Save Rec Particle in the Desktop
     RecParts.push_back( desktop()->keep( &tmpPart ) );
@@ -689,9 +689,12 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
 	      << " Chi2/NDoF " << RecParts.back()->endVertex()->chi2PerDoF()
 	      <<endmsg;
       Gaudi::XYZPoint pos = RecParts.back()->endVertex()->position();
-      debug() << "Pos of end vertex " << pos << " R "<< pos.rho() << endmsg;
+      debug() << "Pos of decay vertex " << pos << " R "<< pos.rho() << endmsg;
       debug() << "Number of associated tracks " 
 	      << RecParts.back()->daughtersVector().size() << endmsg;
+      double isindet = RecParts.back()->info(51,0.);
+      if( isindet > 0. )
+        debug() <<"Decay vertex found to be in detector material."<< endmsg;
       debug() << "----------------------------" << endmsg;
     }
   }
@@ -940,9 +943,11 @@ bool RecVertices2Particles::IsIsolated( const RecVertex* rv, RecVertex::ConstVec
 //  if = 1  : remove reco vtx if in detector material
 //  if = 2  : remove reco vtx if rad length from decay pos - DetDist 
 //            to decay pos + DetDist along momentum is > threshold
-//  if = 3 : remove reco vtx if rad length along 
+//  if = 3  : remove reco vtx if rad length along 
 //                             +- DetDist * PositionCovMatrix
-//  if = 4 : 3 but range+3 if in RF foil.
+//  if = 4  : 3 but range+3 if in RF foil.
+//  if = 5  : use home-made parametrisation of the detector material.
+
 //=============================================================================
 bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode, 
                                            double range ){
@@ -1048,12 +1053,12 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
 	    debug()<<"RV is too closed to a detector material --> disguarded !"
 		   << endmsg;
           return true;
-	}
+        }
       }
     }
   } // end of 3 and 4 cond
   else if( mode == 5 ){
-    const Gaudi::XYZPoint point = RV->position();
+    const Gaudi::XYZPoint & point = RV->position();
     Gaudi::XYZPoint posloc;
     bool inMat = false;
     //move to local Velo half frame
@@ -1076,15 +1081,16 @@ bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
   // First get the z bin
   int regModIndex(0);
   double downlimit(-1000.),uplimit(-1000.);
-  for (int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
+  for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
     downlimit=uplimit;
-    uplimit=(m_LeftSensorsCenter[mod].z()+(m_LeftSensorsCenter[mod+1].z()-m_LeftSensorsCenter[mod].z())/2);
+    uplimit=(m_LeftSensorsCenter[mod].z()+(m_LeftSensorsCenter[mod+1].z()-
+                                           m_LeftSensorsCenter[mod].z())/2);
     if( point.z()>downlimit && point.z()<uplimit ){
       regModIndex=mod;
       continue;
     }
   }
-  if (point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
+  if(point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
 
   // Is in vaccum clean cylinder?
   double r = sqrt(pow(point.x()-m_LeftSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_LeftSensorsCenter[regModIndex].y(),2));
@@ -1096,7 +1102,8 @@ bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
   // Is in the module area
   double halfModuleBoxThickness(1.75);
   if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
-    && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness)return true;
+      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness)
+    return true;
 
   // depending on z:
   // in the region of small corrugation
@@ -1107,19 +1114,22 @@ bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
     float largerCyl = 11.;
     float RlargerCyl = 9.;
     
-    if (fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
-	&& r < RsmallerCyl ) return false;
-    if (fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
-	&& r < RlargerCyl ) return false;
+    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
+       && r < RsmallerCyl ) return false;
+    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
+       && r < RlargerCyl ) return false;
   }
   
   // Is clearly outside RFFoil part
-  if (r<12.5 && point.z()<440.)return true;
-  if (fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && point.z()<440.)return true;
-  if (fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && point.z()>440.) return true;  
+  if(r<12.5 && point.z()<440.) return true;
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && 
+     point.z()<440.) return true;
+  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
+     point.z()>440.) return true;  
   return false;
   
 }
+
 bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
   // First get the z bin
   int regModIndex(0);
@@ -1132,7 +1142,8 @@ bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
       continue;
     }
   }
-  if (point.z()<800. && point.z()>uplimit)regModIndex=m_RightSensorsCenter.size()-1;
+  if(point.z()<800. && point.z()>uplimit)
+    regModIndex=m_RightSensorsCenter.size()-1;
   // Is in vaccum clean cylinder?
   double r = sqrt(pow(point.x()-m_RightSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_RightSensorsCenter[regModIndex].y(),2));
   
@@ -1143,7 +1154,7 @@ bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
   // is in the module area
   double halfModuleBoxThickness(1.75);
   if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
-    && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness)return true;
+      && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
   // depending on z:
   // in the region of small corrugation
   if(point.z()<300. && point.x()-m_RightSensorsCenter[regModIndex].x()<-4){
@@ -1154,9 +1165,9 @@ bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
     float RlargerCyl = 9.;
     
     if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>smallerCyl
-	&& r < RsmallerCyl ) return false;
+        && r < RsmallerCyl ) return false;
     if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>largerCyl
-	&& r < RlargerCyl ) return false;
+        && r < RlargerCyl ) return false;
   }
   // Is clearly outside RFFoil part
   if (r<12.5 && point.z()<450. ) return true;
@@ -1692,27 +1703,32 @@ void RecVertices2Particles::InitialiseGeoInfo(){
     for(;iLeftR!=velo->leftRSensorsEnd();iLeftR++){
       if((*iLeftR)->isPileUp())continue;
       const Gaudi::XYZPoint localCenter(0.,0.,0.);
-      const Gaudi::XYZPoint halfBoxRCenter = (*iLeftR)->localToVeloHalfBox (localCenter);
+      const Gaudi::XYZPoint halfBoxRCenter = 
+        (*iLeftR)->localToVeloHalfBox (localCenter);
       const DeVeloPhiType * phisens = (*iLeftR)->associatedPhiSensor () ;
       if(!(*iLeftR)->isPileUp()){
-	const Gaudi::XYZPoint halfBoxPhiCenter = phisens->localToVeloHalfBox (localCenter);
-	Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
+        const Gaudi::XYZPoint halfBoxPhiCenter = 
+          phisens->localToVeloHalfBox (localCenter);
+        Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
 				      halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
 				      halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
-	m_LeftSensorsCenter.push_back(halfBoxCenter);
+        m_LeftSensorsCenter.push_back(halfBoxCenter);
       }
     }
-    std::vector< DeVeloRType * >::const_iterator iRightR = velo->rightRSensorsBegin() ;
+    std::vector< DeVeloRType * >::const_iterator iRightR = 
+      velo->rightRSensorsBegin() ;
     for(;iRightR!=velo->rightRSensorsEnd();iRightR++){
       const Gaudi::XYZPoint localCenter(0.,0.,0.);
-      const Gaudi::XYZPoint halfBoxRCenter = (*iRightR)->localToVeloHalfBox (localCenter);
+      const Gaudi::XYZPoint halfBoxRCenter = 
+        (*iRightR)->localToVeloHalfBox (localCenter);
       const DeVeloPhiType * phisens = (*iRightR)->associatedPhiSensor () ;
       if(!(*iRightR)->isPileUp()){
-	const Gaudi::XYZPoint halfBoxPhiCenter = phisens->localToVeloHalfBox (localCenter);
-	Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
-				      halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
-				      halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
-	m_RightSensorsCenter.push_back(halfBoxCenter);
+        const Gaudi::XYZPoint halfBoxPhiCenter = 
+          phisens->localToVeloHalfBox (localCenter);
+        Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
+                                      halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
+                                      halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
+        m_RightSensorsCenter.push_back(halfBoxCenter);
       }
     }
   }
