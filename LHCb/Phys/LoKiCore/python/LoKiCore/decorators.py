@@ -1654,6 +1654,40 @@ def getAndDecoratePredicates ( name , base , calls , opers ) :
     funcs = getInherited ( name , base )
     return decoratePredicates ( funcs , calls , opers )  ## RETURN 
 # =============================================================================
+## get all primitive void functors and decorate them
+#  void -> double
+#  void -> bool
+def getAndDecoratePrimitiveVoids ( name ) :
+    """
+    Get all primitive void functors and decorate them
+    
+    void -> double
+    void -> bool
+    
+    """
+    ## void-stuff
+    _d = 'double'
+    _b = 'bool'
+    _v = 'void'
+    # void -> double 
+    _decorated   = getAndDecorateFunctions  (
+        name                                , ## module name 
+        LoKi.Functor        ( _v , _d )     , ## the base 
+        LoKi.Dicts.FunCalls ( _v      )     , ## call-traits 
+        LoKi.Dicts.FuncOps  ( _v , _v )       ## operators
+        )
+    
+    # void -> bool 
+    _decorated  |= getAndDecoratePredicates (
+        name                                , ## module name 
+        LoKi.Functor        ( _v , _b )     , ## the base 
+        LoKi.Dicts.CutCalls ( _v      )     , ## call-traits 
+        LoKi.Dicts.CutsOps  ( _v , _v )       ## operators
+        )
+    
+    return _decorated
+
+# =============================================================================
 # the special case of decoration of ID/ABSID functions:
 def decoratePID ( fun , opers ) :
     """
