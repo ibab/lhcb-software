@@ -4,6 +4,8 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r1 2010-10-25 =========================
+
 ! 2010-10-15 - Chris Jones
  - Add a new method to the Cherenkov angle tool interface to calculate the
    saturated CK theta angle for a give track segment (assuming it has infinite
