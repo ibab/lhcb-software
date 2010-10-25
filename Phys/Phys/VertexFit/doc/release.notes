@@ -4,6 +4,13 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2010-10-25 - Juan Palacios
+ - src/AdaptivePVReFitter.cpp
+  . Use const, pass by const reference wherever possible.
+  . Remove unnecessary const_casts.
+ - src/PVFitTrack.h
+  . Enable construction from Track, pass by const reference semantics.
+
 ! 2010-10-24 - Juan Palacios
  - src/PVReFitterAlg.cpp
   . Fix memory leak. New PVs not deleted when re-fitting fails.

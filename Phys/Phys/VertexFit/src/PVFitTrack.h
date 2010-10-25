@@ -6,7 +6,7 @@ class PVFitTrack
 private:
 
   // pointer to the reference track
-  LHCb::Track* m_track;
+  const LHCb::Track* m_track;
 
   // State of the track at the current point
   LHCb::State m_state;
@@ -19,15 +19,32 @@ private:
 
 public:
 
-  inline LHCb::Track* getTrack() { return m_track;  }
+  PVFitTrack()
+    :
+    m_track(0)
+  {
+  }
+  
 
-  inline LHCb::State getState() { return m_state;  }
+  explicit PVFitTrack(const LHCb::Track* track)
+    :
+    m_track(track),
+    m_state(track->firstState()),
+    m_weight(1.0),
+    m_slopes(ROOT::Math::SVector<double, 2>(m_state.tx(), m_state.ty()) )
+  {
+  }
+  
 
-  inline double getWeight() { return m_weight;  }
+  inline const LHCb::Track* getTrack() const { return m_track;  }
 
-  inline ROOT::Math::SVector<double,2> getFittedSlopes() { return m_slopes;  }
+  inline const LHCb::State& getState() const { return m_state;  }
 
-  void setTrack(LHCb::Track* tr)
+  inline double getWeight() const { return m_weight;  }
+
+  inline ROOT::Math::SVector<double,2> getFittedSlopes() const { return m_slopes;  }
+
+  void setTrack(const LHCb::Track* tr)
   {
     m_track = tr;
     m_state = tr->firstState();
@@ -35,11 +52,11 @@ public:
     m_slopes = ROOT::Math::SVector<double, 2>(m_state.tx(), m_state.ty());
   }
 
-  inline void setState(LHCb::State& s ) { m_state = s;  }
+  inline void setState(const LHCb::State& s ) { m_state = s;  }
 
   inline void setWeight(double w) { m_weight = w;  }
 
-  inline void setFittedSlopes(ROOT::Math::SVector<double,2>& sl) { m_slopes = sl;  }
+  inline void setFittedSlopes(const ROOT::Math::SVector<double,2>& sl) { m_slopes = sl;  }
   
 };
 

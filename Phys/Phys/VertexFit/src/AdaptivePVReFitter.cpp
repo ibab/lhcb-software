@@ -91,13 +91,15 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const {
  
   std::vector<PVFitTrack> fittracks;
 
-  SmartRefVector<LHCb::Track> pvtracks = primvtx->tracks();
-  for( SmartRefVector<LHCb::Track>::iterator trIt = pvtracks.begin();
-       pvtracks.end() != trIt; trIt++) {
-    LHCb::Track* track = *trIt;
+  const SmartRefVector<LHCb::Track>& pvtracks = primvtx->tracks();
+  SmartRefVector<LHCb::Track>::const_iterator trIt = pvtracks.begin();
+  SmartRefVector<LHCb::Track>::const_iterator trItEnd = pvtracks.end();
+
+  for( ; trItEnd != trIt; trIt++) {
+    const LHCb::Track* track = *trIt;
     if(!track) continue;
-    PVFitTrack aFitTrack;
-    aFitTrack.setTrack(track);
+    PVFitTrack aFitTrack(track);
+    //    aFitTrack.setTrack(track);
     fittracks.push_back(aFitTrack);
   }
 
@@ -127,14 +129,14 @@ StatusCode AdaptivePVReFitter::remove(const LHCb::Particle* part,
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  for( std::vector<const LHCb::Track*>::iterator idtrack = dautracks.begin();
+  for( std::vector<const LHCb::Track*>::const_iterator idtrack = dautracks.begin();
        dautracks.end() != idtrack; idtrack++ ) {
-    LHCb::Track* dauTrack = const_cast<LHCb::Track*>(*idtrack);
+    const LHCb::Track* dauTrack = *idtrack;
     bool isPVtr=false;
-    SmartRefVector<LHCb::Track> pvtracks = primvtx->tracks();
-    for( SmartRefVector<LHCb::Track>::iterator trIt = pvtracks.begin();
+    const SmartRefVector<LHCb::Track>& pvtracks = primvtx->tracks();
+    for( SmartRefVector<LHCb::Track>::const_iterator trIt = pvtracks.begin();
          pvtracks.end() != trIt; trIt++) {
-      LHCb::Track* tmptr = *trIt;
+      const LHCb::Track* tmptr = *trIt;
       if(tmptr==dauTrack) { isPVtr=true; break; }
     }
     if(!isPVtr) continue;
@@ -157,8 +159,11 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
   debug() <<"Now entering fitPV!"<<endreq;
 
-  if(fittracks.size()< m_minTrNumber) {
-    debug() << "number of track left for the PV "<< fittracks.size() <<endreq;
+  const size_t nTracks = fittracks.size();
+  
+
+  if(nTracks < m_minTrNumber) {
+    debug() << "number of track left for the PV "<< nTracks <<endreq;
     return StatusCode::FAILURE;
   }
 
@@ -170,46 +175,47 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
   double chi2Fit=0.;
 
   int Iter=0;
+
+  const std::vector<PVFitTrack>::iterator iFitTrBegin = fittracks.begin();
+  const std::vector<PVFitTrack>::iterator iFitTrEnd = fittracks.end();
+  std::vector<PVFitTrack>::iterator iFitTr;
+
   while(!converged && Iter < m_maxIter) 
   {
     debug() <<" Iteration " << Iter <<endreq;
 
-    Gaudi::XYZPoint PosPV = PV->position();
+    const Gaudi::XYZPoint& PosPV = PV->position();
 
     //expansion point
-    ROOT::Math::SVector<double, 3> Xn0;
-    Xn0[0] = PosPV.x();
-    Xn0[1] = PosPV.y();
-    Xn0[2] = PosPV.z();
+    const ROOT::Math::SVector<double, 3> Xn0(PosPV.x(),
+                                             PosPV.y(),
+                                             PosPV.z() );
 
-    double zref = Xn0[2];
+    const double zref = Xn0[2];
 
     //fit parameters
-    ROOT::Math::SVector<double, 3> Xn;
+    ROOT::Math::SVector<double, 3> Xn(0., 0., 0.);
     Gaudi::SymMatrix3x3 Cn;
     
     chi2Fit=0.;
-
-    Xn[0] = 0.;
-    Xn[1] = 0.;
-    Xn[2] = 0.;
 
     Cn(0,0) = 0.;
     Cn(1,1) = 0.;
     Cn(2,2) = 0.;
 
-    for( std::vector<PVFitTrack>::iterator iFitTr = fittracks.begin(); fittracks.end() != iFitTr; iFitTr++ )
+    iFitTr = iFitTrBegin;
+    for( ; iFitTr != iFitTrEnd ; ++iFitTr )
     {
       PVFitTrack& aFitTrack = *iFitTr;
-      LHCb::Track* tr =  aFitTrack.getTrack();
+      const LHCb::Track* tr =  aFitTrack.getTrack();
 
-      double wk = aFitTrack.getWeight();
+      const double wk = aFitTrack.getWeight();
       debug() <<" weight " << wk << endreq; 
 
-      LHCb::State statetr =  tr->firstState();
+      const LHCb::State& statetr =  tr->firstState();
       LHCb::State newstate =  statetr;
 
-      bool isVeloOnly = (tr->checkType( Track::Velo )) || (tr->checkType( Track::VeloR ));
+      const bool isVeloOnly = (tr->checkType( Track::Velo )) || (tr->checkType( Track::VeloR ));
       if(isVeloOnly) sc = m_veloExtrapolator->propagate( newstate, zref );
       else sc = m_fullExtrapolator->propagate( newstate, zref );
       if( sc.isFailure ()) {
@@ -220,11 +226,10 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       aFitTrack.setState(newstate);
 
       //pk is the measurements vector
-      ROOT::Math::SVector<double, 4> pk;
-      pk[0] = newstate.x();
-      pk[1] = newstate.y();
-      pk[2] = newstate.tx();
-      pk[3] = newstate.ty();
+      ROOT::Math::SVector<double, 4> pk(newstate.x(),
+                                        newstate.y(),
+                                        newstate.tx(),
+                                        newstate.ty() );
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
       if(Iter==0) {
@@ -283,19 +288,19 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
     }
     PV->setCovMatrix(Cn);
 
-    for( std::vector<PVFitTrack>::iterator iFitTr = fittracks.begin(); fittracks.end() != iFitTr; iFitTr++ )
+    iFitTr = iFitTrBegin;    
+    for ( ; iFitTr != iFitTrEnd; ++iFitTr )
     {
       PVFitTrack& aFitTrack = *iFitTr;
 
-      double wk = aFitTrack.getWeight();
+      const double wk = aFitTrack.getWeight();
 
-      LHCb::State statetr =   aFitTrack.getState();
+      const LHCb::State& statetr =   aFitTrack.getState();
 
-      ROOT::Math::SVector<double, 4> pk;
-      pk[0] = statetr.x();
-      pk[1] = statetr.y();
-      pk[2] = statetr.tx();
-      pk[3] = statetr.ty();
+      ROOT::Math::SVector<double, 4> pk(statetr.x(),
+                                        statetr.y(),
+                                        statetr.tx(),
+                                        statetr.ty() );
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
       if(Iter==0) {
@@ -346,22 +351,22 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
       Xn +=  Cn*(wk*(ROOT::Math::Transpose(Ak))*GBk*(pk-ck));
     }
-    Gaudi::XYZPoint position(Xn[0], Xn[1], Xn[2]);
-    PV->setPosition(position);
 
-    for( std::vector<PVFitTrack>::iterator iFitTr = fittracks.begin(); fittracks.end() != iFitTr; iFitTr++ )
+    PV->setPosition(Gaudi::XYZPoint(Xn[0], Xn[1], Xn[2]));
+
+    iFitTr = iFitTrBegin;    
+    for( ; iFitTr != iFitTrEnd ; ++iFitTr )
     {
       PVFitTrack& aFitTrack = *iFitTr;
 
-      double wk = aFitTrack.getWeight();
+      const double wk = aFitTrack.getWeight();
 
-      LHCb::State statetr =   aFitTrack.getState();
+      const LHCb::State& statetr =   aFitTrack.getState();
 
-      ROOT::Math::SVector<double, 4> pk;
-      pk[0] = statetr.x();
-      pk[1] = statetr.y();
-      pk[2] = statetr.tx();
-      pk[3] = statetr.ty();
+      ROOT::Math::SVector<double, 4> pk(statetr.x(),
+                                        statetr.y(),
+                                        statetr.tx(),
+                                        statetr.ty() );
 
       ROOT::Math::SVector<double, 2> qk0 = aFitTrack.getFittedSlopes();
       if(Iter==0) {
@@ -405,24 +410,24 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
         return StatusCode::FAILURE;
       }
 
-      Gaudi::SymMatrix2x2 Vs = statetr.errSlopes().Sub<Gaudi::SymMatrix2x2>(0,0);
+      //      Gaudi::SymMatrix2x2 Vs = statetr.errSlopes().Sub<Gaudi::SymMatrix2x2>(0,0);
 
-      ROOT::Math::SMatrix<double, 2, 2> Vxt = statetr.covariance().Sub<Gaudi::Matrix2x2>(0,2);     
+      const ROOT::Math::SMatrix<double, 2, 2> Vxt = statetr.covariance().Sub<Gaudi::Matrix2x2>(0,2);     
 
-      ROOT::Math::SMatrix<double, 2, 2> Vtx = ROOT::Math::Transpose(Vxt);
+      const ROOT::Math::SMatrix<double, 2, 2> Vtx = ROOT::Math::Transpose(Vxt);
 
       ROOT::Math::SMatrix<double, 2, 4> SBG ;
-      ROOT::Math::SMatrix<double, 2, 2> VtxVx = -Vtx*Vx ;
+      const ROOT::Math::SMatrix<double, 2, 2> VtxVx = -Vtx*Vx ;
       SBG.Place_at(VtxVx,0,0);
       SBG(0,2) =1.0;
       SBG(1,3) =1.0;
 
       //qk not explicitly affected by weight
-      ROOT::Math::SVector<double, 2> qk = SBG*(pk-ck-Ak*Xn);
+      const ROOT::Math::SVector<double, 2> qk = SBG*(pk-ck-Ak*Xn);
 
       aFitTrack.setFittedSlopes(qk);
 
-      ROOT::Math::SVector<double, 4> Delta4 = pk - ck - Ak*Xn - Bk*qk;
+      const ROOT::Math::SVector<double, 4> Delta4 = pk - ck - Ak*Xn - Bk*qk;
 
       Gaudi::SymMatrix4x4 Gk = statetr.covariance().Sub<Gaudi::SymMatrix4x4>(0,0);
       if(!Gk.Invert()) {
@@ -435,7 +440,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       chi2Fit+= wk*distSq;
 
       if(m_reweightTracks) {
-        double wknew = getNewWeight(distSq, Iter);
+        const double wknew = getNewWeight(distSq, Iter);
         aFitTrack.setWeight(wknew);   
       }
     }
@@ -454,7 +459,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
   
   PV->setChi2(chi2Fit);
-  int nDoF = 2*fittracks.size()-3;
+  const int nDoF = 2*nTracks-3;
   PV->setNDoF(nDoF);
 
   return sc;
@@ -489,11 +494,11 @@ void AdaptivePVReFitter::getFinalTracks(const LHCb::Particle* part,
 double AdaptivePVReFitter::getNewWeight(double& x, int& i) const
 {
   double T;
-  int tsize = m_temperatures.size();
+  const int tsize = m_temperatures.size();
   if(i<tsize) T = m_temperatures[i];
   else T = m_temperatures[tsize-1];
 
-  double w = 1/(1+exp((x-m_criticalPoint)/2./T));
+  const double w = 1/(1+exp((x-m_criticalPoint)/2./T));
 
   return w;
 }

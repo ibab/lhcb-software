@@ -204,7 +204,7 @@ void PVReFitter::getFinalTracks(const LHCb::Particle* part,
     SmartRefVector< LHCb::Particle >::const_iterator iProd;
     for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
       const LHCb::Particle* daughter = *iProd;
-      getFinalTracks(const_cast<LHCb::Particle*>(daughter), tracks);
+      getFinalTracks(daughter, tracks);
     }
   }
 }
