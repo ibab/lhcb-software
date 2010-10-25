@@ -4,6 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatKernel v2r3p2 2010-10-25 =========================
+
 ! 2010-10-06 - Olivier Callot
  - Change IPatDebugTool interface, add new methods to access the position of 
    a MCParticle specified by key at a specified z position.
