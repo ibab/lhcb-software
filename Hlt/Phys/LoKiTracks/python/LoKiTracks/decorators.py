@@ -122,24 +122,10 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.InfoOps (_pt)                        ) ## methods
     ##
 
-    ## void-stuff
-    _d = 'double'
-    _b = 'bool'
-    _v = 'void'
-    # void -> double 
-    _decorated  |= _LoKiCore.getAndDecorateFunctions  (
-        name                                             , ## module name 
-        LoKi.Functor        (_v,_d)                      , ## the base 
-        LoKi.Dicts.FunCalls (_v)                         , ## call-traits 
-        LoKi.Dicts.FuncOps  (_v,_v)                      ) ## operators
+
+    ## primitive voids:
     
-    # void -> bool 
-    _decorated  |= _LoKiCore.getAndDecoratePredicates (
-        name                                             , ## module name 
-        LoKi.Functor        (_v,_b)                      , ## the base 
-        LoKi.Dicts.CutCalls (_v)                         , ## call-traits 
-        LoKi.Dicts.CutsOps  (_v,_v)                      ) ## operators
-    
+    _decorated  |= _LoKiCore.getAndDecoratePrimitiveVoids ( name ) 
     
     return _decorated                            ## RETURN
 
