@@ -4,6 +4,11 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Ulrich Kerzel
+- fix saving particles to desktop
+- take Expertise from PARAM package if available, try locally if not
+- add network output/probability to ntuple
+
 ! 2010-10-22 - Ulrich Kerzel
 - fix requirements file, add StrippingNeuroBayesParam to requirements
 - add options file to test networks (for mumu)

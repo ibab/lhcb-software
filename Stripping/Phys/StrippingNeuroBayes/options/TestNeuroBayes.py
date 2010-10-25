@@ -34,20 +34,21 @@ jPsiNB.PlotHisto          = True
 jPsiNB.PlotMassMin        =  3.0
 jPsiNB.PlotMassMax        =  3.2
 jPsiNB.PlotNBins          = 120
-jPsiNB.Expertise          = 'mumu_net_noip.nb' 
+jPsiNB.Expertise          = 'Muon/mumu_net_noip.nb' 
 jPsiNB.NetworkVersion     = "TuneSep2010"
-jPsiNB.NetworkCut         = 0.75
+jPsiNB.NetworkCut         = 0.7
 
 
 mumuNB                    = StrippingNBMuMu("mumuNB")
-#mumuNB.OutputLevel        = 2
+#mumuNB.OutputLevel        = 1
 mumuNB.PlotHisto          = True
 mumuNB.PlotMassMin        =  0.0
 mumuNB.PlotMassMax        = 12.0
 mumuNB.PlotNBins          = 1000
-mumuNB.Expertise          = 'mumu_net_full.nb' 
+mumuNB.Expertise          = 'Muon/mumu_net_full.nb' 
 mumuNB.NetworkVersion     = "TuneSep2010"
-mumuNB.NetworkCut         = 0.95
+mumuNB.NetworkCut         = -1#0.95
+
 
 
 ########################################################################
@@ -59,23 +60,26 @@ from PhysSelPython.Wrappers import MergedSelection
 from PhysSelPython.Wrappers import SelectionSequence
 
 muons        = DataOnDemand('Phys/StdLooseMuons')
-jPsiSel      = Selection("jPsiSel"   , Algorithm = JPsi   , RequiredSelections = [ muons   ] )
-mumuSel      = Selection("mumuSel"   , Algorithm = MuMu   , RequiredSelections = [ muons   ] )
-jPsiNBSel    = Selection("jPsiNBSel" , Algorithm = jPsiNB , RequiredSelections = [ jPsiSel ] )
-mumuNBSel    = Selection("mumuNBSel" , Algorithm = mumuNB , RequiredSelections = [ mumuSel ] )
+jPsiSel      = Selection("jPsiSel"      , Algorithm = JPsi      , RequiredSelections = [ muons   ] )
+mumuSel      = Selection("mumuSel"      , Algorithm = MuMu      , RequiredSelections = [ muons   ] )
+jPsiNBSel    = Selection("jPsiNBSel"    , Algorithm = jPsiNB    , RequiredSelections = [ jPsiSel ] )
+mumuNBSel    = Selection("mumuNBSel"    , Algorithm = mumuNB    , RequiredSelections = [ mumuSel ] )
 
 SelSeqJPsi   = SelectionSequence("SeqJPsi"    , TopSelection = jPsiNBSel)
 SelSeqMuMu   = SelectionSequence("SeqMuMu"    , TopSelection = mumuNBSel)
+SelSeqMuMuAll= SelectionSequence("SeqMuMuAll" , TopSelection = mumuSel)
 
 SeqJPsi      = SelSeqJPsi.sequence()
 SeqMuMu      = SelSeqMuMu.sequence()
+SeqMuMuAll   = SelSeqMuMuAll.sequence()
+
 
 
 ########################################################################
 #
 # NTupling
 #
-from Configurables import DecayTreeTuple, PhysDesktop
+from Configurables import DecayTreeTuple
 tupleMuMu                =  DecayTreeTuple("tupleMuMu")
 tupleMuMu.InputLocations = [SelSeqMuMu.outputLocation()]
 tupleMuMu.Decay          = "J/psi(1S) -> ^mu+ ^mu-"
@@ -87,14 +91,16 @@ tupleMuMu.ToolList      += [
     , "TupleToolPid"
     , "TupleToolEventInfo"
     , "TupleToolPropertime"
-    ,"LoKi::Hybrid::TupleTool/LoKiTupleJpsi" 
+    ,"LoKi::Hybrid::TupleTool/LoKiTupleMuMu" 
      ]
 from Configurables import LoKi__Hybrid__TupleTool
 LoKiTupleMuMu = LoKi__Hybrid__TupleTool("LoKiTupleMuMu")
 LoKiTupleMuMu.Variables = {
-    "Charge" : "Q" ,
-    "DOCA" : "DOCA(1,2)",
-    "DOCAMAX" : "DOCAMAX"
+    "Charge"  : "Q" ,
+    "DOCA"    : "DOCA(1,2)",
+    "DOCAMAX" : "DOCAMAX",
+    "NetOut"  : "INFO(LHCb.Particle.LastGlobal+1, -999)",
+    "NetProb" : "INFO(LHCb.Particle.LastGlobal+2, -999)"
     }
 tupleMuMu.addTool(LoKiTupleMuMu)
 
@@ -105,8 +111,8 @@ tupleMuMu.addTool(LoKiTupleMuMu)
 
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
-CondDB(UseOracle = True)
-importOptions("$APPCONFIGOPTS/DisableLFC.py")
+#CondDB(UseOracle = True)
+#importOptions("$APPCONFIGOPTS/DisableLFC.py")
 
 
 # Remove the microbias and beam gas etc events before doing the tagging step
@@ -123,12 +129,12 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 DaVinci().HistogramFile              = "DVHistosNeuroBayes.root"
 DaVinci().TupleFile                  = "DVTupleNeuroBayes.root"
 DaVinci().EventPreFilters            = [ filterHLT ]
-#DaVinci().EvtMax                     = 5000;
-DaVinci().EvtMax                     = -1;
+DaVinci().EvtMax                     = 5000;
+#DaVinci().EvtMax                     = -1;
 DaVinci().DataType                   = "2010"
 
 DaVinci().Simulation                 = False
-DaVinci().UserAlgorithms             = [ SeqJPsi, SeqMuMu,
+DaVinci().UserAlgorithms             = [ SeqJPsi, SeqMuMu, SeqMuMuAll,
                                          tupleMuMu]
 
 DaVinci().DataType                   = "2010"
@@ -139,9 +145,9 @@ DaVinci().DDDBtag                    = "head-20101003" #"head-20100518" # "head-
 DaVinci().CondDBtag                  = "head-20101010" #"head-20100730" # "head-20100509"
 
 #DaVinci().SkipEvents = 20100
-#EventSelector().Input   = [
-#    "DATAFILE='PFN:/work/kerzel/00007574_00000133_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-#    ]
+EventSelector().Input   = [
+    "DATAFILE='PFN:/work/kerzel/00007574_00000133_1.minibias.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    ]
 
 #EventSelector().Input   = [
 #    "   DATAFILE='LFN:/lhcb/data/2010/SDST/00007951/0000/00007951_00001135_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",

@@ -88,16 +88,22 @@ StatusCode StrippingNBMuMu::initialize() {
   if ( m_ExpertiseName.empty() ) 
     return Error( "No NeuroBayes Expertise specified" );
 
-  // Expertise are in PARAM group of packages
-  //const std::string paramEnv = "STRIPPINGNEUROBAYESPARAMROOT";
-  //if ( !getenv(paramEnv.c_str()) ) 
-  //  return Error( "$"+paramEnv+" not set" );
-  //
-  //const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
-  //                                "/data/" + m_netVersion + "/" );
+  std::string fullPath;
 
-  //std::string fullPath = paramRoot+m_ExpertiseName;
-  std::string fullPath = m_ExpertiseName;
+  // Expertise are in PARAM group of packages
+  const std::string paramEnv = "STRIPPINGNEUROBAYESPARAMROOT";
+  if ( getenv(paramEnv.c_str()) ) {
+    debug() << "found environment for Expertise " << paramEnv << endmsg;
+    const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
+                                    "/data/" + m_netVersion + "/" );
+    fullPath = paramRoot+m_ExpertiseName;
+  } else {
+    warning() << "$"+paramEnv+" not set - try locally" << endmsg;
+    fullPath = m_ExpertiseName;
+  } // if paramEnv
+
+
+  info() << "Take Expertise from " << fullPath << endmsg;
      
   // FPE Guard for NB call
   FPE::Guard guard(true);
@@ -124,7 +130,7 @@ StatusCode StrippingNBMuMu::execute() {
 
 
   StatusCode sc = StatusCode::SUCCESS;
-  
+  LHCb::Particle::ConstVector acceptedParticles;
 
 #ifdef __GNUC__
 
@@ -185,14 +191,16 @@ StatusCode StrippingNBMuMu::execute() {
         } //if
 
         setFilterPassed(true);
-        particle->addInfo(LHCb::Particle::LastGlobal +  0, netOut);   
-        particle->addInfo(LHCb::Particle::LastGlobal +  1, prob);   
+        particle->addInfo(LHCb::Particle::LastGlobal +  1, netOut);   
+        particle->addInfo(LHCb::Particle::LastGlobal +  2, prob);   
         desktop()->keep ( particle ) ;
+        acceptedParticles.push_back(particle);
       } // if prob
     } // if sc
   } // for iCand
   
-  sc = desktop()->saveDesktop() ;
+
+  sc = desktop()->cloneTrees(acceptedParticles);
   return sc;
   
 #endif 
@@ -343,8 +351,6 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   // pre-cuts, if any
   // 
 
-  
-  info() << "==========================> TEST 5 " << std::endl;
   //
   // fill input array
   //
@@ -413,9 +419,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
     filledInput = true;
   } // if NoIP net
 
-  info() << "==========================> TEST 6 " << std::endl;
-
-  if (!filledInput) {
+   if (!filledInput) {
     warning() << "StrippingNBMuMu::getInputVar: Input variables not filled - which network?" << endmsg;
     return StatusCode::FAILURE;
   } //if
