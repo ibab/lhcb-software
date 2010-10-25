@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r0p1 2010-10-25 =========================
 ! 2010-10-18 - David Hutchcroft
  - Default is now now ERROR from the decoding (can override in options)
  - Fix for online trigger farm flooding with header bit errors 
