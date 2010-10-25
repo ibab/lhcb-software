@@ -1,11 +1,11 @@
 #
-# B->twobody selection for stripping. Uses selection framework. 
+# B->threebody selection for stripping. Uses selection framework. 
 #
 # Author: R. Oldeman
 #
 
-def B2twobodyLine(
-        moduleName = "B2twobody", 
+def B2threebodyLine(
+        moduleName = "B2threebody", 
 
 	MinBMass = 4500.0,     
 	MaxBMass = 8000.0,     
@@ -52,15 +52,6 @@ def B2twobodyLine(
         MinDPIDK = -5.0,
         MinDPIDp = -5.0,
 
- 	MaxKSDeltaM = 150.0, 
-        MinKSPt = 2000.0,      
-        MaxKSVertChi2DOF = 10.0,
-        MinKSPVVDChi2 = 100.0,
-        MinKSIPChi2 = 16.0,
-        MinKSDauPt = 500.0,      
-        MinKSDauIPChi2 = 16.0,      
-        MaxKSDauTrkChi2 = 5.0,
-
  	MaxPhDeltaM = 30.0, 
         MinPhPt = 1500.0,      
         MaxPhVertChi2DOF = 10.0,
@@ -105,9 +96,9 @@ def B2twobodyLine(
         MinPhoPt=3000.0,
    ) : 
 
-    from Configurables import CombineParticles, FilterDesktop
+    from Configurables import CombineParticles, FilterDesktop, LoKi__VoidFilter
     from StrippingConf.StrippingLine import StrippingLine
-    from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
+    from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection, EventSelection
 
     # Define the shared cuts
     Bcombcut =    "(in_range(%(MinBMass)s*MeV, AM, %(MaxBMass)s*MeV))" % locals()
@@ -132,7 +123,6 @@ def B2twobodyLine(
     StdDS      = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi")
     StdJp      = DataOnDemand(Location = "Phys/StdLooseDiMuon")
     StdPh      = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK")
-    StdKS      = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi")
     StdPi0M    = DataOnDemand(Location = "Phys/StdLooseMergedPi0")
     StdPi0R    = DataOnDemand(Location = "Phys/StdLooseResolvedPi0")
     StdPho     = DataOnDemand(Location = "Phys/StdLooseAllPhotons")
@@ -232,22 +222,6 @@ def B2twobodyLine(
     Ph.Code = Phcut
     PhSel  = Selection("PhSelFor" + moduleName,  Algorithm = Ph, RequiredSelections = [ StdPh  ] )
 
-    KS = FilterDesktop("KSFor" + moduleName)
-    KScut =  "(ADMASS('K*(892)0') < %(MaxKSDeltaM)s*MeV)"%locals()
-    KScut+="& ( PT > %(MinKSPt)s )"%locals()
-    KScut+="& ( VFASPF(VCHI2/VDOF) < %(MaxKSVertChi2DOF)s )"%locals()
-    KScut+="& ( BPVVDCHI2 > %(MinKSPVVDChi2)s )"%locals()
-    KScut+="& ( MIPCHI2DV(PRIMARY) > %(MinKSIPChi2)s )"%locals()
-    KScut+="& CHILDCUT ( MIPCHI2DV ( PRIMARY ) > %(MinKSDauIPChi2)s , 1 )"%locals()
-    KScut+="& CHILDCUT ( MIPCHI2DV ( PRIMARY ) > %(MinKSDauIPChi2)s , 2 )"%locals()
-    KScut+="& CHILDCUT ( PT > %(MinKSDauPt)s , 1 )"%locals()
-    KScut+="& CHILDCUT ( PT > %(MinKSDauPt)s , 2 )"%locals()
-    KScut+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 1 )"%locals()
-    KScut+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 2 )"%locals()
-    KS.Code = KScut
-    KSSel  = Selection("KSSelFor" + moduleName,  Algorithm = KS, RequiredSelections = [ StdKS  ] )
-
-
     # Heavy resonances 
     Jp = FilterDesktop("JpFor" + moduleName)
     Jpcut =  "( ADMASS('J/psi(1S)') < %(MaxJpDeltaM)s*MeV)"%locals()
@@ -317,7 +291,9 @@ def B2twobodyLine(
             p.cp=self
             self.cp=p
             return p
-
+        def isCP(self):
+            if self.cp.name==self.name: return True
+            else: return False
 
     # Define the particles (skip D_s+ since it's called D+)
     particles=[]
@@ -340,51 +316,67 @@ def B2twobodyLine(
     particles.append(particles[-1].CP("D*(2010)-" ))
     particles.append(particle(        "J/psi(1S)" ,2,   0,  0))
     particles.append(particle(        "phi(1020)" ,2,   0,  0))
-    particles.append(particle(        "K*(892)0"  ,2,   0,  0))
-    particles.append(particles[-1].CP("K*(892)~0" ))
+    #particles.append(particle(        "K*(892)0"  ,2,   0,  0))
+    #particles.append(particles[-1].CP("K*(892)~0" ))
     particles.append(particle(        "pi0"       ,0,   0,  0))
     particles.append(particle(        "gamma"     ,0,   0,  0))
 
-    #go through all twobody combinations
+    #alphabetically ordered name of particles
+    def pname(ps):
+        names=[]
+        for p in ps: names.append(p.name)
+        names.sort()
+        result=""
+        for name in names:
+            result=result+name+' '
+        return result[:-1]
+
+    #go through all threebody combinations
     descriptors = []
     for i1,p1 in enumerate(particles):
-        for i2,p2 in enumerate(particles[i1:]):
+        for i2,p2 in enumerate(particles):
+            for i3,p3 in enumerate(particles):
+                if i2<i1 or i3<i2: continue
 
-            #check for the number of vertex-constraining (pseudo)tracks
-            nvc=p1.nvc+p2.nvc
-            if nvc<MinNvc: continue
-            #check for charge and baryon number
-            Q=p1.Q+p2.Q
-            B=p1.B+p2.B
-            if abs(Q)>1: continue
-            if abs(B)>1: continue
-
-            #assign identity to mother 
-            mother=""
-            if Q==0  and B==0: mother="B0"
-            if Q==1  and B==0: mother="B+"
-            if Q==0  and B==1: mother="Lambda_b0"
-            if Q==-1 and B==1: mother="Xi_b-"
-            if Q==+1 and B==1: mother="Xi_bc+"
-            if mother=="": continue
-
-            #check if final state is CP eigenstate
-            CP=False
-            if p1.cp.name==p2.name:CP=True
-            if p1.cp.name==p1.name and p2.cp.name==p2.name:CP=True
-
-            #for B0 non-CP combinations come twice. 
-            if mother=="B0" and not CP and p1.name+p2.name<p1.cp.name+p2.cp.name:continue
-
-            #build the decay descriptor
-            descriptor=mother+" -> "+p1.name+" "+p2.name
-            if not CP:descriptor="["+descriptor+"]cc"
-            #print "DESCRIPTOR:",descriptor
-            descriptors.append(descriptor)
+                #check for the number of vertex-constraining (pseudo)tracks
+                nvc=p1.nvc+p2.nvc+p3.nvc
+                if nvc<MinNvc: continue
+                #check for charge and baryon number
+                Q=p1.Q+p2.Q+p3.Q
+                B=p1.B+p2.B+p3.B
+                if abs(Q)>1: continue
+                if abs(B)>1: continue
+                
+                #assign identity to mother 
+                mother=""
+                if Q==0  and B==0: mother="B0"
+                if Q==1  and B==0: mother="B+"
+                if Q==0  and B==1: mother="Lambda_b0"
+                if Q==-1 and B==1: mother="Xi_b-"
+                if Q==+1 and B==1: mother="Xi_bc+"
+                if mother=="": continue
+                
+                #check if final state is CP eigenstate
+                CP=False
+                if p1.cp.name==p2.name and p3.isCP(): CP=True
+                if p1.cp.name==p3.name and p2.isCP(): CP=True
+                if p2.cp.name==p3.name and p1.isCP(): CP=True
+                if p1.isCP() and p2.isCP() and p3.isCP(): CP=True
+                
+                #for B0 non-CP combinations come twice. 
+                if mother=="B0" and not CP:
+                    if pname((p1,p2,p3))<pname((p1.cp,p2.cp,p3.cp)):continue
+                
+                #build the decay descriptor
+                descriptor=mother+" -> "+pname((p1,p2,p3))
+                if not CP:descriptor="["+descriptor+"]cc"
+                #print "DESCRIPTOR:",descriptor
+                descriptors.append(descriptor)
 
     #make a merge of the input selections
-    AllSel=[PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,DSSel,JpSel,PhSel,KSSel,Pi0Sel,PhoSel]
-    InputSel= MergedSelection("InputForB2twobody", RequiredSelections = AllSel )
+    AllRSel=[PiSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,DSSel,JpSel,PhSel,Pi0Sel,PhoSel]
+    InputRSel= MergedSelection("RInputForB2threebody", RequiredSelections = AllRSel )
+    InputSel= MergedSelection("InputForB2threebody", RequiredSelections = [InputRSel,KSel,pSel] )
 
     #make a selection
     B=CombineParticles("BFor"+moduleName)
@@ -392,7 +384,12 @@ def B2twobodyLine(
     B.CombinationCut = Bcombcut
     B.MotherCut = Bcut
     BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [InputSel] )
+    Bpresel= EventSelection(
+        LoKi__VoidFilter("BpreselFor"+moduleName,
+                         Code=" (CONTAINS('%s') > 2.5) " %  ( InputRSel.outputLocation() + "/Particles" ) ),
+        RequiredSelection=InputRSel
+    )
 
-    line = StrippingLine("B2twobodyLine",  algos = [BSel] )
+    line = StrippingLine("B2threebodyLine",  algos = [Bpresel,BSel] )
 
     return [line]
