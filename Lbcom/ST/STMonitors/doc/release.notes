@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 Mark Tobin
+ - Add new algorithm to monitor raw bank size / tell1 : STDataSizeMonitor
+ 
 ! 2010-10-14 Mark Tobin
  - Adapt STNZSMonitor to use new ST noise tool interface.
 
