@@ -6,6 +6,8 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiNumbers v9r4 2010-10-25 =========================
+
 ! 2010-10-10 - Vanya Belyaev
  - add blinding functions 
  - cmt/requirements
