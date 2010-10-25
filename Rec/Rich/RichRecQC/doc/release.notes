@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-10-25 - Chris Jones
+ - Improve HPD plots in data size monitoring by including entries when no
+   data is sent.
+
 ! 2010-10-18 - Chris Jones
  - Add a new option to the python Configurable to allow the CK theta 
    resolution histogram ranges to be set.
