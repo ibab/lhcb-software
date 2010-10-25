@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-10-25 Silvia Borghi
+ - Update the Velo Detector and Module survey with the proper z position
+
 </PRE><H1><A NAME=v5r2>2010-10-08 TAlignment v5r2</A></H1><PRE> 
 
 ! 2010-10-15 M Needham

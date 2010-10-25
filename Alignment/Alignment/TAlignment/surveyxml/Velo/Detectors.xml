@@ -1,445 +1,93 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
-
-  <condition classID="6" name="DetectorPU00-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="DetectorPU01-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="DetectorPU02-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="DetectorPU03-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector00-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector00-01">
-    <paramVector name="dPosXYZ" type="double">-0.005 -0.012 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001195 -0.000054</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector01-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector01-01">
-    <paramVector name="dPosXYZ" type="double">0.001 -0.015 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0.000167 -0.000124</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector02-00">
-    <paramVector name="dPosXYZ" type="double">0.006 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001330 -0.000007</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector02-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector03-00">
-    <paramVector name="dPosXYZ" type="double">-0.000 -0.009 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000756 0.000058</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector03-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector04-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector04-01">
-    <paramVector name="dPosXYZ" type="double">0.006 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000685 0.000020</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector05-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector05-01">
-    <paramVector name="dPosXYZ" type="double">0.005 -0.005 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001110 -0.000017</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector06-00">
-    <paramVector name="dPosXYZ" type="double">0.008 -0.000 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001574 -0.000019</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector06-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector07-00">
-    <paramVector name="dPosXYZ" type="double">0.002 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000947 0.000047</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector07-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector08-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector08-01">
-    <paramVector name="dPosXYZ" type="double">-0.007 0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001155 0.000050</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector09-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector09-01">
-    <paramVector name="dPosXYZ" type="double">0.002 -0.009 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000283 -0.000045</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector10-00">
-    <paramVector name="dPosXYZ" type="double">-0.003 0.005 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001116 -0.000053</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector10-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector11-00">
-    <paramVector name="dPosXYZ" type="double">0.002 0.009 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000736 0.000016</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector11-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector12-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector12-01">
-    <paramVector name="dPosXYZ" type="double">-0.005 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001186 0.000082</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector13-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector13-01">
-    <paramVector name="dPosXYZ" type="double">0.001 0.004 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001005 -0.000040</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector14-00">
-    <paramVector name="dPosXYZ" type="double">0.004 -0.004 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000831 -0.000073</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector14-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector15-00">
-    <paramVector name="dPosXYZ" type="double">0.002 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001174 0.000056</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector15-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector16-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector16-01">
-    <paramVector name="dPosXYZ" type="double">-0.003 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000904 0.000015</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector17-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector17-01">
-    <paramVector name="dPosXYZ" type="double">0.004 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000684 -0.000037</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector18-00">
-    <paramVector name="dPosXYZ" type="double">-0.004 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001040 0.000012</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector18-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector19-00">
-    <paramVector name="dPosXYZ" type="double">-0.000 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000665 0.000010</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector19-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector20-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector20-01">
-    <paramVector name="dPosXYZ" type="double">0.006 -0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000332 0.000040</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector21-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector21-01">
-    <paramVector name="dPosXYZ" type="double">0.005 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000609 -0.000044</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector22-00">
-    <paramVector name="dPosXYZ" type="double">-0.005 -0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000031 -0.000015</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector22-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector23-00">
-    <paramVector name="dPosXYZ" type="double">0.004 -0.005 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001145 0.000023</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector23-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector24-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector24-01">
-    <paramVector name="dPosXYZ" type="double">0.001 -0.007 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000697 0.000027</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector25-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector25-01">
-    <paramVector name="dPosXYZ" type="double">-0.003 0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001173 -0.000069</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector26-00">
-    <paramVector name="dPosXYZ" type="double">0.005 -0.000 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001265 -0.000046</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector26-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector27-00">
-    <paramVector name="dPosXYZ" type="double">-0.020 0.049 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0.002989 0.000051</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector27-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector28-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector28-01">
-    <paramVector name="dPosXYZ" type="double">-0.003 -0.005 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000515 0.000038</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector29-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector29-01">
-    <paramVector name="dPosXYZ" type="double">-0.024 -0.018 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0.002713 -0.000027</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector30-00">
-    <paramVector name="dPosXYZ" type="double">0.005 0.006 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000844 -0.000034</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector30-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector31-00">
-    <paramVector name="dPosXYZ" type="double">0.003 -0.000 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000824 0.000036</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector31-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector32-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector32-01">
-    <paramVector name="dPosXYZ" type="double">0.001 -0.004 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000515 -0.000014</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector33-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector33-01">
-    <paramVector name="dPosXYZ" type="double">0.004 -0.004 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001281 -0.000055</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector34-00">
-    <paramVector name="dPosXYZ" type="double">-0.011 0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001030 -0.000050</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector34-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector35-00">
-    <paramVector name="dPosXYZ" type="double">0.004 0.007 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000645 0.000059</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector35-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector36-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector36-01">
-    <paramVector name="dPosXYZ" type="double">-0.002 -0.002 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001137 0.000104</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector37-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector37-01">
-    <paramVector name="dPosXYZ" type="double">0.002 0.051 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001421 -0.000062</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector38-00">
-    <paramVector name="dPosXYZ" type="double">-0.007 0.007 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001128 -0.000105</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector38-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector39-00">
-    <paramVector name="dPosXYZ" type="double">0.002 0.003 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000554 -0.000017</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector39-01">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector40-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector40-01">
-    <paramVector name="dPosXYZ" type="double">-0.001 0.001 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.001185 0.000109</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector41-00">
-    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
-  </condition>
-
-  <condition classID="6" name="Detector41-01">
-    <paramVector name="dPosXYZ" type="double">0.002 -0.006 0</paramVector>
-    <paramVector name="dRotXYZ" type="double">0 -0.000945 -0.000057</paramVector>
-  </condition>
+<condition classID="6" name="DetectorPU00-00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
+<condition classID="6" name="DetectorPU01-00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
+<condition classID="6" name="DetectorPU02-00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
+<condition classID="6" name="DetectorPU03-00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
+<condition classID="6" name="Detector00-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector00-01"><paramVector name="dPosXYZ" type="double">-0.005 -0.012 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001195 -5.4e-05</paramVector></condition>
+<condition classID="6" name="Detector01-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector01-01"><paramVector name="dPosXYZ" type="double">0.001 -0.015 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.000167 -0.000124</paramVector></condition>
+<condition classID="6" name="Detector02-00"><paramVector name="dPosXYZ" type="double">0.006 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.00133 -7e-06</paramVector></condition>
+<condition classID="6" name="Detector02-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector03-00"><paramVector name="dPosXYZ" type="double">-0.0 -0.009 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000756 5.8e-05</paramVector></condition>
+<condition classID="6" name="Detector03-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector04-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector04-01"><paramVector name="dPosXYZ" type="double">0.006 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000685 2e-05</paramVector></condition>
+<condition classID="6" name="Detector05-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector05-01"><paramVector name="dPosXYZ" type="double">0.005 -0.005 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.00111 -1.7e-05</paramVector></condition>
+<condition classID="6" name="Detector06-00"><paramVector name="dPosXYZ" type="double">0.008 -0.0 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001574 -1.9e-05</paramVector></condition>
+<condition classID="6" name="Detector06-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector07-00"><paramVector name="dPosXYZ" type="double">0.002 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000947 4.7e-05</paramVector></condition>
+<condition classID="6" name="Detector07-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector08-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector08-01"><paramVector name="dPosXYZ" type="double">-0.007 0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001155 5e-05</paramVector></condition>
+<condition classID="6" name="Detector09-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector09-01"><paramVector name="dPosXYZ" type="double">0.002 -0.009 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000283 -4.5e-05</paramVector></condition>
+<condition classID="6" name="Detector10-00"><paramVector name="dPosXYZ" type="double">-0.003 0.005 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001116 -5.3e-05</paramVector></condition>
+<condition classID="6" name="Detector10-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector11-00"><paramVector name="dPosXYZ" type="double">0.002 0.009 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000736 1.6e-05</paramVector></condition>
+<condition classID="6" name="Detector11-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector12-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector12-01"><paramVector name="dPosXYZ" type="double">-0.005 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001186 8.2e-05</paramVector></condition>
+<condition classID="6" name="Detector13-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector13-01"><paramVector name="dPosXYZ" type="double">0.001 0.004 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001005 -4e-05</paramVector></condition>
+<condition classID="6" name="Detector14-00"><paramVector name="dPosXYZ" type="double">0.004 -0.004 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000831 -7.3e-05</paramVector></condition>
+<condition classID="6" name="Detector14-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector15-00"><paramVector name="dPosXYZ" type="double">0.002 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001174 5.6e-05</paramVector></condition>
+<condition classID="6" name="Detector15-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector16-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector16-01"><paramVector name="dPosXYZ" type="double">-0.003 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000904 1.5e-05</paramVector></condition>
+<condition classID="6" name="Detector17-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector17-01"><paramVector name="dPosXYZ" type="double">0.004 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000684 -3.7e-05</paramVector></condition>
+<condition classID="6" name="Detector18-00"><paramVector name="dPosXYZ" type="double">-0.004 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.00104 1.2e-05</paramVector></condition>
+<condition classID="6" name="Detector18-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector19-00"><paramVector name="dPosXYZ" type="double">-0.0 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000665 1e-05</paramVector></condition>
+<condition classID="6" name="Detector19-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector20-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector20-01"><paramVector name="dPosXYZ" type="double">0.006 -0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000332 4e-05</paramVector></condition>
+<condition classID="6" name="Detector21-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector21-01"><paramVector name="dPosXYZ" type="double">0.005 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000609 -4.4e-05</paramVector></condition>
+<condition classID="6" name="Detector22-00"><paramVector name="dPosXYZ" type="double">-0.005 -0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -3.1e-05 -1.5e-05</paramVector></condition>
+<condition classID="6" name="Detector22-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector23-00"><paramVector name="dPosXYZ" type="double">0.004 -0.005 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001145 2.3e-05</paramVector></condition>
+<condition classID="6" name="Detector23-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector24-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector24-01"><paramVector name="dPosXYZ" type="double">0.001 -0.007 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000697 2.7e-05</paramVector></condition>
+<condition classID="6" name="Detector25-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector25-01"><paramVector name="dPosXYZ" type="double">-0.003 0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001173 -6.9e-05</paramVector></condition>
+<condition classID="6" name="Detector26-00"><paramVector name="dPosXYZ" type="double">0.005 -0.0 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001265 -4.6e-05</paramVector></condition>
+<condition classID="6" name="Detector26-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector27-00"><paramVector name="dPosXYZ" type="double">-0.02 0.049 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.002989 5.1e-05</paramVector></condition>
+<condition classID="6" name="Detector27-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector28-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector28-01"><paramVector name="dPosXYZ" type="double">-0.003 -0.005 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000515 3.8e-05</paramVector></condition>
+<condition classID="6" name="Detector29-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector29-01"><paramVector name="dPosXYZ" type="double">-0.024 -0.018 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.002713 -2.7e-05</paramVector></condition>
+<condition classID="6" name="Detector30-00"><paramVector name="dPosXYZ" type="double">0.005 0.006 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000844 -3.4e-05</paramVector></condition>
+<condition classID="6" name="Detector30-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector31-00"><paramVector name="dPosXYZ" type="double">0.003 -0.0 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000824 3.6e-05</paramVector></condition>
+<condition classID="6" name="Detector31-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector32-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector32-01"><paramVector name="dPosXYZ" type="double">0.001 -0.004 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000515 -1.4e-05</paramVector></condition>
+<condition classID="6" name="Detector33-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector33-01"><paramVector name="dPosXYZ" type="double">0.004 -0.004 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001281 -5.5e-05</paramVector></condition>
+<condition classID="6" name="Detector34-00"><paramVector name="dPosXYZ" type="double">-0.011 0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.00103 -5e-05</paramVector></condition>
+<condition classID="6" name="Detector34-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector35-00"><paramVector name="dPosXYZ" type="double">0.004 0.007 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000645 5.9e-05</paramVector></condition>
+<condition classID="6" name="Detector35-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector36-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector36-01"><paramVector name="dPosXYZ" type="double">-0.002 -0.002 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001137 0.000104</paramVector></condition>
+<condition classID="6" name="Detector37-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector37-01"><paramVector name="dPosXYZ" type="double">0.002 0.051 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001421 -6.2e-05</paramVector></condition>
+<condition classID="6" name="Detector38-00"><paramVector name="dPosXYZ" type="double">-0.007 0.007 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001128 -0.000105</paramVector></condition>
+<condition classID="6" name="Detector38-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector39-00"><paramVector name="dPosXYZ" type="double">0.002 0.003 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000554 -1.7e-05</paramVector></condition>
+<condition classID="6" name="Detector39-01"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector40-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector40-01"><paramVector name="dPosXYZ" type="double">-0.001 0.001 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.001185 0.000109</paramVector></condition>
+<condition classID="6" name="Detector41-00"><paramVector name="dPosXYZ" type="double">0.0 0.0 0.0</paramVector><paramVector name="dRotXYZ" type="double">0.0 0.0 0.0</paramVector></condition>
+<condition classID="6" name="Detector41-01"><paramVector name="dPosXYZ" type="double">0.002 -0.006 -0.3</paramVector><paramVector name="dRotXYZ" type="double">0.0 -0.000945 -5.7e-05</paramVector></condition>
  
 </DDDB>
