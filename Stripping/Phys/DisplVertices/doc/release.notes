@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-10-25 - Neal Gauvin
+ - Allow checking the first RV with FromBeamLine method.
+
+! 2010-10-25 - Neal Gauvin
  - Check consistency of newly added features.
 
 ! 2010-10-25 - Victor Coco

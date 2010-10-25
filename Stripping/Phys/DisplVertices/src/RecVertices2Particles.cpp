@@ -252,10 +252,10 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
   //Check track and Particle content
   //PrintTrackandParticles();
 
-  // Initialize the RCut Method. In both case get the UpPV
+  //Require a upstream PV for both FromBeamLine and FromUpstreamPV methods.
   const RecVertex * UpPV = NULL;
   UpPV = GetUpstreamPV();
-  if( !m_KeepLowestZ && UpPV==NULL){
+  if( m_RCut != "" && UpPV==NULL){
     if(msgLevel(MSG::DEBUG))
       debug() <<"No PV match the requirements" << endmsg;
     return StatusCode::SUCCESS;
@@ -318,12 +318,12 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     }
 
     //Do not change the PV into a particle ! (if any !)
-    if( !m_KeepLowestZ ){
-      if( i == RV.begin() ) continue;
-      //Do not keep if upstream to the upPV
-      if( m_RCut != "" && 
-          rv->position().z() < UpPV->position().z() ) continue;
-    }
+    if( !m_KeepLowestZ and i == RV.begin() ) continue;
+
+    //Do not keep if upstream to the upPV
+    if( m_RCut != "" && 
+        rv->position().z() < UpPV->position().z() ) continue;
+
 
     //PVs have no backward tracks
     if( HasBackwardTracks(rv) ){ 
