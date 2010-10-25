@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-25 - W. Bonivento
+
+  add untagged stripping lines for D0->mumu
 
 ! 2010-10-25 - Vanya Belyaev
 

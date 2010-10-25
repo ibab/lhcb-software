@@ -15,7 +15,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
     """
     Definition of  D*(2010)+ -> pi+ (D0->xx) stripping
     """
-    __slots__ = { 'PrescalepipiBox'     : 1.
+    __slots__ = {   'PrescalepipiBox'     : 1.
                   , 'PrescalemumuBox'     : 1.
                   , 'PrescaleKpiBox'    : 1.
                   , 'PrescaleemuBox'    : 1.
@@ -23,7 +23,13 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
                   , 'PrescaleepiBox'    : 1.
                   , 'PrescalepimuBox'    : 1.
                   , 'PrescaleKmuBox'    : 1.
+                  , 'Prescalepipi_untagged_Box'     : 0.2
+                  , 'Prescalemumu_untagged_Box'     : 1.
+                  , 'PrescaleKpi_untagged_Box'    : 0.2
+                  , 'Prescalepimu_untagged_Box'    : 1.
+                  , 'PrescaleKmu_untagged_Box'    : 0.2  
                   ,'DMassWin'           : 70.       # MeV
+                  ,'DMassWinMuMu'       : 300       #MeV
                   ,'doca'               : 0.1        # mm
                   ,'XminPT'             : 750.       # MeV
                   ,'XmaxPT'             : 1100.      # MeV
@@ -41,6 +47,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
                   ,'PiMaxIPCHI2'        : 10.         # adimensional
                   ,'DstMassWin'         : 110.       # MeV
                   ,'DstD0DMWin'         : 10.        # MeV
+                  ,'DstD0DMWinMuMu'      : 30.        # MeV  
                   ,'RequireHlt'         : 1          # 
                   ,'LinePrefix'         : '' 
                   }
@@ -65,7 +72,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWin)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
 
         d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) " 
-        d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (INGENERATION( (BPVIPCHI2()>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
+        d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (INGENERATION( (MIPCHI2DV(PRIMARY)>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
         name = "D02"+xplus+xminus
         tbline = CombineParticles( self.getProp('LinePrefix')+name )
         inputLoc = {
@@ -128,7 +135,25 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
 
         return line_box
     
-    
+    def baseLine_untagged(self, xplus, xminus) :
+        from StrippingConf.StrippingLine import bindMembers
+        from StrippingConf.StrippingLine import StrippingLine
+        xxComb = self.combinetwobody(xplus, xminus)
+#        dstar = self.combineDstar()
+        combname = xplus+xminus
+#        dstar_box = dstar.clone(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"D0PiComb" )
+#        dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", self.getProp('LinePrefix')+"D02"+combname ]
+        seq_box =  bindMembers(self.getProp('LinePrefix')+"seq_"+combname+"_untagged__box", algos = [ xxComb])
+        pres = "Prescale"+combname+"_untagged_Box"
+        # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
+        Xplus  = xplus[0].upper() + xplus[1:]    
+        Xminus = xminus[0].upper() + xminus[1:]
+        hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
+        line_untagged_box = StrippingLine(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"_untagged_Box",
+                                 HLT = "HLT_PASS_RE('"+hltname+"')",
+                                 algos = [ seq_box ], prescale = self.getProps()[ pres ])
+
+        return line_untagged_box    
     
     def lines ( self ) :
         from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
@@ -146,10 +171,14 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         line_mue_box  = self.baseLine("e",  "mu")
         line_pimu_box = self.baseLine("pi", "mu")
         line_Kmu_box  = self.baseLine("K",  "mu")
+        line_mumu_untagged_box  = self.baseLine_untagged("mu",  "mu")
+        line_Kmu_untagged_box  = self.baseLine_untagged("K",  "mu")
+        line_pipi_untagged_box  = self.baseLine_untagged("pi",  "pi")
+        line_Kpi_untagged_box  = self.baseLine_untagged("K",  "pi")
+        line_pimu_untagged_box = self.baseLine_untagged("pi", "mu")
         
         
-        
-        lines = [line_pipi_box, line_mumu_box,line_pimu_box, line_Kpi_box, line_mue_box, line_eK_box,line_epi_box, line_Kmu_box]
+        lines = [line_pipi_box, line_mumu_box,line_pimu_box, line_Kpi_box, line_mue_box, line_eK_box,line_epi_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box,line_pimu_untagged_box]
         
         return lines
     
