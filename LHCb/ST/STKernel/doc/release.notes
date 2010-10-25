@@ -3,6 +3,8 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r5 2010-10-25 =========================
+
 ! 2010-10-14 Mark Tobin
  - Add method in ISTNoiseCalculationTool to return the number of events used per
  strip in the calculation of the noise.
