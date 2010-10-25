@@ -4,6 +4,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v10r7 2010-10-25 =========================
 
 ! 2010-10-22 - Olivier Deschamps
   - CellParam : protect CaloCellQuality::Name against unexpected quality flag.
