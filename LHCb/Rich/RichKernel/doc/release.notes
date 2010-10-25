@@ -4,6 +4,8 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r39 2010-10-25 =========================
+
 ! 2010-10-17 - Chris Jones
  - Clean up the base class constructors, moving all initialisations
    into one place in methods called from the constructors.
