@@ -1,4 +1,4 @@
-// $Id: Archive.cpp,v 1.89 2010-10-01 12:52:26 frankb Exp $
+// $Id: Archive.cpp,v 1.90 2010-10-26 18:33:30 robbep Exp $
 // This Class
 #include "Archive.h"
 
@@ -159,8 +159,15 @@ void Archive::fillHistogram(DbRootHist* histogram,
 
       TList* list = new TList;
       while ( foundRootFilesIt != foundRootFiles.end( ) ) {
-        TFile * rootFile = 
-          TFile::Open( (*foundRootFilesIt).file_string().c_str() ) ;
+	TFile * rootFile = TFile::Open( (*foundRootFilesIt).file_string().c_str() ) ;
+	if ( 0 == rootFile ) {
+	  std::cout << "Error reading file " << (*foundRootFilesIt).file_string() 
+		    << std::endl 
+		    << "History not available !" 
+		    << std::endl ;
+	  break ;
+	}
+	
         if ( rootFile -> IsZombie() )
           std::cout << "Error opening Root file: " 
                     << (*foundRootFilesIt).file_string() << std::endl;

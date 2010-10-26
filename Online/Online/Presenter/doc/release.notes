@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-10-26 - Patrick Robbe
+ - Archive.cpp: Protect against corrupted history files
+
 ! 2010-10-19 - Giacomo Graziani
 - fix problem with conflicting history modes (history from files and alarm display were not
   working after using history by run)
