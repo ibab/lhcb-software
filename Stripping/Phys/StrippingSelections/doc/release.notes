@@ -17,6 +17,11 @@
   Also, add loose PID on Pions in the (3H) bachelor. UnbiasedLine B-->D(PiPiPi) line
   is prescaled. 
 
+! 2010-10-26 - Katarzyna Senderowska
+ - Updated StrippingBs2ChicPhi_Chic2KKPiPi.py and StrippingBs2ChicPhi_Chic2PiPiPiPi.py
+    - Removed TrChi2 cut 
+    - Changed values of PT cuts and IPS cuts
+
 ! 2010-10-26 - Walter Bonivento
 - Updated StrippingB2twobody_prompt.py: bugfix and reduce timing and retention
 
