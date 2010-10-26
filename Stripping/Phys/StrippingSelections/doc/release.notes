@@ -4,6 +4,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-26 Walter Bonivento
+ - Updated StrippingB2twobody_prompt.py including neutrals; improved timing and rejection
 
 ! 2010-10-26 - Roel Aaij
  - Updated StrippingB2JpsiXforBeta_s
