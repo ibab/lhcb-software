@@ -1,6 +1,0 @@
-<lcgdict>
-  <class name = "std::vector<const LHCb::Node*>" />
-  <class name = "Gaudi::Range_<std::vector<const LHCb::Node*> >" />
-  <class name = "LHCb::OTLiteTime" />
-  <class name = "LHCb::OTLiteTime::Vector"  />
-</lcgdict>
