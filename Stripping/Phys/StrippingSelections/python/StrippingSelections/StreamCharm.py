@@ -34,7 +34,7 @@ from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 #from StrippingSelections.StrippingDstarVeryLooseWithD02HH import StrippingDstarVeryLooseWithD02HHConf
 from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
-#from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
 #from StrippingSelections.StrippingDstarD02xxForCross import  StrippingDstarD02xxForCrossConf
 from StrippingSelections.StrippingCcbar2Ppbar import StrippingCcbar2PpbarConf
 from StrippingSelections.StrippingD0ForBXX import StrippingD0forBXXConf
@@ -48,7 +48,7 @@ from StrippingSelections.StrippingDs2piPhiNoPt import StrippingDs2piPhiConf
 from StrippingSelections.StrippingD02K3Pi import StrippingD02K3PiForXSectionConf 
 
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
-
+from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
 stream = StrippingStream("Charm")
 
 stream.appendLines( [
@@ -132,13 +132,13 @@ stream.appendLines( [
 #        , StrippingDstarD02KKmumuRegular.line1
           ,StrippingDs2piPhiConf().line() 
     ] )
-
+stream.appendLines( [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ] )
 stream.appendLines( StrippingDstarD02KKmumuRegularConf().lines )
 stream.appendLines( StrippingDstarD02KKpipiRegularConf().lines )
 
 stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
-#stream.appendLines( StrippingDstarD02xxConf().lines() )
+stream.appendLines( StrippingDstarD02xxConf().lines() )
 #stream.appendLines( StrippingDstarD02xxForCrossConf().lines() )
 # Charmonium -> p pbar
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )

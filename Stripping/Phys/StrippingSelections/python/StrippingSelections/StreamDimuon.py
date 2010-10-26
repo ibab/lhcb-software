@@ -40,6 +40,7 @@ from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
 
 
 from StrippingSelections.StrippingDKPiMu import StrippingDKPiMuConf
+from StrippingSelections.StrippingJpsiMuMuforD0MuMu import JpsiMuMuforD0MuMuConf
 
 from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
 
@@ -47,6 +48,9 @@ from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
 
 stream = StrippingStream("Dimuon")
+
+FullDSTJpsiMuMuforD0MuMuConf = JpsiMuMuforD0MuMuConf( config = JpsiMuMuforD0MuMuConf.config_default )
+stream.appendLines( FullDSTJpsiMuMuforD0MuMuConf.Lines )
 
 FullDSTDiMuonConf = DiMuonConf( config = DiMuonConf.config_default )
 stream.appendLines( FullDSTDiMuonConf.Lines )

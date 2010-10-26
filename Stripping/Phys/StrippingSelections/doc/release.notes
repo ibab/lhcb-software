@@ -5,6 +5,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Walter Bonivento
+ update StrippingSelections/streamcharm,dimuon,bhadron
 ! 2010-10-26 - Jibo He
  - python/StrippingSelections/StrippingDiElectronNew.py
    Set checkPV to False for unbiased lines 
