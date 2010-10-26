@@ -4,11 +4,15 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-26 - Steve Blusk
+- Updated StrippingB2D3H.py. Modifications of selection requirements. Mainly
+  increase mass window on (3H) bachelor to 3 GeV, and tighten some of the B cuts.
+  Also, add loose PID on Pions in the (3H) bachelor. UnbiasedLine B-->D(PiPiPi) line
+  is prescaled. 
+
 
 ! 2010-10-26 - Walter Bonivento
-
 - Updated StrippingB2twobody_prompt.py: bugfix and reduce timing and retention
-
 
 ! 2010-10-26 - Jibo He
  - python/StrippingSelections/StreamCharm.py
