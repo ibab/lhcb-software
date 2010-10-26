@@ -44,6 +44,8 @@ from PhysSelPython.Wrappers import Selection
 
 VerticesLocation = "Rec/Vertices/DisplRV"
 RCutMethod = "FromBeamLine" 
+RCutMethodInfo = "FromPreyInfo" 
+
 
 from Configurables import CalibrateIP
 BL = CalibrateIP( "BeamLine" )
@@ -89,7 +91,7 @@ PreselDisplVertices.TrackMaxChi2oNDOF = 5.
 SingleDV = DisplVertices("SingleDV")
 SingleDV.InputLocations = [PreselDisplVertices.getName()]
 SingleDV.MinNBCands = 1
-SingleDV.RCutMethod = RCutMethod
+SingleDV.RCutMethod = RCutMethodInfo
 SingleDV.BeamLineLocation="/Event/BeamLine"
 SingleDV.RMin = 0.3*mm
 SingleDV.NbTracks = 5
@@ -100,7 +102,7 @@ SingleDV.RemVtxFromDet = 0
 SingleDVLowMass = DisplVertices("SingleDVLowMass")
 SingleDVLowMass.InputLocations = [PreselDisplVertices.getName()]
 SingleDVLowMass.MinNBCands = 1
-SingleDVLowMass.RCutMethod = RCutMethod
+SingleDVLowMass.RCutMethod = RCutMethodInfo
 SingleDVLowMass.BeamLineLocation="/Event/BeamLine"
 SingleDVLowMass.RMin = 0.3*mm
 SingleDVLowMass.NbTracks = 6
@@ -114,7 +116,7 @@ SingleDVLowMass.RemVtxFromDet = 5
 SingleDVHighMass = DisplVertices("SingleDVHighMass")
 SingleDVHighMass.InputLocations = [PreselDisplVertices.getName()]
 SingleDVHighMass.MinNBCands = 1
-SingleDVHighMass.RCutMethod = RCutMethod
+SingleDVHighMass.RCutMethod = RCutMethodInfo
 SingleDVHighMass.BeamLineLocation="/Event/BeamLine"
 SingleDVHighMass.RMin = 0.3*mm
 SingleDVHighMass.NbTracks = 5
@@ -128,7 +130,7 @@ SingleDVHighMass.RemVtxFromDet = 0
 DoubleDV = DisplVertices("DoubleDV")
 DoubleDV.InputLocations = [PreselDisplVertices.getName()]
 DoubleDV.MinNBCands = 2
-DoubleDV.RCutMethod = RCutMethod
+DoubleDV.RCutMethod = RCutMethodInfo
 DoubleDV.BeamLineLocation="/Event/BeamLine"
 DoubleDV.RMin = 0.3*mm
 DoubleDV.NbTracks = 4

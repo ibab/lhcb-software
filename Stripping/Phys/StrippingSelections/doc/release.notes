@@ -1,9 +1,12 @@
-Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
+ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2010-10-26 - Victor Coco
+StrippingDisplVertices.py updated wrt to new option in Phys/DisplVertices
 
 ! 2010-20-26 - Rafael Coutinho
  Increase the limit on number of tracks for studies in StrippingBu3hFrom2h
