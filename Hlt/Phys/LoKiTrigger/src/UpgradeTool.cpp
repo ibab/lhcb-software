@@ -2,6 +2,14 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <climits>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Incident.h"
+// ============================================================================
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -26,17 +34,115 @@
  *  @author Vanya BELYAEV
  */
 // ============================================================================
+namespace 
+{
+}
+// ============================================================================
+// get the stored tracks 
+// ============================================================================
+LHCb::Track::Container* 
+LoKi::Hlt1::UpgradeTool::_createTracks() const 
+{
+  /// reset 
+  m_hlt_tracks = 0 ;
+  /// get new 
+  typedef LHCb::Track::Container OBJECTS ;
+  m_hlt_tracks = alg()->getOrCreate<OBJECTS,OBJECTS> ( address() ) ;
+  //
+  return m_hlt_tracks ;
+}
+// ============================================================================
+// get the stored candidates 
+// ============================================================================
+Hlt::Candidate::Container* 
+LoKi::Hlt1::UpgradeTool::_createCandidates () const 
+{
+  //
+  m_hlt_candidates = 0 ;
+  //
+  typedef Hlt::Candidate::Container OBJECTS ;
+  m_hlt_candidates = alg() -> getOrCreate<OBJECTS,OBJECTS>
+    ( Hlt::CandidateLocation::Default  ) ;
+  //
+  return m_hlt_candidates ;
+}
+// ============================================================================
+// get the stored stages 
+// ============================================================================
+Hlt::Stage::Container* 
+LoKi::Hlt1::UpgradeTool::_createStages () const 
+{
+  //
+  m_hlt_stages = 0 ;
+  //
+  typedef Hlt::Stage::Container OBJECTS ;
+  m_hlt_stages = alg() -> getOrCreate<OBJECTS,OBJECTS>
+    ( Hlt::StageLocation::Default  ) ;
+  //
+  return m_hlt_stages ;
+}
+// ============================================================================
+// get the stored multitracks 
+// ============================================================================
+Hlt::MultiTrack::Container* 
+LoKi::Hlt1::UpgradeTool::_createMultiTracks () const 
+{
+  //
+  m_hlt_multitracks = 0 ;
+  //
+  typedef Hlt::MultiTrack::Container OBJECTS ;
+  m_hlt_multitracks = alg() -> getOrCreate<OBJECTS,OBJECTS>
+    ( Hlt::MultiTrackLocation::Default  ) ;
+  //
+  return m_hlt_multitracks ;
+}
+// ============================================================================
 // create the tool from info 
 // ============================================================================
 LoKi::Hlt1::UpgradeTool::UpgradeTool
 ( const LoKi::Hlt1::UpgradeConf& info ) 
-  : LoKi::AuxFunBase() 
+  : LoKi::Listener () 
   , m_config  ( info ) 
   , m_recoID  ( -1   ) 
   , m_upgrade (      ) 
   , m_alg     ( 0    ) 
+//
+  , m_hlt_candidates  ( 0 ) 
+  , m_hlt_stages      ( 0 ) 
+  , m_hlt_multitracks ( 0 ) 
+  , m_hlt_tracks      ( 0 ) 
+//
 {
   init() ;
+  //
+  // Incidents
+  //
+  subscribe ( IncidentType::BeginEvent , std::numeric_limits<int>::min()  ) ;
+  subscribe ( IncidentType::  EndEvent , std::numeric_limits<int>::min()  ) ;
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+LoKi::Hlt1::UpgradeTool::UpgradeTool 
+( const LoKi::Hlt1::UpgradeTool& right ) 
+  : LoKi::AuxFunBase  ( right ) 
+  , LoKi::Listener    ( right ) 
+//
+  , m_config          ( right.m_config ) 
+  , m_recoID          ( -1    ) 
+  , m_upgrade         (       ) 
+  , m_alg             ( 0     ) 
+//
+  , m_hlt_candidates  ( 0 ) 
+  , m_hlt_stages      ( 0 ) 
+  , m_hlt_multitracks ( 0 ) 
+  , m_hlt_tracks      ( 0 ) 
+//
+{
+  //
+  init() ;
+  //
 }
 // ============================================================================
 // intialize the object 
@@ -44,10 +150,10 @@ LoKi::Hlt1::UpgradeTool::UpgradeTool
 void LoKi::Hlt1::UpgradeTool::init () const  
 {
   // get GaudiAlgorithm 
-  GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
-  Assert ( 0 != alg , "GaudiAlgorithm points to NULL!" ) ;
+  GaudiAlgorithm*  alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
+  Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;
   // get IAlgorithm 
-  IAlgorithm* ialg = LoKi::Hlt1::Utils::getAlg ( *this ) ;
+  IAlgorithm*     ialg = LoKi::Hlt1::Utils::getAlg      ( *this ) ;
   Assert ( alg == ialg , "GaudiAlgorithm is not *my* IAlgorithm" ) ;
   //
   m_alg = alg ;
@@ -63,8 +169,11 @@ void LoKi::Hlt1::UpgradeTool::init () const
   Assert( info , " request for unknown Info ID : " + trTool() );
   //
   m_recoID = info->second ;
+  //
+
 }
 // ============================================================================
+// anonymos namespace to hide some local tchnical details 
 namespace
 {
   // ==========================================================================
@@ -118,7 +227,9 @@ namespace
     // ========================================================================
   } ;  
   // ==========================================================================
-} // end of anonynmous namespace
+} //                                                end of anonynmous namespace
+
+
 // ============================================================================
 // find the tracks within the recontructed 
 // ============================================================================
@@ -131,7 +242,7 @@ size_t LoKi::Hlt1::UpgradeTool::find
   const size_t ntracks = tracks.size() ;
   if ( 0 == otracks ) 
   { 
-    Error ("find(): LHCb::Track::Container* pointns to NULL!") ;
+    Error ("find(): LHCb::Track::Container* points to NULL!") ;
     return 0 ;
   }
   LoKi::Algs::copy_if 
@@ -191,16 +302,13 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
   Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
   
-  typedef LHCb::Track::Container    TRACKS ;
-  typedef LHCb::Track::ConstVector  OUTPUT ;
-  
   // get or create the output
-  TRACKS* otracks = 0 ;
-  if ( owner() ) { otracks = alg()->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
+  LHCb::Track::Container* otracks = storedTracks() ;
   
   // ==========================================================================
   // loop over input tracks, upgrade track-by-track 
   // ==========================================================================
+  typedef LHCb::Track::ConstVector  OUTPUT ;
   for ( OUTPUT::const_iterator iseed = itracks.begin() ;
         itracks.end() != iseed ; ++iseed ) 
   {
@@ -233,20 +341,17 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
   Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
-  
-  typedef LHCb::Track::Container    TRACKS ;
-  typedef std::vector<LHCb::Track*> OUTPUT ;
+  //
   // get or create the output
-  TRACKS* otracks = 0 ;
-  if ( owner() ) { otracks = alg()->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
-  
+  LHCb::Track::Container* otracks = storedTracks () ;
+  //
   StatusCode sc = iupgrade ( itrack , output , otracks ) ;
   if ( sc.isFailure() ) { return Error ( "upgrade: error from iupgrade" , sc ) ; }
-  
+  //
   // sort tracks ? 
   if ( ptOrder() ) 
   { std::stable_sort ( output.begin () , output.end () , Hlt::SortTrackByPt() ) ; }
-  
+  //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -273,13 +378,13 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
   return StatusCode::SUCCESS ;
 }
 // ======================================================================      
-/*  upgrade the candidates          
+/*  upgrade the 'track'candidates          
  *  @param itrack  input track/seeds 
  *  @param otracks output container of upgraded tracks (cumulative) 
  *  @return status code 
  */
 // ======================================================================      
-StatusCode LoKi::Hlt1::UpgradeTool::upgrade 
+StatusCode LoKi::Hlt1::UpgradeTool::upgradeTracks  
 ( const Hlt::Candidate::ConstVector& input  , 
   Hlt::Candidate::ConstVector&       output ) const 
 {
@@ -289,20 +394,145 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
   Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
-  typedef LHCb::Track::Container TRACKS ;
-  TRACKS* otracks = 0 ;
-  if ( owner() ) { otracks = alg()->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
+  LHCb::Track::Container*     otracks       = storedTracks      () ;
   // 
-  Hlt::Candidate::Container*  candidates = 
-    alg() -> getOrCreate<Hlt::Candidate::Container,Hlt::Candidate::Container>
-    ( Hlt::CandidateLocation::Default  ) ;
-  Hlt::Stage::Container*      stages     = 
-    alg() -> getOrCreate<Hlt::Stage::Container,Hlt::Stage::Container>
-    ( Hlt::StageLocation::Default      ) ;
-  Hlt::MultiTrack::Container* multi_tracks   = 
-    alg() -> getOrCreate<Hlt::MultiTrack::Container,Hlt::MultiTrack::Container>
-    ( Hlt::MultiTrackLocation::Default ) ;
+  // loop over input candidates, upgrade one-by-one 
+  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
+        input.end() != iseed ; ++iseed ) 
+  {
+    const Hlt::Candidate* candidate = *iseed ;
+    if ( 0 == candidate ) 
+    { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
+    const Hlt::Stage*     stage  = candidate->currentStage() ;
+    if ( 0 == stage     )
+    { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
+    //
+    if ( !stage->is<LHCb::Track> () ) 
+    { Error ( "No      LHCb::Track,    skip it!") ; continue ; } // CONTINUE 
+    //
+    // upgrade single track
+    StatusCode sc = _i_upgrade_1track 
+      ( candidate   , 
+        output      , 
+        otracks     ) ;
+    //
+    if ( sc.isFailure() ) { Error ( "Error from i_upgrade_1track", sc ) ; }
+    //
+  } //
   //
+  return StatusCode::SUCCESS ;
+}
+// ======================================================================      
+/*  upgrade the candidates          
+ *  @param itrack  input track/seeds 
+ *  @param otracks output container of upgraded tracks (cumulative) 
+ *  @return status code 
+ */
+// ======================================================================      
+StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
+( const Hlt::Candidate::ConstVector& input  , 
+  Hlt::Candidate::ConstVector&       output ) const 
+{
+  //
+  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
+  //
+  Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
+  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  //
+  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  // 
+  // loop over input candidates, upgrade one-by-one 
+  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
+        input.end() != iseed ; ++iseed ) 
+  {
+    const Hlt::Candidate* candidate = *iseed ;
+    if ( 0 == candidate ) 
+    { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
+    const Hlt::Stage*     stage  = candidate->currentStage() ;
+    if ( 0 == stage     )
+    { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
+    //
+    // upgrade single track
+    if ( !stage->is<Hlt::MultiTrack>() ) 
+    { Error ( "No Hlt::MultiTrack,     skip it!") ; continue ; } // CONTINUE  
+    //
+    StatusCode sc = _i_upgrade_multi_track 
+      ( candidate     , 
+        output        , 
+        otracks       ) ;
+    //
+    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
+    //
+  } //                                      end of the loop over new candidates 
+  //
+  return StatusCode::SUCCESS ;
+} 
+// ======================================================================      
+/*  upgrade the candidates          
+ *  @param itrack  input track/seeds 
+ *  @param otracks output container of upgraded tracks (cumulative) 
+ *  @return status code 
+ */
+// ======================================================================      
+StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
+( const Hlt::Candidate::ConstVector& input  , 
+  const unsigned int                 index  ,
+  Hlt::Candidate::ConstVector&       output ) const 
+{
+  //
+  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
+  //
+  Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
+  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  //
+  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  // 
+  // loop over input candidates, upgrade one-by-one 
+  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
+        input.end() != iseed ; ++iseed ) 
+  {
+    const Hlt::Candidate* candidate = *iseed ;
+    if ( 0 == candidate ) 
+    { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
+    const Hlt::Stage*     stage  = candidate->currentStage() ;
+    if ( 0 == stage     )
+    { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
+    //
+    // upgrade single track
+    if ( !stage->is<Hlt::MultiTrack>() ) 
+    { Error ( "No Hlt::MultiTrack,     skip it!") ; continue ; } // CONTINUE  
+    //
+    StatusCode sc = _i_upgrade_multi_track_j  
+      ( candidate     , 
+        index         ,
+        output        , 
+        otracks       ) ;
+    //
+    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
+    //
+  } //                                      end of the loop over new candidates 
+  //
+  return StatusCode::SUCCESS ;
+} 
+// ======================================================================      
+/*  upgrade the candidates          
+ *  @param itrack  input track/seeds 
+ *  @param otracks output container of upgraded tracks (cumulative) 
+ *  @return status code 
+ */
+// ======================================================================      
+StatusCode LoKi::Hlt1::UpgradeTool::upgradeAll 
+( const Hlt::Candidate::ConstVector& input  , 
+  Hlt::Candidate::ConstVector&       output ) const 
+{
+  //
+  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
+  //
+  Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
+  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  //
+  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  // 
   // loop over input candidates, upgrade one-by-one 
   for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
         input.end() != iseed ; ++iseed ) 
@@ -317,11 +547,9 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
     // upgrade single track
     if     ( stage->is<LHCb::Track>     () ) 
     {
-      StatusCode sc = _i_upgrade_track 
+      StatusCode sc = _i_upgrade_1track 
         ( candidate   , 
           output      , 
-          *candidates ,
-          *stages     , 
           otracks     ) ;
       if ( sc.isFailure() ) { Warning( "Error from i_uprgade_track", sc ) ; }
     }
@@ -330,9 +558,6 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
       StatusCode sc = _i_upgrade_multi_track 
         ( candidate     , 
           output        , 
-          *candidates   ,
-          *stages       , 
-          *multi_tracks ,
           otracks       ) ;
       if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
     }
@@ -349,19 +574,17 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
  *  @return status code 
  */
 // ============================================================================
-StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_track 
+StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track 
 ( const Hlt::Candidate*              input      , 
   Hlt::Candidate::ConstVector&       output     , 
-  Hlt::Candidate::Container&         candidates ,
-  Hlt::Stage::Container&             stages     , 
   LHCb::Track::Container*            otracks    ) const 
 {
   //
-  if ( 0 == input ) { return Error("Hlt::Candidate points to NULL") ; }
-  const Hlt::Stage* stage = input->currentStage() ;
+  if ( 0 == input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
   //
+  const Hlt::Stage* stage = input->currentStage() ;
   if ( 0 == stage || !stage->is<LHCb::Track> () ) 
-  { return Error("Invalid Hlt::Stage*" ) ; }
+  { return Error ( "Invalid Hlt::Stage*" ) ; }
   //
   const LHCb::Track*    seed = stage->get<LHCb::Track> () ;
   //
@@ -381,8 +604,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_track
   else if ( 1 == out.size() ) 
   {
     // track has been upgraded
-    Hlt::Stage* newstage = new Hlt::Stage() ;
-    stages.push_back ( newstage ) ;
+    Hlt::Stage* newstage = newStage() ;
+    //
     Hlt::Stage::Lock lock ( newstage , alg() ) ;
     newstage -> set( out[0] ) ; // add track to the stage
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
@@ -402,13 +625,11 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_track
       if ( 0 == track ) { continue ; }
       // 
       // start new Candidate: 
-      Hlt::Candidate* candidate = new Hlt::Candidate() ;
-      candidates. push_back ( candidate ) ;
+      Hlt::Candidate* candidate = newCandidate() ;
       output.push_back      ( candidate ) ;                          // OUTPUT++
       //
       // the initiator of new candidate is the stage of the initial candidate:
-      Hlt::Stage* stage1 = new Hlt::Stage() ;
-      stages     . push_back   ( stage1 ) ;
+      Hlt::Stage* stage1 = newStage() ;
       candidate -> addToStages ( stage1 ) ;
       //
       Hlt::Stage::Lock lock1 ( stage1, alg() ) ;
@@ -416,8 +637,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_track
       
       //
       // the actual stage: new candidate is the track
-      Hlt::Stage* stage2 = new Hlt::Stage() ;
-      stages    .  push_back   ( stage2 ) ;
+      Hlt::Stage* stage2 = newStage() ;
       candidate -> addToStages ( stage2 ) ;
       // 
       Hlt::Stage::Lock lock2 ( stage2, alg() ) ;
@@ -439,9 +659,6 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_track
 StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track 
 ( const Hlt::Candidate*              input        , 
   Hlt::Candidate::ConstVector&       output       , 
-  Hlt::Candidate::Container&         candidates   ,
-  Hlt::Stage::Container&             stages       , 
-  Hlt::MultiTrack::Container&        multi_tracks , 
   LHCb::Track::Container*            otracks      ) const 
 {
   //
@@ -455,7 +672,6 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   //
   typedef std::vector<LHCb::Track::ConstVector> OUTs ;
   
-
   bool OK    = true  ;
   bool split = false ;
   OUTs outs ;
@@ -482,17 +698,16 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   if ( !split ) 
   {
     // new multi-track  
-    Hlt::MultiTrack* mtrack = new Hlt::MultiTrack() ;
-    multi_tracks.push_back ( mtrack ) ;
+    Hlt::MultiTrack* mtrack = newMultiTrack() ;
     //
     for ( OUTs::const_iterator iout = outs.begin() ; outs.end() != iout ; ++iout ) 
     { mtrack->addToTracks( iout->front() ) ; }
     //
     // new stage  
-    Hlt::Stage* newstage = new Hlt::Stage() ;
-    stages.push_back ( newstage ) ;
+    Hlt::Stage* newstage = newStage() ;
+    //
     Hlt::Stage::Lock lock ( newstage , alg() ) ;
-    newstage -> set( mtrack ) ; // add multitarck to the stage
+    newstage -> set( mtrack ) ; // add multitrack to the stage
     Hlt::Candidate* _input = const_cast<Hlt::Candidate*>  ( input ) ;
     _input -> addToStages ( newstage ) ;
     output.push_back ( input ) ;                               // OUTPUT++ 
@@ -500,7 +715,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   else
   {
     //
-    Warning ( "Reconstructin causes split of candidate" ) ;
+    Warning ( "Reconstruction causes split of candidate" ) ;
     //
     typedef LoKi::Combiner_<LHCb::Track::ConstVector> COMBINER ;
     COMBINER combiner ;
@@ -513,15 +728,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     for ( ; combiner.valid() ; ++combiner ) 
     {
       //
-      Hlt::Candidate*  newcand   = new Hlt::Candidate  () ;
-      candidates   . push_back ( newcand   ) ;
-      Hlt::Stage*      newstage1 = new Hlt::Stage      () ;
-      stages       . push_back ( newstage1 ) ;
-      Hlt::Stage*      newstage2 = new Hlt::Stage      () ;
-      stages       . push_back ( newstage2 ) ;
-      Hlt::MultiTrack* newtrack = new Hlt::MultiTrack  () ;
-      multi_tracks . push_back ( newtrack  ) ;
+      Hlt::Candidate*  newcand   = newCandidate  () ;
       //
+      Hlt::Stage*      newstage1 = newStage      () ;
+      Hlt::Stage*      newstage2 = newStage      () ;
+      
+      Hlt::MultiTrack* newtrack  = newMultiTrack () ;
       //
       Hlt::Stage::Lock lock1 ( newstage1 , alg() ) ;
       newstage1 -> set<Hlt::Stage>      ( stage    ) ;
@@ -542,6 +754,95 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     }
   }
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  upgrade the candidate          
+ *  @param itrack  input track/seeds 
+ *  @param otracks output container of upgraded tracks (cumulative) 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
+( const Hlt::Candidate*              input        , 
+  const unsigned int                 index        , // the index 
+  Hlt::Candidate::ConstVector&       output       , 
+  LHCb::Track::Container*            otracks      ) const 
+{
+  //
+  if ( 0 == input ) { return Error("Hlt::Candidate points to NULL") ; }
+  const Hlt::Stage* stage = input->currentStage() ;
+  //
+  if ( 0 == stage || !stage->is<Hlt::MultiTrack> () ) 
+  { return Error("Invalid Hlt::Stage*" ) ; }
+  //
+  const Hlt::MultiTrack* multi_track = stage->get<Hlt::MultiTrack> () ;
+  //
+  
+  typedef std::vector<LHCb::Track::ConstVector> OUTs ;
+  
+  bool OK    = true  ;
+  bool split = false ;
+  OUTs outs ;
+  
+  const Hlt::MultiTrack::Tracks& tracks = multi_track->tracks() ;
+  
+  //
+  if ( tracks.size() <= index ) 
+  { return Error( "Invalid size of track-vector") ; }
+  
+  // get the track:
+  const LHCb::Track* track = tracks[index] ;
+  if ( 0 == track ) 
+  { return Error ( "Invalid track by index" ) ; }
+  
+  // upgrade it!
+  LHCb::Track::ConstVector out ;
+  StatusCode sc = iupgrade ( track , out , otracks ) ;
+  if ( sc.isFailure() ) { return Error    ( "Error from iupgrade", sc ) ; } 
+  if ( out.empty()    ) { return Warning  ( "No tracks" )               ; }
+  //
+  
+  for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ; 
+        out.end() != iout ; ++iout ) 
+  {
+    const LHCb::Track* _track = *iout ;
+    if ( 0 == _track ) { continue ; }
+    //
+    Hlt::Candidate* newcand = 0 ;
+    if ( iout == out.begin() ) { newcand = const_cast<Hlt::Candidate*> (  input ) ; }
+    //
+    if ( 0 == newcand ) 
+    {
+      newcand              = newCandidate () ;
+      //
+      Hlt::Stage* newstage = newStage       () ;
+      newcand  -> addToStages  ( newstage ) ;
+      //
+      Hlt::Stage::Lock lock ( newstage , alg() ) ;
+      newstage -> set<Hlt::Stage>      ( stage ) ;
+      //
+    }
+    //
+    Hlt::Stage*      newstage   = newStage        () ;
+    newcand  -> addToStages  ( newstage ) ;
+    //
+    Hlt::MultiTrack* newmtrack  = newMultiTrack   ()  ;
+    Hlt::Stage::Lock lock ( newstage , alg() ) ;
+    newstage -> set<Hlt::MultiTrack>  ( newmtrack ) ;
+    //
+    // fill multi-track: 
+    LHCb::Track::ConstVector _tracks ( tracks.begin() , tracks.end  () ) ;
+    _tracks [index] = _track ;
+    // 
+    for ( LHCb::Track::ConstVector::const_iterator it = _tracks.begin() ; 
+          _tracks.end() != it ; ++it ) 
+    { newmtrack -> addToTracks ( *it ) ; }
+    //
+    output.push_back ( newcand ) ;
+  }
+  //
+  return StatusCode::SUCCESS ;
+  
 }
 // ============================================================================
 // The END 

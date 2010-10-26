@@ -43,9 +43,7 @@ __date__     = "2007-05-29; last modified $Date$ by $Author$"
 __version__  = "SVN version $Revision$"
 __author__   = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
-
 from   LoKiTrigger.functions   import *
-
 
 _name = __name__
 
@@ -138,6 +136,11 @@ def _decorate ( name = _name  ) :
         LoKi.Functor         ( 'void' , vC )   , ## the base
         LoKi.Dicts.SourceOps ( tC     , tC )   ) ## call-traits
 
+    
+    ## primitive voids 
+    _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name )
+
+    
     # =========================================================================
     ## LHCb::Track remnants ATTENTION !!! 
     # =========================================================================
@@ -176,7 +179,7 @@ if __name__ == '__main__' :
     print ' Version   : %s '        %   __version__
     print ' Date      : %s '        %   __date__
     print ' Decorated : %s symbols' %   len ( _decorated )
-    for t in decorated  : print t 
+    for t in _decorated  : print t 
     print '*'*120
     
 # =============================================================================

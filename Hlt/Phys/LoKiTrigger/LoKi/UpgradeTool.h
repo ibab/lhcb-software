@@ -3,8 +3,6 @@
 #ifndef LOKI_UPGRADETOOL_H 
 #define LOKI_UPGRADETOOL_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
@@ -24,6 +22,7 @@
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/UpgradeConf.h"
+#include "LoKi/Listener.h"
 // ============================================================================
 class GaudiAlgorithm ;
 // ============================================================================
@@ -39,12 +38,15 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-13
      */
-    class UpgradeTool : public virtual LoKi::AuxFunBase 
+    class UpgradeTool : public virtual LoKi::Listener
     {
     public:
       // ======================================================================
-      /// create the tool from configuration info 
+      /// create the tool from configuration info
       UpgradeTool ( const LoKi::Hlt1::UpgradeConf& info ) ;
+      // ======================================================================
+      /// copy constructor 
+      UpgradeTool ( const UpgradeTool& right ) ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -66,30 +68,59 @@ namespace LoKi
       ( const LHCb::Track*        itrack , 
         LHCb::Track::ConstVector& otracks ) const ;
       // ======================================================================      
+    public:
+      // ======================================================================      
       /** upgrade the candidates          
        *  @param itrack  input track/seeds 
        *  @param otracks output container of upgraded tracks (cumulative) 
        *  @return status code 
        */
-      StatusCode upgrade 
+      StatusCode upgradeAll 
       ( const Hlt::Candidate::ConstVector& input  , 
         Hlt::Candidate::ConstVector&       output ) const ;
       // ======================================================================      
-    private:
-      // ======================================================================      
-      /** upgrade the candidate          
+      /** upgrade the candidates          
        *  @param itrack  input track/seeds 
        *  @param otracks output container of upgraded tracks (cumulative) 
        *  @return status code 
        */
-      StatusCode _i_upgrade_track 
+      StatusCode upgradeTracks 
+      ( const Hlt::Candidate::ConstVector& input  , 
+        Hlt::Candidate::ConstVector&       output ) const ;
+      // ======================================================================      
+      /** upgrade the candidates          
+       *  @param itrack  input track/seeds 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode upgradeMultiTracks 
+      ( const Hlt::Candidate::ConstVector& input  , 
+        Hlt::Candidate::ConstVector&       output ) const ;
+      // ======================================================================      
+      /** upgrade the candidates          
+       *  @param itrack  input track/seeds 
+       *  @param inedx   the track index to be upgraded 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode upgradeMultiTracks 
+      ( const Hlt::Candidate::ConstVector& input  , 
+        const unsigned int                 index  , 
+        Hlt::Candidate::ConstVector&       output ) const ;
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /** upgrade the single track candidate 
+       *  @param itrack  input track/seeds 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode _i_upgrade_1track 
       ( const Hlt::Candidate*              input      , 
         Hlt::Candidate::ConstVector&       output     , 
-        Hlt::Candidate::Container&         candidates ,
-        Hlt::Stage::Container&             stages     , 
         LHCb::Track::Container*            otracks    ) const ;
       // ======================================================================      
-      /** upgrade the candidate          
+      /** upgrade the all tracks form multi-track candidate          
        *  @param itrack  input track/seeds 
        *  @param otracks output container of upgraded tracks (cumulative) 
        *  @return status code 
@@ -97,9 +128,18 @@ namespace LoKi
       StatusCode _i_upgrade_multi_track 
       ( const Hlt::Candidate*              input        , 
         Hlt::Candidate::ConstVector&       output       , 
-        Hlt::Candidate::Container&         candidates   ,
-        Hlt::Stage::Container&             stages       , 
-        Hlt::MultiTrack::Container&        multi_tarcks ,
+        LHCb::Track::Container*            otracks      ) const ;
+      // ======================================================================      
+      /** upgrade tracsk by index in multitrack candidate 
+       *  @param itrack  input track/seeds 
+       *  @param inedx   the index of tarcj to be upgraded 
+       *  @param otracks output container of upgraded tracks (cumulative) 
+       *  @return status code 
+       */
+      StatusCode _i_upgrade_multi_track_j
+      ( const Hlt::Candidate*              input        , 
+        const unsigned int                 index        , // the index 
+        Hlt::Candidate::ConstVector&       output       , 
         LHCb::Track::Container*            otracks      ) const ;
       // ======================================================================      
     public:
@@ -197,6 +237,83 @@ namespace LoKi
       // ======================================================================      
       /// the algorithm 
       mutable const GaudiAlgorithm* m_alg ; // the algorithm 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** handle the incidents:
+       *  clear the involved pointers 
+       */
+      virtual void handle ( const Incident& /* incident */ )
+      {
+        // clear all pointers 
+        m_hlt_candidates  = 0 ;
+        m_hlt_stages      = 0 ;
+        m_hlt_multitracks = 0 ;
+        m_hlt_tracks      = 0 ;
+      }
+      // ======================================================================
+    private:
+      // ======================================================================      
+      /// get the stored tracks 
+      inline LHCb::Track::Container*     storedTracks      () const 
+      {
+        if ( !owner() ) { return 0 ; }
+        if ( 0 == m_hlt_tracks ) { _createTracks () ; }
+        return m_hlt_tracks ;
+      }
+      // ======================================================================      
+    private:
+      // ======================================================================
+      template <class TYPE> 
+      inline TYPE* _create ( typename TYPE::Container* cnt ) const 
+      {
+        TYPE* _new = new TYPE() ;
+        cnt->push_back ( _new ) ;
+        return _new ;
+      }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// get new candidate 
+      inline Hlt::Candidate*  newCandidate     () const 
+      {
+        if ( 0 == m_hlt_candidates  ) { _createCandidates  () ; }
+        return _create<Hlt::Candidate> ( m_hlt_candidates   ) ;
+      }
+      /// get new stage 
+      inline Hlt::Stage*      newStage         () const 
+      {
+        if ( 0 == m_hlt_stages       ) { _createStages      () ; }
+        return _create<Hlt::Stage>      ( m_hlt_stages     ) ;
+      }
+      /// get new multitarck
+      inline Hlt::MultiTrack* newMultiTrack    () const 
+      {
+        if ( 0 == m_hlt_multitracks ) { _createMultiTracks () ; }
+        return _create<Hlt::MultiTrack> ( m_hlt_multitracks ) ;
+      }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// get the storage for tracks 
+      LHCb::Track::Container*     _createTracks      () const ;
+      /// get the storage for candidates 
+      Hlt::Candidate::Container*  _createCandidates  () const ;
+      /// get the storage for stages 
+      Hlt::Stage::Container*      _createStages      () const ;
+      /// get the storage for multitracks 
+      Hlt::MultiTrack::Container* _createMultiTracks () const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// container of Hlt-candidates 
+      mutable Hlt::Candidate::Container*  m_hlt_candidates  ;
+      /// container of Hlt-stages 
+      mutable Hlt::Stage::Container*      m_hlt_stages      ;      
+      /// container of Hlt-multitracks 
+      mutable Hlt::MultiTrack::Container* m_hlt_multitracks ;      
+      /// container of tracks 
+      mutable LHCb::Track::Container*     m_hlt_tracks      ;      
       // ======================================================================
     };  
     // ========================================================================

@@ -171,6 +171,18 @@ SINK            = LoKi.Hlt1.Sink
 
 
 # =============================================================================
+## Upgrade:
+# =============================================================================
+
+## @see LoKi::Cuts::TC_UPGRADE_ALL 
+TC_UPGRADE_ALL  = LoKi.Hlt1.Upgrade
+## @see LoKi::Cuts::TC_UPGRADE_TR
+TC_UPGRADE_TR   = LoKi.Hlt1.UpgradeTracks 
+## @see LoKi::Cuts::TC_UPGRADE_MT
+TC_UPGRADE_MT   = LoKi.Hlt1.UpgradeMultiTracks 
+
+
+# =============================================================================
 ## end of new stuff ## 
 # =============================================================================
 

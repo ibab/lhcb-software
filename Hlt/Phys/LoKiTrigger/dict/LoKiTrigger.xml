@@ -39,6 +39,10 @@
 
   <class name = "LoKi::Hlt1::Selection" /> 
   <class name = "LoKi::Hlt1::Sink"      /> 
+
+  <class name = "LoKi::Hlt1::Upgrade"             /> 
+  <class name = "LoKi::Hlt1::UpgradeTracks"       /> 
+  <class name = "LoKi::Hlt1::UpgradeMultiTracks"  /> 
   
   <!-- Hlt::Stage --> 
   

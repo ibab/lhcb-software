@@ -168,45 +168,15 @@ LoKi::Candidates::StageFun::operator()
     Error("Hlt::Candidate* points to NULL, return NegativeInfinity") ;
     return LoKi::Constants::NegativeInfinity ;
   }
-  
-  const SmartRefVector<Hlt::Stage>& stages = a->stages() ;
-  
-  // current stage 
-  if ( 0 == m_slot )
-  {
-    const Hlt::Stage* last = a->currentStage() ;
-    if ( 0 == last ) 
-    { 
-      Error("Hlt::Stage* points to NULL, return NegativeInfinity") ;
-      return LoKi::Constants::NegativeInfinity ;
-    }
-    return m_cut ( last ) ;
-  }
-  // initiator stage 
-  else if ( m_slot < 0 )            
-  {
-    const Hlt::Stage* init = a->initiatorStage () ;
-    if ( 0 == init ) 
-    { 
-      Error("Hlt::Stage* points to NULL, return NegativeInfinity") ;
-      return LoKi::Constants::NegativeInfinity ;
-    }
-    return m_cut ( init ) ;
-  }
-  // invalid index 
-  else if ( m_slot >= (int) stages.size() ) 
-  {
-    Error("invalid Hlt::Stage-slot, return NegativeInfinity") ;
-    return LoKi::Constants::NegativeInfinity ;
-  }
-  // regular case 
-  const Hlt::Stage* s = stages[ stages.size() - m_slot - 1 ] ;
-  if ( 0 == s ) 
+  // 
+  const Hlt::Stage* stage = a->get<Hlt::Stage> ( m_slot ) ;
+  if ( 0 == stage ) 
   { 
     Error("Hlt::Stage* points to NULL, return NegativeInfinity") ;
     return LoKi::Constants::NegativeInfinity ;
   }
-  return m_cut ( s ) ;
+  //
+  return m_cut ( stage ) ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -250,48 +220,18 @@ LoKi::Candidates::StageCut::operator()
 {
   if ( 0 == a ) 
   {
-    Error("Hlt::Candidate* points to NULL, return false") ;
-    return false ;
-  }
-  const SmartRefVector<Hlt::Stage>& stages = a->stages() ;
-  
-  // current stage 
-  if ( 0 == m_slot )
-  {
-    const Hlt::Stage* last = a->currentStage() ;
-    if ( 0 == last ) 
-    { 
-      Error("Hlt::Stage* points to NULL, return false") ;
-      return false ;
-    }
-    return m_cut ( last ) ;
-  }
-  // initiator stage 
-  else if ( m_slot < 0 )            
-  {
-    const Hlt::Stage* init = a->initiatorStage () ;
-    if ( 0 == init ) 
-    { 
-      Error("Hlt::Stage* points to NULL, false") ;
-      return false ;
-    }
-    return m_cut ( init ) ;
-  }
-  // invalid index 
-  else if ( m_slot >= (int) stages.size() ) 
-  {
-    Error("invalid Hlt::Stage-slot, return false") ;
-    return false ;
-  }
-  // regular case 
-  const Hlt::Stage* s = stages[ stages.size() - m_slot - 1 ] ;
-  if ( 0 == s ) 
-  { 
-    Error("Hlt::Stage* points to NULL, return false") ;
+    Error ( "Hlt::Candidate* points to NULL, return false" ) ;
     return false ;
   }
   //
-  return m_cut ( s ) ;
+  const Hlt::Stage* stage = a->get<Hlt::Stage> ( m_slot ) ;
+  if ( 0 == stage ) 
+  { 
+    Error ( "Hlt::Stage* points to NULL, return false" ) ;
+    return false ;
+  }
+  //
+  return m_cut ( stage ) ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -302,9 +242,6 @@ std::ostream& LoKi::Candidates::StageCut::fillStream ( std::ostream& s ) const
   if ( 0 != m_slot ) { s << "," << m_slot ; }
   return s << ") ";
 }
-
- 
- 
 
 // ============================================================================
 // The END 

@@ -5,6 +5,21 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Vanya Belyaev
+ - add upgrade functors 
+
+     TC_UPGRADE_ALL :
+            upgrade tracks & multitracks 
+
+     TC_UPGRADE_TR  :
+            upgrade tracks only 
+
+     TC_UPGRADE_MT  :
+            upgrade multitracks only (eithe ralltracks or selected by index) 
+
+ - cmt/requirements
+    version increment to v11r2
+
 !========================== LoKiTrigger v11r1 2010-10-04 ===================
 ! 2010-10-02 - Vanya Belyaev
 
@@ -20,7 +35,7 @@
 
  - cmt/requirements
 
-    version ioncrement to v11r1 
+    version increment to v11r1 
 
 !========================== LoKiTrigger v11r0p1 2010-09-09 ===================
 ! 2010-09-09 - Gerhard Raven
