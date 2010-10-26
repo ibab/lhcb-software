@@ -24,7 +24,7 @@ for i in [ 'LoKiTrigger.decorators' ] :
   if i not in modules : modules.append(i)
 
 StrippingKillTooManyTopoIP = VoidFilter('StrippingKillTooManyTopoIP' 
-                                        , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )")
+                                        , Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 300 )")
 
 #  Two-body Line
 Bu3hFrom2h_2Body = CombineParticles("Bu3hFrom2h_2Body")
