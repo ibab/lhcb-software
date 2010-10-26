@@ -4,6 +4,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2010-10-26 - Jeremy Dickens
+ - Added StrippingBd2KstarMuMuTriggered_JD.py for new K*mumu stripping (include noFD lines)
+ - Added StrippingB2DiMuonX.py for Tom Blake's generic b -> mu mu X lines
+
 ! 2010-10-26 Walter Bonivento
  - Updated StrippingB2twobody_prompt.py including neutrals; improved timing and rejection
 
