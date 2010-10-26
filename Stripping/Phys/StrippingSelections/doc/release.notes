@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Anton Poluektov 
+ - StrippingB2DX.py 
+   - Added wrong-sign D2hh line ([D0->h-h-]cc, only for B->Dh), prescaled to 20%. 
+
 ! 2010-10-26 - Paul Nicholas SCHAACK
  - Added StrippingBs2MuMuD.py
  - Added StrippingBs2MuMuKstar.py

@@ -227,7 +227,8 @@ class B2DXLines(object) :
 	      "CombMassMax"        : 5900,          # MeV
 	    }, 
 	    "Prescales" : {
-	      "D2hh"     : 1., 
+	      "D2hh"     : 1.,
+	      "D2hhWS"   : 0.2,
 	      "D2hhh"    : 1., 
 	      "D2hhhWS"  : 0.1, 
 	      "D2hhhh"   : 1., 
@@ -240,6 +241,7 @@ class B2DXLines(object) :
 	    "CheckPV"	       : True, 
 	    "MaxTracksInEvent" : {
 	      "D2hh"     : 100, 
+	      "D2hhWS"   : 100, 
 	      "D2hhh"    : 180, 
 	      "D2hhhWS"  : 180, 
 	      "D2hhhh"   : 100, 
@@ -268,6 +270,8 @@ class B2DXLines(object) :
 	D2hhh = makeD2hhh(moduleName, config["D2hhhCuts"])
 	D2hhhh = makeD2hhhh(moduleName, config["D2hhhhCuts"])
 	
+	D2hhWS = makeD2hhWS(moduleName, config["D2hhCuts"])
+
 	D2hhhWS = makeD2hhhWS(moduleName, config["D2hhhCuts"])
 	
 	D2KPiPi0Merged = makeD2KPiPi0(moduleName, "Merged", config["D2KPiPi0Cuts"], 
@@ -282,6 +286,7 @@ class B2DXLines(object) :
 
         DSelections = {
           "D2hh"     : D2hh, 
+          "D2hhWS"   : D2hhWS, 
           "D2hhh"    : D2hhh, 
           "D2hhhWS"  : D2hhh, 
           "D2hhhh"   : D2hhhh,
@@ -429,6 +434,50 @@ def makeD2hh(moduleName, config) :
     D2KKSel = Selection("SelD2KKFor" + moduleName, Algorithm = D2KK, RequiredSelections = [ StdK ] )
 
     DSel = MergedSelection("SelD2hhFor" + moduleName, 
+                           RequiredSelections = [ D2pipiSel, D2KpiSel, D2KKSel ] )
+
+    return DSel
+
+def makeD2hhWS(moduleName, config) : 
+
+    __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min", 
+                              "PtMin", "CombDMass", "DMass", "VtxChi2Max", "VDChi2Min", 
+                              "DIRAMin", "DOCAMax", "IPChi2Min", "MaxDauMIPChi2")
+
+    checkConfig(__configuration_keys__, config)
+    	     
+    StdPi = DataOnDemand(Location = "Phys/StdNoPIDsPions")
+    StdK = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
+
+#    StdPi = DataOnDemand(Location = "Phys/StdLoosePions")
+#    StdK = DataOnDemand(Location = "Phys/StdLooseKaons")
+
+    Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
+    "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
+    "(MIPCHI2DV(PRIMARY) > %(DauMIPChi2Min)s))" % config
+    
+    D2pipi = CombineParticles("D2pipiWSFor" + moduleName)
+    D2pipi.DecayDescriptors = [ "D0 -> pi- pi-" ]
+    D2pipi.DaughtersCuts =  { "pi+"	 : Daughtercut, 
+                              "K+"       : Daughtercut }
+
+    D2pipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
+    "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
+    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) & " \
+    "(ADAMASS('D0') < %(CombDMass)s*MeV)" % config
+
+    D2pipi.MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
+    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
+
+    D2pipiSel = Selection("SelD2pipiWSFor" + moduleName, Algorithm = D2pipi, RequiredSelections = [ StdPi ] )
+
+    D2Kpi = D2pipi.clone("D2KpiWSFor" + moduleName, DecayDescriptors = [ "D0 -> K- pi-" ])
+    D2KpiSel = Selection("SelD2KpiWSFor" + moduleName, Algorithm = D2Kpi, RequiredSelections = [ StdPi, StdK ] )
+
+    D2KK = D2pipi.clone("D2KKWSFor" + moduleName, DecayDescriptors = [ "D0 -> K- K-" ])
+    D2KKSel = Selection("SelD2KKWSFor" + moduleName, Algorithm = D2KK, RequiredSelections = [ StdK ] )
+
+    DSel = MergedSelection("SelD2hhWSFor" + moduleName, 
                            RequiredSelections = [ D2pipiSel, D2KpiSel, D2KKSel ] )
 
     return DSel
