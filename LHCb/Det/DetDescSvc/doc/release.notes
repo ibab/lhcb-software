@@ -5,10 +5,11 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+
+!========================= DetDescSvc v3r0 2010-10-26 =========================
+
 ! 2010-10-26 - Marco Clemencic
  - Improved fix to bug #74255 (it was exposing again bug #66497).
-
-!========================= DetDescSvc v3r0 2010-10-25 =========================
 
 ! 2010-10-25 - Marco Clemencic
  - Fixed bug #74255: UpdateMgrSvc fails to query CondDB at requested timeStamp
