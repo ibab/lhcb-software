@@ -4,6 +4,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-10-26 - Anne Keune
+ - Updated the Bd2DstarTauNu line. Now a loose and tight line and format change
+   to python configurables. 
 
 ! 2010-10-26 - Anton Poluektov 
  - StrippingB2DX.py 
