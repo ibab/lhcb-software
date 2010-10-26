@@ -105,15 +105,8 @@ KsListLoose = MergedSelection("StdLooseKsMerged",
                               RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
                                                     DataOnDemand(Location = "Phys/StdLooseKsLL")] )
 
-
-
-
-
 KsList = createSubSel(OutputList = "KsForBetaS",
                       InputList = KsListLoose, Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
-
-
-
 
 f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
                                DaughterLists = [ DataOnDemand(Location = "Phys/StdLoosePions") ],
@@ -159,14 +152,16 @@ Bu2JpsiK = createCombinationSel( OutputList = "Bu2JpsiK",
                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
 Bu2JpsiKPrescaledLine = StrippingLine("Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , prescale = 0.125)
-Bu2JpsiKDetachedLine  = StrippingLine("Bu2JpsiKDetachedLine",
-                                      algos = [ createSubSel( InputList = Bu2JpsiK,
-                                                              OutputList = Bu2JpsiK.name() + "Detached",
-                                                              Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
+
+Bu2JpsiKDetached = createSubSel( InputList = Bu2JpsiK, OutputList = Bu2JpsiK.name() + "Detached",
+                                 Cuts = "(BPVLTIME()>0.15*ps)" )
+Bu2JpsiKDetachedLine  = StrippingLine("Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ] )
+
+Bu2JpsiKUnbiased = createSubSel( InputList = Bu2JpsiK,
+                                 OutputList = Bu2JpsiK.name() + "Unbiased",
+                                 Cuts = "(MINTREE('K+'==ABSID, PT) > 1000.*MeV)")
 Bu2JpsiKUnbiasedLine  = StrippingLine("Bu2JpsiKUnbiasedLine",
-                                      algos = [ createSubSel( InputList = Bu2JpsiK,
-                                                              OutputList = Bu2JpsiK.name() + "Unbiased",
-                                                              Cuts = "(MINTREE('K+'==ABSID, PT) > 1000.*MeV)") ] )
+                                      algos = [ Bu2JpsiKUnbiased ] )
 
 B2JpsiXLines += [ Bu2JpsiKPrescaledLine, Bu2JpsiKDetachedLine, Bu2JpsiKUnbiasedLine]
 
@@ -195,18 +190,17 @@ Bs2JpsiPhi = createCombinationSel( OutputList = "Bs2JpsiPhi",
                                    DaughterLists  = [ PhiList, JpsiList],
                                    PreVertexCuts = "in_range(5000,AM,5650)",
                                    PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
-
 Bs2JpsiPhiPrescaledLine = StrippingLine("Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , prescale = 1.00)
 
-Bs2JpsiPhiDetachedLine  = StrippingLine("Bs2JpsiPhiDetachedLine",
-                                        algos = [ createSubSel( InputList = Bs2JpsiPhi,
-                                                                OutputList = Bs2JpsiPhi.name() + "Detached",
-                                                                Cuts = "(BPVLTIME()>0.15*ps)" )] )
+Bs2JpsiPhiDetached = createSubSel( InputList = Bs2JpsiPhi,
+                                   OutputList = Bs2JpsiPhi.name() + "Detached",
+                                   Cuts = "(BPVLTIME()>0.15*ps)" )
+Bs2JpsiPhiDetachedLine  = StrippingLine("Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ] )
 
-Bs2JpsiPhiUnbiasedLine =  StrippingLine("Bs2JpsiPhiUnbiasedLine",
-                                        algos = [ createSubSel( InputList = Bs2JpsiPhi,
-                                                                OutputList = Bs2JpsiPhi.name() + "Unbiased",
-                                                                Cuts = "(MINTREE('phi(1020)'==ABSID, PT) > 1000.*MeV)") ] )
+Bs2JpsiPhiUnbiased = createSubSel( InputList = Bs2JpsiPhi,
+                                   OutputList = Bs2JpsiPhi.name() + "Unbiased",
+                                   Cuts = "(MINTREE('phi(1020)'==ABSID, PT) > 1000.*MeV)")
+Bs2JpsiPhiUnbiasedLine =  StrippingLine("Bs2JpsiPhiUnbiasedLine", algos = [ Bs2JpsiPhiUnbiased ] )
 
 B2JpsiXLines += [ Bs2JpsiPhiPrescaledLine, Bs2JpsiPhiDetachedLine, Bs2JpsiPhiUnbiasedLine ]
 
@@ -222,17 +216,21 @@ Bd2JpsiKstar = createCombinationSel( OutputList = "Bd2JpsiKstar",
                                      PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
 Bd2JpsiKstarPrescaledLine = StrippingLine("Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , prescale = 0.125)
-Bd2JpsiKstarDetachedLine  = StrippingLine("Bd2JpsiKstarDetachedLine",
-                                          algos = [ createSubSel( InputList = Bd2JpsiKstar,
-                                                                  OutputList = Bd2JpsiKstar.name() + "Detached",
-                                                                  Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
-Bd2JpsiKstarUnbiasedLine  = StrippingLine("Bd2JpsiKstarUnbiasedLine",
-                                          algos = [ createSubSel( InputList = Bd2JpsiKstar,
-                                                                  OutputList = Bd2JpsiKstar.name() + "Unbiased",
-                                                                  Cuts = "(PT>2.*GeV) " \
-                                                                  "& (MINTREE('K*(892)0'==ABSID, PT)> 1000.*MeV)") ] )
-B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKstarUnbiasedLine]
 
+Bd2JpsiKstarDetached = createSubSel( InputList = Bd2JpsiKstar,
+                                     OutputList = Bd2JpsiKstar.name() + "Detached",
+                                     Cuts = "(BPVLTIME()>0.15*ps)" )
+Bd2JpsiKstarDetachedLine  = StrippingLine("Bd2JpsiKstarDetachedLine",
+                                          algos = [ Bd2JpsiKstarDetached ] )
+
+Bd2JpsiKstarUnbiased = createSubSel( InputList = Bd2JpsiKstar,
+                                     OutputList = Bd2JpsiKstar.name() + "Unbiased",
+                                     Cuts = "(PT>2.*GeV) " \
+                                     "& (MINTREE('K*(892)0'==ABSID, PT)> 1000.*MeV)")
+Bd2JpsiKstarUnbiasedLine  = StrippingLine("Bd2JpsiKstarUnbiasedLine",
+                                          algos = [ Bd2JpsiKstarUnbiased ] )
+
+B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKstarUnbiasedLine]
 
 ##################
 ### Bd->JpsiKS ###
@@ -244,26 +242,21 @@ Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
                                   )
 
-
-
-
-
 Bd2JpsiKsPrescaledLine = StrippingLine("Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = 1.00)
+
+Bd2JpsiKsDetached = createSubSel( InputList = Bd2JpsiKs,
+                                  OutputList = Bd2JpsiKs.name() + "Detached",
+                                  Cuts = "(BPVLTIME()>0.15*ps)" )
 Bd2JpsiKsDetachedLine  = StrippingLine("Bd2JpsiKsDetachedLine",
-                                       algos = [ createSubSel( InputList = Bd2JpsiKs,
-                                                               OutputList = Bd2JpsiKs.name() + "Detached",
-                                                               Cuts = "(BPVLTIME()>0.15*ps)" )] )
+                                       algos = [ Bd2JpsiKsDetached ] )
+
+Bd2JpsiKsUnbiased = createSubSel( InputList = Bd2JpsiKs,
+                                  OutputList = Bd2JpsiKs.name() + "Unbiased",
+                                  Cuts = "(MINTREE('KS0'==ABSID, PT)> 1000.*MeV)")
 Bd2JpsiKsUnbiasedLine  = StrippingLine("Bd2JpsiKsUnbiasedLine",
-                                       algos = [ createSubSel( InputList = Bd2JpsiKs,
-                                                               OutputList = Bd2JpsiKs.name() + "Unbiased",
-                                                               Cuts = "(MINTREE('KS0'==ABSID, PT)> 1000.*MeV)") ] )
+                                       algos = [ Bd2JpsiKsUnbiased ] )
+
 B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbiasedLine ]
-
-
-
-
-
-
 
 ##################
 ### Bs->Jpsif0 ##
@@ -273,7 +266,7 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 #                                  DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)",
 #                                  DaughterLists  = [ f0List, JpsiList],
 #                                  PreVertexCuts = "ADAMASS('B_s0') < 300",
-#                                  PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+#                                  PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10)" )
 #
 #Bs2Jpsif0Line = StrippingLine("Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ])
 #
@@ -290,8 +283,6 @@ Lambdab2JpsiLambda = createCombinationSel( OutputList = "Lambdab2JpsiLambda",
                                   PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < 20)"
                                   )
 
-
-
 Lambdab2JpsiLambdaUnbiasedLine = StrippingLine("Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ])
 
 B2JpsiXLines += [Lambdab2JpsiLambdaUnbiasedLine ]
@@ -304,7 +295,7 @@ Bs2JpsiEta = createCombinationSel( OutputList = "Bs2JpsiEta",
                                   DecayDescriptor = "[B_s0 -> J/psi(1S) eta]cc",
                                   DaughterLists  = [ EtaList, JpsiList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
-                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2/VDOF) < 10)"
+                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
                                   )
 
 Bs2JpsiEtaPrescaledLine = StrippingLine("Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = 1.00)

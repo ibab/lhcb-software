@@ -5,6 +5,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Roel Aaij
+ - Updated StrippingB2JpsiXforBeta_s
+   - Replaced VCHI2/VDOF with VCHI2PDOF
+   - Add VCHI2PDOF < 10 to Bd->JpsiKS lines
+   - Create symbols for selections
+
 ! 2010-10-26 - Paula Alvarez Cartelle
  - Update on StrippingBs2Ks0tKst0.py
 
