@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Paula Alvarez Cartelle
+ - Update on StrippingBs2Ks0tKst0.py
+
 ! 2010-10-26 - Victor Coco
 StrippingDisplVertices.py updated wrt to new option in Phys/DisplVertices
 
