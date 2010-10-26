@@ -6,7 +6,7 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Fred Blanc']
-__date__ = '03/10/2010'
+__date__ = '26/10/2010'
 __version__ = '$Revision: 1.0 $'
 
 
@@ -27,7 +27,7 @@ from GaudiKernel.SystemOfUnits import MeV
 
 
 # a few functions that we will use. are there alternatives for this in Juan's framework?
-B2Psi2SXLines = []
+B2Psi2SXJpsiPiPiLines = []
 
 # create a selection using a FilterDesktop
 def createSubSel( OutputList, InputList, Cuts ) :
@@ -65,39 +65,39 @@ def createCombinationSel( OutputList,
 
 
 # define input daughter lists for various B -> J/psi X selections
-PionList = createSubSel( OutputList = "PionsForBToPsi2SX",
+PionList = createSubSel( OutputList = "PionsForBToPsi2SXJpsiPiPi",
                          InputList = DataOnDemand(Location = "Phys/StdLoosePions"),
                          Cuts = "(TRCHI2DOF < 5)" )
 
 JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu")
 
-Psi2SList = createCombinationSel( OutputList = "Psi2SToJpsiPiPiForBToPsi2SX",
+Psi2SList = createCombinationSel( OutputList = "Psi2SToJpsiPiPiForBToPsi2SXJpsiPiPi",
                                   DaughterLists = [ JpsiList, PionList ],
                                   DaughterCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > 4" , "pi+" : "MIPCHI2DV(PRIMARY) > 4" },
-                                  DecayDescriptor = "[psi(2S) -> J/psi(1S) pi+ pi-]cc",
+                                  DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-",
                                   PreVertexCuts = "(AM23>400.*MeV) & (AM23<800.*MeV) &(APT>500*MeV) & (ADAMASS('psi(2S)') < 30*MeV)",
                                   PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 16)" )
 
-KaonList = createSubSel( OutputList = "KaonsForBToPsi2SX",
+KaonList = createSubSel( OutputList = "KaonsForBToPsi2SXJpsiPiPi",
                          InputList = DataOnDemand(Location = "Phys/StdLooseKaons"),
-                         Cuts = "(TRCHI2DOF < 5) & (PIDK > -5)" )
+                         Cuts = "(TRCHI2DOF < 5) & (PIDK > -2)" )
 
-PhiList = createSubSel( OutputList = "Phi2KKForBToPsi2SX",
+PhiList = createSubSel( OutputList = "Phi2KKForBToPsi2SXJpsiPiPi",
                         InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK"),
                         Cuts = "(ADMASS('phi(1020)') < 20)" \
                         "& (PT > 500) " \
                         "& (VFASPF(VCHI2) < 16)" \
-                        "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < 10)" \
-                        "& (MINTREE('K+'==ABSID, PIDK) > -5)" )
+                        "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < 5)" \
+                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" )
 
-KstarList = createCombinationSel( OutputList = "Kstar2KpiForBToPsi2SX",
+KstarList = createCombinationSel( OutputList = "Kstar2KpiForBToPsi2SXJpsiPiPi",
                                   DaughterLists = [ KaonList, PionList ],
                                   DaughterCuts = { },
                                   DecayDescriptor = "[K*(892)0 -> K+ pi-]cc",
-                                  PreVertexCuts = "(APT>500*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
+                                  PreVertexCuts = "(APT>800*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
                                   PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
 
-KsList = MergedSelection("KsForBToPsi2SX",
+KsList = MergedSelection("KsForBToPsi2SXJpsiPiPi",
                          RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
                                                DataOnDemand(Location = "Phys/StdLooseKsLL")] )
 
@@ -106,95 +106,62 @@ KsList = MergedSelection("KsForBToPsi2SX",
 ####################
 
 Psi2SToJpsiPiPiLine =  StrippingLine("Psi2SToJpsiPiPiLine",algos = [ Psi2SList ], prescale = 1)
-B2Psi2SXLines += [ Psi2SToJpsiPiPiLine ]
+B2Psi2SXJpsiPiPiLines += [ Psi2SToJpsiPiPiLine ]
 
 #####################
 ### Bu->Psi(2S)K+ ###
 #####################
-Bu2Psi2SK = createCombinationSel( OutputList = "Bu2Psi2SK",
-                                 DecayDescriptor = "[B+ -> psi(2S) K+]cc",
-                                 DaughterLists = [ KaonList, Psi2SList],
-                                 DaughterCuts  = {"K+": "(PT > 500)" },
-                                 PreVertexCuts = "ADAMASS('B+') < 300",
-                                 PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+Bu2Psi2SKJpsiPiPi = createCombinationSel( OutputList = "Bu2Psi2SKJpsiPiPi",
+                                          DecayDescriptor = "[B+ -> psi(2S) K+]cc",
+                                          DaughterLists = [ KaonList, Psi2SList],
+                                          DaughterCuts  = {"K+": "(PT > 500)" },
+                                          PreVertexCuts = "in_range(5000,AM,5650)",
+                                          PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
-Bu2Psi2SKPrescaledLine = StrippingLine("Bu2Psi2SKPrescaledLine", algos = [ Bu2Psi2SK ] , prescale = 1.00)
-Bu2Psi2SKDetachedLine  = StrippingLine("Bu2Psi2SKDetachedLine",
-                                      algos = [ createSubSel( InputList = Bu2Psi2SK,
-                                                              OutputList = Bu2Psi2SK.name() + "Detached",
-                                                              Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
-Bu2Psi2SKUnbiasedLine  = StrippingLine("Bu2Psi2SKUnbiasedLine",
-                                      algos = [ createSubSel( InputList = Bu2Psi2SK,
-                                                              OutputList = Bu2Psi2SK.name() + "Unbiased",
-                                                              Cuts = "(MINTREE('K+'==ABSID, PT) > 1000.*MeV)") ] )
+Bu2Psi2SKJpsiPiPiLine = StrippingLine("Bu2Psi2SKJpsiPiPiLine", algos = [ Bu2Psi2SKJpsiPiPi ] , prescale = 1.00)
 
-B2Psi2SXLines += [ Bu2Psi2SKPrescaledLine, Bu2Psi2SKDetachedLine, Bu2Psi2SKUnbiasedLine]
+B2Psi2SXJpsiPiPiLines += [ Bu2Psi2SKJpsiPiPiLine]
 
 #####################
 ### Bs->Psi(2S)Phi ##
 #####################
 
-Bs2Psi2SPhi = createCombinationSel( OutputList = "Bs2Psi2SPhi",
-                                   DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
-                                   DaughterLists  = [ PhiList, Psi2SList],
-                                   PreVertexCuts = "ADAMASS('B_s0') < 300",
-                                   PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+Bs2Psi2SPhiJpsiPiPi = createCombinationSel( OutputList = "Bs2Psi2SPhiJpsiPiPi",
+                                            DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
+                                            DaughterLists  = [ PhiList, Psi2SList],
+                                            PreVertexCuts = "in_range(5000,AM,5650)",
+                                            PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
-Bs2Psi2SPhiPrescaledLine = StrippingLine("Bs2Psi2SPhiPrescaledLine", algos = [ Bs2Psi2SPhi ] , prescale = 1.00)
+Bs2Psi2SPhiJpsiPiPiLine = StrippingLine("Bs2Psi2SPhiJpsiPiPiLine", algos = [ Bs2Psi2SPhiJpsiPiPi ] , prescale = 1.00)
 
-Bs2Psi2SPhiDetachedLine  = StrippingLine("Bs2Psi2SPhiDetachedLine",
-                                        algos = [ createSubSel( InputList = Bs2Psi2SPhi,
-                                                                OutputList = Bs2Psi2SPhi.name() + "Detached",
-                                                                Cuts = "(BPVLTIME()>0.15*ps)" )] )
-
-Bs2Psi2SPhiUnbiasedLine =  StrippingLine("Bs2Psi2SPhiUnbiasedLine",
-                                        algos = [ createSubSel( InputList = Bs2Psi2SPhi,
-                                                                OutputList = Bs2Psi2SPhi.name() + "Unbiased",
-                                                                Cuts = "(MINTREE('phi(1020)'==ABSID, PT) > 1000.*MeV)") ] )
-
-B2Psi2SXLines += [ Bs2Psi2SPhiPrescaledLine, Bs2Psi2SPhiDetachedLine, Bs2Psi2SPhiUnbiasedLine ]
+B2Psi2SXJpsiPiPiLines += [ Bs2Psi2SPhiJpsiPiPiLine]
 
 
 #####################
 ### B0->Psi(2S)K*  ##
 #####################
 
-Bd2Psi2SKstar = createCombinationSel( OutputList = "Bd2Psi2SKstar",
-                                     DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
-                                     DaughterLists  = [ KstarList, Psi2SList ],
-                                     PreVertexCuts = "ADAMASS('B0') < 300",
-                                     PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)" )
+Bd2Psi2SKstarJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKstarJpsiPiPi",
+                                              DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
+                                              DaughterLists  = [ KstarList, Psi2SList ],
+                                              PreVertexCuts = "in_range(5000,AM,5650)",
+                                              PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
-Bd2Psi2SKstarPrescaledLine = StrippingLine("Bd2Psi2SKstarPrescaledLine", algos = [ Bd2Psi2SKstar ] , prescale = 0.25)
-Bd2Psi2SKstarDetachedLine  = StrippingLine("Bd2Psi2SKstarDetachedLine",
-                                          algos = [ createSubSel( InputList = Bd2Psi2SKstar,
-                                                                  OutputList = Bd2Psi2SKstar.name() + "Detached",
-                                                                  Cuts = "(BPVLTIME()>0.15*ps)" ) ] )
-Bd2Psi2SKstarUnbiasedLine  = StrippingLine("Bd2Psi2SKstarUnbiasedLine",
-                                          algos = [ createSubSel( InputList = Bd2Psi2SKstar,
-                                                                  OutputList = Bd2Psi2SKstar.name() + "Unbiased",
-                                                                  Cuts = "(PT>2.*GeV) " \
-                                                                  "& (MINTREE('K*(892)0'==ABSID, PT)> 1000.*MeV)") ] )
-B2Psi2SXLines += [ Bd2Psi2SKstarPrescaledLine, Bd2Psi2SKstarDetachedLine, Bd2Psi2SKstarUnbiasedLine]
+Bd2Psi2SKstarJpsiPiPiLine = StrippingLine("Bd2Psi2SKstarJpsiPiPiLine", algos = [ Bd2Psi2SKstarJpsiPiPi ] , prescale = 1.00)
+
+B2Psi2SXJpsiPiPiLines += [ Bd2Psi2SKstarJpsiPiPiLine]
 
 
 #####################
 ### Bd->Psi(2S)KS ###
 #####################
-Bd2Psi2SKs = createCombinationSel( OutputList = "Bd2Psi2SKS",
-                                  DecayDescriptor = "B0 -> psi(2S) KS0",
-                                  DaughterLists  = [ KsList, Psi2SList ],
-                                  PreVertexCuts = "ADAMASS('B0') < 500",
-                                  PostVertexCuts = "ALL" #"(VFASPF(VCHI2/VDOF) < 20)"
-                                  )
+Bd2Psi2SKsJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKSJpsiPiPi",
+                                           DecayDescriptor = "B0 -> psi(2S) KS0",
+                                           DaughterLists  = [ KsList, Psi2SList ],
+                                           PreVertexCuts = "in_range(5000,AM,5650)",
+                                           PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)")
 
-Bd2Psi2SKsPrescaledLine = StrippingLine("Bd2Psi2SKsPrescaledLine", algos = [ Bd2Psi2SKs ] , prescale = 1.00)
-Bd2Psi2SKsDetachedLine  = StrippingLine("Bd2Psi2SKsDetachedLine",
-                                       algos = [ createSubSel( InputList = Bd2Psi2SKs,
-                                                               OutputList = Bd2Psi2SKs.name() + "Detached",
-                                                               Cuts = "(BPVLTIME()>0.15*ps)" )] )
-Bd2Psi2SKsUnbiasedLine  = StrippingLine("Bd2Psi2SKsUnbiasedLine",
-                                       algos = [ createSubSel( InputList = Bd2Psi2SKs,
-                                                               OutputList = Bd2Psi2SKs.name() + "Unbiased",
-                                                               Cuts = "(MINTREE('KS0'==ABSID, PT) > 1000.*MeV)") ] )
-B2Psi2SXLines += [ Bd2Psi2SKsPrescaledLine, Bd2Psi2SKsDetachedLine, Bd2Psi2SKsUnbiasedLine ]
+
+Bd2Psi2SKsJpsiPiPiLine = StrippingLine("Bd2Psi2SKsJpsiPiPiLine", algos = [ Bd2Psi2SKsJpsiPiPi ] , prescale = 1.00)
+
+B2Psi2SXJpsiPiPiLines += [ Bd2Psi2SKsJpsiPiPiLine]
