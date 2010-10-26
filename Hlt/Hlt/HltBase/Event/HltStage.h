@@ -1,7 +1,7 @@
 // $Id: HltStage.h,v 1.10 2010-08-30 13:00:44 amazurov Exp $ 
 // =============================================================================
-#ifndef HltEvent_Stage_H
-#define HltEvent_Stage_H 1
+#ifndef HltEvent_Stage_H_
+#define HltEvent_Stage_H_ 1
 // =============================================================================
 // Include files
 // =============================================================================
@@ -32,12 +32,13 @@
 // HltBase 
 // =============================================================================
 #include "Event/HltMultiTrack.h"
-#include "Event/HltCandidate.h"
 #include "Event/HltL0DiMuonCandidate.h"
 #include "HltBase/Cache.h"
 // =============================================================================
 #ifdef _WIN32
+// =============================================================================
 // Avoid conflict of Windows macro with std::max
+// =============================================================================
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -47,12 +48,12 @@
 // =============================================================================
 #include "GaudiKernel/boost_allocator.h"
 // =============================================================================
-// Forward declarations
-// =============================================================================
-namespace Hlt { class Candidate ; }
-// ==============================================================================
 namespace Hlt 
 {
+  // ===========================================================================
+  // Forward declarations
+  class Stage     ;
+  class Candidate ;
   // ===========================================================================
   // Namespace for locations in TDS
   namespace StageLocation 
@@ -329,7 +330,9 @@ namespace Hlt
   // ==========================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
-#include "Event/HltCandidate.h"
+// #include "Event/HltCandidate.h"
+// #include "Event/HltMultiTrack.h"
+// #include "Event/HltL0DiMuonCandidate.h"
 // ============================================================================
 namespace Hlt 
 {

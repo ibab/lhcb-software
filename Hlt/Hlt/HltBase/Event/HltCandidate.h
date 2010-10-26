@@ -1,7 +1,7 @@
 // $Id: HltCandidate.h,v 1.8 2010-08-30 13:00:44 amazurov Exp $ 
 // ============================================================================
-#ifndef HltEvent_Candidate_H
-#define HltEvent_Candidate_H 1
+#ifndef HltEvent_Candidate_H_
+#define HltEvent_Candidate_H_ 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -23,7 +23,9 @@
 #include "Event/HltStage.h"
 // ============================================================================
 #ifdef _WIN32
+// ============================================================================
 // Avoid conflict of Windows macro with std::max
+// ============================================================================
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -33,12 +35,12 @@
 // ============================================================================
 #include "GaudiKernel/boost_allocator.h"
 // ============================================================================
-// Forward declarations
-// ============================================================================
-namespace Hlt { class Stage ; }
-// ============================================================================
 namespace Hlt
 {
+  // ==========================================================================
+  // Forward declarations
+  class Stage     ;
+  class Candidate ;
   // ==========================================================================
   // Namespace for locations in TDS
   namespace CandidateLocation 
@@ -115,7 +117,7 @@ namespace Hlt
     /// Get the current stage
     const Hlt::Stage* currentStage() const
     { if ( m_stages.empty()) return NULL ; return m_stages.back () ; }
-    /// Last worker (algotithm name)
+    /// Last worker (algorithm name)
     Worker lastWorker() const
     { if ( m_workers.empty()) return "" ;  return m_workers.back() ; }
     /// print
@@ -136,6 +138,31 @@ namespace Hlt
     void clearStages() { m_stages.clear() ; }
     /// Has stage ?
     bool hasStage ( const Hlt::Stage* stage ) const ;
+    // ========================================================================
+  public: // standard 
+    // ========================================================================  
+    /** easy accessors to various  underlying objects 
+     *
+     *  @code
+     * 
+     *   const Hlt::Candidate* candidate = ... ;
+     * 
+     *   // get the stage 
+     *  const Hlt::Stage* stage = candidate->get<Hlt::Stage>() ;
+     *
+     *   // get the L0diMuon
+     *  const Hlt::L0Dimuon* dimuon = candidate->get<Hlt::Stage>() ;
+     *
+     *  @endcode 
+     *
+     *  @param slot the slot to be used for data extraction 
+     *     - 0 corresponds to the current stage , 
+     *     - negative value corresponds to initiator stage 
+     *     - positive value corresponds to step-back in history
+     *  @return the obejct 
+     */
+    template <class TYPE>
+    const TYPE* get ( const int slot = 0 ) const ;
     // ========================================================================
   public: // standard 
     // ========================================================================  
@@ -168,7 +195,7 @@ namespace Hlt
       ::operator delete (p, pObj);
     }
     // ========================================================================
-  #endif
+#endif
     // ========================================================================
   private: // the data
     // ========================================================================
@@ -186,8 +213,148 @@ namespace Hlt
   {
     return obj.fillStream(str);
   }
+  // ==========================================================================
+} //                                                       end of namespace Hlt 
+// ============================================================================
+#include "Event/HltStage.h"
+// ============================================================================
+namespace Hlt 
+{
   // ===========================================================================
-} //                                                       end of namespace LHCb
+  // implementation of various methods for simple access 
+  // ===========================================================================
+  /** get the stage from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the stage 
+   */
+  template <>
+  inline const Hlt::Stage* 
+  Candidate::get<Stage>( const int slot ) const 
+  {
+    if      ( 0 == slot ) { return currentStage   () ; }    // current 
+    else if ( 0 >  slot ) { return initiatorStage () ; }    // initator 
+    // 
+    if ( (unsigned) slot >= m_stages.size () ) { return 0 ; }
+    //
+    return *( m_stages.end() - slot - 1 ) ;                 // step-back 
+  } 
+  // ===========================================================================
+  /** get the track from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the track
+   */
+  template <>
+  inline const LHCb::Track* 
+  Candidate::get<LHCb::Track>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage-> get<LHCb::Track>() ;
+  }
+  // ==========================================================================
+  /** get the vertex from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the vertex
+   */
+  template <>
+  inline const LHCb::RecVertex* 
+  Hlt::Candidate::get<LHCb::RecVertex>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<LHCb::RecVertex>() ;
+  }
+  // ==========================================================================
+  /** get the L0CaloCandidate from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the L0CaloCandidate
+   */
+  template <>
+  inline const LHCb::L0CaloCandidate* 
+  Hlt::Candidate::get<LHCb::L0CaloCandidate>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<LHCb::L0CaloCandidate>() ;
+  }
+  // ==========================================================================
+  /** get the L0MuonCandidate from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the L0MuonCandidate
+   */
+  template <>
+  inline const LHCb::L0MuonCandidate* 
+  Hlt::Candidate::get<LHCb::L0MuonCandidate>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<LHCb::L0MuonCandidate>() ;
+  }
+  // ==========================================================================
+  /** get the Multi-track from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the multi-track
+   */
+  template <>
+  inline const Hlt::MultiTrack* 
+  Hlt::Candidate::get<Hlt::MultiTrack>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<Hlt::MultiTrack>() ;
+  }
+  // ==========================================================================
+  /** get the L0DiMuonCandidate from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the dimuon-candidate
+   */
+  template <>
+  inline const Hlt::L0DiMuonCandidate* 
+  Hlt::Candidate::get<Hlt::L0DiMuonCandidate>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<Hlt::L0DiMuonCandidate>() ;
+  }  
+  // ==========================================================================
+  /** get the Hlt-Candidate from the Hlt Candidate
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the candidate 
+   */
+  template <>
+  inline const Hlt::Candidate* 
+  Hlt::Candidate::get<Hlt::Candidate>( const int slot ) const 
+  {
+    const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
+    if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
+    return _stage->get<Hlt::Candidate> () ;
+  }
+  // ==========================================================================
+} //                                                       end of namespace Hlt
 // ============================================================================
 // the END 
 // ============================================================================

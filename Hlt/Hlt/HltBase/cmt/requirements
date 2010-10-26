@@ -4,7 +4,7 @@
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v10r1
+version           v10r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -53,7 +53,8 @@ apply_pattern    reflex_dictionary                                 \
                  options="-U__MINGW32__"
 
 # Hack for cmt v1r19 bug to link dictionary on windows
-macro HltBaseDict_use_linkopts $(use_linkopts)
+macro        HltBaseDict_use_linkopts $(use_linkopts)
+macro_append HltBaseDict_dependencies    " HltBase " 
 
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
 

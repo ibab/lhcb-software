@@ -18,7 +18,7 @@ namespace
   /** @var CLID_Candidate 
    *  Class ID definition 
    */
-  static const CLID CLID_Candidate = 7561;
+  const CLID CLID_Candidate = 7561;
   // ==========================================================================
 }
 // ============================================================================

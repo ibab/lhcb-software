@@ -3,6 +3,14 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2010-10-26 - Vanya Belyaev
+
+ - add few getters into HltCandidate to bypass stage...
+
+ - cmt/requirements 
+    version increment v10r2
+
 !========================== HltBase v10r1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
  - remove setReco from the ITrackUpgrade interface

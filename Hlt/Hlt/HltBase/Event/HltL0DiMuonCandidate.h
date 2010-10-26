@@ -1,52 +1,40 @@
-
-//   **************************************************************************
-//   *                                                                        *
-//   *                      ! ! ! A T T E N T I O N ! ! !                     *
-//   *                                                                        *
-//   *  This file was created automatically by GaudiObjDesc, please do not    *
-//   *  delete it or edit it by hand.                                         *
-//   *                                                                        *
-//   *  If you want to change this file, first change the corresponding       *
-//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
-//   *  are using it from inside a Gaudi-package).                            *
-//   *                                                                        *
-//   **************************************************************************
-
+// $Id:$ 
+// ============================================================================
 #ifndef HltEvent_L0DiMuonCandidate_H
 #define HltEvent_L0DiMuonCandidate_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
+// STD & STL  
+// ============================================================================
+#include <vector>
+#include <ostream>
+// ============================================================================
 #include "GaudiKernel/NamedRange.h"
 #include "Event/L0MuonCandidate.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/ObjectVector.h"
+// ============================================================================
 #ifdef _WIN32
 // Avoid conflict of Windows macro with std::max
-  #ifndef NOMINMAX
-    #define NOMINMAX
-  #endif
+#ifndef NOMINMAX
+#define NOMINMAX
 #endif
+#endif
+// ============================================================================
 #include "GaudiKernel/boost_allocator.h"
 #include "GaudiKernel/SmartRef.h"
-#include <vector>
-#include <ostream>
-
+// ============================================================================
 // Forward declarations
-
 namespace Hlt
 {
-
-  // Forward declarations
-  
-  // Class ID definition
-  static const CLID CLID_L0DiMuonCandidate = 7563;
-  
+  // ==========================================================================
   // Namespace for locations in TDS
-  namespace L0DiMuonCandidateLocation {
+  namespace L0DiMuonCandidateLocation 
+  {
     static const std::string& Default = "Hlt/DiTracks";
   }
-  
-
+  // ==========================================================================
   /** @class L0DiMuonCandidate L0DiMuonCandidate.h
    *
    * Representation of di-muon for Hlt 
@@ -55,32 +43,29 @@ namespace Hlt
    * created Mon Jun 14 15:57:48 2010
    * 
    */
-
   class L0DiMuonCandidate: public ContainedObject
   {
   public:
-
+    // ========================================================================
     /// typedef for std::vector of L0DiMuonCandidate
-    typedef std::vector<L0DiMuonCandidate*> Vector;
-    typedef std::vector<const L0DiMuonCandidate*> ConstVector;
-  
-  /// typedef for ObjectVector of L0DiMuonCandidate
-  typedef ObjectVector<L0DiMuonCandidate> Container;
-  
+    typedef std::vector<L0DiMuonCandidate*>       Vector      ;
+    typedef std::vector<const L0DiMuonCandidate*> ConstVector ;
+    /// typedef for ObjectVector of L0DiMuonCandidate
+    typedef ObjectVector<L0DiMuonCandidate>       Container   ;
     /// The container type for shared di-tracks (without ownership)
     typedef SharedObjectsContainer<Hlt::L0DiMuonCandidate> Selection;
     /// For uniform access to containers in TES (KeyedContainer,SharedContainer) 
-    typedef Gaudi::NamedRange_<ConstVector> Range;
-  
+    typedef Gaudi::NamedRange_<ConstVector>                Range;
+    // ========================================================================
+  public:
+    // ========================================================================    
     /// Default Constructor
     L0DiMuonCandidate() {}
-  
     /// Default Destructor
     virtual ~L0DiMuonCandidate() {}
-  
     // Retrieve pointer to class definition structure
-    virtual const CLID& clID() const;
-    static const CLID& classID();
+    virtual const CLID& clID    () const ;
+    static  const CLID& classID ()       ;
   
     /// Fill the ASCII output stream
    virtual std::ostream& fillStream(std::ostream& s) const;
@@ -162,24 +147,6 @@ namespace Hlt
 // -----------------------------------------------------------------------------
 // end of class
 // -----------------------------------------------------------------------------
-
-// Including forward declarations
-
-inline const CLID& Hlt::L0DiMuonCandidate::clID() const
-{
-  return Hlt::L0DiMuonCandidate::classID();
-}
-
-inline const CLID& Hlt::L0DiMuonCandidate::classID()
-{
-  return CLID_L0DiMuonCandidate;
-}
-
-inline std::ostream& Hlt::L0DiMuonCandidate::fillStream(std::ostream& s) const
-{
-  return s;
-}
-
 
 inline const LHCb::L0MuonCandidate* Hlt::L0DiMuonCandidate::first() const
 {

@@ -4,8 +4,8 @@
 
 #include "Event/HltL0DiMuonCandidate.h"
 #include "Event/HltMultiTrack.h"
-#include "Event/HltCandidate.h"
 #include "Event/HltStage.h"
+#include "Event/HltCandidate.h"
 
 
 
