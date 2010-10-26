@@ -57,7 +57,7 @@ class ElectronIDConf(object):
         )
 
     config_default =  {
-        'LinePrescale'            :    0.2  ,
+        'LinePrescale'            :    0.4  ,
         'LinePostscale'           :    1.   ,
 
         'Both_PT'                 :  500.   ,  # MeV

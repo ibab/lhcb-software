@@ -43,6 +43,7 @@ class DiElectronConf(object):
         # DiElectron line
         'DiElectron_Prescale',
         'DiElectron_Postscale',
+        'DiElectron_checkPV',
         
         'DiElectron_ElectronPT',
         'DiElectron_ElectronP',
@@ -55,6 +56,7 @@ class DiElectronConf(object):
         # DiElectron Low Mass line
         'DiElectronLowMass_Prescale',
         'DiElectronLowMass_Postscale',
+        'DiElectronLowMass_checkPV',
         
         'DiElectronLowMass_ElectronPT',
         'DiElectronLowMass_ElectronP',
@@ -63,7 +65,7 @@ class DiElectronConf(object):
         'DiElectronLowMass_MinMass',
         'DiElectronLowMass_VCHI2PDOF',       
         'DiElectronLowMass_PT',
-
+        
         # BiasedDiElectron line
         'BiasedDiElectron_Prescale',
         'BiasedDiElectron_Postscale',
@@ -93,6 +95,7 @@ class DiElectronConf(object):
         # Jpsi2ee line
         'Jpsi2ee_Prescale',
         'Jpsi2ee_Postscale',
+        'Jpsi2ee_checkPV',
         
         'Jpsi2ee_ElectronPT',
         'Jpsi2ee_ElectronP',
@@ -107,7 +110,8 @@ class DiElectronConf(object):
     config_default= {
         # DiElectron line
         'DiElectron_Prescale'                           :     1.  ,
-        'DiElectron_Postscale'                          :     1.  ,        
+        'DiElectron_Postscale'                          :     1.  ,
+        'DiElectron_checkPV'                            : False   , 
         
         'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
         'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
@@ -120,6 +124,7 @@ class DiElectronConf(object):
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     0.2 ,
         'DiElectronLowMass_Postscale'                   :     1.  ,
+        'DiElectronLowMass_checkPV'                     : False   ,   
         
         'DiElectronLowMass_ElectronPT'                  :  1100.  ,  # MeV
         'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
@@ -158,6 +163,7 @@ class DiElectronConf(object):
         # Jpsi2ee line
         'Jpsi2ee_Prescale'                              :     1.  ,
         'Jpsi2ee_Postscale'                             :     1.  ,
+        'Jpsi2ee_checkPV'                               : False   ,   
         
         'Jpsi2ee_ElectronPT'                            :  1200.  ,  # MeV
         'Jpsi2ee_ElectronP'                             : -8000.  ,  # MeV, no cut now
@@ -174,6 +180,7 @@ class DiElectronConf(object):
         # DiElectron line
         'DiElectron_Prescale'                           :     1.  ,
         'DiElectron_Postscale'                          :     1.  ,        
+        'DiElectron_checkPV'                            :  True   ,
         
         'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
         'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
@@ -186,6 +193,7 @@ class DiElectronConf(object):
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     1.  ,
         'DiElectronLowMass_Postscale'                   :     1.  ,
+        'DiElectronLowMass_checkPV'                     :  True   , 
         
         'DiElectronLowMass_ElectronPT'                  :   750.  ,  # MeV
         'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
@@ -224,6 +232,7 @@ class DiElectronConf(object):
         # Jpsi2ee line
         'Jpsi2ee_Prescale'                              :     1.  ,
         'Jpsi2ee_Postscale'                             :     1.  ,
+        'Jpsi2ee_checkPV'                               :  True   , 
         
         'Jpsi2ee_ElectronPT'                            :  1200.  ,  # MeV
         'Jpsi2ee_ElectronP'                             : -8000.  ,  # MeV, no cut now
@@ -262,6 +271,7 @@ class DiElectronConf(object):
         self.DiElectronLine = StrippingLine( name + 'IncDiElectron' + 'Line',
                                              prescale  = config['DiElectron_Prescale'],
                                              postscale = config['DiElectron_Postscale'],
+                                             checkPV   = config['DiElectron_checkPV'],
                                              algos = [self.SelDiElectron]
                                              )
 
@@ -282,6 +292,7 @@ class DiElectronConf(object):
                                                     HLT = "HLT_PASS('Hlt2UnbiasedTFDiElectronLowMassDecision')",
                                                     prescale  = config['DiElectronLowMass_Prescale'],
                                                     postscale = config['DiElectronLowMass_Postscale'],
+                                                    checkPV   = config['DiElectronLowMass_checkPV'],
                                                     algos = [ self.SelDiElectronLowMass ]
                                                     )
 
@@ -344,6 +355,7 @@ class DiElectronConf(object):
         self.Jpsi2eeLine = StrippingLine( name + 'Jpsi2ee' + 'Line',
                                           prescale  = config['Jpsi2ee_Prescale'],
                                           postscale = config['Jpsi2ee_Postscale'],
+                                          checkPV   = config['Jpsi2ee_checkPV'],
                                           algos = [self.SelJpsi2ee]
                                           )
         

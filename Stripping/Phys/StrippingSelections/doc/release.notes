@@ -5,6 +5,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Jibo He
+ - python/StrippingSelections/StrippingDiElectronNew.py
+   Set checkPV to False for unbiased lines 
+ - python/StrippingSelections/StrippingElectronID.py
+   Prescaling loosened to 0.4 
+
 ! 2010-10-26 - Mat Charles
  - Bugfix to the following files: avoid name collision in global event cut
     + StrippingD2hhh_conf.py
