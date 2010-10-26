@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-10-26 - Jibo He
+ - python/StrippingSelections/StreamCharm.py
+   Removed the loose line of Ccbar2Ppbar
+
+! 2010-10-26 - Jibo He
  - python/StrippingSelections/StrippingCcbar2Ppbar.py
    + Added a new line for exclusive production study 
    - Obsolete loose line removed 

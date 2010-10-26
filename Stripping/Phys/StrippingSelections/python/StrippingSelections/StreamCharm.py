@@ -142,7 +142,7 @@ stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 #stream.appendLines( StrippingDstarD02xxForCrossConf().lines() )
 # Charmonium -> p pbar
 stream.appendLines( [ StrippingCcbar2PpbarConf().Nominal_Line() ] )
-stream.appendLines( [ StrippingCcbar2PpbarConf().Loose_Line() ] )
+stream.appendLines( [ StrippingCcbar2PpbarConf().Exclusive_Line() ] )
 #stream.appendLines( StrippingDstarPromptWithD02K3PiConf().lines() )
 #stream.appendLines( StrippingD02K3PiForCrossSectionConf().lines() )
 D02K3PiForXSection = StrippingD02K3PiForXSectionConf(
