@@ -7,6 +7,10 @@
 
 ! 2010-10-26 - Roel Aaij
  - Updated StrippingB2JpsiXforBeta_s
+   - Removed cc from decay descriptors of Bs->J/psi eta and f0List
+
+! 2010-10-26 - Roel Aaij
+ - Updated StrippingB2JpsiXforBeta_s
    - Replaced VCHI2/VDOF with VCHI2PDOF
    - Add VCHI2PDOF < 10 to Bd->JpsiKS lines
    - Create symbols for selections

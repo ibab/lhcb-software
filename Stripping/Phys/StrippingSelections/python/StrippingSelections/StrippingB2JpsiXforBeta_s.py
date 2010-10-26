@@ -110,7 +110,7 @@ KsList = createSubSel(OutputList = "KsForBetaS",
 
 f0List = createCombinationSel( OutputList = "f02PiPiForBetaS",
                                DaughterLists = [ DataOnDemand(Location = "Phys/StdLoosePions") ],
-                               DecayDescriptor = "[f_0(980) -> pi+ pi-]cc",
+                               DecayDescriptor = "f_0(980) -> pi+ pi-",
                                DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 10)"},
                                PreVertexCuts = "(APT>900*MeV) & (ADAMASS('f_0(980)') < 500*MeV) & (AMAXDOCA('') < 0.5*mm)",
                                PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
@@ -292,7 +292,7 @@ B2JpsiXLines += [Lambdab2JpsiLambdaUnbiasedLine ]
 ## Bs->Jpsi Eta ##
 ##################
 Bs2JpsiEta = createCombinationSel( OutputList = "Bs2JpsiEta",
-                                  DecayDescriptor = "[B_s0 -> J/psi(1S) eta]cc",
+                                  DecayDescriptor = "B_s0 -> J/psi(1S) eta",
                                   DaughterLists  = [ EtaList, JpsiList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
