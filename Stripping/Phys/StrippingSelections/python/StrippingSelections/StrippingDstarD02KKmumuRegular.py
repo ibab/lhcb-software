@@ -174,7 +174,7 @@ def makeNBTracks(name) :
         if i not in modules : modules.append(i)
         
         filterTooManyIP = VoidFilter(
-            'FilterNTracks'
+            'FilterNTracks_forDstarD02KKmumuRegular'
             ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )" %locals()
             )
         

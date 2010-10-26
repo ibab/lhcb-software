@@ -228,7 +228,7 @@ class StrippingD2hhhConf(LHCbConfigurableUser) :
          if i not in modules : modules.append(i)
 
       filterTooManyIP = VoidFilter(
-         'FilterNTracks'
+         'FilterNTracks_forD2hhh'
          ,Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTracksInEvent)s )" %self.getProps()
          )
       return filterTooManyIP
