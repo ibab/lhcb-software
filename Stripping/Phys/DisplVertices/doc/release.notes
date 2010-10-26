@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-26 - Neal Gauvin
+ - Added the possibility to measure the radial displacement with respect 
+   to the upstream PV when no beam line infos are found.
+
 ! 2010-10-25 - Neal Gauvin
  - Allow checking the first RV with FromBeamLine method.
 
@@ -41,7 +45,7 @@
 	 * SaveParticlesFrom : moved to Phys/DisplVerticesMC
    * DisplVertices : MC-dependent code moved to Phys/DisplVerticesMC under 
                      the name MCDisplVertices.
-   The phyisics remains unaffected.
+   The physics remains unaffected.
 
 !========================== DisplVertices v6r11 2010-09-06 ===================
 

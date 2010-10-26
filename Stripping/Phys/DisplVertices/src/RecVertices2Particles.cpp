@@ -35,10 +35,13 @@ DECLARE_ALGORITHM_FACTORY( RecVertices2Particles );
 RecVertices2Particles::RecVertices2Particles( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_vFit(0)
-    , pi(3.1415926)
-    , m_MapCalled(false)
-    , m_pt(400.)
+  , m_vFit(0)
+  , pi(3.1415926)
+  , m_MapCalled(false)
+  , m_FromBL(false)
+  , m_FromUpPV(false)
+  , m_GeoInit(false)
+  , m_pt(400.)
 {
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("UsePartFromTES", m_UsePartFromTES = false );
@@ -112,6 +115,14 @@ StatusCode RecVertices2Particles::initialize() {
     m_UsePartFromTES = true; 
   }
 
+  //Set the value of m_FromBL and m_FromUpPV according to what is given in
+  //  m_RCut
+  if( !m_RCut.empty() ){
+    if( m_RCut.find("FromBeamLine") != string::npos ) m_FromBL = true;    
+    if( m_RCut.find("UpstreamPV") != string::npos ) m_FromUpPV = true; 
+  }
+  
+
 
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
@@ -144,14 +155,18 @@ StatusCode RecVertices2Particles::initialize() {
     info()<<"Minimum number of tracks at the RecVertex : "
           << m_nTracks <<" tracks."<< endmsg;
     info()<< "The radial displacement is ";
-    if( m_RCut == "FromUpstreamPV" ){
-      info()<< "computed with respect to the upstream PV of PV3D."<< endmsg;
-      info()<< "Min nb of tracks on the upPV candidate : "
-            << m_PVnbtrks << endmsg;
-    } else if( m_RCut == "FromBeamLine" ){
+    if( m_FromBL ){
       info()<< "computed with respect to the beam line given at " 
             << m_BLLoc << endmsg;
-    } else {
+      if( m_FromUpPV )
+        info()<< "If no beam line info are found, it will then be ";
+    } 
+    if( m_FromUpPV ){
+      info()<< "computed with respect to the upstream PV."<< endmsg;
+      info()<< "Min nb of tracks on the upPV candidate : "
+            << m_PVnbtrks << endmsg;
+    }
+    if( !m_FromUpPV && !m_FromBL ){
       info()<< "computed with respect to (0,0,z) in the global LHCb frame" 
             << endmsg;
       info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
@@ -196,7 +211,7 @@ StatusCode RecVertices2Particles::initialize() {
   m_BeamLine = new Particle();
 
   //Set beam line to z axis
-  if( m_RCut =="" ){
+  if( m_RCut.empty() ){
     m_BeamLine->setReferencePoint( Gaudi::XYZPoint( 0., 0., 0. ) );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
@@ -255,13 +270,13 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
   //Require a upstream PV for both FromBeamLine and FromUpstreamPV methods.
   const RecVertex * UpPV = NULL;
   UpPV = GetUpstreamPV();
-  if( m_RCut != "" && UpPV==NULL){
+  if( (m_FromBL || m_FromUpPV) && UpPV==NULL){
     if(msgLevel(MSG::DEBUG))
       debug() <<"No PV match the requirements" << endmsg;
     return StatusCode::SUCCESS;
   }
   //Set the beam line
-  if( m_RCut=="FromBeamLine" ){
+  if( m_FromBL ){
     if( exist<Particle::Range>( m_BLLoc ) ){
       const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
       const LHCb::Particle* tmp = *(BL.begin());
@@ -271,10 +286,12 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
         debug()<<"Beam line position "<< m_BeamLine->referencePoint()
                <<" direction " << m_BeamLine->momentum() << endmsg;
     } else {
-      warning()<<"No Beam line found at "<< m_BLLoc << endmsg;
-      return StatusCode::SUCCESS;
+      if( msgLevel(MSG::DEBUG) )
+        debug()<<"No Beam line found at "<< m_BLLoc << endmsg;
+      if( !m_FromUpPV ) return StatusCode::SUCCESS;
     }
-  } else if( m_RCut=="FromUpstreamPV" ){
+  } 
+  if( m_FromUpPV ){
     m_BeamLine->setReferencePoint( UpPV->position() );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
     if(msgLevel(MSG::DEBUG))
@@ -301,6 +318,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
   Particle::ConstVector RecParts;
   RecVertex::ConstVector::const_iterator i = RV.begin();
   RecVertex::ConstVector::const_iterator iend = RV.end();
+  m_GeoInit = false; //be sure the goe is initialised if needed.
   for( ; i != iend; ++i) {
     const RecVertex* rv = *i;
     const SmartRefVector< Track > & Tracks = rv->tracks();
@@ -321,7 +339,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     if( !m_KeepLowestZ and i == RV.begin() ) continue;
 
     //Do not keep if upstream to the upPV
-    if( m_RCut != "" && 
+    if( (m_FromBL || m_FromUpPV) && 
         rv->position().z() < UpPV->position().z() ) continue;
 
 
@@ -404,7 +422,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
 //=============================================================================
 StatusCode RecVertices2Particles::finalize() {
 
-  if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
+  delete m_BeamLine;
 
   debug() << "==> Finalize" << endmsg;
   return DVAlgorithm::finalize(); 
@@ -460,7 +478,7 @@ const RecVertex * RecVertices2Particles::GetUpstreamPV(){
         i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Check that the PV is in beamline else check that the PV is in a credible position
-    if(m_RCut=="FromBeamLine" && RFromBL( pv->position() )> m_RMin){
+    if( m_FromBL && RFromBL( pv->position() )> m_RMin){
        continue;
     }
     else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){ continue;}
@@ -673,6 +691,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     //Store 51 info if found to be in detector material
     if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) 
       tmpPart.addInfo(51,1.);
+    tmpPart.addInfo(52,r );
     
     //Save Rec Particle in the Desktop
     RecParts.push_back( desktop()->keep( &tmpPart ) );
@@ -1679,6 +1698,8 @@ void RecVertices2Particles::StudyPreyComposition( const Particle * p ){
 }
 
 void RecVertices2Particles::InitialiseGeoInfo(){
+  if( m_GeoInit ) return; //no need to do it more than once per event.
+  
   //get the Velo geometry
   string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
   const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );

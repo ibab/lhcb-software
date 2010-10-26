@@ -139,14 +139,14 @@ private:
   bool   m_KeepLowestZ;      ///< keep the RV with the lowest Z (particle gun)
   bool   m_SaveTuple;        ///< Save candidate infos in a tuple
   bool   m_UseMap;           ///< Use a map to store Particle Track relation
-  bool   m_MapCalled;         ///< has the map been already called in event ?
+  bool   m_MapCalled;        ///< has the map been already called in event ?
   /***************************************************************//**
    * When trying to associate tracks participating to the reconstructed
    * vertex with a Particle, use Particles from the TES.
    * The alternative is to find the associated protoparticle and make 
    * a Particle with best PID. 
    ******************************************************************/
-  bool   m_UsePartFromTES;
+  bool        m_UsePartFromTES;
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation;
   std::string m_Fitter;      ///< method for fitting the RecVertex
@@ -155,8 +155,12 @@ private:
    * ""                   : cut with respect to (0,0,z)
    * "FromUpstreamPV"     : cut with respect to the upstream PV (PV3D)
    * "FromBeamLine"       : cut with respect to given beam line
+   * "FromBeamLineUpstreamPV" : cut with respect to given beam line
+   *                            if no beam line is found, take the upPV.
    ******************************************************************/
   std::string m_RCut;         
+  bool        m_FromBL;       ///< Set at initialisation acc. to m_RCut
+  bool        m_FromUpPV;     ///< Set at initialisation acc. to m_RCut
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
 
@@ -165,6 +169,8 @@ private:
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
   std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
   std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
+  /// set to true when geometry is already initialised
+  bool        m_GeoInit;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
 
