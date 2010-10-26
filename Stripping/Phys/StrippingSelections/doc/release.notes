@@ -5,6 +5,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Paul Nicholas SCHAACK
+ - Added StrippingBs2MuMuD.py
+ - Added StrippingBs2MuMuKstar.py
+ - Updated StrippingBs2MuMuPhi.py
+
 ! 2010-10-26 - Jeremy Dickens
  - Added StrippingBd2KstarMuMuTriggered_JD.py for new K*mumu stripping (include noFD lines)
  - Added StrippingB2DiMuonX.py for Tom Blake's generic b -> mu mu X lines
