@@ -4,6 +4,9 @@ __version__ = '$Revision: 1.4 $'
 
 """
  Charmonium -> p pbar, including eta(1S) -> psi(2S)
+ Including
+ 1. Nominal line
+ 2. Exclusive line, for exclusive production study
 """
 
 from Gaudi.Configuration import *
@@ -13,23 +16,20 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
     __slots__ = {
                     'SpdMult'          :   600.   # dimensionless, Spd Multiplicy cut 
                   , 'ProtonPT'         :  1950.   # MeV
-                  , 'ProtonTrkChi2'    :     4. 
+                  , 'ProtonTrkChi2'    :     5. 
                   , 'ProtonPIDppi'     :    10.   # CombDLL(p-pi)
                   , 'ProtonPIDpK'      :     5.   # CombDLL(p-K)
-                  , 'CombUpperMass'    :  3950.   # MeV, before Vtx fit
+                  , 'CombUpperMass'    :  4050.   # MeV, before Vtx fit
                   , 'CombLowerMass'    :  2850.   # MeV, before Vtx fit
-                  , 'UpperMass'        :  3900.   # MeV, after Vtx fit
+                  , 'UpperMass'        :  4000.   # MeV, after Vtx fit
                   , 'LowerMass'        :  2900.   # MeV, after Vtx fit
                   , 'VtxCHI2'          :     9.   # dimensionless
-                  # Loose selection
-                  , 'ProtonPTLoose'         :  1600.   # MeV
-                  , 'ProtonPIDppiLoose'     :    -5.   # CombDLL(p-pi)
-                  , 'ProtonPIDpKLoose'      :    -5.   # CombDLL(p-K)
-                  , 'CombUpperMassLoose'    :  4050.   # MeV, before Vtx fit
-                  , 'CombLowerMassLoose'    :  2750.   # MeV, before Vtx fit
-                  , 'UpperMassLoose'        :  3950.   # MeV, after Vtx fit
-                  , 'LowerMassLoose'        :  2850.   # MeV, after Vtx fit
-                  , 'VtxCHI2Loose'          :     9.   # dimensionless 
+                  # Exclusive production
+                  , 'SpdMultExclusive'          :   100.   # dimensionless, Spd Multiplicy cut   
+                  , 'ProtonPTExclusive'         :   500.   # MeV
+                  , 'ProtonPIDppiExclusive'     :    10.   # CombDLL(p-pi)
+                  , 'ProtonPIDpKExclusive'      :     5.   # CombDLL(p-K)
+                  , 'VtxCHI2Exclusive'          :     9.   # dimensionless                    
                   }
 
     def Nominal_Line(self):
@@ -38,14 +38,24 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
         return StrippingLine('Ccbar2Ppbar',
                              prescale = 1,
                              checkPV  = False,
+                             FILTER = { 'Code'       : "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps(), 
+                                        'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
+                                                         'from LoKiCore.functions    import *' ]
+                                        },
                              algos = [ StripCcbar2Ppbar ] )
-
     
-    def Loose_Line(self):
+    def Exclusive_Line(self):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        StripCcbar2PpbarLoose = self.combineCcbarLoose()
-        return StrippingLine('Ccbar2PpbarLoose', prescale = 0.01,  algos = [ StripCcbar2PpbarLoose ] )
-   
+        StripCcbar2PpbarExclusive = self.combineCcbarExclusive()
+        return StrippingLine('Ccbar2PpbarExclusive',
+                             prescale = 1,
+                             checkPV  = False,
+                             FILTER = { 'Code'       : "( CONTAINS('Raw/Spd/Digits')<%(SpdMultExclusive)s )" % self.getProps(), 
+                                        'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
+                                                         'from LoKiCore.functions    import *' ]
+                                        },
+                             algos = [ StripCcbar2PpbarExclusive ] )
+    
         
     def combineCcbar(self):
         from Configurables import CombineParticles, LoKi__VoidFilter
@@ -54,12 +64,6 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
         #---------------------------
         # Selections 
         #---------------------------
-
-        # Requre SpdMult < 600
-        SpdMultFilter = LoKi__VoidFilter("_SpdMultFilter",
-                                         Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
-                                         ) 
-        
         _TightProtons = DataOnDemand(Location = "Phys/StdTightProtons")
         
         ProtonCut = "(PT > %(ProtonPT)s *MeV) & (TRCHI2DOF < %(ProtonTrkChi2)s) & ((PIDp-PIDpi) > %(ProtonPIDppi)s) & ((PIDp-PIDK) > %(ProtonPIDpK)s)" % self.getProps()
@@ -72,33 +76,36 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
         _Ccbar2Ppbar.CombinationCut = CombCut
         _Ccbar2Ppbar.MotherCut = MomCut
         
-        SelCcbar2Ppbar = Selection( "SelCcbar2Ppbar",
-                                    Algorithm = _Ccbar2Ppbar,
-                                    RequiredSelections = [ _TightProtons ]
-                                    )
+        return Selection( "SelCcbar2Ppbar",
+                          Algorithm = _Ccbar2Ppbar,
+                          RequiredSelections = [ _TightProtons ]
+                          )
+        
 
-        return SelectionSequence( "SeqCcbar2Ppbar",
-                                  TopSelection = SelCcbar2Ppbar,
-                                  EventPreSelector = [ SpdMultFilter ]
-                                  )
-
-    def combineCcbarLoose(self):
-        from Configurables import CombineParticles
+    def combineCcbarExclusive(self):
+        from Configurables import CombineParticles, LoKi__VoidFilter
+        from PhysSelPython.Wrappers import DataOnDemand, EventSelection, Selection, SelectionSequence
         
         #---------------------------
-        # Loose Selections 
+        # Selections 
         #---------------------------
-        ProtonLooseCut = "(PT> %(ProtonPTLoose)s *MeV) & ((PIDp-PIDpi) > %(ProtonPIDppiLoose)s) & ((PIDp-PIDK) > %(ProtonPIDpKLoose)s)" % self.getProps()
-        CombLooseCut = "(%(CombLowerMassLoose)s *MeV < AM) & (AM < %(CombUpperMassLoose)s *MeV)" % self.getProps()
-        MomLooseCut = "(VFASPF(VCHI2/VDOF)< %(VtxCHI2Loose)s) & (%(LowerMassLoose)s *MeV < MM) & (MM < %(UpperMassLoose)s *MeV)" % self.getProps()
+        _TightProtons = DataOnDemand(Location = "Phys/StdTightProtons")
         
-        StripCcbar2PpbarLoose = CombineParticles("StripCcbar2PpbarLoose")
-        StripCcbar2PpbarLoose.InputLocations = [ "StdLooseProtons" ]
-        StripCcbar2PpbarLoose.DecayDescriptor = "J/psi(1S) -> p+ p~-" 
-        StripCcbar2PpbarLoose.DaughtersCuts = { "p+": ProtonLooseCut }
-        StripCcbar2PpbarLoose.CombinationCut = CombLooseCut
-        StripCcbar2PpbarLoose.MotherCut = MomLooseCut
-        return StripCcbar2PpbarLoose  
+        ProtonCut = "(PT > %(ProtonPTExclusive)s *MeV) & ((PIDp-PIDpi) > %(ProtonPIDppiExclusive)s) & ((PIDp-PIDK) > %(ProtonPIDpKExclusive)s)" % self.getProps()
+        #CombCut = "(%(CombLowerMassExclusive)s *MeV < AM) & (AM < %(CombUpperMassExclusive)s *MeV)" % self.getProps()
+        #MomCut = "(VFASPF(VCHI2/VDOF)< %(VtxCHI2Exclusive)s) & (%(LowerMassExclusive)s *MeV < MM) & (MM < %(UpperMassExclusive)s *MeV)" % self.getProps()
+        MomCut = "(VFASPF(VCHI2/VDOF)< %(VtxCHI2Exclusive)s)" % self.getProps()        
+
+        _Ccbar2PpbarExclusive = CombineParticles("_Ccbar2PpbarExclusive")
+        _Ccbar2PpbarExclusive.DecayDescriptor = "J/psi(1S) -> p+ p~-" 
+        _Ccbar2PpbarExclusive.DaughtersCuts = { "p+": ProtonCut }
+        _Ccbar2PpbarExclusive.MotherCut = MomCut
+        
+        return Selection( "SelCcbar2PpbarExclusive",
+                          Algorithm = _Ccbar2PpbarExclusive,
+                          RequiredSelections = [ _TightProtons ]
+                          )
+    
     
     def getProps(self):
         """
