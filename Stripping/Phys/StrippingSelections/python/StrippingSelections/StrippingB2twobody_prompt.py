@@ -6,13 +6,16 @@
 #
 
 def B2twobody_promptLine(
+
         moduleName = "B2twobody_prompt", 
-        MaxLongTracksInEvent=100,
+        Prescale_prompt=1.,
+
+        MaxLongTracksInEvent=80,
         MinBPt = 2000.0,       
 	MaxBVertChi2DOF = 10., 
-        MaxBPVVDCHI2=9.,
-        MaxIPCHI2DV=9.,
-        MinBPVDIRA = 0.0, # removed
+#        MaxBPVVDCHI2=9.,
+#        MaxIPCHI2DV=9.,
+        MinBPVDIRA = 0.999, # removed
 	MinBMass = 4000.0,     
 	MaxBMass = 100000.0,     
         MinNvc=3,
@@ -26,9 +29,10 @@ def B2twobody_promptLine(
         MinLongLivedDauIPChi2 = 4.0,      
         MaxLongLivedDauTrkChi2 = 10.0,
         MinLongLivedPt = 3000.0,
-        MinKsPt=3500.,
+        MinKsPt=2500.,
         MaxLongLivedIPChi2 = 10.0,
         MaxLongLivedVertChi2DOF = 10.0,
+
  	MinLongLivedPVVDChi2 = 200.0,   # halved
  	MaxKsDeltaM = 25.0, 
  	MaxLmDeltaM = 15.0, 
@@ -39,9 +43,9 @@ def B2twobody_promptLine(
         MinDPIDpK = 5.0,
         MinDPIDKforD0Dplus = 0.0,
         MinDDauPt = 250.0,
-        MinDDauIPChi2 = 6.0,      
+        MinDDauIPChi2 = 7.0,      
         MaxDDauTrkChi2 = 5.0,
-        MinDPt = 2000.0,       
+        MinDPt = 1200.0,       
         MaxDIPChi2 = 10.0,   # changed
         MaxDVertChi2DOF = 10.0,
  	MinDPVVDChi2 = 50.0,  # halved/2 
@@ -77,25 +81,25 @@ def B2twobody_promptLine(
         MaxYDeltaM = 1000.0,
 
         MaxDSD0VertChi2DOF = 10.0,
-        MinDSD0PVVDChi2 = 50.0,   # halved/2
+        MinDSD0PVVDChi2 = 60.0,   # halved/2
         MaxDSD0DeltaM = 30.0,
-        MinDSPt = 1500.0,      
-        MaxDSDeltaM=4.0,
-        MaxDSSlowPionIPChi2=10.,  # added   
-        MaxDSD0IPChi2=10.,  # added
+        MinDSPt = 1000.0,      
+        MaxDSDeltaM=3.0,
+        MaxDSSlowPionIPChi2=7.,  # added   
+        MaxDSD0IPChi2=7.,  # added
         MinDSD0DauPt = 250.0, # added
         MinDSD0DauIPChi2 = 9.0,
-        MinDSSlowPionDauPt = 110.0, # added
+        MinDSSlowPionDauPt = 150.0, # added
 
-        MinPi0RPt=4000.0,  
+        MinPi0RPt=3500.0,  
         MinPi0RMM=100.0,   
         MaxPi0RMM=170.0,
         MinPi0RGamCL=0.2,
-        MinPi0MPt=4000.0,
+        MinPi0MPt=3500.0,  # was 3500
 
-        MinPhoPt=4000.0, 
+        MinPhoPt=3500.0, 
 
-        MinEtaRPt=3500.0
+
 
    ) : 
 
@@ -115,7 +119,7 @@ def B2twobody_promptLine(
     # Define the shared cuts
     B_prompt_combcut =    "(in_range(%(MinBMass)s*MeV, AM, %(MaxBMass)s*MeV))" % locals()
     B_prompt_combcut += "& (APT>%(MinBPt)s*MeV)"%locals()
-    B_prompt_cut = "(VFASPF(VCHI2/VDOF)<%(MaxBVertChi2DOF)s) & (BPVVDCHI2 <%(MaxBPVVDCHI2)s) & (MIPCHI2DV(PRIMARY) < %(MaxIPCHI2DV)s) "%locals()
+    B_prompt_cut = "(VFASPF(VCHI2/VDOF)<%(MaxBVertChi2DOF)s) "%locals()
 #    B_prompt_cut += "& (BPVIPCHI2() < %(MaxBPVIPChi2)s)"%locals()
 #    Bcut += "& (BPVVDCHI2 < %(MinBPVVDChi2)s)"% locals()  # changed
 #    Bcut += "& (BPVDIRA > %(MinBPVDIRA)s)"% locals()
@@ -169,6 +173,7 @@ def B2twobody_promptLine(
     LongLivedcut+="& CHILDCUT ( MIPCHI2DV ( PRIMARY ) > %(MinLongLivedDauIPChi2)s , 2 )"%locals()
     LongLivedcut+="& CHILDCUT ( TRCHI2DOF < %(MaxLongLivedDauTrkChi2)s , 1 )"%locals()
     LongLivedcut+="& CHILDCUT ( TRCHI2DOF < %(MaxLongLivedDauTrkChi2)s , 2 )"%locals()
+    LongLivedcut+="& (BPVDIRA> %(MinBPVDIRA)s)"%locals()
     Kscut = LongLivedcut+"& (PT>%(MinKsPt)s*MeV) & (ADMASS('KS0') < %(MaxKsDeltaM)s*MeV)"%locals()
     Lmcut = LongLivedcut+"& (ADMASS('Lambda0') < %(MaxLmDeltaM)s*MeV)"%locals()
     Ks.Code = Kscut
@@ -192,6 +197,7 @@ def B2twobody_promptLine(
     Charm2Bcut+="& CHILDCUT ( MIPCHI2DV ( PRIMARY ) > %(MinDDauIPChi2)s , 2 )"%locals()
     Charm2Bcut+="& CHILDCUT ( TRCHI2DOF < %(MaxDDauTrkChi2)s , 1 )"%locals()
     Charm2Bcut+="& CHILDCUT ( TRCHI2DOF < %(MaxDDauTrkChi2)s , 2 )"%locals()
+    Charm2Bcut+="& (BPVDIRA> %(MinBPVDIRA)s)"%locals()
     Charm3Bcut=Charm2Bcut
     Charm3Bcut+="& CHILDCUT ( PT > %(MinDDauPt)s , 3 )"%locals()
     Charm3Bcut+="& CHILDCUT ( MIPCHI2DV ( PRIMARY ) > %(MinDDauIPChi2)s , 3 )"%locals()
@@ -201,7 +207,7 @@ def B2twobody_promptLine(
     Dscut = Charm3Bcut+"& (ADMASS('D_s+') < %(MaxDDeltaM)s*MeV)"%locals()
     Lccut = Charm3Bcut+"& (ADMASS('Lambda_c+') < %(MaxDDeltaM)s*MeV)"%locals()
     Dzcut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDKforD0Dplus)s , 1 )"%locals()
-    Dpcut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDKforD0Dplus)s , 1 )"%locals()
+    Dpcut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDK)s , 1 )"%locals()
     Dscut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDK)s , 1 )"%locals()
     Dscut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDK)s , 2 )"%locals()
     Lccut+="& CHILDCUT ( PIDK-PIDpi > %(MinDPIDK)s , 1 )"%locals()
@@ -271,12 +277,14 @@ def B2twobody_promptLine(
     DScut =  "(abs(M-MAXTREE('D0'==ABSID,M)-145.42)<%(MaxDSDeltaM)s)"%locals()
     DScut+="& CHILDCUT ( VFASPF(VCHI2/VDOF) < %(MaxDSD0VertChi2DOF)s , 2 )"%locals()
     DScut+="& CHILDCUT ( BPVVDCHI2 > %(MinDSD0PVVDChi2)s , 2 )"%locals()
+    DScut+="& CHILDCUT ( BPVDIRA> %(MinBPVDIRA)s, 2 )"%locals()
     DScut+="& CHILDCUT ( ADMASS('D0') < %(MaxDSD0DeltaM)s*MeV , 2 )"%locals()
     DScut+="& ( PT > %(MinDSPt)s )"%locals()
     DScut+="& CHILDCUT ( MIPCHI2DV(PRIMARY) < %(MaxDSSlowPionIPChi2)s , 1 )"%locals()     # added
     DScut+="& CHILDCUT ( MIPCHI2DV(PRIMARY) < %(MaxDSD0IPChi2)s , 2 )"%locals()     # added 
 #    DScut+="& CHILDCUT ( MinDsD0DauPt
     DScut+="& ( NINGENERATION ( ( PT > %(MinDSD0DauPt)s ) , 2 ) == 2 )"%locals()
+#    DScut+="& (1 == NINGENERATION ( (PIDK-PIDpi > %(MinDPIDKforD0Dplus)s ),2))"%locals()
     DScut+="& ( NINGENERATION ( ( MIPCHI2DV ( PRIMARY ) > %(MinDSD0DauIPChi2)s ) , 2 ) == 2 )"%locals()
     DScut+="& CHILDCUT ( PT > %(MinDSSlowPionDauPt)s ,1)"%locals()     # added 
     DS.Code = DScut
@@ -408,8 +416,8 @@ def B2twobody_promptLine(
     B_prompt_StrippingNumTracksGEC = VoidFilter('B_prompt_StrippingNumTracksGEC'
                                   , Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >>  (TrSIZE < %(MaxLongTracksInEvent)s ) "%locals() 
                                   )
-    VertexFilterMin = LoKi__VoidFilter(  'VertexFilterMin', Code= "CONTAINS('Rec/Vertex/Primary')>0")
-    VertexFilterMax = LoKi__VoidFilter(  'VertexFilterMax', Code= "CONTAINS('Rec/Vertex/Primary')<3")
-    line = StrippingLine("B2twobody_promptLine",  algos = [VertexFilterMin, VertexFilterMax, B_prompt_StrippingNumTracksGEC,Bpresel,BSel_prompt] )
+    VertexFilterMin = LoKi__VoidFilter(  'VertexFilterMin', Code= "CONTAINS('Rec/Vertex/Primary')==1")
+#    VertexFilterMax = LoKi__VoidFilter(  'VertexFilterMax', Code= "CONTAINS('Rec/Vertex/Primary')<3")
+    line = StrippingLine("B2twobody_promptLine",   prescale = "%(Prescale_prompt)s  "%locals(), algos = [VertexFilterMin,  B_prompt_StrippingNumTracksGEC,Bpresel,BSel_prompt] )
 
     return [line]

@@ -5,6 +5,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-26 - Walter Bonivento
+
+- Updated StrippingB2twobody_prompt.py: bugfix and reduce timing and retention
+
+
 ! 2010-10-26 - Jibo He
  - python/StrippingSelections/StreamCharm.py
    Removed the loose line of Ccbar2Ppbar
