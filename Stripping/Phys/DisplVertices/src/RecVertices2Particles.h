@@ -80,9 +80,9 @@ private:
   bool TestTrack( const LHCb::Track *  ); ///< Cut on the track quality
   /// Cut on the RF-Foil and sensors position
   bool IsInRFFoil( const Gaudi::XYZPoint & );
-  void InitialiseGeoInfo();
-  bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);
-  bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);
+  void InitialiseGeoInfo();///< Store geometry infos
+  bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);///<Point in material region in Left halfbox
+  bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);///<Point in material region in Right halfbox
 
   StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
   StatusCode SaveCaloInfos( Tuple & );

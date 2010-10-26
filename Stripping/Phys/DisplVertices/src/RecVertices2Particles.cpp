@@ -145,8 +145,8 @@ StatusCode RecVertices2Particles::initialize() {
     if( m_RemVtxFromDet == 4 )
       info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
     if( m_RemVtxFromDet == 5 )
-      info()<<"Remove RecVertex if in home-made description of detector"
-            <<" material"<< endmsg;
+      info()<<"Remove RecVertex if in region arround the RFFoil and sensors,"
+            <<"positionned w.r.t the velo sensors"<< endmsg;
     info()<<"Remove tracks with Chi2/ndof > "<< m_TChi2<< endmsg;
     info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
     info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
@@ -1094,7 +1094,10 @@ bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode,
   }
   return false;
 }
-
+//=============================================================================
+// Check if a point is in a region containing RFFoil and sensors in the Left 
+// halfbox frame
+//=============================================================================
 
 bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
   // First get the z bin
@@ -1148,6 +1151,11 @@ bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
   return false;
   
 }
+
+//=============================================================================
+// Check if a point is in a region containing RFFoil and sensors in the Right 
+// halfbox frame
+//=============================================================================
 
 bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
   // First get the z bin

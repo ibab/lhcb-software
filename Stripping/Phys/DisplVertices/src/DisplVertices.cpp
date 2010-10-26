@@ -67,7 +67,7 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
   declareProperty("SigmaZ", m_SigmaZ = 1000. );
   declareProperty("SigmaR", m_SigmaR = 1000. );
-  declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
+  declareProperty("RCutMethod", m_RCut = "FromPreyInfo" );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
   declareProperty("DetDist", m_DetDist = 1*mm );
   declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
@@ -181,6 +181,8 @@ StatusCode DisplVertices::initialize() {
     } else if( m_RCut == "FromBeamLine" ){
       info() << "computed with respect to the beam line given at " 
              << m_BLLoc << endmsg;
+    }else if( m_RCut == "FromPreyInfo" ){
+      info() << "obtained from previous calculation"  << endmsg;
     } else {
       info() << "computed with respect to (0,0,z) in the global LHCb frame" 
              << endmsg;
@@ -239,7 +241,8 @@ StatusCode DisplVertices::execute(){
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
   //------------------Get the (upstream) Primary Vertex------------------
-  GetUpstreamPV();
+  if ( m_RCut != "FromPreyInfo")GetUpstreamPV();
+
   if( msgLevel( MSG::DEBUG ) && PV != NULL )
     debug() << "Upstream PV Position : " << PV->position() << endmsg ;
 
@@ -303,7 +306,9 @@ StatusCode DisplVertices::execute(){
     int nbtrks = p->endVertex()->outgoingParticles().size();
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
-    double rho = GetRFromBL( pos );
+    double rho = -10.;
+    if( m_RCut != "FromPreyInfo" )rho = GetRFromBL( pos );
+    else rho = p->info(52,-1000.);
     double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);

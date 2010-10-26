@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-10-26 - Neal Gauvin
+ - Added FromPreyInfo Rcut method in DisplVertices.cpp (use the info put in the particle in RecVertices2Particles)
+
+! 2010-10-26 - Neal Gauvin
  - Added the possibility to measure the radial displacement with respect 
    to the upstream PV when no beam line infos are found.
 
