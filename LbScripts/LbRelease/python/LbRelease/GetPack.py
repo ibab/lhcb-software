@@ -141,6 +141,11 @@ try:
             self.xpos = xpos
             self.ysize = ysize
             self.xsize = xsize
+            # hack to avoid false error in PyDev
+            self.ACS_UARROW = getattr(curses, "ACS_UARROW")
+            self.ACS_DARROW = getattr(curses, "ACS_DARROW")
+            self.ACS_CKBOARD = getattr(curses, "ACS_CKBOARD")
+            self.ACS_BLOCK = getattr(curses, "ACS_BLOCK")
             # The pad has to be higher than the length of the list
             # otherwise we get an error trying to write to the bottom-left char
             self._pad = curses.newpad(self._count + 1, self.xsize)
@@ -181,13 +186,13 @@ try:
                 top    = self.offset
                 bottom = self.offset + self.ysize
                 right  = self.xsize - 1
-                pad.addch(top, right, curses.ACS_UARROW)
-                pad.addch(bottom, right, curses.ACS_DARROW)
+                pad.addch(top, right, self.ACS_UARROW)
+                pad.addch(bottom, right, self.ACS_DARROW)
                 pad.vline(top + 1, right,
-                          curses.ACS_CKBOARD, bottom - top - 1)
+                          self.ACS_CKBOARD, bottom - top - 1)
                 cursor = int(round((bottom - top - 2) *
                                    float(self.selection) / (self._count-1)))
-                pad.addch(top + cursor + 1, right, curses.ACS_BLOCK)
+                pad.addch(top + cursor + 1, right, self.ACS_BLOCK)
 
             # paint
             pad.refresh(self.offset, 0,
@@ -224,6 +229,9 @@ try:
             self.min_y, self.min_x = 0, 0
             self.max_y, self.max_x = self.scr.getmaxyx()
 
+            # hack to avoid false error in PyDev
+            self.ACS_HLINE = getattr(curses, "ACS_HLINE")
+
             self.message = message
             self.listbox = ListBox(data,
                                    self.min_y + 3, self.min_x + 1,
@@ -235,8 +243,8 @@ try:
         def _draw(self):
             self.scr.addnstr(1, 1, self.message, self.max_x - 1)
             self.scr.box()
-            self.scr.hline(2, 1, curses.ACS_HLINE, self.max_x-2)
-            self.scr.hline(self.max_y - 3, 1, curses.ACS_HLINE, self.max_x-2)
+            self.scr.hline(2, 1, self.ACS_HLINE, self.max_x-2)
+            self.scr.hline(self.max_y - 3, 1, self.ACS_HLINE, self.max_x-2)
             self.scr.addnstr(self.max_y - 2, 1,
                              "Use arrows, pgup, pgdown to move, Enter to select, 'q' to quit.",
                              self.max_x - 2)

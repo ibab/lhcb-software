@@ -1,6 +1,7 @@
 2010-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
-	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out
+	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out.
+	Fixed some 'fake' PyDev errors.
 	* python/LbRelease/rcs.py: modified to add package-specific configurations to the Eclipse
 	project and to create an Eclipse project whenthe option --project is used.
 
