@@ -51,7 +51,7 @@ const std::string& DeRichLocations::location( const Rich::DetectorType det )
     ( Rich::Rich1, DeRichLocations::Rich1 )
     ( Rich::Rich2, DeRichLocations::Rich2 );
 
-  // Find the given radiator in the map
+  // Find the given detector in the map
   DetLocMap::const_iterator iDet = detLocMap.find(det);
 
   // All OK ?
