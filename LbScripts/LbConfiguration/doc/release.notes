@@ -1,3 +1,9 @@
+2010-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/eclipse/*: templates for the configuration of Eclipse projects
+	* python/LbConfiguration/__init__.py: added functions to generate the Eclipse configuration
+	* python/LbConfiguration/SetupProject.py: create Eclipse project configuration when called with --build-env
+
 2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Repository.py: fixed a few syntax warnings
@@ -14,8 +20,8 @@
 
 2010-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: set the default ACL for the User_release_area to be "system:anyuser l" 
-	and "cern:z5 rl" in order to enforce the CERN policy about public areas. 
+	* python/LbConfiguration/LbLogin.py: set the default ACL for the User_release_area to be "system:anyuser l"
+	and "cern:z5 rl" in order to enforce the CERN policy about public areas.
 
 2010-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -43,7 +49,7 @@
 
 2010-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/generateLogin: 
+	* scripts/generateLogin:
 	- fixed usage of MYSITEROOT when it is built with several path entries.
 	- created function for the update above.
 
@@ -53,22 +59,22 @@
 
 2010-09-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
-	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to 
-	something different then CMTSupportedConfig is used. This ensure that desktop slc5 
-	ia32 machine would work. 
+	* python/LbConfiguration/LbLogin.py:
+	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to
+	something different then CMTSupportedConfig is used. This ensure that desktop slc5
+	ia32 machine would work.
 	- added warnings when the selected config is in the compatible ones but not in the supported
 	ones.
 
 2010-09-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: changed the detected CMTCONFIGs from CMTSupportedConfig to 
+	* python/LbConfiguration/LbLogin.py: changed the detected CMTCONFIGs from CMTSupportedConfig to
 	CMTCompatibleConfig. This will allow native slc5 32 bits machines to run properly.
 
 2010-08-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the "--dev" option. It allows to use the LHCBDEV area for
-	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in 
+	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in
 	the shell wrappers (LbLogin.{sh,csh,bat}) do not match.
 
 2010-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>

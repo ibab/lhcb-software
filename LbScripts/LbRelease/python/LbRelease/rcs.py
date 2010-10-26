@@ -193,7 +193,7 @@ class RevisionControlSystem(object):
         Retursn the error code of the underlying command.
         """
         return 0
-    
+
     def move(self, package, project):
         """ Move a package from one project to another """
         return 0
@@ -398,7 +398,7 @@ class CVS(RevisionControlSystem):
         options = ("-d", self.repository, "rtag", version, module)
         _, _, retcode = apply(_cvs, options, {"stdout": None, "stderr": None})
         return retcode
-    
+
     def move(self, package, project):
         """ Move a package from one project to another """
         log = logging.getLogger()
@@ -552,7 +552,7 @@ class SubversionCmd(RevisionControlSystem):
         If no path is specified, the root of the repository is used.
         """
         if path:
-            if path[0] == "/": # we need relative path 
+            if path[0] == "/": # we need relative path
                 path = path[1:]
             path = "/".join([self.repository, path])
         else:
@@ -884,11 +884,21 @@ class SubversionCmd(RevisionControlSystem):
         """
         return self._computePaths(module, version, isProject)[0]
 
-    def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
+    def checkout(self, module, version = "head", dest = None, vers_dir = False,
+                 project = False, eclipse = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
+
+        @param module: name of the module
+        @param version: version of the module
+        @param dest: destination directory (default ".")
+        @param vers_dir: if the version directory must be created
+        @param project: if the module name refers to a project
+        @param eclipse: if the eclipse configuration must be created (by default
+                        it is created only if in an eclipse workspace)
         """
+        from os.path import exists, join, dirname, realpath, isdir
         # check for the validity of the version
         # (this implies a check on the existence of the module)
         if not self.hasVersion(module, version, project):
@@ -900,24 +910,24 @@ class SubversionCmd(RevisionControlSystem):
             os.chdir(dest)
         else:
             dest = "." # If not specified, use local directory
+        # we should create Eclipse-friendly configuration if we are in an Eclipse
+        # workspace (i.e. exists(<dest>/../.metadata) or if we are asked explicitly
+        eclipse = eclipse or exists(join(dirname(realpath(dest)), ".metadata"))
 
         src, dst = self._computePaths(module, version, project, vers_dir)
 
         # Check if we can do an advanced (eclipse-friendly checkout)
         # - first prepare the top level directory if needed
         if not project and not vers_dir: # we can do it on packages without version
-            workspace_path = os.path.dirname(os.path.realpath(dest))
-            if os.path.exists(os.path.join(workspace_path, ".metadata")):
-                # this is an eclipse workspace
-                if not os.path.exists(os.path.join(dest, ".svn")):
-                    # there is no svn directory, make a checkout of the project
-                    # containing the package
-                    psrc, _ = self._computePaths(self.modules[module], "trunk", isProject = True)
-                    psrc = psrc.rsplit("/", 1)[0] # _computePaths return the path to cmt for projects
-                    _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
-                    # top level directory ready
+            if eclipse and not exists(join(dest, ".svn")):
+                # there is no svn directory, make a checkout of the project
+                # containing the package
+                psrc, _ = self._computePaths(self.modules[module], "trunk", isProject = True)
+                psrc = psrc.rsplit("/", 1)[0] # _computePaths return the path to cmt for projects
+                _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
+                # top level directory ready
         # - check if we can use the top level directory
-        if os.path.exists(os.path.join(dest, ".svn")):
+        if exists(join(dest, ".svn")):
             out = _svn("info", dest, stderr = None)[0]
             try:
                 url = (l for l in out.splitlines() if l.startswith("URL:")).next().split()[-1]
@@ -927,7 +937,7 @@ class SubversionCmd(RevisionControlSystem):
                     ldst = dst.replace("\\", "/").split("/")
                     step = dest
                     while ldst:
-                        step = os.path.join(step, ldst.pop(0))
+                        step = join(step, ldst.pop(0))
                         if ldst:
                             # non-recursive checkout for the intermediate levels
                             if _svn("up", "-N", step)[2]:
@@ -940,9 +950,9 @@ class SubversionCmd(RevisionControlSystem):
                 pass
 
         # full path to destination
-        dst = os.path.join(dest, dst)
+        dst = join(dest, dst)
 
-        if os.path.isdir(os.path.join(dst,".svn")): # looks like a SVN working copy
+        if isdir(join(dst,".svn")): # looks like a SVN working copy
             # try with "switch"
             sub_cmd = "switch"
         else:
@@ -953,7 +963,19 @@ class SubversionCmd(RevisionControlSystem):
 
         if not vers_dir and not project:
             # create version.cmt file
-            self._create_vers_cmt(os.path.join(dest, module), version)
+            self._create_vers_cmt(join(dest, module), version)
+
+        if eclipse:
+            if not project:
+                # add package-specific configuration
+                from LbConfiguration import eclipseConfigurationAddPackage
+                eclipseConfigurationAddPackage(os.path.realpath(dest), module)
+            else:
+                # add project-specific configuration
+                from LbConfiguration import createEclipseConfiguration
+                createEclipseConfiguration(os.path.realpath(dst),
+                                           os.environ.get("CMTPROJECTPATH",""))
+
 
     def tag(self, module, version, isProject = False):
         """
@@ -971,13 +993,13 @@ class SubversionCmd(RevisionControlSystem):
                                                             module, version),
                              trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
-    
+
     def _updatePath(self, pth, root_dir):
         pthlist = []
         for p in pth.split("/") :
             pthlist.append(p)
             _svn("update", "-N", os.sep.join(pthlist), cwd=root_dir)
-            
+
     def _createPath(self, pth, root_dir):
         pthlist = []
         for p in pth.split("/") :
@@ -1017,7 +1039,7 @@ class SubversionCmd(RevisionControlSystem):
             log.debug("The temporary directory used is %s" % tmpdir_name)
             _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name)
             root_dir  = os.path.join(tmpdir_name, self.repository.split("/")[-1])
-            
+
             # package full checkout
             for k in ["trunk", "tags", "branches"] :
                 _, pdir = self._getPackagePath(package, k)
@@ -1033,7 +1055,7 @@ class SubversionCmd(RevisionControlSystem):
                         for d in _svn("ls", pdir, cwd = root_dir)[0].splitlines() :
                             ddir = os.path.join(pdir, d)
                             _, _, _ = _svn("update", ddir, cwd=root_dir)
-    
+
                         ppdir = prdir
                         pkglist = package.split("/")[:-1]
                         if pkglist :
@@ -1044,7 +1066,7 @@ class SubversionCmd(RevisionControlSystem):
                         _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir)
 
             self.modules[package] = project
-            modlist = os.path.join(tmpdir_name,"packages.list") 
+            modlist = os.path.join(tmpdir_name,"packages.list")
             f = open(modlist, "w")
             f.write(self._getPackageProperty())
             f.close()
@@ -1052,7 +1074,7 @@ class SubversionCmd(RevisionControlSystem):
             _svn("propset", "--file", modlist, "packages", root_dir)
             log.info("Committing the changes.")
             _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir)
-                
+
         return status
 
     def _getRequirements(self, module, version = "head"):

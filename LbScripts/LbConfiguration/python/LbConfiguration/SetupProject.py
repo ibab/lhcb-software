@@ -9,7 +9,7 @@ from stat import S_ISDIR
 from fnmatch import fnmatch
 from tempfile import mkdtemp, mkstemp
 
-from LbConfiguration import createProjectMakefile
+from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.CVS import CVS2Version
 __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
@@ -1729,7 +1729,7 @@ class SetupProject:
                         messages.append('Appending %s to the path.' % exedir)
                         self.environment["PATH"] = os.pathsep.join([self.environment["PATH"], exedir])
 
-        else:
+        else: # Prepare build-time environment
             tmps = self.project_info.name
             if self.project_info.version: tmps += " %s" % self.project_info.version
             messages.append('Build-time environment for %s ready.' % tmps)
@@ -1758,6 +1758,8 @@ class SetupProject:
                     if os.path.isdir(user_proj_dir):
                         # Create a project Makefile
                         createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
+                        # eclipse configuration
+                        createEclipseConfiguration(user_proj_dir, self.environment["CMTPROJECTPATH"])
                         # Let's enter the user project directory
                         script += "cd %s\n" % user_proj_dir
                         messages.append("Current directory is '%s'." % user_proj_dir)

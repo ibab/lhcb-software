@@ -367,6 +367,8 @@ class GetPack(Script):
         self.parser.add_option("--no-curses", action = "store_true",
                                help = "use the simple selection from the list of packages "
                                       "instead of the curses version")
+        self.parser.add_option("--eclipse", action = "store_true",
+                               help = "enable eclipse-friendly check-out and configuration")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
@@ -465,7 +467,7 @@ class GetPack(Script):
         if version.lower() == "head":
             version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
-        rep.checkout(package, version, vers_dir = self.options.version_dirs)
+        rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
         # Call "cmt config"
         if self.options.version_dirs:
             pkgdir =  os.path.join(package, version, "cmt")
@@ -516,7 +518,7 @@ class GetPack(Script):
         if version.lower() == "head":
             version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
-        rep.checkout(project, version, vers_dir = True, project = True)
+        rep.checkout(project, version, vers_dir = True, project = True, eclipse = self.options.eclipse)
         project = project.upper()
         pkgdir =  os.path.join(project, "%s_%s" % (project, version))
         return (project, version, pkgdir)

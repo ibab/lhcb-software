@@ -1,12 +1,18 @@
+2010-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out
+	* python/LbRelease/rcs.py: modified to add package-specific configurations to the Eclipse
+	project and to create an Eclipse project whenthe option --project is used.
+
 2010-10-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/move_package: 
+	* scripts/move_package:
 	* python/LbRelease/rcs.py: finished the implementation of the move_package utility.
 
 2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbRelease/rcs.py: 
-	* scripts/move_package: 
+	* python/LbRelease/rcs.py:
+	* scripts/move_package:
 	* scripts/tag_package: fixed syntax warnings.
 
 2010-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
