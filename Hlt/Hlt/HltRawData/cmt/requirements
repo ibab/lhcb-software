@@ -29,7 +29,6 @@ use HltEvent            v*    Event
 use DAQEvent            v*    Event
 use TrackEvent          v*    Event
 
-use L0Event             v*    Event
 
 #============================================================================
 # Component library building rule
