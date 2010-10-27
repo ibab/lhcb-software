@@ -20,6 +20,8 @@ use HltEvent            v*    Event
 use TrackEvent          v*    Event
 use HltInterfaces       v*    Kernel
 
+use L0Event             v*    Event
+
 use CaloDet             v*    Det 
 
 use DaVinciKernel       v*    Phys

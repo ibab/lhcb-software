@@ -4,6 +4,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-10-27 - Tomasz Skwarnicki
+ - move L0DecReportsMaker & L0SelReportsMaker from Hlt/HltRawData here, since they don't
+   belong to Hlt
+
 ! 2010-10-18 - Tomasz Skwarnicki
  -  Add UseParticle2LHCbIDsMap property to TriggerSelectionTisTos
  -  Add TriggerSelectionTisTosSummary,TriggerTisTosSummary for TisTos summary use
