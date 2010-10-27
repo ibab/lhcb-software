@@ -11,7 +11,7 @@
 #
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
-from StrippingSelections.StrippingB2twobody_prompt import B2twobody_promptLine
+#from StrippingSelections.StrippingB2twobody_prompt import B2twobody_promptLine
 from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
 #from StrippingSelections.StrippingB02D0Kstar_D02KPiPi0 import B02D0Kstar_D02KPiPi0Conf
 #from StrippingSelections.StrippingB02D0Kstar_D02K3Pi import B02D0Kstar_D02K3PiConf
@@ -59,5 +59,5 @@ stream.appendLines( [
 stream.appendLines( B2DXLines().lines ) # B2DX lines with default cuts
 #stream.appendLines( B02D0Kstar_D02KPiPi0Conf().lines ) 
 #stream.appendLines( B02D0Kstar_D02K3PiConf().lines ) 
-stream.appendLines( B2twobody_promptLine() )
+#stream.appendLines( B2twobody_promptLine() )
 stream.appendLines( StrippingB2D3HLoose('Loose').lines ) # B2D3H Lines

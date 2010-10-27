@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-27 - Walter Bonivento
+ update StrippingSelections/bhadron; possible cause of conflict
+
 
 ! 2010-10-27 - James Keaveney
   - StrippingDiPhotonDiMuon.py  - added line for DiPhotonDiMuon requiring 
