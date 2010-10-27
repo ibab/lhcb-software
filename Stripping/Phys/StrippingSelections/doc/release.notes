@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-27 - Anton Poluektov 
+  - StrippingB2DX.py  - fixed d2hh wrong sign line ( [ ]cc was missing )
+
 ! 2010-10-26 - Walter Bonivento
  update StrippingSelections/streamcharm,dimuon,bhadron
 ! 2010-10-26 - Jibo He

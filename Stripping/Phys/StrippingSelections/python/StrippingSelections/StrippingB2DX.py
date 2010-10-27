@@ -457,7 +457,7 @@ def makeD2hhWS(moduleName, config) :
     "(MIPCHI2DV(PRIMARY) > %(DauMIPChi2Min)s))" % config
     
     D2pipi = CombineParticles("D2pipiWSFor" + moduleName)
-    D2pipi.DecayDescriptors = [ "D0 -> pi- pi-" ]
+    D2pipi.DecayDescriptors = [ "[D0 -> pi- pi-]cc" ]
     D2pipi.DaughtersCuts =  { "pi+"	 : Daughtercut, 
                               "K+"       : Daughtercut }
 
@@ -471,10 +471,10 @@ def makeD2hhWS(moduleName, config) :
 
     D2pipiSel = Selection("SelD2pipiWSFor" + moduleName, Algorithm = D2pipi, RequiredSelections = [ StdPi ] )
 
-    D2Kpi = D2pipi.clone("D2KpiWSFor" + moduleName, DecayDescriptors = [ "D0 -> K- pi-" ])
+    D2Kpi = D2pipi.clone("D2KpiWSFor" + moduleName, DecayDescriptors = [ "[D0 -> K- pi-]cc" ])
     D2KpiSel = Selection("SelD2KpiWSFor" + moduleName, Algorithm = D2Kpi, RequiredSelections = [ StdPi, StdK ] )
 
-    D2KK = D2pipi.clone("D2KKWSFor" + moduleName, DecayDescriptors = [ "D0 -> K- K-" ])
+    D2KK = D2pipi.clone("D2KKWSFor" + moduleName, DecayDescriptors = [ "[D0 -> K- K-]cc" ])
     D2KKSel = Selection("SelD2KKWSFor" + moduleName, Algorithm = D2KK, RequiredSelections = [ StdK ] )
 
     DSel = MergedSelection("SelD2hhWSFor" + moduleName, 
