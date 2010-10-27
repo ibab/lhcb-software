@@ -36,8 +36,11 @@ private:
 private:
 
   ITriggerTisTos* m_iTisTos;
+  ITriggerTisTos* m_iTisTosL0;
   LHCb::HltDecReports* m_decReports;
+  LHCb::HltDecReports* m_decReportsL0;
   std::string m_decReportsLocation;
+  std::string m_decReportsLocationL0;
   
 };
 #endif // COPYPARTICLE2TISTOSDECISIONS_H

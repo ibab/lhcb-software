@@ -4,6 +4,9 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2010-10-27 - Tomasz Skwarnicki
+ - extend CopyParticle2TisTosDecision to include L0 Tis/Tos if available.
+
 ! 2010-10-07 - Juan Palacios
  ** Requires MicroDST/MicroDSTBase v3r0 or higher.
  - CopyParticle2PVMap, 

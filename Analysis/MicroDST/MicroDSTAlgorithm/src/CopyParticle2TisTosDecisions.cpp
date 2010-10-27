@@ -30,9 +30,12 @@ CopyParticle2TisTosDecisions::CopyParticle2TisTosDecisions( const std::string& n
                                                             ISvcLocator* pSvcLocator)
   : MicroDSTAlgorithm ( name , pSvcLocator ),
   m_decReports(0),
-  m_decReportsLocation(LHCb::HltDecReportsLocation::Default)
+  m_decReportsL0(0),
+  m_decReportsLocation(LHCb::HltDecReportsLocation::Default),
+  m_decReportsLocationL0("HltLikeL0/DecReports")
 {
   declareProperty("HltDecReportsLocation", m_decReportsLocation);
+  declareProperty("L0DecReportsLocation", m_decReportsLocationL0);
 }
 //=============================================================================
 // Destructor
@@ -49,8 +52,11 @@ StatusCode CopyParticle2TisTosDecisions::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_iTisTos = tool<ITriggerTisTos>("TriggerTisTos", this);
+  m_iTisTosL0 = tool<ITriggerTisTos>("L0TriggerTisTos", this);
 
-  return m_iTisTos ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  if ( !m_iTisTos )return StatusCode::FAILURE;
+  if ( !m_iTisTosL0 )return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
 
 }
 
@@ -61,12 +67,23 @@ StatusCode CopyParticle2TisTosDecisions::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-
-  m_decReports = get<LHCb::HltDecReports>(m_decReportsLocation);
-
-  if (0==m_decReports) {
+  m_decReports =0;  
+  if( exist<LHCb::HltDecReports>(m_decReportsLocation) ){
+    m_decReports = get<LHCb::HltDecReports>(m_decReportsLocation);
+  } else {
     return Warning("No LHCb::HltDecReports in " +
             m_decReportsLocation,
+            StatusCode::SUCCESS, 
+            0);
+  }
+
+  m_decReportsL0 =0;  
+  if( exist<LHCb::HltDecReports>(m_decReportsLocationL0) ){
+    m_decReportsL0 = get<LHCb::HltDecReports>(m_decReportsLocationL0);
+  } else {
+    Warning("No L0 LHCb::HltDecReports in " +
+            m_decReportsLocationL0 +
+            " L0 Tis/Tos results will not be saved ",
             StatusCode::SUCCESS, 
             0);
   }
@@ -145,6 +162,22 @@ void CopyParticle2TisTosDecisions::executeLocation(const std::string& particleLo
         decisions.push_back(m_iTisTos->tisTosSelection(*iName));
       }
 
+      if( m_decReportsL0 ){
+        
+        m_iTisTosL0->setOfflineInput(); 
+        m_iTisTosL0->addToOfflineInput(**iPart);
+
+        std::vector<std::string> decNamesL0 = m_decReportsL0->decisionNames();
+
+        std::vector<std::string>::const_iterator iName = decNamesL0.begin();
+        std::vector<std::string>::const_iterator nameEnd = decNamesL0.end();
+
+        for ( ; iName != nameEnd; ++ iName) {
+          decisions.push_back(m_iTisTosL0->tisTosSelection(*iName));
+        }
+        
+      }
+
       p2TisTos->insert(clone, decisions);
 
     }
@@ -154,20 +187,20 @@ void CopyParticle2TisTosDecisions::executeLocation(const std::string& particleLo
   
   DaVinci::Map::Particle2UnsignedInts* test = get<DaVinci::Map::Particle2UnsignedInts>(outputLocation);
   if (test) {
-    debug() << "Test passed, found P2LHCbID map with " 
+    debug() << "Test passed, found P2UnsignedInts map with " 
             << test->size() <<" entries!" << endmsg;
     if (!test->empty()) {
       for (DaVinci::Map::Particle2UnsignedInts::const_iterator iMap = test->begin();
            iMap!=test->end();
            ++iMap) {
-        debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
+        debug() << "Found " << (*iMap).second.size() << " TisTosDecision " << endmsg;
       }
     }
     
   }
 
   else {
-    error() << "Test failed, found no P2LHCbID map" << endmsg;
+    error() << "Test failed, found no P2UnsignedInt map" << endmsg;
   }
   
   
