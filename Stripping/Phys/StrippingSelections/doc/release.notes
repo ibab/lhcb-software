@@ -5,6 +5,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2010-10-27 - James Keaveney
+  - StrippingDiPhotonDiMuon.py  - added line for DiPhotonDiMuon requiring 
+    the relevant L0 decision   
+
+
 ! 2010-10-27 - Anton Poluektov 
   - StrippingB2DX.py  - fixed d2hh wrong sign line ( [ ]cc was missing )
 
