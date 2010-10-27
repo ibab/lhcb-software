@@ -197,10 +197,11 @@ def __fill_s_Histos ( lambdas                      ,
     """
     
     histomap, lambdas, badfiles = Fill.fillDataBase (
-        lambdas                ,
-        file_names             ,
-        cellFunc    = cellFunc ,
-        Unit        = Unit     , 
+        lambdas                  ,
+        file_names               ,
+        dbase_name  = dbase_name ,
+        cellFunc    = cellFunc   ,
+        Unit        = Unit       , 
         **args )
     
     return histomap,badfiles
