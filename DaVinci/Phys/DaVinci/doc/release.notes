@@ -9,6 +9,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-10-27 - Tomasz Skwarnicki
+ - python/DaVinci/Configuration.py
+   added L0Conf().FullL0MuonDecoding = True needed by L0 Tis/Tos 
+
 ! 2010-10-22 - Jaap Panman
  - python/DaVinci/Configuration.py
   . remove MergeFSR option from DaVinci, should be switched on directly in 

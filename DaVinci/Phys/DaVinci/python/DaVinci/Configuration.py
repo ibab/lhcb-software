@@ -244,6 +244,9 @@ class DaVinci(LHCbConfigurableUser) :
         from Configurables import L0SelReportsMaker, L0DecReportsMaker
         DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
         DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )        
+        from Configurables import L0Conf
+        L0Conf().FullL0MuonDecoding = True 
+        
         """
         Decode DecReports _if_ Hlt is not run
         """
