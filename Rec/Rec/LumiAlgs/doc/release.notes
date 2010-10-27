@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-27 - Jaap Panman
+ - add database checker in unit tests (LumiCheckCondDB algorithm)
+ - update unit tests to use raw file at CERN
+ - update database layer 
+
 ! 2010-10-19 - Jaap Panman
  - LumiMergeFSR: add EventCountFSR handling
  - LumiIntegrateFSR: add "ignoreEE" method

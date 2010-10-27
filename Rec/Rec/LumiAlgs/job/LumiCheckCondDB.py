@@ -8,9 +8,14 @@ from Gaudi.Configuration import *
 
 #--- switch on xml summary
 from Configurables import LHCbApp
+from Configurables import CondDB
+
+CondDB(UseOracle = True)
 
 #-- set explicit CondDB tag
 LHCbApp().CondDBtag = 'head-20100826'
+#LHCbApp().CondDBtag = 'lumi-20101026'
+#CondDB().LocalTags["LHCBCOND"] = ["lumi-20101026"]
 
 #--- determine application to run
 from Configurables import LumiAlgsConf, LumiCheckCondDB
@@ -19,10 +24,6 @@ OutputLevel =  INFO
 
 # standard sequence from configurable
 sequence = GaudiSequencer("CheckDB")
-
-# clock service for CondDB
-#from Configurables import EventClockSvc
-#EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 # normalization of BeamCrossing
 seqMembers=[]
@@ -41,8 +42,6 @@ ApplicationMgr( TopAlg = [ GaudiSequencer( "CheckDB" ),
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Test input
 files = [
-  "DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'  OPT='REC' ",
-  "DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC' ",
   ]
 #-- input options
 ApplicationMgr().EvtMax =  -1
@@ -54,5 +53,5 @@ EventSelector( OutputLevel  = INFO,
                )
 
 #-- to test layer uncomment these lines
-# from Configurables import CondDB
-# CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")
+from Configurables import CondDB
+CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")

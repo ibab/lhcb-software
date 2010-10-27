@@ -43,8 +43,9 @@ LumiCheckCondDB::LumiCheckCondDB( const std::string& name,
     m_condGUIDs(NULL)
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
-  declareProperty( "StartTime"          , m_startTime         = 1269077209  );
-  declareProperty( "NumberSteps"        , m_numberSteps       = 30  );
+  declareProperty( "StartTime"          , m_startTime         = 1269817249  );
+  declareProperty( "NumberSteps"        , m_numberSteps       = 80  );
+  declareProperty( "StepHours"          , m_stepHours         = 72  );
 }
 //=============================================================================
 // Destructor
@@ -108,9 +109,10 @@ StatusCode LumiCheckCondDB::finalize() {
 
   unsigned long xt0 = m_startTime ;
   for ( unsigned long ixt = 0; ixt < m_numberSteps; ixt++ ) {
-    unsigned long xt = ixt*3600*24*7 + xt0;
-    m_dds->setEventTime(Gaudi::Time( xt * 1000*1000*1000 ));
-    StatusCode sc = updMgrSvc()->newEvent(Gaudi::Time( xt * 1000*1000*1000 ));
+    unsigned long xt = ixt*3600*m_stepHours + xt0;
+    Gaudi::Time gxt = xt * 1000*1000*1000;
+    m_dds->setEventTime( gxt );
+    StatusCode sc = updMgrSvc()->newEvent( gxt );
     if (sc.isFailure()) {
       error() << "ERROR newEvent " << endmsg;
     }
@@ -118,15 +120,24 @@ StatusCode LumiCheckCondDB::finalize() {
     if (sc.isFailure()) {
       error() << "ERROR runUpdate " << endmsg;
     }
-    info() << " t0 " << xt 
-	   << " Revolution frequency " << m_calibRevolutionFrequency 
-	   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
-	   << " CollidingBunches " << m_calibCollidingBunches 
-	   << " Calib "            << m_calibRelative
-	   << endmsg;
+    info() << " t0 "    << xt 
+	   << " " << gxt.format(true, "%Y-%m-%d %H:%M")
+	   << " fLHC "  << m_calibRevolutionFrequency 
+	   << " fLUMI " << m_calibRandomFrequencyBB 
+	   << " nCB "   << m_calibCollidingBunches ;
+    for ( long unsigned int i = 0; i < m_calibRelative.size(); i++ ) {
+      if ( m_calibCoefficientsLog[i] != 0 ) info() << " LOG# " << i << ":" << m_calibRelativeLog[i];
+      if ( m_calibCoefficients[i] != 0 ) {
+	if ( i == LHCb::LumiMethods::CorrectionFlag ) info() << " no EE correction ";
+	else info() << " AVG# " << i << ":" << m_calibRelative[i];
+      }
+    }
+    info() << endmsg;
     Gaudi::Time xtfound = m_dds->eventTime();
-    info() << " tfound " << xtfound  
-	   << endmsg;
+    if ( xtfound != gxt ) {
+      error() << "different time read back: found " << xtfound  << " " << gxt 
+	      << endmsg;
+    }
   }    
 
   info() << "========== Probe DB: END   ==========" << endmsg;

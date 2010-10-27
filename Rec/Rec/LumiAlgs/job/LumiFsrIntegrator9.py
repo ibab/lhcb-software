@@ -52,5 +52,5 @@ EventSelector( OutputLevel  = INFO,
                )
 
 #-- to test layer uncomment these lines
-# from Configurables import CondDB
-# CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")
+from Configurables import CondDB
+CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")

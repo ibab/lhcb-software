@@ -36,7 +36,8 @@ protected:
 
 private:
   unsigned long m_startTime;                    ///< start probing database here
-  unsigned long m_numberSteps;                  ///< number of months checked
+  unsigned long m_numberSteps;                  ///< number of steps checked
+  unsigned long m_stepHours;                    ///< number of hours per step
 
   StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
   StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition

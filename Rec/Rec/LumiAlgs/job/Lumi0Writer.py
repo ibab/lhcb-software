@@ -15,8 +15,7 @@ from LumiAlgs.LumiWriterConf import LumiWriterConf as LumiWriter
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                             ]
 files = [
-  #"   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000180.raw' SVC='LHCb::MDFSelector'"
-  "   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/80355/080355_0000000087.raw' SVC='LHCb::MDFSelector'"
+  "   DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81363/081363_0000000313.raw?svcClass=lhcbrdst' SVC='LHCb::MDFSelector'",
   ]
 
 ofilename='testout0.mdf'
@@ -29,5 +28,6 @@ LumiWriter().OutputLevel =  INFO
 
 EventSelector().PrintFreq = 1000
 
+#-- to test layer 
 from Configurables import CondDB
 CondDB().addLayer(dbFile = "LHCBCOND_Lumi_IOV.db", dbName = "LHCBCOND")

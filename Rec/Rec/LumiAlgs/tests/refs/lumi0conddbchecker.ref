@@ -1,0 +1,189 @@
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
+# FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
+# FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
+# FileRecordCnvSvc.ShareFiles           = "YES";
+# FileRecordDataSvc.ForceLeaves         = true;
+# FileRecordDataSvc.EnableFaultHandler  = true;
+# FileRecordDataSvc.RootCLID            =    1;
+# PoolRootEvtCnvSvc.EnableIncident      =    1;
+# PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
+# PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r11/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-DataType    = '2009'
+# |-TimeStamp   = False
+# |-SkipEvents  = 0
+# |-OutputLevel = 3
+# |-EvtMax      = -1
+# |-Simulation  = False
+# |-Monitors    = []  (default: [])
+# |-XMLSummary  = None
+# |-CondDBtag   = 'head-20100826'  (default: '')
+# |-DDDBtag     = ''
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag head-20100826 for partition DDDB
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType   = '2009'
+# |-DbRoot     = 'conddb:/lhcb.xml'
+# |-Simulation = False
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# skipping configuration of XMLSummary
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB-Oracle.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB-Oracle.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
+# |-Tags                      = {}  (default: {})
+# |-Overrides                 = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0xd2af40>)]  (default: [])
+# |-DisableLFC                = False
+# |-Simulation                = False
+# |-SQLiteLocalCopiesDir      = ''
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
+# |-Online                    = False
+# |-UseOracle                 = True  (default: False)
+# |-LogFile                   = ''
+# |-UseLatestTags             = []  (default: [])
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to DaVinci version v26r3
+                                          running on lxplus249.cern.ch on Wed Oct 27 16:36:15 2010
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+CheckDB              INFO Member list: LumiCheckCondDB/CheckCondDB
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
+COOLConfSvc          INFO Using CORAL LFCReplicaService
+COOLConfSvc          INFO Using 'CERN.ch' as preferred site
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+automatic_LHCBCOND   INFO Connected to database "sqlite_file:LHCBCOND_Lumi_IOV.db/LHCBCOND"
+automatic_LHCBCOND   INFO Using TAG ""
+DDDB                 INFO Connected to database "CondDB/DDDB"
+DDDB                 INFO Using TAG "head-20100826"
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+EventSelector        INFO End of event input reached.
+EventLoopMgr         INFO No more events in event selection
+ApplicationMgr       INFO Application Manager Stopped successfully
+CheckCondDB          INFO ========== Probe DB: START ==========
+CheckCondDB          INFO  t0 1269817249 2010-03-29 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1270076449 2010-04-01 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1270335649 2010-04-04 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1270594849 2010-04-07 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1270854049 2010-04-10 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1271113249 2010-04-13 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1271372449 2010-04-16 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1271631649 2010-04-19 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1271890849 2010-04-22 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1272150049 2010-04-25 01:00 fLHC 11245 fLUMI 697.9 nCB 2 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1272409249 2010-04-28 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1272668449 2010-05-01 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1272927649 2010-05-04 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1273186849 2010-05-07 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.0087314
+CheckCondDB          INFO  t0 1273446049 2010-05-10 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.01005
+CheckCondDB          INFO  t0 1273705249 2010-05-13 01:00 fLHC 11245 fLUMI 697.9 nCB 1 AVG# 6:0.01005
+CheckCondDB          INFO  t0 1273964449 2010-05-16 01:00 fLHC 11245 fLUMI 697.9 nCB 3 AVG# 6:0.01005
+CheckCondDB          INFO  t0 1274223649 2010-05-19 01:00 fLHC 11245 fLUMI 697.9 nCB 3 AVG# 6:0.01005
+CheckCondDB          INFO  t0 1274482849 2010-05-22 01:00 fLHC 11245 fLUMI 697.9 nCB 3 AVG# 6:0.01005
+CheckCondDB          INFO  t0 1274742049 2010-05-25 01:00 fLHC 11245 fLUMI 697.9 nCB 8 AVG# 6:0.0101261
+CheckCondDB          INFO  t0 1275001249 2010-05-28 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1275260449 2010-05-31 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1275519649 2010-06-03 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1275778849 2010-06-06 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1276038049 2010-06-09 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1276297249 2010-06-12 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1276556449 2010-06-15 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1276815649 2010-06-18 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1277074849 2010-06-21 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1277334049 2010-06-24 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1277593249 2010-06-27 01:00 fLHC 11245 fLUMI 697.9 nCB 2 LOG# 1:1
+CheckCondDB          INFO  t0 1277852449 2010-06-30 01:00 fLHC 11245 fLUMI 697.9 nCB 2 LOG# 1:1
+CheckCondDB          INFO  t0 1278111649 2010-07-03 01:00 fLHC 11245 fLUMI 697.9 nCB 4 LOG# 1:1
+CheckCondDB          INFO  t0 1278370849 2010-07-06 01:00 fLHC 11245 fLUMI 697.9 nCB 4 LOG# 1:1
+CheckCondDB          INFO  t0 1278630049 2010-07-09 01:00 fLHC 11245 fLUMI 697.9 nCB 4 LOG# 1:1
+CheckCondDB          INFO  t0 1278889249 2010-07-12 01:00 fLHC 11245 fLUMI 697.9 nCB 4 LOG# 1:1
+CheckCondDB          INFO  t0 1279148449 2010-07-15 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1279407649 2010-07-18 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1279666849 2010-07-21 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1279926049 2010-07-24 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1280185249 2010-07-27 01:00 fLHC 11245 fLUMI 697.9 nCB 8 LOG# 1:1
+CheckCondDB          INFO  t0 1280444449 2010-07-30 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1280703649 2010-08-02 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1280962849 2010-08-05 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1281222049 2010-08-08 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1281481249 2010-08-11 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1281740449 2010-08-14 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1281999649 2010-08-17 01:00 fLHC 11245 fLUMI 697.9 nCB 16 LOG# 1:1
+CheckCondDB          INFO  t0 1282258849 2010-08-20 01:00 fLHC 11245 fLUMI 697.9 nCB 36 LOG# 1:1
+CheckCondDB          INFO  t0 1282518049 2010-08-23 01:00 fLHC 11245 fLUMI 697.9 nCB 36 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1282777249 2010-08-26 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1283036449 2010-08-29 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1283295649 2010-09-01 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1283554849 2010-09-04 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1283814049 2010-09-07 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1284073249 2010-09-10 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1284332449 2010-09-13 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1284591649 2010-09-16 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1284850849 2010-09-19 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1285110049 2010-09-22 01:00 fLHC 11245 fLUMI 697.9 nCB 35 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1285369249 2010-09-25 01:00 fLHC 11245 fLUMI 697.9 nCB 47 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1285628449 2010-09-28 01:00 fLHC 11245 fLUMI 697.9 nCB 93 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1285887649 2010-10-01 01:00 fLHC 11245 fLUMI 697.9 nCB 12 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1286146849 2010-10-04 01:00 fLHC 11245 fLUMI 697.9 nCB 140 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1286406049 2010-10-07 01:00 fLHC 11245 fLUMI 697.9 nCB 186 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1286665249 2010-10-10 01:00 fLHC 11245 fLUMI 697.9 nCB 233 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1286924449 2010-10-13 01:00 fLHC 11245 fLUMI 697.9 nCB 233 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1287183649 2010-10-16 01:00 fLHC 11245 fLUMI 697.9 nCB 12 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1287442849 2010-10-19 01:00 fLHC 11245 fLUMI 697.9 nCB 295 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1287702049 2010-10-22 01:00 fLHC 11245 fLUMI 697.9 nCB 295 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1287961249 2010-10-25 01:00 fLHC 11245 fLUMI 697.9 nCB 295 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1288220449 2010-10-28 01:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1288479649 2010-10-31 01:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1288738849 2010-11-03 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1288998049 2010-11-06 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1289257249 2010-11-09 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1289516449 2010-11-12 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1289775649 2010-11-15 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1290034849 2010-11-18 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO  t0 1290294049 2010-11-21 00:00 fLHC 11245 fLUMI 697.9 nCB -99999 LOG# 1:1 no EE correction
+CheckCondDB          INFO ========== Probe DB: END   ==========
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO CheckDB                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO   CheckCondDB                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

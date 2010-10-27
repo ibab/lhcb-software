@@ -4,7 +4,7 @@
   <argument name="args"><set>
     <text>../../job/LumiCheckCondDB.py</text>
   </set></argument>
-  <argument name="reference"><text>../refs/lumiAconddbchecker.ref</text></argument>
+  <argument name="reference"><text>../refs/lumi0conddbchecker.ref</text></argument>
   <argument name="validator"><text>
 from LumiAlgs.QMTest.LumiAlgsExclusions import preprocessor
 validateWithReference(preproc = preprocessor)

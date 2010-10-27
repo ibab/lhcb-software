@@ -19,8 +19,7 @@ from LumiAlgs.LumiFsrWriterConf import LumiFsrWriterConf as LumiFsrWriter
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 files = [
-    #"   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000180.raw' SVC='LHCb::MDFSelector'"
-    "   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/80355/080355_0000000087.raw' SVC='LHCb::MDFSelector'"
+  "   DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81363/081363_0000000313.raw?svcClass=lhcbrdst' SVC='LHCb::MDFSelector'",
     ]
 
 ofilename='testFSRout0.dst'

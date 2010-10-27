@@ -19,7 +19,6 @@ from LumiAlgs.LumiFsrWriterConf import LumiFsrWriterConf as LumiFsrWriter
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 files = [
-    #"   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw' SVC='LHCb::MDFSelector'"
     "   DATAFILE='LFN:/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw' SVC='LHCb::MDFSelector'"
     ]
 
