@@ -38,7 +38,9 @@ TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
     , m_L0TriggerTisTosTool()
 {
   declareInterface<IParticleTupleTool>(this);
-  
+  declareProperty("TriggerTisTosName",m_TriggerTisTosName="");  
+  declareProperty("L0TriggerTisTosName",m_L0TriggerTisTosName="");  
+
 }
 //=============================================================================
 // Destructor
@@ -55,8 +57,19 @@ StatusCode TupleToolTISTOS::initialize( )
   
   StatusCode sc = TupleToolTriggerBase::initialize();
   if (!sc) return sc;
-  m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
-  m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+  if( m_TriggerTisTosName != "" ){
+    m_TriggerTisTosTool = tool<ITriggerTisTos>( m_TriggerTisTosName,this);
+  } else {
+    m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
+  }
+
+  if( m_L0TriggerTisTosName != "" ){
+    m_L0TriggerTisTosTool = tool<ITriggerTisTos>( m_L0TriggerTisTosName,this);
+  } else {
+    m_L0TriggerTisTosTool = tool<ITriggerTisTos>( "L0TriggerTisTos",this);
+  }
+  if( !m_TriggerTisTosTool )  return StatusCode::FAILURE;
+  if( !m_L0TriggerTisTosTool )  return StatusCode::FAILURE;
   
   return sc;
 }

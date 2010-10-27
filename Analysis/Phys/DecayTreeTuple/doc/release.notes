@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-10-27 - Tomasz Skwarnicki
+ - TupleToolTISTOS: make it possible to use non-standard TriggerTisTos tools
+
 ! 2010-10-22 - Olivier Deschamps
  - TupleToolPhotonInfo : add photon->ConfLevel() info
 

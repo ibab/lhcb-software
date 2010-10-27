@@ -64,6 +64,11 @@ public:
 
 protected:
   
+  /// to make it possible to replace standard TisTos tools.
+  std::string m_TriggerTisTosName;
+  std::string m_L0TriggerTisTosName;
+  
+
 private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
