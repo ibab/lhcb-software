@@ -14,7 +14,7 @@ defaultConfig = {
     ,       "DiMuonTrDOCA"  :       0.2     # mm
     ,       "DiMuonTrSumPT" :       2500.   # MeV
     ,       "DiMuonTrMass"  :       2500.   # MeV
-    ,       "DiMuonTrVCHI2" :       20      # dimensionless
+    ,       "DiMuonTrVCHI2" :       16      # dimensionless
     ,       "DiMuonTrDIRA"  :       0.995   # dimensionless
     ,       "DiMuonTrMCORLow"  :    4000.0  # MeV
     ,       "DiMuonTrMCORHigh" :    6000.0  # MeV
@@ -91,8 +91,8 @@ class StrippingB2DiMuonXConf(object):
         Defines the combination cut for the B, cutting on M(MuMuX), sum pT and DOCA.
         """
         _cut = "(AM > %(DiMuonTrMass)s *MeV ) & "\
-               "(APT>%(DiMuonTrSumPT)s *MeV) & " \
-               "(ADOCAMAX('')<%(DiMuonTrDOCA)s *mm)" % conf 
+               "(ASUM(PT) > %(DiMuonTrSumPT)s *MeV) & " \
+               "(ADOCAMAX('') < %(DiMuonTrDOCA)s *mm)" % conf 
         return _cut
 
     def __MotherCut__( self, conf ):
