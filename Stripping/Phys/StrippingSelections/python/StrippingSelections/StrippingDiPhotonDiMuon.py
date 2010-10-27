@@ -55,3 +55,8 @@ line = StrippingLine('PP2PPMuMu'
                      , algos = [ sequence ]
                      )
 
+line_2 = StrippingLine('PP2PPMuMu_2'
+                     , prescale = 1.
+                     , checkPV  = False
+                     , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')" 
+                  )
