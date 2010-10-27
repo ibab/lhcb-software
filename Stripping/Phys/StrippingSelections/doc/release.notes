@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-27 - Marcin Kucharczyk
+  - Optimize StrippingHighPtJets line cuts 
+
 ! 2010-10-27 - Walter Bonivento
  update StrippingSelections/bhadron; possible cause of conflict
 
