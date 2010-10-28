@@ -5,6 +5,30 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-10-28 - Juan Palacios
+ - Added modules PhysSelPython.SaneConfigurables with code necessary to create
+   safe Configurables and replace them for their unsafe counterparts in the
+   Configurables module.
+ - Added __sanity__.py
+  . Creates sane configurables out of the following:
+
+          DaVinciTools.DaVinciToolsConf,
+          LoKiCore.LoKiCoreConf,
+          LoKiArrayFunctors.LoKiArrayFunctorsConf,
+          LoKiHlt.LoKiHltConf,
+          LoKiArrayFunctors.LoKiArrayFunctorsConf,
+          DecayTreeTuple.DecayTreeTupleConf,
+          ParticleMaker.ParticleMakerConf,
+          TisTosTobbing.TisTosTobbingConf,
+          GaudiSequencer,
+          DeterministicPrescaler])
+  . Additional sanity can be created:
+    from PhysSelPython.SaneConfigurables import sanitise
+    sanitise(SomeModule)
+    sanitise(['SomeConf0', SomeConf1])
+    from Configurables import SomeConf0, SomeConf1
+
+
 ! 2010-10-14 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
   . New module PhysSelPython.Utils. Contains classes to transform selection-like
