@@ -4,7 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!========================= DetCond v12r16 2010-10-25 =========================
+!========================= DetCond v12r16 2010-10-28 =========================
+
+! 2010-10-28 - Marco Clemencic
+ - Fixed a 32bit compilation problem in some new test code.
 
 ! 2010-10-25 - Marco Clemencic
  - Added a test to expose bug #74255

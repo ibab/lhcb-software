@@ -191,9 +191,9 @@ public:
                     "list of paths to conditions in the detector transient store");
     declareProperty("InitialTime", m_initTime = 0, // 1970-01-01 00:00:00UTC
                     "First event time of the fake event loop");
-    declareProperty("FinalTime", m_finalTime = m_initTime + 10000000000, // init + 10s
+    declareProperty("FinalTime", m_finalTime = m_initTime + 10000000000LL, // init + 10s
                     "Final time of the loop");
-    declareProperty("Step", m_step = 1000000000, // 1s
+    declareProperty("Step", m_step = 1000000000LL, // 1s
                     "Step of the loop");
   }
 
