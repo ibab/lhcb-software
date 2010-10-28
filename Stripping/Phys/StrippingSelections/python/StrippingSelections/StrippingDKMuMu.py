@@ -28,8 +28,8 @@ defaultConfig = {
     }
 
 defaultLines = {
-    "DsKKPi"   : 0.02
-    , "DsKPiPi"  : 0.02
+    "DsKKPi"   : 1.0
+    , "DsKPiPi"  : 1.0
     , "DsKKMu"   : 1.0
     , "DsKPiMu"  : 1.0
     , "DsKMuMu"  : 1.0
@@ -40,6 +40,17 @@ class StrippingDKMuMuConf(object):
     Definition of D(s)+ -> K- mu+ mu+ stripping 
 
     Includes signal and control lines. To include these lines please do :
+
+    from StrippingSelections.StrippingDKMuMu import StrippingDKMuMuConf
+    from StrippingSelections.StrippingDKMuMu import defaultConfig
+    from StrippingSelections.StrippingDKMuMu import defaultLines
+
+    conf  = StrippingDKMuMuConf( config = defaultConfig, activeLines = defaultLines )
+    lines = conf.lines()
+
+    to include a single line do, e.g.
+
+    line_KMuMu = conf.line('DsKMuMu')
     """
     __configuration_keys__ = (
         "D_DIRA"
@@ -76,12 +87,15 @@ class StrippingDKMuMuConf(object):
         
         self.TrCut      = "(PT> %(Tr_PT)s ) & " \
                           "(MIPCHI2DV(PRIMARY)> %(Tr_IPCHI2)s )" % config
-        self.KCut       = "(PIDK> %(K_PIDK)s) & " % config  + self.TrCut  
+
         self.MassWindow = "(AM> %(D_MINMASS)s *MeV) & " \
                           "(AM< %(D_MAXMASS)s *MeV)" % config
         self.DCut       = "(VFASPF(VCHI2PDOF) < %(D_CHI2)s ) & " \
                           "(BPVDIRA> %(D_DIRA)s ) & " \
                           "(BPVIPCHI2() < %(D_IPCHI2)s )" % config 
+        
+        self.DCut += "&(((ID>0)&(INTREE((ID=='K-')&(PIDK > %(K_PIDK)s )))) | "\
+                     "(((ID<0)&(INTREE((ID=='K+')&(PIDK > %(K_PIDK)s ))))))" % config
 
         self.DsMass     = "(M> %(Ds_MINMASS)s *MeV)" % config
 
@@ -127,7 +141,6 @@ class StrippingDKMuMuConf(object):
         _combine = CombineParticles( self.name + "_DsKKPi" )
         _combine.DecayDescriptor = "[D_s+ -> K- K+ pi+]cc"
         _combine.DaughtersCuts = {
-            "K-"  : self.KCut ,
             "K+"  : self.TrCut ,
             "pi+" : self.TrCut
             }
@@ -150,7 +163,7 @@ class StrippingDKMuMuConf(object):
         _combine = CombineParticles( self.name+"_DsKPiPi" )
         _combine.DecayDescriptor = "[D_s+ -> K- pi+ pi+]cc"
         _combine.DaughtersCuts =  {
-            "K-"  : self.KCut ,
+            "K-"  : self.TrCut ,
             "pi+" : self.TrCut
             }
         _combine.CombinationCut = self.MassWindow
@@ -172,8 +185,8 @@ class StrippingDKMuMuConf(object):
         _combine = CombineParticles( self.name + "_DsKMuMu" )
         _combine.DecayDescriptor = "[D_s+ -> K- mu+ mu+]cc"
         _combine.DaughtersCuts = {
-            "K-"  : self.KCut ,
-            "mu-" : self.TrCut
+            "K-"  : self.TrCut ,
+            "mu+" : self.TrCut
             }
         _combine.CombinationCut = self.MassWindow
         _combine.MotherCut = self.DCut

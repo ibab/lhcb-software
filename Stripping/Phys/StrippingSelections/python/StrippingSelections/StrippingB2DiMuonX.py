@@ -8,27 +8,26 @@ from StrippingConf.StrippingLine import StrippingLine
 
 defaultConfig = { 
     "DiMuonFD"              :       64.     # dimensionless
-    ,       "MuonPT"        :       400     # MeV
-    ,       "MuonIP"        :       9.      # dimensionless
+    ,       "MuonPT"        :       500     # MeV
+    ,       "MuonIP"        :       16.     # dimensionless
     ,       "DiMuonVCHI2"   :       10.     # adimensional
     ,       "DiMuonTrDOCA"  :       0.2     # mm
     ,       "DiMuonTrSumPT" :       2500.   # MeV
     ,       "DiMuonTrMass"  :       2500.   # MeV
-    ,       "DiMuonTrVCHI2" :       16      # dimensionless
-    ,       "DiMuonTrDIRA"  :       0.995   # dimensionless
+    ,       "DiMuonTrVCHI2" :       10      # dimensionless
+    ,       "DiMuonTrDIRA"  :       0.997   # dimensionless
     ,       "DiMuonTrMCORLow"  :    4000.0  # MeV
     ,       "DiMuonTrMCORHigh" :    6000.0  # MeV
-    ,       "DiMuonTrFD"   :        100.    # dimensionless
-    ,       "TrPT"         :        400.    # MeV
-    ,       "TrIP"         :        9.      # dimensionless 
+    ,       "DiMuonTrFD"   :        144.    # dimensionless
+    ,       "TrPT"         :        500.    # MeV
+    ,       "TrIP"         :        16.     # dimensionless 
     ,       "KSMass"       :        20.     # MeV
     ,       "KSVCHI2"      :        10      # dimensionless
-    ,       "TrTrigger"    :        None
+    ,       "TrTrigger"    :        "HLT_PASS_RE('Hlt2.*(MuTrack|Topo).*Decision')"
     ,       "TrPrescale"   :        1.0
-    ,       "KSTrigger"    :        None
+    ,       "KSTrigger"    :        "HLT_PASS_RE('Hlt2.*(MuTrack|Topo).*Decision')"
     ,       "KSPrescale"   :        1.0
     }
-
 
 class StrippingB2DiMuonXConf(object):
     """
