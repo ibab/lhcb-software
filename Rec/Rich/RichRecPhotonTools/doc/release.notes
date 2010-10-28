@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r8 2010-10-28 =========================
 ! 2010-10-15 - Chris Jones
  - Update the ray Tracing photon reconstruction tool to use the new method
    in the Chereknov Angle tool to get the saturated CK theta value on a 
