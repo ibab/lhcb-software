@@ -6,6 +6,11 @@
 ! The package is subject to the Lesser GPL, see doc/COPYING and doc/COPYING.LESSER.
 !-----------------------------------------------------------------------------
 
+! 2010-10-01 - Juan Palacios
+ - Added PyAna.pysequence module
+  . Contains helpers for iterable objects.
+ - Increase to v1r3
+
 !======================= AnalysisPyAna v1r2p1 2010-10-04 =====================
 
 ! 2010-10-01 - Juan Palacios
