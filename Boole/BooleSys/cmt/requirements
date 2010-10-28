@@ -37,9 +37,6 @@ use STDigiAlgorithms    v2r1    ST       # In SVN. Matt Needham
 use VeloPixAlgorithms   v2r0    VeloPix  # Marcin Kucharczyk
 use VeloPixAssociators  v1r2    VeloPix  # Marcin Kucharczyk
 
-# Packages from other projects updated temporarily in this release
-use DDDB v1r36 Det
-
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
 
