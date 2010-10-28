@@ -4,6 +4,13 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2010-10-28 - Rob Lambert
+ - Update database tags:
+   . LHCBCOND, 2010, 2009: head-20101026
+   . DDDB, 2010, 2009: head-20101026
+   . SIMCOND, 2010: sim-20101026-vc-md100 
+   . SIMCOND, 2009: MC-20101026-vc15mm-md100 
+
 !========================= DDDB v1r37 2010-10-25 =========================
 
 ! 2010-10-11 - Marco Cattaneo
