@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-10-28 - Victor Coco
+ - Added a return false in IsInMaterialBoxRight and IsInMaterialBoxLeft in case the detector element was not accessed correctly
+   and the vector of sensor position is empty
+
 ! 2010-10-26 - Neal Gauvin
  - Added FromPreyInfo Rcut method in DisplVertices.cpp (use the info put in the particle in RecVertices2Particles)
 

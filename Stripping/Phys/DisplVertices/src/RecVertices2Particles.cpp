@@ -1103,6 +1103,7 @@ bool RecVertices2Particles::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point){
   // First get the z bin
   int regModIndex(0);
   double downlimit(-1000.),uplimit(-1000.);
+  if(int(m_LeftSensorsCenter.size())-1<2)return false;
   for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
     downlimit=uplimit;
     uplimit=(m_LeftSensorsCenter[mod].z()+(m_LeftSensorsCenter[mod+1].z()-
@@ -1161,6 +1162,7 @@ bool RecVertices2Particles::IsInMaterialBoxRight(const Gaudi::XYZPoint& point){
   // First get the z bin
   int regModIndex(0);
   double downlimit(-1000.),uplimit(-1000.);
+  if(int(m_RightSensorsCenter.size())-1<2)return false;
   for (int mod = 0 ; mod != int(m_RightSensorsCenter.size())-1; mod++){
     downlimit=uplimit;
     uplimit=(m_RightSensorsCenter[mod].z()+(m_RightSensorsCenter[mod+1].z()-m_RightSensorsCenter[mod].z())/2);
