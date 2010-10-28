@@ -1,11 +1,8 @@
-import DaVinciTools.DaVinciToolsConf
-import LoKiCore.LoKiCoreConf
-import LoKiHlt.LoKiHltConf
-import LoKiArrayFunctors.LoKiArrayFunctorsConf
-import DecayTreeTuple.DecayTreeTupleConf
-import ParticleMaker.ParticleMakerConf
-import TisTosTobbing.TisTosTobbingConf
-from Configurables import DeterministicPrescaler, GaudiSequencer
+"""Module containing fixed versions of insane configurables.
+"""
+
+__author__ = 'Juan Palacios palacios@physik.uzh.ch'
+
 
 from ConfigurableHospital import memoized_sanitise
 from CrazyConfigurables import configurables
