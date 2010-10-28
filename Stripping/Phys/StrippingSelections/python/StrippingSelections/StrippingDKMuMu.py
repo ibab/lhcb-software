@@ -28,8 +28,8 @@ defaultConfig = {
     }
 
 defaultLines = {
-    "DsKKPi"   : 1.0
-    , "DsKPiPi"  : 1.0
+    "DsKKPi"   : 0.02
+    , "DsKPiPi"  : 0.02
     , "DsKKMu"   : 1.0
     , "DsKPiMu"  : 1.0
     , "DsKMuMu"  : 1.0
