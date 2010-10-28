@@ -91,18 +91,20 @@ class memoized_sanitise(object) :
     containing Configurables.
     """
     _cache = []
+    def __init__(self, sourceModule, targetModule) :
+        self._source = sourceModule
+        self._target = targetModule
+
     def __call__(self, algs) :
 
         if not isIterable(algs) :
-            print 'Not iterable!'
             if inspect.ismodule(algs) :
                 print 'Dealing with a module'
                 algs = getConfigurablesFromModule(algs)
             else :
                 'dealing with a single instance'
                 algs = [algs]
-        else :
-            print 'Iterable'
+
         self.processAlgs(algs)
         
     def processAlgs(self, algs) :
@@ -119,10 +121,10 @@ class memoized_sanitise(object) :
                     memoized_sanitise._cache += [alg]
                     crazyAlg = alg
                     if type(alg) == str :
-                        crazyAlg = _crazyConfigurables.__getattr__(alg)
+                        crazyAlg = self._source.__getattr__(alg)
                     elif isConfigurable(alg) :
                         alg = alg.__name__
                     saneAlg =  SaneConfigurable(crazyAlg)
-                    _crazyConfigurables.__setattr__(alg, saneAlg)
+                    self._target.__setattr__(alg, saneAlg)
 
-sanitise = memoized_sanitise()
+sanitise = memoized_sanitise(_crazyConfigurables, _crazyConfigurables)
