@@ -43,7 +43,11 @@ def getConfigurablesFromModule(confModule) :
     # load the symbols
     algs = [getattr( confModule, x) for x in algNames]
 
-    return filterConfigurables(algs)
+    # Remove anything that doesn't belong to this module (i.e. imports)
+    algs = filter(lambda x : x.__module__ == confModule.__name__,
+                  filterConfigurables(algs))
+    
+    return algs
 
 _originalCloner = Configurable.clone
 
@@ -110,7 +114,7 @@ class memoized_sanitise(object) :
             else :
                 'not module', alg
                 if alg in memoized_sanitise._cache or issubclass(type(alg), SaneConfigurable) :
-                    print 'Item', alg, 'already sanitised'
+                    pass
                 else :
                     memoized_sanitise._cache += [alg]
                     crazyAlg = alg
