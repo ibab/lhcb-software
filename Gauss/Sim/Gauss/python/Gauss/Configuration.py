@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.30 2010-05-09 18:14:28 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2010/05/09 18:14:28 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -1092,12 +1092,29 @@ class Gauss(LHCbConfigurableUser):
         # for Pythia8 usage (Minimum Bias):
         from Configurables import Pythia8Production
         gen_t0.MinimumBias.addTool(Pythia8Production,name="Pythia8Production")
-        gen_t0.MinimumBias.Pythia8Production.addTool(CollidingBeams,
-                                                     name="CollidingBeams")
+        gen_t0.Inclusive.addTool(Pythia8Production,name="Pythia8Production")
+        gen_t0.Special.addTool(Pythia8Production,name="Pythia8Production")
+        gen_t0.SignalPlain.addTool(Pythia8Production,name="Pythia8Production")
+        gen_t0.MinimumBias.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
+        gen_t0.Inclusive.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
+        gen_t0.Special.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
+        gen_t0.SignalPlain.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.Emittance = emittance
         gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.Emittance = emittance
+        gen_t0.Inclusive.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.Special.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
+        gen_t0.Special.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
+        gen_t0.Special.Pythia8Production.CollidingBeams.Emittance = emittance
+        gen_t0.Special.Pythia8Production.CollidingBeams.BetaStar = betaStar
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.Emittance = emittance
+        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BetaStar = betaStar
         # Only signal events
         gen_t0.addTool(StandAloneDecayTool,name="StandAloneDecayTool")
         gen_t0.StandAloneDecayTool.addTool(PythiaProduction,
