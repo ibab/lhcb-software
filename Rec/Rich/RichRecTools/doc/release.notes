@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r13 2010-10-28 =========================
 ! 2010-10-14 - Chris Jones
  - Changes to avoid loading the radiator detector elements until they are 
    actually needed
