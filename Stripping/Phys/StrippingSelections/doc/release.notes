@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-28 - Paul Nicholas SCHAACK
+ - removed StrippingBs2MuMuKstar.py (already covered by other Kstar lines)
+
+
 ! 2010-10-27 - Thomas Blake
  - Added StrippingDKMuMu for M. Patel
 
