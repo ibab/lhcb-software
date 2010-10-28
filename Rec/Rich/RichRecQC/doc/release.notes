@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r47 2010-10-28 =========================
 ! 2010-10-25 - Chris Jones
  - Improve HPD plots in data size monitoring by including entries when no
    data is sent.
