@@ -9,13 +9,18 @@ from Configurables import DeterministicPrescaler, GaudiSequencer
 
 from SaneConfigurables import sanitise
 
-sanitise([DaVinciTools.DaVinciToolsConf,
-          LoKiCore.LoKiCoreConf,
-          LoKiArrayFunctors.LoKiArrayFunctorsConf,
-          LoKiHlt.LoKiHltConf,
-          LoKiArrayFunctors.LoKiArrayFunctorsConf,
-          DecayTreeTuple.DecayTreeTupleConf,
-          ParticleMaker.ParticleMakerConf,
-          TisTosTobbing.TisTosTobbingConf,
-          GaudiSequencer,
-          DeterministicPrescaler])
+_configurableList = [DaVinciTools.DaVinciToolsConf,
+                    LoKiCore.LoKiCoreConf,
+                    LoKiArrayFunctors.LoKiArrayFunctorsConf,
+                    LoKiHlt.LoKiHltConf,
+                    LoKiArrayFunctors.LoKiArrayFunctorsConf,
+                    DecayTreeTuple.DecayTreeTupleConf,
+                    ParticleMaker.ParticleMakerConf,
+                    TisTosTobbing.TisTosTobbingConf,
+                    GaudiSequencer,
+                    DeterministicPrescaler]
+
+def configurableList() :
+    return _configurableList
+
+sanitise(configurableList())
