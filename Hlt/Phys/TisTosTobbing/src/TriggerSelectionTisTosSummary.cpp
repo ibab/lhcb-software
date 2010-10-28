@@ -205,7 +205,7 @@ bool TriggerSelectionTisTosSummary::addTisTosSummary(std::vector<unsigned int> &
 	Warning( " TisTosSummary size > HltDecReports size but no L0 HltDecReports ", StatusCode::SUCCESS, 10 ).setChecked();	
 	return true;
       } 
-      std::vector<std::string> triggerNamesL0 = m_hltDecReports->decisionNames();
+      std::vector<std::string> triggerNamesL0 = m_hltDecReportsL0->decisionNames();
       if( tisTosSummary.size() != ( triggerNames.size() + triggerNamesL0.size() ) ){
 	Warning( " TisTosSummary size != HltDecReports + L0 size ", StatusCode::SUCCESS, 10 ).setChecked();	
 	return true;

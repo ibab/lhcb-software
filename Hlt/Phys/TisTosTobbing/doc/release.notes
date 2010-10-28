@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-10-28 - Tomasz Skwarnicki
+ - fix bug in TriggerTisTosSelectionSummary.cpp
+
 ! 2010-10-27 - Tomasz Skwarnicki
  - move L0DecReportsMaker & L0SelReportsMaker from Hlt/HltRawData here, since they don't
    belong to Hlt
