@@ -86,7 +86,7 @@ class StrippingDstarD2KShhConf(LHCbConfigurableUser) :
         for i in ['LoKiTrigger.decorators']:
           if i not in modules : modules.append(i)
         from Configurables import LoKi__VoidFilter as VoidFilter
-        StrippingKillTooManyKShh = VoidFilter('StrippingKillTooManyKShh', Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 240 )")
+        StrippingKillTooManyKShh = VoidFilter('StrippingKillTooManyKShh', Code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < 300 )")
 
         # All lines start with one of: KS->LL, KS->DD
         memberKSLL = self.makeKSLL()

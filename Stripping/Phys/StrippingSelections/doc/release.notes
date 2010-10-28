@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-28 - Mat Charles
+ - Soften global event cut on ntracks from 240 to 300 in
+   StrippingDstarD2KShh.py
+
 ! 2010-10-28 - Paul Nicholas SCHAACK
  - removed StrippingBs2MuMuKstar.py (already covered by other Kstar lines)
 
