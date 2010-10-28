@@ -186,7 +186,9 @@ class StrippingB2D3HConf( object ):
                               "B2DStarDSignal_Prescale",
                               "B2DStarDSignal_Postscale",
                               "UnbiasedB2DPiPiPiAll_Prescale",
-                              "UnbiasedB2DPiPiPiAll_Postscale"                              
+                              "UnbiasedB2DPiPiPiAll_Postscale",
+                              "WSB2D3H_Prescale",
+                              "WSB2D3H_Postscale"
                               )
 
 
@@ -697,10 +699,181 @@ class StrippingB2D3HConf( object ):
                                             parentD = 6
                                             )
 
+
+        # ----------------------------------
+        # Create the Wrong-Sign Combinations
+        # ----------------------------------
+
+        # Make B- --> D- (pipipi)+
+        name3 = 'WSB2DPiPiPi' + name
+        self.WSB2DPiPiPi = makeB2D3H(name3,
+                                   dSel = self.selDch,
+                                   hhhSel = self.selPiPiPi,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[B0 -> D- a_1(1260)-]cc",
+                                   parentB = "B0")
+        
+        # Make B0 --> D- (Kpipi)-
+        name5 = 'WSB2DKPiPi' + name
+        self.WSB2DKPiPi = makeB2D3H(name5,
+                                  dSel = self.selDch,
+                                  hhhSel = self.selKPiPi,
+                                  BMassWindow = config['BMassWindow'],
+                                  BMinPT = config['BMinPT'],
+                                  MinPT = config['MinPT'],
+                                  BIP2PV = config['BIP2PV'],
+                                  BIPChisq2PV = config['BIPChisq2PV'],
+                                  BVtxChisq = config['BVtxChisq'],
+                                  BVtxSepChisq = config['BVtxSepChisq'],
+                                  BDiraPV = config['BDiraPV'],
+                                  BZVtxSep = config['BZVtxSep'],
+                                  BDZVtxSep = config['BDZVtxSep'],
+                                  BDRPV = config['BDRPV'],      
+                                  decayDesc = "[B0 -> D- K_1(1270)-]cc",
+                                  parentB = "B0")
+
+        # Make B- --> D*- (pipipi)-
+        name6 = 'WSB2DStarPiPiPi' + name
+        self.WSB2DStarPiPiPi = makeB2D3H(name6,
+                                       dSel = self.selDStar,
+                                       hhhSel = self.selPiPiPi,
+                                       BMassWindow = config['BMassWindow'],
+                                       BMinPT = config['BMinPT'],
+                                       MinPT = config['MinPT'],
+                                       BIP2PV = config['BIP2PV'],
+                                       BIPChisq2PV = config['BIPChisq2PV'],
+                                       BVtxChisq = config['BVtxChisq'],
+                                       BVtxSepChisq = config['BVtxSepChisq'],
+                                       BDiraPV = config['BDiraPV'],
+                                       BZVtxSep = config['BZVtxSep'],
+                                       BDZVtxSep = config['BDZVtxSep'],
+                                       BDRPV = config['BDRPV'],      
+                                       decayDesc = "[B0 -> D*(2010)- a_1(1260)-]cc",
+                                       parentB = "B0")
+        
+
+
+        # Make B0 --> D*- (Kpipi)-
+        name7 = 'WSB2DStarKPiPi' + name
+        self.WSB2DStarKPiPi = makeB2D3H(name7,
+                                      dSel = self.selDStar,
+                                      hhhSel = self.selKPiPi,
+                                      BMassWindow = config['BMassWindow'],
+                                      BMinPT = config['BMinPT'],
+                                      MinPT = config['MinPT'],
+                                      BIP2PV = config['BIP2PV'],
+                                      BIPChisq2PV = config['BIPChisq2PV'],
+                                      BVtxChisq = config['BVtxChisq'],
+                                      BVtxSepChisq = config['BVtxSepChisq'],
+                                      BDiraPV = config['BDiraPV'],
+                                      BZVtxSep = config['BZVtxSep'],
+                                      BDZVtxSep = config['BDZVtxSep'],
+                                      BDRPV = config['BDRPV'],      
+                                      decayDesc = "[B0 -> D*(2010)- K_1(1270)-]cc",
+                                      parentB = "B0")
+
+
+
+        # Make B- --> D_(s)- D_(s)-
+        name8 = 'WSB2DD' + name
+        self.WSB2DD = makeB2D3H(name8,
+                                   dSel = self.selDch,
+                                   hhhSel = self.selDch,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[B0 -> D- D-]cc",
+                                   parentB = "B0")
+
+        # Make B- --> D_(s)- D_(s)-
+        name9 = 'WSB2DStarD' + name
+        self.WSB2DStarD = makeB2D3H(name9,
+                                   dSel = self.selDStar,
+                                   hhhSel = self.selDch,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[B0 -> D*(2010)- D-]cc",
+                                   parentB = "B0")
+
+
+        # Make LambdaB --> LambdaC+ (pipipi)+
+        name9 = 'WSLambdaB2LambdaCPiPiPi' + name
+        self.WSLambdaB2LambdaCPiPiPi = makeB2D3H(name9,
+                                   dSel = self.selLambdaC,
+                                   hhhSel = self.selPiPiPi,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc",
+                                   parentB = "Lambda_b0")
+
+
+        # Make LambdaB --> LambdaC+ (Kpipi)+
+        name10 = 'WSLambdaB2LambdaCKPiPi' + name
+        self.WSLambdaB2LambdaCKPiPi = makeB2D3H(name10,
+                                              dSel = self.selLambdaC,
+                                              hhhSel = self.selKPiPi,
+                                              BMassWindow = config['BMassWindow'],
+                                              BMinPT = config['BMinPT'],
+                                              MinPT = config['MinPT'],
+                                              BIP2PV = config['BIP2PV'],
+                                              BIPChisq2PV = config['BIPChisq2PV'],
+                                              BVtxChisq = config['BVtxChisq'],
+                                              BVtxSepChisq = config['BVtxSepChisq'],
+                                              BDiraPV = config['BDiraPV'],
+                                              BZVtxSep = config['BZVtxSep'],
+                                              BDZVtxSep = config['BDZVtxSep'],
+                                              BDRPV = config['BDRPV'],      
+                                              decayDesc = "[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc",
+                                              parentB = "Lambda_b0")
+        
+
+
+
         # Now create stripping lines...
         
         # These are for the full mass region with sidebands.
         # These lines should be prescaled forst, if necessary.
+
+        #---------------------------
+        # Right-Sign Stripping Lines
+        #---------------------------
+
         self.StrippingAllB2D0PiPiPiLine = StrippingLine('AllB2D0PiPiPiLine'+name,
                                                      prescale = config['B2D0PiPiPiAll_Prescale'],
                                                      postscale = config['B2D0PiPiPiAll_Postscale'],
@@ -767,9 +940,65 @@ class StrippingB2D3HConf( object ):
                                                     algos = [ self.EventFilter, self.LambdaB2LambdaCKPiPi]
                                                     )
 
+        #---------------------------
+        # Wrong-Sign Stripping Lines
+        #---------------------------
 
+        
+        self.StrippingAllWSB2DPiPiPiLine = StrippingLine('AllWSB2DPiPiPiLine'+name,
+                                                         prescale = config['WSB2D3H_Prescale'],
+                                                         postscale = config['WSB2D3H_Postscale'],
+                                                         algos = [ self.EventFilter, self.WSB2DPiPiPi]
+                                                         )
+        
+        self.StrippingAllWSB2DKPiPiLine = StrippingLine('AllWSB2DKPiPiLine'+name,
+                                                        prescale = config['WSB2D3H_Prescale'],
+                                                        postscale = config['WSB2D3H_Postscale'],
+                                                        algos = [ self.EventFilter, self.WSB2DKPiPi]
+                                                        )
+        
+        self.StrippingAllWSB2DStarPiPiPiLine = StrippingLine('AllWSB2DStarPiPiPiLine'+name,
+                                                             prescale = config['WSB2D3H_Prescale'],
+                                                             postscale = config['WSB2D3H_Postscale'],
+                                                             algos = [ self.EventFilter, self.WSB2DStarPiPiPi]
+                                                             )
+        
+        self.StrippingAllWSB2DStarKPiPiLine = StrippingLine('AllWSB2DStarKPiPiLine'+name,
+                                                            prescale = config['WSB2D3H_Prescale'],
+                                                            postscale = config['WSB2D3H_Postscale'],
+                                                            algos = [ self.EventFilter, self.WSB2DStarKPiPi]
+                                                            )
+        
+        self.StrippingAllWSB2DDLine = StrippingLine('AllWSB2DDLine'+name,
+                                                    prescale = config['WSB2D3H_Prescale'],
+                                                    postscale = config['WSB2D3H_Postscale'],
+                                                    algos = [ self.EventFilter, self.WSB2DD]
+                                                    )
+        
+        self.StrippingAllWSB2DStarDLine = StrippingLine('AllWSB2DStarDLine'+name,
+                                                        prescale = config['WSB2D3H_Prescale'],
+                                                        postscale = config['WSB2D3H_Postscale'],
+                                                        algos = [ self.EventFilter, self.WSB2DStarD]
+                                                        )
+        
+        self.StrippingAllWSLambdaB2LambdaCPiPiPiLine = StrippingLine('AllWSLambdaB2LambdaCPiPiPiLine'+name,
+                                                                     prescale = config['WSB2D3H_Prescale'],
+                                                                     postscale = config['WSB2D3H_Postscale'],
+                                                                     algos = [ self.EventFilter, self.WSLambdaB2LambdaCPiPiPi]
+                                                                     )
+        
+        self.StrippingAllWSLambdaB2LambdaCKPiPiLine = StrippingLine('AllWSLambdaB2LambdaCKPiPiLine'+name,
+                                                                    prescale = config['WSB2D3H_Prescale'],
+                                                                    postscale = config['WSB2D3H_Postscale'],
+                                                                    algos = [ self.EventFilter, self.WSLambdaB2LambdaCKPiPi]
+                                                                    )
+
+        
         # These are for the signal mass region with sidebands.
         # These lines should not be prescaled unless absolutely necessary
+        # But, if prescales neeeded for future...
+
+
         self.StrippingSignalB2D0PiPiPiLine = StrippingLine('SignalB2D0PiPiPiLine'+name,
                                                      prescale = config['B2D0PiPiPiSignal_Prescale'],
                                                      postscale = config['B2D0PiPiPiSignal_Postscale'],
@@ -830,6 +1059,7 @@ class StrippingB2D3HConf( object ):
                                                     )
 
 
+
         self.lines = [ self.StrippingAllB2D0PiPiPiLine,
                        self.StrippingAllB2D0KPiPiLine,
                        self.StrippingAllUnbiasedB2DPiPiPiLine,
@@ -841,6 +1071,14 @@ class StrippingB2D3HConf( object ):
                        self.StrippingAllB2DStarDLine,
                        self.StrippingAllLambdaB2LambdaCPiPiPiLine,
                        self.StrippingAllLambdaB2LambdaCKPiPiLine,
+                       self.StrippingAllWSB2DPiPiPiLine,
+                       self.StrippingAllWSB2DKPiPiLine,
+                       self.StrippingAllWSB2DStarPiPiPiLine,
+                       self.StrippingAllWSB2DStarKPiPiLine,
+                       self.StrippingAllWSB2DDLine,
+                       self.StrippingAllWSB2DStarDLine,
+                       self.StrippingAllWSLambdaB2LambdaCPiPiPiLine,
+                       self.StrippingAllWSLambdaB2LambdaCKPiPiLine,                      
                        self.StrippingSignalB2D0PiPiPiLine,
                        self.StrippingSignalB2D0KPiPiLine,
                        self.StrippingSignalB2DPiPiPiLine,
@@ -1601,7 +1839,9 @@ def StrippingB2D3HNominal(name="Def") :
         "B2DStarDSignal_Prescale"       : 1.0,
         "B2DStarDSignal_Postscale"      : 1.0,
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
-        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0
+        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
+        "WSB2D3H_Prescale"              : 0.1,
+        "WSB2D3H_Postscale"             : 1.0
         }
 
     
@@ -1700,7 +1940,9 @@ def StrippingB2D3HLoose(name='Loose') :
         "B2DStarDSignal_Prescale"       : 1.0,
         "B2DStarDSignal_Postscale"      : 1.0,
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
-        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0
+        "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
+        "WSB2D3H_Prescale"              : 0.1,
+        "WSB2D3H_Postscale"             : 1.0
         }
 
 

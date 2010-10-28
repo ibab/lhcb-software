@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-28 - Steve Blusk
+- Updated StrippingB2D3H.py. Add wrong-sign combinations for neutral B's
+
 ! 2010-10-28 - Mat Charles
  - Soften global event cut on ntracks from 240 to 300 in
    StrippingDstarD2KShh.py
