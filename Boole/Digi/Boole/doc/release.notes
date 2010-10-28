@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+
+</PRE><H1><A NAME=v21r8>2010-10-04 Boole v21r8</A></H1><PRE>
+This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1
+ and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
+
+ - This release of boole is to pick up the latest Lbcom/LHCb changes.
+
  - Changes to tests
    . Add a test for latest 2010 database tags (boole.boole-2010-latestdb)
 
