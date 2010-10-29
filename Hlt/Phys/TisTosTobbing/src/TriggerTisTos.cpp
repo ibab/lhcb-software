@@ -37,6 +37,8 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
 {
   declareInterface<ITriggerTisTos>(this);
 
+  declareProperty("AllowIntermediateSelections", m_allowIntermediate = false );
+
   declareProperty("TriggerInputWarnings", m_trigInputWarn = false );
 
 }
@@ -83,13 +85,15 @@ void TriggerTisTos::getTriggerNames()
   //    Now add intermediate selections which found some candidates in this event
   //    and were configured to save them in HltSelReports.
   //    This part is likely to vary from event to event even for the same TCK.
-  if( m_hltSelReports ){
-    std::vector<std::string> selIDs = m_hltSelReports->selectionNames();
-    for(std::vector<std::string>::const_iterator i =
-          selIDs.begin(); i!=selIDs.end(); ++i) {
-      if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
-          == m_triggerNames.end() ){
-        m_triggerNames.push_back(*i);
+  if( m_allowIntermediate ){    
+    if( m_hltSelReports ){
+      std::vector<std::string> selIDs = m_hltSelReports->selectionNames();
+      for(std::vector<std::string>::const_iterator i =
+            selIDs.begin(); i!=selIDs.end(); ++i) {
+        if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
+            == m_triggerNames.end() ){
+          m_triggerNames.push_back(*i);
+        }
       }
     }
   }

@@ -61,8 +61,10 @@ public:
   std::vector<const LHCb::HltObjectSummary*> hltObjectSummaries( unsigned int tisRequirement      = kAnything,
                                                                  unsigned int tosRequirement      = kAnything,
                                                                  unsigned int tpsRequirement      = kAnything );
-  
-  
+
+  /// Switch to allow intermediate selection
+  bool m_allowIntermediate;  
+ 
 private:
 
   /// if true then warning about empty trigger inputs are printed
