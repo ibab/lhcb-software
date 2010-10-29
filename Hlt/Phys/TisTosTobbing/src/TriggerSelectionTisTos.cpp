@@ -162,8 +162,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
       if( registry ){
           std::string path = registry->identifier();
           boost::replace_last(path,"/Particles","/Particle2LHCbIDMap");
-          if( exist< DaVinci::Map::Particle2LHCbIDs >(path) ){
-            DaVinci::Map::Particle2LHCbIDs* p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path);
+          if( exist< DaVinci::Map::Particle2LHCbIDs >(path,false) ){
+            DaVinci::Map::Particle2LHCbIDs* p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path,false);
             if( p2lhcbids ){
               std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
               if ( msgLevel(MSG::VERBOSE) ) 

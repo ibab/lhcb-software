@@ -144,11 +144,11 @@ bool TriggerSelectionTisTosSummary::addParticleTisTosSummary( const LHCb::Partic
   }
   std::string path = registry->identifier();
   boost::replace_last(path,"/Particles","/Particle2TisTos");
-  if( !exist< DaVinci::Map::Particle2UnsignedInts >(path) ){
+  if( !exist< DaVinci::Map::Particle2UnsignedInts >(path,false) ){
     Error("No /Particle2TisTos for the Particle passed as OfflineInput - no TisTossing", StatusCode::FAILURE ,10).setChecked();
     return false;   
   }
-  DaVinci::Map::Particle2UnsignedInts* p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >(path);
+  DaVinci::Map::Particle2UnsignedInts* p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >(path,false);
   if( !p2tisTosSummary ){
     Error("No /Particle2TisTos for the Particle passed as OfflineInput - no TisTossing", StatusCode::FAILURE ,10).setChecked();
     return false;   

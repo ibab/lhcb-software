@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-10-29 - Tomasz Skwarnicki
+ - do not use RootOnTES when accessing maps in TriggerSelectionTisTos(Summary)
+
 ! 2010-10-28 - Tomasz Skwarnicki
  - fix bug in TriggerTisTosSelectionSummary.cpp
 
