@@ -91,27 +91,29 @@ StatusCode STRawBankMonitor::execute(){
   
     // data size per board
     //unsigned int id = (aBoard.region()*20) + aBoard.subID();
-    const std::map< unsigned int, unsigned int > & SourceIDToTELLmap = readoutTool()->SourceIDToTELLNumberMap();
-    unsigned int tellNumber = SourceIDToTELLmap.find((*iterBank)->sourceID())->second;
-    
+    //const std::map< unsigned int, unsigned int > & SourceIDToTELLmap = readoutTool()->SourceIDToTELLNumberMap();
+    //unsigned int tellNumber = SourceIDToTELLmap.find((*iterBank)->sourceID())->second;
+    unsigned int tellNumber = readoutTool()->SourceIDToTELLNumber( (*iterBank)->sourceID() );
+  
     // These hard coded numbers come from here: https://lbtwiki.cern.ch/bin/view/Online/Tell1PortNum
-    int doubleLinkedTTtell1s[] = {1, 2, 3, 4, 5, 6, 8, 9, 10, 13, 14, 15};
+    int doubleLinkedTTtell1s[] = {1, 2, 3, 4, 5,  6,  8,  9,  10, 13, 14, 15};
     int doubleLinkedITtell1s[] = {1, 2, 8, 9, 15, 16, 22, 23, 29, 30, 36, 37};
     unsigned int numberOfLinks = 1;
     
     if ( detType() == "IT" ) {
-	for ( unsigned int i = 0; i < sizeof(doubleLinkedITtell1s); i++) {
+	for ( unsigned int i = 0; i < 12; i++) {
 		if (tellNumber == doubleLinkedITtell1s[i]) numberOfLinks = 2;
 	}
     }
     else if ( detType() == "TT" ) {
-	for ( unsigned int i = 0; i < sizeof(doubleLinkedTTtell1s); i++) {
+	for ( unsigned int i = 0; i < 12; i++) {
 		if (tellNumber == doubleLinkedTTtell1s[i]) numberOfLinks = 2;
 	}
     }
 
-    double datasize = bankSize/numberOfLinks;
+    double datasize = bankSize/(double)numberOfLinks;
     plot(tellNumber, "data size", 0., 100. , 100, datasize);
+    plot(tellNumber, "data size unnormalised", 0., 100. , 100, (double)bankSize);
 
   } // iterBank
 
