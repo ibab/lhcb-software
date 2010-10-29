@@ -45,6 +45,7 @@ public:
 protected:
 
 private:
+  bool m_updatePVTracks;
   // Extrapolators
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
   ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator

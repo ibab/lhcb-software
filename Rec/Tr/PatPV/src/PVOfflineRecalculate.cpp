@@ -24,10 +24,11 @@ DECLARE_TOOL_FACTORY( PVOfflineRecalculate );
 PVOfflineRecalculate::PVOfflineRecalculate( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_updatePVTracks(false)
 {
   declareInterface<PVOfflineRecalculate>(this);
- 
+  declareProperty("UpdatePVTracks"      , m_updatePVTracks   = false); 
 }
 //=============================================================================
 // Destructor
@@ -109,10 +110,10 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   int ipv = itpv - recoVertices->begin();
   const std::vector<std::pair<int,float> >& the_weights = (*weightsContainer)(ipv)->weights();
 
-  int ntr = (*itpv)->tracks().size();
-  int nw = the_weights.size();
+  int ntr2 = (*itpv)->nDoF()+3;
+  int nw2 = 2*the_weights.size();
   
-  if ( ntr != nw ) {
+  if ( ntr2 != nw2 ) {
     // # tracks in PV does not match # weights
     m_counter_count[3] += 1;    
     return;
@@ -212,18 +213,21 @@ void PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   // Set covariance matrix
   hess = hess * 2.0;
   vtx.setCovMatrix(hess);
-  // Set tracks
-  vtx.clearTracks();
-  SmartRefVector< LHCb::Track >  vtx_tracks = pvin->tracks();
-  for (unsigned int it = 0; it < vtx_tracks.size(); it++ ) {
-    const LHCb::Track* ptr =  vtx_tracks[it];
-    if ( std::find(removed_tracks.begin(), removed_tracks.end(), ptr) == removed_tracks.end() ) {
-      vtx.addToTracks(ptr);
-    }
-  }
-
   vtx.setChi2(pvin->chi2()-dchi2);
   vtx.setNDoF(pvin->nDoF()-2*ntr_removed);
+
+  if (m_updatePVTracks) {
+    
+    // Update tracks. Default is not to update since tracks may not be available (uDST)
+    vtx.clearTracks();
+    SmartRefVector< LHCb::Track >  vtx_tracks = pvin->tracks();
+    for (unsigned int it = 0; it < vtx_tracks.size(); it++ ) {
+      const LHCb::Track* ptr =  vtx_tracks[it];
+      if ( std::find(removed_tracks.begin(), removed_tracks.end(), ptr) == removed_tracks.end() ) {
+        vtx.addToTracks(ptr);
+      }
+    }
+  }
 
   m_counter_count[8] += 1;
   
