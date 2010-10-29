@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-10-29 - Greig Cowan
+ - Initial commit of the stream definitions for Stripping12. Still lots to 
+   do regarding the organisation of the microDST streams and the corresponding
+   full DST streams. I expect some stream names will have to change. We will 
+   need to review the definitions of the streams according to what the WGs have 
+   approved.
+
 ! ========================== StrippingSettings v1r2 2010-10-07 ================
 
 ! 2010-10-07 - Thomas Blake
