@@ -9,13 +9,13 @@ __author__ = "Juan PALACIOS juan.palacios@cern.ch"
 
 class TreeInfo(object) :
     def __init__(self, tree) :
-#        self.location = tree.GetName().replace('_', '/')
-        self.location = tree.GetName()
+        self.location = tree.GetName().replace('_', '/')
+#        self.location = tree.GetName()
         self.sizeInBytes = tree.GetTotBytes()
         self.zippedSizeInBytes = tree.GetZipBytes()
-        self.sizeInKB = round(self.sizeInBytes/1024., 2)
-        self.sizeInMB = round(self.sizeInBytes/(1024.*1024), 2)
-        self.zippedSizeInKB = round(self.zippedSizeInBytes/1024., 2)
+        self.sizeInKB = self.sizeInBytes/1024.
+        self.sizeInMB = self.sizeInBytes/(1024.*1024)
+        self.zippedSizeInKB = self.zippedSizeInBytes/1024.
         self.entries = tree.GetEntries()
 
 def getTreeInfo( filename, trunk ) :
@@ -67,19 +67,23 @@ if __name__ == '__main__' :
     
     for s in stats :
         if not s.location.endswith('_') :
-            message = s.location.ljust(length) + str(str(s.sizeInKB)+' ('+ str(s.zippedSizeInKB) +') KB /' + str(s.entries)+' Entries.').rjust(10) + '\n'
+            sizeKB = round(s.sizeInKB, 2)
+            zipSizeKB = round(s.zippedSizeInKB, 2)
+            message = s.location.ljust(length) + str(str(sizeKB)+' ('+ str(zipSizeKB) +') KB /' + str(s.entries)+' Entries.').rjust(10) + '\n'
             zipsize += s.zippedSizeInKB
             size += s.sizeInKB
             _printMessage += message
             outputFile.write(message)
 
-    outputFile.write('Total zipped size ' + str(zipsize) + ' KB')
-    outputFile.write('Total size        ' + str(size) + ' KB')
+    totzipsize = 'Total zipped size ' + str(round(zipsize,2)) + ' KB'
+    outputFile.write(totzipsize)
+    totsize = 'Total size        ' + str(round(size,2)) + ' KB'
+    outputFile.write(totsize)
     if verbose :
         print '----------------------------------------------------------------------------------'
         print _printMessage
-        print 'Total zipped size', zipsize, 'KB'
-        print 'Total size       ', size, 'KB'
+        print totzipsize
+        print totsize
         print '----------------------------------------------------------------------------------'
         print 'Wrote summary to', output
         
