@@ -10,17 +10,16 @@ from Gaudi.Configuration import *
 from Configurables import LHCbApp
 from Configurables import CondDB
 
-CondDB(UseOracle = True)
+# use oracle + grid certificate (not in unittests)
+# CondDB(UseOracle = True)
+# CondDB().LocalTags["LHCBCOND"] = ["lumi-20101026"]
 
 #-- set explicit CondDB tag
 LHCbApp().CondDBtag = 'head-20100826'
 #LHCbApp().CondDBtag = 'lumi-20101026'
-#CondDB().LocalTags["LHCBCOND"] = ["lumi-20101026"]
 
 #--- determine application to run
 from Configurables import LumiAlgsConf, LumiCheckCondDB
-
-OutputLevel =  INFO
 
 # standard sequence from configurable
 sequence = GaudiSequencer("CheckDB")
@@ -40,9 +39,9 @@ ApplicationMgr( TopAlg = [ GaudiSequencer( "CheckDB" ),
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
-#-- Test input
-files = [
-  ]
+#-- Test input not needed
+files = [ ]
+
 #-- input options
 ApplicationMgr().EvtMax =  -1
 importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")

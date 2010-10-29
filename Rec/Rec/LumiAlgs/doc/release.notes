@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-10-29 - Jaap Panman
+ - minor correction to database checker job options in unit tests
+
 !========================= LumiAlgs v4r1 2010-10-28 =========================
 ! 2010-10-27 - Jaap Panman
  - add database checker in unit tests (LumiCheckCondDB algorithm)
