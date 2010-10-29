@@ -9,7 +9,8 @@ __author__ = "Juan PALACIOS juan.palacios@cern.ch"
 
 class TreeInfo(object) :
     def __init__(self, tree) :
-        self.location = tree.GetName().replace('_', '/')
+#        self.location = tree.GetName().replace('_', '/')
+        self.location = tree.GetName()
         self.sizeInBytes = tree.GetTotBytes()
         self.zippedSizeInBytes = tree.GetZipBytes()
         self.sizeInKB = round(self.sizeInBytes/1024., 2)
@@ -59,14 +60,26 @@ if __name__ == '__main__' :
     length = len(sorted([s.location for s in stats], cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
     _printMessage = ''
 
-    for s in stats :
-        message = s.location.ljust(length) + str(str(s.sizeInKB)+' ('+ str(s.zippedSizeInKB) +') KB /' + str(s.entries)+' Entries.').rjust(10) + '\n'
-        _printMessage += message
-        outputFile.write(message)
+    locations = [s.location for s in stats]
 
+    zipsize = 0
+    size = 0
+    
+    for s in stats :
+        if not s.location.endswith('_') :
+            message = s.location.ljust(length) + str(str(s.sizeInKB)+' ('+ str(s.zippedSizeInKB) +') KB /' + str(s.entries)+' Entries.').rjust(10) + '\n'
+            zipsize += s.zippedSizeInKB
+            size += s.sizeInKB
+            _printMessage += message
+            outputFile.write(message)
+
+    outputFile.write('Total zipped size ' + str(zipsize) + ' KB')
+    outputFile.write('Total size        ' + str(size) + ' KB')
     if verbose :
         print '----------------------------------------------------------------------------------'
         print _printMessage
+        print 'Total zipped size', zipsize, 'KB'
+        print 'Total size       ', size, 'KB'
         print '----------------------------------------------------------------------------------'
         print 'Wrote summary to', output
         
