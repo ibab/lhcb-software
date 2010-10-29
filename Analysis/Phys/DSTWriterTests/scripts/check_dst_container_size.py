@@ -11,8 +11,10 @@ class TreeInfo(object) :
     def __init__(self, tree) :
         self.location = tree.GetName().replace('_', '/')
         self.sizeInBytes = tree.GetTotBytes()
+        self.zippedSizeInBytes = tree.GetZipBytes()
         self.sizeInKB = round(self.sizeInBytes/1024., 2)
         self.sizeInMB = round(self.sizeInBytes/(1024.*1024), 2)
+        self.zippedSizeInKB = round(self.zippedSizeInBytes/1024., 2)
         self.entries = tree.GetEntries()
 
 def getTreeInfo( filename, trunk ) :
@@ -58,7 +60,7 @@ if __name__ == '__main__' :
     _printMessage = ''
 
     for s in stats :
-        message = s.location.ljust(length) + str(str(s.sizeInKB)+' KB / '+ str(s.entries)+' Entries.').rjust(10) + '\n'
+        message = s.location.ljust(length) + str(str(s.sizeInKB)+' ('+ str(s.zippedSizeInKB) +') KB /' + str(s.entries)+' Entries.').rjust(10) + '\n'
         _printMessage += message
         outputFile.write(message)
 
