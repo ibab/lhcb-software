@@ -2,7 +2,7 @@
 # Globals
 imageFileName = ''
 canvas        = None
-tempDir       = "/var/work/jonesc/tmp/HPDImageAlign"
+tempDir       = "/var/nwork/pciy/jonesc/tmp/HPDImageAlign"
 
 def initialise():
 
@@ -209,7 +209,7 @@ def getRunFillData(rootfiles):
 
     # Initialise return data
     runfilldata = { }
-    runfilldata["RunData"] = { }
+    runfilldata["RunData"]  = { }
     runfilldata["FillData"] = { }
     runfilldata["GlobalStopTime"] = None
 
@@ -484,6 +484,10 @@ def calibration(rootfiles,type,fullFit,forceAverages):
     print "Making summary plots", globals()["imageFileName"]
     printCanvas('[')
 
+    # Run range for including in the fitted data
+    #minMaxFillForFit = [0,9999999] # All fills/runs
+    minMaxFillForFit = [952, 1430] # Range used by Matt for Mirror alignment 28/10/2010
+
     for hpd,data in plotData.iteritems():
 
         # HPD copy number
@@ -541,54 +545,60 @@ def calibration(rootfiles,type,fullFit,forceAverages):
         
         for fl in sorted(data.keys()):
 
-            # Field Polarity
-            polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
-            
-            if fl < minMaxFlag[0] : minMaxFlag[0] = fl
-            if fl > minMaxFlag[1] : minMaxFlag[1] = fl
-            
-            values = data[fl]
-            if values['FitOK'] :
-                
-                vflag.append(fl)
-                vflagerr.append(0.0)
-                vshiftX.append(values['ShiftX'][0])
-                vshiftXerr.append(values['ShiftX'][1])
-                vshiftY.append(values['ShiftY'][0])
-                vshiftYerr.append(values['ShiftY'][1])
-                vshiftR.append(values['ShiftR'][0])
-                vshiftRerr.append(values['ShiftR'][1])
-                dbX.append(values["DBShiftX"])
-                dbY.append(values["DBShiftY"])
-                dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
+            if fl >= minMaxFillForFit[0] and fl <= minMaxFillForFit[1] :
 
-                if polarity == 'MagDown':
-                    vflagMagDown.append(fl)
-                    vflagerrMagDown.append(0.0)
-                    vshiftXMagDown.append(values['ShiftX'][0])
-                    vshiftXerrMagDown.append(values['ShiftX'][1])
-                    vshiftYMagDown.append(values['ShiftY'][0])
-                    vshiftYerrMagDown.append(values['ShiftY'][1])
-                    vshiftRMagDown.append(values['ShiftR'][0])
-                    vshiftRerrMagDown.append(values['ShiftR'][1])
-                if polarity == 'MagUp':
-                    vflagMagUp.append(fl)
-                    vflagerrMagUp.append(0.0)
-                    vshiftXMagUp.append(values['ShiftX'][0])
-                    vshiftXerrMagUp.append(values['ShiftX'][1])
-                    vshiftYMagUp.append(values['ShiftY'][0])
-                    vshiftYerrMagUp.append(values['ShiftY'][1])
-                    vshiftRMagUp.append(values['ShiftR'][0])
-                    vshiftRerrMagUp.append(values['ShiftR'][1])
-                if polarity == 'MagOff':
-                    vflagMagOff.append(fl)
-                    vflagerrMagOff.append(0.0)
-                    vshiftXMagOff.append(values['ShiftX'][0])
-                    vshiftXerrMagOff.append(values['ShiftX'][1])
-                    vshiftYMagOff.append(values['ShiftY'][0])
-                    vshiftYerrMagOff.append(values['ShiftY'][1])
-                    vshiftRMagOff.append(values['ShiftR'][0])
-                    vshiftRerrMagOff.append(values['ShiftR'][1])
+                # Field Polarity
+                polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
+            
+                if fl < minMaxFlag[0] : minMaxFlag[0] = fl
+                if fl > minMaxFlag[1] : minMaxFlag[1] = fl
+            
+                values = data[fl]
+                if values['FitOK'] :
+                
+                    vflag.append(fl)
+                    vflagerr.append(0.0)
+                    vshiftX.append(values['ShiftX'][0])
+                    vshiftXerr.append(values['ShiftX'][1])
+                    vshiftY.append(values['ShiftY'][0])
+                    vshiftYerr.append(values['ShiftY'][1])
+                    vshiftR.append(values['ShiftR'][0])
+                    vshiftRerr.append(values['ShiftR'][1])
+                    dbX.append(values["DBShiftX"])
+                    dbY.append(values["DBShiftY"])
+                    dbR.append(rFromXY([values["DBShiftX"],0],[values["DBShiftY"],0])[0])
+
+                    if polarity == 'MagDown':
+                        vflagMagDown.append(fl)
+                        vflagerrMagDown.append(0.0)
+                        vshiftXMagDown.append(values['ShiftX'][0])
+                        vshiftXerrMagDown.append(values['ShiftX'][1])
+                        vshiftYMagDown.append(values['ShiftY'][0])
+                        vshiftYerrMagDown.append(values['ShiftY'][1])
+                        vshiftRMagDown.append(values['ShiftR'][0])
+                        vshiftRerrMagDown.append(values['ShiftR'][1])
+                    if polarity == 'MagUp':
+                        vflagMagUp.append(fl)
+                        vflagerrMagUp.append(0.0)
+                        vshiftXMagUp.append(values['ShiftX'][0])
+                        vshiftXerrMagUp.append(values['ShiftX'][1])
+                        vshiftYMagUp.append(values['ShiftY'][0])
+                        vshiftYerrMagUp.append(values['ShiftY'][1])
+                        vshiftRMagUp.append(values['ShiftR'][0])
+                        vshiftRerrMagUp.append(values['ShiftR'][1])
+                    if polarity == 'MagOff':
+                        vflagMagOff.append(fl)
+                        vflagerrMagOff.append(0.0)
+                        vshiftXMagOff.append(values['ShiftX'][0])
+                        vshiftXerrMagOff.append(values['ShiftX'][1])
+                        vshiftYMagOff.append(values['ShiftY'][0])
+                        vshiftYerrMagOff.append(values['ShiftY'][1])
+                        vshiftRMagOff.append(values['ShiftR'][0])
+                        vshiftRerrMagOff.append(values['ShiftR'][1])
+                        
+            else :
+
+                print "Skipping data from", type, fl, "from fit"
 
         if len(vflag) > 0:
 
@@ -779,17 +789,17 @@ def calibration(rootfiles,type,fullFit,forceAverages):
             if values["FitOK"] and not forceAverages :
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
-                text = "From Fit"
+                text = "From Fits to each Fill"
             else:
                 if hpdID in averageShifts[polarity].keys():
                     xOff = averageShifts[polarity][hpdID][0]
                     yOff = averageShifts[polarity][hpdID][1]
-                    text = "From" + polarity + "average"                      
+                    text = "From " + polarity + " Average"                      
                 else:
                     if hpdID in averageShifts['All'].keys():
                         xOff = averageShifts['All'][hpdID][0]
                         yOff = averageShifts['All'][hpdID][1]
-                        text = "From All average"
+                        text = "From Overall Average"
                     else:
                         xOff = values["DBShiftX"]
                         yOff = values["DBShiftY"]

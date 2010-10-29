@@ -54,7 +54,7 @@ StatusCode RichHPDImageSummary::initialize()
 
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
 
-  const LHCb::RichSmartID::Vector &activeHPDs  = m_RichSys->activeHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector &activeHPDs = m_RichSys->activeHPDRichSmartIDs();
 
   for (  LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
          iHPD != activeHPDs.end(); ++iHPD )
@@ -142,16 +142,19 @@ StatusCode RichHPDImageSummary::execute()
 //  Finalize
 //=============================================================================
 
-StatusCode RichHPDImageSummary::finalize() {
+StatusCode RichHPDImageSummary::finalize() 
+{
 
-  if ( msgLevel(MSG::DEBUG) ){
+  if ( msgLevel(MSG::DEBUG) )
+  {
     debug() << "==> Finalize" << endmsg;
     debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << " Creating summary information " << endmsg;
 
-  for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter ){
+  for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
+  {
     summaryINFO( m_iter->first, m_iter->second );
   }
 
@@ -197,7 +200,7 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
   std::string sensorpath = m_RichSys->getDeHPDLocation(smartID);
   sensorpath += ( "/SiSensor:" + boost::lexical_cast<std::string>( ID ) );
 
-  DetectorElement* dd = getDet<DetectorElement>( sensorpath );
+  DetectorElement * dd = getDet<DetectorElement>( sensorpath );
 
   Gaudi::XYZPoint zero;
   Gaudi::XYZPoint offsetCondDB = (dd->geometry()->ownMatrix())*zero;
@@ -214,6 +217,7 @@ double RichHPDImageSummary::distanceToCondDBValue( const unsigned int ID,
 void RichHPDImageSummary::summaryINFO( const unsigned int ID,
                                        const TH2D* hist ) const
 {
+  if ( !hist ) return;
 
   const unsigned int nPix = (unsigned int) (hist->Integral());
   if ( nPix < m_minOccupancy ) return ;

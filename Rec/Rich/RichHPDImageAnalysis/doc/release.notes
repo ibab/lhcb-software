@@ -4,6 +4,12 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-10-29 - Chris Jones
+ - Fix a bug in the monitor that causes a NULL histogram pointer to be 
+   dereferenced. Is triggered when a non-empty disabled HPD list used in the
+   Conditions DB.
+ - Various updates to the python scripts.
+
 !================= Rich/RichHPDImageAnalysis v1r3 2010-09-24 =================
 ! 2010-09-23 - Chris Jones
  - Some more improvements to the run by run calibration script. Now it is
