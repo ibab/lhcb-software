@@ -17,6 +17,7 @@
 
 #include "Kernel/STTell1ID.h"
 #include "Kernel/STRawBankMap.h"
+#include "Kernel/ISTReadoutTool.h"
 
 DECLARE_ALGORITHM_FACTORY( STRawBankMonitor );
 
@@ -89,8 +90,28 @@ StatusCode STRawBankMonitor::execute(){
     plot((double)bankSize, "board data size", 0., 200., 200);
   
     // data size per board
-    unsigned int id = (aBoard.region()*20) + aBoard.subID();
-    plot(id, "data size", 0., 100. , 100,(double)bankSize);
+    //unsigned int id = (aBoard.region()*20) + aBoard.subID();
+    const std::map< unsigned int, unsigned int > & SourceIDToTELLmap = readoutTool()->SourceIDToTELLNumberMap();
+    unsigned int tellNumber = SourceIDToTELLmap.find((*iterBank)->sourceID())->second;
+    
+    // These hard coded numbers come from here: https://lbtwiki.cern.ch/bin/view/Online/Tell1PortNum
+    int doubleLinkedTTtell1s[] = {1, 2, 3, 4, 5, 6, 8, 9, 10, 13, 14, 15};
+    int doubleLinkedITtell1s[] = {1, 2, 8, 9, 15, 16, 22, 23, 29, 30, 36, 37};
+    unsigned int numberOfLinks = 1;
+    
+    if ( detType() == "IT" ) {
+	for ( unsigned int i = 0; i < sizeof(doubleLinkedITtell1s); i++) {
+		if (tellNumber == doubleLinkedITtell1s[i]) numberOfLinks = 2;
+	}
+    }
+    else if ( detType() == "TT" ) {
+	for ( unsigned int i = 0; i < sizeof(doubleLinkedTTtell1s); i++) {
+		if (tellNumber == doubleLinkedTTtell1s[i]) numberOfLinks = 2;
+	}
+    }
+
+    double datasize = bankSize/numberOfLinks;
+    plot(tellNumber, "data size", 0., 100. , 100, datasize);
 
   } // iterBank
 

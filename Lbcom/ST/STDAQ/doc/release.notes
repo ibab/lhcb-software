@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2010-10-29 Greig Cowan
+ - Added code to STRawBankMonitor to account for the double links to some TT and
+   IT TELL1 boards.
+
 !========================= STDAQ v3r25 2010-10-25 =========================
 ! 2010-10-2 M Needham
   - Bug fix in STRawBankMonitor 
