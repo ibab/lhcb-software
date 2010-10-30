@@ -13,9 +13,60 @@ This version uses Gaudi v21r11 and LHCb v31r6p1
 - Minor updates for the winter 2010 reprocessing
 
 - Packages updated:
-    Calo/CaloTools v6r0, Hlt/HltDAQ v2r4, L0/L0DU v10r10, L0/L0Muon v9r2, 
+    Calo/CaloTools v6r0, Hlt/HltDAQ v2r4, L0/L0DU v10r10, L0/L0Muon v9r2,
     L0/L0MuonMonitor v2r1p1, Rich/RichTools v2r31, ST/STAlgorithms v4r4,
     ST/STDAQ v3r25, ST/STMonitors v3r3, ST/STTools v4r5, Velo/VeloDAQ v6r0p1
+
+- In Calo/CaloTools v6r0:
+  . change parameters to const references in CaloHypo2Calo
+  . new tool : CaloHypoEstimator
+  . Minor update to other tools
+
+- In Hlt/HltDAQ v2r4:
+  . fix ANNSvc for compilation error with boost 1.44
+  . try int-decision name mapping from DecReports if ANNSvc fails in HltSelReportsDecoder
+
+- In L0/L0DU v10r10:
+  . Add the decoding of the full list of L0Muon candidates to the data on demand service
+    needed for L0 TisTossing
+  . reduced verbosity
+
+
+- In L0/L0Muon v9r2:
+  . Better use of rootInTes - needed for MicroDSTs
+
+- In L0/L0MuonMonitor v2r1p1:
+  . Handle optical links forced to 1; needed for online monitoring.
+  . Fix reporting of tell1 errors
+  . Check muon readout saturation in comparison with l0muon + fixes
+
+- In Rich/RichTools v2r31:
+  . Remove private methods in Snells law and refractive index tools, instead use new method from RichDet.
+  . Removing the caching of the threshold momentum values in the particle properties too
+  . Add a new method to allow the threshold momentum to be calculated
+  . More updates to only load radiator detector elements when needed
+  . Update the Snells Law refraction tool to load detector elements on demand
+
+- In ST/STAlgorithms v4r4:
+  . Really add STClusterContainerCopy.cpp
+
+- In ST/STDAQ v3r25:
+  . Fixed minor bug and added new histogram
+  . Added code to account for double links to some TT and IT TELL1s
+  . Bug fix in STRawBankMonitor
+  . Make raw location an option.
+  . Add possibility to copy the pcn from the summary block to the raw bank in the encoding
+
+- In ST/STMonitors v3r3:
+  . update to use new interface of ISTNoiseCalculationTool
+
+- In ST/STTools v4r5:
+  . Fix vc compilation error+warnings
+  . Add series of changes to implement new methods in noise st noise calculation tools plus bug fixes.
+
+- In Velo/VeloDAQ v6r0p1:
+  . Default is now no ERROR messages from the decoding (can override in options)
+
 
 </PRE><H1><A NAME=v9r7>2010-08-26 LbcomSys v9r7</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6
@@ -34,21 +85,21 @@ This version uses Gaudi v21r11 and LHCb v31r6
   . L0CondDBProvider : reduced verbosity
 
 - In L0/L0MuonMonitor v2r1:
-  . L0MuonMonitorInput : 
+  . L0MuonMonitorInput :
     o check if muon read out is saturated before processing events
     o add hit maps of bad channels (if FullDetail is enabled)
-    o write out list list of bad channels at the end of the job (if Offline 
+    o write out list list of bad channels at the end of the job (if Offline
       and FullDetail are enabled)
   . L0MuonMuonComp :
     o check if muon read out is saturated before processing events
-  . L0MuonMonitorData : 
+  . L0MuonMonitorData :
     o protect FAILURE in case of missing container
-  . L0MuonMoniError : 
+  . L0MuonMoniError :
     o don't fill histo per quarter for PU bcid errors
     o report tell1 errors (type J2 and K2) in the summary plot.
 
 - In Rich/RichDAQ v3r29:
-  . Suppress unneccessary warning message during initialisation of the 
+  . Suppress unneccessary warning message during initialisation of the
     decoding tool
 
 - In ST/STDAQ v3r24:
@@ -66,29 +117,29 @@ This version uses Gaudi v21r10p1 and LHCb v31r5
   ST/STCheckers v3r2, ST/STTools v4r4, Velo/VeloDAQ v6r0
 
 - In Hlt/HltDAQ v2r2:
-  . ANNDispatchSvc: fix bug that disallowed setting of properties 
-  . a bug fix for non-standard RawEvent location 
-  . Allow the use (disabled by default) of the conditions DB to find 
+  . ANNDispatchSvc: fix bug that disallowed setting of properties
+  . a bug fix for non-standard RawEvent location
+  . Allow the use (disabled by default) of the conditions DB to find
     the time of the start of run used for the trend plots of the various rates
-  . fix fillStream declaration in xml so that const_cast can be removed 
-  . fix compiler warning in HltRoutingBitsWriter.cpp 
+  . fix fillStream declaration in xml so that const_cast can be removed
+  . fix compiler warning in HltRoutingBitsWriter.cpp
 
 - In Rich/RichDAQ v3r28:
-  . Add new methods to RawBufferToSmartIDsTool to return 
-    the total number of hits in the current event. 
+  . Add new methods to RawBufferToSmartIDsTool to return
+    the total number of hits in the current event.
 
 - In ST/STAlgorithms v4r3:
-  . Add STClusterContainerCopy algorithm 
+  . Add STClusterContainerCopy algorithm
 
 - In ST/STCheckers v3r2:
   . Add some histograms to STClusterResolution
 
 - In ST/STTools v4r4:
-  . Add tool to select STChannelIDs on tracks 
+  . Add tool to select STChannelIDs on tracks
 
 - In Velo/VeloDAQ v6r0:
-  . Added a ProcStatus when the bank has a header bit error and is not decoded 
-  . Change in the nzs data stream decoder to cope with corrupted banks 
+  . Added a ProcStatus when the bank has a header bit error and is not decoded
+  . Change in the nzs data stream decoder to cope with corrupted banks
     (related with error banks)
 
 
@@ -109,8 +160,8 @@ This version uses Gaudi v21r10 and LHCb v31r3
 
 - In RichTools v2r30
   . Add to RichDetParameters a new method to return the S.D. of the n-1
-    distribution for observable photons. 
-  . Remove from RichTabulatedRefractiveIndex the private hard coded n-1 S.D. 
+    distribution for observable photons.
+  . Remove from RichTabulatedRefractiveIndex the private hard coded n-1 S.D.
     values.
   . Update refractiveIndexRMS() to return the RMS and not the S.D.
   . Add new method refractiveIndexSD() to return the standard deviation.
@@ -119,7 +170,7 @@ This version uses Gaudi v21r10 and LHCb v31r3
   . Changed include location of ISTClusterPosition (now in Tr/TrackInterfaces).
 
 - In STCheckers v3r1
-  . Add histograms normalizing to MIP to STClusterChecker 
+  . Add histograms normalizing to MIP to STClusterChecker
 
 - In STTools v4r3
   . Follow changes in ISTClusterPosition interface.
@@ -128,10 +179,10 @@ This version uses Gaudi v21r10 and LHCb v31r3
 
 - In SiTools v1r8
   . Remove obsolete file SiTools_dll.cpp
-  . SiDepositedCharge now uses SiLandauFun.h/cpp 
+  . SiDepositedCharge now uses SiLandauFun.h/cpp
 
 - In VeloDAQ v5r3
-  . Changed how ProcStatus is used as per Savannah task #16278. Now still set 
+  . Changed how ProcStatus is used as per Savannah task #16278. Now still set
     ProcStatus for any problem, but also set ProcStatus->setAborted(true)
     when all clusters are removed due to high multiplicity
   . Removed setFilterPass options as it was unused.
@@ -149,8 +200,8 @@ This version uses Gaudi v21r9 and LHCb v31r2
 
 - In L0DU v10r8
   . L0Filter : fix doxygen documentation
-  . L0DURawBankMonitor : BXID-decision monitoring in detail 
-                         (positive bcid per channel/trigger). 
+  . L0DURawBankMonitor : BXID-decision monitoring in detail
+                         (positive bcid per channel/trigger).
 
 - In STAlgorithms v4r1
   . STClusterKiller prints out fraction of clusters killed
@@ -172,7 +223,7 @@ This version uses Gaudi v21r9 and LHCb v31r2
   . New tuning of eta correction (for new charge sharing tune) and new hit error
     estimates for MC.
   . Changed the calculation of the effect of the Lorentz angle.
-  . Add new selector tool STRndmEffSelector 
+  . Add new selector tool STRndmEffSelector
     (used by default by cluster selector from channel)
   . Implementation of new methods in noise calculation tools
 
@@ -196,7 +247,7 @@ This version uses Gaudi v21r9 and LHCb v31r1
   . src/L0CaloCompare.cpp/.h: add monitoring histograms to count error rates
 
 - In L0DU v10r7
-  . ReplayL0DU : new property added to L0Conf to allow the rerunning of the 
+  . ReplayL0DU : new property added to L0Conf to allow the rerunning of the
     L0DU alone starting from the L0DU banks (with for example a new L0TCK).
 
 - In RichDAQ v3r27
@@ -205,15 +256,15 @@ This version uses Gaudi v21r9 and LHCb v31r1
   . Turn back on the BXID check between the RICH and the ODIN.
 
 - In RichTools v2r29p4
-  . Add missing HLT mode flag to refractiveIndex call in 
+  . Add missing HLT mode flag to refractiveIndex call in
     Rich::TabulatedRefractiveIndex and Rich::SnellsLawRefraction
 
 - In STTools v4r1
-  . Added STOffline Conf, which replaces the files Brunel.opts and 
+  . Added STOffline Conf, which replaces the files Brunel.opts and
     Brunel_EarlyData.opts
 
 - In VeloDAQ v5r2
-  . Make lite decoding check full bank length, remove lite and full clusters 
+  . Make lite decoding check full bank length, remove lite and full clusters
     from the containers for corrupted TELL1 banks then continue normally
   . Review warnings/errors
 
@@ -233,13 +284,13 @@ This version uses Gaudi v21r9 and LHCb v31r0
     VeloDAQ v5r1, VeloPixDAQ v1r2, VeloPixTools v1r0
 
 - In L0DU v10r6
-  . L0Conf: 
+  . L0Conf:
     o Fix bug (wrong algorithm name for L0CaloDecoding) affecting
       L0Conf().DecodeL0=True,  introduced in version v10r2
     o Add default TCK for 2009 (0x1309) and 2010 (0x1810) data types
     o Add property to enable/disable the use of condDB for the L0Muon
       by default : now use the condDB (was not used by default up to this change)
-    o Add the on demand decoding of the L0MuonProcData bank 
+    o Add the on demand decoding of the L0MuonProcData bank
 
 - In RichTools v2r29p3
   . Fix untested status code in HighOccHPDSuppressionTool
@@ -277,11 +328,11 @@ This version uses Gaudi v21r8 and LHCb v30r1
     VeloDAQ v5r0, VeloTools v3r5
 
 - In HltDAQ v1r7
-  . HltDecReportsDecoder: try alternative standard RawEventLocations 
+  . HltDecReportsDecoder: try alternative standard RawEventLocations
     (::Copied, ::Default)  if  rawEvent not found in the user-defined location
 
 - In L0DU v10r5
-  . L0DUFromRawTool : try alternative standard RawEventLocations 
+  . L0DUFromRawTool : try alternative standard RawEventLocations
     (::Copied, ::Default)  if  rawEvent not found in the user-defined location
   . L0DURawBankMonitor : implement filterPassed to filter out problematic event
     (according to a mask set via options)
@@ -295,7 +346,7 @@ This version uses Gaudi v21r8 and LHCb v30r1
   . Remove STSignalToNoiseTool
 
 - In STAlgorithms v4r0
-  . Allow use of cuts from conditions in STClusterCreator 
+  . Allow use of cuts from conditions in STClusterCreator
   . Make threshold integer + cut >= (was >)
 
 - In STCheckers v3r0
@@ -308,7 +359,7 @@ This version uses Gaudi v21r8 and LHCb v30r1
   . Added algorithm (STDumpClusters) to dump all clusters in an event to an ntuple
 
 - In VeloDAQ v5r0
-  . When more than 10k VeloClusters are to be decoded, decoding is aborted, an 
+  . When more than 10k VeloClusters are to be decoded, decoding is aborted, an
     Error is printed and empty containers are provided instead (both lite and
     full). Protects against excessive reconstruction time and memory
   . Made a corrupted bank length in the full cluster decoding an Abort event
@@ -342,7 +393,7 @@ This version uses Gaudi v21r8 and LHCb v30r0
     HltRawBankMonitor
 
 - In L0Calo v11r1
-  . L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in 
+  . L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in
     RAW banks. In this case, do not decode the bank.
 
 - In L0DU v10r4
@@ -351,30 +402,30 @@ This version uses Gaudi v21r8 and LHCb v30r0
   . L0Filter : improve L0Filtering (TCK-dependent orChannels)
 
 - In L0Muon v9r1
-  . Change in CondDB (L0MuonAlg), use new condition (SoftFOI) 
+  . Change in CondDB (L0MuonAlg), use new condition (SoftFOI)
   . Add implementation of L0MuonOverflowTool, L0MuonOLErrorTool, L0MuonInputTool
   . Better handling of TAE event (L0MuonCandidatesFromRaw & L0MuonAlg)
-  . L0MuonOutputs : add protection against wrong magic pattern in RAW banks. 
+  . L0MuonOutputs : add protection against wrong magic pattern in RAW banks.
 
 - In L0MuonMonitor v2r0
   . Remove obsolete file L0MuonMonitor_dll.cpp
   . Add dependency to L0/L0Muon (requirements)
   . Add new algorithms : L0MuonMonitorProcessing, L0MuonMonitorInput,
     L0MuonMonitorError, L0MuonMonitorData, L0MuonMonitorCandidates
-  . L0MuonOnlineMonitor : improvements + bug fixe (get odin info only for 
+  . L0MuonOnlineMonitor : improvements + bug fixe (get odin info only for
     central time slice)
   . L0MuonMuonComp : new output format, imporve handling of pdm
   . L0MuonAlgComparison : implement a light mode if Online property is set
-  . L0MuonMonitorBase : 
+  . L0MuonMonitorBase :
 	  o new helper functions : getL0MuonPads, olsErrorSummary, activeTS
     o new properties : Prescale & Online
 
 - In PuVeto v7r7p1
-  . PuVetoAlg: bug fix for backward compatibility (no bank-size check on 
+  . PuVetoAlg: bug fix for backward compatibility (no bank-size check on
     older bank version 1) + magic number check
 
 - In MuonAssociators v3r3
-  . changes in MuonPad2MCTool 
+  . changes in MuonPad2MCTool
 
 - In RichDAQ v3r26p1
   . Add check on Rawbank magic pattern to detect general data corruption issues
@@ -394,7 +445,7 @@ This version uses Gaudi v21r8 and LHCb v30r0
 
 - In VeloAlgorithms v5r2
   . Change electrons per ADC to 601 (was 442) to match VeloSim changes
-  . Reduce Warning/Error messages to debug if there is a sensor with no 
+  . Reduce Warning/Error messages to debug if there is a sensor with no
     MCVeloFEs, does happen now with VeloSim optimisation
 
 - In VeloDAQ v4r13
@@ -402,7 +453,7 @@ This version uses Gaudi v21r8 and LHCb v30r0
   . Add protection against corrupted banks in Velo decoders
 
 - In VeloSimulation v3r7
-  . Changed simulation to match 2009 collision data and TELL1 style cluster 
+  . Changed simulation to match 2009 collision data and TELL1 style cluster
     maker, gain is lower 601 ADC per electron instead of 442 and smaller noise
   . Added an optimisation to only make isolated MCVeloFEs if they could start a
     cluster, still use inclusion threshold for FEs next to an FE with signal
@@ -421,23 +472,23 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
 - Packages modified: L0DU v10r3, PuVeto v7r7, RichTools v2r29, STMonitors v2r5
 
 - In L0DU v10r3
-  - L0DURawBankMonitor : 
-    . check L0Processor banks exist 
-    . report MuonBX misalignement only when L0Muon data is valid +  
+  - L0DURawBankMonitor :
+    . check L0Processor banks exist
+    . report MuonBX misalignement only when L0Muon data is valid +
       mask BXID = 3562->3563 (L0Muon reset)
     . emulator check : compare preDecision instead of decision to avoid fake
-      monitored error due to downscaling effect 
+      monitored error due to downscaling effect
   - L0DUEmulatorTool : fix abusive protection against multiple emulations per
     event (was preventing L0DUMultiTrends, L0ConfigMonitor.opt to run correctly)
   - L0DUMultiConfigProvider : fix verbose messaging when RootInTES != 'T0'
   - bug found in L0DU firmware for 'pathological' condition setting :
-    -> PVSS exported TCK options may not match the actual board configuration 
+    -> PVSS exported TCK options may not match the actual board configuration
        when there are several conditions on the same data and 'data>0' condition
        is not set first ('data > 0' corresponds to an empty register)
     -> adapt L0CUDonfigProvider : no longer special treatment for ordering the
-       'data>0' condition 
+       'data>0' condition
        => match the actual PGA configuration not the buggy PVSS export !
-    -> no impact on existing L0TCK (except maybe 0x1409 used for FEST)  
+    -> no impact on existing L0TCK (except maybe 0x1409 used for FEST)
 
 - In PuVeto v7r7
   . PuVetoAlg fixed to avoid infinite loop on real data: events with a wrong
@@ -445,7 +496,7 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
 
 - In RichTools v2r29
   . Fix crash when running average is turn on in Rich::HPDOccupancyTool due to
-    and infinite recursive call. Also protect against invalid HPD IDs in the 
+    and infinite recursive call. Also protect against invalid HPD IDs in the
     data (L1 suppressed HPDs etc.).
 
 - In STMonitors v2r5
@@ -462,9 +513,9 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 	. Track2Calo : switch HeraBExtrapolator to RungeKutta
 
 - In L0DU v10r2
-  . Add new module (L0Algs) to allow to access the various algorithms used 
+  . Add new module (L0Algs) to allow to access the various algorithms used
     by L0Conf with their proper name
-  . L0ConfigProvider  : 
+  . L0ConfigProvider  :
     o hardware-like automatic ordering of ElementaryCondition indices
       (can be disabled via options for backward-compatibility)
     o implement the condition reportSummary mask (from TCK configuration)
@@ -472,39 +523,39 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
       (short notice by default - detailed output can be activated by options)
     o use default naming for  predefined-data as defined in L0Event/L0DUBase.h
       (also in L0DUEmulatorTool and L0DUFromRawTool)
-    o Detailed check for all configurations can be activated via 
+    o Detailed check for all configurations can be activated via
       context() = "CHECK"
-  . L0DUElementaryData.xml : 
+  . L0DUElementaryData.xml :
     add new data type in enum (specific for 'RamBCID' data)
-  . L0DUEmulatorTool : 
+  . L0DUEmulatorTool :
     o report only registered condition
     o protect the decisisons downscaling against multi emulation/event
      (based on BeginEvent incident)
-    o make L0DUEmulatorTool a public tool in L0DUAlg, L0DUFromRawTool, 
+    o make L0DUEmulatorTool a public tool in L0DUAlg, L0DUFromRawTool,
       L0DUMultiTrends, L0Pattern, L0DURawBankMonitor
-  . requirements : use L0TCK v3*  
+  . requirements : use L0TCK v3*
     (backward-compatible ordering of condition for already  simulated data)
 
 - In L0Muon v9r0
   . fix bug when filling L0MuonError for L0MuonCtrlCand Bank
   . Fix compilation warning on Windows (L0MuonOutputs, L0MuonFromRawTrans)
-  . L0MuonAlg : 
+  . L0MuonAlg :
     o set proper protection against missing condition in CondDB
-    o define CondDB conditions and parameters names as algorithm properties 
+    o define CondDB conditions and parameters names as algorithm properties
   . Trigger parameters and CondDB :
     o access the FOI values and the procVersion from CondDB
     o new property : IgnoreCondDB to disable the previous feature if needed
       (set to true by default until conditions are in default CondDB tags)
-    o remove useless IgnoreM2 property 
+    o remove useless IgnoreM2 property
     o set new default for procVersion = 3
   . Clean up :
     o remove calls to ChronoStatSvc (L0MuonAlg + L0MuonCandidatesFromRaw)
     o split the fillOlsFromDigits method into parts:
       + get the hits from the relevants location
       + fill the ol registers
-    o L0MuonOutputTool : 
+    o L0MuonOutputTool :
       + use locations defined in L0Event for BCSU candidates
-      + remove the check using exists<>(location) to avoi conflict with the 
+      + remove the check using exists<>(location) to avoi conflict with the
         data on demand svc.
 
 - In RichMCMonitors v1r7p2
@@ -546,8 +597,8 @@ This version uses Gaudi v21r7 and LHCb v29r0
     TriggerType/BXType/CalibrationType
 
 - In L0Calo v11r0
-  . L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in 
-    the Hadron trigger, and PS/SPD in the ECAL triggers 
+  . L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in
+    the Hadron trigger, and PS/SPD in the ECAL triggers
     (available starting from tags *-20100202*, SQLDDDB v5r19)
   . L0CaloCheckCalibCte.cpp: move from int to unsigned long
 
@@ -563,17 +614,17 @@ This version uses Gaudi v21r7 and LHCb v29r0
                           properties are performed
   . L0Filter : o update with decision type and subTriggers filtering
                o inherits from L0AlgBase (L0Context-dependent location)
-               o protect against missing L0 + add counters  
+               o protect against missing L0 + add counters
   . new algo L0DUMultiTrends.cpp provides comparison of various TCK + trending
-  . L0Conf : 
+  . L0Conf :
     o remove the imports of opts files (translated in python).
     o add new properties :
-      + EnableL0DecodingOnDemand : setup the data on demand service 
+      + EnableL0DecodingOnDemand : setup the data on demand service
                                    to decode the L0 on demand
       + FastL0DUDecoding  : activate fast L0 decoding for HLT
-      + FullL0MuonDecoding : activate L0Muon full decoding 
-      + L0DecodingContext : string appended to the location of the 
-                            containers with the decoding results 
+      + FullL0MuonDecoding : activate L0Muon full decoding
+      + L0DecodingContext : string appended to the location of the
+                            containers with the decoding results
 	    + L0EmulatorContext : string appended to the location of the
 	                          containers with the emulation results
   . L0EmulatorSeq.opts : fix typo
@@ -588,7 +639,7 @@ This version uses Gaudi v21r7 and LHCb v29r0
   . Remove obsolete OTTimeCreator from Boole.opts (see task 12764)
 
 - In STTools v3r15
-  . Add STSelectBySN tool 
+  . Add STSelectBySN tool
 
 </PRE><H1><A NAME=v8r0>2010-01-22 LbcomSys v8r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
@@ -613,13 +664,13 @@ This version uses Gaudi v21r7 and LHCb v29r0
     o adapt monitoring (both L0DUReport and L0DUBank monitoring)
   . Add 'template' configuration in L0DUMultiConfigProvider needed by HLT for
     fast run change: L0DUConfig.Template tool available at initialization time
-  . L0DUFromRawAlg : 
-    o inherits from L0Base/L0FromRawBase 
-    o adapt TES I/O to L0 convention 
+  . L0DUFromRawAlg :
+    o inherits from L0Base/L0FromRawBase
+    o adapt TES I/O to L0 convention
     o Warning : writeProcData now is set false by default (was true)
-  . L0DUAlg, L0DUReportMonitor : 
-    o inherits from L0Base/L0AlgBase 
-    o adapt TES I/O to L0 convention 
+  . L0DUAlg, L0DUReportMonitor :
+    o inherits from L0Base/L0AlgBase
+    o adapt TES I/O to L0 convention
   . Handling TAE events in L0DU(Multi)ConfigProvider (L0DUConfig is TAE slot
     dependent)
     o L0DUFromRawTool : load config according to RootInTES
@@ -627,7 +678,7 @@ This version uses Gaudi v21r7 and LHCb v29r0
   . Monitoring : review and update histogram production
   . Adapt and complete L0Pattern.cpp and related options (for firmware checks)
   . New L0ConfigMonitor.opts for monitoring the performance of a given TCK
-  . Update FastDecoding.opts 
+  . Update FastDecoding.opts
     o L0DUFromRawTool : FillDataMap property default is now TRUE
       to be used for fast minimal decoding of L0DU bank (factor 4 in speed)
 
@@ -647,7 +698,7 @@ This version uses Gaudi v21r7 and LHCb v29r0
   . Add dependency on DAQUtils, new location of BankWriter.h helper
 
 - In VeloAlgorithms v5r1
-  . Change signatures of two methods from:  
+  . Change signatures of two methods from:
       StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
       StatusCode VeloTell1DataProcessor::writeForSenors()
     to
@@ -655,18 +706,18 @@ This version uses Gaudi v21r7 and LHCb v29r0
       void VeloTell1DataProcessor::writeForSenors()
   . Implement two new methods for adding ZS processing engines
       void addEngineInStaticMode(unsigned int tell1, const DeVeloSensor* sens)
-      void addEngineInDynamicMode(unsigned int tell1)  
+      void addEngineInDynamicMode(unsigned int tell1)
   . Add extra layer of protection against missing NZS data streams
 
 </PRE><H1><A NAME=v7r11>2009-12-15 LbcomSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
 
-- Added package VeloPix/VeloPixDAQ 
+- Added package VeloPix/VeloPixDAQ
 
 - Packages modified: PuVeto v7r4, OTAssociators v4r4, STMonitors v2r3
 
 - In PuVeto v7r4
-  . PuVetoAlg "decoding part" re-written, to deal with the current PU bank 
+  . PuVetoAlg "decoding part" re-written, to deal with the current PU bank
     (LHCb::RawBank::L0PU) format
 
 - In OTAssociators v4r4
@@ -689,13 +740,13 @@ This version uses Gaudi v21r6 and LHCb v28r4
     OTMonitor v3r1, STMonitors v2r2, STTools v3r14, VeloDAQ v4r12
 
 - In CaloTools v5r14
-  . Calo2MCTool : 
-    o new methods isCalo(particle), isPureNeutralCalo(particle) 
+  . Calo2MCTool :
+    o new methods isCalo(particle), isPureNeutralCalo(particle)
                   findMCOrBest(string/ParticleID,threshold)
     o complete the code (still not fully completed)
 
 - In HltDAQ v1r2
-  . HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports 
+  . HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports
     (bank version=1, previous was=0). Old Decoder will not be compatibile with
     the new content.
   . HltSelReportsDecoder: decode Particle2Vertex info in HltObjectSummary of
@@ -711,7 +762,7 @@ This version uses Gaudi v21r6 and LHCb v28r4
 
 - In OTMonitor v3r1
   . Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
-    OTTimeMonitor (was crashing anyway...) 
+    OTTimeMonitor (was crashing anyway...)
   . Remove unused variables in OTTimeMonitor following previous changes
   . Remove obsolete file OTMonitor_dll.cpp
 
@@ -726,7 +777,7 @@ This version uses Gaudi v21r6 and LHCb v28r4
   . Add implementations of ISTNoiseCalculationTool:
     o re-implementation of Nicola Chiapolini's methods from STNZSMonitors
     o STNoiseCalculationToolBase: base class to provide common data accessors.
-    o STNoiseCalculcationTool: calculates noise from using ADCs from input 
+    o STNoiseCalculcationTool: calculates noise from using ADCs from input
       container.
     o STCMSNoiseCalculationTool: calculates noise after CMS using different
       techniques for CMS.
@@ -770,17 +821,17 @@ This version uses Gaudi v21r6 and LHCb v28r2
   . Re-organize CaloAssociators.opts
 
 - In CaloTools v5r13
-  . L0Calo2CaloTool : 
+  . L0Calo2CaloTool :
     o bugfix - make storage of all created clusters on TES the only supported
       behaviour (therefore remove the 'DuplicateClustersOnTES' property)
     o use CaloFunctors::neighbours() instead of look_neig()
 
 - In HltDAQ v1r1p1
-  . In HltRoutingBitsWriter, publish counters 
+  . In HltRoutingBitsWriter, publish counters
 
 - In L0Calo v10r0
   . requirements: use new base package L0/L0Base
-  . L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common 
+  . L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common
     options amongst all L0 packages, defined in L0Base)
   . L0CaloCandidatesFromRawBank: do not write candidates in TES in the tool
     but move it outside
@@ -799,7 +850,7 @@ This version uses Gaudi v21r6 and LHCb v28r2
   . Add algorithm to write noise conditions
 
 - In STDAQ v3r20
-  . Minimize messages about lost banks 
+  . Minimize messages about lost banks
   . Added method to get source ID from TELL1 number to readout tool.
   . RawBankToSTClusterAlg: Adopt changes in STKernel, STTell1Board::ADCToOffline.
     Also, the requirement on whether the interstrip fraction was rounded up to
@@ -814,7 +865,7 @@ This version uses Gaudi v21r6 and LHCb v28r2
   . Fix binning of 2d histograms for ADCs vs TELL1
   . Add flags to only makes noise plots for certain TELL
   . Book histograms in STErrorMonitor for online monitoring.
-  . Change noise plots to profile histograms; better for the history mode in the 
+  . Change noise plots to profile histograms; better for the history mode in the
     online monitoring.
   . Add algorithm (STNoiseCalculation) to calculate noise in Tool.
   . Modified the binning of some histograms in the STTAEClusterMonitor
@@ -826,9 +877,9 @@ This version uses Gaudi v21r6 and LHCb v28r2
   . Add implementations of ISTNoiseCalculationTool:
     o Re-implementation of Nicola Chiapolini's methods that were in STNZSMonitors
     o STNoiseCalculationToolBase: base class to provide common data accessors.
-    o STNoiseCalculcationTool: 
+    o STNoiseCalculcationTool:
       calculates noise from using ADCs from input container.
-    o STCMSNoiseCalculationTool: 
+    o STCMSNoiseCalculationTool:
       calculates noise after CMS using different techniques for CMS.
 
 - In VeloAlgorithms v5r0
@@ -856,12 +907,12 @@ This version uses Gaudi v21r5 and LHCb v28r1
   . Adapt to changes in CaloDAQ
   . New tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation
     (interface CaloInterfaces/ICalo2MCTool.h). Not yet complete but usable
-  . Calo2Calo.cpp : 
-    o make use of CaloAlgUtils.h to define context-dependent TES I/O 
+  . Calo2Calo.cpp :
+    o make use of CaloAlgUtils.h to define context-dependent TES I/O
     o caloGetterTool : public -> private tool
     o use caloGetterTool in isLocMax(id) method
   . CaloGetterTool.cpp : make use of CaloAlgUtils.h to define context-dependent
-                         TES I/O 
+                         TES I/O
   . L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
   . use Relations in requirements
 
@@ -880,8 +931,8 @@ This version uses Gaudi v21r5 and LHCb v28r1
   . L0DUConfigProvider.cpp : remove protection against empty configuration.
     Simple TCK registration is enough to run w/o crash.
   . *.cpp/h : replace endreq by endmsg
-  . Fix bug in L0Conf: 
-    import of L0Sequence.opts was missing when using DecodeL0DU flag 
+  . Fix bug in L0Conf:
+    import of L0Sequence.opts was missing when using DecodeL0DU flag
 
 - In L0Muon v8r5p2
   . Remove calls to ChronoStatSvc in execute
@@ -904,11 +955,11 @@ This version uses Gaudi v21r5 and LHCb v28r1
 
 - In VeloDAQ v4r9
   . Bug fix in error bank decoder: there were no (empty) event infos inserted
-    for PPFPGAs w/o errors resulting in a crash when trying to access an info 
+    for PPFPGAs w/o errors resulting in a crash when trying to access an info
     for a PPFPGA > number of PPFGA w/ errors. Of course the positions were also
-    wrong. The only cases handled correctly before the fix were: 
+    wrong. The only cases handled correctly before the fix were:
     1. only errors in PPFPGA 0
-    2. errors in all PPFPGAs   
+    2. errors in all PPFPGAs
 
 - In VeloTools v3r4
   . protected Linux-only include in LivDBTELL1SensorMap on Windows
@@ -935,8 +986,8 @@ This version uses Gaudi v21r4 and LHCb v28r0
 - In CaloAssociators v6r9
   . Add CaloReCreateMCLinks.cpp (moved from CaloDAQ)
   . Introduce new configuation: python/CaloAssociators/MCTruthOnDemand.py
-  . Make sure that a request to the data-on-demand service for 
-    Relations/Raw/Calo/Digits first creates digits, without relying on a cascade 
+  . Make sure that a request to the data-on-demand service for
+    Relations/Raw/Calo/Digits first creates digits, without relying on a cascade
     from the data-on-demand service
 
 - In CaloTools v5r11
@@ -953,23 +1004,23 @@ This version uses Gaudi v21r4 and LHCb v28r0
     a given HPD (as identified by its RichSmartID).
 
 - In STAlgorithms v3r9
-  . Modify WriteSTStatusConditions to use STXMLUtils 
+  . Modify WriteSTStatusConditions to use STXMLUtils
 
 - In STCheckers v2r14
   . Add plots to STPerformanceMonitor
 
 - In STMonitors v1r6
-  . Modified STSummaryMonitor and STErrorMonitor to always book histograms 
+  . Modified STSummaryMonitor and STErrorMonitor to always book histograms
     used in Summary tab of Histogram presenter.
   . Changes to STClusterMonitor:
     o IT Cluster map uses ITDetector from STKernel.
     o Modified binning for ADC distributions
     o Add plot of ODIN BCID, plus add cut on this number to pick up only 1 BCID
     o Reduced number of times that warning is printed when cluster location is
-      missing. 
+      missing.
     o Added plots of ADCs in service box for 1,2,3,4 strip clusters to detailed
       histograms
-    o TT cluster map: 
+    o TT cluster map:
       + invert A and C side to comply with offline and IT plot.
       + now uses the TTDetectorPlot from STKernel.
   . Modified STNZSMonitor to book histograms at initialize stage.
@@ -1015,7 +1066,7 @@ This version uses Gaudi v21r3 and LHCb v27r5
     environment variables 'late'
 
 - In RichMCTools v3r12
-  . Add new tool Rich::MC::NULLMCTruthTool that implements the MC truth 
+  . Add new tool Rich::MC::NULLMCTruthTool that implements the MC truth
     interface but always returns NULL information.
 
 - In STTools v3r11
@@ -1060,8 +1111,8 @@ This version uses Gaudi v21r2 and LHCb v27r3
 - Packages modified: RichTools v2r27, STMonitors v1r4
 
 - In RichTools v2r27
-  . Changed the way the global to/from photodetector panel frame conversion is 
-    made. A 3D tranform is calculated in the DeRichHPDPanel and used by the 
+  . Changed the way the global to/from photodetector panel frame conversion is
+    made. A 3D tranform is calculated in the DeRichHPDPanel and used by the
     SmartIDTool.
 
 - In STMonitors v1r4
@@ -1078,7 +1129,7 @@ This version uses Gaudi v21r1 and LHCb v27r2
   . L0CaloMonit: clean code
 
 - In L0MuonMonitor v1r5
-  . L0MuonPadsHistos, L0MuonCandHistos : 
+  . L0MuonPadsHistos, L0MuonCandHistos :
     o correct 2D histograms filling (requires a version of L0/L0MuonKernel
       AFTER v8r6)
     o add the unweighted option for 2D histos (e.g. for pdm events)
@@ -1086,10 +1137,10 @@ This version uses Gaudi v21r1 and LHCb v27r2
 
 - In RichDAQ v3r24
   . Improvements to the Raw Data format tools
-    + Fix bug that causes event sizes to be double counted by 
+    + Fix bug that causes event sizes to be double counted by
       RichRawDataFormatTool, when the tool is called more than once per event.
     + Add TAE type to event summary printed, when appropriate.
-    + Improve how the tool RichRawBufferToSmartIDsTool calls 
+    + Improve how the tool RichRawBufferToSmartIDsTool calls
       RichRawDataFormatTool to avoid it being used more than neccessary.
 
 - In STMonitors v1r3
@@ -1113,12 +1164,12 @@ This version uses Gaudi v21r1 and LHCb v27r1
     STTools v3r9p1, SiTools v1r7p1
 
 - In CaloTools v5r9
-  . Add a bit more statistical printout  
+  . Add a bit more statistical printout
   . Add missing #include "Event/Particle.h" following removal from IPart2Calo.h
   . Replace endreq by endmsg
 
 - In L0DU v8r17
-  . L0DURawBankMonitor : fix bug in SpdMult error monitoring 
+  . L0DURawBankMonitor : fix bug in SpdMult error monitoring
 
 - In STAlgorithms v3r7
   . WriteSTStatusConditions: removed obsolete replaceChars function, added
@@ -1133,14 +1184,14 @@ This version uses Gaudi v21r1 and LHCb v27r1
 - In STMonitors v1r2
   . Fix unused StatusCode in STClusterMonitor.
   . Moved STClusterMonitor and STLiteClusterMonitor into this package and into ST
-    namespace. 
+    namespace.
   . Added new algorithm ST::STTAEClusterMonitor for monitoring of clusters
     produced in TAE event.
   . Added options directory and .py and .opts files for monitoring TAE events
     online.
 
 - In L0MuonMonitor v1r4p1, CaloTools v5r9
-  . Add missing <package>_dll.cpp file for component library on Windows 
+  . Add missing <package>_dll.cpp file for component library on Windows
 
 - In STTools v3r9p1, SiTools v1r7p1
   . Fixes for Windows compilation
@@ -1164,17 +1215,17 @@ This version uses Gaudi v21r0 and LHCb v27r0
   . Adapt to change in CaloDet
 
 - In L0DU v8r16
-  . In L0Conf: 
+  . In L0Conf:
     o change default TCK for re-simulating L0 bank for DC06 data (0xFFFF->0xFFF8)
     o Implement missing action for DecodeL0DU property
     o Add "TCK" property, used to specify a TCK for the simulation or emulation
     o  Add a verbose method to enable the print out of the log info.
-  . L0DEmulatorTool/L0DUFromRawTool : speed-up processing 
+  . L0DEmulatorTool/L0DUFromRawTool : speed-up processing
   . L0DUConfigProvider : protection against missing config description
   . L0DURawBankMonitoring : add monitoring histo for PileUp multiplicity
 
 - In OTAssociators v4r3
-  . Bug fix: correctly apply window in OTMCDepositLiner. Add dtime as weight. 
+  . Bug fix: correctly apply window in OTMCDepositLiner. Add dtime as weight.
 
 - In OTMonitor v2r11
   . Added monitoring algorithm for MCOTTimes
@@ -1187,8 +1238,8 @@ This version uses Gaudi v21r0 and LHCb v27r0
   . Downgrade some messages about refractive index changes to debug()
 
 - In SiTools v1r7
-  . Simplify calculation of the max in SiZuriFunction  
-  . Add remainder/ristime functions to SiAmplifierResponse 
+  . Simplify calculation of the max in SiZuriFunction
+  . Add remainder/ristime functions to SiAmplifierResponse
 
 - In STAlgorithms v3r6
   . Add WriteSTStatusConditions algorithm
@@ -1221,7 +1272,7 @@ This version uses Gaudi v21r0 and LHCb v27r0
   . added python files for createing and configuring pages
 
 - In STTools v3r9
-  . STOfflinePosition: 
+  . STOfflinePosition:
     o Improved tune of error estimates using long tracks.
     o New charge sharing functions. Cubic plus linear term for 2-strip clusters,
       cubic term for 3-strip clusters, linear term for 4-strip clusters, no
@@ -1230,7 +1281,7 @@ This version uses Gaudi v21r0 and LHCb v27r0
    [STSelectSpilloverCluster]
   . Add STSelectChannelIDByTruth [select by spillover, particle type etc]
   . Modifications to cluster selectors
-  . Add STChannelID based selectors 
+  . Add STChannelID based selectors
   . Remove STCluster based selectors + replace with STSelectClustersByChannel
   . add cluster selector by charge
 
@@ -1244,7 +1295,7 @@ This version uses Gaudi v21r0 and LHCb v27r0
 This version uses Gaudi v20r4 and LHCb v26r3
 
 - Packages added:    STMonitors - Standard package for monitoring NZS and ZS data
-- Packages modified: CaloTools v5r7, L0DU v8r15, OTMonitor v2r10, 
+- Packages modified: CaloTools v5r7, L0DU v8r15, OTMonitor v2r10,
     RichDAQ v3r23p1, STAlgorithms v3r5, STCheckers v2r11, STDAQ v3r16
 
 - In CaloTools v5r7
@@ -1253,7 +1304,7 @@ This version uses Gaudi v20r4 and LHCb v26r3
   . Improve verbosity for CaloCosmics stuff
 
 - In L0DU v8r15
-  . Add "DataType" property to L0DUConf(), used to define default TCK 
+  . Add "DataType" property to L0DUConf(), used to define default TCK
   . Default TCK is "0xFFFF" if DataType is "DC06", "0xDC09" otherwise
   . Remove options/DefaultTCK.opts, obsoleted by above change
   . Fix compilation problem with gcc43
@@ -1270,7 +1321,7 @@ This version uses Gaudi v20r4 and LHCb v26r3
 
 - In RichDAQ v3r23p1
   . Fix untested StatusCodes in RichRawDataFormatTool (Warning().ignore())
-  . Replace obsolescent endreq by endmsg 
+  . Replace obsolescent endreq by endmsg
 
 - In STAlgorithms v3r5
   . Move STClusterCreator to new base class
@@ -1297,19 +1348,19 @@ This version uses Gaudi v20r4 and LHCb v26r2
   . Remove obsolete file options/BooleRelations.opts, now in Boole Configurable
 
 - In L0DU v8r13
-  . Add L0Conf configurable. 
-  . Separate the option files containing a sequence definition and an addition 
+  . Add L0Conf configurable.
+  . Separate the option files containing a sequence definition and an addition
     to the TopAlg into 2 files.
   . Add L0MuonMonitoring in the standard monitoring sequence
 
 - In L0Muon v8r5
-  . Possibiliy to disable the decoding of TAE event (DisableTAE property)  
-  . L0MuonCandidatesFromRaw: modify the way the TAE are handled in the 
+  . Possibiliy to disable the decoding of TAE event (DisableTAE property)
+  . L0MuonCandidatesFromRaw: modify the way the TAE are handled in the
     decoding. Do not use anymore the exist method to check for raw data since
     it creates the Prev_i Next_i leaves when data on demand is activated.
     Instead, check the Event tree by hand.
   . Fix a bug in the filling of the L0MuonCandidates (pt sign was missing)
-  . Modify the default mode for writing bank (standard instead of light) 	
+  . Modify the default mode for writing bank (standard instead of light)
 
 - In L0MuonMonitor v1r4
   . Modify weight in 2D hitmaps for full stations
@@ -1325,8 +1376,8 @@ This version uses Gaudi v20r4 and LHCb v26r2
   . Add flag to turn on/off atomic binding smearing in SiGeantDepositedCharge.
     Default is now not to apply atomic binding
   . Add SiZuriFunction [second order RC-CR shaper function]
-  . Make base class for SiAmplifierResponse [SiAmplifierResponseBase] 
-  . Add print functionality to SiAmplifier classes  
+  . Make base class for SiAmplifierResponse [SiAmplifierResponseBase]
+  . Add print functionality to SiAmplifier classes
 
 - In STAlgorithms v3r4
   . Template SiClustersToLite + add Velo and ST specializations
@@ -1334,18 +1385,18 @@ This version uses Gaudi v20r4 and LHCb v26r2
   . Bug fix in initialization of STClusterKiller
 
 - In STAssociators v1r6
-  . Make associators delta-ray aware 
+  . Make associators delta-ray aware
   . Migrate to STAlgBase class
 
 - In STCheckers v2r10
-  . Use named algorithm macros for cluster/digit occupancy algorithms. 
+  . Use named algorithm macros for cluster/digit occupancy algorithms.
   . Remove Boole.opts, now done inside Boole configurable.
 
 - In STDAQ v3r15
   . Improve warning messages in case of error bank too short or too long
 
 - In STTools v3r8
-  . Add new cluster selectors 
+  . Add new cluster selectors
 
 - In VeloDAQ v4r5
   . Added a sort to the decoding of the VELO lite clusters for the track fit
@@ -1368,7 +1419,7 @@ This version uses Gaudi v20r4 and LHCb v26r1
 
 - Packages modified: Associators v3r7, CaloTools v5r6, L0DU v8r12, L0Muon v8r4,
     OTMonitor v2r8p1, RichMCTools v3r10, RichTools v2r24, STAlgorithms v3r3,
-    STCheckers v2r9, STDAQ v3r14, STTools v3r7, VeloAlgorithms v4r8, 
+    STCheckers v2r9, STDAQ v3r14, STTools v3r7, VeloAlgorithms v4r8,
     VeloDAQ v4r4p1
 
 - In LbcomSys v6r25
@@ -1381,12 +1432,12 @@ This version uses Gaudi v20r4 and LHCb v26r1
 
 - In CaloTools v5r6
   . Fix gcc 4.3 warnings
-  . CaloCosmicsTrackTool :: fix bug in Hcal timing 
+  . CaloCosmicsTrackTool :: fix bug in Hcal timing
 
 - In L0DU v8r12
-  . FastL0Filter : new algo to get decision from L0DU rawBank and filter 
+  . FastL0Filter : new algo to get decision from L0DU rawBank and filter
                    -> NO COMPLETE L0DU bank decoding -> NO REPORT
-                   add the possibility to re-inforce the threshold on 
+                   add the possibility to re-inforce the threshold on
                    sumEt/SpdMult/hardon/electron/muon1
   . Add missing -import=AIDA for compilation
 
@@ -1408,17 +1459,17 @@ This version uses Gaudi v20r4 and LHCb v26r1
   . STClusterResolution:
     o Added two options MergeSplitClusters, SkipSplitClusters, to remove split
       clusters. By default both flags are switched off.
-    o Take the cluster size from the STOfflinePosition tool. 
+    o Take the cluster size from the STOfflinePosition tool.
     o  Added histograms for the fractional position of an offline cluster.
   . Add STDumpEvent classes
   . Add histograms of port occupancy in Occupancy classes
-  . Bug fixes in IT/TTDigitOccupancy 
+  . Bug fixes in IT/TTDigitOccupancy
   . Bug fixes in STClusterClassification algorithm
   . Fix a a wrong equality comparison (assignment was used instead)
   . Use the shorth for monitoring in STDigitMonitor
   . Add STLiteClusterMonitor
-  . Use generalized mean function to fill reference histos 
-    in STPerformanceMonitor/STDigitMonitor 
+  . Use generalized mean function to fill reference histos
+    in STPerformanceMonitor/STDigitMonitor
   . Tidy up in STClusterMonitor
 
 - In STDAQ v3r14
@@ -1438,7 +1489,7 @@ This version uses Gaudi v20r4 and LHCb v26r1
 
 - In VeloAlgorithms v4r8
   . Re-tuned the cluster threshold and high bit threshold as per the
-    T-Rec talk on the 15th of December. 
+    T-Rec talk on the 15th of December.
 
 - In CaloTools v5r6, L0DU v8r12, L0Muon v8r4, OTMonitor v2r8p1,
      RichMCTools v3r10, STCheckers v2r9, STDAQ v3r14, VeloDAQ v4r4p1
@@ -1503,21 +1554,21 @@ This version uses Gaudi v20r3 and LHCb v26r0
   . Follow changes in STCluster class [add spill]
 
 - In STAlgorithms v3r2, STCheckers v2r8, STDAQ v3r13, STTools v3r6
-  . Move to new ST algorithm/tool base classes 
+  . Move to new ST algorithm/tool base classes
 
 - In VeloDAQ v4r4
   . Degrading some message level from info() to debug() - related with
     new data that can contain errors only for one ppfpga processor
   . Add property for PrepareVeloFullRawBuffer - used when consecutive
-    events are analysed  
+    events are analysed
   . Modified SmartErrorBankDecoder - if there are no error banks detected, it
     continues processing and skips to the next event (plus minor improvement to
     make the code compatible with new RawEvent object)
   . The decoding of full VELO clusters for bank version 3 now checks whether a
     key already exists in the container before insertion.  This is a change in
     policy, not a bug fix.  We will no longer crash in the case of duplicate
-    keys.  Instead an error message containing the problematic source ID is 
-    issued and all clusters from this source are removed.  
+    keys.  Instead an error message containing the problematic source ID is
+    issued and all clusters from this source are removed.
   . Added DefaultVeloRawBufferDecoders.py, a new Python helper module
     containing default configurations of the DecodeVeloRawBuffer algorithm
     for decoding into VeloLiteClusters or VeloClusters.
@@ -1538,7 +1589,7 @@ This version uses Gaudi v20r2 and LHCb v25r2
 
 - In CaloAssociators v6r6
   . Add HLT CaloCluster MC association in CaloAssociators.opts
-  . CaloClusterMCTruth.cpp : - make use of context() for HLT 
+  . CaloClusterMCTruth.cpp : - make use of context() for HLT
                              - protect against missing clusters
                              - correct typo in property "Clustes"->"Clusters"
   . Remove obsolete stuff (CaloTrgClusterMCTruth & CaloClustersMCTruthAlg)
@@ -1580,10 +1631,10 @@ This version uses Gaudi v20r2 and LHCb v25r2
   . Change return type of RawBankToSTClusterAlg::createCluster to void,
     fixes untested StatusCode warnings in Brunel
   . Make recovery mode default for cluster decoding
-  . Protect against zero banks processed 
+  . Protect against zero banks processed
 
 - In VeloSimulation v3r6
-  . Removed finalize printout of nan when no events processed 
+  . Removed finalize printout of nan when no events processed
 
 </PRE><H1><A NAME=v6r22>2008-09-08 LbcomSys v6r22</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r1
@@ -1610,14 +1661,14 @@ This version uses Gaudi v20r2 and LHCb v25r1
     after configurations cleaning (naming + algorithm rewritting)
       -> Warning : not backward compatible
   . L0DUConfig_0x000X-obsolete.opts: to be used instead of L0DUConfig_0x000X.opts
-    for commissioning data taken before 2008/08/20 (run <30406)  
+    for commissioning data taken before 2008/08/20 (run <30406)
   . L0DUConfig_0xDEBX.opts : produced by L0DU PVSS on 25th august 2008
   . L0DUTriggerSet.opts : new options containing trigger set definition.
   . improve printout
 
 - In L0Muon v8r2
   . Change in L0MuonFromRawTrans :
-    o use a third instance of RegisterFactory 
+    o use a third instance of RegisterFactory
     o use by default the config file in PARAMFILES
 
 - In L0MuonMonitor v1r1p1
@@ -1634,30 +1685,30 @@ This version uses Gaudi v20r2 and LHCb v25r1
     in the Job Option based configuration.
 
 - In STCheckers v2r7
-  . Add STPerformanceMonitor 
+  . Add STPerformanceMonitor
 
 - In STDAQ v3r11
   . Bug fixes in readout tool and data lite cluster decoding
-  . Recovery mode implemented 
+  . Recovery mode implemented
   . Use IT and TTNames classes.
-  . Bug fix in service box mapping: vector of all possible names was not filled 
+  . Bug fix in service box mapping: vector of all possible names was not filled
   . Move to using new representation classes
-  . Error decoding moved to base class 
-  . Add PCN printout 
-  . Add functionality related to service boxes to readout tool 
+  . Error decoding moved to base class
+  . Add PCN printout
+  . Add functionality related to service boxes to readout tool
   . Fix problem in cluster decoding in case of all banks lost
 
 - In VeloDAQ v4r3
   . missing input containers are no longer an error condition in NZS decoder
-  . if input is missing, the cluster decoder now only creates empty containers 
-    for the requested cluster type. 
+  . if input is missing, the cluster decoder now only creates empty containers
+    for the requested cluster type.
   . add a new SmartVeloErrorBankDecoder to deal with complicated error bank, able
     to check which fpga processors sent errors and deal with different size of
     the bank that depends on a raw file content
   . update PrepareVeloFullRawBuffer - error decoding is now decoupled
     from NZS data
-  . add a cluster filter algorithm that filters the [lite]clusters into 
-    new TES locations according to a few pre-defined criteria like 
+  . add a cluster filter algorithm that filters the [lite]clusters into
+    new TES locations according to a few pre-defined criteria like
     "is R", is phi", etc. Also maximum and and minimum limits can be required
 
 </PRE><H1><A NAME=v6r21>2008-07-30 LbcomSys v6r21</A></H1><PRE>
@@ -1673,13 +1724,13 @@ This version uses Gaudi v20r2 and LHCb v25r0
 - In L0Calo v9r16
   . L0CaloAlg: gives correct address in case of saturated cells
                with equal energies in global pi0 candidate
-  . L0CaloMonit: add possibility to detect automatically hot cells in 
+  . L0CaloMonit: add possibility to detect automatically hot cells in
                  the calo trigger
-  . L0CaloAlg, L0CaloCandidatesFromRaw and L0CaloCandidatesFromRawBank: 
+  . L0CaloAlg, L0CaloCandidatesFromRaw and L0CaloCandidatesFromRawBank:
       use RawBankReadoutStatus class to store status of L0Calo banks decoding.
 
 - In L0Muon v8r1
-  . Protect against not valid MuonTileID when filling the OL in L0MuonAlg. 
+  . Protect against not valid MuonTileID when filling the OL in L0MuonAlg.
   . Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
     Replaced by the Context property in the L0MuonOutput tool.
   . Check for L0MuonError bank - fill the RawBankReadOutStatus if error bank
@@ -1696,22 +1747,22 @@ This version uses Gaudi v20r2 and LHCb v25r0
   . Bug fix in Error construction
   . Change STTELL1Error construction sequence in STErrorDecoding
   . Really check Tell1 source is valid
-  . Clean up of counters  
+  . Clean up of counters
   . Add check on magic pattern
   . Remove some unneeded printouts
 
 - In VeloSimulation v3r5
-  . Add a new wrapper inline int safe_int_poissonDist() to protect against 
+  . Add a new wrapper inline int safe_int_poissonDist() to protect against
     FPE in Rndm::Poisson
 
 </PRE><H1><A NAME=v6r20>2008-07-18 LbcomSys v6r20</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r1
 
-- Packages modified: L0Calo v9r15, L0DU v8r7, L0Muon v8r0, RichDAQ v3r18, 
+- Packages modified: L0Calo v9r15, L0DU v8r7, L0Muon v8r0, RichDAQ v3r18,
     STDAQ v3r9, VeloSimulation v3r4
 
 - In L0Calo v9r15
-  . L0CaloAlg: 
+  . L0CaloAlg:
     o add 'WriteOnTES' property. Writing L0CaloCandidate on TES is now
       independent of 'StoreInBuffer' as in L0Muon and L0DU.
     o decides which candidate to take in case of equality, to mimic electronics
@@ -1736,8 +1787,8 @@ This version uses Gaudi v20r1 and LHCb v24r1
 - In L0Muon v8r0
   . Protect raw bank writing for encoding errors
   . Possibility to ask for compression of banks
-  . Clean the management of the output mode 
-  . Merge procVersion & bankVersion into a single tag : version 
+  . Clean the management of the output mode
+  . Merge procVersion & bankVersion into a single tag : version
   . Decoding of bank version 2 : tested (without RLE compression)
   . Use of L0MuonError (introduced in Event/L0Event)
   . Possibility to run without M1 or M2
@@ -1745,19 +1796,19 @@ This version uses Gaudi v20r1 and LHCb v24r1
 - In RichDAQ v3r18
   . Add an error message in the case an HPD is found in extended format, but
     no errors where detected.
- 
+
 - In STDAQ v3r9
   . Add dependency on RecEvent
   . Allow possibility to force the bank version
   . Add functionality to see which banks are missing
   . Follow changes in readout tool interface
-  . Remove use of ODIN 
+  . Remove use of ODIN
   . Move some code to base class/change some printouts
 
 - In VeloSimulation v3r4
   . Changed code to use real bad strip list from DeVeloSensor to kill bad strips
-  . Changed VeloSim.opts to make 1% bad strips in pileup (random) and only 
-    known bad strips dead in main VELO. 
+  . Changed VeloSim.opts to make 1% bad strips in pileup (random) and only
+    known bad strips dead in main VELO.
   . Tweaked code for gsl_sf_erf_Q wrapper to reduce unnecessary calls
 
 </PRE><H1><A NAME=v6r19>2008-07-04 LbcomSys v6r19</A></H1><PRE>
@@ -1768,7 +1819,7 @@ This version uses Gaudi v20r1 and LHCb v24r0
 
 - In CaloTools v5r2
   . Add asymmetry monitoring in CaloCosmicsTrackAlg
-  . Add 'kernel' variable computation in CaloCosmicsTool 
+  . Add 'kernel' variable computation in CaloCosmicsTool
   . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
     Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
 
@@ -1778,27 +1829,27 @@ This version uses Gaudi v20r1 and LHCb v24r0
   . src/L0CaloAlg:
     o add the possibility to create LUT for the TVB, which will be loaded
       in the real electronics
-    o use left address instead of right address for the global pi0 
+    o use left address instead of right address for the global pi0
   . src/DumpL0CaloBanks: new algorithm to dump the content of the L0Calo
     banks for debugging
 
 - In L0DU v8r6
   . Fix in L0DUEmulatorTool (clear before setting configuration not after !)
   . Tune verbosity in L0DUFromRawTool and Monitor algorithms
-  . L0DUFromRawTool : 
+  . L0DUFromRawTool :
     o new properties : ForceTCK, ForceSummarySize and ForceNonZeroSupMuons
-    o add missing m_report.setTCK( m_tck ) 
-    o update ReadoutStatus in L0D   
+    o add missing m_report.setTCK( m_tck )
+    o update ReadoutStatus in L0D
   . make L0DUFromRawTool a public tool in L0DUFromRawAlg and L0DURawBankMonitor
 
 - In RichDAQ v3r17
-  . Purge the hits from the decoded data structure for HPDs which fail the 
+  . Purge the hits from the decoded data structure for HPDs which fail the
     data integrity checks.
-  . Add protection against invalid HPD IDs, which are now possible given the 
+  . Add protection against invalid HPD IDs, which are now possible given the
     fact that the decoded data includes suppressed HPDs and those for which the
     L0ID -> RichSmartID database lookup failed.
   . Add new option to completely disable decoding in a either RICH detector.
-  . Suppress over excessive error messages in the case of inhibited or invalid 
+  . Suppress over excessive error messages in the case of inhibited or invalid
     HPDs. An option now exists to turn these back on for debugging etc.
 
 - In RichTools v2r21
@@ -1812,16 +1863,16 @@ This version uses Gaudi v20r1 and LHCb v24r0
   . Check is now made by checking readout map makes sense compared to geometry
   . Check data integrity before decoding into clusters in lite and full decoding
   . Only count boards without error in majority PCN vote in ZS decoding
-  . More consistant counting of errors in cluster decoding  
+  . More consistant counting of errors in cluster decoding
   . Move STErrorDecoding to this package.
   . Move STRawBankMap to STKernel
-  . Clean up of error handling 
+  . Clean up of error handling
   . Add possibility to create clusters from banks with errors in decoding
    (default is to skip)
   . Further improvements in monitoring of decoding
   . Further improvements in handling corrupted data
   . Print out how many banks are decoded correctly, how many are skipped, and
-    how many are lost. 
+    how many are lost.
 
 - In VeloSimulation v3r3
   . Added an FPE protection wrapper to gsl_sf_erf_Q to remove FPE when audited
@@ -1829,11 +1880,11 @@ This version uses Gaudi v20r1 and LHCb v24r0
 </PRE><H1><A NAME=v6r18>2008-06-04 LbcomSys v6r18</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7
 
-- Packages modified: CaloTools v5r1, L0Calo v9r13p1, L0DU v8r5, RichDAQ v3r16, 
+- Packages modified: CaloTools v5r1, L0Calo v9r13p1, L0DU v8r5, RichDAQ v3r16,
     STDAQ v3r7, VeloDAQ v4r2, VeloSimulation v3r2, VeloTools v3r2
 
 - In CaloTools v5r1
-  . Add new tools and alg for cosmics track reconstruction in calorimeter : 
+  . Add new tools and alg for cosmics track reconstruction in calorimeter :
 	  CaloCosmicsTool, CaloCosmicsTrackTool, CaloCosmicsTrackAlg
 
 - In L0Calo v9r13p1
@@ -1842,12 +1893,12 @@ This version uses Gaudi v19r9 and LHCb v23r7
 - In L0DU v8r5
   . add standard definition of sub-triggers in the configuration options files
     ("L0Muon", "L0Ecal", "L0Hcal")
-  . implement sub-trigger where it is needed 
+  . implement sub-trigger where it is needed
   . adapt to changes in L0Event
   . clean options
-  . add options for L0DU test pattern production (expert usage) : 
+  . add options for L0DU test pattern production (expert usage) :
     L0DUPattern.opts & L0DUPatternConfig.opts
-  . rename L0.opts -> L0Emulator.opts to avoid confusion 
+  . rename L0.opts -> L0Emulator.opts to avoid confusion
 
 - In RichDAQ v3r16
   . Adapt to changes in decoded data format
@@ -1858,10 +1909,10 @@ This version uses Gaudi v19r9 and LHCb v23r7
 
 - In VeloDAQ v4r2
   . Adapt VeloFull decoding to run without ODIN bank; this behaviour
-    is controlable via options file 
+    is controlable via options file
 
 - In VeloSimulation v3r2
-  . Fixed a divide by zero and sqrt(-N) problem when PrevPrev MCHits gave 
+  . Fixed a divide by zero and sqrt(-N) problem when PrevPrev MCHits gave
     either zero or negative charge deposition
 
 - In VeloTools v3r2
@@ -1906,7 +1957,7 @@ This version uses Gaudi v19r9 and LHCb v23r6
     RawBanksToSTLiteClusterAlg)
 
 - In VeloAlgorithms v4r7p1
-  . Changed VeloRawClusterMoni and VeloClusterMoni to reflect fix to linker in 
+  . Changed VeloRawClusterMoni and VeloClusterMoni to reflect fix to linker in
     VeloSim.cpp
 
 - In VeloSimulation v3r1
@@ -1917,17 +1968,17 @@ This version uses Gaudi v19r9 and LHCb v23r6
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
 
-- Packages modified: L0Calo v9r12, L0DU v8r4, L0Muon v7r8, MuonAssociators v3r2, 
+- Packages modified: L0Calo v9r12, L0DU v8r4, L0Muon v7r8, MuonAssociators v3r2,
     OTAssociators v4r2, OTMonitor v2r8, RichDAQ v3r15, RichMCTools v3r9,
     RichTools v2r19, STCheckers v2r4p1, VeloAlgorithms v4r7, VeloDAQ v4r1,
     VeloSimulation v2r7, VeloTools v3r1
 
 - In L0Calo v9r12
-  . L0CaloMonit.cpp: 
+  . L0CaloMonit.cpp:
     o use Calo2Dview base class, change binning for slot in crates
     o add an option (false by default) not to produce detailed histograms.
     o protect against non existing input data
-  . L0CaloCandidatesFromRaw.cpp: 
+  . L0CaloCandidatesFromRaw.cpp:
     o fix memory leaks in default container filling
     o protect against non existing input data
     o change output level of debugging messages
@@ -1937,7 +1988,7 @@ This version uses Gaudi v19r9 and LHCb v23r5
     o add options to use or not PS/SPD and ECAL information resp. to build
       electromagnetic and hadron candidates. Default is to use it.
   . L0CaloNtpMonitor.cpp: new class to fill Ntuples with L0Calo quantities.
-  . L0CaloCandidatesFromRawBank.cpp: 
+  . L0CaloCandidatesFromRawBank.cpp:
     o verify output level in debugging messages
     o protect against null pointer in debugging output.
 
@@ -1955,7 +2006,7 @@ This version uses Gaudi v19r9 and LHCb v23r5
   . Add few minor improvements along the code & adapt to changes in L0Event
   . L0ETC: do not write out. This is done by evtcol svc. Add some .ignore()
   . Add missing DC06Conditions.opts include in Write/ReadETC
-  . L0DUEmulatorTool : fix bug in muon processing 
+  . L0DUEmulatorTool : fix bug in muon processing
     (affects DiMuon and Muon2 in case single non-0 L0Muon candidate)
   . options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts :
     uniformize channel naming according to other config.
@@ -1968,8 +2019,8 @@ This version uses Gaudi v19r9 and LHCb v23r5
   . Update decoding and monitoring of L0Muon data in transparent mode
   . L0MuonFromRawTrans : new algorithm to decode the data with the format
                          used at the pit during commissionning.
-  . L0MuonMonitor : new algorithm to make histograms from L0Muon data 
-                    stored in the TES. 
+  . L0MuonMonitor : new algorithm to make histograms from L0Muon data
+                    stored in the TES.
 
 - In OTAssociators v4r2
   . Added new associator algorithms. The deposits, hits and particles are linked
@@ -2008,14 +2059,14 @@ This version uses Gaudi v19r9 and LHCb v23r5
 
 - In VeloDAQ v4r1
   . Changes in DecodeVeloFullRawBuffer and VeloFullDecoder:
-    o avoid unnecessary copies of large vectors 
-    o protect frequent streams to debug() with a flag 
+    o avoid unnecessary copies of large vectors
+    o protect frequent streams to debug() with a flag
     o instatiate the various VeloFullDecoders only once, so their internal
       containers live for the whole job
     o made local ADC/Header/Ped buffers member variables, so their memory is
-      only allocated once per job 
+      only allocated once per job
     o the target cable order is now configurable
-    o the cable order correction is now off by default  
+    o the cable order correction is now off by default
     o all TES input and output locations are now configurable
 
 - In VeloSimulation v3r0
@@ -2026,12 +2077,12 @@ This version uses Gaudi v19r9 and LHCb v23r5
   . Allow a list of output locations (for the PileUp modules which write to two)
   . Simulate noise from the DeVeloSensor->stripNoise() distribution per strip
   . Added options to convert from noise in ADC to noise in electrons
-  . Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital 
+  . Retuned time curves to use vfp = 150 and vfs = 550 : best guess as inital
     BEETLE tune parameters, amount of spillover increased
   . Offset sampling time to get equal amplification to Prev and Next MCHits
   . Added PrevPrev to simulation by default
   . Corrected noise simulation otherwise empty strips
-  . Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip 
+  . Set capacitve coupling to 1% (from 5%) to get approx 1 and 2 strip
     ratio about right
 
 - In VeloTools v3r1
@@ -2045,11 +2096,11 @@ This version uses Gaudi v19r8 and LHCb v23r4
    STDAQ v3r5
 
 - In L0DU v8r3
-  . L0DUFromRawTool : 
+  . L0DUFromRawTool :
     o fix redundant rootInTES in get<rawEvent>(rootInTES() + rawEventLocation )
     o add protection against non-existing L0DU rawBank
-    o fix bug when decoding consecutive BX info 
-  . Fix TCK string format (%4X -> %04X) 
+    o fix bug when decoding consecutive BX info
+  . Fix TCK string format (%4X -> %04X)
 
 - In RichTools v2r18, v2r17p1
   . Changes in ray tracing tool interface
@@ -2072,7 +2123,7 @@ This version uses Gaudi v19r8 and LHCb v23r4
 This version uses Gaudi v19r7 and LHCb v23r3
 
 - Packages modified: CaloAssociators v6r5, L0DU v8r2, L0Muon v7r6, PuVeto v7r3,
-    RichDAQ v3r14, RichMCTools v3r8, RichTools v2r17, STAlgorithms v2r6, 
+    RichDAQ v3r14, RichMCTools v3r8, RichTools v2r17, STAlgorithms v2r6,
     STCheckers v2r4, STDAQ v3r4, STTools v3r5
 
 - In CaloAssociators v6r5
@@ -2082,12 +2133,12 @@ This version uses Gaudi v19r7 and LHCb v23r3
 
 - In L0DU v8r2
   . Fix minor memory leak in L0ProcessorDataLocation initialize()
-  . Finalize the implementation of the TCK mechanism 
+  . Finalize the implementation of the TCK mechanism
     o new tool L0DUMultiConfigProvider (same interface as L0DUConfigProvider)
-    o fix backward compatibility with previous DC06 data : 
+    o fix backward compatibility with previous DC06 data :
       assign TCK = 0xDC06 when bank vsn = 0
     o enable the decoding of DC06 format
-    o review L0DUConfig.opts 
+    o review L0DUConfig.opts
     o update and rename all individual configuration options files
   . Fixes to L0ETC.cpp
     o Define nTuple ID as 1 explicitly (fixes writing error with new Gaudi)
@@ -2132,7 +2183,7 @@ This version uses Gaudi v19r7 and LHCb v23r3
   . Add Next spill to MC Deposit Creators
 
 - In STCheckers v2r4
-  . Make all locations jobOptions 
+  . Make all locations jobOptions
 
 - In STDAQ v3r4
   . Use stripFraction function from Kernel instead of local version
@@ -2164,7 +2215,7 @@ This version uses Gaudi v19r6 and LHCb v23r2
     included for each L1 board
 
 - In RichMCMonitors v1r5
-  . Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing 
+  . Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing
     is not aborted when these data objects are missing (a warning is printed).
 
 - In RichTools v2r16
@@ -2178,7 +2229,7 @@ This version uses Gaudi v19r6 and LHCb v23r2
   . Allow smearing of charge from Geant
 
 - In STAlgorithms v2r5
-  . Use isOKStrip method 
+  . Use isOKStrip method
   . In itDigi.opts, change conversion factor from e- to ADC
   . Make it possible to turn on/off dead strip sim (default off)
 
@@ -2226,13 +2277,13 @@ This version uses Gaudi v19r5 and LHCb v23r1
   . First step toward implementation of the Trigger Configuration Key mechanism
   . Add few missing part in the emulator to follow hardware processing
   . Adapt to change in L0Event
-  . Repackaging 
+  . Repackaging
   . See package release notes for details of new tools and options
 
 - In STDAQ v3r2
   . Remove some unneccessary includes
   . fix compilation warnings in readout tool
-  . Bug fix in header file inclusion 
+  . Bug fix in header file inclusion
   . Make rawevent location a jobOption
 
 - In STAlgorithms v2r4
@@ -2276,7 +2327,7 @@ This version uses Gaudi v19r5 and LHCb v22r10
 
 - In L0Muon v7r4
   . Add job options to allow more flexible steering of the algorithms
-  . Add missing variable initialization 
+  . Add missing variable initialization
 
 </PRE><H1><A NAME=v6r9>2007-09-21 LbcomSys v6r9</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r9
@@ -2301,13 +2352,13 @@ This version uses Gaudi v19r4 and LHCb v22r9
   . Replaced > with >=
 
 - In RichDAQ v3r12
-  . Remove auto pointers from clustering interfaces in favour of a simple 
+  . Remove auto pointers from clustering interfaces in favour of a simple
     pointer, which the user then 'owns'
-  . Update HPD occupancy tool to be able to run with explicit RICH1 or 
+  . Update HPD occupancy tool to be able to run with explicit RICH1 or
     RICH2 setting.
   . use EventID and BXID == and != operators
   . Minor fix to prevent the abortion of an entire L1 bank when one HPD fails
-    its RichSmartID lookup. Now only that HPD is rejected but the remaining 
+    its RichSmartID lookup. Now only that HPD is rejected but the remaining
     HPDs in the L1 bank are processed.
 
 - In RichMCTools v3r7
@@ -2316,21 +2367,21 @@ This version uses Gaudi v19r4 and LHCb v22r9
 
 - In RichTools v2r15
   . Adapt to changes in RichGeomPhoton in RichKernel
-  . Update the mirror segment finding tool to sort mirrors in order to distance 
+  . Update the mirror segment finding tool to sort mirrors in order to distance
     from beamline.
   . Add to the particle properties tool the method to return the active
     hypothesis list.
-  . Add correction for refraction at aerogel to Rich1Gas boundary during 
+  . Add correction for refraction at aerogel to Rich1Gas boundary during
     ray tracing
   . Update default tool mappings in tool registry.
-  . Add implementations for two new methods to the RichSmartID tool, 
-    anodeGlobalPosition, which return the position for a given RichSmartID 
+  . Add implementations for two new methods to the RichSmartID tool,
+    anodeGlobalPosition, which return the position for a given RichSmartID
     or Rich::HPDPixelCluster on the anode pixel chip.
 
 - In VeloDAQ v4r0
   . Add decoding of the non-zero suppressed (NZS) banks added, new code can cope
     with decoding of the VeloFull data bank, PedestalBank and VeloErrorBank.
-    Also EvtInfo object, that includes a number of informations critical from 
+    Also EvtInfo object, that includes a number of informations critical from
     point of view of the emulation, can be created. Beetle headers do not
     make a separate data stream but are part of the NZS header bank. The headers
     are also decoded and stored. All decoding routines follow closely appropriate
@@ -2348,10 +2399,10 @@ This version uses Gaudi v19r4 and LHCb v22r9
     bank version.  If a byte count mismatch (corrupted raw bank) is discovered
     during the cluster decoding the clusters from this source ID are removed from
     the container.  Clusters from other source IDs will be still available in
-    this case. 
+    this case.
 
 - In VeloSimulation v7r6
-  . Modified the treatment of the timing of particle arrivals to correctly 
+  . Modified the treatment of the timing of particle arrivals to correctly
     implement spillover with the right fractions in each sensor
   . Fixed the unchecked StatusCodes
   . In VeloSim wrapped all message service calls with a test on output level
@@ -2366,13 +2417,13 @@ This version uses Gaudi v19r4 and LHCb v22r8
 - Packages modified: L0Calo v9r9, L0DU v7r6, VeloTools v2r2
 
 - In L0Calo v9r9
-  . L0CaloAlg.cpp: 
+  . L0CaloAlg.cpp:
     * update HCAL energy with ECAL in front also if HCAL Et=0
     * for particular cases where Front-End boards are partially used
       (HCAL for example), only transmit data to neighbour cards if
       the connection is physically present and not masked in the hardware.
-    * if the candidate's cellID is not valid, use (in this order) the top 
-      cellID, the right cellID (if the top is not valid) or the corner cellID 
+    * if the candidate's cellID is not valid, use (in this order) the top
+      cellID, the right cellID (if the top is not valid) or the corner cellID
       (it the right is not valid) instead, to follow what is done in the hardware
   . TriggerCard.cpp: use left bottom valid cell of the board as default address
     when the card has 0 energy deposited in it.
@@ -2402,7 +2453,7 @@ This version uses Gaudi v19r4 and LHCb v22r7
   . Improvements to monitoring in RichRawdataFormatTool to handle cases when the
     L1 board ID is not recognised.
   . Set ingress header properly in decoded data
-  . Change ODIN orbitNumber() to bunchId() in BXID comparision between ODIN and 
+  . Change ODIN orbitNumber() to bunchId() in BXID comparision between ODIN and
     RICH decoded data
   . Fix bug accidentally introduced in last release when HPDs are suppressed
 
@@ -2410,7 +2461,7 @@ This version uses Gaudi v19r4 and LHCb v22r7
   . Add new monitor for MRichOpticalPhotons
 
 - In RichTools v2r14
-  . Update default tools to reject change in name for the tool 
+  . Update default tools to reject change in name for the tool
     Rich::Rec::PhotonSignalGaussProb
 
 - In L0DU v7r5
@@ -2422,7 +2473,7 @@ This version uses Gaudi v19r4 and LHCb v22r7
 - In VeloTools v2r1
   . new parametrizations
   . new method with StateVector object
-  . fixed return statement when sensor pointer is invalid 
+  . fixed return statement when sensor pointer is invalid
 
 - In STTools v3r2, RichDAQ v3r11, VeloTools v2r1
   . Fix doxygen warnings
@@ -2549,12 +2600,12 @@ Packages modified: RichDAQ v3r9, RichTools v2r11, RichMCTools v3r5,
      STAssociators v1r4, STDAQ v2r9, SiTools v1r2
   . Some fixes for missing StatusCode tests
 
-- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5, 
+- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5,
      STAlgorithms v2r1, STTools v3r1, STCheckers v2r1, STAssociators v1r4,
      STDAQ v2r9, SiTools v1r2
   . Remove obsolete xxx_load.cpp file
 
-- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5, 
+- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5,
      STAlgorithms v2r1, STTools v3r1, STAssociators v1r4,STDAQ v2r9, SiTools v1r2
   . Fix doxygen warnings
 
@@ -2566,7 +2617,7 @@ Packages modified:  L0Calo v9r7, OTMonitor v2r4, VeloSimulation v2r5
 - In L0Calo v9r7
   . Adapt to code changes in CaloDAQ v3r1
   . Protect against the possibility to have Pin-diode FE-Cards in condDB
- 
+
 - In VeloSimulation v2r5
   . Bug fix to get rid of biased residuals
 
@@ -2593,7 +2644,7 @@ Packages modified: RichDAQ v3r7, RichMCMonitors v1r1, RichMCTools v3r4,
     + New pixel cluster object added to RichKernel
 
 - In RichTools v2r10
-  . Use new method in DeRichBeamPipe that only tests for presence of an 
+  . Use new method in DeRichBeamPipe that only tests for presence of an
     intersection without computing the points
   . Make RichRayTrace::reflectFlatPlane a public method
 
@@ -2713,7 +2764,7 @@ This version uses Gaudi v18r7 and LHCb v21r8
   . New algorithm PuVetoFillRawBuffer to produce the Raw Buffer information.
     In fact the central strip of each group of 4 is coded, not the original
     strip, and duplicates are removed. This is closer to the hardware.
-  . PuVetoAlg starts from the Raw Event bank to compute the decision, and 
+  . PuVetoAlg starts from the Raw Event bank to compute the decision, and
     then can be used for play-back i.e. reprocessing in DaVinci.
 
 - In Associators v3r4
@@ -2731,7 +2782,7 @@ This version uses Gaudi v18r7 and LHCb v21r7
                      RichMCTools v3r2, Associators v3r3
 
 - In L0Calo v9r4
-  . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
+  . Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the
     first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
     connection was made. Found by Valgrind!
 
@@ -2770,7 +2821,7 @@ This version uses Gaudi v18r6 and LHCb v21r3.
 
 - In VeloDAQ v3r4
   . Remove sorting from decoding to full clusters, to speed up
-  . Speed up lite cluster decoding (MsgSvc usage, resize container once only) 
+  . Speed up lite cluster decoding (MsgSvc usage, resize container once only)
 
 - In OTAssociators v4r1
   . Move to GaudiKernel/SystemOfUnits
@@ -2795,7 +2846,7 @@ This version uses Gaudi v18r5 and LHCb v21r1.
                      RichMCTools v3r1
 
 - In L0DU v7r3:
-  . Protection added in src/L0CandidateTool.cpp: 
+  . Protection added in src/L0CandidateTool.cpp:
     L0DU can run even if one L0ProcessorData container is not available
   . Add a simple algorithm (L0DUFromRaw) to extract the L0DUReport from RawEvent
   . Default options file L0DUFromRaw.opts added
@@ -2877,7 +2928,7 @@ This version uses Gaudi v18r3 and LHCb v20r3.
   . Adapt to GaudiHistoAlg
 
 - In L0Calo v9r2:
-  . Split the Raw Bank produced by L0CaloCandidate into two banks, one for 
+  . Split the Raw Bank produced by L0CaloCandidate into two banks, one for
     HCAL and one for the rest
 
 - In L0DU v7r1p2:
@@ -2902,7 +2953,7 @@ This version uses Gaudi v18r3 and LHCb v20r2.
   . Backward compatible fixes to compile with Gaudi v18r3
 
 - In PuVeto v7r1p1
-  . Fix bug in initialise method caused in transition new DeVelo 
+  . Fix bug in initialise method caused in transition new DeVelo
 
 - In OTMonitor v2r1:
   . Adapt to new OTDet interface
@@ -2914,7 +2965,7 @@ This version uses Gaudi v18r2 and LHCb v20r1.
     STCheckers v1r1, STTools v2r1, STAssociators v1r1, Associators v3r1,
     VeloAssociators v2r1, L0DU v7r1, L0MuonTrigger v5r1, PuVeto v7r1, L0Calo v9r1
     RichTools v2r3
-    
+
 - In VeloDAQ v3r1:
   . Bug fixes in handling of interstrip position bits and threshold bit
   . Definition of less-than for VeloCluster, now same as for InternalVeloCluster
@@ -2924,7 +2975,7 @@ This version uses Gaudi v18r2 and LHCb v20r1.
   . Add pixel cluster suppression tool
 
 - In STDAQ v2r4:
-  . Changes to switch strip mapping for hybrids that are flipped. 
+  . Changes to switch strip mapping for hybrids that are flipped.
     Requires XmlConditions v1r5 or greater
 
 - In STAlgorithms v1r1:
@@ -2979,7 +3030,7 @@ This version is built against LHCb v19r4 and Gaudi v17r2.
 
 - In L0MuonTrigger v4r0
   . L0mTriggerAlgorithm now writes into the RawBuffer
-  . New algorithm L0MuonCandidatesFromRaw to write L0MuonCandidates 
+  . New algorithm L0MuonCandidatesFromRaw to write L0MuonCandidates
     from the raw buffer
   . Uses latest developements in L0MuonKernel
   . Change in the algo properties
@@ -3062,7 +3113,7 @@ This version is built against LHCb v18r6 and Gaudi v16r4.
 - Packages modified: L0DU v6r9p1
 
 - In KaliMisCalo v1r0:
-  . Algorithms to miscalibrate CaloDigits, MCCaloDigits, MCCaloHits 
+  . Algorithms to miscalibrate CaloDigits, MCCaloDigits, MCCaloHits
 
 - In L0DU v6r9p1:
   . Add $(L0DUOPTS)/L0.opts, for re-running L0 from DST in DaVinci or Panoramix
@@ -3146,12 +3197,12 @@ Its contents are unchanged relative to LbcomSys v2r0
    several LHCb applications. It should not contain any exported header
    files or link libraries.
 
- - Initial packages: 
-     L0:   L0Calo v8r0, L0DU v6r7p3, L0MuonTrigger v2r3p1, PuVeto v6r0 
+ - Initial packages:
+     L0:   L0Calo v8r0, L0DU v6r7p3, L0MuonTrigger v2r3p1, PuVeto v6r0
      OT:   OTMonitor v1r1
      Tr:   TrExtrapolator v2r14
      Calo: CaloReco v2r7, CaloPIDs v2r4
-     Rich: RichTools v1r4, RichMCTools v2r4, RichRecTools v2r13, 
+     Rich: RichTools v1r4, RichMCTools v2r4, RichRecTools v2r13,
            RichRecCommon v1r11, RichRecQC v1r10
 
  - Backwards compatible fixes for CLHEP 1.9
