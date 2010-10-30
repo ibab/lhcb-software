@@ -4,11 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r19 2010-10-30 =========================
 ! 2010-10-29 - Mariusz Witek
 - remove access to tracks of PV to be recalculated in PVOfflineRecalculate.
   They are not stored on uDST 
 
-!========================= PatPV v3r19 2010-10-28 =========================
 ! 2010-10-24 - Mariusz Witek
 - change of argument type to const in removeTracksAndRecalculatePV of IPVOfflineTool interface
 
