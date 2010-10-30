@@ -105,7 +105,8 @@ private:
                         std::string, Tuples::Tuple&, std::string trail = "") const ;
 
   const IDistanceCalculator* m_dist;
-  
+
+  int m_etaID;  
   int m_photonID; 
   int m_pi0ID;
   //bool m_fillMother;
