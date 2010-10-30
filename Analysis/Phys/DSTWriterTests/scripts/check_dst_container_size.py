@@ -78,6 +78,7 @@ if __name__ == '__main__' :
     totzipsize = 'Total zipped size ' + str(round(zipsize,2)) + ' KB'
     outputFile.write(totzipsize)
     totsize = 'Total size        ' + str(round(size,2)) + ' KB'
+    outputFile.write(totzipsize)
     outputFile.write(totsize)
     if verbose :
         print '----------------------------------------------------------------------------------'
