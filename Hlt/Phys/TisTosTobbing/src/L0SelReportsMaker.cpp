@@ -102,13 +102,6 @@ StatusCode L0SelReportsMaker::execute() {
   // translate all L0MuonCandidates into Object Summaries
 
 
-  // do not remove this code; it serves triggering DataOnDemand service: need to ask for Default to get BCSU...
-  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) ){
-    if ( msgLevel(MSG::VERBOSE) ){      
-      verbose() << " L0MuonCandidates exist at default location " << endmsg;
-    }
-  }
-
   // BCSU is the full list of candidates; while Default is 6 best; try BCSU first
   if( exist<L0MuonCandidates>( L0MuonCandidateLocation::BCSU ) )
   {    

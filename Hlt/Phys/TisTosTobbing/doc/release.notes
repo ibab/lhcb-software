@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-10-31 - Tomasz Skwarnicki
+ - remove checking existance of Trig/L0/MuonCtrl when looking for MuonBCSU in L0SelReportsMaker 
+
 ! 2010-10-29 - Tomasz Skwarnicki
  - introduce "AllowIntermediateSelections" property (default false) to exclude fake Decisions in Sel report
  - do not use RootOnTES when accessing maps in TriggerSelectionTisTos(Summary)
