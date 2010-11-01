@@ -27,9 +27,10 @@ PatForward::PatForward( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 { 
-  declareProperty( "InputTracksName",   m_inputTracksName  = LHCb::TrackLocation::Velo );
-  declareProperty( "OutputTracksName",  m_outputTracksName = LHCb::TrackLocation::Forward);
-  declareProperty( "TrackSelectorName", m_trackSelectorName = "None");
+  declareProperty( "InputTracksName",    m_inputTracksName    = LHCb::TrackLocation::Velo );
+  declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);
+  declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = LHCb::TrackLocation::Forward);
+  declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
 
   if ( "Hlt" == context() ) {
     m_inputTracksName  =  "";
@@ -41,6 +42,7 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
   declareProperty( "DoCleanUp", m_doClean = true); 
+  declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
   declareProperty( "TimingMeasurement", m_doTiming = false);
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
@@ -89,8 +91,27 @@ StatusCode PatForward::initialize() {
 bool PatForward::acceptTrack(const LHCb::Track& track) {
   bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
   ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
+
   if (m_trackSelector) ok = ok && (m_trackSelector->accept(track));
 
+  if (m_unusedVeloSeeds && ok){
+
+    LHCb::Tracks* veloVetoTracks  = 
+      get<LHCb::Tracks>( m_veloVetoTracksName);
+     
+    LHCb::Tracks::const_iterator itT =  veloVetoTracks->begin();
+    while ((itT != veloVetoTracks->end()) && (ok == true)){
+
+      const SmartRefVector<LHCb::Track>& parents = (*itT)->ancestors();
+      for ( SmartRefVector<LHCb::Track>::const_iterator iterP = parents.begin();
+	    iterP != parents.end(); ++iterP) {
+	const LHCb::Track* testTrack = *iterP;
+	if ( testTrack == &track) ok = false;
+      }       
+      itT++;
+    } 
+  }
+  
   if ( msgLevel( MSG::VERBOSE )) verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;
   return ok;
 }

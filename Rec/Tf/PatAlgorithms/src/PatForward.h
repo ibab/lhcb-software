@@ -38,12 +38,15 @@ class IOTRawBankDecoder;
   private:
     std::string      m_inputTracksName;
     std::string      m_outputTracksName;
-    std::string      m_trackSelectorName;
+    std::string      m_trackSelectorName;  
+    std::string      m_veloVetoTracksName;
+    
     int m_deltaNumberInTT;
     int m_deltaNumberInT;
     unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
+    bool m_unusedVeloSeeds;
 
     unsigned int m_maxNumberOTHits;      
     unsigned int m_maxNumberITHits; 

@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2010-11-01 - Stephanie Hansmann-Menzemer
+ - add option for second loop in PatForward (interessting for HLT application)
 
 !========================= PatAlgorithms v4r7 2010-09-27 =========================
 
