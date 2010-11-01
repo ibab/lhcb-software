@@ -22,9 +22,7 @@
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/UpgradeConf.h"
-#include "LoKi/Listener.h"
-// ============================================================================
-class GaudiAlgorithm ;
+#include "LoKi/HelperTool.h"
 // ============================================================================
 namespace LoKi
 {
@@ -38,15 +36,12 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-13
      */
-    class UpgradeTool : public virtual LoKi::Listener
+    class UpgradeTool : public LoKi::Hlt1::HelperTool
     {
     public:
       // ======================================================================
       /// create the tool from configuration info
       UpgradeTool ( const LoKi::Hlt1::UpgradeConf& info ) ;
-      // ======================================================================
-      /// copy constructor 
-      UpgradeTool ( const UpgradeTool& right ) ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -177,6 +172,11 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      /// the default constructrio is disabled 
+      UpgradeTool () ;
+      // ======================================================================
+    private:
+      // ======================================================================
       /** upgrade one track. 
        *  - If the seed  has "right" type, just copy it it output
        *  - else if it is not yet reconstucted ( info(recoID() ), upgrade it
@@ -214,16 +214,6 @@ namespace LoKi
         LHCb::Track::Container*    otracks ) const ;
       // ======================================================================
     private:
-      // ======================================================================
-      /// initialize the object 
-      void init () const ; // initialize the object 
-      // ======================================================================      
-    protected:
-      // ======================================================================
-      /// get access to the algorithm 
-      const GaudiAlgorithm* alg() const { return m_alg ; }
-      // ======================================================================
-    private:
       // ======================================================================      
       /// the actual configuration of the tool 
       LoKi::Hlt1::UpgradeConf m_config ;       // the configuration of the tool 
@@ -235,86 +225,6 @@ namespace LoKi
       /// the recontruction/upgrade tool itself 
       mutable LoKi::Interface<ITracksFromTrack> m_upgrade ; // the upgrade tool
       // ======================================================================      
-      /// the algorithm 
-      mutable const GaudiAlgorithm* m_alg ; // the algorithm 
-      // ======================================================================
-    public:
-      // ======================================================================
-      /** handle the incidents:
-       *  clear the involved pointers 
-       */
-      virtual void handle ( const Incident& /* incident */ )
-      {
-        // clear all pointers 
-        m_hlt_candidates  = 0 ;
-        m_hlt_stages      = 0 ;
-        m_hlt_multitracks = 0 ;
-        m_hlt_tracks      = 0 ;
-      }
-      // ======================================================================
-    private:
-      // ======================================================================      
-      /// get the stored tracks 
-      inline LHCb::Track::Container*     storedTracks      () const 
-      {
-        if ( !owner() ) { return 0 ; }
-        if ( 0 == m_hlt_tracks ) { _createTracks () ; }
-        return m_hlt_tracks ;
-      }
-      // ======================================================================      
-    private:
-      // ======================================================================
-      template <class TYPE> 
-      inline TYPE* _create ( typename TYPE::Container* cnt ) const 
-      {
-        TYPE* _new = new TYPE() ;
-        cnt->push_back ( _new ) ;
-        return _new ;
-      }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// get new candidate 
-      inline Hlt::Candidate*  newCandidate     () const 
-      {
-        if ( 0 == m_hlt_candidates  ) { _createCandidates  () ; }
-        return _create<Hlt::Candidate> ( m_hlt_candidates   ) ;
-      }
-      /// get new stage 
-      inline Hlt::Stage*      newStage         () const 
-      {
-        if ( 0 == m_hlt_stages       ) { _createStages      () ; }
-        return _create<Hlt::Stage>      ( m_hlt_stages     ) ;
-      }
-      /// get new multitarck
-      inline Hlt::MultiTrack* newMultiTrack    () const 
-      {
-        if ( 0 == m_hlt_multitracks ) { _createMultiTracks () ; }
-        return _create<Hlt::MultiTrack> ( m_hlt_multitracks ) ;
-      }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// get the storage for tracks 
-      LHCb::Track::Container*     _createTracks      () const ;
-      /// get the storage for candidates 
-      Hlt::Candidate::Container*  _createCandidates  () const ;
-      /// get the storage for stages 
-      Hlt::Stage::Container*      _createStages      () const ;
-      /// get the storage for multitracks 
-      Hlt::MultiTrack::Container* _createMultiTracks () const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// container of Hlt-candidates 
-      mutable Hlt::Candidate::Container*  m_hlt_candidates  ;
-      /// container of Hlt-stages 
-      mutable Hlt::Stage::Container*      m_hlt_stages      ;      
-      /// container of Hlt-multitracks 
-      mutable Hlt::MultiTrack::Container* m_hlt_multitracks ;      
-      /// container of tracks 
-      mutable LHCb::Track::Container*     m_hlt_tracks      ;      
-      // ======================================================================
     };  
     // ========================================================================
   } //                                              end of namespace LoKi::Hlt1

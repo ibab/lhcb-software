@@ -181,6 +181,14 @@ TC_UPGRADE_TR   = LoKi.Hlt1.UpgradeTracks
 ## @see LoKi::Cuts::TC_UPGRADE_MT
 TC_UPGRADE_MT   = LoKi.Hlt1.UpgradeMultiTracks 
 
+# =============================================================================
+## Match
+# =============================================================================
+
+## @see LoKi::Cuts::TC_MATCH 
+TC_MATCH    = LoKi.Hlt1.Match
+## @see LoKi::Cuts::TC_MATCH2 
+TC_MATCH2   = LoKi.Hlt1.Match2
 
 # =============================================================================
 ## end of new stuff ## 

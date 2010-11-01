@@ -23,6 +23,7 @@
 #include "LoKi/Algs.h"
 #include "LoKi/UpgradeTool.h"
 #include "LoKi/Combiner.h"
+#include "LoKi/HelperTool.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -34,143 +35,29 @@
  *  @author Vanya BELYAEV
  */
 // ============================================================================
-namespace 
-{
-}
-// ============================================================================
-// get the stored tracks 
-// ============================================================================
-LHCb::Track::Container* 
-LoKi::Hlt1::UpgradeTool::_createTracks() const 
-{
-  /// reset 
-  m_hlt_tracks = 0 ;
-  /// get new 
-  typedef LHCb::Track::Container OBJECTS ;
-  m_hlt_tracks = alg()->getOrCreate<OBJECTS,OBJECTS> ( address() ) ;
-  //
-  return m_hlt_tracks ;
-}
-// ============================================================================
-// get the stored candidates 
-// ============================================================================
-Hlt::Candidate::Container* 
-LoKi::Hlt1::UpgradeTool::_createCandidates () const 
-{
-  //
-  m_hlt_candidates = 0 ;
-  //
-  typedef Hlt::Candidate::Container OBJECTS ;
-  m_hlt_candidates = alg() -> getOrCreate<OBJECTS,OBJECTS>
-    ( Hlt::CandidateLocation::Default  ) ;
-  //
-  return m_hlt_candidates ;
-}
-// ============================================================================
-// get the stored stages 
-// ============================================================================
-Hlt::Stage::Container* 
-LoKi::Hlt1::UpgradeTool::_createStages () const 
-{
-  //
-  m_hlt_stages = 0 ;
-  //
-  typedef Hlt::Stage::Container OBJECTS ;
-  m_hlt_stages = alg() -> getOrCreate<OBJECTS,OBJECTS>
-    ( Hlt::StageLocation::Default  ) ;
-  //
-  return m_hlt_stages ;
-}
-// ============================================================================
-// get the stored multitracks 
-// ============================================================================
-Hlt::MultiTrack::Container* 
-LoKi::Hlt1::UpgradeTool::_createMultiTracks () const 
-{
-  //
-  m_hlt_multitracks = 0 ;
-  //
-  typedef Hlt::MultiTrack::Container OBJECTS ;
-  m_hlt_multitracks = alg() -> getOrCreate<OBJECTS,OBJECTS>
-    ( Hlt::MultiTrackLocation::Default  ) ;
-  //
-  return m_hlt_multitracks ;
-}
-// ============================================================================
 // create the tool from info 
 // ============================================================================
 LoKi::Hlt1::UpgradeTool::UpgradeTool
 ( const LoKi::Hlt1::UpgradeConf& info ) 
-  : LoKi::Listener () 
+  : LoKi::Hlt1::HelperTool ( 1 ) 
   , m_config  ( info ) 
   , m_recoID  ( -1   ) 
   , m_upgrade (      ) 
-  , m_alg     ( 0    ) 
-//
-  , m_hlt_candidates  ( 0 ) 
-  , m_hlt_stages      ( 0 ) 
-  , m_hlt_multitracks ( 0 ) 
-  , m_hlt_tracks      ( 0 ) 
 //
 {
-  init() ;
-  //
-  // Incidents
-  //
-  subscribe ( IncidentType::BeginEvent , std::numeric_limits<int>::min()  ) ;
-  subscribe ( IncidentType::  EndEvent , std::numeric_limits<int>::min()  ) ;
-  //
-}
-// ============================================================================
-// copy constructor 
-// ============================================================================
-LoKi::Hlt1::UpgradeTool::UpgradeTool 
-( const LoKi::Hlt1::UpgradeTool& right ) 
-  : LoKi::AuxFunBase  ( right ) 
-  , LoKi::Listener    ( right ) 
-//
-  , m_config          ( right.m_config ) 
-  , m_recoID          ( -1    ) 
-  , m_upgrade         (       ) 
-  , m_alg             ( 0     ) 
-//
-  , m_hlt_candidates  ( 0 ) 
-  , m_hlt_stages      ( 0 ) 
-  , m_hlt_multitracks ( 0 ) 
-  , m_hlt_tracks      ( 0 ) 
-//
-{
-  //
-  init() ;
-  //
-}
-// ============================================================================
-// intialize the object 
-// ============================================================================
-void LoKi::Hlt1::UpgradeTool::init () const  
-{
-  // get GaudiAlgorithm 
-  GaudiAlgorithm*  alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
-  Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;
-  // get IAlgorithm 
-  IAlgorithm*     ialg = LoKi::Hlt1::Utils::getAlg      ( *this ) ;
-  Assert ( alg == ialg , "GaudiAlgorithm is not *my* IAlgorithm" ) ;
-  //
-  m_alg = alg ;
   // retrive the tool 
-  m_upgrade = m_alg->tool<ITracksFromTrack> ( trTool() , alg ) ;
+  m_upgrade = alg()->tool<ITracksFromTrack> ( trTool() , alg() ) ;
   /// it must be private tool! 
-  Assert ( m_upgrade->parent() == m_alg , "ITracksFromTrack tool must be private!");  
+  Assert ( m_upgrade->parent() == alg() , "ITracksFromTrack tool must be private!");  
   //
   /// get the service 
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   //
-  boost::optional<IANNSvc::minor_value_type> info = ann->value("InfoID" , trTool()  );
-  Assert( info , " request for unknown Info ID : " + trTool() );
+  boost::optional<IANNSvc::minor_value_type> _info = ann->value("InfoID" , trTool()  );
+  Assert( _info , " request for unknown Info ID : " + trTool() );
   //
-  m_recoID = info->second ;
+  m_recoID = _info->second ;
   //
-
 }
 // ============================================================================
 // anonymos namespace to hide some local tchnical details 
@@ -297,13 +184,11 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   LHCb::Track::ConstVector&        output  ) const 
 {
   //
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
-  //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   
   // get or create the output
-  LHCb::Track::Container* otracks = storedTracks() ;
+  LHCb::Track::Container* otracks = storedTracks( address() ) ;
   
   // ==========================================================================
   // loop over input tracks, upgrade track-by-track 
@@ -336,14 +221,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   //
   if ( 0 == itrack ) 
   { return Error ( "Upgrade: LHCb::Track* points to NULL" ) ; }
-  
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
   //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
   // get or create the output
-  LHCb::Track::Container* otracks = storedTracks () ;
+  LHCb::Track::Container* otracks = storedTracks ( address() ) ;
   //
   StatusCode sc = iupgrade ( itrack , output , otracks ) ;
   if ( sc.isFailure() ) { return Error ( "upgrade: error from iupgrade" , sc ) ; }
@@ -389,12 +272,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeTracks
   Hlt::Candidate::ConstVector&       output ) const 
 {
   //
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
-  //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
-  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  LHCb::Track::Container*     otracks = storedTracks ( address () ) ;
   // 
   // loop over input candidates, upgrade one-by-one 
   for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
@@ -434,12 +315,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
   Hlt::Candidate::ConstVector&       output ) const 
 {
   //
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
-  //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
-  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  LHCb::Track::Container* otracks = storedTracks ( address () ) ;
   // 
   // loop over input candidates, upgrade one-by-one 
   for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
@@ -480,12 +359,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
   Hlt::Candidate::ConstVector&       output ) const 
 {
   //
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
-  //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
-  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  LHCb::Track::Container* otracks = storedTracks ( address () ) ;
   // 
   // loop over input candidates, upgrade one-by-one 
   for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
@@ -526,12 +403,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeAll
   Hlt::Candidate::ConstVector&       output ) const 
 {
   //
-  if ( !m_upgrade  || 0 == m_alg || -1 == recoID () ) { init () ; } 
-  //
   Assert ( !(!m_upgrade) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != m_alg    , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( 0 != alg()    , "GaudiAlgorithm*   points to NULL!" ) ;
   //
-  LHCb::Track::Container*     otracks       = storedTracks      () ;
+  LHCb::Track::Container* otracks = storedTracks ( address() ) ;
   // 
   // loop over input candidates, upgrade one-by-one 
   for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
@@ -780,10 +655,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
   
   typedef std::vector<LHCb::Track::ConstVector> OUTs ;
   
-  bool OK    = true  ;
-  bool split = false ;
-  OUTs outs ;
-  
+
   const Hlt::MultiTrack::Tracks& tracks = multi_track->tracks() ;
   
   //

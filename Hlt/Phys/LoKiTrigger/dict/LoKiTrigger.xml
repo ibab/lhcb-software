@@ -40,6 +40,8 @@
   <class name = "LoKi::Hlt1::Selection" /> 
   <class name = "LoKi::Hlt1::Sink"      /> 
 
+  <class name = "LoKi::Hlt1::Match"               />
+  <class name = "LoKi::Hlt1::Match2"              />
   <class name = "LoKi::Hlt1::Upgrade"             /> 
   <class name = "LoKi::Hlt1::UpgradeTracks"       /> 
   <class name = "LoKi::Hlt1::UpgradeMultiTracks"  /> 
@@ -56,9 +58,12 @@
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
   
   <class pattern = "LoKi::Stages::*" /> 
+
   
 
-  <class name    = "LoKi::Hlt1::UpgradeTool"/>
+  <class name    = "LoKi::Hlt1::HelperTool"  />
+  <class name    = "LoKi::Hlt1::MatchTool"   />
+  <class name    = "LoKi::Hlt1::UpgradeTool" />
   
   <exclusion>    
     <class name="LoKi::Stages::HistoryRegex" >
@@ -67,12 +72,19 @@
   </exclusion>
 
   <exclusion>    
+    <class name="LoKi::Hlt1::HelperTool" >
+      <field  name = "m_alg"        />
+    </class>
     <class name="LoKi::Hlt1::UpgradeTool" >
       <field  name = "m_upgrade"    />
-      <field  name = "m_alg"        />
       <method name = "upgradeTool"  />
     </class>
+    <class name="LoKi::Hlt1::MatchTool" >
+      <field  name = "m_match"      />
+    </class>
+    
   </exclusion>
+  
   
   
   <!-- LHCb::Track-remnants  --> 

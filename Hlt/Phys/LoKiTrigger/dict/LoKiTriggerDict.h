@@ -20,6 +20,7 @@
 #include "LoKi/Hlt1.h"
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
+#include "LoKi/TrMatch.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"
