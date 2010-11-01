@@ -140,8 +140,9 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   
   for (std::vector<LHCb::ParticleID>::const_iterator iterC = m_motherPid.begin();  
        iterC != m_motherPid.end(); ++iterC){//loop over all the mothers
-    debug() << "This is the particle we are looking at : "  << P->particleID().pid() << endmsg; 
-    if(iterC->abspid() == abs(P->particleID().pid())){
+    unsigned motherPID =   abs(P->particleID().pid());
+    debug() << "This is the particle we are looking at : "  << motherPID << endmsg; 
+    if(iterC->abspid() == motherPID ){
       //-----------------
       // apply a refit
       //-----------------

@@ -3,9 +3,14 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2010-11-01  Yasmine Amhis
+  - TupleToolDecayTreeFitter
+    . Remove warning
+
 ! 2010-10-30 - Yasmine Amhis 
   - TupleToolDecayTreeFitter
     . New Algo to get many  DTF with many configurations in one job.
+
 ! 2010-10-30 - Ailsa Sparkes
  - TupleToolGeometry: Added protection against crashes for Eta
 
