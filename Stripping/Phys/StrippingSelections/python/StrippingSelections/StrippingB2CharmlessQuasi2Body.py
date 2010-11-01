@@ -76,7 +76,7 @@ B2Q2B = createCombinationSel( OutputList = "B2Q2B",
                               DecayDescriptor = "B0 -> rho(770)0 rho(770)0",
                               DaughterLists = [ DiTrackList ],
                               DaughterCuts  = {},
-                              PreVertexCuts = "(APT>1000*MeV) & (AP>20*GeV) & in_range(3800,AM,5700)",
+                              PreVertexCuts = "(APT>1000*MeV) & in_range(2500,AM,5700)",
                               PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 4)" )
 
 B2Quasi2Body4piLine = StrippingLine("B2Quasi2Body4piLine",
