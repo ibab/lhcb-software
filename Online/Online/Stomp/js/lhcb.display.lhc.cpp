@@ -698,10 +698,12 @@ var lhc_body = function()  {
   if ( prt ) selector.logger.print = prt;
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
+
   selector.build();
   selector.subscribe();
   selector.provider.start();
   body.style.cursor = 'default';
+  return selector;
 };
 
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

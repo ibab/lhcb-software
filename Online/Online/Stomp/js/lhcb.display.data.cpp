@@ -259,7 +259,7 @@ var RawItem = function(provider, name, fmt, element)   {
 /** @class DataProvider
  *
  *
- *  @author  M.frank
+ *  @author  M.Frank
  *  @version 1.0
  */
 var DataProvider = function(logger)  {
@@ -271,6 +271,8 @@ var DataProvider = function(logger)  {
   this.needConnection = false;
   this.topic = '/topic/home';
   this.sessionKey = null;
+  this.command = '/topic/clientCommands';
+  this.pageName = 'dataPage';
   _dataProvider = this;
 
   // set up stomp client.
@@ -286,6 +288,8 @@ var DataProvider = function(logger)  {
   this.subscribeOpts['activemq.maximumPendingMessageLimit']=5;
   this.subscribeOpts['activemq.dispatchAsync']=true;
   this.subscribeOpts['activemq.prefetchSize']=2;
+
+  if ( the_displayObject ) this.pageName=the_displayObject.type;
 
   var clid = '';
   try {
@@ -310,6 +314,13 @@ var DataProvider = function(logger)  {
   }
   this.connectOpts['client-id'] = 'ID:'+clid;
 
+  this.reconnectHandler = function() {
+    _dataProvider.logger.info('Starting reconnect timer');
+    if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
+      _dataProvider.reconnect();
+      setTimeout(_dataProvider.reconnectHandler,5000);
+    }
+  };
 
   stomp.onopen = function() {
     _dataProvider.logger.info("Transport opened");
@@ -338,15 +349,8 @@ var DataProvider = function(logger)  {
     _dataProvider.logger.info("Reconnect flag:"+_dataProvider.needConnection);
 
     if ( _dataProvider.needConnection ) {
-      this.reconnectHandler = function() {
-	_dataProvider.logger.info('Starting reconnect timer');
-	if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
-	  _dataProvider.reconnect();
-	  setTimeout(reconnectHandler,5000);
-	}
-      };
       _dataProvider.logger.info('Starting reconnection timer');
-      setTimeout(this.reconnectHandler,5000);
+      setTimeout(_dataProvider.reconnectHandler,5000);
     }
   };
 
@@ -389,6 +393,18 @@ var DataProvider = function(logger)  {
 	_dataProvider.logger.info("Update: [" +frame.body.length+' bytes] '+ itm+'='+d);
       }
       return;
+    }
+    else if ( frame.body == this.parent.pageName+':reload' ) {
+      this.parent.reset();
+      window.location.replace(document.location);
+    }
+    else if ( frame.body == 'allPages:reload' ) {
+      this.parent.reset();
+      window.location.replace(document.location);
+    }
+    else if ( frame.body.substring(0,this.parent.pageName.length+5) == this.parent.pageName+':url:' ) {
+      this.parent.reset();
+      window.location.assign(frame.body.substring(this.parent.pageName.length+5));
     }
     _dataProvider.logger.error('onmessage: retrieved data with invalid item number');    
   };
@@ -468,6 +484,7 @@ var DataProvider = function(logger)  {
    */
   this.unsubscribe = function(item)  {
     if ( this.isConnected ) {
+      this.service.unsubscribe(this.command,{exchange:''});
       for(var i=0; i<this.calls.length;++i) {
 	if ( this.calls[i] == item ) {
 	  this.service.unsubscribe(item,{exchange:''});
@@ -489,6 +506,7 @@ var DataProvider = function(logger)  {
    */
   this.unsubscribeAll = function()  {
     this.logger.info("Disconnect all pending data services ..");
+    this.service.unsubscribe(this.command,{exchange:''});
     if ( this.isConnected ) {
       for(var i=0; i<this.calls.length;++i) {
 	var item = this.calls[i];
@@ -516,6 +534,7 @@ var DataProvider = function(logger)  {
   /// Connect to item topics and force first update
   this.connect = function()  {
     this.logger.info("Connecting all pending data leaves to services ..");
+    this.service.subscribe(this.command,{exchange:''});
     for (var i=0; i < this.calls.length; ++i) {
       var svc = this.calls[i];
       if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;

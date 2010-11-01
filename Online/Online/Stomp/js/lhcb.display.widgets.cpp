@@ -354,7 +354,11 @@ if ( !lhcb.widgets ) {
     tab.className = tb.className = 'MonitorPage';
 
     tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Plan',null,null);
-    tab.comments.conversion = function(data) { return data.replace(/\n/g,'<BR>');    };
+    tab.comments.conversion = function(data) { 
+      //alert(data);
+      var s = data.replace(/\n/g,'<BR>');
+      return s;
+    };
     tab.comments.style.fontWeight = 'normal';
 
     if ( options.style) {

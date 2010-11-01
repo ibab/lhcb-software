@@ -48,7 +48,7 @@ var LumiStatus = function(msg)   {
     */
     this.left.addItem(this.run);
     this.left.addItem(this.shift);
-    this.left.addItem(this.plan);
+    //this.left.addItem(this.plan);
 
     this.right.addItem(this.lhc_state);
     this.right.addItem(this.magnet);

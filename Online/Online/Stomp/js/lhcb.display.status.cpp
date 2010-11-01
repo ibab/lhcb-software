@@ -1,4 +1,4 @@
-_loadScript('lhcb.display.data.cpp');
+//_loadScript('lhcb.display.data.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.listener.cpp');
 _loadScript('lhcb.display.widgets.cpp');
