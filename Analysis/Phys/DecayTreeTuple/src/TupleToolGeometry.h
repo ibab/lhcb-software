@@ -106,10 +106,10 @@ private:
 
   const IDistanceCalculator* m_dist;
 
-  int m_etaID;  
   int m_photonID; 
-  int m_pi0ID;
-  //bool m_fillMother;
+  int m_pi0ID; 
+  int m_etaID;  
+//bool m_fillMother;
   
   DVAlgorithm* m_dva;
 
