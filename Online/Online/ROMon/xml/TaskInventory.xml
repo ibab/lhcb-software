@@ -399,8 +399,8 @@
   <Task name="ROcollect"/>
 <!--
   <Task name="FarmMon_0"/>
--->
   <Task name="FarmStomp"/>
+-->
   <Task name="StatusStomp"/>
   <Task name="OrbitedSrv_0"/>
   <Task name="OrbitedSrv_1"/>
