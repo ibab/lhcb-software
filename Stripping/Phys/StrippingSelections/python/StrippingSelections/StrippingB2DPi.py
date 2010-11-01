@@ -41,11 +41,9 @@
 #
 # Authors: J. Nardulli & V. Gligorov 
 
-from os import environ
 from Gaudi.Configuration import *
 from Configurables import DecayTreeTuple
 from Configurables import CombineParticles, FilterDesktop
-from Configurables import TupleToolMCBackgroundInfo, TupleToolMCTruth, BackgroundCategory
 from StrippingConf.StrippingLine import StrippingLine
 
 # We need the Void filter for the GEC

@@ -16,7 +16,6 @@ __all__ = ('name', 'Bd_KSLL', 'Bd_KSDD', 'seqLL', 'seqDD')
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from Configurables import LoKi__Hybrid__PlotTool as PlotTool
 #import GaudiKernel.SystemOfUnits as Units
 
 name = "Bd2JpsiKS"

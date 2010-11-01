@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-01 - Thomas Blake
+ - Removed numerous uneccessary 'from Configurables import ...' 
+   statements 
+
 ! 2010-10-28 - Steve Blusk
 - Updated StrippingB2D3H.py. Add wrong-sign combinations for neutral B's
 

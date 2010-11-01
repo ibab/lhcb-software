@@ -16,12 +16,10 @@ from StrippingConf.StrippingLine import StrippingLine
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingSelections.Utils import checkConfig
 from Configurables import FilterDesktop, CombineParticles
-from Configurables import OdinTimeDecoder, EventClockSvc
+
 import GaudiKernel.SystemOfUnits as Units
 
-# some necessary framework stuff to read mDST's
-ecs = EventClockSvc()
-ecs.addTool(OdinTimeDecoder)
+
 
 class StrippingX2D0D0Conf(object):
     """
