@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
   . #87223: New LHCBCOND tag head-20101010
   . #87576, #87577, #87582, #87587, #87589 Fix refractive index for Aerogel
   . #89880: Remove Aerogel specific monitor
+  . Latest alignment db, Photon improvements in Rich, printout of Calo Quality checks
 
 </PRE><H1><A NAME=v37r8>2010-10-04 Brunel v37r8</A></H1><PRE>
 - Changes to Configurable:
