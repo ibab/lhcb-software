@@ -107,9 +107,9 @@ StatusCode LumiCheckCondDB::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   info() << "========== Probe DB: START ==========" << endmsg;
 
-  unsigned long xt0 = m_startTime ;
-  for ( unsigned long ixt = 0; ixt < m_numberSteps; ixt++ ) {
-    unsigned long xt = ixt*3600*m_stepHours + xt0;
+  unsigned long long xt0 = m_startTime ;
+  for ( unsigned long long ixt = 0; ixt < m_numberSteps; ixt++ ) {
+    unsigned long long xt = ixt*3600*m_stepHours + xt0;
     Gaudi::Time gxt = xt * 1000*1000*1000;
     m_dds->setEventTime( gxt );
     StatusCode sc = updMgrSvc()->newEvent( gxt );
@@ -125,7 +125,7 @@ StatusCode LumiCheckCondDB::finalize() {
 	   << " fLHC "  << m_calibRevolutionFrequency 
 	   << " fLUMI " << m_calibRandomFrequencyBB 
 	   << " nCB "   << m_calibCollidingBunches ;
-    for ( long unsigned int i = 0; i < m_calibRelative.size(); i++ ) {
+    for ( long long unsigned int i = 0; i < m_calibRelative.size(); i++ ) {
       if ( m_calibCoefficientsLog[i] != 0 ) info() << " LOG# " << i << ":" << m_calibRelativeLog[i];
       if ( m_calibCoefficients[i] != 0 ) {
 	if ( i == LHCb::LumiMethods::CorrectionFlag ) info() << " no EE correction ";

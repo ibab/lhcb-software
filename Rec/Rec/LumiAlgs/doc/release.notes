@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-11-01 - Rob Lambert
+ - make long -> long long for 32-64 bit compatibility in LumiCheckCondDB.h/cpp
+
 !========================= LumiAlgs v4r1 2010-10-28 =========================
 ! 2010-10-29 - Jaap Panman
  - minor correction to database checker job options in unit tests

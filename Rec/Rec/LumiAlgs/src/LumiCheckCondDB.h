@@ -35,9 +35,9 @@ protected:
   SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
 
 private:
-  unsigned long m_startTime;                    ///< start probing database here
-  unsigned long m_numberSteps;                  ///< number of steps checked
-  unsigned long m_stepHours;                    ///< number of hours per step
+  unsigned long long m_startTime;               ///< start probing database here
+  unsigned long long m_numberSteps;                  ///< number of steps checked
+  unsigned long long m_stepHours;                    ///< number of hours per step
 
   StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
   StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition
