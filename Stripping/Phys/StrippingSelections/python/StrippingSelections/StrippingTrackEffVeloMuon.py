@@ -21,7 +21,7 @@ from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,
 from Configurables import TrackCloneFinder
 from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlg, ChargedProtoCombineDLLsAlg
 from MuonID import ConfiguredMuonIDs
-from Configurables import DaVinci
+
 
 class StrippingTrackEffVeloMuonConf(LHCbConfigurableUser):
     """

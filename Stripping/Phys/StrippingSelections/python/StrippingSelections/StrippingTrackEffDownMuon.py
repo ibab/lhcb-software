@@ -10,7 +10,7 @@
 #FIXME Write includes in a cleaner way
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import GaudiSequencer, DaVinci
+from Configurables import GaudiSequencer 
 from Configurables import UnpackTrack, ChargedProtoParticleMaker, DelegatingTrackSelector, TrackSelector, BestPIDParticleMaker
 from TrackFitter.ConfiguredFitters import ConfiguredFit
 from Configurables import TrackStateInitAlg
@@ -35,6 +35,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 		,	"MassPostComb":		200.	# MeV
 		,	"Doca":			5.	# mm
 		,	"VertChi2":		25.	# adimensional
+                ,       "DataType":             '2010'        
 		}
 
     def nominal_line( self ):
@@ -83,7 +84,7 @@ class StrippingTrackEffDownMuonConf(LHCbConfigurableUser):
 	unpacker.OutputName="Rec/Track/"+trackcont
 
 	idalg = MuonIDAlg(name+"IDalg")
-	cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=DaVinci().getProp("DataType"))
+	cm=ConfiguredMuonIDs.ConfiguredMuonIDs( self.getProp("DataType") ) #data=DaVinci().getProp("DataType"))
 	cm.configureMuonIDAlg(idalg)
 	idalg.TrackLocation = "Rec/Track/"+trackcont
 	idalg.MuonIDLocation = "Rec/Muon/MuonPID/"+trackcont

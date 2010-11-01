@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-11-01 - Thomas Blake
+ - Updated StrippingTrackEffDownMuonConf   
+
+! 2010-11-01 - Thomas Blake
  - Removed numerous uneccessary 'from Configurables import ...' 
    statements 
 
