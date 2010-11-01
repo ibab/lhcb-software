@@ -5,6 +5,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-01 - Andrew Powell
+ - Update to StrippingNoPIDDstarWithD02RSKPi.py 
+		- Added wrong mass (DCS Kpi, KK, pipi) vetos
+		- Updated prescale (0.22 -> 0.42)
+
 ! 2010-11-01 - Thomas Blake
  - Updated StrippingTrackEffDownMuonConf   
 

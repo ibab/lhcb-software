@@ -1,8 +1,8 @@
 # $Id: StrippingNoPIDDstarWithD02RSKPi.py,v 1.1 2010-09-03 22:38:21 pxing Exp $
 
 __author__ = ['Philip Xing', 'Andrew Powell']
-__date__ = '04 October 2010'
-__version__ = '$Revision: 2.0 $'
+__date__ = '1 November 2010'
+__version__ = '$Revision: 3.0 $'
 
 '''
 Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
@@ -34,7 +34,13 @@ class StrippingNoPIDDstarWithD02RSKPiConf(LHCbConfigurableUser) :
         , 'DstarPt'          : 2.2 * GeV      ## GeV
         , 'DstarVtxChi2Ndof' : 13             ## unitless
         , 'DeltaM'           : 2 * MeV        ## MeV
-        , 'Prescale'         : 0.22           ## unitless
+        ##
+        , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+        , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+        , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
+        ##
+        , 'Prescale'         : 0.42           ## unitless
+        ##
         , 'Monitor'          : False          ## Activate the monitoring?
         }
 
@@ -70,6 +76,9 @@ class StrippingNoPIDDstarWithD02RSKPiConf(LHCbConfigurableUser) :
                     & (BPVVDCHI2>%(D0FDChi2)g)
                     & (BPVDIRA>%(D0BPVDira)g)
                     & (BPVIPCHI2()<%(D0IPChi2)g)
+                    & ( ADWM( 'D0' , WM( 'pi-' , 'K+') ) > %(DCS_WrongMass)g)
+                    & ( ADWM( 'D0' , WM( 'K-' , 'K+') ) > %(KK_WrongMass)g)
+                    & ( ADWM( 'D0' , WM( 'pi-' , 'pi+') ) > %(PiPi_WrongMass)g)
                     """
         _D0.MotherCut = mothercut % self.getProps()
 
