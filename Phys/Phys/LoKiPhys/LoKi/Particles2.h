@@ -26,6 +26,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -44,9 +45,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDistance : public LoKi::Particles::VertexDistance 
+    class GAUDI_API TimeDistance : public LoKi::Particles::VertexDistance 
     {
     public:
+      // ======================================================================
       /// constructor 
       TimeDistance 
       ( const LHCb::VertexBase*  vertex )
@@ -95,7 +97,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeSignedDistance : public LoKi::Particles::VertexSignedDistance 
+    class GAUDI_API TimeSignedDistance : public LoKi::Particles::VertexSignedDistance 
     {
     public:
       // ======================================================================
@@ -147,7 +149,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TimeDotDistance : public LoKi::Particles::VertexDotDistance 
+    class GAUDI_API TimeDotDistance : public LoKi::Particles::VertexDotDistance 
     {
     public:
       // ======================================================================
@@ -201,7 +203,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-19
      */
-    class LifetimeDistance 
+    class GAUDI_API LifetimeDistance 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::Vertices::VertexHolder 
     {
@@ -232,10 +234,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  }  // end of namespace LoKi::Particles
-}  // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES1_H
 // ============================================================================

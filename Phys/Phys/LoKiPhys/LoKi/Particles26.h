@@ -33,7 +33,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-04-24
      */
-    class DOCA
+    class GAUDI_API DOCA
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -65,13 +65,13 @@ namespace LoKi
       inline double doca
       ( const LHCb::Particle* p1 ,
         const LHCb::Particle* p2 ) const
-      { return m_eval.distance ( p1 , p2 ) ; }
+      { return m_eval.distance_  ( p1 , p2 ) ; }
       // ======================================================================
       /// evaluate the chi2 
       inline double chi2
       ( const LHCb::Particle* p1 ,
         const LHCb::Particle* p2 ) const
-      { return m_eval.chi2 ( p1 , p2 ) ; }
+      { return m_eval.chi2_      ( p1 , p2 ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -188,7 +188,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-04-24
      */    
-    class DOCAChi2 : public LoKi::Particles::DOCA 
+    class GAUDI_API DOCAChi2 : public LoKi::Particles::DOCA 
     {
     public:
       // ======================================================================
@@ -227,7 +227,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-04-24
      */
-    class DOCAMax : public LoKi::Particles::DOCA 
+    class GAUDI_API DOCAMax : public LoKi::Particles::DOCA 
     {
     public:
       // ======================================================================
@@ -255,7 +255,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-04-24
      */
-    class DOCAChi2Max : public LoKi::Particles::DOCAMax
+    class GAUDI_API DOCAChi2Max : public LoKi::Particles::DOCAMax
     {
     public:
       // ======================================================================
@@ -285,7 +285,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-13
      */
-    class ChildIP
+    class GAUDI_API ChildIP
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -354,7 +354,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-11-13
      */
-    class ChildIPChi2 : public ChildIP
+    class GAUDI_API ChildIPChi2 : public ChildIP
     {
     public:
       // ======================================================================
@@ -383,9 +383,9 @@ namespace LoKi
       // ======================================================================
     }; 
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi
 {

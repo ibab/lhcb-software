@@ -45,7 +45,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-03
      */
-    class DecayTreeFitterFun
+    class GAUDI_API DecayTreeFitterFun
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::AuxDTFBase 
     {
@@ -113,7 +113,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-03
      */
-    class DecayTreeFitterCut
+    class GAUDI_API DecayTreeFitterCut
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::AuxDTFBase 
     {
@@ -185,7 +185,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-03
      */     
-    class ChildCTau
+    class GAUDI_API ChildCTau
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::AuxDTFBase 
     {
@@ -290,7 +290,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-03
      */     
-    class ChildCTauErr : public ChildCTau 
+    class GAUDI_API ChildCTauErr : public ChildCTau 
     {
     public:
       // ======================================================================
@@ -371,7 +371,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-03
      */     
-    class ChildCTauSignificance : public ChildCTauErr 
+    class GAUDI_API ChildCTauSignificance : public ChildCTauErr 
     {
     public:
       // ======================================================================
@@ -447,7 +447,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-08
      */     
-    class DecayTreeFitChi2 : public DecayTreeFitterFun 
+    class GAUDI_API DecayTreeFitChi2 : public DecayTreeFitterFun 
     {
     public: 
       // ======================================================================
@@ -498,7 +498,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-08
      */     
-    class DecayTreeFitNDoF : public DecayTreeFitChi2
+    class GAUDI_API DecayTreeFitNDoF : public DecayTreeFitChi2
     {
     public: 
       // ======================================================================
@@ -536,7 +536,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-08
      */     
-    class DecayTreeFitChi2NDoF : public DecayTreeFitNDoF
+    class GAUDI_API DecayTreeFitChi2NDoF : public DecayTreeFitNDoF
     {
     public: 
       // ======================================================================
@@ -573,7 +573,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date 2010-06-08
      */     
-    class DecayTreeFitProb : public DecayTreeFitChi2NDoF
+    class GAUDI_API DecayTreeFitProb : public DecayTreeFitChi2NDoF
     {
     public: 
       // ======================================================================

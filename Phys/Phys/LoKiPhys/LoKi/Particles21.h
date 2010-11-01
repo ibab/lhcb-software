@@ -11,6 +11,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -22,7 +23,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-23
      */
-    class DeltaNominalMass 
+    class GAUDI_API DeltaNominalMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -54,7 +55,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-23
      */
-    class AbsDeltaNominalMass : public DeltaNominalMass 
+    class GAUDI_API AbsDeltaNominalMass : public DeltaNominalMass 
     {
     public:
       // ======================================================================
@@ -108,10 +109,11 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } // end of namespace LoKi::Particles 
-} // end of namespace LoKi 
+  } //                                         end of namespace LoKi::Particles 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES21_H
 // ============================================================================

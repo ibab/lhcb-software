@@ -60,7 +60,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-03-11
      */
-    class MaxCosineDirectionAngleWithSource 
+    class GAUDI_API MaxCosineDirectionAngleWithSource 
       : public LoKi::Particles::CosineDirectionAngle 
     {
     public:
@@ -127,7 +127,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-03-11
      */
-    class MaxCosineDirectionAngleDV 
+    class GAUDI_API MaxCosineDirectionAngleDV 
       : public LoKi::Particles::CosineDirectionAngle
       , public virtual LoKi::AuxDesktopBase 
     {
@@ -173,7 +173,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-03-11
      */
-    class MaxCosineDirectionAngleTES
+    class GAUDI_API MaxCosineDirectionAngleTES
       : public LoKi::Particles::MaxCosineDirectionAngleWithSource 
     {
     public:
@@ -202,9 +202,9 @@ namespace LoKi
       // ======================================================================
     } ; 
     // ========================================================================
-  } // end of namespace LoKi::Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} //end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi 
 {

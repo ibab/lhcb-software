@@ -34,7 +34,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date   2009-04-30
      */
-    class ReFit : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
+    class GAUDI_API ReFit
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
       // ======================================================================
@@ -88,7 +89,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date   2009-04-30
      */
-    class MassFit : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
+    class GAUDI_API MassFit 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
       // ======================================================================
@@ -162,7 +164,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Particles 
+  } //                                               end of namespace Particles 
   // ==========================================================================
   namespace Cuts 
   {
@@ -219,11 +221,11 @@ namespace LoKi
      */ 
     typedef LoKi::Particles::MassFit                                    MFIT_ ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES27_H
 // ============================================================================

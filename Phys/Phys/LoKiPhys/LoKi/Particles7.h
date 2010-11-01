@@ -25,6 +25,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -54,10 +55,11 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-02-27
      */
-    class VFunAsPFun
+    class GAUDI_API VFunAsPFun
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /** The constructor from "Vertex function"
        *  
        *  @code 
@@ -89,18 +91,24 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is private 
       VFunAsPFun() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Types::VFun m_vfun ;
       double            m_bad  ;
+      // ======================================================================
     };
     // ========================================================================      
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES7_H
 // ============================================================================

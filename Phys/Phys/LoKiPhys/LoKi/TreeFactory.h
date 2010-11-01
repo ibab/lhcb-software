@@ -37,6 +37,7 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::Particle*>::Tree&           tree       ,
       const Decays::iNode&                                          mother     , 
@@ -54,6 +55,7 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::Particle*>::Tree& tree       ,
       const Decays::iNode&                                mother     , 
@@ -67,16 +69,17 @@ namespace Decays
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-22 
      */     
+    GAUDI_API
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::Particle*>::Tree& tree   ,
       const Decays::Parsers::Tree&                        parsed ,
       std::ostream&                                       stream ) ;
     // ========================================================================
-  } // end of namespace Decays::Trees
+  } //                                           end of namespace Decays::Trees
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_TREEFACTORY_H
 // ============================================================================

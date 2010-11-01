@@ -40,7 +40,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-13
      */
-    class WrongMass 
+    class GAUDI_API WrongMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -236,7 +236,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-13
      */
-    class DeltaWrongMass : public WrongMass 
+    class GAUDI_API DeltaWrongMass : public WrongMass 
     {
     public:
       // ======================================================================
@@ -311,7 +311,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-13
      */
-    class AbsDeltaWrongMass : public DeltaWrongMass 
+    class GAUDI_API AbsDeltaWrongMass : public DeltaWrongMass 
     {
     public:
       // ======================================================================
@@ -362,11 +362,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES23_H
 // ============================================================================

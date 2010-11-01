@@ -52,7 +52,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-21
      */
-    class ChildFunction
+    class GAUDI_API ChildFunction
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -209,7 +209,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-21
      */
-    class ChildPredicate 
+    class GAUDI_API ChildPredicate 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:

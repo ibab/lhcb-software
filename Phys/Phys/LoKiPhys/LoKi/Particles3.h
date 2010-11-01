@@ -32,6 +32,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {   
     // ========================================================================
@@ -50,7 +51,7 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class ClosestApproach 
+    class GAUDI_API ClosestApproach 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public LoKi::Vertices::ImpactParamTool 
     {
@@ -79,19 +80,20 @@ namespace LoKi
       // ======================================================================
       /// the actual evaluation
       result_type distance ( argument p ) const 
-      { return distance ( p , particle() ) ; }
+      { return distance_ ( p , particle() ) ; }
       /// the actual evaluation
-      result_type distance 
+      result_type distance_ 
       ( const LHCb::Particle* p1 ,
         const LHCb::Particle* p2 ) const ;
       // ======================================================================
       /// the actual evaluation of chi2 
-      result_type chi2 
+      result_type chi2_ 
       ( const LHCb::Particle* p1 ,
         const LHCb::Particle* p2 ) const ;
       // ======================================================================
       /// the actual evaluation
-      result_type chi2 ( argument p ) const { return chi2 ( p , particle() ) ; }
+      result_type chi2 ( argument p ) const 
+      { return chi2_ ( p , particle() ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -129,7 +131,7 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class ClosestApproachChi2 : public ClosestApproach 
+    class GAUDI_API ClosestApproachChi2 : public ClosestApproach 
     {
     public:
       // ======================================================================
@@ -175,22 +177,15 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class MinClosestApproach 
+    class GAUDI_API MinClosestApproach 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LHCb::Particle::Vector&             particles ,
-        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
+      // ======================================================================
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
       ( const LHCb::Particle::ConstVector&        particles ,
-        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const SmartRefVector<LHCb::Particle>&     particles ,
         const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
@@ -198,36 +193,13 @@ namespace LoKi
         const LoKi::Vertices::ImpactParamTool&    tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
-      ( const LoKi::Keeper<LHCb::Particle>&       particles ,
-        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
-        const LoKi::Vertices::ImpactParamTool&    tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool&    tool      ,
-        const LHCb::Particle::Vector&             particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
       ( const LoKi::Vertices::ImpactParamTool&    tool      ,
         const LHCb::Particle::ConstVector&        particles ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproach 
       ( const LoKi::Vertices::ImpactParamTool&    tool      , 
-        const SmartRefVector<LHCb::Particle>&     particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
         const LoKi::PhysTypes::Range&             particles ) ;   
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
-        const LoKi::Keeper<LHCb::Particle>&       particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproach 
-      ( const LoKi::Vertices::ImpactParamTool&    tool      , 
-        const LoKi::UniqueKeeper<LHCb::Particle>& particles ) ;
+      // ======================================================================
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param first 'begin'-iterator for the sequence 
@@ -242,7 +214,7 @@ namespace LoKi
       : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
       , LoKi::Keeper<LHCb::Particle>( first , last ) 
       , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      {} ;
+      {}      
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param tool  helper tool needed for evaluation
@@ -257,10 +229,8 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
         , LoKi::Keeper<LHCb::Particle>( first , last ) 
         , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      {} ;
-      /// copy constructor 
-      MinClosestApproach 
-      ( const MinClosestApproach& right    ) ;
+      {} 
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MinClosestApproach* clone() const 
       { return new MinClosestApproach(*this) ; }
@@ -271,8 +241,13 @@ namespace LoKi
       { return distance ( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// the actual evaluation
-      result_type distance( argument p ) const ;
+      result_type distance ( argument p ) const ;
+      /// the actual evaluation
+      result_type chi2     ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -301,23 +276,13 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class MinClosestApproachChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
-      , public LoKi::UniqueKeeper<LHCb::Particle>
+    class GAUDI_API MinClosestApproachChi2 : public MinClosestApproach 
     {
     public:
       // ======================================================================
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
-      ( const LHCb::Particle::Vector&          particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
       ( const LHCb::Particle::ConstVector&     particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const SmartRefVector<LHCb::Particle>&  particles ,
         const LoKi::Vertices::ImpactParamTool& tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
@@ -325,36 +290,12 @@ namespace LoKi
         const LoKi::Vertices::ImpactParamTool& tool      ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
-      ( const LoKi::Keeper<LHCb::Particle>&    particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const LoKi::UniqueKeeper<LHCb::Particle>& particles ,
-        const LoKi::Vertices::ImpactParamTool& tool      ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const LoKi::Vertices::ImpactParamTool& tool      ,
-        const LHCb::Particle::Vector&          particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool      ,
         const LHCb::Particle::ConstVector&     particles ) ;
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool      , 
-        const SmartRefVector<LHCb::Particle>&  particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const LoKi::Vertices::ImpactParamTool& tool      , 
-        const LoKi::PhysTypes::Range&          particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const LoKi::Vertices::ImpactParamTool& tool      ,
-        const LoKi::Keeper<LHCb::Particle>&    particles ) ;
-      /// constructor from the particle(s) and the tool  
-      MinClosestApproachChi2 
-      ( const LoKi::Vertices::ImpactParamTool&    tool      ,
-        const LoKi::UniqueKeeper<LHCb::Particle>& particles ) ;
+        const LoKi::PhysTypes::Range&          particles ) ; 
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param first 'begin'-iterator for the sequence 
@@ -366,10 +307,8 @@ namespace LoKi
       ( PARTICLE first , 
         PARTICLE last  ,
         const LoKi::Vertices::ImpactParamTool& tool ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
-        , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      {};
+        : LoKi::Particles::MinClosestApproach ( first , last , tool ) 
+      {}
       /** templated contructor 
        *  from the sequence of "particles"
        *  @param tool helepr tool needed for evaluations 
@@ -381,13 +320,8 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  , 
         PARTICLE                               first , 
         PARTICLE                               last  )
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , LoKi::UniqueKeeper<LHCb::Particle> ( first , last ) 
-        , m_fun       ( (const LHCb::Particle*) 0 , tool ) 
-      {} ;
-      /// copy constructor 
-      MinClosestApproachChi2 
-      ( const MinClosestApproachChi2& right    ) ;
+        : LoKi::Particles::MinClosestApproach ( first , last , tool ) 
+      {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MinClosestApproachChi2* clone() const 
       { return new MinClosestApproachChi2(*this) ;}
@@ -398,25 +332,19 @@ namespace LoKi
       { return chi2( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-      /// the actual evaluation
-      result_type chi2 ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
       /// default constructor is private 
       MinClosestApproachChi2();               // default constructor is private 
       // ======================================================================
-    private:
-      // ======================================================================
-      LoKi::Particles::ClosestApproachChi2 m_fun       ;
-      // ======================================================================
     } ;    
     // ========================================================================
-  } // end of namespace LoKi::Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES3_H
 // ============================================================================

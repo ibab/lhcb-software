@@ -29,6 +29,7 @@ namespace LHCb { class MuonPID       ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {   
     // ========================================================================
@@ -46,10 +47,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class ProtoHasInfo 
+    class GAUDI_API ProtoHasInfo 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor form the index in ProtoParticle::ExtraInfo
       ProtoHasInfo ( int index ) ;
       /// copy constructor 
@@ -62,12 +64,17 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // default contructor is disabled 
       ProtoHasInfo() ;
+      // ======================================================================
     private :
-      // index in ProtoParticle::ExtraInfo 
-      int m_info ; ///< index in ProtoParticle::ExtraInfo
+      // ======================================================================
+      /// index in ProtoParticle::ExtraInfo 
+      int m_info ;                        // index in ProtoParticle::ExtraInfo
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class ProtoInfo
@@ -84,10 +91,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoInfo
+    class GAUDI_API ProtoInfo
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-   {
+    {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        *  @param def default valeu for info 
@@ -114,16 +122,21 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       ProtoInfo();
+      // ======================================================================
     private:
-      // index in ProtoParticle::ExtraInfo
-      int    m_key ; ///< index in ProtoParticle::ExtraInfo
-      // value to be returned for invalid particle and protoparticle 
+      // ======================================================================
+      /// index in ProtoParticle::ExtraInfo
+      int    m_key ; // index in ProtoParticle::ExtraInfo
+      /// value to be returned for invalid particle and protoparticle 
       double m_def ;
-      // default value for missing infomration 
+      /// default value for missing infomration 
       double m_bad ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class ProtoHasRichPID 
@@ -140,10 +153,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasRichPID
+    class GAUDI_API ProtoHasRichPID
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasRichPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -153,6 +167,7 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class ProtoHasMuonPID 
@@ -169,10 +184,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasMuonPID 
+    class GAUDI_API ProtoHasMuonPID 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasMuonPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -182,6 +198,7 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class ProtoHasCaloHypos
@@ -197,10 +214,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ProtoHasCaloHypos 
+    class GAUDI_API ProtoHasCaloHypos 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasCaloHypos() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -210,6 +228,7 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class IsMuon
@@ -223,7 +242,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-02-25
      */
-    class IsMuon
+    class GAUDI_API IsMuon
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -261,7 +280,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-09-26
      */
-    class IsMuonLoose : public IsMuon 
+    class GAUDI_API IsMuonLoose : public IsMuon 
     {
     public:
       // ======================================================================
@@ -284,7 +303,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-08
      */
-    class InMuonAcceptance : public IsMuonLoose 
+    class GAUDI_API InMuonAcceptance : public IsMuonLoose 
     {
     public:
       // ======================================================================
@@ -310,7 +329,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-02-11 
      */
-    class TrackHasInfo 
+    class GAUDI_API TrackHasInfo 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -352,7 +371,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-02-11
      */
-    class TrackInfo
+    class GAUDI_API TrackInfo
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
       // ======================================================================
@@ -396,14 +415,14 @@ namespace LoKi
       double m_def ; // value to be returned for invalid objects
       /// default value for missing information
       double m_bad ;  // default value for missing information
-      // =====================================================================
+      // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES12_H
 // ============================================================================

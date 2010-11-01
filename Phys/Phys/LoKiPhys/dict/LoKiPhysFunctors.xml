@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml 86202 2010-09-14 13:01:14Z ibelyaev $ 
+     * $Id:$ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -12,62 +12,28 @@
      *  contributions and advices from G.Raven, J.van Tilburg, 
      *  A.Golutvin, P.Koppenburg have been used in the design.
      *
-     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     * @date 2006-02-06
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-06
+     *
+     *  $Revision:$
+     *
      * ========================================================================
 -->
 
 <lcgdict>
   
-
-  <class pattern   = "LoKi::Particles::*"   />
-  <class pattern   = "LoKi::Vertices::*"    />
-  <class pattern   = "LoKi::Legacy::*"      />
-  
-  <class name = "LoKi::AuxFunBase"  />
-  <class name = "LoKi::AuxDTFBase"  />
-
-  <class name = "Decays::Trees::Any_<const LHCb::Particle*>"    />
-  <class name = "Decays::Trees::None_<const LHCb::Particle*>"   />
-  <class name = "Decays::Trees::Stable_<const LHCb::Particle*>" />
-  <class name = "Decays::Trees::Exclusive" />
-  <class name = "Decays::Trees::Inclusive" />
-  <class name = "Decays::Trees::Optional"  />
-  <class name = "LoKi::Dicts::TreeOps<const LHCb::Particle*>" />
-  <class name = "Decays::iTree_<const LHCb::Particle*>" />
-  <class name = "Decays::Tree_<const LHCb::Particle*>"  />
-  <class name = "Decays::Trees::_Tree_<const LHCb::Particle*>"     />
-  <class name = "Decays::TreeList_<const LHCb::Particle*>"         />
-  <class name = "Decays::TreeList_<const LHCb::Particle*>::Trees_" />
-
-  <class name = "LoKi::Child::Selector"  />
-
-
-  <class name = "Decays::IDecay"         />
-  <class name = "Decays::IDecay::Finder" />
-  <class name = "Decays::IDecay::Tree"   />
-  <class name = "LoKi::Dicts::FinderDicts_<const LHCb::Particle*>" />
-
-  <class name = "std::vector<const LHCb::CaloDigit*>" />
-  <class name = "std::set<const LHCb::CaloDigit*>"    />
-  <class name = "std::vector<LHCb::CaloCellID>"       />
-  <class name = "std::set<LHCb::CaloCellID>"          />
-  
-  <function pattern = "LoKi::Photons::*"  />
-  
+ 
   <exclusion>
     
-    <class name="LoKi::Particles::InvariantMass::Indices" /> 
 
-    <class pattern="LoKi::Particles::*">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Vertices::*">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Legacy::*">
-      <method name="=" />
-    </class>
+    <class name="LoKi::Particles::DecTree::iTree"  />
+    <class name="LoKi::Particles::DecTree::Tree"   />
+
+    <class pattern ="LoKi::Particles::*::Source"  />
+    <class pattern ="LoKi::Particles::*::_Source"  />
+    <class pattern ="LoKi::Vertices::*::Source"  />
+    <class pattern ="LoKi::Vertices::*::_Source"  />
+
 
   </exclusion>
   

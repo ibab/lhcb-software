@@ -64,7 +64,7 @@ namespace LoKi
      *  @author Roel Aaij
      *  @date   2010-06-18
      */
-    class DecayLengthSignificance 
+    class GAUDI_API DecayLengthSignificance 
       : public LoKi::BasicFunctors< const LHCb::Particle* >::Function
       , public LoKi::Vertices::VertexHolder 
     {
@@ -112,7 +112,7 @@ namespace LoKi
      *  @author Roel Aaij
      *  @date   2010-05-07
      */
-    class DecayLengthSignificanceDV
+    class GAUDI_API DecayLengthSignificanceDV
       : public         DecayLengthSignificance
       , public virtual LoKi::AuxDesktopBase
     {
@@ -141,7 +141,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class PathDistance : public LoKi::Particles::ImpPar 
+    class GAUDI_API PathDistance : public LoKi::Particles::ImpPar 
     {
     public:
       // ======================================================================
@@ -175,7 +175,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class PathDistanceChi2 : public LoKi::Particles::PathDistance 
+    class GAUDI_API PathDistanceChi2 : public LoKi::Particles::PathDistance 
     {
     public:
       // ======================================================================
@@ -211,7 +211,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class PathDistanceSignificance 
+    class GAUDI_API PathDistanceSignificance 
       : public LoKi::Particles::PathDistanceChi2
     {
     public:
@@ -245,7 +245,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class ProjectedDistance : public LoKi::Particles::PathDistance 
+    class GAUDI_API ProjectedDistance : public LoKi::Particles::PathDistance 
     {
     public:
       // ======================================================================
@@ -278,7 +278,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class ProjectedDistanceSignificance 
+    class GAUDI_API ProjectedDistanceSignificance 
       : public LoKi::Particles::ProjectedDistance
     {
     public:
@@ -315,7 +315,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class PathDistanceWithBestPV : public LoKi::Particles::ImpParWithTheBestPV  
+    class GAUDI_API PathDistanceWithBestPV
+      : public LoKi::Particles::ImpParWithTheBestPV  
     {
     public:
       // ======================================================================
@@ -366,7 +367,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class PathDistanceSignificanceWithBestPV 
+    class GAUDI_API PathDistanceSignificanceWithBestPV 
       : public LoKi::Particles::PathDistanceChi2WithBestPV 
     {
     public:
@@ -391,7 +392,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class ProjectedDistanceWithBestPV 
+    class GAUDI_API ProjectedDistanceWithBestPV 
       : public LoKi::Particles::PathDistanceWithBestPV
     {
     public:
@@ -417,7 +418,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-10-23
      */
-    class ProjectedDistanceSignificanceWithBestPV 
+    class GAUDI_API ProjectedDistanceSignificanceWithBestPV 
       : public LoKi::Particles::ProjectedDistanceWithBestPV
     {
     public:
@@ -770,7 +771,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // FUNCTORS_H
 // ============================================================================

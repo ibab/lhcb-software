@@ -33,7 +33,8 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2009-11-16
      */
-    class PCutA : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API PCutA 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       // ======================================================================
@@ -80,7 +81,8 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2009-11-16
      */
-    class PFunA : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class GAUDI_API PFunA 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       // ======================================================================
@@ -125,7 +127,8 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2009-11-16
      */
-    class PCutV : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API PCutV 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       // ======================================================================
@@ -170,7 +173,8 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2009-11-16
      */
-    class PFunV : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class GAUDI_API PFunV 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
       // ======================================================================
@@ -198,7 +202,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
@@ -264,7 +268,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES31_H
 // ============================================================================

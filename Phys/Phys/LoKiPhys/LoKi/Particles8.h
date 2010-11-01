@@ -31,6 +31,7 @@ namespace LHCb { class ProtoParticle ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -48,21 +49,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */     
-    class HasProtos
+    class GAUDI_API HasProtos
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::UniqueKeeper<LHCb::ProtoParticle>
     {
     public:
+      // ======================================================================
       /// constructor from one protoparticle 
       HasProtos ( const LHCb::ProtoParticle* proto ) ;
       /// constructor from vector of protoparticles 
-      HasProtos ( const std::vector<LHCb::ProtoParticle*>& ps ) ;
-      /// constructor from vector of protoparticles 
-      HasProtos ( const std::vector<const LHCb::ProtoParticle*>& ps ) ;
-      /// constructor from container of protoparticles 
-      HasProtos ( const LoKi::Keeper<LHCb::ProtoParticle>& ps ) ;
-      /// constructor from container of protoparticles 
-      HasProtos ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& ps ) ;
+      HasProtos ( const LHCb::ProtoParticle::ConstVector& ps ) ;
+      // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -73,9 +70,29 @@ namespace LoKi
         PROTO last  ) 
         : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( first , last ) 
-      {} ;
-      /// copy constructor 
-      HasProtos ( const HasProtos& right ) ;
+      {} 
+      /** templated constructor from sequence of ptoroparticles 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class PROTO>
+      HasProtos 
+      ( const LoKi::Keeper<PROTO>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( keeper.begin() , 
+                                                    keeper.end  () ) 
+      {} 
+      /** templated constructor from sequence of ptoroparticles 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class PROTO>
+      HasProtos 
+      ( const LoKi::UniqueKeeper<PROTO>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( keeper.begin() , 
+                                                    keeper.end  () ) 
+      {} 
       /// MANDATORY: virtual destructor
       virtual ~HasProtos() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -84,6 +101,10 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      HasProtos() ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -102,25 +123,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasProtosInTree
+    class GAUDI_API HasProtosInTree
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from one protoparticle 
       HasProtosInTree 
       ( const LHCb::ProtoParticle* proto ) ;
-      /// constructor from vector of protoparticles 
       HasProtosInTree
-      ( const std::vector<LHCb::ProtoParticle*>& ps ) ;
-      /// constructor from vector of protoparticles 
-      HasProtosInTree
-      ( const std::vector<const LHCb::ProtoParticle*>& ps ) ;
-      /// constructor from container of protoparticles 
-      HasProtosInTree
-      ( const LoKi::Keeper<LHCb::ProtoParticle>& ps ) ;
-      /// constructor from container of protoparticles 
-      HasProtosInTree
-      ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& ps ) ;
+      ( const LHCb::ProtoParticle::ConstVector& ps ) ;
+      // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -131,10 +144,28 @@ namespace LoKi
         PROTO last  ) 
         : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last ) 
-      {} ;
-      /// copy constructor 
+      {} 
+      /** templated constructor from sequence of ptoroparticles 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class PROTO>
       HasProtosInTree 
-      ( const HasProtosInTree& right ) ;
+      ( const LoKi::Keeper<PROTO>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut ( keeper.begin() , keeper.end() )
+      {} 
+      /** templated constructor from sequence of ptoroparticles 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class PROTO>
+      HasProtosInTree 
+      ( const LoKi::UniqueKeeper<PROTO>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut ( keeper.begin() , keeper.end() )
+      {} 
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~HasProtosInTree() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -146,13 +177,20 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     private: 
+      // ======================================================================
+      HasProtosInTree() ;
+      // ======================================================================
+    private: 
+      // ======================================================================
       LoKi::Particles::HasProtos m_cut ;
+      // ======================================================================
     } ;
     // ========================================================================    
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  }  //                                        end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES8_H
 // ============================================================================

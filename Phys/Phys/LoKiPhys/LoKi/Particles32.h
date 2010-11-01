@@ -23,7 +23,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date 2010-02-19
      */
-    class BestPrimaryVertexAdaptor 
+    class GAUDI_API BestPrimaryVertexAdaptor 
       : public         LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public virtual LoKi::AuxDesktopBase 
     {

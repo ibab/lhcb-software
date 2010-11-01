@@ -45,7 +45,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-03-20
      */
-    class Filter
+    class GAUDI_API Filter
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -79,7 +79,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES15_H
 // ============================================================================

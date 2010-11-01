@@ -27,6 +27,7 @@ namespace LHCb { class State ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -41,10 +42,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackChi2
+    class GAUDI_API TrackChi2
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -53,9 +55,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class TrackChi2PerDoF 
@@ -69,10 +74,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackChi2PerDoF 
+    class GAUDI_API TrackChi2PerDoF 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2PerDoF() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -82,9 +88,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class TrackChi2Prob 
@@ -97,7 +106,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-10
      */
-    class TrackChi2Prob 
+    class GAUDI_API TrackChi2Prob 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -130,10 +139,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHasState
+    class GAUDI_API TrackHasState
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
+      // ======================================================================
       /// constructor from the state location 
       TrackHasState ( const LHCb::State::Location location ) ;
       /// copy constructor
@@ -147,14 +157,19 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       TrackHasState();
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
       // location of the state 
       LHCb::State::Location m_location ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class TrackType
@@ -169,10 +184,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackType
+    class GAUDI_API TrackType
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackType() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -182,9 +198,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class TrackHistory
@@ -199,10 +218,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHistory 
+    class GAUDI_API TrackHistory 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackHistory() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -212,9 +232,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class TrackHistoryFit
@@ -229,10 +252,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackHistoryFit
+    class GAUDI_API TrackHistoryFit
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackHistoryFit() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -242,9 +266,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class TrackStatus
@@ -259,10 +286,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23 
      */
-    class TrackStatus
+    class GAUDI_API TrackStatus
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrackStatus() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -272,9 +300,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // extractor of the track from the partice 
       LoKi::Extract::Particle2Track m_track ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class GhostProbability 
@@ -284,7 +315,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-10-02
      */
-    class GhostProbability 
+    class GAUDI_API GhostProbability 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -313,7 +344,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-10-02
      */
-    class TrackLikelihood
+    class GAUDI_API TrackLikelihood
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:

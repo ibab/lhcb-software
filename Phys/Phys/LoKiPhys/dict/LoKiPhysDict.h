@@ -106,7 +106,7 @@ namespace LoKi
   {
     // ========================================================================   
     template <>
-    class FunCalls<LHCb::Particle> 
+    class GAUDI_API FunCalls<LHCb::Particle> 
     {
     private:
       // ======================================================================
@@ -152,7 +152,7 @@ namespace LoKi
     } ;
     // ========================================================================
     template <>
-    class CutCalls<LHCb::Particle>
+    class GAUDI_API CutCalls<LHCb::Particle>
     {
     private:
       // ======================================================================
@@ -183,7 +183,7 @@ namespace LoKi
     } ;
     // ========================================================================
     template <>
-    class FunCalls<LHCb::VertexBase> 
+    class GAUDI_API FunCalls<LHCb::VertexBase> 
     {
     private:
       // ======================================================================
@@ -232,7 +232,7 @@ namespace LoKi
     } ;
     // ========================================================================
     template <>
-    class CutCalls<LHCb::VertexBase> 
+    class GAUDI_API CutCalls<LHCb::VertexBase> 
     {
     private:
       // ======================================================================

@@ -61,7 +61,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-04-30
      */
-    class DHCoplanarity 
+    class GAUDI_API DHCoplanarity 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public virtual LoKi::AuxDesktopBase 
     {
@@ -96,7 +96,7 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
   namespace Cuts 
   {
@@ -122,11 +122,11 @@ namespace LoKi
      */
     const LoKi::Particles::DHCoplanarity                            BPVDVDOCA ;
     // ========================================================================
-  }  
+  } //                                              end of namespace LoKi::Cuts   
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END  
+//                                                                      The END  
 // ============================================================================
 #endif // LOKI_PARTICLES29_H
 // ============================================================================

@@ -117,9 +117,9 @@ LoKi::Vertices::VertexSignedDistance::signedDistance
   return LoKi::Constants::InvalidDistance ;      // RETURN 
 }
 // ============================================================================
-LoKi::Vertices::VertexChi2Distance::result_type 
-LoKi::Vertices::VertexChi2Distance::chi2  
-( LoKi::Vertices::VertexChi2Distance::argument v ) const 
+LoKi::Vertices::VertexDistance::result_type 
+LoKi::Vertices::VertexDistance::chi2  
+( LoKi::Vertices::VertexDistance::argument v ) const 
 {
   if     ( 0 == v    ) 
   {
@@ -160,51 +160,27 @@ LoKi::Vertices::VertexChi2Distance::chi2
 }
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LHCb::VertexBase::Vector& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::VertexBase::ConstVector& vs ) 
   : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
+  , LoKi::UniqueKeeper<LHCb::VertexBase>( vs.begin() , vs.end() )
 {} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
+  , LoKi::UniqueKeeper<LHCb::VertexBase>( vs.begin() , vs.end() )
 {} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertex::ConstVector& vs ) 
   : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
+  , LoKi::UniqueKeeper<LHCb::VertexBase>( vs.begin() , vs.end() )
 {} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LHCb::RecVertices* vs ) 
+( const LHCb::RecVertex::Container* vs ) 
   : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ()
+  , LoKi::UniqueKeeper<LHCb::VertexBase>()
 {
   if ( 0 != vs ) { addObjects( vs->begin() , vs->end() ) ; }
 } 
@@ -212,48 +188,12 @@ LoKi::Vertices::MinVertexDistance::MinVertexDistance
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::PhysTypes::VRange& vs ) 
   : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Vertices::VertexDistance ( LoKi::Point3D () ) 
-  , m_keeper ( vs )
+  , LoKi::UniqueKeeper<LHCb::VertexBase>( vs.begin() , vs.end() )
 {} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::result_type 
 LoKi::Vertices::MinVertexDistance::minvd
-( LoKi::Vertices::MinVertexChi2Distance::argument v ) const
+( LoKi::Vertices::MinVertexDistance::argument v ) const
 {
   if     ( 0 == v    ) 
   {
@@ -276,101 +216,9 @@ LoKi::Vertices::MinVertexDistance::minvd
   return result ;                                           // RETURN 
 }
 // ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::VertexBase::Vector& vs )
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::VertexBase::ConstVector& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::Vertex::ConstVector& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::RecVertex::ConstVector& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::RecVertices* vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ()
-{
-  if ( 0 != vs ) { addObjects( vs->begin() , vs->end() ) ; }
-} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::PhysTypes::VRange& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs.begin() , vs.end() )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) 
-  : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() ) 
-  , m_keeper  ( vs )
-{} 
-// ============================================================================
-LoKi::Vertices::MinVertexChi2Distance::result_type 
-LoKi::Vertices::MinVertexChi2Distance::minvdchi2 
-( LoKi::Vertices::MinVertexChi2Distance::argument v ) const
+LoKi::Vertices::MinVertexDistance::result_type 
+LoKi::Vertices::MinVertexDistance::minvdchi2 
+( LoKi::Vertices::MinVertexDistance::argument v ) const
 {
   if     ( 0 == v    ) 
   {
@@ -382,8 +230,8 @@ LoKi::Vertices::MinVertexChi2Distance::minvdchi2
   
   if ( end() == LoKi::Helpers::_Min_vertex 
        ( begin() , end() ,
-         LoKi::Helpers::PMFA<LoKi::Vertices::VertexChi2Distance>
-         ( this , &LoKi::Vertices::VertexChi2Distance::chi2) ,
+         LoKi::Helpers::PMFA<LoKi::Vertices::VertexDistance>
+         ( this , &LoKi::Vertices::VertexDistance::chi2) ,
          v , result ) ) 
   {
     Error ( "Invalid evaluation; return 'InvalidDistance'") ;
@@ -394,6 +242,31 @@ LoKi::Vertices::MinVertexChi2Distance::minvdchi2
 }
 // ============================================================================
 
+// ============================================================================
+LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
+( const LHCb::VertexBase::ConstVector& vs ) 
+  : LoKi::Vertices::MinVertexDistance ( vs ) 
+{} 
+// ============================================================================
+LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
+( const LHCb::Vertex::ConstVector& vs ) 
+  : LoKi::Vertices::MinVertexDistance ( vs ) 
+{} 
+// ============================================================================
+LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
+( const LHCb::RecVertex::ConstVector& vs ) 
+  : LoKi::Vertices::MinVertexDistance ( vs ) 
+{} 
+// ============================================================================
+LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
+( const LHCb::RecVertex::Container* vs )  
+  : LoKi::Vertices::MinVertexDistance ( vs ) 
+{} 
+// ============================================================================
+LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
+( const LoKi::PhysTypes::VRange& vs ) 
+  : LoKi::Vertices::MinVertexDistance ( vs ) 
+{} 
 
 // ============================================================================
 // The END 

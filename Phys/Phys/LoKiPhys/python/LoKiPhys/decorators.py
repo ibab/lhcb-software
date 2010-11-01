@@ -43,6 +43,8 @@ ns = picosecond
 ps = picosecond
 fs = femtosecond
 
+from LoKiCore.basic import cpp, std, LoKi, LHCb
+
 from   LoKiPhys.functions  import *
 from   LoKiCore.functions  import  equal_to 
 import LoKiPhys.Phys
@@ -54,19 +56,23 @@ def _decorate ( name = _name ) :
     """
     Make the decoration of all objects from this module
     """
+
     import LoKiCore.decorators as     _LoKiCore
+
     p = 'const LHCb::Particle*'
     v = 'const LHCb::VertexBase*'
     d = 'double'
     _vp  = 'std::vector<const LHCb::Particle*>'   ## std.vector( p )
     _vv  = 'std::vector<const LHCb::VertexBase*>' ## std.vector( v )
     _vd  = 'std::vector<double>'                  ## std.vector( 'double' )
+    #_vp  = std.vector( p )
+    #_vv  = std.vector( v )
+    #_vd  = std.vector( 'double' )
     #
     
-    # "function" : Particle -> double 
-    
+    # "function" : Particle -> double     
     _decorated  = _LoKiCore.getAndDecorateFunctions (  
-        name                                   , ## module name  
+        name                                   , ## module name                                   , ## the base 
         LoKi.Functor   (p,'double')            , ## the base
         LoKi.Dicts.FunCalls (LHCb.Particle)    , ## call-traits
         LoKi.Dicts.FuncOps  (p,p)              ) ## operators&operations
@@ -92,10 +98,11 @@ def _decorate ( name = _name ) :
         LoKi.Dicts.CutCalls (LHCb.VertexBase)  , ## call-traits
         LoKi.Dicts.CutsOps  (v,v)              ) ## operators&operations
 
+    # =========================================================================
     ## functional part:
+    # =========================================================================
     
     # "map" : vector<T> -> vector<double>
-    
     _decorated |= _LoKiCore.getAndDecorateMaps (
         name                                   , ## module name  
         LoKi.Functor (_vp,_vd)                 , ## the base
@@ -106,7 +113,6 @@ def _decorate ( name = _name ) :
         LoKi.Dicts.MapsOps(v)                  ) ## call-traits
     
     # "pipe" : vector<T> -> vector<T>
-    
     _decorated |= _LoKiCore.getAndDecoratePipes (
         name                                   , ## module name  
         LoKi.Functor   (_vp,_vp)               , ## the base
@@ -117,7 +123,6 @@ def _decorate ( name = _name ) :
         LoKi.Dicts.PipeOps(v,v)                ) ## call-traits
     
     # "funval" : vector<T> -> double 
-    
     _decorated |= _LoKiCore.getAndDecorateFunVals ( 
         name                                   , ## module name  
         LoKi.Functor   (_vp,'double')          , ## the base
@@ -128,7 +133,6 @@ def _decorate ( name = _name ) :
         LoKi.Dicts.FunValOps(v)                ) ## call-traits
 
     # "cutval" : vector<T> -> bool
-    
     _decorated |= _LoKiCore.getAndDecorateCutVals (
         name                                   , ## module name  
         LoKi.Functor   (_vp,bool)              , ## the base
@@ -138,9 +142,7 @@ def _decorate ( name = _name ) :
         LoKi.Functor   (_vv,bool)              , ## the base
         LoKi.Dicts.CutValOps(v)                ) ## call-traits
 
-
     # "element": vector<T> -> T
-    
     _decorated |= _LoKiCore.getAndDecorateElements (  
         name                                   , ## module name  
         LoKi.Functor   (_vp,p)                 , ## the base
@@ -148,11 +150,9 @@ def _decorate ( name = _name ) :
     _decorated |= _LoKiCore.getAndDecorateElements (  
         name                                   , ## module name  
         LoKi.Functor   (_vv,v)                 , ## the base
-        LoKi.Dicts.ElementOps(v,v)             ) ## call-traits
-    
+        LoKi.Dicts.ElementOps(v,v)             ) ## call-traits    
     
     # 'source' : void -> vector<T>
-
     _decorated |= _LoKiCore.getAndDecorateSources  (  
         name                                   , ## module name  
         LoKi.Functor   ('void',_vp)            , ## the base
@@ -163,7 +163,6 @@ def _decorate ( name = _name ) :
         LoKi.Dicts.SourceOps(v,v)              ) ## call-traits
     
     # 'infos'
-    
     _decorated |= _LoKiCore.getAndDecorateInfos      (
         name                                            , ## module name
         LoKi.Functor       (p,'double')                 , ## the base 
@@ -173,7 +172,7 @@ def _decorate ( name = _name ) :
         LoKi.Functor       (v,'double')                 , ## the base 
         LoKi.Dicts.InfoOps (v)                          ) ## methods
 
-    ## vid primitives
+    ## void primitives
     _decorated |= _LoKiCore.getAndDecoratePrimitiveVoids ( name )
     
     # decorate pids (Comparison with strings, integers and ParticleID objects:

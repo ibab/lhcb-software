@@ -40,38 +40,13 @@ LoKi::Particles::HasProtos::HasProtos
 ( const LHCb::ProtoParticle* p ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( p ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasProtos::HasProtos
-( const std::vector<LHCb::ProtoParticle*>& pp ) 
+( const LHCb::ProtoParticle::ConstVector& pp ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp.begin() , pp.end() ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtos::HasProtos
-( const std::vector<const LHCb::ProtoParticle*>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
-  , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp.begin() , pp.end() ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtos::HasProtos
-( const LoKi::Keeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
-  , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtos::HasProtos
-( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
-  , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( pp ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtos::HasProtos
-( const LoKi::Particles::HasProtos& right ) 
-  : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
-  , LoKi::UniqueKeeper<LHCb::ProtoParticle> ( right ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasProtos::result_type 
 LoKi::Particles::HasProtos::operator() 
@@ -101,38 +76,13 @@ LoKi::Particles::HasProtosInTree::HasProtosInTree
 ( const LHCb::ProtoParticle* p ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
   , m_cut ( p ) 
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasProtosInTree::HasProtosInTree
-( const std::vector<LHCb::ProtoParticle*>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ()
-  , m_cut ( pp ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtosInTree::HasProtosInTree
-( const std::vector<const LHCb::ProtoParticle*>& pp ) 
+( const LHCb::ProtoParticle::ConstVector& pp ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  () 
   , m_cut ( pp )  
-{};
-// ============================================================================
-LoKi::Particles::HasProtosInTree::HasProtosInTree
-( const LoKi::Keeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
-  , m_cut ( pp ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtosInTree::HasProtosInTree
-( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (    ) 
-  , m_cut ( pp ) 
-{};
-// ============================================================================
-LoKi::Particles::HasProtosInTree::HasProtosInTree
-( const LoKi::Particles::HasProtosInTree& right ) 
-  : LoKi::AuxFunBase                        ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  ( right ) 
-  , m_cut                                   ( right.m_cut )
-{};
+{}
 // ============================================================================
 LoKi::Particles::HasProtosInTree::result_type 
 LoKi::Particles::HasProtosInTree::operator() 
@@ -150,7 +100,7 @@ LoKi::Particles::HasProtosInTree::operator()
   }
   // scan the tree 
   return LoKi::PhysAlgs::found ( p , m_cut ) ;
-} ;
+} 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::HasProtosInTree::fillStream

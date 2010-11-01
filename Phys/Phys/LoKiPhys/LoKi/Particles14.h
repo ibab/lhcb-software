@@ -25,6 +25,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {   
     // ========================================================================
@@ -48,10 +49,11 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-11-02
      */
-    class DecayAngle 
+    class GAUDI_API DecayAngle 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor with daughter index (starts from 1).
        *  E.g. for 2-body decays it could be 1 or 2 
        *  @param child index of daughter particles
@@ -67,12 +69,17 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       DecayAngle();
+      // ======================================================================
     private:
+      // ======================================================================
       // index of the daughter particle
       size_t m_child ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class ArmenterosPodolanski 
@@ -114,7 +121,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@inkhef.nl
      *  @date 2008-09-21
      */
-    class ArmenterosPodolanski
+    class GAUDI_API ArmenterosPodolanski
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -132,10 +139,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  }  // end of namespace Particles
-} // end of namespace LoKi
+  } //                                               end of namespace Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES12_H
 // ============================================================================

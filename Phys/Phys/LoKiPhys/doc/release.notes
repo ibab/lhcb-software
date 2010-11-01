@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-01 - Vanya Belyaev
+
+ - fix the python problem for slc4-platform
+ - undo split of the dictionary 
+
+
 ! 2010-10-24 - Vanya Belyaev
 
  - introduce the concept of stable particle in decay descriptors

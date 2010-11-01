@@ -42,15 +42,13 @@ __date__    = "????-??-??"
 __version__ = "Version $Revision$"
 # =============================================================================
 
+
 import LoKiCore.decorators    as      _LoKiCore
 from   LoKiCore.functions     import  equal_to 
 
 # Namespaces:
-cpp      = _LoKiCore.cpp 
-std      = cpp.std
-LoKi     = cpp.LoKi
-LHCb     = cpp.LHCb
-Gaudi    = cpp.Gaudi 
+from LoKiCore.basic import cpp, std, LoKi, LHCb, Gaudi 
+
 
 _RCP = 'const LHCb::Particle*'
 _RCV = 'const LHCb::VertexBase*'
@@ -86,6 +84,59 @@ VCuts = LoKi.Functor                ( _RCV ,  bool    )
 VFun  = LoKi.FunctorFromFunctor     ( _RCV , 'double' ) 
 ## @see LoKi::Types::Cut
 VCut  = LoKi.FunctorFromFunctor     ( _RCV ,  bool    ) 
+
+
+# =============================================================================
+# Functional part: 
+# =============================================================================
+
+## functional part
+#_vp       = std.vector ( _RCP    )
+#_vv       = std.vector ( _RCV    )
+#_vd       = std.vector ('double')
+
+_vp       = 'std::vector<const LHCb::Particle*>'   ## std.vector ( _RCP    )
+_vv       = 'std::vector<const LHCb::VertexBase*>' ## std.vector ( _RCV    )
+_vd       = 'std::vector<double>'                  ## std.vector ('double')
+
+#_vp       = std.vector ( _RCP    )
+#_vv       = std.vector ( _RCV    )
+#_vd       = std.vector ('double')
+#
+
+Maps      = LoKi.Functor             ( _vp    , _vd      )
+Map       = LoKi.FunctorFromFunctor  ( _vp    , _vd      )
+Pipes     = LoKi.Functor             ( _vp    , _vp      )
+Pipe      = LoKi.FunctorFromFunctor  ( _vp    , _vp      )
+FunVals   = LoKi.Functor             ( _vp    , 'double' )
+FunVal    = LoKi.FunctorFromFunctor  ( _vp    , 'double' )
+CutVals   = LoKi.Functor             ( _vp    , bool     )
+CutVal    = LoKi.FunctorFromFunctor  ( _vp    , bool     )
+Elements  = LoKi.Functor             ( _vp    , _RCP     ) 
+Element   = LoKi.FunctorFromFunctor  ( _vp    , _RCP     ) 
+Sources   = LoKi.Functor             ( 'void' , _vp      ) 
+Source    = LoKi.FunctorFromFunctor  ( 'void' , _vp      ) 
+#
+
+VMaps     = LoKi.Functor             ( _vv , _vd      )
+VMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
+VPipes    = LoKi.Functor             ( _vv , _vv      )
+VPipe     = LoKi.FunctorFromFunctor  ( _vv , _vv      )
+VFunVals  = LoKi.Functor             ( _vv , 'double' )
+VFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
+VCutVals  = LoKi.Functor             ( _vv , bool     )
+VCutVal   = LoKi.FunctorFromFunctor  ( _vv , bool     )
+VElements = LoKi.Functor             ( _vv , _RCV     ) 
+VElement  = LoKi.FunctorFromFunctor  ( _vv , _RCV     ) 
+VSources  = LoKi.Functor             ( 'void' , _vv   ) 
+VSource   = LoKi.FunctorFromFunctor  ( 'void' , _vv   ) 
+
+EMPTY  = LoKi.Functors.Empty ( _RCP ) ()
+VEMPTY = LoKi.Functors.Empty ( _RCV ) ()
+SIZE   = LoKi.Functors.Size  ( _RCP ) ()
+VSIZE  = LoKi.Functors.Size  ( _RCV ) ()
+
+
 
 # =============================================================================
 ## All concrete types 
@@ -486,7 +537,6 @@ LTFITCHI2  = LoKi.Particles.LifeTimeFitChi2
 ## @see LoKi::Cuts::LTIMEERR
 LTIMEERR      = LoKi.Particles.LifeTimeError
 
-
 ## @see LoKi::Cuts::REFIT_
 REFIT_        = LoKi.Particles.ReFit
 ## @see LoKi::Cuts::MFIT_
@@ -561,7 +611,6 @@ VIPCHI2    = LoKi.Vertices.ImpParChi2
 VDZ        = LoKi.Vertices.VertexDeltaZ 
 ## @see LoKi::Cuts::VABSDZ
 VABSDZ     = LoKi.Vertices.VertexAbsDeltaZ 
-
 
 # =============================================================================
 # Aliases from Vava GLIGOROV
@@ -669,7 +718,6 @@ DPCTAUERR          = LoKi.Particles.DaughterParticleCTauErr
 DPCTAUFITCHI2      = LoKi.Particles.DaughterParticleCTauFitChi2 
 ## @see LoKi::Cuts::DPCTAUSIGNIFICANCE
 DPCTAUSIGNIFICANCE = LoKi.Particles.DaughterParticleCTauSignificance
-
 
 
 # =============================================================================
@@ -824,6 +872,7 @@ DTF_CTAUSIGNIFICANCE = LoKi.Particles.ChildCTauSignificance
 # @thanks Roel Aaij
 # =============================================================================
 
+
 ## @see LoKi::Cuts::DLS
 DLS                  = LoKi.Particles.DecayLengthSignificance
 ## @see LoKi::Cuts::BPVDLS
@@ -867,7 +916,6 @@ BPVPROJDS            = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV ()
 BPVPROJDS_           = LoKi.Particles.ProjectedDistanceSignificanceWithBestPV
 
 
-
 # =============================================================================
 ## Collection of functions for 'corrected mass' variable by Mike Williams, 
 #  see <a href="http://indico.cern.ch/conferenceDisplay.py?confId=104542">
@@ -891,57 +939,16 @@ BPVCORRM    = LoKi.Particles.MCorrectedWithBestVertex ()
 
 
 
-# =============================================================================
-# Functional part: 
-# =============================================================================
-
-## functional part
-#_vp       = std.vector ( _RCP    )
-#_vv       = std.vector ( _RCV    )
-#_vd       = std.vector ('double')
-_vp       = 'std::vector<const LHCb::Particle*>'   ## std.vector ( _RCP    )
-_vv       = 'std::vector<const LHCb::VertexBase*>' ## std.vector ( _RCV    )
-_vd       = 'std::vector<double>'                  ## std.vector ('double')
-#
-Maps      = LoKi.Functor             ( _vp    , _vd      )
-Map       = LoKi.FunctorFromFunctor  ( _vp    , _vd      )
-Pipes     = LoKi.Functor             ( _vp    , _vp      )
-Pipe      = LoKi.FunctorFromFunctor  ( _vp    , _vp      )
-FunVals   = LoKi.Functor             ( _vp    , 'double' )
-FunVal    = LoKi.FunctorFromFunctor  ( _vp    , 'double' )
-CutVals   = LoKi.Functor             ( _vp    , bool     )
-CutVal    = LoKi.FunctorFromFunctor  ( _vp    , bool     )
-Elements  = LoKi.Functor             ( _vp    , _RCP     ) 
-Element   = LoKi.FunctorFromFunctor  ( _vp    , _RCP     ) 
-Sources   = LoKi.Functor             ( 'void' , _vp      ) 
-Source    = LoKi.FunctorFromFunctor  ( 'void' , _vp      ) 
-#
-VMaps     = LoKi.Functor             ( _vv , _vd      )
-VMap      = LoKi.FunctorFromFunctor  ( _vv , _vd      )
-VPipes    = LoKi.Functor             ( _vv , _vv      )
-VPipe     = LoKi.FunctorFromFunctor  ( _vv , _vv      )
-VFunVals  = LoKi.Functor             ( _vv , 'double' )
-VFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
-VCutVals  = LoKi.Functor             ( _vv , bool     )
-VCutVal   = LoKi.FunctorFromFunctor  ( _vv , bool     )
-VElements = LoKi.Functor             ( _vv , _RCV     ) 
-VElement  = LoKi.FunctorFromFunctor  ( _vv , _RCV     ) 
-VSources  = LoKi.Functor             ( 'void' , _vv   ) 
-VSource   = LoKi.FunctorFromFunctor  ( 'void' , _vv   ) 
-
-EMPTY  = LoKi.Functors.Empty ( _RCP ) ()
-VEMPTY = LoKi.Functors.Empty ( _RCV ) ()
-SIZE   = LoKi.Functors.Size  ( _RCP ) ()
-VSIZE  = LoKi.Functors.Size  ( _RCV ) ()
-
 
 SOURCE         = LoKi.Particles.SourceTES
 SOURCEDESKTOP  = LoKi.Particles.SourceDesktop
 VSOURCE        = LoKi.Vertices.SourceTES
 VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
+
 NUMBER         = LoKi.Particles.TESCounter
 VNUMBER        = LoKi.Vertices.TESCounter
+
 
 ## adapters
 ## @see LoKi::Cuts::PCUTA 
@@ -961,11 +968,11 @@ TRFUN   = LoKi.Particles.TrackFun
 ## @see LoKi::Cuts::TRCUT
 TRCUT   = LoKi.Particles.TrackCut
 
+
 ## Legacy stuff
 BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
 TRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPt
 BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
-
 
 
 # =============================================================================

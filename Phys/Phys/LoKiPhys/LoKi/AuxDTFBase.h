@@ -41,7 +41,7 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
    *  @date   2010-06-03
    */
-  class AuxDTFBase : public virtual LoKi::AuxDesktopBase 
+  class GAUDI_API AuxDTFBase : public virtual LoKi::AuxDesktopBase 
   {
   public:
     // =========================================================================

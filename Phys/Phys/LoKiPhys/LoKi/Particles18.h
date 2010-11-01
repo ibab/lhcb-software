@@ -15,6 +15,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Particles
   {
     // ========================================================================    
@@ -30,7 +31,8 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasInfo : public LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*>
+    class GAUDI_API HasInfo
+      : public LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*>
     {
     public:
       // ======================================================================
@@ -65,9 +67,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Info : public LoKi::ExtraInfo::GetInfo<const LHCb::Particle*>
+    class GAUDI_API Info 
+      : public LoKi::ExtraInfo::GetInfo<const LHCb::Particle*>
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        *  @param def default value for missing key/invalid object 
@@ -81,14 +85,19 @@ namespace LoKi
       virtual Info* clone() const { return new Info(*this); }
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Info();
+      // ======================================================================
     };
-  } // end of namepsace LoKi::Particles
-} // end of namespace LoKi 
+    // ========================================================================
+  } //                                         end of namepsace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES18_H
 // ============================================================================

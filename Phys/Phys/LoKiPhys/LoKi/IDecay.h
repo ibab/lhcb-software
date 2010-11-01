@@ -23,7 +23,7 @@ namespace Decays
    *  @author Ivan BELYAEV
    *  @date   2009-05-22
    */
-  class IDecay : public virtual IDecayNode
+  class GAUDI_API IDecay : public virtual IDecayNode
   {
     // ========================================================================
   public:

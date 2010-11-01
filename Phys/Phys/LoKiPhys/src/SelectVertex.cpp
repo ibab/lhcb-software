@@ -38,15 +38,7 @@
  *  @author Vanya  BELYAEV ibelyaev@physics.syr.edu
  */
 // ============================================================================
-LHCb::VertexBase*               LoKi::SelectVertex::selectMin 
-( const LHCb::VertexBase::Vector&            vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::VertexBase::Vector::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
+// Min
 // ============================================================================
 const LHCb::VertexBase*               LoKi::SelectVertex::selectMin 
 ( const LHCb::VertexBase::ConstVector&       vs       , 
@@ -70,43 +62,11 @@ const LHCb::VertexBase*               LoKi::SelectVertex::selectMin
 } 
 // ============================================================================
 const LHCb::VertexBase*               LoKi::SelectVertex::selectMin 
-( const LoKi::Keeper<LHCb::VertexBase>&      vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::VertexBase>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMin 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>&vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::VertexBase>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMin 
 ( const LoKi::Types::VRange&                 vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
 {
   LoKi::Types::VRange::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-
-// ============================================================================
-LHCb::Vertex*               LoKi::SelectVertex::selectMin 
-( const LHCb::Vertex::Vector&                vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::Vertex::Vector::const_iterator ipv = 
     LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
   return vs.end() == ipv ? 0 : *ipv ;
 } 
@@ -132,39 +92,6 @@ const LHCb::Vertex*               LoKi::SelectVertex::selectMin
   return vs->end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMin 
-( const LoKi::Keeper<LHCb::Vertex>&          vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::Vertex>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMin 
-( const LoKi::UniqueKeeper<LHCb::Vertex>&    vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::Vertex>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-
-
-// ============================================================================
-LHCb::RecVertex*               LoKi::SelectVertex::selectMin 
-( const LHCb::RecVertex::Vector&             vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::RecVertex::Vector::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
 const LHCb::RecVertex*               LoKi::SelectVertex::selectMin 
 ( const LHCb::RecVertex::ConstVector&        vs       , 
   const LoKi::Types::VFunc&                  fun      , 
@@ -186,39 +113,9 @@ const LHCb::RecVertex*               LoKi::SelectVertex::selectMin
   return vs->end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMin 
-( const LoKi::Keeper<LHCb::RecVertex>&       vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::RecVertex>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
+// Max
 // ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMin 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::RecVertex>::const_iterator ipv = 
-    LoKi::select_min ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-
-// ============================================================================
-LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
-( const LHCb::VertexBase::Vector&            vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::VertexBase::Vector::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
+const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
 ( const LHCb::VertexBase::ConstVector&       vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -228,7 +125,7 @@ const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
   return vs.end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
+const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
 ( const LHCb::VertexBase::Container*         vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -239,27 +136,7 @@ const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
   return vs->end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
-( const LoKi::Keeper<LHCb::VertexBase>&      vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::VertexBase>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>&vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::VertexBase>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::VertexBase*               LoKi::SelectVertex::selectMax 
+const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
 ( const LoKi::Types::VRange&                 vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -269,19 +146,7 @@ const LHCb::VertexBase*               LoKi::SelectVertex::selectMax
   return vs.end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-
-// ============================================================================
-LHCb::Vertex*               LoKi::SelectVertex::selectMax 
-( const LHCb::Vertex::Vector&                vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::Vertex::Vector::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMax 
+const LHCb::Vertex*               LoKi::SelectVertex::selectMax
 ( const LHCb::Vertex::ConstVector&           vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -291,7 +156,7 @@ const LHCb::Vertex*               LoKi::SelectVertex::selectMax
   return vs.end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMax 
+const LHCb::Vertex*               LoKi::SelectVertex::selectMax
 ( const LHCb::Vertex::Container*             vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -302,40 +167,7 @@ const LHCb::Vertex*               LoKi::SelectVertex::selectMax
   return vs->end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMax 
-( const LoKi::Keeper<LHCb::Vertex>&          vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::Vertex>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::Vertex*               LoKi::SelectVertex::selectMax 
-( const LoKi::UniqueKeeper<LHCb::Vertex>&    vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::Vertex>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-
-
-// ============================================================================
-LHCb::RecVertex*               LoKi::SelectVertex::selectMax 
-( const LHCb::RecVertex::Vector&             vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LHCb::RecVertex::Vector::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMax 
+const LHCb::RecVertex*               LoKi::SelectVertex::selectMax
 ( const LHCb::RecVertex::ConstVector&        vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -345,7 +177,7 @@ const LHCb::RecVertex*               LoKi::SelectVertex::selectMax
   return vs.end() == ipv ? 0 : *ipv ;
 } 
 // ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMax 
+const LHCb::RecVertex*               LoKi::SelectVertex::selectMax
 ( const LHCb::RecVertex::Container*          vs       , 
   const LoKi::Types::VFunc&                  fun      , 
   const LoKi::Types::VCuts&                  cut      ) 
@@ -355,27 +187,6 @@ const LHCb::RecVertex*               LoKi::SelectVertex::selectMax
     LoKi::select_max ( vs->begin() , vs->end() , fun , cut ) ;
   return vs->end() == ipv ? 0 : *ipv ;
 } 
-// ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMax 
-( const LoKi::Keeper<LHCb::RecVertex>&       vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::Keeper<LHCb::RecVertex>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
-const LHCb::RecVertex*               LoKi::SelectVertex::selectMax 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs       , 
-  const LoKi::Types::VFunc&                  fun      , 
-  const LoKi::Types::VCuts&                  cut      ) 
-{
-  LoKi::UniqueKeeper<LHCb::RecVertex>::const_iterator ipv = 
-    LoKi::select_max ( vs.begin() , vs.end() , fun , cut ) ;
-  return vs.end() == ipv ? 0 : *ipv ;
-} 
-// ============================================================================
 
 
 // ============================================================================

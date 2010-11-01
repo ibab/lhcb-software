@@ -42,16 +42,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class IsPrimary 
+    class GAUDI_API IsPrimary 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual IsPrimary* clone() const  ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class  Technique
@@ -65,16 +67,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Technique
+    class GAUDI_API Technique
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     { 
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual Technique* clone() const ;
       /// MANDATOY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class VertexChi2
@@ -88,7 +92,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexChi2
+    class GAUDI_API VertexChi2
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
@@ -119,9 +123,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
      *  @date   2008-06-20
      */
-    class VertexChi2PerDoF : public VertexChi2 
+    class GAUDI_API VertexChi2PerDoF : public VertexChi2 
     {      
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~VertexChi2PerDoF() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -130,9 +135,12 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       double chi2PerDoF( const LHCb::VertexBase& v ) const 
       { return v.chi2() / v.nDoF()  ; }
+      // ======================================================================
     };
     // ========================================================================
     /** @class VertexDoF
@@ -147,16 +155,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexDoF
+    class GAUDI_API VertexDoF
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexDoF* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class PositionX 
@@ -168,16 +178,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionX
+    class GAUDI_API PositionX
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionX* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class PositionY 
@@ -189,16 +201,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionY
+    class GAUDI_API PositionY
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionY* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class PositionZ 
@@ -210,16 +224,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PositionZ 
+    class GAUDI_API PositionZ 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual PositionZ* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class  NumberOfOutgoing 
@@ -234,16 +250,18 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class NumberOfOutgoing 
+    class GAUDI_API NumberOfOutgoing 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual NumberOfOutgoing* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class HasInfo
@@ -258,7 +276,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasInfo
+    class GAUDI_API HasInfo
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {
     public:
@@ -300,7 +318,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Info
+    class GAUDI_API Info
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {
     public:
@@ -357,7 +375,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class NumberOfTracks 
+    class GAUDI_API NumberOfTracks 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {    
     public:
@@ -385,10 +403,11 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-02-28
      */  
-    class Chi2Prob 
+    class GAUDI_API Chi2Prob 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor:
       virtual ~Chi2Prob() { }
       /// MANDATORY: clone method ("virtual constructor")
@@ -397,12 +416,14 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
      } ;
     // ========================================================================
-  } // end of namespace LoKi::Vertices 
-} // end of namespace LoKi
+  } //                                          end of namespace LoKi::Vertices 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTICES0_H
 // ============================================================================

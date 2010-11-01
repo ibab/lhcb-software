@@ -22,7 +22,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@physics.syr.edu
    *  @date   2008-01-16
    */  
-  class AuxDesktopBase : public virtual LoKi::AuxFunBase 
+  class GAUDI_API AuxDesktopBase : public virtual LoKi::AuxFunBase 
   { 
   public:
     // ========================================================================

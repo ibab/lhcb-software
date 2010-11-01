@@ -215,12 +215,17 @@ LoKi::Particles::MinImpParWithSource::operator()
   // check the event 
   if ( !sameEvent() ) 
   {
+    typedef LoKi::UniqueKeeper<LHCb::VertexBase> KEEPER ;
+    const KEEPER& keep1 = *this ;
+    KEEPER&       keep2 = const_cast<KEEPER&> ( keep1 ) ;
+    
+    
     // clear the list of vertices 
-    clear() ;
+    keep2.clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = source()() ;  // NB! 
     // fill the functor with primary vertices:
-    addObjects ( primaries.begin() , primaries.end () ) ;
+    keep2.addObjects ( primaries.begin() , primaries.end () ) ;
     if ( empty() ) 
     { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
@@ -464,12 +469,17 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
   // check the event 
   if ( !sameEvent() ) 
   {
+    typedef LoKi::UniqueKeeper<LHCb::VertexBase> KEEPER ;
+    const KEEPER& keep1 = *this ;
+    KEEPER&       keep2 = const_cast<KEEPER&> ( keep1 ) ;
+    
+    
     // clear the list of vertices 
-    clear() ;
+    keep2.clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = source()() ; // NB!!
     // fill the functor with primary vertices:
-    addObjects ( primaries.begin() , primaries.end () ) ;
+    keep2.addObjects ( primaries.begin() , primaries.end () ) ;
     if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;

@@ -31,7 +31,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-12-17
      */
-    class DecNode 
+    class GAUDI_API DecNode 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -80,7 +80,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-12-17
      */
-    class DecTree 
+    class GAUDI_API DecTree 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -139,7 +139,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES24_H
 // ============================================================================

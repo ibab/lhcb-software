@@ -29,6 +29,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -47,9 +48,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree : public LoKi::PhysTypes::Cuts 
+    class GAUDI_API InTree : public LoKi::PhysTypes::Cuts 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param cut cut to be applied 
        */
@@ -64,11 +66,16 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is disabled 
       InTree () ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Cut m_cut ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class NinTree
@@ -84,9 +91,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class NinTree : public LoKi::PhysTypes::Func 
+    class GAUDI_API NinTree : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param cut cut to be applied 
        */
@@ -101,11 +109,16 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       NinTree () ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Cut m_cut ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class SumTree
@@ -125,9 +138,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class SumTree : public LoKi::PhysTypes::Func 
+    class GAUDI_API SumTree : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -156,13 +170,18 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       SumTree() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Fun m_fun ;
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MultTree
@@ -182,9 +201,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MultTree : public LoKi::PhysTypes::Func 
+    class GAUDI_API MultTree : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -213,13 +233,18 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       MultTree() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Fun m_fun ;
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinTree
@@ -238,9 +263,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MinTree : public LoKi::PhysTypes::Func 
+    class GAUDI_API MinTree : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -271,13 +297,18 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       MinTree() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Fun m_fun ;
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinTree
@@ -296,9 +327,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class MaxTree : public LoKi::PhysTypes::Func 
+    class GAUDI_API MaxTree : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
@@ -329,13 +361,18 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       MaxTree() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Fun m_fun ;
       LoKi::PhysTypes::Cut m_cut ;
       double               m_res ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class InGeneration 
@@ -351,9 +388,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class InGeneration : public LoKi::PhysTypes::Cuts 
+    class GAUDI_API InGeneration : public LoKi::PhysTypes::Cuts 
     {
     public:
+      // ======================================================================
       /// the constructor from the predicate and the generation level
       InGeneration 
       ( const LoKi::PhysTypes::Cuts& cut   , 
@@ -370,14 +408,19 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       InGeneration(); // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// the predicate to be checked 
       LoKi::PhysTypes::Cut  m_cut   ; // the predicate to be checked
       /// the generation level 
       unsigned int          m_level ; // the generation level 
+      // ======================================================================
     };
     // ========================================================================
     /** @class NinGeneration 
@@ -393,9 +436,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class NinGeneration : public LoKi::PhysTypes::Func 
+    class GAUDI_API NinGeneration : public LoKi::PhysTypes::Func 
     {
     public:
+      // ======================================================================
       /// the constructor from the predicate and the generation level
       NinGeneration 
       ( const LoKi::PhysTypes::Cuts& cut   , 
@@ -412,20 +456,26 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       NinGeneration(); // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// the predicate to be checked 
       LoKi::PhysTypes::Cut  m_cut   ; // the predicate to be checked
       /// the generation level 
       unsigned int          m_level ; // the generation level 
+      // ======================================================================
     };
     // ========================================================================    
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES4_H
 // ============================================================================

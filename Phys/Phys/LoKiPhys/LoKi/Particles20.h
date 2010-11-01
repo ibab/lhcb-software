@@ -57,11 +57,12 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class CosineDirectionAngleWithTheBestPV
+    class GAUDI_API CosineDirectionAngleWithTheBestPV
       : public LoKi::Particles::CosineDirectionAngle 
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
+      // ======================================================================
       /// the default constructor, creates the object in invalid state 
       CosineDirectionAngleWithTheBestPV () ;
       /// MANDATORY: virtual destructor 
@@ -92,7 +93,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class ImpParWithTheBestPV 
+    class GAUDI_API ImpParWithTheBestPV 
       : public LoKi::Particles::ImpPar 
       , public virtual LoKi::AuxDesktopBase 
     {
@@ -142,7 +143,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class ImpParChi2WithTheBestPV : public ImpParWithTheBestPV 
+    class GAUDI_API ImpParChi2WithTheBestPV : public ImpParWithTheBestPV 
     {
     public:
       // ======================================================================
@@ -181,7 +182,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParWithSource : public LoKi::Particles::MinImpPar 
+    class GAUDI_API MinImpParWithSource : public LoKi::Particles::MinImpPar 
     {
     protected:
       // ======================================================================
@@ -259,7 +260,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParDV : public LoKi::Particles::MinImpParWithSource 
+    class GAUDI_API MinImpParDV : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       // ======================================================================
@@ -313,7 +314,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParTES : public LoKi::Particles::MinImpParWithSource 
+    class GAUDI_API MinImpParTES : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       // ======================================================================
@@ -434,7 +435,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2WithSource : public LoKi::Particles::MinImpParWithSource
+    class GAUDI_API MinImpParChi2WithSource 
+      : public LoKi::Particles::MinImpParWithSource
     {
     public:
       // ======================================================================
@@ -481,7 +483,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2DV 
+    class GAUDI_API MinImpParChi2DV 
       : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
@@ -538,7 +540,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2TES 
+    class GAUDI_API MinImpParChi2TES 
       : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
@@ -660,7 +662,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexDistanceDV 
+    class GAUDI_API VertexDistanceDV 
       : public LoKi::Particles::VertexDistance 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -696,7 +698,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexSignedDistanceDV 
+    class GAUDI_API VertexSignedDistanceDV 
       : public LoKi::Particles::VertexSignedDistance 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -732,7 +734,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexDotDistanceDV 
+    class GAUDI_API VertexDotDistanceDV 
       : public LoKi::Particles::VertexDotDistance 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -768,7 +770,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexChi2DistanceDV 
+    class GAUDI_API VertexChi2DistanceDV 
       : public LoKi::Particles::VertexChi2Distance 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -805,7 +807,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeDV 
+    class GAUDI_API LifeTimeDV 
       : public LoKi::Particles::LifeTime 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -854,7 +856,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeChi2DV : public LoKi::Particles::LifeTimeDV 
+    class GAUDI_API LifeTimeChi2DV : public LoKi::Particles::LifeTimeDV 
     {
     public:
       // ======================================================================
@@ -892,7 +894,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeSignedChi2DV : public LoKi::Particles::LifeTimeChi2DV 
+    class GAUDI_API LifeTimeSignedChi2DV : public LoKi::Particles::LifeTimeChi2DV 
     {
     public:
       // ======================================================================
@@ -930,7 +932,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeFitChi2DV : public LoKi::Particles::LifeTimeDV 
+    class GAUDI_API LifeTimeFitChi2DV : public LoKi::Particles::LifeTimeDV 
     {
     public:
       // ======================================================================
@@ -966,7 +968,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeErrorDV : public LoKi::Particles::LifeTimeDV 
+    class GAUDI_API LifeTimeErrorDV : public LoKi::Particles::LifeTimeDV 
     {
     public:
       // ======================================================================
@@ -1004,7 +1006,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexZDistanceWithTheBestPV
+    class GAUDI_API VertexZDistanceWithTheBestPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -1043,7 +1045,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class VertexRhoDistanceWithTheBestPV
+    class GAUDI_API VertexRhoDistanceWithTheBestPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public virtual LoKi::AuxDesktopBase
     {
@@ -1071,7 +1073,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceWithSource
+    class GAUDI_API MinVertexDistanceWithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
       // ======================================================================
@@ -1121,7 +1123,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceDV 
+    class GAUDI_API MinVertexDistanceDV 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1160,7 +1162,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceTES
+    class GAUDI_API MinVertexDistanceTES
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1215,7 +1217,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceWithSource
+    class GAUDI_API MinVertexChi2DistanceWithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
       // ======================================================================
@@ -1265,7 +1267,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceDV 
+    class GAUDI_API MinVertexChi2DistanceDV 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1304,7 +1306,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceTES
+    class GAUDI_API MinVertexChi2DistanceTES
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1367,7 +1369,7 @@ namespace LoKi
      *  @author Patrick SPRADLIN P.Spradlin1@physics.ox.ac.uk
      *  @date 2009-03-10
      */
-    class TrgPointingScoreWithBestPV
+    class GAUDI_API TrgPointingScoreWithBestPV
       : public LoKi::Particles::TrgPointingScore 
       , public virtual LoKi::AuxDesktopBase 
     {
@@ -1390,7 +1392,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi   
 // ============================================================================
-// The end 
+//                                                                      The end 
 // ============================================================================
 #endif // LOKI_PARTICLES20_H
 // ============================================================================

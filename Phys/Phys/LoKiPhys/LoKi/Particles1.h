@@ -52,7 +52,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexDistance 
+    class GAUDI_API VertexDistance 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -123,7 +123,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexSignedDistance 
+    class GAUDI_API VertexSignedDistance 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -191,7 +191,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexDotDistance 
+    class GAUDI_API VertexDotDistance 
       : public    LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public    LoKi::Vertices::VertexHolder 
     {
@@ -246,7 +246,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class VertexChi2Distance
+    class GAUDI_API VertexChi2Distance
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -307,16 +307,11 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexDistance
+    class GAUDI_API MinVertexDistance
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
       // ======================================================================
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LHCb::VertexBase::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of vertices 
        */
@@ -325,26 +320,8 @@ namespace LoKi
       /** constructor from container of vertices 
        *  @param vs container of vertices 
        */
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LHCb::Vertex::Vector& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
       MinVertexDistance 
       ( const LHCb::Vertex::ConstVector& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
-      MinVertexDistance 
-      ( const SmartRefVector<LHCb::Vertex>& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LHCb::RecVertex::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -354,45 +331,13 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
-      ( const LHCb::RecVertices*   vs  ) ;
+      ( const LHCb::RecVertex::Container*   vs  ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexDistance 
       ( const LoKi::PhysTypes::VRange& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::Keeper<LHCb::VertexBase>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::Keeper<LHCb::Vertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::Keeper<LHCb::RecVertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexDistance 
-      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) ;      
+      // ======================================================================
       /** templated constructor from arbitrary sequence 
        *  of vertices and helper object 
        *  @param first begin iterator of arbitrary sequence of primary vertices
@@ -405,9 +350,29 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_fun                  ( first , last )
       {}
-      /// copy  constructor
+      /** templated constructor from arbitrary sequence 
+       *  of vertices and helper object 
+       *  @param first begin iterator of arbitrary sequence of primary vertices
+       *  @param last  end iterator of arbitrary sequence of primary vertices
+       */
+      template <class VERTEX>
       MinVertexDistance 
-      ( const MinVertexDistance& right ) ;
+      ( const LoKi::Keeper<VERTEX>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+        , m_fun                  ( keeper )
+      {}
+      /** templated constructor from arbitrary sequence 
+       *  of vertices and helper object 
+       *  @param first begin iterator of arbitrary sequence of primary vertices
+       *  @param last  end iterator of arbitrary sequence of primary vertices
+       */
+      template <class VERTEX>
+      MinVertexDistance 
+      ( const LoKi::UniqueKeeper<VERTEX>& keeper )
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
+        , m_fun                  ( keeper )
+      {}
+      // ======================================================================
       /// MANDATORY: destructor 
       virtual ~MinVertexDistance() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -445,16 +410,11 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexChi2Distance
+    class GAUDI_API MinVertexChi2Distance
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
       // ======================================================================
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LHCb::VertexBase::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of vertices 
        */
@@ -463,26 +423,8 @@ namespace LoKi
       /** constructor from container of vertices 
        *  @param vs container of vertices 
        */
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LHCb::Vertex::Vector& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
       MinVertexChi2Distance 
       ( const LHCb::Vertex::ConstVector& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of vertices 
-       */
-      MinVertexChi2Distance 
-      ( const SmartRefVector<LHCb::Vertex>& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LHCb::RecVertex::Vector& vs ) ;      
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -492,45 +434,12 @@ namespace LoKi
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
-      ( const LHCb::RecVertices*   vs  ) ;
+      ( const LHCb::RecVertex::Container*   vs  ) ;
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
       MinVertexChi2Distance 
       ( const LoKi::PhysTypes::VRange& vs ) ;
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::Keeper<LHCb::VertexBase>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::Keeper<LHCb::Vertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::Keeper<LHCb::RecVertex>& vs ) ;      
-      /** constructor from container of vertices 
-       *  @param vs container of primary vertices 
-       */
-      MinVertexChi2Distance 
-      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) ;      
       /** templated constructor from arbitrary sequence 
        *  of vertices and helper object 
        *  @param first begin iterator of arbitrary sequence of primary vertices
@@ -543,9 +452,6 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_fun  ( first , last )
       {}
-      /// copy  constructor
-      MinVertexChi2Distance 
-      ( const MinVertexChi2Distance& right ) ;
       /// MANDATORY: destructor 
       virtual ~MinVertexChi2Distance() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -568,11 +474,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-  }  // end of namespace LoKi::Particles
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES1_H
 // ============================================================================

@@ -20,6 +20,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16
    */
+  GAUDI_API 
   IDVAlgorithm* getPhysDesktop ( const IAlgContextSvc* svc ) ;
   // ==========================================================================
   /** get the desktop from LoKi Service 
@@ -28,6 +29,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16
    */
+  GAUDI_API 
   IDVAlgorithm* getPhysDesktop ( const LoKi::ILoKiSvc* svc  ) ;
   // ==========================================================================
   /** get the desktop using the chain LoKi -> Algorithm Context -> DVAlgorithm
@@ -35,6 +37,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16
    */
+  GAUDI_API 
   IDVAlgorithm* getPhysDesktop () ;
   // ==========================================================================
 } //                                                      end of namespace LoKi

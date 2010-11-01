@@ -30,7 +30,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date   2009-04-30
      */
-    class ReFitter : public LoKi::Particles::ReFit 
+    class GAUDI_API ReFitter : public LoKi::Particles::ReFit 
     {
     public:
       // ======================================================================
@@ -67,7 +67,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
      *  @date   2009-04-30
      */
-    class MassFitter : public LoKi::Particles::MassFit
+    class GAUDI_API MassFitter : public LoKi::Particles::MassFit
     {
     public:
       // ======================================================================
@@ -95,7 +95,7 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Particles 
+  } //                                               end of namespace Particles 
   // ==========================================================================
   namespace Cuts 
   {
@@ -214,11 +214,11 @@ namespace LoKi
      */ 
     typedef LoKi::Particles::MassFitter                               MASSFIT ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES28_H
 // ============================================================================

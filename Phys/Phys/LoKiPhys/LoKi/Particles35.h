@@ -26,7 +26,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class ProtoPFun : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class GAUDI_API ProtoPFun 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
       // ======================================================================
     public:
@@ -67,7 +68,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class ProtoPCut : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API ProtoPCut 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
       // ======================================================================
     public:
@@ -102,7 +104,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class TrackFun : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class GAUDI_API TrackFun 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
       // ======================================================================
     public:
@@ -143,7 +146,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-26
      */
-    class TrackCut : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API TrackCut 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
       // ======================================================================
     public:
@@ -281,6 +285,7 @@ namespace LoKi
   // ==========================================================================  
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES35_H
+// ============================================================================

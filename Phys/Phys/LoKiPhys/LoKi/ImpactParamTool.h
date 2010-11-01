@@ -50,7 +50,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
      *  @date 2006-02-19
      */
-    class ImpactParamTool : virtual public LoKi::AuxFunBase 
+    class GAUDI_API ImpactParamTool : virtual public LoKi::AuxFunBase 
     {    
     public:
       // ======================================================================

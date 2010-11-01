@@ -378,16 +378,6 @@ LoKi::Particles::VertexChi2Distance::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 /*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LHCb::VertexBase::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
  *  @param vs container of vertices 
  */
 // ============================================================================
@@ -395,17 +385,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 ( const LHCb::VertexBase::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of vertices 
@@ -415,27 +395,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
@@ -445,17 +405,17 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 ( const LHCb::RecVertex::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
  */
 // ============================================================================
 LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LHCb::RecVertices*   vs  ) 
+( const LHCb::RecVertex::Container*   vs  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
@@ -465,76 +425,7 @@ LoKi::Particles::MinVertexDistance::MinVertexDistance
 ( const LoKi::PhysTypes::VRange& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs )       
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-//  copy constructor 
-// ============================================================================
-LoKi::Particles::MinVertexDistance::MinVertexDistance
-( const LoKi::Particles::MinVertexDistance& right ) 
-  : LoKi::AuxFunBase                      ( right )
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_fun ( right.m_fun ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================
@@ -549,7 +440,7 @@ LoKi::Particles::MinVertexDistance::operator()
   }
   // use the actual evaluator 
   return m_fun ( p->endVertex()  ) ;
-} ;
+} 
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================
@@ -560,16 +451,6 @@ LoKi::Particles::MinVertexDistance::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 /*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::VertexBase::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
  *  @param vs container of vertices 
  */
 // ============================================================================
@@ -577,17 +458,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 ( const LHCb::VertexBase::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::Vertex::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of vertices 
@@ -597,27 +468,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const SmartRefVector<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::RecVertex::Vector& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
@@ -634,10 +485,10 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
  */
 // ============================================================================
 LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LHCb::RecVertices*   vs  ) 
+( const LHCb::RecVertex::Container*   vs  ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
+{}
 // ============================================================================
 /*  constructor from container of vertices 
  *  @param vs container of primary vertices 
@@ -647,76 +498,7 @@ LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
 ( const LoKi::PhysTypes::VRange& vs ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-/*  constructor from container of vertices 
- *  @param vs container of primary vertices 
- */
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance 
-( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs )       
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( vs ) 
-{};
-// ============================================================================
-//  copy constructor 
-// ============================================================================
-LoKi::Particles::MinVertexChi2Distance::MinVertexChi2Distance
-( const LoKi::Particles::MinVertexChi2Distance& right ) 
-  : LoKi::AuxFunBase                      ( right )
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_fun ( right.m_fun ) 
-{};
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method 
 // ============================================================================

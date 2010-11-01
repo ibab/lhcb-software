@@ -250,11 +250,45 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-  } // end of namespace LoKi::Helpers
+    template <class FUNCTOR>
+    struct PMFA2
+    {
+      typedef typename FUNCTOR::argument     argument        ;
+      typedef typename FUNCTOR::result_type  result_type     ;
+      typedef result_type (FUNCTOR::*PMF)( argument ) const  ;
+      // ======================================================================
+      /// constructor 
+      PMFA2 ( const FUNCTOR* fun , PMF _pmf ) 
+        : m_fun ( fun ) , m_pmf ( _pmf ) {}
+      /// the only one method 
+      result_type operator() ( argument a ) const 
+      { return (m_fun->*m_pmf) ( a ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      template <class PARTICLE> 
+      void setParticle ( PARTICLE particle ) const 
+      { m_fun ->setParticle ( particle ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PMFA2 () ;                   // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// the functor 
+      const FUNCTOR* m_fun ;
+      /// member function 
+      PMF            m_pmf ;
+      // ======================================================================
+    } ;
+    // ========================================================================    
+  } //                                           end of namespace LoKi::Helpers
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PHYSHELPERS_H
 // ============================================================================

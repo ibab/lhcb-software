@@ -33,7 +33,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-15
      */
-    class DaughterParticleCTau
+    class GAUDI_API DaughterParticleCTau
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -101,7 +101,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-15
      */
-    class DaughterParticleCTauErr : public DaughterParticleCTau
+    class GAUDI_API DaughterParticleCTauErr : public DaughterParticleCTau
     {
     public:
       // ======================================================================
@@ -140,7 +140,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-15
      */
-    class DaughterParticleCTauFitChi2 : public DaughterParticleCTau
+    class GAUDI_API DaughterParticleCTauFitChi2 : public DaughterParticleCTau
     {
     public:
       // ======================================================================
@@ -179,7 +179,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-05-15
      */
-    class DaughterParticleCTauSignificance : public DaughterParticleCTau
+    class GAUDI_API DaughterParticleCTauSignificance : public DaughterParticleCTau
     {
     public:
       // ======================================================================
@@ -215,7 +215,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES34_H
 // ============================================================================

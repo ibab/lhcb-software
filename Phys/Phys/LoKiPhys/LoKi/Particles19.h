@@ -51,7 +51,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTime 
+    class GAUDI_API LifeTime 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::Vertices::VertexHolder 
     {
@@ -145,7 +145,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeChi2 : public LifeTime 
+    class GAUDI_API LifeTimeChi2 : public LifeTime 
     {
     public:
       // ======================================================================
@@ -203,7 +203,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeSignedChi2 : public LoKi::Particles::LifeTimeChi2
+    class GAUDI_API LifeTimeSignedChi2 : public LoKi::Particles::LifeTimeChi2
     {
     public:
       // ======================================================================
@@ -266,7 +266,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeFitChi2 : public LoKi::Particles::LifeTime 
+    class GAUDI_API LifeTimeFitChi2 : public LoKi::Particles::LifeTime 
     {
     public:
       // ======================================================================
@@ -318,7 +318,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeError : public LoKi::Particles::LifeTime 
+    class GAUDI_API LifeTimeError : public LoKi::Particles::LifeTime 
     {
     public:
       // ======================================================================
@@ -365,7 +365,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_PARTICLES19_H
 // ============================================================================

@@ -39,7 +39,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-06-11
      */
-    class Exclusive: public Decays::iTree_<const LHCb::Particle*>
+    class GAUDI_API Exclusive: public Decays::iTree_<const LHCb::Particle*>
     {
     protected:
       // ======================================================================
@@ -209,7 +209,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-06-11
      */
-    class Inclusive : public Exclusive 
+    class GAUDI_API Inclusive : public Exclusive 
     {
     public:
       // ======================================================================
@@ -288,7 +288,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-13
      */
-    class Optional : public Exclusive
+    class GAUDI_API Optional : public Exclusive
     {
     public:
       // ======================================================================

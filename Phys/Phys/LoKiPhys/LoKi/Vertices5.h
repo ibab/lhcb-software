@@ -32,6 +32,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Vertices 
   {
     // ========================================================================
@@ -43,14 +44,19 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceWithSource
+    class GAUDI_API MinVertexDistanceWithSource
       : public LoKi::Vertices::MinVertexDistance 
     {
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the source 
       MinVertexDistanceWithSource ( const _Source& source ) ;
       /// MANDATORY: virtual destructor 
@@ -101,7 +107,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceDV 
+    class GAUDI_API MinVertexDistanceDV 
       : public LoKi::Vertices::MinVertexDistanceWithSource 
     {
     public:
@@ -143,7 +149,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexDistanceTES
+    class GAUDI_API MinVertexDistanceTES
       : public LoKi::Vertices::MinVertexDistanceWithSource 
     {
     public:
@@ -204,14 +210,19 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceWithSource
+    class GAUDI_API MinVertexChi2DistanceWithSource
       : public LoKi::Vertices::MinVertexChi2Distance
     {
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the source 
       MinVertexChi2DistanceWithSource ( const _Source& source ) ;
       /// MANDATORY: virtual destructor 
@@ -262,7 +273,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceDV 
+    class GAUDI_API MinVertexChi2DistanceDV 
       : public LoKi::Vertices::MinVertexChi2DistanceWithSource 
     {
     public:
@@ -304,7 +315,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-28
      */
-    class MinVertexChi2DistanceTES
+    class GAUDI_API MinVertexChi2DistanceTES
       : public LoKi::Vertices::MinVertexChi2DistanceWithSource 
     {
     public:
@@ -356,10 +367,12 @@ namespace LoKi
       std::vector<std::string> m_path ; // the TES locations 
       // ======================================================================
     } ;
-  } // end of namespace LoKi::Vertices
-} // end of namespace LoKi 
+    // ========================================================================
+  } //                                          end of namespace LoKi::Vertices
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTICES5_H
 // ============================================================================

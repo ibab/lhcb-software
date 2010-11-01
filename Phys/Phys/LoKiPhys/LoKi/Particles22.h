@@ -32,7 +32,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2008-09-29
      */
-    class DaughterVertexDistance 
+    class GAUDI_API DaughterVertexDistance 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -82,7 +82,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2008-09-29
      */
-    class DaughterVertexSignedDistance 
+    class GAUDI_API DaughterVertexSignedDistance 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -132,7 +132,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2008-09-29
      */
-    class DaughterVertexDistanceChi2 
+    class GAUDI_API DaughterVertexDistanceChi2 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -184,7 +184,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2008-09-29
      */
-    class DaughterVertexDistanceDot
+    class GAUDI_API DaughterVertexDistanceDot
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -236,7 +236,7 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl 
      *  @date 2008-09-29
      */
-    class DaughterVertexDistanceSignedChi2 
+    class GAUDI_API DaughterVertexDistanceSignedChi2 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -271,11 +271,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
-} // end of namespace LoKi  
+} //                                                      end of namespace LoKi  
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES22_H
 // ============================================================================

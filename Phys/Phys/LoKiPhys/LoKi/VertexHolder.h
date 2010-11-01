@@ -30,6 +30,7 @@ namespace LHCb { class VertexBase ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Vertices 
   {
     // ========================================================================
@@ -40,12 +41,15 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2004-01-24
      */
-    class VertexHolder : virtual public LoKi::AuxFunBase 
+    class GAUDI_API VertexHolder : virtual public LoKi::AuxFunBase 
     {
     public:
+      // ======================================================================
       /// switch to distinguish different use cases 
       enum Case { _vertex , _point };
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the 3Dpoint
       VertexHolder ( const LoKi::Point3D&     point      ) ;
       /// constructor from Vertex 
@@ -54,7 +58,9 @@ namespace LoKi
       VertexHolder ( const VertexHolder&      right      ) ;
       /// destructor
       virtual ~VertexHolder();
+      // ======================================================================
     public:
+      // ======================================================================
       /// accessor to the 'case' 
       Case                     type   () const { return m_type   ; }
       /// accessor to the vertex 
@@ -78,16 +84,20 @@ namespace LoKi
       /// valid information 
       bool  valid() const 
       { return _point == type() ? true : 0 != m_vertex ; }
+      // ======================================================================
     private:
+      // ======================================================================
       mutable       Case               m_type   ;
       mutable const LHCb::VertexBase*  m_vertex ;
       mutable       LoKi::Point3D      m_point  ;
+      // ======================================================================
     };
     // ========================================================================    
-  } // end of namespace LoKi::Vertices;
-} // end of namespace LoKi
+  } //                                          end of namespace LoKi::Vertices
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTEXHOLDER_H
 // ============================================================================

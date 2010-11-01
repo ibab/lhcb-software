@@ -17,6 +17,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Vertices 
   {
     // ========================================================================
@@ -33,10 +34,11 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpPar 
+    class GAUDI_API ImpPar 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
+      // ======================================================================
       /// constructor from the particle and tool 
       ImpPar
       ( const LHCb::Particle*                     particle , 
@@ -63,22 +65,29 @@ namespace LoKi
       result_type operator() ( argument ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
-      // set the particle 
+      // ======================================================================
+      /// set the particle 
       void setParticle ( const LHCb::Particle* p ) 
       { m_particle = p ; }
+      // ======================================================================
     protected:
+      // ======================================================================
       /// accessor to the particle 
       const LHCb::Particle* particle() const 
       { return m_particle ; }
+      // ======================================================================
     private:
       // ======================================================================
       // default constructor is private 
       ImpPar(); 
       // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::ImpPar   m_evaluator ;
       const LHCb::Particle*     m_particle  ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class  ImpParChi2
@@ -94,7 +103,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-03-17
      */
-    class ImpParChi2 
+    class GAUDI_API ImpParChi2 
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
@@ -144,10 +153,11 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================    
-  } // end of namespace LoKi::Vertices 
-} // end of namespace LoKi
+  } //                                          end of namespace LoKi::Vertices 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_VERTICES2_H
 // ============================================================================

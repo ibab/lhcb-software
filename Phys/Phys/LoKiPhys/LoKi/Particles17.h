@@ -29,6 +29,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace  Particles
   {
     // ========================================================================
@@ -40,7 +41,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi : public LoKi::Particles::Phi
+    class GAUDI_API DeltaPhi : public LoKi::Particles::Phi
     {
     public:
       // ======================================================================
@@ -108,7 +109,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public LoKi::Particles::PseudoRapidity 
+    class GAUDI_API DeltaEta : public LoKi::Particles::PseudoRapidity 
     {
     public:
       // ======================================================================
@@ -179,7 +180,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public DeltaPhi 
+    class GAUDI_API DeltaR2 : public DeltaPhi 
     {
     public:
       /// constructor from the eta, phi
@@ -230,10 +231,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES17_H
 // ============================================================================

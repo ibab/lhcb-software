@@ -51,7 +51,7 @@ namespace LoKi
      *  @date   2010-10-23
      */
     // ========================================================================
-    class PtFlight
+    class GAUDI_API PtFlight
       : public  LoKi::Particles::TransverseMomentumRel  
       , public  LoKi::Vertices::VertexHolder    
     {
@@ -140,7 +140,7 @@ namespace LoKi
      *  @date   2010-10-23
      */
     // ========================================================================
-    class MCorrected : public  LoKi::Particles::PtFlight  
+    class GAUDI_API MCorrected : public  LoKi::Particles::PtFlight  
     {
     public:
       // ======================================================================
@@ -184,7 +184,7 @@ namespace LoKi
      *  @thanks Mike Williams
      */
     // ========================================================================
-    class PtFlightWithBestVertex 
+    class GAUDI_API PtFlightWithBestVertex 
       : public          LoKi::Particles::PtFlight 
       , public virtual  LoKi::AuxDesktopBase 
     {
@@ -222,7 +222,7 @@ namespace LoKi
      *  @thanks Mike Williams
      */
     // ========================================================================
-    class MCorrectedWithBestVertex : public PtFlightWithBestVertex 
+    class GAUDI_API MCorrectedWithBestVertex : public PtFlightWithBestVertex 
     {
     public: 
       // =====================================================================
@@ -343,7 +343,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES38_H
 // ============================================================================

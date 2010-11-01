@@ -32,6 +32,7 @@ namespace LHCb { class Track ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -49,11 +50,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasTracks
+    class GAUDI_API HasTracks
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
       , public LoKi::UniqueKeeper<LHCb::Track>
     {
     public:
+      // ======================================================================
       /// constructor from one track 
       HasTracks ( const LHCb::Track* track ) ;
       /// constructor from vector of tracks 
@@ -87,11 +89,16 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       HasTracks();
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Extract::Particle2Track  m_extract ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class HasTracksInTree
@@ -109,10 +116,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class HasTracksInTree
+    class GAUDI_API HasTracksInTree
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from one track 
       HasTracksInTree ( const LHCb::Track* track ) ;
       /// constructor from vector of tracks 
@@ -148,17 +156,23 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the defualt constructor is private 
       HasTracksInTree() ;
+      // ======================================================================
     private: 
+      // ======================================================================
       LoKi::Particles::HasTracks     m_cut     ;
+      // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES8_H
 // ============================================================================

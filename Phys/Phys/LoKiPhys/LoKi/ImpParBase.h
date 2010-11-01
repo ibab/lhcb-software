@@ -28,6 +28,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Vertices 
   {
     // ========================================================================
@@ -37,7 +38,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ImpParBase 
+    class GAUDI_API ImpParBase 
       : public LoKi::Vertices::ImpactParamTool 
       , public LoKi::Vertices::VertexHolder    
     {

@@ -56,7 +56,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-02-21
      */
-    class PolarizationAngle
+    class GAUDI_API PolarizationAngle
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -180,7 +180,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-02-21
      */
-    class SinChi : public PolarizationAngle 
+    class GAUDI_API SinChi : public PolarizationAngle 
     {    
     public:
       // ======================================================================
@@ -292,7 +292,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-02-21
      */
-    class CosChi : public SinChi
+    class GAUDI_API CosChi : public SinChi
     {    
     public:
       // ======================================================================
@@ -355,7 +355,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-02-21
      */
-    class AngleChi : public CosChi
+    class GAUDI_API AngleChi : public CosChi
     {    
     public:
       // ======================================================================
@@ -434,7 +434,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class CosThetaTr : public AngleChi
+    class GAUDI_API CosThetaTr : public AngleChi
     {    
     public:
       // ======================================================================
@@ -522,7 +522,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class SinPhiTr : public CosThetaTr
+    class GAUDI_API SinPhiTr : public CosThetaTr
     {    
     public:
       // ======================================================================
@@ -587,7 +587,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class CosPhiTr : public SinPhiTr
+    class GAUDI_API CosPhiTr : public SinPhiTr
     {    
     public:
       // ======================================================================
@@ -652,7 +652,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-06-02
      */
-    class AnglePhiTr : public CosPhiTr
+    class GAUDI_API AnglePhiTr : public CosPhiTr
     {    
     public:
       // ======================================================================
@@ -968,7 +968,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES33_H
 // ============================================================================

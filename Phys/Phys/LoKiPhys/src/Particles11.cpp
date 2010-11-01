@@ -45,26 +45,10 @@ LoKi::Particles::IsAParticle::IsAParticle
 //  constructor from container of particles
 // ============================================================================
 LoKi::Particles::IsAParticle::IsAParticle 
-( const LHCb::Particles*                p ) 
+( const LHCb::Particle::Container*                p ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , LoKi::UniqueKeeper<LHCb::Particle> ()
 { if ( 0 != p ) { addObjects( p->begin() , p->end() ) ; } }
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticle::IsAParticle 
-( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticle::IsAParticle 
-( const LHCb::Particle::Vector&         p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
 // ============================================================================
 //  constructor from container of particles
 // ============================================================================
@@ -82,36 +66,10 @@ LoKi::Particles::IsAParticle::IsAParticle
   , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
 {} 
 // ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticle::IsAParticle 
-( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-    , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
-{} 
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticle::IsAParticle 
-( const LoKi::UniqueKeeper<LHCb::Particle>& p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
-{} 
-// ============================================================================
-//  copy constructor
-// ============================================================================
-LoKi::Particles::IsAParticle::IsAParticle 
-( const LoKi::Particles::IsAParticle& right ) 
-  : LoKi::AuxFunBase                      ( right )
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right ) 
-  , LoKi::UniqueKeeper<LHCb::Particle>    ( right ) 
-{} 
-// ============================================================================
 //  MANDATORY: the only one essential method
 // ============================================================================
-LoKi::Particles::IsAParticle::result_type 
-LoKi::Particles::IsAParticle::operator() 
-  ( LoKi::Particles::IsAParticle::argument p ) const 
+bool LoKi::Particles::IsAParticle::inList
+( LoKi::Particles::IsAParticle::argument p ) const 
 {
   if ( 0 == p ) 
   {
@@ -131,81 +89,60 @@ std::ostream&
 LoKi::Particles::IsAParticle::fillStream
 ( std::ostream& stream ) const
 { return stream << "IS" ; }
+
 // ============================================================================
 //  constructor from one particle 
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree 
 ( const LHCb::Particle*                 p )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
+  : LoKi::Particles::IsAParticle ( p ) 
 {}  
 // ============================================================================
 //  constructor from container of particles
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const LHCb::Particles*                p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
-{}
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
-{}  
-// ============================================================================
-//  constructor from vector of particles 
-// ============================================================================
-LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const LHCb::Particle::Vector&         p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
+( const LHCb::Particle::Container*   p ) 
+  : LoKi::Particles::IsAParticle ( p ) 
 {}  
 // ============================================================================
 //  constructor from vector of particles 
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LHCb::Particle::ConstVector&    p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
+  : LoKi::Particles::IsAParticle ( p ) 
 {}  
 // ============================================================================
 //  constructor from container of particle 
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 ( const LoKi::PhysTypes::Range&         p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
-{}  
-// ============================================================================
-//  constructor from container of particle 
-// ============================================================================
-LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
-{}  
-// ============================================================================
-//  constructor from container of particle 
-// ============================================================================
-LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const LoKi::UniqueKeeper<LHCb::Particle>& p )       
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-  , m_cut ( p )
-{}  
-// ============================================================================
-//  copy constructor 
-// ============================================================================
-LoKi::Particles::IsAParticleInTree::IsAParticleInTree
-( const LoKi::Particles::IsAParticleInTree&  right ) 
-  : LoKi::AuxFunBase                       ( right )
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
-  , m_cut                                  ( right.m_cut  )
+  : LoKi::Particles::IsAParticle ( p ) 
 {}  
 // ============================================================================
 //  MANDATORY: the only one essential method
+// ============================================================================
+namespace 
+{
+  struct InList : public std::unary_function<const LHCb::Particle*,bool>
+  {
+  public:
+    // ========================================================================
+    InList ( const LoKi::Particles::IsAParticle& cut ) : m_cut ( cut ) {}    
+    // ========================================================================
+    bool operator() ( const LHCb::Particle* p ) const 
+    { return m_cut.inList ( p ) ; }
+    // =======================================================================
+  private: 
+    // =======================================================================
+    InList () ;
+    // =======================================================================
+  private: 
+    // =======================================================================
+    const LoKi::Particles::IsAParticle& m_cut ;
+    // =======================================================================
+  };
+  // ==========================================================================
+}
 // ============================================================================
 LoKi::Particles::IsAParticleInTree::result_type 
 LoKi::Particles::IsAParticleInTree::operator() 
@@ -221,87 +158,44 @@ LoKi::Particles::IsAParticleInTree::operator()
     Warning  ( " Empty list of particles is specified! return 'false' " );
     return false ;
   }
-  // scan the tree 
-  return LoKi::PhysAlgs::found ( p , m_cut ) ;
+  //
+  return LoKi::PhysAlgs::found ( p , InList ( *this ) ) ;
 } 
 // ============================================================================
 std::ostream&
 LoKi::Particles::IsAParticleInTree::fillStream
 ( std::ostream& stream ) const
 { return stream << "ISINTREE" ; }
+
+
 // ============================================================================
 //  constructor from one particle 
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LHCb::Particle*                 p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
-{} 
+  : LoKi::Particles::IsAParticleInTree ( p ) 
+{}
 // ============================================================================
 //  constructor from container of particles
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
-( const LHCb::Particles*                p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ()
-{ if ( 0 != p ) { addObjects( p->begin() , p->end() ) ; } }
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
-( const SmartRefVector<LHCb::Particle>& p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
-( const LHCb::Particle::Vector&         p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
+( const LHCb::Particle::Container*      p ) 
+  : LoKi::Particles::IsAParticleInTree ( p ) 
+{}
 // ============================================================================
 //  constructor from container of particles
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
 ( const LHCb::Particle::ConstVector&    p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
+  : LoKi::Particles::IsAParticleInTree ( p ) 
+{}
 // ============================================================================
 //  constructor from container of particles
 // ============================================================================
 LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
 ( const LoKi::PhysTypes::Range&         p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p.begin() , p.end() ) 
-{} 
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
-( const LoKi::Keeper<LHCb::Particle>&   p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-    , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
-{} 
-// ============================================================================
-//  constructor from container of particles
-// ============================================================================
-LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree
-( const LoKi::UniqueKeeper<LHCb::Particle>& p ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , LoKi::UniqueKeeper<LHCb::Particle> ( p ) 
-{} 
-// ============================================================================
-//  copy constructor
-// ============================================================================
-LoKi::Particles::IsAParticleFromTree::IsAParticleFromTree 
-( const LoKi::Particles::IsAParticleFromTree& right ) 
-  : LoKi::AuxFunBase                      ( right )
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate( right ) 
-  , LoKi::UniqueKeeper<LHCb::Particle>    ( right ) 
-{} 
+  : LoKi::Particles::IsAParticleInTree ( p ) 
+{}
 // ============================================================================
 //  MANDATORY: the only one essential method
 // ============================================================================

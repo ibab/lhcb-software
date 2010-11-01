@@ -28,6 +28,7 @@ namespace LHCb { class RecVertex ; }
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -48,35 +49,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksFromPV
+    class GAUDI_API HasTracksFromPV
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
       // ======================================================================
       /// constructor from one primary vertex 
-      HasTracksFromPV ( const LHCb::RecVertex*               pv  ) ;
+      HasTracksFromPV ( const LHCb::RecVertex*                pv  ) ;
       /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::RecVertex::Vector&       pvs ) ;
-      /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::RecVertex::ConstVector&  pvs ) ;
+      HasTracksFromPV ( const LHCb::RecVertex::ConstVector&   pvs ) ;
       /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LHCb::RecVertices*             pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::Keeper<LHCb::RecVertex>& pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::RecVertex>& pvs ) ;
+      HasTracksFromPV ( const LHCb::RecVertex::Container*     pvs ) ;
       /// constructor from one vertex 
       HasTracksFromPV ( const LHCb::VertexBase*               pv  ) ;
-      /// constructor from vector of primary vertices 
-      HasTracksFromPV ( const LHCb::VertexBase::Vector&       pvs ) ;
       /// constructor from vector of primary vertices 
       HasTracksFromPV ( const LHCb::VertexBase::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksFromPV ( const LoKi::PhysTypes::VRange&        pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::Keeper<LHCb::VertexBase>& pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -88,8 +77,26 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut () 
       { addVertices ( first , last ) ; }
-      /// copy constructor 
-      HasTracksFromPV ( const HasTracksFromPV& right ) ;
+      /** templated constructor from sequence of vertices 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class VERTEX>
+      HasTracksFromPV 
+      ( const LoKi::Keeper<VERTEX>& keeper ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut () 
+      { addVertices ( keeper.begin() , keeper.end() ) ; }
+      /** templated constructor from sequence of vertices 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class VERTEX>
+      HasTracksFromPV 
+      ( const LoKi::UniqueKeeper<VERTEX>& keeper ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut () 
+      { addVertices ( keeper.begin() , keeper.end() ) ; }
       /// MANDATORY: virtual destructor
       virtual ~HasTracksFromPV() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -99,7 +106,9 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** add the vertex 
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
@@ -160,7 +169,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class HasTracksInTreeFromPV 
+    class GAUDI_API HasTracksInTreeFromPV 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -170,37 +179,19 @@ namespace LoKi
       ( const LHCb::RecVertex*               pv  ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::RecVertex::Vector&       pvs ) ;
-      /// constructor from vector of primary vertices 
-      HasTracksInTreeFromPV 
       ( const LHCb::RecVertex::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::RecVertices*             pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksInTreeFromPV 
-      ( const LoKi::Keeper<LHCb::RecVertex>& pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksInTreeFromPV 
-      ( const LoKi::UniqueKeeper<LHCb::RecVertex>& pvs ) ;
+      ( const LHCb::RecVertex::Container*    pvs ) ;
       /// constructor from one vertex 
       HasTracksInTreeFromPV 
       ( const LHCb::VertexBase*                   pv  ) ;
-      /// constructor from vector of primary vertices 
-      HasTracksInTreeFromPV 
-      ( const LHCb::VertexBase::Vector&           pvs ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
       ( const LHCb::VertexBase::ConstVector&      pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
       ( const LoKi::PhysTypes::VRange&        pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksInTreeFromPV 
-      ( const LoKi::Keeper<LHCb::VertexBase>&     pvs ) ;
-      /// constructor from container of primary vertices 
-      HasTracksInTreeFromPV 
-      ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -212,8 +203,26 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
         , m_cut ( first , last )
       {}
-      /// copy constructor 
-      HasTracksInTreeFromPV ( const HasTracksInTreeFromPV& right ) ;
+      /** templated constructor from sequence of vertices 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class VERTEX>
+      HasTracksInTreeFromPV 
+      ( const LoKi::Keeper<VERTEX>& keeper ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut ( keeper ) 
+      {}
+      /** templated constructor from sequence of vertices 
+       *  @param first 'begin'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
+       */
+      template <class VERTEX>
+      HasTracksInTreeFromPV 
+      ( const LoKi::UniqueKeeper<VERTEX>& keeper ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , m_cut ( keeper ) 
+      {}
       /// MANDATORY: virtual destructor
       virtual ~HasTracksInTreeFromPV() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -264,8 +273,9 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================    
-  } // end of namespace Particles
-} // end of namespace LoKi
+  } //                                               end of namespace Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

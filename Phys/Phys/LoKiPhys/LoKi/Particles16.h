@@ -26,6 +26,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Particles 
   {
     // ========================================================================
@@ -38,7 +39,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyave@physics.syr.edu
      *  @date   2002-07-15
      */
-    class CosineDirectionAngle 
+    class GAUDI_API CosineDirectionAngle 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::Vertices::VertexHolder
     {
@@ -73,8 +74,6 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-
-    // ========================================================================
     /** @class TrgPointingScore
      *  Evaluator of the custom 'pointing angle' sometimes used in
      *  trigger applications:
@@ -94,7 +93,7 @@ namespace LoKi
      *  @author patrick spradlin
      *  @date   10 March 2009
      */
-    class TrgPointingScore 
+    class GAUDI_API TrgPointingScore 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
       , public LoKi::Vertices::VertexHolder
     {
@@ -131,10 +130,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES16_H
 // ============================================================================

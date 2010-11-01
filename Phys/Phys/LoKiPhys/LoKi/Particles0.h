@@ -52,7 +52,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class HasKey
+    class GAUDI_API HasKey
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -77,10 +77,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class  Key 
+    class  GAUDI_API Key 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor from "bad" value, to be returned 
        *  in the case of invalid argument
        *  @param bad value to be returned for invalid argument 
@@ -130,7 +131,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-23
      */
-    class InTES
+    class GAUDI_API InTES
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -180,7 +181,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier
+    class GAUDI_API Identifier
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {  
     public:
@@ -203,7 +204,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier
+    class GAUDI_API AbsIdentifier
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {  
     public:
@@ -227,10 +228,11 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class Charge 
+    class GAUDI_API Charge 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Charge* clone() const ;
       /// the only one essential method 
@@ -253,9 +255,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2006-05-22
      */
-    class SumCharge : public Charge 
+    class GAUDI_API SumCharge : public Charge 
     {  
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual SumCharge* clone() const ;
       /// the only one essential method 
@@ -273,7 +276,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum 
+    class GAUDI_API Momentum 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -292,7 +295,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Momentum2 
+    class GAUDI_API Momentum2 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
@@ -312,10 +315,11 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Energy 
+    class GAUDI_API Energy 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Energy* clone() const ;
       /// the only one essential method 
@@ -331,7 +335,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class TransverseMomentum 
+    class GAUDI_API TransverseMomentum 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -351,7 +355,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumX 
+    class GAUDI_API MomentumX 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -371,7 +375,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumY
+    class GAUDI_API MomentumY
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
@@ -391,7 +395,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MomentumZ 
+    class GAUDI_API MomentumZ 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
@@ -415,7 +419,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity 
+    class GAUDI_API PseudoRapidity 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -456,7 +460,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Rapidity : public PseudoRapidity 
+    class GAUDI_API Rapidity : public PseudoRapidity 
     {    
     public:
       // ======================================================================
@@ -479,7 +483,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Rapidity0 : public Rapidity 
+    class GAUDI_API Rapidity0 : public Rapidity 
     {    
     public:
       // ======================================================================
@@ -498,7 +502,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi 
+    class GAUDI_API Phi 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -536,7 +540,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Theta 
+    class GAUDI_API Theta 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -556,7 +560,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Mass 
+    class GAUDI_API Mass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -579,7 +583,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MeasuredMass 
+    class GAUDI_API MeasuredMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
@@ -610,10 +614,11 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class InvariantMass 
+    class GAUDI_API InvariantMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:      
+      // ======================================================================
       /// type for container of indices 
       typedef std::vector<size_t> Indices   ;
       /** constructor with index of daughter particle 
@@ -664,7 +669,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMass : public LoKi::Particles::Mass 
+    class GAUDI_API DeltaMass : public LoKi::Particles::Mass 
     {      
     public:
       // ======================================================================
@@ -726,7 +731,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class AbsDeltaMass : public DeltaMass 
+    class GAUDI_API AbsDeltaMass : public DeltaMass 
     {      
     public:
       // ======================================================================      
@@ -781,9 +786,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-09-09
      */
-    class DeltaMeasuredMass : public DeltaMass 
+    class GAUDI_API DeltaMeasuredMass : public DeltaMass 
     {      
     public:
+      // ======================================================================
       /// constructor  
       DeltaMeasuredMass ( const double mass ) 
         : DeltaMass ( mass ) {}
@@ -836,7 +842,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-08-04
      */
-    class AbsDeltaMeasuredMass : public DeltaMeasuredMass 
+    class GAUDI_API AbsDeltaMeasuredMass : public DeltaMeasuredMass 
     {
     public :
       // ======================================================================
@@ -892,7 +898,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2003-01-17
      */
-    class DeltaMeasuredMassChi2 : public DeltaMeasuredMass 
+    class GAUDI_API DeltaMeasuredMassChi2 : public DeltaMeasuredMass 
     {      
     public:
       // ======================================================================
@@ -947,12 +953,12 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyav@nikhef.nl
      *  @date   2008-09-23
      */
-    class DeltaMassChi2 : public DeltaMass 
+    class GAUDI_API DeltaMassChi2 : public DeltaMass 
     {      
     public:
+      // ======================================================================
       /// constructor  
-      DeltaMassChi2 ( const double mass ) 
-        : DeltaMass ( mass ) {}
+      DeltaMassChi2 ( const double mass ) : DeltaMass ( mass ) {}
       /** constructor 
        *  @param pp particle property 
        */
@@ -1003,10 +1009,11 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class ConfidenceLevel 
+    class GAUDI_API ConfidenceLevel 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual ConfidenceLevel* clone() const ;
       /// the only one essential method 
@@ -1028,7 +1035,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class Weight
+    class GAUDI_API Weight
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1054,7 +1061,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class IsBasic 
+    class GAUDI_API IsBasic 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -1075,12 +1082,11 @@ namespace LoKi
      *  It relies on the method LHCb::Particle::daughters().size()
      *
      *  @see LHCb::Particle
-     *  @see LoKi::Cuts::WEIGHT
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class NumberOfDaughters 
+    class GAUDI_API NumberOfDaughters 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1106,7 +1112,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasProto 
+    class GAUDI_API HasProto 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -1132,7 +1138,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    class HasVertex 
+    class GAUDI_API HasVertex 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -1158,7 +1164,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-02-11
      */
-    class HasTrack
+    class GAUDI_API HasTrack
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
@@ -1184,7 +1190,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-01
      */
-    class TransverseMomentumRel 
+    class GAUDI_API TransverseMomentumRel 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1297,7 +1303,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-21
      */
-    class TransverseMomentumQ 
+    class GAUDI_API TransverseMomentumQ 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1328,7 +1334,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-23
      */
-    class NominalMass 
+    class GAUDI_API NominalMass 
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
@@ -1345,10 +1351,11 @@ namespace LoKi
       // ======================================================================
     };    
     // ========================================================================
-  } // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLES0_H
 // ============================================================================
