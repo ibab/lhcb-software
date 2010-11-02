@@ -13,7 +13,7 @@ MessageSvc.LoggerOnly = 1;
 
 SaverSvc.partname=@OnlineEnv.PartitionName;
 SaverSvc.taskname={"GauchoJob"};
-SaverSvc.refreshTime=20;
+SaverSvc.refreshTime=60;
 SaverSvc.dimclientdns="MONA08";
 SaverSvc.savedir="/hist/Savesets";
 

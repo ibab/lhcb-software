@@ -1,7 +1,7 @@
 #!/bin/bash
 #need to cd incase script is launched outside the taskmanager
 #get online version
-
+ulimit -c unlimited
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
 if test -n "$2" ; then 

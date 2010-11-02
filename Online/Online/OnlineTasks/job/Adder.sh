@@ -36,6 +36,8 @@ fi
 
 export DIM_DNS_CLIENT_NODE=${DIM_DNS_NODE}.lbdaq.cern.ch
 
+#export ONLINEVERSION=/home/online/ONLINE/Online_v4r43/Online/OnlineTasks/job
+
 # if the parent > 6 chars its run inside a node
 if test -z "${PARENT:6}" ; then
    export DIM_DNS_NODE=hlt01

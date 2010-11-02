@@ -1,0 +1,16 @@
+#include "$OPTIONS"
+ApplicationMgr.ExtSvc               += { "LHCb::SaverSvc/SaverSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+
+SaverSvc.OutputLevel                 = 3;
+MessageSvc.OutputLevel               = 3;
+//MessageSvc.LoggerOnly                = true;
+SaverSvc.partname                    = @OnlineEnv.PartitionName;
+SaverSvc.taskname                  = {"Brunel"};
+SaverSvc.refreshTime                 = 60;
+SaverSvc.dimclientdns                = "mona09";
+SaverSvc.savedir                     = "/hist/Savesets";

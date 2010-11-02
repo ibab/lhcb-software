@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /group/rich/sw/cmtuser/Panoptes_v2r7/Rich/Panoptes/cmt
+cd /group/rich/sw/cmtuser/Panoptes_v2r13/Rich/Panoptes/cmt
 . ./setup.vars_x86_64-slc5-gcc43-opt
 
 #
@@ -10,6 +10,9 @@ cd /group/rich/sw/cmtuser/Panoptes_v2r7/Rich/Panoptes/cmt
 export UTGID
 export LOGFIFO=/tmp/logGaudi.fifo
 export PARTITION="LHCb"
+
+export TNS_ADMIN=/sw/oracle/10.2.0.4/linux64/network/admin
+echo "TNSNAMES  $TNS_ADMIN"
 
 echo "Panoptes is taken from $PANOPTESROOT/$CMTCONFIG using $GAUDIONLINEROOT "
 echo "LOGFIFO is taken from $LOGFIFO"
