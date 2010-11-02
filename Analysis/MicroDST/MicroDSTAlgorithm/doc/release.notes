@@ -4,6 +4,11 @@
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
 
+! 2010-11-02 - Juan Palacios
+ - CopyParticle2LHCbIDs
+  . Add property FullDecayTree (default false). If set to true, scan full
+   decay tree and store LHCbIDs.
+
 ! 2010-10-27 - Tomasz Skwarnicki
  - extend CopyParticle2TisTosDecision to include L0 Tis/Tos if available.
 
