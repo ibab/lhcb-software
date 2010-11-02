@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v6r6 2010-11-02 ======================
+
 ! 2010-10-25 - Juan Palacios
  - src/AdaptivePVReFitter.cpp
   . Use const, pass by const reference wherever possible.
