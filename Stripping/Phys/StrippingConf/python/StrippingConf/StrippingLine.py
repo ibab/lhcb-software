@@ -158,9 +158,10 @@ class bindMembers (object) :
         self._handleSelectionType( line, sel )
 
     def _handle_EventSelection(self, line, alg) :
-        from PhysSelPython.Wrappers import MergedSelection
-        sel = MergedSelection(line, RequiredSelections = [alg])        
-        self._handleSelectionType( line, sel )
+        if alg.outoutLocation() != '' :
+            from PhysSelPython.Wrappers import MergedSelection
+            alg = MergedSelection(line, RequiredSelections = [alg])        
+        self._handleSelectionType( line, alg )
 
     def _handle_MergedSelection(self, line, alg) :
         sel = alg.clone(line)

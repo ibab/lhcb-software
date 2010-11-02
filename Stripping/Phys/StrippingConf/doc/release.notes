@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-11-02 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . Only treat EventSelection specially if non-empty outputLocation.
+
 ! 2010-10-16 - Anton Poluektov 
  - python/StrippingConf/StrippingStream.py 
 
