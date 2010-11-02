@@ -59,7 +59,7 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
         
     def combineCcbar(self):
         from Configurables import CombineParticles, LoKi__VoidFilter
-        from PhysSelPython.Wrappers import DataOnDemand, EventSelection, Selection, SelectionSequence
+        from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
         
         #---------------------------
         # Selections 
@@ -84,7 +84,7 @@ class StrippingCcbar2PpbarConf(LHCbConfigurableUser):
 
     def combineCcbarExclusive(self):
         from Configurables import CombineParticles, LoKi__VoidFilter
-        from PhysSelPython.Wrappers import DataOnDemand, EventSelection, Selection, SelectionSequence
+        from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
         
         #---------------------------
         # Selections 

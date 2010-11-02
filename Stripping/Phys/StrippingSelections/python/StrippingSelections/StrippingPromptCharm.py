@@ -182,7 +182,7 @@ __all__ = (
 # =============================================================================
 
 from PhysSelPython.Wrappers      import AutomaticData    , Selection
-from PhysSelPython.Wrappers      import EventSelection   , MergedSelection 
+from PhysSelPython.Wrappers      import MergedSelection 
 from Configurables               import CombineParticles , FilterDesktop  , LoKi__VoidFilter
 from StrippingConf.StrippingLine import StrippingLine
 

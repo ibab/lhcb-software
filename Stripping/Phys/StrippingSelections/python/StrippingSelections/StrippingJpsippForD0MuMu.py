@@ -39,7 +39,7 @@ class StrippingJpsippForD0MuMuConf(LHCbConfigurableUser):
 
     def combineJpsippForD0mumu(self):
         from Configurables import CombineParticles
-        from PhysSelPython.Wrappers import DataOnDemand, EventSelection, Selection, SelectionSequence
+        from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
         
         #---------------------------
         # for MUMU Selections 
