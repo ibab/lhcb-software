@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiFitters v3r2 2010-11-02 =====================
+
 ! 2010-10-24 - Vanya Belyaev
 
  - VertexFitter
@@ -34,7 +36,7 @@
         
  - cmt/requirements 
 
-    version increment to v3r1 
+    version increment to v3r2
 
 
 !========================== LoKiFitters v3r1 2010-09-29 =====================
