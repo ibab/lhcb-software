@@ -10,7 +10,7 @@ use  DaVinciKernel              v8r8p2   Phys    # Juan Palacios
 use  DaVinciMaps                v1r2     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v1r3     Phys    # Juan Palacios
+use  SelPy                      v1r4     Phys    # Juan Palacios
 use  PhysSelPython              v5r7     PhysSel # Juan Palacios
 
 #===================================================================
