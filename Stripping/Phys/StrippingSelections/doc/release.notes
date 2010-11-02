@@ -5,6 +5,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-02 - Sam Gregson
+ - Update to StrippingD2KS0h_KS02PiPi.py 
+		- Loosened D(s) meson IP chi2 cut to allow DfB contributions through
+    - Tightened some other cuts to compensate
+
 ! 2010-11-01 - Andrew Powell
  - Update to StrippingNoPIDDstarWithD02RSKPi.py 
 		- Added wrong mass (DCS Kpi, KK, pipi) vetos

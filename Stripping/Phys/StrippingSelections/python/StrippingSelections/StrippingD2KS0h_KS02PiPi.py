@@ -93,7 +93,7 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
 
         # Outline the KS0 daughter pion cuts
         #KS0_DaughterCut = "(MIPCHI2DV(PRIMARY) > 9) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2)"
-        KS0_DaughterCut = "(ADMASS('KS0')<30*MeV) & (MIPCHI2DV(PRIMARY) > 9) & (VFASPF(VCHI2/VDOF) < 10) & CHILDCUT((TRCHI2DOF < 4),1) & CHILDCUT((TRCHI2DOF < 4),2) &  CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2)"
+        KS0_DaughterCut = "(ADMASS('KS0')<20*MeV) & (MIPCHI2DV(PRIMARY) > 9) & (VFASPF(VCHI2/VDOF) < 10) & CHILDCUT((PT>0.2*GeV),1) & CHILDCUT((PT >0.2*GeV),2) & CHILDCUT((TRCHI2DOF < 4),1) & CHILDCUT((TRCHI2DOF < 4),2) &  CHILDCUT((MIPCHI2DV(PRIMARY)>100),1) & CHILDCUT((MIPCHI2DV(PRIMARY)>100),2)"
       
         KS0ForD2KS0h_KS02PiPi = FilterDesktop("StripKS0ForD2KS0h_KS02PiPi")
         #KS0ForD2KS0h_KS02PiPi.InputLocations = [ "StdLooseKsLL", "StdLooseKsDD"]
@@ -120,9 +120,9 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         #D_ComboCut = "(AM> 1380*MeV) & (AM < 2220*MeV) & (AMAXDOCA('') < 1.0*mm)" 
         #D_MotherCut = "(VFASPF(VCHI2/VDOF) < 20) & (MM> 1400*MeV) & (MM < 2200*MeV) & (MIPCHI2DV(PRIMARY) < 4)"
 
-        D_DaughterCut = { "pi+" : "(P > 3*GeV) & (PT > 0.5*GeV) & (TRCHI2DOF < 3)  & (MIPCHI2DV(PRIMARY) > 49)" }
-        D_ComboCut = "(AM> 1380*MeV) & (AM < 2120*MeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.6*mm)"
-        D_MotherCut = "(VFASPF(VCHI2/VDOF) < 10) & (MM> 1400*MeV) & (MM < 2100*MeV) & (MIPCHI2DV(PRIMARY) < 4)"
+        D_DaughterCut = { "pi+" : "(P > 5*GeV) & (PT > 0.5*GeV) & (TRCHI2DOF < 3)  & (MIPCHI2DV(PRIMARY) > 49)" }
+        D_ComboCut = "(AM> 1580*MeV) & (AM < 2090*MeV) & (AMAXDOCA('LoKi::DistanceCalculator') < 0.6*mm)"
+        D_MotherCut = "(VFASPF(VCHI2/VDOF) < 10) & (MM> 1600*MeV) & (MM < 2070*MeV) & (MIPCHI2DV(PRIMARY) < 50)"
 
 
         
