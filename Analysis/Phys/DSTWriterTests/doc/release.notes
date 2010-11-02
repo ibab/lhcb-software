@@ -4,6 +4,8 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! ========================== DstwriterTests v2r0 2010-11-02 ==================
+
 ! 2010-10-15 - Juan Palacios
  - Add module DSTWriterTests.default_args
   . Contains parser, an OptionParser with defaults for DST analysis scripts.
