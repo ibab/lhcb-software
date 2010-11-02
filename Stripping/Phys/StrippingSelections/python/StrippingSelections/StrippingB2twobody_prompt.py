@@ -405,19 +405,22 @@ def B2twobody_promptLine(
     B_prompt.DecayDescriptors = descriptors
     B_prompt.CombinationCut = B_prompt_combcut
     B_prompt.MotherCut = B_prompt_cut
-    BSel_prompt=Selection("B_prompt_SelFor"+moduleName, Algorithm = B_prompt, RequiredSelections = [InputSel_prompt] )
+   
     Bpresel= EventSelection(
         LoKi__VoidFilter("BpreselFor"+moduleName,
                          Code=" (CONTAINS('%s') > 1.5) " %  ( InputSel_prompt.outputLocation() + "/Particles" ) ),
         RequiredSelection=InputSel_prompt
     )
-# Define the GEC on the number of tracks, needed in order to control
-# the time for the combinatorics (especially once we add the 4-body D states)
-    B_prompt_StrippingNumTracksGEC = VoidFilter('B_prompt_StrippingNumTracksGEC'
-                                  , Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >>  (TrSIZE < %(MaxLongTracksInEvent)s ) "%locals() 
-                                  )
+
+    BSel_prompt=Selection("B_prompt_SelFor"+moduleName, Algorithm = B_prompt, RequiredSelections = [ Bpresel ] )
+    
+    # Define the GEC on the number of tracks, needed in order to control
+    # the time for the combinatorics (especially once we add the 4-body D states)
+    B_prompt_StrippingNumTracksGEC = VoidFilter( 'B_prompt_StrippingNumTracksGEC' )
+    B_prompt_StrippingNumTracksGEC.Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >>  (TrSIZE < %(MaxLongTracksInEvent)s ) "%locals() 
+                                   
     VertexFilterMin = LoKi__VoidFilter(  'VertexFilterMin', Code= "CONTAINS('Rec/Vertex/Primary')==1")
-#    VertexFilterMax = LoKi__VoidFilter(  'VertexFilterMax', Code= "CONTAINS('Rec/Vertex/Primary')<3")
-    line = StrippingLine("B2twobody_promptLine",   prescale = "%(Prescale_prompt)s  "%locals(), algos = [VertexFilterMin,  B_prompt_StrippingNumTracksGEC,Bpresel,BSel_prompt] )
+    #    VertexFilterMax = LoKi__VoidFilter(  'VertexFilterMax', Code= "CONTAINS('Rec/Vertex/Primary')<3")
+    line = StrippingLine("B2twobody_promptLine",   prescale = "%(Prescale_prompt)s  "%locals(), algos = [VertexFilterMin,  B_prompt_StrippingNumTracksGEC, BSel_prompt] )
 
     return [line]

@@ -376,20 +376,20 @@ def B2threebodyLine(
     #make a merge of the input selections
     AllRSel=[PiSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,DSSel,JpSel,PhSel,Pi0Sel,PhoSel]
     InputRSel= MergedSelection("RInputForB2threebody", RequiredSelections = AllRSel )
-    InputSel= MergedSelection("InputForB2threebody", RequiredSelections = [InputRSel,KSel,pSel] )
+    #  InputSel= MergedSelection("InputForB2threebody", RequiredSelections = [InputRSel,KSel,pSel] )
 
     #make a selection
     B=CombineParticles("BFor"+moduleName)
     B.DecayDescriptors = descriptors
     B.CombinationCut = Bcombcut
     B.MotherCut = Bcut
-    BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [InputSel] )
+    
     Bpresel= EventSelection(
         LoKi__VoidFilter("BpreselFor"+moduleName,
                          Code=" (CONTAINS('%s') > 2.5) " %  ( InputRSel.outputLocation() + "/Particles" ) ),
         RequiredSelection=InputRSel
     )
-
-    line = StrippingLine("B2threebodyLine",  algos = [Bpresel,BSel] )
+    BSel=Selection("BSelFor"+moduleName, Algorithm = B, RequiredSelections = [Bpresel, KSel, pSel] )
+    line = StrippingLine("B2threebodyLine",  algos = [BSel] )
 
     return [line]
