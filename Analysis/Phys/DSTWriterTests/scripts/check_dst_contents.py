@@ -81,10 +81,10 @@ if __name__ == '__main__' :
             message = loc.ljust(length) + str('Events: '+ str(nSelEvents[loc])+'. Objects: '+ str(nObjects[loc])).rjust(10) + '\n'
             outputFile.write(message)
             _printMessage += message
-            
+    outputFile.write("Analysed " + str(nEvents) + " events")
     if verbose :
         print '----------------------------------------------------------------------------------'
-        print "Analysed ", nEvents, " events"
+        print "Analysed", nEvents, "events"
         print _printMessage
         print '----------------------------------------------------------------------------------'
         print 'Wrote summary to', output
