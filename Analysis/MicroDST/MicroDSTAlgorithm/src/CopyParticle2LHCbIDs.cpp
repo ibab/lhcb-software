@@ -123,7 +123,7 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
   LHCb::Particle::Range::const_iterator iPartEnd = particles.end();
 
   for ( ; iPart != iPartEnd; ++iPart) {
-    storeLHCbIDs(*iPart);
+    storeLHCbIDs(*iPart, p2LHCbID);
 //     const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(*iPart);
 //     if (clone) {
 //       m_iTisTos->setOfflineInput(); 
@@ -161,12 +161,12 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 }
 //=============================================================================
 void CopyParticle2LHCbIDs::storeLHCbIDs(const LHCb::Particle* part,
-                                        DaVinci::Map::Particle2LHCbIDs* p2LHCbID) 
+                                        DaVinci::Map::Particle2LHCbIDs* p2LHCbID) const
 {
   const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(part);
   if (clone) {
     m_iTisTos->setOfflineInput(); 
-    m_iTisTos->addToOfflineInput(**iPart);
+    m_iTisTos->addToOfflineInput(*part);
     std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
     p2LHCbID->insert(clone, signalHits);
   }
