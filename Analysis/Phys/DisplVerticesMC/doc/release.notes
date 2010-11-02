@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! ======================= DisplVerticesMC v1r1 2010-11-02 ====================
+
 ! 2010-10-25 - Neal Gauvin
  - Propagate modifications done in DisplVertices
  - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
