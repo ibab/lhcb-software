@@ -1,8 +1,10 @@
 ! $Id: release.notes,v 1.99 2010-09-07 09:23:13 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
-! Responsible : Ulrich Kerzel, Juan Palacios
+! Responsible : Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v5r0 2010-11-02 =================
 
 ! 2010-11-02 - Juan Palacios
  - CopyParticle2LHCbIDs
