@@ -3,13 +3,28 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v4r12>2010-11-02 Analysis v4r12 </A></H1><PRE>
+
+ *** Based on Phys v9r12. Candidate for Stripping12 ***
+
+  * MicroDST developments
+   - Particle -> LHCbIDs maps for TisTosTobbing
+   - Particle -> TisTos decisions maps
+   - Possibility to copy (currently unused) Particle->PV one-to-one map.
+   - RootInTES for DSTWriters. Helpful form making MicroDSTs out of MicroDSTs.
+  * DSTWriterTests scripts are now more user-friendly (use --help to find out).
+  * DecayTreeTuple: 
+       New tuple using DecayTreefitter
+       TupleToolTISTOS aware of non-standard TriggerTisTos tools.
+       TupleToolPhotonInfo : add photon->ConfLevel() info
+
 </PRE><H1><A NAME=v4r11>2010-10-04 Analysis v4r11 </A></H1><PRE>
 
  *** Based on Phys v9r11. Version for Stripping11 ***
 
   * Important MicroDST changes:
    - New functionality for copying special containers.
-   - New finctionality for cloning Particle -> TisTos decisions map
+   - New functionality for cloning Particle -> TisTos decisions map
    - New functionality to clone RecVertex track weights vector.
    - Memory leak prevention in MicroDST relations tables cloning.
    - Fixes to invalid SmartRefs to Tracks in cloned RecVertices
