@@ -8,8 +8,21 @@
 
 class ITriggerTisTos;
 
+namespace DaVinci {
+  namespace Map {
+    class Particle2LHCbIDs;
+  }
+}
+
 /** @class CopyParticle2LHCbIDs CopyParticle2LHCbIDs.h
  *  
+ *  MicroDSTAlgorithm to take sets of LHCb::Particles, get an std::vector
+ *  containing all the LHCb::LHCbIDs that contribured to the particle, and
+ *  place a Particle->std::vector<LHCb::LHCbID> map on the TES.
+ *
+ *  Property <b>FullDecayTree</b> extends this to all the decay products of 
+ *  each input particle. The maps are places in a TES location obtained by
+ *  replacing "Particles" in each <b>InputLocations</b> "Particle2LHCbIDMap".
  *
  *  @author Juan Palacios
  *  @date   2010-08-18
@@ -29,9 +42,17 @@ private:
 
   void executeLocation(const std::string& particleLocation);
 
+  void storeLHCbIDs(const LHCb::Particle* part,
+                    DaVinci::Map::Particle2LHCbIDs* p2LHCbID) const;
+
 private:
 
+  bool m_fullTree;
+
   ITriggerTisTos* m_iTisTos;
+
+
+  
 
 };
 #endif // COPYPARTICLE2LHCBIDS_H

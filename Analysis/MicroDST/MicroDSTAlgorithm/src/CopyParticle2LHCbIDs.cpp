@@ -29,8 +29,12 @@ DECLARE_ALGORITHM_FACTORY( CopyParticle2LHCbIDs );
 //=============================================================================
 CopyParticle2LHCbIDs::CopyParticle2LHCbIDs( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : MicroDSTAlgorithm ( name , pSvcLocator )
+  : MicroDSTAlgorithm ( name , pSvcLocator ),
+    m_fullTree(false),
+    m_iTisTos(0)
 {
+
+  declareProperty("FullDecayTree", m_fullTree);
 
 }
 //=============================================================================
@@ -119,35 +123,64 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
   LHCb::Particle::Range::const_iterator iPartEnd = particles.end();
 
   for ( ; iPart != iPartEnd; ++iPart) {
-    const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(*iPart);
-    if (clone) {
-      m_iTisTos->setOfflineInput(); 
-      m_iTisTos->addToOfflineInput(**iPart);
-      std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
-      p2LHCbID->insert(clone, signalHits);
-    }
+    storeLHCbIDs(*iPart);
+//     const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(*iPart);
+//     if (clone) {
+//       m_iTisTos->setOfflineInput(); 
+//       m_iTisTos->addToOfflineInput(**iPart);
+//       std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
+//       p2LHCbID->insert(clone, signalHits);
+//     }
   }
 
   // test that we find the stuff.
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    
   
-  DaVinci::Map::Particle2LHCbIDs* test = get<DaVinci::Map::Particle2LHCbIDs>(outputLocation);
-  if (test) {
-    debug() << "Test passed, found P2LHCbID map with " 
-            << test->size() <<" entries!" << endmsg;
-    if (!test->empty()) {
-      for (DaVinci::Map::Particle2LHCbIDs::const_iterator iMap = test->begin();
-           iMap!=test->end();
-           ++iMap) {
-        debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
+    DaVinci::Map::Particle2LHCbIDs* test = get<DaVinci::Map::Particle2LHCbIDs>(outputLocation);
+    if (test) {
+      debug() << "Test passed, found P2LHCbID map with " 
+              << test->size() <<" entries!" << endmsg;
+      if (!test->empty()) {
+        for (DaVinci::Map::Particle2LHCbIDs::const_iterator iMap = test->begin();
+             iMap!=test->end();
+             ++iMap) {
+          debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
+        }
       }
+    
+    }
+
+    else {
+      error() << "Test failed, found no P2LHCbID map" << endmsg;
+    }
+
+  }  
+  
+}
+//=============================================================================
+void CopyParticle2LHCbIDs::storeLHCbIDs(const LHCb::Particle* part,
+                                        DaVinci::Map::Particle2LHCbIDs* p2LHCbID) 
+{
+  const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(part);
+  if (clone) {
+    m_iTisTos->setOfflineInput(); 
+    m_iTisTos->addToOfflineInput(**iPart);
+    std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
+    p2LHCbID->insert(clone, signalHits);
+  }
+
+  if (m_fullTree) {
+    const SmartRefVector<LHCb::Particle>& daughters = part->daughters();
+    if (daughters.empty()) return;
+    SmartRefVector<LHCb::Particle>::const_iterator iDau = daughters.begin();
+    SmartRefVector<LHCb::Particle>::const_iterator iDauEnd = daughters.end();
+    for (; iDau != iDauEnd; ++iDau) {
+      storeLHCbIDs(*iDau, p2LHCbID);
     }
     
   }
-
-  else {
-    error() << "Test failed, found no P2LHCbID map" << endmsg;
-  }
-  
   
 }
 //=============================================================================
