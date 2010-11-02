@@ -6,6 +6,8 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+!====================== MicroDSTBase v3r0 2010-11-02 =========================
+
 ! 2010-10-07 - Juan Palacios
  - Changes to fix clashes between MicroDST outputLocations and RootInTES.
    Crucial for making MicroDSTs out of MicroDSTs.
