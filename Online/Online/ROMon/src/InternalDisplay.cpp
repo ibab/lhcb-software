@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.6 2010-10-19 15:36:26 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.7 2010-11-02 10:23:17 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.6 2010-10-19 15:36:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.7 2010-11-02 10:23:17 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -162,6 +162,10 @@ void InternalDisplay::handle(const Event& ev)    {
       if ( parent() ) parent()->set_cursor(this);
       if ( pb ) ::scrc_cursor_on(pb);
       delete [] ptr;
+      break;
+    }
+    case CMD_EXCLUDE: {
+      if ( ev.data ) delete ((set<string>*)ev.data);
       break;
     }
     default:
