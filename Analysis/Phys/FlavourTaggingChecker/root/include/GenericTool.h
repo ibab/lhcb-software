@@ -77,8 +77,8 @@ public:
       /* 	  && a->PIDm() > m_PIDm_cut ) return false; */
       /* if( a->inAccHcal() && a->PIDe() > m_PIDe_cut ) return false;  */
       /* if( pidpass ) return true; */
-     if( pidpass ) if( a->absID()==211 ) return true;
-
+      //if( pidpass ) if( a->absID()==211 ) return true;
+     if( pidpass ) return true;
     }
     return false;
   }
