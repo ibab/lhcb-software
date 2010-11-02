@@ -3,6 +3,54 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r12>2010-11-02 Phys v9r12 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r12                                  #
+###############################################################################
+
+- Based on LHCb v31r6p1 and Gaudi v21r11. Candidate for stripping12.
+
+ * DaVinciTools:
+     PhysDesktop bug fix: Particle->PV relations calculated for input
+     particles that had no previous relation were not making it to DST.
+ * LoKiFitters: 
+     MeasuredMass, MeasuredMassErr from 4-momenta of daughters.
+     Add special treatment of converted photons.
+ * LoKiPhys: 
+     Add "corrected-mass" family of functors. 
+	   Add projected distance and path distance family of functors. 
+     Introduce concept of stable particle in decay descriptors.
+ * LoKiProtoParticles:
+     Add new symbol PP_NUM
+ * Particlemaker:
+     PhotonMaker : convert new photonID into confLevel
+ * TisTosTobbing
+     Add UseParticle2LHCbIDsMap property to TriggerSelectionTisTos. Needed for
+     running TisTos on MicroDST with Particle->LHCbIDs maps.
+     Add TriggerSelectionTisTosSummary,TriggerTisTosSummary
+     Migrate L0DecReportsMaker & L0SelReportsMaker from Hlt/HltRawData.
+     Introduce "AllowIntermediateSelections" property (default false) to 
+     exclude fake Decisions in HltSelReport
+ * PhysSelPython
+     New module PhysSelPython.Utils. Contains classes to transform 
+     selection-like objects into selections with an output location completely 
+     bound to a new name. Needed for stripping, where the stripping line is 
+     created from a selection
+     object.
+     Added modules PhysSelPython.SaneConfigurables and PhysSelPython.__sanity__
+     with code necessary to create safe Configurables and replace them for 
+     their unsafe counterparts in the Configurables module. Replaces or 
+     modifies most configurables used in typical physics analysis and/or
+     stripping. Two distinct cases:
+     1) Replace all configurables of interest in Configurables module:
+              from PhysSelPython import __sanity__
+              from Configurables import X # X is safe version
+     2) Create configurable module SaneConfigurables with safe versions of
+        configurables of interest
+              from PhysSelPython import SaneConfigurables
+              from SaneConfigurables import X # X is safe version of Configurables.X
+
 </PRE><H1><A NAME=v9r11>2010-09-29 Phys v9r11 </A></H1><PRE>
 
 ###############################################################################

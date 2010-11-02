@@ -1,6 +1,6 @@
 #$Id: requirements,v 1.243 2010-08-27 13:49:59 jpalac Exp $
 package PhysSys
-version v9r11
+version v9r12
 
 branches doc cmt
 
@@ -11,16 +11,16 @@ use  DaVinciMaps                v1r2     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
 use  SelPy                      v1r3     Phys    # Juan Palacios
-use  PhysSelPython              v5r6     PhysSel # Juan Palacios
+use  PhysSelPython              v5r7     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r5     Phys    # Chris Jones
-use  DaVinciTools       	v21r6    Phys    # Juan Palacios
+use  DaVinciTools       	v21r6p1  Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p2   Phys    # Juan Palacios
-use  ParticleMaker      	v5r8 	 Phys    # Chris Jones
-use  VertexFit			v6r5     Phys    # Yuehong Xie
-use  LoKiFitters                v3r1     Phys    # Vanya Belyaev
+use  ParticleMaker      	v5r9 	 Phys    # Chris Jones
+use  VertexFit			v6r6     Phys    # Yuehong Xie
+use  LoKiFitters                v3r2     Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r10p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 
@@ -31,12 +31,12 @@ use LoKiAlgo                    v9r2     Phys    # Vanya Belyaev
 use LoKiAlgoMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
 use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
-use LoKiPhys                    v9r4     Phys    # Vanya Belyaev
+use LoKiPhys                    v9r5     Phys    # Vanya Belyaev
 use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
-use LoKiProtoParticles          v1r0     Phys    # Vanya Belyaev
+use LoKiProtoParticles          v1r1     Phys    # Vanya Belyaev
 
 #===================================================================
-use TisTosTobbing		v6r0	 Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v6r1	 Phys	 # Tomasz Skwarnicki
 
 # Declare this as a container package
 apply_pattern container_package
