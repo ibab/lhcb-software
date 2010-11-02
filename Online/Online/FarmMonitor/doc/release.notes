@@ -4,6 +4,9 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2010-11-02 - Olivier Callot
+ - Add a boost header file for new LCG version
+
 ! 2010-10-19 - Olivier Callot
  - Compiles now under Windows.
 

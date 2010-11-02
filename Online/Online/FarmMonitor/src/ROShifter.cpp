@@ -1,4 +1,4 @@
-// $Id: ROShifter.cpp,v 1.1 2010-10-18 06:25:08 ocallot Exp $
+// $Id: ROShifter.cpp,v 1.2 2010-11-02 13:52:04 ocallot Exp $
 // Include files
 
 // local
@@ -13,6 +13,7 @@
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/regex.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ROShifter
