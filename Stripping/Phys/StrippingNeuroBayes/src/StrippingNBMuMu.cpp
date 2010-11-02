@@ -91,15 +91,14 @@ StatusCode StrippingNBMuMu::initialize() {
   std::string fullPath;
 
   // Expertise are in PARAM group of packages
-  const std::string paramEnv = "STRIPPINGNEUROBAYESPARAMROOT";
+  const std::string paramEnv = "STRIPPINGNEUROBAYESROOT";
   if ( getenv(paramEnv.c_str()) ) {
     debug() << "found environment for Expertise " << paramEnv << endmsg;
     const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
-                                    "/data/" + m_netVersion + "/" );
+                                    "/expertise/" + m_netVersion + "/" );
     fullPath = paramRoot+m_ExpertiseName;
   } else {
-    warning() << "$"+paramEnv+" not set - try locally" << endmsg;
-    fullPath = m_ExpertiseName;
+    return Error("PARAM file not found",StatusCode::FAILURE,1);
   } // if paramEnv
 
 
@@ -108,7 +107,7 @@ StatusCode StrippingNBMuMu::initialize() {
   // FPE Guard for NB call
   FPE::Guard guard(true);
   m_NBExpert = new Expert(fullPath.c_str()); 
-
+  
   // prepare arry of input variables, use max. allowed length
   // (easier for switching between different networks)
   m_inArray = new float[NB_MAXNODE];
@@ -429,8 +428,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
 } //double getInputVar
 //=============================================================================
 double StrippingNBMuMu::minIPChi2(const LHCb::Particle& particle){
-  // as taken from 
-  // http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/davinci/releases/latest/doxygen/d7/d86/_tuple_tool_geometry_8cpp_source.html
+  // as taken from TupleToolGeometry
+  
 
   double returnValue = -999; 
 

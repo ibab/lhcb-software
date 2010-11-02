@@ -4,6 +4,11 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2010-11-02 - Thomas Blake
+ - Updated StrippingNBMuMu to look for expertise in StrippingNeuroBayes/expertise
+ - Removed dependence on StrippingNeuroBayesParam (now obsolete).
+
+
 ! 2010-10-25 - Ulrich Kerzel
 - fix saving particles to desktop
 - take Expertise from PARAM package if available, try locally if not

@@ -19,7 +19,6 @@ branches          cmt doc src python
 
 
 use DaVinciKernel              v*      Phys
-use StrippingNeuroBayesParam   v*
 
 
 # NeuroBayes
