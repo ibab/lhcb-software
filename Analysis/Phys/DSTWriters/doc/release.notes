@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! ======================== DSTWriters v1r13 2010-11-02 =======================
+
 ! 2010-11-02 - Juan Palacios
  - python/DSTWriters/__dev__/microdstelements.py
   . Add FullDecayTree parameter to CopyLHCbIDs.
