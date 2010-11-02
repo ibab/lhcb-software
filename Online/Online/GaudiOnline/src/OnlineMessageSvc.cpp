@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.18 2010-09-21 14:28:26 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.19 2010-11-02 13:02:41 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -27,7 +27,7 @@ OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svcloc )
   m_outputLevel   = MSG::NIL;
   declareProperty( "Format",       m_defaultFormat = Message::getDefaultFormat() );
   declareProperty( "timeFormat",   m_defaultTimeFormat = Message::getDefaultTimeFormat() );
-  declareProperty( "doPrintAlways",m_printAlways = true );
+  declareProperty( "doPrintAlways",m_printAlways = false );
   declareProperty( "showStats",    m_stats = false );
   declareProperty( "statLevel",    m_statLevel = 0 );
 
@@ -347,8 +347,8 @@ int OnlineMessageSvc::outputLevel()   const {
 }
 
 // ---------------------------------------------------------------------------
-int OnlineMessageSvc::outputLevel( const string& source )   const {
-  ThresholdMap::const_iterator it = m_thresholdMap.find( source );
+int OnlineMessageSvc::outputLevel(const string& source)   const {
+  ThresholdMap::const_iterator it = m_thresholdMap.find(source);
   return it == m_thresholdMap.end() ? int(m_outputLevel) : (*it).second;
 }
 

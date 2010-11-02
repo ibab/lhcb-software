@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.9 2010-09-21 14:28:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.10 2010-11-02 13:02:41 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -39,88 +39,89 @@ namespace LHCb {
     typedef std::multimap< StatusCode, Message >    MessageMap;
     typedef std::map< std::string, int >            ThresholdMap;
     
-    // Default constructor.
+    /// Default constructor.
     OnlineMessageSvc( const std::string& name, ISvcLocator* svcloc );
-    // Destructor.
+
+    /// Destructor.
     virtual ~OnlineMessageSvc() {};
 
-    // Implementation of IInterface::queryInterface()
+    /// Implementation of IInterface::queryInterface()
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
-    // Implementation of IService::initialize()
+    /// Implementation of IService::initialize()
     virtual StatusCode initialize();
 
-    // Implementation of IService::finalize()
+    /// Implementation of IService::finalize()
     virtual StatusCode finalize();
 
-    // Implementation of IMessageSvc::reportMessage()
+    /// Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const Message& message );
 
-    // Implementation of IMessageSvc::reportMessage()
+    /// Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const StatusCode& code, const std::string& source = "");
 
-    // Implementation of IMessageSvc::reportMessage()
+    /// Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const char* source, int type, const char* message);
 
     /// Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage(const Message& message, int outputLevel);
 
-    // Implementation of IMessageSvc::reportMessage()
+    /// Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const std::string& source, int type, const std::string& message);
     
-    // Implementation of IMessageSvc::insertMessage()
+    /// Implementation of IMessageSvc::insertMessage()
     virtual void insertMessage( const StatusCode& code, const Message& message );
 
-    // Implementation of IMessageSvc::eraseMessage()
+    /// Implementation of IMessageSvc::eraseMessage()
     virtual void eraseMessage();
 
-    // Implementation of IMessageSvc::eraseMessage()
+    /// Implementation of IMessageSvc::eraseMessage()
     virtual void eraseMessage( const StatusCode& code ) ;
 
-    // Implementation of IMessageSvc::eraseMessage()
+    /// Implementation of IMessageSvc::eraseMessage()
     virtual void eraseMessage( const StatusCode& code, const Message& message );
 
-    // Implementation of IMessageSvc::insertStream()
+    /// Implementation of IMessageSvc::insertStream()
     virtual void insertStream( int message_type, const std::string& name, std::ostream* stream );
     
-    // Implementation of IMessageSvc::eraseStream()
+    /// Implementation of IMessageSvc::eraseStream()
     virtual void eraseStream();
     
-    // Implementation of IMessageSvc::eraseStream()
+    /// Implementation of IMessageSvc::eraseStream()
     virtual void eraseStream( int message_type );
     
-    // Implementation of IMessageSvc::eraseStream()
+    /// Implementation of IMessageSvc::eraseStream()
     virtual void eraseStream( int message_type, std::ostream* stream );
 
-    // Implementation of IMessageSvc::eraseStream()
+    /// Implementation of IMessageSvc::eraseStream()
     virtual void eraseStream( std::ostream* stream );
 
-    // Implementation of IMessageSvc::desaultStream()
+    /// Implementation of IMessageSvc::desaultStream()
     virtual std::ostream* defaultStream() const { 
       return m_defaultStream; 
     }
 
-    // Implementation of IMessageSvc::setDefaultStream()
+    /// Implementation of IMessageSvc::setDefaultStream()
     virtual void setDefaultStream( std::ostream* stream ) { 
       m_defaultStream = stream;
     }
 
-    // Implementation of IMessageSvc::ouputLevel()
+    /// Implementation of IMessageSvc::ouputLevel()
     virtual int outputLevel()   const;
 
-    // Implementation of IMessageSvc::ouputLevel()
+    /// Implementation of IMessageSvc::ouputLevel()
     virtual int outputLevel(const std::string& source)   const;
 
-    // Implementation of IMessageSvc::setOuputLevel()
+    /// Implementation of IMessageSvc::setOuputLevel()
     virtual void setOutputLevel(int new_level);
 
-    // Implementation of IMessageSvc::setOuputLevel()
+    /// Implementation of IMessageSvc::setOuputLevel()
     virtual void setOutputLevel(const std::string& source, int new_level);
 
-    // Implementation of IMessageSvc::useColor()
+    /// Implementation of IMessageSvc::useColor()
     virtual bool useColor() const { return false; }
 
-    // Implementation of IMessageSvc::getLogColor()
+    /// Implementation of IMessageSvc::getLogColor()
     virtual std::string getLogColor(int /* logLevel */) const {  return ""; };
 
     /// Get the number of messages issued at a particular level

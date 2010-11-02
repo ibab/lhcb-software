@@ -6,27 +6,45 @@
 #include "GaudiOnline/IErrorLogger.h"
 #include "GaudiOnline/OnlineMessageSvc.h"
 
-namespace LHCb 
-{
+
+/*
+ * LHCb namespace declaration
+ */
+namespace LHCb  {
+
   /***************************************************************************/
   class FmcMessageSvc : public OnlineMessageSvc, virtual public IErrorLogger  {
   public:
     /// Default constructor.
     FmcMessageSvc(const std::string& name, ISvcLocator* svcloc);
+
     /// Destructor.
     virtual ~FmcMessageSvc();
+
     /// IInterface implementation : queryInterface
     StatusCode queryInterface(const InterfaceID& riid,void** ppIf);
+
     /// Implementation of IService::initialize()
     virtual StatusCode initialize();
+
     /// Implementation of IService::finalize()
     virtual StatusCode finalize();
+
     /// Error logger implementation: report message
     virtual void report(int typ,const std::string& src,const std::string& msg);
+
     /// Number of dropped messages (in congestion-proof mode)
     virtual int getDroppedN();
+
     /// True if last messages was dropped (in congestion-proof mode)
     virtual bool isDropped();
+
+    /// Implementation of IMessageSvc::ouputLevel()
+    virtual int outputLevel()   const;
+
+    /// Implementation of IMessageSvc::ouputLevel(source)
+    virtual int outputLevel(const std::string& source)   const;
+
 
   protected:
     /// Implementation of IMessageSvc::reportMessage()

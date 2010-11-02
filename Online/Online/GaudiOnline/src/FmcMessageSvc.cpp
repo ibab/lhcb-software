@@ -289,24 +289,41 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
   /*-------------------------------------------------------------------------*/
   return;
 }
+
 /*****************************************************************************/
 /// Dispatch a message to the relevant streams.
-void LHCb::FmcMessageSvc::i_reportMessageEx(const Message& msg,int /*typ*/)  {
-  int typ = msg.getType();
-  bool report_always = m_printAlways;
-  if ( typ==MSG::ALWAYS && !report_always) return;
-  report(msg.getType(),msg.getSource(),msg.getMessage());
+void LHCb::FmcMessageSvc::i_reportMessageEx(const Message& msg,int typ)  {
+  int typM = msg.getType();
+  if (  typM < m_outputLevel || typ < m_outputLevel ) return;
+  if ( (typM==MSG::ALWAYS || typ==MSG::ALWAYS) && !m_printAlways) return;
+  report(typM,msg.getSource(),msg.getMessage());
 }
+
+/// Implementation of IMessageSvc::ouputLevel()
+int LHCb::FmcMessageSvc::outputLevel()   const {
+  return m_outputLevel;
+}
+
+/// Implementation of IMessageSvc::ouputLevel(source)
+int LHCb::FmcMessageSvc::outputLevel(const std::string& source) const {
+  ThresholdMap::const_iterator it = m_thresholdMap.find(source);
+  int lvl = (it == m_thresholdMap.end()) ? int(m_outputLevel) : (*it).second;
+  if ( lvl > m_outputLevel ) return lvl;
+  return m_outputLevel;
+}
+
 /*****************************************************************************/
 int LHCb::FmcMessageSvc::getDroppedN()
 {
   return droppedN;
 }
+
 /*****************************************************************************/
 bool LHCb::FmcMessageSvc::isDropped()
 {
   return dropped;
 }
+
 /*****************************************************************************/
 /* get the process name (the executable image file name, i.e. argv[0])       */
 /*****************************************************************************/
