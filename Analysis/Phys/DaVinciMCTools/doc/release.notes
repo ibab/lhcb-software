@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+!========================== DaVinciMCTools v9r27 2010-11-02 ==================
+
 ! 2010-10-25 - Jibo He
  - src/MCBd2KstarMuMuAngleCalculator.cpp
    Tiny change to make it work also for Bd->ee Kstar 
