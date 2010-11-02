@@ -20,5 +20,5 @@ def flattenList(tree) :
             flatList.extend(flattenList(member))
         else :
             flatList.append(member)
-        return flatList
+    return flatList
                                                         
