@@ -16,6 +16,7 @@ use  StrippingSelections         v2r1     Phys   # Anton Poluektov
 use  StrippingSettings           v1r2     Phys   # Anton Poluektov
 use  DisplVertices 		 v7r0	  Phys	 # Neal Gauvin
 use  HighPtJets			 v1r2     Phys   # Marcin Kucharczyk
+use  StrippingNeuroBayes         v1r0     Phys   # Ulrich Kerzel
 ####################################################################
 
 # Declare this as a container package
