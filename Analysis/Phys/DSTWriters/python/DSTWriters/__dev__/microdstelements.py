@@ -244,10 +244,14 @@ class CloneBackCat(MicroDSTElement) :
         return [backCatAlg, cloner]
 
 class CloneLHCbIDs(MicroDSTElement) :
+    def __init__(self, branch='', fullDecayTree=False) :
+        MicroDSTElement.__init__(self, branch)
+        self._fullDecay = fullDecayTree
     def __call__(self, sel) :
         from Configurables import CopyParticle2LHCbIDs
         cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
-                                                            'CopyLHCbIDs'))
+                                                            'CopyLHCbIDs'),
+                                       FullDecayTree = self.fullDecay)
         cloner.InputLocations = self.dataLocations(sel,"Particles")
         self.setOutputPrefix(cloner)
         return [cloner]
