@@ -4,6 +4,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v6r1 2010-11-02 ===================
+
 ! 2010-10-31 - Tomasz Skwarnicki
  - remove checking existance of Trig/L0/MuonCtrl when looking for MuonBCSU in L0SelReportsMaker 
 
