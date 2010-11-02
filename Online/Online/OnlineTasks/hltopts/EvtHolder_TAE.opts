@@ -1,3 +1,4 @@
+#pragma print off
 // Job options file. Simple Online monitoring example
 //==============================================================
 ApplicationMgr.TopAlg  = { };

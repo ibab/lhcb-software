@@ -1,6 +1,7 @@
+#pragma print off
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.7 2010-11-02 14:40:28 evh Exp $
+// $Id: MEPRxSvc.opts,v 1.8 2010-11-02 15:47:18 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 #include "$HLTOPTS/OnlineEnvironment.opts"

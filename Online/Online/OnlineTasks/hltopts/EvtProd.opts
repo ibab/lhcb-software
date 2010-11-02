@@ -1,3 +1,4 @@
+#pragma print off
 #include "$HLTOPTS/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
