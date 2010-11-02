@@ -10,7 +10,9 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-# AcceptBadEvents means that events which fail the reconstruction are still written out
+# AcceptBadEvents means that events which fail the
+# reconstruction are still written out.
+
 stream = StrippingStream("Calibration", AcceptBadEvents = True)
 
 # Juan Palacios
@@ -43,7 +45,9 @@ stream.appendLines( [ InclPhi.InclPhiHighPtLine,
 
 # Regis Lefevre D0 ->Kpipi0
 from StrippingSelections.StrippingD02KPiPi0 import StrippingD02KPiPi0Conf
-stream.appendLines( [ StrippingD02KPiPi0Conf().D02KPiPi0_Merged(), StrippingD02KPiPi0Conf().D02KPiPi0_Resolved() ] )
+stream.appendLines( [ StrippingD02KPiPi0Conf().D02KPiPi0_Merged(),
+                      StrippingD02KPiPi0Conf().D02KPiPi0_Resolved() ] )
+
 
 # Jibo He
 from StrippingSelections.StrippingElectronID import ElectronIDConf
@@ -52,24 +56,26 @@ stream.appendLines( [ StrippingElectronIDConf.line ])
 
 #
 # Lines for Muon ID
-# Gaia Lanfranchi  
+# Gaia Lanfranchi, Erica Polycarpo
 #
 
 from StrippingSelections import StrippingMuIDCalib
-stream.appendLines( [ StrippingMuIDCalib.jp_line, StrippingMuIDCalib.b_line ] )
+stream.appendLines( [ StrippingMuIDCalib.jp_line,
+                      StrippingMuIDCalib.b_line,
+                      StrippingMuIDCalib.bnomip_line ] )
 
 #
 # Lines for tracking studies
 # Michel de Cian, Georg Kroecker 
 #
 
-from StrippingSelections import StrippingTrackEffMuonTT
-from StrippingSettings.Stripping11.LineConfigDictionaries import TrackEffMuonTTConfig
-MuonTTStripping = StrippingTrackEffMuonTT.StrippingTrackEffMuonTTConf('TrackEffMuonTT', TrackEffMuonTTConfig )
+from StrippingSelections.StrippingTrackEffMuonTT import StrippingTrackEffMuonTTConf
+from StrippingSettings.Stripping12.LineConfigDictionaries import TrackEffMuonTTConfig
+MuonTTStripping = StrippingTrackEffMuonTTConf('TrackEffMuonTT', TrackEffMuonTTConfig )
 stream.appendLines( MuonTTStripping.lines )
 
-#from StrippingSelections.StrippingTrackEffDownMuon import StrippingTrackEffDownMuonConf
-#stream.appendLines( [ StrippingTrackEffDownMuonConf().nominal_line() ] )
+from StrippingSelections.StrippingTrackEffDownMuon import StrippingTrackEffDownMuonConf
+stream.appendLines( [ StrippingTrackEffDownMuonConf().nominal_line() ] )
 
-#from StrippingSelections.StrippingTrackEffVeloMuon import StrippingTrackEffVeloMuonConf
-#stream.appendLines( [ StrippingTrackEffVeloMuonConf().nominal_line() ] )
+from StrippingSelections.StrippingTrackEffVeloMuon import StrippingTrackEffVeloMuonConf
+stream.appendLines( [ StrippingTrackEffVeloMuonConf().nominal_line() ] )

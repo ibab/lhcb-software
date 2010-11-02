@@ -1,20 +1,40 @@
 # Line config for StrippingBd2KstarMuMuTriggered.py
 
-Bd2KstarMuMuConfig = { 
-    'BMassLow'           : 5050
-    ,  'BMassHighWin'  :  500      
-    ,  'BDIRA'               : 0.9999     
-    ,  'BFlightCHI2'       : 100      
-    ,  'BIPCHI2'            : 25        
-    ,  'DaughterVertexChi2' : 12         
-    ,  'BVertexCHI2'     : 12     
-    ,  'IntDIRA'              : -0.9      
-    ,  'IntFlightCHI2'      : 9         
-    ,  'TrackChi2'         : 10        
-    ,  'TrackIPChi2'      : 4           
-    ,  'KstarHighMass'  : 2500.       
-    ,  'KstarLowMass'  : 500.        
-        }
+Bd2KstarMuMuConfig = {
+    'BMassLow'           : 5050          # MeV, low mass cut
+    ,  'BMassHighWin'       :  500       # MeV, high mass window
+    ,  'BDIRA'              : 0.9998     # dimensionless (0.9999?)
+    ,  'BFlightCHI2'        : 100        # dimensionless
+    ,  'BIPCHI2'            : 64         # dimensionless 
+    ,  'DaughterVertexChi2' : 20         # dimensionless
+    ,  'BVertexCHI2'        : 20         # dimensionless
+    ,  'IntDIRA'            : -0.9       # dimensionless
+    ,  'IntFlightCHI2'      : 9          # dimensionless
+    ,  'TrackChi2'          : 10         # dimensionless
+    ,  'TrackIPChi2'        : 4          # dimensionless
+    ,  'KstarHighMass'      : 2500.      # MeV
+    ,  'KstarLowMass'       : 500.       # MeV
+    ,  'noFD_BIPCHI2'            :   16       # dimensionless
+    ,  'noFD_BVertexCHI2'        :   12       # dimensionless (9?)
+    ,  'noFD_DaughterVertexChi2' :   12       # dimensionless (9?)
+    ,  'noFD_DaughterDIRA'       :   -0.9     # dimensionless
+    ,  'noFD_TrackChi2'          :    5       # dimensionless
+    ,  'noFD_TrackIPChi2'        :    9       # dimensionless
+    }
+    
+Bd2KstarMuMuLines = {
+    'Signal' : 0.5,
+    'SignalTriggered' : 1.0,
+    'WideKstarTriggered' : 1.0,
+    'SameSign' : 0.5,
+    'SameSignTriggered' : 1.0,
+    'Signal_noFD' : 1.0,
+    'SignalTriggered_noFD' : 1.0,
+    'WideKstarTriggered_noFD' : 1.0,
+    'SameSign_noFD' : 1.0,
+    'SameSignTriggered_noFD' : 1.0
+    }
+
 
 
 # Vanya wants us to use the default!!!

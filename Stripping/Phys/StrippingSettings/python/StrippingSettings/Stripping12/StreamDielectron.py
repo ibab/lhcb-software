@@ -15,13 +15,6 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream("Dielectron")
 
-#
-# Lines from beta_s WG
-# Jibo He
-#
-from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf
-stream.appendLines( [ StrippingBs2JpsieePhiConf().UnbiasedPT_line() ] )
-stream.appendLines( [ StrippingBs2JpsieePhiConf().Signalbox_line() ] )
 
 #
 # Lines from RD WG
@@ -41,3 +34,10 @@ from StrippingSelections.StrippingBu2LLK import defaultConfig as Bu2LLKConfig
 Bu2LLKConf = StrippingBu2LLKConf( "Bu2eeK", config = Bu2LLKConfig )
 stream.appendLines( [ Bu2LLKConf._eeKLine() ] )
 
+#
+# Lines from beta_s WG
+# Jibo He
+#
+from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf
+stream.appendLines( [ StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
+                      StrippingBs2JpsieePhiConf().Signalbox_line() ] )

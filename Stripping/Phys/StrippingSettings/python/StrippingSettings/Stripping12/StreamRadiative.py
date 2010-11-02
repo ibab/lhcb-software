@@ -18,6 +18,7 @@ stream = StrippingStream("Radiative")
 # Ulrik Egede, Fatima Soomro 
 #
 from StrippingSelections.StrippingB2XGamma import StrippingB2XGammaConf
+
 stream.appendLines( [ StrippingB2XGammaConf().phigamma()
     		    , StrippingB2XGammaConf().phigammaLooseDira()
     		    , StrippingB2XGammaConf().phigammaWideBMass()

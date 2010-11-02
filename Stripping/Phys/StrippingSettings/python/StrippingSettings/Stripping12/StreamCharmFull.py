@@ -1,9 +1,9 @@
 # $Id: StreamCharm.py,v 1.4 2010-09-08 09:05:18 gcowan Exp $
 #
-#   Dimuon + Dielectron stripping selections for DST
-#   This is a copy of the selections on the microDST and
-#   should not be prescaled.
+#   Charm stripping selection for microDST
 #
+#   all physics channels with hadronic final states from charm decay
+#   This is a copy of the lines in the Charm microDST stream, no prescales
 #
 #   @author Greig Cowan and Tom Blake 
 #   @date 2010-09-07
@@ -13,9 +13,8 @@
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
+from StrippingSettings.Stripping12.StreamCharmMicroDST import stream as microDSTstream 
 
-from StrippingSettings.Stripping12.StreamLeptonicMicroDST import stream as microDSTstream
-
-stream = StrippingStream("LeptonicFull")
+stream = StrippingStream("CharmFull")
 #stream.appendLines( microDSTstream.lines )
 

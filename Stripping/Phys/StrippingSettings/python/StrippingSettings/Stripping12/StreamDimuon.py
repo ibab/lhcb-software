@@ -16,44 +16,16 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Dimuon")
 
 #
-# Lines from beta_s WG
-# Olivier Leroy, Wouter Hulsebergen and Greig Cowan
-#
-
-from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXLines
-stream.appendLines( B2JpsiXLines )
-
-from StrippingSelections.StrippingB2Psi2SX import B2Psi2SXLines
-stream.appendLines( B2Psi2SXLines )
-
-from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
-stream.appendLines( [ StrippingLambdab2JpsiLambdaConf().line_LL(),
-                      StrippingLambdab2JpsiLambdaConf().line_DD() ])
-
-from StrippingSelections.StrippingBs2Jpsif0 import StrippingBs2Jpsif0Conf
-stream.appendLines( [ StrippingBs2Jpsif0Conf().nominal_line(),
-                      StrippingBs2Jpsif0Conf().nominalKst_line()  ])
-
-from StrippingSelections.StrippingBiasedBs2JpsiPhi import line
-stream.appendLines( [ line ] )
-
-#
 # Lines for the RD WG
 # U. Egede
 #
 
 # Phillip Urquijo
 from StrippingSelections.StrippingB2XMuMuSS import StrippingB2XMuMuSSConf
-stream.appendLines( [ StrippingB2XMuMuSSConf().PiSS_line() ] )
-stream.appendLines( [ StrippingB2XMuMuSSConf().PiOS_line() ] )
-stream.appendLines( [ StrippingB2XMuMuSSConf().KSS_line() ] )
-stream.appendLines( [ StrippingB2XMuMuSSConf().KOS_line() ] )
-
-from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line() ] )
-stream.appendLines( [ StrippingD2XMuMuSSConf().PiOS_line() ] )
-stream.appendLines( [ StrippingD2XMuMuSSConf().KSS_line() ] )
-stream.appendLines( [ StrippingD2XMuMuSSConf().KOS_line() ] )
+stream.appendLines( [ StrippingB2XMuMuSSConf().PiSS_line(),
+                      StrippingB2XMuMuSSConf().PiOS_line(),
+                      StrippingB2XMuMuSSConf().KSS_line(),
+                      StrippingB2XMuMuSSConf().KOS_line() ] )
 
 # Patrick Koppenburg
 from StrippingSelections.StrippingBu2LLK import StrippingBu2LLKConf
@@ -63,23 +35,27 @@ stream.appendLines( [ Bu2LLKConf._mmKLine() ] )
 
 #
 # Lines from Bs2mumu WG
-# Johannes Albrecht
+# Johannes Albrecht, Diego Martinez Santos
 #
 
 from StrippingSelections.StrippingBs2MuMuLines import Bs2MuMuLinesConf
-bs2mm = Bs2MuMuLinesConf("Bs2MuMu", Bs2MuMuLinesConf.config_default )
-stream.appendLines( bs2mm.lines )
+Bs2MuMuConf = Bs2MuMuLinesConf('Bs2MuMu',Bs2MuMuLinesConf.config_default)
+stream.appendLines( Bs2MuMuConf.lines )
+
+from StrippingSelections.StrippingB2MuMuMuMuLines import B2MuMuMuMuLinesConf
+Bs4MuConf = B2MuMuMuMuLinesConf('Bs24Mu',B2MuMuMuMuLinesConf.config_default)
+stream.appendLines( Bs4MuConf.lines )
 
 #
 # Lines from BdKstarMuMu RD WG
 # Tom Blake, Jeremy Dickens, Patrick Koppenburg
 #
 
-from StrippingSelections.StrippingBd2KstarMuMuTriggered import StrippingBd2KstarMuMuConf
-from StrippingSelections.StrippingBd2KstarMuMuTriggered import defaultLines as Bd2KstarMuMuLines
-from StrippingSettings.Stripping11.LineConfigDictionaries import Bd2KstarMuMuConfig
+from StrippingSelections.StrippingBd2KstarMuMuTriggered_JD import StrippingBd2KstarMuMuConf_JD
+from StrippingSettings.Stripping12.LineConfigDictionaries import Bd2KstarMuMuLines
+from StrippingSettings.Stripping12.LineConfigDictionaries import Bd2KstarMuMuConfig
 
-Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf( config = Bd2KstarMuMuConfig, activeLines = Bd2KstarMuMuLines )
+Bd2KstarMuMuConf = StrippingBd2KstarMuMuConf_JD( config = Bd2KstarMuMuConfig, activeLines = Bd2KstarMuMuLines )
 stream.appendLines( Bd2KstarMuMuConf.lines() )
 
 from StrippingSelections.StrippingBd2KstarMuMuLT import StrippingBd2KstarMuMuLTConf
@@ -87,18 +63,43 @@ from StrippingSelections.StrippingBd2KstarMuMuLT import defaultConfig as Bd2Ksta
 Bd2KstarMuMuLTConf = StrippingBd2KstarMuMuLTConf( config = Bd2KstarMuMuLTConfig )
 stream.appendLines( Bd2KstarMuMuLTConf.lines() )
 
-
-
 # Liming Zhang
 from StrippingSelections.StrippingBs2PhiMuMu import StrippingBs2PhiMuMuConf
-stream.appendLines( [ StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine() ] )
-stream.appendLines( [ StrippingBs2PhiMuMuConf().Bs2f0MuMuLine() ] )
+stream.appendLines( [ StrippingBs2PhiMuMuConf().Bs2PhiMuMuLine(), 
+                      StrippingBs2PhiMuMuConf().Bs2f0MuMuLine() ] )
 
 
 # Vanya Belayev
 from StrippingSelections.StrippingTriMuons import StrippingTriMuonsConf
 stream.appendLines (  StrippingTriMuonsConf({}).lines() )
 
+# Paul Schaak and Vanya Belayev
+from StrippingSelections.StrippingBs2MuMuD import StrippingBs2MuMuDConf
+from StrippingSelections.StrippingBs2MuMuD import defaultConfig as Bs2MuMuDConfig
+
+Bs2MuMuDConf = StrippingBs2MuMuDConf(config = Bs2MuMuDConfig)
+stream.appendLines(Bs2MuMuDConf.lines())
+
+from StrippingSelections.StrippingBs2MuMuPhi import StrippingBs2MuMuPhiConf
+from StrippingSelections.StrippingBs2MuMuPhi import defaultConfig as Bs2MuMuPhiConfig
+
+Bs2MuMuPhiConf = StrippingBs2MuMuPhiConf(config = Bs2MuMuPhiConfig)
+stream.appendLines(Bs2MuMuPhiConf.lines())
+
+# Thomas Blake (Inclusive RD lines)
+from StrippingSelections.StrippingB2DiMuonX import StrippingB2DiMuonXConf
+from StrippingSelections.StrippingB2DiMuonX import defaultConfig as DiMuonXConfig
+DiMuonXConf = StrippingB2DiMuonXConf( config = DiMuonXConfig )
+stream.appendLines( DiMuonXConf.lines() )
+
+#
+# Lines from Charm RD
+# Walter Bonivento
+#
+
+from StrippingSelections.StrippingJpsiMuMuforD0MuMu import JpsiMuMuforD0MuMuConf
+D0MuMuConfJPsi =  JpsiMuMuforD0MuMuConf( config = JpsiMuMuforD0MuMuConf.config_default )
+stream.appendLines( D0MuMuConfJPsi.Lines )
 
 #
 # Lines from Flavour WG
@@ -107,12 +108,9 @@ stream.appendLines (  StrippingTriMuonsConf({}).lines() )
 
 # Nicola Mangiafave
 from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf
-stream.appendLines( [
-    StrippingBu2KJpsiPiPiConf().loose_line(),
-    StrippingBu2KJpsiPiPiConf().X3872_line(),
-    StrippingBu2KJpsiPiPiConf().Psi2S_line()
-    ] )
-
+stream.appendLines( [ StrippingBu2KJpsiPiPiConf().loose_line(),
+                      StrippingBu2KJpsiPiPiConf().X3872_line(),
+                      StrippingBu2KJpsiPiPiConf().Psi2S_line()] )
 
 # Jibo He 
 from StrippingSelections.StrippingBc2JpsiMuX import StrippingBc2JpsiMuXConf
@@ -125,5 +123,31 @@ from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetac
 stream.appendLines( [ StrippingBc2JpsiHDetachedConf().MuMu() ] )
 
 
+#
+# Lines from beta_s WG
+# Olivier Leroy, Wouter Hulsebergen and Greig Cowan
+#
 
-## Micro DST streams 
+# Greig Cowan, Juan Palacios
+from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXLines
+stream.appendLines( B2JpsiXLines )
+
+# Fred Blanc
+from StrippingSelections.StrippingB2Psi2SX import B2Psi2SXJpsiPiPiLines
+stream.appendLines( B2Psi2SXJpsiPiPiLines )
+
+# Yasmine Ahmis
+from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
+stream.appendLines( [ StrippingLambdab2JpsiLambdaConf().line_LL(),
+                      StrippingLambdab2JpsiLambdaConf().line_DD() ])
+
+# Liming Zhang
+from StrippingSelections.StrippingBs2Jpsif0 import StrippingBs2Jpsif0Conf
+stream.appendLines( [ StrippingBs2Jpsif0Conf().nominal_line(),
+                      StrippingBs2Jpsif0Conf().nominalKst_line()  ])
+
+# Basem Khanji, Olivier Leroy
+from StrippingSelections.StrippingBiasedBs2JpsiPhi import line
+stream.appendLines( [ line ] )
+
+

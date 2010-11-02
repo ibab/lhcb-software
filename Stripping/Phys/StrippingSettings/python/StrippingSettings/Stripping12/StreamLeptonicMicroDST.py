@@ -31,3 +31,8 @@ stream.appendLines( MicroDSTDiElectronConf.MicroDSTLines )
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
 MicroDSTDiMuonConf = DiMuonConf( name = 'MicroDST', config = DiMuonConf.config_microDST )
 stream.appendLines( MicroDSTDiMuonConf.MicroDSTLines )
+
+# Ulrich Kerzel (Lines using NeuroBayes NN)
+
+from StrippingSelections.StrippingNeuroBayesMuMu import StrippingNeuroBayesMuMuConf
+stream.appendLines ( StrippingNeuroBayesMuMuConf().lines() )
