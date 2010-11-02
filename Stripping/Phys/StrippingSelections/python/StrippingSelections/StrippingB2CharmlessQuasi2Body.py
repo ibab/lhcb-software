@@ -83,6 +83,6 @@ B2Quasi2Body4piLine = StrippingLine("B2Quasi2Body4piLine",
                                     algos = [ createSubSel( InputList = B2Q2B,
                                                             OutputList = B2Q2B.name() + "Prescaled",
                                                             Cuts = "(MAXTREE('pi+'==ABSID, PT) > 1500*MeV)" ) ] ,
-                                    prescale = 1.00)
+                                    prescale = 0.2)
 
 B2Quasi2Body4piLines += [ B2Quasi2Body4piLine ]
