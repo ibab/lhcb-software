@@ -5,6 +5,17 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v1r4 2010-11-02 ==============================
+
+! 2010-11-02 - Juan Palacios
+ - python/SelPy/utils.py
+  . New module with utilities to create lists of selections from dependency trees,
+    remove duplicates, etc.
+ - python/SelPy/selection.py
+  . FlatSelectionListBuilder uses new utils module.
+ - cmt/requirements
+  . Increase to v1r4.
+
 !======================== SelPy v1r3 2010-06-24 ==============================
 
 ! 2010-06-23 - Juan Palacios

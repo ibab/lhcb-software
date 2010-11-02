@@ -21,6 +21,8 @@ __all__ = ('AutomaticData',
 
 from copy import copy
 
+from SelPy.utils import flatSelectionList, removeDuplicates
+
 class AutoData(object) :
     """
     Simple wrapper for a data location. To be used for locations
@@ -232,9 +234,9 @@ class SelSequence(object) :
         return SelSequence(name, **new_dict)
 
     def selection(self) :
-        '''
+        """
         Return the sequence's top Selection.
-        '''
+        """
         return self._topSelection
 
     def __getitem__(self, index) :
@@ -268,24 +270,15 @@ class FlatSelectionListBuilder(object) :
         _alg = TopSelection.algorithm()
         self.selectionList = []
         if (_alg != None) :
-            self.selectionList.append(_alg)
-            self._buildSelectionList( TopSelection.requiredSelections )
-            self.selectionList.reverse()
-            self.selectionList = remove_duplicates(self.selectionList)
-    def _buildSelectionList(self, selections) :
-        for sel in selections :
-            if type(sel) == AutoData :
-                print "Automatic data: do nothing"
-            else :
-                if sel.algorithm() != None:
-                    self.selectionList.append(sel.algorithm())
-                self._buildSelectionList( sel.requiredSelections )
+            _selList = flatSelectionList(TopSelection)
+            _selList = filter(lambda a : type(a) != AutoData, _selList)
+            self.selectionList = [sel.algorithm() for sel in _selList]
+            self.selectionList = removeDuplicates(self.selectionList)
 
-
-def remove_duplicates(alg_list) :
-    '''
+def removeDuplicates(alg_list) :
+    """
     Remove all but the first instance of each algorithm from the list.
-    '''
+    """
     clean_list = []
     for alg in alg_list :
         if alg not in clean_list :
@@ -293,10 +286,10 @@ def remove_duplicates(alg_list) :
     return clean_list
 
 def update_overlap(dict0, dict1) :
-    '''
+    """
     Replace entries from dict0 with those from dict1 that have
     keys present in dict0.
-    '''
+    """
     overlap_keys = filter(dict1.has_key, dict0.keys())
     result = copy(dict0)
     for key in overlap_keys : result[key] = dict1[key]
