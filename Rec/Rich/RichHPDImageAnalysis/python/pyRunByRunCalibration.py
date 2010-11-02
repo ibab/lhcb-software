@@ -181,16 +181,16 @@ def fileMD5(file):
     return m.hexdigest()
 
 def pickleDict(filename,data):
-    import pickle, os
-    file = open(filename,"w")
-    pickle.dump(data,file)
+    import pickle, os, bz2
+    file = bz2.BZ2File(filename,"w")
+    pickle.dump(data,file,2)
     file.close()
 
 def loadDict(filename):
-    import pickle, os
+    import pickle, os, bz2
     data = { }
     if os.path.exists(filename) :
-        file = open(filename,"r")
+        file = bz2.BZ2File(filename,"r")
         data = pickle.load(file)
         file.close()
     return data
@@ -202,10 +202,10 @@ def getRunFillData(rootfiles):
     # get file MD5 sum
     md = fileMD5(rootfiles)
 
-    RunFillCacheName = "RunFillInfoCache.pck"
+    RootFileNameMD5CacheName = "RootFileNameMD5Cache.pck.bz2"
 
     # load cached run/fill info
-    runFillTimeCache = loadDict(RunFillCacheName)
+    rootFileMD5Cache = loadDict(RootFileNameMD5CacheName)
 
     # Initialise return data
     runfilldata = { }
@@ -214,10 +214,10 @@ def getRunFillData(rootfiles):
     runfilldata["GlobalStopTime"] = None
 
     # Do we already have results for this run/fill
-    if md in runFillTimeCache.keys() :
+    if md in rootFileMD5Cache.keys() :
 
         # Yes, so just return the data
-        runfilldata = runFillTimeCache[md]
+        runfilldata = rootFileMD5Cache[md]
 
     else:
 
@@ -228,7 +228,7 @@ def getRunFillData(rootfiles):
         files = rootFileListFromTextFile(rootfiles)
 
         # Load the raw cached run data
-        RunCacheName = "RunInfoCache.pck"
+        RunCacheName = "RunInfoCache.pck.bz2"
         runTimeCache = loadDict(RunCacheName)
 
         # Loop over the sorted run list and get the runfilldata
@@ -281,10 +281,10 @@ def getRunFillData(rootfiles):
                 DIRAC.exit(1)
 
         # Save the result to the cache
-        runFillTimeCache[md] = runfilldata
+        rootFileMD5Cache[md] = runfilldata
 
         # Pickle the caches
-        pickleDict(RunFillCacheName,runFillTimeCache)
+        pickleDict(RootFileNameMD5CacheName,rootFileMD5Cache)
         pickleDict(RunCacheName,runTimeCache)
 
     # Return the Run Time Information
