@@ -12,6 +12,7 @@ Runable.Wait                         = 3;  // 1 of running as daemon
 AdderSvc.publishRates   = 1;
 AdderSvc.OutputLevel    = 3;
 MessageSvc.OutputLevel  = 3;
+MessageSvc.OutputLevel  = @OnlineEnv.OutputLevel;
 MessageSvc.LoggerOnly   = 1;
 HistogramPersistencySvc.Warnings = false;
 

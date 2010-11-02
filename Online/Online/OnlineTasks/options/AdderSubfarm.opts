@@ -1,3 +1,4 @@
+#pragma print off
 // Job options file. Simple Online monitoring example
 //==============================================================
 //#include "$SUBFARM"
@@ -11,7 +12,7 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 HistogramPersistencySvc.Warnings     = 0;
 AdderSvc.OutputLevel                 = 1;
-MessageSvc.OutputLevel               = 1;
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MessageSvc.LoggerOnly                = 1;
 MessageSvc.fifoPath                  = "/tmp/logGaudi.fifo";                  
 AdderSvc.taskname                    = {"GauchoJob"}; // Could be empty.
