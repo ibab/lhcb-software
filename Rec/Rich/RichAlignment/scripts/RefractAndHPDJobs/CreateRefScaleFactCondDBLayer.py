@@ -2,7 +2,7 @@
 
 import CondDBUI
 from PyCool import cool
-import os
+import os, bz2
 import pickle
 import datetime, time
 import DIRAC
@@ -38,11 +38,11 @@ def getUNIXTime(dtime):
 def getCalibrationsFromFile(rad,rootName):
     
     # Load the Corrections
-    filename = rad+'Gas_'+rootName+'.pck'
+    filename = rad+'Gas_'+rootName+'.pck.bz2'
     print "Loading (n-1) Calibrations for", rad, "from", filename
 
     # Unpickle the calibration data
-    file = open(filename,"r")
+    file = bz2.BZ2File(filename,"r")
     calibrations = pickle.load(file)
 
     # Close file and return the data
@@ -62,16 +62,16 @@ def correctStartTime(run,time):
     return retTime
 
 def pickleDict(filename,data):
-    import pickle, os
-    file = open(filename,"w")
-    pickle.dump(data,file)
+    import pickle, os, bz2
+    file = bz2.BZ2File(filename,"w")
+    pickle.dump(data,file,2)
     file.close()
 
 def loadDict(filename):
-    import pickle, os
+    import pickle, os, bz2
     data = { }
     if os.path.exists(filename) :
-        file = open(filename,"r")
+        file = bz2.BZ2File(filename,"r")
         data = pickle.load(file)
         file.close()
     return data
@@ -118,7 +118,7 @@ def getRunTimes(calibrations):
     runList.sort()
     
     # Load the raw cached run data
-    RunCacheName = "RunInfoCache.pck"
+    RunCacheName = "RunInfoCache.pck.bz2"
     runTimeCache = loadDict(RunCacheName)
 
     tmpTime = 0

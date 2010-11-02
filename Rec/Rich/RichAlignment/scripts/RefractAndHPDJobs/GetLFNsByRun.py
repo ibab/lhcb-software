@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import pickle
+import pickle, bz2
 import DIRAC
 
 def usage():
@@ -102,8 +102,8 @@ if allOK :
     
   # Pickle the data
   if len(RunLFNs.keys()) > 0:
-    filename = "RunData/RunLFNs_"+firstDate+"_"+lastDate+".pck"
-    file = open(filename,"w")
+    filename = "RunData/RunLFNs_"+firstDate+"_"+lastDate+".pck.bz2"
+    file = bz2.BZ2File(filename,"w")
     pickle.dump(RunLFNs,file)
     file.close()
     print "Created pickled data file", filename

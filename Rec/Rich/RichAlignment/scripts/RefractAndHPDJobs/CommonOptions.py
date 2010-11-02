@@ -4,8 +4,6 @@ from Configurables import Brunel, LHCbApp
 importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 
-#LHCbApp().DDDBtag   = "head-20100906"
-#LHCbApp().CondDBtag = "head-20100906"
 LHCbApp().DDDBtag   = "head-20101003"
 LHCbApp().CondDBtag = "head-20101010"
 
@@ -23,7 +21,7 @@ rConf = RichRecSysConf("RichOfflineRec")
 # Photon selection options
 rConf.photonConfig().SelectionMode = "Wide"
 
-# No PID or ring finding
+# No PID or ring finding, for speed
 rConf.TracklessRingAlgs = []
 rConf.PidConfig = "None"
 
@@ -35,6 +33,7 @@ RecMoniConf().MoniSequence = ["RICH"]
 from Configurables import RichRecQCConf
 rMoni = RichRecQCConf("OfflineRichMoni")
 rMoni.removeMonitors ( ["HPDIFBMonitoring","PidMonitoring","TracklessRingAngles"] )
+# Open up the CK res plot range, for the Wide photon selection
 rMoni.CKThetaResRange = [ 0.03, 0.0075, 0.004 ]
 
 # Alignment histogram options
@@ -47,4 +46,3 @@ conf.HPDList = [ [], [0], [0] ]
 from Configurables import Rich__Mon__RichHPDImageSummary
 imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
 imageSummary.Keep2DHistograms = True
-
