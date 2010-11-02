@@ -98,9 +98,6 @@ bool ProcessMgr::write(){
   return endofrun;
 }
 
-void ProcessMgr::reset(){
-  m_serviceMap->reset();
-}  
 
 int ProcessMgr::getrunNumber(bool change){
   MsgStream msg(msgSvc(), "ProcessMgr");
@@ -410,7 +407,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
        // else msg << MSG::DEBUG << "nodeName OK" << endreq;
        // This is a 1st level Adder, then we can check the task name here.
         if ((Misc::findCaseIns(m_taskName, taskName) == std::string::npos)&(m_farm !="MF")) {
-          msg << MSG::DEBUG << "REFUSED because taskName "<< taskName << " NOT OK should be " << m_taskName << endreq;
+     //     msg << MSG::DEBUG << "REFUSED because taskName "<< taskName << " NOT OK should be " << m_taskName << endreq;
           continue; 
         }
      //   else msg << MSG::DEBUG << "taskName OK" << endreq;

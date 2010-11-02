@@ -592,6 +592,7 @@ void MonH2D::reset(){
   m_fTsumwxy = 0;
 
 //  m_fSumSize = 0;
+  if (0!=m_hist) m_hist->Reset();
 }
 
 void MonH2D::print(){

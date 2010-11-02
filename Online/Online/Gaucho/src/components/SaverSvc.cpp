@@ -158,6 +158,7 @@ StatusCode SaverSvc::start() {
   if (utgidParts[2].compare("1")==0){ // EFF farm 
      m_nodeName = utgidParts[0];
      verifName = utgidParts[1];
+     //wait until the Adder is RUNNING
      m_monitoringFarm = false;
   }
   else { //Monitoring Farm
@@ -191,7 +192,10 @@ StatusCode SaverSvc::start() {
      ProcessMgr* processMgr = new ProcessMgr (s_Saver, msgSvc(), this, m_refreshTime);
      if (m_firststart) {
         if (m_monitoringFarm) processMgr->setPartVector(m_partName);
-        else processMgr->setPartName(m_tmpPart);
+        else {
+	   lib_rtl_sleep(44000);
+	   processMgr->setPartName(m_tmpPart);
+	}   
         processMgr->setTaskName(*it);
         processMgr->setAlgorithmVector(m_algorithmName);
         processMgr->setObjectVector(m_objectName);

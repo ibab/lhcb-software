@@ -601,7 +601,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     if(! f->IsZombie()) {
       histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);   
       if (save) {
-       msg << MSG::WARNING << "Closing root file." << endreq;  
+     //  msg << MSG::WARNING << "Closing root file." << endreq;  
         f->Close();
         delete f;f=0;
       }    

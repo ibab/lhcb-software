@@ -38,6 +38,7 @@ void MonRateDecoder::resetValues() {
   countexists=false;
   TCKexists=false;
   RunNumberexists=false;
+  m_RunNumberChanged=false;
 
 }
 
@@ -61,11 +62,6 @@ void MonRateDecoder::update(MonRate *monRate) {
   m_oldOffsetTimeLastEvInCycle = m_newOffsetTimeLastEvInCycle;
   m_oldOffsetGpsTimeLastEvInCycle = m_newOffsetGpsTimeLastEvInCycle;
   m_oldNumEntries = m_newNumEntries;
-  m_oldRunNumber = m_newRunNumber;
-  m_oldTriggerConfigurationKey = m_newTriggerConfigurationKey;
-  m_oldCycleNumber = m_newCycleNumber;
-  m_oldDesiredDeltaT = m_newDesiredDeltaT;
-  m_oldNumCounters = m_newNumCounters;
  
   int tmpcycle;
   int tmpentries;
@@ -73,16 +69,29 @@ void MonRateDecoder::update(MonRate *monRate) {
   tmpcycle = (int) monRate->binContent(7);
   msg << MSG::DEBUG << "The old cycle number was :" << m_oldCycleNumber << endreq;
   msg << MSG::DEBUG << "checking the new cycle number :" << tmpcycle << endreq;
-  if (m_oldCycleNumber == tmpcycle ) {
+  if ((m_oldCycleNumber == tmpcycle ) || ( tmpcycle ==0)){
     msg << MSG::DEBUG << "No update because the cycle number did not change"<<endreq;
     return;
   }
+
+  m_oldRunNumber = m_newRunNumber;
+  m_oldTriggerConfigurationKey = m_newTriggerConfigurationKey;
+  m_oldCycleNumber = m_newCycleNumber;
+  m_oldDesiredDeltaT = m_newDesiredDeltaT;
+  m_oldNumCounters = m_newNumCounters;
 
   m_newOffsetTimeFirstEvInRun = monRate->binContent(1);
   m_newOffsetTimeLastEvInCycle = monRate->binContent(2);
   m_newOffsetGpsTimeLastEvInCycle = monRate->binContent(3);
   m_newNumEntries = (int) monRate->binEntry(4);
   m_newRunNumber = (int) monRate->binContent(5);
+ 
+  if ((m_oldRunNumber!=m_newRunNumber)&&(m_oldRunNumber!=0)) {
+     msg << MSG::DEBUG << "Runnumber changed: "<< m_newRunNumber << endreq;  
+     m_RunNumberChanged=true;
+  }   
+  else m_RunNumberChanged=false; 
+  
   m_newTriggerConfigurationKey = (unsigned int) monRate->binContent(6);
   m_newCycleNumber = (int) monRate->binContent(7);
   m_newDesiredDeltaT = monRate->binContent(8);
@@ -228,7 +237,9 @@ void MonRateDecoder::update(MonRate *monRate) {
        m_oldrateValue.push_back(rateValue);
     }
     else {   
+       //avoid wild fluctuations - PVSS can't handle it
        if (rateValue<=0.000001) { rateValue=m_oldrateValue[i];}
+       if ((rateValue/m_oldrateValue[i]<0.01)||(rateValue/m_oldrateValue[i]>100)) rateValue=m_oldrateValue[i];
        m_oldrateValue[i]=rateValue;
     }  
     Data m_rateData;
@@ -414,3 +425,14 @@ void MonRateDecoder::print(){
   msg << MSG::INFO << "************************************************"<<endreq;
 }
 
+bool  MonRateDecoder::RunChange() {
+   MsgStream msg(m_msgSvc, "MonRateDecoder");
+ //  msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
+   bool RunNumberChanged;
+   RunNumberChanged=false;
+   if ((m_RunNumberChanged)&&((m_newRunNumber!=0)||m_newCycleNumber==0)){
+    //  msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
+      RunNumberChanged=true;
+   }   
+   return RunNumberChanged;
+}  

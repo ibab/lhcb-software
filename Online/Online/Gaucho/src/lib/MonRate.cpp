@@ -110,6 +110,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     msg << MSG::WARNING << "unrecognized exception. MonRate not saved."<< endreq;
     return;
   } 
+  //crashes at stop?
   MonProfile::save(ar, version); 
   ar & m_numCounters;
   if (isServer) {

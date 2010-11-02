@@ -56,8 +56,6 @@ protected:
   bool procexists;
   bool countexists;
   bool TCKexists;
-  bool RunNumberexists;
-  
 
   DimService* m_dimSvcNumberOfProcess;
   DimService* m_dimSvcNumberOfCounters; 
@@ -76,7 +74,10 @@ public:
   void resetValues();
   void update(MonRate *monRate);
   std::string makeServiceName(std::string nameHeader, int counterId, std::string comment);
+  bool RunChange();
   void print();
+  bool RunNumberexists;
+  bool m_RunNumberChanged;
 
 };
 

@@ -49,7 +49,6 @@ public:
   bool write(std::string saveDir, std::string &fileName, int runNumber);
   bool add();
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
-  void reset();
 
 private:
   std::string m_name;

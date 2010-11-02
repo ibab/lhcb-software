@@ -32,13 +32,9 @@ BaseServiceMap::~BaseServiceMap() {
 
 void BaseServiceMap::removeMap() {
   MsgStream msg(m_processMgr->msgSvc(), name());
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
-//  msg << MSG::DEBUG  << " Removing Servers from maps because destructor called"      << endreq;
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
-  // msg << MSG::DEBUG << "   Removing Server : " << svrMapIt->first << "." <<  endreq;
     excludeServerInMaps(svrMapIt->first);
   }
 }
@@ -52,7 +48,7 @@ void BaseServiceMap::printServiceSet() {
  MsgStream msg(m_processMgr->msgSvc(), name());
  std::set<std::string>::iterator it;
  for (it = m_serviceSet.begin(); it != m_serviceSet.end(); ++it){
-//   msg << MSG::DEBUG << "Service " << *it << endreq;    
+   msg << MSG::INFO << "Service " << *it << endreq;    
   }
 }
 
@@ -60,35 +56,24 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
 {
   MsgStream msg(msgSvc(), name());
   
- // msg << MSG::DEBUG << "verifying if we have the ServiceSet seted" << endreq;
   if (0 == m_serviceSet.size()) return;
-//  msg << MSG::DEBUG << "verifying if current Map is equal to local map " << endreq;
   if (serverMap == m_serverMap) return;
   
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   
-//  msg << MSG::DEBUG << "printing local set services " << endreq;
-  printServiceSet();
+ printServiceSet();
     
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
-//  msg << MSG::DEBUG << " Excluding Servers from Maps" << endreq;
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
-  //printMap();
+
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
-  //  msg << MSG::INFO << "   Server: " << svrMapIt->first << " active " << svrMapIt->second << endreq;
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
     if (serverMap.find(svrMapIt->first)->second) continue; // Server active, we don't have to exclude
     excludeServerInMaps(svrMapIt->first);
   }
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
-//  msg << MSG::DEBUG << " Including Servers in Maps" << endreq;
-//  msg << MSG::DEBUG << "***************************************************************" << endreq;
-  for (svrMapIt=serverMap.begin() ; svrMapIt != serverMap.end(); ++svrMapIt){
+ for (svrMapIt=serverMap.begin() ; svrMapIt != serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // Server inactive, we don't have to include
     if (m_serverMap.find(svrMapIt->first) != m_serverMap.end()) // if it is in local we verify if its active
       if (m_serverMap.find(svrMapIt->first)->second) continue; // is already active in local dimInfo  
    
- //   msg << MSG::DEBUG << "   Server: " << svrMapIt->first << endreq;
     includeServerInMaps(svrMapIt->first);
   }
   
@@ -99,7 +84,6 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   MsgStream msg(msgSvc(), name());
 
   std::set<std::string>::iterator svcSetIt;  
-//  msg << MSG::DEBUG << "m_dimInfo.size() = " << m_dimInfo.size()<< endreq;    
 
   bool insertDimSvc = false;
 
@@ -108,16 +92,13 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   }
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
-//    msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     insertDimInfo(*svcSetIt, serverName);    
   }
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
-//    msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     loadDimInfo(*svcSetIt, serverName);
     if (insertDimSvc) {
- //     msg << MSG::DEBUG << "creating the Adder Service " << endreq;    
-      insertDimService(*svcSetIt, serverName);
+     insertDimService(*svcSetIt, serverName);
     } 
   }
 } 
@@ -166,14 +147,9 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
     elementName = termSvcName;
   }
   
-//  msg << MSG::DEBUG << "creating DimInfoMonObject " << termSvcName << endreq;
-//  msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
-//  msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
   
   m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
-  //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
   m_dimInfo[groupName][elementName]->setSourceName(name());
-  //msg << MSG::DEBUG << "setMsgSvc" << endreq;
   m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
 
 }
@@ -197,7 +173,6 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
     elementName = termSvcName;
   }
   
-//  msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << termSvcName << endreq;
   
   bool created = false;  
   int maxtries=5;
@@ -210,7 +185,6 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
     if (tries > maxtries) break;
   }
   
-//  msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
   if (m_processMgr->serviceOwner() == s_Saver)
   {// If it's a Saver we also create the object
     if (0 != m_dimInfo[groupName][elementName]->monObject()){ 
@@ -272,23 +246,17 @@ int BaseServiceMap::deleteDimInfo(const std::string &serviceName, const std::str
   }
 
   if (m_dimInfo.find(groupName) == m_dimInfo.end()){
-//    msg << MSG::DEBUG << " sorry there is no group " << groupName << " in the map" << endreq;    
     return 1;
   }
 
   if (m_dimInfo[groupName].find(elementName) == m_dimInfo[groupName].end()){
-//    msg << MSG::DEBUG << " sorry there is no element " << elementName << "in group " << groupName << endreq;    
     return 1;
   }
 
-//  msg << MSG::DEBUG << " erasing element "<< elementName <<" from group "<< groupName <<endreq;
-//  msg << MSG::DEBUG << " the serviceName was: "<< m_dimInfo[groupName][elementName]->dimInfo()->getName() <<endreq;
   delete m_dimInfo[groupName][elementName]; m_dimInfo[groupName][elementName]=0; m_dimInfo[groupName].erase(elementName);
 
   if (m_dimInfo[groupName].size()!=0)  return 1;
 
-//  msg << MSG::DEBUG << " The group is empty after erasing element "<< elementName << ". We have to erase the group too." <<endreq;
-//  msg << MSG::DEBUG << " erasing group "<< groupName << " from map "<< endreq;  
   m_dimInfo.erase(groupName);
 
   return 0;
@@ -314,25 +282,16 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
   }
 
   MonObject *monObjectTmp = m_dimInfo[groupName][elementName]->monObject();
-  //msg << MSG::DEBUG << "printing MonObjectTest: " << endreq;
-  //monObjectTest->print();
-//  msg << MSG::DEBUG << "creating MonObject for Adder" << groupName << endreq;
-
   std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
   std::string svctype = serviceParts[0];
 
   MonObject *monObjectAdder = MonObjectCreator::createMonObjectWithPrefix(svctype, msgSvc(), name());
-
-//  msg << MSG::DEBUG << "copy MonObject for Adder" << groupName << endreq;
 
   bool isCopied = false;
   if (monObjectTmp !=0) {
     monObjectAdder->copyFrom(monObjectTmp);
     isCopied = true;
   }
-
-  //monObjectAdder->print();
-//  msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
   DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
 
   m_dimSrv[groupName] = std::pair<DimServiceMonObject*, MonObject*> (dimServiceMonObjectAdder, monObjectAdder);
@@ -357,18 +316,8 @@ void BaseServiceMap::deleteDimService(const std::string &serviceName){
     return;  
   }
   
-/*  if (m_dimSrv[groupName].second->typeName().compare (s_monRate) == 0) {
-    if (m_processMgr->publishRates())  {
- //     msg << MSG::DEBUG << " erasing MonRateDecoder" <<endreq;
-      if (m_monRateDecoder != 0) {
-        delete m_monRateDecoder; m_monRateDecoder = 0;
-      }
-    }
-  }*/
-//  msg << MSG::DEBUG << " erasing published MonObject from map" <<endreq;
   delete m_dimSrv[groupName].second; 
   m_dimSrv[groupName].second = 0;
-//  msg << MSG::DEBUG << " erasing DimService " << groupName << " from map" <<endreq;  
   delete m_dimSrv[groupName].first; 
   m_dimSrv[groupName].first = 0; 
   m_dimSrv.erase(groupName);
@@ -382,21 +331,12 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
   std::size_t first_slash = serviceName.find("/");
   std::size_t second_slash = serviceName.find("/", first_slash + 1);
   if (serverName.find("Bridge")!= std::string::npos) {
-    //std::vector<std::string> parts = Misc::splitString(serviceName, "/");
-    //std::vector<std::string> parts2 = Misc::splitString(parts[1], "_");
-    //std::string subfarmName = parts2[0];
     std::vector<std::string> parts = Misc::splitString(serverName, "_");
-    std::string subfarmName = Misc::stringToUpper(parts[1]);
-    
-   // subfarmName=m_processMgr->getPartitionName(); 
-//    msg << MSG::DEBUG << " subfarmName = " << subfarmName <<endreq; 
-
+    std::string subfarmName = Misc::stringToUpper(parts[1]);    
     return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
   }
   else{
    return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
-   // for saver the partition is in the utgid position
-   // return serviceName;
   }
 }    
     
@@ -502,13 +442,6 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   secs=timeInfo->tm_sec;
   if ((mins==0)||(mins==15)||(mins==30)||(mins==45)) save=true;
   bool endofrun=false;
- // save=true;
- /* for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
-  {   
-     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-        it->second->loadMonObject();
-     }
-  }*/
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {   
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
@@ -548,78 +481,68 @@ bool BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
            std::string type = it->second->monObject()->typeName();
 	   std::string histogramname=it->second->dimInfo()->getName();	   
            std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");    
-           if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||("MonP1" == type)) {
-	      if ((taskName=="Brunel")||(histogramname.find("HltRoutingBitsWriter")!= std::string::npos)||(histogramname.find("HltGlobalMonitor")!= std::string::npos)){
-                 it->second->loadMonObject();
-                 it->second->monObject()->loadObject();
-	         std::string histdir=fileName+":";
-	         int previous=0;
+           it->second->loadMonObject();
+           it->second->monObject()->loadObject();
+	   std::string histdir=fileName+":";
+	   int previous=0;
 	
-	         for (int i=3;i<(int)HistoFullName.size()-1;i++) {
-	      	    TDirectory *dir=0; 
-	            histdir=histdir+"/"+HistoFullName[i];
-	            if (i>3) {   
-		       bool dirfound=false;
-                       for (int j5=0;j5<(int)dirs.size();j5++){
-		          if (!strcmp(dirs[j5]->GetPath(),histdir.c_str())){ 		          
-		            dirs[j5]->GetDirectory(histdir.c_str());
-			    dirs[j5]->cd();
-			  //  msg << MSG::DEBUG << " histdir found " << histdir.c_str() << endreq;
+	   for (int i=3;i<(int)HistoFullName.size()-1;i++) {
+	      TDirectory *dir=0; 
+	      histdir=histdir+"/"+HistoFullName[i];
+	      if (i>3) {   
+		 bool dirfound=false;
+                 for (int j5=0;j5<(int)dirs.size();j5++){
+		    if (!strcmp(dirs[j5]->GetPath(),histdir.c_str())){ 		          
+		       dirs[j5]->GetDirectory(histdir.c_str());
+		       dirs[j5]->cd();
+		       dirfound=true;
+		       previous=j5;
+		    }
+		  }
+		  if (!dirfound) {
+		     dir=dirs[previous]->mkdir(HistoFullName[i].c_str()); 
+		     dir->cd();
+		     dirs.push_back(dir);
+		     previous=dirs.size()-1;
+		  } 	
+	       }   		    		 
+	       else {
+		  bool dirfound=false;
+	          if (dirs.size()>0) {		     
+                     for (int j6=0;j6<(int)dirs.size();j6++){
+			if (!strcmp(dirs[j6]->GetPath(),histdir.c_str())){ 
+		            dirs[j6]->GetDirectory(histdir.c_str());
+			    dirs[j6]->cd();
 			    dirfound=true;
-			    previous=j5;
-		          }
-		       }
-		       if (!dirfound) {
-		         // msg << MSG::DEBUG << " making directory " << HistoFullName[i].c_str() << endreq;
-		          dir=dirs[previous]->mkdir(HistoFullName[i].c_str()); 
-		          dir->cd();
-		          dirs.push_back(dir);
-		          previous=dirs.size()-1;
-		       } 	
-	            }   		    		 
-	            else {
-		       bool dirfound=false;
-	               if (dirs.size()>0) {		     
-                          for (int j6=0;j6<(int)dirs.size();j6++){
-			     if (!strcmp(dirs[j6]->GetPath(),histdir.c_str())){ 
-		                dirs[j6]->GetDirectory(histdir.c_str());
-			        dirs[j6]->cd();
-			      //  msg << MSG::DEBUG << " histdir found  (i<3) " << histdir.c_str() << endreq;
-			        dirfound=true;
-			        previous=j6;
-			     }
-		          }      
-		       }    
-		       if (!dirfound) {
-		      //    msg << MSG::DEBUG << " making directory (i<3) " << HistoFullName[i].c_str() << endreq;
-		          dir=f->mkdir(HistoFullName[i].c_str());
-		          dirs.push_back(dir);
-		          previous=dirs.size()-1;
-		          dir->cd();      
-		       }   
-	            }
-                 }   
-		// msg << MSG::DEBUG << " saving histogram " << it->second->dimInfo()->getName() << endreq;
-		 it->second->monObject()->write();  
-              }		
-           }
-           else {
-            msg << MSG::DEBUG << "MonObject of type " << type << " can not be written."<< endreq; 
-           }
-	   HistoFullName.clear();
-        } 
-        f->Close();
-        delete f;f=0;
-        if (endofrun) m_saved=true;
-     }  
-  }
-  return endofrun;
+			    previous=j6;
+			}
+		      }      
+		   }    
+		   if (!dirfound) {
+		       dir=f->mkdir(HistoFullName[i].c_str());
+		       dirs.push_back(dir);
+		       previous=dirs.size()-1;
+		       dir->cd();      
+		   }   
+	        }
+             }   
+	//	 msg << MSG::DEBUG << " saving histogram " << it->second->dimInfo()->getName() << endreq;
+             it->second->monObject()->write();  
+	     HistoFullName.clear();
+          } 
+          f->Close();
+          delete f;f=0;
+          if (endofrun) m_saved=true;
+       }  
+   }
+   return endofrun;
 }
 
 
 bool BaseServiceMap::add() {
   MsgStream msg(msgSvc(), name());
   bool endofrun=false;
+  bool runchanged=false;
   std::map<std::string, DimInfoMonObject*>::iterator it;
   if (0 == m_serverMap.size()){
     msg << MSG::DEBUG << " Adder can't add because the ServerMap is empty " << endreq;
@@ -634,14 +557,9 @@ bool BaseServiceMap::add() {
     return false;
   }
   bool toteor=true;
- // msg << MSG::INFO << "Adding. "  << endreq;
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-    //loop over services
-    if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
-      msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
-      continue;
-    }
+
 
     if (!m_dimSrvStatus[m_dimInfoIt->first].first){
       MonObject *monObjectTmp = m_dimInfo[m_dimInfoIt->first][m_dimSrvStatus[m_dimInfoIt->first].second]->monObject();
@@ -654,9 +572,13 @@ bool BaseServiceMap::add() {
         continue;
       }
     }
- //    msg << MSG::INFO << "Adding: " << m_dimInfoIt->first << endreq;       
+  
      m_dimSrv[m_dimInfoIt->first].second->reset();
-  //   if (m_processMgr->publishRates()) { if (m_monRateDecoder->RunChange()) reset();}
+
+    if (m_processMgr->publishRates()) {
+
+       runchanged= m_monRateDecoder->RunChange();
+     }
      int eors=0;
      int inactive=0;
      for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
@@ -677,7 +599,6 @@ bool BaseServiceMap::add() {
          //if we find an endof run, only set the endofrun flag if we have them all
        if (tmpendofrun) eors++;
      }
-  //   msg << MSG::INFO  << "number of servers "<< m_serverMap.size() << " eors " << eors <<std::endl;
      //we are at the end of the run, so set the recipient to end of run
      if (eors == (int)m_serverMap.size()) {
         m_dimSrv[m_dimInfoIt->first].second->setEndOfRun(true);
@@ -688,15 +609,16 @@ bool BaseServiceMap::add() {
        // we need to set it to false; it may be true from a previous end of run
        m_dimSrv[m_dimInfoIt->first].second->setEndOfRun(false);
 
-   //    if (eors>0) msg << MSG::DEBUG << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << endreq;
-    //   if (eors>0) std::cout << eors << " EOR contributions received. Total should be: " << m_serverMap.size() << std::endl;
      }      
        
-   // msg << MSG::INFO  << "number of servers "<< m_serverMap.size() << " eors " << eors << " endofrun " << endofrun << " toteor " << toteor <<std::endl;
     try {
        int cntr=0;
        for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
           //loop over servers
+	  if (runchanged) {
+	  
+	     it->second->reset();
+	     }
           if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
 
           if (0 == it->second->monObject()) continue;
@@ -705,17 +627,16 @@ bool BaseServiceMap::add() {
              continue;
           }
 	  cntr++;
-	//  msg << MSG::INFO  << "Adding service nb "<< cntr << "  " << it->second->dimInfo()->getName() << " total number " << m_serverMap.size()  <<std::endl;
 
           if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
              int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
-	     //if  (it->second->monObject()==0) continue;
              int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
              if ( countersAdder < countersTerm) {
                 ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
                 ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
              }
           }
+
           m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
        }
 
@@ -732,40 +653,8 @@ bool BaseServiceMap::add() {
        msg << MSG::INFO << "unrecognized exception. "<< endreq;
     } 
   }
-  if ((endofrun)&(!toteor)) {
-   // toteor=endofrun;
-     msg << MSG::DEBUG <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< endreq;
-    // std::cout <<  " Waiting for all eor contributions endofrun=" << endofrun << " toteor="<< toteor<< std::endl;
-  }
-  if (toteor) {  
-     msg << MSG::DEBUG <<  " All eor contributions received. endofrun=" << endofrun << " toteor="<< toteor<<  endreq;
-  }
- // msg << MSG::INFO <<  " Finished adding. Results published. endofrun=" << endofrun << " toteor="<< toteor<<  endreq;
+
+
   return toteor;
 
-}
-
-void BaseServiceMap::reset() {
-  MsgStream msg(msgSvc(), name());
-  std::map<std::string, DimInfoMonObject*>::iterator it;
-  msg << MSG::DEBUG << "runchanged. resetting histograms. " << endreq;
-  for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
-  {
-     m_dimSrv[m_dimInfoIt->first].second->reset();     
-     try {
-       for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
-          bool isLoaded = it->second->loadMonObject();
-          if (!isLoaded){
-             continue;
-          }
-          it->second->reset();
-       }
-    }
-    catch (const std::exception &ex){
-       msg << MSG::INFO << "std::exception: " << ex.what() << endreq;
-    }  
-    catch (...){
-       msg << MSG::INFO << "unrecognized exception. "<< endreq;
-    } 
-  }
 }

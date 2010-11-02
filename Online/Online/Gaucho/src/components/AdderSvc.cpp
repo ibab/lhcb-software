@@ -165,13 +165,13 @@ void AdderSvc::handle(const Event&  ev) {
 void AdderSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
   IocSensor::instance().send(this, s_reconfigureAdder, this);
 }
 
 StatusCode AdderSvc::start() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG  << "Adder starting."<< endreq;
+//  msg << MSG::DEBUG  << "Adder starting."<< endreq;
   if (m_firststart) {
      lib_rtl_sleep(6000);    
      m_utgid = RTL::processName();
@@ -212,7 +212,7 @@ StatusCode AdderSvc::start() {
      startUp();
      m_firststart = false;
   }
-  else {
+  else {  
    // shutDown();
    // startUp();
   }
@@ -222,15 +222,14 @@ StatusCode AdderSvc::start() {
 
 StatusCode AdderSvc::stop() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Adder stopping." << endreq;
-  m_processMgr->reset();
+ // msg << MSG::DEBUG << "Adder stopping." << endreq;
  return StatusCode::SUCCESS;
  }
 
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize Adder." << endreq; 
+ // msg << MSG::DEBUG << "Finalize Adder." << endreq; 
   return Service::SUCCESS;
 }
 
