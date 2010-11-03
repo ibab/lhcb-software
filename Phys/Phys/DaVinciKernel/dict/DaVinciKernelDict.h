@@ -17,6 +17,7 @@
 #include "Kernel/TransporterFunctions.h"
 #include "Kernel/DecayTree.h"
 #include "Kernel/ParticleFilters.h"
+#include "Kernel/HashIDs.h"
 //#include "Kernel/DaVinciStringUtils.h"
 #include "Kernel/DVAlgorithm.h" // Has to be last for compilation on Windows
 // ============================================================================

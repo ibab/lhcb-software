@@ -4,6 +4,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2010-11-03 - Vanya Belyaev
+
+ - add function to evaluate 'unique-hash-ID' and to compare 'the-same' objects 
+
+ - cmt/requirements
+  . Increase to v8r9
+
 !======================== DaVinciKernel v8r8p2 2010-08-27 ===================
 
 ! 2010-08-27 - Juan Palacios
