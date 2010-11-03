@@ -1,5 +1,5 @@
 <lcgdict>
-  
+
   <class name    = "Hlt::IRegister"        />
   <class name    = "Hlt::IRegister::Lock"  />
   <class name    = "Hlt::IData"            />
@@ -9,13 +9,13 @@
   <class name    = "LoKi::Interface<Hlt::IRegister>"    />
   <class name    = "LoKi::Interface<Hlt::IData>"        />
   <class name    = "LoKi::Interface<Hlt::IInspector>"   />
-  
+
   <class name    = "LoKi::ITrgFunctorFactory"       />
   <class name    = "LoKi::ITrgFunctorAntiFactory"   />
   <class name    = "LoKi::Hybrid::TrgEngine"        />
-  
 
-  <!-- Hlt::Candidate --> 
+
+  <!-- Hlt::Candidate -->
 
   <class pattern = "LoKi::Functor<*Hlt::Candidate*>"              />
   <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Candidate*>"   />
@@ -34,44 +34,49 @@
   <class pattern = "LoKi::Dicts::CutValOps<*Hlt::Candidate*>"   />
   <class pattern = "LoKi::Dicts::ElementOps<*Hlt::Candidate*>"  />
   <class pattern = "LoKi::Dicts::SourceOps<*Hlt::Candidate*>"   />
-  
-  <class pattern = "LoKi::Candidates::*" /> 
 
-  <class name = "LoKi::Hlt1::Selection" /> 
-  <class name = "LoKi::Hlt1::Sink"      /> 
+  <class pattern = "LoKi::Candidates::*" />
+
+  <class name = "LoKi::Hlt1::Selection" />
+  <class name = "LoKi::Hlt1::Sink"      />
 
   <class name = "LoKi::Hlt1::Match"               />
   <class name = "LoKi::Hlt1::Match2"              />
-  <class name = "LoKi::Hlt1::Upgrade"             /> 
-  <class name = "LoKi::Hlt1::UpgradeTracks"       /> 
-  <class name = "LoKi::Hlt1::UpgradeMultiTracks"  /> 
-  
-  <!-- Hlt::Stage --> 
-  
+  <class name = "LoKi::Hlt1::Upgrade"             />
+  <class name = "LoKi::Hlt1::UpgradeTracks"       />
+  <class name = "LoKi::Hlt1::UpgradeMultiTracks"  />
+
+  <!-- Hlt::Stage -->
+
   <class pattern = "LoKi::Functor<*Hlt::Stage*>"            />
   <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Stage*>" />
   <class pattern = "LoKi::Constant<*Hlt::Stage*>"           />
-  
+
   <class pattern = "LoKi::Dicts::FunCalls<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Stage*>"     />
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
-  
-  <class pattern = "LoKi::Stages::*" /> 
 
-  
+  <class pattern = "LoKi::Stages::*" />
+
+  <!-- L0TMP -->
+  <class pattern = "LoKi::Functor<*LHCb::L0MuonCandidate*>" />
+  <class pattern = "LoKi::Functor<*LHCb::L0CaloCandidate*>" />
+  <class name = "LoKi::L0::L0CaloCut" />
+  <class name = "LoKi::L0::L0MuonCut" />
+
 
   <class name    = "LoKi::Hlt1::HelperTool"  />
   <class name    = "LoKi::Hlt1::MatchTool"   />
   <class name    = "LoKi::Hlt1::UpgradeTool" />
-  
-  <exclusion>    
+
+  <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
     </class>
   </exclusion>
 
-  <exclusion>    
+  <exclusion>
     <class name="LoKi::Hlt1::HelperTool" >
       <field  name = "m_alg"        />
     </class>
@@ -82,46 +87,46 @@
     <class name="LoKi::Hlt1::MatchTool" >
       <field  name = "m_match"      />
     </class>
-    
-  </exclusion>
-  
-  
-  
-  <!-- LHCb::Track-remnants  --> 
-  
-  <class name = "LoKi::Hlt1::TrSelection" /> 
-  <class name = "LoKi::Hlt1::TrRegister"  /> 
-  <class name = "LoKi::Hlt1::TrTESInput"  /> 
-  
 
-  <!-- 
+  </exclusion>
+
+
+
+  <!-- LHCb::Track-remnants  -->
+
+  <class name = "LoKi::Hlt1::TrSelection" />
+  <class name = "LoKi::Hlt1::TrRegister"  />
+  <class name = "LoKi::Hlt1::TrTESInput"  />
+
+
+  <!--
 
   <class name    = "LoKi::Hlt1::Tool"                />
   <class name    = "LoKi::Hlt1::TrackFunction"       />
   <class name    = "LoKi::Hlt1::TrackBiFunction"     />
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
   <class name    = "LoKi::Hlt1::TrackVertexFunction" />
-  
+
   <class pattern   = "LoKi::HltBinders::HltBin*"      />
   <class pattern   = "LoKi::HltBinders::BinderFun*"   />
   <class pattern   = "LoKi::HltBinders::BinderValue*" />
   <class name      = "LoKi::Dicts::HltBind" />
-  
-  <class name = "LoKi::Functors::Empty<LHCb::Track*>"     /> 
-  <class name = "LoKi::Functors::Empty<LHCb::RecVertex*>" /> 
-  <class name = "LoKi::Functors::Size<LHCb::Track*>"      /> 
-  <class name = "LoKi::Functors::Size<LHCb::RecVertex*>"  /> 
+
+  <class name = "LoKi::Functors::Empty<LHCb::Track*>"     />
+  <class name = "LoKi::Functors::Empty<LHCb::RecVertex*>" />
+  <class name = "LoKi::Functors::Size<LHCb::Track*>"      />
+  <class name = "LoKi::Functors::Size<LHCb::RecVertex*>"  />
 
 
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::RecVertices::*"                   />
   <class pattern   = "LoKi::Trigger::*"                       />
-  
+
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::FunCalls<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::R*>"    />
-  
+
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::T*>"    />
@@ -146,33 +151,33 @@
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::R*>" />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::R*>"   />
-  
+
   <class pattern   = "LoKi::Reference<*>"      />
   <class pattern   = "LoKi::ConstReference<*>" />
   <class pattern   = "LoKi::Holder<*>"    />
   <class pattern   = "std::pair<*LHCb::Track*>"     />
   <class pattern   = "std::pair<*LHCb::RecVertex*>" />
-  
-  
+
+
   <function pattern = "LoKi::Dicts::TrInfo::info*" />
-  
+
   <enum name= "LHCb::Track::Flags"     />
-  
+
   <class pattern   = "LoKi::ITrHybrid**" />
   <class pattern   = "LoKi::Hybrid::*"   />
 
   <class pattern   = "LoKi::Hlt1::*" />
 
 
-  
-  
+
+
   <exclusion>
-  
+
   <class pattern="LoKi::HltBinders::HltBinder*::Container" />
   <class pattern="LoKi::HltBinders::HltBinder*::Pair"      />
-  <class name = "std::vector<const ContainedObject*>"           /> 
-  
-  
+  <class name = "std::vector<const ContainedObject*>"           />
+
+
   <class pattern="LoKi::Tracks::*">
   <method name="=" />
   </class>
@@ -182,7 +187,7 @@
   <class pattern="LoKi::Trigger::*">
   <method name="=" />
   </class>
-  
+
   <class pattern="LoKi::Dicts::*">
   <method name="=" />
   </class>
@@ -195,7 +200,7 @@
   <class pattern="LoKi::Hybrid::*">
   <method name="=" />
   </class>
-  
+
   <class pattern="LoKi::Functor&lt;*&gt;">
   <method name="=" />
   </class>
@@ -211,7 +216,7 @@
   <class pattern="LoKi::Identity&lt;*&gt;">
   <method name="=" />
   </class>
-  
+
   <class pattern="Gaudi::Range_&lt;*&gt;">
   <method name="=" />
   </class>
@@ -227,29 +232,29 @@
   <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
   <method name="=" />
   </class>
-  
+
   <class pattern="LoKi::Functors::*">
   <method name="=" />
   </class>
   <class pattern="LoKi::Hlt1::*">
   <method name="=" />
   </class>
-  
-  
+
+
   <class pattern = "std::pair&lt;*LHCb::*&gt;" >
   <method name="=" />
   </class>
   <class pattern = "LoKi::Reference&lt;*LHCb::*&gt;" >
   <method name="=" />
   </class>
-  
+
   <class pattern = "LoKi::Holder&lt;*LHCb::*&gt;" >
   <method name="=" />
   </class>
-  
-  
+
+
   </exclusion>
-  
+
   -->
 
 </lcgdict>

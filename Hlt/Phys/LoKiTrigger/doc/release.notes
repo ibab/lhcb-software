@@ -5,23 +5,31 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Alexander Mazurov
+
+ - add new pipe functors for Candidate. Now it's possible to write something like
+   Functor<TYPE,Hlt::Candidate::ConstVector> >> Functor<const STAGETYPE*, bool>,
+   where STAGETYPE is any type which Hlt::Stage can store (LHCb::Track,
+   	LHCb::L0MuonCandidate, LHCb::L0CaloCandidate, ... )
+
+
 ! 2010-11-01 - Vanya Belyaev
 
- - redo upgrade & match 
-   remove their 'track'-versions 
+ - redo upgrade & match
+   remove their 'track'-versions
 
 
 ! 2010-10-26 - Vanya Belyaev
- - add upgrade functors 
+ - add upgrade functors
 
      TC_UPGRADE_ALL :
-            upgrade tracks & multitracks 
+            upgrade tracks & multitracks
 
      TC_UPGRADE_TR  :
-            upgrade tracks only 
+            upgrade tracks only
 
      TC_UPGRADE_MT  :
-            upgrade multitracks only (eithe ralltracks or selected by index) 
+            upgrade multitracks only (eithe ralltracks or selected by index)
 
  - cmt/requirements
     version increment to v11r2
@@ -29,19 +37,19 @@
 !========================== LoKiTrigger v11r1 2010-10-04 ===================
 ! 2010-10-02 - Vanya Belyaev
 
- - add more reasonable treatment of 
+ - add more reasonable treatment of
 
      L0Muon   -> Track and
-     L0DiMuon -> MultiTrack conversion algorithms 
+     L0DiMuon -> MultiTrack conversion algorithms
 
 
 ! 2010-09-29 - Vanya Belyaev
 
- - small adaptation for new structiure of LoKiCore 
+ - small adaptation for new structiure of LoKiCore
 
  - cmt/requirements
 
-    version increment to v11r1 
+    version increment to v11r1
 
 !========================== LoKiTrigger v11r0p1 2010-09-09 ===================
 ! 2010-09-09 - Gerhard Raven
@@ -60,21 +68,21 @@
 
 ! 2010-08-12 - Vanya Belyaev
  - Hlt::Unit
-    - add the default preambulo (LoKiTracks+LoKiTrigger+function) 
+    - add the default preambulo (LoKiTracks+LoKiTrigger+function)
 
  - resurrect the symbols for Track-selecitons:
 
-      "sources" : 
-             - TrSELECTION - get      track-selection by name for Hlt::IData 
-             - TrINPUT     - get'TES'-track-selection by name from Hlt::IData 
+      "sources" :
+             - TrSELECTION - get      track-selection by name for Hlt::IData
+             - TrINPUT     - get'TES'-track-selection by name from Hlt::IData
 
-      "sink" ( well, it is actually pipe) 
+      "sink" ( well, it is actually pipe)
 
-             - TrREGISTER 
+             - TrREGISTER
 
  Thus, in cas eI[ve put not too many errors, now
 
-    Hlt::Unit with Code = 
+    Hlt::Unit with Code =
 
          " TrSELECTION( 'input' ) >> ( ... )  >> TrREGISTER ('otput') >> ~TrEMPTY "
 
@@ -82,47 +90,47 @@
 
          " TrSELECTION( 'input' ) >> select ( TrPT > 1*GeV ) >> TrREGISTER ('otput') >> ~TrEMPTY "
 
-    or (simpler) 
-     
+    or (simpler)
+
          " TrSELECTION( 'input' ) >> ( TrPT > 1*GeV ) >> TrREGISTER ('otput') >> ~TrEMPTY "
 
 
 
 ! 2010-08-05 - Vanya Belyaev
 
- - remove obsolete factory 
-   add    proper   factory 
+ - remove obsolete factory
+   add    proper   factory
 
 ! 2010-08-01 - Vanya Belyaev
 
  - start the creation of new functors :
 
-      Hlt::Candidiate 
-      Hlt::Stage 
+      Hlt::Candidiate
+      Hlt::Stage
 
- - new algorithms: 
+ - new algorithms:
 
-      L0Calo -> Candidate 
-      L0Muon -> Candidate 
+      L0Calo -> Candidate
+      L0Muon -> Candidate
 
 
 ! 2010-07-18 - Vanya Belyaev
 
     prepare the scene for creation of "new"-functors for *new* Hlt1-event model
- 
-    move all Track-related functions into new package LoKiTrack 
 
-    change the signature from LHCb::Track to const LHCb::Track* 
+    move all Track-related functions into new package LoKiTrack
 
-    remove *all* classes form dictionary 
+    change the signature from LHCb::Track to const LHCb::Track*
+
+    remove *all* classes form dictionary
 
          - from now: add only on case-by-case basis
 
 
  - cmt/requirements
- 
-    add dependency on new package LoKiTrack 
-    version increment to v11r0 
+
+    add dependency on new package LoKiTrack
+    version increment to v11r0
 
 !========================== LoKiTrigger v10r1 2010-07-08 ===================
 ! 2010-06-19 - Vanya Belyaev
@@ -130,9 +138,9 @@
 
  - LoKiTrigger/decorators.py
    LoKiTrigger/functions.py
-  
-     move all "equal_to"-functors form functions to decorators 
- 
+
+     move all "equal_to"-functors form functions to decorators
+
 
 ! 2010-06-06 - Vanya Belyaev
 
@@ -143,15 +151,15 @@
 
  - LoKi/Tracks.h
 
-    new functor StateZ ( for Patrick Koppenburg ) 
+    new functor StateZ ( for Patrick Koppenburg )
 
  - LoKi/TrackCuts.h
 
-    add symbols: TrSTATEZ & TrFIRSTHITZ 
+    add symbols: TrSTATEZ & TrFIRSTHITZ
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v10r1 
+     version increment to v10r1
 
 !========================== LoKiTrigger v10r0p1 2010-05-27 ===================
 ! 2010-05-24 - Gerhard Raven
@@ -159,9 +167,9 @@
 
 !========================== LoKiTrigger v10r0 2010-04-09 ===================
 ! 2010-04-06 - Vanya Belyaev
- - replace LoKi::Range with Gaudi::Range 
- - new decorators 
- - version increment to v10r0 
+ - replace LoKi::Range with Gaudi::Range
+ - new decorators
+ - version increment to v10r0
 
 !========================== LoKiTrigger v9r9 2010-03-28 ===================
 ! 2010-03-11 - V. Gligorov
@@ -170,7 +178,7 @@
 
 !========================== LoKiTrigger v9r8 2010-02-01 ===================
 ! 2010-01-25 - Gerhard Raven
- - migrate LoKi::IHltUnit to HltBase, Hlt::IUnit, update code that uses 
+ - migrate LoKi::IHltUnit to HltBase, Hlt::IUnit, update code that uses
    this interface
 
 !========================== LoKiTrigger v9r7 2010-01-11 ===================
@@ -178,8 +186,8 @@
  - fix failing qmtest, move tag
 
 ! 2010-01-01 - Vanya BELYAEV
- - add new symbols for Wouterl Hulsbergen 
-     a.  TrSTIDC  ( count STChannelIDs ) 
+ - add new symbols for Wouterl Hulsbergen
+     a.  TrSTIDC  ( count STChannelIDs )
      b.  TrVELOIDC (count VeloChannelIDs):
 
   For usage see $LOKITRIGGERROOT/python/LoKiTrigger/tests.py :
@@ -187,11 +195,11 @@
     track = LHCb.Track()
 
     f1  = TrIDC     (   'isVelo'   )
-    
+
     f2  = TrOTIDC   (   'module',1 )
     f3  = TrOTIDC   ( 1,'module',5 )
     f4  = TrOTIDC   ( 'module', uints( 1, 2, 3, 4, 5 ) )
-    
+
     f5  = TrSTIDC   (   'sector',1 )
     f6  = TrSTIDC   ( 1,'sector',5 )
     f7  = TrSTIDC   ( 'sector', uints( 1, 2, 3, 4, 5 ) )
@@ -199,26 +207,26 @@
     f8  = TrVELOIDC (   'sensor',1 )
     f9  = TrVELOIDC ( 1,'sensor',5 )
     f10 = TrVELOIDC ( 'sensor', uints( 1, 2, 3, 4, 5 ) )
-    f11 = TrVELOIDC ( 'pileUp' ) 
+    f11 = TrVELOIDC ( 'pileUp' )
 
     for f in ( f1 , f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ) :
         print f , f(track)
-    
-  
+
+
 
 ! 2009-12-27 - Gerhard Raven
- - also comment out TrIDC and TrOTIDC definitions, as otherwise the 
+ - also comment out TrIDC and TrOTIDC definitions, as otherwise the
    import fails because of the change below...
 
  - found workaround for this bug which only happens if POOL is loaded:
    remove the typedef for std::vector<unsigned int>, and use the type
    explicityly... put back LoKi/TrackIDs in dictionary, and add TrIDC and
-   TrOTIDC definitions... 
+   TrOTIDC definitions...
    see https://savannah.cern.ch/bugs/index.php?60968 for more information
 
 
 ! 2009-12-25 - Gerhard Raven
- - remove (hopefully temporarily!) LoKi/TrackIDs.h from dictionary -- 
+ - remove (hopefully temporarily!) LoKi/TrackIDs.h from dictionary --
    it seems responsible for crashes like
    Warning in <TEnvRec::ChangeValue>: duplicate entry <Library.vector<unsigned-int>=vector.dll> for level 0; ignored
 #13 0x0000002aa243bda9 in (anonymous namespace)::(anonymous namespace)::Dictionaries::Dictionaries ()
@@ -230,7 +238,7 @@
 
 ! 2009-12-23 - Gerhard Raven
  - move IHlt{Data,Register,Inspector}.h to HltBase to avoid circular
-   dependencies. 
+   dependencies.
  - migrate from HltBase/stringKey to GaudiKernel/StringKey
  - updates to L0Muon to track conversion to reproduce old results
  - migrate from HltBase/stringKey to GaudiKernel/StringKey
@@ -241,21 +249,21 @@
 
     TrIDC : count LHCbIDs in track, that satisfy certain criteria
 
-          " ( 3 <  TrIDC( 'isVelo' ) ) & ( TrIDs ( 'isOT') > 15 ) " 
+          " ( 3 <  TrIDC( 'isVelo' ) ) & ( TrIDs ( 'isOT') > 15 ) "
 
     TrOTIDC: count OTChannelIDs in track that satisfy certain criteria:
 
          " TrOTIDC( 'layer' , 3 ) > 0 "  count layer #3
 
-         " TrOTIDC( 'layer' , 1 , 3  ) > 0 "  count layers in range [1,3] 
+         " TrOTIDC( 'layer' , 1 , 3  ) > 0 "  count layers in range [1,3]
 
          " TrOTIDC( 'layer' , uints( [1, 2, 3, 4, 8] )   ) > 0 "  count layers from list
 
 
-  - cmt/requirements 
+  - cmt/requirements
 
-       version increment to v9r7 
- 
+       version increment to v9r7
+
 !========================== LoKiTrigger v9r6 2009-10-17 ===================
 ! 2009-10-08 - Patrick Koppenburg
  - Remove FC2 from functions following Gerhard's changes of 10-05.
@@ -272,21 +280,21 @@
 
 ! 2009-07-15 - Vanya BELYAEV
 
- - many minor fixes 
- 
+ - many minor fixes
+
 
 ! 2009-07-13 - Vanya BELYAEV
 
- - add "source for TES input location" functors 
+ - add "source for TES input location" functors
 
 
 ! 2009-07-12 - Vanya BELYAEV
 
- - add the concept of "TES-input-location", 
-     update all interfaces properly 
+ - add the concept of "TES-input-location",
+     update all interfaces properly
 
 
- - cmt/requiremenets 
+ - cmt/requiremenets
 
     version increment to v9r5
 
@@ -298,19 +306,19 @@
 
      add LoKi::ConstReference<*>
 
- - cmt/requirements 
- 
-     version increment to v9r4 
+ - cmt/requirements
+
+     version increment to v9r4
 
 
 !========================== LoKiTrigger v9r3 2009-06-22 ===================
-! 2009-06-11 - Vanya BELYAEV  
+! 2009-06-11 - Vanya BELYAEV
 
  - some minor polishing for cmt/requirmeents file
 
  - cmt/requirements
 
-    version increment to v9r3 
+    version increment to v9r3
 
 
 !========================== LoKiTrigger v9r2p1 2009-06-03 ===================
@@ -318,34 +326,34 @@
 
  - dict/LoKiTrigger.xml
 
-   remove unnesessary assignement operators to suppress compiler warnings 
-   for lhcb2-nightlies 
-   surprizingly there are no warning for lhcb3 nightlies 
+   remove unnesessary assignement operators to suppress compiler warnings
+   for lhcb2-nightlies
+   surprizingly there are no warning for lhcb3 nightlies
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v9r2p1 
-   
+    version increment to v9r2p1
+
 !========================== LoKiTrigger v9r2 2009-06-03 ===================
 
 ! 2009-05-14 - Vanya Belyaev
 
- - fix the problem with the bad interference of 
-     new SmartIF and LoKi::Interface 
+ - fix the problem with the bad interference of
+     new SmartIF and LoKi::Interface
 
 ! 2009-05-09 - Vanya BELYAEV
 
- - remove unnesessary std::unary/binary_function bases 
+ - remove unnesessary std::unary/binary_function bases
 
  - cmt/requirements
 
-   version increment to v9r2 
+   version increment to v9r2
 
 !========================== LoKiTrigger v9r1p1 2009-05-06 =================
-! 2009-04-09 - Vanya BELYAEV 
+! 2009-04-09 - Vanya BELYAEV
 
  - src/Components/ServiceRegister.cpp
-   fix for Win32 compilation 
+   fix for Win32 compilation
 
 
 !========================== LoKiTrigger v9r1 2009-04-08 ===================
@@ -354,108 +362,108 @@
   new functors, needed for Hlt1 implementation
 
    TrDPMU    ( "TRack Delta P MUon" )
-    LoKi-fied version of HltDeltaPTool by Leandro de Paula 
-
-   
+    LoKi-fied version of HltDeltaPTool by Leandro de Paula
 
 
- - LoKi/Hl1Functions.h, src/Hl1Functions.cpp 
 
-    new files with new functors, specific for Hlt1 implementation 
+
+ - LoKi/Hl1Functions.h, src/Hl1Functions.cpp
+
+    new files with new functors, specific for Hlt1 implementation
 
 
 ! 2009-03-28 - Vanya BELYAEV
 
  - add the python image of Hlt::IInspector  service:
 
-    >>> import LoKiTrigger.Service 
+    >>> import LoKiTrigger.Service
 
-    >>> gaudi = AppMgr() 
+    >>> gaudi = AppMgr()
 
 
-    >>> hlt = gaudi.hltInspector() 
+    >>> hlt = gaudi.hltInspector()
 
     >>> algs = hlt.algorithms()  ## get all algorithms, list of iAlgorithm
-    
+
     >>> sels = hlt.selections() ## get all selections, (list ofnames)
 
     various checkers: hasAlgorithm/hasProducer/hasConsumer/hasSelection
 
     >>> inp = htl.inputs ( alg ) ## get all input selections for the given algorithm
-    >>> for i in inp: print i 
+    >>> for i in inp: print i
 
     >>> out = htl.outputs ( alg ) ## get all output selections for the given algorithm
     >>> for o in out: print o
 
     >>> p = hlt.producer ( selection ) ## get the producer for the given selection
-    >>> c = htl.consumers ( seleciton ) ## get the list of consumers 
-    >>> for i in c : print i.name() 
+    >>> c = htl.consumers ( seleciton ) ## get the list of consumers
+    >>> for i in c : print i.name()
 
 
     >>> hlt.dumpAlg( alg ) # prin tsoem primitive info for debugging
 
     >>> htl.dotAlg( alg ) # produce DOT-view for the given algorithm
-    >>> hlt.dotAlg( alg , 'file.dot' ) # write DOT-view into the file  
-    >>> hlt.dotAlg( alg , open('file.dot') ) # the same 
+    >>> hlt.dotAlg( alg , 'file.dot' ) # write DOT-view into the file
+    >>> hlt.dotAlg( alg , open('file.dot') ) # the same
 
 
     >>> htl.dotSel( sel ) # produce DOT-view for the given selection
-    >>> hlt.dotSel( sel , 'file.dot' ) # write DOT-view into the file  
-    >>> hlt.dotSel( sel , open('file.dot') ) # the same 
+    >>> hlt.dotSel( sel , 'file.dot' ) # write DOT-view into the file
+    >>> hlt.dotSel( sel , open('file.dot') ) # the same
 
-    >>> htl.dotAll() # produce DOT-view for all algorithms 
-    >>> hlt.dotAll( 'file.dot' ) # write DOT-view into the file  
-    >>> hlt.dotAll( open('file.dot') ) # the same 
- 
-    
-    
+    >>> htl.dotAll() # produce DOT-view for all algorithms
+    >>> hlt.dotAll( 'file.dot' ) # write DOT-view into the file
+    >>> hlt.dotAll( open('file.dot') ) # the same
+
+
+
 
 
 ! 2009-03-24 - Vanya BELYAEV
 
- - add  L0 -> Hlt utilities and L0Calo -> Track converter 
+ - add  L0 -> Hlt utilities and L0Calo -> Track converter
 
 
 
 !========================== LoKiTrigger v9r0 2009-03-23 ===================
 ! 2009-03-22 - Vanya BELYAEV
 
- - many fixes for new trigger 
+ - many fixes for new trigger
 
 ! 2009-03-19 - Vanya BELYAEV
 
- - base class for "Exceptional" algorithms 
-   Hlt::Base 
- 
- - the first "exceptional" algorithm 
+ - base class for "Exceptional" algorithms
+   Hlt::Base
+
+ - the first "exceptional" algorithm
    Hlt::L0Muon2Track
 
  - new files:
    LoKi/HltBase.h
    src/HltBase.cpp
    src/Components/L0Muon2Track.cpp
- 
+
 
 ! 2009-03-19 - Vanya BELYAEV
 
  - new interfaces:
 
-    Hlt::IRegister 
-    Hlt::IData 
-    Hlt::IInspector 
+    Hlt::IRegister
+    Hlt::IData
+    Hlt::IInspector
 
 - new service
 
-    Hlt::Service 
+    Hlt::Service
 
-- new files : 
+- new files :
 
-   LoKi/IHltRegister.h 
-   LoKi/IHltData.h 
-   LoKi/IHltInspector.h 
-   src/IHltRegister.cpp 
+   LoKi/IHltRegister.h
+   LoKi/IHltData.h
+   LoKi/IHltInspector.h
+   src/IHltRegister.cpp
    src/IHltData.cpp
-   src/IHltInspector.cpp 
+   src/IHltInspector.cpp
    src/Components/Service.cpp
    src/Components/Service.h
    src/Components/ServiceData.cpp
@@ -466,12 +474,12 @@
 
 - cmt/requirements
 
-    version increment to v9r0 
+    version increment to v9r0
 
 
 !========================== LoKiTrigger v8r1 2009-01-15 ===================
 ! 2009-01-13 - Gerhard Raven
-   HltUnit.h : follow minor interface change in IHltDataSvc 
+   HltUnit.h : follow minor interface change in IHltDataSvc
 
 ! 2008-12-13 - Vanya BELYAEV
  - fix the dictionarie sfor lhcb3 compilation
@@ -479,9 +487,9 @@
 
 ! 2008-11-28 - Vanya BELYAEV
 
- - new decorators 
+ - new decorators
  - add QMTest
- - version increment to v8r1  
+ - version increment to v8r1
 
 !========================== LoKiTrigger v8r0 2008-11-24 ===================
 ! 2008-11-19 - Vanya Belyaev
@@ -492,24 +500,24 @@
 
 ! 2008-11-19 - Vanya Belyaev
 
- - fix typos for HltUnit 
+ - fix typos for HltUnit
 
 
 ! 2008-11-17 - Vanya Belyaev
 
- - add various Hlt1-related "binders" 
+ - add various Hlt1-related "binders"
 
    Looks like we have now all components for Htl1 implementation through
     "units"....
 
-  
+
 
 ! 2008-11-13 - Vanya BELYAEV
 
- - add the preliminary version of Hlt1-functors 
+ - add the preliminary version of Hlt1-functors
 
-       - "sources" : get selection from Hlt Data Service 
-       - "sinks"   : put selection to  Hlt Data Service  (pipes) 
+       - "sources" : get selection from Hlt Data Service
+       - "sinks"   : put selection to  Hlt Data Service  (pipes)
        - "vertex maker"  : source...
        - "track upgrade" : pipe...
 
@@ -529,17 +537,17 @@
 
 ! 2008-11-02 - Vanya BELYAEV
 
- - fixes for variosu compilers 
+ - fixes for variosu compilers
 
 ! 2008-10-19 - Vanya BELYAEV
 
- - adaptation for new LoKiCore v8r0 
+ - adaptation for new LoKiCore v8r0
 
-     the new structure of decorators 
+     the new structure of decorators
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version inctrement to v8r0 
+    version inctrement to v8r0
 
 
 !========================== LoKiTrigger v7r3 2008-04-25 ===================
@@ -548,17 +556,17 @@
 
 ! 2008-03-30 - Vanya BELYAEV
 
- - new stremers/shift __rshift__ operators 
- - better prinptu of boolean constants 
- - cmt/requirements 
-    version increment to v7r3 
+ - new stremers/shift __rshift__ operators
+ - better prinptu of boolean constants
+ - cmt/requirements
+    version increment to v7r3
 
 !========================== LoKiTrigger v7r2 2008-02-11 ===================
 
 ! 2008-02-11 - Vanya BELYAEV
  - many minor fixes to please new Gaudi/ROOT/Reflex
- - cmt/requirements 
-   version incrfement to v7r2 
+ - cmt/requirements
+   version incrfement to v7r2
 
 !========================== LoKiTrigger v7r1 2008-02-05 ===================
 ! 2008-01-22 Jose A. Hernando
@@ -568,7 +576,7 @@
 !========================== LoKiTrigger v7r0 2007-10-09 ===================
 
 ! 2007-12-09 - Vanay BELYAEV
- - add sources 
+ - add sources
    new files LoKi/TrSources.h, src/TrSources.cpp
 
 !========================== LoKiTrigger v6r1 2007-10-24 ===================
@@ -577,13 +585,13 @@
 !========================== LoKiTrigger v6r0 2007-09-23 ===================
 ! 2007-08-20 - Vanya BELYAEV
 
- - increment the major version to v6r0 
+ - increment the major version to v6r0
 
-! 2007-07-27 - Vanya BELYAEV 
+! 2007-07-27 - Vanya BELYAEV
 
-   New package: import from Phys/LoKiTracks 
+   New package: import from Phys/LoKiTracks
 
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
