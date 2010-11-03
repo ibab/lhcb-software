@@ -406,7 +406,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             ## specific cuts :
             Cuts = { 'PtGamma' : self.getProp ( 'PtGamma' ) ,
                      'SpdCut'  : self.getProp ( 'SpdCut'  ) } ,
-            PtPi0          = ptCut                          ,
+            PtPi0          = self.getProp ( 'PtPi0' )       ,
             ## general configuration 
             NTupleLUN      = "KALIPI0"                      ,
             HistoPrint     = True                           ,
