@@ -2,7 +2,7 @@
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
 from StrippingSelections.Utils import checkConfig
 from StrippingConf.StrippingLine import StrippingLine  
 
@@ -185,11 +185,11 @@ class StrippingB2DiMuonXConf(object):
         _dimuonKS.CombinationCut = self.__CombinationCut__(conf)
         _dimuonKS.MotherCut = self.__MotherCut__(conf) 
        
-    	KsMerged = MergedSelection( self.name + "_MergedKS", RequiredSelections = [_KSLL, _KSDD] )	
+    	_KsMerged = MergedSelection( self.name + "_MergedKS", RequiredSelections = [_KSLL, _KSDD] )	
  
         _sel = Selection( "Sel" + self.name + "_DiMuonKS",
                           Algorithm = _dimuonKS,
-                          RequiredSelections = [ KsMerged, self.DiMuon ] )        
+                          RequiredSelections = [ _KsMerged, self.DiMuon ] )        
         return _sel
     
     def LineWithTr( self ):
