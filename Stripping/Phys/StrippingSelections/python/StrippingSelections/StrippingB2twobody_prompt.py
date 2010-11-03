@@ -178,8 +178,10 @@ def B2twobody_promptLine(
     Lmcut = LongLivedcut+"& (ADMASS('Lambda0') < %(MaxLmDeltaM)s*MeV)"%locals()
     Ks.Code = Kscut
     Lm.Code = Lmcut
-    KsSel=Selection("KsSelFor" + moduleName, Algorithm = Ks, RequiredSelections = [ StdKsLL, StdKsDD ] )
-    LmSel=Selection("LmSelFor" + moduleName, Algorithm = Lm, RequiredSelections = [ StdLmDD,StdLmLL ] )
+    KsMerged = MergedSelection( "MergedKS0For" + moduleName, RequiredSelections = [StdKsDD,StdKsLL] )
+    LmMerged = MergedSelection( "MergedLmFor" + moduleName, RequiredSelections = [StdLmDD,StdLmLL] ) 
+    KsSel=Selection("KsSelFor" + moduleName, Algorithm = Ks, RequiredSelections = [ KsMerged ] )
+    LmSel=Selection("LmSelFor" + moduleName, Algorithm = Lm, RequiredSelections = [ LmMerged ] )
 
     # Charm hadrons
     Dz = FilterDesktop("DzFor" + moduleName)

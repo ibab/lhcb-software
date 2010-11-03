@@ -11,7 +11,7 @@ configurables.
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 import GaudiKernel.SystemOfUnits as Units
 
@@ -104,8 +104,10 @@ class StrippingD2KS0h_KS02PiPiConf(LHCbConfigurableUser):
         _stdKsLL = DataOnDemand( Location = "Phys/StdLooseKsLL" )
         _stdKsDD = DataOnDemand( Location = "Phys/StdLooseKsDD" )
 
+	_KS = MergedSelection( "MergedKS0ForD2KS0h_KS02PiPi", RequiredSelections = [_stdKsLL, _stdKsDD] )
+
         _sel = Selection( "SelKS0ForD2KS0h_KS02PiPi",
-                          RequiredSelections = [_stdKsLL, _stdKsDD], Algorithm = KS0ForD2KS0h_KS02PiPi )
+                          RequiredSelections = [_KS], Algorithm = KS0ForD2KS0h_KS02PiPi )
         
         return _sel 
         

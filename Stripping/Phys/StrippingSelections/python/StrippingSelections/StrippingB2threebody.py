@@ -151,7 +151,8 @@ def B2threebodyLine(
     Kscut+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 1 )"%locals()
     Kscut+="& CHILDCUT ( TRCHI2DOF < %(MaxKsDauTrkChi2)s , 2 )"%locals()
     Ks.Code = Kscut
-    KsSel=Selection("KsSelFor" + moduleName, Algorithm = Ks, RequiredSelections = [ StdKsDD,StdKsLL ] )
+    KsMerged = MergedSelection( "MergedKS0For" + moduleName, RequiredSelections = [StdKsDD,StdKsLL] )
+    KsSel=Selection("KsSelFor" + moduleName, Algorithm = Ks, RequiredSelections = [ KsMerged ] )
 
     Lm=FilterDesktop("LmFor" + moduleName)
     Lmcut =  "(ADMASS('Lambda0') < %(MaxLmDeltaM)s*MeV)"%locals()
@@ -166,7 +167,8 @@ def B2threebodyLine(
     Lmcut+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPrtTrkChi2)s , 1 )"%locals()
     Lmcut+="& CHILDCUT ( TRCHI2DOF < %(MaxLmPiTrkChi2)s , 2 )"%locals()
     Lm.Code = Lmcut
-    LmSel=Selection("LmSelFor" + moduleName, Algorithm = Lm, RequiredSelections = [ StdLmDD,StdLmLL ] )
+    LmMerged = MergedSelection( "MergedLmFor" + moduleName, RequiredSelections = [StdLmDD,StdLmLL] )
+    LmSel=Selection("LmSelFor" + moduleName, Algorithm = Lm, RequiredSelections = [ LmMerged ] )
 
     # Charm hadrons
     Dz = FilterDesktop("DzFor" + moduleName)

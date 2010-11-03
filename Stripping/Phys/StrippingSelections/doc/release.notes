@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Greig Cowan 
+ - Fixed bugs in some lines requiring a MergedSelection
+
 ! 2010-11-03 - Rudolf Oldeman
  - Modified StrippingB2threebody.py to circumvent the problem of having two
    Selection objects as the algorithms of a line

@@ -184,10 +184,12 @@ class StrippingB2DiMuonXConf(object):
             }
         _dimuonKS.CombinationCut = self.__CombinationCut__(conf)
         _dimuonKS.MotherCut = self.__MotherCut__(conf) 
-        
+       
+    	KsMerged = MergedSelection( self.name + "_MergedKS", RequiredSelections = [_KSLL, _KSDD] )	
+ 
         _sel = Selection( "Sel" + self.name + "_DiMuonKS",
                           Algorithm = _dimuonKS,
-                          RequiredSelections = [ _KSLL, _KSDD, self.DiMuon ] )        
+                          RequiredSelections = [ KsMerged, self.DiMuon ] )        
         return _sel
     
     def LineWithTr( self ):
