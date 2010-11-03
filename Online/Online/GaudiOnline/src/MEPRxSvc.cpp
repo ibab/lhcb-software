@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.92 2010-04-07 08:55:52 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.93 2010-11-03 08:34:18 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -630,8 +630,8 @@ void MEPRxSvc::removePkt()   {
 static int errorCheck(void *context) {
   MEPRxSvc *svc = (MEPRxSvc *) context;
   static int n_high = 0;
-  static int old_errors = 0;
-  int new_errors;
+  static long long old_errors = 0;
+  long long new_errors;
    
   new_errors = svc->m_incEvt + svc->m_notReqPkt + svc->m_totBadMEP + 
     svc->totWrongPartID();

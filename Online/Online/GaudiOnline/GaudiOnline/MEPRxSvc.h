@@ -203,8 +203,8 @@ namespace LHCb  {
     int       spaceSize()  const            {  return m_MEPBufSize;   }
     int       sourceID() const              {  return m_sourceID;     }
     int       sourceAddr(u_int32_t i)       {  return m_srcAddr[i];   }
-    int       addIncompleteEvent()          {  return m_incEvt++;     }
-    int       totWrongPartID()              {  return m_totWrongPartID;  }   
+    int64_t   addIncompleteEvent()          {  return m_incEvt++;     }
+    int64_t   totWrongPartID()              {  return m_totWrongPartID;  }   
     RXIT ageRx();
     static bool cmpL0ID(MEPRx *r, u_int32_t id);
     void removePkt(void);

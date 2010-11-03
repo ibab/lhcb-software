@@ -105,15 +105,13 @@ int open_sock_udp(std::string &errmsg, int port)
     goto drop_out;
   }
 #ifdef linux
-  if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMP, 
-			     &on, sizeof(on))) {
+  if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMP, &on, sizeof(on))) {
     errmsg = "setsockopt SO_TIMESTAMP";
-    goto shut_out;
+    ::shutdown(s, SHUT_RD);
+    goto drop_out;
   }
 #endif
   return s;
-shut_out:
-  ::shutdown(s, SHUT_RD);
 drop_out:  
   return -1;
 }
