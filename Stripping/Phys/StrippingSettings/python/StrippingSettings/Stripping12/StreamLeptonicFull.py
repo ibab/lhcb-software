@@ -17,5 +17,5 @@ from StrippingConf.StrippingStream import StrippingStream
 from StrippingSettings.Stripping12.StreamLeptonicMicroDST import stream as microDSTstream
 
 stream = StrippingStream("LeptonicFull")
-#stream.appendLines( microDSTstream.lines )
+stream.appendLines( [ line.clone("Full" + line.name().lstrip("Stripping") ) for line in microDSTstream.lines ] )
 

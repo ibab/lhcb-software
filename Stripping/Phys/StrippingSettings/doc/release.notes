@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Greig Cowan
+ - Updated Stripping12 definitions to include the cloning of the lines for the
+   Charm and Leptonic microDST and full streams. Requires some hacks to support
+   the lines that are not using the Selection toolkit.
+
 ! 2010-11-02 - Thomas Blake
  - Updated Stripping12 definitions
 

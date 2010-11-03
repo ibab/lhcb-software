@@ -21,21 +21,9 @@ stream = StrippingStream("Charm")
 # Ulrik Egede, Walter Bonivento
 #
 
-# Phillip Urquijo
-from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-from StrippingConf.StrippingStream import StrippingStream
-
-stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
-                      StrippingD2XMuMuSSConf().PiOS_line(),
-                      StrippingD2XMuMuSSConf().KSS_line(),
-                      StrippingD2XMuMuSSConf().KOS_line() ] )
-
 # Walter Bonivento, D0 -> mu mu searches
 from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
 stream.appendLines( D02MuMuLines )
-
-from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf("DstarD02xx",LinePrefix="").lines() )
 
 from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
 stream.appendLines( [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ] )
@@ -86,20 +74,6 @@ stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
 from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
 stream.appendLines( [StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ] )
 
-# Philip Hunt (4-body lines)
-from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
-DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf()
-stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
-
-# Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
-from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-StrippingDstarPromptWithD02HHConf().LinePrefix = 'DstarPrompt'
-stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
-
-# Sebastian Bachmann (Double D0 for tag and probe)
-from StrippingSelections.StrippingX2D0D0 import StrippingX2D0D0Conf
-stream.appendLines( [ StrippingX2D0D0Conf().line() ] )
-
 # Harry Cliff, Vava (lifetime unbiased line)
 from StrippingSelections.StrippingD2hhLTUnbiased import StrippingD2hhLTUnbiasedConf
 stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
@@ -108,10 +82,37 @@ stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
 from StrippingSelections.StrippingD2hhLTUnbiasedMBNB import StrippingD2hhLTUnbiasedMBNBConf
 stream.appendLines( StrippingD2hhLTUnbiasedMBNBConf().lines() )
 
+cloneableCharmLines = stream.lines
+
+# Can't clone these lines
+
+# Philip Hunt (4-body lines)
+from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
+DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf()
+stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
+
+# Sebastian Bachmann (Double D0 for tag and probe)
+from StrippingSelections.StrippingX2D0D0 import StrippingX2D0D0Conf
+stream.appendLines( [ StrippingX2D0D0Conf().line() ] )
+
+# Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+StrippingDstarPromptWithD02HHConf().prefix = 'DstarPrompt'
+stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
+
+# Phillip Urquijo
+from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
+from StrippingConf.StrippingStream import StrippingStream
+
+stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
+                      StrippingD2XMuMuSSConf().PiOS_line(),
+                      StrippingD2XMuMuSSConf().KSS_line(),
+                      StrippingD2XMuMuSSConf().KOS_line() ] )
 
 
-
-
+# Walter Bonivento, D0 -> mu mu searches
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xx",prefix="").lines() )
 
 
 
