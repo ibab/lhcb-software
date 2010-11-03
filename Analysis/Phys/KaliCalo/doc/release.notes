@@ -7,6 +7,12 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Albert Puig
+
+- Added Cluster information in NTuple
+- Exposed switch for creation of NTuples for the Kali Configurable
+- Changed Pi0Pt Cut to LoKi expression
+
 !========================== KaliCalo v4r5 2010-10-05 ==========================
 
 ! 2010-10-05 - Vanya Belyaev

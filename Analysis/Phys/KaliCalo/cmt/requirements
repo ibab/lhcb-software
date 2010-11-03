@@ -20,6 +20,7 @@ use                LoKiPhys    v* Phys
 use                LoKiAlgo    v* Phys 
 use                GaudiPython v* 
 use                pytools     v* LCG_Interfaces
+use                LoKiArrayFunctors v* Phys
 
 # ================ constituents ==============================================
 library            KaliCalo     ../src/*.cpp 

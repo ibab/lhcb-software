@@ -188,7 +188,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         ## ``Physics''
         , 'PtGamma'             : 300 * MeV ## Pt-cut for photons 
-        , 'PtPi0'               : 800 * MeV ## Pt-cut for pi0  
+        , 'PtPi0'               : "PT > 800 * MeV" ## Pt-cut for pi0  
         , 'SpdCut'              : 0.1 * MeV ## Spd-cuts for photons 
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
@@ -206,6 +206,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'MeasureTime'         : True   ## Measure the time for sequencers
         , 'OutputLevel'         : INFO   ## The global output level
         , 'PrintFreq'           : 100000 ## The print frequency
+        , 'NTupleProduce'       : True   ## Produce NTuples
         }
     ## documentation lines 
     _propertyDocDct = {
@@ -244,6 +245,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Simulation'          : """ Simulation              (DaVinci) """
         , 'MeasureTime'         : """ Measure the time for sequencers """
         , 'OutputLevel'         : """ The global output level """
+        , 'NTupleProduce'       : """ Produce calibration NTuples """
         }
  
     ## 1. General Calorimeter Reconstruction Confifuration
@@ -403,8 +405,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             "KaliPi0"                                       ,
             ## specific cuts :
             Cuts = { 'PtGamma' : self.getProp ( 'PtGamma' ) ,
-                     'PtPi0'   : self.getProp ( 'PtPi0'   ) ,
                      'SpdCut'  : self.getProp ( 'SpdCut'  ) } ,
+            PtPi0          = ptCut                          ,
             ## general configuration 
             NTupleLUN      = "KALIPI0"                      ,
             HistoPrint     = True                           ,
@@ -412,7 +414,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             InputLocations = [ 'StdLooseAllPhotons' ]       ,
             OutputLevel    = self.getProp ( 'OutputLevel' ) ,
             Mirror         = self.getProp ( 'Mirror'      ) , 
-            HistoProduce   = self.getProp ( 'Histograms'  )
+            HistoProduce   = self.getProp ( 'Histograms'  ) ,
+            NTupleProduce  = self.getProp ( 'NTupleProduce' )
             )
         
         if self.getProp ('Mirror' ) :
@@ -424,6 +427,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             _log.warning ( "KaliPi0: Monitoring histograms are   activated") 
         else :
             _log.warning ( "KaliPi0: Monitoring histograms are deactivated")
+
+        if self.getProp ( 'NTupleProduce' ) :
+            _log.warning ( "KaliPi0: Creation of calibration NTuples is   activated")
+        else :
+            _log.warning ( "KaliPi0: Creation of calibration NTuples is deactivated")
             
         if self.getProp ( 'FirstPass' ) :
             
@@ -643,6 +651,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         NTupleSvc ().Output += [
             "KALIPI0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % self.getProp('NTuple')
             ]
+
         if ( self.getProp ( 'Histograms' ) ): 
           HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
 

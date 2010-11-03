@@ -16,11 +16,13 @@ __date__     = " 2010-03-23 "
 __version__  = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 __all__      = (
     "RootFile"          ,
-    "POOLCatalogParser"
+    "POOLCatalogParser" ,
+    "InputDataList"
     )
 # =============================================================================
 import ROOT 
 import os
+import re
 
 # =============================================================================
 ## @class RootFile
@@ -331,6 +333,27 @@ class POOLCatalogParser (object) :
                 out.append  ( item ) 
         return out 
 
+# =============================================================================
+## @class   InputDataList
+#  Parser for InputData in "EventSelector"-style. Extracts filenames.
+#  @author Albert PUIG    Albert.Puig@cern.ch
+#  @date 2010-03-23
+class InputDataList ( object ):
+    """
+    Parser for InputData in "EventSelector"-style. Extracts filenames.
+  
+    @author Albert PUIG    Albert.Puig@cern.ch
+  
+    """  
+    def __init__ ( self , eventSelectorData ):
+        self._files = self.__extractFileNames( eventSelectorData )
+    
+    def __extractFileNames( self , fileList ):
+        regex = re.compile( "((LFN|PFN):/.*/.*\.\w*)" )
+        return [ match.group( 1 ) for match in [ regex.search( line ) for line in fileList ] if match ]
+        
+    def files( self ):
+        return self._files
 
 # =============================================================================
 if '__name__' == __name__ :

@@ -11,6 +11,7 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"
+#include "Event/Vertex.h"
 // ============================================================================
 #include "Event/CaloDataFunctor.h"
 // ============================================================================
@@ -19,8 +20,14 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Algo.h"
+#include "LoKi/IHybridFactory.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/Photons.h"
+#include "LoKi/BasicFunctors.h"
+// ============================================================================
+// CaloUtils
+// ============================================================================
+#include "CaloUtils/ClusterFunctors.h"
 // ============================================================================
 // ICaloDigits4TrackTool
 // ============================================================================
@@ -68,6 +75,8 @@ namespace Kali
       , m_mirror        ( false )
       , m_veto_dm       ( -1 * Gaudi::Units::MeV )
       , m_veto_chi2     ( -1  )
+      , m_ptCutExp      ( "PNONE" )
+      , m_ptCut         ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) )
       , m_spdDigitsTool (  0  )
       , m_ecal          (  0  )
         // histograms
@@ -92,6 +101,10 @@ namespace Kali
           m_veto_chi2        ,
           "Chi2 for pi0-veto" )
         -> declareUpdateHandler ( &Kali::Pi0::vetoHandler , this ) ;
+      //
+      declareProperty ( "PtPi0"    ,
+                        m_ptCutExp ,
+                        "LoKi cut for Pt of the Pi0" ) ;
       //
       Property* histos = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
       Assert ( 0 != histos , "Unable to get property 'HistoProduce'" ) ;
@@ -125,9 +138,12 @@ namespace Kali
       const LHCb::CaloCellID& ,
       const Gaudi::XYZPoint&  ,
       const Gaudi::XYZPoint&  ,
+      const LHCb::CaloCluster* ,
+      const LHCb::CaloCluster* ,          
       const int               ) ;
     // ========================================================================
     double caloEnergy4Photon ( const Gaudi::LorentzVector&  p ) ;
+    double getSeedCellEnergy ( const LHCb::CaloCluster* ) ;
     // ========================================================================
   private:
     // ========================================================================
@@ -150,6 +166,9 @@ namespace Kali
     double m_veto_dm   ;                               // Delta-mass for pi0-veto
     // chi2       for pi0-veto
     double m_veto_chi2 ;                               // Delta-mass for pi0-veto
+    // ptCut functor
+    std::string       m_ptCutExp ;
+    LoKi::Types::Cut  m_ptCut    ;
     // Tool for retrieving SPD digits info
     ICaloDigits4Track*  m_spdDigitsTool ;
     // DeCalorimeter object for ECAL
@@ -245,6 +264,8 @@ void Kali::Pi0::fillTuple
   const LHCb::CaloCellID&     cell2  ,
   const Gaudi::XYZPoint&      point1 ,
   const Gaudi::XYZPoint&      point2 ,
+  const LHCb::CaloCluster*    clus1  ,
+  const LHCb::CaloCluster*    clus2  ,
   const int                   bkg    )
 {
 
@@ -288,13 +309,31 @@ void Kali::Pi0::fillTuple
 
   tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
 
-
   Gaudi::XYZVector vec = point2 - point1 ;
   double cSize = std::max (  m_ecal->cellSize ( cell1 ) ,
                              m_ecal->cellSize ( cell2 ) ) ;
   double dist = ( cSize > 0) ? vec.Rho() / cSize : 0 ;
   tuple -> column ( "dist" , dist ) ;
 
+  // Energies
+  const double eRaw1 = clus1->position().e() ;
+  const double eRaw2 = clus2->position().e() ;
+  
+  tuple -> column ( "eClus1" , eRaw1 ) ;
+  tuple -> column ( "eClus2" , eRaw2 ) ;
+
+  const int nClus1 = clus1->entries().size() ;
+  const int nClus2 = clus2->entries().size() ;
+
+  tuple -> column ( "nClus1" , nClus1 ) ;
+  tuple -> column ( "nClus2" , nClus2 ) ;
+
+  const double eSeed1 = getSeedCellEnergy( clus1 ) ;
+  const double eSeed2 = getSeedCellEnergy( clus2 ) ;
+
+  tuple -> column ( "eSeed1" , eSeed1 ) ;
+  tuple -> column ( "eSeed2" , eSeed2 ) ;
+  
   tuple -> write () ;
 }
 // ============================================================================
@@ -317,6 +356,18 @@ double Kali::Pi0::caloEnergy4Photon( const Gaudi::LorentzVector&  p )
   return e ;
 }
 // ============================================================================
+// Energy of the seed cell of a CaloCluster
+// ============================================================================
+double Kali::Pi0::getSeedCellEnergy( const LHCb::CaloCluster* cluster )
+{
+  const LHCb::CaloCluster::Entries& entries = cluster->entries();
+  LHCb::CaloCluster::Entries::const_iterator iseed = LHCb::ClusterFunctors::locateDigit ( entries.begin () ,entries.end   () ,
+                                                                                          LHCb::CaloDigitStatus::SeedCell ) ;
+  if( entries.end() == iseed ) return 0.0;
+
+  return iseed->digit()->e();
+}
+// ============================================================================
 // the proper initialization
 // ============================================================================
 StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
@@ -333,6 +384,10 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   { Warning ( "Pi0-Veto               is   activated!", StatusCode::SUCCESS ) ; }
   //
   setupHistos() ;
+  //
+  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) ;
+  sc = factory->get( m_ptCutExp , m_ptCut ) ;
+  if ( sc.isFailure() ) { return Error ( "Unable to compile Pt-cut predicate") ; }   
   //
   m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
   sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
@@ -358,7 +413,6 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   LHCb::CaloDataFunctor::DigitFromCalo spd ( "Spd" ) ;
   LHCb::CaloDataFunctor::DigitFromCalo prs ( "Prs" ) ;
 
-  const double ptCut_Pi0   = cutValue ( "PtPi0"   ) ;
   const double ptCut_Gamma = cutValue ( "PtGamma" ) ;
   const double spdCut      = cutValue ( "SpdCut"  ) ;
 
@@ -377,6 +431,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
 
   typedef std::set<const LHCb::Particle*> Photons ;
   Photons                                 photons ;
+
+
 
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 )
   {
@@ -398,8 +454,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     _p1.SetPy ( -_p1.Py () ) ;
     const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
 
-    const bool good    =             ( m12      < 335 * MeV && p12.Pt () > ptCut_Pi0 ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV && fake.Pt() > ptCut_Pi0 ) ;
+    const bool good    =             ( m12      < 335 * MeV && m_ptCut( pi0 ) ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV && m_ptCut( pi0 ) ) ;
 
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
 
@@ -423,6 +479,11 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     if ( 0 == hypo1 ) { continue ; }
     const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
     if ( 0 == hypo2 ) { continue ; }
+    
+    const LHCb::CaloCluster* cluster1 = cluster ( g1 )  ;
+    if ( 0 == cluster1 ) { continue ; }
+    const LHCb::CaloCluster* cluster2 = cluster ( g2 )  ;
+    if ( 0 == cluster2 ) { continue ; }    
 
     const Gaudi::LorentzVector mom1 = g1->momentum() ;
     const Gaudi::LorentzVector mom2 = g2->momentum() ;
@@ -469,14 +530,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
                                      p2 -> y () ,
                                      p2 -> z () );
       fillTuple ( tuple , mom1 , mom2 , p12 , prs1e , prs2e ,
-                  spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 , 0 ) ;
+                  spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 ,
+                  cluster1 , cluster2 , 0 ) ;
     }
     if ( goodBkg )
     {
       const LHCb::CaloPosition* p2 = hypo2->position() ;
       const Gaudi::XYZPoint point2Sym ( - p2 -> x () , - p2 -> y () , p2 -> z () );
       fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e ,
-                 spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym , 1 ) ;
+                 spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym ,
+                 cluster1 , cluster2 , 1 ) ;
     }
 
     //
