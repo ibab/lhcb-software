@@ -7,6 +7,10 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Daria Savrina
+
+- Fixed a bug with passing of the event filter conditions to DaVinci
+
 ! 2010-11-03 - Albert Puig
 
 - Added Cluster information in NTuple

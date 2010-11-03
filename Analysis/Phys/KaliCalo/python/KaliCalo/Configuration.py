@@ -624,6 +624,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                     "from LoKiTracks.decorators  import *" , 
                     "from LoKiCore.functions     import *"
                     ]
+                fltrs.append(fltr)    
                 _log.warning('KaliCalo: Event Filter is used \n%s' % _fltr )
                 
                 
