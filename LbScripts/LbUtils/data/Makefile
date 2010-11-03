@@ -137,7 +137,6 @@ endif
 
 # --- Declare the variables that have to be exported
 export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEXT
-export CCACHE_PREFIX
 
 # --- Main targets
 all: $(packages:=_build)

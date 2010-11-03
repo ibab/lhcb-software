@@ -1,8 +1,13 @@
+2010-11-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: removed the export of CCACHE_PREFIX, which doesn't seem to be needed and causes problems
+	if distcc is not used when using ccache.
+
 2010-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Log.py: added NullHandler to be used in libraries. This is usefull when the 
+	* python/LbUtils/Log.py: added NullHandler to be used in libraries. This is usefull when the
 	main application calling the library is not defining any logger.
-	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the 
+	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the
 	LbRelease.rcs module.
 
 2010-10-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -12,7 +17,7 @@
 
 2010-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/afs/directory.py: added a check when removing ACL. The new ACL settings is cleaned of 
+	* python/LbUtils/afs/directory.py: added a check when removing ACL. The new ACL settings is cleaned of
 	groups with empty ACL
 
 2010-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
