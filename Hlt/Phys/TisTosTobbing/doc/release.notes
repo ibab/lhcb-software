@@ -4,6 +4,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-11-03 - Tomasz Skwarnicki
+ - fix L0Global in L0SelReportsMaker (included intermediate selections)
+
 !========================== TisTosTobbing v6r1 2010-11-02 ===================
 
 ! 2010-10-31 - Tomasz Skwarnicki

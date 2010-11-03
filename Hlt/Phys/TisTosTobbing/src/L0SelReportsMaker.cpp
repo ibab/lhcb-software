@@ -383,7 +383,8 @@ StatusCode L0SelReportsMaker::execute() {
 
      // see which decisions contributed to it
      for( HltSelReports::Container::const_iterator it=outputSummary->begin();it!=outputSummary->end();++it){
-       // const std::string & selName = it->first;
+       const std::string & selName = it->first;
+       if( selName.find("Decision") == std::string::npos )continue;       
        const LHCb::HltObjectSummary& selRep = it->second;
        // must find corresponding HltObjectSummary in the object store
        HltObjectSummary::Info::const_iterator i = selRep.numericalInfo().find("0#SelectionID");
