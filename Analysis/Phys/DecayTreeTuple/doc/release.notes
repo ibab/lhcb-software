@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-11-02 - Andrew Powell
+	- New Tuple Tool: TupleToolRICHPid
+	- Stores informartion associated with the RichPid object. To be used within 
+	  the RICH PID calibration package.
+
 !========================== DecayTreeTuple v3r9 2010-11-02 ==================
 
 ! 2010-11-01  Yasmine Amhis
