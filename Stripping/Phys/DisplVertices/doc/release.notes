@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================== DisplVertices v7r1 2010-11-03 ====================
+
 ! 2010-10-28 - Victor Coco
  - Added a return false in IsInMaterialBoxRight and IsInMaterialBoxLeft in case the detector element was not accessed correctly
    and the vector of sensor position is empty
