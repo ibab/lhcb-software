@@ -16,6 +16,8 @@ from StrippingConf.StrippingStream import StrippingStream
 
 stream = StrippingStream("Charm") 
 
+cloneableCharmLines = []
+
 #
 # Lines from Charm RD
 # Ulrik Egede, Walter Bonivento
@@ -23,21 +25,21 @@ stream = StrippingStream("Charm")
 
 # Walter Bonivento, D0 -> mu mu searches
 from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
-stream.appendLines( D02MuMuLines )
+cloneableCharmLines += D02MuMuLines
 
 from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
-stream.appendLines( [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ] )
+cloneableCharmLines += [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ]
 
 # Benoit Viaud ( 4-body SCS lines )
 from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
 from StrippingSettings.Stripping12.LineConfigDictionaries import D02KKpipiRegularConfig
 DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
-stream.appendLines( DstarD0KKpipi.lines )
+cloneableCharmLines += DstarD0KKpipi.lines
 
 # Benoit Viaud (D*+ -> D0 pi+, D0 -> K- K+ mu- mu+)
 from StrippingSelections.StrippingDstarD02KKmumuRegular import StrippingDstarD02KKmumuRegularConf
 DstarD0KKmumu = StrippingDstarD02KKmumuRegularConf('DstarD02KKmumuRegular')
-stream.appendLines( DstarD0KKmumu.lines )
+cloneableCharmLines += DstarD0KKmumu.lines
 
 #
 # Charm CP Lines
@@ -46,43 +48,44 @@ stream.appendLines( DstarD0KKmumu.lines )
 
 # Marco Gersabeck and Harry Cliff ( Two-body untagged charm lines )
 from StrippingSelections.StrippingD2hh import StrippingD2hhConf
-stream.appendLines( StrippingD2hhConf().lines() )
+cloneableCharmLines += StrippingD2hhConf().lines()
 
 # Vanya Belyaev
 from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf
 PromptCharmConf = StrippingPromptCharmConf ( config = {} )
-stream.appendLines( PromptCharmConf.lines() )
+cloneableCharmLines += PromptCharmConf.lines()
 
 # 3-body lines (Rio + Oxford)
 from StrippingSelections.StrippingD2hhh_conf import StrippingD2hhhConf
 
-stream.appendLines( [ StrippingD2hhhConf().stripD2PPP(),
+cloneableCharmLines += [ StrippingD2hhhConf().stripD2PPP(),
                       StrippingD2hhhConf().stripD2KKP(),
-                      StrippingD2hhhConf().stripD2KKK() ] )
+                      StrippingD2hhhConf().stripD2KKK() ]
 
-stream.appendLines( [ StrippingD2hhhConf().stripD2KPP(),
-                      StrippingD2hhhConf().stripD2KPPos() ] ) 
+cloneableCharmLines += [ StrippingD2hhhConf().stripD2KPP(),
+                      StrippingD2hhhConf().stripD2KPPos() ]
 
-stream.appendLines( [ StrippingD2hhhConf().stripD2hhh_inc() ] )
+cloneableCharmLines += [ StrippingD2hhhConf().stripD2hhh_inc() ]
 
 
 # Matt Charles (KShh lines)
 from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
-stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
+cloneableCharmLines += StrippingDstarD2KShhConf().MakeLines()
 
 # Cambridge (Ksh line)
 from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
-stream.appendLines( [StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ] )
+cloneableCharmLines += [StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi() ]
 
 # Harry Cliff, Vava (lifetime unbiased line)
 from StrippingSelections.StrippingD2hhLTUnbiased import StrippingD2hhLTUnbiasedConf
-stream.appendLines( StrippingD2hhLTUnbiasedConf().lines() )
+cloneableCharmLines += StrippingD2hhLTUnbiasedConf().lines()
 
 # Harry Cliff, Vava. Lifetime-unbiased line with micro/no-bias trigger 
 from StrippingSelections.StrippingD2hhLTUnbiasedMBNB import StrippingD2hhLTUnbiasedMBNBConf
-stream.appendLines( StrippingD2hhLTUnbiasedMBNBConf().lines() )
+cloneableCharmLines += StrippingD2hhLTUnbiasedMBNBConf().lines()
 
-cloneableCharmLines = stream.lines
+stream.appendLines( cloneableCharmLines )
+
 
 # Can't clone these lines
 
@@ -102,8 +105,7 @@ stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 
 # Phillip Urquijo
 from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-from StrippingConf.StrippingStream import StrippingStream
-
+StrippingD2XMuMuSSConf().prefix = 'MicroDST'
 stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
                       StrippingD2XMuMuSSConf().PiOS_line(),
                       StrippingD2XMuMuSSConf().KSS_line(),
@@ -112,7 +114,7 @@ stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
 
 # Walter Bonivento, D0 -> mu mu searches
 from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf("DstarD02xx",prefix="").lines() )
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xx", prefix = "MicroDST").lines() )
 
 
 

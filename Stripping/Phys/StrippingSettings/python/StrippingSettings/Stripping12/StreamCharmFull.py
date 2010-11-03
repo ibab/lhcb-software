@@ -21,30 +21,30 @@ stream.appendLines( [ line.clone("Full" + line.name().lstrip("Stripping") ) for 
 
 # Now a big hack to get the uncloneable lines in
 
-#from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
-#DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf("FullDstarPromptWithD02K3Pi")
-#stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
+from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
+DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf(name = "FullDstarPromptWithD02K3Pi")
+stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
 
 # Sebastian Bachmann (Double D0 for tag and probe)
-#from StrippingSelections.StrippingX2D0D0 import StrippingX2D0D0Conf
-#stream.appendLines( [ StrippingX2D0D0Conf( prefix = "Full" ).line() ] )
+from StrippingSelections.StrippingX2D0D0 import StrippingX2D0D0Conf
+stream.appendLines( [ StrippingX2D0D0Conf( prefix = "Full" ).line() ] )
 
 # Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
-#from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-#StrippingDstarPromptWithD02HHConf().prefix = 'FullDstarPrompt'
-#stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+StrippingDstarPromptWithD02HHConf().prefix = 'FullDstarPrompt'
+stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 
 # Phillip Urquijo
-#from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-#from StrippingConf.StrippingStream import StrippingStream
-#StrippingD2XMuMuSSConf().prefix = "Full"
+from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
+from StrippingConf.StrippingStream import StrippingStream
+StrippingD2XMuMuSSConf().prefix = "Full"
 
-#stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
-#                      StrippingD2XMuMuSSConf().PiOS_line(),
-#                      StrippingD2XMuMuSSConf().KSS_line(),
-#                      StrippingD2XMuMuSSConf().KOS_line() ] )
+stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
+                      StrippingD2XMuMuSSConf().PiOS_line(),
+                      StrippingD2XMuMuSSConf().KSS_line(),
+                      StrippingD2XMuMuSSConf().KOS_line() ] )
 
 # Walter Bonivento, D0 -> mu mu searches
-#from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-#stream.appendLines( StrippingDstarD02xxConf("DstarD02xx", prefix = "Full").lines() )
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xx", prefix = "Full").lines() )
 
