@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Rudolf Oldeman
+ - Modified StrippingB2threebody.py to circumvent the problem of having two
+   Selection objects as the algorithms of a line
+
 ! 2010-11-03 - Greig Cowan 
  - Modified some lines to use a name prefix. This is essential to allow for lines to
    run in both the [Charm, Leptonic] full and microDST streams.
