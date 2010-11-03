@@ -36,7 +36,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
                   , 'SlowPiPt'         : 0.260          ## GeV
                   , 'DstarPt'          : 3.6            ## GeV
                   , 'DstarVtxChi2Ndof' : 13             ## unitless
-                  , 'LinePrefix'       : 'StripDstarPrompt'
+                  , 'prefix'       : 'StripDstarPrompt'
                 }
                 
     _rsLine   = {} 
@@ -82,13 +82,13 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         Returns a stripping line for the D0 -> K- pi+ (right sign).
         """
 
-        linepref = self.getProp('LinePrefix')
+        linepref = self.getProp('prefix')
         #if StrippingDstarPromptWithD02HHConf._rsLine == None : 
         if not linepref in StrippingDstarPromptWithD02HHConf._rsLine:
             
             from StrippingConf.StrippingLine import StrippingLine
 
-            lineName = "%(LinePrefix)sWithD02RSKPiLine" % self.getProps()
+            lineName = "%(prefix)sWithD02RSKPiLine" % self.getProps()
             lineSeq = self.seqWithD02RSKPi()
             
             StrippingDstarPromptWithD02HHConf._rsLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
@@ -102,14 +102,14 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         Returns a stripping line for the D0 -> pi- K+ (wrong sign).
         """
         
-        linepref = self.getProp('LinePrefix')
+        linepref = self.getProp('prefix')
         #        if StrippingDstarPromptWithD02HHConf._wsLine == None : 
 
         
         if not linepref in StrippingDstarPromptWithD02HHConf._wsLine:
             from StrippingConf.StrippingLine import StrippingLine
             
-            lineName = "%(LinePrefix)sWithD02WSKPiLine" % self.getProps()
+            lineName = "%(prefix)sWithD02WSKPiLine" % self.getProps()
             lineSeq = self.seqWithD02WSKPi()
             
             StrippingDstarPromptWithD02HHConf._wsLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
@@ -124,11 +124,11 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         
         #if StrippingDstarPromptWithD02HHConf._kkLine == None : 
-        linepref = self.getProp('LinePrefix')
+        linepref = self.getProp('prefix')
         if not linepref in StrippingDstarPromptWithD02HHConf._kkLine:
             from StrippingConf.StrippingLine import StrippingLine
             
-            lineName = "%(LinePrefix)sWithD02KKLine" % self.getProps()
+            lineName = "%(prefix)sWithD02KKLine" % self.getProps()
             lineSeq = self.seqWithD02KK()
             
             StrippingDstarPromptWithD02HHConf._kkLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
@@ -143,11 +143,11 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         """
         
         #if StrippingDstarPromptWithD02HHConf._pipiLine == None : 
-        linepref = self.getProp('LinePrefix')
+        linepref = self.getProp('prefix')
         if not linepref in StrippingDstarPromptWithD02HHConf._pipiLine:
             from StrippingConf.StrippingLine import StrippingLine
             
-            lineName = "%(LinePrefix)sWithD02PiPiLine" % self.getProps()
+            lineName = "%(prefix)sWithD02PiPiLine" % self.getProps()
             lineSeq = self.seqWithD02PiPi()
             
             StrippingDstarPromptWithD02HHConf._pipiLine[linepref] = StrippingLine(lineName, algos = [ lineSeq ])
@@ -174,7 +174,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
 
         dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
-        seqName = "%(LinePrefix)sWithD02RSKPiSeq" % self.getProps()
+        seqName = "%(prefix)sWithD02RSKPiSeq" % self.getProps()
 
         ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
         seq =  bindMembers(seqName, algos = [d0Seq, dstar])
@@ -198,12 +198,12 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         d0Seq = self.seqD02WSKPi()   ## Seq for D0 -> pi- K+ reconstruction
         rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
 
-        combName = "%(LinePrefix)sWithD02WSKPiComb" % self.getProps()
+        combName = "%(prefix)sWithD02WSKPiComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
         dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
-        seqName = "%(LinePrefix)sWithD02WSKPiSeq" % self.getProps()
+        seqName = "%(prefix)sWithD02WSKPiSeq" % self.getProps()
 
         ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
         seq =  bindMembers(seqName, algos = [d0Seq, dstar])
@@ -227,12 +227,12 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         d0Seq = self.seqD02KK()   ## Seq for D0 -> pi- K+ reconstruction
         rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
 
-        combName = "%(LinePrefix)sWithD02KKComb" % self.getProps()
+        combName = "%(prefix)sWithD02KKComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
         dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
-        seqName = "%(LinePrefix)sWithD02KKSeq" % self.getProps()
+        seqName = "%(prefix)sWithD02KKSeq" % self.getProps()
 
         ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
         seq =  bindMembers(seqName, algos = [d0Seq, dstar])
@@ -256,12 +256,12 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         d0Seq = self.seqD02PiPi()   ## Seq for D0 -> pi- K+ reconstruction
         rsDstar = self.combRSDstar()   ## CombineParticles for D*+ -> D0 pi+
 
-        combName = "%(LinePrefix)sWithD02PiPiComb" % self.getProps()
+        combName = "%(prefix)sWithD02PiPiComb" % self.getProps()
 
         dstar = rsDstar.clone(combName)
         dstar.InputLocations = [ 'StdNoPIDsPions', d0Seq.outputLocation() ]
 
-        seqName = "%(LinePrefix)sWithD02PiPiSeq" % self.getProps()
+        seqName = "%(prefix)sWithD02PiPiSeq" % self.getProps()
 
         ## Since StdNoPIDsPions is DoD, no explicit dependence in the sequence
         seq =  bindMembers(seqName, algos = [d0Seq, dstar])
@@ -282,7 +282,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         combiCut =  "(APT>%(DstarPt)s*GeV) & (ADAMASS('D*(2010)+')<75*MeV)" % self.getProps()
         motherCut =  "(VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s) & (M-MAXTREE('D0'==ABSID,M)<(145.5+15)*MeV)" % self.getProps()
 
-        combName = "%(LinePrefix)sWithD02RSKPiComb" % self.getProps()
+        combName = "%(prefix)sWithD02RSKPiComb" % self.getProps()
 
         ## InputLocations must be defined by calling method.
         comb = CombineParticles( combName )
@@ -305,7 +305,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
 
         d0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
 
-        seqName = "%(LinePrefix)sD02RSKPiSeq" % self.getProps()
+        seqName = "%(prefix)sD02RSKPiSeq" % self.getProps()
 
         ## Since the base list StdLooseD02KPi is DoD, no explicit dependence
         ##   in the sequence
@@ -328,13 +328,13 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
 
         rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
 
-        filtName = "%(LinePrefix)sD02WSKPiFilt" % self.getProps()
+        filtName = "%(prefix)sD02WSKPiFilt" % self.getProps()
 
         d0Recon = rsD0Recon.clone(filtName)
         d0Recon.DecayDescriptor = "[D0 -> pi- K+]cc"
         d0Recon.InputLocations = [ 'StdNoPIDsPions', 'StdNoPIDsKaons' ]
 
-        seqName = "%(LinePrefix)sD02WSKPiSeq" % self.getProps()
+        seqName = "%(prefix)sD02WSKPiSeq" % self.getProps()
 
         ## Since the base list StdLooseD02KPiDCS is DoD, no explicit dependence
         ##   in the sequence
@@ -356,13 +356,13 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
 
         rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
 
-        filtName = "%(LinePrefix)sD02KKFilt" % self.getProps()
+        filtName = "%(prefix)sD02KKFilt" % self.getProps()
 
         d0Recon = rsD0Recon.clone(filtName)
         d0Recon.DecayDescriptor = "[D0 -> K- K+]cc"
         d0Recon.InputLocations = [ 'StdNoPIDsKaons' ]
 
-        seqName = "%(LinePrefix)sD02KKSeq" % self.getProps()
+        seqName = "%(prefix)sD02KKSeq" % self.getProps()
 
         ## Since the base list StdLooseD02KK is DoD, no explicit dependence
         ##   in the sequence
@@ -384,13 +384,13 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
 
         rsD0Recon = self.filtRSD0()   ## FilterDesktop for D0 -> K- pi+
 
-        filtName = "%(LinePrefix)sD02PiPiFilt" % self.getProps()
+        filtName = "%(prefix)sD02PiPiFilt" % self.getProps()
 
         d0Recon = rsD0Recon.clone(filtName)
         d0Recon.DecayDescriptor = "[D0 -> pi- pi+]cc"
         d0Recon.InputLocations = [ 'StdNoPIDsPions' ]
 
-        seqName = "%(LinePrefix)sD02PiPiSeq" % self.getProps()
+        seqName = "%(prefix)sD02PiPiSeq" % self.getProps()
 
         ## Since the base list StdLooseD02PiPi is DoD, no explicit dependence
         ##   in the sequence
@@ -416,7 +416,7 @@ class StrippingDstarPromptWithD02HHConf(LHCbConfigurableUser) : # {
         combiCut =  "(ADAMASS('D0')<75*MeV)" % self.getProps() ## Hard-code the mass windows for now.
         motherCut =  "(PT>%(D0Pt)s*GeV) & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s) & (BPVVD>%(D0PVDisp)s)" % self.getProps()
 
-        combName = "%(LinePrefix)sD02RSKPiFilt" % self.getProps()
+        combName = "%(prefix)sD02RSKPiFilt" % self.getProps()
 
         comb = CombineParticles( combName )
         comb.DecayDescriptor = '[D0 -> pi+ K-]cc'

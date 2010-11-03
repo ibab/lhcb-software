@@ -146,7 +146,7 @@ B2JpsiXLines += [ Jpsi2MuMuForBetasLine,Jpsi2MuMuForBetasDetachedLine ]
 ##################
 Bu2JpsiK = createCombinationSel( OutputList = "Bu2JpsiK",
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                 DaughterLists = [ KaonList, JpsiList],
+                                 DaughterLists = [ JpsiList, KaonList ],
                                  DaughterCuts  = {"K+": "(PT > 500)" },
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
@@ -171,7 +171,7 @@ B2JpsiXLines += [ Bu2JpsiKPrescaledLine, Bu2JpsiKDetachedLine, Bu2JpsiKUnbiasedL
 # WH: could in fact make lines above a sublist of this one
 Bu2JpsiH = createCombinationSel( OutputList = "Bu2JpsiKNoPID",
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                 DaughterLists = [ NoPIDKaonList, JpsiList],
+                                 DaughterLists = [ JpsiList, NoPIDKaonList ],
                                  DaughterCuts  = {"K+": "(PT > 500)"},
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
@@ -187,7 +187,7 @@ B2JpsiXLines += [ Bu2JpsiHDetachedLine ]
 
 Bs2JpsiPhi = createCombinationSel( OutputList = "Bs2JpsiPhi",
                                    DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
-                                   DaughterLists  = [ PhiList, JpsiList],
+                                   DaughterLists  = [ JpsiList, PhiList ],
                                    PreVertexCuts = "in_range(5000,AM,5650)",
                                    PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 Bs2JpsiPhiPrescaledLine = StrippingLine("Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , prescale = 1.00)
@@ -211,7 +211,7 @@ B2JpsiXLines += [ Bs2JpsiPhiPrescaledLine, Bs2JpsiPhiDetachedLine, Bs2JpsiPhiUnb
 
 Bd2JpsiKstar = createCombinationSel( OutputList = "Bd2JpsiKstar",
                                      DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
-                                     DaughterLists  = [ KstarList, JpsiList ],
+                                     DaughterLists  = [ JpsiList, KstarList ],
                                      PreVertexCuts = "in_range(5000,AM,5650)",
                                      PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
@@ -237,7 +237,7 @@ B2JpsiXLines += [ Bd2JpsiKstarPrescaledLine, Bd2JpsiKstarDetachedLine, Bd2JpsiKs
 ##################
 Bd2JpsiKs = createCombinationSel( OutputList = "Bd2JpsiKS",
                                   DecayDescriptor = "B0 -> J/psi(1S) KS0",
-                                  DaughterLists  = [ KsList, JpsiList ],
+                                  DaughterLists  = [ JpsiList, KsList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
                                   )
@@ -264,7 +264,7 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 ##################
 #Bs2Jpsif0 = createCombinationSel( OutputList = "Bs2Jpsif0",
 #                                  DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)",
-#                                  DaughterLists  = [ f0List, JpsiList],
+#                                  DaughterLists  = [ JpsiList, f0List ],
 #                                  PreVertexCuts = "ADAMASS('B_s0') < 300",
 #                                  PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10)" )
 #
@@ -278,7 +278,7 @@ B2JpsiXLines += [ Bd2JpsiKsPrescaledLine, Bd2JpsiKsDetachedLine, Bd2JpsiKsUnbias
 # Added by Yasmine
 Lambdab2JpsiLambda = createCombinationSel( OutputList = "Lambdab2JpsiLambda",
                                   DecayDescriptor = "[Lambda_b0 -> Lambda0 J/psi(1S) ]cc",
-                                  DaughterLists  = [ LambdaList, JpsiList ],
+                                  DaughterLists  = [ JpsiList, LambdaList ],
                                   PreVertexCuts = "in_range(5020,AM,6220)",
                                   PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < 20)"
                                   )
@@ -293,7 +293,7 @@ B2JpsiXLines += [Lambdab2JpsiLambdaUnbiasedLine ]
 ##################
 Bs2JpsiEta = createCombinationSel( OutputList = "Bs2JpsiEta",
                                   DecayDescriptor = "B_s0 -> J/psi(1S) eta",
-                                  DaughterLists  = [ EtaList, JpsiList ],
+                                  DaughterLists  = [ JpsiList, EtaList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)"
                                   )

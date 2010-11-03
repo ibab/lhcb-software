@@ -113,7 +113,7 @@ B2Psi2SXJpsiPiPiLines += [ Psi2SToJpsiPiPiLine ]
 #####################
 Bu2Psi2SKJpsiPiPi = createCombinationSel( OutputList = "Bu2Psi2SKJpsiPiPi",
                                           DecayDescriptor = "[B+ -> psi(2S) K+]cc",
-                                          DaughterLists = [ KaonList, Psi2SList],
+                                          DaughterLists = [ Psi2SList, KaonList ],
                                           DaughterCuts  = {"K+": "(PT > 500)" },
                                           PreVertexCuts = "in_range(5000,AM,5650)",
                                           PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
@@ -128,7 +128,7 @@ B2Psi2SXJpsiPiPiLines += [ Bu2Psi2SKJpsiPiPiLine]
 
 Bs2Psi2SPhiJpsiPiPi = createCombinationSel( OutputList = "Bs2Psi2SPhiJpsiPiPi",
                                             DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
-                                            DaughterLists  = [ PhiList, Psi2SList],
+                                            DaughterLists  = [ Psi2SList, PhiList ],
                                             PreVertexCuts = "in_range(5000,AM,5650)",
                                             PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
@@ -143,7 +143,7 @@ B2Psi2SXJpsiPiPiLines += [ Bs2Psi2SPhiJpsiPiPiLine]
 
 Bd2Psi2SKstarJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKstarJpsiPiPi",
                                               DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
-                                              DaughterLists  = [ KstarList, Psi2SList ],
+                                              DaughterLists  = [ Psi2SList, KstarList ],
                                               PreVertexCuts = "in_range(5000,AM,5650)",
                                               PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
@@ -157,7 +157,7 @@ B2Psi2SXJpsiPiPiLines += [ Bd2Psi2SKstarJpsiPiPiLine]
 #####################
 Bd2Psi2SKsJpsiPiPi = createCombinationSel( OutputList = "Bd2Psi2SKSJpsiPiPi",
                                            DecayDescriptor = "B0 -> psi(2S) KS0",
-                                           DaughterLists  = [ KsList, Psi2SList ],
+                                           DaughterLists  = [ Psi2SList, KsList ],
                                            PreVertexCuts = "in_range(5000,AM,5650)",
                                            PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)")
 

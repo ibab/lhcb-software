@@ -114,7 +114,7 @@ B2Psi2SXMuMuLines += [ Psi2SToMuMuLine,Psi2SToMuMuDetachedLine ]
 #####################
 Bu2Psi2SKMuMu = createCombinationSel( OutputList = "Bu2Psi2SKMuMu",
                                  DecayDescriptor = "[B+ -> psi(2S) K+]cc",
-                                 DaughterLists = [ KaonList, Psi2SList],
+                                 DaughterLists = [ Psi2SList, KaonList ],
                                  DaughterCuts  = {"K+": "(PT > 500)" },
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
@@ -137,7 +137,7 @@ B2Psi2SXMuMuLines += [ Bu2Psi2SKMuMuPrescaledLine, Bu2Psi2SKMuMuDetachedLine, Bu
 
 Bs2Psi2SPhiMuMu = createCombinationSel( OutputList = "Bs2Psi2SPhiMuMu",
                                         DecayDescriptor = "B_s0 -> psi(2S) phi(1020)",
-                                        DaughterLists  = [ PhiList, Psi2SList],
+                                        DaughterLists  = [ Psi2SList, PhiList ],
                                         PreVertexCuts = "in_range(5000,AM,5650)",
                                         PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
@@ -161,7 +161,7 @@ B2Psi2SXMuMuLines += [ Bs2Psi2SPhiMuMuPrescaledLine, Bs2Psi2SPhiMuMuDetachedLine
 
 Bd2Psi2SKstarMuMu = createCombinationSel( OutputList = "Bd2Psi2SKstarMuMu",
                                           DecayDescriptor = "[B0 -> psi(2S) K*(892)0]cc",
-                                          DaughterLists  = [ KstarList, Psi2SList ],
+                                          DaughterLists  = [ Psi2SList, KstarList ],
                                           PreVertexCuts = "in_range(5000,AM,5650)",
                                           PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 10)" )
 
@@ -183,7 +183,7 @@ B2Psi2SXMuMuLines += [ Bd2Psi2SKstarMuMuPrescaledLine, Bd2Psi2SKstarMuMuDetached
 
 Bd2Psi2SKsMuMu = createCombinationSel( OutputList = "Bd2Psi2SKsMuMu",
                                        DecayDescriptor = "B0 -> psi(2S) KS0",
-                                       DaughterLists  = [ KsList, Psi2SList ],
+                                       DaughterLists  = [ Psi2SList, KsList ],
                                        PreVertexCuts = "in_range(5000,AM,5650)",
                                        PostVertexCuts = "in_range(5100,M,5550) & (VFASPF(VCHI2PDOF) < 20)"
                                        )

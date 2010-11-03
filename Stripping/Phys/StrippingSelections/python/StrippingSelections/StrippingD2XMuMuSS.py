@@ -18,6 +18,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
     """
     
     __slots__ = {
+	"prefix"	: "",
         #Muons
         "MuonTRCHI2"    : 10.   ,#adimensional
         "MuonP"         : 3000. ,#MeV
@@ -66,56 +67,57 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
 
     def PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('D2PiMuMuSSLine', prescale = 1., 
+        return StrippingLine(self.getProp("prefix") + 'D2PiMuMuSSLine', prescale = 1., 
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
                                       self._D2PiMuMuSS()])
     def PiOS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('D2PiMuMuOSLine', prescale = 1., 
+        return StrippingLine(self.getProp("prefix") + 'D2PiMuMuOSLine', prescale = 1., 
                              algos = [self._muonFilter(),
                                       self._pionFilter(),
                                       self._D2PiMuMuOS()])
 
     def KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('D2KMuMuSSLine', prescale = 1., 
+        return StrippingLine(self.getProp("prefix") + 'D2KMuMuSSLine', prescale = 1., 
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._D2KMuMuSS()])
     
     def KOS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine('D2KMuMuOSLine', prescale = 1., 
+        return StrippingLine(self.getProp("prefix") + 'D2KMuMuOSLine', prescale = 1., 
                              algos = [self._muonFilter(),
                                       self._kaonFilter(),
                                       self._D2KMuMuOS()])
 
     def _muonFilter( self ):
         from Configurables import FilterDesktop
-        _mu = FilterDesktop("Mu_forD2XMuMu",
+        _mu = FilterDesktop(self.getProp("prefix") + "Mu_forD2XMuMu",
                             InputLocations = ["Phys/StdLooseMuons"])
         _mu.Code = self._NominalMuSelection() % self.getProps()
         return _mu
 
     def _pionFilter( self ):
         from Configurables import FilterDesktop
-        _pi = FilterDesktop("Pi_forD2XMuMu",
+        _pi = FilterDesktop(self.getProp("prefix") + "Pi_forD2XMuMu",
                             InputLocations = ["Phys/StdLoosePions"])
         _pi.Code = self._NominalPiSelection() % self.getProps()
         return _pi
 
     def _kaonFilter( self ):
         from Configurables import FilterDesktop
-        _ka = FilterDesktop("K_forD2XMuMu",
+        _ka = FilterDesktop(self.getProp("prefix") + "K_forD2XMuMu",
                             InputLocations = ["Phys/StdLooseKaons"])
         _ka.Code = self._NominalKSelection() % self.getProps()
         return _ka
     
     def _D2PiMuMuSS( self ):
         from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMuMu = CombineParticles("D2PiMuMuSS")
-        _PiMuMu.InputLocations = ["Phys/Mu_forD2XMuMu","Phys/Pi_forD2XMuMu"]
+        _PiMuMu = CombineParticles(self.getProp("prefix") + "D2PiMuMuSS")
+        _PiMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
+				  "Phys/" + self.getProp("prefix") + "Pi_forD2XMuMu"]
         _PiMuMu.DecayDescriptors = ["[D- -> pi+ mu- mu-]cc"]
         _PiMuMu.CombinationCut = " (AM>%(DMassLow)s*MeV) & (ADAMASS('D-') < %(DMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(DVCHI2DOF)s ) & (BPVVDCHI2 > %(DFDCHI2)s)"\
@@ -125,8 +127,9 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
 
     def _D2PiMuMuOS( self ):
         from Configurables import CombineParticles, OfflineVertexFitter
-        _PiMuMu = CombineParticles("D2PiMuMuOS")
-        _PiMuMu.InputLocations = ["Phys/Mu_forD2XMuMu","Phys/Pi_forD2XMuMu"]
+        _PiMuMu = CombineParticles(self.getProp("prefix") + "D2PiMuMuOS")
+        _PiMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
+				  "Phys/" + self.getProp("prefix") + "Pi_forD2XMuMu"]
         _PiMuMu.DecayDescriptors = ["[D+ -> pi+ mu+ mu-]cc"]
         _PiMuMu.CombinationCut = "(AM>%(DMassLow)s*MeV)& (ADAMASS('D+') < %(DMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _PiMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(DVCHI2DOF)s ) & (BPVVDCHI2 > %(DFDCHI2)s)"\
@@ -136,8 +139,9 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
     
     def _D2KMuMuSS( self ):
         from Configurables import CombineParticles, OfflineVertexFitter
-        _KMuMu = CombineParticles("D2KMuMuSS")
-        _KMuMu.InputLocations = ["Phys/Mu_forD2XMuMu","Phys/K_forD2XMuMu"]
+        _KMuMu = CombineParticles(self.getProp("prefix") + "D2KMuMuSS")
+        _KMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
+				 "Phys/" + self.getProp("prefix") + "K_forD2XMuMu"]
         _KMuMu.DecayDescriptors = ["[D- -> K+ mu- mu-]cc"]
         _KMuMu.CombinationCut = "(AM>%(DMassLow)s*MeV)& (ADAMASS('D-') < %(DMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(DVCHI2DOF)s ) & (BPVVDCHI2 > %(DFDCHI2)s)"\
@@ -147,8 +151,9 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
     
     def _D2KMuMuOS( self ):
         from Configurables import CombineParticles, OfflineVertexFitter
-        _KMuMu = CombineParticles("D2KMuMuOS")
-        _KMuMu.InputLocations = ["Phys/Mu_forD2XMuMu","Phys/K_forD2XMuMu"]
+        _KMuMu = CombineParticles(self.getProp("prefix") + "D2KMuMuOS")
+        _KMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
+				 "Phys/" + self.getProp("prefix") + "K_forD2XMuMu"]
         _KMuMu.DecayDescriptors = ["[D+ -> K+ mu+ mu-]cc"]
         _KMuMu.CombinationCut = " (AM>%(DMassLow)s*MeV)& (ADAMASS('D+') < %(DMassWin)s *MeV) & (AM23>250.*MeV)" % self.getProps()
         _KMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(DVCHI2DOF)s ) & (BPVVDCHI2 > %(DFDCHI2)s)"\

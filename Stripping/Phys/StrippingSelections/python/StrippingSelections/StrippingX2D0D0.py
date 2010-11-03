@@ -73,14 +73,18 @@ class StrippingX2D0D0Conf(object):
         # ---> Pseudo cut on pseudo mother particle
         #
         }
-    
+   
+
+    def __init__( self, prefix = "" ):
+	self.prefix = prefix
+ 
     def line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         config = StrippingX2D0D0Conf.config_X2D0D0
         checkConfig(StrippingX2D0D0Conf.__configuration_keys__, config)
 #        self.Bd2DstarDstarLine = self.X2D0D0(config)
         self.lines = [self.X2D0D0(config)]
-	return StrippingLine("X2D0D0"
+	return StrippingLine(self.prefix + "X2D0D0"
               , prescale = 1
               , postscale = 1
               , algos = self.lines
@@ -99,7 +103,7 @@ class StrippingX2D0D0Conf(object):
 
 
         pD2Kpi = CombineParticles(
-            "pD2Kpi"
+            self.prefix + "pD2Kpi"
             , InputLocations = ["StdTightKaons", "StdTightPions"]
             , DecayDescriptor = '[D0 -> K- pi+]cc'
             , DaughtersCuts = {"K-": pKaon_DC, "pi+": pPion_DC}
@@ -108,7 +112,7 @@ class StrippingX2D0D0Conf(object):
             )    
 
         tD2Kpi = CombineParticles(
-            "tD2Kpi"
+            self.prefix + "tD2Kpi"
             , InputLocations = ["StdTightKaons", "StdTightPions"]
             , DecayDescriptor = '[D0 -> K- pi+]cc'
             , DaughtersCuts = {"K+": tKaon_DC, "pi-": tPion_DC}
@@ -117,19 +121,19 @@ class StrippingX2D0D0Conf(object):
             )    
 
         tagAndProbe = CombineParticles(
-            "tpD2Kpi"
-            , InputLocations = [ "pD2Kpi", "tD2Kpi" ]
+            self.prefix + "tpD2Kpi"
+            , InputLocations = [ self.prefix + "pD2Kpi", self.prefix + "tD2Kpi" ]
             , DecayDescriptors = [ 'B0 -> D0 D0', 'B0 -> D0 D~0', 'B0 -> D~0 D~0' ]
             , CombinationCut = "(AP>0)"
             , MotherCut = "(P>0)"
             )
 
 
-	combine = FilterDesktop("CombineX")
-	combine.InputLocations = ["tD2Kpi", "pD2Kpi"]
+	combine = FilterDesktop(self.prefix + "CombineX")
+	combine.InputLocations = [self.prefix + "tD2Kpi", self.prefix + "pD2Kpi"]
 	combine.Code = "(ALL)"
 
-	selseq = GaudiSequencer("X2D0D0SelSequence")
+	selseq = GaudiSequencer(self.prefix + "X2D0D0SelSequence")
 	selseq.Members += [tD2Kpi, pD2Kpi, tagAndProbe, combine]
 	selseq.ModeOR = False
 	selseq.ShortCircuit = True

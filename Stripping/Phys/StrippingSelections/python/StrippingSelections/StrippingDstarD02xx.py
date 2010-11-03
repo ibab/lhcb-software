@@ -49,7 +49,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
                   ,'DstD0DMWin'         : 10.        # MeV
                   ,'DstD0DMWinMuMu'      : 30.        # MeV  
                   ,'RequireHlt'         : 1          # 
-                  ,'LinePrefix'         : '' 
+                  ,'prefix'         : '' 
                   }
 
 
@@ -74,7 +74,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) " 
         d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (INGENERATION( (MIPCHI2DV(PRIMARY)>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
         name = "D02"+xplus+xminus
-        tbline = CombineParticles( self.getProp('LinePrefix')+name )
+        tbline = CombineParticles( self.getProp('prefix')+name )
         inputLoc = {
              "pi" : "StdNoPIDsPions"
             ,"mu" : "StdLooseMuons"
@@ -104,7 +104,7 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         dstcomb_picut = "(PT> %(PiMinPT)s * MeV) &  ( MIPCHI2DV(PRIMARY)< %(PiMaxIPCHI2)s) & (TRCHI2DOF<%(XTrackChi2Pi)s) "
         dstcomb_d0cut = "PT>0"
         
-        dstar = CombineParticles( self.getProp('LinePrefix')+"combine" )
+        dstar = CombineParticles( self.getProp('prefix')+"combine" )
         #dstar.DecayDescriptors = ['[D*(2010)+ -> D0 pi+]cc']
         dstar.DecayDescriptors = ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-']
         dstar.DaughtersCuts = {    "pi+" : dstcomb_picut % self.getProps() ,
@@ -121,15 +121,15 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         xxComb = self.combinetwobody(xplus, xminus)
         dstar = self.combineDstar()
         combname = xplus+xminus
-        dstar_box = dstar.clone(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"D0PiComb" )
-        dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", self.getProp('LinePrefix')+"D02"+combname ]
-        seq_box =  bindMembers(self.getProp('LinePrefix')+"seq_"+combname+"_box", algos = [ xxComb, dstar_box])
+        dstar_box = dstar.clone(self.getProp('prefix')+"Dst2PiD02"+combname+"D0PiComb" )
+        dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", self.getProp('prefix')+"D02"+combname ]
+        seq_box =  bindMembers(self.getProp('prefix')+"seq_"+combname+"_box", algos = [ xxComb, dstar_box])
         pres = "Prescale"+combname+"Box"
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
         hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
-        line_box = StrippingLine(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"Box",
+        line_box = StrippingLine(self.getProp('prefix')+"Dst2PiD02"+combname+"Box",
                                  HLT = "HLT_PASS_RE('"+hltname+"')",
                                  algos = [ seq_box ], prescale = self.getProps()[ pres ])
 
@@ -141,15 +141,15 @@ class StrippingDstarD02xxConf(LHCbConfigurableUser):
         xxComb = self.combinetwobody(xplus, xminus)
 #        dstar = self.combineDstar()
         combname = xplus+xminus
-#        dstar_box = dstar.clone(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"D0PiComb" )
-#        dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", self.getProp('LinePrefix')+"D02"+combname ]
-        seq_box =  bindMembers(self.getProp('LinePrefix')+"seq_"+combname+"_untagged__box", algos = [ xxComb])
+#        dstar_box = dstar.clone(self.getProp('prefix')+"Dst2PiD02"+combname+"D0PiComb" )
+#        dstar_box.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", self.getProp('prefix')+"D02"+combname ]
+        seq_box =  bindMembers(self.getProp('prefix')+"seq_"+combname+"_untagged__box", algos = [ xxComb])
         pres = "Prescale"+combname+"_untagged_Box"
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
         hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
-        line_untagged_box = StrippingLine(self.getProp('LinePrefix')+"Dst2PiD02"+combname+"_untagged_Box",
+        line_untagged_box = StrippingLine(self.getProp('prefix')+"Dst2PiD02"+combname+"_untagged_Box",
                                  HLT = "HLT_PASS_RE('"+hltname+"')",
                                  algos = [ seq_box ], prescale = self.getProps()[ pres ])
 

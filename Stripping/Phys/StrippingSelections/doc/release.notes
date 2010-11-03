@@ -5,6 +5,19 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-03 - Greig Cowan 
+ - Modified some lines to use a name prefix. This is essential to allow for lines to
+   run in both the [Charm, Leptonic] full and microDST streams.
+ - Updated beta_s lines to use optimal ordering of input particles due to new changes
+   in Selection toolkit.
+ - Added new stripping test sample from Reco07-Stripping11:
+
+        Events: ~1.6M
+        Run: 81430
+        mu: ~2.7
+        TCK: 0x002E002C
+        Magnet: Down
+
 ! 2010-11-02 - Sam Gregson
  - Update to StrippingD2KS0h_KS02PiPi.py 
 		- Loosened D(s) meson IP chi2 cut to allow DfB contributions through
