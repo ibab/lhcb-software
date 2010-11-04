@@ -44,16 +44,13 @@ import KaliCalo.ZipShelve        as ZipShelve
 kali = firstPass (
     ## ``Physics''
     PtGamma          = 250 * MeV ,
-    PtPi0            = 400 * MeV ,
     ##     ## IO 
     NTuple           = "KaliPi0_Tuples_2k+10.root" , 
     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
-    ##
     ## general 
     DataType         = '2010'   ,
     EvtMax           =  -1 
     )
-
 
 # =============================================================================
 ## the actual job steering 

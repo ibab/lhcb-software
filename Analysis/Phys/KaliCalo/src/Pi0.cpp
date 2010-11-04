@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.19 2010-08-10 09:44:32 ibelyaev Exp $
+// $Id:$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,8 +46,13 @@ namespace Kali
   // ==========================================================================
   /** @class Pi0
    *  Simple algorithm for Calorimeter Cailbration using pi0 peak
+   *
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-09-28
+   *
+   *                    $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
   class Pi0 : public LoKi::Algo
   {
@@ -75,8 +80,8 @@ namespace Kali
       , m_mirror        ( false )
       , m_veto_dm       ( -1 * Gaudi::Units::MeV )
       , m_veto_chi2     ( -1  )
-      , m_ptCutExp      ( "PNONE" )
-      , m_ptCut         ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) )
+      , m_pi0CutExp     ( "PT > 200*MeV*(ETA-1) " )
+      , m_pi0Cut        ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) )
       , m_spdDigitsTool (  0  )
       , m_ecal          (  0  )
         // histograms
@@ -102,9 +107,10 @@ namespace Kali
           "Chi2 for pi0-veto" )
         -> declareUpdateHandler ( &Kali::Pi0::vetoHandler , this ) ;
       //
-      declareProperty ( "PtPi0"    ,
-                        m_ptCutExp ,
-                        "LoKi cut for Pt of the Pi0" ) ;
+      declareProperty
+        ( "Pi0Cut"   ,
+          m_pi0CutExp ,
+          "Predicate for Pi0 (LoKi/Bender expression)" ) ;
       //
       Property* histos = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
       Assert ( 0 != histos , "Unable to get property 'HistoProduce'" ) ;
@@ -112,6 +118,12 @@ namespace Kali
       { histos -> declareUpdateHandler ( &Kali::Pi0::histosHandler , this ) ; }
       //
       setProperty ( "HistoProduce" , false ) ;
+      //
+      ToolMap _combiners ;
+      _combiners[""] = "MomentumCombiner" ;
+      StatusCode sc = setProperty ( "ParticleCombiners" , _combiners ) ;
+      Assert ( sc.isSuccess() , "Unable to set the proper ParticleComber" );
+      //
     }
     /// virtual & protected destructor
     virtual ~Pi0() {}
@@ -161,18 +173,20 @@ namespace Kali
     // ========================================================================
   private:
     // ========================================================================
-    bool  m_mirror     ;                               // use Albert's trick?
-    // Delta-mass for pi0-veto
+    /// use Albert's trick?
+    bool  m_mirror     ;                                // use Albert's trick?
+    /// Delta-mass for pi0-veto
     double m_veto_dm   ;                               // Delta-mass for pi0-veto
-    // chi2       for pi0-veto
+    /// chi2       for pi0-veto
     double m_veto_chi2 ;                               // Delta-mass for pi0-veto
-    // ptCut functor
-    std::string       m_ptCutExp ;
-    LoKi::Types::Cut  m_ptCut    ;
-    // Tool for retrieving SPD digits info
-    ICaloDigits4Track*  m_spdDigitsTool ;
+    /// pi0-Cut functor
+    std::string       m_pi0CutExp ;                    //       Pi0-Cut functor
+    /// pi0-Cut functor expression 
+    LoKi::Types::Cut  m_pi0Cut    ;               // pi0-Cut functor expression 
+    /// Tool for retrieving SPD digits info
+    ICaloDigits4Track*  m_spdDigitsTool ; // Tool for retrieving SPD digits info
     // DeCalorimeter object for ECAL
-    DeCalorimeter*      m_ecal ;
+    DeCalorimeter*      m_ecal ;          //      DeCalorimeter object for ECAL
     // ========================================================================
   private:
     // ========================================================================
@@ -358,13 +372,15 @@ double Kali::Pi0::caloEnergy4Photon( const Gaudi::LorentzVector&  p )
 // ============================================================================
 // Energy of the seed cell of a CaloCluster
 // ============================================================================
-double Kali::Pi0::getSeedCellEnergy( const LHCb::CaloCluster* cluster )
+double Kali::Pi0::getSeedCellEnergy ( const LHCb::CaloCluster* cluster )
 {
   const LHCb::CaloCluster::Entries& entries = cluster->entries();
-  LHCb::CaloCluster::Entries::const_iterator iseed = LHCb::ClusterFunctors::locateDigit ( entries.begin () ,entries.end   () ,
-                                                                                          LHCb::CaloDigitStatus::SeedCell ) ;
+  LHCb::CaloCluster::Entries::const_iterator iseed = 
+    LHCb::ClusterFunctors::locateDigit 
+    ( entries.begin () ,entries.end   () , LHCb::CaloDigitStatus::SeedCell ) ;
+  //
   if( entries.end() == iseed ) return 0.0;
-
+  //
   return iseed->digit()->e();
 }
 // ============================================================================
@@ -372,6 +388,7 @@ double Kali::Pi0::getSeedCellEnergy( const LHCb::CaloCluster* cluster )
 // ============================================================================
 StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
 {
+  //
   StatusCode sc = LoKi::Algo::initialize();
   if ( sc.isFailure() ) { return sc ; }
   //
@@ -385,11 +402,15 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   //
   setupHistos() ;
   //
-  LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) ;
-  sc = factory->get( m_ptCutExp , m_ptCut ) ;
-  if ( sc.isFailure() ) { return Error ( "Unable to compile Pt-cut predicate") ; }   
+  LoKi::IHybridFactory* factory = 
+    tool<LoKi::IHybridFactory> ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) ;
+  sc = factory -> get ( m_pi0CutExp , m_pi0Cut ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to compile Pi0-Cut predicate" , sc ) ; }   
   //
-  m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
+  // Load tool for SPD
+  m_spdDigitsTool = 
+    tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; 
   sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
   if ( sc.isFailure() )
   { return Error ( "Unable to configure 'SpdEnergyForTrack' tool", sc ) ; }
@@ -422,49 +443,47 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   
   counter ( "#gamma_all") += all   . size () ;
   counter ( "#gamma"    ) += gamma . size () ;
-
+  
   Tuple tuple = nTuple ( "Pi0-Tuple" ) ;
-
+  
   const bool make_tuples = produceNTuples() ;
-
+  
   LHCb::CaloDigit::Set digits ;
-
+  
   typedef std::set<const LHCb::Particle*> Photons ;
   Photons                                 photons ;
 
-
-
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 )
   {
-
+    
     const double              m12 = pi0->mass ( 1 , 2 ) ;
     const LoKi::LorentzVector p12 = pi0->p    ( 1 , 2 ) ;
-
+    
     const LHCb::Particle* g1 = pi0(1) ;
     if ( 0 == g1         ) { continue ; }  // CONTINUE
-
+    
     const LHCb::Particle* g2 = pi0(2) ;
     if ( 0 == g2         ) { continue ; }  // CONTINUE
-
+    
     // trick with "mirror-background" by Albert Puig
-
+    
     // invert the first photon :
     Gaudi::LorentzVector _p1 = g1->momentum() ;
     _p1.SetPx ( -_p1.Px () ) ;
     _p1.SetPy ( -_p1.Py () ) ;
     const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
-
-    const bool good    =             ( m12      < 335 * MeV && m_ptCut( pi0 ) ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV && m_ptCut( pi0 ) ) ;
-
+    
+    const bool good    =             ( m12      < 335 * MeV ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
+    
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
-
+    
     double spd1e = seedEnergyFrom ( g1 , spd ) ;
-    if ( 0 < spd1e ) { continue ; }
-
+    if ( 0 < spd1e ) { continue ; }                // CONTINUE  
+    
     double spd2e = seedEnergyFrom ( g2 , spd ) ;
-    if ( 0 < spd2e ) { continue ; }
-
+    if ( 0 < spd2e ) { continue ; }                // CONITUNE 
+    
     // order the photons according energy in preshower
     double prs1e = energyFrom ( g1 , prs ) ;
     double prs2e = energyFrom ( g2 , prs ) ;
@@ -474,30 +493,30 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( prs1e , prs2e ) ;
       std::swap ( spd1e , spd2e ) ;
     }
-
+    
     const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
-    if ( 0 == hypo1 ) { continue ; }
+    if ( 0 == hypo1 ) { continue ; }                       // CONTINUE 
     const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
-    if ( 0 == hypo2 ) { continue ; }
+    if ( 0 == hypo2 ) { continue ; }                       // CONTINUE 
     
     const LHCb::CaloCluster* cluster1 = cluster ( g1 )  ;
-    if ( 0 == cluster1 ) { continue ; }
+    if ( 0 == cluster1 ) { continue ; }                    // CONITNUE 
     const LHCb::CaloCluster* cluster2 = cluster ( g2 )  ;
-    if ( 0 == cluster2 ) { continue ; }    
-
+    if ( 0 == cluster2 ) { continue ; }                    // CONTINUE
+    
+    /// apply pi0-cut:
+    if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
+    
+    
     const Gaudi::LorentzVector mom1 = g1->momentum() ;
     const Gaudi::LorentzVector mom2 = g2->momentum() ;
-
-    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
-                             hypo1->position()->y() ,
-                             hypo1->position()->z() );
-
+    
     const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
     const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
 
     // apply cut on 3x3 SPD
-    if ( spdCut < spd1e3x3 ) { continue ; }
-    if ( spdCut < spd2e3x3 ) { continue ; }
+    if ( spdCut < spd1e3x3 ) { continue ; }                 // CONITUNE 
+    if ( spdCut < spd2e3x3 ) { continue ; }                 // CONTINUE 
     
     // pi0-veto ?
     bool veto = true ;
@@ -505,6 +524,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     { veto = pi0Veto ( g1 , g2 , all   , m_veto_dm , m_veto_chi2 ) ; }
     if ( !veto ) { continue ; }                                           // CONTINUE
     
+
     if ( good && m12 < 250 * MeV )
     {
       if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
@@ -517,10 +537,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     photons.insert  ( g1 ) ;
     photons.insert  ( g2 ) ;
     
-    if  ( !make_tuples ) { continue ; }
+    if  ( !make_tuples ) { continue ; }                      // CONTINUE 
     
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;
+    
+
+    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
+                             hypo1->position()->y() ,
+                             hypo1->position()->z() );
+    
 
     // fill N-tuples
     if  ( good )
@@ -541,10 +567,10 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
                  spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym ,
                  cluster1 , cluster2 , 1 ) ;
     }
-
+    
     //
   }
-
+  
   for ( Photons::const_iterator iphoton = photons.begin() ;
         photons.end() != iphoton ; ++iphoton )
   {
@@ -552,7 +578,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     LHCb::Particle ph (**iphoton) ;
     desktop()->keep( &ph  ) ;
   }
-
+  
   counter ( "#photons" ) += photons .size  () ;
 
   setFilterPassed ( !photons.empty() ) ;

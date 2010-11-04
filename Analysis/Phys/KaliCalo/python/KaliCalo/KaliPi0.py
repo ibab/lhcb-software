@@ -44,7 +44,7 @@ import KaliCalo.ZipShelve        as ZipShelve
 ##kali = firstPass (
 ##    ## ``Physics''
 ##    PtGamma          = 250 * MeV ,
-##    PtPi0            = "PT > 550 * MeV" ,
+##    Pi0Cut           = "PT > 550 * MeV" ,
 ##    ## IO 
 ##    NTuple           = "KaliPi0_Tuples_2k+10.root" , 
 ##    FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
@@ -57,7 +57,7 @@ import KaliCalo.ZipShelve        as ZipShelve
 kali = secondPass (
     ## ``Physics''
     PtGamma          = 250 * MeV ,
-    PtPi0            = "PT > 550 * MeV",
+    Pi0Cut           = "PT > 550 * MeV",
     ## IO 
     NTuple           = "KaliPi0_Tuples_2k+10.root" , 
     FemtoDST         = "KaliPi0_2k+10.fmDST"       ,

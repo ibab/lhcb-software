@@ -43,6 +43,11 @@
 #
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2009-09-28
+#
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
+#
 # =============================================================================
 """
 The basic configuration to (re)run Ecal pi0-calibration
@@ -85,7 +90,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $ "
+__version__ = " version $Revision: 1.21 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -188,7 +193,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         ## ``Physics''
         , 'PtGamma'             : 300 * MeV ## Pt-cut for photons 
-        , 'PtPi0'               : "PT > 800 * MeV" ## Pt-cut for pi0  
+        , 'Pi0Cut'              : " PT > 200 * MeV * ( ETA - 1 ) " ## Cut for pi0  
         , 'SpdCut'              : 0.1 * MeV ## Spd-cuts for photons 
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
@@ -228,7 +233,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'PrsCoefficients'     : """ The map of (mis)calibration coefficients for Prs """
         ## ``Physics''
         , 'PtGamma'             : """ Pt-cut for photons """
-        , 'PtPi0'               : """ Pt-cut for pi0 """ 
+        , 'Pi0Cut'              : """ Cut for pi0 (LoKi/Bender expression)""" 
         , 'SpdCut'              : """ Spd-cuts for photons """ 
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
@@ -406,7 +411,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             ## specific cuts :
             Cuts = { 'PtGamma' : self.getProp ( 'PtGamma' ) ,
                      'SpdCut'  : self.getProp ( 'SpdCut'  ) } ,
-            PtPi0          = self.getProp ( 'PtPi0' )       ,
+            ## cut for pi0 :
+            Pi0Cut         = self.getProp ( 'Pi0Cut' )      ,
             ## general configuration 
             NTupleLUN      = "KALIPI0"                      ,
             HistoPrint     = True                           ,
@@ -674,7 +680,9 @@ def firstPass ( **args ) :
     """
     
     kali = KaliPi0Conf (
+        ##
         FirstPass        = True ,
+        ##
         UseTracks        = args.pop ( 'UseTracks'        , True     ) ,
         UseSpd           = args.pop ( 'UseSpd'           , True     ) ,
         UsePrs           = args.pop ( 'UsePrs'           , False    ) ,
@@ -705,7 +713,9 @@ def secondPass ( **args ) :
     
     """
     kali = KaliPi0Conf (
+        ##
         FirstPass  = False ,
+        ##
         UseTracks  = args.pop ( 'UseTracks'  , False ) ,
         UseSpd     = args.pop ( 'UseSpd'     , False ) ,
         UsePrs     = args.pop ( 'UsePrs'     , False ) ,

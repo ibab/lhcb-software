@@ -7,6 +7,18 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Vanya Belyaev
+
+ -  cmt/requirements 
+
+     version increment to v4r6 
+
+! 2010-11-04 - Vanya Belyaev
+
+   - fix the problem with ParticleCombier (use MomentumCombiner ) 
+   - rename "PtPi0" to "Pi0Cut"
+
+
 ! 2010-11-04 Daria Savrina
 
 - Removed pi0 veto cut from the default configuration
