@@ -396,7 +396,7 @@ StatusCode DeVeloPixSquareType::channelToPoint( const LHCb::VeloPixChannelID& ch
 StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
                                                     std::vector <LHCb::VeloPixChannelID>& channels) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  //MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   // Get the channel corresponding to the central point 
   LHCb::VeloPixChannelID  channelCentral;
   std::pair <double, double> fraction;
@@ -406,40 +406,76 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
   std::pair <double, double> size (0.,0.);
   if( sc.isSuccess()) size = PixelSize(channelCentral);
 
+
   // Loop over the possible position in the 3x3 cluster
-  for (int x = -1 ; x < 2 ; x ++){
-    for (int y = -1 ; y < 2 ; y ++){
+  int pixY = (channelCentral).pixel_hp();
+  int pixX = (channelCentral).pixel_lp();
+  int chip = (channelCentral).chip();
+  int ladderIndex = WhichLadder(loc_point);
+  int NchipInLad =m_ladders[ladderIndex].nChip();
       
-      // if it is the central position and it was corresponding to a channel, put it in the list
-      if( x == 0 && y == 0 && sc.isSuccess() ) {
-        channels.push_back(channelCentral);
-        continue;
-      }
-      // but if is the central position and it does not correspond to any channel skip it
-      else if( x == 0 && y == 0 && !sc.isSuccess() )  continue;
-      double relx = 0;
-      double rely = 0;
-      // compute the relx,rely distances to which one might find an other pixel for the different x,y    
-      if (x < 0) relx = - fraction.first*size.first - lpSize()/2;
-      if (x > 0) relx = (1.- fraction.first)*size.first + lpSize()/2;
-      if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
-      if (y > 0) rely = (1.- fraction.second)*size.second + hpSize()/2;
-      if (!sc.isSuccess()){
-        // in case fraction is undefined (central position does not correspond to any channel), move by nominal size
-        relx = x*lpSize();
-        rely = y*hpSize();
-      }
-      
-      Gaudi::XYZPoint neigh_point (loc_point.x()+relx,loc_point.y()+rely,loc_point.z());  
-      Gaudi::XYZPoint glob_neigh_point = localToGlobal(neigh_point);
-      LHCb::VeloPixChannelID neig_channel;
-      std::pair <double,double> frac (0.,0.);
-      // if there is a channel corresponding to this new point, put it in the list
-      if ( pointToChannel( glob_neigh_point, neig_channel, frac).isSuccess()){
-        channels.push_back(neig_channel);
+  int minY(-1),maxY(2);
+  int minX(-1),maxX(2);
+  int chipoffset (0);
+  // if it is the central position and it was corresponding to a channel, put it in the list
+  if( sc.isSuccess() ) {
+    
+
+    channels.push_back(channelCentral);
+    //bool diff = false;
+    if (pixX == 0 || pixX == nPixCol()-1 || pixY==0 || pixY==nPixRow()-1){
+      //diff = true;
+      // if pixel is fisrt row, start loop at 0
+      if (pixY == 0 )minY=0;
+      // if pixel is last row, end loop at 0
+      if (pixY == nPixRow()-1 )maxY=1;
+      // if pixel is first col and this is first chip of ladder, start loop at 0
+      if (pixX == 0 && chip%NchipInLad == 0)minX=0;
+      // if pixel is last col and this is lasr chip of ladder, end loop at 0
+      if (pixX == nPixRow()-1 && chip%NchipInLad == NchipInLad-1)maxX=1;
+      // if pixel is first col and this is not first chip of ladder, start loop at 0
+      if (pixX == 0 && chip%NchipInLad != 0)chipoffset = -1;
+      // if pixel is last col and this is lasr chip of ladder, end loop at 0
+      if (pixX == nPixRow()-1 && chip%NchipInLad != NchipInLad-1)chipoffset = 1;
+    }
+    
+    //if (diff)msg() << MSG::INFO<<"Central Channel "<<(channelCentral).sensor()<<" "<<(channelCentral).chip()<<" "<<(channelCentral).pixel_hp()<<" "<<(channelCentral).pixel_lp()<<" "<<size<<" x,y,zloc "<<loc_point<<endreq;
+    for (int x = minX ; x < maxX ; x ++){
+      for (int y = minY ; y < maxY ; y ++){
+	LHCb::VeloPixChannelID neig_channel(channelCentral);
+	if (x == 0 && y == 0)continue;
+	neig_channel.setChip(neig_channel.chip()+chipoffset);
+	neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
+	neig_channel.setPixel_hp(neig_channel.pixel_hp()+y);
+	channels.push_back(neig_channel);
+	//if (diff) msg() << MSG::INFO<<"       x,y "<<x<<" "<<y<<" minX,Y "<<minX<<" "<<minY<<" maxX,Y"<<maxX<<" "<<maxY<<" "<<(neig_channel).sensor()<<" "<<(neig_channel).chip()<<" "<<(neig_channel).pixel_hp()<<" "<<(neig_channel).pixel_lp()<<endreq;
       }
     }
   }
+  else if(  !sc.isSuccess() ) {
+    //msg() << MSG::INFO<<"Central Channel does not exist.... "<<" x,y,zloc "<<loc_point<<endreq;
+    std::vector< std::pair< int,int > > thePairPix;
+    for (int x = -1 ; x < 2 ; x ++){
+      for (int y = -1 ; y < 2 ; y ++){
+	Gaudi::XYZPoint tmpPoint(point.x()+x*hpSize(),point.y()+y*hpSize(),point.z());
+	LHCb::VeloPixChannelID  channeltmp;
+	std::pair <double, double> fractiontmp;
+	StatusCode sc = pointToChannel( tmpPoint, channeltmp, fractiontmp);
+	if (sc.isSuccess()){
+	  bool used = false;
+	  // prevent reuse of long pixel (since here the space is checked in small pixel size)
+	  for (std::vector <LHCb::VeloPixChannelID>::iterator ich = channels.begin();channels.end()!=ich;ich++){
+	    if (channeltmp.channelID()==(*ich).channelID()){
+	      used=true;
+	      continue;
+	    }
+	  }
+	  if(!used)channels.push_back(channeltmp);
+	}
+      }
+    }
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -450,7 +486,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
 //==============================================================================
 StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannelID& seedChannel,
                                                       std::vector <LHCb::VeloPixChannelID>& channels) const
-{
+{ 
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   // Get the point corresponding to the seedChannel 
   std::pair <double, double> fraction(0.5,0.5);
@@ -459,36 +495,43 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
   if (!sc.isSuccess()) return sc;
   
   Gaudi::XYZPoint loc_point = globalToLocal(point);
-
+  
   // Initialise the size of the seed pixel
   std::pair <double, double> size (0.,0.);
   size = PixelSize(seedChannel);
-
+  
   // Loop over the possible position in the 3x3 cluster
-  for (int x = -1 ; x < 2 ; x ++){
-    for (int y = -1 ; y < 2 ; y ++){
-
-      if( x == 0 && y == 0  )  continue;
-      double relx = 0;
-      double rely = 0;
-      // compute the relx,rely distances to which one might find an other pixel for the different x,y    
-      if (x < 0) relx = - fraction.first*size.first - lpSize()/2;
-      if (x > 0) relx = (1.- fraction.first)*size.first + lpSize()/2;
-      if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
-      if (y > 0) rely = (1.- fraction.second)*size.second + hpSize()/2;
-      if (!sc.isSuccess()){
-        // in case fraction is undefined (central position does not correspond to any channel), move by nominal size
-        relx = x*lpSize();
-        rely = y*hpSize();
-      }
-      Gaudi::XYZPoint neigh_point (loc_point.x()+relx,loc_point.y()+rely,loc_point.z());  
-      Gaudi::XYZPoint glob_neigh_point = localToGlobal(neigh_point);
-      LHCb::VeloPixChannelID neig_channel;
-      std::pair <double,double> frac (0.,0.);
-      // if there is a channel corresponding to this new point, put it in the list... here we might find a faster impemntation
-      if ( pointToChannel( glob_neigh_point, neig_channel, frac).isSuccess()){
-        channels.push_back(neig_channel);
-      }
+  int pixY = (seedChannel).pixel_hp();
+  int pixX = (seedChannel).pixel_lp();
+  int chip = (seedChannel).chip();
+  int ladderIndex = WhichLadder(loc_point);
+  int NchipInLad =m_ladders[ladderIndex].nChip();
+  
+  int minY(-1),maxY(2);
+  int minX(-1),maxX(2);
+  int chipoffset (0);
+  if (pixX == 0 || pixX == nPixCol()-1 || pixY==0 || pixY==nPixRow()-1){
+    // if pixel is fisrt row, start loop at 0
+    if (pixY == 0 )minY=0;
+    // if pixel is last row, end loop at 0
+    else if (pixY == nPixRow()-1 )maxY=1;
+    // if pixel is first col and this is first chip of ladder, start loop at 0
+    if (pixX == 0 && chip%NchipInLad == 0)minX=0;
+    // if pixel is last col and this is lasr chip of ladder, end loop at 0
+    else if (pixX == nPixRow()-1 && chip%NchipInLad == NchipInLad-1)maxX=1;
+    // if pixel is first col and this is not first chip of ladder, start loop at 0
+    else if (pixX == 0 && chip%NchipInLad != 0)chipoffset = -1;
+    // if pixel is last col and this is lasr chip of ladder, end loop at 0
+    else if (pixX == nPixRow()-1 && chip%NchipInLad == NchipInLad-1)chipoffset = 1;
+  }
+  for (int x = minX ; x < maxX ; x ++){
+    for (int y = minY ; y < maxY ; y ++){
+      LHCb::VeloPixChannelID neig_channel(seedChannel);
+      if (x == 0 && y == 0)continue;
+      neig_channel.setChip(neig_channel.chip()+chipoffset);
+      neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
+      neig_channel.setPixel_hp(neig_channel.pixel_hp()+y);
+      channels.push_back(neig_channel);
     }
   }
   return StatusCode::SUCCESS;
