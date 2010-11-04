@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-11-06 - Olivier Deschamps
+ - TupleToolKinematics : add specific protection in case of  merged pi0 (basic particles with measured mass). Potential bug when both resolved pi0 and merged pi0 where run simultaneously as _MM column appear or not depending on the first pi0 type seen.
+
 ! 2010-11-02 - Andrew Powell
 	- New Tuple Tool: TupleToolRICHPid
 	- Stores informartion associated with the RichPid object. To be used within 

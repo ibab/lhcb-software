@@ -78,11 +78,10 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
     // mass before fit (what CombinationCut cuts on)
     //if(isVerbose() && !(P->isBasicParticle()) ) test &= tuple->column( prefix+"_PreFitMass", preFitMass(P) );
     
-    if( !P->isBasicParticle() ) test &= tuple->column( prefix+"_MM", P->measuredMass() );
-    if( !P->isBasicParticle() )
-      test &= tuple->column( prefix+"_MMERR", P->measuredMassErr() );
+    if( !P->isBasicParticle() ||  P->particleID().pid()  ==  111 ) test &= tuple->column( prefix+"_MM", P->measuredMass() );
+    if( !P->isBasicParticle() ||  P->particleID().pid()  ==  111 ) test &= tuple->column( prefix+"_MMERR", P->measuredMassErr() );
     test &= tuple->column( prefix+"_M", P->momentum().M() );
-
+    
     if(isVerbose()&& mother &&P->isBasicParticle() && P->charge() != 0 ) {
       const LHCb::Vertex* originvtx = mother->endVertex();
       if(originvtx){
