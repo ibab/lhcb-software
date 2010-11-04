@@ -13,16 +13,29 @@ Including the following lines:
    Keep Hlt2UnbiasedDiMuonLowMassDecision triggered events 
 6. Jpsi2MuMuLine
 7. Psi2MuMuLine
+8. DiMuonExclusiveLine
+   Selection is the same as DiMuonLine at present,
+   a cut of "1mm upstream of any PV" applied further  
+9. DiMuonNoPVLine
+   Using the same selection as DiMuonExclusiveLine at present (except the PV cut)
+   Requring no reconstructed PV.
 
 More details can be found here:
 http://indico.cern.ch/contributionDisplay.py?contribId=2&confId=100755
 
 --------------------------
-To use this for Full DST
+To include lines for DiMuon stream
 --------------------------
 from StrippingSelections.StrippingDiMuonNew import DiMuonConf
-FullDSTDiMuonConf = DiMuonConf( config = DiMuonConf.config_default )
-stream.appendLines( FullDSTDiMuonConf.Lines )
+DiMuonStreamDiMuonConf = DiMuonConf( config = DiMuonConf.config_default )
+stream.appendLines( DiMuonStreamDiMuonConf.DiMuonStreamLines )
+
+--------------------------
+To include all lines in Full DST Leptonic stream 
+--------------------------
+from StrippingSelections.StrippingDiMuonNew import DiMuonConf
+FullDSTDiMuonConf = DiMuonConf( name= 'FullDST', config = DiMuonConf.config_default )
+stream.appendLines( FullDSTDiMuonConf.MicroDSTLines  )
 
 --------------------------
 For MicroDST
@@ -41,8 +54,8 @@ __all__ = (
     )
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from Configurables import FilterDesktop, CombineParticles, LoKi__VoidFilter
+from PhysSelPython.Wrappers import Selection, DataOnDemand, EventSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingSelections.Utils import checkConfig
 
@@ -66,6 +79,23 @@ class DiMuonConf(object):
         'DiMuonSameSign_Postscale',
         'DiMuonSameSign_checkPV',
         
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale',
+        'DiMuonExclusive_Postscale',
+        'DiMuonExclusive_checkPV',
+        
+        'DiMuonExclusive_MuonPT',
+        'DiMuonExclusive_MuonP',
+        'DiMuonExclusive_MuonTRCHI2DOF', 
+        'DiMuonExclusive_MinMass',
+        'DiMuonExclusive_VCHI2PDOF',
+        'DiMuonExclusive_PT',
+        'DiMuonExclusive_DZ',
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale',
+        'DiMuonNoPV_Postscale',
+        
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale',
         'DiMuonHighMass_Postscale',
@@ -78,7 +108,7 @@ class DiMuonConf(object):
         'DiMuonHighMass_VCHI2PDOF',
         'DiMuonHighMass_PT',
 
-        # DiMuon High Mass line
+        # DiMuonHighMassSameSign line
         'DiMuonHighMassSameSign_Prescale',
         'DiMuonHighMassSameSign_Postscale',
         'DiMuonHighMassSameSign_checkPV',
@@ -125,7 +155,7 @@ class DiMuonConf(object):
     
     config_default= {
         # DiMuon line
-        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Prescale'                          :     1.   ,
         'DiMuon_Postscale'                         :     1.   ,
         'DiMuon_checkPV'                           : False    ,  
         
@@ -140,6 +170,23 @@ class DiMuonConf(object):
         'DiMuonSameSign_Prescale'                  :     0.1  ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   : False    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
+        
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
         
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale'                  :     1.   ,
@@ -181,7 +228,7 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
         'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
 
         # Psi2MuMu line
         'Psi2MuMu_Prescale'                        :     1.   ,
@@ -201,7 +248,7 @@ class DiMuonConf(object):
 
     config_checkPV= {
         # DiMuon line
-        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Prescale'                          :     1.   ,
         'DiMuon_Postscale'                         :     1.   ,
         'DiMuon_checkPV'                           :  True    ,  
         
@@ -216,7 +263,24 @@ class DiMuonConf(object):
         'DiMuonSameSign_Prescale'                  :     0.1  ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   :  True    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
         
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
+                
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale'                  :     1.   ,
         'DiMuonHighMass_Postscale'                 :     1.   ,
@@ -257,7 +321,7 @@ class DiMuonConf(object):
         'Jpsi2MuMu_MinMass'                        :  3040.   ,  # MeV
         'Jpsi2MuMu_MaxMass'                        :  3140.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.0  ,  # MeV
+        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
 
         # Psi2MuMu line
         'Psi2MuMu_Prescale'                        :     1.   ,
@@ -277,7 +341,7 @@ class DiMuonConf(object):
     
     config_microDST= {
         # DiMuon line
-        'DiMuon_Prescale'                          :     1.0  ,
+        'DiMuon_Prescale'                          :     1.   ,
         'DiMuon_Postscale'                         :     1.   ,
         'DiMuon_checkPV'                           :  True    ,  
         
@@ -292,7 +356,24 @@ class DiMuonConf(object):
         'DiMuonSameSign_Prescale'                  :     0.1  ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   :  True    ,
+
+        # DiMuonExclusive line
+        'DiMuonExclusive_Prescale'                 :     1.   ,
+        'DiMuonExclusive_Postscale'                :     1.   ,
+        'DiMuonExclusive_checkPV'                  :  True    ,
         
+        'DiMuonExclusive_MuonPT'                   :   650.   ,  # MeV
+        'DiMuonExclusive_MuonP'                    : -8000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_MuonTRCHI2DOF'            :     5.   , 
+        'DiMuonExclusive_MinMass'                  :  2900.   ,
+        'DiMuonExclusive_VCHI2PDOF'                :    20.   ,
+        'DiMuonExclusive_PT'                       : -1000.   ,  # MeV, no cut now 
+        'DiMuonExclusive_DZ'                       :    -1.   ,  # mm, upstream of any PV
+
+        # DiMuonNoPV line
+        'DiMuonNoPV_Prescale'                      :     1.   ,
+        'DiMuonNoPV_Postscale'                     :     1.   ,
+               
         # DiMuon High Mass line
         'DiMuonHighMass_Prescale'                  :     1.   ,
         'DiMuonHighMass_Postscale'                 :     1.   ,
@@ -399,7 +480,49 @@ class DiMuonConf(object):
                                                  checkPV   = config['DiMuonSameSign_checkPV'],
                                                  algos = [self.SelDiMuonSameSign]
                                                  )
+        
+        """
+        DiMuonExclusiveline
+        """
+        self.SelDiMuonExclusive = filterDiMuonAndDZ( name + 'DiMuonExclusive',
+                                                     MuonPT        = config['DiMuonExclusive_MuonPT'],
+                                                     MuonP         = config['DiMuonExclusive_MuonP'],
+                                                     MuonTRCHI2DOF = config['DiMuonExclusive_MuonTRCHI2DOF'],
+                                                     MuMuMinMass   = config['DiMuonExclusive_MinMass'],
+                                                     MuMuVCHI2PDOF = config['DiMuonExclusive_VCHI2PDOF'],
+                                                     MuMuPT        = config['DiMuonExclusive_PT'],
+                                                     MuMuDZ        = config['DiMuonExclusive_DZ']
+                                                     )
+                
+        self.DiMuonExclusiveLine = StrippingLine( name + 'DiMuonExclusive' + 'Line',
+                                                  prescale  = config['DiMuonExclusive_Prescale'],
+                                                  postscale = config['DiMuonExclusive_Postscale'],
+                                                  checkPV   = config['DiMuonExclusive_checkPV'],
+                                                  algos = [self.SelDiMuonExclusive]
+                                                  )
 
+        """
+        DiMuonNoPVline
+        """
+        self.SelDiMuonNoPV = filterDiMuon( name + 'DiMuonNoPV',
+                                           MuonPT        = config['DiMuonExclusive_MuonPT'],
+                                           MuonP         = config['DiMuonExclusive_MuonP'],
+                                           MuonTRCHI2DOF = config['DiMuonExclusive_MuonTRCHI2DOF'],
+                                           MuMuMinMass   = config['DiMuonExclusive_MinMass'],
+                                           MuMuVCHI2PDOF = config['DiMuonExclusive_VCHI2PDOF'],
+                                           MuMuPT        = config['DiMuonExclusive_PT']
+                                           )
+
+        self.DiMuonNoPVLine = StrippingLine( name + 'DiMuonNoPV' + 'Line',
+                                             prescale  = config['DiMuonNoPV_Prescale'],
+                                             postscale = config['DiMuonNoPV_Postscale'],
+                                             checkPV   = False,
+                                             FILTER = { 'Code'       : "CONTAINS('Rec/Vertex/Primary')<0.5" , 
+                                                        'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
+                                                                         'from LoKiCore.functions    import *' ]
+                                                        },
+                                             algos = [self.SelDiMuonExclusive]
+                                             )       
         
         """
         DiMuon High Mass line
@@ -505,6 +628,8 @@ class DiMuonConf(object):
         self.Lines = [
             self.DiMuonLine,
             self.DiMuonSameSignLine,
+            self.DiMuonExclusiveLine,
+            self.DiMuonNoPVLine, 
             self.DiMuonHighMassLine,
             self.DiMuonHighMassSameSignLine,
             self.DiMuonLowMassLine,
@@ -512,9 +637,21 @@ class DiMuonConf(object):
             self.Psi2MuMuLine
             ]
 
+        self.DiMuonStreamLines = [
+            self.DiMuonExclusiveLine,
+            self.DiMuonNoPVLine, 
+            self.DiMuonHighMassLine,
+            self.DiMuonHighMassSameSignLine,
+            self.DiMuonLowMassLine,
+            self.Jpsi2MuMuLine,
+            self.Psi2MuMuLine           
+            ]
+
         self.FullDSTLines = [
             self.DiMuonLine,
             self.DiMuonSameSignLine,
+            self.DiMuonExclusiveLine,
+            self.DiMuonNoPVLine, 
             self.DiMuonLowMassLine
             ]
         
@@ -622,3 +759,44 @@ def filterSignal( name,
                       RequiredSelections = [ _StdLooseDiMuon ]
                       )
 
+
+def filterDZ( name,
+              DZAnyPV, 
+              MySelection ):
+    
+    return EventSelection (
+        #
+        LoKi__VoidFilter( name + 'filterDZ', 
+                          Code =  " ( minMyZ - minPVZ ) < %(DZAnyPV)s*mm " % locals() ,
+                          Preambulo = [ "from LoKiPhys.decorators import *",
+                                        "minMyZ = SOURCE('%s') >> min_value( VFASPF(VZ) )"  %(MySelection.outputLocation()) ,
+                                        "minPVZ = VSOURCE('Rec/Vertex/Primary') >> min_value(VZ) "
+                                        ]
+                          )
+        )
+        
+
+
+def filterDiMuonAndDZ( name,
+                       MuonPT,
+                       MuonP,
+                       MuonTRCHI2DOF,
+                       MuMuMinMass,
+                       MuMuVCHI2PDOF,
+                       MuMuPT,
+                       MuMuDZ
+                       ):
+    
+    _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon' )
+    
+    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
+    
+    MuMuCut = "(MM > %(MuMuMinMass)s) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s) & (BPVVDZ < %(MuMuDZ)s*mm)" % locals()
+    
+    _MuMu = FilterDesktop( "_Filter" + name,
+                           Code = MuonCut + " & " + MuMuCut )
+
+    return Selection( name + "_SelMuMu",
+                      Algorithm = _MuMu,
+                      RequiredSelections = [ _StdLooseDiMuon ]
+                      )

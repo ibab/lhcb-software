@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Jibo He
+ - python/StrippingSelections/StrippingDiMuonNew.py
+   + Added DiMuonExclusiveLine & DiMuonNoPVLine for exclusive production studies
+
 ! 2010-11-04 - Greig Cowan 
  - Fixed bug in Psi2SmMuMu line.
 
