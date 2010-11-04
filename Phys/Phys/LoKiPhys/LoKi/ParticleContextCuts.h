@@ -939,7 +939,7 @@ namespace LoKi
      *  const LHCb::Particle* B = ... ;
      *
      *  // prepare the functor:
-     *  Fun fun = BPVLTIME ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *  Fun fun = BPVLTIME () ;
      *
      *  // use the functor 
      *  const double ltime = fun ( B ) ;
@@ -973,7 +973,7 @@ namespace LoKi
      *  const LHCb::Particle* B = ... ;
      *
      *  // prepare the functor:
-     *  Fun fun = BPVLTCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *  Fun fun = BPVLTCHI2 () ;
      *
      *  // use the functor 
      *  const double chi2 = fun ( B ) ;
@@ -1007,7 +1007,7 @@ namespace LoKi
      *  const LHCb::Particle* B = ... ;
      *
      *  // prepare the functor:
-     *  Fun fun = BPVLTSIGNCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *  Fun fun = BPVLTSIGNCHI2 () ;
      *
      *  // use the functor 
      *  const double chi2 = fun ( B ) ;
@@ -1040,7 +1040,7 @@ namespace LoKi
      *  const LHCb::Particle* B = ... ;
      *
      *  // prepare the functor:
-     *  Fun fun = BPVLTFITCHI2 ( "PropertimeFitter/ProperTime:PUBLIC" ) ;
+     *  Fun fun = BPVLTFITCHI2 () ;
      *
      *  // use the functor 
      *  const double chi2 = fun ( B ) ;

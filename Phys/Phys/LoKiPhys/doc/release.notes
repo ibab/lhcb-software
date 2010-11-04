@@ -5,6 +5,13 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Vanya Belyaev
+
+  - remove obsolete ugly documentation lines 
+
+ - cmt/requirements 
+     version inctrement to v9r5p1
+
 ! ========================== LoKiPhys v9r5 2010-11-02 =========================
 
 ! 2010-11-01 - Vanya Belyaev
