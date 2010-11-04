@@ -681,7 +681,7 @@ def firstPass ( **args ) :
         Mirror           = args.pop ( 'Mirror'           , True     ) , 
         Histograms       = args.pop ( 'Histograms'       , True     ) ,
         ##
-        Pi0VetoDeltaMass = args.pop ( 'Pi0VetoDeltaMass' , 15 * MeV ) ,
+        Pi0VetoDeltaMass = args.pop ( 'Pi0VetoDeltaMass' ,  -1      ) ,
         Pi0VetoChi2      = args.pop ( 'Pi0VetoChi2'      ,  -1      ) ,
         ##
         Filter           = args.pop ( 'Filter'           , """

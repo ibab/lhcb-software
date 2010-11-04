@@ -7,6 +7,10 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 Daria Savrina
+
+- Removed pi0 veto cut from the default configuration
+
 ! 2010-11-03 - Albert Puig
 
 - Bugfix: Pi0PtCut must be got from the algorithm properties 
