@@ -4,8 +4,6 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.21 2010-02-11 19:57:26 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
