@@ -4,6 +4,10 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+
+! 2010-11-06 - Olivier Deschamps
+  - DeCalorimeter : reduce initialization verbosity
+
 !========================= CaloDet v10r7 2010-10-25 =========================
 
 ! 2010-10-22 - Olivier Deschamps

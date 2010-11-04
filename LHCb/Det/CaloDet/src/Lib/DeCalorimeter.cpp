@@ -233,7 +233,7 @@ StatusCode DeCalorimeter::initialize()
       } 
     }
     // Check gain
-    msg << MSG::INFO << "Found " << nGain << " channel(s) with null gain " << endmsg;
+    if(nGain > 0)msg << MSG::INFO << "Found " << nGain << " channel(s) with null gain " << endmsg;
     // Verbosity 
     msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
          << " channels " << " ----------- " << endmsg; 
@@ -1148,9 +1148,9 @@ StatusCode DeCalorimeter::getQuality( )  {
     }
   }
   msg << MSG::DEBUG << "Quality constant added for " << count << " channel(s) " << endmsg;
-  msg << MSG::INFO << "Found  " << bad << " problematic readout channel(s)" << endmsg;
-  msg << MSG::INFO << "Found  " << masked << " channel(s) to be masked offline " << endmsg;
-  msg << MSG::INFO << "Found  " << badLED << " channel(s) with 'LED monitoring problem'" << endmsg;
+  if(bad>0)msg << MSG::INFO << "Found  " << bad << " problematic readout channel(s)" << endmsg;
+  if(masked>0)msg << MSG::INFO << "Found  " << masked << " channel(s) to be masked offline " << endmsg;
+  if(badLED>0)msg << MSG::INFO << "Found  " << badLED << " channel(s) with 'LED monitoring problem'" << endmsg;
   return StatusCode::SUCCESS;  
 }
 
@@ -1375,7 +1375,7 @@ StatusCode DeCalorimeter::updGain(){
   int count = 0;
   // Nominal Gain parameters
   if( m_gain->exists("data") && m_gain->exists("size")){ 
-    msg << MSG::INFO << "Apply DB nominal gains" << endmsg;
+    msg << MSG::DEBUG << "Apply DB nominal gains" << endmsg;
     nominal=true;
     int size = m_gain->paramAsInt( "size" );
     std::vector<double> data = m_gain->paramAsDoubleVect( "data" );
@@ -1411,9 +1411,10 @@ StatusCode DeCalorimeter::updGain(){
       msg << MSG::ERROR << " There should be " << m_nArea << " parameters (or a single one for all regions)"  << endmsg;
       return StatusCode::FAILURE;
     }
-  // ** update gain/channel with theoretical value (if needed)
-    if (!nominal){      
-      msg << MSG::INFO << "Apply theoretical nominal gain as EtInCenter+sin(Theta)*EtSlope" << endmsg;
+    // ** update gain/channel with theoretical value (if needed)
+    if (!nominal){    
+      if(  m_caloDet == "EcalDet" ||  m_caloDet == "HcalDet" ) 
+        msg << MSG::INFO << "Apply theoretical nominal gain as EtInCenter+sin(Theta)*EtSlope" << endmsg;
       count=0;
       for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;m_cells.end() != pCell ; ++pCell ) {
         LHCb::CaloCellID id       = pCell->cellID();
