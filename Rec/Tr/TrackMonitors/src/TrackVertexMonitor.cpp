@@ -101,13 +101,12 @@ TrackVertexMonitor::TrackVertexMonitor( const std::string& name,
   declareProperty( "MaxRPV", m_rpvmax = 1*Gaudi::Units::mm ) ;
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;
   declareProperty( "MaxZPV", m_zpvmax =  20*Gaudi::Units::cm ) ;
-  declareProperty( "MinZPV_Wide", m_zpvmin = -150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
-  declareProperty( "MaxZPV_Wide", m_zpvmax =  150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
+  declareProperty( "MinZPV_Wide", m_zpvmin_wide = -150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
+  declareProperty( "MaxZPV_Wide", m_zpvmax_wide =  150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
   declareProperty( "MaxLongTrackChisqPerDof", m_maxLongTrackChisqPerDof = 5 ) ;
   declareProperty( "MinLongTrackMomentum", m_minLongTrackMomentum = 5 ) ;
   declareProperty( "NumProfileBins", m_nprbins = 20 ) ;
 }
-
 //=============================================================================
 // Destructor
 //=============================================================================

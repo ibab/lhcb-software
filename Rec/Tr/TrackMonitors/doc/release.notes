@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-11-04 - Patrick Koppenburg
+ - Fix bug https://savannah.cern.ch/bugs/?74815 in TrackVertexMonitors
+
 !========================== TrackMonitors v1r30 2010-09-27 ===================
 ! 2010-09-21 - Wouter Hulsbergen
  - TrackPV2HalfAlignMonitor to sequence
