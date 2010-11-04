@@ -19,6 +19,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class TrgDistanceCalculator
    *
    *  It is the fast "trigger-oriented" implementation of the basic math, 
@@ -557,25 +558,27 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
   {
+    // ========================================================================
     *chi2 = -1.e+10 ;
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::loadAsFlying ( particle , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Error("_distance(I): error from KalmanFilter::load", sc ) ; }
+    { return _Error("_distance(I): error from KalmanFilter::load", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 
-    { return Error ( "_distance(I): unable to calculate the gain matrix" ) ; }
+    { return _Error ( "_distance(I): unable to calculate the gain matrix" ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry , vertex.position() , ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(I): error from Kalman Filter step" , sc ) ; }
+    { return _Error ( "_distance(I): error from Kalman Filter step" , sc ) ; }
     // get the chi2 
     *chi2 = m_entry.m_chi2 ;
+    // ========================================================================
   }
-  
+  //
   return StatusCode::SUCCESS ;                                 // RETURN 
-}
+} 
 // ============================================================================
 /*  The method for the evaluation of the impact parameter ("distance")
  *  vector of the particle with respect to  the fixed point 
@@ -586,8 +589,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   const Gaudi::XYZPoint&  point    , 
   Gaudi::XYZVector&       impact   , 
   double*                 chi2     ) const 
-{
-  
+{ 
   using namespace Gaudi::Math::Operators ;
   
   // make the fast evaluation:
@@ -596,13 +598,15 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   // evaluate the chi2 (if needed) 
   if ( 0 != chi2 ) 
   {
+    // ========================================================================
     *chi2 = -1.e+10 ;
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::loadAsFlying ( particle , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Error("_distance(II): error from KalmanFilter::load" , sc ) ; }
+    { return _Error("_distance(II): error from KalmanFilter::load" , sc ) ; }
     // here the evaluations of chi2 is just trivial:
     *chi2 = Gaudi::Math::Similarity ( m_entry.m_vxi , impact ) ;
+    // ========================================================================
   }  
   //
   return StatusCode::SUCCESS ;                                 // RETURN 
@@ -633,6 +637,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
   {
+    // =======================================================================
     *chi2 = 1.e+10 ;
     // prepare the Kalman Filter machinery
     m_entries.resize(2) ;
@@ -641,45 +646,20 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
     
     StatusCode sc = LoKi::KalmanFilter::load ( p1 , *first  ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::load(1)" , sc ) ; }
+    { return _Error ( "_distance(III): error from KalmanFilter::load(1)" , sc ) ; }
     
     sc =            LoKi::KalmanFilter::load ( p2 , *second ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::load(2)" , sc ) ; }
+    { return _Error ( "_distance(III): error from KalmanFilter::load(2)" , sc ) ; }
     
-    // construct the proper seed:
-    Gaudi::Vector3       x  ;
-    Gaudi::SymMatrix3x3 ci ;
-    sc = LoKi::KalmanFilter::seed ( m_entries , x , ci , 1.e-4 ) ;
+    // make the special step of Kalman filter 
+    sc = LoKi::KalmanFilter::step ( *first  , *second , 0 ) ;
     if ( sc.isFailure() ) 
-    { 
-      Warning ( "_distance(III): error from KalmanFilter::seed" , sc ) ; 
-      // set manually the seed to be equal to the middle position 
-      Gaudi::Math::geo2LA ( point1 + 0.5 * ( point2 - point1 ) , x ) ;
-      // set the gain matrix to be "small enought" 
-      const double sc = std::max ( 5 * ( point1 - point2 ).R() , Gaudi::Units::cm ) ;
-      Gaudi::Math::setToUnit ( ci , 1./(sc*sc) ) ;
-    }
-    
-    const Gaudi::Vector3*      _x  = &x  ;
-    const Gaudi::SymMatrix3x3* _ci = &ci ;
-    
-    // make the first step of Kalman filter 
-    sc = LoKi::KalmanFilter::step ( *first , *_x , *_ci , 0 ) ;
-    if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::step(1)" , sc ) ; }
-    
-    // use the step result as seed for the second step:
-    _x  = &first->m_x  ;
-    _ci = &first->m_ci ;
-    
-    // make the second step of Kalman filter 
-    sc = LoKi::KalmanFilter::step ( *second , *_x , *_ci , first->m_chi2 ) ;
-    if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::step(2)" , sc ) ; }
+    { return _Error ( "distance(III): error from KalmanFilter::step(2)" , sc ) ; }
     
     // get the final chi2 
     *chi2 = second->m_chi2 ;
+    // ========================================================================
   }
   //
   return StatusCode::SUCCESS ;                                 // RETURN
@@ -704,10 +684,10 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   StatusCode sc = LoKi::Fitters::path0 ( primary , particle , decay , path ) ;
   if ( sc.isFailure() ) 
   {
-    Warning ( "Error code from LoKi::Fitters::path0" , sc ) ;
+    _Warning ( "Error code from LoKi::Fitters::path0" , sc ) ;
     path = 0 ;
   }
-
+  
   // get the expansion point:
   Gaudi::LorentzVector momentum   = particle .  momentum       () ;
   Gaudi::XYZPoint      decvertex  = particle .  referencePoint () ;
@@ -718,7 +698,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   sc = LoKi::Fitters::path_step 
     ( primary , particle , momentum , decvertex , primvertex , m_fitter ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "_pathDistance(): error from path_step" , sc ) ; }
+  { return _Error ( "_pathDistance(): error from path_step" , sc ) ; }
   
   // get the parameters from the fitter
   path  = m_fitter.m_var  ;
@@ -790,7 +770,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   else 
   {
     *error = -1 ;
-    return Error ( "The negative covariance, return error=-1" ) ;    // RETURN 
+    return _Error ( "The negative covariance, return error=-1" ) ;   // RETURN 
   }
   //
   return StatusCode::SUCCESS ;                                       // RETURN

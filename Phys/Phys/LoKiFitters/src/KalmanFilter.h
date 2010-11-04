@@ -370,8 +370,6 @@ namespace LoKi
     /** make one step of Kalman filter from two entries 
      *  @param entry1 (update)       measurements to be updated 
      *  @param entry2 (update)       measurements to be updated 
-     *  @param x      (input)        the initial position of the vertex 
-     *  @param ci     (input)        its gain matrix 
      *  @param chi2   (input)        the initial chi2 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -380,8 +378,6 @@ namespace LoKi
     StatusCode step 
     ( LoKi::KalmanFilter::Entry&  entry1 ,
       LoKi::KalmanFilter::Entry&  entry2 , 
-      const Gaudi::Vector3&       x      , 
-      const Gaudi::SymMatrix3x3&  ci     , 
       const double                chi2   ) ;
     // ========================================================================    
     /** make one step of Kalman filter 
@@ -477,7 +473,7 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
-#endif // LOKIFITERS_KALMANFILTER_H
+#endif // LOKIFITTERS_KALMANFILTER_H
 // ============================================================================

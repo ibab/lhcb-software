@@ -5,6 +5,28 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Vanya Belyaev
+
+ - "DistanceCalculators"
+
+     evaluation of chi2(DOCA) :
+
+       - make it numerically more robust 
+
+       - speedup it a little bit : 
+
+           a. decrease the number of 3x3-matrix inversions from 2 to 1 
+           b. eilminate the creation of few local (small) matrices 
+           c. [however use two 'matrix-similaryty' operations instead of one]
+
+     printout: allow a bit more flexible configuration of verbosity
+
+     new property 'MaxPrint'
+
+ - cmt/requirements 
+
+    version increment to v3r3   
+ 
 !========================== LoKiFitters v3r2 2010-11-02 =====================
 
 ! 2010-10-24 - Vanya Belyaev

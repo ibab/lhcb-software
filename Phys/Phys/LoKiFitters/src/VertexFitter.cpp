@@ -164,8 +164,7 @@ StatusCode LoKi::VertexFitter::_iterate
           2 == LoKi::KalmanFilter::nGood ( m_entries ) )  
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
-                                      m_entries[1] , 
-                                      *x , *ci , *chi2 ) ;
+                                      m_entries[1] , *chi2 ) ;
       if ( sc.isSuccess () ) 
       {
         // update the parameters 
@@ -729,7 +728,7 @@ StatusCode LoKi::VertexFitter::initialize()
   if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
   {
     m_prints = 10 ;
-    warning () << "Redefine 'KeepSilence' property to " << m_prints ;
+    warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
   }
   //
   return StatusCode::SUCCESS ;

@@ -293,8 +293,6 @@ StatusCode LoKi::KalmanFilter::step
 /*  make one step of Kalman filter (similar to seeding)
  *  @param entry1 (update)       measurements to be updated 
  *  @param entry2 (update)       measurements to be updated 
- *  @param x     (input)        the initial position of the vertex 
- *  @param ci    (input)        its gain matrix 
  *  @param chi2  (input)        the initial chi2 
  *  @return status code 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -304,18 +302,16 @@ StatusCode LoKi::KalmanFilter::step
 StatusCode LoKi::KalmanFilter::step 
 ( LoKi::KalmanFilter::Entry&  entry1   ,
   LoKi::KalmanFilter::Entry&  entry2   , 
-  const Gaudi::Vector3&       /* x  */ , 
-  const Gaudi::SymMatrix3x3&  /* ci */ , 
   const double                chi2     ) 
 {
   //
   if ( entry1.m_type != LongLivedParticle  && 
        entry1.m_type != ShortLivedParticle  ) 
-  { return StatusCode( ErrorInInputData , true ) ; }
+  { return StatusCode ( ErrorInInputData , true ) ; }
   //
   if ( entry2.m_type != LongLivedParticle  && 
        entry2.m_type != ShortLivedParticle  ) 
-  { return StatusCode( ErrorInInputData , true ) ; }
+  { return StatusCode ( ErrorInInputData , true ) ; }
   //
   entry1.m_ci = entry1.m_vxi + entry2.m_vxi ; 
   entry2.m_ci = entry1.m_ci ;

@@ -27,7 +27,8 @@
 // ============================================================================
 namespace LoKi 
 {
-  /** @class DistanceCalculatorBase DistanceCalculator.h
+  // ==========================================================================
+  /** @class DistanceCalculatorBase DistanceCalculatorBase.h
    *
    *  It is the simplest implementation of the basic math, 
    *  needed for the real implementation 
@@ -67,7 +68,49 @@ namespace LoKi
       NotImplemented          = 920   // not yet implemented 
     } ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /// initialize 
+    virtual StatusCode initialize () ;
+    // ========================================================================
   protected:
+    // ========================================================================
+    inline StatusCode _Warning
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if ( errorsPrint() ) { return Warning ( msg , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      {
+        warning () << "LoKi::DistanceCalculator/Warning : '"
+                   << msg  << "'  Code =" << code << endmsg ;
+      }
+      //
+      return code ;
+    }
+    // ========================================================================
+    inline StatusCode _Error 
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if ( errorsPrint() ) { return Error   ( msg , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      {
+        error   () << "LoKi::DistanceCalculator/Error   : '"
+                   << msg  << "'  Code =" << code << endmsg ;
+      }
+      //
+      return code ;
+    }
+    // ========================================================================
+  protected:
+    // ========================================================================
     /// construct the line trajectory from the particle  
     inline Line_  line   ( const LHCb::Particle& particle ) const ;
     // ========================================================================
@@ -186,6 +229,7 @@ namespace LoKi
       const LHCb::VertexBase* v2 ) const ;
     // ========================================================================
   protected: 
+    // ========================================================================
     /** Standard constructor
      *  @param type tool type(?)
      *  @param name tool instance name 
@@ -197,77 +241,85 @@ namespace LoKi
       const IInterface*  parent ) ;  // the parent 
     // virtual and protected desctrustor 
     virtual ~DistanceCalculatorBase () ; // Destructor
+    // ========================================================================
   private:
+    // ========================================================================
     /// the default constructor is disabled 
     DistanceCalculatorBase () ; // no default constructor 
     /// the copy    constructor is disabled 
     DistanceCalculatorBase ( const DistanceCalculatorBase&) ; // no copy 
     /// the assignement operator is disabled 
     DistanceCalculatorBase& operator=( const DistanceCalculatorBase&) ; // no assignement
+    // ========================================================================
   private:
-  };
+    // ========================================================================
+    /// # of prints 
+    unsigned int m_prints ;                                      // # of prints 
+    // ========================================================================
+  }; 
+  // ==========================================================================
 } // end of namespace LoKi
-// ========================================================================
+// ============================================================================
 // check the validity of the particle
-// ========================================================================
+// ============================================================================
 inline StatusCode LoKi::DistanceCalculatorBase::check 
 ( const LHCb::Particle*    p ) const 
 {
   if ( 0 == p ) 
-  { return Error ( "LHCb::Particle* points to NULL", InvalidParticle ) ; }
+  { return _Error ( "LHCb::Particle* points to NULL", InvalidParticle ) ; }
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 // check the validity of the vertex 
-// ========================================================================
+// ============================================================================
 inline StatusCode LoKi::DistanceCalculatorBase::check 
- ( const LHCb::VertexBase* v ) const 
+( const LHCb::VertexBase* v ) const 
 {
   if ( 0 == v ) 
-  { return Error ( "LHCb::VertexBase* points to NULL", InvalidVertex ) ; }
+  { return _Error ( "LHCb::VertexBase* points to NULL", InvalidVertex ) ; }
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 // check the validity of the particles 
-// ========================================================================
+// ============================================================================
 inline StatusCode LoKi::DistanceCalculatorBase::check 
 ( const LHCb::Particle*   p1 , 
   const LHCb::Particle*   p2 ) const 
 {
   if ( 0 == p1 || 0 == p2  ) 
-  { return Error ( "LHCb::Particle* points to NULL", InvalidParticle ) ; }
+  { return _Error ( "LHCb::Particle* points to NULL", InvalidParticle ) ; }
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 // check the validity of the particle and the vertex 
-// ========================================================================
+// ============================================================================
 inline StatusCode LoKi::DistanceCalculatorBase::check 
 ( const LHCb::Particle*   p ,
   const LHCb::VertexBase* v ) const 
 {
   if ( 0 == p ) 
-  { return Error ( "LHCb::Particle* points to NULL", InvalidParticle ) ; }
+  { return _Error ( "LHCb::Particle*   points to NULL" , InvalidParticle ) ; }
   if ( 0 == v ) 
-  { return Error ( "LHCb::VertexBase* points to NULL", InvalidVertex ) ; }
+  { return _Error ( "LHCb::VertexBase* points to NULL" , InvalidVertex   ) ; }
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 // check the validity of the vertices 
-// ========================================================================
+// ============================================================================
 inline StatusCode LoKi::DistanceCalculatorBase::check 
 ( const LHCb::VertexBase* v1 , 
   const LHCb::VertexBase* v2 ) const 
 {
   if ( 0 == v1 || 0 == v2 ) 
-  { return Error ( "LHCb::VertexBase* points to NULL", InvalidVertex ) ; }
+  { return _Error ( "LHCb::VertexBase* points to NULL", InvalidVertex ) ; }
   //
   return StatusCode::SUCCESS ;
 }
-// ========================================================================
+// ============================================================================
 // construct the line trajector from the particle  
 // ============================================================================
 inline LoKi::DistanceCalculatorBase::Line_
@@ -338,7 +390,7 @@ LoKi::DistanceCalculatorBase::i_distance
   // evaluate chi2: 
   Gaudi::SymMatrix3x3 cov ( vx1.covMatrix() + vx2.covMatrix() ) ;
   if ( !cov.Invert() ) 
-  { return Error ( "Error in matrix inversion" , ErrorInMatrixInversion ); }
+  { return _Error ( "Error in matrix inversion" , ErrorInMatrixInversion ); }
   // evaluate the chi2 
   *chi2 = Gaudi::Math::Similarity ( delta , cov ) ; 
   //
@@ -362,7 +414,7 @@ LoKi::DistanceCalculatorBase::i_distance
   // evaluate chi2: 
   Gaudi::SymMatrix3x3 cov ( v.covMatrix() ) ;
   if ( !cov.Invert() ) 
-  { return Error ( "Error in matrix inversion" , ErrorInMatrixInversion ) ; }  
+  { return _Error ( "Error in matrix inversion" , ErrorInMatrixInversion ) ; }  
   // evaluate the chi2 
   *chi2 = Gaudi::Math::Similarity ( delta , cov ) ; 
   //
