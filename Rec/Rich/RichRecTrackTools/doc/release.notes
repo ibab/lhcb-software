@@ -4,7 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!========================= RichRecTrackTools v1r25 2010-10-28 =========================
+! 2010-11-04 - Chris Jones
+ - Add max and min momentum cuts to "HasRichInfo" cuts
+
+!==================== RichRecTrackTools v1r25 2010-10-28 =====================
 ! 2010-10-15 - Chris Jones
  - Remove caching of refractive indices in CherenkovAngle tool. Doesn't 
    really save any cpu time, and breaks whenever the refractive index is
@@ -22,7 +25,7 @@
  - Various changes to avoid loading radiator detector elements until they
    are actually needed.
 
-!======================== RichRecTrackTools v1r24p1 2010-09-01 ================
+!====================== RichRecTrackTools v1r24p1 2010-09-01 =================
 ! 2010-09-01 - Chris Jones
  - Fix against very rare crashed caused by an array index going out of range
    in the isolated track tool, when the photon Cherenkov phi value is 

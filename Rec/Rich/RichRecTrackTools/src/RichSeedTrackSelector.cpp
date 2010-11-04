@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.5 2009-08-06 18:10:57 smenzeme Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */

@@ -29,6 +29,11 @@
 #include "RichRecBase/IRichRayleighScatter.h"
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+#include "boost/assign/list_of.hpp"
+
 namespace Rich
 {
   namespace Rec
@@ -188,6 +193,12 @@ namespace Rich
 
       /// Threshold momentum scale factor
       double m_pThresScale;
+
+      // Minimum momentum by radiator for track segments.
+      std::vector<double> m_minPbyRad;
+
+      // Maximum momentum by radiator for track segments.
+      std::vector<double> m_maxPbyRad;
 
     };
 

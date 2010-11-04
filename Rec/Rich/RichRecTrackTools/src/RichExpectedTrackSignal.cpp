@@ -33,15 +33,23 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
     m_richPartProp     ( NULL ),
     m_rayScat          ( NULL ),
     m_gasQuartzWin     ( NULL ),
-    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 )
+    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 ),
+    m_maxPbyRad        ( Rich::NRadiatorTypes, boost::numeric::bounds<double>::highest() )
 {
   // interface
   declareInterface<IExpectedTrackSignal>(this);
+
   // JOS
   declareProperty( "ThresholdMomentumScaleFactor", m_pThresScale = 1.0 );
   declareProperty( "MinNumPhotonsPerRad",
                    m_minPhotonsPerRad,
                    "Minimum number of photons in each radiator for a radiator segment to be considered as having RICH information" );
+  declareProperty( "MinRadiatorMomentum", m_minPbyRad = boost::assign::list_of(0)(0)(0) );
+  declareProperty( "MaxRadiatorMomentum", m_maxPbyRad = boost::assign::list_of
+                   (15*Gaudi::Units::GeV)                        // Aerogel
+                   (boost::numeric::bounds<double>::highest())   // Rich1 Gas
+                   (boost::numeric::bounds<double>::highest())   // Rich2 Gas
+                   );
 }
 
 StatusCode ExpectedTrackSignal::initialize()
@@ -487,49 +495,59 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
 {
   // default to no info
   bool hasInfo = false;
-  // above lowest mass hypothesis threshold ?
-  if ( aboveThreshold( segment, m_pidTypes.front() ) )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "RichRecSegment is above " << m_pidTypes.front()
-                << " threshold -> hasRichInfo" << endmsg;
-    }
 
-    // see if any mass hypothesis is detectable
-    for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-          hypo != m_pidTypes.end(); ++hypo )
+  // Check max radiator momentum
+  const double P = std::sqrt(segment->trackSegment().bestMomentum().mag2());
+  if ( P > m_minPbyRad[segment->trackSegment().radiator()] &&
+       P < m_maxPbyRad[segment->trackSegment().radiator()] )
+  {
+
+    // above lowest mass hypothesis threshold ?
+    if ( aboveThreshold( segment, m_pidTypes.front() ) )
     {
-      if ( m_geomEff->geomEfficiency(segment,*hypo) > 0 )
+      if ( msgLevel(MSG::VERBOSE) )
       {
-        hasInfo = true; break;
+        verbose() << "RichRecSegment is above " << m_pidTypes.front()
+                  << " threshold -> hasRichInfo" << endmsg;
       }
-    }
-    // Check segment has minimum number of required photons expected
-    if ( hasInfo )
-    {
-      hasInfo = false;
+
+      // see if any mass hypothesis is detectable
       for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
             hypo != m_pidTypes.end(); ++hypo )
       {
-        if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] <
-             nObservableSignalPhotons(segment,*hypo) )
+        if ( m_geomEff->geomEfficiency(segment,*hypo) > 0 )
         {
           hasInfo = true; break;
         }
       }
+
+      // Check segment has minimum number of required photons expected
+      if ( hasInfo )
+      {
+        hasInfo = false;
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
+        {
+          if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] <
+               nObservableSignalPhotons(segment,*hypo) )
+          {
+            hasInfo = true; break;
+          }
+        }
+      }
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "RichRecSegment has richInfo = " << hasInfo << endmsg;
+      }
+
     }
-    if ( msgLevel(MSG::VERBOSE) )
+    else if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "RichRecSegment has richInfo = " << hasInfo << endmsg;
+      verbose() << "RichRecSegment is below " << m_pidTypes.front()
+                << " threshold -> noRichInfo" << endmsg;
     }
 
-  }
-  else if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "RichRecSegment is below " << m_pidTypes.front()
-              << " threshold -> noRichInfo" << endmsg;
-  }
+  } // min/max momentum
 
   return hasInfo;
 }
@@ -627,7 +645,7 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
   if ( !track || !pid ) return;
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Setting thresholds for Track " << track->key() 
+    debug() << "Setting thresholds for Track " << track->key()
             << " RichPID " << pid->key()
             << endmsg;
   }
@@ -638,7 +656,7 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
   pid->setProtonHypoAboveThres(false);
   for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
         hypo != m_pidTypes.end(); ++hypo )
-  { 
+  {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Trying " << *hypo << endmsg;
     pid->setAboveThreshold(*hypo,aboveThreshold(track,*hypo));
