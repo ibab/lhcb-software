@@ -4,6 +4,10 @@
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2010-11-04 Ulrich Kerzel
+- fix windows compiliation issues (more ifdef's)
+
+
 !======================= StrippingNeuroBayes v1r0 2010-11-02 =================
 
 ! 2010-11-02 - Thomas Blake

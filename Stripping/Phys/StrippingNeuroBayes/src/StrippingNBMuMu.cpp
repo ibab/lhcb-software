@@ -213,12 +213,14 @@ StatusCode StrippingNBMuMu::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "==> Finalize" << endmsg;
+#ifdef __GNUC__
 
   if (m_NBExpert)
     delete m_NBExpert;
 
   if (m_inArray)
     delete[] m_inArray;
+#endif 
 
   return DVAlgorithm::finalize();
 }
@@ -228,6 +230,7 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   
   StatusCode sc = StatusCode::SUCCESS;
 
+#ifdef __GNUC__
   // get daughters
   const SmartRefVector< LHCb::Particle > &muons = particle.endVertex()->outgoingParticles();
 
@@ -423,7 +426,8 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
     return StatusCode::FAILURE;
   } //if
 
-  
+#endif  
+
   return sc;
 } //double getInputVar
 //=============================================================================
@@ -462,12 +466,13 @@ double StrippingNBMuMu::minIPChi2(const LHCb::Particle& particle){
 
   
   returnValue = minChi2;
-  
+
+#ifdef __GNUC__  
   if ( isnan(returnValue)     ||
        abs(isinf(returnValue)))
     warning() << "StrippingNBMuMu::minIPChi2: something went wrong, minIP not valid " << returnValue << endmsg;
   returnValue = -999;
-  
+#endif    
 
  if(msgLevel(MSG::VERBOSE))
    verbose() << " returning " << returnValue  << " for minIPChi2" << endmsg;
