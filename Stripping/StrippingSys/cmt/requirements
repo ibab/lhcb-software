@@ -1,5 +1,5 @@
 package StrippingSys
-version v1r0
+version v1r1
 
 branches doc cmt tests
 
@@ -9,7 +9,7 @@ branches doc cmt tests
 use  CommonParticles             v7r5     Phys   # Patrick Koppenburg, WGs
 
 ####################################################################
-use  MvaPreSelB2DH               v1r0     Phys   # Sajan Easo
+use  MvaPreSelB2DH               v1r1     Phys   # Sajan Easo
 use  StrippingAlgs               v1r5     Phys   # Anton Poluektov
 use  StrippingConf               v3r8     Phys   # Anton Poluektov
 use  StrippingSelections         v2r1     Phys   # Anton Poluektov

@@ -4,6 +4,10 @@ Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
 
+</PRE><H1><A NAME=v1r1>2010-11-04 StrippingSys v1r1 </A></H1><PRE>
+
+Candidate version for Stripping12.
+
 </PRE><H1><A NAME=v1r0>2010-10-04 StrippingSys v1r0 </A></H1><PRE>
 
 First version of the Stripping Project, built from the component parts
