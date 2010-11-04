@@ -336,7 +336,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     }
 
     //Do not change the PV into a particle ! (if any !)
-    if( !m_KeepLowestZ and i == RV.begin() ) continue;
+    if( !m_KeepLowestZ && i == RV.begin() ) continue;
 
     //Do not keep if upstream to the upPV
     if( (m_FromBL || m_FromUpPV) && 
