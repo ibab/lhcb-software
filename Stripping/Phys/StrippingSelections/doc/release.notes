@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Greig Cowan 
+ - Fixed bug in Psi2SmMuMu line.
+
 ! 2010-11-03 - Greig Cowan 
  - Fixed bugs in some lines requiring a MergedSelection
 

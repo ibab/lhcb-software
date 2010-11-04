@@ -88,7 +88,7 @@ KstarList = createCombinationSel( OutputList = "Kstar2KpiForBToPsi2SXMuMu",
                                   PreVertexCuts = "(APT>500*MeV) & (ADAMASS('K*(892)0') < 90*MeV)",
                                   PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
 
-KsListLoose = MergedSelection("StdLooseKsMerged",
+KsListLoose = MergedSelection("StdLooseKsMergedForBToPsi2SXMuMu",
                               RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD"),
                                                     DataOnDemand(Location = "Phys/StdLooseKsLL")] )
 
