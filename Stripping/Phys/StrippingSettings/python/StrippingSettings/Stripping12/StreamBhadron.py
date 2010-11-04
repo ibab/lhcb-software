@@ -34,12 +34,12 @@ stream.appendLines( Bd2DstarTauNuConf.Lines )
 from StrippingSelections.StrippingB2twobody import B2twobodyLine
 stream.appendLines( B2twobodyLine() )
 
-#from StrippingSelections.StrippingB2threebody import B2threebodyLine
-#stream.appendLines( B2threebodyLine() )
+from StrippingSelections.StrippingB2threebody import B2threebodyLine
+stream.appendLines( B2threebodyLine() )
 
 # Walter Bonivento 
-#from StrippingSelections.StrippingB2twobody_prompt import B2twobody_promptLine
-#stream.appendLines( B2twobody_promptLine() )
+from StrippingSelections.StrippingB2twobody_prompt import B2twobody_promptLine
+stream.appendLines( B2twobody_promptLine() )
 
 # Fred Blanc
 
