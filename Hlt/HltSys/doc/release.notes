@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+</PRE><H1><A NAME=v11r4>2010-11-04 HltSys v11r4/A></H1><PRE>
+! 2010-11-04 - Juan Palacios
+ - Hlt code identical to v11r3. Built on Phys v9r12
+
 </PRE><H1><A NAME=v11r3>2010-10-04 HltSys v11r3/A></H1><PRE>
 ! 2010-10-04 - Gerhard Raven
  - update tags on top of Phys v9r11
