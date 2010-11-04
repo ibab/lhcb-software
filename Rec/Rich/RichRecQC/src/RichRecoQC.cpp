@@ -113,31 +113,31 @@ StatusCode RecoQC::prebookHistograms()
       richHisto1D( HID("ckResAllStereoRefit",*rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                   "delta(Cherenkov theta) / mrad" );
+                   "delta(Cherenkov theta) / rad" );
       richHisto1D( HID("ckResAllStereoRefitIsolated",*rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                   "delta(Cherenkov theta) / mrad" );
+                   "delta(Cherenkov theta) / rad" );
       richHisto1D( HID("thetaRec",*rad), "Reconstructed Ch Theta | All photons",
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                   "Cherenkov Theta / mrad" );
+                   "Cherenkov Theta / rad" );
       richHisto1D( HID("thetaExpect",*rad), "Expected Ch Theta | All Tracks",
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                   "Cherenkov Theta / mrad" );
+                   "Cherenkov Theta / rad" );
       richHisto1D( HID("phiRec",*rad), "Reconstructed Ch Phi | All photons",
                    0.0, 2.0*Gaudi::Units::pi, nBins1D(),
                    "Cherenkov Phi / rad" );
       richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta | All photons",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                   "delta(Cherenkov theta) / mrad" );
+                   "delta(Cherenkov theta) / rad" );
       richHisto1D( HID("thetaRecIsolated",*rad), 
                    "Reconstructed Ch Theta | All photons | Isolated Tracks",
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                   "Cherenkov Theta / mrad" );
+                   "Cherenkov Theta / rad" );
       richHisto1D( HID("ckResAllIsolated",*rad), 
                    "Rec-Exp Cktheta | All photons | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                   "delta(Cherenkov theta) / mrad" );
+                   "delta(Cherenkov theta) / rad" );
       richHisto1D( HID("totalPhotons",*rad),"Reconstructed Photon Candidates",
                    0, 10000, 100, "# Photon Candidates" );
       richHisto1D( HID("totalPhotonsPerSeg",*rad),"Photons per Segment | All Tracks",
@@ -149,7 +149,7 @@ StatusCode RecoQC::prebookHistograms()
       richProfile1D( HID("ckPullVthetaIso",*rad), 
                      "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
                      m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                     "Cherenkov Theta / mrad", "Cherenkov Theta pull" );
+                     "Cherenkov Theta / rad", "Cherenkov Theta pull" );
       if ( *rad == Rich::Aerogel )
       {
         // Book a few plots for each aerogel tile
@@ -161,14 +161,14 @@ StatusCode RecoQC::prebookHistograms()
           title << "Rec-Exp Cktheta | All photons | Tile " << *tileID;
           richHisto1D( HID(id.str(),*rad), title.str(),
                        -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                       "delta(Cherenkov theta) / mrad" );
+                       "delta(Cherenkov theta) / rad" );
           id.str("");
           title.str("");
           id << "thetaRecTile" << *tileID;
           title << "Reconstructed Ch Theta | All photons | Tile " << *tileID;
           richHisto1D( HID(id.str(),*rad), title.str(),
                        m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                       "Cherenkov Theta / mrad" );
+                       "Cherenkov Theta / rad" );
         }
       }
     }
