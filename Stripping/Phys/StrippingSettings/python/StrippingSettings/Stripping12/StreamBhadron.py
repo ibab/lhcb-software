@@ -42,7 +42,6 @@ from StrippingSelections.StrippingB2twobody_prompt import B2twobody_promptLine
 stream.appendLines( B2twobody_promptLine() )
 
 # Fred Blanc
-
 from StrippingSelections.StrippingB2CharmlessQuasi2Body import B2Quasi2Body4piLines
 stream.appendLines( B2Quasi2Body4piLines )
 
@@ -123,5 +122,7 @@ from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
 Bs2PhiPhiConf = StrippingBs2PhiPhiConf("Bs2PhiPhi", StrippingBs2PhiPhiConf.config_Sept2010 )
 stream.appendLines( Bs2PhiPhiConf.lines )
 
-
+# Paula Alvarez Cartelle
+from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
+stream.appendLines( [ StrippingBs2KstKstConf().nominall() ] )
 

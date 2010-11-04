@@ -76,6 +76,7 @@ stream.appendLines( MuonTTStripping.lines )
 
 from StrippingSelections.StrippingTrackEffDownMuon import StrippingTrackEffDownMuonConf
 stream.appendLines( [ StrippingTrackEffDownMuonConf().nominal_line() ] )
+stream.appendLines( [ StrippingTrackEffDownMuonConf().trackEffValid_line() ] )
 
 from StrippingSelections.StrippingTrackEffVeloMuon import StrippingTrackEffVeloMuonConf
 stream.appendLines( [ StrippingTrackEffVeloMuonConf().nominal_line() ] )

@@ -132,9 +132,11 @@ stream.appendLines( [ StrippingBc2JpsiHDetachedConf().MuMu() ] )
 from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXLines
 stream.appendLines( B2JpsiXLines )
 
-# Fred Blanc
+# Fred Blanc, Neus Lopez March
 from StrippingSelections.StrippingB2Psi2SX import B2Psi2SXJpsiPiPiLines
 stream.appendLines( B2Psi2SXJpsiPiPiLines )
+from StrippingSelections.StrippingB2Psi2SXMuMu import B2Psi2SXMuMuLines
+stream.appendLines( B2Psi2SXMuMuLines )
 
 # Yasmine Ahmis
 from StrippingSelections.StrippingLambdab2JpsiLambda import StrippingLambdab2JpsiLambdaConf
@@ -149,5 +151,4 @@ stream.appendLines( [ StrippingBs2Jpsif0Conf().nominal_line(),
 # Basem Khanji, Olivier Leroy
 from StrippingSelections.StrippingBiasedBs2JpsiPhi import line
 stream.appendLines( [ line ] )
-
 
