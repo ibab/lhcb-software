@@ -251,7 +251,7 @@ class CloneLHCbIDs(MicroDSTElement) :
         from Configurables import CopyParticle2LHCbIDs
         cloner =  CopyParticle2LHCbIDs(self.personaliseName(sel,
                                                             'CopyLHCbIDs'),
-                                       FullDecayTree = self.fullDecay)
+                                       FullDecayTree = self._fullDecay)
         cloner.InputLocations = self.dataLocations(sel,"Particles")
         self.setOutputPrefix(cloner)
         return [cloner]
