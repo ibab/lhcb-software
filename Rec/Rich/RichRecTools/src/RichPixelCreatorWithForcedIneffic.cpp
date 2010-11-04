@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.6 2009-07-30 11:23:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
  */
