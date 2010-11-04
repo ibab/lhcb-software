@@ -1,4 +1,4 @@
-// $Id: InternalDisplay.cpp,v 1.7 2010-11-02 10:23:17 frankb Exp $
+// $Id: InternalDisplay.cpp,v 1.8 2010-11-04 07:28:16 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.7 2010-11-02 10:23:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/InternalDisplay.cpp,v 1.8 2010-11-04 07:28:16 frankb Exp $
 
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
@@ -130,7 +130,7 @@ void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
 
 /// DIM command service callback
 void InternalDisplay::excludedHandler(void* tag, void* address, int* size) {
-  if ( address && tag && *size > 0 ) {
+  if ( address && tag ) {
     InternalDisplay* disp = *(InternalDisplay**)tag;
     char *p = (char*)address, *end = p+*size;
     set<string> nodes;
@@ -138,9 +138,7 @@ void InternalDisplay::excludedHandler(void* tag, void* address, int* size) {
       nodes.insert(strlower(p));
       p += (::strlen(p)+1);
     }
-    if ( nodes.size() > 0 )  {
-      IocSensor::instance().send(disp,CMD_EXCLUDE,new set<string>(nodes));
-    }
+    IocSensor::instance().send(disp,CMD_EXCLUDE,new set<string>(nodes));
   }
 }
 

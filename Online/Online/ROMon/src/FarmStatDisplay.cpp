@@ -1,4 +1,4 @@
-// $Id: FarmStatDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
+// $Id: FarmStatDisplay.cpp,v 1.8 2010-11-04 07:28:16 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.7 2010-10-15 07:42:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmStatDisplay.cpp,v 1.8 2010-11-04 07:28:16 frankb Exp $
 
 // Framework include files
 #include "ROMon/HelpDisplay.h"
@@ -125,8 +125,8 @@ static FarmStatDisplay* s_fd = 0;
 
 namespace {
 
-  float _cnvItem(const char* p, float*) {  return ::atof(p); }
-  int   _cnvItem(const char* p, int*)   {  return ::atol(p); }
+  float _cnvItem(const char* p, float*) {  return (float)::atof(p); }
+  int   _cnvItem(const char* p, int*)   {  return ::atol(p);        }
 
   template <class T> void _cnv(string buffer,std::map<string,map<string,vector<T> > >& cnt) {
     char* data = (char*)buffer.c_str();
