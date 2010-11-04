@@ -22,7 +22,7 @@ include_path     none
 #============================================================================
 # Component library building rule
 #============================================================================
-macro_append ROOT_linkopts " -lThread "
+macro_append ROOT_linkopts ' -lThread ' WIN32 ' libThread.lib '
 macro_append Boost_linkopts ' $(Boost_linkopts_regex)'
 macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
 macro_append Boost_linkopts ' $(Boost_linkopts_filesystem)'

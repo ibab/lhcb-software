@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.93 2010-11-03 08:34:18 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.94 2010-11-04 07:39:24 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -859,8 +859,8 @@ StatusCode MEPRxSvc::run() {
         // not found - get a new descriptor
         RXIT oldest = ageRx();
 	// 
-	m_idleTimeTSC->fill(tsc - lasttsc, 1.0);
-	m_idleTimeSock->fill(rxtim - lastrxtim, 1.0);
+	m_idleTimeTSC->fill(double(tsc - lasttsc), 1.0);
+	m_idleTimeSock->fill(double(rxtim - lastrxtim), 1.0);
         
 
 //        m_monSvc->updateAll(false);
