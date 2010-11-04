@@ -36,8 +36,5 @@ library          StrippingNeuroBayes    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=StrippingNeuroBaye
-#============================================================================
-# do not build on windows.
-apply_pattern disable_package_on platform=target-winxp
+apply_pattern    component_library library=StrippingNeuroBayes
 #============================================================================
