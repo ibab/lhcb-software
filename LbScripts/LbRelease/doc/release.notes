@@ -1,3 +1,7 @@
+2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r6
+
 2010-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out.

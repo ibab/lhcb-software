@@ -1,5 +1,5 @@
 package LbConfiguration
-version v5r5
+version v5r6
 
 use LbUtils		v*
 
@@ -30,8 +30,8 @@ macro_append projectaliases_dependencies " LbConfiguration_python "
 
 cmtpath_pattern \
 	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup
-	
-private 
+
+private
 
 
 macro Lblogin_script_location "$(LbConfiguration_cmtpath)/$(cmt_installarea_prefix)" \
@@ -42,13 +42,13 @@ pattern generateShellLogin \
    macro generate_<shell>_Login_output "../scripts/LbLogin.<shell>" \
                                  WIN32 "..\scripts\LbLogin.<shell>" ; \
    macro generate_<shell>_Login_command "python ../scripts/generateLogin" \
-                                  WIN32 "python ..\scripts\generateLogin" ; \ 
+                                  WIN32 "python ..\scripts\generateLogin" ; \
    macro_append generate_<shell>_Login_command " --build --login-version=$(singleq)$(version)$(singleq)" ; \
    macro_append generate_<shell>_Login_command " $(Lblogin_script_location)" ; \
-   macro_append generate_<shell>_Login_command " $(generate_<shell>_Login_output)" ; \   
+   macro_append generate_<shell>_Login_command " $(generate_<shell>_Login_output)" ; \
    apply_pattern CallCommand target=generate_<shell>_Login ; \
-   macro_append install_scripts_dependencies " generate_<shell>_Login " 
-  
+   macro_append install_scripts_dependencies " generate_<shell>_Login "
+
 apply_pattern generateShellLogin shell=csh
 apply_pattern generateShellLogin shell=sh
 apply_pattern generateShellLogin shell=bat

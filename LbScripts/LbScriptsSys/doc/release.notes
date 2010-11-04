@@ -1,19 +1,79 @@
+2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r6
+
+	* data/eclipse/*: templates for the configuration of Eclipse projects (Marco Cl.)
+	* python/LbConfiguration/__init__.py: added functions to generate the Eclipse configuration (Marco Cl.)
+	* python/LbConfiguration/SetupProject.py: create Eclipse project configuration when called with --build-env (Marco Cl.)
+	* python/LbConfiguration/Repository.py: added the getRepositories function
+      fitered against a protocol string (Marco Cl.).
+    * python/LbConfiguration/SetupProject.py: fixed the setting of the prompt in batch mode (where there is
+      no prompt whatsoever).
+	* python/LbConfiguration/LbLogin.py: set the default ACL for the User_release_area to be "system:anyuser l"
+	  and "cern:z5 rl" in order to enforce the CERN policy about public areas.
+	* python/LbConfiguration/LbLogin.py: added support for new component in the CMTPROJECTPATH:
+      $MYSITEROOT/lcg/app/releases. It will be added only if the directory exists.
+	* python/LbConfiguration/Package.py: added ChargedProtoANNPIDParam to the list of PARAM packages.
+	* python/LbConfiguration/Version.py: added generic version sorting. This relies on the splitting of
+      the string holding the version into alphabetic and numeric token which then are placed in a tuple. This
+      works for any version type (LHCb, LCG, ROOT) except for the extended LHCb version with the "-pre" suffix.
+	* python/LbConfiguration/Platform.py: added support for win64 and vc9.
+	* scripts/generateLogin: fixed the test for the login shell in the main wrapper.
+
+	* python/LbLegacy/install_project.py: added security when removing html files.
+	* python/LbLegacy/install_project.py: enhanced the message about link creation.
+	* python/LbLegacy/install_project.py: created the $MYSITEROOT/etc directory. This is holding links
+      to the current setup wrappers.
+	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the
+      HTML file. At that moment it didn't exist anymore and os.getcwd() was crashing.
+	* scripts/mkproject: fixed the location of the initialisation of the not_ready_file variable.
+
+	* python/LbRelease/GetPack.py: added --eclipse option to force Eclipse-friendly check-out.
+      Fixed some 'fake' PyDev errors. (Marco Cl.)
+	* python/LbRelease/rcs.py: modified to add package-specific configurations to the Eclipse
+      project and to create an Eclipse project whenthe option --project is used. (Marco Cl.)
+	* scripts/move_package:
+	* python/LbRelease/rcs.py: finished the implementation of the move_package utility.
+	* python/LbRelease/GetPack.py: Use the same version as the one already used by a project
+      as default choice for a package. (Marco Cl.)
+	* python/LbRelease/rcs.py: added getPackageRepo and getProjectRepo functions to get the
+      repositories containing the package/project.
+	* scripts/move_package: added skeleton of the script
+	* python/LbRelease/rcs.py: factored out the callCommand and RetryCommand utilities to the
+      LbUtils.Processes module.
+	* python/LbRelease/LHCbNightlies.py: client must be started with CMTCONFIG as a parameter,
+      and now it can build only platforms that have not only the same platform type (slc4/sl5)
+      but also matching architecture (32b/64b) (already in production) (Karol)
+
+	* data/Makefile: removed the export of CCACHE_PREFIX, which doesn't seem to be needed and causes problems
+      if distcc is not used when using ccache. (Marco Cl.)
+	* python/LbUtils/Log.py: added NullHandler to be used in libraries. This is usefull when the
+      main application calling the library is not defining any logger.
+	* python/LbUtils/Processes.py: factored out the callCommand and RetryCommand utilities from the
+      LbRelease.rcs module.
+	* python/LbUtils/Terminal.py: new file. Added the function to get the size of the terminal. It
+      works both on Linux and windows.
+	* python/LbUtils/afs/directory.py: added a check when removing ACL. The new ACL settings is cleaned of
+      groups with empty ACL
+	* python/LbUtils/Path.py: added check for existence in the path manipulation functions.
+	* data/Makefile: avoid removing the whole InstallArea on 'clean' (just InstallArea/$CMTCONFIG)
+
 2010-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r5
 
-	* scripts/generateLogin: 
+	* scripts/generateLogin:
 	- fixed usage of MYSITEROOT when it is built with several path entries.
 	- created function for the update above.
 	* scripts/eclipse: use version 'prod' (symlink to the latest version) (Marco Cl.)
-	* python/LbConfiguration/LbLogin.py: 
-	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to 
-	something different then CMTSupportedConfig is used. This ensure that desktop slc5 
-	ia32 machine would work. 
+	* python/LbConfiguration/LbLogin.py:
+	- tuned previous fix. Use CMTCompatibleConfig only for CERN. When CMTSITE is set to
+	something different then CMTSupportedConfig is used. This ensure that desktop slc5
+	ia32 machine would work.
 	- added warnings when the selected config is in the compatible ones but not in the supported
 	ones.
 	* python/LbConfiguration/LbLogin.py: added the "--dev" option. It allows to use the LHCBDEV area for
-	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in 
+	the LbScripts setup. Has problably to be used with --scripts-version="v*" if the version hardcoded in
 	the shell wrappers (LbLogin.{sh,csh,bat}) do not match.
 	* python/LbConfiguration/SetupProject.py: Ignore projects that are being released
 	(checks if there is a file called "NOT_READY" in the project directory) (Marco Cl.)
@@ -39,8 +99,8 @@
 	* scripts/copyLCG: (new) script to copy AFS LCG software into a local installation
 
 	* python/LbLegacy/install_project.py: added error message in case of requested installation
-	of LbScripts in check mode. This is impossible. 
-	* python/LbLegacy/install_project.py: 
+	of LbScripts in check mode. This is impossible.
+	* python/LbLegacy/install_project.py:
 	- fixed the usage of MYSITEROOT for the update of LHCBPROJECTPATH.
 	- call the post-install command after each installation and not at the global end
 	of the installation procedure.
@@ -50,8 +110,8 @@
 	* scripts/mkproject: creates a "NOT_READY" file at the start to prevent its
 	usage by SetupProject. This file is removed when using the "K" (locK) action.
 	* scripts/mkLCGCMTtar: added the generation of the html file for LCGCMT like tarballs
-	* python/LbLegacy/install_project.py: 
-	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments 
+	* python/LbLegacy/install_project.py:
+	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments
 	  any more on the command line.
 	- allows the listing of LCGCMT like tarballs
 	- fixed the binary of LCGCMT like tarballs: it is always optimized.
@@ -74,7 +134,7 @@
 2010-08-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r4p1
-	
+
 	fixed python 2.6 warning.
 
 2010-08-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -99,8 +159,8 @@
 
 	* LbRelease/python/LbRelease/rcs.py: modified the svn check out procedure to
 	produce eclipse-friendly working copies (in special cases). (Marco Cl.)
-	* LbRelease/python/LbRelease/GetPack.py: 
-	* LbRelease/python/LbRelease/LHCbDoc.py: 
+	* LbRelease/python/LbRelease/GetPack.py:
+	* LbRelease/python/LbRelease/LHCbDoc.py:
 	* LbRelease/python/LbRelease/rcs.py: added a protection for the used of the builtin "set". Use
 	the Set class from the sets modules if the builtin is not available. This is the case
 	for python version < 2.4.
@@ -109,11 +169,11 @@
 	with several source directories.
 	* python/LbUtils/Links.py: removed useless messages.
 	* python/LbUtils/CMT/Common.py: created a new function CMTLog for the logging of CMT messages
-	* python/LbUtils/CMT/Package.py: 
+	* python/LbUtils/CMT/Package.py:
 	    - factored out the "cmt show macro_value" in a new method called getMacroValue.
 	    - factored out the "cmt show set_value" in a new method called getSetValue.
-	* LbUtils/python/LbUtils/File.py: 
-	* LbUtils/python/LbUtils/Tar.py: 
+	* LbUtils/python/LbUtils/File.py:
+	* LbUtils/python/LbUtils/Tar.py:
 	* LbUtils/python/LbUtils/VersionsDB.py: added a protection for the used of the builtin "set". Use
 	the Set class from the sets modules if the builtin is not available. This is the case
 	for python version < 2.4.
@@ -129,7 +189,7 @@
 	- If the SP_PROMPT env variable is set to "without_version", "[<project>]" is prepended to
 	the prompt
 	- If the SP_PROMPT env variable is not set, nothing is done.
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/LbLogin.py:
 	- fixed the usage of the internal path to the Compat binaries for the windows platform.
 	- removed useless SAVE_PATH variables
 	- added a few more debug printout
@@ -145,11 +205,11 @@
 	- added the getExternalVersion function.
 	- added the doxygen_version.
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed the autorestart of the script with a message on windows. The script cannot be restarted automatically and so it has
 	to be done manually.
 	- added a fallback on VO_LHCB_SW_DIR/lib if the MYSITEROOT variable is not set. It
-	issues a warning. 
+	issues a warning.
 	- removed the download of the useless distribution.htm file
 	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
 	tarball
@@ -190,7 +250,7 @@
 	Exclude LHCbDirac from the allowed projects (it causes a segfault in doxygen).
 	Improved generation of dependency graph in SVG format, to be visible on more
 	browsers (Marco Cl.).
-	* python/LbRelease/LHCbDoc.py (Marco Cl.): 
+	* python/LbRelease/LHCbDoc.py (Marco Cl.):
 	- Added the generation of a graph for the dependencies between projects (using 'dot').
 	- Added the possibility of triggering a re-build of the documentation with a
 	special file in the doc directory.
@@ -199,7 +259,7 @@
 	- Include LHCbDirac in the allowed projects.
 	* python/LbRelease/LHCbNightlies.py: -j, -l parameters added to the build
 	procedure (Karol)
-	* python/LbRelease/LHCbDoc.py (Marco Cl.): 
+	* python/LbRelease/LHCbDoc.py (Marco Cl.):
 	- Added a simple (weak) locking of the doc directories.
 	- Moved the generation of the symlinks of the general directory to the end of the build step (was in 'add').
 	- Added a function to locate all the projects in the release area (instead
@@ -213,14 +273,14 @@
 	to get the URL to a module (Marco Cl.)
 	* scripts/svnpath: script to print the Subversion URL to a package or a
 	project (trunk or tags) (Marco Cl.)
-	
-	* python/LbScriptsPolicy/PathStripper.py: added protection against directories which are 
+
+	* python/LbScriptsPolicy/PathStripper.py: added protection against directories which are
 	not listable. They are ignored.
 	* python/LbScriptsPolicy/PathStripper.py: Modified to accept zip files
 	in the path (Marco Cl.).
 
 
-	* python/LbUtils/Script.py: changed the default config file location. Now uses 
+	* python/LbUtils/Script.py: changed the default config file location. Now uses
 	XDG_CONFIG_HOME
 	* scripts/killtree: new file; wrapper over killTree python function
 	from LbUtils.Processes (Karol)
@@ -249,7 +309,7 @@
 	Tools/Emacs standalone package.
 	- python/LbConfiguration/LbLogin.py: fixed the creation of the missing User_release_area. Now creates the
 	intermediate directories.
-	- scripts/generateLogin: fixed the main usage of the wrapper: now the convention is that 
+	- scripts/generateLogin: fixed the main usage of the wrapper: now the convention is that
 	the .noLHCBLoginscript file must not exist in the $HOME directory. Completed the windows part.
 	- python/LbConfiguration/Project.py: added the support for the Feicim project.
 	- python/LbConfiguration/SetupProject.py: changed --ignore-missing to --force
@@ -266,13 +326,13 @@
 	the lock option will also adjust the volume quota to the used space.
 	- LbLegacy/python/LbLegacy/install_project.py: fixed usage of md5 with python 2.6
 	- python/LbLegacy/install_project.py: fixed endless loop if the install_project.py script is not in the
-	  current directory and needs an update. Added the --dev-install. getMySelf use the devel location instead of the regular one. 
+	  current directory and needs an update. Added the --dev-install. getMySelf use the devel location instead of the regular one.
 	- scripts/archive_project: use the unlockAFSDir to reenable write permission to the project
 	to be archived.
 	- scripts/mkproject: added ACL read-only locking and unlocking.
 	- python/LbRelease/LHCbNightlies.py: fix for Windows (Karol)
-	- python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from the documentation. Added 
-	symlinks to the latest version of a project in the docs directory (Marco Cl.).   
+	- python/LbRelease/LHCbDoc.py: Exclude MainPage.h (of the projects) from the documentation. Added
+	symlinks to the latest version of a project in the docs directory (Marco Cl.).
 	- data/Makefile: Moved the dependency files to a different subdirectory
 	for each CMTCONFIG, to allow concurrent builds (Marco Cl.).
 	- scripts/tuneAFSVol: New file. Added class and scripts to deal with AFS volumes
@@ -287,27 +347,27 @@
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* release of version v5r1:
-	
+
 	- SetupProject ignores version of Dirac above v4r*. Use LHCbDirac instead (Marco Cl.).
 	- Fix MacOSX Leopard CMTCONFIG detection.
-	- LbConfiguration.Platform: added DiracPlatfrom method to the NativeMachine class. It detects also 
+	- LbConfiguration.Platform: added DiracPlatfrom method to the NativeMachine class. It detects also
 	the glibc version.
 	- scripts/tag_package: new simple script to tag a package independently of the repository (Marco Cl.).
-	- scripts/cmpPackageWithTrunk: new simple script to check if a checked out package is different 
-	from the HEAD of the trunk. It process both CVS and Subversion hosted packages and can check 
+	- scripts/cmpPackageWithTrunk: new simple script to check if a checked out package is different
+	from the HEAD of the trunk. It process both CVS and Subversion hosted packages and can check
 	all the packages in a directory without the need for "cmt broadcast" (Marco Cl.).
 	- install_project.py: added the possibility to call a post install script. This
-	script must be a python script and is located in the container package usually 
+	script must be a python script and is located in the container package usually
 	at <Project>Sys/cmt/PostInstall.py.
 	- install_project.py: added support for "latest data link". It creates a link to
-	the version directory of a data package called "v99r9". The explicit "--latest-data-link" has 
+	the version directory of a data package called "v99r9". The explicit "--latest-data-link" has
 	to be provided on the command line.
-	
+
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v5r0. Summary of the main changes. Please
-	look at the package release.notes files for details and credits. 
-	- added a new script genProjectSetup that generates the setup script for 
+	look at the package release.notes files for details and credits.
+	- added a new script genProjectSetup that generates the setup script for
 	  a CMT project.
 	- new LbConfiguration.Version module that holds the LHCb version schemes.
 	- implemented the CMTCONFIG detection in LbConfiguration.Platform
@@ -329,7 +389,7 @@
 	switch back to an older release of CMT)
 	- "SetupProject --build-env" and "getpack" create a top level Makefile
 	for the projects (Marco Cl.).
-	- LbLogin gets a "--no-strip-path" option to avoid the removal of 
+	- LbLogin gets a "--no-strip-path" option to avoid the removal of
 	invalid directories.
 	- group_login, group_shell and LHCb wrappers are now generated with the
 	correct path.

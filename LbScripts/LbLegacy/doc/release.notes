@@ -1,3 +1,7 @@
+2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r6
+
 2010-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed log messages.
@@ -12,12 +16,12 @@
 
 2010-09-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: created the $MYSITEROOT/etc directory. This is holding links 
+	* python/LbLegacy/install_project.py: created the $MYSITEROOT/etc directory. This is holding links
 	to the current setup wrappers.
 
 2010-09-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the 
+	* scripts/mkLCGCMTtar: fixed current working directory problem when trying to create the
 	HTML file. At that moment it didn't exist anymore and os.getcwd() was crashing.
 
 2010-09-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -31,11 +35,11 @@
 2010-09-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added error message in case of requested installation
-	of LbScripts in check mode. This is impossible. 
+	of LbScripts in check mode. This is impossible.
 
 2010-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed the usage of MYSITEROOT for the update of LHCBPROJECTPATH.
 	- call the post-install command after each installation and not at the global end
 	of the installation procedure.
@@ -54,8 +58,8 @@
 2010-08-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: added the generation of the html file for LCGCMT like tarballs
-	* python/LbLegacy/install_project.py: 
-	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments 
+	* python/LbLegacy/install_project.py:
+	- fix for "-C" option (lists compatible CMTCONFIG). It doesn't require any arguments
 	  any more on the command line.
 	- allows the listing of LCGCMT like tarballs
 	- fixed the binary of LCGCMT like tarballs: it is always optimized.
@@ -101,11 +105,11 @@
 
 2010-07-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: 
+	* python/LbLegacy/install_project.py:
 	- fixed the autorestart of the script with a message on windows. The script cannot be restarted automatically and so it has
 	to be done manually.
 	- added a fallback on VO_LHCB_SW_DIR/lib if the MYSITEROOT variable is not set. It
-	issues a warning. 
+	issues a warning.
 	- removed the download of the useless distribution.htm file
 	* scripts/mkLHCbtar: remove obsolete dependency on the system/<cmtconfig>.tar.gz
 	tarball
