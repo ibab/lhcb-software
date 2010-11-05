@@ -4,8 +4,7 @@
   <HEAD id="html_head_tag">
     <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"></META>
     <META HTTP-EQUIV="Expires" CONTENT="0"></META>
-    <BASE href="http://cern.ch/lhcbproject/online/comet/Online/"></BASE>
-  </HEAD>
+    
   <SCRIPT language="JavaScript">
     var g_fWarnOnLogOff = false;
     function WarnOnLogOff() {
@@ -13,7 +12,9 @@
         alert("Thank you for using the LHCb online web.\n\nhttp://lhcb.cern.ch");
       }
     }
+    document.write('<BASE href="'+(''+document.location).substr(0,(''+document.location).indexOf('/Online/')+8)+'"></BASE>');
   </SCRIPT>
+  </HEAD>
   <FRAMESET OnUnload="WarnOnLogOff()" framespacing="1" cols="150,*">
     <FRAME name="navigation" src="html/lhcb.static.htm?type=navbar" marginheight="0" marginwidth="0" scrolling="auto" border="1"/>
     <FRAME name="viewer" src="html/News.htm" scrolling="auto"/>
