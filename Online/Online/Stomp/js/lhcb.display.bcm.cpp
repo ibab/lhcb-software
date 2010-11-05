@@ -1,4 +1,5 @@
 _loadScript('lhcb.display.tooltips.cpp');
+_loadScript('lhcb.display.constants.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('dom.print.cpp');
 _loadFile('lhcb.display.general','css');
@@ -220,7 +221,7 @@ if ( !lhcb.widgets ) {
     for(j=0; j<2; ++j) {
       td = document.createElement('td');
       fr = document.createElement('iframe');
-      fr.src = 'http://lbcomet.cern.ch/static/RunStatus/lhcb.chart.htm';
+      fr.src = lhcb.constants.lhcb_comet_url()+'/lhcb.chart.htm';
       fr.id           = 'frame_chart_'+j;
       fr.bgcolor      = '#CCCCCC';
       fr.style.width  = '430px';

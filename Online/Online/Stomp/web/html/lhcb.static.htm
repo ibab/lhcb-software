@@ -7,6 +7,8 @@
   var _stomp_in_use = false;
   var _base = ''+document.location;
   var _fileBase = _base.substr(0,_base.indexOf('/Online/')+7);
+  _fileBase = (''+document.location).substr(0,(''+document.location).indexOf('/Online/')+7);
+  //  alert(_fileBase);
   var _lhcbScriptBase = _fileBase;
   var _javascriptType = 'text/javascript';
   </script>

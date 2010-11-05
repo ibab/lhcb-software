@@ -1,17 +1,13 @@
 //------------------------------------------------------------------------------------------------------------------------------------------------
 if ( !_lhcb().constants ) {
   lhcb.constants = function() {
-    this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
+    this._url = (''+document.location).substr(0,(''+document.location).indexOf('/Online/')+7);//'http://www.cern.ch/lhcbproject/online/comet/Online';
     this._loc = ''+document.location;
-    if ( this._loc.indexOf('/frankm/')>0 ) this._url = 'http://www.cern.ch/frankm/Online';
-    if ( this._loc.indexOf('/lhcbproject/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
-    if ( this._loc.indexOf('/static/RunStatus/')>0 ) this._url = 'http://www.cern.ch/lhcbproject/online/comet/Online';
-    if ( this._loc.indexOf('/comet.lbdaq.')>0 ) this._url = '/Online';
-    if ( this._loc.indexOf('/lbcomet')>0 ) this._url = '/Online';
-    if ( this._loc.indexOf('/lbtncomet')>0 ) this._url = '/Online';
-    //this.lhcb_comet_url   = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';                  };
-    this.lhcb_comet_url   = function()     {    return '/static/RunStatus';                  };
-    this.lhcb_base_url    = function()     {    return this._url;                                                  };
+    this.lhcb_comet_url2  = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';  };
+    this.lhcb_comet_url   = function()     {    return this._url;                                  };
+    this.lhcb_base_url    = function()     {    return this._url;                                  };
+    //alert('\nDomain:'+document.domain+'\nURL:'+this._url+'\nLoc:'+this._loc+'\nComet:'+this.lhcb_comet_url()+'\nBase:'+this.lhcb_base_url()+'\n');
+
     if ( this._loc.indexOf('/frankm/')>0 ) {
       this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name;     };
     }
