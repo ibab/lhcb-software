@@ -12,7 +12,15 @@
         alert("Thank you for using the LHCb online web.\n\nhttp://lhcb.cern.ch");
       }
     }
-    document.write('<BASE href="'+(''+document.location).substr(0,(''+document.location).indexOf('/Online/')+8)+'"></BASE>');
+    {
+      var s = (''+document.location);
+      if ( s.indexOf('lhcbproject.web.cern.ch')>0 )
+        document.write('<BASE href="http://lbcomet.cern.ch/Online/"></BASE>');
+      else if ( s.indexOf('frankm')>0 )
+        document.write('<BASE href="http://lbcomet.cern.ch/Online/"></BASE>');
+      else
+        document.write('<BASE href="'+s.substr(0,s.indexOf('/Online/')+8)+'"></BASE>');
+    }
   </SCRIPT>
   </HEAD>
   <FRAMESET OnUnload="WarnOnLogOff()" framespacing="1" cols="150,*">
