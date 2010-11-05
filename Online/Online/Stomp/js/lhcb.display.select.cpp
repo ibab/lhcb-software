@@ -39,7 +39,6 @@ function _loadFileAbs(base,filename, filetype)   {
 function _loadFile(filename, filetype)   {  _loadFileAbs(_fileBase,filename,filetype); };
 
 if ( _transport_in_use=='stomp' )  {
-
   TCPSocket = Orbited.TCPSocket;
   //var org_transport = Orbited.util.chooseTransport;
   //Orbited.util.chooseTransport = function() {
