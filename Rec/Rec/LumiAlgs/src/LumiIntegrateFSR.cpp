@@ -448,38 +448,38 @@ StatusCode LumiIntegrateFSR::add_file() {
 	    }
 	  }
 
-      	// apply calibration
-      	debug() << "Result for this file (before calibration): " << *result << endmsg;
-      	result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
-      	verbose() << "Result for this file (after calibration): " << *result << endmsg;
-      	// simple summing per counter
-      	if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
-      		m_statusScale = 0;        // invalid luminosity
-      		error() << "ERROR summing result using tool " << endmsg;
-      	}
-      	// summing of integral
-      	long old_n_runs = n_runs;
-      	if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
-	else n_runs = 0;
-      	double old_scale = rel_scale;
-      	rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
-      	if ( old_scale != rel_scale || old_n_runs != n_runs ) {
-      	  info() << "run: " << result->runNumbers()
-      	         << " Revolution frequency " << m_calibRevolutionFrequency 
-      	         << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
-		 << " CollidingBunches " << m_calibCollidingBunches 
-		 << endmsg;
-      	}
-      	if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
-      								    m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
-      						rel_scale ) == StatusCode::FAILURE ) {
-      		m_statusScale = 0;        // invalid luminosity
-      		error() << "ERROR integrating luminosity result" << endmsg;
-      	}
-      	delete result;
+	  // apply calibration
+	  debug() << "Result for this file (before calibration): " << *result << endmsg;
+	  result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
+	  verbose() << "Result for this file (after calibration): " << *result << endmsg;
+	  // simple summing per counter
+	  if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
+	    m_statusScale = 0;        // invalid luminosity
+	    error() << "ERROR summing result using tool " << endmsg;
+	  }
+	  // summing of integral
+	  long old_n_runs = n_runs;
+	  if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
+	  else n_runs = 0;
+	  double old_scale = rel_scale;
+	  rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
+	  if ( old_scale != rel_scale || old_n_runs != n_runs ) {
+	    info() << "run: " << result->runNumbers()
+		   << " Revolution frequency " << m_calibRevolutionFrequency 
+		   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
+		   << " CollidingBunches " << m_calibCollidingBunches 
+		   << endmsg;
+	  }
+	  if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
+								m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
+					    rel_scale ) == StatusCode::FAILURE ) {
+	    m_statusScale = 0;        // invalid luminosity
+	    error() << "ERROR integrating luminosity result" << endmsg;
+	  }
+	  delete result;
 	}
       }
-
+      
       // set absolute scales for tool
       double abs_scale = m_statusScale * m_calibScale;
       m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
@@ -566,6 +566,14 @@ StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
     LHCb::LumiFSR bxFSR;
     // pick the right fsr at fkey
     LHCb::LumiFSRs::iterator fsr = lumiFSRs->begin();
+
+    // protection for missing data
+    if ( lumiFSRs->empty() ) warning() << "FSR is empty!!!:" << fileRecordAddress << endmsg;
+    if ( lumiFSRs->size() <= fkey ) {
+      warning() << "FSR is missing elements: [" << fkey << "] missing in " << fileRecordAddress << endmsg;
+      return StatusCode::SUCCESS;
+    }
+
     LHCb::LumiFSR* lumiFSR = fsr[fkey];
     bxFSR = (*lumiFSR);
     // debug output
@@ -602,6 +610,7 @@ StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
       if ( msgLevel(MSG::DEBUG) ) debug() << "addNormalized: " << *result << endmsg;
     }
   }
+
   return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-11-05 - Jaap Panman
+ - add protection for missing data in LumiIntegrateFSR
+
 !========================= LumiAlgs v4r1 2010-11-01 =========================
 ! 2010-11-01 - Rob Lambert
  - make long -> long long for 32-64 bit compatibility in LumiCheckCondDB.h/cpp
