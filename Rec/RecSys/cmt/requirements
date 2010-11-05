@@ -1,5 +1,5 @@
 package RecSys
-version           v10r5p1
+version           v10r5p2
 
 branches cmt doc tests
  
@@ -57,7 +57,8 @@ use RichENNRingFinder    v1r2    Rich # Chris Jones, Ulrich Kerzel
 use RichIFBAnalysis      v1r1p1  Rich # Ross Young, Chris Jones
 
 # Tf packages: Track Pattern Recognition
-use FastVelo             v1r0    Tf   # Olivier Callot
+#Commented out for the winter processing release
+#use FastVelo             v1r0    Tf   # Olivier Callot
 use PatAlgorithms        v4r7    Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r25   Tf   # David Hutchcroft
 use PatVeloTT            v3r15   Tf   # Mariusz Witek

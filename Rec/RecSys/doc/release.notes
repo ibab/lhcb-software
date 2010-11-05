@@ -5,9 +5,18 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-! 2010-11-01 - Rob Lambert
- - Added Tf/FastVelo back into requirements
 
+</PRE><H1><A NAME=v10r5p2>2010-11-05 RecSys v10r5p2</A></H1><PRE> 
+This version uses Gaudi v21r11 and LHCb v31r6p1
+
+- This is a minimal patch to include the latest fixes to FSR processing.
+- This version replaces Rec v10r5p1, and will be usd for the winter reprocessing.
+
+- Modified packages:
+  Rec/LumiAlgs v4r1p1 (Fix FSR bug), Tr/TrackMonitors v1r30p1 (fix monitoring bug #74815)
+
+- The FSR bug was resulting in some small files without the correct FSRs.
+  This caused some segfaulting in user jobs and would have prevented merging FSRs.
 
 </PRE><H1><A NAME=v10r5p1>2010-10-28 RecSys v10r5p1</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6p1
