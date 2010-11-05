@@ -44,8 +44,9 @@ tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+#tag.BTaggingTool.ForceSignalID = "Bs" #"Bs", "Bu", "Bd"
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
-tag.BTaggingTool.OutputLevel = 3
+tag.BTaggingTool.OutputLevel = 4
 
 #Import cuts for MC2010
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
@@ -74,7 +75,7 @@ tagana.InputLocations = [ location,
 
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
-tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
+tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
@@ -105,7 +106,7 @@ DaVinci().Hlt = False
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 100                        # Number of events
+DaVinci().EvtMax     = 250                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "analysis.root"     # Ntuple

@@ -233,6 +233,12 @@ StatusCode BTaggingAnalysis::execute() {
     return StatusCode::SUCCESS;
   }    
 
+  double ipPVBS, iperrPVBS;
+  ipPVBS=iperrPVBS=0;
+  m_util->calcIP(AXBS, RecVert, ipPVBS, iperrPVBS);
+  tuple -> column ("Bip", ipPVBS);
+  tuple -> column ("Biperr", iperrPVBS);
+
   tuple -> column ("krec", verts.size() );
   tuple -> column ("RVx",  RecVert->position().x()/mm);
   tuple -> column ("RVy",  RecVert->position().y()/mm);
@@ -562,52 +568,58 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
 
-  double kdmin = 1000000;
-  //RecVertex::Container::const_iterator iv;
-  RecVertex::Range::const_iterator iv;
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
-    double var, ip, iperr;
-    if(m_ChoosePV == "CheatPV") {
-      if (m_EnableMC) {
-        var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
-        debug()<<" distance from true PV="<<var<<endreq;
-      } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
-    } 
-    else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
-      m_util->calcIP(AXB, *iv, ip, iperr);
-      var=fabs(ip); 	
-    } else if(m_ChoosePV=="PVbyIPs") { 
-      m_util->calcIP(AXB, *iv, ip, iperr);
-      if(!iperr){
-        err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
-        continue;
+  if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
+    //const VertexBase* myPV = bestPV(AXB);  //RecVert = (const RecVertex*) myPV;
+    RecVert = (const RecVertex*) bestPV(AXB);
+  } else {
+  
+    double kdmin = 1000000;
+    //RecVertex::Container::const_iterator iv;
+    RecVertex::Range::const_iterator iv;
+    for(iv=verts.begin(); iv!=verts.end(); iv++){
+      double var, ip, iperr;
+      if(m_ChoosePV == "CheatPV") {
+	if (m_EnableMC) {
+	  var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
+	  debug()<<" distance from true PV="<<var<<endreq;
+	} else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
+      } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
+	m_util->calcIP(AXB, *iv, ip, iperr);
+	var=fabs(ip); 	
+      } else if(m_ChoosePV=="PVbyIPs") { 
+	m_util->calcIP(AXB, *iv, ip, iperr);
+	if(!iperr){
+	  err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+	  continue;
+	}
+	var=fabs(ip/iperr); 	
+      } else {
+	err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+	return PileUpVtx;
       }
-      var=fabs(ip/iperr); 	
-    } else {
-      err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
-      return PileUpVtx;
+      if( var < kdmin ) {
+	kdmin = var;
+	RecVert = (*iv);
+	
+	//       RecVertex newPV(**iv);
+	//       Particle newPart(*AXB);
+	//       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+	//       if(!sc) { 
+	//         err()<<"ReFitter fails!"<<endreq; 
+	//         continue; 
+	//       } else RefitRecVert = newPV;
+	debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
+      }    
     }
-    if( var < kdmin ) {
-      kdmin = var;
-      RecVert = (*iv);
-
-      //       RecVertex newPV(**iv);
-      //       Particle newPart(*AXB);
-      //       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
-      //       if(!sc) { 
-      //         err()<<"ReFitter fails!"<<endreq; 
-      //         continue; 
-      //       } else RefitRecVert = newPV;
-      debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
-    }    
-  }
-
+  }//else bestPV
+  
   //build a vector of pileup vertices --------------------------
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
-    if( (*iv) == RecVert ) continue;
-    PileUpVtx.push_back(*iv);
+  RecVertex::Range::const_iterator jv;
+  for(jv=verts.begin(); jv!=verts.end(); jv++){
+    if( (*jv) == RecVert ) continue;
+    PileUpVtx.push_back(*jv);
   }
-
+  
   return PileUpVtx;
 }
 
