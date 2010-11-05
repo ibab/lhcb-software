@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-11-05 - Patrick Koppenburg
+ - Remove obsolete DaVinci.py
+
 ! 2010-11-05 - Jaap Panman
  - python/DaVinci/Configuration.py bugfix in logic to run Lumi
 
