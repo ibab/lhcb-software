@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v37r8p2>2010-11-05 Brunel v37r8p2</A></H1><PRE>
+- Dummy version to pick up FSR changes from Rec.
+
+- Previous Recs had a bug in FSR writing that the FSRs were not always created.
+  That's fixed in Rec/LumiAlgs v4r1p1
+
+
 </PRE><H1><A NAME=v37r8p1>2010-10-28 Brunel v37r8p1</A></H1><PRE>
 - Changes to references to reflect changes in Brunel v37r8p1 output
   . #87223: New LHCBCOND tag head-20101010
