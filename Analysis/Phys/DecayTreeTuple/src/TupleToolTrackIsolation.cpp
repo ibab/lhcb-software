@@ -251,7 +251,7 @@ std::pair< std::vector<double>, int> TupleToolTrackIsolation::ConeP(const LHCb::
     double trackpz = trackMomentum.Z();
 
     // -- Calculate the difference in Eta and Phi between the particle in question and a track
-    double deltaPhi = partMomentum.Phi() - trackMomentum.Phi();
+    double deltaPhi = fabs( partMomentum.Phi() - trackMomentum.Phi() );
     if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
 
     double deltaEta = partMomentum.Eta() - trackMomentum.Eta();
