@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-04 - Georg Krocker
+ - fixed lt biasing bug with dira cut on b in the UnbiasedB2Dh line by removing
+   the cut and introducing a prescale of 0.2 to get the rate back on the old level
+ 
 ! 2010-11-04 - Jibo He
  - python/StrippingSelections/StrippingDiMuonNew.py
    + Added DiMuonExclusiveLine & DiMuonNoPVLine for exclusive production studies

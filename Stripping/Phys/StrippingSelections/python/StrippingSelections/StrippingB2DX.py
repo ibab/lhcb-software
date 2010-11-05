@@ -195,7 +195,7 @@ class B2DXLines(object) :
 	      "VtxChi2Max"         : 12.,           # B vertex Chi2
 	      "IPChi2Max"          : 250.,           # chi2 of B impact parameter to the related PV
 	      "LTMin"              : -1000.,           # Chi2 of B vertex separation from the related PV
-	      "DIRAMin"            : 0.9998,        # DIRA of the B to the related PV
+	      "DIRAMin"            : -1.,        # DIRA of the B to the related PV
 	      "CombDMass"          : 500,           # MeV
 	    }, 
     	    "LambdaCCuts" : {
@@ -236,7 +236,7 @@ class B2DXLines(object) :
 	      "D2KPiPi0Merged"   : 1., 
 	      "D2KPiPi0Resolved" : 1., 
 	      "Lambda"   : 1., 
-	      "Unbiased"   : 1., 
+	      "Unbiased"   : 0.2, 
 	    }, 
 	    "CheckPV"	       : True, 
 	    "MaxTracksInEvent" : {
