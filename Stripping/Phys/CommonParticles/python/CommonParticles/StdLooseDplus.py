@@ -76,18 +76,22 @@ StdLooseDplus2hhh.DaughtersCuts = {
     "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
     }
 
-StdLooseDplus2hhh.CombinationCut = """(
+StdLooseDplus2hhh.CombinationCut = """(APT>1.*GeV) & (ADOCACHI2CUT(50, '')) & (
                                       in_range(1769*MeV, mpipipi    , 2069 * MeV) | 
                                       in_range(1769*MeV, mKpipi     , 2069 * MeV) | 
-                                      in_range(1769*MeV, mKKpi      , 2069 * MeV) | 
-                                      in_range(1769*MeV, mKpipiDCS  , 2069 * MeV)
-                                      ) & (APT>1.*GeV) & (ADOCACHI2CUT(50, ''))
+                                      in_range(1769*MeV, mKKpi1     , 2069 * MeV) | 
+                                      in_range(1769*MeV, mKKpi2     , 2069 * MeV) | 
+                                      in_range(1769*MeV, mKpipiDCS1 , 2069 * MeV) |
+                                      in_range(1769*MeV, mKpipiDCS2 , 2069 * MeV)
+                                      )
                                     """
 StdLooseDplus2hhh.MotherCut = "(VFASPF(VCHI2) < 30 )"
-StdLooseDplus2hhh.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+' , 'pi+' ) " ,
+StdLooseDplus2hhh.Preambulo = [   "mpipipi = AWM ('pi-'  , 'pi+', 'pi+' ) " ,
                                   "mKpipi  = AWM ('K-'   , 'pi+', 'pi+' ) " , 
-                                  "mKKpi   = AWM ('K-'   , 'K+' , 'pi+'  ) " , 
-                                  "mKpipiDCS  = AWM ( 'pi-' , 'K+' , 'pi+'  )" ]
+                                  "mKKpi1  = AWM ('K-'   , 'K+' , 'pi+' ) " , 
+                                  "mKKpi2  = AWM ('K-'   , 'pi+', 'K+'  ) " , 
+                                  "mKpipiDCS1 = AWM ( 'pi-' , 'K+' , 'pi+'  )",
+                                  "mKpipiDCS2 = AWM ( 'pi-' , 'pi+', 'K+'   )" ]
 ## configure Data-On-Demand service
 locations = updateDoD (StdLooseDplus2hhh)  
 

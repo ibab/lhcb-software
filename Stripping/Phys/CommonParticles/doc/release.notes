@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-11-05 - Rudolf Oldeman
+ - python/CommonParticles/StdLooseDplus.py
+	 + Added permutations to CombinationCut of StdLooseDplus2hhh
+
 ! 2010-10-05 - Wouter Hulsbergen
  - tightened mass window for StdMassConstrainedJpsi2MuMu
 
