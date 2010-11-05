@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-11-05 - Jaap Panman
+ - python/DaVinci/Configuration.py bugfix in logic to run Lumi
+
 ! 2010-10-27 - Tomasz Skwarnicki
  - python/DaVinci/Configuration.py
    added L0Conf().FullL0MuonDecoding = True needed by L0 Tis/Tos 

@@ -230,11 +230,11 @@ class DaVinci(LHCbConfigurableUser) :
             tupleFile = self.getProp('TupleFile')
 	    if tupleFile == '' :
 	      	log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
-	      	# add integrator for normalization
-	      	self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
-	      	lumiInt = GaudiSequencer("IntegratorSeq")
-	      	LumiIntegratorConf().LumiSequencer = lumiInt
-	      	seq += [ lumiInt ]
+	    # add integrator for normalization
+	    self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile"])
+	    lumiInt = GaudiSequencer("IntegratorSeq")
+	    LumiIntegratorConf().LumiSequencer = lumiInt
+	    seq += [ lumiInt ]
         return seq
         
 ################################################################################
