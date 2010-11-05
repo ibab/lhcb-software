@@ -1,14 +1,14 @@
 package DaVinciSys
-version v26r2p1
+version v26r3
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v26r2p1   Phys
+use  DaVinci                 	v26r3   Phys
 use  DaVinciTests               v1r6
 
 # Patches
-use StrippingConf               v3r8p1    Phys
+use LumiAlgs   v4r1p1 Rec
 
 # Declare this as a container package
 apply_pattern container_package
