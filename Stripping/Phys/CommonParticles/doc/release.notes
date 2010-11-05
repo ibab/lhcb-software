@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v7r6 2010-10-05 ===================
+
 ! 2010-11-05 - Rudolf Oldeman
  - python/CommonParticles/StdLooseDplus.py
 	 + Added permutations to CombinationCut of StdLooseDplus2hhh
