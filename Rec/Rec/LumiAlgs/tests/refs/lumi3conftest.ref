@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r5/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v10r5/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/DaVinci_v26r2p1/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-DataType    = '2009'
@@ -20,11 +20,12 @@
 # |-DataType          = '2010'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
+# |-MergeFSR          = False
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xba22250>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x18c0feb0>  (default: None)
 # |-InputType         = 'MDF'
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
@@ -38,8 +39,8 @@
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r41/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r41/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -59,7 +60,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus215.cern.ch on Mon Oct 11 17:23:40 2010
+                                          running on lxplus249.cern.ch on Fri Nov  5 17:42:17 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -69,7 +70,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -186,9 +187,9 @@ LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service DetectorD
 LumiCountNoBeam     DEBUG ==> Register DB
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r41/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20100826"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r40/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r41/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "head-20100831"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
@@ -585,8 +586,10 @@ LumiFilterNoBeam    DEBUG Tools to release :
 LumiFilterNoBeam    DEBUG Services to release :
 LumiCountNoBeam     DEBUG ==> Finalize
 LumiCountNoBeam      INFO number of files seen: 0
+LumiCountNoBeam   VERBOSE FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountNoBeam      INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountNoBeam     DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/LumiFSRNoBeam'
+LumiCountNoBeam     DEBUG READ FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountNoBeam     DEBUG Finalize base class GaudiAlgorithm
 LumiCountNoBeam     DEBUG Tools to release :
 LumiCountNoBeam     DEBUG Services to release : FileRecordDataSvc UpdateManagerSvc
@@ -598,8 +601,10 @@ LumiFilterBeamC...  DEBUG Tools to release :
 LumiFilterBeamC...  DEBUG Services to release :
 LumiCountBeamCr...  DEBUG ==> Finalize
 LumiCountBeamCr...   INFO number of files seen: 0
+LumiCountBeamCr...VERBOSE FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeamCr...   INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeamCr...  DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/LumiFSRBeamCrossing'
+LumiCountBeamCr...  DEBUG READ FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeamCr...  DEBUG Finalize base class GaudiAlgorithm
 LumiCountBeamCr...  DEBUG Tools to release :
 LumiCountBeamCr...  DEBUG Services to release : FileRecordDataSvc UpdateManagerSvc
@@ -611,8 +616,10 @@ LumiFilterBeam1     DEBUG Tools to release :
 LumiFilterBeam1     DEBUG Services to release :
 LumiCountBeam1      DEBUG ==> Finalize
 LumiCountBeam1       INFO number of files seen: 0
+LumiCountBeam1    VERBOSE FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam1       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam1      DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/LumiFSRBeam1'
+LumiCountBeam1      DEBUG READ FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam1      DEBUG Finalize base class GaudiAlgorithm
 LumiCountBeam1      DEBUG Tools to release :
 LumiCountBeam1      DEBUG Services to release : FileRecordDataSvc UpdateManagerSvc
@@ -624,8 +631,10 @@ LumiFilterBeam2     DEBUG Tools to release :
 LumiFilterBeam2     DEBUG Services to release :
 LumiCountBeam2      DEBUG ==> Finalize
 LumiCountBeam2       INFO number of files seen: 0
+LumiCountBeam2    VERBOSE FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam2       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam2      DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/LumiFSRBeam2'
+LumiCountBeam2      DEBUG READ FSR: {  runs :  files :  info (key/incr/integral) :  }
 LumiCountBeam2      DEBUG Finalize base class GaudiAlgorithm
 LumiCountBeam2      DEBUG Tools to release :
 LumiCountBeam2      DEBUG Services to release : FileRecordDataSvc UpdateManagerSvc
@@ -674,7 +683,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.07 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

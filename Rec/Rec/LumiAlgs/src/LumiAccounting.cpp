@@ -70,6 +70,9 @@ StatusCode LumiAccounting::initialize() {
   m_lumiFSRs = new LHCb::LumiFSRs();
   m_lumiFSR = 0;
   put(m_fileRecordSvc, m_lumiFSRs, m_FSRName);
+  // create a new FSR and append to TDS
+  m_lumiFSR = new LHCb::LumiFSR();
+  m_lumiFSRs->insert(m_lumiFSR);
 
   // initialize calibration factors
   for ( int key = 0; key <= LHCb::LumiCounters::Random; key++ ) {
@@ -147,9 +150,11 @@ StatusCode LumiAccounting::execute() {
       m_count_files++;
       m_current_fname = fname;
       if ( msgLevel(MSG::DEBUG) ) debug() << "RunInfo record: " << fname << endmsg;
+      /* This code is now in initialize:
       // create a new FSR and append to TDS
       m_lumiFSR = new LHCb::LumiFSR();
       m_lumiFSRs->insert(m_lumiFSR);
+      */
     }
   }
 
@@ -167,7 +172,6 @@ StatusCode LumiAccounting::execute() {
     // increment!
     m_lumiFSR->incrementInfo(key, value);
     // check if over threshold and increment with offset
-    // TODO: !!!  threholds should be in database !!!
     double threshold = m_calibThresholds[key];
     int binary = value > threshold ? 1 : 0 ;
     m_lumiFSR->incrementInfo(key + LHCb::LumiMethods::PoissonOffset, binary);
