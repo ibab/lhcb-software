@@ -38,7 +38,7 @@ function _loadFileAbs(base,filename, filetype)   {
 
 function _loadFile(filename, filetype)   {  _loadFileAbs(_fileBase,filename,filetype); };
 
-if ( _stomp_in_use )  {
+if ( _transport_in_use=='stomp' )  {
 
   TCPSocket = Orbited.TCPSocket;
   //var org_transport = Orbited.util.chooseTransport;
@@ -48,9 +48,9 @@ if ( _stomp_in_use )  {
   _loadStatic('/static/protocols/stomp/stomp.js');
   _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
 }
-//if ( _amq_in_use )  {
-//  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
-//}
+else if ( _transport_in_use == 'amq' )  {
+  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
+}
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.constants.cpp');
 
