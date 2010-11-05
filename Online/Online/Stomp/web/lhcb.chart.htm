@@ -1,0 +1,33 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+   <title>My Demo Chart</title>
+   <meta name="Description" content="Generic HTML histogram page">
+   <meta HTTP-EQUIV="Pragma"         CONTENT="no-cache"></meta>
+   <meta HTTP-EQUIV="CACHE-CONTROL"  CONTENT="no-cache"></meta>
+   <meta HTTP-EQUIV="Expires"        CONTENT="0"></meta>
+
+   <!--
+   IMPORTANT NOTE:
+
+   EJSChart.js MUST be included from the same domain as this file.
+   Otherwise the different documents are not accessible from the 
+   main document!
+   This would give different results depending on the level of
+   the internet security in IE; though mostly for firefox it works.
+
+
+   DO NOT CHANGE THE PATHES OF THE INCUDED FILES BELOW!
+   -->
+   <script language="javascript" src="charts/EJSChart.js"></script>
+   <script language="javascript" src="/Online/lhcb.display.charts.cpp"></script>
+</head> 
+
+<body id="body_element">
+<div id="chart" style="width:100%; height:100%;"></div>
+<div id="caption"></div>
+<script type="text/javascript">
+Charts.createChartArea('chart');
+</script>
+</body>
+</html>
