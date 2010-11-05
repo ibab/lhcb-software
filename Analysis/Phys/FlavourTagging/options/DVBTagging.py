@@ -46,8 +46,9 @@ tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+#tag.BTaggingTool.ForceSignalID = "Bs" #"Bs", "Bd", "Bu", will Force Signal ID
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
-tag.BTaggingTool.OutputLevel    = 3
+tag.BTaggingTool.OutputLevel  = 4
 
 #Import cuts for MC2010
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')

@@ -42,7 +42,6 @@ StatusCode TaggingUtils::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
-
   m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
   if(! m_pvReFitter) {
     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;

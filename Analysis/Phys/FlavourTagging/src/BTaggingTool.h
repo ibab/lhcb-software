@@ -19,8 +19,13 @@
 #include "Kernel/IBTaggingTool.h" 
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IPVReFitter.h"
+#include "Kernel/IRelatedPVFinder.h"
 
 #include "ITaggingUtils.h"
+//
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
+class DVAlgorithm;
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -74,11 +79,16 @@ private:
   ICombineTaggersTool *m_combine;
   IPVReFitter* m_pvReFitter;
 
+  DVAlgorithm* m_dva;
+
+  //  IRelatedPVFinder* m_pFinder;
+
   //properties ----------------
   double m_thetaMin, m_distphi_cut;
   double m_IPPU_cut;
 
   std::string m_taggerLocation, m_CombineTaggersName, m_ChoosePV;
+  std::string m_ForceSignalID;
 
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;

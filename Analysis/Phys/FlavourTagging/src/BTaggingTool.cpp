@@ -39,9 +39,13 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
   declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggingParticles" );
+
+  declareProperty( "ForceSignalID",  m_ForceSignalID  = " ");
+  
   m_util    = 0;
   m_descend = 0;
   m_pvReFitter = 0;
+  m_dva =0;
   m_combine = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
@@ -108,6 +112,10 @@ StatusCode BTaggingTool::initialize() {
       return StatusCode::FAILURE;
     }
   }
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE); 
+
 
   return StatusCode::SUCCESS;
 }
@@ -161,6 +169,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   bool isBd = false; if( AXB->particleID().hasDown() )   isBd = true;
   bool isBs = false; if( AXB->particleID().hasStrange()) isBs = true;
   bool isBu = false; if( AXB->particleID().hasUp() )     isBu = true;
+
+  ///ForceSignalID
+  if (m_ForceSignalID=="Bd") { isBd = true; isBu = false; isBs = false; }
+  if (m_ForceSignalID=="Bu") { isBd = false; isBu = true; isBs = false; }
+  if (m_ForceSignalID=="Bs") { isBd = false; isBu = false; isBs = true; }
 
   ///Choose Taggers ------------------------------------------------------ 
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
@@ -277,47 +290,55 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
 
-  double kdmin = 1000000;
-  RecVertex::Range::const_iterator iv;
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
-    RecVertex newPV(**iv);
-    double var, ip, iperr;
-    if(m_ChoosePV=="RefitPV") { 
-      Particle newPart(*AXB);
-      StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
-      if(!sc) { err()<<"ReFitter fails!"<<endreq; continue; }
-      m_util->calcIP(AXB, &newPV, ip, iperr); 
-      var=fabs(ip); 
-    } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
-      m_util->calcIP(AXB, *iv, ip, iperr);
-      var=fabs(ip); 	
-    } else if(m_ChoosePV=="PVbyIPs") { 
-      m_util->calcIP(AXB, *iv, ip, iperr);
-      if(!iperr){
-        err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
-        continue;
-      }
-      var=fabs(ip/iperr); 	
-    } else {
-      err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
-      return PileUpVtx;
-    }
-    if( var < kdmin ) {
-      kdmin = var;
-      RecVert = (*iv);
-      if(m_ChoosePV=="RefitPV") RefitRecVert = newPV;
-    }    
-    if( ! RecVert ) {
-      err() <<"No Reconstructed Vertex! Skip. " 
-            <<"(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)"<<endreq;
-      return PileUpVtx;
-    }    
-  }
+  if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
+    //const LHCb::VertexBase* bestPV = m_dva->bestPV(AXB);
+    //RecVert = (const RecVertex*) bestPV;
+    RecVert = (const RecVertex*) m_dva->bestPV(AXB);
+  } else {
 
+    double kdmin = 1000000;
+    RecVertex::Range::const_iterator iv;
+    for(iv=verts.begin(); iv!=verts.end(); iv++){
+      RecVertex newPV(**iv);
+      double var, ip, iperr;
+      if(m_ChoosePV=="RefitPV") { 
+	Particle newPart(*AXB);
+	StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+	if(!sc) { err()<<"ReFitter fails!"<<endreq; continue; }
+	m_util->calcIP(AXB, &newPV, ip, iperr); 
+	var=fabs(ip); 
+      } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
+	m_util->calcIP(AXB, *iv, ip, iperr);
+	var=fabs(ip); 	
+      } else if(m_ChoosePV=="PVbyIPs") { 
+	m_util->calcIP(AXB, *iv, ip, iperr);
+	if(!iperr){
+	  err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+	  continue;
+	}
+	var=fabs(ip/iperr); 	
+      } else {
+	err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+	return PileUpVtx;
+      }
+      if( var < kdmin ) {
+	kdmin = var;
+	RecVert = (*iv);
+	if(m_ChoosePV=="RefitPV") RefitRecVert = newPV;
+      }    
+      if( ! RecVert ) {
+	err() <<"No Reconstructed Vertex! Skip. " 
+	      <<"(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)"<<endreq;
+	return PileUpVtx;
+      }    
+    }
+  }//else bestPV
+  
   //build a vector of pileup vertices --------------------------
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
-    if( (*iv) == RecVert ) continue;
-    PileUpVtx.push_back(*iv);
+  RecVertex::Range::const_iterator jv;
+  for(jv=verts.begin(); jv!=verts.end(); jv++){
+    if( (*jv) == RecVert ) continue;
+    PileUpVtx.push_back(*jv);
   }
   //UseReFitPV means that it will use the refitted pV for the ip calculation 
   //of taggers and SV building. Do not move this line above PileUpVtx building
