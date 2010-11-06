@@ -26,6 +26,7 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
+#                    $Revision$
 #  Last modification $Date: 2010-10-11 11:00:28 $
 #                 by $Author: ibelyaev $ 
 # =============================================================================
@@ -44,6 +45,7 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+                    $Revision$
   Last modification $Date: 2010-10-11 11:00:28 $
                  by $Author: ibelyaev $  
 """
@@ -66,6 +68,7 @@ __all__     = (
     'setPreAction'      ,
     'setData'           ,
     ##
+    'seekForData'       ,
     'seekVoidDecision'  ,
     'seekAlgDecision'   ,
     'seekHltDecision'   ,
@@ -291,6 +294,48 @@ def seekAlgDecision ( alg , EvtMax = 1000 ) :
         
     return seekVoidDecision ( fun ) 
 
+
+## 
+def _dataOk_ ( o ) :
+    #
+    if not o : return False
+    #
+    if hasattr ( o , 'size' ) :
+        return True if 0 < o.size() else False
+    #
+    return True
+
+
+# =============================================================================
+## seek for data
+def seekForData ( location       ,
+                  EvtMax = 10000 ) :
+    """
+    Seek for existence of some (non-empty) data
+    
+    >>> seekForData ('/Event/Phys/MyDecay/Particles')
+    
+    """
+    
+    _cnt      = 0
+    _g        = appMgr()
+    _evt      = _g.evtSvc()
+    
+    _obj      = _evt[ location ]
+    if _dataOk_ ( _obj ) : return _obj, _cnt
+
+    while _evt['/Event'] and _cnt < EvtMax :
+        
+        run(1)
+        _cnt += 1
+        
+        _obj = _evt[ location ]
+        if _dataOk_ ( _obj ) : return _obj, _cnt
+        
+    return None, _cnt 
+
+            
+
 # =============================================================================
 ## seek the decision for the certain Trigger Line 
 def seekHltDecision ( expr                                 ,
@@ -311,12 +356,13 @@ def seekHltDecision ( expr                                 ,
     evt = 0
 
     _g        = appMgr()
-
+    _evt      = _g.evtSvc()
+    
     ## disable the algorithms 
     _disabled = _g.disableAllAlgs() if disableAll else _g.disableTopAlgs()
     
     try : 
-        while  not ok and evt < EvtMax :
+        while  _evt['/Event'] and evt < EvtMax and not ok :
             run(1)
             hlt  = get ( location )
             if not hlt : break            ## BREAK 
@@ -342,7 +388,7 @@ def seekStripDecision ( expr                                        ,
                              EvtMax     ,
                              disableAll , 
                              location   ) 
-    
+
 # =============================================================================
 ## skip the events 
 def skip ( nEvents ) : 

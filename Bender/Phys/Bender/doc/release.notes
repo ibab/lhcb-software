@@ -9,6 +9,12 @@
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-06 - Vanya Belyaev
+
+ - add function 
+
+     seekForData 
+
 
 ! ==================== Phys/Bender v15r1p1 2010-10-12 =========================
 
