@@ -327,7 +327,7 @@ class StrippingBd2KstarMuMuConf_JD(object):
         _combineBd.CombinationCut = "(AM > %(BMassLow)s *MeV) & (ADAMASS('B0') < %(BMassHighWin)s *MeV)"  % conf
         _combineBd.MotherCut = BdCuts
 
-        _sel = Selection("Sel" + Name, RequiredSelections = [Kstar,Dimuon], Algorithm = _combineBd)
+        _sel = Selection("Sel" + Name, RequiredSelections = [Dimuon,Kstar], Algorithm = _combineBd)
         return _sel
     
     def lines(self):

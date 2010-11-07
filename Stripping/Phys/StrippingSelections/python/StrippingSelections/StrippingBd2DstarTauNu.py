@@ -482,7 +482,7 @@ class Bd2DstarTauNuOneLineConf(object):
             } 
         
         SelTau2PiPiPi = Selection("SelTau2PiPiPi"+self.LineSuffix, Algorithm=Tau2PiPiPi,
-                                  RequiredSelections = [self.PiPiSel,self.PionSel])
+                                  RequiredSelections = [self.PionSel,self.PiPiSel])
         
         self.TauSel=SelTau2PiPiPi
     
@@ -508,6 +508,6 @@ class Bd2DstarTauNuOneLineConf(object):
             } 
         
         SelBd2DstarTauNu = Selection("SelBd2DstarTauNu"+self.LineSuffix, Algorithm=CombBd2DstarTauNu,
-                                    RequiredSelections = [self.TauSel,self.DstarSel])
+                                    RequiredSelections = [self.DstarSel,self.TauSel])
         
         self.B0Sel=SelBd2DstarTauNu
