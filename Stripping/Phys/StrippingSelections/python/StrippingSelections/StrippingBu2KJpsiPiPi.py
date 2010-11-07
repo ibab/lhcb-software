@@ -120,8 +120,8 @@ class StrippingBu2KJpsiPiPiConf(LHCbConfigurableUser):
 
 	X3872Loose = Selection("SelX38722JpsiRhoForBu2KJpsiPiPiLoose",
                                Algorithm = _X3872Loose,
-                               RequiredSelections = [StrippingBu2KJpsiPiPiConf.Rho_loose,
-                                                     StrippingBu2KJpsiPiPiConf.Jpsi_loose])
+                               RequiredSelections = [StrippingBu2KJpsiPiPiConf.Jpsi_loose,
+                                                     StrippingBu2KJpsiPiPiConf.Rho_loose  ])
 
         StrippingBu2KJpsiPiPiConf.X3872_loose = X3872Loose
         return X3872Loose
