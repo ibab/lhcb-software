@@ -5,6 +5,17 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-07 - Vanya Belyaev
+
+ - improve a little bit Particles(8,9&11).h(&.cpp)
+   
+   1. shrink some common line 
+   2. use inheritance 
+   3. make use of boost::lambda instead of home-made functors 
+   (unfortunately now is reuslt in long compilaiton warnings,
+    lets home it will be better with new Boost)
+
+
 ! 2010-11-04 - Vanya Belyaev
 
   - remove obsolete ugly documentation lines 

@@ -49,8 +49,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class GAUDI_API HasTracksFromPV
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API HasTracksFromPV : public LoKi::Particles::HasTracks 
     {
     public:
       // ======================================================================
@@ -66,6 +65,7 @@ namespace LoKi
       HasTracksFromPV ( const LHCb::VertexBase::ConstVector&  pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksFromPV ( const LoKi::PhysTypes::VRange&        pvs ) ;
+      // ======================================================================
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -74,9 +74,8 @@ namespace LoKi
       HasTracksFromPV 
       ( VERTEX first , 
         VERTEX last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut () 
-      { addVertices ( first , last ) ; }
+        : LoKi::Particles::HasTracks ( first , last ) 
+      {}
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -84,9 +83,8 @@ namespace LoKi
       template <class VERTEX>
       HasTracksFromPV 
       ( const LoKi::Keeper<VERTEX>& keeper ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut () 
-      { addVertices ( keeper.begin() , keeper.end() ) ; }
+        : LoKi::Particles::HasTracks ( keeper  ) 
+      {}
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -94,60 +92,21 @@ namespace LoKi
       template <class VERTEX>
       HasTracksFromPV 
       ( const LoKi::UniqueKeeper<VERTEX>& keeper ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut () 
-      { addVertices ( keeper.begin() , keeper.end() ) ; }
+        : LoKi::Particles::HasTracks ( keeper  ) 
+      {}
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~HasTracksFromPV() {};
       /// MANDATORY: clone method ("virtual constructor")
       virtual  HasTracksFromPV* clone() const 
       { return new HasTracksFromPV(*this); }
-      /// MANDATORY: the only one essential method
-      virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /** add the vertex 
-       *  @param vertex vertex to be added 
-       *  @return the actual number of tracks 
-       */
-      size_t addVertex ( const LHCb::VertexBase* vertex ) ;
-      /** add the vertex 
-       *  @param vertex vertex to be added 
-       *  @return the actual number of tracks 
-       */
-      size_t addVertex ( const LHCb::RecVertex*  vertex ) ;      
-      /** add the sequence of vertices  
-       *  @param first 'begin'-iterator of the sequence 
-       *  @param last  'end'-iterator of the sequence 
-       *  @return the actual number of tracks 
-       */          
-      template <class VERTEX>
-      size_t addVertices 
-      ( VERTEX first , 
-        VERTEX last  ) 
-      { 
-        for ( ; first != last ; ++first ) { addVertex ( *first ) ; } 
-        return size() ;
-      } ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// empty vector of tracks?
-      bool   empty () const { return m_cut.empty () ; }
-      /// the actual size of the vector of tracks 
-      size_t size  () const { return m_cut.size  () ; }      
-      // ======================================================================
     private:
       // ======================================================================
-      // The defualt costructor is disabled 
+      // The default costructor is disabled 
       HasTracksFromPV();
-      // ======================================================================
-    private:
-      // ======================================================================
-      LoKi::Particles::HasTracks m_cut ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -169,8 +128,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22
      */
-    class GAUDI_API HasTracksInTreeFromPV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API HasTracksInTreeFromPV : public HasTracksFromPV 
     {
     public:
       // ======================================================================
@@ -185,13 +143,13 @@ namespace LoKi
       ( const LHCb::RecVertex::Container*    pvs ) ;
       /// constructor from one vertex 
       HasTracksInTreeFromPV 
-      ( const LHCb::VertexBase*                   pv  ) ;
+      ( const LHCb::VertexBase*              pv  ) ;
       /// constructor from vector of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LHCb::VertexBase::ConstVector&      pvs ) ;
+      ( const LHCb::VertexBase::ConstVector& pvs ) ;
       /// constructor from container of primary vertices 
       HasTracksInTreeFromPV 
-      ( const LoKi::PhysTypes::VRange&        pvs ) ;
+      ( const LoKi::PhysTypes::VRange&       pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -200,8 +158,7 @@ namespace LoKi
       HasTracksInTreeFromPV 
       ( VERTEX first , 
         VERTEX last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( first , last )
+        : LoKi::Particles::HasTracksFromPV ( first , last ) 
       {}
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
@@ -210,8 +167,7 @@ namespace LoKi
       template <class VERTEX>
       HasTracksInTreeFromPV 
       ( const LoKi::Keeper<VERTEX>& keeper ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( keeper ) 
+        : LoKi::Particles::HasTracksFromPV ( keeper ) 
       {}
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
@@ -220,8 +176,7 @@ namespace LoKi
       template <class VERTEX>
       HasTracksInTreeFromPV 
       ( const LoKi::UniqueKeeper<VERTEX>& keeper ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( keeper ) 
+        : LoKi::Particles::HasTracksFromPV ( keeper ) 
       {}
       /// MANDATORY: virtual destructor
       virtual ~HasTracksInTreeFromPV() {};
@@ -233,43 +188,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /** add the vertex 
-       *  @param vertex vertex to be added 
-       *  @return the actual number of tracks 
-       */
-      size_t addVertex ( const LHCb::VertexBase*     vertex ) 
-      { return m_cut.addVertex ( vertex ) ; }
-      /** add the vertex 
-       *  @param vertex vertex to be added 
-       *  @return the actual number of tracks 
-       */
-      size_t addVertex ( const LHCb::RecVertex* vertex ) 
-      { return m_cut.addVertex ( vertex ) ; }
-      /** add the sequence of vertices  
-       *  @param first 'begin'-iterator of the sequence 
-       *  @param last  'end'-iterator of the sequence 
-       *  @return the actual number of tracks 
-       */          
-      template <class VERTEX>
-      size_t addVertices 
-      ( VERTEX first , 
-        VERTEX last  ) 
-      { return m_cut.addVertices( first , last ) ; } ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      bool   empty () const { return m_cut.empty () ; }
-      size_t size  () const { return m_cut.size  () ; }      
-      // ======================================================================
     private:
+      // ======================================================================
       // The defualt costructor is disabled 
       HasTracksInTreeFromPV();
-      // ======================================================================
-    private:
-      // ======================================================================
-      LoKi::Particles::HasTracksFromPV m_cut ;
       // ======================================================================
     } ;
     // ========================================================================    

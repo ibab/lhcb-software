@@ -12,6 +12,7 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/PhysRangeTypes.h"
 // ============================================================================
 namespace LHCb { class ProtoParticle ; }
 // ============================================================================
@@ -59,6 +60,12 @@ namespace LoKi
       HasProtos ( const LHCb::ProtoParticle* proto ) ;
       /// constructor from vector of protoparticles 
       HasProtos ( const LHCb::ProtoParticle::ConstVector& ps ) ;
+      /// constructor from one particle 
+      HasProtos ( const LHCb::Particle* p) ;
+      /// constructor from vector of particles 
+      HasProtos ( const LHCb::Particle::ConstVector& ps ) ;
+      /// constructor from vector of particles 
+      HasProtos ( const LoKi::Types::Range& ps ) ;
       // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
@@ -102,6 +109,26 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      template <class PROTO>
+      std::size_t addProtos
+      ( PROTO first , 
+        PROTO last  ) 
+      {
+        std::size_t _size = this->size() ;
+        for ( ; first != last ; ++first ) { addProtos ( *first ) ; }
+        return this->size() - _size ;
+      }
+      // =====================================================================
+      std::size_t addProtos ( const LHCb::ProtoParticle* p ) ;
+      std::size_t addProtos ( const LHCb::Particle*      p ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool inList ( const LHCb::Particle* p ) const ;
+      bool inTree ( const LHCb::Particle* p ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       HasProtos() ;
@@ -123,16 +150,21 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class GAUDI_API HasProtosInTree
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API HasProtosInTree 
+      : public LoKi::Particles::HasProtos  
     {
     public:
       // ======================================================================
       /// constructor from one protoparticle 
-      HasProtosInTree 
-      ( const LHCb::ProtoParticle* proto ) ;
-      HasProtosInTree
-      ( const LHCb::ProtoParticle::ConstVector& ps ) ;
+      HasProtosInTree ( const LHCb::ProtoParticle* proto ) ;
+      /// constructor from vector of protoparticles 
+      HasProtosInTree ( const LHCb::ProtoParticle::ConstVector& ps ) ;
+      /// constructor from one particle 
+      HasProtosInTree ( const LHCb::Particle* p) ;
+      /// constructor from vector of particles 
+      HasProtosInTree ( const LHCb::Particle::ConstVector& ps ) ;
+      /// constructor from vector of particles 
+      HasProtosInTree ( const LoKi::Types::Range& ps ) ;
       // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
@@ -142,8 +174,7 @@ namespace LoKi
       HasProtosInTree 
       ( PROTO first , 
         PROTO last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( first , last ) 
+        : LoKi::Particles::HasProtos  ( first , last ) 
       {} 
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
@@ -152,8 +183,7 @@ namespace LoKi
       template <class PROTO>
       HasProtosInTree 
       ( const LoKi::Keeper<PROTO>& keeper )
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( keeper.begin() , keeper.end() )
+        : LoKi::Particles::HasProtos  ( keeper ) 
       {} 
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
@@ -162,8 +192,7 @@ namespace LoKi
       template <class PROTO>
       HasProtosInTree 
       ( const LoKi::UniqueKeeper<PROTO>& keeper )
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( keeper.begin() , keeper.end() )
+        : LoKi::Particles::HasProtos  ( keeper ) 
       {} 
       // ======================================================================
       /// MANDATORY: virtual destructor
@@ -179,10 +208,6 @@ namespace LoKi
     private: 
       // ======================================================================
       HasProtosInTree() ;
-      // ======================================================================
-    private: 
-      // ======================================================================
-      LoKi::Particles::HasProtos m_cut ;
       // ======================================================================
     } ;
     // ========================================================================    

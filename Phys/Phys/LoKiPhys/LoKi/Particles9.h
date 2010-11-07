@@ -12,9 +12,14 @@
 // LoKiPhys 
 // ============================================================================
 #include "LoKi/PhysTypes.h"
+#include "LoKi/PhysRangeTypes.h"
 #include "LoKi/PhysExtract.h"
 // ============================================================================
-namespace LHCb { class Track ; }
+namespace LHCb 
+{
+  class Track ; 
+  class RecVertex ;
+}
 // ============================================================================
 /** @file
  *
@@ -59,15 +64,16 @@ namespace LoKi
       /// constructor from one track 
       HasTracks ( const LHCb::Track* track ) ;
       /// constructor from vector of tracks 
-      HasTracks ( const LHCb::Track::Vector& ts ) ;
-      /// constructor from vector of tracks 
       HasTracks ( const LHCb::Track::ConstVector& ts ) ;
       /// constructor from vector of tracks 
-      HasTracks ( const SmartRefVector<LHCb::Track>& ts ) ;
-      /// constructor from container of tracks 
-      HasTracks ( const LoKi::Keeper<LHCb::Track>& ps ) ;
-      /// constructor from container of tracks 
-      HasTracks ( const LoKi::UniqueKeeper<LHCb::Track>& ps ) ;
+      HasTracks ( const LHCb::Track::Container*   ts ) ;
+      /// constructor from one particle 
+      HasTracks ( const LHCb::Particle* p ) ;
+      /// constructor from vector of particles 
+      HasTracks ( const LHCb::Particle::ConstVector& p ) ;
+      /// constructor from vector of particles 
+      HasTracks ( const LoKi::Types::Range&          p ) ;
+      // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -77,10 +83,27 @@ namespace LoKi
       ( TRACK first , 
         TRACK last  ) 
         : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , LoKi::UniqueKeeper<LHCb::Track> ( first , last ) 
-      {} 
-      /// copy constructor 
-      HasTracks ( const HasTracks& right ) ;
+        , LoKi::UniqueKeeper<LHCb::Track> ()
+      {
+        addTracks ( first , last );
+      } 
+      // from arbitrary keeper 
+      template <class TRACK> 
+      HasTracks ( const LoKi::Keeper<TRACK>& tracks ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , LoKi::UniqueKeeper<LHCb::Track> () 
+      {
+        addTracks ( tracks.begin() , tracks.end() );
+      }
+      // from arbitrary keeper 
+      template <class TRACK> 
+      HasTracks ( const LoKi::UniqueKeeper<TRACK>& tracks ) 
+        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
+        , LoKi::UniqueKeeper<LHCb::Track> () 
+      {
+        addTracks ( tracks.begin() , tracks.end() );
+      }
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~HasTracks() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -89,6 +112,33 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      template <class TRACK>
+      std::size_t addTracks ( TRACK first , 
+                              TRACK last  ) 
+      {
+        std::size_t _size = this->size() ;
+        for ( ; first != last ; ++first ) { addTracks ( *first ) ; } 
+        return size() - _size ;
+      }
+      // =====================================================================
+    public:
+      // ======================================================================
+      /// check if particle has a track in list 
+      bool inList ( const LHCb::Particle* p ) const ;
+      /// check if particle has a track in list 
+      bool inTree ( const LHCb::Particle* p ) const ;
+      // ======================================================================
+    protected:
+      // =====================================================================
+      std::size_t addTracks ( const LHCb::Track*         track    ) ;
+      std::size_t addTracks ( const LHCb::Particle*      particle ) ;
+      std::size_t addTracks ( const LHCb::ProtoParticle* particle ) ;
+      std::size_t addTracks ( const LHCb::VertexBase*    vertex   ) ;
+      std::size_t addTracks ( const LHCb::Vertex*        vertex   ) ;
+      std::size_t addTracks ( const LHCb::RecVertex*     vertex   ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -116,23 +166,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-22 
      */
-    class GAUDI_API HasTracksInTree
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    class GAUDI_API HasTracksInTree : public HasTracks 
     {
     public:
       // ======================================================================
       /// constructor from one track 
       HasTracksInTree ( const LHCb::Track* track ) ;
       /// constructor from vector of tracks 
-      HasTracksInTree ( const LHCb::Track::Vector& ts ) ;
-      /// constructor from vector of tracks 
       HasTracksInTree ( const LHCb::Track::ConstVector& ts ) ;
       /// constructor from vector of tracks 
-      HasTracksInTree ( const SmartRefVector<LHCb::Track>& ts ) ;
-      /// constructor from container of tracks 
-      HasTracksInTree ( const LoKi::Keeper<LHCb::Track>& ps ) ;
-      /// constructor from container of tracks 
-      HasTracksInTree ( const LoKi::UniqueKeeper<LHCb::Track>& ps ) ;
+      HasTracksInTree ( const LHCb::Track::Container*   ts ) ;
+      /// constructor from one particle 
+      HasTracksInTree ( const LHCb::Particle* p ) ;
+      /// constructor from vector of particles 
+      HasTracksInTree ( const LHCb::Particle::ConstVector& p ) ;
+      /// constructor from vector of particles 
+      HasTracksInTree ( const LoKi::PhysTypes::Range&      p ) ;
+      // ======================================================================
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
        *  @param last  'end'-iterator of the sequence 
@@ -141,12 +191,19 @@ namespace LoKi
       HasTracksInTree 
       ( TRACK first , 
         TRACK last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ()
-        , m_cut ( first , last )
+        : LoKi::Particles::HasTracks ( first , last ) 
       {} 
-      /// copy constructor 
-      HasTracksInTree 
-      ( const HasTracksInTree& right ) ;
+      // from arbitrary keeper 
+      template <class TRACK> 
+      HasTracksInTree ( const LoKi::Keeper<TRACK>& tracks ) 
+        : LoKi::Particles::HasTracks ( tracks ) 
+      {}
+      // from arbitrary keeper 
+      template <class TRACK> 
+      HasTracksInTree ( const LoKi::UniqueKeeper<TRACK>& tracks ) 
+        : LoKi::Particles::HasTracks ( tracks ) 
+      {}
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~HasTracksInTree() {};
       /// MANDATORY: clone method ("virtual constructor")
@@ -161,10 +218,6 @@ namespace LoKi
       // ======================================================================
       // the defualt constructor is private 
       HasTracksInTree() ;
-      // ======================================================================
-    private: 
-      // ======================================================================
-      LoKi::Particles::HasTracks     m_cut     ;
       // ======================================================================
     } ;
     // ========================================================================

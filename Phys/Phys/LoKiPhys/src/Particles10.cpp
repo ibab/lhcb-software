@@ -41,72 +41,33 @@
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LHCb::RecVertex* pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ addVertex ( pv ) ; } 
+  : LoKi::Particles::HasTracks( LHCb::Track::ConstVector() ) 
+{ addTracks ( pv ) ; }
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LHCb::RecVertex::ConstVector& pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ addVertices ( pv.begin() , pv.end() ) ; } 
+  : LoKi::Particles::HasTracks( LHCb::Track::ConstVector() ) 
+{ addTracks ( pv.begin() , pv.end() ) ; } 
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LHCb::RecVertex::Container* pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ if ( 0 != pv ) { addVertices ( pv->begin() , pv->end() ) ; } } 
+  : LoKi::Particles::HasTracks ( LHCb::Track::ConstVector() ) 
+{ if ( 0 != pv ) { addTracks ( pv->begin() , pv->end() ) ; } } 
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LHCb::VertexBase* pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ addVertex ( pv ) ; } 
+  : LoKi::Particles::HasTracks ( LHCb::Track::ConstVector() ) 
+{ addTracks ( pv ) ; } 
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LHCb::VertexBase::ConstVector& pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ addVertices ( pv.begin() , pv.end() ) ; } 
+  : LoKi::Particles::HasTracks( LHCb::Track::ConstVector() ) 
+{ addTracks ( pv.begin() , pv.end() ) ; } 
 // ============================================================================
 LoKi::Particles::HasTracksFromPV::HasTracksFromPV
 ( const LoKi::PhysTypes::VRange& pv ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate  (   ) 
-  , m_cut ( LHCb::Track::Vector() ) 
-{ addVertices ( pv.begin() , pv.end() ) ; } 
-// ============================================================================
-size_t LoKi::Particles::HasTracksFromPV::addVertex
-( const LHCb::RecVertex* pv ) 
-{
-  if ( 0 != pv ) 
-  { m_cut.addObjects ( pv->tracks().begin() , pv->tracks().end() ) ; }
-  return size() ;
-} ;
-// ============================================================================
-size_t LoKi::Particles::HasTracksFromPV::addVertex
-( const LHCb::VertexBase* pv ) 
-{
-  const LHCb::RecVertex* vertex = LoKi::Vertices::base2rec( pv ) ;
-  if ( 0 == vertex || !pv->isPrimary() ) { return m_cut.size() ; }
-  return addVertex( vertex ) ;
-} 
-// ============================================================================
-LoKi::Particles::HasTracksFromPV::result_type 
-LoKi::Particles::HasTracksFromPV::operator() 
-  ( LoKi::Particles::HasTracksFromPV::argument p ) const 
-{
-  if ( 0 == p ) 
-  {
-    Error ( " Argument is invalid! return 'false' " ) ;
-    return false ;                                              
-  }
-  if ( empty() ) 
-  {
-    Warning ( " Empty list of tracks is specified! return 'false' " ) ;
-    return false ;
-  }
-  return m_cut ( p ) ;
-} 
+  : LoKi::Particles::HasTracks( LHCb::Track::ConstVector() ) 
+{ addTracks ( pv.begin() , pv.end() ) ; } 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::HasTracksFromPV::fillStream
@@ -119,33 +80,33 @@ LoKi::Particles::HasTracksFromPV::fillStream
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LHCb::RecVertex*               pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LHCb::RecVertex::ConstVector& pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LHCb::RecVertex::Container* pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LHCb::VertexBase*               pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LHCb::VertexBase::ConstVector& pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::HasTracksInTreeFromPV 
 ( const LoKi::PhysTypes::VRange& pv  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
-  , m_cut ( pv ) {}
+  : LoKi::Particles::HasTracksFromPV ( pv ) 
+{}
 // ============================================================================
 LoKi::Particles::HasTracksInTreeFromPV::result_type 
 LoKi::Particles::HasTracksInTreeFromPV::operator() 
@@ -162,7 +123,7 @@ LoKi::Particles::HasTracksInTreeFromPV::operator()
     return false ;
   }
   // scan the decay tree 
-  return LoKi::PhysAlgs::found ( p , m_cut ) ;
+  return inTree ( p ) ;
 } 
 // ============================================================================
 std::ostream& 

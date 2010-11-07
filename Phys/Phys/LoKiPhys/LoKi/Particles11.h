@@ -111,8 +111,9 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// MANDATORY: the only one essential method
-      bool inList ( argument p ) const ;
+      /// the only one essential method
+      bool inList ( const LHCb::Particle* p ) const ;
+      bool inTree ( const LHCb::Particle* p ) const ;
       // ======================================================================
     private:
       // ======================================================================

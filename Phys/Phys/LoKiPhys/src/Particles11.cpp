@@ -18,6 +18,11 @@
 #include "LoKi/Particles11.h"
 #include "LoKi/PhysAlgs.h"
 // ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
+// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles
@@ -69,7 +74,26 @@ LoKi::Particles::IsAParticle::IsAParticle
 //  MANDATORY: the only one essential method
 // ============================================================================
 bool LoKi::Particles::IsAParticle::inList
-( LoKi::Particles::IsAParticle::argument p ) const 
+( const LHCb::Particle* p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error    ( " Argument is invalid! return 'false' " );
+    return false ;
+  }
+  //
+  if ( empty() ) 
+  {
+    Warning  ( " Empty list of particles is specified! return 'false' " );
+    return false ;
+  }
+  // look for the particle 
+  return std::binary_search ( begin() , end() , p ) ;
+} 
+// ============================================================================
+bool LoKi::Particles::IsAParticle::inTree
+( const LHCb::Particle* p ) const 
 {
   if ( 0 == p ) 
   {
@@ -81,9 +105,11 @@ bool LoKi::Particles::IsAParticle::inList
     Warning  ( " Empty list of particles is specified! return 'false' " );
     return false ;
   }
-  // look for the particle 
-  return std::binary_search ( begin() , end() , p ) ;
-} 
+  //
+  using namespace boost::lambda ;
+  return LoKi::PhysAlgs::found 
+    ( p , bind ( &LoKi::Particles::IsAParticle::inList , this , _1 ) ) ;
+}
 // ============================================================================
 std::ostream&
 LoKi::Particles::IsAParticle::fillStream
@@ -121,45 +147,11 @@ LoKi::Particles::IsAParticleInTree::IsAParticleInTree
 // ============================================================================
 //  MANDATORY: the only one essential method
 // ============================================================================
-namespace 
-{
-  struct InList : public std::unary_function<const LHCb::Particle*,bool>
-  {
-  public:
-    // ========================================================================
-    InList ( const LoKi::Particles::IsAParticle& cut ) : m_cut ( cut ) {}    
-    // ========================================================================
-    bool operator() ( const LHCb::Particle* p ) const 
-    { return m_cut.inList ( p ) ; }
-    // =======================================================================
-  private: 
-    // =======================================================================
-    InList () ;
-    // =======================================================================
-  private: 
-    // =======================================================================
-    const LoKi::Particles::IsAParticle& m_cut ;
-    // =======================================================================
-  };
-  // ==========================================================================
-}
-// ============================================================================
 LoKi::Particles::IsAParticleInTree::result_type 
 LoKi::Particles::IsAParticleInTree::operator() 
   ( LoKi::Particles::IsAParticleInTree::argument p ) const
 {
-  if ( 0 == p ) 
-  {
-    Error    ( " Argument is invalid! return 'false' " );
-    return false ;
-  }
-  if ( empty() ) 
-  {
-    Warning  ( " Empty list of particles is specified! return 'false' " );
-    return false ;
-  }
-  //
-  return LoKi::PhysAlgs::found ( p , InList ( *this ) ) ;
+  return inTree ( p ) ;
 } 
 // ============================================================================
 std::ostream&
