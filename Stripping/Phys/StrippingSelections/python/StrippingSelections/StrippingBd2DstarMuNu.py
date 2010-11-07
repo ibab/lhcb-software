@@ -447,6 +447,6 @@ class Bd2DstarMuNuOneLineConf(object):
             } 
         
         SelBd2DstarMuNu = Selection("SelBd2DstarMuNu"+self.LineSuffix, Algorithm=CombBd2DstarMuNu,
-                                    RequiredSelections = [self.DstarSel, self.MuSel])
+                                    RequiredSelections = [self.MuSel,self.DstarSel])
         
         self.B0Sel=SelBd2DstarMuNu

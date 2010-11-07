@@ -446,6 +446,6 @@ class B0q2DplusMuXOneLineConf(object):
             } 
         
         SelB0q2DplusMuX = Selection("SelB0q2DplusMuX"+self.LineSuffix, Algorithm=CombB0q2DplusMuX,
-                                    RequiredSelections = [self.DSel, self.MuSel])
+                                    RequiredSelections = [self.MuSel, self.DSel])
         
         self.B0Sel=SelB0q2DplusMuX
