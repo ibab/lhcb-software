@@ -102,9 +102,19 @@ D0MuMuConfJPsi =  JpsiMuMuforD0MuMuConf( config = JpsiMuMuforD0MuMuConf.config_d
 stream.appendLines( D0MuMuConfJPsi.Lines )
 
 #
+# Ulrich Kerzel (Lines using NeuroBayes NN)
+#
+from StrippingSelections.StrippingNeuroBayesMuMu import StrippingNeuroBayesMuMuConf
+stream.appendLines ( StrippingNeuroBayesMuMuConf().lines() )
+
+#
 # Lines from Flavour WG
 # Patrick Robbe, Jibo He
 #
+# Jpsi2MuMu lines for the full Dimuon streamed DSTs
+from StrippingSelections.StrippingDiMuonNew import DiMuonConf
+DiMuonStreamDiMuonConf = DiMuonConf( config = DiMuonConf.config_default )
+stream.appendLines( DiMuonStreamDiMuonConf.DiMuonStreamLines )
 
 # Nicola Mangiafave
 from StrippingSelections.StrippingBu2KJpsiPiPi import StrippingBu2KJpsiPiPiConf

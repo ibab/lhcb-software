@@ -14,8 +14,9 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSettings.Stripping12.StreamLeptonicMicroDST import stream as microDSTstream
-
 stream = StrippingStream("LeptonicFull")
-stream.appendLines( [ line.clone("Full" + line.name().lstrip("Stripping") ) for line in microDSTstream.lines ] )
+
+from StrippingSelections.StrippingDiMuonNew import DiMuonConf
+FullDSTDiMuonConf = DiMuonConf( name= 'FullDST', config = DiMuonConf.config_default )
+stream.appendLines( FullDSTDiMuonConf.MicroDSTLines  )
 

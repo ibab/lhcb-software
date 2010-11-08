@@ -19,29 +19,6 @@ stream = StrippingStream("Charm")
 cloneableCharmLines = []
 
 #
-# Lines from Charm RD
-# Ulrik Egede, Walter Bonivento
-#
-
-# Walter Bonivento, D0 -> mu mu searches
-from StrippingSelections.StrippingD02MuMu import lines as D02MuMuLines
-cloneableCharmLines += D02MuMuLines
-
-from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
-cloneableCharmLines += [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ]
-
-# Benoit Viaud ( 4-body SCS lines )
-from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
-from StrippingSettings.Stripping12.LineConfigDictionaries import D02KKpipiRegularConfig
-DstarD0KKpipi = StrippingDstarD02KKpipiRegularConf('DstarD02KKpipiRegular',D02KKpipiRegularConfig)
-cloneableCharmLines += DstarD0KKpipi.lines
-
-# Benoit Viaud (D*+ -> D0 pi+, D0 -> K- K+ mu- mu+)
-from StrippingSelections.StrippingDstarD02KKmumuRegular import StrippingDstarD02KKmumuRegularConf
-DstarD0KKmumu = StrippingDstarD02KKmumuRegularConf('DstarD02KKmumuRegular')
-cloneableCharmLines += DstarD0KKmumu.lines
-
-#
 # Charm CP Lines
 # Patrick Spradlin, Marco Gersabeck 
 #
@@ -102,19 +79,4 @@ stream.appendLines( [ StrippingX2D0D0Conf().line() ] )
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 StrippingDstarPromptWithD02HHConf().prefix = 'DstarPrompt'
 stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
-
-# Phillip Urquijo
-from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-StrippingD2XMuMuSSConf().prefix = 'MicroDST'
-stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
-                      StrippingD2XMuMuSSConf().PiOS_line(),
-                      StrippingD2XMuMuSSConf().KSS_line(),
-                      StrippingD2XMuMuSSConf().KOS_line() ] )
-
-
-# Walter Bonivento, D0 -> mu mu searches
-from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf("DstarD02xx", prefix = "MicroDST").lines() )
-
-
 
