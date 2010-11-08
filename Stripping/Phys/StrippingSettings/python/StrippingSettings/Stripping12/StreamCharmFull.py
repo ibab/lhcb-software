@@ -18,19 +18,16 @@ from StrippingSettings.Stripping12.StreamCharmMicroDST import cloneableCharmLine
 stream = StrippingStream("CharmFull")
 stream.appendLines( [ line.clone("Full" + line.name().lstrip("Stripping") ) for line in cloneableCharmLines ] )
 
-
-# Now a big hack to get the uncloneable lines in
-
-from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
-DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf(name = "FullDstarPromptWithD02K3Pi")
-stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
-
 # Sebastian Bachmann (Double D0 for tag and probe)
 from StrippingSelections.StrippingX2D0D0 import StrippingX2D0D0Conf
 stream.appendLines( [ StrippingX2D0D0Conf( prefix = "Full" ).line() ] )
 
-# Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
-from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
-StrippingDstarPromptWithD02HHConf().prefix = 'FullDstarPrompt'
-stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
+## from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
+## DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf(name = "FullDstarPromptWithD02K3Pi")
+## stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
+
+## # Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
+## from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+## StrippingDstarPromptWithD02HHConf().prefix = 'FullDstarPrompt'
+## stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 

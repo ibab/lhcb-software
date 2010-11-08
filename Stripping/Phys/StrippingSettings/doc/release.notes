@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-08 - Thomas Blake
+ - Updated Charm stream definitions after discussion with WG.
+
 ! 2010-11-04 - Greig Cowan
  - Updated streams definition to include missing lines.
 

@@ -99,3 +99,31 @@ from StrippingSelections.StrippingDstar_D2KPiPi0 import lineWS, lineRS
 stream.appendLines( [ lineWS, lineRS ] )
 
 
+# 
+# Charm CP lines
+# Marco Gersabeck, Matt Charles
+
+# Philip Hunt (4-body lines)
+from StrippingSelections.StrippingDstarPromptWithD02K3Pi import DstarPromptWithD02K3PiAllLinesConf
+DstarPromptWithD02K3PiConf = DstarPromptWithD02K3PiAllLinesConf()
+stream.appendLines( DstarPromptWithD02K3PiConf.Lines )
+
+# Patrick Spradlin, Philip Xing ( D*-tagged yCP lines )
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+StrippingDstarPromptWithD02HHConf().prefix = 'DstarPrompt'
+stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
+
+# Matt Charles (KShh lines)
+from StrippingSelections.StrippingDstarD2KShh import StrippingDstarD2KShhConf
+stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
+
+# Cambridge (Ksh line)
+from StrippingSelections.StrippingD2KS0h_KS02PiPi import StrippingD2KS0h_KS02PiPiConf
+stream.appendLines( [StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi()] )
+
+# Harry Cliff, Vava. Lifetime-unbiased line with micro/no-bias trigger 
+from StrippingSelections.StrippingD2hhLTUnbiasedMBNB import StrippingD2hhLTUnbiasedMBNBConf
+stream.appendLines( StrippingD2hhLTUnbiasedMBNBConf().lines() )
+
+
+
