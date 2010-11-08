@@ -7,6 +7,12 @@
 ! ======================== DSTWriters v1r13 2010-11-08 =======================
 
 ! 2010-11-08 - Juan Palacios
+ - python/DSTWriters/__dev__/microdst.py
+ - python/DSTWriters/__dev__/Configuration.py
+  . Add stripMicroDSTElements, stripMicroDSTStreamConf functions with defaults
+    for stripping MicroDSTs.
+
+! 2010-11-08 - Juan Palacios
  - python/DSTWriters/BaseDSTWriter.py, MicroDSTWriter.py
   . Fix for output candidates location with RootInTES.
 
