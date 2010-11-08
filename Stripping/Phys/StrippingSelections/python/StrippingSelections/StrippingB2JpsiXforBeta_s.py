@@ -78,7 +78,7 @@ KaonList = createSubSel( OutputList = "KaonsForBToJpsiX",
 
 PhiList = createSubSel( OutputList = "Phi2KKForBetaS",
                         InputList = DataOnDemand(Location = "Phys/StdLoosePhi2KK"),
-                        Cuts = "(ADMASS('phi(1020)') < 20)" \
+                        Cuts = "(in_range(980,M,1050))" \
                         "& (PT > 500) " \
                         "& (VFASPF(VCHI2) < 16)" \
                         "& (MAXTREE('K+'==ABSID, TRCHI2DOF) <5)" \

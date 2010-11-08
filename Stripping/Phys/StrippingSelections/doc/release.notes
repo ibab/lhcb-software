@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-08 - Greig Cowan
+ - Made small change to beta_s lines.
+
 ! 2010-11-07 - Thomas Blake
  - Updated line ordering to improve timing
    . StrippingBd2DstarTauNu.py
