@@ -1,5 +1,5 @@
 package BrunelSys
-version           v37r8p2
+version           v37r8p3
 
 branches cmt doc tests
  
@@ -8,9 +8,11 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v37r8p2   Rec
+use Brunel v37r8p3   Rec
 
 # Add here any component libraries to be added as patches
+# Rich/RichHPDImageAnalysis accidentally not included in the Rec release
+use RichHPDImageAnalysis   v1r4   Rich
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
