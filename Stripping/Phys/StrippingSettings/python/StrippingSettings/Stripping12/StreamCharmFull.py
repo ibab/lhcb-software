@@ -34,17 +34,3 @@ from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarProm
 StrippingDstarPromptWithD02HHConf().prefix = 'FullDstarPrompt'
 stream.appendLines( StrippingDstarPromptWithD02HHConf().linesDstarOnly() )
 
-# Phillip Urquijo
-from StrippingSelections.StrippingD2XMuMuSS import StrippingD2XMuMuSSConf
-from StrippingConf.StrippingStream import StrippingStream
-StrippingD2XMuMuSSConf().prefix = "Full"
-
-stream.appendLines( [ StrippingD2XMuMuSSConf().PiSS_line(),
-                      StrippingD2XMuMuSSConf().PiOS_line(),
-                      StrippingD2XMuMuSSConf().KSS_line(),
-                      StrippingD2XMuMuSSConf().KOS_line() ] )
-
-# Walter Bonivento, D0 -> mu mu searches
-from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
-stream.appendLines( StrippingDstarD02xxConf("DstarD02xx", prefix = "Full").lines() )
-

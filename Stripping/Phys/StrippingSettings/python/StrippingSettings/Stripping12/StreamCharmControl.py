@@ -35,6 +35,10 @@ stream.appendLines( D02MuMuLines )
 from StrippingSelections.StrippingJpsippForD0MuMu import StrippingJpsippForD0MuMuConf
 stream.appendLines( [ StrippingJpsippForD0MuMuConf().ForD0mumu_Line() ] )
 
+from StrippingSelections.StrippingDstarD02xx import  StrippingDstarD02xxConf
+stream.appendLines( StrippingDstarD02xxConf("DstarD02xx").lines() )
+
+
 # Benoit Viaud ( 4-body SCS lines )
 from StrippingSelections.StrippingDstarD02KKpipiRegular import StrippingDstarD02KKpipiRegularConf
 from StrippingSettings.Stripping12.LineConfigDictionaries import D02KKpipiRegularConfig
