@@ -17,7 +17,7 @@ class BaseDSTWriter(ConfigurableUser) :
         , "SelectionSequences"       : []
         , "ExtraItems"               : []
         , "WriteFSR"                 : True
-        , "RootInTES"                : '/Event'
+        , "RootInTES"                : '/Event/'
         }
 
     _propertyDocDct = {  

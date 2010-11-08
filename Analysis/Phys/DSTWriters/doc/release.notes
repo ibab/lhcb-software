@@ -4,7 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
-! ======================== DSTWriters v1r13 2010-11-04 =======================
+! ======================== DSTWriters v1r13 2010-11-08 =======================
+
+! 2010-11-08 - Juan Palacios
+ - python/DSTWriters/BaseDSTWriter.py, MicroDSTWriter.py
+  . Fix for output candidates location with RootInTES.
 
 ! 2010-11-04 - Juan Palacios
  - python/DSTWriters/__dev__/microdstelements.py
