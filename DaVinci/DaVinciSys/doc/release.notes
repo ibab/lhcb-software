@@ -3,9 +3,18 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v26r3>2010-11-05 DaVinci v26r3. Candidate version for Stripping12.</A></H1><PRE>
+</PRE><H1><A NAME=v26r3>2010-11-09 DaVinci v26r3. Candidate version for Stripping12.</A></H1><PRE>
 
   * Based on LHCb v31r6p1 stack. Version for end of year reprocessing.
+  * Phys:
+      Extensions and enhancements. Too many to mention here. See:
+      http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/phys/releases/latest/release.notes.php
+  * Stripping line definitions for Stripping12.
+  * Analysis: 
+      Extensions to MicroDST for stripping, making MicroDSTs from MicroDSTs. Enhancements to 
+      DecayTreetuple. For details, see 
+      http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/analysis/releases/latest/release.notes.php
+  * Hlt: Identical to previous version.
 
 </PRE><H1><A NAME=v26r2p1>2010-10-11 DaVinci v26r2p1. Version for Stripping11.</A></H1><PRE>
 

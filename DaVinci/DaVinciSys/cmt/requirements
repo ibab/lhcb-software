@@ -5,7 +5,7 @@ branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v26r3   Phys
-use  DaVinciTests               v1r6
+use  DaVinciTests               v1r7
 
 # Declare this as a container package
 apply_pattern container_package
