@@ -2,6 +2,8 @@
 
 	* python/LbRelease/rcs.py: fixed a bug in the implementation of the option
 	--eclipse preventing the checkout from CVS.
+	* scripts/tag_package: fixed problem due to the new way to get the list of
+	repositories.
 
 2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

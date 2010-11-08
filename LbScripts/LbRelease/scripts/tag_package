@@ -11,15 +11,15 @@ class TagPackage(Script):
                               description = "script to easily tag a package in "
                                             "the LHCb Subversion or CVS repositories")
         self._packageRepos = None
-        
+
         self.package = None
         self.version = None
-        
+
     def defineOpts(self):
         """ User options """
         self.parser.add_option("-x", "--exclude", action = "append",
                                metavar = "REPOSITORY",
-                               help = "exclude a default repository %s" % repositories.keys())
+                               help = "exclude a default repository %s" % getRepositories().keys())
         self.parser.add_option("--user-svn", action = "append",
                                metavar = "URL",
                                help = "add a custom subversion repository to the known ones")
@@ -34,7 +34,7 @@ class TagPackage(Script):
                                  user_svn = [],
                                  user_cvs = [],
                                  force = False)
-    
+
     def packageRepos(self):
         """
         Find the repository that contains the requested package.
@@ -42,9 +42,9 @@ class TagPackage(Script):
         if self._packageRepos is None:
             # Add user-defined repositories to the known ones
             reps = getRepositories(self.options.user_svn, self.options.user_cvs, protocol="ssh")
-            self._packageRepos = list(rcs.getPackageRepo(self.package, reps, self.options.exclude))[0]                
+            self._packageRepos = list(rcs.getPackageRepo(self.package, reps, self.options.exclude))[0]
         return self._packageRepos
-    
+
     def isValidVersion(self):
         """
         Tell if the specified version name conforms to the standards.
@@ -52,7 +52,7 @@ class TagPackage(Script):
         from LbConfiguration.Version import _txt_cvs_version_style
         import re
         return bool(re.match(_txt_cvs_version_style + '$', self.version))
-    
+
     def main(self):
         """
         Main function of the script.
@@ -60,7 +60,7 @@ class TagPackage(Script):
         if len(self.args) != 2:
             self.parser.error("Wrong number of arguments. Use -h for more information.")
         self.package, self.version = self.args
-        
+
         # Check the format of the version/tag
         if not self.isValidVersion():
             if not self.options.force:
@@ -68,13 +68,13 @@ class TagPackage(Script):
                 return 1
             else:
                 self.log.warning("Ignoring malformed tag '%s'", self.version)
-        
+
         # Locate the package in the repositories
         repos = self.packageRepos()
         if not repos:
             self.log.error("Cannot find the package '%s', check the name.", self.package)
             return 1
-        
+
         declared_version = repos.getDeclaredVersion(self.package)
         if declared_version is None:
             self.log.warning("The requirements file of the package '%s' does not contain the version", self.package)
@@ -85,12 +85,12 @@ class TagPackage(Script):
                 return 1
             else:
                 self.log.warning("Ignoring the version declared in the requirements file (%s)", declared_version)
-        
+
         # Check if the tag is already present
         if repos.hasVersion(self.package, self.version):
             self.log.error("The package '%s' has got already the tag '%s'. Remove it first.", self.package, self.version)
             return 1
-        
+
         retcode = repos.tag(self.package, self.version)
         if retcode:
             self.log.error("Tagging of the package failed (return code %d)", retcode)
