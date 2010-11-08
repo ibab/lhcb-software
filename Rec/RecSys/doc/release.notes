@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+! 2010-11-08 - Rob Lambert
+ - Add back in Tf/FastVelo to Rec
+
 
 </PRE><H1><A NAME=v10r5p2>2010-11-05 RecSys v10r5p2</A></H1><PRE> 
 This version uses Gaudi v21r11 and LHCb v31r6p1
