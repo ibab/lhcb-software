@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+
+</PRE><H1><A NAME=v37r8p3>2010-11-05 Brunel v37r8p3</A></H1><PRE>
+
+- This version picks up the Rich/RichHPDImageAnalysis fix required to prevent a segfault.
+  It replaces v37r8p2 as the winter reprocessing version.
+
+
 </PRE><H1><A NAME=v37r8p2>2010-11-05 Brunel v37r8p2</A></H1><PRE>
 - Dummy version to pick up FSR changes from Rec.
 
