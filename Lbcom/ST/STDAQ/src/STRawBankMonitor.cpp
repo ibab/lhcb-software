@@ -96,8 +96,8 @@ StatusCode STRawBankMonitor::execute(){
     unsigned int tellNumber = readoutTool()->SourceIDToTELLNumber( (*iterBank)->sourceID() );
   
     // These hard coded numbers come from here: https://lbtwiki.cern.ch/bin/view/Online/Tell1PortNum
-    int doubleLinkedTTtell1s[] = {1, 2, 3, 4, 5,  6,  8,  9,  10, 13, 14, 15};
-    int doubleLinkedITtell1s[] = {1, 2, 8, 9, 15, 16, 22, 23, 29, 30, 36, 37};
+    unsigned int doubleLinkedTTtell1s[] = {1, 2, 3, 4, 5,  6,  8,  9,  10, 13, 14, 15};
+    unsigned int doubleLinkedITtell1s[] = {1, 2, 8, 9, 15, 16, 22, 23, 29, 30, 36, 37};
     unsigned int numberOfLinks = 1;
     
     if ( detType() == "IT" ) {
