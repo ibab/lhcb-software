@@ -180,7 +180,8 @@ class RevisionControlSystem(object):
         return version.lower() == "head" \
             or version in self._retrieveVersions(module, isProject)
 
-    def checkout(self, module, dest = None, vers_dir = False, project = False):
+    def checkout(self, module, dest = None, vers_dir = False, project = False,
+                 eclipse = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -357,7 +358,8 @@ class CVS(RevisionControlSystem):
                 break
         return tags
 
-    def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
+    def checkout(self, module, version = "head", dest = None, vers_dir = False,
+                 project = False, eclipse = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
