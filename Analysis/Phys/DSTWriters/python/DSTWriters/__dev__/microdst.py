@@ -21,7 +21,9 @@ from microdstelements import  (CloneRecHeader,
                                ClonePVRelations,
                                CloneBackCat,
                                CloneBTaggingInfo,
-                               ReFitAndClonePVs)
+                               ReFitAndClonePVs,
+                               CloneLHCbIDs,
+                               CloneRawBanks)
 
 def microDSTElements() :
     return [CloneRecHeader(),
