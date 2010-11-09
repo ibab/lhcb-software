@@ -84,7 +84,7 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
 //=============================================================================
 B2DHMvaPreSelectionParamTool::~B2DHMvaPreSelectionParamTool() {
 
-    if(m_B2DHFisherDReader) delete m_B2DHFisherDReader;
+  //  if(m_B2DHFisherDReader) delete m_B2DHFisherDReader;
 
 } 
 //=============================================================================
