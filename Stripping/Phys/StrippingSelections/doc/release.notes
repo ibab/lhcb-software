@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-09 - Greig Cowan
+ - Prescaled the Ds2PhiPhi line.
+
 ! 2010-11-08 - Greig Cowan
  - Made small change to beta_s lines.
 
