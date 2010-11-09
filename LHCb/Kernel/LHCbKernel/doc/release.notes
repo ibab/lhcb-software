@@ -4,6 +4,23 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-11-09 - Vanya Belyaev
+
+ - add new classes to represent the notion of 
+   'persistifiable counters-in-TES'
+
+   these objects could be very useful e.g. for uDST. 
+
+     Gaudi::Counter   CLID=150 - trivial couneter of StatEntity   in TES 
+     Gaudi::Counters  CLID=151 - the map  { string : StatEntity } in TES 
+     Gaudi::Numbers   CLID=152 - the map  { string : double     } in TES 
+
+   the classes are propertly decorates using new python module Counters.py 
+
+  
+ - cmt/requirements 
+     version increment to v12r6 
+
 !===================== LHCbKernel v12r5 2010-09-27 ========================
 ! 2010-08-25 - Vanya Belyaev
  - FastClusterContainer:

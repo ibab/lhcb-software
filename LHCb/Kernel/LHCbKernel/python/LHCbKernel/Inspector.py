@@ -3,8 +3,14 @@
 ## @file
 #  Helper module for decoration on LHCb::Inpector class
 #  @see LHCb::Inspector
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-08-03
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $    $
+#
 # =============================================================================
 """
 Helper module for decoration on LHCb::Inpector class
@@ -45,9 +51,14 @@ Inspect the whole application
 
 >>> i << gaudi                             # inspect the application
 
+
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV Ivan.BElyaev@nikhef.nl"
+__author__  = "Vanya BELYAEV Ivan.BElyaev@nikhef.nl"
+__version__ = "$Revision$"
+__date__    = " 2008-08-03"
+## NB: nothing to be imported 
+__all__     = ()                                   # NB: nothing to be imported 
 # =============================================================================
 
 from GaudiPython.Bindings import gbl as _cpp
@@ -57,7 +68,7 @@ _Inspector = _cpp.LHCb.Inspector
 ## helper function for inspection of variosu objects 
 def _new_shift_ ( self , obj ) :
     """
-    Helper function for inspection of variosu objects:
+    Helper function for inspection of various objects:
     
     >>> obj = ...   # get the object
     >>> ins << obj  # inspect it uinsg the inspector
@@ -115,3 +126,17 @@ _Inspector.__init__   = _new_init_
 _Inspector.__lshift__ = _new_shift_ 
 
 
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 120*'*'
+    print __doc__
+    print ' Author  : ' , __author__ 
+    print ' Version : ' , __version__ 
+    print ' Date    : ' , __date__ 
+    print 120*'*'
+    
+    
+# =============================================================================
+# The END 
+# =============================================================================
