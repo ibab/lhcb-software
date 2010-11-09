@@ -240,16 +240,16 @@ class B2DXLines(object) :
 	    }, 
 	    "CheckPV"	       : True, 
 	    "MaxTracksInEvent" : {
-	      "D2hh"     : 100, 
-	      "D2hhWS"   : 100, 
+	      "D2hh"     : 120, 
+	      "D2hhWS"   : 120, 
 	      "D2hhh"    : 180, 
 	      "D2hhhWS"  : 180, 
-	      "D2hhhh"   : 100, 
-	      "D2Kshh"   : 100, 
-	      "D2KPiPi0Merged"   : 100, 
-	      "D2KPiPi0Resolved" : 100, 
-	      "Lambda"   : 100, 
-	      "Unbiased"   : 100
+	      "D2hhhh"   : 120, 
+	      "D2Kshh"   : 120, 
+	      "D2KPiPi0Merged"   : 120, 
+	      "D2KPiPi0Resolved" : 120, 
+	      "Lambda"   : 120, 
+	      "Unbiased" : 120
 	    }
     	}
     ) : 
@@ -345,14 +345,10 @@ class B2DXLines(object) :
 
             BSidebandSel = Selection(moduleName + "With" + name, Algorithm = B2DXSideband, RequiredSelections = [ BSel ] ) 
 
-	    filterTooManyIP = VoidFilter(
-              'FilterNTracksFor' + name
-              ,Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name]
-            )
-
     	    line = StrippingLine(BSidebandSel.name()+"Line", prescale = config["Prescales"][name] , 
-                                 algos = [ filterTooManyIP, BSidebandSel ], 
-                                 checkPV = config["CheckPV"]  )
+                                 algos = [ BSidebandSel ], 
+                                 checkPV = config["CheckPV"], 
+                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name] )
     	    self.lines.append( line )
 
 	selection1 = makeLambdaB2LambdaCK(moduleName, LambdaC, config["LambdaBCuts"])
@@ -366,31 +362,23 @@ class B2DXLines(object) :
         LambdaBSidebandSel = Selection(moduleName + "WithLambda", Algorithm = B2DXSideband, 
                                        RequiredSelections = [ LambdaBSel ] ) 
 
-	filterTooManyIP = VoidFilter(
-            'FilterNTracksForLambda'
-            ,Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"]
-        )
-
     	line = StrippingLine(LambdaBSidebandSel.name()+"Line", prescale = config["Prescales"]["Lambda"] , 
-                             algos = [ filterTooManyIP, LambdaBSidebandSel ], 
-                             checkPV = config["CheckPV"]  )
+                             algos = [ LambdaBSidebandSel ], 
+                             checkPV = config["CheckPV"], 
+                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"] )
 
     	self.lines.append( line )
 
 	#make unbiased selections
     	unbiasedSelection = makeUnbiasedB2DPi("Unbiased" + moduleName, "D2hhh", D2hhh, config["UnbiasedBCuts"]) #NeedsAdditionalString?
  
-	filterTooManyIP = VoidFilter(
-            'FilterNTracksForUnbiased'
-            ,Code = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"]
-        )
- 
  	HLT1TIS = makeTISTOSSel("HLT1TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", unbiasedSelection, "Hlt1Global%TIS")
  	HLT2TIS = makeTISTOSSel("HLT2TISSelFor" + moduleName + "WithUnbiasedBs2DsPi", HLT1TIS, "Hlt2Global%TIS")
 
 	line = StrippingLine(moduleName + "WithUnbiasedB2DPiLine", prescale = config["Prescales"]["Unbiased"] , 
-                             algos = [ filterTooManyIP, HLT2TIS ], 
-                             checkPV = config["CheckPV"]  )
+                             algos = [ HLT2TIS ], 
+                             checkPV = config["CheckPV"], 
+                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"] )
     	self.lines.append( line )
     	
 
@@ -524,7 +512,7 @@ def makeD2hhh(moduleName, config) :
     D2KKpiSel = Selection("SelD2KKpiFor" + moduleName, Algorithm = D2KKpi, RequiredSelections = [ StdPi, StdK ] )
 
     D2piKK = D2pipipi.clone("D2piKKFor" + moduleName, DecayDescriptors = [ "[D+ -> pi- K+ K+]cc" ])
-    D2piKKSel = Selection("SelD2piKKFor" + moduleName, Algorithm = D2KKpi, RequiredSelections = [ StdPi, StdK ] )
+    D2piKKSel = Selection("SelD2piKKFor" + moduleName, Algorithm = D2piKK, RequiredSelections = [ StdPi, StdK ] )
 
     D2pipiK = D2pipipi.clone("D2pipiKFor" + moduleName, DecayDescriptors = [ "[D+ -> pi- pi+ K+]cc" ])
     D2pipiKSel = Selection("SelD2pipiKFor" + moduleName, Algorithm = D2pipiK, RequiredSelections = [ StdPi, StdK ] )

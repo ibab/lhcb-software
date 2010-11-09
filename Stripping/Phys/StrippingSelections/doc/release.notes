@@ -5,6 +5,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-09 - Anton Poluektov
+ - StrippingB2DX.py
+   * Fixed bug that caused [D->K-K+Pi+]cc candidates to be duplicated (was present in Stripping10 and 11)
+     Duplicate [D->K-K+Pi+]cc was used instead of [D->Pi-K+K+]cc. 
+   * Use FILTER argument of StrippingLine instead of VoidFilter for GEC - avoid name conflicts. 
+   * Relax GEC cut from 100 to 120 long tracks for all lines except for D->hhh (left 180 for them)
+     to better match GEC in Stripping11 (<350 best tracks). As a result, increased retention 2.0 -> 2.2%. 
+
 ! 2010-11-09 - Greig Cowan
  - Prescaled the Ds2PhiPhi line.
 
