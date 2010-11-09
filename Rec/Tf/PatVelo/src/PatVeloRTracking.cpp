@@ -88,28 +88,11 @@ namespace Tf {
 		   StatusCode::FAILURE);
     }
 
-    // use the parameters ZVertexMin and MaxRSlope to calculate the z position of 
-    // the last sensor to search in z for forward tracks
-    // first get the minimum radius of a sensor in the local frame
-    double maxR = (*(m_velo->rSensorsBegin()))->rMax(0);
-    // Correct for the opening of the VELO, if any
-    // Assume the half box is not too skew to the beam
-    double dX = fabs(m_velo->halfBoxOffset(DeVelo::LeftHalf).x());
-    m_zSensorSearchMin = m_zVertexMin + ((maxR+dX) / m_maxRSlope);
-    // same for backward tracks
-    m_zSensorSearchMax = m_zVertexMax - ((maxR+dX) / m_maxRSlope);
-
-    if(m_isDebug){
-      debug() << "zSearchMin= " << m_zSensorSearchMin << endmsg;
-      debug() << "zSearchMax= " << m_zSensorSearchMax << endmsg;
-    }
-
     sc = registerConditionCallBacks();
     if (sc.isFailure()) {
       return Error("Failure to register condition update call backs.",
 		   StatusCode::FAILURE);
     }
-
 
     if ( m_doTiming) {
       m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
@@ -841,7 +824,7 @@ namespace Tf {
   }
 
   StatusCode PatVeloRTracking::registerConditionCallBacks() {
-    
+    if(m_isDebug) debug() <<"Register callbacks" << endmsg;
     updMgrSvc()->
       registerCondition(this,(*(m_velo->leftSensorsBegin()))->geometry(),
 		      &Tf::PatVeloRTracking::updateBoxOffset);
@@ -856,6 +839,23 @@ namespace Tf {
   }
   
   StatusCode PatVeloRTracking::updateBoxOffset(){
+    if(m_isDebug) debug() << "updateBoxOffset" << endmsg;
+    // use the parameters ZVertexMin and MaxRSlope to calculate the z position of 
+    // the last sensor to search in z for forward tracks
+    // first get the minimum radius of a sensor in the local frame
+    double maxR = (*(m_velo->rSensorsBegin()))->rMax(0);
+    // Correct for the opening of the VELO, if any
+    // Assume the half box is not too skew to the beam
+    double dX = fabs(m_velo->halfBoxOffset(DeVelo::LeftHalf).x());
+    m_zSensorSearchMin = m_zVertexMin + ((maxR+dX) / m_maxRSlope);
+    // same for backward tracks
+    m_zSensorSearchMax = m_zVertexMax - ((maxR+dX) / m_maxRSlope);
+
+    if(m_isDebug){
+      debug() << "zSearchMin= " << m_zSensorSearchMin << endmsg;
+      debug() << "zSearchMax= " << m_zSensorSearchMax << endmsg;
+    }
+
     // need to calculate the expected shift of the left -> right and
     // vice versaboxes in r which is the overlap region is in the y direction
     // Lets be unsubtle and make a table of each possible offset

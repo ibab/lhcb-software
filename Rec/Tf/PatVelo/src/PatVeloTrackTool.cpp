@@ -61,41 +61,6 @@ namespace Tf {
     }
 
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
-
-    // set average global zones
-    m_phiOfRZone.clear();
-    m_phiOfRZone.resize(8,0.);
-    std::vector<int> nVal(8,0);
-    for ( std::vector<DeVeloRType *>::const_iterator iR =
-            m_velo->rSensorsBegin(); iR != m_velo->rSensorsEnd(); ++iR ){
-      for( unsigned int zone = 0 ; zone < 4 ; ++zone ){
-        double val = ((*iR)->halfboxPhiRange(zone).first+
-                      (*iR)->halfboxPhiRange(zone).second)/2.;
-	if( fabs((*iR)->halfboxPhiRange(zone).first - 
-		 (*iR)->halfboxPhiRange(zone).second) > Gaudi::Units::pi ){
-	  // OK tripped over 2pi boundary : add pi to the average 
-	  val += Gaudi::Units::pi;
-	}	    
-        // range to match how RZ tracks have used the zone previously
-        if( val < -1.*Gaudi::Units::halfpi ) val += Gaudi::Units::twopi;
-        if( val > 3.*Gaudi::Units::halfpi ) val -= Gaudi::Units::twopi;
-        if( (*iR)->isLeft() ) {
-          m_phiOfRZone[zone] += val;	  
-          nVal[zone] += 1;
-        }
-        if( (*iR)->isRight() ) {
-          m_phiOfRZone[zone+4] += val;
-          nVal[zone+4] += 1;
-        }
-      }
-    }
-    for( unsigned int i = 0 ; i < m_phiOfRZone.size() ; ++i ){
-      m_phiOfRZone[i] /= static_cast<double>(nVal[i]);
-      if(msgLevel( MSG::VERBOSE )) {
-        verbose() << "Global R zone " << i << " is at average phi " 
-                  << m_phiOfRZone[i] << endmsg;
-      }
-    }
         
     return registerConditionCallBacks();
   }
@@ -396,7 +361,7 @@ namespace Tf {
   }
 
   StatusCode PatVeloTrackTool::registerConditionCallBacks() {
-
+    if(msgLevel(MSG::DEBUG)) debug() << "Register call backs" << endmsg;
     updMgrSvc()->
       registerCondition(this,(*(m_velo->leftSensorsBegin()))->geometry(),
                         &Tf::PatVeloTrackTool::updateBoxOffset);
@@ -411,6 +376,41 @@ namespace Tf {
   }
 
   StatusCode PatVeloTrackTool::updateBoxOffset(){
+    if(msgLevel(MSG::DEBUG)) debug() << "updateBoxOffset" << endmsg;
+    // set average global zones
+    m_phiOfRZone.clear();
+    m_phiOfRZone.resize(8,0.);
+    std::vector<int> nVal(8,0);
+    for ( std::vector<DeVeloRType *>::const_iterator iR =
+            m_velo->rSensorsBegin(); iR != m_velo->rSensorsEnd(); ++iR ){
+      for( unsigned int zone = 0 ; zone < 4 ; ++zone ){
+        double val = ((*iR)->halfboxPhiRange(zone).first+
+                      (*iR)->halfboxPhiRange(zone).second)/2.;
+	if( fabs((*iR)->halfboxPhiRange(zone).first - 
+		 (*iR)->halfboxPhiRange(zone).second) > Gaudi::Units::pi ){
+	  // OK tripped over 2pi boundary : add pi to the average 
+	  val += Gaudi::Units::pi;
+	}	    
+        // range to match how RZ tracks have used the zone previously
+        if( val < -1.*Gaudi::Units::halfpi ) val += Gaudi::Units::twopi;
+        if( val > 3.*Gaudi::Units::halfpi ) val -= Gaudi::Units::twopi;
+        if( (*iR)->isLeft() ) {
+          m_phiOfRZone[zone] += val;	  
+          nVal[zone] += 1;
+        }
+        if( (*iR)->isRight() ) {
+          m_phiOfRZone[zone+4] += val;
+          nVal[zone+4] += 1;
+        }
+      }
+    }
+    for( unsigned int i = 0 ; i < m_phiOfRZone.size() ; ++i ){
+      m_phiOfRZone[i] /= static_cast<double>(nVal[i]);
+      if(msgLevel( MSG::VERBOSE )) {
+        verbose() << "Global R zone " << i << " is at average phi " 
+                  << m_phiOfRZone[i] << endmsg;
+      }
+    }
     // need to calculate the expected shift of the box to the global frame
     // Lets be unsubtle and make a table of each possible offset
     unsigned int nSens = 132; // include the pileup even if not used here

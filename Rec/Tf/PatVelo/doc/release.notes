@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-11-09 - David Hutchcroft
+ - Fixed problem with PatVeloRTracking not updating local cached variables properly
+   See Savannah bug #75039
+
 !========================== PatVelo v3r25 2010-07-20 =========================
 ! 2010-07-05 - Marco Gersabeck
  - Reduced memory consumption of PatVeloAlignTrackFilter
