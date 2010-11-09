@@ -459,6 +459,59 @@ class BlockSlotPolicy(SlotPolicy):
 
 # =============================================================================
 #
+# CLASS: RoundRobinSlotPolicy
+#
+# =============================================================================
+class RoundRobinSlotPolicy(SlotPolicy):
+  """ Class to implement the block slot allocation policy.
+
+      The block allocation policy works as follows:
+      1) get the first node and allocate a slice
+      2) get the next node and allocate a slice ....
+      3) if only one node is left, allocate the rest on this node
+
+      @author  M.Frank
+      @version 1.0
+  """
+  # ===========================================================================
+  def __init__(self, debug=1):
+    SlotPolicy.__init__(self, debug)
+
+  # ===========================================================================
+  def allocateSlices(self,number,per_node,slices):
+    freeSlots = self.collectFreeSlots(slices)
+    if self.debug: print 'Free slots:',freeSlots
+    num = 0
+    alloc_slots = {}
+    last_node = ''
+    for i in xrange(number):
+      for node,slots in freeSlots.items():
+        if node != last_node:
+          last_node = node
+          if not alloc_slots.has_key(node): alloc_slots[node] = []
+          alloc_slots[node].append(slots.pop())
+          num = num + 1
+          break
+        
+    for i in xrange(number-num):
+      node = self.leastOccupied(freeSlots)
+      if node is not None:
+        slots = freeSlots[node]
+        for j in xrange(per_node):
+          if num<number and len(slots) > 0:
+            if not alloc_slots.has_key(node): alloc_slots[node] = []
+            alloc_slots[node].append(slots.pop())
+            num = num + 1
+
+    self.debug = True
+    if self.debug:
+      print 'RoundRobinSlotPolicy> Allocated %d slots on %d nodes:'%(num,len(alloc_slots))
+      for node,slots in alloc_slots.items():
+        print 'Node:%-12s  Slots:%s'%(node,slots)
+    return (num,alloc_slots)
+
+# =============================================================================
+#
 # CLASS: AllSlotPolicy
 #
 # =============================================================================
@@ -685,8 +738,10 @@ class Allocator(StreamingDescriptor):
 
     @return None on failure, on Succes tuple (all_recv_slots,all_strm_slots) with allocated slots
     """
-    if recv_slots_per_node is None: recv_slots_per_node = self.recv_slots_per_node
-    if strm_slots_per_node is None: strm_slots_per_node = self.strm_slots_per_node
+    if self.recv_slots_per_node is not None:
+      recv_slots_per_node = self.recv_slots_per_node
+    if self.strm_slots_per_node is not None:
+      strm_slots_per_node = self.strm_slots_per_node
 
     start = time.time()
     if debug: print 'Starting action:',start,' recv_slots_per_node:',recv_slots_per_node,' strm_slots_per_node:',strm_slots_per_node

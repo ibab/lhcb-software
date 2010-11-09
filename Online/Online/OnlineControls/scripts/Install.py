@@ -262,11 +262,19 @@ def copyProject():
       content = 'proj_path = "/localdisk/pvss/'+nam+'"'
     print >>fout,content
     if content=='distributed = 1':
+      """
       print >>fout, 'pmonPort= '+str(sysN+100)+'00'
       print >>fout, 'dataPort= '+str(sysN+100)+'01'
       print >>fout, 'eventPort= '+str(sysN+100)+'02'
       print >>fout, '[dist]'
       print >>fout, 'distPort= '+str(sysN+100)+'10'
+      """
+      print >>fout, 'pmonPort= 44000'
+      print >>fout, 'dataPort= 44001'
+      print >>fout, 'eventPort= 44002'
+      print >>fout, '[dist]'
+      print >>fout, 'distPort= 44010'
+
       print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
       print >>fout, 'distPeer= "storectl01:40710" 307 # RECSTORAGE'
       print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'

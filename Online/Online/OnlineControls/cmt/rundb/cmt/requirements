@@ -1,0 +1,10 @@
+package rundb
+version v1r0
+
+use oracle v* LCG_Interfaces
+use cx_oracle v* LCG_Interfaces
+use OnlineControls v* Online
+
+path_remove  PYTHONPATH      "/sw/oracle/"
+path_prepend PYTHONPATH      $(cx_oracle_home)/lib/python2.5/site-packages
+path_prepend LD_LIBRARY_PATH $(cx_oracle_home)/lib/python2.5/site-packages

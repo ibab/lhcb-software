@@ -222,7 +222,13 @@ class Cursor:
         Standard constructor
     """
     self.core = core
-    
+
+  def commit(self):
+    """
+        Commit pending transactions
+    """
+    return self.core._DB.commit()
+  
   def select(self, sql, *parms, **kws):
     """
         Selector
@@ -230,7 +236,7 @@ class Cursor:
     ret = self.core.execute(sql,*parms,**kws)
     if ( _debug ):
       print 'DbCore.select:\n', sql, parms, kws, ret
-    if ( ret == 0 ):
+    if ret:
       return Result(self, ret)
     return Result(None, None)
   

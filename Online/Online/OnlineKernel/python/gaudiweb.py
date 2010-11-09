@@ -655,9 +655,9 @@ class ManagementServlet(Service):
     buf =       '<TABLE cellspacing="0" cellpadding="10">'
     buf = buf + '  <TR>'
     buf = buf +     '<TD colspan="4">'
-    buf = buf +       '<form action="http://'+srv.nodeName()+':'+str(srv.port)+'/'+self.name()+'?-action=exit" method="post">'
+    buf = buf +       '<FORM action="http://'+srv.nodeName()+':'+str(srv.port)+'/'+self.name()+'?-action=exit" method="post">'
     buf = buf +       '<BR><input type="submit" value="Stop Server"/></BR>'
-    buf = buf +       '</form>'
+    buf = buf +       '</FORM>'
     buf = buf +     '</TD>'
     buf = buf +     '<TD><IMG border=0 src="/images/lhcblogo.gif"></TD>'
     buf = buf +     '<TD>Featured by</TD>'
@@ -666,7 +666,7 @@ class ManagementServlet(Service):
     buf = buf + '</TABLE>'
     buf = buf + '<P><img src="/images/e-mail.gif" height="25" width="72"></img>'
     buf = buf + 'If you have problems or suggestions send mail to '
-    buf = buf + '<I><A HREF=\"mailto:Markus.Frank@cern.ch\">Markus Frank</A></I>'
+    buf = buf + '<I>M.Frank CERN/LHCb</I>'
     return buf
 
   #===============================================================================
@@ -761,7 +761,10 @@ class ManagementServlet(Service):
           buf = '<html><head><title>Gaudi RPC/Web Portal</title>'
           buf = buf + '</head><body>'
           buf = buf + '<H1>The server process exited gracefully.</H1>'
-          buf = buf + '<IMG border=0 src=\"/images/lhcblogo.gif\">'
+          #buf = buf + '<IMG border=0 src=\"/images/lhcblogo.gif\">'
+          buf = buf + '<FORM action="http://'+srv.nodeName()+':'+str(srv.port)+'/'+self.name()+'?-action=exit" method="post">'
+          buf = buf + '<BR><input type="submit" value="Retry: Stop Server"/></BR>'
+          buf = buf + '</FORM>'
           buf = buf + '</body></html>'
           return self.makeWebFile((req_path, self.name(), 'text/html', len(buf), buf))
         elif ( args.has_key('-type')):

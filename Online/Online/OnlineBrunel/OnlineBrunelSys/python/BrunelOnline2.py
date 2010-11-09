@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.25 2010-11-09 12:20:55 frankb Exp $"
+__version__ = "$Id: BrunelOnline2.py,v 1.1 2010-11-09 12:21:19 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os, sys
@@ -18,7 +18,6 @@ InstallRootLoggingHandler(level=logging.CRITICAL)
 processingType ='DataTaking'
 
 GaudiKernel.ProcessJobOptions._parser._parse_units(os.path.expandvars("$STDOPTS/units.opts"))
-requirement = None
 
 debug = 0
 def dummy(*args,**kwd): pass
@@ -69,14 +68,12 @@ def patchBrunel(true_online_version):
 
   brunel = Brunel.Configuration.Brunel()
   EventLoopMgr().OutputLevel = 0
-  """
   brunel.DDDBtag   = "head-20091120"
   brunel.CondDBtag = "head-20100303"
   brunel.CondDBtag = "head-20100222"
 
   brunel.DDDBtag   = "head-20100407"
   brunel.CondDBtag = "head-20100509"
-  """
 
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
@@ -93,26 +90,26 @@ def patchBrunel(true_online_version):
   if processingType == 'Reprocessing':
     GaudiConf.DstConf.DstConf._doWriteMDF = packDST
     brunel.PackType   = 'MDF'
-    brunel.OutputType = 'RDST'
-    brunel.WriteLumi  = True
+    brunel.OutputType = 'SDST'
+    brunel.WriteLumi  =  True
     brunel.Histograms = 'None'
-    print '[WARN] Running brunel with histogram settings:None'
+    print '[WARN] Running brunel with: Output ',brunel.OutputType,'/',brunel.PackType,\
+          ' Lumi:',brunel.WriteLumi,' histogram settings:',brunel.Histograms
     sys.stdout.flush()
   else:
-    #print '[WARN]  Running GaudiSerialize!'
+    ###print '[WARN]  Running GaudiSerialize!'
     from Configurables import Serialisation, ProcessPhase
-    brunel.WriteLumi = False
+    brunel.WriteLumi  =  False
     brunel.Histograms = 'Online'
     print '[WARN] Running brunel with histogram settings:Online'
     sys.stdout.flush()
     Brunel.Configuration.Brunel.configureOutput = dummy
-    ProcessPhase("Output").DetectorList += [ 'DST' ]
+    ProcessPhase("Output").DetectorList += ['DST']
     brunel.setProp( 'DatasetName', 'GaudiSerialize' )
     DstConf().Writer       = 'DstWriter'
     DstConf().DstType      = 'DST'
     DstConf().PackType     = 'NONE'
     Serialisation().Writer = 'Writer'
-    ##Serialisation().Explorer = True
     Serialisation()._ConfigurableUser__addPassiveUseOf(DstConf())
     
   HistogramPersistencySvc().OutputFile = ""
@@ -126,7 +123,7 @@ def setupOnline():
         @author M.Frank
   """
   import OnlineEnv as Online
-  
+
   buffs = ['Events','Output']
   if processingType == 'Reprocessing':
     buffs = ['Input','Output']
@@ -141,9 +138,6 @@ def setupOnline():
   ###print "BUFFERS",buffs
   mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
   sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False)
-  if requirement:
-    print 'Setting requirements:',requirement
-    sel.REQ1 = requirement
   app.EvtSel  = sel
   app.Runable = Online.evtRunable(mep)
   app.Runable.NumErrorToStop = 1;
@@ -202,9 +196,7 @@ processingType = getProcessingType()
 true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
 debug = not true_online
 
-if not true_online:
-  print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
-  requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+if not true_online: print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
 patchBrunel(true_online)
 setupOnline()
 if true_online: patchMessages()

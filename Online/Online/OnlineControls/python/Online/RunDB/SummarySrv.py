@@ -1,6 +1,8 @@
 import traceback
 import Online.PVSS as PVSS
-std = PVSS.gbl.std
+import Online.Utils as Utils
+std       = PVSS.gbl.std
+log       = Utils.log
 DataPoint = PVSS.DataPoint
 
 _debug = False
@@ -38,10 +40,11 @@ class RunDB:
         self.fillCurrent   = self.dp0('LHCbPerformance.CurrentFill')
         self.fillInjection = self.dp0('LHCbPerformance.CurrentFillStart')
         self.fillRamped    = self.dp0('LHCbPerformance.CurrentFillRamped')
+        self.fillSqueeze   = self.dp0('LHCbPerformance.CurrentFillSqueezed')
         self.fillStable    = self.dp0('LHCbPerformance.CurrentFillStable')
         self.fillEnded     = self.dp0('LHCbPerformance.CurrentFillEnded')
 
-        self.lhcState      = self.dp1('LHC_STATE/LHC.State.Text')
+        self.lhcState      = self.dp1('LHCCOM/LHC.LHC.RunControl.BeamMode')
         self.b1Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.averageBeamIntensity');
         self.b2Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.averageBeamIntensity');
         self.energy        = self.dp1('LHCCOM/LHC.LHC.Beam.Energy')
@@ -61,19 +64,19 @@ class RunDB:
         for i in self.effi: self.readerECS.add(i)
 
         self.lumi = []
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_pp_rate'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_pp_rate'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_hadron'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_hadron'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_smu'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_smu'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_dimu'))
-        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_dimu'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_calo'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_BLS_Aside'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_BLS_Cside'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_BRAN_4L8'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_BRAN_4R8'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_Ideal'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_annual_3500'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_annual_3500'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntRec_GP'))
         self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.Luminosity.LumiIntDel_GP'))
+        self.lumi.append(self.dp1('LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRateLumi_GP'))
         for i in self.lumi: self.readerLHC.add(i)
-
         
     # ===========================================================================
     def dp0(self,name):
@@ -94,6 +97,7 @@ class RunDB:
     def initialize(self):
         self.reader.add(self.fillHistoryDp)
         self.reader.add(self.fillInjection)
+        self.reader.add(self.fillSqueeze)
         self.reader.add(self.fillRamped)
         self.reader.add(self.fillStable)
         self.reader.add(self.fillEnded)
@@ -104,35 +108,48 @@ class RunDB:
         self.state = ''
         exe = False
         if not len(self.fillInjection.data): self.fillInjection.data='0'
-        if not len(self.fillRamped.data): self.fillRamped.data='0'
-        if not len(self.fillStable.data): self.fillStable.data='0'
-        if not len(self.fillEnded.data): self.fillEnded.data='0'
-        if int(self.fillInjection.data.split('/')[0]) != self.fillNo.data:
+        if not len(self.fillRamped.data):    self.fillRamped.data='0'
+        if not len(self.fillSqueeze.data):   self.fillSqueeze.data='0'
+        if not len(self.fillStable.data):    self.fillStable.data='0'
+        if not len(self.fillEnded.data):     self.fillEnded.data='0'
+        if len(self.fillInjection.data)==0 or int(self.fillInjection.data.split('/')[0]) != self.fillNo.data:
             self.fillInjection.data = str(self.fillNo.data)
-            self.fillRamped.data = str(self.fillNo.data)
-            self.fillStable.data = str(self.fillNo.data)
-            self.fillEnded.data = str(self.fillNo.data)
+            self.fillRamped.data    = str(self.fillNo.data)
+            self.fillSqueeze.data   = str(self.fillNo.data)
+            self.fillStable.data    = str(self.fillNo.data)
+            self.fillEnded.data     = str(self.fillNo.data)
             self.writer.add(self.fillInjection)
             self.writer.add(self.fillRamped)
+            self.writer.add(self.fillSqueeze)
             self.writer.add(self.fillStable)
             self.writer.add(self.fillEnded)
             exe = True
-        elif int(self.fillRamped.data.split('/')[0]) != self.fillNo.data:
-            self.fillRamped.data = str(self.fillNo.data)
-            self.fillStable.data = str(self.fillNo.data)
-            self.fillEnded.data = str(self.fillNo.data)
+        elif len(self.fillRamped.data)==0 or int(self.fillRamped.data.split('/')[0]) != self.fillNo.data:
+            self.fillRamped.data    = str(self.fillNo.data)
+            self.fillSqueeze.data   = str(self.fillNo.data)
+            self.fillStable.data    = str(self.fillNo.data)
+            self.fillEnded.data     = str(self.fillNo.data)
+            self.writer.add(self.fillSqueeze)
             self.writer.add(self.fillRamped)
             self.writer.add(self.fillStable)
             self.writer.add(self.fillEnded)
             exe = True
-        elif int(self.fillStable.data.split('/')[0]) != self.fillNo.data:
-            self.fillStable.data = str(self.fillNo.data)
-            self.fillEnded.data = str(self.fillNo.data)
+        elif len(self.fillSqueeze.data)==0 or int(self.fillSqueeze.data.split('/')[0]) != self.fillNo.data:
+            self.fillSqueeze.data   = str(self.fillNo.data)
+            self.fillStable.data    = str(self.fillNo.data)
+            self.fillEnded.data     = str(self.fillNo.data)
+            self.writer.add(self.fillSqueeze)
             self.writer.add(self.fillStable)
             self.writer.add(self.fillEnded)
             exe = True
-        elif int(self.fillEnded.data.split('/')[0]) != self.fillNo.data:
-            self.fillEnded.data = str(self.fillNo.data)
+        elif len(self.fillStable.data)==0 or int(self.fillStable.data.split('/')[0]) != self.fillNo.data:
+            self.fillStable.data    = str(self.fillNo.data)
+            self.fillEnded.data     = str(self.fillNo.data)
+            self.writer.add(self.fillStable)
+            self.writer.add(self.fillEnded)
+            exe = True
+        elif len(self.fillEnded.data)==0 or int(self.fillEnded.data.split('/')[0]) != self.fillNo.data:
+            self.fillEnded.data    = str(self.fillNo.data)
             self.writer.add(self.fillEnded)
             exe = True
         if exe:
@@ -146,26 +163,27 @@ class RunDB:
 
         l = self.lumi[10].data;
         s = str(self.fillNo.data)+'/'+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())+'/'+str(l)+'/'
-        for i in self.effi: s = s + str(i.data*l)+'/'
+        for i in self.effi: s = s + str((1.-(i.data/100.))*l)+'/'
         s = s[:-1]+'/'+\
             str(self.lhcState.data)+'/'+str(self.b1Intensity.data)+'/'+\
             str(self.b2Intensity.data)+'/'+str(self.energy.data)+'/'+\
             str(self.lumi[9].data)+'/'+str(l)
+        #print 'Current fill:',s
         return s
     
     # ===========================================================================
     def updateCurrentLumi(self):
         try:
             s = str(self.fillNo.data)+'/'+str(self.lhcState.data)+'/'
-            for i in self.lumi: s = s + str(i.data) + '/'
+            for i in self.lumi: s = s + '%9.5e'%(i.data,) + '/'
             s = s[:-1]
-            if _debug: print 'Lumi: ',s
+            if _debug: log('Lumi: '+s)
             if s != self.fillLuminosity.data:
                 self.fillLuminosity.data = s
                 self.writer.add(self.fillLuminosity)
                 return True
         except Exception,X:
-            print X
+            log('Exception:'+str(X))
             traceback.print_stack()
         return False
     
@@ -176,33 +194,39 @@ class RunDB:
         rec = self.fillRecord()
         self.fillCurrent.data = rec
         self.writer.add(self.fillCurrent)
-        if (st == "INJECTION" or st == "MD") and self.state != st:
+        if (st.find("INJECT")>=0 or st == "MD" or st == "SETUP" or st == "NO BEAM" ) and self.state != st:
             self.state = st
             self.fillInjection.data = rec
             self.fillRamped.data    = str(self.fillNo.data)
+            self.fillSqueeze.data   = str(self.fillNo.data)
             self.fillStable.data    = str(self.fillNo.data)
             self.fillEnded.data     = str(self.fillNo.data)
             self.writer.add(self.fillInjection)
             self.writer.add(self.fillRamped)
+            self.writer.add(self.fillSqueeze)
             self.writer.add(self.fillStable)
             self.writer.add(self.fillEnded)
-        elif st == "PHYS_ADJUST" and self.state != st:
+        elif (st == "PHYS_ADJUST" or st == "FLAT TOP" or st == "ADJUST") and self.state != st:
             self.state = st
             self.fillRamped.data = rec
             self.writer.add(self.fillRamped)
-        elif st == "PHYSICS" and self.state != st:
+        elif (st == "SQUEEZE") and self.state != st:
+            self.state = st
+            self.fillSqueeze.data = rec
+            self.writer.add(self.fillSqueeze)
+        elif (st == "PHYSICS" or st == "STABLE BEAMS") and self.state != st:
             self.state = st
             self.fillStable.data = rec
             self.writer.add(self.fillStable)
-        elif st == "DUMP" or st == "EOF" or st == "NO_BEAM":
+        elif st == "DUMP" or st == "EOF" or st == "NO_BEAM" or st == "RAMP DOWN":
             if self.state != 'EOF':
                 self.state = 'EOF'
                 self.fillEnded.data = rec
                 self.writer.add(self.fillEnded)
-        if _debug: print 'Current: ',rec
+        if _debug: log('Current: '+str(rec))
         return True
       except Exception,X:
-        print X
+        log('Execption:'+str(X))
         traceback.print_stack()
       return False
   
@@ -216,49 +240,63 @@ class RunDB:
         tmp = std.vector('std::string')()
         row = c.fetchone()
         while row:
-            res = ''
-            for r in row:
-                res = res + str(r) + '/'
-            tmp.push_back(res[:-1])
-            if _debug: print ' History:',res[:-1]
-            row = c.fetchone()
+          res = ''
+          for r in row:
+            res = res + str(r) + '/'
+          tmp.push_back(res[:-1])
+          if _debug: log(' History:'+str(res[:-1]))
+          #log(' History:'+str(res[:-1]))
+          row = c.fetchone()
 
         if self.fillHistory.size() != tmp.size():
-            print 'Saving history'
-            self.fillHistory = tmp
-            self.fillHistoryDp.data = tmp
-            self.writer.add(self.fillHistoryDp)
-            return True
+          #log('Saving history...')
+          self.fillHistory = tmp
+          self.fillHistoryDp.data = tmp
+          self.writer.add(self.fillHistoryDp)
+          return True
         else:
-            for i in xrange(tmp.size()):
-                if self.fillHistory[i] != tmp[i]:
-                    print 'Saving history'
-                    self.fillHistory = tmp
-                    self.fillHistoryDp.data = tmp
-                    self.writer.add(self.fillHistoryDp)
-                    return True
-                
+          for i in xrange(tmp.size()):
+            if self.fillHistory[i] != tmp[i]:
+              log('Saving history...')
+              self.fillHistory = tmp
+              self.fillHistoryDp.data = tmp
+              self.writer.add(self.fillHistoryDp)
+              return True
+
     # ===========================================================================
     def loadData(self):
       try:
         if self.readerECS.execute(1,1) and self.readerLHC.execute(1,1):
           st = self.lhcState.data
-          if st == "INJECTION" or st == "MD" or st == "PHYS_ADJUST":
-            print 'Reset lumi to 0 for state ',st
+          if    st.find("INJECTION")>=0      \
+             or st == "MD"                   \
+             or st == "NO BEAM"              \
+             or st == "EOF"                  \
+             or st == "DUMP"                 \
+             or st == "SETUP"                \
+             or st == "RECOVERY"             \
+             or st == "CYCLING"              \
+             or st == "PHYS_ADJUST"          \
+             or st == "ADJUST"               \
+             or st == "SQUEEZE"              \
+             or st == "RAMP"                 \
+             or st == "RAMP DOWN"            \
+             or st == "PREPARE RAMP":
+            #log('Reset lumi to 0 for state '+st)
             self.lumi[-2].data = 0.
             self.lumi[-1].data = 0.
-            return True
+            #pass
+          return True
       except Exception,X:
-        print X
+        log('Failed to load data: Exception:'+str(X))
         traceback.print_stack()
-        print 'Failed to load data'
       return False
 
 # ===============================================================================
 def run():
     import time
 
-    db=_createConnection('rundb_admin','adm1n','oradb01')
+    db=_createConnection('rundb_admin','adm1n','rundb')
     rundb = RunDB(db)
     rundb.initialize()
     while(1):
@@ -270,9 +308,14 @@ def run():
               b2 = rundb.updateCurrentLumi()
               b3 = rundb.updateFillSummary()
               if b1 or b2 or b3:
+                if _debug:
+                  log('Updating STORAGE datapoints...')
+                  log('===============================================================================')
                 rundb.writer.execute(0,1)
+            else:
+              log('Failed to load data...')
         except Exception,X:
-            print X
+            log('Exception:'+str(X))
             traceback.print_stack()
 
 

@@ -1,0 +1,57 @@
+
+.RecoTable {
+	font-size:        12px;
+	font-family:      Arial, Helvetica, sans-serif;
+	border-width:     2px;
+	border-style:     double;
+	border-color:     #FF0000;
+	border-collapse:  collapse;
+	line-height:      18px;	
+	border-spacing:   1px;
+        width:            90%;
+}
+
+.RecoTable td {
+	border-color:     #0000FF;
+	border-spacing:   0px;
+	border-style:     solid;
+	border-right-style:none;
+	border-width:     1px;
+	background-color: yellow;
+	padding:          3px;
+}
+
+.RecoTable th {
+	font-size:        16px;
+	font-weight:      bold;
+	background-color: green;
+	color:white;
+	padding:          3px;
+}
+
+
+.RecoLog {
+	font-size:        12px;
+	font-family:      Arial, Helvetica, sans-serif;
+	border-width:     2px;
+	border-style:     ridge;
+	border-color:     #FF0000;
+	border-spacing:   1px;
+        width:            90%;
+}
+
+.RecoLog td {
+	border-color:     #0000FF;
+	border-spacing:   0px;
+	border-style:     none;
+	background-color: light-grey;
+	padding:          3px;
+}
+
+.RecoLog th {
+	font-size:        16px;
+	font-weight:      bold;
+	background-color: green;
+	color:white;
+	padding:          3px;
+}
