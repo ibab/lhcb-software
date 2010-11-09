@@ -61,7 +61,7 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
   
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   
- printServiceSet();
+// printServiceSet();
     
 
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){

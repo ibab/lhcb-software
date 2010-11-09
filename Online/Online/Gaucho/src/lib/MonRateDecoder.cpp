@@ -427,11 +427,11 @@ void MonRateDecoder::print(){
 
 bool  MonRateDecoder::RunChange() {
    MsgStream msg(m_msgSvc, "MonRateDecoder");
- //  msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
+  // msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
    bool RunNumberChanged;
    RunNumberChanged=false;
-   if ((m_RunNumberChanged)&&((m_newRunNumber!=0)||m_newCycleNumber==0)){
-    //  msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
+   if ((m_RunNumberChanged)&&(((m_newRunNumber!=0)&&(m_newCycleNumber!=0))&&(m_newRunNumber!=999))){
+ //     msg << MSG::INFO << "Runchange? m_RunNumberChanged "<<m_RunNumberChanged << " m_newCycleNumber " << m_newCycleNumber<< " m_newRunNumber " << m_newRunNumber << endreq;
       RunNumberChanged=true;
    }   
    return RunNumberChanged;

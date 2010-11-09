@@ -46,7 +46,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
   Service(name, sl)
 {
    declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
-   declareProperty("disableMonRate", m_disableMonRate = 0);
+   declareProperty("disableMonRate", m_disableMonRate = 1);
    declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
    declareProperty("disableDimCmdServer", m_disableDimCmdServer = 0);
   // declareProperty("disableDimRcpGaucho", m_disableDimRcpGaucho = 0);
@@ -168,7 +168,9 @@ StatusCode MonitorSvc::finalize() {
   if ( 0 == m_disableDimPropServer){
     if (m_dimpropsvr) delete m_dimpropsvr; m_dimpropsvr = 0;
   }
-
+  if ( 0 == m_disableMonRate) {
+    if (m_monRate) delete m_monRate; m_monRate = 0;
+  }  
   
   return StatusCode::SUCCESS;
 }
@@ -213,25 +215,16 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
-      //  msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
-	//if (!registerName("monRate", owner)) return;
         if (!registerName("monRate", this)) return;
-       // msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("MonRate... !!");
-       // msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
-       // msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
-      //  msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-    //  msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
-      
       m_monRate->addCounter(newName, desc, var);
     }
-  //  else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;   
   }  
   
@@ -276,7 +269,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
         m_monRateDeclared = true;
       }
       msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
-      
+
       m_monRate->addCounter(newName, desc, (double&) var);
     }
     else  msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
@@ -324,6 +317,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
+
       m_monRate->addCounter(newName, desc, var);
     }
     return;
@@ -444,7 +438,6 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
                              const std::string& desc, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  // msg << MSG::DEBUG << "StatEntity Counter "<< name << " being declared." << endreq; 
   if (name.find("COUNTER_TO_RATE") != std::string::npos) {
     std::string newName = extract("COUNTER_TO_RATE", name);
     //make newName unique!
@@ -452,7 +445,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
         if (!registerName("monRate", this)) return;
-        m_monRate->setComments("MonRate !!");
+        m_monRate->setComments("MonRate... !!");
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
         m_monRate->print();
@@ -460,10 +453,8 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
 	//msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
         m_monRateDeclared = true;
       }
-       // msg << MSG::DEBUG << "Adding  Counter to MonRate"<< newName << endreq; 
-	m_monRate->addCounter(newName, desc, var);
+      m_monRate->addCounter(newName, desc, var);
     }
-   // else msg << MSG::DEBUG << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;
   }
 
@@ -715,9 +706,6 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
     std::set<std::string> * infoNamesSet = getInfos( owner );
     if( 0 == infoNamesSet ) return;
     std::set<std::string>::iterator infoNamesIt;
-
-    for( infoNamesIt = (*infoNamesSet).begin();
-         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
 
     for( infoNamesIt = (*infoNamesSet).begin();
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){

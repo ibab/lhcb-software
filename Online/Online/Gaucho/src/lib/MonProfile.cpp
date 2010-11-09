@@ -156,7 +156,7 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
 
 void MonProfile::setProfile(TProfile * tProfile){
   m_profile = tProfile;
-  if (m_profile != 0) splitObject();
+  splitObject();
 }
 
 TProfile* MonProfile::profile(){  
@@ -166,13 +166,6 @@ TProfile* MonProfile::profile(){
   return m_profile;
 }
 
-void MonProfile::deleteProfile(){
-  if (m_profile) {
-    MsgStream msg = createMsgStream();
-    msg <<MSG::DEBUG<<"deleting m_profile" << endreq;
-    delete m_profile; m_profile = 0;
-  }
-}
 
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
@@ -257,6 +250,11 @@ void MonProfile::splitObject(){
      FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
   
      nbinsx = m_profile->GetNbinsX();
+     if (nbinsx==0) {
+        isLoaded = false;
+        msg << MSG::WARNING << "0 bins m_profile. MonProfile can not be not loaded."<< endreq;
+        return;     
+     }
      Xmin = m_profile->GetXaxis()->GetXmin();
      Xmax = m_profile->GetXaxis()->GetXmax();
      Ymin = m_profile->GetYmin();
@@ -280,27 +278,33 @@ void MonProfile::splitObject(){
       }
 
      bBinLabelX = false;
-     for (int i = 1; i < (nbinsx+1) ; ++i){
-    //   std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
-    //   if (binLab.length() > 0 ){
-       const char *binLab = m_profile->GetXaxis()->GetBinLabel(i);
-       if (strlen(binLab) > 0 ){
-         bBinLabelX = true;
-         break;
-       }
-     }
-  
-     if (bBinLabelX){
-         binLabelX.clear();
+     
+   //  if ((this->typeName()!="MonRate"){
        for (int i = 1; i < (nbinsx+1) ; ++i){
-         if (m_profile->GetXaxis()->GetBinLabel(i)) {
-	    binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));}
-         else {
-	    msg << MSG::WARNING << "No bin label found. Pushing back empty bin label " << i << " in profile " << sTitle << endreq; 
-	    binLabelX.push_back("");}
+      //   std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
+      //   if (binLab.length() > 0 ){
+         const char *binLab = m_profile->GetXaxis()->GetBinLabel(i);
+         if (strlen(binLab) > 0 ){
+           bBinLabelX = true;
+           break;
+         }
        }
-     }
-
+  
+       if (bBinLabelX){
+         //binLabelX.clear();
+	 if ((int)binLabelX.size()==nbinsx) {
+           for (int i = 1; i < (nbinsx+1) ; ++i){
+    	      binLabelX[i-1]=m_profile->GetXaxis()->GetBinLabel(i);
+           }
+	 }
+	 else     {    
+	   if ((int)binLabelX.size()>0) binLabelX.clear();	   
+	   for (int i = 1; i < (nbinsx+1) ; ++i){
+    	      binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));
+           }
+	 }    
+       }
+    // }
      m_fDimension = fot->fDimension;
      m_fMaximum = fot->fMaximum;
      m_fMinimum = fot->fMinimum;

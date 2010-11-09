@@ -30,7 +30,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 //       if (m_profile) { delete m_profile; m_profile = 0; }
        if (m_profile) { m_profile->Reset(); }
        else {
-         m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+8, 0, m_maxNumCounters+8);
+         m_profile = new TProfile("MRprofile","MonRate Profile", m_maxNumCounters+8, 0, m_maxNumCounters+8);
       	  //set m_profile as the one used by MonProfile
 	  MonProfile::setProfile(m_profile);  
        }      
@@ -79,9 +79,18 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 	    msg <<MSG::DEBUG<<"Counter :" << counter.nEntries() << endreq;
           }  
          else {
-            msg <<MSG::WARNING<<"Counter "<< m_counterMapIt->first << " has a type "<< m_counterMapIt->second.second.first << " that is not supported by MonRate.." << endreq;
-	    return;
-           }
+	    //sometimes compare doesn't see it. try find.
+	    if (m_counterMapIt->second.second.first.find("StatEntityflag") != std::string::npos) {
+               msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is StatEntity (flag) "<< endreq;
+               StatEntity counter = (*(StatEntity*) m_counterMapIt->second.second.second);
+	       m_profile->Fill((double)i - 0.5, counter.flag(), 1.00);
+	       msg <<MSG::DEBUG<<"Counter :" << counter.flag() << endreq;	   	    	    	    
+	    }
+	    else {
+               msg <<MSG::WARNING<<"Counter "<< m_counterMapIt->first << " has a type "<< m_counterMapIt->second.second.first << " that is not supported by MonRate." << endreq;
+	       return;
+	    }   
+          }
           i++;
         }
     
@@ -97,7 +106,8 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
         i = 9;
         for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
           msg <<MSG::DEBUG<<"label description: " << (*(m_counterMapIt->second.first)).c_str() << endreq;
-          m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.first)).c_str());
+          if ((*(m_counterMapIt->second.first)).c_str()==0)  m_profile->GetXaxis()->SetBinLabel(i, "no label");
+	  else m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.first)).c_str());
           i++;
         }   
       }
@@ -114,7 +124,6 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   MonProfile::save(ar, version); 
   ar & m_numCounters;
   if (isServer) {
-   //  if (m_profile) { delete m_profile; m_profile = 0; }
      if (m_profile) { m_profile->Reset(); }
   }
 }
@@ -126,11 +135,6 @@ void MonRate::load(boost::archive::binary_iarchive  & ar)
   MonObject::load(ar);
   MonProfile::load(ar);
   ar & m_numCounters;
-  
-/*  m_profile = profile();
-  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
-    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
-  }*/
   
 }
 

@@ -38,6 +38,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   m_enablePostEvents = true;
   m_reconfigured = false;
   m_firststart = true;
+  //m_refreshTime = 20;
 }
 
 AdderSvc::~AdderSvc() {}

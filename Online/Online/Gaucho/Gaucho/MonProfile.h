@@ -39,7 +39,6 @@ public:
 
   void setProfile(TProfile * tProfile);
   TProfile* profile();
-  void deleteProfile();
   
   std::string profileName(){return sName;};
   std::string profileTitle(){return sTitle;};
