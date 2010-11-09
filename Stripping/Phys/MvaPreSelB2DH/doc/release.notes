@@ -4,7 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!=========================== MvaPreSelB2DH v1r1 2010-11-04 ===================
+!=========================== MvaPreSelB2DH v1r1 2010-11-09 ===================
+
+! 2010-11-09 - Juan Palacios
+ - src/B2DHMvaPreSelectionParamTool.cpp
+  . Initialise some pointers. Was preventing slc4 and windows compilation.
 
 -2010-10-15 - Sajan Easo
   Removed the use of the interface to TMVA. Now using the standalone

@@ -32,6 +32,8 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
   : GaudiTool ( type, name , parent ),
     m_distanceCalculator(0),
     m_dva(0),
+    m_B2DHPreselMvaUtilityTool(0),
+    m_B2DHFisherDReader(0),
     m_maxNumPhysicsChannelsToSelect(2),
     m_current_B2DH_channel_Number(0),
     m_classifierName(std::string("Fisher method")),
