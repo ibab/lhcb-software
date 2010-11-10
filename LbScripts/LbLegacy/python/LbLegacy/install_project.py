@@ -17,7 +17,7 @@ from shutil import rmtree
 script_version = '101011'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v5r5"
+lbscripts_version = "v5r6"
 compat_version = None
 #-----------------------------------------------------------------------------------
 
@@ -667,7 +667,7 @@ def checkMD5(url, filenm, dest):
     return isok
 
 def isMD5Valid(url, filename):
-    """ This function checks the validity of the md5 sum file that was 
+    """ This function checks the validity of the md5 sum file that was
         installed from a previous installation """
     pass
 
@@ -781,7 +781,7 @@ except ImportError:
                 binary = b
                 core_name = core_name.replace("_%s" %b, "")
                 break
-    
+
         cptes = core_name.split("_")
         nm = cptes[0]
         from LbConfiguration import Project, Package
@@ -800,7 +800,7 @@ except ImportError:
         else :
             if nm in lcg_tar :
                 name = nm
-                version = cptes[1]       
+                version = cptes[1]
         return name, version, binary
 
 def getProjectList(name, version, binary=None, recursive=True):
@@ -818,7 +818,7 @@ def getProjectList(name, version, binary=None, recursive=True):
         p = LbConfiguration.Package.getPackage(name)
         tar_file = p.tarBallName(version)
     elif name in lcg_tar:
-        tar_file = "_".join([name, version]) 
+        tar_file = "_".join([name, version])
         if binary :
             tar_file += "_%s" % binary
     else:
@@ -899,7 +899,7 @@ def getProjectList(name, version, binary=None, recursive=True):
                     sub_project_list, sub_html_list = getProjectList(s_name, s_version, s_binary)
                     updateProjectList(sub_project_list, project_list)
                     updateHTMLList(sub_html_list, html_list)
-                        
+
     return project_list, html_list
 
 #----------------------------------------------------------------------------------
@@ -1148,7 +1148,7 @@ def getProjectTar(tar_list, already_present_list=None):
                                 shutil.copytree(pack_ver[0] + '_' + pack_ver[1], prodlink)
                                 log.debug("Copying %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
                             else :
-                                log.error("%s is not a directory. Please remove this file" % prodlink)                                
+                                log.error("%s is not a directory. Please remove this file" % prodlink)
                     my_dir = os.path.dirname(this_lhcb_dir)
                     selected_script_dir = os.path.join(prodlink, "InstallArea", "scripts")
                     if not os.path.exists(selected_script_dir) :
@@ -1188,8 +1188,8 @@ def getProjectTar(tar_list, already_present_list=None):
                                     os.symlink(sourcef, targetf)
                                     log.debug("linking %s -> %s" % (targetf, sourcef))
 
-            
-            
+
+
             prj = pack_ver[0]
             if isProjectRegistered(prj) :
                 callPostInstallCommand(prj)
@@ -1345,7 +1345,7 @@ def getVersionList(pname, ver=None):
 
     if pname not in lcg_tar :
         plist = sortStrings(plist, safe=True)
-        
+
     return plist
 
 def listVersions(pname, ver=None):
@@ -2064,7 +2064,7 @@ def untarFile(fname):
 
 def checkBinaryName(binary):
     global make_flag
-    
+
     from LbConfiguration.Platform import NativeMachine, isBinaryOpt, getBinaryDbg, binary_list
 
     log = logging.getLogger()
@@ -2243,8 +2243,8 @@ def main():
             if os.path.exists(fallback_mysiteroot) :
                 thelog.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
                 os.environ["MYSITEROOT"] = fallback_mysiteroot
-    
-    
+
+
     if not os.environ.has_key("MYSITEROOT") :
         thelog.fatal('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
         sys.exit(1)
