@@ -51,7 +51,7 @@ DaVinci().EvtMax     = 500                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "2010"
-
+DaVinci().CondDBtag = 'sim-20101026-vc-md100'
 DaVinci().Simulation    = True
 from Configurables import StoreExplorerAlg, PrintDecayTree
 PrintDecayTree().InputLocations = [ location ] 
@@ -67,6 +67,7 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
 # example data file
 # bsjpsiphi
 DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007386/0000/00007386_00000244_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 
 

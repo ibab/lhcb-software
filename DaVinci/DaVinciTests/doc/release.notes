@@ -8,6 +8,8 @@
 
 ! 2010-11-10 - Juan Palacios
  - Small change in efficiency in davinci.io.test_decaytreetuple.
+ - Add correct CondDB tag to tests/options/DVTestTagging.py. Actually, it
+   is a guess since I don't know where exactly the data comes from.
 
 ! 2010-11-08 - Rob Lambert
  - davinci.fsrs.davinci-dumpfsrs-tofile updated for new FSRs and verbosity
