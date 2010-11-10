@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-11-10 - Vanya Belyaev
+
+ - fix some strange problem
+
 ! 2010-11-09 - Vanya Belyaev
 
  - add new classes to represent the notion of 

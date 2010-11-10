@@ -43,19 +43,12 @@
 #include "Kernel/HitPattern.h"
 #include "Kernel/IReferenceRate.h"
 #include "Kernel/IAccept.h"
+#include "Kernel/Counters.h"
 
-
-// ==============================================================================
-// LHCbKernel
-// ==============================================================================
-#include "Kernel/Counters.h"  // counters 
-// ==============================================================================
 // end include files
 
-namespace 
-{
-  struct _Instantiations 
-  {
+namespace {
+  struct _Instantiations {
     // begin instantiations
     GaudiUtils::VectorMap<int,double>                   m_vector_map_int_double;
     std::pair<LHCb::VeloChannelID,int>                  m_std_pair_VeloChannelID_int;
@@ -79,16 +72,8 @@ namespace
     std::vector<LHCb::VeloPixChannelID>                 m_std_vector_VeloPixChannelID;
     std::vector<LHCb::LHCbID>::const_iterator           m_std_vector_LHCbID_const_iterator;
     std::map<std::pair<int,unsigned int>,unsigned int>  m_L0DUReport_Summaries;
-    //
-    // counters in TES 
-    Gaudi::Counters::Map m_counters_map ;
-    Gaudi::Numbers::Map  m_numbers_map  ;
-    //   end instantiations
+    // end instantiations
   };
-  // ============================================================================
 }
-// ==============================================================================
-//                                                                        The END 
-// ==============================================================================
+
 #endif // DICT_LHCBKERNELDICT_H
-// ==============================================================================

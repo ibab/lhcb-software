@@ -47,16 +47,12 @@
   <class name = "IAccept"                      />
   <class name = "extend_interfaces1<IAlgTool>" />
   
-  
-  <!--- Counters in Transient Store  --> 
-  
-  <class name = "Gaudi::Counter" 
-         guid = "00000096-0000-0000-0000-000000000000" />
-  <class name = "Gaudi::Counters"
-         guid = "00000097-0000-0000-0000-000000000000" />
-  <class name = "Gaudi::Numbers"  
-         guid = "00000098-0000-0000-0000-000000000000" />
-  
+<!-- Counters in TES --> 
+
+  <class name = "Gaudi::Counter"  id = "00000096-0000-0000-0000-000000000000" />
+  <class name = "Gaudi::Counters" id = "00000097-0000-0000-0000-000000000000" />
+  <class name = "Gaudi::Numbers"  id = "00000098-0000-0000-0000-000000000000" />
+
   <class name = "std::pair<std::string,double>"     />
   <class name = "std::pair<std::string,StatEntity>" />  
   <class name = "std::vector<std::pair<std::string,double> >"      />
