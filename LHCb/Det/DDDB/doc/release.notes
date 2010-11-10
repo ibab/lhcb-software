@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2010-11-10 - Marco Cattaneo
+ - Remove default tag for 2010 SIMCOND, added by mistake in last release
+ - Update database tags for SQLDDDB v5r42:
+   . LHCBCOND, 2010, 2009: head-20101106
+
 !========================= DDDB v1r38 2010-10-28 =========================
 ! 2010-10-28 - Rob Lambert
  - Update database tags:
