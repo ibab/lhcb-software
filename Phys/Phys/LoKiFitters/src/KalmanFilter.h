@@ -367,7 +367,7 @@ namespace LoKi
       const Gaudi::SymMatrix3x3&  ci    , 
       const double                chi2  ) ;
     // ========================================================================    
-    /** make one step of Kalman filter from two entries 
+    /** make the special step of Kalman filter from two entries 
      *  @param entry1 (update)       measurements to be updated 
      *  @param entry2 (update)       measurements to be updated 
      *  @param chi2   (input)        the initial chi2 
@@ -378,6 +378,38 @@ namespace LoKi
     StatusCode step 
     ( LoKi::KalmanFilter::Entry&  entry1 ,
       LoKi::KalmanFilter::Entry&  entry2 , 
+      const double                chi2   ) ;
+    // ========================================================================    
+    /** make the special step of Kalman filter from three entries 
+     *  @param entry1 (update)       measurements to be updated 
+     *  @param entry2 (update)       measurements to be updated 
+     *  @param entry3 (update)       measurements to be updated 
+     *  @param chi2   (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode step 
+    ( LoKi::KalmanFilter::Entry&  entry1 ,
+      LoKi::KalmanFilter::Entry&  entry2 , 
+      LoKi::KalmanFilter::Entry&  entry3 , 
+      const double                chi2   ) ;
+    // ========================================================================    
+    /** make the special step of Kalman filter from four entries 
+     *  @param entry1 (update)       measurements to be updated 
+     *  @param entry2 (update)       measurements to be updated 
+     *  @param entry3 (update)       measurements to be updated 
+     *  @param entry4 (update)       measurements to be updated 
+     *  @param chi2   (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode step 
+    ( LoKi::KalmanFilter::Entry&  entry1 ,
+      LoKi::KalmanFilter::Entry&  entry2 , 
+      LoKi::KalmanFilter::Entry&  entry3 , 
+      LoKi::KalmanFilter::Entry&  entry4 , 
       const double                chi2   ) ;
     // ========================================================================    
     /** make one step of Kalman filter 

@@ -346,6 +346,172 @@ StatusCode LoKi::KalmanFilter::step
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+/*  make one step of Kalman filter (similar to seeding)
+ *  @param entry1 (update)       measurements to be updated 
+ *  @param entry2 (update)       measurements to be updated 
+ *  @param entry3 (update)       measurements to be updated 
+ *  @param chi2   (input)        the initial chi2 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-11-10
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::Entry&  entry1   ,
+  LoKi::KalmanFilter::Entry&  entry2   , 
+  LoKi::KalmanFilter::Entry&  entry3   , 
+  const double                chi2     ) 
+{
+  //
+  if ( entry1.m_type != LongLivedParticle  && 
+       entry1.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  if ( entry2.m_type != LongLivedParticle  && 
+       entry2.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  if ( entry3.m_type != LongLivedParticle  && 
+       entry3.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  entry1.m_ci  = entry1.m_vxi ;
+  entry1.m_ci += entry2.m_vxi ; 
+  entry1.m_ci += entry3.m_vxi ; 
+  //
+  entry2.m_ci = entry1.m_ci ;
+  entry3.m_ci = entry1.m_ci ;
+  //
+  /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
+  int ifail = 0 ;
+  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
+  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  entry2.m_c  = entry1.m_c ;
+  entry3.m_c  = entry1.m_c ;
+  
+  /// \f$\vec{x}_k\f$
+  entry1.m_x = entry1.m_c * ( entry1.m_vxi * entry1.m_parx + 
+                              entry2.m_vxi * entry2.m_parx +
+                              entry3.m_vxi * entry3.m_parx ) ;
+  
+  entry2.m_x = entry1.m_x ;
+  entry3.m_x = entry1.m_x ;
+  // OK ! 
+  const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  // OK !
+  const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  // OK ! 
+  const Gaudi::Vector3 dx3 = entry3.m_parx - entry3.m_x ;  
+  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * entry3.m_vxi * dx3 ; 
+
+  //
+  // update chi2 
+  //
+  const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
+  entry1.m_chi2 = chi2          + dchi2_1 ;
+  //
+  const double dchi2_2 = ROOT::Math::Similarity ( entry2.m_vxi , dx2 ) ;
+  entry2.m_chi2 = entry1.m_chi2 + dchi2_2 ;
+  //
+  const double dchi2_3 = ROOT::Math::Similarity ( entry3.m_vxi , dx3 ) ;
+  entry3.m_chi2 = entry2.m_chi2 + dchi2_3 ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  make one step of Kalman filter (similar to seeding)
+ *  @param entry1 (update)       measurements to be updated 
+ *  @param entry2 (update)       measurements to be updated 
+ *  @param entry3 (update)       measurements to be updated 
+ *  @param entry4 (update)       measurements to be updated 
+ *  @param chi2   (input)        the initial chi2 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-11-10
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::Entry&  entry1   ,
+  LoKi::KalmanFilter::Entry&  entry2   , 
+  LoKi::KalmanFilter::Entry&  entry3   , 
+  LoKi::KalmanFilter::Entry&  entry4   , 
+  const double                chi2     ) 
+{
+  //
+  if ( entry1.m_type != LongLivedParticle  && 
+       entry1.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  if ( entry2.m_type != LongLivedParticle  && 
+       entry2.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  if ( entry3.m_type != LongLivedParticle  && 
+       entry3.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  if ( entry4.m_type != LongLivedParticle  && 
+       entry4.m_type != ShortLivedParticle  ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }
+  //
+  entry1.m_ci  = entry1.m_vxi ;
+  entry1.m_ci += entry2.m_vxi ; 
+  entry1.m_ci += entry3.m_vxi ; 
+  entry1.m_ci += entry4.m_vxi ; 
+  //
+  entry2.m_ci = entry1.m_ci ;
+  entry3.m_ci = entry1.m_ci ;
+  entry4.m_ci = entry1.m_ci ;
+  //
+  /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
+  int ifail = 0 ;
+  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
+  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  entry2.m_c  = entry1.m_c ;
+  entry3.m_c  = entry1.m_c ;
+  entry4.m_c  = entry1.m_c ;
+  
+  /// \f$\vec{x}_k\f$
+  entry1.m_x = entry1.m_c * ( entry1.m_vxi * entry1.m_parx + 
+                              entry2.m_vxi * entry2.m_parx +
+                              entry3.m_vxi * entry3.m_parx ) ;
+  
+  entry2.m_x = entry1.m_x ;
+  entry3.m_x = entry1.m_x ;
+  entry4.m_x = entry1.m_x ;
+  // OK ! 
+  const Gaudi::Vector3 dx1 = entry1.m_parx - entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_p.posMomCovMatrix() * entry1.m_vxi * dx1 ; 
+  // OK !
+  const Gaudi::Vector3 dx2 = entry2.m_parx - entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_p.posMomCovMatrix() * entry2.m_vxi * dx2 ; 
+  // OK ! 
+  const Gaudi::Vector3 dx3 = entry3.m_parx - entry3.m_x ;  
+  entry3.m_q = entry3.m_parq - entry3.m_p.posMomCovMatrix() * entry3.m_vxi * dx3 ; 
+  // OK ! 
+  const Gaudi::Vector3 dx4 = entry4.m_parx - entry4.m_x ;  
+  entry4.m_q = entry4.m_parq - entry4.m_p.posMomCovMatrix() * entry4.m_vxi * dx4 ; 
+  
+  //
+  // update chi2 
+  //
+  const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
+  entry1.m_chi2 = chi2          + dchi2_1 ;
+  //
+  const double dchi2_2 = ROOT::Math::Similarity ( entry2.m_vxi , dx2 ) ;
+  entry2.m_chi2 = entry1.m_chi2 + dchi2_2 ;
+  //
+  const double dchi2_3 = ROOT::Math::Similarity ( entry3.m_vxi , dx3 ) ;
+  entry3.m_chi2 = entry2.m_chi2 + dchi2_3 ;
+  //
+  const double dchi2_4 = ROOT::Math::Similarity ( entry4.m_vxi , dx4 ) ;
+  entry4.m_chi2 = entry3.m_chi2 + dchi2_4 ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 // kalman smoothing  
 // ============================================================================
 StatusCode LoKi::KalmanFilter::smooth

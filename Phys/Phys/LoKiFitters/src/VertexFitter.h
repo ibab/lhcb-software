@@ -574,8 +574,12 @@ namespace LoKi
     double                             m_seedZmin        ;
     double                             m_seedZmax        ;
     double                             m_seedRho         ;
-    /// use the special branch for two-body decays 
-    bool m_use_twobody_branch    ; // use the special branch for two-body decays 
+    /// use the special branch for   two-body decays 
+    bool m_use_twobody_branch    ; // use the special branch for   two-body decays 
+    /// use the special branch for three-body decays 
+    bool m_use_threebody_branch  ; // use the special branch for three-body decays 
+    /// use the special branch for  four-body decays 
+    bool m_use_fourbody_branch   ; // use the special branch for  four-body decays 
     /// transport tolerance 
     double m_transport_tolerance ; // the transport tolerance 
     /// # of prints 

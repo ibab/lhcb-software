@@ -157,28 +157,53 @@ StatusCode LoKi::VertexFitter::_iterate
     chi2 = &_chi2 ;
     const Gaudi::Vector3 x0 ( *x ) ;    
     // start the kalman filter 
-    bool done = false ;
+    bool special = false ;
     // A) the simplest case: 2 body fit 
-    if  ( m_use_twobody_branch  && 
-          2 == m_entries.size() && 
-          2 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    if      ( m_use_twobody_branch  && 
+              2 == m_entries.size() && 
+              2 == LoKi::KalmanFilter::nGood ( m_entries ) )  
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
                                       m_entries[1] , *chi2 ) ;
-      if ( sc.isSuccess () ) 
-      {
-        // update the parameters 
-        const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
-        ci   = &last.m_ci   ;
-        x    = &last.m_x    ;
-        chi2 = &last.m_chi2 ;
-        //
-        done = true ;
-      }
-      else { _Warning ( "Error from twobody Kalman step" , sc ) ; }      
+      if ( sc.isSuccess() ) { special = true ; }
+      else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
     }
-    // B) general case (of failure of two-body specialiation) 
-    if  ( !done ) 
+    // B) use three-body branch 
+    else if ( m_use_threebody_branch  && 
+              3 == m_entries.size()   && 
+              3 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    {
+      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
+                                      m_entries[1] ,
+                                      m_entries[2] , *chi2 ) ;
+      if ( sc.isSuccess() ) { special = true ; }
+      else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
+    }
+    // C) use four-body branch 
+    else if ( m_use_fourbody_branch  && 
+              4 == m_entries.size()  && 
+              4 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    {
+      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
+                                      m_entries[1] ,
+                                      m_entries[2] ,
+                                      m_entries[3] , *chi2 ) ;
+      if ( sc.isSuccess() ) { special = true ; }
+      else { _Warning ( "Error from  four-body Kalman step" , sc ) ; }      
+    }
+    //
+    if ( special && sc.isSuccess () ) 
+    {
+      // update the parameters 
+      const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
+      ci   = &last.m_ci   ;
+      x    = &last.m_x    ;
+      chi2 = &last.m_chi2 ;
+    }
+    //
+    // D) general case (of failure of any N-body specialiation) 
+    //
+    if  ( !special || sc.isFailure()  ) 
     {
       for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
       {
@@ -196,6 +221,7 @@ StatusCode LoKi::VertexFitter::_iterate
         chi2 = &entry->m_chi2 ;
       }
     }
+    //
     // kalman smooth
     sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
     if ( sc.isFailure() ) 
@@ -557,8 +583,12 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmin            ( -1.5 * Gaudi::Units::meter      ) 
   , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
-/// Use the special branch for two-body decays 
-  , m_use_twobody_branch  ( false   ) // Use the sepcial branch for two-body decays?
+/// Use the special branch for   two-body decays 
+  , m_use_twobody_branch   ( false   ) // Use the sepcial branch for   two-body decays?
+/// Use the special branch for three-body decays 
+  , m_use_threebody_branch ( false   ) // Use the sepcial branch for three-body decays?
+/// Use the special branch for  four-body decays 
+  , m_use_fourbody_branch  ( false   ) // Use the sepcial branch for  four-body decays?
 /// The transport tolerance  
   , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
 /// number of prints 
@@ -611,6 +641,18 @@ LoKi::VertexFitter::VertexFitter
     ( "DeltaChi2"          ,  
       m_DistanceChi2       , 
       "Delta-chi2     as convergency criterion"    ) ;
+  declareProperty 
+    ( "UseTwoBodyBranch"     , 
+      m_use_twobody_branch   , 
+      "Use the special branch for   two-body decays" ) ;
+  declareProperty 
+    ( "UseThreeBodyBranch"   , 
+      m_use_threebody_branch , 
+      "Use the special branch for three-body decays" ) ;
+  declareProperty 
+    ( "UseFourBodyBranch"    , 
+      m_use_fourbody_branch  , 
+      "Use the special branch for  four-body decays" ) ;
   declareProperty 
     ( "UseTwoBodyBranch"   , 
       m_use_twobody_branch , 

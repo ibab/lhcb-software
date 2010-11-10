@@ -5,6 +5,28 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-10 - Vanya Belyaev
+
+ - VertexFitters: 
+
+     introduce the special branches for 3-body and 4-body decays.
+     each branch contains only one matrix inversion instead of 3(4)
+
+     but I would expect some CPU gain (to be measured) 
+    
+     The actual behavior is under the control of Properties:
+
+    +---------------------+---------------------------------------------+
+    |                     |          The default value                  | 
+    |     Property        +--------------------+------------------------+
+    |                     | LoKi::VertexFitter | LoKi::FastVertexFitter |
+    +---------------------+--------------------+------------------------+
+    | UseTwoBodyBranch    |        false       |         true           |
+    | UseThreeBodyBranch  |        false       |         true           | 
+    | UseFourBodyBranch   |        false       |         true           |
+    +---------------------+--------------------+------------------------+
+ 
+
 ! 2010-11-04 - Vanya Belyaev
 
  - "DistanceCalculators"
@@ -17,7 +39,7 @@
 
            a. decrease the number of 3x3-matrix inversions from 2 to 1 
            b. eilminate the creation of few local (small) matrices 
-           c. [however use two 'matrix-similaryty' operations instead of one]
+           c. [however use two 'matrix-similarity' operations instead of one]
 
      printout: allow a bit more flexible configuration of verbosity
 
