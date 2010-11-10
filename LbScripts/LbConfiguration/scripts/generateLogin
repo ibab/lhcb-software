@@ -71,7 +71,7 @@ def getNativeString(data, varlist, dotbat=False):
     for v in varlist :
         if os.environ.has_key(v) and native_data :
             native_data = fixNativeStringWithVar(native_data, v, varcont=None, dotbat=dotbat)
-    
+
     return native_data
 
 def getNativeWrap(data, shell, offset=0):
@@ -96,7 +96,7 @@ if [[ -n "$%s" ]]; then""" % vartotest
 else"""
             content += offSetString(data, offset=1)
             content += """
-fi"""            
+fi"""
         elif shell == "csh" :
             content += """
 if ( $?%s ) then""" % vartotest
@@ -105,7 +105,7 @@ if ( $?%s ) then""" % vartotest
 else"""
             content += offSetString(data, offset=1)
             content += """
-endif"""            
+endif"""
 
         elif shell == "bat" :
             content += """
@@ -115,7 +115,7 @@ IF DEFINED %s (""" % vartotest
 ) ELSE ("""
             content += offSetString(data, offset=1)
             content += """
-)"""            
+)"""
 
 
     content = offSetString(content, offset)
@@ -125,7 +125,7 @@ IF DEFINED %s (""" % vartotest
 def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", prodlocation=None, offset=0):
 
     data = ShellFileSnippet(base, shell,
-                            targetlocation, args, postargs, 
+                            targetlocation, args, postargs,
                             prodlocation, offset=0)
     wrapped_data = getNativeWrap(data, shell, offset=offset)
     return wrapped_data
@@ -147,43 +147,43 @@ def ShellFileNativeSnippet(base, shell, targetlocation, args = "", postargs="", 
 #        if shell == "sh" :
 #            content += """
 #if [[ -n "$%s" ]]; then""" % vartotest
-#            content += ShellFileSnippet(base, shell, 
-#                                        native_tarloc, args, postargs, 
+#            content += ShellFileSnippet(base, shell,
+#                                        native_tarloc, args, postargs,
 #                                        native_prodloc, offset=1)
 #            content += """
 #else"""
 #            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs, 
+#                                        targetlocation, args, postargs,
 #                                        prodlocation, offset=1)
 #            content += """
-#fi"""            
+#fi"""
 #        elif shell == "csh" :
 #            content += """
 #if ( $?%s ) then""" % vartotest
-#            content += ShellFileSnippet(base, shell, 
-#                                        native_tarloc, args, postargs, 
+#            content += ShellFileSnippet(base, shell,
+#                                        native_tarloc, args, postargs,
 #                                        native_prodloc, offset=1)
 #            content += """
 #else"""
 #            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs, 
+#                                        targetlocation, args, postargs,
 #                                        prodlocation, offset=1)
 #            content += """
-#endif"""            
+#endif"""
 #
 #        elif shell == "bat" :
 #            content += """
 #IF DEFINED %s (""" % vartotest
-#            content += ShellFileSnippet(base, shell, 
-#                                        native_tarloc, args, postargs, 
+#            content += ShellFileSnippet(base, shell,
+#                                        native_tarloc, args, postargs,
 #                                        native_prodloc, offset=1)
 #            content += """
 #ELSE ("""
 #            content += ShellFileSnippet(base, shell,
-#                                        targetlocation, args, postargs, 
+#                                        targetlocation, args, postargs,
 #                                        prodlocation, offset=1)
 #            content += """
-#)"""            
+#)"""
 #
 #    else :
 #        content = ShellFileSnippet(base, shell, targetlocation, args, postargs, prodlocation, offset=0)
@@ -516,7 +516,7 @@ set LbLogin_tmpfile="%TEMP%\LbLogin_tmpsetup.bat"
 """
         if mysiteroot :
             if withoutcache :
-                content = """ 
+                content = """
 python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%*""" % (targetlocation, mysiteroot, version)
             else :
                 content = """
@@ -750,6 +750,9 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
     script = os.path.join(_scripts_dir, "LHCb.%s" % shell)
     prodlink = getProdLink(targetlocation)
     prodlocation = None
+    set_volhcb = None
+    if os.path.basename(targetlocation) == "lib" :
+        set_volhcb = os.path.dirname(targetlocation)
     if prodlink :
         if shell != "bat" :
             prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
@@ -758,6 +761,12 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
     f = open(script, "w")
     content = ""
     if shell == "sh" :
+        if set_volhcb :
+            content += """
+if [[ ! -n "$VO_LHCB_SW_DIR" ]]; then
+  export VO_LHCB_SW_DIR %s
+fi
+""" % set_volhcb
         content += """
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
   lbvers=prod
@@ -783,6 +792,12 @@ fi
 
 """
     elif shell == "csh" :
+        if set_volhcb :
+            content += """
+if (! $?VO_LHCB_SW_DIR ) then
+  setenv VO_LHCB_SW_DIR %s
+endif
+""" % set_volhcb
         content += """
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
   set lbvers=prod
@@ -808,6 +823,12 @@ endif
 
 """
     elif shell == "bat" :
+        if set_volhcb :
+            content += """
+IF NOT DEFINED VO_LHCB_SW_DIR (
+  set VO_LHCB_SW_DIR = %s
+)
+""" % set_volhcb
         content += """
 IF DEFINED HOME (
   IF NOT EXIST %HOME%\.noLHCBLoginscript (
