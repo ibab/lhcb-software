@@ -2304,4 +2304,11 @@
     <logical/>
   </File>
 
+  <File ID="80AFA99B-7AE8-DF11-84CA-000423D986F4">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Test.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

@@ -37,13 +37,13 @@ defaulSettings =  {
         'KaonP'                   : 3000.   ,  # MeV  
         'KaonTrackCHI2pNDOF'      :    5.   , 
         'KaonIPCHI2'              :    4.   , 
-        'KaonPIDKpi'              :    0.   , 
+        'KaonPIDKpi'              :   -5.   , 
         #
         'PionPT'                  :  300.   ,  # MeV
         'PionP'                   : 3000.   ,  # MeV 
         'PionTrackCHI2pNDOF'      :    5.   , 
         'PionIPCHI2'              :    4.   , 
-        'PionPIDpiK'              :    5.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5 
         #
         'KstarComMassW'           :  200.   ,  # MeV  
         'KstarVertexCHI2'         :   25.   , 
@@ -229,8 +229,8 @@ def makeKstar(name,
               KstarMassW
               ):
 
-    _StdTightKaons = DataOnDemand( Location = "Phys/StdTightKaons" )   
-    _StdTightPions = DataOnDemand( Location = "Phys/StdTightPions" )
+    _StdTightKaons = DataOnDemand( Location = "Phys/StdLooseKaons" )   
+    _StdTightPions = DataOnDemand( Location = "Phys/StdLoosePions" )
     
     KaonCut = "(PT> %(KaonPT)s *MeV) & (P>%(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (PIDK>%(KaonPIDKpi)s)" % locals()
     PionCut = "(PT> %(PionPT)s *MeV) & (P>%(PionP)s *MeV) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (PIDK<%(PionPIDpiK)s)" % locals()

@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-10 - Jibo He
+ - StrippingBd2JpsieeKstar.py & StrippingBd2eeKstar.py
+   . PIDK(K), PIDpiK(pi) loosened, retention rates still satisfying the 0.05% requirements 
+
 ! 2010-11-09 - Anton Poluektov
  - StrippingB2DX.py
    * Fixed bug that caused [D->K-K+Pi+]cc candidates to be duplicated (was present in Stripping10 and 11)
