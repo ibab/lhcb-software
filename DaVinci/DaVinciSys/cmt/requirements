@@ -7,6 +7,9 @@ branches doc cmt
 use  DaVinci                 	v26r3   Phys
 use  DaVinciTests               v1r7
 
+# Patches
+use LumiAlgs             v4r1p1  Rec  # Jaap Panman
+
 # Declare this as a container package
 apply_pattern container_package
 
