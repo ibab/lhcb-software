@@ -9,7 +9,7 @@
 findReferenceBlock("""
 Tuple                                                       SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |      1000 |         75 |(  7.50000 +- 0.832917 )%|   -------   |   -------   |
+ |*"#accept"                                       |      1000 |         74 |(  7.40000 +- 0.827792 )%|   -------   |   -------   |
  | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="Tuple")
 findReferenceBlock("""
