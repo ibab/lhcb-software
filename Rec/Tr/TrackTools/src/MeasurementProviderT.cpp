@@ -76,7 +76,7 @@ MeasurementProviderT<T>::MeasurementProviderT( const std::string& type,
                                                const IInterface* parent )
   :  GaudiTool( type, name , parent ),
      m_positiontool(T::positionToolName()),
-     m_det(0)
+     m_det(0), m_clusters(0)
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "UseReference", m_useReference = true );
@@ -96,23 +96,26 @@ StatusCode MeasurementProviderT<T>::initialize()
   sc = m_positiontool.retrieve() ;
   if( sc.isFailure() ) { return Error( "Failed to initialize position tool!", sc ); }
   
+  // make damn sure m_clusters is initialised properly
+  m_clusters = 0;
   // Retrieve the detector element
   m_det = getDet<typename T::DetectorType>( T::defaultDetectorLocation() );
 
-  // reset pointer to list of clusters at beginevent
-  incSvc()->addListener(this, IncidentType::BeginEvent);
+  // reset pointer to list of clusters at end of event (that is the point in
+  // time at which the pointee is supposed to become invalid)
+  incSvc()->addListener(this, IncidentType::EndEvent);
  
   return sc;
 }
 
 //-----------------------------------------------------------------------------
-/// Handle a begin-event incidence: Make sure clusters are reloaded.
+/// Handle a end-event incidence: Make sure clusters are reloaded next time.
 //-----------------------------------------------------------------------------
 
 template <typename T>
 void MeasurementProviderT<T>::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) m_clusters = 0 ;
+  if ( IncidentType::EndEvent == incident.type() ) m_clusters = 0 ;
 }
 
 //-----------------------------------------------------------------------------

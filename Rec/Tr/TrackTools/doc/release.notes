@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-11-10 - Manuel Tobias Schiller
+ - fix uninitialised pointer member in MeasurementProviderT and invalidate
+   that pointer on EndEvent (where the pointee becomes invalid) instead of
+   on BeginEvent
+
 !========================= TrackTools v3r35p2 2010-10-28 =========================
 ! 2010-10-22 - Michel De Cian
  - Added "setFilterPassed" to MuonTTTrack.cpp
@@ -108,7 +113,7 @@
 
 ! 2010-04-06 J Luisier
  - Changed ITIsolatedTackSelector property, allows to have two different cuts
-	 for max number of hits, according to track type.
+    for max number of hits, according to track type.
 
 ! 2010-04-05 - Wouter Hulsbergen
  - Added Backward as track type to TrackSelectorBase
