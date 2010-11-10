@@ -5,6 +5,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v2r2 2010-11-10 ===============
 ! 2010-11-10 - Jibo He
  - StrippingBd2JpsieeKstar.py & StrippingBd2eeKstar.py
    . PIDK(K), PIDpiK(pi) loosened, retention rates still satisfying the 0.05% requirements 
