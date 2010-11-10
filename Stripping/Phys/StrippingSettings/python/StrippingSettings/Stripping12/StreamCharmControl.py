@@ -125,5 +125,6 @@ stream.appendLines( [StrippingD2KS0h_KS02PiPiConf().D2KS0h_KS02PiPi()] )
 from StrippingSelections.StrippingD2hhLTUnbiasedMBNB import StrippingD2hhLTUnbiasedMBNBConf
 stream.appendLines( StrippingD2hhLTUnbiasedMBNBConf().lines() )
 
-
-
+# Vincent Fave
+from StrippingSelections.StrippingDs2piPhiNoPt import StrippingDs2piPhiConf
+stream.appendLines( [ StrippingDs2piPhiConf().line() ] )

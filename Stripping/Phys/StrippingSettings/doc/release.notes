@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ========================== StrippingSettings v1r3 2010-11-10 ================
+
 ! 2010-11-09 - Greig Cowan
  - Added Jpsi2ee lines to Dielectron stream.
 
