@@ -751,8 +751,8 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     set_volhcb = None
-    if os.path.basename(targetlocation) == "lib" :
-        set_volhcb = os.path.dirname(targetlocation)
+    if mysiteroot and os.path.basename(mysiteroot) == "lib" :
+        set_volhcb = os.path.dirname(mysiteroot)
     if prodlink :
         if shell != "bat" :
             prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
@@ -826,7 +826,7 @@ endif
         if set_volhcb :
             content += """
 IF NOT DEFINED VO_LHCB_SW_DIR (
-  set VO_LHCB_SW_DIR = %s
+  set VO_LHCB_SW_DIR=%s
 )
 """ % set_volhcb
         content += """
