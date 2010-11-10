@@ -41,3 +41,12 @@ stream.appendLines( [ Bu2LLKConf._eeKLine() ] )
 from StrippingSelections.StrippingBs2JpsieePhi import StrippingBs2JpsieePhiConf
 stream.appendLines( [ StrippingBs2JpsieePhiConf().UnbiasedPT_line(),
                       StrippingBs2JpsieePhiConf().Signalbox_line() ] )
+
+
+#
+# Lines from flavour WG
+# Jibo He
+#
+from StrippingSelections.StrippingDiElectronNew import DiElectronConf
+FullDSTDiElectronConf = DiElectronConf( config = DiElectronConf.config_default )
+stream.appendLines( FullDSTDiElectronConf.Lines )

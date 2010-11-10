@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-09 - Greig Cowan
+ - Added Jpsi2ee lines to Dielectron stream.
+
 ! 2010-11-08 - Thomas Blake
  - Updated Charm stream definitions after discussion with WG.
 
