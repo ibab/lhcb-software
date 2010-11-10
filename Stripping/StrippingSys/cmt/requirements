@@ -10,8 +10,8 @@ use  CommonParticles             v7r6     Phys   # Patrick Koppenburg, WGs
 ####################################################################
 use  StrippingAlgs               v1r5     Phys   # Anton Poluektov
 use  StrippingConf               v3r9     Phys   # Anton Poluektov
-use  StrippingSelections         HEAD     Phys   # Anton Poluektov
-use  StrippingSettings           HEAD     Phys   # Anton Poluektov
+use  StrippingSelections         v2r2     Phys   # Anton Poluektov
+use  StrippingSettings           v1r3     Phys   # Anton Poluektov
 use  DisplVertices 		 v7r1	  Phys	 # Neal Gauvin
 use  HighPtJets			 v1r2     Phys   # Marcin Kucharczyk
 use  StrippingNeuroBayes         v1r0     Phys   # Ulrich Kerzel
