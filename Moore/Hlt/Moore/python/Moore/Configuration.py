@@ -122,6 +122,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MonitorSvc
         MonitorSvc().disableDimPropServer      = 1
         MonitorSvc().disableDimCmdServer       = 1
+	MonitorSvc().disableMonRate            = 0
 
         app=ApplicationMgr()
         
