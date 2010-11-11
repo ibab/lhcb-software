@@ -34,20 +34,24 @@ def flattenList(tree) :
             flatList.append(member)
     return flatList
 
-def flatSelectionList(selection) :
-    """
-    Return a flat selection list containing all the selections required
-    by selection, in the correct order of execution.
-    """
-    return flattenList(treeSelectionList(selection))
-                                                                        
 def removeDuplicates(obj_list) :
     """
     Remove all but the first instance of an object from the a list.
+    Remove all NoneType instances.
     """
     clean_list = []
     for obj in obj_list :
-        if obj not in clean_list :
+        if obj not in clean_list and obj != None :
             clean_list.append(obj)
     return clean_list
+
+def flatSelectionList(selection) :
+    """
+    Return a flat selection list containing all the selections required
+    by selection, in the correct order of execution. Duplicates are removed,
+    keeping the first one.
+    """
+    return removeDuplicates(flattenList(treeSelectionList(selection)))
+                                                                        
+
                                 

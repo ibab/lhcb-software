@@ -14,6 +14,7 @@ __all__ = ('AutomaticData',
            'AutoData',
            'Selection',
            'FlatSelectionListBuilder',
+           'flatAlgorithmList',
            'NameError',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations',
@@ -267,6 +268,7 @@ class FlatSelectionListBuilder(object) :
     def __init__(self,
                  TopSelection) :
 
+        print 'Warning: FlatSelectionListBuilder deprecated. Please use flatAlgorithmList function instead.'
         _alg = TopSelection.algorithm()
         self.selectionList = []
         if (_alg != None) :
@@ -274,16 +276,14 @@ class FlatSelectionListBuilder(object) :
             _selList = filter(lambda a : type(a) != AutoData, _selList)
             self.selectionList = [sel.algorithm() for sel in _selList]
             self.selectionList = removeDuplicates(self.selectionList)
-
-def removeDuplicates(alg_list) :
+    
+def flatAlgorithmList(selection) :
     """
-    Remove all but the first instance of each algorithm from the list.
+    Return a flat list with all the necessary algorithms for
+    the selection to run.
     """
-    clean_list = []
-    for alg in alg_list :
-        if alg not in clean_list :
-            clean_list.append(alg)
-    return clean_list
+    _selList = flatSelectionList(selection)
+    return  [sel.algorithm() for sel in _selList]
 
 def update_overlap(dict0, dict1) :
     """
@@ -302,8 +302,6 @@ def compatibleSequences( seq0, seq1) :
         if x not in seq1 :
             return False
     return True
-
-
 
 class NameError(Exception) :
     pass

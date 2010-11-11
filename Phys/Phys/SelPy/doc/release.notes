@@ -5,6 +5,16 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-11-11 - Juan Palacios
+ - python/SelPy/utils.py
+  . removeDuplicates removes None elements too. Moved from selection.py
+  . Added flatSelectionList: returns cleaned, duplicate-free flat list of all
+    selections needed by a selection X, including X itself.
+ - python/SelPy/selection.py
+  . Added flatAlgorithmList: return a flat list with all the necessary algorithms (configurables obtained from the algorithm() method) needed for a selection to run. Duplicates and None removed.
+ - cmt/requirements
+  . Increase to v1r5.
+
 !======================== SelPy v1r4 2010-11-02 ==============================
 
 ! 2010-11-02 - Juan Palacios
