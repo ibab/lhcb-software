@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !=========================== MvaPreSelB2DH v1r1 2010-11-09 ===================
+! 2010-11-1 - Sajn Easo
+  - fixed deleting a pointer in B2DHMvaPreSelectionParamTool.cpp
 ! 2010-11-09 - Sajan Easo
   - fixed a compilation problem in B2DHMvaPreSelectionParamTool.cpp
 
