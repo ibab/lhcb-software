@@ -12,7 +12,7 @@ from PhysSelPython.Wrappers import ( Selection,
                                      NameError,
                                      NonEmptyInputLocations,
                                      IncompatibleInputLocations )
-from PhysSelPython.Utils import dummy
+from PhysSelPython.MockStrippingLine import MockStrippingLine as dummy
 
 from SelPy.configurabloids import DummyAlgorithm, DummySequencer
 

@@ -7,6 +7,8 @@ Test suite for SelectionSequence class.
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
+from py.test import raises
+
 sys.path.append('../python')
 
 from PhysSelPython.Wrappers import ( Selection,
@@ -16,6 +18,7 @@ from PhysSelPython.Wrappers import ( Selection,
 from SelPy.configurabloids import ( DummyAlgorithm,
                                     DummySequencer  )
 
+from Configurables import FilterDesktop
 
 class SelectionTree(object) :
     sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),
@@ -249,6 +252,13 @@ def test_remove_duplicates() :
     assert alg_names.index('0.00003') < alg_names.index('1.10001')
     assert alg_names.index('1.10000') < alg_names.index('2.10000')
     assert alg_names.index('1.10001') < alg_names.index('2.10000')
+
+def test_selectionsequence_with_existing_configurable_name_raises() :
+
+    fd = FilterDesktop('SelSeq00')
+    
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    raises(NameError, SelectionSequence, 'SelSeq00', TopSelection = sel00 )
 
 if '__main__' == __name__ :
 

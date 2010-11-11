@@ -7,6 +7,7 @@ from py.test import raises
 sys.path.append('../python')
 from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection, NameError, NonEmptyInputLocations, IncompatibleInputLocations
 from SelPy.configurabloids import DummyAlgorithm, DummySequencer
+from Configurables import FilterDesktop
 
 def test_automatic_data() :
     sel00 = AutomaticData(Location = 'Phys/Sel00x')
@@ -17,8 +18,22 @@ def test_automatic_data() :
 def test_automatic_data_does_not_accept_more_than_one_ctor_argument() :
     raises(TypeError, AutomaticData, 'name', Location = 'Phys/Sel00')
 
+def test_selection_with_existing_configurable_name_raises() :
+    _fd0 = FilterDesktop('_fd0')
+    selFilter = FilterDesktop('SelFilter')
+    raises(NameError, Selection, 'SelFilter', Algorithm=_fd0)
+
+def test_mergedselection_with_existing_configurable_name_raises() :
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    sel02 = AutomaticData(Location = 'Phys/Sel02')
+    sel03 = AutomaticData(Location = 'Phys/Sel03')
+    selFilter = FilterDesktop('MergeFilter')
+    raises(NameError, MergedSelection, 'MergeFilter',
+           RequiredSelections = [sel00, sel01, sel02, sel03] )
+
 def test_automatic_data_with_no_location_raises() :
-     raises(Exception, AutomaticData)
+    raises(Exception, AutomaticData)
 
 def test_merged_selection() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')

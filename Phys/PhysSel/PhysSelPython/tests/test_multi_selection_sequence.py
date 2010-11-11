@@ -7,29 +7,33 @@ Test suite for MultiSelectionSequence class.
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
+from py.test import raises
 sys.path.append('../python')
 
 from PhysSelPython.Wrappers import ( Selection,
                                      SelectionSequence,
                                      MultiSelectionSequence,
-                                     AutomaticData )
+                                     AutomaticData,
+                                     NameError)
 
 from SelPy.configurabloids import ( DummyAlgorithm,
                                     DummySequencer  )
+
+from Configurables import FilterDesktop
 
 def test_instantiate_dataondemand_multi_sequencer() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     sel01 = AutomaticData(Location = 'Phys/Sel01')
     seq00 = SelectionSequence('Seq00x', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01x', TopSelection = sel01)
-    seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
+    seq = MultiSelectionSequence('MultiSeq00x', Sequences = [seq00, seq01])
 
 def test_call_important_methods() :
     sel00 = AutomaticData(Location = 'Phys/Sel00')
     sel01 = AutomaticData(Location = 'Phys/Sel01')
     seq00 = SelectionSequence('Seq00y', TopSelection = sel00)
     seq01 = SelectionSequence('Seq01y', TopSelection = sel01)
-    seq = MultiSelectionSequence('Seq00', Sequences = [seq00, seq01])
+    seq = MultiSelectionSequence('MultiSeq00y', Sequences = [seq00, seq01])
     assert seq.outputLocations() == ['Phys/Sel00', 'Phys/Sel01']
     algs = seq.algos
     seq = seq.sequence()
@@ -45,7 +49,7 @@ def test_instantiate_multi_sequencer() :
                      RequiredSelections = [sel01])
     seq00 = SelectionSequence('Seq000', TopSelection = sel00)
     seq01 = SelectionSequence('Seq001', TopSelection = sel01)
-    seq = MultiSelectionSequence('MultiSeq00', Sequences = [seq00, seq01])
+    seq = MultiSelectionSequence('MultiSeq00z', Sequences = [seq00, seq01])
 
 def test_multi_sequencer_sequences() :
     _sel00 = AutomaticData(Location = 'Phys/Sel00')
@@ -151,6 +155,19 @@ def test_multi_sequencer_sequences() :
     for sel in [sel00_01, sel02_03]:
         assert sel.algorithm() in ref_algosA[len(preselsA):len(ref_algosA)-len(postselsA)]
 
+
+def test_multiselectionsequence_with_existing_configurable_name_raises() :
+
+    fd = FilterDesktop('MultiSeq00')
+    sel00 = AutomaticData(Location = 'Phys/Sel00')
+    sel01 = AutomaticData(Location = 'Phys/Sel01')
+    seq00 = SelectionSequence('SelSeq00x', TopSelection = sel00)
+    seq01 = SelectionSequence('SelSeq01x', TopSelection = sel01)
+    
+    raises(NameError,
+           MultiSelectionSequence,
+           'MultiSeq00',
+           Sequences = [seq00,seq01] )
 
 if '__main__' == __name__ :
 
