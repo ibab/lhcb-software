@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/StrippingUtils
+! Responsible : Juan Palacios
+! Purpose     : Helpers for safely building stripping components.
+!-----------------------------------------------------------------------------
+
+! 2010-11-11 - Juan Palacios
+ - First import.
