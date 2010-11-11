@@ -580,8 +580,8 @@ def getFile(url, fname):
         local_retries = nb_retries + 1
         hasbeendownloaded = False
         while (not hasbeendownloaded and (local_retries > 0)) :
-            log.info("Retrieving %s" % url + "/" +fname)
-            h = retrieve(url + '/' + fname, dest)[1]
+            log.info("Retrieving %s" % url +fname)
+            h = retrieve(url + fname, dest)[1]
             if h.type.find(filetype) == -1:
                 log.warning('cannot download %s - retry' % fname)
                 os.remove(dest)
@@ -1130,7 +1130,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     updateLHCbProjectPath(os.environ["MYSITEROOT"])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
-                    log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    log.info("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
