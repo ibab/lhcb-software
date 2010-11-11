@@ -5,6 +5,19 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2010-11-11 - Juan Palacios
+ - python/PhysSelPython/MockStrippingLine.py
+  . Module containing class to make a pretend stripping line from any
+    kind of Selection-like object.
+ - Move isConfigurable(obj) and configurableExists(str) from PhysSelPython.ConfigurableHospital to PhysSelPython.Utils.
+ - PhysSelPython.Wrappers
+  . Add wrapper for Selection, checking if name is name of a pre-existing 
+    Configurable. 
+  . Add extra name safety to SelectionSequence, MergedSelection, MultiSelectionSequence. Safety consists of checking whether a configurable with the same name of the internally built one already exists. AutomaticData is still unsafe.
+  . Use SelPy.selection.flatAlgorithmList instead of deprecated SelPy.selection.FlatSelectionListBuilder
+ - cmt/requirements
+  . Increase to v5r8.   
+
 !==================== PhysSel/PhysSelPython v5r7 2010-11-02 ================
 
 ! 2010-10-28 - Juan Palacios
