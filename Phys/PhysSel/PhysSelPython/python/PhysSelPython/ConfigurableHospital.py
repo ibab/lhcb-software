@@ -4,22 +4,17 @@
 from GaudiConf.Configuration import allConfigurables
 from GaudiKernel.Configurable import Configurable
 from GaudiKernel.ConfigurableMeta import ConfigurableMeta
+from PhysSelPython.Utils import configurableExists, isConfigurable
 import inspect
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
-__all__ = ('configurableExists',
-           'isConfigurable',
-           'filterConfigurables',
+__all__ = ('filterConfigurables',
            'getConfigurablesFromModule',
            'SaneConfigurable',
            'sanitise')
 
-def configurableExists(name) :
-    return allConfigurables.get(name) != None
 
-def isConfigurable(alg) :
-    return issubclass(type(alg), Configurable) or issubclass(type(alg), ConfigurableMeta)
 
 def isIterable(obj) :
     '''
