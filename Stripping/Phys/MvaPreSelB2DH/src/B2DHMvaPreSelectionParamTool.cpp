@@ -75,7 +75,7 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
 
 
 
-  //     m_B2DHFisherDReader=new TMVA::Reader();
+  //    m_B2DHFisherDReader=new TMVA::Reader();
 
 
 }
@@ -84,7 +84,7 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
 //=============================================================================
 B2DHMvaPreSelectionParamTool::~B2DHMvaPreSelectionParamTool() {
 
-  //  if(m_B2DHFisherDReader) delete m_B2DHFisherDReader;
+    if(m_B2DHFisherDReader) delete m_B2DHFisherDReader;
 
 } 
 //=============================================================================
