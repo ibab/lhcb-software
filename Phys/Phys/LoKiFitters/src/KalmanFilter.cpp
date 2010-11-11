@@ -19,6 +19,10 @@
 // ============================================================================
 #include "CaloUtils/CaloMomentum.h"
 // ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/Child.h"
+// ============================================================================
 /** @file 
  *  Implementation file for functions from namespace LoKi::KalmanFilter
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -203,6 +207,19 @@ StatusCode LoKi::KalmanFilter::loadAsGamma
   LoKi::KalmanFilter::Entry& entry    ) 
 { 
   entry.m_type = LoKi::KalmanFilter::GammaLikeParticle ;
+  entry.m_p0   = &particle ;
+  entry.m_p    =  particle ;
+  //
+  return _update ( entry , entry.m_type ) ;
+}
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::loadAsDiGamma
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ 
+  entry.m_type = LoKi::KalmanFilter::DiGammaLikeParticle ;
   entry.m_p0   = &particle ;
   entry.m_p    =  particle ;
   //
@@ -668,11 +685,27 @@ StatusCode LoKi::KalmanFilter::transport
   //
   if      ( GammaLikeParticle == entry.m_type ) 
   {
-    calo.addCaloPosition ( entry.m_p0->proto() ) ;
+    const LHCb::ProtoParticle* proto = entry.m_p0->proto() ;
+    if ( 0 == proto ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    //
+    calo.addCaloPosition ( proto ) ;
   }
   else if ( DiGammaLikeParticle == entry.m_type ) 
   {
-    /// @todo add the treatment of digammas 
+    // the first gamma  : 
+    const LHCb::Particle*      gamma1 = LoKi::Child::child ( entry.m_p0 , 1 ) ;
+    if ( 0 == gamma1 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    const LHCb::ProtoParticle* proto1 = gamma1 -> proto() ;
+    if ( 0 == proto1 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    // the second gamma :
+    const LHCb::Particle*      gamma2 = LoKi::Child::child ( entry.m_p0 , 2 ) ;
+    if ( 0 == gamma2 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    const LHCb::ProtoParticle* proto2 = gamma2 -> proto() ;
+    if ( 0 == proto2 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    //
+    calo.addCaloPosition ( proto1 ) ;
+    calo.addCaloPosition ( proto2 ) ;
+    //
   }
   //
   const bool ok = calo.evaluate() ;

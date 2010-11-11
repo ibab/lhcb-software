@@ -96,14 +96,17 @@ StatusCode LoKi::VertexFitter::_load
   switch ( particleType ( particle ) ) 
   {
     //
-  case LoKi::KalmanFilter::LongLivedParticle  :
+  case LoKi::KalmanFilter::LongLivedParticle   :
     return LoKi::KalmanFilter::loadAsFlying     ( *particle  , entry ) ; // RETURN 
     //
-  case LoKi::KalmanFilter::ShortLivedParticle : 
+  case LoKi::KalmanFilter::ShortLivedParticle  : 
     return LoKi::KalmanFilter::loadAsShortLived ( *particle  , entry ) ; // RETURN 
     //
-  case LoKi::KalmanFilter::GammaLikeParticle  : 
+  case LoKi::KalmanFilter::GammaLikeParticle   : 
     return LoKi::KalmanFilter::loadAsGamma      ( *particle  , entry ) ; // RETURN 
+    //
+  case LoKi::KalmanFilter::DiGammaLikeParticle : 
+    return LoKi::KalmanFilter::loadAsDiGamma    ( *particle  , entry ) ; // RETURN 
     //
   default:
     return LoKi::KalmanFilter::load             ( *particle  , entry ) ; // RETURN 
@@ -797,10 +800,16 @@ StatusCode LoKi::VertexFitter::finalize()
       log << endmsg ;
     }
     //
-    log << "Gamma-like  particles : " << std::endl ;
-    log << m_gammaLike ;
-    log << endmsg ;
-    //
+    // Gamma
+    if ( !m_gamma_like.empty() ) 
+    {
+      std::vector<LHCb::ParticleID> parts ( m_gamma_like.begin() , 
+                                            m_gamma_like.end  () ) ;
+      
+      log << "Gamma-like   particles : " << m_gammaLike << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
     // GammaC 
     if ( !m_gammaC_like.empty() ) 
     {
@@ -857,8 +866,16 @@ LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
     return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN 
   } 
-  else if ( m_gammaLike  ( p ) )
-  { return LoKi::KalmanFilter::GammaLikeParticle   ; }  // RETURN 
+  else if ( m_digammaLike ( p ) )
+  { 
+    m_digamma_like.insert ( p->particleID () ) ;   
+    return LoKi::KalmanFilter::DiGammaLikeParticle ;    // RETURN 
+  } 
+  else if ( m_gammaLike   ( p ) )
+  { 
+    m_gamma_like.insert   ( p->particleID () ) ;   
+    return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
+  }
   else if ( m_longLived  ( p->particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
   else if ( m_shortLived ( p->particleID () ) )

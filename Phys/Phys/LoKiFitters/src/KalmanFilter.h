@@ -169,7 +169,11 @@ namespace LoKi
       /// Error from CaloMomentum 
       ErrorFromCaloMomentum        = 408 ,  // Error from CaloMomentum
       /// Error from Particle Transporter 
-      ErrorFromParticleTransporter = 410    // Error form particle transporter 
+      ErrorFromParticleTransporter = 410 ,  // Error from particle transporter
+      /// Error in "Gamma-Like" particle  
+      ErrorGammaLikeParticle       = 411 ,   // Error in Gamma-Like particle
+      /// Error in "DiGamma-Like" particle  
+      ErrorDiGammaLikeParticle     = 412     // Error in DiGamma-Like particle
       // ======================================================================
     } ;
     // ========================================================================
@@ -286,14 +290,26 @@ namespace LoKi
      *  Essentially it includes also the proper tarnsformation 
      *  of the covariance matrix of the particle 
      *
-     *  @attention It is not implemented properly yet! 
-     *
      *  @param  particle (input)  the particle to be added 
      *  @param  entry    (output) the resulting entry 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-04
      */
     StatusCode loadAsGamma
+    ( const LHCb::Particle&      particle , 
+      LoKi::KalmanFilter::Entry& entry    ) ;
+    // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
+     *  Essentially it includes also the proper tarnsformation 
+     *  of the covariance matrix of the particle 
+     *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-11
+     */
+    StatusCode loadAsDiGamma
     ( const LHCb::Particle&      particle , 
       LoKi::KalmanFilter::Entry& entry    ) ;
     // ========================================================================
