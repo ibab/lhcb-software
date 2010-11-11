@@ -263,8 +263,15 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
 
   std::string res(response);
 
-  start = res.find(startStr) + sizeof(startStr) - 1;
+  start = res.find(startStr); 
+  if(start == res.npos)
+      throw RetryException("Could not find filename in the RunDB answer");
+  start += sizeof(startStr) - 1;
+
   end = res.find(endStr);
+  if(end == res.npos)
+      throw RetryException("Could not find filename in the RunDB answer");
+
   file = std::string(response, start, end-start);
   
   return file;
@@ -299,8 +306,8 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   start = res.find(startStr);
   if(start == res.npos) 
       throw RetryException("Could not find filename in the RunDB answer");
-
   start = start + sizeof(startStr) - 1;
+
   end = res.find(endStr);
   if(end == res.npos) 
       throw RetryException("Could not find filename in the RunDB answer");
