@@ -15,6 +15,8 @@ use Brunel v37r8p4   Rec
 use RichHPDImageAnalysis   v1r4   Rich
 # Tf/PatVelo to fix DB dependency problems
 use PatVelo   v3r25p1   Tf
+# Tr/TrackTools for an uninitialized pointer
+use TrackTools v3r35p3 Tr
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

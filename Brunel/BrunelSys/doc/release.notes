@@ -4,11 +4,12 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
-</PRE><H1><A NAME=v37r8p4>2010-11-10 Brunel v37r8p4</A></H1><PRE>
+</PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
  Rec v10r5p2 and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, AppConfig v3r*
 
-- This version picks up the Tf/PatVelo fix for DB caching problems
+- This version picks up the Tf/PatVelo fix for DB caching problems,
+  and the Tr/TrackTools fix of an uninitialized pointer
   It replaces v37r8p3 as the winter reprocessing version.
 
 </PRE><H1><A NAME=v37r8p3>2010-11-05 Brunel v37r8p3</A></H1><PRE>
