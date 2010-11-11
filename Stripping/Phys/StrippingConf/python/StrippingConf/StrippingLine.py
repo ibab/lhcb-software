@@ -130,6 +130,8 @@ class bindMembers (object) :
             self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
+	if isinstance(line, str) and line.find("Stream") != 0 : 
+    	    print 'WARNING: line', line, 'uses plain Gaudi configurable', alg.name(), '. Consider using Selection instead!'
         # if not known, blindly copy -- not much else we can do
         self._members += [ alg ]
         # try to guess where the output goes...

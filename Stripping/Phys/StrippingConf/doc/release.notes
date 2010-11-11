@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2010-11-11
+ - python/StrippingConf/StrippingLine.py
+   . Issue warning if plain Gaudi configurable is used to construct StrippingLine
+
 !========================== StrippingConf v3r9 2010-11-04 ===================
 
 ! 2010-11-02 - Juan Palacios
