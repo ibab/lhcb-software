@@ -42,6 +42,7 @@ StrippingReport::StrippingReport( const std::string& name,
   declareProperty("PrintHot", m_printHot = true);
   declareProperty("HotThreshold", m_hotThreshold = 0.5);
   declareProperty("NormalizeByGoodEvents", m_normalizeByGoodEvents = true);
+  declareProperty("Latex", m_latex = false);
 }
 
 //=============================================================================
@@ -98,7 +99,7 @@ void StrippingReport::report(bool onlyPositive) {
 
   char str[128];
   
-  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|%7.7s|%7.7s|%7.7s|", "*Decision name*", "*Rate*", "*Accepted*", "*Mult*","*ms/evt*","*Errs*","*Incds*","*Slow*");
+  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|%7.7s|%7.7s|%7.7s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*","*Errs*","*Incds*","*Slow*");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
 
@@ -107,10 +108,10 @@ void StrippingReport::report(bool onlyPositive) {
     double rate = 0.;
     
     if (m_normalizeByGoodEvents) {
-      if (m_goodEvent > 0) rate = (double)i->decisions/(double)m_goodEvent;
+      if (m_goodEvent > 0) rate = 100.*(double)i->decisions/(double)m_goodEvent;
     }
     else {
-      if (m_event > 0) rate = (double)i->decisions/(double)m_event;
+      if (m_event > 0) rate = 100.*(double)i->decisions/(double)m_event;
     }
 
     if (i->candidates >= 0) {
@@ -119,10 +120,10 @@ void StrippingReport::report(bool onlyPositive) {
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str," |%-51.51s|%8.6f|%10.1d|%7.3f|%8.3f|%7d|%7d|%7d|", outputName.data(), 
+          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|%8.3f|%7d|%7d|%7d|", outputName.data(), 
                   rate, i->decisions, mult, i->avgtime, i->errors, i->incidents, i->slow_events);
         else 
-          sprintf(str," |%-51.51s|%8.6f|%10.1d|%7.3f|        |%7d|%7d|%7d|", outputName.data(), 
+          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|        |%7d|%7d|%7d|", outputName.data(), 
                   rate, i->decisions, mult, i->errors, i->incidents, i->slow_events);
         info() << str << "\n";
       }
@@ -131,9 +132,9 @@ void StrippingReport::report(bool onlyPositive) {
 
       // Not a Selection::Line
       if (i->avgtime > 0) 
-        sprintf(str," |%-51.51s|%8.6f|%10.1d|       |%8.3f|       |       |       |", outputName.data(), rate, i->decisions, i->avgtime);
+        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |%8.3f|       |       |       |", outputName.data(), rate, i->decisions, i->avgtime);
       else 
-        sprintf(str," |%-51.51s|%8.6f|%10.1d|       |        |       |       |       |", outputName.data(), rate, i->decisions);
+        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |        |       |       |       |", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
       
@@ -142,6 +143,59 @@ void StrippingReport::report(bool onlyPositive) {
   info() << endmsg;
 
 }
+
+void StrippingReport::reportLatex(bool onlyPositive) {
+
+  std::vector<ReportStat>::iterator i;
+
+  char str[128];
+  
+  sprintf(str," %51.51s&%8.8s&%10.10s&%7.7s&%8.8s\\\\ \\hline", "Decision name", "Rate, \\%", "Accepted", "Mult","ms/evt");
+
+  info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
+
+  for (i = m_stat.begin(); i != m_stat.end(); i++) {
+
+    double rate = 0.;
+    
+    if (m_normalizeByGoodEvents) {
+      if (m_goodEvent > 0) rate = 100.*(double)i->decisions/(double)m_goodEvent;
+    }
+    else {
+      if (m_event > 0) rate = 100.*(double)i->decisions/(double)m_event;
+    }
+
+    if (i->candidates >= 0) {
+      std::string outputName = i->name;
+      double mult = 0;
+      if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
+      if (i->decisions > 0 || !onlyPositive) {
+        if (i->avgtime > 0) 
+          sprintf(str," %-51.51s&%8.4f&%10.1d&%7.3f&%8.3f\\\\", outputName.data(), 
+                  rate, i->decisions, mult, i->avgtime);
+        else 
+          sprintf(str," %-51.51s&%8.4f&%10.1d&%7.3f&        \\\\", outputName.data(), 
+                  rate, i->decisions, mult);
+        info() << str << "\n";
+      }
+    } else if (i->decisions > 0 || !onlyPositive) {
+      std::string outputName = i->name;
+
+      // Not a Selection::Line
+      if (i->avgtime > 0) 
+        sprintf(str," %-51.51s&%8.4f&%10.1d&       &%8.3f\\\\", outputName.data(), rate, i->decisions, i->avgtime);
+      else 
+        sprintf(str," %-51.51s&%8.4f&%10.1d&       &       \\\\", outputName.data(), rate, i->decisions);
+      info() << str << "\n";
+    }
+      
+  }
+
+  info() << endmsg;
+
+}
+
+
 
 //=============================================================================
 // Main execution
@@ -242,7 +296,13 @@ StatusCode StrippingReport::execute() {
   
   m_goodEvent++;
   
-  if (m_reportFreq > 0 && (m_event % m_reportFreq == 0) ) report(m_onlyPositive);
+  if (m_reportFreq > 0 && (m_event % m_reportFreq == 0) ) { 
+    if (m_latex) {
+      reportLatex(m_onlyPositive);
+    } else { 
+      report(m_onlyPositive);
+    }
+  }
   
   return result;
 }
@@ -255,7 +315,11 @@ StatusCode StrippingReport::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   // Produce selection statistics report (always show all lines, even non-responding)
-  report(false);
+  if (m_latex) {
+    reportLatex(false);
+  } else { 
+    report(false);
+  }
 
   std::vector<ReportStat>::iterator i;
 

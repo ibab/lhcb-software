@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-11-11 - Anton Poluektov 
+ - StrippingReport: option Latex=True/False. 
+   Latex=False (default) - TWiki-style output
+   Latex=True - Latex table output
+
 !======================== StrippngAlgs v1r5 2010-10-04 ========================
 
 ! 2010-10-01 - Anton Poluektov 

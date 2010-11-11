@@ -52,6 +52,7 @@ protected:
 private:
 
   void report(bool onlyPositive);
+  void reportLatex(bool onlyPositive);
 
   std::string m_hdrLocation;     ///< Location of the stripping HltDecReport
   std::vector < std::string > m_selections;  ///< List of selections to report
@@ -62,6 +63,7 @@ private:
   bool m_printHot;               ///< If true, show hot (with rate above threshold) lines
   double m_hotThreshold;         ///< Rate threshold for hot lines
   bool m_normalizeByGoodEvents;  ///< If true, use good event number (after pre-filter) to calculate rates
+  bool m_latex;                  ///< false for TWiki, true for LaTeX style
   
   std::vector < ReportStat > m_stat;
   
