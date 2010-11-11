@@ -453,6 +453,15 @@ void CalibrateIP::SaveBeamLine(){
   p->setMomentum( mom );
   p->setReferencePoint( m_Beam->GetIPPosition() );
 
+  Gaudi::SymMatrix3x3 sigMat;
+  sigMat(0,0) = m_Beam->GetXEigenValue();
+  sigMat(0,1) = 0;
+  sigMat(0,2) = 0;
+  sigMat(1,1) = m_Beam->GetYEigenValue();
+  sigMat(1,2) = 0;
+  sigMat(2,2) = m_Beam->GetZEigenValue();
+  p->setPosCovMatrix( sigMat );
+
   Particles* vec = new Particles();
   vec->insert( p );  
   put( vec, m_outloc );
