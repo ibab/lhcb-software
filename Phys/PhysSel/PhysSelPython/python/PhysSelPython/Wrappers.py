@@ -36,8 +36,9 @@ try :
 except :
     print 'WARNING: Gaudi Configurables not found. No default sequencer type defined.'
 
-from SelPy.selection import ( Selection,
-                              FlatSelectionListBuilder,
+
+
+from SelPy.selection import ( flatAlgorithmList,
                               AutomaticData,
                               NameError,
                               NonEmptyInputLocations,
@@ -45,10 +46,23 @@ from SelPy.selection import ( Selection,
                               update_overlap,
                               SelSequence                )
 
+from SelPy.selection import Selection as Sel
 from SelPy.selection import AutomaticData as autodata
 
 from Configurables import LoKi__VoidFilter as VoidFilter
 from Configurables import FilterDesktop
+from PhysSelPython.Utils import configurableExists
+
+def Selection(name, *args, **kwargs) :
+    """
+    Wrapper around SelPy.Selection. Since SelPy.Selection clones it's input
+    algorithm giving it it's own name, check first whether a configurable
+    with that name already exists and raise a NameError if that is the case.
+    If not, construct and return a SelPy.Selection.
+    """
+    if configurableExists(name) :
+        raise NameError('Configurable '+ name + ' already exists. Pick a new one')
+    return Sel(name, *args, **kwargs)
 
 class AutomaticData(autodata) :
     """
@@ -78,6 +92,7 @@ class AutomaticData(autodata) :
                           name='',
                           Location=Location)
         self._dataType = 'Particles'
+        self._algoName = 'SelFilter'+self._name
     def algorithm(self) :
         return VoidFilter('SelFilter'+self._name,
                           Code = "CONTAINS('"+self.outputLocation()+"/"+self._dataType+"')>0")
@@ -142,14 +157,17 @@ class MergedSelection(object) :
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
-
+        _algName = '_'+ name
+        if configurableExists(_algName) :
+            raise NameError('Configurable '+ name + ' already exists. Pick a new one')
         self._sel = Selection(name,
-                              Algorithm = FilterDesktop('_'+ name,
+                              Algorithm = FilterDesktop(_algName,
                                                         Code='ALL'),
                               RequiredSelections = RequiredSelections,
                               OutputBranch = OutputBranch)
         
-        self.algos = FlatSelectionListBuilder(self._sel).selectionList
+#        self.algos = FlatSelectionListBuilder(self._sel).selectionList
+        self.algos = flatAlgorithmList(self._sel)
 
         self.requiredSelections = []
         self._name = name
@@ -195,9 +213,9 @@ class SelectionSequence(SelSequence) :
     dv = DaVinci()
     dv.UserAlgorithms = [mySelSeq]
 
-    Uses selection.SelSequence and selection.FlatSelectionListBuilder
+    Uses selection.SelSequence and selection.flatAlgorithmList
     help(SelSequence)
-    help(FlatSelectionListBuilder)
+    help(flatAlgorithmList)
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
@@ -213,6 +231,9 @@ class SelectionSequence(SelSequence) :
                              PostSelectionAlgs)
 
         self.gaudiseq = None
+
+        if configurableExists(self.name()) :
+            raise NameError('Configurable '+ self.name() + ' already exists. Pick a new one.')
 
     def sequence(self, sequencerType = _sequencerType) :
         if self.gaudiseq == None :
@@ -250,6 +271,8 @@ class MultiSelectionSequence(object) :
 
     def sequence(self, sequencerType = _sequencerType) :
         if self.gaudiseq == None :
+            if configurableExists(self.name()) :
+                raise NameError('Configurable '+ self.name() + ' already exists. Pick a new one.')
             self.gaudiseq = sequencerType(self.name(),
                                           ModeOR = True,
                                           ShortCircuit = False,
