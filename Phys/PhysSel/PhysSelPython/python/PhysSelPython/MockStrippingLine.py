@@ -35,7 +35,7 @@ class MockStrippingLine(object) :
     >>> sel = Selection('Fred', ....)
     >>> print sel.name(), sel.outputLocation()
     Fred Phys/Fred
-    >>> mockStrippingLineComponents = dummy('StrippingLineFred', sel)
+    >>> mockStrippingLineComponents = MockStrippingLine('StrippingLineFred', sel)
     >>> srtippingSel = mockStrippingLineComponents.selection()
     >>> print strippingSel.name(), strippingSel.outputLocation()
     StrippingLineFred, Phys/StrippingLineFred
@@ -59,11 +59,11 @@ class MockStrippingLine(object) :
 
     def _getMembers(self, selection) :
         selTypeName = type(selection).__name__
-        return dummy._getMemberAlgs.get(selTypeName, _getAlgoList)(selection)
+        return MockStrippingLine._getMemberAlgs.get(selTypeName, _getAlgoList)(selection)
 
     def _getSelection(self, selection, name) :
         selTypeName = type(selection).__name__
-        return dummy._getSelectionAlgs.get(selTypeName, lambda x : x)(selection, name)
+        return MockStrippingLine._getSelectionAlgs.get(selTypeName, lambda x : x)(selection, name)
     
     def outputLocation(self) :
         return self._outputLocation
