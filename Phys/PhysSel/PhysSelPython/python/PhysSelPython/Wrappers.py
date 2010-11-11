@@ -61,7 +61,7 @@ def Selection(name, *args, **kwargs) :
     If not, construct and return a SelPy.Selection.
     """
     if configurableExists(name) :
-        raise NameError('Configurable '+ name + ' already exists. Pick a new one')
+        raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
     return Sel(name, *args, **kwargs)
 
 class AutomaticData(autodata) :
@@ -157,9 +157,11 @@ class MergedSelection(object) :
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
+
         _algName = '_'+ name
         if configurableExists(_algName) :
-            raise NameError('Configurable '+ name + ' already exists. Pick a new one')
+            raise NameError('Target Configurable '+ name + ' already exists. Pick a new one')
+
         self._sel = Selection(name,
                               Algorithm = FilterDesktop(_algName,
                                                         Code='ALL'),
@@ -233,7 +235,7 @@ class SelectionSequence(SelSequence) :
         self.gaudiseq = None
 
         if configurableExists(self.name()) :
-            raise NameError('Configurable '+ self.name() + ' already exists. Pick a new one.')
+            raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
 
     def sequence(self, sequencerType = _sequencerType) :
         if self.gaudiseq == None :
@@ -257,12 +259,16 @@ class MultiSelectionSequence(object) :
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
     def __init__(self, name, Sequences = []) :
+
+        self._name = name
+        if configurableExists(self.name()) :
+            raise NameError('Target Configurable '+ self.name() + ' already exists. Pick a new one.')
         self.sequences = copy(Sequences)
         self.gaudiseq = None
-        self._name = name
         self.algos = []
         for seq in self.sequences :
             self.algos += seq.algos
+        
     def name(self) :
         return self._name
         
@@ -271,8 +277,6 @@ class MultiSelectionSequence(object) :
 
     def sequence(self, sequencerType = _sequencerType) :
         if self.gaudiseq == None :
-            if configurableExists(self.name()) :
-                raise NameError('Configurable '+ self.name() + ' already exists. Pick a new one.')
             self.gaudiseq = sequencerType(self.name(),
                                           ModeOR = True,
                                           ShortCircuit = False,
