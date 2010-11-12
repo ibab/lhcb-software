@@ -104,11 +104,15 @@ StatusCode RichHPDImageSummary::execute()
       for ( Rich::DAQ::HPDMap::const_iterator iHPD = mapHPD.begin();
             iHPD != mapHPD.end(); ++iHPD )
       {
-
         const LHCb::RichSmartID &smartID = (iHPD->second).hpdID();
 
-        if ( !smartID.isValid() ) {
-          if ( m_displayWarnings ) {
+        // Skip inhibited HPDs
+        if ( (iHPD->second).header().inhibit() ) continue;
+
+        if ( !smartID.isValid() ) 
+        {
+          if ( m_displayWarnings ) 
+          {
             Warning(" Invalid Rich Smart ID ").ignore();
           }
           continue;
@@ -119,8 +123,10 @@ StatusCode RichHPDImageSummary::execute()
         const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( smartID );
         TH2D* hist = m_histo[ hpdID.data() ];
 
-        if ( NULL == hist ) {
-          if ( m_displayWarnings ) {
+        if ( NULL == hist ) 
+        {
+          if ( m_displayWarnings ) 
+          {
             Warning(" Can not retrieve boundary FCN, invalid hardware ID ").ignore();
           }
           continue;
@@ -131,6 +137,7 @@ StatusCode RichHPDImageSummary::execute()
         {
           hist->Fill( iHit->pixelCol(), iHit->pixelRow() ) ;
         }
+
       }
     }
   }
