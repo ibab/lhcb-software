@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-12 - Juan Palacios
+ - StrippingSelections.StrippingTrackEffMuonTT, StrippingSelections.StrippingB2D3H
+  . Fixes for code that wan not passing latest PhysSelPython safety enhancements.
+
 ! 2010-11-12 - Greig Cowan
  - Removed import statement from StrippingV0 that was causing nightlies to fail.
 

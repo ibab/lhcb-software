@@ -1659,7 +1659,7 @@ def makeB2D3H( name,
     parentB          : parent B (use either B0 or B+)
     """
     
-    _b2d3h = CombineParticles(name)
+    _b2d3h = CombineParticles('_'+name)
     _b2d3h.DecayDescriptor = decayDesc
     _b2d3h.Preambulo = [ "Z  = VFASPF(VZ)"   ,  
                         "DZ = CHILD(Z,1)-Z" 

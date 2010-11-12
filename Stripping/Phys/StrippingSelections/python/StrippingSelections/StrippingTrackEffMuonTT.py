@@ -324,7 +324,7 @@ def chargeFilter(name, trackAlgo, tisTosAlgo, charge):
     """
     Select plus or minus charge for muonTT or long track
     """
-    Filter = FilterDesktop(name)
+    Filter = FilterDesktop('_' + name)
         
     if(charge == -1):
         Filter.Code = "(Q < 0)"
@@ -342,7 +342,7 @@ def tisTosFilter1(name, flag, trigger):
     Filter to require the candidate is TOS (Hlt1) for the long track muon!
     """
     
-    tisTosFilter1 = TisTosParticleTagger(name)
+    tisTosFilter1 = TisTosParticleTagger('_' + name)
 
     tisTosFilter1.TisTosSpecs = trigger
     tisTosFilter1.NoRegex = True
@@ -364,7 +364,7 @@ def tisTosFilter2(name, trigger, firstFilter):
     Filter to require the candidate is TOS (Hlt2) for the long track muon!
     """
     
-    tisTosFilter2 = TisTosParticleTagger(name)
+    tisTosFilter2 = TisTosParticleTagger('_' + name)
 
     tisTosFilter2.TisTosSpecs = trigger
     tisTosFilter2.NoRegex = True
@@ -404,7 +404,7 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
     
     massWinCombCut = 2 * massWin
     
-    MuonTTResonance = CombineParticles(name)
+    MuonTTResonance = CombineParticles('_'+name)
     MuonTTResonance.DecayDescriptor = decayDescriptor
 
     MuonTTResonance.OutputLevel = 4 
