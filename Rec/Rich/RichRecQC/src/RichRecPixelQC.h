@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.12 2009-08-13 13:22:50 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

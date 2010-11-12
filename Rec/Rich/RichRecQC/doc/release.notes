@@ -4,7 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecQC v2r47 2010-10-28 =========================
+! 2010-11-11 - Chris Jones
+ - Add profile plots showing the average data size version HPD copy number 
+   and L1 logical ID.
+
+!======================== RichRecQC v2r47 2010-10-28 ========================
 ! 2010-10-25 - Chris Jones
  - Improve HPD plots in data size monitoring by including entries when no
    data is sent.
