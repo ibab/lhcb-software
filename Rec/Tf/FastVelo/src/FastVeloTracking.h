@@ -78,8 +78,8 @@ private:
 
   bool   m_onlyForward;
   bool   m_onlyBackward;
-  int    m_minRSensor;
-  bool   m_bestEfficiency;
+  bool   m_HLT1Only;
+  bool   m_HLT2Complement;
   unsigned int m_maxRZForExtra;
   bool   m_stateAtBeam;
 

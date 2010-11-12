@@ -33,6 +33,7 @@ FastVeloTrack::FastVeloTrack(  ) :
   m_y0 = 0.;
   m_tx = 0.;
   m_ty = 0.;
+  m_missedSensors = -1;
 }
 //=============================================================================
 // Destructor
@@ -159,6 +160,8 @@ void FastVeloTrack::setPhiClusters( FastVeloTrack& track,
     m_rHits.push_back( *itH );
   }
   m_zone = track.zone();
+  m_missedSensors = track.nbMissedSensors();
+  m_backward      = track.backward();  
 
   m_phiHits.clear();
   m_sumGlobal = 0.;
@@ -193,6 +196,8 @@ void FastVeloTrack::setPhiClusters( FastVeloTrack& track,
     m_rHits.push_back( *itH );
   }
   m_zone = track.zone();
+  m_missedSensors = track.nbMissedSensors();
+  m_backward      = track.backward();
 
   m_phiHits.clear();
   m_phiHits.push_back( h1 );
@@ -212,6 +217,8 @@ void FastVeloTrack::setPhiClusters( FastVeloHit* r1, int zone,
   m_rHits.clear();
   m_rHits.push_back( r1 );
   m_zone = zone;
+  m_missedSensors = 0;
+  m_backward      = 0;
   m_phiHits.clear();
   m_phiHits.push_back( h1 );
   m_phiHits.push_back( h2 );

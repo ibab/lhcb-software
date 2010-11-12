@@ -51,6 +51,8 @@ StatusCode FastVeloHitManager::initialize() {
   
   // make sure we are up-to-date on populated VELO stations
   registerCondition( m_velo->geometry(), &FastVeloHitManager::rebuildGeometry );
+  registerCondition( (*(m_velo->leftSensorsBegin()))->geometry(), &FastVeloHitManager::rebuildGeometry );
+  registerCondition( (*(m_velo->rightSensorsBegin()))->geometry(), &FastVeloHitManager::rebuildGeometry );
   
   // first update
   sc = updMgrSvc()->update(this);

@@ -29,8 +29,8 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "OnlyForward"     , m_onlyForward    = false );
   declareProperty( "OnlyBackward"    , m_onlyBackward   = false );
-  declareProperty( "MinRSensor"      , m_minRSensor     = 3     );
-  declareProperty( "BestEfficiency"  , m_bestEfficiency = true );
+  declareProperty( "HLT1Only"        , m_HLT1Only       = false );
+  declareProperty( "HLT2Complement"  , m_HLT2Complement = false );
   declareProperty( "MaxRZForExtra"   , m_maxRZForExtra  = 200  );
   declareProperty( "StateAtBeam"     , m_stateAtBeam    = true );
 
@@ -140,25 +140,29 @@ StatusCode FastVeloTracking::execute() {
   double maxZ = m_zVertexMax - 200.;
   if ( m_doTiming ) m_timerTool->stop( m_timePrepare );
 
-  if ( !m_onlyBackward ) {
-    if ( m_doTiming ) m_timerTool->start( m_timeFwd4 );
-    for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
-      if ( m_hitManager->sensor(sensorNb)->z() < minZ ) break;
-      findQuadruplets( sensorNb, true );  // forward
+  //== Find quadruplet, if not HLT2 complement only. Do forward and backward if needed
+  if ( !m_HLT2Complement ) {
+    if ( !m_onlyBackward ) {
+      if ( m_doTiming ) m_timerTool->start( m_timeFwd4 );
+      for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
+        if ( m_hitManager->sensor(sensorNb)->z() < minZ ) break;
+        findQuadruplets( sensorNb, true );  // forward
+      }
+      if ( m_doTiming ) m_timerTool->stop( m_timeFwd4 );
     }
-    if ( m_doTiming ) m_timerTool->stop( m_timeFwd4 );
-  }
-
-  if ( !m_onlyForward ) {
-    if ( m_doTiming ) m_timerTool->start( m_timeBkwd4 );
-    for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
-      if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
-      findQuadruplets( sensorNb, false );  // backward
+    
+    if ( !m_onlyForward ) {
+      if ( m_doTiming ) m_timerTool->start( m_timeBkwd4 );
+      for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
+        if ( m_hitManager->sensor(sensorNb)->z() > maxZ ) break;
+        findQuadruplets( sensorNb, false );  // backward
+      }
+      if ( m_doTiming ) m_timerTool->stop( m_timeBkwd4 );
     }
-    if ( m_doTiming ) m_timerTool->stop( m_timeBkwd4 );
   }
-
-  if ( m_minRSensor < 4 ) {
+  
+  //== Find triplets if not HLT1
+  if ( !m_HLT1Only ) {
     if ( !m_onlyBackward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeFwd3 );
       for ( sensorNb = m_hitManager->lastRSensor(); m_hitManager->firstRSensor()+8 < sensorNb; --sensorNb ) {
@@ -185,7 +189,7 @@ StatusCode FastVeloTracking::execute() {
   }
   if ( m_doTiming ) m_timerTool->stop( m_timeSpace );
 
-  if ( m_bestEfficiency &&
+  if ( !m_HLT1Only &&
        m_maxRZForExtra > m_tracks.size() &&
        m_tracks.size() * 0.5 <  m_spaceTracks.size() ) {
     if ( m_doTiming ) m_timerTool->start( m_timeUnused );
@@ -537,7 +541,6 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           newTrack.addRHit( *c2 );
           newTrack.setBackward( !forward );
 
-
           int nMiss = extendTrack( newTrack, sensor2, zone, forward );
           newTrack.setMissedSensors( nMiss );  // store the number of missed stations to put on LHCb::Track later
           if ( 1 >= newTrack.nbRHits() - newTrack.nbUsedRHits() ) {
@@ -666,6 +669,9 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       printCoords( (*itT).rHits(),   "Stored R   " );
       printCoords( (*itT).phiHits(), "Stored Phi " );
     }
+    //== Add the number of found + missed R hits. Note that 'missed' is incomplete as we stop
+    //== searching missed sensors after the maximum number of missed sensors has been reached.
+    newTrack->addInfo( LHCb::Track::nPRVelo3DExpect, (*itT).nbRHits() + (*itT).nbMissedSensors() );
 
     double zMin = 1.e9;
     double zMax = -1.e9;

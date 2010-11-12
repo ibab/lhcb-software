@@ -4,6 +4,13 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-11-12 - Olivier Callot
+ - Fix the update of the geometry, on sensor's geometry, not whole Velo.
+ - New control flags HLT1Only and HLT2Complement to setup the tracking in 
+   HLT1 and the complement in HLT2. Result of the sequence is almost identical
+   to running FastVeloTracking only once completely.
+ - Add the number of expected R sensors on track. 
+
 ! 2010-10-20 - Olivier Callot
  - Change the option file name to define the output, for HLT compatibility
 
