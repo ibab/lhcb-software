@@ -25,11 +25,11 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingSelections.Utils import checkConfig
+from StrippingUtils import LineBuilder
 
 name = "Bs2JpsiPhiPrescaled"
 
-class Bs2JpsiPhiPrescaledAndDetatchedConf(object) :
+class Bs2JpsiPhiPrescaledAndDetatchedConf(LineBuilder) :
     """
     Builder of pre-scaled Bs->JpsiPhi stripping Selection and StrippingLine.
     Constructs Bs -> J/Psi Phi Selections and StrippingLines from a configuration dictionary.
@@ -65,12 +65,9 @@ class Bs2JpsiPhiPrescaledAndDetatchedConf(object) :
                               'DetatchedLinePostscale'
                               )
 
-    def __init__(self, 
-                 name = 'Bs2JpsiPhi',
-                 config = None) :
+    def __init__(self, name, config) :
 
-        checkConfig(Bs2JpsiPhiPrescaledAndDetatchedConf.__configuration_keys__,
-                    config)
+        LineBuilder.__init__(self, name, config)
 
         prescaled_name = name+'Prescaled'
         detatched_name = name+'Detatched'
@@ -104,7 +101,9 @@ class Bs2JpsiPhiPrescaledAndDetatchedConf(object) :
                                             algos = [ self.selBs2JpsiPhiDetatched ]
                                             )
 
-        self.lines = [self.prescaled_line, self.detatched_line]
+        self.registerLine(self.prescaled_line)
+        self.registerLine(self.detatched_line)
+
 
 def makePhi2KK(name, PhiPT) :
     """

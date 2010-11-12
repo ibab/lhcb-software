@@ -6,6 +6,14 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-11-12 - Juan Palacios
+ - Use new package Phys/StrippingUtils with LineBuilder base class and
+   testing tools.
+ - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py
+  . Inherits from StrippingUtils.LineBuilder.
+ - Add tests/test_bs2jpsiphi_prescaled_and_detatched.py, using new test tools
+   from StrippingUtils.
+
+! 2010-11-12 - Juan Palacios
  - StrippingSelections.StrippingTrackEffMuonTT, StrippingSelections.StrippingB2D3H
   . Fixes for code that wan not passing latest PhysSelPython safety enhancements.
 
