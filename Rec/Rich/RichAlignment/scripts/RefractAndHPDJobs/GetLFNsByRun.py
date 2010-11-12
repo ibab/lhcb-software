@@ -30,6 +30,16 @@ month    = int(args[1])
 startday = int(args[2])
 endday   = int(args[3])
 
+if 2009 == year :
+  ConfigV = 'Collision09'
+elif 2010 == year :
+  ConfigV = 'Collision10'
+elif 2011 == year :
+  ConfigV = 'Collision11'
+else:
+  print 'Unknown year', year
+  DIRAC.exit(2)
+
 firstDate = getDate(year,month,startday)
 lastDate  = getDate(year,month,endday)
 print "Creating run list for period",firstDate,"to",lastDate
@@ -70,13 +80,14 @@ for day in range(startday,endday):
     for run in runs :
 
       type = 91000000 # EXPRESS Stream
+      if year == 2009 : type = 90000000 # Use full stream for 2009
       if run > 77595 and run < 77624 :
         print "Warning : run", run, "had no EXPRESS stream :( Using FULL instead"
         type = 90000000 # FULL Stream
   
       # Raw files
       bkDict = {'ConfigName'           : 'LHCb',
-                'ConfigVersion'        : 'Collision10',
+                'ConfigVersion'        : ConfigV,
                 'ProcessingPass'       : procpass,
                 'FileType'             : 'ALL',
                 'StartRun'             : run,

@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+import pickle, bz2
+
 def usage():
   print 'Usage: %s <datafile>' %(Script.scriptName)
 
@@ -13,9 +15,8 @@ if len(args) < 1:
 
 filename = str(args[0])
 
-file = open(filename,"r")
+file = bz2.BZ2File(filename,"r")
 
-import pickle
 data = pickle.load(file)
  
 file.close()
