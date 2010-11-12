@@ -5,10 +5,16 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-12 - Vanya Belyaev
+
+ - add base class ParticleClassifier 
+ - remove BlindVertexfitter 
+
+
 ! 2010-11-11 - Vanya Belyaev
 
 
- - Kalmanfilter & LoKi::(Fast)VertexFitter : 
+ - KalmanFilter & LoKi::(Fast)VertexFitter : 
 
     Implement the treatment of "di-gamma-like" particles in the vertex fitters.
     The list of di-gamma-lke patters is specified via property  "DiGammaDecays"

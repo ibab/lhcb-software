@@ -10,10 +10,6 @@
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 // ============================================================================
-// GaudiAlg 
-// ============================================================================
-#include "GaudiAlg/GaudiTool.h"
-// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -606,22 +602,6 @@ LoKi::VertexFitter::VertexFitter
   , m_cmom1   (   ) 
   , m_mpcov   (   ) 
   , m_mm_c    (   )
-/// particle classification: 
-  , m_ppSvc               (  0      ) 
-  , m_longLived           (         ) 
-  , m_shortLived          (         ) 
-  , m_gammaLike           ( "gamma" )
-  , m_gammaCLike          ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
-  , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
-//
-  , m_dd_gammaC  (" gamma -> e+ e- ")
-  , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
-///
-  , m_unclassified  ()
-  , m_gamma_like    ()
-  , m_gammaC_like   ()
-  , m_digamma_like  ()
-///
 {
   // ==========================================================================
   declareProperty 
@@ -687,15 +667,6 @@ LoKi::VertexFitter::VertexFitter
       m_transporterName  , 
       "The typename of tranporter to bee used" ) ;
   // ==========================================================================
-  declareProperty 
-    ( "GammaCDecays"  , 
-      m_dd_gammaC     , 
-      "The gammaC-decays" ) ;
-  declareProperty 
-    ( "DiGammaDecays" , 
-      m_dd_digamma    , 
-      "The di-gamma-decays" ) ;
-  // ==========================================================================
 } 
 // ============================================================================
 // desctructor 
@@ -706,69 +677,11 @@ LoKi::VertexFitter::~VertexFitter(){}
 // ============================================================================
 StatusCode LoKi::VertexFitter::initialize() 
 {
-  StatusCode sc = GaudiTool::initialize() ;
+  /// initialize the base class 
+  StatusCode sc = LoKi::ParticleClassificator::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
+  //
   svc<IService>( "LoKiSvc" , true ) ;
-  
-  // get particle property service 
-  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true );
-  // validate  
-  sc = m_longLived.validate  ( m_ppSvc ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Long-Lived  particles" , sc ) ; }
-  sc = m_shortLived.validate ( m_ppSvc ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
-  sc = m_gammaLike.validate  ( m_ppSvc ) ;
-  if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Gamma-Like  particles" , sc ) ; }
-  //
-  const StatusCode ok = StatusCode( StatusCode::SUCCESS , true ) ;
-  //
-  // GammaC ? 
-  //
-  if ( !m_dd_gammaC.empty() )
-  { 
-    // construct gamma_c descriptor
-    Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
-    //
-    m_gammaCLike =  decay->tree ( m_dd_gammaC ) ;
-    if ( !m_gammaCLike.valid() )   
-    { return Error ( "Unable to decode Gamma_c: '" + m_dd_gammaC  + "'" ) ; }
-    //
-    debug () << " Gamma_c  descriptor : " << m_gammaCLike << endmsg ;
-    //
-    release ( decay ) ;
-  }
-  else 
-  {
-    // disable gamma_c treatment
-    m_gammaCLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
-    m_gammaCLike = Decays::Trees::Not_<const LHCb::Particle*>( m_gammaCLike ) ;
-    Warning ( "The special treatment of Gamma_c is disabled" , ok ) ;
-  }
-  //
-  // DiGamma  ? 
-  //
-  if ( !m_dd_digamma.empty() )
-  { // construct digamma descriptors
-    Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
-    //
-    m_digammaLike =  decay->tree ( m_dd_digamma ) ;
-    if ( !m_digammaLike.valid() ) 
-    { return Error ( "Unable to decode DiGamma: '" + m_dd_digamma + "'" ) ; }
-    //
-    debug () << " Di-Gamma descriptor : " << m_digammaLike << endmsg ;
-    //
-    release ( decay ) ;
-  }
-  else 
-  {
-    // disable gamma_c treatment
-    m_digammaLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
-    m_digammaLike = Decays::Trees::Not_<const LHCb::Particle*>( m_digammaLike ) ;
-    Warning ( "The special treatment of DiGamma is disabled" , ok ) ;
-  }
   //
   if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
   {
@@ -781,110 +694,8 @@ StatusCode LoKi::VertexFitter::initialize()
 // ========================================================================
 // the standard finalization of the tool 
 // ========================================================================
-StatusCode LoKi::VertexFitter::finalize() 
-{
-  // reset particle property service & functors 
-  if ( msgLevel ( MSG::DEBUG ) ) 
-  {
-    MsgStream& log = debug () ;
-    if ( !m_shortLived.accepted().empty() ) 
-    {
-      log << "Short-Lived particles : " << std::endl ;
-      LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
-      log << endmsg ;
-    }
-    if ( !m_longLived.accepted().empty() ) 
-    {
-      log << "Long-Lived  particles : " << std::endl ;
-      LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
-      log << endmsg ;
-    }
-    //
-    // Gamma
-    if ( !m_gamma_like.empty() ) 
-    {
-      std::vector<LHCb::ParticleID> parts ( m_gamma_like.begin() , 
-                                            m_gamma_like.end  () ) ;
-      
-      log << "Gamma-like   particles : " << m_gammaLike << std::endl ;
-      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
-      log << endmsg ;
-    }
-    // GammaC 
-    if ( !m_gammaC_like.empty() ) 
-    {
-      std::vector<LHCb::ParticleID> parts ( m_gammaC_like.begin() , 
-                                            m_gammaC_like.end  () ) ;
-      
-      log << "GammaC-like   particles : " << m_gammaCLike << std::endl ;
-      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
-      log << endmsg ;
-    }
-    // DiGamma 
-    if ( !m_digamma_like.empty() ) 
-    {
-      std::vector<LHCb::ParticleID> parts ( m_digamma_like.begin() , 
-                                            m_digamma_like.end  () ) ;
-      
-      log << "DiGamma-like  particles : " << m_digammaLike << std::endl ;
-      LHCb::ParticleProperties::printAsTable ( parts , log , m_ppSvc ) ;
-      log << endmsg ;
-    }
-    //
-  }
-  //
-  if ( !m_unclassified.empty() ) 
-  {
-    MsgStream& log = warning() ;
-    std::vector<LHCb::ParticleID> tmp ( m_unclassified.begin() , 
-                                        m_unclassified.end  () ) ;
-    log << "Unclassified particles : " << std::endl ;
-    LHCb::ParticleProperties::printAsTable ( tmp , log , m_ppSvc ) ;
-    log << endmsg ;      
-  }
-  // 
-  m_ppSvc = 0 ;
-  m_shortLived . setService ( m_ppSvc ) ;
-  m_longLived  . setService ( m_ppSvc ) ;
-  m_gammaCLike   = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
-  m_digammaLike  = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
-  //
-  return GaudiTool::finalize () ;
-}
-// ============================================================================
-// get the particle type 
-// ============================================================================
-LoKi::KalmanFilter::ParticleType 
-LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const 
-{
-  //
-  if      ( 0 == p ) 
-  { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
-  else if ( m_gammaCLike ( p ) )
-  { 
-    m_gammaC_like.insert ( p->particleID () ) ;
-    // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
-    return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN 
-  } 
-  else if ( m_digammaLike ( p ) )
-  { 
-    m_digamma_like.insert ( p->particleID () ) ;   
-    return LoKi::KalmanFilter::DiGammaLikeParticle ;    // RETURN 
-  } 
-  else if ( m_gammaLike   ( p ) )
-  { 
-    m_gamma_like.insert   ( p->particleID () ) ;   
-    return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
-  }
-  else if ( m_longLived  ( p->particleID () ) ) 
-  { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
-  else if ( m_shortLived ( p->particleID () ) )
-  { return LoKi::KalmanFilter::ShortLivedParticle  ; }  // RETURN 
-  //
-  m_unclassified.insert ( p->particleID() ) ;
-  //
-  return LoKi::KalmanFilter::UnspecifiedParticle ;
-}
+StatusCode LoKi::VertexFitter::finalize()
+{ return LoKi::ParticleClassificator::finalize () ; }
 // ============================================================================
 // transport the data to a certain position 
 // ============================================================================

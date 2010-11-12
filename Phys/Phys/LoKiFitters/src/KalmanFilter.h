@@ -500,7 +500,7 @@ namespace LoKi
     /** check if the collection of entries is OK for vertex:
      *   - either at least one short-lived particle 
      *   - or at least two long-lived particles 
-     *  @return true of colelction of entries is OK 
+     *  @return true of collection of entries is OK 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-24
      */   

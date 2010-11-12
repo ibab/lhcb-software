@@ -14,10 +14,6 @@
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 // ============================================================================
-// GaudiAlg
-// ============================================================================
-#include "GaudiAlg/GaudiTool.h"
-// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -27,16 +23,6 @@
 // ============================================================================
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleTransporter.h"
-#include "Kernel/IParticlePropertySvc.h"
-// ============================================================================
-// PartProp
-// ============================================================================
-#include "Kernel/NodesPIDs.h"
-// ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/IDecay.h"
-#include "LoKi/Trees.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -49,7 +35,21 @@
 // ============================================================================
 // Local 
 // ============================================================================
-#include "KalmanFilter.h"
+#include "ParticleClassificator.h"
+// ============================================================================
+/** @file 
+ *
+ *  This file is a part of 
+ *  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+ *  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *   By usage of this code one clearly states the disagreement 
+ *    with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2006-05-24
+ */
 // ============================================================================
 namespace LoKi
 {
@@ -174,14 +174,11 @@ namespace LoKi
    *  - \f$ G_{p}^{-1} = V_{p} - V^T_{xp}V^{-1}_{x}V_{xp} \f$ 
    *  - \f$ G^{-1}G^T_{xp} = -V^T_{xp}V^{-1}_{x}          \f$ 
    *
-   * 
-   *  @todo LoKi::VertexFitter still unable to deal with photons 
-   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-05-24
    */
   // ==========================================================================
-  class VertexFitter : public extends1<GaudiTool,IVertexFit> 
+  class VertexFitter : public extends1<ParticleClassificator,IVertexFit> 
   {
     // ========================================================================
     /// the friend factory for instantiation 
@@ -551,9 +548,6 @@ namespace LoKi
       return m_transporter ;
     } 
     // ========================================================================
-    /// get the particle type 
-    LoKi::KalmanFilter::ParticleType particleType ( const LHCb::Particle* p ) const ;
-    // ========================================================================
   private:
     // ========================================================================
     /// maximal number of iterations for the vertex fit 
@@ -600,34 +594,6 @@ namespace LoKi
     mutable Gaudi::Matrix4x3           m_mpcov    ;
     // for measured mass 
     mutable Gaudi::SymMatrix4x4        m_mm_c     ;
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// particle property service 
-    mutable const LHCb::IParticlePropertySvc* m_ppSvc        ;
-    /// Long-lived particles 
-    mutable Decays::Nodes::LongLived_         m_longLived    ;
-    /// Short-lived particles 
-    mutable Decays::Nodes::ShortLived_        m_shortLived   ;
-    /// Gamma-like particles 
-    mutable Decays::Trees::Stable_<const LHCb::Particle*> m_gammaLike    ;
-    /// GammaC-like particles (gamma-> e+ e-)
-    mutable Decays::IDecay::Tree              m_gammaCLike   ;
-    /// Di-Gamma-like particles ( pi0 -> gamma gamma , eta -> gamma gamma ) 
-    mutable Decays::IDecay::Tree              m_digammaLike  ;
-    // ========================================================================
-    /// decay descriptor for gammaC-like particles:
-    std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
-    /// decay descriptor for di-gamma-like particles:
-    std::string m_dd_digamma ;  // decay descriptor for di-gamma-like particles
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// Unclassified particles 
-    mutable std::set<LHCb::ParticleID>        m_unclassified ;
-    mutable std::set<LHCb::ParticleID>        m_gamma_like   ;
-    mutable std::set<LHCb::ParticleID>        m_gammaC_like  ;
-    mutable std::set<LHCb::ParticleID>        m_digamma_like ;
     // ========================================================================
   } ;
   // ==========================================================================
