@@ -504,10 +504,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
         return d
 
 
-
-from HltLine.HltLine import prnt , len1
-
-
 def __enroll__ ( self       ,   ## the object
                  level = 0  ,   ## the recursion level
                  lst   = [] ) : ## the major properties  
