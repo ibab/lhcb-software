@@ -5,6 +5,10 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-11-12 - Juan Palacios
+ - python/SelPy/selection.py
+  . Use flatSelectionList function.
+
 ! 2010-11-11 - Juan Palacios
  - python/SelPy/utils.py
   . removeDuplicates removes None elements too. Moved from selection.py

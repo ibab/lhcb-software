@@ -212,7 +212,8 @@ class SelSequence(object) :
         self.algos = copy(EventPreSelector)
         self._name = name
         self._topSelection = TopSelection
-        self.algos += FlatSelectionListBuilder(TopSelection).selectionList
+#        self.algos += FlatSelectionListBuilder(TopSelection).selectionList
+        self.algos += flatAlgorithmList(TopSelection)
         self.algos += PostSelectionAlgs
         
     def name(self) :
