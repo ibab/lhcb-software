@@ -28,15 +28,24 @@ def checkConfig(reference_keys, configuration) :
 
 
 class LineBuilder(object) :
+
+    """
+
+    """
+
+    __config_keys__ = []
+
     def __init__(self, 
                  name,
-                 config,
-                 config_keys) :
+                 config) :
         
-        checkConfig(config_keys,
+        checkConfig(self._configKeys(),
                     config)
 
         self._lines = []
+
+    def _configKeys(self) :
+        return self.__config_keys__
 
     def registerLine(self, line) :
         self.checkLine(line)
