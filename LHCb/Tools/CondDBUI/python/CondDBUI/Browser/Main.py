@@ -10,28 +10,36 @@ __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 from os import environ as env
 __lfc_replica_svc__ = 'CORAL_LFC_BASEDIR' in env and 'LFC_HOST' in env and not 'COOL_IGNORE_LFC' in env
 
-from os.path import isdir
+from os.path import isdir, exists, join
 __pit_special_dir__ = "/group/online/condb_viewer"
 __pit_environment__ = isdir(__pit_special_dir__)
 if __pit_environment__:
     env["CORAL_DBLOOKUP_PATH"] = env["CORAL_AUTH_PATH"] = __pit_special_dir__
 
 
+__default_option_files__ = [
+    "$SQLDDDBROOT/options/SQLDDDB.py",
+    "$VETRAROOT/options/Velo/VeloCondDB.py"
+    ]
+
+import logging
+
 ## Imports an options file to find the configured conditions databases.
 #  @return A dictionary associating names (of the services) to connection strings.
-def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py"):
+def getStandardConnectionStrings(optionFiles):
     from Gaudi.Configuration import importOptions, allConfigurables
     from GaudiKernel.ProcessJobOptions import ParserError
     # output dictionary
     data = {}
-    try:
-        importOptions(optionFile)
-        for name in allConfigurables:
-            if hasattr(allConfigurables[name],"ConnectionString"):
-                data[name] = allConfigurables[name].ConnectionString
-    except ParserError:
-        # Ignore errors from the parser (e.g. file not found)
-        pass
+    for o in optionFiles:
+        try:
+            importOptions(o)
+        except ParserError, x:
+            # Ignore errors from the parser (e.g. file not found)
+            logging.info("Problems importing %s: %s", o, x)
+    for name in allConfigurables:
+        if hasattr(allConfigurables[name],"ConnectionString"):
+            data[name] = allConfigurables[name].ConnectionString
     # If we are at the PIT or we can use the offline Oracle ...
     if __pit_environment__ or __lfc_replica_svc__:
         # ... add Oracle connection strings explicitly
@@ -78,14 +86,23 @@ def main(argv = []):
     parser = OptionParser(usage = "%prog [Qt-options] [options] [database]")
     parser.add_option("--rw", action = "store_true",
                       help = "Open the database specified in the command line in read/write mode")
-    parser.set_defaults(rw = False)
+    parser.add_option("--options", action = "append",
+                      dest = "option_files",
+                      help = "Option files to be used to detect the standard databases (can be specified multiple times")
+    parser.add_option("--verbose", action = "store_true",
+                      help = "Increase verbosity")
+    parser.set_defaults(rw = False,
+                        option_files = __default_option_files__)
+    
     opts, args = parser.parse_args(argv[1:])
     
+    logging.basicConfig(level = opts.verbose and logging.INFO or logging.WARNING)
+
     if len(args) > 1:
         parser.error("Only one database can be specified on the command line (see --help).")
 
     mw = MainWindow()
-    mw.setDefaultDatabases(getStandardConnectionStrings())
+    mw.setDefaultDatabases(getStandardConnectionStrings(opts.option_files))
     
     # Use the first (and only) argument as name of the database to open
     if args:

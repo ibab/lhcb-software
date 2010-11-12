@@ -5,6 +5,12 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-11-12 - Marco Clemencic
+ - Added the possibility of specifying extra option files to CondDBBrowser
+   (used to provide the list of "standard" databases).
+ - Added VetraCondDB.py to the default list of option files to import by
+   default. (fixes bug #73085)
+
 !========================= CondDBUI v3r5p1 2010-10-25 =========================
 
 ! 2010-10-07 - Marco Clemencic
