@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-11-12 - Chris Jones
+ - Add new methods to DeRichSystem to :-
+  + Provide access to the vector of inactive HPDRichSmartIDs
+  + Prove a new method to get the L1 Copy Number from a hardware ID
+
 !========================= RichDet v15r1 2010-10-25 =========================
 
 ! 2010-10-16 - Chris Jones

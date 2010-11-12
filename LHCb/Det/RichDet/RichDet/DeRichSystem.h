@@ -38,7 +38,6 @@ extern const CLID CLID_DERichSystem;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   27/01/2006
- *
  */
 class DeRichSystem: public DeRichBase
 {
@@ -103,6 +102,9 @@ public:
   /// Returns a list of all active HPDs identified by their RichSmartID
   const LHCb::RichSmartID::Vector & activeHPDRichSmartIDs() const;
 
+  /// Returns a list of all inactive HPDs identified by their RichSmartID
+  const LHCb::RichSmartID::Vector & inactiveHPDRichSmartIDs() const;
+
   /// Returns a list of all active HPDs identified by their hardware IDs
   const Rich::DAQ::HPDHardwareIDs & activeHPDHardwareIDs() const;
 
@@ -159,6 +161,12 @@ public:
    *  @return The corresponding HPD Level1 logical ID
    */
   const Rich::DAQ::Level1LogicalID level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const;
+
+  /** Obtain the Level1 logical ID number for a Level1 hardware ID
+   *  @param hardID The hardware ID for the HPD
+   *  @return The corresponding HPD Level1 logical ID
+   */
+  const Rich::DAQ::Level1CopyNumber copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const;
 
   /** Obtain the Level1 input number for a given HPD RichSmartID
    *  @param smartID The RichSmartID for the HPD
@@ -300,6 +308,10 @@ private: // data
   typedef GaudiUtils::HashMap< const Rich::DAQ::HPDCopyNumber, LHCb::RichSmartID > CopyNToSmartID;
   CopyNToSmartID m_copyNumber2smartid;
 
+  /// L1 Logical ID to L1 Copy Number
+  typedef GaudiUtils::HashMap< const Rich::DAQ::Level1HardwareID, Rich::DAQ::Level1CopyNumber > L1HIDToCopyN;
+  L1HIDToCopyN m_l1H2CopyN;
+
   /// Rich1 & Rich2 detector elements
   boost::array<DetectorElement*, Rich::NRiches> m_deRich;
 
@@ -320,6 +332,9 @@ private: // data
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1HardwareID, Rich::DAQ::Level1LogicalID > L1HardToLog;
   L1HardToLog m_l1HardToLog;
 
+  /// First L1 Copy Number
+  unsigned int m_firstL1CopyN;
+
 };
 
 //=========================================================================
@@ -328,6 +343,14 @@ private: // data
 inline const LHCb::RichSmartID::Vector& DeRichSystem::activeHPDRichSmartIDs() const
 {
   return m_smartIDs;
+}
+
+//=========================================================================
+// inactiveHPDRichSmartIDs
+//=========================================================================
+inline const LHCb::RichSmartID::Vector& DeRichSystem::inactiveHPDRichSmartIDs() const
+{
+  return m_inactiveSmartIDs;
 }
 
 //=========================================================================

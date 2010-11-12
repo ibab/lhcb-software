@@ -87,6 +87,8 @@ StatusCode DeRichSystem::initialize ( )
   if ( up.isFailure() )
     error() << "Failed to update mappings" << endmsg;
 
+  m_firstL1CopyN = 0;
+
   return up;
 }
 
@@ -118,6 +120,7 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_inactiveSmartIDs.clear();
   m_inactiveHardIDs.clear();
   m_L1HardIDAndInputToHPDHardID.clear();
+  m_firstL1CopyN = 0;
 
   // NB : Currently updating both RICH1 and RICH2 if either changes ...
   //      Could considering doing this separately, probably not a big issue though
@@ -286,11 +289,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     {
       m_inactiveHardIDs.push_back  ( hardID );
       m_inactiveSmartIDs.push_back ( hpdID  );
-      info() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
+      debug() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
     }
   }
-  std::sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
-  std::sort( m_inactiveSmartIDs.begin(), m_inactiveSmartIDs.end() );
+  // Sort, to help speed up std::find later on
+  std::stable_sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
+  std::stable_sort( m_inactiveSmartIDs.begin(), m_inactiveSmartIDs.end() );
 
   // L1 mapping
   if ( numbers->exists("Level1LogicalToHardwareIDMap") )
@@ -328,6 +332,19 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
               << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;
+    }
+  }
+
+  // L1 Logical ID to Copy Numbers
+  // Create on the fly here. Should add to CondDB really ...
+  for ( Rich::DAQ::Level1HardwareIDs::const_iterator iL1HID = m_l1IDs.begin();
+        iL1HID != m_l1IDs.end(); ++iL1HID )
+  {
+    if ( m_l1H2CopyN.find(*iL1HID) == m_l1H2CopyN.end() )
+    {
+      m_l1H2CopyN[*iL1HID] = Rich::DAQ::Level1CopyNumber(m_firstL1CopyN);
+      debug() << "L1 Hardware ID " << *iL1HID << " -> Copy Number " << m_l1H2CopyN[*iL1HID] << endmsg;
+      ++m_firstL1CopyN;
     }
   }
 
@@ -667,11 +684,28 @@ DeRichSystem::hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
   L1HardIDAndInputToHPDHardID::const_iterator iID = m_L1HardIDAndInputToHPDHardID.find(key);
   if ( m_L1HardIDAndInputToHPDHardID.end() == iID )
   {
-    throw GaudiException( "Unknown L1 hardware ID " + (std::string)L1HardID,
+    throw GaudiException( "Unknown L1 hardware ID " + (std::string)L1HardID +
                           " and L1 input " + (std::string)L1Input + " pair",
+                          "DeRichSystem::hpdHardwareID",
                           StatusCode::FAILURE );
   }
   return (*iID).second;
+}
+
+//=========================================================================
+// L1 Logical ID to Copy Number
+//=========================================================================
+const Rich::DAQ::Level1CopyNumber 
+DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
+{
+  L1HIDToCopyN::const_iterator iCN = m_l1H2CopyN.find(hardID);
+  if ( m_l1H2CopyN.end() == iCN )
+  {
+    throw GaudiException( "Unknown L1 Hardware ID " + (std::string)hardID,  
+                          "DeRichSystem::copyNumber",
+                          StatusCode::FAILURE );
+  }
+  return (*iCN).second;
 }
 
 //=========================================================================
