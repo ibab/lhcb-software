@@ -18,6 +18,7 @@
   <class name  = "Rich::DAQ::Level0ID"                 />
   <class name  = "Rich::DAQ::Level1HardwareID"         />
   <class name  = "Rich::DAQ::Level1LogicalID"          />
+  <class name  = "Rich::DAQ::Level1CopyNumber"         />
   <class name  = "Rich::DAQ::EventID"                  />
   <class name  = "Rich::DAQ::BXID"                     />
   <class name  = "Rich::DAQ::L1IngressID"              />

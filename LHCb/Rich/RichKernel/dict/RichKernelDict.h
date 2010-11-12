@@ -50,6 +50,7 @@ namespace
     Rich::DAQ::HPDHardwareID                     obj_12;
     Rich::DAQ::HPDL1InputID                      obj_13;
     Rich::DAQ::HPDCopyNumber                     obj_14;
+    Rich::DAQ::Level1CopyNumber                  obj_15;
   };
 }
 

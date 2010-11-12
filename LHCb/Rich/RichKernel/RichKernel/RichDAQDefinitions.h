@@ -569,6 +569,21 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
+    /** @class  Level1CopyNumber RichKernel/RichDAQDefinitions.h
+     *
+     *  Copy number for L1 boards. Starts at 0 in RICH1 and increments
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   11/11/2010
+     */
+    class Level1CopyNumber : public NumericType<ShortType>
+    {
+    public :
+      /// Constructor
+      explicit Level1CopyNumber ( const ShortType id = 0 )
+        : NumericType<ShortType>(id) { }
+    };
+
     //---------------------------------------------------------------------------------
 
     /// Local definition of a RawBank constructed from 32bit ints
@@ -748,6 +763,19 @@ namespace __gnu_cxx
   template <> struct hash<const Rich::DAQ::HPDCopyNumber&>
   { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
 
+  /// Level1CopyNumber hash function
+  template <> struct hash<Rich::DAQ::Level1CopyNumber>
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber hash function
+  template <> struct hash<Rich::DAQ::Level1CopyNumber&>
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber hash function
+  template <> struct hash<const Rich::DAQ::Level1CopyNumber>
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber hash function
+  template <> struct hash<const Rich::DAQ::Level1CopyNumber&>
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+
 }
 
 namespace GaudiUtils
@@ -869,6 +897,19 @@ namespace GaudiUtils
   /// HPDCopyNumber Hash function
   template <> struct Hash<const Rich::DAQ::HPDCopyNumber&>
   { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1CopyNumber Hash function
+  template <> struct Hash<Rich::DAQ::Level1CopyNumber>
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber Hash function
+  template <> struct Hash<Rich::DAQ::Level1CopyNumber&>
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber Hash function
+  template <> struct Hash<const Rich::DAQ::Level1CopyNumber>
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// Level1CopyNumber Hash function
+  template <> struct Hash<const Rich::DAQ::Level1CopyNumber&>
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
 
 }
 
