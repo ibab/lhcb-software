@@ -105,6 +105,10 @@ namespace Rich
       // of the HPD silicon sensor
       bool isSiBackScatter ( const LHCb::RichSmartID id ) const;
 
+      // Checks if the given RichSmartID is the result of scintillation
+      // of the radiator
+      bool isRadScintillation ( const LHCb::RichSmartID id ) const;
+
       // Checks if the given RichSmartID is the result of true Cherenkov
       bool isCherenkovRadiation( const LHCb::RichSmartID id,
                                  const Rich::RadiatorType rad ) const;
@@ -137,6 +141,10 @@ namespace Rich
       // Checks if the given cluster of RichSmartIDs is the result of backscattering
       // of the HPD silicon sensor
       bool isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const;
+
+      // Checks if the given cluster of RichSmartIDs is the result of scintillation
+      // of the radiator
+      bool isRadScintillation ( const Rich::HPDPixelCluster& cluster ) const;
 
       // Checks if the given RichSmartID is the result of true Cherenkov
       bool isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,

@@ -88,6 +88,11 @@ bool NULLMCTruthTool::isSiBackScatter ( const Rich::HPDPixelCluster& ) const
   return false;
 }
 
+bool NULLMCTruthTool::isRadScintillation ( const Rich::HPDPixelCluster& ) const
+{
+  return false;
+}
+
 bool NULLMCTruthTool::isBackground ( const LHCb::RichSmartID ) const
 {
   return false;
@@ -99,6 +104,11 @@ bool NULLMCTruthTool::isHPDReflection ( const LHCb::RichSmartID ) const
 }
 
 bool NULLMCTruthTool::isSiBackScatter ( const LHCb::RichSmartID ) const
+{
+  return false;
+}
+
+bool NULLMCTruthTool::isRadScintillation ( const LHCb::RichSmartID ) const
 {
   return false;
 }

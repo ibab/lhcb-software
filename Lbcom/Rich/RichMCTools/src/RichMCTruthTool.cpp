@@ -209,6 +209,16 @@ bool MCTruthTool::isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const
   return true;
 }
 
+bool MCTruthTool::isRadScintillation ( const Rich::HPDPixelCluster& cluster ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    if ( !isRadScintillation(*iS) ) return false;
+  }
+  return true;
+}
+
 bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
@@ -230,7 +240,7 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
   {
     debug() << "Failed to find MC history for " << id << endmsg;
   }
-  
+
   // if all else fails, assume background
   return true;
 }
@@ -254,7 +264,7 @@ bool MCTruthTool::isHPDReflection ( const LHCb::RichSmartID id ) const
   {
     debug() << "Failed to find MC history for " << id << endmsg;
   }
-  
+
   return (!isSignal && isHPDRefl);
 }
 
@@ -277,8 +287,31 @@ bool MCTruthTool::isSiBackScatter ( const LHCb::RichSmartID id ) const
   {
     debug() << "Failed to find MC history for " << id << endmsg;
   }
-  
+
   return (!isSignal && isSiRefl);
+}
+
+bool MCTruthTool::isRadScintillation ( const LHCb::RichSmartID id ) const
+{
+  // try via summary objects
+  bool isSignal(false), isRadScint(false);
+  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  if ( iEn != mcRichDigSumMap().end() )
+  {
+    // loop over summaries
+    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
+          iSum != (*iEn).second.end(); ++iSum )
+    {
+      if ( (*iSum)->history().isSignal()         ) isSignal = true;
+      if ( (*iSum)->history().radScintillation() ) isRadScint = true;
+    }
+  }
+  else if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Failed to find MC history for " << id << endmsg;
+  }
+
+  return (!isSignal && isRadScint);
 }
 
 bool MCTruthTool::isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
