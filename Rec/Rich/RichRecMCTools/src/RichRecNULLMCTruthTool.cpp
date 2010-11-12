@@ -198,6 +198,12 @@ NULLMCTruthTool::isBackground( const LHCb::RichRecPixel * ) const
   return false;
 }
 
+bool
+NULLMCTruthTool::isRadScintillation( const LHCb::RichRecPixel * ) const
+{
+  return false;
+}
+
 const LHCb::MCRichHit *
 NULLMCTruthTool::trueCherenkovHit( const LHCb::RichRecPhoton * ) const
 {

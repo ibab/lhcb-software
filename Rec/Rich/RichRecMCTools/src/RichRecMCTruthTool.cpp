@@ -472,6 +472,12 @@ MCTruthTool::isBackground( const LHCb::RichRecPixel * pixel ) const
   return m_truth->isBackground( pixel->hpdPixelCluster() );
 }
 
+bool
+MCTruthTool::isRadScintillation( const LHCb::RichRecPixel * pixel ) const
+{
+  return m_truth->isRadScintillation( pixel->hpdPixelCluster() );
+}
+
 // CRJ : Remove use of MCRichHits ??
 const LHCb::MCRichHit *
 MCTruthTool::trueCherenkovHit( const LHCb::RichRecPhoton * photon ) const

@@ -211,6 +211,9 @@ namespace Rich
         // Is this RichRecPixel background ?
         bool isBackground( const LHCb::RichRecPixel * pixel ) const;
 
+        // Is this RichRecPixel radiator scintillation ?
+        bool isRadScintillation( const LHCb::RichRecPixel * pixel ) const;
+
         // Checks if Track -> MCparticle association is available
         bool trackToMCPAvailable() const;
 
