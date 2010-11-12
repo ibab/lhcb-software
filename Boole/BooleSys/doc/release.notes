@@ -11,6 +11,12 @@ This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1
 - This is a dummy release of Boole to pick up the latest LHCb and Lbcom changes
   There are no changes in Boole itself.
 
+- Bug fixes:
+  . #90028 Fix loading of Online constants in SIMCOND partition (DetCond v12r6)
+
+- Changes to tests
+  . Add a test for latest 2010 database tags (boole.boole-2010-latestdb)
+
 </PRE><H1><A NAME=v21r8>2010-10-04 Boole v21r8</A></H1><PRE>
 This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6, Lbcom v9r7
  and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r*, AppConfig v3r*
