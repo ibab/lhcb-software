@@ -1,4 +1,3 @@
-
 ## @package RichRecSys
 #  High level Configuration tools for RICH Reconstruction
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
