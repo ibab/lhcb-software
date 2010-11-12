@@ -2,10 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecBase.icpp
  *
- *  Implementation file for RICH reconstruction base class : RichRecBase
- *
- *  CVS Log :-
- *  $Id: RichRecBase.icpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
+ *  Implementation file for RICH reconstruction base class : Rich::Rec::CommonBase
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
