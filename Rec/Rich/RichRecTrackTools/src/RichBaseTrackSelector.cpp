@@ -413,13 +413,13 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 
 //=============================================================================
 
-double BaseTrackSelector::minPCut()    const { return m_minPCut; }
-double BaseTrackSelector::maxPCut()    const { return m_maxPCut; }
-double BaseTrackSelector::minPtCut()   const { return m_minPtCut; }
-double BaseTrackSelector::maxPtCut()   const { return m_maxPtCut; }
-double BaseTrackSelector::minChi2Cut() const { return m_minChi2Cut; }
-double BaseTrackSelector::maxChi2Cut() const { return m_maxChi2Cut; }
-int    BaseTrackSelector::chargeSel()  const { return m_chargeSel; }
+double BaseTrackSelector::minPCut()          const { return m_minPCut; }
+double BaseTrackSelector::maxPCut()          const { return m_maxPCut; }
+double BaseTrackSelector::minPtCut()         const { return m_minPtCut; }
+double BaseTrackSelector::maxPtCut()         const { return m_maxPtCut; }
+double BaseTrackSelector::minChi2Cut()       const { return m_minChi2Cut; }
+double BaseTrackSelector::maxChi2Cut()       const { return m_maxChi2Cut; }
+int    BaseTrackSelector::chargeSel()        const { return m_chargeSel; }
 double BaseTrackSelector::minLikelihoodCut() const { return m_minLL; }
 double BaseTrackSelector::maxLikelihoodCut() const { return m_maxLL; }
 double BaseTrackSelector::minCloneDistCut()  const { return m_minCloneCut; }

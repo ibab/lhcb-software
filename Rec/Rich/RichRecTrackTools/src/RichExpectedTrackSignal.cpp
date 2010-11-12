@@ -33,8 +33,7 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
     m_richPartProp     ( NULL ),
     m_rayScat          ( NULL ),
     m_gasQuartzWin     ( NULL ),
-    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 ),
-    m_maxPbyRad        ( Rich::NRadiatorTypes, boost::numeric::bounds<double>::highest() )
+    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 )
 {
   // interface
   declareInterface<IExpectedTrackSignal>(this);
@@ -608,8 +607,7 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
 
   // loop over segments
   for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
-        segment != track->richRecSegments().end();
-        ++segment )
+        segment != track->richRecSegments().end(); ++segment )
   {
     if ( aboveThreshold( *segment, type ) ) return true;
   }
@@ -626,8 +624,7 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
 
   // loop over segments
   for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
-        segment != track->richRecSegments().end();
-        ++segment )
+        segment != track->richRecSegments().end(); ++segment )
   {
     if ( radiator == (*segment)->trackSegment().radiator() )
     {
