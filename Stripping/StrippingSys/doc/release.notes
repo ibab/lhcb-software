@@ -3,6 +3,9 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+! 2010-11-12 - Juan Palacios
+ - Use new Phys/StrippingUtils package.
+
 ! 2010-11-12 - Rob Lambert
  - updated configurables reference
 
