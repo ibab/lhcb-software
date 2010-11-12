@@ -30,16 +30,21 @@ def createEclipseConfiguration(dest, projectpath):
             "CMTPROJECTPATH": projectpath,
             }
     # create the templates
-    os.mkdir(join(dest, ".settings"))
-    for f, t in [(".project", "cdt_project_template.xml"),
-                 (".cproject", "cdt_cproject_template.xml"),
-                 (".pydevproject", "pydev_pydevproject_template.xml"),
-                 (join(".settings", "org.eclipse.cdt.core.prefs"), "cdt_prefs_template.txt"),
-                 ]:
-        if not exists(join(dest, f)) \
-           and exists(join(environ["LBCONFIGURATIONROOT"], "data", "eclipse", t)):
-            t = open(join(environ["LBCONFIGURATIONROOT"], "data", "eclipse", t)).read()
-            open(join(dest, f), "w").write(t % data)
+    try:
+        if not exists(join(dest, ".settings")):
+            os.mkdir(join(dest, ".settings"))
+        for f, t in [(".project", "cdt_project_template.xml"),
+                     (".cproject", "cdt_cproject_template.xml"),
+                     (".pydevproject", "pydev_pydevproject_template.xml"),
+                     (join(".settings", "org.eclipse.cdt.core.prefs"), "cdt_prefs_template.txt"),
+                     ]:
+            if not exists(join(dest, f)) \
+               and exists(join(environ["LBCONFIGURATIONROOT"], "data", "eclipse", t)):
+                t = open(join(environ["LBCONFIGURATIONROOT"], "data", "eclipse", t)).read()
+                open(join(dest, f), "w").write(t % data)
+    except:
+        # Ignore failures
+	pass
 
 def eclipseConfigurationAddPackage(dest, package):
     """Add package-specific configuration details to an already existing Eclipse
