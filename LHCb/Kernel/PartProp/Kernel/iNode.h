@@ -10,6 +10,10 @@
 #include <functional>
 #include <iosfwd>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // forward declarations 
 // ============================================================================
 namespace LHCb 
@@ -29,7 +33,7 @@ namespace Decays
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2008-04-12
    */
-  class iNode
+  class GAUDI_API iNode
   {
   private:
     // ========================================================================
@@ -77,7 +81,7 @@ namespace Decays
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
    */
-  class Node : public iNode 
+  class GAUDI_API Node : public iNode 
   {
   public:
     // ========================================================================
@@ -208,7 +212,7 @@ inline StatusCode operator*
 ( const Decays::iNode&              n   , 
   const LHCb::IParticlePropertySvc* svc ) { return n.validate ( svc ) ; }
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DECAYS_NODE_H
 // ============================================================================

@@ -31,7 +31,7 @@ namespace Decays
    *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2008-03-31
    */
-  class Decay 
+  class GAUDI_API Decay 
   {
   public: 
     // ========================================================================
@@ -220,7 +220,7 @@ namespace Decays
     // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LHCb
+} //                                                      end of namespace LHCb
 // ============================================================================
 /// the printout operator to the stream 
 inline std::ostream& operator<<
@@ -232,7 +232,7 @@ inline std::ostream& operator<<
   ( std::ostream&              s     , 
     const Decays::Decay::Item& item  ) { return item .fillStream ( s ) ; }
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LHCBKERNEL_DECAY_H
 // ============================================================================

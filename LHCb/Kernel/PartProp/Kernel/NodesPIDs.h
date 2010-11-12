@@ -28,7 +28,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Any : public Decays::iNode
+    class GAUDI_API Any : public Decays::iNode
     {
     public:
       // ======================================================================
@@ -48,7 +48,7 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Decays::Nodes
+  } //                                           end of namespace Decays::Nodes
   // ==========================================================================
   namespace Nodes 
   {
@@ -59,7 +59,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Pid : public Decays::iNode 
+    class GAUDI_API Pid : public Decays::iNode 
     {
     public:
       // ======================================================================
@@ -111,7 +111,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class CC : public Pid
+    class GAUDI_API CC : public Pid
     {
     public:
       // ======================================================================
@@ -142,7 +142,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Lepton : public Any
+    class GAUDI_API Lepton : public Any
     {
     public:
       // ======================================================================
@@ -163,7 +163,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Nu : public Lepton
+    class GAUDI_API Nu : public Lepton
     {
     public:
       // ======================================================================
@@ -184,9 +184,10 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Ell : public Lepton 
+    class GAUDI_API Ell : public Lepton 
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~Ell() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -196,6 +197,7 @@ namespace Decays
       { return pid.isLepton() && ( 0 != pid.threeCharge() ) ; }
       /// MANDATORY: the specific printout
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class EllPlus
@@ -203,7 +205,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class EllPlus : public Ell
+    class GAUDI_API EllPlus : public Ell
     {
     public:
       // ======================================================================
@@ -224,7 +226,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class EllMinus : public  Ell
+    class GAUDI_API EllMinus : public  Ell
     {
     public:
       // ======================================================================
@@ -245,7 +247,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Hadron : public Any 
+    class GAUDI_API Hadron : public Any 
     {
     public:
       // ======================================================================
@@ -266,7 +268,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Meson : public Hadron
+    class GAUDI_API Meson : public Hadron
     {
     public:
       // ======================================================================
@@ -287,7 +289,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Baryon : public Hadron
+    class GAUDI_API Baryon : public Hadron
     {
     public:
       // ======================================================================
@@ -308,7 +310,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Charged : public Any
+    class GAUDI_API Charged : public Any
     {
     public:
       // ======================================================================
@@ -329,7 +331,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Positive : public Charged 
+    class GAUDI_API Positive : public Charged 
     {
     public:
       // ======================================================================
@@ -350,7 +352,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Negative : public Charged
+    class GAUDI_API Negative : public Charged
     {
     public:
       // ======================================================================
@@ -371,7 +373,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Neutral : public Charged
+    class GAUDI_API Neutral : public Charged
     {
     public:
       // ======================================================================
@@ -392,7 +394,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Nucleus : public Any
+    class GAUDI_API Nucleus : public Any
     {
     public:
       // ======================================================================
@@ -413,7 +415,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class HasQuark : public Any
+    class GAUDI_API HasQuark : public Any
     {
     public:
       // ======================================================================
@@ -446,7 +448,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class JSpin : public Any
+    class GAUDI_API JSpin : public Any
     {
     public:
       // ======================================================================
@@ -495,7 +497,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class SSpin : public JSpin
+    class GAUDI_API SSpin : public JSpin
     {
     public:
       // ======================================================================
@@ -523,7 +525,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class LSpin : public SSpin
+    class GAUDI_API LSpin : public SSpin
     {
     public:
       // ======================================================================
@@ -551,7 +553,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class CTau : public Decays::iNode 
+    class GAUDI_API CTau : public Decays::iNode 
     {
     public:
       // ======================================================================
@@ -626,7 +628,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class ShortLived_ : public CTau 
+    class GAUDI_API ShortLived_ : public CTau 
     {
     public:
       // ======================================================================
@@ -649,7 +651,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class LongLived_ : public CTau 
+    class GAUDI_API LongLived_ : public CTau 
     {
     public:
       // ======================================================================
@@ -672,7 +674,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class Stable : public LongLived_
+    class GAUDI_API Stable : public LongLived_
     {
     public:
       // ======================================================================
@@ -692,7 +694,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class StableCharged : public Stable
+    class GAUDI_API StableCharged : public Stable
     {
     public:
       // ======================================================================
@@ -714,7 +716,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class Mass : public CTau
+    class GAUDI_API Mass : public CTau
     {
     public:
       // ======================================================================
@@ -745,7 +747,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class Light : public Mass
+    class GAUDI_API Light : public Mass
     {
     public:
       // ======================================================================
@@ -773,7 +775,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-05-11
      */
-    class Heavy : public Mass
+    class GAUDI_API Heavy : public Mass
     {
     public:
       // ======================================================================
@@ -796,7 +798,7 @@ namespace Decays
       // ======================================================================      
     } ;
     // ========================================================================
-    class Symbol : public Decays::iNode
+    class GAUDI_API Symbol : public Decays::iNode
     {      
     public :
       // =======================================================================
@@ -832,11 +834,11 @@ namespace Decays
       // ======================================================================
     };    
     // ========================================================================
-  } // end of namespace 
+  } //                                         end of namespace DaVinci::Decays 
   // ==========================================================================
-} // end of namespace DaVinci
+} //                                                   end of namespace DaVinci
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // KERNEL_NODESPID_H
 // ============================================================================

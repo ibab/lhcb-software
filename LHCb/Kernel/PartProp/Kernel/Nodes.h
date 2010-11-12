@@ -7,6 +7,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/SmartIF.h"
 // ============================================================================
@@ -59,7 +60,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Invalid : public Decays::iNode
+    class GAUDI_API Invalid : public Decays::iNode
     {
     public:
       // ======================================================================
@@ -85,7 +86,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class _Node
+    class GAUDI_API _Node
     {
     private:
       // ======================================================================
@@ -177,7 +178,7 @@ namespace Decays
     // ========================================================================
   } // end of namespace Decays::Nodes 
   // ==========================================================================
-  class NodeList 
+  class GAUDI_API NodeList 
   {
   public:
     // ========================================================================
@@ -245,7 +246,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Or : public Decays::iNode
+    class GAUDI_API Or : public Decays::iNode
     {
     public:
       // ======================================================================
@@ -305,7 +306,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class And : public Decays::iNode
+    class GAUDI_API And : public Decays::iNode
     {
     public:
       // ======================================================================
@@ -364,7 +365,7 @@ namespace Decays
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-12
      */
-    class Not : public Decays::iNode
+    class GAUDI_API Not : public Decays::iNode
     {
     public:
       // ======================================================================
@@ -396,9 +397,9 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Decays::Nodes 
+  } //                                           end of namespace Decays::Nodes 
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
 /** Create the "OR" of two nodes
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -459,6 +460,7 @@ inline Decays::Nodes::Not operator!
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const Decays::iNode& o1 , 
   const std::string&   o2 ) ;
@@ -467,6 +469,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const Decays::iNode&    o1 , 
   const LHCb::ParticleID& o2 ) ;
@@ -475,6 +478,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const Decays::iNode&     o1 , 
   const Decays::Decay::Item& o2 ) ;
@@ -483,6 +487,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const Decays::iNode&          o1 , 
   const LHCb::ParticleProperty* o2 ) ;
@@ -491,6 +496,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const std::string&   o2 ,
   const Decays::iNode& o1 ) ;
@@ -499,6 +505,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const LHCb::ParticleID& o2 ,
   const Decays::iNode&    o1 ) ;
@@ -507,6 +514,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const Decays::Decay::Item& o2 ,
   const Decays::iNode&       o1 ) ;
@@ -515,6 +523,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::Or operator||
 ( const LHCb::ParticleProperty* o2 ,
   const Decays::iNode&          o1 ) ;
@@ -523,6 +532,7 @@ Decays::Nodes::Or operator||
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const Decays::iNode& o1 , 
   const std::string&   o2 ) ;
@@ -531,6 +541,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const Decays::iNode&    o1 , 
   const LHCb::ParticleID& o2 ) ;
@@ -539,6 +550,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const Decays::iNode&       o1 , 
   const Decays::Decay::Item& o2 ) ;
@@ -547,6 +559,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const Decays::iNode&          o1 , 
   const LHCb::ParticleProperty* o2 ) ;
@@ -555,6 +568,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const std::string&   o2 ,
   const Decays::iNode& o1 ) ;
@@ -563,6 +577,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const LHCb::ParticleID& o2 ,
   const Decays::iNode&    o1 ) ;
@@ -571,6 +586,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const Decays::Decay::Item& o2 ,
   const Decays::iNode&     o1 ) ;
@@ -579,6 +595,7 @@ Decays::Nodes::And operator&&
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
+GAUDI_API
 Decays::Nodes::And operator&&
 ( const LHCb::ParticleProperty* o2 ,
   const Decays::iNode&          o1 ) ;

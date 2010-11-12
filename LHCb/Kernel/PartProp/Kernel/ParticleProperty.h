@@ -7,11 +7,13 @@
 // ============================================================================
 #include <string>
 #include <vector>
+#include <set>
 #include <iosfwd>
 #include <functional>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/PhysicalConstants.h"
 // ============================================================================
 // LHCbKernel
@@ -29,7 +31,7 @@ namespace LHCb
    *  @author Iain Last,G.Corti
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    */
-  class ParticleProperty 
+  class GAUDI_API ParticleProperty 
   {
   public:
     // ========================================================================
@@ -283,6 +285,7 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date  2008-08-03
      */        
+    GAUDI_API
     std::ostream& printAsTable_
     ( const std::vector<const LHCb::ParticleProperty*>& particles    ,
       std::ostream&                                     stream       , 
@@ -340,6 +343,7 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date  2008-08-03
      */
+    GAUDI_API
     std::string printAsTable
     ( const std::vector<const LHCb::ParticleProperty*>& particles    ,
       const LHCb::IParticlePropertySvc*                 service  = 0 ) ;
@@ -397,6 +401,7 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date  2008-08-03
      */        
+    GAUDI_API
     MsgStream& printAsTable
     ( const std::vector<const LHCb::ParticleProperty*>& particles    ,
       MsgStream&                                        stream       , 
@@ -410,10 +415,22 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date  2010-01-04
      */
+    GAUDI_API
     std::ostream& printAsTable_
     ( const std::vector<LHCb::ParticleID>& particles    ,
       std::ostream&                        stream       , 
       const LHCb::IParticlePropertySvc*    service  = 0 ) ;
+    // ========================================================================
+    template <class C_, class A_>
+    inline std::ostream& printAsTable_ 
+    ( const std::set<LHCb::ParticleID,C_,A_>& particles    , 
+      std::ostream&                           stream       , 
+      const LHCb::IParticlePropertySvc*       service  = 0 ) 
+    {
+      return printAsTable_ ( std::vector<LHCb::ParticleID>
+                             ( particles.begin() , 
+                               particles.end  () ) , stream , service ) ;
+    }
     // ========================================================================
     /** print properties in a form of the table 
      *  @param particles (INPUT) list of particles 
@@ -422,9 +439,20 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date  2010-01-04
      */    
+    GAUDI_API
     std::string printAsTable
     ( const std::vector<LHCb::ParticleID>& particles    ,
       const LHCb::IParticlePropertySvc*    service  = 0 ) ;
+    // ========================================================================
+    template <class C_, class A_>
+    inline  std::string printAsTable
+    ( const std::set<LHCb::ParticleID,C_,A_>& particles    , 
+      const LHCb::IParticlePropertySvc*       service  = 0 ) 
+    {
+      return printAsTable ( std::vector<LHCb::ParticleID>
+                            ( particles.begin() , 
+                              particles.end  () ) , service ) ;
+    }
     // ========================================================================
     /** print properties in a form of the table 
      *  @param particles (INPUT) list of particles 
@@ -434,14 +462,26 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date  2010-01-04
      */
+    GAUDI_API
     MsgStream&    printAsTable
     ( const std::vector<LHCb::ParticleID>& particles    ,
       MsgStream&                           stream       , 
       const LHCb::IParticlePropertySvc*    service  = 0 ) ;
     // ========================================================================
-  } // end of namespace LHCb::ParticleProperties
+    template <class C_, class A_>
+    inline MsgStream& printAsTable
+    ( const std::set<LHCb::ParticleID,C_,A_>& particles , 
+      MsgStream&                              stream       , 
+      const LHCb::IParticlePropertySvc*       service  = 0 ) 
+    {
+      return printAsTable ( std::vector<LHCb::ParticleID>
+                            ( particles.begin() , 
+                              particles.end  () ) , stream , service ) ;
+    }
+    // ========================================================================
+  } //                                end of namespace LHCb::ParticleProperties
   // ==========================================================================
-} // end of namespace LHCb 
+} //                                                      end of namespace LHCb 
 // ============================================================================
 namespace Gaudi
 {
@@ -456,15 +496,16 @@ namespace Gaudi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date  2008-08-03
      */  
+    GAUDI_API
     std::ostream& toStream 
     ( const std::vector<const LHCb::ParticleProperty*>& particles ,
       std::ostream&                                     stream    ) ;
     // ========================================================================
-  } // end of namespace LHCb::ParticleProperties 
+  } //                                            end of namespace Gaudi::Utils
   // ==========================================================================
-} // end of namespace LHCb
+} //                                                     end of namespace Gaudi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif
 // ============================================================================
