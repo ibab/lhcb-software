@@ -4,5 +4,9 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2010-11-12 - Juan Palacios
+ - Fist attempy at line builder base class.
+ - Some fixes to test tools.
+
 ! 2010-11-11 - Juan Palacios
  - First import.

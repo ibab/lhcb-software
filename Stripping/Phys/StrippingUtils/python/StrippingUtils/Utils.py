@@ -33,7 +33,7 @@ class LineBuilder(object) :
 
     """
 
-    __config_keys__ = []
+    __configuration_keys__ = ()
 
     def __init__(self, 
                  name,
@@ -42,10 +42,14 @@ class LineBuilder(object) :
         checkConfig(self._configKeys(),
                     config)
 
+        self._name = name
         self._lines = []
 
     def _configKeys(self) :
-        return self.__config_keys__
+        return self.__configuration_keys__
+
+    def name(self) :
+        return self._name
 
     def registerLine(self, line) :
         self.checkLine(line)
