@@ -4,7 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecSys v3r33 2010-10-28 =========================
+! 2010-11-12 - Chris Jones
+ - New tuning of the photon creator cuts, with better tuned expected 
+   resolution calculations
+
+!======================= RichRecSys v3r33 2010-10-28 =========================
 ! 2010-10-15 - Chris Jones
  - Fine tune the photon creator selection cuts to take into account the better
    gas resolutions in the latest database updates.

@@ -77,6 +77,42 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # -----------------------------------------------------------------------
 
         if selMode == "Tight" :
+
+            # Change CK resolution calculation parameters
+            # Will be committed to C++ in a future release
+            self.richTools().CkResType = "Functional" # Default, but to be sure
+            self.richTools().ckResolution().ScaleFactor   = [ 3.5,  1.5,    1.25   ]
+            self.richTools().ckResolution().MaxCKThetaRes = [ 0.01, 0.0035, 0.0015 ]
+            
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # No # sigma cut 
+            creator.Predictor.NSigma         = [  5,      4,     8    ]
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
+            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
+            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
+            creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
+            # No # sigma cut
+            creator.NSigma                   = [ 2.75,   3.5,  4.0   ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
+            # ================================================================
+
+        elif selMode == "OldTight" :
+
+            # Change CK resolution calculation parameters
+            # Will be committed to C++ in a future release
+            self.richTools().CkResType = "Functional" # Default, but to be sure
+            self.richTools().ckResolution().ScaleFactor   = [ 1.0,   1.0,    1.0    ]
+            self.richTools().ckResolution().MaxCKThetaRes = [ 0.003, 0.0025, 0.001  ]
             
             # ================================================================
             # Photon Predictor cuts
@@ -96,30 +132,6 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
             # No # sigma cut
             creator.NSigma                   = [ 9.0,   5.25,  5.0   ]
-            # Any probability
-            creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
-            # ================================================================
-
-        elif selMode == "OldTight" :
-            
-            # ================================================================
-            # Photon Predictor cuts
-            # ================================================================
-            # No # sigma cut 
-            creator.Predictor.NSigma         = [  17,     8,    12    ]
-            # Min and max search window for track centre - hit seperation
-            creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
-            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
-            # ================================================================
-
-            # ================================================================
-            # Photon Creator cuts
-            # ================================================================
-            # Allow all photon CK theta values
-            creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
-            creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
-            # No # sigma cut
-            creator.NSigma                   = [ 9.0,   6.5,   5.5   ]
             # Any probability
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
