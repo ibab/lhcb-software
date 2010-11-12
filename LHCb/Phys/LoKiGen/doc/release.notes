@@ -1,25 +1,28 @@
-! $Id: release.notes,v 1.86 2010-05-30 17:09:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.86 2010-05-30 17:09:55 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
-! Purpose     : Functions and algorithms for "LoKi for HepMC" 
+! Purpose     : Functions and algorithms for "LoKi for HepMC"
 ! -----------------------------------------------------------------------------
-! 
-!   This file is a part of LoKi project - 
+!
+!   This file is a part of LoKi project -
 !     "C++ ToolKit  for Smart and Friendly Physics Analysis"
-! 
+!
 !   The package has been designed with the kind help from
-!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-!   contributions and advices from G.Raven, J.van Tilburg, 
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+!   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2010-11-12 - Rob Lambert
+ - remove print statement
 
 !========================= LoKiGen v9r3 2010-10-25 =========================
 
 ! 2010-10-24 - Vanya Belyaev
- - add concept of stable particle in decay descriptors 
+ - add concept of stable particle in decay descriptors
  - cmt/requirements
-     version incrment to v9r2 
+     version incrment to v9r2
 
 
 !========================== LoKiGen v9r2 2010-09-28 ===========================
@@ -28,39 +31,39 @@
      fix for new module in LoKiCore
 
  - cmt/requirements
-     version incrment to v9r2 
+     version incrment to v9r2
 
 !========================== LoKiGen v9r1 2010-06-18 ===========================
 ! 2010-05-30 - Vanya Belyaev
 
- - polish for various functions 
+ - polish for various functions
 
  - cmt/requirements
-   version incrment to v9r1 
+   version incrment to v9r1
 
 !========================== LoKiGen v9r0 2010-04-26 ===========================
 ! 2010-04-09 - Vanya Belyaev
 
   - LoKiGen/functions.py
 
-     LoKi.NamedRange -> Gaudi.NamedRange 
+     LoKi.NamedRange -> Gaudi.NamedRange
 
 ! 2010-04-06 - Vanya Belyaev
 
- - replace LoKi::Raneg by Gaudi::Range 
+ - replace LoKi::Raneg by Gaudi::Range
 
- - cmt/requirements 
-     version incremen tto v9r0 
+ - cmt/requirements
+     version incremen tto v9r0
 
 
 !========================== LoKiGen v8r8 2010-02-12 ===========================
 ! 2010-02-10 - Vanya Belyaev
- Add new symbols 
+ Add new symbols
     GY    LoKi::GenParticles::Rapidity   for evaluation of rapidity  (y)
-    GY0   LoKi::GenParticles::Rapidity0  for evaluation of rapidity0 (y_0) 
+    GY0   LoKi::GenParticles::Rapidity0  for evaluation of rapidity0 (y_0)
 
- - cmt/requirements 
-    version increment to v8r8 
+ - cmt/requirements
+    version increment to v8r8
 
 !========================== LoKiGen v8r7 2009-09-02 ===========================
 ! 2009-09-02 - Marco Cattaneo
@@ -68,136 +71,136 @@
 
 ! 2009-08-12 - Vanya  BELYAEV
 
- - add useful typedef 
+ - add useful typedef
 
 !========================== LoKiGen v8r6 2009-07-12 ===========================
 ! 2009-07-12 - Vanya BELYAEV
 
  - minor fix to please Bender
- - cmt/requirements 
-   version increment to v8r6 
+ - cmt/requirements
+   version increment to v8r6
 
 
 !========================== LoKiGen v8r5 2009-06-29 ===========================
 ! 2009-06-28 - Vanya Belyaev
 
- - improvements for decay finder 
- - cmt/requirements 
+ - improvements for decay finder
+ - cmt/requirements
 
-    version increment to v8r5 
-     
+    version increment to v8r5
+
 
 !========================== LoKiGen v8r4 2009-06-16 ===========================
 ! 2009-06-02 - Vanya BELYAEV
- - further polishing of decay finder 
+ - further polishing of decay finder
 
 ! 2009-05-27 - Vanya BELYAEV
  - LoKi::GenDecay
-    new HepMC-decay finder tool 
+    new HepMC-decay finder tool
 
- - cmt/requirements 
-    version increment to v8r4 
+ - cmt/requirements
+    version increment to v8r4
 
 !========================== LoKiGen v8r3 2009-05-25 ===========================
 ! 2009-05-14 - Vanya Belyaev
- - clean-up the trees 
- 
+ - clean-up the trees
+
 ! 2009-05-11 - Vanya Belyaev
- - fix for changes in Kernel/PartProp  
+ - fix for changes in Kernel/PartProp
 
 ! 2009-05-09 - Vanya BELYAEV
- - remove unnesessary std::unary/binary_function bases 
+ - remove unnesessary std::unary/binary_function bases
  - cmt/requirements
-   version incremen to v8r3 
+   version incremen to v8r3
 
 !========================== LoKiGen v8r2 2009-05-07 ===========================
 ! 2009-05-06 - Vanya BELYAEV
- - few improvements for new decay finders 
- - cmt/requirements 
-    version increment to v8r2 
+ - few improvements for new decay finders
+ - cmt/requirements
+    version increment to v8r2
 
 !========================== LoKiGen v8r1 2009-01-08 ===========================
 ! 2008-12-18 - Vanya Belyaev
- - many fixes for trees , 
+ - many fixes for trees ,
    add new symbols:
-     GDECNODE 
-     GDECTREE 
+     GDECNODE
+     GDECTREE
 
 ! 2008-11-23 - Vanya BELYAEV
-  - add QMTest 
+  - add QMTest
   - new functors:
     GSIZE
     GEMTPTY
     GOSCILLATED1
-    GOSCILLATED2 
-  - better treatment  of "CutVals"    
-  - cmt/requirements 
-    version increment to v8r1 
+    GOSCILLATED2
+  - better treatment  of "CutVals"
+  - cmt/requirements
+    version increment to v8r1
 
 
 !============================ LoKiGen v8r0 2008-11-17 =========================
 ! 2008-11-02 - Vanya BELYAEV
- - fixes for various compilers 
+ - fixes for various compilers
 
 ! 2008-10-30 - Vanya BELYAEV
- - fix for LCG-preview 
+ - fix for LCG-preview
 
 ! 2008-10-29 - Vanya BELYAEV
- - fixes for gcc43 compilation 
+ - fixes for gcc43 compilation
 
 ! 2008-10-19 - Vanya BELYAEV
- - adaptation for new LoKiCore 
+ - adaptation for new LoKiCore
 
-     new structure of decorators 
+     new structure of decorators
 
  - cmt/requirements
 
-     version increment to v8r0 
+     version increment to v8r0
 
 !============================ LoKiGen v7r6 2008-09-04 =========================
 ! 2008-08-04 - Vanya BELYAEV
  - LoKi/GenDecays.h
    src/GenDecays.cpp
 
-     1) make more uniform interface for LoKi::Decays::Trees::Gen* 
-     2) improve Doxygen comments 
+     1) make more uniform interface for LoKi::Decays::Trees::Gen*
+     2) improve Doxygen comments
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v7r6 
-     
+     version increment to v7r6
+
 !============================ LoKiGen v7r5 2008-07-16 =========================
 ! 2008-07-09 - Vanya BELYAEV
 
- - Many changes for (Gen) Decay Finder 
- - cmt/requirements 
-    version inrement to v7r5 
+ - Many changes for (Gen) Decay Finder
+ - cmt/requirements
+    version inrement to v7r5
 
 !============================ LoKiGen v7r4 2008-06-30 =========================
 ! 2008-06-26 - Vanya BELYAEV
  - LoKi/CmpBarCode.h & src/GenChild.cpp
-     fix some compilation problmes 
+     fix some compilation problmes
 
 ! 2008-06-25 - Vanya BELYAEV
  - src/GenParticles.cpp
-    suppress "empty vertices list"-error message for FromHepMCTree 
+    suppress "empty vertices list"-error message for FromHepMCTree
 
 ! 2008-06-24 - Vanya BELYAEV
- - LoKi/CmtBarCode.h 
-    - new utility LoKi::GenParticles::CmpBarCode 
-      to compare HepMC::GenParticle by barcode 
-    - new typedef for the std::set of particles using CmtBarCode 
-      as the ordering criteria 
+ - LoKi/CmtBarCode.h
+    - new utility LoKi::GenParticles::CmpBarCode
+      to compare HepMC::GenParticle by barcode
+    - new typedef for the std::set of particles using CmtBarCode
+      as the ordering criteria
 
 ! 2008-06-12 - Vanya BELYAEV
  -  LoKi/GenDecays.h
     src/LoKiGenDecays.cpp
-    
-    Implemenmtation of HepMC-trees (functors which acts on the decay 
-    structure), needed for new (HepMC)DecayFinder 
-   
- - cmt/requirements 
-    version incrmeent to v7r4 
+
+    Implemenmtation of HepMC-trees (functors which acts on the decay
+    structure), needed for new (HepMC)DecayFinder
+
+ - cmt/requirements
+    version incrmeent to v7r4
 
 !============================ LoKiGen v7r3 2008-05-05 =========================
 ! 2008-05-05 - Marco Cattaneo
@@ -208,26 +211,26 @@
      new files with functions which produce "sections" for the decay trees.
 
  - LoKi/GenChild.h, src/GenChild.cpp
-     add "daughters" to the list of the available functions         
+     add "daughters" to the list of the available functions
 
  - cmt/requirmeents
-    version increment to v7r3 
+    version increment to v7r3
 
 !============================ LoKiGen v7r2 2008-04-03 =========================
 ! 2008-03-30 - Vanya BELYAEV
-  - introduce the proper shift-operators __rshift__ (streamers) 
-  - add the proper specialization for printout of boolean constants 
+  - introduce the proper shift-operators __rshift__ (streamers)
+  - add the proper specialization for printout of boolean constants
   - cmt/requirements
-     version increment to v7r2 
+     version increment to v7r2
 
 !============================ LoKiGen v7r1 2008-02-19 =========================
 ! 2008-02-19 - Vanya BELYAEV
- - All *Hybrid* stuff:  
+ - All *Hybrid* stuff:
      everything is extended for "functional" functors also
 
 ! 2008-02-11 - Vanya BELYAEV
- - many small fixes for new Gaudi/ROOT/Reflex 
- - cmt/requirements 
+ - many small fixes for new Gaudi/ROOT/Reflex
+ - cmt/requirements
      version increment to v7r1
 
 !============================ LoKiGen v7r0 2007-12-09 =========================
@@ -237,28 +240,28 @@
     new files:  LoKi/GenSources.h & src/GenSources.cpp
 
 ! 2007-12-01 - Vanya BELYAEV
-	
- - The major update for the new LoKi v7r0  (The Powerful Streamers) 
+
+ - The major update for the new LoKi v7r0  (The Powerful Streamers)
 
    cmt/requirements
 
-   version increment to v7r0 
+   version increment to v7r0
 
 !============================ LoKiGen v6r1 2007-10-08 =========================
 ! 2007-10-07 - Vanya BELYAEV
- - cmt/requirements 
-    increment version to v6r1 
-    use new pattern for python modules 
+ - cmt/requirements
+    increment version to v6r1
+    use new pattern for python modules
 
 !============================ LoKiGen v6r0 2007-09-04 =========================
 ! 2007-08-20 - Vanya Belyaev
- - increment the major version to v6r0 
+ - increment the major version to v6r0
 
 ! 2007-07-25 - Vanya BELYAEV
- - add all "hybrid"-functionality for the 
+ - add all "hybrid"-functionality for the
    interplay between C++ and Python, in particular for hybrid factory.
 
-New Files: 
+New Files:
   LoKi/GenHybridEngine.h
   LoKi/GenHybridEngineActor.h
   LoKi/GenHybridLock.h
@@ -273,10 +276,10 @@ New Files:
   src/Components/LoKiGen_dll.cpp
 
 ! 2007-07-23 - Vanya BELYAEV
- - many tiny updates to minimize the dependencies, 
+ - many tiny updates to minimize the dependencies,
    reduce the dictionaries, decrease the compilation time
    and improve the doxygen documentation
- - cmt/requirements 
+ - cmt/requirements
     version increment to v3r1
 
 !============================ LoKiGen v3r0 2007-06-11 =========================
@@ -285,9 +288,9 @@ New Files:
 
 ! 2007-06-01 - Vanya BELYAEV
  - prepare for the version v3r0 :
-   all dictionaries are built locally 
+   all dictionaries are built locally
 
-   - New files: 
+   - New files:
 
     LoKi/GetHepMC.h
     src/GetHepMC.cpp
@@ -306,29 +309,29 @@ New Files:
     LoKi/GenTypes.h
     LoKi/LoKiGen.h
 
- - cmt/requirements version increment to v3r0 
+ - cmt/requirements version increment to v3r0
 
 !============================ LoKiGen v2r1 2007-03-05 =========================
 ! 2007-03-04 - Vanya BELYAEV
  - LoKi/GenParticles.h, LoKi/GenParticleCuts.h,  src/GenParticles.cpp
-   . Add 3 new functions DeltaPhi, DeltaEta and DeltaR2, very useful for 
+   . Add 3 new functions DeltaPhi, DeltaEta and DeltaR2, very useful for
      jet-studies
 
 ! 2007-02-26 - Marco Cattaneo
  - Fix many doxygen warnings
 
 ! 2007-01-23 - Vanya BELYAEV
- - LoKi/GenParticles.h, src/GenParticles.cpp  
-     many tiny fixes to build Ex/LoKiExample package 
+ - LoKi/GenParticles.h, src/GenParticles.cpp
+     many tiny fixes to build Ex/LoKiExample package
 
- - cmt/requirements 
-     version increment to v2r1 
+ - cmt/requirements
+     version increment to v2r1
 
 ! =========================== LoKiGen v2r0 2007-01-19 =========================
 ! 2007-01-19 - Vanya BELYAEV
  - LoKi/BuildGenTrees.h
-    new file with utilities to select the independent trees from 
-    the flat list of HepMC-particles 
+    new file with utilities to select the independent trees from
+    the flat list of HepMC-particles
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
@@ -337,53 +340,53 @@ New Files:
 ! 2006-11-25 - Vanya BELYAEV
  -  src/PrintHepMCDecay.h
     fix a treatment of cut-off for maximal max-level printouts
- -  improve Doxygen comments for nested namespaces 
- -  cmt/requirements 
-    version increment to v1r8 
+ -  improve Doxygen comments for nested namespaces
+ -  cmt/requirements
+    version increment to v1r8
 
 !============================ LoKiGen v1r7 2006-11-10 =========================
 ! 2006-11-09 - Vanya BELYAEV
  - LoKi/PrintHepMCDecay.h
    src/PrintHepMCDecay.h
-     1) move all functions into the namespace LoKi::Print 
-     2) add a maximum recursion level 
- - cmt/requirements 
-     version increment to v1r7 
+     1) move all functions into the namespace LoKi::Print
+     2) add a maximum recursion level
+ - cmt/requirements
+     version increment to v1r7
 
 !============================ LoKiGen v1r6 2006-10-12 =========================
 ! 2006-10-10 - Vanya BELYAEV
  - LoKi/GenExtract.h
-   fix for dictionaries 
+   fix for dictionaries
 
 ! 2006-10-05 - Vanya BELYAEV
  - LoKi/GenAlgs.h
-    fix for SLC4 compilation error 
- - cmt/requirements 
-    version increment to b1r6 
+    fix for SLC4 compilation error
+ - cmt/requirements
+    version increment to b1r6
 
 !============================ LoKiGen v1r5 2006-09-09 =========================
 ! 2006-09-06 - Vanya BELYAEV
  - LoKi/GenTypes.h
      add the formal defintions of containers and ranges [needed for Phys/AlgoMC]
  - cmt/requirements
-     version increment to v1r5 
+     version increment to v1r5
 
 !=========================== LoKiGen v1r4 2006-08-30 ==========================
 ! 2006-08-26 - Vanya BELYAEV
- - LoKi/GenParticles.h 
+ - LoKi/GenParticles.h
    src/GenParticles.cpp
 
-     add the new primitive function(functor) LoKi::GenPArticles::Status 
-      for evaluation of HepMC::GenParticles::status() 
+     add the new primitive function(functor) LoKi::GenPArticles::Status
+      for evaluation of HepMC::GenParticles::status()
 
  - LoKi/GenParticleCuts.h
- 
-     add a shortcut LoKi::Cuts::GSTATUS as a shortcut for the instance 
-     fo LoKi::GenParticles::Status() 
 
- - cmt/requirements 
-  
-      version increment to v1r4 
+     add a shortcut LoKi::Cuts::GSTATUS as a shortcut for the instance
+     fo LoKi::GenParticles::Status()
+
+ - cmt/requirements
+
+      version increment to v1r4
 
 !=========================== LoKiGen v1r3 2006-06-09 ==========================
 ! 2006-06-09 - Marco Cattaneo
@@ -391,22 +394,22 @@ New Files:
 
 ! 2006-05-27 - Vanya BELYAEV
  - LoKi/PrintHepMCDecay.h src/PrintHepMCDecay.cpp
-   set of new functions LoKi::pritnHepMCDecay and LoKi::printDecay 
-   for the printout of the HepMC decay tree 
+   set of new functions LoKi::pritnHepMCDecay and LoKi::printDecay
+   for the printout of the HepMC decay tree
 
 ! 2006-05-26 - Vanya BELYAEV
 
  - LoKi/GenParticles.h src/GenParticles.cpp
    increase functionality of FromHepMCTree function.
    now it can treat the list of trees.
- - cmt/requirements 
-   version increment to v1r3 
+ - cmt/requirements
+   version increment to v1r3
 
 !=========================== LoKiGen v1r2 2006-05-02 ==========================
 ! 2006-05-02 - Vanya Belyaev
  - *ALL* files are modified (well, actually censored)
  - cmt/requirements
-   version increment to v1r2 
+   version increment to v1r2
 
 !=========================== LoKiGen v1r1 2006-03-28 ==========================
 ! 2006-03-03 - Vanya BELYAEV
@@ -416,64 +419,64 @@ New Files:
 ! 2006-02-09 - Vanya BELYAEV
  - new set of functions:
 
-   A) adapter functions  
-     - AdapterToProductionVertex - alias GFAPVX 
-     - AdapterToEndVertex        - alias GFAEVX 
-     trivial funtions which gelegated the evaluation of 
-     "vertex" fucntion to production/end vertices of 
+   A) adapter functions
+     - AdapterToProductionVertex - alias GFAPVX
+     - AdapterToEndVertex        - alias GFAEVX
+     trivial funtions which gelegated the evaluation of
+     "vertex" fucntion to production/end vertices of
      given HepMC::GenParticle :
 
-     *  Extract all particles, which are decayed after z > 1000 
+     *  Extract all particles, which are decayed after z > 1000
      *
-     *  @code 
-     * 
-     *  const LHCb::HepMCEvents* events 
+     *  @code
+     *
+     *  const LHCb::HepMCEvents* events
      *    get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
-     *  
+     *
      *  typedef std::vector<HepMC::GenParticle*> PARTICLES ;
-     *  
+     *
      *  PARTICLES parts ;
-     * 
+     *
      *  // create the predicate:
      *  GCut cut = GFAEVX( GVZ  , 10000  ) >  1000 ;
-     * 
-     *  LoKi::Extract::genParticles 
+     *
+     *  LoKi::Extract::genParticles
      *    ( events , std::back_inserter ( parts )  , cut ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
 
    B) a lot of "Vertex" funcitons  (Convention: the name starts with "GV"):
-     the trivial generic functios: 
+     the trivial generic functios:
        - GVTRUE, GVFALSE, GVALL, GVNONE, GVONE, GVNULL, GVZERO, GVMIN
-       - GVBAR, GVBARCODE - returns the "bar-code" for the given vertex 
+       - GVBAR, GVBARCODE - returns the "bar-code" for the given vertex
        - GVX,GVY,GVZ,GVT,GVTIME - returns corresponding "position" of the vertex
-       - GVCOUNT - counts number of particles withing the sepcified range, 
-                   which atisfy the certain criteria: 
+       - GVCOUNT - counts number of particles withing the sepcified range,
+                   which atisfy the certain criteria:
 
      *  E.g. find the decay H -> b b~ X :
      *
      *  @code
      *
-     *  // number of b-quarks withing children particles 
-     *  GVFun num1 =  GVCOUNT( "b"  == GID , HepMC::children ) ; 
+     *  // number of b-quarks withing children particles
+     *  GVFun num1 =  GVCOUNT( "b"  == GID , HepMC::children ) ;
      *
-     *  // number of b~-quarks withing children particles 
-     *  GVFun num2 =  GVCOUNT( "b~" == GID , HepMC::children ) ; 
+     *  // number of b~-quarks withing children particles
+     *  GVFun num2 =  GVCOUNT( "b~" == GID , HepMC::children ) ;
      *
-     *  // use adapter function to End vertex 
+     *  // use adapter function to End vertex
      *  GFun num = GFAEVX ( num1 + num2 , 0 ) ;
-     * 
+     *
      *  // find the decay H -> b b :
-     *  
+     *
      *  const LHCB::HepMCEvents* events = ... ;
      *
-     *  GCut decay = ( 2 == num ) && ( "H_10" == GID ) ;  
+     *  GCut decay = ( 2 == num ) && ( "H_10" == GID ) ;
      *
      *  const bool good = LoKi::GenAlgs::found ( events , decay ) ;
      *
-     *  @endcode 
-   
+     *  @endcode
+
       - GVSUM - accumulates the valeu of function for particles
                 withing teh specified range whcih satisfy the certain criteria:
 
@@ -481,16 +484,16 @@ New Files:
      *
      *  @code
      *
-     *  GVFun e1 = GVSUM( GE , HepMC::descendants , 
+     *  GVFun e1 = GVSUM( GE , HepMC::descendants ,
      *                           GCHARGED && GLEPTON ) ;
-     *   
-     *  GFun eLep = GFAEVX( e1 ) 
+     *
+     *  GFun eLep = GFAEVX( e1 )
      *
      *  const HepMC::GenParticle* p = ... ;
-     * 
+     *
      *  const double eTot = eLep( p ) ;
      *
-     *  @endcode 
+     *  @endcode
 
     new files:
     - LoKi/GenVertices.h
@@ -498,14 +501,14 @@ New Files:
     - src/GenVertoces.cpp
 
 ! 2006-01-24 - Vanya BELYAEV
- - New import: the parts of LoKi project, 
+ - New import: the parts of LoKi project,
    directly related to generator information in HepMC format
 
-   The package contains the HepMC-dependent parts of LoKi project: 
+   The package contains the HepMC-dependent parts of LoKi project:
      -- basic functors & predicates
-     -- helper utilities to manipulate HepMC graphs 
-     -- STL-like algorithms for selections of particles 
+     -- helper utilities to manipulate HepMC graphs
+     -- STL-like algorithms for selections of particles
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
