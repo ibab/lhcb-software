@@ -26,17 +26,21 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
 
   declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
   declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 5.0 );
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
   declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
+  declareProperty( "PionSame_ipPU_cut", m_ipPU_cut_pS      = 3.0 );
+  declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
+
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
 
   m_nnet = 0;
   m_util = 0;
+  m_descend = 0;
 
 }
 TaggerPionSameTool::~TaggerPionSameTool() {}; 
@@ -54,6 +58,12 @@ StatusCode TaggerPionSameTool::initialize() {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
   }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS; 
 }
 
@@ -69,6 +79,10 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Gaudi::LorentzVector ptotB = AXB0->momentum();
   double B0mass = ptotB.M();
 
+ //fill auxdaugh for distphi
+  double distphi;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
+  axdaugh.push_back( AXB0 );
   //select pionS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ipionS=0;
@@ -94,6 +108,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P  < m_P_cut_pionS )  continue;
     verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
+    //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
+    //if (cloneDist!=-1) continue;
+
     const Track* track = proto->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
@@ -109,6 +126,12 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
+
+    double ippu=(*ipart)->info(1,100000.);
+    if(ippu < m_ipPU_cut_pS) continue;
+    //distphi
+    if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distPhi_cut_pS ) continue;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;

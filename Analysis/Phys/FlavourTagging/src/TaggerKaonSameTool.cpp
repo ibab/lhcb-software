@@ -31,6 +31,8 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 5.0 );
+  declareProperty( "KaonS_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
+  declareProperty( "KaonS_distPhi_cut", m_distPhi_cut_kS= 0.005 );
 
   declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  1.0 );
   declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -1.0 );
@@ -39,6 +41,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
 
   m_nnet = 0;
   m_util = 0;
+  m_descend = 0;
 }
 TaggerKaonSameTool::~TaggerKaonSameTool() {}; 
 
@@ -54,7 +57,13 @@ StatusCode TaggerKaonSameTool::initialize() {
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
+  } 
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
   }
+
 
   return StatusCode::SUCCESS; 
 }
@@ -70,6 +79,10 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
 
+  //fill auxdaugh for distphi
+  double distphi;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
+  axdaugh.push_back( AXB0 );
   //select kaonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ikaonS=0;
@@ -82,10 +95,11 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 );
 
+    //verbose()<<"  KaonS PIDk="<<pidk<<" PIDp="<<pidp <<" pidk-p: "<<pidk-pidp<<endreq;
     if(pidk==0) continue;
     if(pidk < m_KaonSPID_kS_cut ) continue;
     if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
-    verbose()<<" KaonS PIDk="<<pidk<<" PIDp="<<pidp <<endreq;
+    verbose()<<"     KaonS PIDk="<<pidk<<" PIDp="<<pidp <<endreq;
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
@@ -94,10 +108,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P < m_P_cut_kaonS )  continue;
     verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endreq;
 
+    //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
+    //if (cloneDist!=-1) continue;
+
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
+    verbose()<<" KaonS lcs1="<<lcs<<endreq;
     if( lcs > m_lcs_cut ) continue;
-    verbose()<<" KaonS lcs="<<lcs<<endreq;
+    verbose()<<" KaonS lcs2="<<lcs<<endreq;
 
     //calculate signed IP wrt RecVert
     double IP, IPerr;
@@ -106,6 +124,13 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double IPsig = IP/IPerr;
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
     verbose()<<" KaonS IPs="<<IPsig<<endreq;
+
+    double ippu=(*ipart)->info(1,100000.);
+    if(ippu < m_ipPU_cut_kS) continue;
+    //distphi
+    if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
+    info()<<" distPhi="<<distphi<<endreq;
+    if( distphi < m_distPhi_cut_kS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     if(deta > m_etacut_kaonS) continue;

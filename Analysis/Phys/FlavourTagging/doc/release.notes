@@ -5,6 +5,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-11-11 - Marc Grabalosa
+  . default strip10 tuning
+  . modify options
+  . introduced noclones(kOS and vtx), ipPU, and distPhi for each tagger
+
 ! 2010-11-04 - Marc Grabalosa
   . added bestPV method (uses IRelatedPVFinder)
   . added ForceSignalID (Bu, Bd, Bs)

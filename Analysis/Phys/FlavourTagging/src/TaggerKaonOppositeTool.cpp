@@ -24,19 +24,22 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "NeuralNetName", m_NeuralNetName    = "NNetTool_MLP" );
   declareProperty( "AverageOmega",  m_AverageOmega     = 0.33 );
 
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.9 *GeV );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.8 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4. );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.5 );
-  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 5 );
-  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  0.0);
+  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 2.7 );
+  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  2.0);
   declareProperty( "Kaon_PIDkp",    m_PIDkp_cut     = -1.0 );
   declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
-  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut      = 4.0 );
-  declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0. ); //no cut
+  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 6.0 );
+  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= 0.005 );
+  declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0.51 ); //no cut
 
   m_nnet = 0;
   m_util = 0;
+  m_descend = 0;
+  
 }
 TaggerKaonOppositeTool::~TaggerKaonOppositeTool() {}; 
 
@@ -53,6 +56,11 @@ StatusCode TaggerKaonOppositeTool::initialize() {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS; 
 }
@@ -67,13 +75,17 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
   verbose()<<"--Kaon OppositeSide Tagger--"<<endreq;
 
+  //fill auxdaugh for distphi
+  double distphi;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
+  axdaugh.push_back( AXB0 );
   //select kaon opposite tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ikaon=0;
   double ptmaxk = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-
+    
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
     if(pidk < m_PID_k_cut ) continue;
@@ -89,6 +101,9 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     double P = (*ipart)->p();
     if( P < m_P_cut_kaon )  continue;
 
+    double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
+    if (cloneDist!=-1) continue;
+
     verbose() << " Kaon P="<< P <<" Pt="<<Pt<<endmsg;
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
@@ -103,15 +118,15 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
+    if (fabs(IP) > m_IP_cut_kaon) continue;
+    if (IPsig < m_IPs_cut_kaon) continue;
  
     double ippu=(*ipart)->info(1,100000.);
     verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" IPPU="<<ippu<<endmsg;
-
-    if (IPsig < m_IPs_cut_kaon) continue;
-
-    if (fabs(IP) > m_IP_cut_kaon) continue;
-
-    if(ippu < m_ipPU_cut) continue;
+    if(ippu < m_ipPU_cut_kaon) continue;
+    //distphi
+    if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distPhi_cut_kaon ) continue;
 
     ncand++;
 	

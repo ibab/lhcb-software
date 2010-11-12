@@ -29,8 +29,8 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
-  declareProperty( "PowerK",       m_PowerK               = 0.35 );
-  declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.12 );
+  declareProperty( "PowerK",       m_PowerK               = 0.4 );
+  declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.15 );
   declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.53);
 
   //For CombinationTechnique: "Probability"

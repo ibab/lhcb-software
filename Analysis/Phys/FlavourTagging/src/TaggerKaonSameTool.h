@@ -13,6 +13,7 @@
 
 // from local
 #include "INNetTool.h"
+#include "Kernel/IParticleDescendants.h"
 #include "ITaggingUtils.h"
 
 /** @class TaggerKaonSameTool TaggerKaonSameTool.h 
@@ -45,6 +46,7 @@ public:
 private:
 
   INNetTool* m_nnet;
+  IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
@@ -58,6 +60,8 @@ private:
   double m_lcs_cut;
   double m_KaonSPID_kpS_cut;
   double m_KaonSPID_kS_cut;
+  double m_ipPU_cut_kS;
+  double m_distPhi_cut_kS;
   double m_ProbMin_kaonS;
 
   double m_AverageOmega;

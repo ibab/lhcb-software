@@ -25,19 +25,22 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "AverageOmega", m_AverageOmega      = 0.33 );
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1.1 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
   declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
-  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 0. );
+  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 2. );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
   declareProperty( "VeloChargeMin",m_VeloChMin     = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.3 );
-  declareProperty( "EoverP",       m_EoverP        = 0.85 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 5.5 );
+  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.6 );
+  declareProperty( "EoverP",       m_EoverP        = 0.6 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
+  declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
+  declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
   declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
 
   m_nnet = 0;
   m_util = 0;
+  m_descend = 0;
   m_electron = 0;
 }
 TaggerElectronTool::~TaggerElectronTool() {}; 
@@ -53,6 +56,11 @@ StatusCode TaggerElectronTool::initialize() {
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
   m_electron = tool<ICaloElectron>( "CaloElectron");
@@ -72,7 +80,11 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   if(!RecVert) return tele;
 
   verbose()<<"-- Electron Tagger --"<<endreq;
-
+  
+  //fill auxdaugh for distphi
+  double distphi;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
+  axdaugh.push_back( AXB0 );
   //select electron tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   Particle::ConstVector vele(0);
@@ -95,6 +107,9 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P < m_P_cut_ele )  continue;
     verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
+    //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
+    //if (cloneDist!=-1) continue;
+
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
@@ -112,6 +127,12 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(!IPerr) continue;
     double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele) continue;
+
+    double ippu=(*ipart)->info(1,100000.);
+    if(ippu < m_ipPU_cut_ele) continue;
+    //distphi
+    if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distPhi_cut_ele ) continue;
 
     double eOverP  = -999;
     if( m_electron->set(*ipart) ) { 

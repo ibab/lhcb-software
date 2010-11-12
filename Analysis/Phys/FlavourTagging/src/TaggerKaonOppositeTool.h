@@ -9,8 +9,10 @@
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
-#include "INNetTool.h"
 
+// from local
+#include "INNetTool.h"
+#include "Kernel/IParticleDescendants.h"
 #include "ITaggingUtils.h"
 
 /** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h 
@@ -42,6 +44,7 @@ public:
 private:
   
   ITaggingUtils* m_util;
+  IParticleDescendants* m_descend;
   INNetTool* m_nnet;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
@@ -56,8 +59,9 @@ private:
   double m_ghost_cut;
   double m_PID_k_cut;
   double m_PIDkp_cut;
+  double m_ipPU_cut_kaon;
+  double m_distPhi_cut_kaon;
   double m_ProbMin_kaon;
-  double m_ipPU_cut;
 
 
 };

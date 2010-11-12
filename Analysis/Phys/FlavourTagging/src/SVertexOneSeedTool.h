@@ -51,7 +51,9 @@ private:
   IVertexFit *fitter;
   double m_lcs_Long_cut;
   double m_lcs_Upstream_cut;
+  double m_lcs_vtxaddedtracks_cut;
   double m_maxprobf;
+  bool m_noclones;
 
 };
 #endif // SVERTEXTOOL_H

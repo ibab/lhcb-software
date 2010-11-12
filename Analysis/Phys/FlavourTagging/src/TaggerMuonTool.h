@@ -12,6 +12,7 @@
 
 // from local
 #include "ITaggingUtils.h"
+#include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
 
 
@@ -44,6 +45,7 @@ public:
 private:
 
   INNetTool* m_nnet;
+  IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
 
   IDataProviderSvc* m_eventSvc;
@@ -55,6 +57,8 @@ private:
   double m_IPs_cut_muon;
   double m_lcs_cut_muon;
   double m_PIDm_cut;
+  double m_ipPU_cut_muon;
+  double m_distPhi_cut_muon;
   double m_ProbMin_muon;
   double m_AverageOmega;
 };

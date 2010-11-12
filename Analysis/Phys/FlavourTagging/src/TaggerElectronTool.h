@@ -13,6 +13,7 @@
 // from local
 #include "ITaggingUtils.h"
 #include "INNetTool.h"
+#include "Kernel/IParticleDescendants.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
  *
@@ -43,6 +44,7 @@ public:
 private:
   INNetTool* m_nnet;
   ITaggingUtils*  m_util;
+  IParticleDescendants* m_descend;
   ICaloElectron*  m_electron;
 
   std::string m_CombinationTechnique, m_NeuralNetName;
@@ -50,14 +52,16 @@ private:
   //properties 
   double m_Pt_cut_ele;
   double m_P_cut_ele;
+  double m_IPs_cut_ele;
   double m_VeloChMin;
   double m_VeloChMax;
   double m_EoverP, m_lcs_cut_ele;  
   double m_AverageOmega;
   double m_ghost_cut_ele;
   double m_PIDe_cut;
+  double m_ipPU_cut_ele;
+  double m_distPhi_cut_ele;
   double m_ProbMin_ele;
-  double m_IPs_cut_ele;
 
 
 };

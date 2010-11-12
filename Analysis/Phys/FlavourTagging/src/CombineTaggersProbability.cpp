@@ -19,9 +19,9 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<ICombineTaggersTool>(this);
 
-  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
-  declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
-  declareProperty( "ProbMin",     m_ProbMin     = 0.55 );
+  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.38 );
+  declareProperty( "OmegaScale",  m_omegascale  = 0.07 );
+  declareProperty( "ProbMin",     m_ProbMin     = 0.56 );
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}

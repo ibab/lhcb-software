@@ -14,6 +14,7 @@
 
 // from local
 #include "ITaggingUtils.h"
+#include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
 
 /** @class TaggerPionSameTool TaggerPionSameTool.h 
@@ -45,6 +46,7 @@ public:
 private:
 
   INNetTool* m_nnet;
+  IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
@@ -59,6 +61,7 @@ private:
   double m_ghost_cut;
   double m_PionSame_PIDNoK_cut;
   double m_PionSame_PIDNoP_cut;
+  double m_ipPU_cut_pS, m_distPhi_cut_pS;
 
 };
 //===============================================================//

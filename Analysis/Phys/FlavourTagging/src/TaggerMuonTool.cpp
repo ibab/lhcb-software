@@ -27,13 +27,17 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
 
   declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
-  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 *GeV );
-  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
+  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 2.0 );
+  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.5 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 3.0 );
+  declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
+  declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.04 );
+
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
 
   m_nnet = 0;
   m_util = 0;
+  m_descend = 0;
 }
 TaggerMuonTool::~TaggerMuonTool() {}; 
 
@@ -48,6 +52,11 @@ StatusCode TaggerMuonTool::initialize() {
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
@@ -68,6 +77,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   
   verbose()<<"--Muon Tagger--"<<endreq;
   
+ //fill auxdaugh for distphi
+  double distphi;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB0 );
+  axdaugh.push_back( AXB0 );
   //select muon tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* imuon=0;
@@ -92,6 +105,9 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P  < m_P_cut_muon ) continue;
     verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
 
+    //double cloneDist = proto->track()->info(LHCb::Track::CloneDist, -1.);
+    //if (cloneDist!=-1) continue;
+
     double lcs = proto->track()->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
     verbose() << " Muon lcs="<< lcs <<endreq;
@@ -102,6 +118,15 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(!IPerr) continue;
     double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_muon) continue;
+    verbose() << " IPsig="<< IPsig <<endreq;
+
+    double ippu=(*ipart)->info(1,100000.);
+    verbose() << " ippu="<< ippu <<endreq;
+    if(ippu < m_ipPU_cut_muon) continue;
+    //distphi
+    if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distPhi_cut_muon ) continue;
+    verbose()<<" distPhi="<<distphi<<endreq;
 
     ncand++;
 
