@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction base class : Rich::Rec::CommonBase
  *
- *  CVS Log :-
- *  $Id: RichRecBase.h,v 1.5 2007-03-09 18:04:33 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
  */
