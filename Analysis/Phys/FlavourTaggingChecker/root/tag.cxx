@@ -207,6 +207,69 @@ int main () {
         if( isame->absMCID()== 0   ) 
         { h1023->Fill(isame->PIDk()); h1024->Fill(isame->PIDk()-isame->PIDp()); }
       }
+      
+      ////////////////////////////////////////////
+      //for primary vertex study
+      Particle*  iparticle = ikaon;
+      Tagger* tparticle = tkaon;
+      if ((iparticle) and (krec>1)) {
+        debug()<<"Variables: "	
+               <<"nippuerr: "<<iparticle->nippuerr()
+               <<"nippuchi2bs: "<<iparticle->ippuchi2bs()
+               <<"tracks: "<<iparticle->tracks()
+               <<endmsg;
+
+        double gippu=sqrt(iparticle->nippuerr());
+        //double ipmeandif= pow(iparticle->IP()-iparticle->ipmean(),2)/pow(iparticle->ipmean(),2);
+        double ipmeandif= pow(iparticle->IP()-iparticle->ipmean(),2)/pow(iparticle->IP(),2);
+        double ipmeandif1= (iparticle->IP()-iparticle->ipmean());
+        //double ipdif=pow(iparticle->IP()-iparticle->IPPU(),2)/pow(iparticle->IPPU(),2);
+        double ipdif=pow(iparticle->IP()-iparticle->nippu(),2)/pow(iparticle->IP(),2);
+        double ipdif1=(iparticle->IP()-iparticle->nippu());
+        double zposdif=(iparticle->trackzfirst()-iparticle->zpos());
+        double zposdif1=fabs(iparticle->trackzfirst()-iparticle->zpos());
+        
+        if (tparticle->decision()==TrueTag) {
+          //if (iparticle->fromB()==1) {
+          //if ((iparticle->absMCID()==321) && (iparticle->fromB()==1)) {
+          hpv_difip_r->Fill(ipdif);
+          hpv_difip1_r->Fill(ipdif1);
+          hpv_ipmeandif_r->Fill(ipmeandif);
+          hpv_ipmeandif1_r->Fill(ipmeandif1);
+          hpv_ippu_r->Fill(iparticle->IPPU());
+          hpv_gippu_r->Fill(gippu);
+          hpv_ipmean_r->Fill(iparticle->ipmean());
+          hpv_nippu_r->Fill(iparticle->nippu());
+          hpv_tracks_r->Fill(iparticle->tracks());
+          hpv_trackzfirst_r->Fill(iparticle->trackzfirst());
+          hpv_trackp_r->Fill(iparticle->trackp());
+          hpv_zposdif_r->Fill(zposdif);
+          hpv_zposdif1_r->Fill(zposdif1);
+          hpv_ippubs_r->Fill(iparticle->ippubs());
+          hpv_ippuchi2bs_r->Fill(iparticle->ippuchi2bs());
+          hpv_zpos_r->Fill(iparticle->zpos());
+          hpv_zerrpos_r->Fill(iparticle->zerrpos());
+        } else {
+          hpv_difip_w->Fill(ipdif);
+          hpv_difip1_w->Fill(ipdif1);
+          hpv_ipmeandif_w->Fill(ipmeandif);
+          hpv_ipmeandif1_w->Fill(ipmeandif1);
+          hpv_ippu_w->Fill(iparticle->IPPU());
+          hpv_gippu_w->Fill(gippu);
+          hpv_ipmean_w->Fill(iparticle->ipmean());
+          hpv_nippu_w->Fill(iparticle->nippu());
+          hpv_nippuerr_w->Fill(iparticle->nippuerr());
+          hpv_tracks_w->Fill(iparticle->tracks());
+          hpv_trackzfirst_w->Fill(iparticle->trackzfirst());
+          hpv_trackp_w->Fill(iparticle->trackp());
+          hpv_zposdif_w->Fill(zposdif);
+          hpv_zposdif1_w->Fill(zposdif1);
+          hpv_ippubs_w->Fill(iparticle->ippubs());
+          hpv_ippuchi2bs_w->Fill(iparticle->ippuchi2bs());
+          hpv_zpos_w->Fill(iparticle->zpos());
+          hpv_zerrpos_w->Fill(iparticle->zerrpos());
+        }
+      }
 
       /////////////////////////
       if(imuon) { 
@@ -242,6 +305,7 @@ int main () {
           hr_ele_pid->Fill(iele->PIDe()); 
           hr_ele_tsal->Fill(iele->likelihood()); 
           hr_ele_mult->Fill(nparts); 
+          homphi_ele_r->Fill(iele->distPhi());
         } else {
           hw_ele_p->Fill(iele->p()); 
           hw_ele_pt->Fill(iele->pt());
@@ -251,6 +315,7 @@ int main () {
           hw_ele_pid->Fill(iele->PIDe()); 
           hw_ele_tsal->Fill(iele->likelihood()); 
           hw_ele_mult->Fill(nparts); 
+          homphi_ele_w->Fill(iele->distPhi());
         }
       }
       if(ikaon) { 

@@ -4,14 +4,17 @@ TaggerMuonTool::TaggerMuonTool( ) {
 
   declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
-  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
-  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0. );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
+  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.5 );
+  declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 2.0 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 3.0 );
+  declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
+  declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.04 );
   declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
 
   NNetTool_MLP nnet;
   tmu = new Tagger();
   hcut_mu_ippu= new TH1F("hcut_mu_ippu","hcut_mu_ippu",100, 0, 20);
+  hcut_mu_distphi= new TH1F("hcut_mu_distphi","hcut_mu_distphi",100, 0, 0.09);
   hcut_mu_N   = new TH1F("hcut_mu_N",   "hcut_mu_N",   100, 0, 100);
   hcut_mu_pid = new TH1F("hcut_mu_pid","hcut_mu_pid", 100, -10, 40);
   hcut_mu_pt  = new TH1F("hcut_mu_pt", "hcut_mu_pt",  100, 0, 10);
@@ -51,15 +54,25 @@ Tagger* TaggerMuonTool::tag(Event& event) {
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     if(IPsig < m_IPs_cut_muon ) continue;
+    verbose() << " IPsig="<< IPsig <<endreq;
+
+    //ip and phi wrt PU
+    double ipPU  = axp->IPPU();
+    verbose() << " ipPU="<< ipPU <<endreq;
+    if(ipPU < m_ipPU_cut_muon ) continue;
+    double distPhi = axp->distPhi();
+    if (distPhi < m_distPhi_cut_muon) continue;
+    verbose() << " distPhi="<< distPhi <<endreq;
 
     ncand++;
 
-    hcut_mu_ippu->Fill(axp->IPPU());
-    hcut_mu_N   ->Fill(event.multiplicity());
-    hcut_mu_pid->Fill(axp->PIDm());
-    hcut_mu_pt->Fill(Pt);
-    hcut_mu_p->Fill(P);
-    hcut_mu_lcs->Fill(axp->LCS());
+    hcut_mu_ippu   ->Fill(axp->IPPU());
+    hcut_mu_distphi->Fill(distPhi);
+    hcut_mu_N      ->Fill(event.multiplicity());
+    hcut_mu_pid    ->Fill(axp->PIDm());
+    hcut_mu_pt     ->Fill(Pt);
+    hcut_mu_p      ->Fill(P);
+    hcut_mu_lcs    ->Fill(axp->LCS());
 
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = (*ipart);

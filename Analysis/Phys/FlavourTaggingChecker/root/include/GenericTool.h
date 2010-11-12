@@ -53,32 +53,39 @@ public:
     
     switch (s) {
     case Particle::muon :
-      if( a->hasMuonFlag() && a->muonNShared()==0 && 
-	  a->PIDm() > m_PIDm_cut ) return true;
+      if( a->hasMuonFlag() && a->muonNShared()==0 &&
+          //if( a->hasMuonFlag() && a->muonNShared()==0 && a->cloneDist()==-1 &&
+          a->PIDm() > m_PIDm_cut ) return true;
       return false;
     case Particle::electron :
       if( a->inAccHcal() && a->PIDe() > m_PIDe_cut ) return true;
+      //if( a->inAccHcal() && a->PIDe() > m_PIDe_cut && a->cloneDist()==-1 ) return true;
       return false;
     case Particle::kaon_opposite :
-      if( a->PIDk()  && a->PIDk() > m_PID_k_cut && 
-	  a->PIDk()-a->PIDp() > m_PIDkp_cut)  return true;
+      //if( a->PIDk()!=0 && a->PIDk()!=-1000.0  && a->PIDk() > m_PID_k_cut && 
+      if( a->PIDk()!=0 && a->PIDk()!=-1000.0  && a->PIDk() > m_PID_k_cut && a->cloneDist()==-1 && 
+	           a->PIDk()-a->PIDp() > m_PIDkp_cut)  return true;
       return false;
     case Particle::kaon_same :
-      if( a->PIDk()  && a->PIDk()> m_KaonSPID_kS_cut &&  
-	  a->PIDk()-a->PIDp()> m_KaonSPID_kpS_cut ) return true;
+      if( a->PIDk()  && a->PIDk()> m_KaonSPID_kS_cut ) return true;
+      //if( a->PIDk()  && a->PIDk()> m_KaonSPID_kS_cut && a->cloneDist()==-1 ) retrun true;
+      //((a->PIDk())-(a->PIDp()))> m_KaonSPID_kpS_cut ) return true;
       return false;
     case Particle::pion :
       bool pidpass=false;
       if( a->PIDk()==0 ) pidpass=true;
       if( a->PIDk()!=0 ) if(a->PIDk() < m_PionSame_PIDNoK_cut &&
-			    a->PIDp() < m_PionSame_PIDNoP_cut) pidpass=true;
+                            a->PIDp() < m_PionSame_PIDNoP_cut) pidpass=true;
+
+      //if (a->cloneDist()!=-1) pidpass=false;
 
       /* if( a->hasMuonFlag() && a->muonNShared()==0 */
       /* 	  && a->PIDm() > m_PIDm_cut ) return false; */
       /* if( a->inAccHcal() && a->PIDe() > m_PIDe_cut ) return false;  */
       /* if( pidpass ) return true; */
+
       //if( pidpass ) if( a->absID()==211 ) return true;
-     if( pidpass ) return true;
+      if( pidpass ) return true;
     }
     return false;
   }

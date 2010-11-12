@@ -31,6 +31,7 @@ class Particle {
     m_PIDe=m_PIDm=m_PIDk=m_PIDp=-999; m_IPs=0; m_IP=0; m_LCS=0;
     m_p  =TLorentzVector(0,0,0,0);
     m_mcp=TLorentzVector(0,0,0,0);
+    m_cloneDist=0;
     m_MuonNShared=0;
     m_InAccHcal=0;
     m_likelihood=0;
@@ -40,6 +41,9 @@ class Particle {
     m_docaSV=0;
     m_IPSV=0;
     m_IPPU=0;
+    m_ipmean=0; m_nippu=0; m_nippuerr=0; m_tracks=0; m_ippubs=0; m_ippuchi2bs=0;
+    m_trackp=0; m_trackzfirst=0;
+    m_zpos=0; m_zerrpos=0;
     m_distPhi=0;
     m_endVertexPosition=TVector3(0,0,0);
     m_osc=0;
@@ -106,7 +110,17 @@ class Particle {
   double IPPU() { return m_IPPU; }
   /// distance of closest approach wrt Secondary Vertex
   double docaSV()   { return m_docaSV; }
-
+  /// extra info for PV tuning
+  double ipmean() { return m_ipmean; }
+  double nippu() { return m_nippu; }
+  double nippuerr() { return m_nippuerr; }
+  int tracks() { return m_tracks; }
+  double trackzfirst() { return m_trackzfirst; }
+  double trackp() { return m_trackp; }
+  double ippubs() { return m_ippubs; }
+  double ippuchi2bs() { return m_ippuchi2bs; }
+  double zpos() { return m_zpos; }
+  double zerrpos() { return m_zerrpos; }
   /// Last Chi Square from tracking fit
   double LCS()  { return m_LCS; }
   /// particle momentum in GeV
@@ -129,6 +143,8 @@ class Particle {
   double eOverP()  { return m_EOverP; }
   /// number of shared hits of particle with other particles in the muon system
   int    muonNShared() {return m_MuonNShared; }
+  /// clone distance to other tracks
+  double  cloneDist() {return m_cloneDist; }
   /// retrieve 4-momentum
   TLorentzVector momentum()   { return m_p; }
   /// retrieve MC true 4-momentum
@@ -193,9 +209,22 @@ class Particle {
   void setMCID( int a )           {  m_MCID = a; }
   void setType( int a )      {  m_TrackType = a; }
 
+  // extra info for PV tuning
+  void setipmean(double a)    { m_ipmean = a; }
+  void setnippu(double a)    { m_nippu = a; }
+  void setnippuerr(double a)    { m_nippuerr = a; }
+  void settracks(int a)    { m_tracks = a; }
+  void settrackzfirst(double a)    { m_trackzfirst = a; }
+  void settrackp(double a)    { m_trackp = a; }
+  void setippubs(double a)    { m_ippubs = a; }
+  void setippuchi2bs(double a)    { m_ippuchi2bs = a; }
+  void setzpos(double a)    { m_zpos = a; }
+  void setzerrpos(double a)    { m_zerrpos = a; }
+
   void setDOCA( double a )   {  m_DOCA = a; }
 
   void setMuonNShared( int a )    {  m_MuonNShared = a; }
+  void setcloneDist( double a )    {  m_cloneDist = a; }
 
   void setEndVertexPosition(TVector3 a) { m_endVertexPosition=a; }
 
@@ -224,11 +253,17 @@ class Particle {
   bool m_ComesFromSVtx;
   int m_ID, m_MotherID, m_AncestorID, m_fromB, m_xFlag, m_MCID, 
     m_TrackType,m_Charge, m_MuonNShared, m_MuonFlag, m_osc;
-  double m_PIDe,m_PIDm,m_PIDk,m_PIDp, m_IPs, m_IP, m_LCS, m_veloch,  m_EOverP;
+  double m_PIDe,m_PIDm,m_PIDk,m_PIDp, m_IPs, m_IP, m_LCS, m_veloch,  m_EOverP, m_cloneDist;
   double m_InAccHcal, m_likelihood, m_DOCA, m_IPerr, m_IPSV, m_docaSV, m_distPhi;
   double m_IPPU;
   TLorentzVector m_p, m_mcp;
   TVector3 m_endVertexPosition;
+  /// extra info for PV tuning
+  double m_ipmean, m_nippu, m_nippuerr, m_ippubs, m_ippuchi2bs;
+  int m_tracks;
+  double m_trackzfirst, m_trackp;
+  double m_zpos, m_zerrpos;
+
 
 };
 

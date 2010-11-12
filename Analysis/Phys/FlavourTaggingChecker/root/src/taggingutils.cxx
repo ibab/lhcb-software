@@ -65,7 +65,7 @@ bool isinTextFile(int run, int evt) {
       if(listfile.empty()) {//no existe
         fatal()<< datafile
                <<" (*.eventlist) file does not exist or is empty.\n"
-               <<" You can change DATAFILE to none to disable it."
+               <<" You can change DATAFILE to none in tag.opts to disable it."
                <<endmsg;
         exit(1);
       }

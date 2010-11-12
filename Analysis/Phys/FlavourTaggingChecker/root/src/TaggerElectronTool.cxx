@@ -2,20 +2,23 @@
 
 TaggerElectronTool::TaggerElectronTool() {
 
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1.1 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
-  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 0. );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5. );
+  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 2. );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
   declareProperty( "VeloChargeMin",m_VeloChMin     = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.3 );
-  declareProperty( "EoverP",       m_EoverP        = 0.85 );
-  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 5.5 );
+  declareProperty( "VeloChargeMax",m_VeloChMax     = 1.6 );
+  declareProperty( "EoverP",       m_EoverP        = 0.6 );
+  declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
+  declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
+  declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
   declareProperty( "ProbMin_ele",  m_ProbMin_ele   = 0. ); //no cut
 
   NNetTool_MLP nnet;
   tele = new Tagger();
   hcut_ele_ippu= new TH1F("hcut_ele_ippu","hcut_ele_ippu",100, 0, 20);
+  hcut_ele_distphi= new TH1F("hcut_ele_distphi","hcut_ele_distphi",100, 0, 0.09);
   hcut_ele_N   = new TH1F("hcut_ele_N",   "hcut_ele_N",100, 0, 100);
   hcut_ele_ips = new TH1F("hcut_ele_ips", "hcut_ele_ips",100, 0, 20);
   hcut_ele_pidk= new TH1F("hcut_ele_pidk","hcut_ele_pidk",100, -10, 50);
@@ -65,7 +68,13 @@ Tagger* TaggerElectronTool::tag(Event& event) {
     //calculate signed IP wrt RecVert
     double IPsig = axp->IPs();
     if(IPsig < m_IPs_cut_ele ) continue;
- 
+
+    //ip and phi wrt PU
+    double ipPU  = axp->IPPU();
+    if(ipPU < m_ipPU_cut_ele ) continue;
+    double distPhi = axp->distPhi();
+    if (distPhi < m_distPhi_cut_ele) continue;
+
     double eOverP = axp->eOverP();
     if(eOverP > m_EoverP || eOverP<-100) {
       verbose() << " Elec E/P=" << eOverP <<endreq;
@@ -76,16 +85,17 @@ Tagger* TaggerElectronTool::tag(Event& event) {
 
         ncand++;
 
-        hcut_ele_pidk->Fill(axp->PIDe());
-        hcut_ele_pt  ->Fill(Pt);
-        hcut_ele_p   ->Fill(P);
-        hcut_ele_lcs ->Fill(axp->LCS());
-        hcut_ele_gho ->Fill(tsa);
-        hcut_ele_EoP ->Fill(eOverP);
-        hcut_ele_velo->Fill(veloch);
-        hcut_ele_ippu->Fill(axp->IPPU());
-        hcut_ele_N   ->Fill(event.multiplicity());
-        hcut_ele_ips ->Fill(IPsig);
+        hcut_ele_pidk   ->Fill(axp->PIDe());
+        hcut_ele_pt     ->Fill(Pt);
+        hcut_ele_p      ->Fill(P);
+        hcut_ele_lcs    ->Fill(axp->LCS());
+        hcut_ele_gho    ->Fill(tsa);
+        hcut_ele_EoP    ->Fill(eOverP);
+        hcut_ele_velo   ->Fill(veloch);
+        hcut_ele_ippu   ->Fill(axp->IPPU());
+        hcut_ele_distphi->Fill(distPhi);
+        hcut_ele_N      ->Fill(event.multiplicity());
+        hcut_ele_ips    ->Fill(IPsig);
 
         if( Pt > ptmaxe ) { 
           iele = (*ipart);

@@ -11,6 +11,13 @@ CombineTaggersPID::CombineTaggersPID(){
   declareProperty( "CombineTaggersPID_cat4", m_cat4 = 0.257 );
   declareProperty( "CombineTaggersPID_cat5", m_cat5 = 0.180 );
 
+  //test for strip10
+  //declareProperty( "CombineTaggersPID_cat1", m_cat1 = 0.414 );
+  //declareProperty( "CombineTaggersPID_cat2", m_cat2 = 0.3465 );
+  //declareProperty( "CombineTaggersPID_cat3", m_cat3 = 0.3075 );
+  //declareProperty( "CombineTaggersPID_cat4", m_cat4 = 0.2695 );
+  //declareProperty( "CombineTaggersPID_cat5", m_cat5 = 0.1965 );
+
   //Sort the possible combination of particle identification (PID) 
   //according to omega
   const unsigned long CvSize = 41;
@@ -100,9 +107,50 @@ CombineTaggersPID::CombineTaggersPID(){
     11111,
     111100
   };
+  //strip10
+  const int pid_cats_new_bs[CvSize] = {
+    110110,
+    110101,
+    110100,
+    110011,
+    110111,
+    111000,
+    111011,
+    110010,
+    101110,
+    110001,
+    101101,
+    11010,
+    100111,
+    10000,
+    101100,
+    101111,
+    101011,
+    111101,
+    11100,
+    10011,
+    100110,
+    10110,
+    100101,
+    11001,
+    101010,
+    101001,
+    10101,
+    100,
+    100011,
+    1000,
+    111,
+    1110,
+    1101,
+    1011,
+    10,
+    1
+  };
   for(unsigned int i=0; i<CvSize; i++) {
     m_pid_cats_bu.push_back(pid_cats_bu[i]);
     m_pid_cats_bs.push_back(pid_cats_bs[i]);
+    //m_pid_cats_bu.push_back(pid_cats_new_bs[i]);
+    //m_pid_cats_bs.push_back(pid_cats_new_bs[i]);
     m_index.push_back(0);
   }
   
@@ -207,6 +255,12 @@ FlavourTag* CombineTaggersPID::combineTaggers( Taggers& vtg ){
         else if (ic<=25) { catt=3; omega=m_cat3; }
         else if (ic<=32) { catt=2; omega=m_cat2; }
         else if (ic<=39) { catt=1; omega=m_cat1; }
+        //strip10
+        //if      (ic<=7) { catt=5; omega=m_cat5; }
+        //else if (ic<=14) { catt=4; omega=m_cat4; }
+        //else if (ic<=21) { catt=3; omega=m_cat3; }
+        //else if (ic<=28) { catt=2; omega=m_cat2; }
+        //else if (ic<=36) { catt=1; omega=m_cat1; }
         else catt=0;
       }
     }

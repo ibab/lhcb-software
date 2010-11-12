@@ -2,12 +2,15 @@
 #--- cuts optimized for MC2010:
 
 IPPU_cut = 3.0
+distphi_cut = 0.005
 
 Muon_Pt_cut   = 1.1
 Muon_P_cut    = 0.0 
 Muon_IPs_cut  = 0.0 
 Muon_lcs_cut  = 2.2
 Muon_PIDm_cut = 2.0
+Muon_ipPU_cut  = 3.
+Muon_distPhi_cut    = 0.005
 ProbMin_muon  = 0
 
 Ele_Pt_cut    = 1.1
@@ -19,6 +22,8 @@ VeloChargeMin = 0.0
 VeloChargeMax = 1.3
 EoverP        = 0.85
 Ele_PIDe_cut  = 4.0
+Ele_ipPU_cut  = 3.
+Ele_distPhi_cut    = 0.005
 ProbMin_ele   = 0.0
 
 Kaon_Pt_cut                = 0.4
@@ -26,6 +31,7 @@ Kaon_P_cut                 = 4.0
 Kaon_IPs_cut               = 3.8
 Kaon_IP_cut                = 1.5
 Kaon_ipPU_cut              = 4.
+Kaon_distPhi_cut           = 0.005
 Kaon_LCS_cut               = 2.5
 Kaon_PIDk                  =  0.0
 Kaon_PIDkp                 = -1.0
@@ -39,6 +45,8 @@ KaonSame_Phi_cut = 1.1
 KaonSame_Eta_cut = 1.0
 KaonSame_dQ_cut  = 1.6
 KaonS_LCS_cut    = 2.0
+KaonS_ipPU_cut    = 3.0
+KaonS_distPhi_cut    = 0.005
 KaonSPID_kS_cut  = 1.0
 KaonSPID_kpS_cut = -1.0
 ProbMin_kaonS    = 0
@@ -50,6 +58,8 @@ PionS_LCS_cut         = 2.0
 PionSame_dQ_cut       = 3.0
 PionSame_dQ_extra_cut = 1.5 
 Pion_ghost_cut        = -999.0
+PionSame_ipPU_cut    = 3.0
+PionSame_distPhi_cut    = 0.005
 PionSame_PIDNoK_cut   = 3.0
 PionSame_PIDNoP_cut   = 10.0
 PionProbMin           = 0.55

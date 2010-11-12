@@ -10,8 +10,8 @@ TaggerVertexChargeTool::TaggerVertexChargeTool() {
   declareProperty( "UseObsoleteSV", m_UseObsoleteSV       = false );
   declareProperty( "AverageOmega",  m_AverageOmega        = 0.41 );
 
-  declareProperty( "PowerK",        m_PowerK              = 0.35 );
-  declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.12 );
+  declareProperty( "PowerK",        m_PowerK              = 0.4 );
+  declareProperty( "MinimumVCharge",m_MinimumVCharge      = 0.15 );
   declareProperty( "ProbMin_vtx",   m_ProbMin_vtx         = 0.53);
 
   //For CombinationTechnique "Probability":
@@ -59,6 +59,8 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
     maxprobf= mysecvtx->likelihood();
   }
 
+  debug()<<"Pfit.size: "<<Pfit.size()<<endreq;
+
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
   debug()<<"--- SVTOOL buildVertex returns vertex"
@@ -105,7 +107,7 @@ Tagger* TaggerVertexChargeTool::tag(Event& event) {
 
 
   //calculate omega
-  debug()<<"calculate omega with "<<m_UseObsoleteSV<<endreq;
+  debug()<<"calculate omega, use obsolete (0=no): "<<m_UseObsoleteSV<<endreq;
   double omega = m_AverageOmega;
   if(m_UseObsoleteSV) {
     if( fabs(Vch)<0.75 ) omega = m_P0 + m_P1*fabs(Vch) ;

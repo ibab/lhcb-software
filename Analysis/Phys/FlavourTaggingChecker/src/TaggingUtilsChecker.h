@@ -36,6 +36,14 @@ public:
   StatusCode calcIP( const LHCb::Particle*,
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
+  StatusCode calcIPPU( const LHCb::Particle*,
+                       const LHCb::Particle*,
+                       const LHCb::RecVertex::ConstVector& ,
+                       const double ,
+                       double& , double&, double&,
+                       double& , double&, double&,
+                       double& , double&, double&,
+                       int& , double&, double&);
   StatusCode calcDOCAmin( const LHCb::Particle* ,
 			  const LHCb::Particle* , 
 			  const LHCb::Particle* , double& , double& );

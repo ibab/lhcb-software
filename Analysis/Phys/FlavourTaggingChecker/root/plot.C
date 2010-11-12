@@ -17,16 +17,17 @@
   gStyle->SetTitleFillColor(5);
 
   bool endblock = 1;
-  // goto taggercandidates;
-  // goto general;
-  // goto asymm;
-  goto nnet;
-  // goto vertex;
-  // goto omegapt;
-  // goto addseed;
-  // goto vtxcharge;
-  // goto pid;
-  // goto effeff_cut;
+  //  goto taggercandidates;
+  //  goto general;
+  goto asymm;
+  //  goto nnet;
+  //  goto vertex;
+  //  goto omegapt;
+  //  goto addseed;
+  //  goto vtxcharge;
+  //  goto pid;
+  //  goto effeff_cut;
+  //  goto primaryvertex;
 
 taggercandidates:////////////////////////////////////////////////////
 
@@ -230,6 +231,7 @@ goto tag;
   plotEffectiveEff(hr_mu_pt, hw_mu_pt);              if(wait())return;
   plotEffectiveEff(hr_mu_ips, hw_mu_ips);            if(wait())return;
   plotEffectiveEff(hr_mu_ippu, hw_mu_ippu);          if(wait())return;
+  plotEffectiveEff(homphi_mu_r, homphi_mu_w);          if(wait())return;
   plotEffectiveEff(hr_mu_lcs, hw_mu_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_mu_pid, hw_mu_pid);            if(wait())return;
   plotEffectiveEff(hr_mu_tsal, hw_mu_tsal);          if(wait())return;
@@ -241,6 +243,7 @@ tag:
   plotEffectiveEff(hr_ele_pt, hw_ele_pt);            if(wait())return;
   plotEffectiveEff(hr_ele_ips, hw_ele_ips);          if(wait())return;
   plotEffectiveEff(hr_ele_ippu, hw_ele_ippu);        if(wait())return;
+  plotEffectiveEff(homphi_ele_r, homphi_ele_w);          if(wait())return;
   plotEffectiveEff(hr_ele_lcs, hw_ele_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_ele_pid, hw_ele_pid);          if(wait())return;
   plotEffectiveEff(hr_ele_tsal, hw_ele_tsal);        if(wait())return;
@@ -250,6 +253,7 @@ tag:
   plotEffectiveEff(hr_k_pt, hw_k_pt);              if(wait())return;
   plotEffectiveEff(hr_k_ips, hw_k_ips);            if(wait())return;
   plotEffectiveEff(hr_k_ippu, hw_k_ippu);          if(wait())return;
+  plotEffectiveEff(homphi_kO_r, homphi_kO_w);          if(wait())return;
   plotEffectiveEff(hr_k_lcs, hw_k_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_k_pid, hw_k_pid);            if(wait())return;
   plotEffectiveEff(hr_k_tsal, hw_k_tsal);          if(wait())return;
@@ -260,6 +264,7 @@ tag:
   plotEffectiveEff(hr_kS_pt, hw_kS_pt);                if(wait())return;
   plotEffectiveEff(hr_kS_ips, hw_kS_ips, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_ippu, hw_kS_ippu);            if(wait())return;
+  plotEffectiveEff(homphi_kS_r, homphi_kS_w);          if(wait())return;
   plotEffectiveEff(hr_kS_lcs, hw_kS_lcs, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_pid, hw_kS_pid, "right2left");if(wait())return;
   plotEffectiveEff(hr_kS_tsal, hw_kS_tsal);            if(wait())return;
@@ -403,6 +408,32 @@ tag:
   plotPID("kaon-proton",h1015, h1005, h1025); if(wait())return;
   plotPID("kaonsame",   h1013, h1003, h1023); if(wait())return;
   plotPID("pion",       h1014, h1004, h1024); 
+
+primaryvertex: /////////////////////////////////////////////////////////////
+  cout<<"plotting primary vertex"<<endl;
+  //  plotEffectiveEff(hpv_ipmean_r, hpv_ipmean_w         ); if(wait())return;
+  //  plotEffectiveEff(hpv_ippu_r, hpv_ippu_w                   ); if(wait())return;
+  //plotEffectiveEff(hpv_gippu_r, hpv_gippu_w                 ); if(wait())return;
+  //  plotEffectiveEff(hpv_difip_r, hpv_difip_w                 ); if(wait())return;
+  //  plotEffectiveEff(hpv_difip1_r, hpv_difip1_w               ); if(wait())return;
+  plotEffectiveEff(hpv_difip1_r, hpv_difip1_w, "right2left"); if(wait())return;
+  //  plotEffectiveEff(hpv_ipmeandif_r, hpv_ipmeandif_w         ); if(wait())return;
+  //  plotEffectiveEff(hpv_ipmeandif1_r, hpv_ipmeandif1_w       ); if(wait())return;
+  plotEffectiveEff(hpv_ipmeandif1_r, hpv_ipmeandif1_w, "right2left" ); if(wait())return;
+  //plotEffectiveEff(hpv_nippu_r, hpv_nippu_w           ); if(wait())return;
+  //plotEffectiveEff(hpv_nippuerr_r, hpv_nippuerr_w     ); if(wait())return;
+  //  plotEffectiveEff(hpv_ippubs_r, hpv_ippubs_w         ); if(wait())return;
+  //  plotEffectiveEff(hpv_ippubs_r, hpv_ippubs_w, "right2left" ); if(wait())return;
+  //plotEffectiveEff(hpv_ippuchi2bs_r, hpv_ippuchi2bs_w ); if(wait())return;
+  //plotEffectiveEff(hpv_tracks_r, hpv_tracks_w         ); if(wait())return;
+  //  plotEffectiveEff(hpv_trackzfirst_r, hpv_trackzfirst_w    ); if(wait())return;
+  //plotEffectiveEff(hpv_trackp_r, hpv_trackp_w         ); if(wait())return;
+  //  plotEffectiveEff(hpv_zpos_r, hpv_zpos_w             ); if(wait())return;
+  //  plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w       ); if(wait())return;
+  //  plotEffectiveEff(hpv_zposdif_r, hpv_zposdif_w, "right2left"); if(wait())return;
+  plotEffectiveEff(hpv_zposdif1_r, hpv_zposdif1_w       ); if(wait())return;
+  //  plotEffectiveEff(hpv_zerrpos_r, hpv_zerrpos_w, "right2left"); if(wait())return;
+  //plot_omega, plotEffectiveEff
 
  end:
 

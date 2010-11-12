@@ -39,8 +39,10 @@ private:
   double m_VeloChMin  ;
   double m_VeloChMax  ;
   double m_EoverP ;
-  double m_ProbMin_ele ;
   double m_IPs_cut_ele;
+  double m_ipPU_cut_ele;
+  double m_distPhi_cut_ele;
+  double m_ProbMin_ele ;
   
 
   NNetTool_MLP nnet;
@@ -54,6 +56,7 @@ private:
   TH1F* hcut_ele_EoP ;
   TH1F* hcut_ele_velo;
   TH1F* hcut_ele_ippu;
+  TH1F* hcut_ele_distphi;
   TH1F* hcut_ele_N;
   TH1F* hcut_ele_ips ;
 

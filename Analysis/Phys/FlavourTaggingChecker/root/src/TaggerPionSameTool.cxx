@@ -2,21 +2,24 @@
 
 TaggerPionSameTool::TaggerPionSameTool() {
 
-  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.75 *GeV );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 0.0 *GeV );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 5.0 *GeV );
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.5 );
-  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 5.0 );
+  declareProperty( "PionSame_LCS_cut",   m_lcs_cut       = 5.0 );
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 2.5 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
-  declareProperty( "Pion_ghost_cut",  m_ghost_cut     = -999.0);
+  declareProperty( "PionSame_ghost_cut",  m_ghost_cut_pS     = -999.0);
+  declareProperty( "PionSame_ipPU_cut", m_ipPU_cut_pS      = 3.0 );
+  declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
-
+  declareProperty( "PionProbMin",     m_PionProbMin   = 0.53);
 
   NNetTool_MLP nnet;
   tpionS = new Tagger();
 
+  hcut_pS_ippu= new TH1F("hcut_pS_ippu","hcut_pS_ippu",100, 0, 20);
+  hcut_pS_distphi= new TH1F("hcut_pS_distphi","hcut_pS_distphi",100, 0, 0.09);
   hcut_pS_pt  = new TH1F("hcut_pS_pt",  "hcut_pS_pt",  100, 0, 10);
   hcut_pS_p   = new TH1F("hcut_pS_p",   "hcut_pS_p",   100, 0, 100);
   hcut_pS_lcs = new TH1F("hcut_pS_lcs", "hcut_pS_lcs", 100, 0, 10);
@@ -58,15 +61,21 @@ Tagger* TaggerPionSameTool::tag(Event& event) {
         (*ipart)->type() != Particle::Matched ) continue;
 
     double tsa = (*ipart)->likelihood();
-    if(tsa < m_ghost_cut) continue;
+    if(tsa < m_ghost_cut_pS) continue;
     verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     double IPsig = (*ipart)->IPs();
     if(IPsig > m_IPs_cut_pionS)  continue;
-    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
 
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
+    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
+
+    //ip and phi wrt PU
+    double ipPU  = (*ipart)->IPPU();
+    if(ipPU < m_ipPU_cut_pS ) continue;
+    double distPhi = (*ipart)->distPhi();
+    if (distPhi < m_distPhi_cut_pS) continue;
   
     ncand++;
  

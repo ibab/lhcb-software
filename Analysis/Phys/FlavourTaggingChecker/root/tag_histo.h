@@ -101,6 +101,50 @@ TH1F* h3062   = new TH1F("h3062","ALL tag B time (ps) osc.",     1000,0,10);
 TH1F* h4061   = new TH1F("h4061","IDEAL tag B time (ps) no osc.",1000,0,10);
 TH1F* h4062   = new TH1F("h4062","IDEAL tag B time (ps) osc.",   1000,0,10);
 
+//for pv studies
+TH1F* hpv_ipmean_r = new TH1F("hpv_ipmean_r","IP mean",50, 0.0, 25.);
+TH1F* hpv_ipmean_w = new TH1F("hpv_ipmean_w","IP mean",50, 0.0, 25.);
+TH1F* hpv_ippu_r = new TH1F("hpv_ippu_r","ippu tags", 50, 0.0, 50);
+TH1F* hpv_ippu_w = new TH1F("hpv_ippu_w","ippu tags", 50, 0.0, 50);
+TH1F* hpv_gippu_r = new TH1F("hpv_gippu_r","gippu tags", 50, 0.0, 50);
+TH1F* hpv_gippu_w = new TH1F("hpv_gippu_w","gippu tags", 50, 0.0, 50);
+TH1F* hpv_nippu_r = new TH1F("hpv_nippu_r","min IPPU",50, 0.0, 25.);
+TH1F* hpv_nippu_w = new TH1F("hpv_nippu_w","min IPPU",50, 0.0, 25.);
+TH1F* hpv_nippuerr_r = new TH1F("hpv_nippuerr_r","iperr of min IPPU",50, 0.0, 1000.);
+TH1F* hpv_nippuerr_w = new TH1F("hpv_nippuerr_w","iperr of min IPPU",50, 0.0, 1000.);
+TH1F* hpv_tracks_r = new TH1F("hpv_tracks_r","tracks",50, 0.0, 100.);
+TH1F* hpv_tracks_w = new TH1F("hpv_tracks_w","tracks",50, 0.0, 100.);
+TH1F* hpv_trackzfirst_r = new TH1F("hpv_trackzfirst_r","trackzfirst",50, -150., 200.);
+TH1F* hpv_trackzfirst_w = new TH1F("hpv_trackzfirst_w","trackzfirst",50, -150., 200.);
+TH1F* hpv_trackp_r = new TH1F("hpv_trackp_r","trackp",50, 0.0, 10000.);
+TH1F* hpv_trackp_w = new TH1F("hpv_trackp_w","trackp",50, 0.0, 10000.);
+TH1F* hpv_zposdif_r = new TH1F("hpv_zposdif_r","Z pos dif",50, -25., 25.);
+TH1F* hpv_zposdif_w = new TH1F("hpv_zposdif_w","Z pos dif",50, -25., 25.);
+//TH1F* hpv_zposdif1_r = new TH1F("hpv_zposdif1_r","abs(Z(PU) - Z(tagtrack)) from B",50, 0., 25.);
+//TH1F* hpv_zposdif1_w = new TH1F("hpv_zposdif1_w","abs(Z(PU) - Z(tagtrack)) from B",50, 0., 25.);
+TH1F* hpv_zposdif1_r = new TH1F("hpv_zposdif1_r","abs(Z(PU) - Z(tagtrack)) tags",50, 0., 25.);
+TH1F* hpv_zposdif1_w = new TH1F("hpv_zposdif1_w","abs(Z(PU) - Z(tagtrack)) tags",50, 0., 25.);
+TH1F* hpv_ippubs_r = new TH1F("hpv_ippubs_r","ip wrt signal B",50, 0.0, 10.);
+TH1F* hpv_ippubs_w = new TH1F("hpv_ippubs_w","ip wrt signal B",50, 0.0, 10.);
+TH1F* hpv_ippuchi2bs_r = new TH1F("hpv_ippuchi2bs_r","ipChi2 wrt signal B",50, 0.0, 1000.);
+TH1F* hpv_ippuchi2bs_w = new TH1F("hpv_ippuchi2bs_w","ipChi2 wrt signal B",50, 0.0, 1000.);
+TH1F* hpv_zpos_r = new TH1F("hpv_zpos_r","Z pos of min ippu part",50, -120., 120.);
+TH1F* hpv_zpos_w = new TH1F("hpv_zpos_w","Z pos of min ippu part",50, -120., 120.);
+TH1F* hpv_zerrpos_r = new TH1F("hpv_zerrpos_r","Zerr pos of min ippu part",50, 0.0, 0.1);
+TH1F* hpv_zerrpos_w = new TH1F("hpv_zerrpos_w","Zerr pos of min ippu part",50, 0.0, 0.1);
+TH1F* hpv_difip_r = new TH1F("hpv_difip_r","dif ip-ippu tags", 50, 0., 15.);
+TH1F* hpv_difip_w = new TH1F("hpv_difip_w","dif ip-ippu tags", 50, 0., 15.);
+//TH1F* hpv_difip1_r = new TH1F("hpv_difip1_r","IP-min(IPPU) from B", 50, -15.0, 5);
+//TH1F* hpv_difip1_w = new TH1F("hpv_difip1_w","IP-min(IPPU) from B", 50, -15.0, 5);
+TH1F* hpv_difip1_r = new TH1F("hpv_difip1_r","IP-min(IPPU) tags", 50, -15.0, 5);
+TH1F* hpv_difip1_w = new TH1F("hpv_difip1_w","IP-min(IPPU) tags", 50, -15.0, 5);
+TH1F* hpv_ipmeandif_r = new TH1F("hpv_ipmeandif_r","dif ip ipmean tags", 50, 0.0, 7);
+TH1F* hpv_ipmeandif_w = new TH1F("hpv_ipmeandif_w","dif ip ipmean tags", 50, 0.0, 7);
+//TH1F* hpv_ipmeandif1_r = new TH1F("hpv_ipmeandif1_r","IP-<IPPU> from B", 50, -15.0, 5);
+//TH1F* hpv_ipmeandif1_w = new TH1F("hpv_ipmeandif1_w","IP-<IPPU> from B", 50, -15.0, 5);
+TH1F* hpv_ipmeandif1_r = new TH1F("hpv_ipmeandif1_r","IP-<IPPU> tags", 50, -15.0, 5);
+TH1F* hpv_ipmeandif1_w = new TH1F("hpv_ipmeandif1_w","IP-<IPPU> tags", 50, -15.0, 5);
+
 
 TH1F* h70 = new TH1F("h70","ko pt",50, 0., 10.); //ALL
 TH1F* h71 = new TH1F("h71","ko p" ,50, 0., 100.);
@@ -236,6 +280,9 @@ TH1F* hw_kS_mult = new TH1F("hw_kS_mult","mult wrong tags", 50, x1, x2);
 x1=0; x2=1;
 TH1F* homphi_mu_r = new TH1F("homphi_mu_r","w(dphi)", 50, x1, x2);
 TH1F* homphi_mu_w = new TH1F("homphi_mu_w","w(dphi)", 50, x1, x2);
+
+TH1F* homphi_ele_r = new TH1F("homphi_ele_r","w(dphi)", 50, x1, x2);
+TH1F* homphi_ele_w = new TH1F("homphi_ele_w","w(dphi)", 50, x1, x2);
 
 TH1F* homphi_kO_r = new TH1F("homphi_kO_r","w(dphi)", 50, x1, x2);
 TH1F* homphi_kO_w = new TH1F("homphi_kO_w","w(dphi)", 50, x1, x2);

@@ -106,6 +106,55 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
   return lastsc;
 }
 //=========================================================================
+StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
+                                          const Particle* AXBS,
+                                          const RecVertex::ConstVector& PileUpVtx,
+                                          const double lastipmin,
+                                          double& ippu, double& ippuchi2, double& ipmean, 
+                                          double& xpos, double& ypos, double& zpos,
+                                          double& xerrpos, double& yerrpos, double& zerrpos,
+                                          int& tracks, double& ipBS, double& ipChi2BS) {
+  double ipmin = 100000.0;
+  double ipchi2min = 100000.0;
+  double ipsum = 0;
+  double vtxcount = 0;
+  StatusCode lastsc=1;
+  int ntracks=0;
+  xpos=ypos=zpos=xerrpos=yerrpos=zerrpos=100000.0;
+  
+  RecVertex::ConstVector::const_iterator iv;
+  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+    double ipC=0, ipChi2=0;
+    StatusCode sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
+    if( sc ) {
+      vtxcount++;
+      ipsum+=ipC;
+      if( (ipC < ipmin) and (ipC > lastipmin) ) {
+        ipmin = ipC;
+        ipchi2min = ipChi2;
+        xpos = (*iv)->position().x()/mm;
+        xerrpos = (*iv)->covMatrix().At(0,0);
+        ypos = (*iv)->position().y()/mm;
+        yerrpos = (*iv)->covMatrix().At(1,1);
+        zpos = (*iv)->position().z()/mm;
+        zerrpos = (*iv)->covMatrix().At(2,2);
+	ntracks = (*iv)->tracks().size(); 
+	double ipp=0, ipchi2p=0;
+	StatusCode sc2 = m_Dist->distance (AXBS, *iv, ipp, ipchi2p);
+	if (sc2) {
+	  ipBS=ipp;
+	  ipChi2BS=ipchi2p;
+	}
+      } 
+    } else lastsc = sc;
+  }
+  ipmean = ipsum/vtxcount;
+  ippu  = ipmin;
+  ippuchi2 = ipchi2min;
+  tracks = ntracks;
+  return lastsc;
+}
+//=========================================================================
 int TaggingUtilsChecker::countTracks( Particle::ConstVector& vtags ) {
 
   int nr = 0;

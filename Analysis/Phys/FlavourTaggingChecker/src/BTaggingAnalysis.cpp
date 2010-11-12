@@ -280,6 +280,16 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
+  // data for multPV 
+  std::vector<float> pnippu(0), pnippuerr(0), pipmean(0), pxpos(0), pypos(0), pzpos(0), 
+    pxerrpos(0), pyerrpos(0), pzerrpos(0), pippubs(0), pippuchi2bs(0); 
+  std::vector<float> pnippu2(0), pnippuerr2(0), pxpos2(0), pypos2(0), pzpos2(0), 
+    pxerrpos2(0), pyerrpos2(0), pzerrpos2(0), pippubs2(0), pippuchi2bs2(0); 
+  std::vector<float> pnippu3(0), pnippuerr3(0), pxpos3(0), pypos3(0), pzpos3(0), 
+    pxerrpos3(0), pyerrpos3(0), pzerrpos3(0), pippubs3(0), pippuchi2bs3(0); 
+  std::vector<int> pntracks(0), pntracks2(0), pntracks3(0);
+  std::vector<float> ptrackxfirst(0), ptrackyfirst(0), ptrackzfirst(0), ptrackp(0);
+
 
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
   Particle::ConstVector::const_iterator ip;
@@ -300,7 +310,12 @@ StatusCode BTaggingAnalysis::execute() {
                   - AXBS->momentum().M()) /GeV;
     double lcs = track->chi2PerDoF();
     double cloneDist = track->info(LHCb::Track::CloneDist, -1.) ;
-      
+
+    double trackxfirst = track->position().x();
+    double trackyfirst = track->position().y();
+    double trackzfirst = track->position().z();
+    double trackp = track->p();
+    
     long trtyp = track->type();
     if (track->checkHistory(Track::TrackMatching) == true) trtyp=7;
 
@@ -320,6 +335,41 @@ StatusCode BTaggingAnalysis::execute() {
     double ipval, iperr;
     m_util->calcIP( axp, PileUpVtx, ipval, iperr );
     if(iperr) IPPU=ipval/iperr;
+
+    //cal IP wrt different PU
+    //debug()<<"--> min ippu "<<ipval<<endreq;
+    double nippu, nippuerr, ipmean, xpos, ypos, zpos, xerrpos, yerrpos, zerrpos;
+    int ntracks;
+    double ippubs, ippuchi2bs;
+    m_util->calcIPPU( axp, AXBS, PileUpVtx, 0, nippu, nippuerr, ipmean, xpos, ypos, zpos, 
+                      xerrpos, yerrpos, zerrpos, ntracks, ippubs, ippuchi2bs );
+    /*
+    debug()<<" Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
+    debug()<<" tracks "<<ntracks<<endreq;
+    debug()<<" nippu "<<nippu<<",  ippuerr "<<nippuerr<<",  ipmean "<<ipmean<<endreq;
+    debug()<<" ippubs "<<ippubs<<",  ippuchi2 "<<ippuchi2bs<<endreq;
+    debug()<<" ,  x "<<xpos<<",  y "<<ypos<<",  z "<<zpos<<endreq;
+    debug()<<" ,  dx "<<xerrpos<<",  dy "<<yerrpos<<",  dz "<<zerrpos<<endreq;    
+    */
+    double nippu2, nippuerr2, xpos2, ypos2, zpos2, xerrpos2, yerrpos2, zerrpos2;
+    int ntracks2;
+    double ippubs2, ippuchi2bs2;
+    m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu, nippu2, nippuerr2, ipmean, xpos2, ypos2, zpos2, 
+                      xerrpos2, yerrpos2, zerrpos2, ntracks2, ippubs2, ippuchi2bs2 );
+    /*
+    debug()<<" 2n Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
+    debug()<<" tracks "<<ntracks2<<endreq;
+    debug()<<" nippu "<<nippu2<<",  ippuerr "<<nippuerr2<<",  ipmean "<<ipmean<<endreq;
+    denug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
+    debug()<<" ,  x "<<xpos2<<",  y "<<ypos2<<",  z "<<zpos2<<endreq;
+    debug()<<" ,  dx "<<xerrpos2<<",  dy "<<yerrpos2<<",  dz "<<zerrpos2<<endreq;
+    */
+    double nippu3, nippuerr3, xpos3, ypos3, zpos3, xerrpos3, yerrpos3, zerrpos3;
+    int ntracks3;
+    double ippubs3, ippuchi2bs3;
+    m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu2, nippu3, nippuerr3, ipmean, xpos3, ypos3, zpos3, 
+                      xerrpos3, yerrpos3, zerrpos3, ntracks3, ippubs3, ippuchi2bs3  );
+    //debug()<<" 3n Min IP: ippu3 "<<nippu3<<endreq;
 
     //calculate min IP wrt SV
     double ipSV=0, iperrSV=0, docaSV=0, docaErrSV=0;
@@ -346,8 +396,46 @@ StatusCode BTaggingAnalysis::execute() {
     pip   .push_back(IP);
     piperr.push_back(IPerr);
     pipPU .push_back(IPPU);
+    pipmean    .push_back(ipmean);
+    pnippu     .push_back(nippu);
+    pnippuerr  .push_back(nippuerr);
+    pntracks   .push_back(ntracks);
+    pippubs    .push_back(ippubs);
+    pippuchi2bs.push_back(ippuchi2bs);
+    pxpos      .push_back(xpos);
+    pypos      .push_back(ypos);
+    pzpos      .push_back(zpos);
+    pxerrpos   .push_back(xerrpos);
+    pyerrpos   .push_back(yerrpos);
+    pzerrpos   .push_back(zerrpos);
+    pnippu2     .push_back(nippu2);
+    pnippuerr2  .push_back(nippuerr2);
+    pntracks2   .push_back(ntracks2);
+    pippubs2    .push_back(ippubs2);
+    pippuchi2bs2.push_back(ippuchi2bs2);
+    pxpos2      .push_back(xpos2);
+    pypos2      .push_back(ypos2);
+    pzpos2      .push_back(zpos2);
+    pxerrpos2   .push_back(xerrpos2);
+    pyerrpos2   .push_back(yerrpos2);
+    pzerrpos2   .push_back(zerrpos2);
+    pnippu3     .push_back(nippu3);
+    pnippuerr3  .push_back(nippuerr3);
+    pntracks3   .push_back(ntracks3);
+    pippubs3    .push_back(ippubs3);
+    pippuchi2bs3.push_back(ippuchi2bs3);
+    pxpos3      .push_back(xpos3);
+    pypos3      .push_back(ypos3);
+    pzpos3      .push_back(zpos3);
+    pxerrpos3   .push_back(xerrpos3);
+    pyerrpos3   .push_back(yerrpos3);
+    pzerrpos3   .push_back(zerrpos3);
     plcs     .push_back(lcs);
     pcloneDist.push_back(cloneDist);
+    ptrackxfirst.push_back(trackxfirst);
+    ptrackyfirst.push_back(trackyfirst);
+    ptrackzfirst.push_back(trackzfirst);
+    ptrackp.push_back(trackp);
     pdistPhi .push_back(distphi);
     pIPSV    .push_back(ipSV);
     pIPSVerr .push_back(iperrSV);
@@ -483,9 +571,47 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("ip",      pip, "N", 200);
   tuple -> farray ("iperr",   piperr, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
+  tuple -> farray ("ipmean",  pipmean, "N", 200);
+  tuple -> farray ("nippu",   pnippu, "N", 200);
+  tuple -> farray ("nippuerr",pnippuerr, "N", 200);
+  tuple -> farray ("tracks",   pntracks, "N", 200);
+  tuple -> farray ("ippubs",   pippubs, "N", 200);
+  tuple -> farray ("ippuchi2bs",pippuchi2bs, "N", 200);
+  tuple -> farray ("xpos",    pxpos, "N", 200);
+  tuple -> farray ("ypos",    pypos, "N", 200);
+  tuple -> farray ("zpos",    pzpos, "N", 200);
+  tuple -> farray ("xerrpos", pxerrpos, "N", 200);
+  tuple -> farray ("yerrpos", pyerrpos, "N", 200);
+  tuple -> farray ("zerrpos", pzerrpos, "N", 200);
+  tuple -> farray ("nippu2",   pnippu2, "N", 200);
+  tuple -> farray ("nippuerr2",pnippuerr2, "N", 200);
+  tuple -> farray ("tracks2",   pntracks2, "N", 200);
+  tuple -> farray ("ippubs2",   pippubs2, "N", 200);
+  tuple -> farray ("ippuchi2bs2",pippuchi2bs2, "N", 200);
+  tuple -> farray ("xpos2",    pxpos2, "N", 200);
+  tuple -> farray ("ypos2",    pypos2, "N", 200);
+  tuple -> farray ("zpos2",    pzpos2, "N", 200);
+  tuple -> farray ("xerrpos2", pxerrpos2, "N", 200);
+  tuple -> farray ("yerrpos2", pyerrpos2, "N", 200);
+  tuple -> farray ("zerrpos2", pzerrpos2, "N", 200);
+  tuple -> farray ("nippu3",   pnippu3, "N", 200);
+  tuple -> farray ("nippuerr3",pnippuerr3, "N", 200);
+  tuple -> farray ("tracks3",   pntracks3, "N", 200);
+  tuple -> farray ("ippubs3",   pippubs3, "N", 200);
+  tuple -> farray ("ippuchi2bs3",pippuchi2bs3, "N", 200);
+  tuple -> farray ("xpos3",    pxpos3, "N", 200);
+  tuple -> farray ("ypos3",    pypos3, "N", 200);
+  tuple -> farray ("zpos3",    pzpos3, "N", 200);
+  tuple -> farray ("xerrpos3", pxerrpos3, "N", 200);
+  tuple -> farray ("yerrpos3", pyerrpos3, "N", 200);
+  tuple -> farray ("zerrpos3", pzerrpos3, "N", 200);
   tuple -> farray ("trtyp",   ptrtyp, "N", 200);
   tuple -> farray ("lcs",     plcs, "N", 200);
   tuple -> farray ("cloneDist", pcloneDist, "N", 200);
+  tuple -> farray ("trackxfirst", ptrackxfirst, "N", 200);
+  tuple -> farray ("trackyfirst", ptrackyfirst, "N", 200);
+  tuple -> farray ("trackzfirst", ptrackzfirst, "N", 200);
+  tuple -> farray ("trackp", ptrackp, "N", 200);
   tuple -> farray ("tsal",    ptsal, "N", 200);
   tuple -> farray ("distPhi", pdistPhi, "N", 200);
   tuple -> farray ("veloch",  pveloch, "N", 200);

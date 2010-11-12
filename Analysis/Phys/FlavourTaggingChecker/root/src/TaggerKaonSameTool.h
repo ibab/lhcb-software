@@ -34,7 +34,8 @@ class TaggerKaonSameTool : public GenericTool {
 
   double m_Pt_cut_kaonS, m_P_cut_kaonS, m_IP_cut_kaonS, 
     m_phicut_kaonS, m_etacut_kaonS, m_dQcut_kaonS, m_lcs_cut, m_ProbMin_kaonS;
-  //m_KaonSPID_kS_cut, m_KaonSPID_kpS_cut, 
+  double m_KaonSPID_kS_cut, m_KaonSPID_kpS_cut;
+  double m_ipPU_cut_kS, m_distPhi_cut_kS;
   NNetTool_MLP nnet;
   Tagger* tkaonS;
 
@@ -48,6 +49,7 @@ class TaggerKaonSameTool : public GenericTool {
   TH1F* hcut_kS_deta;
   TH1F* hcut_kS_dq ; 
   TH1F* hcut_kS_ippu ;
+  TH1F* hcut_kS_distphi ;
   TH1F* hcut_kS_N   ;
  
 };

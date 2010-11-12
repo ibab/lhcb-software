@@ -106,6 +106,19 @@ public :
    Float_t         ip[200];   //[N]
    Float_t         iperr[200];   //[N]
    Float_t         ipPU[200];   //[N]
+  //extrainfo for PV
+   Float_t         ipmean[200];   //[N]
+   Float_t         nippu[200];   //[N]
+   Float_t         nippuerr[200];   //[N]
+   Int_t           tracks[200];   //[N]
+   Float_t         trackzfirst[200];   //[N]
+   Float_t         trackp[200];   //[N]
+   Float_t         ippubs[200];   //[N]
+   Float_t         ippuchi2bs[200];   //[N]
+   Float_t         zpos[200];   //[N]
+   Float_t         zerrpos[200];   //[N]
+   //
+   Float_t         cloneDist[200];   //[N]
    Float_t         trtyp[200];   //[N]
    Float_t         lcs[200];   //[N]
    Float_t         tsal[200];   //[N]
@@ -205,6 +218,19 @@ public :
    TBranch        *b_ip;   
    TBranch        *b_iperr;   
    TBranch        *b_ipPU;   
+  //extrainfo for PV
+   TBranch        *b_ipmean;   
+   TBranch        *b_nippu;   
+   TBranch        *b_nippuerr;
+   TBranch        *b_tracks;      
+   TBranch        *b_trackzfirst;      
+   TBranch        *b_trackp;      
+   TBranch        *b_ippubs;   
+   TBranch        *b_ippuchi2bs;   
+   TBranch        *b_zpos;   
+   TBranch        *b_zerrpos;   
+   //
+   TBranch        *b_cloneDist;   
    TBranch        *b_trtyp;   
    TBranch        *b_lcs;   
    TBranch        *b_tsal;   
@@ -373,6 +399,19 @@ void NtpTag::Init(TTree *tree)
    fChain->SetBranchAddress("ip", ip, &b_ip);
    fChain->SetBranchAddress("iperr", iperr, &b_iperr);
    fChain->SetBranchAddress("ipPU", ipPU, &b_ipPU);
+   //extrainfo for PV
+   fChain->SetBranchAddress("ipmean", ipmean, &b_ipmean);
+   fChain->SetBranchAddress("nippu", nippu, &b_nippu);
+   fChain->SetBranchAddress("nippuerr", nippuerr, &b_nippuerr);
+   fChain->SetBranchAddress("tracks", tracks, &b_tracks);
+   fChain->SetBranchAddress("trackzfirst", trackzfirst, &b_trackzfirst);
+   fChain->SetBranchAddress("trackp", trackp, &b_trackp);
+   fChain->SetBranchAddress("ippubs", ippubs, &b_ippubs);
+   fChain->SetBranchAddress("ippuchi2bs", ippuchi2bs, &b_ippuchi2bs);
+   fChain->SetBranchAddress("zpos", zpos, &b_zpos);
+   fChain->SetBranchAddress("zerrpos", zerrpos, &b_zerrpos);
+   //
+   fChain->SetBranchAddress("cloneDist", cloneDist, &b_cloneDist);
    fChain->SetBranchAddress("trtyp", trtyp, &b_trtyp);
    fChain->SetBranchAddress("lcs", lcs, &b_lcs);
    fChain->SetBranchAddress("tsal", tsal, &b_tsal);

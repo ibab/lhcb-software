@@ -3,9 +3,9 @@
 
 CombineTaggersProbability::CombineTaggersProbability() {
 
-  declareProperty( "CombineTaggersProb_omegamaxbin", m_omegamaxbin = 0.36);
-  declareProperty( "CombineTaggersProb_omegascale",  m_omegascale  = 0.06);
-  declareProperty( "CombineTaggersProb_ProbMin",     m_ProbMin     = 0.55);
+  declareProperty( "CombineTaggersProb_omegamaxbin", m_omegamaxbin = 0.38);
+  declareProperty( "CombineTaggersProb_omegascale",  m_omegascale  = 0.07);
+  declareProperty( "CombineTaggersProb_ProbMin",     m_ProbMin     = 0.56);
 
   theTag = new FlavourTag();
 }

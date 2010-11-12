@@ -2,20 +2,22 @@
 
 TaggerKaonOppositeTool::TaggerKaonOppositeTool() {
 
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.9 *GeV );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.8 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4. );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.5 );
-  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 5 );
-  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  0.0);
+  declareProperty( "Kaon_LCS_cut",  m_lcs_kaon      = 2.7 );
+  declareProperty( "Kaon_PIDk",     m_PID_k_cut     =  2.0);
   declareProperty( "Kaon_PIDkp",    m_PIDkp_cut     = -1.0 );
-  declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
-  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut      = 4.0 );
-  declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0. ); //no cut
+  declareProperty( "Kaon_ghost_cut",m_ghost_cut_kaon     = -999.0 );
+  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 6.0 );
+  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= 0.005 );
+  declareProperty( "ProbMin_kaon",  m_ProbMin_kaon  = 0.51 ); //no cut
 
   NNetTool_MLP nnet;
   tkaon = new Tagger();
   hcut_ko_ippu= new TH1F("hcut_ko_ippu","hcut_ko_ippu",100, 0, 20);
+  hcut_ko_distphi= new TH1F("hcut_ko_distphi","hcut_ko_distphi",100, 0, 0.09);
   hcut_ko_N   = new TH1F("hcut_ko_N",   "hcut_ko_N"   ,100, 0, 100);
   hcut_ko_pidk= new TH1F("hcut_ko_pidk","hcut_ko_pidk",100, -10, 90);
   hcut_ko_pidp= new TH1F("hcut_ko_pidp","hcut_ko_pidp",100, -10, 90);
@@ -42,13 +44,10 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
 
     Particle* axp = (*ipart);
     double pidk= axp->PIDk();
- 
-    if(pidk < m_PID_k_cut ) continue;
-    if(pidk==0 || pidk==-1000.0) continue;
- 
     double pidproton = axp->PIDp();
-    if( pidk - pidproton < m_PIDkp_cut ) continue;
-    verbose() << " Kaon PIDk="<< pidk <<" Dkp="<<pidk - pidproton<<endmsg;
+
+    if(!checkPIDhypo(Particle::kaon_opposite, axp)) continue;
+    verbose() << " Kaon PID pass"<<endreq;
 
     double Pt = axp->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
@@ -61,7 +60,7 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
     if(lcs > m_lcs_kaon) continue;
  
     double tsa = axp->likelihood();
-    if( tsa < m_ghost_cut ) continue;
+    if( tsa < m_ghost_cut_kaon ) continue;
     verbose() << " Kaon lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     //calculate signed IP wrt RecVert
@@ -74,7 +73,7 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
  
     if(fabs(IP) > m_IP_cut_kaon ) continue;
 
-    if(ipPU < m_ipPU_cut ) continue;
+    if(ipPU < m_ipPU_cut_kaon ) continue;
 
     ncand++;
     
@@ -94,7 +93,7 @@ Tagger* TaggerKaonOppositeTool::tag(Event& event) {
       ptmaxk = Pt;
     }
   }
-  
+
   if( ! ikaon ) return tkaon;
 
   //calculate omega

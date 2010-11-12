@@ -9,6 +9,8 @@ TaggerKaonSameTool::TaggerKaonSameTool() {
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 5.0 );
+  declareProperty( "KaonS_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
+  declareProperty( "KaonS_distPhi_cut", m_distPhi_cut_kS= 0.005 );
 
   declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut   =  1.0 );
   declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut  = -1.0 );
@@ -18,6 +20,7 @@ TaggerKaonSameTool::TaggerKaonSameTool() {
   NNetTool_MLP nnet;
   tkaonS = new Tagger();
   hcut_kS_ippu= new TH1F("hcut_kS_ippu","hcut_kS_ippu",100, 0, 20);
+  hcut_kS_distphi= new TH1F("hcut_kS_distphi","hcut_kS_distphi",100, 0, 0.09);
   hcut_kS_N   = new TH1F("hcut_kS_N",   "hcut_kS_N",   100, 0, 100);
   hcut_kS_pidk= new TH1F("hcut_kS_pidk","hcut_kS_pidk",100, -10, 90);
   hcut_kS_pidp= new TH1F("hcut_kS_pidp","hcut_kS_pidp",100, -10, 90);
@@ -49,7 +52,11 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
   Particles vtags = event.particles();
   for (ipart=vtags.begin(); ipart!=vtags.end(); ++ipart) {
 
-    if(!checkPIDhypo(Particle::kaon_same, *ipart)) continue;
+    //verbose()<<" PIdk, pidp, pidkp: "<<(*ipart)->PIDk()<<", "<<(*ipart)->PIDp()<<", "
+    //<<((*ipart)->PIDk()-(*ipart)->PIDp())<<endreq;
+    //if(!checkPIDhypo(Particle::kaon_same, *ipart)) continue;
+    if((*ipart)->PIDk()<m_KaonSPID_kS_cut) continue;
+    if((*ipart)->PIDk()-(*ipart)->PIDp()<m_KaonSPID_kpS_cut) continue;
     verbose()<<" KaonS PID pass" <<endreq;
 
     double Pt = (*ipart)->pt();
@@ -66,6 +73,13 @@ Tagger* TaggerKaonSameTool::tag(Event& event) {
     double IPsig = (*ipart)->IPs();
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
     verbose()<<" KaonS IPs="<<IPsig<<endreq;
+
+    //ip and phi wrt PU
+    double ipPU  = (*ipart)->IPPU();
+    if(ipPU < m_ipPU_cut_kS ) continue;
+    double distPhi = (*ipart)->distPhi();
+    verbose()<<" KaonsS distPhi="<<distPhi<<endreq;
+    if (distPhi < m_distPhi_cut_kS) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     if(deta > m_etacut_kaonS) continue;

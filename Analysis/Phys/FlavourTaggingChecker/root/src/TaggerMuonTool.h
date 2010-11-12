@@ -36,6 +36,8 @@ class TaggerMuonTool : public GenericTool {
   double m_Pt_cut_muon;
   double m_IPs_cut_muon ;
   double m_lcs_cut_muon ;
+  double m_ipPU_cut_muon;
+  double m_distPhi_cut_muon;
   double m_ProbMin_muon;
  
   NNetTool_MLP nnet;
@@ -46,6 +48,7 @@ class TaggerMuonTool : public GenericTool {
   TH1F* hcut_mu_p;
   TH1F* hcut_mu_lcs;
   TH1F* hcut_mu_ippu;
+  TH1F* hcut_mu_distphi;
   TH1F* hcut_mu_N ;
   
  

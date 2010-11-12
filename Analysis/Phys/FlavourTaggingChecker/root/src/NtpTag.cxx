@@ -107,7 +107,17 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
     if(distPhi[i] < m_distphi_cut) continue;
     if(acos(Pt[i]/P[i])<m_thetaMin)continue;
     //if(ip[i]      > m_IP_cut)      continue;
-        
+    //if(cloneDist[i]!=-1) continue; //no clones
+    
+    /*
+    //cuts for PV>1
+    if (krec>1) {
+      if ((pow(ip[i]-ipPU[i],2)/pow(ipPU[i],2))<0.865) continue;
+      if (ip[i]-nippu[i]>0.5) continue;
+      if (ip[i]-ipmean[i]>0.2) continue;
+    }
+    */
+       
     ////////////////////////////////
     Particle* apart = new Particle();
     ////////////////////////////////
@@ -145,6 +155,19 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
     apart->setIPerr( iperr[i] );
     apart->setIPPU( ipPU[i] );
 
+    //extrainfo for PV
+    apart->setipmean( ipmean[i] );
+    apart->setnippu( nippu[i] );
+    apart->setnippuerr( nippuerr[i] );
+    apart->settracks( tracks[i] );
+    apart->settrackzfirst( trackzfirst[i] );
+    apart->settrackp( trackp[i] );
+    apart->setippubs( ippubs[i] );
+    apart->setippuchi2bs( ippuchi2bs[i] );
+    apart->setzpos( zpos[i] );
+    apart->setzerrpos( zerrpos[i] );
+
+    apart->setcloneDist( cloneDist[i] );
     apart->setLCS( lcs[i] );
     apart->setCharge( ch[i] );
     apart->setType( trtyp[i] );

@@ -46,7 +46,7 @@ tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 #tag.BTaggingTool.ForceSignalID = "Bs" #"Bs", "Bu", "Bd"
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
-tag.BTaggingTool.OutputLevel = 4
+tag.BTaggingTool.OutputLevel = 3
 
 #Import cuts for MC2010
 #importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010.py')
@@ -79,7 +79,7 @@ tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
-tagana.OutputLevel = 4
+tagana.OutputLevel = 3
 
 tagana.addTool( PhysDesktop )
 tagana.PhysDesktop.OutputLevel = 5
@@ -106,7 +106,7 @@ DaVinci().Hlt = False
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 250                        # Number of events
+DaVinci().EvtMax     = 600                        # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "analysis.root"     # Ntuple
@@ -119,7 +119,7 @@ DaVinci().DDDBtag    = "head-20100407"
 DaVinci().CondDBtag  = "sim-20100429-vc-md100"
 
 DaVinci().MoniSequence = [ cheatsel,
-                           #tag,
+                           tag,
                            #tagcheck,
                            tagana
                            ]  # The algorithms

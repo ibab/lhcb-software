@@ -15,7 +15,7 @@ static const InterfaceID IID_ITaggingUtilsChecker("ITaggingUtilsChecker", 1 , 0)
 /** @class ITaggingUtilsChecker ITaggingUtilsChecker.h 
  *  
  *
- *  @author Marco Musy
+ *  @author Marco Musy, Marc Grabalosa
  *  @date   2007-06-09
  */
 
@@ -32,6 +32,15 @@ public:
   virtual StatusCode calcIP( const LHCb::Particle* ,
                              const LHCb::RecVertex::ConstVector& ,
                              double& , double& )=0;
+
+  virtual StatusCode calcIPPU( const LHCb::Particle* ,
+                               const LHCb::Particle* ,
+                               const LHCb::RecVertex::ConstVector& ,
+                               const double,
+                               double& , double&, double&,
+                               double& , double&, double&,
+                               double& , double&, double&,
+                               int& , double&, double&)=0;
 
   virtual int countTracks( LHCb::Particle::ConstVector& )=0;
 

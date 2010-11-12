@@ -6,6 +6,12 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-11-10 - Marc Grabalosa
+  . added variables to study performance wrt nPV
+	. new tuning for strip10 (default)
+  . added training for PID in root
+  . added noclones and lcs in vtx ch
+
 ! 2010-11-04 - Marc Grabalosa
   . added IP and IPerr of BS wrt PV
   . added bestPV method (uses IRelatedPVFinder) 

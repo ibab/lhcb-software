@@ -37,9 +37,10 @@ class TaggerKaonOppositeTool : public GenericTool {
   double m_IPs_cut_kaon;
   double m_IP_cut_kaon;
   double m_lcs_kaon;
-  double m_ghost_cut;
+  double m_ghost_cut_kaon;
+  double m_ipPU_cut_kaon;
+  double m_distPhi_cut_kaon;
   double m_ProbMin_kaon;
-  double m_ipPU_cut;
 
   NNetTool_MLP nnet;
 
@@ -54,6 +55,7 @@ class TaggerKaonOppositeTool : public GenericTool {
   TH1F*   hcut_ko_IPs ;
   TH1F*   hcut_ko_IP  ;
   TH1F*   hcut_ko_ippu;
+  TH1F*   hcut_ko_distphi;
   TH1F*   hcut_ko_N   ;
 
 };  
