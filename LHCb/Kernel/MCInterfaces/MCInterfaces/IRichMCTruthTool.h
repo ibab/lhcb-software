@@ -216,6 +216,17 @@ namespace Rich
        */
       virtual bool isSiBackScatter ( const LHCb::RichSmartID id ) const = 0;
 
+      /** Checks if the given RichSmartID is the result of scintillation
+       *   of the radiator
+       *
+       *  @param id RichSmartID
+       *
+       *  @return Boolean indicating if the digit is from scintillation
+       *  @retval true  RichSmartID originated from scintillation
+       *  @retval false RichSmartID did not originate from scintillation
+       */
+      virtual bool isRadScintillation ( const LHCb::RichSmartID id ) const = 0;
+
       /** Checks if the given RichSmartID is the result of true Cherenkov
        *  radiation from the given radiator
        *
@@ -262,6 +273,17 @@ namespace Rich
        *  @retval false RichSmartIDs did not originate from back-scattering
        */
       virtual bool isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const = 0;
+
+      /** Checks if the given cluster of RichSmartIDs is the result of scintillation
+       *   of radiator
+       *
+       *  @param cluster Cluster of RichSmartIDs
+       *
+       *  @return Boolean indicating if the cluster is from scintillation
+       *  @retval true  RichSmartIDs originated from scintillation
+       *  @retval false RichSmartIDs did not originate from scintillation
+       */
+      virtual bool isRadScintillation ( const Rich::HPDPixelCluster& cluster ) const = 0;
 
       /** Checks if the given cluster of RichSmartIDs is the result of true Cherenkov
        *  radiation from the given radiator. I.e. At least of of the associated

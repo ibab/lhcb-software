@@ -471,6 +471,15 @@ namespace Rich
          */
         virtual bool isBackground( const LHCb::RichRecPixel * pixel ) const = 0;
 
+        /** Is this RichRecPixel  Scintillation?
+         *
+         *  @param pixel   Pointer to a RichRecPixel
+         *
+         *  @retval true  Pixel is the result of scintillation in the radiator
+         *  @retval false Pixel is a Cherenkov Hit
+         */
+        virtual bool isRadScintillation( const LHCb::RichRecPixel * pixel ) const = 0;
+
         /** Checks if Track -> MCparticle association is available
          *
          *  @retval true  Track -> MCparticle association is possible

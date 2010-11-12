@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2010-11-12 - Antonis Papanestis
+ - Added methods to easily access MC info for scintillation in 
+   IRichRecMCTruthTool and IRichMCTruthTool
+
 !==================== MCInterfaces v1r11 2010-03-17 ==========================
 ! 2010-03-02 - Alessia Satta
  - Changes in IMuonPad2MCTool interface
