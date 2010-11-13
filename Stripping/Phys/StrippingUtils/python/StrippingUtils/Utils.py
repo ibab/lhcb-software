@@ -41,7 +41,7 @@ class LineBuilder(object) :
         
         checkConfig(self._configKeys(),
                     config)
-
+        self._config = config
         self._name = name
         self._lines = []
 
@@ -51,6 +51,9 @@ class LineBuilder(object) :
     def name(self) :
         return self._name
 
+    def configurationParamerter(self, key) :
+        return self._config[key]
+    
     def registerLine(self, line) :
         self.checkLine(line)
         self._lines += [line]
