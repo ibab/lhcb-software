@@ -50,7 +50,7 @@ Gaudi::Math::GSL::EigenSystem::EigenSystem()
   , m_matrix ( 0 ) 
   , m_evec   ( 0 ) 
   , m_vector ( 0 )  
-{} ;
+{} 
 // ============================================================================
 // Destructor
 // ============================================================================
@@ -61,7 +61,7 @@ Gaudi::Math::GSL::EigenSystem::~EigenSystem()
   if ( 0 != m_vector ) { gsl_vector_free      ( m_vector ) ; }
   if ( 0 != m_work1  ) { gsl_eigen_symm_free  ( m_work1  ) ; }
   if ( 0 != m_work2  ) { gsl_eigen_symmv_free ( m_work2  ) ; }
-} ;
+} 
 // ============================================================================
 // check/adjust the  internal structures 
 // ============================================================================
@@ -87,7 +87,7 @@ StatusCode Gaudi::Math::GSL::EigenSystem::_check
   if ( 0 == m_vector   ) { return StatusCode ( VectorAllocationFailure    ) ; }
  
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 // find the eigenvalues   (& sort them if needed ) 
 // ============================================================================
@@ -105,9 +105,9 @@ StatusCode Gaudi::Math::GSL::EigenSystem::_fun1
   if ( result ) { return StatusCode ( ErrorFromGSL + result ) ; }
   if ( sorted ) { gsl_sort_vector   ( m_vector )  ; }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// find the eigenvalues&eigenvectors (& sort them if needed ) 
+// find the eigenvalues&eigenvectors (& sort them if needed ) 
 // ============================================================================
 StatusCode Gaudi::Math::GSL::EigenSystem::_fun2 
 ( const bool sorted ) const
@@ -125,7 +125,7 @@ StatusCode Gaudi::Math::GSL::EigenSystem::_fun2
   { gsl_eigen_symmv_sort ( m_vector , m_evec , GSL_EIGEN_SORT_VAL_ASC )  ; }
 
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
 // thrown the exception 
 // ============================================================================
@@ -135,7 +135,7 @@ StatusCode Gaudi::Math::GSL::EigenSystem::Exception
   throw GaudiException
     ("Error from Gaudi::Math::GSL::EigenSystem" , "*GSL*" , sc ) ;
   return sc ;
-};
+}
 // ============================================================================
 
 // ============================================================================

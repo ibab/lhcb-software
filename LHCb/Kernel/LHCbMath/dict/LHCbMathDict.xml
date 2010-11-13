@@ -26,6 +26,12 @@
   <class name    = "Gaudi::Math::ParticleParams"     />
   <class name    = "Gaudi::Math::FitMass"            />
   
+  <class name    = "Gaudi::Math::EigenSystems"       />
+  
+  <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
+  <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
+  <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
+  
   <function name = "Gaudi::Math::blind" />
   
   <exclusion>

@@ -1,15 +1,10 @@
 // $Id: LHCbMathDict.h,v 1.12 2010-05-25 10:12:19 ibelyaev Exp $
+// ============================================================================
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
-
+// ============================================================================
 // Include files
-
-/** @file LHCbMathDict.h dict/LHCbMathDict.h
- *  
- *
- *  @author Juan PALACIOS
- *  @date   2008-06-20
- */
+// ============================================================================
 #ifdef _WIN32
 #pragma warning ( disable : 4305 ) // truncation double to Scalar in GenVector
 #pragma warning ( disable : 4244 ) // conversion double to float in GenVector
@@ -24,8 +19,17 @@
 #include "LHCbMath/LorentzVectorWithError.h"
 #include "LHCbMath/ParticleParams.h"
 #include "LHCbMath/Blind.h"
+#include "LHCbMath/EigenSystem.h"
 #include <vector>
 #include <list>
+// ============================================================================
+/** @file LHCbMathDict.h 
+ *  
+ *
+ *  @author Juan PALACIOS
+ *  @date   2008-06-20
+ */
+// ============================================================================
 namespace Gaudi
 {
   // ==========================================================================
@@ -188,7 +192,72 @@ namespace Gaudi
       ( const size_t n , 
         const size_t N ) 
       { return Gaudi::Math::binomEff ( n , N ) ; }
-      // ========================================================================
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class EigenSystems 
+    {
+      // ======================================================================
+    public : // eigen values 
+      // ======================================================================
+      // 2x2 
+      static Gaudi::Vector2 eigenValues  
+      ( const Gaudi::SymMatrix2x2& mtrx          , 
+        const bool                 sorted = true ) 
+      { 
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // 3x3 
+      static Gaudi::Vector3 eigenValues  
+      ( const Gaudi::SymMatrix3x3& mtrx          , 
+        const bool                 sorted = true ) 
+      { 
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // 4x4 
+      static Gaudi::Vector4 eigenValues  
+      ( const Gaudi::SymMatrix4x4& mtrx          , 
+        const bool                 sorted = true ) 
+      { 
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // ======================================================================
+    public: // eigen vectors 
+      // ======================================================================
+      // 2x2
+      static StatusCode eigenVectors  
+      ( const Gaudi::SymMatrix2x2&   mtrx          ,
+        Gaudi::Vector2&              vals          , 
+        std::vector<Gaudi::Vector2>& vecs          , 
+        const bool                   sorted = true ) 
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
+      }
+      // 3x3 
+      static StatusCode eigenVectors  
+      ( const Gaudi::SymMatrix3x3&   mtrx          ,
+        Gaudi::Vector3&              vals          , 
+        std::vector<Gaudi::Vector3>& vecs          , 
+        const bool                   sorted = true ) 
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
+      }
+      // 4x4 
+      static StatusCode eigenVectors  
+      ( const Gaudi::SymMatrix4x4&   mtrx          ,
+        Gaudi::Vector4&              vals          , 
+        std::vector<Gaudi::Vector4>& vecs          , 
+        const bool                   sorted = true ) 
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
+      }
+      // ======================================================================
     } ;
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
@@ -226,6 +295,11 @@ namespace
     Gaudi::Math::SVectorWithError<8,double> __sv8 ;
     //
     std::vector<Gaudi::Math::ValueWithError>  _dver ;
+    //
+    std::vector<Gaudi::Vector2>  _vct_2 ;
+    std::vector<Gaudi::Vector3>  _vct_3 ;
+    std::vector<Gaudi::Vector3>  _vct_4 ;
+    
   };
 }
 

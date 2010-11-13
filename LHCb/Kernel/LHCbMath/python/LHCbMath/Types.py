@@ -89,6 +89,7 @@ from GaudiPython.Bindings import gbl as cpp
 
 ## C++ namespace Gaudi
 Gaudi = cpp.Gaudi
+std   = cpp.std
 
 ## ROOT::Math namespace 
 _RM = ROOT.ROOT.Math
@@ -182,6 +183,15 @@ Gaudi.Math.Line3D            = Gaudi.Math.XYZLine
 Gaudi.Math.frac              = Gaudi.Math.Functions.frac
 Gaudi.Math.asym              = Gaudi.Math.Functions.asym
 Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff 
+
+
+## vetcors of vectors
+Gaudi.Vectors2       = std.vector( Gaudi.Vector2 )
+Gaudi.Vectors3       = std.vector( Gaudi.Vector3 )
+Gaudi.Vectors4       = std.vector( Gaudi.Vector4 )
+Gaudi.Math.Vectors2  = Gaudi.Vectors2 
+Gaudi.Math.Vectors3  = Gaudi.Vectors3
+Gaudi.Math.Vectors4  = Gaudi.Vectors4 
 
 ## ============================================================================
 ## some useful decoration:
@@ -380,6 +390,55 @@ for t in ( Gaudi.Math.ValueWithError         ,
         t._new_str_ = t.toString
         t.__str__   = t.toString
         t.__repr__  = t.toString
+
+        
+## get the eigenvalues for symmetric matrices :
+def _eigen_1_ ( self , sorted = True ) :
+    """
+    
+    >>> mtrx = ...
+    >>> values = mtrx.eigenValues ( sorted = True )
+    
+    """
+    return Gaudi.Math.EigenSystems.eigenValues ( self , sorted )
+
+
+## get the eigevectors for symmetric matrices :
+def _eigen_2_ ( self , sorted = True ) :
+    """
+    
+    >>> mtrx = ...
+    >>> values, vectors = mtrx.eigenVectors( sorted = True )
+    
+    """
+    if   2 == mtrx.kCols :
+        _values  = Gaudi.Vector2  ()
+        _vectors = Gaudi.Vectors2 ()
+    elif 3 == mtrx.kCols :
+        _values  = Gaudi.Vector3  ()
+        _vectors = Gaudi.Vectors3 ()
+    elif 4 == mtrx.kCols :
+        _values  = Gaudi.Vector4  ()
+        _vectors = Gaudi.Vectors4 ()
+    else :
+        raise AttributeError, "Not implemented for dimention: %s" % mtrx.kCols
+    
+    st = Gaudi.Math.EigenSystems.eigenVectors ( self , _values , _vectors , sorted )
+    if st.isFailure () :
+        print 'EigenVectors: Failure from EigenSystems' , st
+        
+    return ( _values , _vectors )
+
+    
+_eigen_1_ .__doc__ += '\n' +  Gaudi.Math.EigenSystems.eigenValues  . __doc__
+_eigen_2_ .__doc__ += '\n' +  Gaudi.Math.EigenSystems.eigenVectors . __doc__
+
+for m in ( Gaudi.SymMatrix2x2   ,
+           Gaudi.SymMatrix3x3   ,
+           Gaudi.SymMatrix4x4   ) :
+    if not hasattr ( m , 'eigenValues'  ) : m.eigenValues  = _eigen_1_
+    if not hasattr ( m , 'eigenVectors' ) : m.eigenVectors = _eigen_2_
+        
 
 # =============================================================================
 ## self-printout of Gaudi::Math::ParticleParams  
