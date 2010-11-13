@@ -301,7 +301,7 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
   m_manager -> SetMaximumEpsilonStep(m_maximumEpsilonStep);
 
   // print the value of epsilon step min and max
-  log << MSG::INFO << "Minimum and Maximum Epsilon Step" << std::endl
+  log << MSG::INFO << "Minimum and Maximum Epsilon Step : " 
       << m_manager->GetMinimumEpsilonStep()
       << " " 
       << m_manager->GetMaximumEpsilonStep()
