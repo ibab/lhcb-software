@@ -345,7 +345,7 @@ public:
     m_HpdQuartzWindowExtSurfPhotIncidentPosition=aHpdQuartzWindowExtSurfPhotIncidentPosition;
   }
 
-  inline const G4int PhotonSourceProcessInfo() const 
+  inline G4int PhotonSourceProcessInfo() const 
   {
     return m_PhotonSourceProcessInfo;
   }

@@ -1,18 +1,22 @@
 #ifndef RichG4GeomProp_h
 #define RichG4GeomProp_h 1
+
 #include <vector>
 #include "globals.hh"
 #include "GiGa/GiGaBase.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/MsgStream.h"
 
 class  RichG4GeomProp  {
 
 public:
 
-  RichG4GeomProp(IDataProviderSvc*,IMessageSvc*);
-  virtual ~RichG4GeomProp();
+  RichG4GeomProp() : m_msgStream(NULL) { }
 
+  RichG4GeomProp(IDataProviderSvc*,IMessageSvc*);
+
+  virtual ~RichG4GeomProp();
 
   G4int NumberOfRichDet() const {return m_NumberOfRichDet ;}
   G4int NumberOfHPDsInRich1() const {return m_NumberOfHPDsInRich1; }
@@ -58,6 +62,7 @@ private:
   G4int m_PixelXBoundarySize;
   G4int m_PixelYBoundarySize;
 
+  MsgStream * m_msgStream;
 
 };
 

@@ -7,7 +7,6 @@
 
 /// GaudiKernel
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "DetDesc/DetectorElement.h"
@@ -26,8 +25,10 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   //  m_NumberOfDetSectionsInRich2=2;
   //  m_NumberofPixelsInHPD=1024;
 
+  m_msgStream = new MsgStream( msgSvc, "RichG4GeomProp" );
+  MsgStream & log = *m_msgStream;
+
   // Now to get the total number of HPDs and the Z
-  MsgStream log( msgSvc , "GeomProp" );
   SmartDataPtr<DetectorElement> Rich1DESD(detSvc,Rich1DeStructurePathName  );
 
   if( !Rich1DESD )
@@ -117,36 +118,41 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   }
 }
 
-RichG4GeomProp::~RichG4GeomProp() { ; }
+RichG4GeomProp::~RichG4GeomProp() 
+{
+  delete m_msgStream;
+}
 
-
-G4double RichG4GeomProp::PixelXBoundaryValue(int PixelXNumber) {
-
-  if(PixelXNumber < (int) m_PixelXBoundary.size()){
+G4double RichG4GeomProp::PixelXBoundaryValue(int PixelXNumber) 
+{
+  if(PixelXNumber < (int) m_PixelXBoundary.size())
+  {
     return m_PixelXBoundary[PixelXNumber];
   }
   else
   {
-    G4cout<<"RichGeomProp: Unknown Pixel X boundary number in HPD "
-          <<PixelXNumber<<G4endl;
+    if ( m_msgStream )
+      *m_msgStream << MSG::WARNING 
+                   << "Unknown Pixel X boundary number in HPD "
+                   << PixelXNumber << endmsg;
     return -1000.0;
   }
-
 }
 
-G4double RichG4GeomProp::PixelYBoundaryValue(int PixelYNumber) {
-
+G4double RichG4GeomProp::PixelYBoundaryValue(int PixelYNumber) 
+{
   if(PixelYNumber < (int) m_PixelYBoundary.size())
   {
     return m_PixelYBoundary[PixelYNumber];
   }
   else
   {
-    G4cout << "RichGeomProp: Unknown Pixel Y boundary number in HPD "
-           << PixelYNumber << G4endl;
+    if ( m_msgStream )
+      *m_msgStream << MSG::WARNING 
+                   << "Unknown Pixel Y boundary number in HPD "
+                   << PixelYNumber << endmsg;
     return -1000.0;
   }
-
 }
 
 G4int RichG4GeomProp::PixelPosFinder(G4double Xc,
@@ -157,10 +163,11 @@ G4int RichG4GeomProp::PixelPosFinder(G4double Xc,
 
   if(Xc < aBound[0] || Xc > aBound[aBound.size()-1] )
   {
-    G4cout << " RichGeomProp: Pixel coord outside Sidet "
-           <<" Coord and Pixel bounds =  "
-           <<Xc<<"    "<< aBound[0]<<"    "<< aBound[aBound.size()-1]
-           <<G4endl;
+    if ( m_msgStream )
+      *m_msgStream << MSG::WARNING 
+                   << "Pixel coord outside Sidet. Coord and Pixel bounds = "
+                   <<Xc<<"    "<< aBound[0]<<"    "<< aBound[aBound.size()-1]
+                   <<endmsg;
   }
   else
   {
