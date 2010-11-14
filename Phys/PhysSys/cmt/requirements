@@ -1,17 +1,17 @@
 #$Id: requirements,v 1.243 2010-08-27 13:49:59 jpalac Exp $
 package PhysSys
-version v9r12
+version v9r13
 
 branches doc cmt
 
 ####################################################################
 use  DaVinciUtils               v1r0     Phys    # Juan Palacios
-use  DaVinciKernel              v8r8p2   Phys    # Juan Palacios
+use  DaVinciKernel              HEAD     Phys    # Juan Palacios
 use  DaVinciMaps                v1r2     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v1r4     Phys    # Juan Palacios
-use  PhysSelPython              v5r7     PhysSel # Juan Palacios
+use  SelPy                      HEAD     Phys    # Juan Palacios
+use  PhysSelPython              HEAD     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
@@ -31,7 +31,7 @@ use LoKiAlgo                    v9r2     Phys    # Vanya Belyaev
 use LoKiAlgoMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
 use LoKiGenMC                   v9r0     Phys    # Vanya Belyaev
-use LoKiPhys                    v9r5     Phys    # Vanya Belyaev
+use LoKiPhys                    HEAD     Phys    # Vanya Belyaev
 use LoKiPhysMC                  v9r1     Phys    # Vanya Belyaev
 use LoKiProtoParticles          v1r1     Phys    # Vanya Belyaev
 
