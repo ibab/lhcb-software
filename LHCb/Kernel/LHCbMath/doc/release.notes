@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-11-14 - Vanya Belyaev
+
+ - add (python) accessor to correlation matrix
+
 ! 2010-11-13 - Vanya Belyaev
 
  - add eigenvalues and eigenvectors in python for 2x2,3x3 and 4x4 matrices 

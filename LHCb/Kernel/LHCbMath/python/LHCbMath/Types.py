@@ -298,7 +298,7 @@ def _mg_str_ ( self , fmt = ' %+11.4g') :
         if ( _rows - 1 )  != _irow : _line += '\n'
     return _line
 #
-## self-printpout of symmetrical matrices
+## self-printout of symmetrical matrices
 def _ms_str_ ( self , fmt = ' %+11.4g' , width = 12 ) :
     """
     Self-printout of symetrical matrices 
@@ -315,6 +315,30 @@ def _ms_str_ ( self , fmt = ' %+11.4g' , width = 12 ) :
         if ( _rows - 1 )  != _irow : _line += '\n'
     return _line
 
+## get the correlation matrix
+def _m_corr_ ( self ) :
+    """
+    Get the correlation matrix
+    
+    >>> mtrx = ...
+    >>> corr = mtrx.correlations()
+    
+    """
+    from math import sqrt
+
+    _t = type ( self )
+    _c = _t   () 
+    _rows = self.kRows
+    for i in range ( 0 , _rows ) :
+        _dI = sqrt ( self ( i , i ) ) 
+        for j in range ( i + 1 , _rows ) :
+            _dJ = sqrt ( self ( j , j ) ) 
+            _c [ i , j ] = self ( i , j ) /  (  _dI * _dJ )
+        _c[ i , i ] = 1.0
+        
+    return _c 
+    
+    
 for m in ( Gaudi.Matrix5x5      ,
            Gaudi.TrackMatrix    ,
            Gaudi.Matrix4x3      ) :
@@ -332,6 +356,10 @@ for m in ( Gaudi.SymMatrix2x2   ,
            Gaudi.SymMatrix8x8   ,
            Gaudi.SymMatrix9x9   ,
            Gaudi.TrackSymMatrix ) :
+    
+    if not hasattr ( m , 'correlations' ) :
+        m.correlations = _m_corr_
+        
     if not hasattr ( m , '_new_str_' ) : 
         m. _new_str_ = _ms_str_
         m. __repr__  = _ms_str_
