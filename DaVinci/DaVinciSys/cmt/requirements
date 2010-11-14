@@ -1,18 +1,11 @@
 package DaVinciSys
-version v26r3
+version v26r3p1
 
 branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v26r3   Phys
 use  DaVinciTests               v1r7
-
-# Patches
-use LumiAlgs                    v4r1p1  Rec
-use PatVelo                     v3r25p1 Tf
-use RichHPDImageAnalysis        v1r4    Rich
-use TrackMonitors               v1r30p1 Tr
-use TrackTools                  v3r35p3 Tr
 
 # Declare this as a container package
 apply_pattern container_package
