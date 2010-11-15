@@ -4,6 +4,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2010-11-13 - Vanya Belyaev
+
+ - DVAlgorithm:
+
+     remove "BlindVertexFitter" 
+
 ! 2010-11-03 - Vanya Belyaev
 
  - add function to evaluate 'unique-hash-ID' and to compare 'the-same' objects 

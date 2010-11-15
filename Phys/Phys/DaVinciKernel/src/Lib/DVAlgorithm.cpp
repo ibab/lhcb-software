@@ -103,7 +103,6 @@ DVAlgorithm::DVAlgorithm
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter"     ;
   m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"         ;
-  m_vertexFitNames [ "Blind"         ] = "BlindVertexFitter"       ;
   m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"      ;
   m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"      ;
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"           ;
@@ -121,19 +120,22 @@ DVAlgorithm::DVAlgorithm
                     "Names of ParticleFilters"   ) ;
   // 
   declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ; 
-
-  m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter"     ;
-  m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"         ;
-  m_particleCombinerNames [ "Kalman"        ] = "LoKi::VertexFitter"      ;
-  m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"       ;
-  m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"      ;
-  m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"           ;
-  m_particleCombinerNames [ "Adder"         ] = "ParticleAdder"           ;
-  m_particleCombinerNames [ "Combiner"      ] = "MomentumCombiner"        ;
-  m_particleCombinerNames [ "Momenta"       ] = "MomentumCombiner"        ;
-  m_particleCombinerNames [ "Jet"           ] = "MomentumCombiner"        ;
-  m_particleCombinerNames [ "LoKiFast"      ] = "LoKi::FastVertexFitter"  ;
-  m_particleCombinerNames [ "FastLoKi"      ] = "LoKi::FastVertexFitter"  ;
+  
+  // ==========================================================================
+  // Note: there is no default value! 
+  // ==========================================================================
+  m_particleCombinerNames [ "Offline"          ] = "OfflineVertexFitter"         ;
+  m_particleCombinerNames [ "Trigger"          ] = "TrgVertexFitter"             ;
+  m_particleCombinerNames [ "Kalman"           ] = "LoKi::VertexFitter"          ;
+  m_particleCombinerNames [ "LoKi"             ] = "LoKi::VertexFitter"          ;
+  m_particleCombinerNames [ "Smart"            ] = "LoKi::SmartParticleCombiner" ;
+  m_particleCombinerNames [ "ParticleAdder"    ] = "ParticleAdder"               ;
+  m_particleCombinerNames [ "Adder"            ] = "ParticleAdder"               ;
+  m_particleCombinerNames [ "Combiner"         ] = "MomentumCombiner"            ;
+  m_particleCombinerNames [ "MomentumCombiner" ] = "MomentumCombiner"            ;
+  m_particleCombinerNames [ "Momenta"          ] = "MomentumCombiner"            ;
+  m_particleCombinerNames [ "LoKiFast"         ] = "LoKi::FastVertexFitter"      ;
+  m_particleCombinerNames [ "FastLoKi"         ] = "LoKi::FastVertexFitter"      ;
   declareProperty
     ( "ParticleCombiners"     , 
       m_particleCombinerNames , 
@@ -142,7 +144,6 @@ DVAlgorithm::DVAlgorithm
   m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"    ;
   m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"    ;
   m_particleReFitterNames [ "Vertex"        ] = "OfflineVertexFitter"    ;
-  m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"      ;
   m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"     ;
   m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"     ;
   m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"       ;
