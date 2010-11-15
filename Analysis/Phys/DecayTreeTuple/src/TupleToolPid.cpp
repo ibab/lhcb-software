@@ -65,6 +65,18 @@ StatusCode TupleToolPid::fill( const Particle*
 			     ,proto->info(LHCb::ProtoParticle::CombDLLk,-1000));
       test &= tuple->column( prefix+"_PIDp"
 			     ,proto->info(LHCb::ProtoParticle::CombDLLp,-1000));
+      //The NeuroBays PID probabilities
+      //There is one for each hypothesis
+      test &= tuple->column( prefix+"_ProbNNe"
+                 ,proto->info(LHCb::ProtoParticle::ProbNNe,-1000));
+      test &= tuple->column( prefix+"_ProbNNk"
+                 ,proto->info(LHCb::ProtoParticle::ProbNNk,-1000));
+      test &= tuple->column( prefix+"_ProbNNp"
+                 ,proto->info(LHCb::ProtoParticle::ProbNNp,-1000));
+      test &= tuple->column( prefix+"_ProbNNpi"
+                 ,proto->info(LHCb::ProtoParticle::ProbNNpi,-1000));
+      test &= tuple->column( prefix+"_ProbNNmu"
+                 ,proto->info(LHCb::ProtoParticle::ProbNNmu,-1000));
       // uncomment it if one days set to something non zero..
       //       test &= tuple->column( prefix+"_PIDpi"
       // 			     ,proto->info(LHCb::ProtoParticle::CombDLLpi,-1000));
