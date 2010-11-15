@@ -193,7 +193,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         ## ``Physics''
         , 'PtGamma'             : 300 * MeV ## Pt-cut for photons 
-        , 'Pi0Cut'              : " PT > 200 * MeV * ( ETA - 1 ) " ## Cut for pi0  
+        , 'Pi0Cut'              : " PT > 200 * MeV * ( 7 - ETA ) " ## Cut for pi0  
         , 'SpdCut'              : 0.1 * MeV ## Spd-cuts for photons 
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
