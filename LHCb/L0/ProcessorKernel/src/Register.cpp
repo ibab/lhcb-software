@@ -60,7 +60,7 @@ void L0Muon::Register::print_words(FILE *file, int nwords_per_line){
     
     int val=m_bitset[i] ;
     if (val>0) {
-      word+= int(pow(2,ib));
+      word+= 1<<ib;
     }
     
     ib--;
