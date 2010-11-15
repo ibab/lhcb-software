@@ -860,7 +860,7 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bit
   
   int nbitsPrefix  = 5;
   int nbitsSequence= nbitsPrefix+1;
-  int maximumLength = int(pow(2,nbitsPrefix));
+  int maximumLength = 1<<nbitsPrefix;
 
   int n0;
   int leftover;

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2010-11-15 - Julien Cogan
+ - Fix windows error (misuse of pow)
+
 !============================ L0MuonKernel v9r4 2010-08-25 ====================
 ! 2010-07-21 - Julien Cogan
  - Bug fix : m_ignoreM1 variable was not initialized in CoreUnit 
