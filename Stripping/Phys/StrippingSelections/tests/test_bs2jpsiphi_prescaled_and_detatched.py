@@ -14,11 +14,11 @@ config_params = {'PhiPT' : 500.,
                  'DetatchedLinePrescale' : 1.0,
                  'DetatchedLinePostscale' : 1.0}
 
-bs2jpsiphi = builder('Bs2JpsiPhi', config_params)
-
 from StrippingUtils import LineBuilderTests
 
 def test_line_builder() :
     LineBuilderTests.test_line_builder(builder, config_params)
 
-        
+if __name__ == '__main__' :
+    
+    test_line_builder()
