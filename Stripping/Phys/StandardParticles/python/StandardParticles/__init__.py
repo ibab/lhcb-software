@@ -26,6 +26,8 @@ def addParticleModule(particleModule) :
 
 addParticleModule(StandardBasic)
 
+__all__ += [sel.name() for sel in selections]
+
 if __name__ == '__main__' :
     print '\nStandardParticles: available Selections:\n'
     for sel in selections :
