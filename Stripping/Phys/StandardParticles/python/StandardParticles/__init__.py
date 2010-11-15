@@ -19,14 +19,14 @@ def addParticleModule(particleModule) :
     """
     for loc in particleModule.locations.keys() :
         name = loc.split('/')[-1]
+        global __all__
+        __all__ += [name]
         global selections
         sel =  AutomaticData(Location =  loc)
         selections += [sel]
         setattr(_this,  name, sel)
 
 addParticleModule(StandardBasic)
-
-__all__ += [sel.name() for sel in selections]
 
 if __name__ == '__main__' :
     print '\nStandardParticles: available Selections:\n'
