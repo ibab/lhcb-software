@@ -1,5 +1,5 @@
 package BrunelSys
-version           v37r8p4
+version           v38r0
 
 branches cmt doc tests
  
@@ -8,15 +8,9 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v37r8p4   Rec
+use Brunel v38r0   Rec
 
 # Add here any component libraries to be added as patches
-# Rich/RichHPDImageAnalysis accidentally not included in the Rec release
-use RichHPDImageAnalysis   v1r4   Rich
-# Tf/PatVelo to fix DB dependency problems
-use PatVelo   v3r25p1   Tf
-# Tr/TrackTools for an uninitialized pointer
-use TrackTools v3r35p3 Tr
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

@@ -3,6 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2010-11-15 - Marco Cattaneo
+ - Start preparing v38r0. Removed v37r8 patches from cmt/requirements and updated
+   test reference to current lhcb-head. Any new patches of v37r8p* should be 
+   done on a branch. 
 
 </PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
