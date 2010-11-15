@@ -2,12 +2,17 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+// #include "GaudiKernel/SystemOfUnits.h"
+// ============================================================================
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IParticleTransporter.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
+#include "LHCbMath/Power.h"
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
@@ -34,59 +39,79 @@
 namespace 
 {
   // ==========================================================================
+  /// inverse "large" error in position: used to avoid singularity 
+  const double s_ERROR2_i =  1.0 / Gaudi::Math::pow ( 20.0 * Gaudi::Units::cm , 2 ) ;
+  // ==========================================================================
+  /// "smooth" the singular values 
+  template <class T, unsigned int D>
+  inline 
+  void _smooth 
+  ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx       , 
+    const double                                            error = -1 ) 
+  {
+    //
+    const double error2_i = 
+      error <= 0.0 ? 
+      s_ERROR2_i   :
+      std::min ( 1.0 / Gaudi::Math::pow ( error , 2 ) , s_ERROR2_i ) ;
+    //
+    for ( unsigned i = 0 ; i < D ; ++i ) { mtrx(i,i) += error2_i ; }
+  }
+  // ==========================================================================
   /** make Z-projection of the particle 
    *  see the documentation for namespace DaVinciTransporter
    *  projectAndTransport for deltaZ = 0 
    */
   void _project_Z_ (  LoKi::KalmanFilter::Entry& entry ) 
   {
-    
+    //
     const Gaudi::LorentzVector& p = entry.m_p.momentum        () ;
     const Gaudi::SymMatrix3x3&  c = entry.m_p.posCovMatrix    () ;
     const Gaudi::Matrix4x3&     d = entry.m_p.posMomCovMatrix () ;
-    
+    //
     const double tx = p.Px () / p.Pz() ;
     const double ty = p.Py () / p.Pz() ;
-    
+    //
     const double k1 = c ( 0 , 2 ) ;
     const double k2 = c ( 1 , 2 ) ;  
     const double cz = c ( 2 , 2 ) ;
-    
+    //
     // dirty trick # 1 !! 
     Gaudi::SymMatrix3x3& _c = const_cast<Gaudi::SymMatrix3x3&>( c ) ;
-    
+    //
     // x-y 2x2 subblock
     _c ( 0 , 0 ) +=  tx * tx * cz - ( tx * k1 + tx * k1 ) ;
     _c ( 0 , 1 ) +=  tx * ty * cz - ( tx * k2 + ty * k1 ) ;
     _c ( 1 , 1 ) +=  ty * ty * cz - ( ty * k2 + ty * k2 ) ;
+    //
     // z-row/column
     _c ( 0 , 2 ) = 0  ;
     _c ( 1 , 2 ) = 0  ;
     _c ( 2 , 2 ) = 0  ;
-    
+    //
     // dirty trick # 2 !!    
     Gaudi::Matrix4x3& _d = const_cast<Gaudi::Matrix4x3&> ( d ) ;
-    
+    //
     double _a = _d ( 0 , 2 ) ;
     _d ( 0 , 0 ) -= _a * tx ;
     _d ( 0 , 1 ) -= _a * ty ;
     _d ( 0 , 2 )  = 0 ;
-    
+    //
     _a = _d ( 1 , 2 ) ;
     _d ( 1 , 0 ) -= _a * tx ;
     _d ( 1 , 1 ) -= _a * ty ;
     _d ( 1 , 2 )  = 0 ;
-    
+    //
     _a = _d ( 2 , 2 ) ;
     _d ( 2 , 0 ) -= _a * tx ;
     _d ( 2 , 1 ) -= _a * ty ;
     _d ( 2 , 2 )  = 0 ;
-    
+    //
     _a = _d ( 3 , 2 ) ;
     _d ( 3 , 0 ) -= _a * tx ;
     _d ( 3 , 1 ) -= _a * ty ;
     _d ( 3 , 2 )  = 0 ;
-    
+    //
   }
   // ==========================================================================
   /** "update" the entry and get the valid "gain" matrix
@@ -101,6 +126,7 @@ namespace
   StatusCode _update ( LoKi::KalmanFilter::Entry&       entry , 
                        LoKi::KalmanFilter::ParticleType type  ) 
   {
+    //
     // make the proper projection (if required) 
     if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
     { _project_Z_ ( entry ) ; }
@@ -127,10 +153,12 @@ namespace
       if ( !cixy.Invert() )  
       { return StatusCode 
           ( LoKi::KalmanFilter::ErrorInMatrixInversion1 , true ) ; }  // RETURN 
+      //
       // The most tricky part I
       entry.m_vxi ( 0 , 0 ) = cixy ( 0 , 0 ) ;
       entry.m_vxi ( 0 , 1 ) = cixy ( 0 , 1 ) ;
       entry.m_vxi ( 1 , 1 ) = cixy ( 1 , 1 ) ;
+      //
       // The most tricky part II 
       const Gaudi::LorentzVector& mom = entry.m_p.momentum() ;
       const Gaudi::Vector2 slopes ( mom.Px() / mom.Pz() , mom.Py() / mom.Pz() ) ;
@@ -148,8 +176,14 @@ namespace
       // the regular particle:
       entry.m_vxi = _pmcov ;
       if ( !entry.m_vxi.Invert() )
-      { return StatusCode 
-          ( LoKi::KalmanFilter::ErrorInMatrixInversion2 , true ) ; }   // RETURN 
+      {
+        /// remove singularities 
+        entry.m_vxi = _pmcov ;
+        _smooth ( entry.m_vxi ) ;
+        if ( !entry.m_vxi.Invert() )
+        { return StatusCode 
+            ( LoKi::KalmanFilter::ErrorInMatrixInversion2 , true ) ; } // RETURN
+      }
       //
     }
     // 
@@ -273,8 +307,19 @@ StatusCode LoKi::KalmanFilter::step
     int ifail = 0 ;
     /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
     entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
+    /// try to recover it by "soft" constraint to the photon  
     if ( 0 != ifail ) 
-    { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+    {
+      // try to recover it by "soft" constraint to the photon  
+      entry.m_ci = ci ;
+      _smooth ( entry.m_ci ) ;
+      // invert it : 
+      ifail = 0 ;
+      entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
+      //
+      if ( 0 != ifail ) 
+      { return StatusCode ( ErrorInMatrixInversion3 , true ) ; } // RETURN 
+    }
     //
     return StatusCode::SUCCESS ;
   }
@@ -542,9 +587,23 @@ StatusCode LoKi::KalmanFilter::smooth
   {
     /// \f$ \vec{x}^{n}_k = \vec{x}_{n}\f$ 
     entry -> m_x  = last.m_x ;
-    ///
-    if ( !entry->regular() ) { continue ; }
-    ///
+    //
+    // gamma & digamma 
+    //
+    if ( entry->special() ) 
+    {
+      // the simplest way to calculate entry->m_q
+      StatusCode sc = transportGamma ( *entry , entry->m_x , &last.m_c ) ;    
+      if ( sc.isFailure() ) 
+      { entry -> m_q = entry->m_parq ; continue ; }               // CONTINUE 
+      //
+      Gaudi::Math::geo2LA ( entry->m_p.momentum () , entry->m_q ) ;
+      //
+      continue ;                                                  // CONTINUE 
+    }
+    //
+    // regular case: 
+    // 
     const Gaudi::Vector3 dx = entry->m_parx - entry->m_x ;
     /// \f$ \vec{q}^{n}_k = W_kB^T_{k}G_k\left[\vec{p}_k-A_k\vec{x}_{n}\right]\f$ 
     entry -> m_q = entry -> m_parq 
@@ -572,7 +631,7 @@ StatusCode LoKi::KalmanFilter::evalCov
     if ( entry->regular() ) 
     {
       /// \f$ F_k = G_{p}^{-1}G^T{xp} = - V^T_{xp}V^{-1}_x \f$ 
-      entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix()*entry->m_vxi   ;
+      entry -> m_f = -1.0 * entry->m_p.posMomCovMatrix() * entry->m_vxi   ;
       /// \f$ E_k = - F_k C_n \f$ 
       entry -> m_e = -1.0 * entry->m_f * entry->m_c ;
       /// \f$ D_k = W_k - E^{n}_kF^{T}_{k} = V_p - V^T_{xp}V^{-1}_{x}V_{xp} + F_kC_nF_k^T \f$ 
@@ -584,7 +643,8 @@ StatusCode LoKi::KalmanFilter::evalCov
     {
       Gaudi::Math::setToScalar ( entry->m_f , 0.0 ) ;
       Gaudi::Math::setToScalar ( entry->m_e , 0.0 ) ;
-      entry -> m_d = entry->m_p.momCovMatrix()  ;
+      entry -> m_d = entry -> m_p.momCovMatrix    ()  ;
+      entry -> m_e = entry -> m_p.posMomCovMatrix ()  ;
     }
     //
   }
@@ -613,11 +673,18 @@ StatusCode LoKi::KalmanFilter::seed
     ci   += it->m_vxi                ;
     seed += it->m_vxi * it -> m_parx ;
   }
+  //
   int ifail =  0  ;
   Gaudi::SymMatrix3x3  c = ci.Inverse ( ifail ) ;
-  //
   if ( 0 != ifail ) 
-  { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } // RETURN 
+  { 
+    // try to recover using "soft" constraints 
+    _smooth ( ci ) ;
+    //
+    ifail =  0  ; 
+    c = ci.Inverse ( ifail ) ;
+    if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+  }
   //
   x = c * seed ; 
   //
@@ -677,11 +744,51 @@ StatusCode LoKi::KalmanFilter::transport
   IParticleTransporter*      tool     ) 
 {
   // regular or uknown entry ?
-  if ( !entry.special() ) { return transport ( entry , point.Z () , tool ) ; }
+  if ( !entry.special() ) 
+  { return transport ( entry , point.Z () , tool ) ; }
   //
+  //
+  const  Gaudi::SymMatrix3x3* cov = 0 ;
+  return transportGamma ( entry , point , cov ) ;
+}
+// ============================================================================
+/*  transport the photon or diphoton  into new point 
+ *  @param entry     (UPDATE) the entry to be transported
+ *  @param point     (INPUT)  new position 
+ *  @param pointCov2 (INPUT)  covariance matrix for new point 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::transportGamma
+( LoKi::KalmanFilter::Entry& entry     , 
+  const Gaudi::Vector3&      point     , 
+  const Gaudi::SymMatrix3x3* pointCov2 ) 
+{
+  const Gaudi::XYZPoint pnt ( point[0] , point[1] , point[2] );
+  return transportGamma ( entry , pnt , pointCov2 ) ;
+}
+// ============================================================================
+/*  transport the photon or diphoton  into new point 
+ *  @param entry     (UPDATE) the entry to be transported
+ *  @param point     (INPUT)  new position 
+ *  @param pointCov2 (INPUT)  covariance matrix for new point 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::transportGamma
+( LoKi::KalmanFilter::Entry& entry     , 
+  const Gaudi::XYZPoint&     point     , 
+  const Gaudi::SymMatrix3x3* pointCov2 ) 
+{
   // Gamma-like & Digamma-like entry 
   LHCb::CaloMomentum calo ;
+  //
   calo.setReferencePoint ( point ) ;
+  if ( 0 != pointCov2 ) { calo.setPosCovMatrix ( *pointCov2 ) ; }
   //
   if      ( GammaLikeParticle == entry.m_type ) 
   {
@@ -694,34 +801,43 @@ StatusCode LoKi::KalmanFilter::transport
   {
     // the first gamma  : 
     const LHCb::Particle*      gamma1 = LoKi::Child::child ( entry.m_p0 , 1 ) ;
-    if ( 0 == gamma1 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    if ( 0 == gamma1 ) { return StatusCode ( ErrorDiGammaLikeParticle , true ) ; }
     const LHCb::ProtoParticle* proto1 = gamma1 -> proto() ;
-    if ( 0 == proto1 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    if ( 0 == proto1 ) { return StatusCode ( ErrorDiGammaLikeParticle , true ) ; }
     // the second gamma :
     const LHCb::Particle*      gamma2 = LoKi::Child::child ( entry.m_p0 , 2 ) ;
-    if ( 0 == gamma2 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    if ( 0 == gamma2 ) { return StatusCode ( ErrorDiGammaLikeParticle , true ) ; }
     const LHCb::ProtoParticle* proto2 = gamma2 -> proto() ;
-    if ( 0 == proto2 ) { return StatusCode ( ErrorGammaLikeParticle , true ) ; }
+    if ( 0 == proto2 ) { return StatusCode ( ErrorDiGammaLikeParticle , true ) ; }
     //
     calo.addCaloPosition ( proto1 ) ;
     calo.addCaloPosition ( proto2 ) ;
     //
   }
+  else { return StatusCode ( ErrorGammaTransport , true ) ; }  // RETURN
   //
   const bool ok = calo.evaluate() ;
   if ( !ok ) { return StatusCode ( ErrorFromCaloMomentum , true ) ; }
   //
   // extract the values:
-  entry.m_p.setReferencePoint ( point                ) ;
-  entry.m_p.setMomentum       ( calo.momentum     () ) ;
-  entry.m_p.setMomCovMatrix   ( calo.momCovMatrix () ) ;
+  entry.m_p.setReferencePoint  ( point                     ) ;
+  entry.m_p.setMomentum        ( calo.momentum          () ) ;
+  entry.m_p.setMomCovMatrix    ( calo.momCovMatrix      () ) ;
   //
-  Gaudi::Math::setToScalar
-    ( const_cast<Gaudi::SymMatrix3x3&>( entry.m_p.posCovMatrix    () ) , 0.0 ) ;
-  Gaudi::Math::setToScalar
-    ( const_cast<Gaudi::Matrix4x3&>   ( entry.m_p.posMomCovMatrix () ) , 0.0 ) ;
-  //
-  return StatusCode::SUCCESS ;  
+  if ( 0 != pointCov2 ) 
+  {
+    entry.m_p.setPosCovMatrix    ( calo.pointCovMatrix    () ) ;
+    entry.m_p.setPosMomCovMatrix ( calo.momPointCovMatrix () ) ;
+  }
+  else 
+  {
+    Gaudi::Math::setToScalar
+      ( const_cast<Gaudi::SymMatrix3x3&>( entry.m_p.posCovMatrix    () ) , 0.0 ) ;
+    Gaudi::Math::setToScalar
+      ( const_cast<Gaudi::Matrix4x3&>   ( entry.m_p.posMomCovMatrix () ) , 0.0 ) ;
+  }
+  // update the entry properly:
+  return _update ( entry , entry.m_type ) ;
 }
 // ============================================================================
 /*  get number of 'good' entries for verticing 

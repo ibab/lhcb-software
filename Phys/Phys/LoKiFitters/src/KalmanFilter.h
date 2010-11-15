@@ -171,9 +171,11 @@ namespace LoKi
       /// Error from Particle Transporter 
       ErrorFromParticleTransporter = 410 ,  // Error from particle transporter
       /// Error in "Gamma-Like" particle  
-      ErrorGammaLikeParticle       = 411 ,   // Error in Gamma-Like particle
+      ErrorGammaLikeParticle       = 411 ,  // Error in Gamma-Like particle
       /// Error in "DiGamma-Like" particle  
-      ErrorDiGammaLikeParticle     = 412     // Error in DiGamma-Like particle
+      ErrorDiGammaLikeParticle     = 412 ,  // Error in DiGamma-Like particle
+      /// Error in Gamma-'tranport' 
+      ErrorGammaTransport          = 413    // Error in Gamma-transport 
       // ======================================================================
     } ;
     // ========================================================================
@@ -344,7 +346,7 @@ namespace LoKi
     // ========================================================================
     /** transport the entry into new point 
      *  @param entry     (UPDATE) the entry to be transported 
-     *  @param newpoint  (INPUT)  new 
+     *  @param point     (INPUT)  new position
      *  @param tool      (INPUT)  the particle transporter tool
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -357,7 +359,7 @@ namespace LoKi
     // ========================================================================
     /** transport the entry into new point 
      *  @param entry     (UPDATE) the entry to be transported 
-     *  @param newpoint  (INPUT)  new 
+     *  @param point     (INPUT)  new position 
      *  @param tool      (INPUT)  the particle transporter tool
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -367,6 +369,32 @@ namespace LoKi
     ( LoKi::KalmanFilter::Entry& entry    , 
       const Gaudi::XYZPoint&     point    , 
       IParticleTransporter*      tool     ) ;
+    // ========================================================================
+    /** transport gamma-like and digamma-like particles into new point 
+     *  @param entry     (UPDATE) the entry to be transported
+     *  @param point     (INPUT)  new position 
+     *  @param pointCov2 (INPUT)  covariance matrix for new point 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode transportGamma  
+    ( LoKi::KalmanFilter::Entry& entry         , 
+      const Gaudi::XYZPoint&     point         , 
+      const Gaudi::SymMatrix3x3* pointCov2 = 0 ) ;
+    // ========================================================================
+    /** transport gamma-like and digamma-like particles into new point 
+     *  @param entry     (UPDATE) the entry to be transported
+     *  @param point     (INPUT)  new position 
+     *  @param pointCov2 (INPUT)  covariance matrix for new point 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode transportGamma  
+    ( LoKi::KalmanFilter::Entry& entry         , 
+      const Gaudi::Vector3&      point         , 
+      const Gaudi::SymMatrix3x3* pointCov2 = 0 ) ;
     // ========================================================================
     /** make one step of Kalman filter 
      *  @param entry (update)       measurement to be updated 

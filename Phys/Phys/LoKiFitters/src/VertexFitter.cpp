@@ -221,10 +221,12 @@ StatusCode LoKi::VertexFitter::_iterate
       }
     }
     //
-    // kalman smooth
+    // kalman smooth : could it be moved just before evalCov ? 
+    // @todo study the possibility to move smoothig out of iteration loop
     sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
     if ( sc.isFailure() ) 
     { _Warning ( "_iterate(): problem with smoother", sc ) ; }
+    //
     // distance in the absolute position 
     const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
     // distance in the chi2 units 
@@ -239,6 +241,7 @@ StatusCode LoKi::VertexFitter::_iterate
     //
     if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
+      //    
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
       { _Warning ( "_iterate(): problems with covariances" , sc ) ; }
@@ -279,8 +282,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   }
   //
   StatusCode sc = LoKi::KalmanFilter::seed 
-    ( m_entries , m_seed , m_seedci , s_scale2 ) ;
-  
+    ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
   if ( sc.isFailure() ) 
   { 
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
@@ -403,21 +405,25 @@ StatusCode LoKi::VertexFitter::fit
   const Gaudi::SymMatrix3x3& pos = particle.posCovMatrix() ;
   // 2. for "measured-mass":
   Gaudi::LorentzVector       mm_v  ;
+  
   for ( EIT i = m_entries.begin() ; m_entries.end() != i ; ++i ) 
   {
-    Gaudi::Math::add ( vct , i->m_parq ) ;
-    m_cmom  += i->m_d ;
+    //
+    Gaudi::Math::add ( vct , i->m_q ) ;
+    m_cmom  += i -> m_d ;
+    m_mpcov += i -> m_e ;
+    //
     // for measured mass: blind sum of 4-momenta for extrapolated daughters 
-    mm_v    += i->m_p.momentum     () ;
-    m_mm_c  += i->m_p.momCovMatrix () ;
+    //
+    mm_v    += i -> m_p.momentum     () ;
+    m_mm_c  += i -> m_p.momCovMatrix () ;
     //
     if ( i->special() ) { continue ; } // gamma & digamma
     //
-    m_mpcov += i->m_e ;
     for ( EIT j = i + 1 ; m_entries.end() != j ; ++j ) 
     {	
-      m_cmom1 += i->m_f * pos * Transpose( j->m_f ) ;
-      m_cmom1 += j->m_f * pos * Transpose( i->m_f ) ; 
+      m_cmom1 += i -> m_f * pos * Transpose ( j -> m_f ) ;
+      m_cmom1 += j -> m_f * pos * Transpose ( i -> m_f ) ; 
     } 
   }
   Gaudi::Math::add ( m_cmom , m_cmom1 ) ;

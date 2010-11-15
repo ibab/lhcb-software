@@ -182,7 +182,7 @@ namespace LoKi
   {
     // ========================================================================
     /// the friend factory for instantiation 
-    friend class ToolFactory<VertexFitter> ;
+    friend class ToolFactory<LoKi::VertexFitter> ;
     // ========================================================================
   public:
     // ========================================================================
@@ -465,7 +465,7 @@ namespace LoKi
     // ========================================================================
     /// the default constructor is disabled 
     VertexFitter () ;                    // the default constructor is disabled 
-    /// copiy constructoir is disabled 
+    /// copy constructoir is disabled 
     VertexFitter ( const VertexFitter& ) ; // copy is disabled 
     /// assignement operator is disabled 
     VertexFitter& operator=( const VertexFitter& ); // disabled 
