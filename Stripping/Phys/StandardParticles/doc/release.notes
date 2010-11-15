@@ -36,5 +36,14 @@
 		StdLooseElectrons
 
   Useage: 
- 
-   from StandardParticles import StdTightKaons, StdLooseElectrons
+   # Get some Selections corresponding to CommonParticles 
+   >>> from StandardParticles import StdTightKaons, StdLooseElectrons
+   # import a CommonParticles module and make Selections
+   >>> from CommonParticles import StandardIntermediate
+   >>> import StandardParticles
+   >>> StandardParticles.addParticleModule(StandardIntermediate)
+   >>> for n in [sel.name() for sel in StandardParticles.selections] : 
+        print n 
+      .....   
+   >>> StandardParticles.StdVeryLooseLambdac2PKPi
+   <PhysSelPython.Wrappers.AutomaticData object at 0x181d1d50>
