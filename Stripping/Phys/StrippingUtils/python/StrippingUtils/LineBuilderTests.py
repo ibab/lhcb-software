@@ -64,10 +64,13 @@ def test_bad_configuration_raises(builderType, good_conf_dict) :
 def test_line(line) :
     assert type(line) == StrippingLine
 
-def test_line_location(line) :
+def test_line_location(line, allowEmptyLocation=True) :
     """
     Test that the output location of a line called StrippingXYZ is .../XYZ.
+    If allowEmptyLocation = True accept an empty string.
     """
+    if allowEmptyLocation and line.outputLocation() == '' :
+        return
     assert 'Stripping'+line.outputLocation().split('/')[-1] == line.name()
 
 def test_lines(builder) :
@@ -94,9 +97,14 @@ def test_cannot_modify_lines(builder) :
     assert builder.lines() == orig_lines
 
     
-def test_line_locations(builder) :
+def test_line_locations(builder, allowEmptyLocation=True) :
+    """
+    Test that the output locations of a set of lines called
+    StrippingXYZ, StrippingABC, .. is .../XYZ .../ABC, etc.
+    If allowEmptyLocation = True accept empty strings.
+    """
     print 'test_line_locations', type(builder).__name__, '...'
     lines = builder.lines()
     for line in lines :
-        test_line_location(line)
+        test_line_location(line, allowEmptyLocation)
 
