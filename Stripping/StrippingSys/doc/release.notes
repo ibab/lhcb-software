@@ -3,6 +3,38 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+! 2010-11-15 - Juan Palacios
+ - Add Phys/StandardParticles, module with Selection-type objects for
+   following basic CommonParticles:
+
+		StdLoosePions
+		StdTightMuons
+		StdNoPIDsDownPions
+		StdNoPIDsUpPions
+		StdLooseResolvedPi0
+		StdTightKaons
+		StdTightProtons
+		StdLooseProtons
+		StdLooseDownKaons
+		StdLooseAllPhotons
+		StdTightElectrons
+		StdLooseKaons
+		StdLooseCnvPhotons
+		StdNoPIDsKaons
+		StdLooseMergedPi0
+		StdNoPIDsElectrons
+		StdLooseMuons
+		StdLooseResolvedEta
+		StdTightPions
+		StdNoPIDsDownProtons
+		StdVeryLooseMuons
+		StdNoPIDsMuons
+		StdNoPIDsPions
+		StdNoPIDsProtons
+		StdLoosePhotons
+		StdLooseElectrons
+
+
 ! 2010-11-12 - Juan Palacios
  - Use new Phys/StrippingUtils package.
 
