@@ -5,6 +5,10 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-11-15 - Juan Palacios
+ - python/SelPy/selection.py
+  . Reduce verbosity.
+
 ! 2010-11-12 - Juan Palacios
  - python/SelPy/selection.py
   . Use flatSelectionList function.

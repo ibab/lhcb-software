@@ -56,7 +56,6 @@ class AutoData(object) :
                   name=''  ) :
         if name == '' :
             self._name = Location[Location.rfind('/')+1:]
-            print 'setting name to ', self._name
         else :
             self._name = name
         self._location = Location
@@ -68,9 +67,6 @@ class AutoData(object) :
     def algorithm(self) :
         return None
 
-    def __apply_configuration__(self) :
-        print self.name(), ".__apply_configuration(): NOT A CONFIGURABLE."
-        
     def outputLocation(self) :
         return self._location
 
@@ -125,9 +121,7 @@ class Selection(object) :
         del self.__ctor_dict__['name']
         
         self.requiredSelections = []
-        print "Instantiating Selection", name
         for sel in RequiredSelections :
-            print "Selection: Adding Required Selection ", sel.name()
             self.requiredSelections.append(sel)
         self._name = name
         _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
@@ -138,19 +132,13 @@ class Selection(object) :
                                                  '\nInputLocations: '+str(Algorithm.InputLocations)+\
                                                  '\nRequiredSelections: '+str(_outputLocations))
         self.alg = Algorithm.clone(self._name, InputLocations = [])
-        print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
         self._outputBranch = OutputBranch
         
         for loc in _outputLocations :
-            print "\tAlgo ", self.algName(),  ": adding InputLocation ", loc
             self.algorithm().InputLocations += [loc]
-        print self._name, "Required Selection Algorithms: ", self.requiredSelections
 
     def name(self) :
         return self._name
-
-    def __apply_configuration__(self) :
-        print self.name(), ".__apply_configuration(): NOT A CONFIGURABLE."
 
     def algorithm(self) :
         return self.alg
