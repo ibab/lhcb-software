@@ -9,11 +9,24 @@
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v15r2 2010-11-15 ===========================
+
+! 2010-11-15 - Vanya Belyaev
+ 
+ - polish seek* functions 
+
+ - imporove dst-explorer 
+
+ - prepare for new release v15r2 
+
+ - cmt/requiremements 
+
+     version increment to v15r2 
+    
 ! 2010-11-06 - Vanya Belyaev
 
  - add function 
-
-     seekForData 
+       seekForData 
 
 
 ! ==================== Phys/Bender v15r1p1 2010-10-12 =========================

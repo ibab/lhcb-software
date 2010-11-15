@@ -61,6 +61,7 @@ __all__     = (
     'get'               ,
     'appMgr'            ,
     'dumpHistos'        ,
+    'next'              ,
     ##
     'post_Action'       , 
     'pre_Action'        , 
@@ -268,14 +269,18 @@ def seekVoidDecision ( fun , EvtMax = 1000 ) :
     """
     Seek the Decision for the certains algorithm    
     """
-    ok  = fun()
-    if ok : return True 
 
-    evt = 0 
-    while  not ok and evt < EvtMax :
+    _g   = appMgr()
+    _evt = _g.evtSvc()
+
+    evt  = 0
+    ok   = False
+    
+    while _evt['/Event'] and evt < EvtMax :
+        ok  = fun()
+        if ok : return True, evt  
         run(1)
-        ok   = fun()
-        evt += 1
+        evt += 1 
         
     return ok, evt  
 
@@ -313,27 +318,22 @@ def seekForData ( location       ,
     """
     Seek for existence of some (non-empty) data
     
-    >>> seekForData ('/Event/Phys/MyDecay/Particles')
+    >>> ps , evt = seekForData ('/Event/Phys/MyDecay/Particles')
     
     """
+
     
     _cnt      = 0
     _g        = appMgr()
     _evt      = _g.evtSvc()
-    
-    _obj      = _evt[ location ]
-    if _dataOk_ ( _obj ) : return _obj, _cnt
 
-    while _evt['/Event'] and _cnt < EvtMax :
-        
+    while _evt['/Event'] and _cnt < EvtMax :        
+        _obj      = _evt[ location ]
+        if _dataOk_ ( _obj ) : return _obj, _cnt
         run(1)
         _cnt += 1
         
-        _obj = _evt[ location ]
-        if _dataOk_ ( _obj ) : return _obj, _cnt
-        
     return None, _cnt 
-
             
 
 # =============================================================================
@@ -346,13 +346,7 @@ def seekHltDecision ( expr                                 ,
     from LoKiHlt.decorators import HLT_PASS_RE 
 
     fun = HLT_PASS_RE ( expr ) if isinstance ( expr , str ) else expr 
-    
-    hlt = get ( location )
-    if not hlt : return False , 0     ## RETURN 
-
-    ok  = fun ( hlt )
-    if ok      : return True  , 0     ## RETURN 
-    
+        
     evt = 0
 
     _g        = appMgr()
@@ -362,12 +356,15 @@ def seekHltDecision ( expr                                 ,
     _disabled = _g.disableAllAlgs() if disableAll else _g.disableTopAlgs()
     
     try : 
-        while  _evt['/Event'] and evt < EvtMax and not ok :
+        while  _evt['/Event'] and evt < EvtMax :
+            
+            hlt = get ( location )
+            if not hlt : return False , evt     ## RETURN
+            ok  = fun ( hlt )
+            if ok      : return True  , evt     ## RETURN 
             run(1)
-            hlt  = get ( location )
-            if not hlt : break            ## BREAK 
-            ok   = fun ( hlt )
             evt += 1
+            
     finally :
         for _a in _disabled :
             _a.setEnable ( True )
@@ -411,8 +408,16 @@ def skip ( nEvents ) :
 
     return st 
 
+## go to next  event 
+def next ( num = 1 )  :
+    """
+    Go to next event
 
-
+    >>> next()
+    
+    """
+    return run ( num )
+    
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120

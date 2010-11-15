@@ -28,16 +28,32 @@
 #
 #    dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 #
+#    1) exploring (r,s,m,fm)DSTs:
+#
 #       >>> ls('/Event')
-#       >>> ls('/Event/MicroDST')
-#       >>> ls('/Event/MicroDST/Dimuon')
-#       >>> ls('/Event/MicroDST/Dimuon/Phys')
-#       >>> ls('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU')
-#       >>> bs = get('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU/Particles')
-#       >>> for b in bs : print b.decay()
+#       >>> ls('/Event/Charm')
+#       >>> ls('/Event/Charm/Phys')
+#       >>> ls('/Event/Charm/Phys/D2KKK')
+#
+#    2) getting particles form TES and loop over them :
+# 
+#       >>> Ds = get('/Event/Charm/Phys/D2KKK')
+#       >>> for D in Ds : print D.decay()
+#
+#    3) go to the next event:
+#
 #       >>> run(1)
 #       >>> ls('/Event')
 #
+#    4) loop over events in search for ``valid'' data
+#
+#       >>> Ds, evt = seekForData('/Event/Charm/Phys/DstarForPromptCharm/Particles' )
+#
+#    5) loop in search for event with certain Stripping Decision:
+#
+#       >>> ok, evt = seekStripDecision('.*Lam.*' )
+# 
+# 
 #  @endcode 
 #
 #  @date   2010-09-10
@@ -65,18 +81,35 @@ By usage of this code one clearly states the disagreement with the campain of Dr
 
 Usage:
 
-  dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
+    dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
+
+    1) exploring (r,s,m,fm)DSTs:
 
        >>> ls('/Event')
-       >>> ls('/Event/MicroDST')
-       >>> ls('/Event/MicroDST/Dimuon')
-       >>> ls('/Event/MicroDST/Dimuon/Phys')
-       >>> ls('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU')
-       >>> bs = get('/Event/MicroDST/Dimuon/Phys/SelBs2KKMUMU/Particles')
-       >>> for b in bs : print b.decay()
-       >>> run(1)
-       >>> ls('/Event') 
+       >>> ls('/Event/Charm')
+       >>> ls('/Event/Charm/Phys')
+       >>> ls('/Event/Charm/Phys/D2KKK')
 
+    2) getting particles form TES and loop over them :
+ 
+       >>> Ds = get('/Event/Charm/Phys/D2KKK')
+       >>> for D in Ds : print D.decay()
+
+    3) go to the next event:
+
+       >>> run(1)
+       >>> ls('/Event')
+
+    4) loop over events in search for ``valid'' data
+
+       >>> Ds, evt = seekForData('/Event/Charm/Phys/DstarForPromptCharm/Particles' )
+
+    5) loop in search for event with certain Stripping Decision:
+
+       >>> ok, evt = seekStripDecision('.*Lam.*' )
+ 
+
+                  $Revision$
 Last modification $Date: 2010-10-03 16:20:51 $
                by $Author: ibelyaev $
 
