@@ -25,7 +25,7 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils import LineBuilder
+from StrippingUtils.Utils import LineBuilder
 
 name = "Bs2JpsiPhiPrescaled"
 
