@@ -13,6 +13,7 @@ use   GaudiPolicy   v*
 use   Python        v*  LCG_Interfaces  -no_auto_imports
 use   pytools       v*  LCG_Interfaces  -no_auto_imports
 use   PhysSelPython v*  PhysSel         -no_auto_imports
+use   StrippingConf v*  Phys
 #============================================================================
 apply_pattern install_python_modules
 #============================================================================

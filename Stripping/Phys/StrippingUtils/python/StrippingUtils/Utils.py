@@ -53,7 +53,7 @@ class LineBuilder(object) :
 
     def configurationParamerter(self, key) :
         return self._config[key]
-    
+
     def registerLine(self, line) :
         self.checkLine(line)
         self._lines += [line]
