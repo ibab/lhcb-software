@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-11-15 - V. Gligorov
+ - Add NeuroBayes based PID probabilities to TupleToolPid. There is one
+   probability per "stable" hypothesis (e,mu,k,p,pi)
+
 ! 2010-11-05 - Michel De Cian
  - TupleToolTrackIsolation: Bugfix, changed "partMomentum.Phi() - trackMomentum.Phi()" to  "fabs( partMomentum.Phi() - trackMomentum.Phi() )" in method coneP
 
