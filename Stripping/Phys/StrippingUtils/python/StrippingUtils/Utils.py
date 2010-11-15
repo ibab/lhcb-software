@@ -64,4 +64,4 @@ class LineBuilder(object) :
         # Do all lines have one?
         
     def lines(self) :
-        return self._lines
+        return tuple(self._lines)

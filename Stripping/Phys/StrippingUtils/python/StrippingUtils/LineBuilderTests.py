@@ -2,14 +2,16 @@
 """
 
 __all__ = ('test_line_builder',
-           'test_make_many_instances',
+           'test__many_instances',
            'test_default_raises',
            'test_single_constructor_argument_raises',
            'test_lines',
+           'test_cannot_modify_lines',
            'test_line_locations',
            'test_line',
            'test_line_location',
-           'test_duplicate_name_raises')
+           'test_duplicate_name_raises',
+           'test_bad_configuration_raises')
 
 from py.test import raises
 from StrippingConf.Configuration import StrippingLine
@@ -19,12 +21,15 @@ def test_line_builder(builderType, conf_dict) :
     Run all tests on a line builder, given a configuration dictionary.
     All line builders should pass this test.
     """
+    print 'test_line_builder', builderType.__name__, '...'
     test_default_raises(builderType)
-    test_duplicate_name_raises(builderType, conf_dict)
-    test_make_many_instances(builderType, conf_dict)
     test_single_constructor_argument_raises(builderType, conf_dict)
+    test_duplicate_name_raises(builderType, conf_dict)
+    test_many_instances(builderType, conf_dict)
+    test_bad_configuration_raises(builderType, conf_dict)
     
-def test_make_many_instances(builderType, conf_dict) :
+def test_many_instances(builderType, conf_dict) :
+    print 'test_make_many_instances', builderType.__name__, '...'
     """
     Test that an arbitrary number of instances can be instantiated with different names.
     Access the lines of each instance to catch on-demand line building.
@@ -33,18 +38,29 @@ def test_make_many_instances(builderType, conf_dict) :
     for n in '0123456789' :
         b = builderType(baseName + n, conf_dict)
         lines = b.lines()
-
+        test_lines(b)
+        test_cannot_modify_lines(b)
+        test_line_locations(b)
+        
 def test_duplicate_name_raises(builderType, conf_dict) :
+    print 'test_duplicate_name_raises', builderType.__name__, '...'
     b0 = builderType('bob12345', conf_dict)
     raises(Exception, builderType, 'bob12345', conf_dict)
         
 def test_default_raises(builderType) :
+    print 'test_default_raises', builderType.__name__, '...'
     raises(Exception, builderType)
 
 def test_single_constructor_argument_raises(builderType, conf_dict) :
-     raises(Exception, builderType, conf_dict)
-     raises(Exception, builderType, 'SomeCrazyName')
+    print 'test_single_constructor_argument_raises', builderType.__name__, '...'
+    raises(Exception, builderType, conf_dict)
+    raises(Exception, builderType, 'SomeCrazyName')
 
+def test_bad_configuration_raises(builderType, good_conf_dict) :
+    bad_conf_dict = dict(good_conf_dict)
+    bad_conf_dict['BAD_KEY'] = 0.
+    raises(KeyError, builderType, 'TestBadConf', bad_conf_dict)
+           
 def test_line(line) :
     assert type(line) == StrippingLine
 
@@ -55,11 +71,31 @@ def test_line_location(line) :
     assert 'Stripping'+line.outputLocation().split('/')[-1] == line.name()
 
 def test_lines(builder) :
+    print 'test_lines', type(builder).__name__, '...'
     lines = builder.lines()
     for line in lines :
         test_line(line)
 
+def test_cannot_modify_lines(builder) :
+    """
+    Test that the builder.lines() field cannot be modified.
+    If builder.lines() returns a list-like type that supports += [...] syntax,
+    check that no modification ocurrs. Else, all is good. Check that there
+    is no change anyway.
+    """
+    print 'test_cannot_modify_lines', type(builder).__name__, '...'    
+    orig_lines = builder.lines()
+    mod_lines = builder.lines()
+    try :
+        mod_lines += ['BAD LINE']
+        assert builder.lines() != mod_lines
+    except TypeError :
+        pass
+    assert builder.lines() == orig_lines
+
+    
 def test_line_locations(builder) :
+    print 'test_line_locations', type(builder).__name__, '...'
     lines = builder.lines()
     for line in lines :
         test_line_location(line)

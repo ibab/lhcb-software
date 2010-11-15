@@ -4,6 +4,9 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+! 2010-11-15 - Juan Palacios
+ - Expand tests, and modify LineBuilder base class such that it passes them.
+
 ! 2010-11-12 - Juan Palacios
  - Fist attempy at line builder base class.
  - Some fixes to test tools.
