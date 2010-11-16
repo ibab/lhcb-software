@@ -129,7 +129,7 @@ StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
     if( sc ) {
       vtxcount++;
       ipsum+=ipC;
-      if( (ipC < ipmin) and (ipC > lastipmin) ) {
+      if( (ipC < ipmin) && (ipC > lastipmin) ) {
         ipmin = ipC;
         ipchi2min = ipChi2;
         xpos = (*iv)->position().x()/mm;

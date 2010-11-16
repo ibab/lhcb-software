@@ -6,6 +6,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-11-16 - Juan Palacios
+ - src/TaggingUtilsChecker.cpp
+  . "and" -> "&&" to please windows.
+
 ! 2010-11-10 - Marc Grabalosa
   . added variables to study performance wrt nPV
 	. new tuning for strip10 (default)
