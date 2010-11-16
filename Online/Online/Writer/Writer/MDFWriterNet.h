@@ -160,6 +160,8 @@ namespace LHCb {
     unsigned int getBeamGasEventsEx(){ return m_mon->m_statEvents[BEAMGASEX]; }
     unsigned int getLowLumi(){ return m_mon->m_statEvents[LOWLUMI]; }
     unsigned int getMidLumi(){ return m_mon->m_statEvents[MIDLUMI]; }
+    unsigned int getHlt1In() { return m_mon->m_statEvents[HLT1IN]; }
+    unsigned int getHlt1Ex() { return m_mon->m_statEvents[HLT1EX]; }
     
     void incPhysEventsIn(){  m_mon->m_statEvents[PHYSIN]++; }
     void incPhysEventsEx(){  m_mon->m_statEvents[PHYSEX]++; }
@@ -173,6 +175,8 @@ namespace LHCb {
     void incBeamGasEventsEx(){  m_mon->m_statEvents[BEAMGASEX]++; }
     void incLowLumi(){  m_mon->m_statEvents[LOWLUMI]++; }
     void incMidLumi(){  m_mon->m_statEvents[MIDLUMI]++; }
+    void incHlt1EventsIn(){  m_mon->m_statEvents[HLT1IN]++; }
+    void incHlt1EventsEx(){  m_mon->m_statEvents[HLT1EX]++; }
 
     inline int getStatEvents(unsigned int * destBuffer, int size) {
        if(size == MAX_STAT_TYPES) {
@@ -379,6 +383,9 @@ namespace LHCb {
 
     /// The maximum file size (in MB) to write before creating a new file.
     size_t m_maxFileSizeMB;
+
+    /// The maximum number of event per file.
+    unsigned int m_maxEventInFile;
 
     /// The maximum size of the queue in m_mmObj
     size_t m_maxQueueSizeBytes;

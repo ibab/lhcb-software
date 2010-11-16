@@ -1,0 +1,16 @@
+#pragma print off
+
+//ApplicationMgr.HistogramPersistency  = "NONE";
+//ApplicationMgr.EvtSel                = "NONE";
+//ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+//ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+//Runable.Wait                         = true;
+//ApplicationMgr.ExtSvc                = { };
+//MessageSvc.OutputLevel               = 4;
+
+ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
+MEPInit.InitFlags        = "-s=700000 -e=1 -u=20 -b=15 -i=TestWriter_LHCb -c";
+MessageSvc.OutputLevel   = 1;  // Minimum is Error
+//Runable.Dll              = "OnlineKernel";
+//Runable.Call             = "tan_nameserver";
+//Runable.InitFlags        = "-a -tcp -n -d";

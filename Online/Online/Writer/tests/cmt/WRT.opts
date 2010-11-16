@@ -1,0 +1,63 @@
+///=====
+OnlineEnv.PartitionID       = 333;
+OnlineEnv.PartitionName     = "LHCb";
+
+OnlineEnv.OutputLocation = "";
+
+OnlineEnv.MonitorSvcType    = "MonitorSvc/MonitorSvc";
+ApplicationMgr.ExtSvc       = { "MonitorSvc/MonitorSvc"};
+ApplicationMgr.SvcOptMapping += { "LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+
+MessageSvc.OutputLevel              = 3;
+
+///=====
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc                = {"IncidentSvc"};
+ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager"};
+ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.TopAlg                = {"LHCb::MDFWriter/Writer" };
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+MEPManager.Buffers                   = {"TestWriter"};
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = true;
+
+AuditorSvc.Auditors = {"ChronoAuditor"};
+
+
+Writer.Compress                      = 0;
+Writer.DataType                      = 2;
+Writer.GenerateMD5                   = true;
+EventSelector.Decode                 = false;
+EventSelector.Input                  = "TestWriter";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+// #include "$ONLINETASKS/options/MessageSvc.opts"
+ApplicationMgr.TopAlg                = {"LHCb::MDFWriterNet/Writer"};
+Writer.InputDataType                 = 3;
+Writer.DataType                      = 2;
+//Writer.StorageServerAddr             = "192.167.2.54"; //plus5:eth1
+//Writer.StorageServerAddr             = "192.128.5.1"; //plus5:eth1
+Writer.StorageServerAddr             = "192.167.2.115"; //store05:eth2
+//Writer.StorageServerAddr             = "172.29.30.11";
+Writer.StorageServerPort             = 45247;
+Writer.MaxFileSizeMB                 = 2000;
+//Writer.RunDBServiceURL               = "http://192.128.5.1:8081"; //plus5:eth1
+//Writer.RunDBServiceURL               = "http://127.0.0.1:8081"; //plus5:eth1
+Writer.RunDBServiceURL               = "http://192.167.2.115:8081"; //store04:eth2
+//Writer.RunDBServiceURL		       = "http://172.29.30.11:8081";
+Writer.SndRcvSizes                   = 6553600;
+Writer.Compress                      = 0;
+Writer.GenerateMD5                   = true;
+Writer.Directory                     = @OnlineEnv.OutputLocation;
+Writer.FilePrefix                    = "R";
+Writer.StreamID                      = "FULL";
+Writer.MaxQueueSizeBytes             = 5002880000;
+Writer.RunFileTimeoutSeconds	     = 5;
+Writer.UpdatePeriod		     = 0;
+//Writer.EnableMD5			=false;
+
+//Writer.StreamID                      = @OnlineEnv.StreamID;
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";

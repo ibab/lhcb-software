@@ -196,6 +196,7 @@ void MDFWriterNet::constructNet()
   declareProperty("StorageServerPort",     m_serverPort=45247);
   declareProperty("RunDBServiceURL",       m_runDBURL="");
   declareProperty("MaxFileSizeMB",         m_maxFileSizeMB=1);
+  declareProperty("MaxEventInFile",        m_maxEventInFile=20000);
   declareProperty("SndRcvSizes",           m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",            m_filePrefix="MDFWriterNet_File_");
   declareProperty("Directory",             m_directory=".");
@@ -811,7 +812,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     if( checkForPhysStat(mHeader, len)) {
         m_currFile->incPhysStat();
     }
-    incTriggerType(mHeader, len);
+//    incTriggerType(mHeader, len);
 
     countRouteStat(mHeader, len);
 
@@ -903,7 +904,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   }
   
   //How much have we written?
-  if (totalBytesWritten > (m_maxFileSizeMB << 20)) {
+  if (totalBytesWritten > (m_maxFileSizeMB << 20) || m_maxEventInFile <= m_currFile->getEvents() ) {
     closeFile(m_currFile);
     m_openFiles.removeFile(m_currFile);
     delete(m_currFile);
@@ -979,6 +980,7 @@ inline void MDFWriterNet::countRouteStat(MDFHeader *mHeader, size_t) {
   if(isMBias) m_currFile->incMBiasEventsIn();
   if(isLumi) m_currFile->incLumiEventsIn();
   if(isBeamGas) m_currFile->incBeamGasEventsIn();
+  if(isPhysHlt1) m_currFile->incHlt1EventsIn();
 
   if(routeBitMask1 & bit50) m_currFile->incLowLumi();
   if(routeBitMask1 & bit51) m_currFile->incMidLumi();
