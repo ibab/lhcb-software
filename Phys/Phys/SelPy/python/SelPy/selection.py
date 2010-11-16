@@ -81,7 +81,9 @@ class Selection(object) :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
     configurable plus a list of required selection configurables. It uses
-    the required selections to set the InputLocations of the top selection.
+    the required selections to set the list of input data locations of the
+    top selection. The method used to set the input data locations is defined
+    by the 'InputDataSetter' constructor argument (default 'InputLocations').
     Makes the output location of the data available via outputLocation(),
     a concatenation of the OutputBranch and Algorithm's name.
 
@@ -111,7 +113,8 @@ class Selection(object) :
                  name,
                  Algorithm,
                  RequiredSelections = [],
-                 OutputBranch = "Phys") :
+                 OutputBranch = "Phys",
+                 InputDataSetter = "InputLocations") :
 
         if name in Selection.__used_names :
             raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
@@ -125,17 +128,16 @@ class Selection(object) :
             self.requiredSelections.append(sel)
         self._name = name
         _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
-        if len(Algorithm.InputLocations) != 0 :
+        _inputLocations = getattr(Algorithm, InputDataSetter)
+        if len(_inputLocations) != 0 :
             if not compatibleSequences(_outputLocations,
-                                       Algorithm.InputLocations) :
+                                       _inputLocations) :
                 raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
-                                                 '\nInputLocations: '+str(Algorithm.InputLocations)+\
+                                                 '\nInputLocations: '+str(_inputLocations)+\
                                                  '\nRequiredSelections: '+str(_outputLocations))
-        self.alg = Algorithm.clone(self._name, InputLocations = [])
+        self.alg = Algorithm.clone(self._name)
+        self.alg.__setattr__(InputDataSetter, list(_outputLocations))
         self._outputBranch = OutputBranch
-        
-        for loc in _outputLocations :
-            self.algorithm().InputLocations += [loc]
 
     def name(self) :
         return self._name

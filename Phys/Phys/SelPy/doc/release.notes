@@ -5,6 +5,12 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-11-16 - Juan Palacios
+ - python/SelPy/selection.py
+  . Add InputDataSetter constructor argument to Selection. Defines the method 
+    used to set the input data locations of the contained algorithm. Set to
+    'InputLocations' by default. 
+
 ! 2010-11-15 - Juan Palacios
  - python/SelPy/selection.py
   . Reduce verbosity.
