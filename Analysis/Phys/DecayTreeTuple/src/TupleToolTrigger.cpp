@@ -105,25 +105,26 @@ StatusCode TupleToolTrigger::fillVerbose( Tuples::Tuple& tuple )
   {
     test&=fillL0(tuple);
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger L0" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger L0 " << test << endmsg ;
   
   //fill the HLT1 verbose
   if (m_fillHlt && m_verboseHlt1)
   {
     test&=fillHlt(tuple, "Hlt1");
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt1" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt1 " << test << endmsg ;
   
   //fill the HLT2 verbose
   if (m_fillHlt && m_verboseHlt2)
   {
     test&=fillHlt(tuple, "Hlt2");
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt2" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt2 " << test << endmsg ;
 
   test &= fillRoutingBits(tuple);
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger RoutingBits" << endmsg ;
-  
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger RoutingBits " << test << endmsg ;
+
+  if (!test) Warning("Failure from Trigger::fillVerbose");
   return StatusCode(test);
 }
 
@@ -195,9 +196,11 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
     if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
-    if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() )) 
+    if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() )){
       Warning("Failure to fill routing bits");
       return StatusCode::FAILURE ;
+    }
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
   return StatusCode::SUCCESS ;
 }

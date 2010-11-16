@@ -76,7 +76,7 @@ StatusCode EventTuple::execute() {
 
   Tuple tuple = ( produceEvtCols () ? evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
   if (msgLevel(MSG::VERBOSE)) verbose() << "Got tuple" << endmsg ;
-  if (produceEvtCols ()){
+  if (produceEvtCols()){
     // pick up the location of the event --   
     // this is what makes the tag collection a collection...   
     DataObject* pObject = get<DataObject>("/Event");
