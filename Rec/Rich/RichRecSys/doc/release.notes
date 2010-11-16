@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-11-16 - Chris Jones
+ - Revert the last commit, as I need more time to study the impact for the
+   HLT and Monte Carlo samples.
+
 ! 2010-11-12 - Chris Jones
  - New tuning of the photon creator cuts, with better tuned expected 
    resolution calculations

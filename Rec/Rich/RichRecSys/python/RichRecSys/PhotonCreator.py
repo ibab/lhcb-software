@@ -76,7 +76,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         # -----------------------------------------------------------------------
 
-        if selMode == "Tight" :
+        if selMode == "Tight-DEV" :
 
             # Change CK resolution calculation parameters
             # Will be committed to C++ in a future release
@@ -106,13 +106,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
 
-        elif selMode == "OldTight" :
-
-            # Change CK resolution calculation parameters
-            # Will be committed to C++ in a future release
-            self.richTools().CkResType = "Functional" # Default, but to be sure
-            self.richTools().ckResolution().ScaleFactor   = [ 1.0,   1.0,    1.0    ]
-            self.richTools().ckResolution().MaxCKThetaRes = [ 0.003, 0.0025, 0.001  ]
+        elif selMode == "Tight" :
             
             # ================================================================
             # Photon Predictor cuts
