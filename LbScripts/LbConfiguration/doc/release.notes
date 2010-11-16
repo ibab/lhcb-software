@@ -1,3 +1,7 @@
+2010-11-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: fixed sh wrapper syntax
+
 2010-11-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/__init__.py: fixed a crash when the Eclipse setting are already present

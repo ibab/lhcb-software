@@ -564,15 +564,15 @@ def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, build
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     if prodlink :
-        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
+        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers2}", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
-  lbvers=prod
+  lbvers2=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
-    lbvers=dev
+    lbvers2=dev
   fi
   if [[ -n "$LB_BANNER" ]]; then
     cat ${LB_BANNER}
@@ -586,16 +586,16 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
         content += """
   fi
   export LBLOGIN_DONE=yes
-  unset lbvers
+  unset lbvers2
 fi
 
 """
     elif shell == "csh" :
         content += """
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
-  set lbvers=prod
+  set lbvers2=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
-    set lbvers=dev
+    set lbvers2=dev
   endif
   if ( $?LB_BANNER ) then
     cat ${LB_BANNER}
@@ -609,7 +609,7 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
         content += """
   endif
   setenv LBLOGIN_DONE yes
-  unset lbvers
+  unset lbvers2
 endif
 
 """
@@ -617,26 +617,26 @@ endif
         content += """
 IF DEFINED HOME (
   IF NOT EXIST %HOME%\.noLHCBLoginscript (
-    set lbvers="prod"
+    set lbvers2="prod"
     IF EXIST %HOME%\.devLHCBLoginscript (
-      set lbvers="dev"
+      set lbvers2="dev"
     ) """
         content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=2)
         content += """
-    set lbvers=
+    set lbvers2=
   )
 ) ELSE (
-  set lbvers="prod" """
+  set lbvers2="prod" """
         content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--quiet",
                                     prodlocation=prodlocation, offset=1)
 
         content += """
-  set lbvers=
+  set lbvers2=
 )
 """
 
@@ -649,15 +649,15 @@ def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, build
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     if prodlink :
-        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
+        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers3}", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
 if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
-  lbvers=prod
+  lbvers3=prod
   if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
-    lbvers=dev
+    lbvers3=dev
   fi
   if [[ -n "$LBLOGIN_DONE" ]]; then"""
         content += ShellFileNativeSnippet("LbLogin", shell,
@@ -677,7 +677,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
                                     offset=2)
         content += """
   fi
-  unset lbvers
+  unset lbvers3
 fi
 
 """
@@ -685,9 +685,9 @@ fi
     elif shell == "csh" :
         content += """
 if ( ! -e ${HOME}/.noLHCBLoginscript ) then
-  set lbvers=prod
+  set lbvers3=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
-    set lbvers=dev
+    set lbvers3=dev
   endif
   if ( $?LBLOGIN_DONE ) then"""
         content += ShellFileNativeSnippet("LbLogin", shell,
@@ -707,7 +707,7 @@ if ( ! -e ${HOME}/.noLHCBLoginscript ) then
                                     offset=2)
         content += """
   endif
-  unset lbvers
+  unset lbvers3
 endif
 
 """
@@ -715,9 +715,9 @@ endif
         content += """
 IF DEFINED HOME (
   IF NOT EXIST %HOME%\.noLHCBLoginscript (
-    set lbvers="prod"
+    set lbvers3="prod"
     IF EXIST %HOME%\.devLHCBLoginscript (
-      set lbvers="dev"
+      set lbvers3="dev"
     ) """
         content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
@@ -725,17 +725,17 @@ IF DEFINED HOME (
                                     prodlocation=prodlocation,
                                     offset=2)
         content += """
-    set lbvers=
+    set lbvers3=
   )
 ) ELSE (
-  set lbvers="prod" """
+  set lbvers3="prod" """
         content += ShellFileNativeSnippet("LbLogin", shell,
                                     targetlocation=targetlocation,
                                     args="--silent",
                                     prodlocation=prodlocation,
                                     offset=1)
         content += """
-  set lbvers=
+  set lbvers3=
 )
 """
     f.write(content)
@@ -764,7 +764,7 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
         if set_volhcb :
             content += """
 if [[ ! -n "$VO_LHCB_SW_DIR" ]]; then
-  export VO_LHCB_SW_DIR %s
+  export VO_LHCB_SW_DIR=%s
 fi
 """ % set_volhcb
         content += """
@@ -779,7 +779,7 @@ if [[ ! -e ${HOME}/.noLHCBLoginscript ]]; then
                                     prodlocation=prodlocation,
                                     offset=1)
         content += """
-  if shopt -q login_shell || [[-n "$LB_BANNER" ]]; then"""
+  if shopt -q login_shell || [[ -n "$LB_BANNER" ]]; then"""
         content += ShellFileNativeSnippet("group_login", shell,
                                     targetlocation=targetlocation,
                                     args="",
