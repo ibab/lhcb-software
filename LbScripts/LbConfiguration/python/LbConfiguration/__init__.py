@@ -44,7 +44,7 @@ def createEclipseConfiguration(dest, projectpath):
                 open(join(dest, f), "w").write(t % data)
     except:
         # Ignore failures
-	pass
+        pass
 
 def eclipseConfigurationAddPackage(dest, package):
     """Add package-specific configuration details to an already existing Eclipse
