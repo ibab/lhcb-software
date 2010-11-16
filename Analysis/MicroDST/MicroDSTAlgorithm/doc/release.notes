@@ -4,6 +4,8 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+!========================== MicroDSTAlgorithm v5r0p1 2010-11-16 ===============
+
 ! 2010-11-16 - Juan Palacios
  - src/CopyParticle2LHCbIDs.h, src/CopyParticle2LHCbIDs.cpp
   . Make storeLHCbIDs method non-const. Constness seems to be confusing template
