@@ -1,3 +1,8 @@
+2010-11-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added a protection to the cases where the terminal doesn't
+	support the invisible cursor (MacOSX).
+
 2010-11-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: fixed a bug in the implementation of the option

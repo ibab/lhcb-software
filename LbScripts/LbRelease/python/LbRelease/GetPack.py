@@ -237,7 +237,10 @@ try:
                                    self.min_y + 3, self.min_x + 1,
                                    self.max_y - 7, self.max_x - 2)
 
-            curses.curs_set(0)
+            try:
+                curses.curs_set(0)
+            except:
+                pass # ignore when the terminal doesn't support hidden cursor
             self._draw()
 
         def _draw(self):
