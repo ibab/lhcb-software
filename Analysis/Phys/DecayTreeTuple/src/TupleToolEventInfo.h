@@ -19,6 +19,8 @@ class ITupleTool;
  * - BCID and BC type
  * - Odin, L0 and Hlt TCKs
  * - GPS time
+ * - If the property Mu is given it will fill the Mu of the run. A working dictionary
+ *   can be found at https://twiki.cern.ch/twiki/bin/view/LHCb/NuMuPileUp
  * - if Verbose is on, also gps time in year,month,day,hour,min,second
  *   Note that months are numbered [0-11]. That's a convention. Sorry.
  *
@@ -39,5 +41,6 @@ public:
 
 private :
   std::string m_pvLocation ;
+  std::map<int,double> m_mu ;
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H

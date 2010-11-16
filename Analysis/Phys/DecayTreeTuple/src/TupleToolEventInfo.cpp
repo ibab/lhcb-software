@@ -48,6 +48,7 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" , 
                   "PV location to be used. If empty, take default");
+  declareProperty("Mu", m_mu);
 }
 //=============================================================================
 
@@ -64,6 +65,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   ulonglong gpstime = 0;
   Gaudi::Time gtime ;
   unsigned int nPVs = 0 ;
+  double mu = -1.;
   if ( "" == m_pvLocation){
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
     m_pvLocation = oo->primaryVertexLocation();
@@ -76,6 +78,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
     odin = get<ODIN>( LHCb::ODINLocation::Default );
     run = odin->runNumber();
+    if (m_mu.find(run)!=m_mu.end()) mu = m_mu[run];
     ev = odin->eventNumber();
     bcid = odin->bunchId();
     odintck = odin->triggerConfigurationKey();
@@ -108,6 +111,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
 
   bool test = true;
   test &= tuple->column( prefix+"runNumber", run );
+  if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", mu );
   test &= tuple->column( prefix+"eventNumber", ev );
   test &= tuple->column( prefix+"BCID", bcid );
   test &= tuple->column( prefix+"BCType", bctyp );
@@ -124,7 +128,6 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
   }
   test &= tuple->column( prefix+"Primaries", nPVs );
-  if( msgLevel( MSG::VERBOSE ) )
-    verbose() << "Returns " << test << endreq;
+  if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);
 }

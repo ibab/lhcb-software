@@ -185,7 +185,8 @@ StatusCode TupleToolTriggerBase::fill( const LHCb::Particle* M
   if(m_collateTriggerList) if(!checkAutoList()) appendToList();
   
   //Fill details about the requested triggers
-  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2) test &=fillVerbose(M, P, head, tuple);
+  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || isVerbose()) 
+    test &=fillVerbose(M, P, head, tuple);
   
   return StatusCode(test);
   
@@ -207,7 +208,7 @@ StatusCode TupleToolTriggerBase::fill(Tuples::Tuple& tuple )
   if(m_collateTriggerList) if(!checkAutoList()) appendToList();
   
   //Fill details about the requested triggers
-  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2) test &=fillVerbose(tuple);
+  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || isVerbose()) test &=fillVerbose(tuple);
   
   return StatusCode(test);
   

@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-11-16 - Patrick Koppenburg
+ - TupleToolTriggerBase: Bug fix. Verbose didn't get into fillVerbose
+   if none of VerboseXXX is set. Consequently one could nto get the 
+   roiuting bits alone
+ - TupleToolEventInfo can now fill the mu of a run. See doxygen.
+
 ! 2010-11-15 - V. Gligorov
  - Add NeuroBayes based PID probabilities to TupleToolPid. There is one
    probability per "stable" hypothesis (e,mu,k,p,pi)

@@ -57,7 +57,7 @@ StatusCode TupleToolTrigger::initialize ( ) {
 }
 //=============================================================================
 StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Basic" << endmsg ;
   
   const std::string prefix=fullName();
   //fill the L0 global
@@ -98,27 +98,31 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
 StatusCode TupleToolTrigger::fillVerbose( Tuples::Tuple& tuple ) 
 {
   bool test=true;
-  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Verbose" << endmsg ;
   
   //fill the L0 verbose
   if (m_fillL0 && m_verboseL0)
   {
     test&=fillL0(tuple);
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger L0" << endmsg ;
   
   //fill the HLT1 verbose
   if (m_fillHlt && m_verboseHlt1)
   {
     test&=fillHlt(tuple, "Hlt1");
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt1" << endmsg ;
   
   //fill the HLT2 verbose
   if (m_fillHlt && m_verboseHlt2)
   {
     test&=fillHlt(tuple, "Hlt2");
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt2" << endmsg ;
 
-  fillRoutingBits(tuple);
+  test &= fillRoutingBits(tuple);
+  if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger RoutingBits" << endmsg ;
   
   return StatusCode(test);
 }
@@ -185,11 +189,14 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
 StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple ) 
 {
   const std::string prefix=fullName();
+  if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits" << endmsg ;
   if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default))
   {
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
+    if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
     if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() )) 
+      Warning("Failure to fill routing bits");
       return StatusCode::FAILURE ;
   }
   return StatusCode::SUCCESS ;
