@@ -80,12 +80,13 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
 
   char statEventsCharString[1024];
 
-  ret = sprintf(statEventsCharString, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d",
+  ret = sprintf(statEventsCharString, "TRG0:%d;TRG1:%d;TRG2:%d;TRG3:%d;TRG4:%d;TRG5:%d;TRG6:%d;TRG7:%d;PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d",
       trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3],
       trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7],
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX]);
   if(ret < 0 || (unsigned int) ret > sizeof(statEventsCharString)) {
     throw FailureException("Could not format stat counters correctly.");
   }

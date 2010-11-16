@@ -544,6 +544,8 @@ void MDFWriterNet::closeFile(File *currFile)
          << "RANDEX : " << pdu.statEvents[RANDEX] << " "
          << "LOWLUMI : " << pdu.statEvents[LOWLUMI] << " "
          << "MIDLUMI : " << pdu.statEvents[MIDLUMI] << " "
+         << "HLT1IN : " << pdu.statEvents[HLT1IN] << " "
+         << "HLT1EX : " << pdu.statEvents[HLT1EX] << " "
          << "Command size is: " << sizeof(header) + sizeof(pdu)
          << endmsg;
 
@@ -560,10 +562,11 @@ void MDFWriterNet::closeFile(File *currFile)
       char statEventsCharString[512];
 
       //XXX test return
-      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d", 
+      sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d;HLT1IN:%d;HLT1EX:%d", 
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX]);
 
       struct timeval tv;
       gettimeofday(&tv, NULL);
@@ -864,7 +867,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       sprintf(statEventsCharString, "PHYSIN:%d;MBIASIN:%d;LUMIIN:%d;BEAMGASIN:%d;RANDIN:%d;PHYSEX:%d;MBIASEX:%d;LUMIEX:%d;BEAMGASEX:%d;RANDEX:%d;LOWLUMI:%d;MIDLUMI:%d", 
       statEvents[PHYSIN], statEvents[MBIASIN], statEvents[LUMIIN], statEvents[BEAMGASIN],
       statEvents[RANDEX], statEvents[PHYSEX], statEvents[MBIASEX], statEvents[LUMIEX],
-      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI]);
+      statEvents[BEAMGASEX], statEvents[RANDEX], statEvents[LOWLUMI], statEvents[MIDLUMI],
+      statEvents[HLT1IN], statEvents[HLT1EX]);
 
 
       size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u%c%u%c%d%c%s",  
@@ -1319,6 +1323,8 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
          << "RANDEX : " << pdu->statEvents[RANDEX] << " "
          << "LOWLUMI : " << pdu->statEvents[LOWLUMI] << " "
          << "MIDLUMI : " << pdu->statEvents[MIDLUMI] << " "
+         << "HLT1IN : " << pdu->statEvents[HLT1IN] << " "
+         << "HLT1EX : " << pdu->statEvents[HLT1EX] << " "
          << endmsg;
     break;
   }
