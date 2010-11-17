@@ -127,12 +127,12 @@ public:
 
 
   template <class T>
-  inline bool exist(const std::string& location) {
+  inline bool exist(const std::string& location) const {
     return PBASE:: template exist<T>(location);
   }
 
   template <class T>
-  inline typename Gaudi::Utils::GetData<T>::return_type get(const std::string& location) {
+  inline typename Gaudi::Utils::GetData<T>::return_type get(const std::string& location) const {
     return PBASE:: template get<T>(location);
   }
 

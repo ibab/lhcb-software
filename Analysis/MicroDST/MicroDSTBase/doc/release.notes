@@ -6,6 +6,9 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2010-11-17 - Juan Palacios
+ - MicroDSTCommon: make get and exist methods const.
+
 !====================== MicroDSTBase v3r0 2010-11-02 =========================
 
 ! 2010-10-07 - Juan Palacios
