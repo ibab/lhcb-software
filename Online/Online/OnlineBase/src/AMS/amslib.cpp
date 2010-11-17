@@ -1,9 +1,11 @@
+#include <cstring>
 #include <cstdio>
 #include <cerrno>
 #include <memory>
 
 #include "RTL/que.h"
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #include "WT/wtdef.h"
 #include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
@@ -90,8 +92,8 @@ namespace {
     struct        sockaddr_in address;
     explicit amsentry_t(const char* dest=0, const char* me=0)  
     : chan(-1), refCount(0), del_pending(0), pending(0), msg_ptr(0), sndBuffSize(0)    {
-      if ( dest ) strcpy (name,dest ? dest : "");
-      if ( me   ) strcpy (myName,me ? me : "");
+      if ( dest ) strncpy (name,dest ? dest : "", sizeof(name));
+      if ( me   ) strncpy (myName,me ? me : "", sizeof(myName));
     }
     int release()  {
       if (refCount == 0) delete this;
@@ -139,18 +141,19 @@ int AMS_exit_handler(void* ) {
 }
 
 void amsc_full_name (char *dest, const char *src, size_t length, int style) {
-  char *p, full[SAFE_NAME_LENGTH], proc[PROC_NAME_LENGTH], host[HOST_NAME_LENGTH];
-  if ((p = strstr (src,"::"))) {      // found DECNET style source name 
-    int n = p - src;
+  char full[SAFE_NAME_LENGTH], proc[PROC_NAME_LENGTH], host[HOST_NAME_LENGTH];
+  const char *q;
+  if ((q = strstr_safe(src,"::"))) {      // found DECNET style source name 
+    int n = q - src;
     strncpy(host, src, n);
     host[n] = 0;
-    strcpy(proc, p + 2);
+    strcpy(proc, q + 2);
   }
-  else if ((p = strchr(src,'@')))  {  // found INTERNET style source name 
-    int n = p - src;
+  else if ((q = strchr_safe(src,'@')))  {  // found INTERNET style source name 
+    int n = q - src;
     strncpy(proc, src, n);
     proc[n] = 0;
-    strcpy(host, p + 1);
+    strcpy(host, q + 1);
   }
   else  {                            // Source is process name only 
     strcpy(proc, src);
@@ -174,7 +177,7 @@ void amsc_full_name (char *dest, const char *src, size_t length, int style) {
     dest [length - 1] = 0;
   }
   // Upper or lowercase depending on style; trim blanks
-  for(p = dest; *p; ++p)  {
+  for(char *p = dest; *p; ++p)  {
     *p = char((style == DECNET_STYLE ) ? ::toupper(*p) : ::tolower(*p));
     if (*p == ' ')  {
       *p = 0;

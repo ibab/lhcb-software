@@ -485,6 +485,11 @@ int lib_rtl_pipe_close(FILE* stream) {
 #endif  
 }
 
+/// Safe wrapper around getenv
+const char* rtl_getenv(const char* value) {
+  return value ? ::getenv(value) : 0;
+}
+
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
   cout << "Executing empty test action ..... finished ......" << endl;
   return 1;

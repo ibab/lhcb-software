@@ -129,7 +129,7 @@ inline TanMessage& TanMessage::operator = (const TanMessage& cp)  {
   m_error     = cp.m_error;
   m_length    = sizeof(cp);
   m_function  = cp.m_function;
-  ::strcpy(m_name, cp.m_name);
+  ::strncpy(m_name, cp.m_name, sizeof(m_name));
   return *this;
 }
 
