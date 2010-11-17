@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
+// ============================================================================
 // HltBase 
 // ============================================================================
 #include "Event/HltCandidate.h"
@@ -75,21 +79,26 @@ bool Hlt::Candidate::hasStage ( const Hlt::Stage* stage ) const
 // ============================================================================
 std::ostream& Hlt::Candidate::fillStream(std::ostream& s) const
 {
-  s << "('Candidate',[ ";
-  std::string delim = "";
-  for (StagesConstIterator i = stages().begin(); i != stages().end(); ++i) {
-    s << delim << "'" << **i << "'";
-    delim = ",";
-  }
-  s << "],[";
-  delim = "";
-  for (WorkersConstIterator i = workers().begin(); i != workers().end(); ++i) {
-    s << delim << "'" << *i << "'";
-    delim = ", ";
-  }
-  s << "])";
-  return s;
+  s << "Hlt::Candidate : " ;
+  //
+  Gaudi::Utils::toStream ( m_stages.begin () , 
+                           m_stages.end   () , s , 
+                           " Stages: [" , "]" , " ,\n "   ) ;  
+  Gaudi::Utils::toStream ( m_workers.begin () , 
+                           m_workers.end   () , s , 
+                           "\n Workers: [" , "]" , ","    ) ;
+  return s << std::endl ;
 }
+// ============================================================================
+// printout 
+// ============================================================================
+std::ostream& Gaudi::Utils::toStream 
+( const Hlt::Candidate* c , std::ostream& s ) 
+{
+  if ( 0 == c ){ return s << "<NULL>" ; }
+  return c->fillStream ( s ) ;
+}
+// ============================================================================
 
 // ============================================================================
 // The END 

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-11-17 - Vanya Belyaev
+ - add printout utils 
+
 ! 2010-10-26 - Vanya Belyaev
 
  - add few getters into HltCandidate to bypass stage...

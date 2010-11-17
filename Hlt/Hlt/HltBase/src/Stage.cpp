@@ -1,5 +1,11 @@
 // $Id: Stage.cpp,v 1.7 2010-08-02 18:15:38 ibelyaev Exp $ 
 // ============================================================================
+// Include files 
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
+// ============================================================================
 // HltBase 
 // ============================================================================
 #include "Event/HltStage.h"
@@ -118,17 +124,12 @@ std::ostream& Hlt::Stage::fillStream(std::ostream& s) const
   else if (is<Hlt::Stage> ())
     s << "Stage " << get<Hlt::Stage> ();
   else s << "NULL";
-  
-  
-  s <<  ", " << m_cache;
-  s << ", history: [";
-  std::string delim="";
-  for(History::const_iterator cur = m_history.begin();
-      cur != m_history.end(); cur++) {
-    s << delim << "'" <<  *cur << "'";
-    delim = ", ";
-  }
-  s << "]";
+  //
+  s << ", " << m_cache;
+  //
+  s << ", History: " ;
+  Gaudi::Utils::toStream ( m_history , s  ) ;
+  //
   return s;
 }
 // ============================================================================
@@ -167,7 +168,15 @@ Hlt::Stage::Type Hlt::Stage::stageType() const
   //
   return Hlt::Stage::Unknown ;
 }
-
+// ============================================================================
+// printout 
+// ============================================================================
+std::ostream& Gaudi::Utils::toStream 
+( const Hlt::Stage* c , std::ostream& s ) 
+{
+  if ( 0 == c ){ return s << "<NULL>" ; }
+  return c->fillStream ( s ) ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
