@@ -381,9 +381,9 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   const char *tmp;
   char buff[32], buff2[64];
   size_t resultant_length = sizeof(buff2);
-  tmp = ::getenv("UTGID");
-  if ( !tmp ) tmp = ::getenv("PROCESSNAME");
-  if ( !tmp ) tmp = ::getenv("PROCESS");
+  tmp = ::lib_rtl_getenv("UTGID");
+  if ( !tmp ) tmp = ::lib_rtl_getenv("PROCESSNAME");
+  if ( !tmp ) tmp = ::lib_rtl_getenv("PROCESS");
   if ( !tmp ) { sprintf(buff,"P%06d",lib_rtl_pid()); tmp=buff;}
   ::str_trim(tmp, buff2, &resultant_length);
   ::strncpy(process, buff2, len);
@@ -392,9 +392,9 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
 
 int lib_rtl_get_node_name(char* node, size_t len)  {
   char n[64];
-  const char *tmp = ::getenv("NODE");
+  const char *tmp = ::lib_rtl_getenv("NODE");
 #if defined(_WIN32)
-  if ( !tmp ) tmp = ::getenv("COMPUTERNAME");
+  if ( !tmp ) tmp = ::lib_rtl_getenv("COMPUTERNAME");
   if ( !tmp && 0 == ::gethostname (n,sizeof(n)) ) tmp = n;
 #elif defined(_OSK)
 #else
@@ -405,7 +405,7 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
 }
 
 int lib_rtl_get_datainterface_name(char* node, size_t len)  {
-  const char *tmp = ::getenv("DATAINTERFACE");
+  const char *tmp = ::lib_rtl_getenv("DATAINTERFACE");
   if ( !tmp )  {
     char n[64], nn[70];
     if ( 0 == ::gethostname (n,sizeof(n)) )  {
@@ -486,8 +486,17 @@ int lib_rtl_pipe_close(FILE* stream) {
 }
 
 /// Safe wrapper around getenv
-const char* rtl_getenv(const char* value) {
+const char* lib_rtl_getenv(const char* value) {
   return value ? ::getenv(value) : 0;
+}
+
+/// POSIX/ISO compiant wrapper around unlink
+int lib_rtl_unlink(const char* fname) {
+#ifdef _WIN32
+  return ::_unlink(fname);
+#else
+  return ::unlink(fname);
+#endif
 }
 
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {

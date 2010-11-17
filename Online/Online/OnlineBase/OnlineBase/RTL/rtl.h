@@ -100,7 +100,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   /// Access data interface name
   int lib_rtl_get_datainterface_name(char* node, size_t len);
   /// Safe wrapper around getenv
-  __CXX_CONST char* rtl_getenv(__CXX_CONST char* value);
+  __CXX_CONST char* lib_rtl_getenv(__CXX_CONST char* value);
   /// disable intercepts
   int lib_rtl_disable_intercept();
   /// enable intercpets
@@ -250,6 +250,11 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   int lib_rtl_event_exithandler();
   int lib_rtl_gbl_exithandler();
   int lib_rtl_lock_exithandler();
+
+  /// POSIX/ISO compiant wrapper around unlink
+  int lib_rtl_unlink(__CXX_CONST char* fname);
+
+
 #ifdef __cplusplus
 }
 
