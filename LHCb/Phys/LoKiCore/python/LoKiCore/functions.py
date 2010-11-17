@@ -38,7 +38,7 @@ __version__ = "Version $Revision$ "
 from LoKiCore.basic import cpp, std, LoKi, LHCb, Gaudi
 
 # =============================================================================
-def monitor ( o  , *m ) :
+def monitor ( o , *m ) :
     """
     Create the monitored pedicate/function:
 
@@ -1027,7 +1027,12 @@ def vct_from_list  ( lst , *args ) :
         except TypeError      : pass
     ## 
     return doubles ( lst , *args )
-    
+
+
+# =============================================================================
+## @see LoKi::Functors::dump 
+dump = LoKi.Functors.Dump()
+
 # =============================================================================
 if '__main__' == __name__ :
 

@@ -11,6 +11,7 @@
 #include "LoKi/Cast.h"
 #include "LoKi/apply.h"
 #include "LoKi/compose.h"
+#include "LoKi/Filters.h"
 // ============================================================================
 /** compose/chain the function 
  *
@@ -391,6 +392,71 @@ operator>>
 //  return LoKi::Compose<TYPE,std::vector<TYPE1>,std::vector<TYPE2> > 
 //    ( fun1 , LoKi::Yields<TYPE1,TYPE2,TYPE1> ( fun2 ) ) ;
 //}
+
+
+
+// ============================================================================
+// pipe with the gate 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< std::vector<TYPE> , std::vector<TYPE> >
+operator>> ( const LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> >& pipe , 
+             const LoKi::Functor< void              , bool>&               gate ) 
+{
+  return pipe >> LoKi::gate<TYPE>( gate ) ;
+}
+// ============================================================================
+// source with the gate 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< void , std::vector<TYPE> >
+operator>> ( const LoKi::Functor< void , std::vector<TYPE> >& source , 
+             const LoKi::Functor< void , bool>&               gate   ) 
+{
+  return source >> LoKi::gate<TYPE>( gate ) ;
+}
+
+
+// ============================================================================
+// dumping to the stream 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< std::vector<TYPE> , std::vector<TYPE> >
+operator>> ( const LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> >& pipe , 
+             std::ostream& stream ) 
+{
+  return pipe >> LoKi::Functors::Dump_<TYPE>( stream ) ;
+}
+// ============================================================================
+// dumping to the stream 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< void, std::vector<TYPE> >
+operator>> ( const LoKi::Functor< void, std::vector<TYPE> >& pipe , 
+             std::ostream& stream ) 
+{
+  return pipe >> LoKi::Functors::Dump_<TYPE>( stream ) ;
+}
+// ============================================================================
+// dumping to the stream 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< std::vector<TYPE> , std::vector<TYPE> >
+operator>> ( const LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> >& pipe , 
+             const LoKi::Functors::Dump& /* dump */ ) 
+{
+  return pipe >> LoKi::Functors::Dump_<TYPE>() ;
+}
+// ============================================================================
+// dumping to the stream 
+// ============================================================================
+template <class TYPE>
+inline  LoKi::FunctorFromFunctor< void, std::vector<TYPE> >
+operator>> ( const LoKi::Functor< void, std::vector<TYPE> >& pipe , 
+             const LoKi::Functors::Dump& /* dump */ ) 
+{
+  return pipe >> LoKi::Functors::Dump_<TYPE>() ;
+}
 
 // ============================================================================
 // The END 

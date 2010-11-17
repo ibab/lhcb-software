@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <climits>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
+// ============================================================================
 // LHCb
 // ============================================================================
 #include "LHCbMath/LHCbMath.h"
@@ -41,8 +45,16 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the campain of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-10-30
+   *
+   *                    $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
   namespace Functors
   {
@@ -1656,6 +1668,118 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Gate
+     *  Helper class to control the flow of objects.
+     *  Objects flows only if the gate is open.
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-17
+     */
+    template <class TYPE>
+    class Gate : public LoKi::Functor<std::vector<TYPE> ,
+                                      std::vector<TYPE> >
+    {
+    private: 
+      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >      Pipe_ ;
+      typedef typename Pipe_::argument                              argument ;
+      typedef typename Pipe_::result_type                        result_type ;
+    public:
+      // =====================================================================
+      /// the constructor from the stopper 
+      Gate ( const LoKi::Functor<void,bool>& gate ) 
+        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        , m_gate ( gate )
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Gate() {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  Gate* clone() const { return new Gate ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const 
+      {
+        // run stopper only for non-empty containers
+        // and stop the data flow if needed 
+        if ( !a.empty() && !m_gate() ) { result_type() ; }
+        return a ;
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return  s << "gate(" << m_gate << ")"; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Gate () ;                         // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual gate
+      LoKi::FunctorFromFunctor<void,bool> m_gate ;                  // the gate
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Dump_
+     *  Helper class to dump the content of the flow 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-17
+     */
+    template <class TYPE>
+    class Dump_ : public LoKi::Functor<std::vector<TYPE> ,
+                                       std::vector<TYPE> >
+    {
+    private: 
+      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >      Pipe_ ;
+      typedef typename Pipe_::argument                              argument ;
+      typedef typename Pipe_::result_type                        result_type ;
+    public:
+      // =====================================================================
+      /// the constructor from the stopper 
+      Dump_ ( std::ostream& stream = std::cout ) 
+        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        , m_stream ( stream )
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Dump_ () {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  Dump_* clone() const { return new Dump_ ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return  s << "dump"; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual stream 
+      std::ostream& m_stream ;                             // the actual stream 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    // MANDATORY: the only one essential method 
+    // ========================================================================
+    template <class TYPE>
+    inline 
+    typename Dump_<TYPE>::result_type 
+    Dump_<TYPE>::operator() ( typename Dump_<TYPE>::argument a ) const 
+    {
+      Gaudi::Utils::toStream 
+        ( a.begin() , a.end () , m_stream , "[ " , " ]" , " ,\n " ) ;
+      m_stream << std::endl ;
+      return a ;
+    }
+    // ========================================================================
+    // MANDATORY: the only one essential method 
+    // ========================================================================
+    template <>
+    Dump_<double>::result_type 
+    Dump_<double>::operator() ( Dump_<double>::argument a ) const ;
+    // ========================================================================
+    /** @class Dump
+     *  helper class to implement the dumping 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-17
+     */
+    class GAUDI_API Dump {};
+    // ========================================================================
   } //                                          end of namespace LoKi::Functors  
   // ==========================================================================
   /** simple "filter" function
@@ -2179,6 +2303,17 @@ namespace LoKi
         LoKi::Functors::Select<TYPE,TYPE> ( fun2 ) ) ;
   }
   // ==========================================================================
+  /** simple "gate" function
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-011-17
+   */
+  template <class TYPE>
+  LoKi::Functors::Gate<TYPE>
+  gate ( const LoKi::Functor<void,bool>& gate ) 
+  {
+    return LoKi::Functors::Gate<TYPE>( gate );
+  }
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================     
 // the specific printpout
@@ -2196,9 +2331,11 @@ std::ostream& LoKi::Functors::Size<TYPE>::fillStream
 // the specific printpout
 // ============================================================================     
 template <class TYPE>
-std::ostream& LoKi::Functors::Unique<TYPE>::fillStream
+std::ostream& 
+LoKi::Functors::Unique<TYPE>::fillStream
 ( std::ostream& s ) const { return s << "unique_" ; }
-// ============================================================================     
+// ============================================================================
+
 
 // ============================================================================     
 // The END 

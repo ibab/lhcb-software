@@ -14,6 +14,7 @@
 #include  "GaudiKernel/IAlgManager.h"
 #include  "GaudiKernel/SmartIF.h"
 #include  "GaudiKernel/ToStream.h"
+#include  "GaudiKernel/TypeNameString.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -58,20 +59,39 @@ namespace
         ( "AlgFunctors::getAlgorithm: IAlgManager* points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
-    IAlgorithm* _a = 0 ;
-    StatusCode sc = iam->getAlgorithm ( name , _a ) ;
-    if ( sc.isFailure() )
-    { 
-      LoKi::Report::Error 
-        ( "AlgFunctors::getAlgorithm: Unable to locate Algorithm '" + name + "'" ) ; 
-      return LoKi::Interface<IAlgorithm>()  ; 
-    }
+    //
+    IAlgorithm* _a =  
+      iam -> algorithm ( Gaudi::Utils::TypeNameString ( name ) , true ) ;
     if ( 0 == _a ) 
     {
       LoKi::Report::Error 
         ( "AlgFunctors::getAlgorithm: Algorithm '" + name + "' points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
+    //
+    if ( !_a->isInitialized() ) 
+    {
+      StatusCode sc = _a->sysInitialize() ;
+      if ( sc.isFailure() ) 
+      {
+        LoKi::Report::Error 
+          ( "AlgFunctors::getAlgorithm: Failure to initialize '" + name + "'" , sc ) ;
+        return LoKi::Interface<IAlgorithm>()  ; 
+      } 
+    }
+    //
+    if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() ) 
+    { 
+      // start it! 
+      StatusCode sc = _a->sysStart() ;
+      if ( sc.isFailure() ) 
+      {
+        LoKi::Report::Error 
+          ( "AlgFunctors::getAlgorithm: Failure to start '" + name + "'" , sc ) ;
+        return LoKi::Interface<IAlgorithm>()  ; 
+      } 
+    }
+    //
     return LoKi::Interface<IAlgorithm>( _a )  ; 
   }
   // ===========================================================================
@@ -193,6 +213,52 @@ LoKi::Algorithms::Executed::operator() () const
 // ============================================================================
 std::ostream& LoKi::Algorithms::Executed::fillStream( std::ostream& s ) const 
 { return s << "ALG_EXECUTED(" << Gaudi::Utils::toString( algName() ) << ")" ; }
+
+
+// ============================================================================
+// constructor from the algorithm name 
+// ============================================================================
+LoKi::Algorithms::Run::Run ( const std::string& name ) 
+  : Passed ( name ){}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Algorithms::Run::result_type 
+LoKi::Algorithms::Run::operator() () const 
+{
+  //
+  if ( !algorithm().validPointer() ) { this->getAlgorithm ( algName() ) ; }
+  // 
+  IsEnabled    fun1 ;
+  IsExecuted   fun2 ;
+  FilterPassed fun3 ;
+  //
+  if ( !fun1 ( algorithm() ) ) 
+  {
+    Warning("Algorithm '" + algName() + "' is disabled, return false " );
+    return false ;                                                  // RETURN
+  } 
+  //
+  if ( !fun2 ( algorithm() ) ) 
+  {
+    StatusCode sc = algorithm()->sysExecute() ;  // EXECUTE IT!!!
+    if ( sc.isFailure() ) 
+    {
+      Error("Error from algorithm '" + algName() + "' sysExecute", sc );
+      return false ;                                                // RETURN 
+    } 
+  }
+  //
+  // finally: 
+  return fun3 ( algorithm() ) ;
+  //
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Algorithms::Run::fillStream( std::ostream& s ) const 
+{ return s << "ALG_RUN(" << Gaudi::Utils::toString( algName() ) << ")" ; }
+
 
 // ============================================================================
 // get the algorithm 
@@ -453,6 +519,86 @@ LoKi::Algorithms::NumExecuted::operator() () const
 }
 
 
+// ============================================================================
+// constructor from the algorithm name 
+// ============================================================================
+LoKi::Algorithms::RunAll::RunAll 
+( const std::string& name1 , 
+  const std::string& name2 ) 
+  : LoKi::Algorithms::AllExecuted ( name1 , name2 ) 
+{}
+// ============================================================================
+// constructor from the algorithm name 
+// ============================================================================
+LoKi::Algorithms::RunAll::RunAll 
+( const std::string& name1 , 
+  const std::string& name2 ,
+  const std::string& name3 ) 
+  : LoKi::Algorithms::AllExecuted ( name1 , name2 , name3 ) 
+{}
+// ============================================================================
+// constructor from the algorithm name 
+// ============================================================================
+LoKi::Algorithms::RunAll::RunAll 
+( const std::string& name1 , 
+  const std::string& name2 ,
+  const std::string& name3 ,
+  const std::string& name4 ) 
+  : LoKi::Algorithms::AllExecuted ( name1 , name2 , name3 , name4 ) 
+{}
+// ============================================================================
+// constructor from the algorithm name 
+// ============================================================================
+LoKi::Algorithms::RunAll::RunAll 
+( const std::vector<std::string>& names ) 
+  : LoKi::Algorithms::AllExecuted ( names ) 
+{}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Algorithms::RunAll::result_type 
+LoKi::Algorithms::RunAll::operator() () const
+{
+  //
+  if ( algNames().size() != algorithms().size() ) { getAlgorithms() ; }
+  //
+  IsEnabled    fun1 ;
+  IsExecuted   fun2 ;
+  FilterPassed fun3 ;
+  //
+  const Algorithms& algs = algorithms() ;
+  for ( Algorithms::const_iterator ialg = algs.begin() ; 
+        algs.end() != ialg ; ++ialg ) 
+  {
+    //
+    IAlgorithm* alg = *ialg ;
+    if ( 0 == alg ) 
+    {
+      Warning("Invaild algotithm!, return false " );
+      return false ;                                                  // RETURN
+    }
+    //
+    if ( !fun1 ( alg ) ) 
+    {
+      Warning("Algorithm '" + alg->name() + "' is disabled, return false " );
+      return false ;                                                  // RETURN
+    } 
+    //
+    if ( !fun2 ( alg ) ) 
+    {
+      StatusCode sc = alg->sysExecute() ;  // EXECUTE IT!!!
+      if ( sc.isFailure() ) 
+      {
+        Error("Error from algorithm '" + alg->name() + "' sysExecute", sc );
+        return false ;                                                // RETURN 
+      } 
+    }
+    //
+    if ( !fun3 ( alg ) ) { return false ; }                           // RETURN 
+  }
+  //
+  return true ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

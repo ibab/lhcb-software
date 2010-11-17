@@ -11,6 +11,7 @@
 // ============================================================================
 // Gaudi Kernel 
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
 // LoKi
@@ -31,11 +32,19 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @see IAlgorithm
  *  @see  Algorithm
  *  @see IAlgManager
+ * 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-010-14 
+ *
+ *  $Revision$
+ *  Last Modi
  */
 // ============================================================================
 namespace LoKi 
@@ -59,7 +68,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class Passed : public LoKi::BasicFunctors<void>::Predicate 
+    class GAUDI_API Passed : public LoKi::BasicFunctors<void>::Predicate 
     {
     public:
       // ======================================================================
@@ -109,7 +118,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class Enabled : public Passed 
+    class GAUDI_API Enabled : public Passed 
     {
     public:
       // ======================================================================
@@ -138,7 +147,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class Executed : public Passed 
+    class GAUDI_API Executed : public Passed 
     {
     public:
       // ======================================================================
@@ -158,7 +167,38 @@ namespace LoKi
       /// the default constructor is disabled 
       Executed () ;                       // the default constructor is disabled 
       // ======================================================================
-    } ;  
+    } ;
+    // =========================================================================
+    /** @class Run
+     *  A bit complicated action:
+     *   - algorithm must be enabled, SUCCESSFULLY executed and passed 
+     *   - if not executed, execuye it 
+     *  @see LoKi::Cuts::ALG_RUN
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-10-14
+     */
+    // =========================================================================
+    class GAUDI_API Run : public Passed 
+    {
+    public:
+      // ======================================================================
+      /// constructor from the algorithm name 
+      Run ( const std::string& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Run () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Run* clone() const { return new Run ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() () const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Run () ;                          // the default constructor is disabled 
+      // ======================================================================
+    } ;
     // ========================================================================
     /** @class AnyPassed 
      *  simple check of the certain algorithm to pass the filter  
@@ -167,7 +207,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AnyPassed : public LoKi::BasicFunctors<void>::Predicate 
+    class GAUDI_API AnyPassed : public LoKi::BasicFunctors<void>::Predicate 
     {
     public:
       // ======================================================================
@@ -205,8 +245,8 @@ namespace LoKi
     public:
       // ======================================================================
       virtual std::ostream& print 
-      ( const std::string& name , 
-        std::ostream& s ) const ;
+      ( const std::string&  name , 
+        std::ostream&       s    ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -244,7 +284,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AllPassed : public AnyPassed 
+    class GAUDI_API AllPassed : public AnyPassed 
     {
     public:
       // ======================================================================
@@ -290,7 +330,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AnyEnabled : public AnyPassed 
+    class GAUDI_API AnyEnabled : public AnyPassed 
     {
     public:
       // ======================================================================
@@ -336,7 +376,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AllEnabled : public AnyPassed 
+    class GAUDI_API AllEnabled : public AnyPassed 
     {
     public:
       // ======================================================================
@@ -382,7 +422,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AnyExecuted : public AnyPassed 
+    class GAUDI_API AnyExecuted : public AnyPassed 
     {
     public:
       // ======================================================================
@@ -428,7 +468,7 @@ namespace LoKi
      *  @date 2008-10-14
      */
     // =========================================================================
-    class AllExecuted : public AnyPassed 
+    class GAUDI_API AllExecuted : public AnyPassed 
     {
     public:
       // ======================================================================
@@ -465,7 +505,48 @@ namespace LoKi
       /// the default constructor is disabled 
       AllExecuted () ;                        // the default constructor is disabled 
       // ======================================================================
-    } ;    
+    } ;
+    // ========================================================================
+    /** @class RunAll
+     *  @see LoKi::Cuts::ALG_RUNALL
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-10-14
+     */
+    // =========================================================================
+    class GAUDI_API RunAll : public AllExecuted
+    {
+    public:
+      // ======================================================================
+      /// constructor from the algorithm name 
+      RunAll ( const std::string& name1 , 
+               const std::string& name2 ) ;
+      /// constructor from the algorithm name 
+      RunAll ( const std::string& name1 , 
+               const std::string& name2 ,
+               const std::string& name3 ) ;
+      /// constructor from the algorithm name 
+      RunAll ( const std::string& name1 , 
+               const std::string& name2 ,
+               const std::string& name3 ,
+               const std::string& name4 ) ;
+      /// constructor from the algorithm name 
+      RunAll ( const std::vector<std::string>& name ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~RunAll () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RunAll* clone() const { return new RunAll ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() () const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return print ( "ALG_RUNALL" , s ) ; } 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      RunAll () ;                        // the default constructor is disabled 
+      // ======================================================================
+    } ;
     // =========================================================================
     /** @class NumPassed 
      *  Simple functor to count number of passed algorithms from the list 
@@ -473,13 +554,13 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-19
      */
-    class NumPassed : public LoKi::BasicFunctors<void>::Function 
+    class GAUDI_API NumPassed : public LoKi::BasicFunctors<void>::Function 
     {
     public:
       // ======================================================================
       /// constructor from the algorithm name 
       NumPassed ( const std::string& name1 , 
-                    const std::string& name2 ) ;
+                  const std::string& name2 ) ;
       /// constructor from the algorithm name 
       NumPassed ( const std::string& name1 , 
                   const std::string& name2 ,
@@ -541,7 +622,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-19
      */
-    class NumEnabled  : public NumPassed 
+    class GAUDI_API NumEnabled  : public NumPassed 
     {
     public:
       // ======================================================================
@@ -587,7 +668,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-19
      */
-    class NumExecuted  : public NumPassed 
+    class GAUDI_API NumExecuted  : public NumPassed 
     {
     public:
       // ======================================================================
@@ -627,11 +708,11 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Algorithms
-  // ===========================================================================
-} // end of namaespace LoKi
-// =============================================================================
-// The END 
-// =============================================================================
+  } //                                        end of namespace LoKi::Algorithms
+  // ==========================================================================
+} //                                                     end of namaespace LoKi
+// ============================================================================
+//                                                                      The END 
+// ============================================================================
 #endif // LOKI_ALGFUNCTORS_H
-// =============================================================================
+// ============================================================================

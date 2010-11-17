@@ -653,6 +653,14 @@ namespace LoKi
       __rshift__ 
       ( const Map& fun , const LoKi::BasicFunctors<double>::CutVal& fun2 ) 
       { return fun >> fun2 ; }
+      //
+      // add the dumps
+      //
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rshift__ 
+      ( const  Map& fun , const LoKi::Functors::Dump& /* dump */ ) 
+      { return fun >> LoKi::Functors::Dump_<double> () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -769,6 +777,22 @@ namespace LoKi
       __rshift__ 
       ( const Pipe& fun , const Func&      fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
+      //
+      // add the gate: 
+      //
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
+      { return fun >> LoKi::gate<TYPE> ( gate ) ; }
+      //
+      // add the dumps
+      //
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const Pipe& fun , const LoKi::Functors::Dump& /* dump */ ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1038,6 +1062,22 @@ namespace LoKi
       __rshift__ 
       ( const Source& fun , const Func&    fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
+      //
+      // add the gate 
+      //
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source& fun , const LoKi::Functor<void,bool>& gate ) 
+      { return fun >> LoKi::gate<TYPE> ( gate ) ; }
+      //
+      // add the dumps
+      //
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source& fun , const LoKi::Functors::Dump& /* dump */ ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> () ; }
       // ======================================================================
     public:
       // ======================================================================
