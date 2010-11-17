@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-11-16 - Vanya Belyaev
+
+ - HltLines/Hl1Units.py
+    remove the obsolete symbols.. 
+
 ! 2010-10-18 - Vladimir Gligorov
  - add Hlt1NoPVPassThroughDecision to Hlt1MuonLines: a passthrough for L0
    muon lowMult events into Hlt2  

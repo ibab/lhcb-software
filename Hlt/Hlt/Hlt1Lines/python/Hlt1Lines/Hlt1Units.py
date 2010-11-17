@@ -2,12 +2,14 @@
 # =============================================================================
 # $Id: Hlt1Units.py,v 1.4 2010-09-08 09:23:05 graven Exp $ 
 # =============================================================================
-## @file HltConf/Hlt1Units.py
+## @file Hlt1Lines/Hlt1Units.py
 #  Collection of utilities for dealing with Hlt1 "units"
+#
 #  @see LoKi::IHltUnit
 #  @see LoKi::HltUnit
 #  @see LoKi::FilterAlg
-#  @see LoKi::Hlt1::UpgradeConf 
+#  @see LoKi::Hlt1::UpgradeConf
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-12-10
 # =============================================================================
@@ -26,7 +28,8 @@ See:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $"
+__date__    = "2008-12-10"
+__version__ = "version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
@@ -61,88 +64,88 @@ __all__ = (
     )
 
 from LoKiTrigger.decorators import LoKi , LHCb 
-from LoKiTrigger.decorators import ( TrINPUT     ,
-                                     TrSELECTION ,
-                                     TTrFUN      ,
-                                     TTrFUN2     ,
-                                     TrUPGRADE   ,
-                                     TrMATCH     ) 
+#from LoKiTrigger.decorators import ( TrINPUT     ,
+#                                     TrSELECTION ,
+#                                     TTrFUN      ,
+#                                     TTrFUN2     ,
+#                                     TrUPGRADE   ,
+#                                     TrMATCH     ) 
 
 ## @todo to be done in LoKiTrigger:
 LoKi.Hlt1.UpgradeConf      . __str__  =  LoKi.Hlt1.UpgradeConf     . toString 
 LoKi.Hlt1.UpgradeConf      . __repr__ =  LoKi.Hlt1.UpgradeConf     . toString
 LoKi.Hlt1.MatchConf        . __str__  =  LoKi.Hlt1.MatchConf       . toString 
 LoKi.Hlt1.MatchConf        . __repr__ =  LoKi.Hlt1.MatchConf       . toString
-LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString 
-LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString 
-LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString 
-LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString 
+##LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString 
+##LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString 
+##LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString 
+##LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString 
 
 
-# ==========================================================================
-## Create the upgrade functor: 
-def __tr_upgrade__ ( self , output ) :
-    """
-    Create the upgrade streamer :
+## # ==========================================================================
+## ## Create the upgrade functor: 
+## def __tr_upgrade__ ( self , output ) :
+##     """
+##     Create the upgrade streamer :
     
-    >>> upgrader = ...                             ## get the upgrader
-    >>> streamer = upgrader ( 'OutputSelection' )  ## get the streamer 
+##     >>> upgrader = ...                             ## get the upgrader
+##     >>> streamer = upgrader ( 'OutputSelection' )  ## get the streamer 
     
-    """
-    return TrUPGRADE ( output , self )
+##     """
+##     return TrUPGRADE ( output , self )
 
-LoKi.Hlt1.UpgradeConf. __call__ = __tr_upgrade__
+## LoKi.Hlt1.UpgradeConf. __call__ = __tr_upgrade__
 
-# =============================================================================
-## create the matcher streamer 
-def __tr_match__ ( self , output , source , input = False ) :
-    """
-    Create the matcher streamer :
+## # =============================================================================
+## ## create the matcher streamer 
+## def __tr_match__ ( self , output , source , input = False ) :
+##     """
+##     Create the matcher streamer :
     
-    >>> matcher  = ...                                    ## get the matcher
-    >>> streamer = matcher ( 'OutputSelection' , TrINPUT ( 'second' ) )
+##     >>> matcher  = ...                                    ## get the matcher
+##     >>> streamer = matcher ( 'OutputSelection' , TrINPUT ( 'second' ) )
     
-    >>> matcher  = ...                                    ## get the matcher
-    >>> streamer = matcher ( 'OutputSelection' , 'second'  )
+##     >>> matcher  = ...                                    ## get the matcher
+##     >>> streamer = matcher ( 'OutputSelection' , 'second'  )
 
-    """
-    if str == type ( source ) :
-        source = TrINPUT ( source ) if input else TrSELECTION ( source )
+##     """
+##     if str == type ( source ) :
+##         source = TrINPUT ( source ) if input else TrSELECTION ( source )
         
-    ## create the actual streamer
-    return TrMATCH  ( output , source , self )
+##     ## create the actual streamer
+##     return TrMATCH  ( output , source , self )
 
-LoKi.Hlt1.MatchConf. __call__ = __tr_upgrade__
+## LoKi.Hlt1.MatchConf. __call__ = __tr_upgrade__
 
 
-# ==============================================================================
-## Create the function/tool from the descriptor
-def __tr_func__ ( self ) :
-    """
-    Create the function/tool from the descriptor
+## # ==============================================================================
+## ## Create the function/tool from the descriptor
+## def __tr_func__ ( self ) :
+##     """
+##     Create the function/tool from the descriptor
 
-    >>> fun  = ..                  ## get the function configuration
-    >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
+##     >>> fun  = ..                  ## get the function configuration
+##     >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
     
-    """
-    return TrFUN ( self )
+##     """
+##     return TrFUN ( self )
 
-LoKi.Hlt1.TrackFunction  . __call__  =  __tr_func__
+## LoKi.Hlt1.TrackFunction  . __call__  =  __tr_func__
 
 
-# ==============================================================================
-## Create the function/tool from the descriptor
-def __tr_fun2__ ( self ) :
-    """
-    Create the function/tool from the descriptor
+## # ==============================================================================
+## ## Create the function/tool from the descriptor
+## def __tr_fun2__ ( self ) :
+##     """
+##     Create the function/tool from the descriptor
 
-    >>> fun  = ..                  ## get the function configuration
-    >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
+##     >>> fun  = ..                  ## get the function configuration
+##     >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
     
-    """
-    return TTrFUN ( self )
+##     """
+##     return TTrFUN ( self )
 
-LoKi.Hlt1.TrackBiFunction  . __call__  =  __tr_fun2__
+## LoKi.Hlt1.TrackBiFunction  . __call__  =  __tr_fun2__
 
 
 # =============================================================================
@@ -344,18 +347,18 @@ def trMatcher ( name ) :
 # =============================================================================
 ## ITrackBiFunctionTool interface                     @see ITrackBiFunctionTool
 # =============================================================================
-Calo3DChi2    = LoKi.Hlt1.TrackBiFunction (
-    "HltVeloTCaloMatch/Calo3DChi2"    ,                       ## tool type-name
-    False                                                     ##   public tool?
-    )
-Ecal3DChi2    = LoKi.Hlt1.TrackBiFunction (
-    "HltVeloEcalMatch/Ecal3DChi2"     ,                       ## tool type-name
-    False                                                     ##   public tool?
-    )
+## Calo3DChi2    = LoKi.Hlt1.TrackBiFunction (
+##     "HltVeloTCaloMatch/Calo3DChi2"    ,                       ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## Ecal3DChi2    = LoKi.Hlt1.TrackBiFunction (
+##     "HltVeloEcalMatch/Ecal3DChi2"     ,                       ## tool type-name
+##     False                                                     ##   public tool?
+##     )
 
-_trFun2s = {}
-_trFun2s [ 'Calo3DChi2'   ] = Calo3DChi2
-_trFun2s [ 'Ecal3DChi2'   ] = Ecal3DChi2
+## _trFun2s = {}
+## _trFun2s [ 'Calo3DChi2'   ] = Calo3DChi2
+## _trFun2s [ 'Ecal3DChi2'   ] = Ecal3DChi2
 
 # =============================================================================
 ## get Track Bi-function by name 
@@ -372,39 +375,39 @@ def trFun2s ( name ) :
 # =============================================================================
 ## ITrackFunctionTool interface                       @see   ITrackFunctionTool
 # =============================================================================
-MuonIDDistance = LoKi.Hlt1.TrackFunction  (
-    "HltMuonIDDistance/MuonIDDistance" ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-DeltaP         = LoKi.Hlt1.TrackFunction  (
-    "HltDeltaPTool/DeltaP"             ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-IsMuon         = LoKi.Hlt1.TrackFunction  (
-    "HltIsMuonTool/IsMuon"             ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-IsPhoton       = LoKi.Hlt1.TrackFunction  (
-    "HltIsPhotonTool/IsPhoton"         ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-AntiEleConf    = LoKi.Hlt1.TrackFunction  (
-    "HltAntiEleconf/AntiEleConf"       ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
-PtAtOrigin     = LoKi.Hlt1.TrackFunction  (
-    "PtTransporter/PtAtOrigin"         ,                      ## tool type-name
-    False                                                     ##   public tool?
-    )
+## MuonIDDistance = LoKi.Hlt1.TrackFunction  (
+##     "HltMuonIDDistance/MuonIDDistance" ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## DeltaP         = LoKi.Hlt1.TrackFunction  (
+##     "HltDeltaPTool/DeltaP"             ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## IsMuon         = LoKi.Hlt1.TrackFunction  (
+##     "HltIsMuonTool/IsMuon"             ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## IsPhoton       = LoKi.Hlt1.TrackFunction  (
+##     "HltIsPhotonTool/IsPhoton"         ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## AntiEleConf    = LoKi.Hlt1.TrackFunction  (
+##     "HltAntiEleconf/AntiEleConf"       ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
+## PtAtOrigin     = LoKi.Hlt1.TrackFunction  (
+##     "PtTransporter/PtAtOrigin"         ,                      ## tool type-name
+##     False                                                     ##   public tool?
+##     )
 
 
-_trFuns = {}
-_trFuns [ 'MuonIDDistance' ] = MuonIDDistance
-_trFuns [ 'DeltaP'         ] = DeltaP
-_trFuns [ 'IsMuon'         ] = IsMuon
-_trFuns [ 'IsPhoton'       ] = IsPhoton
-_trFuns [ 'AntiEleConf'    ] = AntiEleConf
-_trFuns [ 'PtAtOrigin'     ] = PtAtOrigin
+## _trFuns = {}
+## _trFuns [ 'MuonIDDistance' ] = MuonIDDistance
+## _trFuns [ 'DeltaP'         ] = DeltaP
+## _trFuns [ 'IsMuon'         ] = IsMuon
+## _trFuns [ 'IsPhoton'       ] = IsPhoton
+## _trFuns [ 'AntiEleConf'    ] = AntiEleConf
+## _trFuns [ 'PtAtOrigin'     ] = PtAtOrigin
 
 # =============================================================================
 ## get Track function by name 
@@ -422,7 +425,6 @@ def trFuns ( name ) :
 # =============================================================================
 # High-level embedded stuff
 # =============================================================================
-# =============================================================================
 ## some embedded action
 if '__main__' == __name__ :
     print __doc__
@@ -436,12 +438,12 @@ if '__main__' == __name__ :
     print "\nTrack Match        : "
     for key in _trMatcher  :
         print ' %25s  : %s' % ( key , _trMatcher[key] )
-    print "\nTrack Functions    : "
-    for key in _trFuns     :
-        print ' %25s  : %s' % ( key , _trFuns   [key] )
-    print "\nTrack Bi-Functions : "
-    for key in _trFun2s    :
-        print ' %25s  : %s' % ( key , _trFun2s  [key] )
+    #print "\nTrack Functions    : "
+    #for key in _trFuns     :
+    #    print ' %25s  : %s' % ( key , _trFuns   [key] )
+    #print "\nTrack Bi-Functions : "
+    #for key in _trFun2s    :
+    #    print ' %25s  : %s' % ( key , _trFun2s  [key] )
 # =============================================================================
 # The END 
 # =============================================================================
