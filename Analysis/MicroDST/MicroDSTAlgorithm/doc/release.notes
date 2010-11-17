@@ -4,6 +4,11 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2010-11-17 - Juan Palacios
+ - CopyParticle2LHCbIDs
+  . Make storeLHCbIDs method const again. Necessary methods have been made
+    const in MicroDSTCommon.
+
 !========================== MicroDSTAlgorithm v5r0p1 2010-11-16 ===============
 
 ! 2010-11-16 - Juan Palacios

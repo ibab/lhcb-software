@@ -161,7 +161,7 @@ void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 }
 //=============================================================================
 void CopyParticle2LHCbIDs::storeLHCbIDs(const LHCb::Particle* part,
-                                        DaVinci::Map::Particle2LHCbIDs* p2LHCbID)
+                                        DaVinci::Map::Particle2LHCbIDs* p2LHCbID) const
 {
   const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(part);
   if (0==clone) return;
