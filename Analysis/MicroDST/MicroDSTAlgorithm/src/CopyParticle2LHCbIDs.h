@@ -43,7 +43,7 @@ private:
   void executeLocation(const std::string& particleLocation);
 
   void storeLHCbIDs(const LHCb::Particle* part,
-                    DaVinci::Map::Particle2LHCbIDs* p2LHCbID) const;
+                    DaVinci::Map::Particle2LHCbIDs* p2LHCbID) ;
 
 private:
 
