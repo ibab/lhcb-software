@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
+! 2010-11-17 - Emilie Maurice
+ - TupleToolGeometry: add 2 variables to obtain the min IP and the min chi2 wrt the 2nd best primary vertex
+
 ! 2010-11-16 - Patrick Koppenburg
  - TupleToolTriggerBase: Bug fix. Verbose didn't get into fillVerbose
    if none of VerboseXXX is set. Consequently one could nto get the 
