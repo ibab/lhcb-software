@@ -4,15 +4,52 @@
 # =============================================================================
 ## @file LoKiHlt/algorithms.py
 #  The full set of useful objects from LoKiHlt library 
-#  The file is a part of LoKi and Bender projects
+#
+#  This file is a part of LoKi project - 
+#   ``C++ ToolKit  for Smart and Friendly Physics Analysis''
+# 
+#  The package has been designed with the kind help from
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+#  contributions and advices from G.Raven, J.van Tilburg, 
+#  A.Golutvin, P.Koppenburg have been used in the design.
+# 
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-10-19
+#
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """
+
 Few useful objects from LoKiHlt library
+
+  This file is a part of LoKi project - 
+   ``C++ ToolKit  for Smart and Friendly Physics Analysis''
+ 
+  The package has been designed with the kind help from
+  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+  contributions and advices from G.Raven, J.van Tilburg, 
+  A.Golutvin, P.Koppenburg have been used in the design.
+ 
+  By usage of this code one clearly states the disagreement 
+  with the campain of Dr.O.Callot et al.: 
+   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+
+                    $Revision$
+  Last Modification $Date$
+                 by $Author$
+
 """
+# =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ " 
+__date__    = "2008-10-19"
+__version__ = "Version $Revision: 1.1 $ " 
 # =============================================================================
 
 from LoKiNumbers.sources    import *
@@ -30,6 +67,9 @@ ALG_ENABLED     = LoKi.Algorithms.Enabled
 ALG_EXECUTED    = LoKi.Algorithms.Executed 
 ALG_PASSED      = LoKi.Algorithms.Passed
 
+ALG_RUN         = LoKi.Algorithms.Run  
+ALG_RUNALL      = LoKi.Algorithms.RunAll
+
 ALG_NUMENABLED  = LoKi.Algorithms.NumEnabled
 ALG_NUMEXECUTED = LoKi.Algorithms.NumExecuted 
 ALG_NUMPASSED   = LoKi.Algorithms.NumPassed
@@ -38,7 +78,6 @@ ALG_NUMPASSED   = LoKi.Algorithms.NumPassed
 from LoKiNumbers.decorators import decorateVoids as _decorateVoids 
 
 _decorated = _decorateVoids ( __name__ )
-
 
 from LoKiCore.functions import strings as _strings 
 
@@ -164,6 +203,20 @@ def numPassed ( alg1 , *algs ) :
     """
     return ALG_NUMPASSED ( _strings ( alg1 , *algs ) )
 
+
+# =============================================================================
+## construct the 'ALG_RUNALL' functor in a nice way 
+def allRun ( alg1 , *algs ) :
+    """
+    Construct the 'ALG_RUNALL' functor in a nice way:
+
+    >>> p2 = allRun ( 'alg1' , 'alg2' ) 
+    >>> p3 = allRun ( 'alg1' , 'alg2' , 'alg3' ) 
+    >>> p4 = allRun ( 'alg1' , 'alg2' , 'alg3' , 'alg4' ) 
+    >>> pl = allRun ( [ 'alg1' , 'alg2' , 'alg3', ... ] )
+    
+    """
+    return ALG_RUNALL ( _strings ( alg1 , *algs ) )
 
 
 # =============================================================================

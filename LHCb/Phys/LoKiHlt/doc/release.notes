@@ -5,6 +5,12 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-17 - Vanya Belyaev
+
+ - add new symbols ALG_RUN & ALG_RUNALL
+ - cmt/requirements    
+     version increment to v3r3
+       
 !========================== LoKiHlt v3r2 2010-06-18 ===========================
 ! 2010-06-04 - Vanya Belyaev
 
