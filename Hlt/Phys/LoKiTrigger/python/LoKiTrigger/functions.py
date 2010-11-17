@@ -169,6 +169,11 @@ TC_SINK         = LoKi.Hlt1.Sink
 ## @see LoKi::Cuts::SINK
 SINK            = LoKi.Hlt1.Sink
 
+## @see LoKi::Cuts::TC_SIZE
+TC_SIZE         = LoKi.Functors.Size  ( _TC ) ()
+## @see LoKi::Cuts::TC_EMPTY 
+TC_EMPTY        = LoKi.Functors.Empty ( _TC ) ()
+
 
 # =============================================================================
 ## Upgrade:

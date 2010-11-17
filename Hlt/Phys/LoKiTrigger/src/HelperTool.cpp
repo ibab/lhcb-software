@@ -122,9 +122,6 @@ LoKi::Hlt1::HelperTool::HelperTool ( const int /* dummy */ )
   , m_hlt_recvertices ( 0 ) 
                                    //
 {
-
-  std::cerr << " I am helepr tool constructor (1) !!!" << std::endl ;
-  
   // get GaudiAlgorithm 
   GaudiAlgorithm*  alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
   Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;
@@ -156,8 +153,6 @@ LoKi::Hlt1::HelperTool::HelperTool ( const LoKi::Hlt1::HelperTool& right )
   , m_hlt_recvertices ( 0 ) 
                                    //
 {
-  std::cerr << " I am helepr tool constructor (2) !!!" << std::endl ;
-
   // get GaudiAlgorithm 
   GaudiAlgorithm*  alg = LoKi::Hlt1::Utils::getGaudiAlg ( *this ) ;
   Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;

@@ -28,8 +28,7 @@
 // ============================================================================
 #include "LoKi/ITrgFunctorFactory.h"
 #include "LoKi/ITrgFunctorAntiFactory.h"
-#include "LoKi/TrgEngine.h"
-
+#include "LoKi/TrgEngine.h"  
 // ============================================================================
 /** @file
  *  Reflex dictionary for LoKiTrigger package
@@ -51,203 +50,203 @@ namespace LoKi
   namespace Dicts
   {
 
-    /** @class PipeOps
-     *  Wrapper class for operations with mapping functors
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-11-30
-     */
+//     /** @class PipeOps
+//      *  Wrapper class for operations with mapping functors
+//      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+//      *  @date   2007-11-30
+//      */
 
-    template <>
-    class  PipeOps<const Hlt::Candidate*>
-    {
-    private:
-      // ======================================================================
-      typedef  const Hlt::Candidate* TYPE ;
-      //
-      typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
-      typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
-      typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
-      typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
-      typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
-      typedef LoKi::BasicFunctors<TYPE>::Function     Func    ;
-      typedef LoKi::BasicFunctors<TYPE>::Predicate    Cuts    ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      static  Pipe::result_type __call__
-      ( const Pipe& fun , Pipe::argument a ) { return fun ( a )  ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
-       __rshift__
-       ( const Pipe& fun , const Map&       fun2 )
-       { return fun >>                      fun2 ; }
-       // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun , const Pipe&      fun2 )
-      { return fun >>                      fun2 ; }
-      // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
-       __rshift__
-       ( const Pipe& fun , const FunVal&    fun2 )
-       { return fun >>                      fun2 ; }
-       // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-       __rshift__
-       ( const Pipe& fun , const CutVal&    fun2 )
-       { return fun >>                      fun2 ; }
-       // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
-       __rshift__
-       ( const Pipe& fun , const Element&   fun2 )
-       { return fun >>                      fun2 ; }
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun , const Cuts&      fun2 )
-      { return fun >> LoKi::filter<TYPE> ( fun2 ) ; }
-      //
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
-      __rshift__
-      ( const Pipe& fun , const Func&      fun2 )
-      { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
-      // ======================================================================
+//     template <>
+//     class  PipeOps<const Hlt::Candidate*>
+//     {
+//     private:
+//       // ======================================================================
+//       typedef  const Hlt::Candidate* TYPE ;
+//       //
+//       typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
+//       typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
+//       typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
+//       typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
+//       typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
+//       typedef LoKi::BasicFunctors<TYPE>::Function     Func    ;
+//       typedef LoKi::BasicFunctors<TYPE>::Predicate    Cuts    ;
+//       // ======================================================================
+//     public:
+//       // ======================================================================
+//       static  Pipe::result_type __call__
+//       ( const Pipe& fun , Pipe::argument a ) { return fun ( a )  ; }
+//       // ======================================================================
+//     public:
+//       // ======================================================================
+//       // __rshift__
+//        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+//        __rshift__
+//        ( const Pipe& fun , const Map&       fun2 )
+//        { return fun >>                      fun2 ; }
+//        // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun , const Pipe&      fun2 )
+//       { return fun >>                      fun2 ; }
+//       // __rshift__
+//        static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
+//        __rshift__
+//        ( const Pipe& fun , const FunVal&    fun2 )
+//        { return fun >>                      fun2 ; }
+//        // __rshift__
+//        static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+//        __rshift__
+//        ( const Pipe& fun , const CutVal&    fun2 )
+//        { return fun >>                      fun2 ; }
+//        // __rshift__
+//        static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
+//        __rshift__
+//        ( const Pipe& fun , const Element&   fun2 )
+//        { return fun >>                      fun2 ; }
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun , const Cuts&      fun2 )
+//       { return fun >> LoKi::filter<TYPE> ( fun2 ) ; }
+//       //
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+//       __rshift__
+//       ( const Pipe& fun , const Func&      fun2 )
+//       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
+//       // ======================================================================
 
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun ,
-        const LoKi::Functor<const LHCb::L0MuonCandidate*,bool>&  fun2 )
-      { return fun >> fun2 ;  }
-
-
-
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun ,
-        const LoKi::Functor<const LHCb::L0CaloCandidate*,bool>&  fun2 )
-      { return fun >> fun2;  }
-
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun ,
-        const LoKi::Functor<const LHCb::Track*,bool>&  fun2 )
-      { return fun >> fun2 ;  }
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun ,
+//         const LoKi::Functor<const LHCb::L0MuonCandidate*,bool>&  fun2 )
+//       { return fun >> fun2 ;  }
 
 
-       // __rshift__
-       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-       __rshift__
-       ( const Pipe& fun ,
-         const LoKi::Functor<const LHCb::RecVertex*,bool>&  fun2 )
-       { return fun >> fun2; }
 
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun ,
-        const LoKi::Functor<const Hlt::MultiTrack*,bool>&  fun2 )
-      { return fun >> fun2 ;  }
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun ,
+//         const LoKi::Functor<const LHCb::L0CaloCandidate*,bool>&  fun2 )
+//       { return fun >> fun2;  }
 
-      // __rshift__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __rshift__
-      ( const Pipe& fun ,
-        const LoKi::Functor<const Hlt::Stage*,bool>&  fun2 )
-      { return fun >> fun2 ;  }
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun ,
+//         const LoKi::Functor<const LHCb::Track*,bool>&  fun2 )
+//       { return fun >> fun2 ;  }
 
 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // __rrshift__
-      static std::vector<TYPE>
-      __rrshift__ ( const Pipe& fun , const std::vector<TYPE>& val )
-      { return fun ( val ) ; }
+//        // __rshift__
+//        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//        __rshift__
+//        ( const Pipe& fun ,
+//          const LoKi::Functor<const LHCb::RecVertex*,bool>&  fun2 )
+//        { return fun >> fun2; }
 
-      // __rrshift__
-      static std::vector<TYPE>
-      __rrshift__ ( const Pipe& fun ,
-                    const std::vector<TYPE>::value_type& val )
-      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
-      // __rrshift__
-      static std::vector<TYPE>
-      __rrshift__ ( const Pipe&                                   fun ,
-                    const Gaudi::Range_<std::vector<TYPE> >&      val )
-      { return val >> fun ; }
-      // __rrshift__
-      static std::vector<TYPE>
-      __rrshift__ ( const Pipe&                                   fun ,
-                    const Gaudi::NamedRange_<std::vector<TYPE> >& val )
-      { return val >> fun ; }
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun ,
+//         const LoKi::Functor<const Hlt::MultiTrack*,bool>&  fun2 )
+//       { return fun >> fun2 ;  }
 
-      // ======================================================================
-    public:
+//       // __rshift__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __rshift__
+//       ( const Pipe& fun ,
+//         const LoKi::Functor<const Hlt::Stage*,bool>&  fun2 )
+//       { return fun >> fun2 ;  }
 
-      // ======================================================================
-      // __tee__
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      __tee__     ( const Pipe& fun )
-      { return LoKi::tee<TYPE>( fun ) ; }
-      // ======================================================================
-    public:
 
-      // ======================================================================
-      // _union_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _union_          ( const Pipe& fun  , const Pipe& fun2 )
-      { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
-      // _union_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _union_          ( const Pipe& fun  , const Cuts& fun2 )
-      { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>
-          ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
-      // _intersection_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _intersection_   ( const Pipe& fun  , const Pipe& fun2 )
-      { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
-      // _intersection_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _intersection_   ( const Pipe& fun  , const Cuts& fun2 )
-      { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>
-          ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
+//       // ======================================================================
+//     public:
+//       // ======================================================================
+//       // __rrshift__
+//       static std::vector<TYPE>
+//       __rrshift__ ( const Pipe& fun , const std::vector<TYPE>& val )
+//       { return fun ( val ) ; }
 
-     // _difference_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _difference_     ( const Pipe& fun  , const Pipe& fun2 )
-      { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
-      // _difference_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _difference_     ( const Pipe& fun  , const Cuts& fun2 )
-      { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>
-          ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
-      // _sym_difference_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _sym_difference_ ( const Pipe& fun  , const Pipe& fun2 )
-      { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
-      // _sym_difference_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
-      _sym_difference_ ( const Pipe& fun  , const Cuts& fun2 )
-      { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>
-          ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
-      // _includes_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-      _includes_       ( const Pipe& fun  , const Pipe& fun2 )
-      { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
-      // _includes_
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
-      _includes_       ( const Pipe& fun  , const Cuts& fun2 )
-      { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>
-          ( fun , LoKi::filter<TYPE>  ( fun2 ) ) ; }
-      // ======================================================================
+//       // __rrshift__
+//       static std::vector<TYPE>
+//       __rrshift__ ( const Pipe& fun ,
+//                     const std::vector<TYPE>::value_type& val )
+//       { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+//       // __rrshift__
+//       static std::vector<TYPE>
+//       __rrshift__ ( const Pipe&                                   fun ,
+//                     const Gaudi::Range_<std::vector<TYPE> >&      val )
+//       { return val >> fun ; }
+//       // __rrshift__
+//       static std::vector<TYPE>
+//       __rrshift__ ( const Pipe&                                   fun ,
+//                     const Gaudi::NamedRange_<std::vector<TYPE> >& val )
+//       { return val >> fun ; }
 
-    };
+//       // ======================================================================
+//     public:
+
+//       // ======================================================================
+//       // __tee__
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       __tee__     ( const Pipe& fun )
+//       { return LoKi::tee<TYPE>( fun ) ; }
+//       // ======================================================================
+//     public:
+
+//       // ======================================================================
+//       // _union_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _union_          ( const Pipe& fun  , const Pipe& fun2 )
+//       { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
+//       // _union_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _union_          ( const Pipe& fun  , const Cuts& fun2 )
+//       { return LoKi::Functors::Union         <std::vector<TYPE>,TYPE>
+//           ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
+//       // _intersection_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _intersection_   ( const Pipe& fun  , const Pipe& fun2 )
+//       { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
+//       // _intersection_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _intersection_   ( const Pipe& fun  , const Cuts& fun2 )
+//       { return LoKi::Functors::Intersection  <std::vector<TYPE>,TYPE>
+//           ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
+
+//      // _difference_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _difference_     ( const Pipe& fun  , const Pipe& fun2 )
+//       { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
+//       // _difference_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _difference_     ( const Pipe& fun  , const Cuts& fun2 )
+//       { return LoKi::Functors::Difference    <std::vector<TYPE>,TYPE>
+//           ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
+//       // _sym_difference_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _sym_difference_ ( const Pipe& fun  , const Pipe& fun2 )
+//       { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
+//       // _sym_difference_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+//       _sym_difference_ ( const Pipe& fun  , const Cuts& fun2 )
+//       { return LoKi::Functors::SymDifference <std::vector<TYPE>,TYPE>
+//           ( fun , LoKi::filter<TYPE> ( fun2 ) ) ; }
+//       // _includes_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+//       _includes_       ( const Pipe& fun  , const Pipe& fun2 )
+//       { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>( fun , fun2 ) ; }
+//       // _includes_
+//       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+//       _includes_       ( const Pipe& fun  , const Cuts& fun2 )
+//       { return LoKi::Functors::Includes <std::vector<TYPE>,TYPE>
+//           ( fun , LoKi::filter<TYPE>  ( fun2 ) ) ; }
+//       // ======================================================================
+
+//     };
 // ========================================================================
 }
 }

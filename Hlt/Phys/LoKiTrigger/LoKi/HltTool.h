@@ -7,6 +7,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 /** @file  LoKi/HltTool.h
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
@@ -17,8 +21,9 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 namespace LoKi 
 {
@@ -31,7 +36,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-31
      */
-    class Tool
+    class GAUDI_API Tool
     {
     public:
       // ======================================================================
@@ -88,7 +93,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-31
      */
-    class TrackFunction : public LoKi::Hlt1::Tool 
+    class GAUDI_API TrackFunction : public LoKi::Hlt1::Tool 
     {
     public:
       // ======================================================================
@@ -122,7 +127,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-31
      */
-    class TrackBiFunction : public LoKi::Hlt1::Tool 
+    class GAUDI_API TrackBiFunction : public LoKi::Hlt1::Tool 
     {
     public:
       // ======================================================================
@@ -156,7 +161,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-31
      */
-    class MatchTVelo : public LoKi::Hlt1::Tool 
+    class GAUDI_API MatchTVelo : public LoKi::Hlt1::Tool 
     {
     public:
       // ======================================================================
@@ -190,7 +195,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-31
      */
-    class TrackVertexFunction : public LoKi::Hlt1::Tool 
+    class GAUDI_API TrackVertexFunction : public LoKi::Hlt1::Tool 
     {
     public:
       // ======================================================================

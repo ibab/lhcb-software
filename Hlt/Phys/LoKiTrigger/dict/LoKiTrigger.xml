@@ -17,6 +17,7 @@
 
   <!-- Hlt::Candidate -->
 
+  
   <class pattern = "LoKi::Functor<*Hlt::Candidate*>"              />
   <class pattern = "LoKi::FunctorFromFunctor<*Hlt::Candidate*>"   />
   <class name    = "LoKi::Constant<const Hlt::Candidate*,double>" />
@@ -28,6 +29,8 @@
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Candidate*>"     />
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::FuncOps_<*Hlt::Candidate*>"    />
+  <class pattern = "LoKi::Dicts::CutsOps_<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::MapsOps<*Hlt::Candidate*>"     />
   <class pattern = "LoKi::Dicts::PipeOps<*Hlt::Candidate*>"     />
   <class pattern = "LoKi::Dicts::FunValOps<*Hlt::Candidate*>"   />
@@ -56,6 +59,8 @@
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Stage*>"     />
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
+  <class pattern = "LoKi::Dicts::FuncOps_<*Hlt::Stage*>"    />
+  <class pattern = "LoKi::Dicts::CutsOps_<*Hlt::Stage*>"    />
 
   <class pattern = "LoKi::Stages::*" />
 
@@ -66,10 +71,20 @@
   <class name = "LoKi::L0::L0MuonCut" />
 
 
-  <class name    = "LoKi::Hlt1::HelperTool"  />
-  <class name    = "LoKi::Hlt1::MatchTool"   />
-  <class name    = "LoKi::Hlt1::UpgradeTool" />
-
+  <class name    = "LoKi::Hlt1::HelperTool"          />
+  <class name    = "LoKi::Hlt1::MatchTool"           />
+  <class name    = "LoKi::Hlt1::UpgradeTool"         />
+  <class name    = "LoKi::Hlt1::UpgradeConf"         />
+  <class name    = "LoKi::Hlt1::MatchConf"           />
+  <class name    = "LoKi::Hlt1::Tool"                />
+  <class name    = "LoKi::Hlt1::TrackFunction"       />
+  <class name    = "LoKi::Hlt1::MatchTVelo"          />
+  
+  <!-- 
+       <class name    = "LoKi::Hlt1::TrackBiFunction"     />
+       <class name    = "LoKi::Hlt1::TrackVertexFunction" />
+  -->
+  
   <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
@@ -92,12 +107,12 @@
 
 
 
-  <!-- LHCb::Track-remnants  -->
-
-  <class name = "LoKi::Hlt1::TrSelection" />
-  <class name = "LoKi::Hlt1::TrRegister"  />
-  <class name = "LoKi::Hlt1::TrTESInput"  />
-
+  <!-- LHCb::Track-remnants 
+       <class name = "LoKi::Hlt1::TrSelection" />
+       <class name = "LoKi::Hlt1::TrRegister"  />
+       <class name = "LoKi::Hlt1::TrTESInput"  />
+  --> 
+  
 
   <!--
 

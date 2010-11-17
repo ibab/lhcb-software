@@ -107,7 +107,7 @@ def _decorate ( name = _name  ) :
         name                                   , ## module name  
         LoKi.Functor       ( vC , vC )         , ## the base
         LoKi.Dicts.PipeOps ( tC , tC )         ) ## call-traits
-
+    
      # "funval" : vector<T> -> double 
     
     _decorated |= _LoKiCore.getAndDecorateFunVals ( 
@@ -116,11 +116,12 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.FunValOps ( tC )            ) ## call-traits
 
     # "cutval" : vector<T> -> bool
-    
+
     _decorated |= _LoKiCore.getAndDecorateCutVals (
         name                                   , ## module name  
         LoKi.Functor         ( vC , bool )     , ## the base
         LoKi.Dicts.CutValOps ( tC        )     ) ## call-traits
+
 
     # "element": vector<T> -> T
     
