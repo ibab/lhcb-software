@@ -195,6 +195,11 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   // minimum IP
   double ipmin = -1;
   double minchi2 = -1 ;
+
+  double ipminnextbest = -1;
+  double minchi2nextbest = -1;
+
+
   const RecVertex::Range PV = m_dva->primaryVertices();
   if ( !PV.empty() ){
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " << P << " PVs:" << PV.size() << endmsg ;
@@ -202,15 +207,43 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
       double ip, chi2;
       StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
       if( test2 ) {
-        if ((ip<ipmin) || (ipmin<0.)) ipmin = ip ;
-        if ((chi2<minchi2) || (minchi2<0.)) minchi2 = chi2 ;
+        if ((ip<ipmin) || (ipmin<0.)) 
+        {
+          ipminnextbest = ipmin;
+          ipmin = ip ;
+        }
+        else
+        {
+          if((ip < ipminnextbest) || (ipminnextbest < 0)) 
+          {
+            ipminnextbest = ip;
+          }
+        }
+
+        if ((chi2<minchi2) || (minchi2<0.)) 
+        {
+          minchi2nextbest = minchi2;
+          minchi2 = chi2 ;       
+        } 
+        else
+        {
+          if((chi2 < minchi2nextbest) || (minchi2nextbest < 0)) 
+          {
+           minchi2nextbest = chi2;
+          }
+        }
       }
     }
   }
   if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
+  if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at " 
+                                       << minchi2nextbest << endmsg  ;
+
   test &= tuple->column( prefix + "_MINIP", ipmin );
   test &= tuple->column( prefix + "_MINIPCHI2", minchi2 );
-  
+
+  test &= tuple->column( prefix + "_MINIPNEXTBEST", ipminnextbest );
+  test &= tuple->column( prefix + "_MINIPCHI2NEXTBEST", minchi2nextbest );
   
   // --------------------------------------------------
   return StatusCode(test) ;
@@ -320,3 +353,10 @@ const VertexBase* TupleToolGeometry::originVertex( const Particle* top
   }
   return 0;
 }
+
+
+
+// =========================================================
+//    Compute the IP chi2 distance to the next closest PV
+// =========================================================
+
