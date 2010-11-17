@@ -61,6 +61,9 @@ namespace LHCb  {
     /// Buffer with reply data after successful event processing
     std::string       m_reply;
     std::string       m_idle;
+    std::string       m_busy;
+    std::string       m_answer;
+    bool              m_isProcessing;
     /// File ID info
     int               m_fileID;
     /// Static DIM callback for command input

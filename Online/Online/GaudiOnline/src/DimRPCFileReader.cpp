@@ -33,7 +33,7 @@ void DimRPCFileReader::cmndCallback(void* tag, void* address, int* size){
 /// Standard Constructor
 DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0), m_evtSelector(0), m_evtLoopMgr(0),
-  m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
+  m_receiveEvts(false), m_evtCount(0), m_rpc(0,0), m_isProcessing(false)
 {
   ::lib_rtl_create_lock(0,&m_lock);
   declareProperty("Incident",     m_incidentName="NEW_INPUT_FID");
@@ -73,6 +73,7 @@ StatusCode DimRPCFileReader::initialize()   {
 
   m_command = new Command();
   m_reply = m_idle = "ds6:statusi1es7:commands4:idles6:paramsdee";
+  m_busy           = "ds6:statusi1es6:paramsdes7:commands4:busye";
 
   // Init the extra Services
   std::string svcName=RTL::processName()+"/RpcFileDBOut";
@@ -128,25 +129,25 @@ StatusCode DimRPCFileReader::sysStop()     {
 }
 
 void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
+  // This routine is thread safe, since DIM takes a lock before calling it
   DimRPCFileReader* self=*(DimRPCFileReader**) tag;
-  std::string result=self->m_reply;
+  self->m_answer = self->m_isProcessing ? self->m_busy : self->m_reply;
   if (*first) {
     //result="ds6:statusi1es6:paramsdes7:commands4:idlee";
   }
-  self->info("Publishing work information:%s",result.c_str());
-  self->info(result);
-  *size = result.length()+1;
-  *buf = (void*)result.c_str();
+  self->info("Publishing work information:%s",self->m_answer.c_str());
+  self->info(self->m_answer);
+  *size = self->m_answer.length()+1;
+  *buf = (void*)self->m_answer.c_str();
   return;
 }
-bool s_isProcessing = false;
 
 void DimRPCFileReader::handleCommand(const char* address, int /* size */){
   ::time(&m_timerStartPrep);
   std::string in = address;
 
-  if ( s_isProcessing ) {
-    error("File is processing and STILL got new proc request:"+in);
+  if ( m_isProcessing ) {
+    error("Protocol violation: File is processing and STILL got new proc request:"+in);
   }
   int sc = m_command->decodeCommand(in);
   if (!sc) {
@@ -208,9 +209,9 @@ StatusCode DimRPCFileReader::run()   {
         // ::dis_update_service(m_rpc.first);
         break;
       }
-      s_isProcessing = true;
+      m_isProcessing = true;
       m_evtCount = 0;
-      m_reply=m_command->encodeResponse(1);
+      m_reply    = m_command->encodeResponse(1);
       ::dis_update_service(m_rpc.first);
       // loop over the events
       while ( m_receiveEvts )   {
@@ -234,7 +235,7 @@ StatusCode DimRPCFileReader::run()   {
       // Bad file: Cannot read input (m_evtCount==0)
       m_reply = m_command->encodeResponse((m_evtCount==0) ? 0 : 2,m_evtCount);
       ::dis_update_service(m_rpc.first);      
-      s_isProcessing = false;
+      m_isProcessing = false;
       m_reply = m_idle;
       m_evtCount = 0;
       info("Preparation took %5.2f seconds",difftime(m_timerStopPrep,m_timerStartPrep));
