@@ -5,6 +5,19 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-11-17 - Illya Shapoval
+ - Added new CondDB.payloadToHash method to calculate any kind of hash sum for
+   a node making the old CondDB.payloadToMd5 method its special case.
+   In addition the bug is fixed in this machinery to reslove requested tag
+   existence at particluar folder node before its hashing.
+ - Added new methods ReleaseNotes.addHashToGlobalTag and
+   ReleaseNotes.getGlobalTags (all global tags for requested partition).
+ - Added new script to compare two databases versioned with a tag of interest.
+   Can be used to verify full equivalence (not just presence) of the tags at
+   Tier 1s and at master DB.
+ - CondDBAdmin_GlobalTag.py sript is upgraded to calculate and add hash sum
+   to 'release_notes.xml' for a global tag when tagging is done.
+
 ! 2010-11-12 - Marco Clemencic
  - Added the possibility of specifying extra option files to CondDBBrowser
    (used to provide the list of "standard" databases).
@@ -19,11 +32,11 @@
 
 !===================== Tools/CondDBUI v3r5 2010-08-25 =========================
 ! 2010-08-13 - Illya Shapoval
- - The bug is fixed (see Savannah bug #53126) in CondDBUI.PyCoolDiff which 
-   prevented insertion of new object if its payload at its IOV-'since' value is 
-   equal to the current actual payload. The harmfull side effect of this was 
-   that all other IOVs with different payloads which had had to be covered by 
-   the new IOV remained actual. Now diffing machinery ignores new objects only 
+ - The bug is fixed (see Savannah bug #53126) in CondDBUI.PyCoolDiff which
+   prevented insertion of new object if its payload at its IOV-'since' value is
+   equal to the current actual payload. The harmfull side effect of this was
+   that all other IOVs with different payloads which had had to be covered by
+   the new IOV remained actual. Now diffing machinery ignores new objects only
    if new IOV covers only *one* old IOV which has the *same* as new payload.
 
                             NEEDS LCGCMT >= 58d (Gaudi v21r10)
@@ -32,7 +45,7 @@
 
 !===================== Tools/CondDBUI v3r4 2010-05-21 =========================
 ! 2010-05-19 - Illya Shapoval
- - Added CreateDBLookupFile.py script which generates the full set of files with 
+ - Added CreateDBLookupFile.py script which generates the full set of files with
    CondDB Tier-1s connection settings (authentication.xml and dblookup-SITE.xml).
    Currently these files are located in AppConfig/conddb.
  - TagsFilter.py script is upgraded. Now it can insert into bookkeeping db the
@@ -40,8 +53,8 @@
 
 !===================== Tools/CondDBUI v3r3 2010-03-24 =========================
 ! 2010-03-24 - Illya Shapoval
- - Removed pyqt_compat dependency which was the reason for CondDBBrowser 
-   segfaults when working with the Oracle Online partition.  
+ - Removed pyqt_compat dependency which was the reason for CondDBBrowser
+   segfaults when working with the Oracle Online partition.
 
 ! 2010-03-16 - Marco Clemencic
  - Modified the Python module CondDBUI to require PyCool at run-time only for
@@ -49,8 +62,8 @@
    It allows to use the other utilities (like the tag filters) without PyCool.
 
 ! 2010-03-02 - Illya Shapoval
- - Fixed the bug in database diffing and merging procedures to correctly process 
-   cases with multiple payloads. 
+ - Fixed the bug in database diffing and merging procedures to correctly process
+   cases with multiple payloads.
 
 !===================== Tools/CondDBUI v3r2 2010-02-14 =========================
 ! 2010-02-03 - Marco Clemencic
@@ -61,18 +74,18 @@
  - Some upgrade of tools in the frame of creation the automation procedure
    for the latest global tag and appropriate on-top local tags usage.
    Particularly:
-   ReleaseNotes class is modified to attach the 'type' elements to global and 
+   ReleaseNotes class is modified to attach the 'type' elements to global and
    local tags entries in the release_notes.xml file when processing patches.
-   Also corresponding changes were introduced into the CondDBAdmin_Commit.py 
+   Also corresponding changes were introduced into the CondDBAdmin_Commit.py
    and CondDBAdmin_Global_Tag.py scripts. See help for right options usage.
 
 ! 2010-01-29 - Illya Shapoval
- - TagsFilter.py script adapted to the changes in the release_notes.xml structure. 
+ - TagsFilter.py script adapted to the changes in the release_notes.xml structure.
    Fixed some minor bugs.
 
 ! 2010-01-28 - Illya Shapoval
  - Added python/CondDBUI/Admin/TagsFilter.py script. It analyses the
-   release_notes.xml file (under the given condition of fixed partition name 
+   release_notes.xml file (under the given condition of fixed partition name
    and data type) to return:
    - the most recent global tag and the list of all subsequent local tags for it;
    - the list of all global tags.
@@ -97,7 +110,7 @@
  - Improvements to the new Qt4-based CondDBBrowser
    - added the "New tag" feature
    - added the script to call the new browser (also .bat)
-   - renamed the old script to CondDBBrowserOld.py 
+   - renamed the old script to CondDBBrowserOld.py
    - added a welcome message for the first time
    - various improvements
 
@@ -124,7 +137,7 @@
    - started the dialog for new conditions
    - minor improvements
    - replaced the splitter with dock widgets
- 
+
 ! 2009-11-08 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser.
 
@@ -136,12 +149,12 @@
    a problem with dictionaries of std::map in CondDBUI.Browser).
  - Changes in CondDBUI.Browser:
    - added the list of recently opened COOL connection strings
-   - store settings using QSettings 
+   - store settings using QSettings
 
 !===================== Tools/CondDBUI v2r23 2009-10-16 ========================
 ! 2009-09-14 - Illya Shapoval
- - The script for adding the global tag to the db is unified to standard 
-   CondDBUI form and functionality, and added to the CondDBUI package as 
+ - The script for adding the global tag to the db is unified to standard
+   CondDBUI form and functionality, and added to the CondDBUI package as
    CondDBAdmin_GlobalTag.py.
 
 ! 2009-09-09 - Illya Shapoval
@@ -161,7 +174,7 @@
    in the release_notes.xml file.
  - Modified addGlobalTag function to contain functionality for merging
    homogeneous global tags entries in the release_notes.xml file.
- 
+
 !===================== Tools/CondDBUI v2r21 2009-07-28 ========================
 ! 2009-07-21 - Marco Clemencic
  - Improved the fragments for pyqt.
@@ -181,7 +194,7 @@
 ! 2009-06-30 - Marco Clemencic
  - Merged (some of) the functionalities fo dump_db_to_files.py into
    CondDBAdmin_MakeSnapshot.py, for a simpler user interface. The old script is
-   kept until the merge will be completed (if it will be completed). 
+   kept until the merge will be completed (if it will be completed).
 
 ! 2009-06-30 - Wouter Hulsbergen
  - Modified copy_files_to_db.py to be able to specify an interval of validity for
@@ -215,7 +228,7 @@
 ! 2009-02-12 - Marco Clemencic
  - Fix in CondDBAdmin_MakeSnapshot.py to be able to use LFC-based authentication
    for the connection (not directly supported by PyCoolCopy).
- 
+
 ! 2009-02-09 - Marco Clemencic
  - Modified dump_db_to_files.py to make the reference to /Conditions/Online
    always point to the database.
@@ -238,7 +251,7 @@
  - Modified PyCoolDiff to truncate the IOVs to the selection range when writing
    to the output database.
  - Moved time related functions from MakeSnapshot to _internals.
- - Extended CondDBAdmin_Commit to accept an IOV for the conditions to insert. 
+ - Extended CondDBAdmin_Commit to accept an IOV for the conditions to insert.
 
 !===================== Tools/CondDBUI v2r12 2008-07-30 ========================
 ! 2008-07-30 - Marco Clemencic
@@ -248,12 +261,12 @@
 ! 2008-07-28 - Marco Clemencic
  - Work around for a problem with the LCG interface package for sip (affecting
    the distributed version of LCG 55a).
- - Minor fixes in CondDBUI.Management (CondDBAdmin_Commit.py). 
+ - Minor fixes in CondDBUI.Management (CondDBAdmin_Commit.py).
 
 ! 2008-07-23 - Marco Clemencic
  - Added the connection string to the opened database in the status bar of
    CondDBBrowser.py.
- - Bug-fixes in CondDBAdmin_Commit.py and PyCoolDiff to support local tags. 
+ - Bug-fixes in CondDBAdmin_Commit.py and PyCoolDiff to support local tags.
 
 ! 2008-07-22 - Marco Clemencic
  - Modified CondDBAdmin_MakeSnapshot.py to accept interval of validity as UTC.
@@ -326,7 +339,7 @@
 ! 2007-12-20 - Marco Clemencic
  - Added the possibility to specify a connection string on the command line of
    CondDBBrowser.py to open a database.
- 
+
 ! 2007-12-14 - Marco Clemencic
  - Fixed a bug (introduced with the latest changes) that prevents the addition
    of new conditions.
@@ -346,7 +359,7 @@
    - Modified the way configuration and settings are stored.
    - Added default entries for the official databases.
  - Added 2 small scripts that wrap the merge and diff functions in CondDBUI
-   (merge_db.py and diff_db.py).  
+   (merge_db.py and diff_db.py).
 
 ! 2007-12-07 - Kurt Rinnert
  - Fixed a problem with ValidityKeyWrapper.__eq__
@@ -362,7 +375,7 @@
    - Check if the environment variable CORAL_DBLOOKUP_PATH exists before using
      it.
    - Work around for a problem with the character encoding. Qt uses UTF, while
-     we have to use ISO-8859-1 in the database. 
+     we have to use ISO-8859-1 in the database.
 
 !===================== Tools/CondDBUI v2r4 2007-07-05 =========================
 ! 2007-07-05 - Marco Clemencic
@@ -553,7 +566,7 @@
 ! 2006-09-08 - Nicolas Gilardi
  - Fixed a bug in guiextras.myDBTable
  - removed obsolete guibridge.py and recursive_tag.py files from cvs
- 
+
 ! 2006-09-04 - Nicolas Gilardi
  - Fixed a bug preventing to display single version conditions in the browser
 
@@ -649,7 +662,7 @@
 ! 2006-07-19 - Nicolas Gilardi
  - Fixed a bug in the browser which prevented to display the payload if an
    ancestor tag was selected.
-   
+
 !=========== Tools/CondDBUI v0r4 2006-09-29 ===================================
 ! 2006-06-20 - Nicolas Gilardi
  - Added attribute "connectionString" to the CondDB class

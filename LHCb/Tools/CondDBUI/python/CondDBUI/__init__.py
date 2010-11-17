@@ -21,7 +21,7 @@ def coolApp():
         from PyCool import cool
         # Initialize COOL Application
         _coolApp = cool.Application()
-    
+
         if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
             # Load CORAL LFCReplicaService into the context of cool::Application
             LFCRepSvcName = "CORAL/Services/LFCReplicaService"
@@ -31,7 +31,7 @@ def coolApp():
                 _coolApp.connectionSvc().configuration().setLookupService(LFCRepSvcName)
                 _coolApp.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
             del LFCRepSvcName
-        
+
         # disable CORAL time-out thread
         _coolApp.connectionSvc().configuration().disablePoolAutomaticCleanUp()
         _coolApp.connectionSvc().configuration().setConnectionTimeOut(0)
@@ -264,7 +264,7 @@ class CondDB(object):
         repr = self.__class__.__name__ + "(%r" %  self.connectionString
         if not self.defaultTag != "HEAD": repr += ",defaultTag=%r" % self.defaultTag
         if not self.readOnly: repr += ",readOnly=False"
-        return repr + ")" 
+        return repr + ")"
     #---------------------------------------------------------------------------------#
 
     #=================#
@@ -375,7 +375,7 @@ class CondDB(object):
             return folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION
         else:
             return False
-    
+
     def setDefaultTag(self, tagName):
         '''
         Set the value of the default tag.
@@ -428,7 +428,7 @@ class CondDB(object):
                         obj = folder.findObject(cool.ValidityKey(when), channelID)
                 else:
                     obj = folder.findObject(cool.ValidityKey(when), channelID)
-                    
+
             except Exception, details:
                 raise Exception, details
             else:
@@ -616,7 +616,7 @@ class CondDB(object):
             return self.db.getFolder(node)
         else:
             return None
-    
+
     def payloadToMd5(self, path = '/', tag = '', initialMd5Sum = None):
         '''
         Computes the md5 sum for the payload stored under the given node.
@@ -633,48 +633,88 @@ class CondDB(object):
         outputs:
             md5 object; result from the md5 check sum.
         '''
+
         import hashlib
+        return payloadToHash(hashlib.md5(), path, tag)
+
+    def payloadToHash(self, initialHashSum = None, path = '/', tag = ''):
+        '''
+        Computes the hash sum with chosen algorithm for the payload(s) stored under the given node.
+        inputs:
+            HashSum: hash object; starting point for the check. If none is given, a
+                     new one is created using md5 hashing algorithm.
+                     -> Default = None
+            path:    string; path to the top of the database subtree to check.
+                     -> Default = '/'
+            tag:     string; version of the data to check. If set to '', defaultTag
+                     is used.
+                     -> Default = ''
+                     @todo: If set to 'ALL', will check all the tags associated
+                     to this node (NOT YET IMPLEMENTED !!)
+
+        outputs:
+            hash object; result from the hash check sum.
+        '''
+
+        import logging
+
+        _log = logging.getLogger( "CondDBUI.CondDB.payloadToHash" )
+        _log.setLevel( logging.INFO )
+
         from PyCool import cool
         assert self.db != None, "No database connected !"
-        # retrieve the list of nodes to check
-        if self.db.existsFolderSet(path):
-            nodesToCheck = self.getAllChildNodes(path)
-        else:
-            nodesToCheck = [path,]
-        # Initialise the md5 sum
-        if initialMd5Sum:
-            md5Sum = initialMd5Sum.copy()
-        else:
-            md5Sum = hashlib.md5()
 
         if tag == 'ALL':
-            raise Exception, "MD5 check over all tags is not yet implemented"
+            raise Exception, "Hash checking over all tags is not yet implemented"
         elif tag == '':
             tag = self.defaultTag
 
+        # retrieve the list of nodes to check
+        _log.info("Building nodes list to hash ...")
+        if self.db.existsFolderSet(path):
+            nodes = self.getAllChildNodes(path)
+            nodesToCheck = [n for n in nodes if self.resolveTag(n,tag)]
+        else:
+            nodesToCheck = [path]
+
+        if initialHashSum:
+            hashSumObj = initialHashSum.copy()
+        else:
+            import hashlib
+            hashSumObj = hashlib.sha1()
+
+        _log.info("Processing nodes ...")
         for nodeName in nodesToCheck:
             # The check is done only on payload, i.e. we use only the folders,
             # not the foldersets.
             if self.db.existsFolder(nodeName):
+                _log.debug("\t" + nodeName)
                 folder = self.db.getFolder(nodeName)
                 payload = cool.Record(folder.payloadSpecification())
                 # Separate the case of single version (no need for tag) and multi
                 # version folders.
-                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION and tag.upper() != 'HEAD':
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION \
+                and tag.upper() != 'HEAD':
                     try:
-                        objIter = folder.browseObjects(cool.ValidityKeyMin, cool.ValidityKeyMax, cool.ChannelSelection(), folder.resolveTag(tag))
+                        objIter = folder.browseObjects(cool.ValidityKeyMin,
+                                                       cool.ValidityKeyMax,
+                                                       cool.ChannelSelection(),
+                                                       folder.resolveTag(tag))
                     except Exception, details:
                         raise Exception, details
                 else:
                     try:
-                        objIter = folder.browseObjects(cool.ValidityKeyMin, cool.ValidityKeyMax, cool.ChannelSelection())
+                        objIter = folder.browseObjects(cool.ValidityKeyMin,
+                                                       cool.ValidityKeyMax,
+                                                       cool.ChannelSelection())
                     except Exception, details:
                         raise Exception, details
-                # Fill the md5 checksum
+                # Fill the hash checksum
+                _log.debug("\tHashing '%s' ..."%nodeName)
                 for obj in objIter:
                     for k in payload.keys():
-                        md5Sum.update(obj.payload()[k])
-        return md5Sum
+                        hashSumObj.update(obj.payload()[k])
+        return hashSumObj
 
     #---------------------------------------------------------------------------------#
 
@@ -743,7 +783,7 @@ class CondDB(object):
                                     pass
                                 else:
                                     raise
-                                
+
             finally:
                 # recover the original value of os.path.sep
                 os.path.sep = sep
@@ -1077,9 +1117,9 @@ class CondDB(object):
             except:
                 return False
         return True
-    
+
     def cloneTag(self, path, src_tag, dest_tag, exclude = []):
-        """ 
+        """
         Create a copy of the tag src_tag with the name dest_tag on folderset
         path.
         The sub folder[set] in exclude (specified as fullpath) are not taken
@@ -1118,17 +1158,17 @@ class CondDB(object):
                 tag = currnode.resolveTag(nodes_tags[path])
             except:
                 tag = nodes_tags[path]
-    
+
         if nodestree: # if it has children
             for n in nodestree:
                 nodes_tags[n] = self._moveTagOnNodes_recursion(nodes_tags,n,basetag,nodestree[n])
-    
+
             # the base node is the only node allowed to have
             # the tag in the nodes_tags dictionary
             if tag is None:
                 tag = self.generateUniqueTagName(basetag)
                 self.cloneTag(path,basetag,tag,nodestree.keys())
-                
+
             for n in nodestree:
                 x = self.getCOOLNode(n)
                 try:
@@ -1145,7 +1185,7 @@ class CondDB(object):
                 self.recursiveTag(path,tag)
         # return the local tag
         return tag
-        
+
     def moveTagOnNodes(self,basepath,tag,nodes_tags):
         """
         Move (or create) the tag "tag" on the folderset basepath using the tags
@@ -1177,7 +1217,7 @@ class CondDB(object):
                     d[dirname] = {}
                 d = d[dirname]
                 base = dirname
-    
+
         nodes_tags[basepath] = tag
         self._moveTagOnNodes_recursion(nodes_tags,basepath,tag,nodes_to_modify)
 
@@ -1207,11 +1247,11 @@ class CondDB(object):
             return n.resolveTag(tag)
         except:
             return None
-        
+
     def findNodesWithTag(self, tag, base = "/", leaves = True):
         """
         Find all the nodes that have a local tag associated with provided parent tag.
-        
+
         If leaves is True (the default), it returns a list of the folders (leaves).
         If it is False, the list is reduced to a set of foldersets in which the tag
         is completely defined and folders (in case a common folderset couldn be identified).
@@ -1220,7 +1260,7 @@ class CondDB(object):
         l = filter(lambda p: self.isMultiVersionFolder(p) and
                              self.resolveTag(p,tag),
                    self.getAllChildNodes(base))
-        
+
         if leaves:
             # enough
             return l
@@ -1230,9 +1270,9 @@ class CondDB(object):
             base = ['']
         else:
             base = base.split('/')
-        
+
         base_count = len(base)
-        
+
         newlist = [] # where to put the extracted bases
         # compare one element with all the others until we exaust the list
         while l:
@@ -1241,7 +1281,7 @@ class CondDB(object):
             # do not have to compare something with the base because is guaranteed
             # to be included in each element
             curr_split = current.split('/')[base_count:]
-            
+
             lcopy = l[:]
             for elem in lcopy:
                 elem_split = elem.split('/')[base_count:]
@@ -1259,17 +1299,17 @@ class CondDB(object):
                         l.remove(elem)
                         curr_split = curr_split[:i]
                         current = candidate
-            
+
             newlist.append(current)
         return newlist
-        
+
 
     #---------------------------------------------------------------------------------#
 
     #=============================#
     # Database Editing Operations #
     #=============================#
-    
+
     def dropDatabase(cls, connectionString):
         '''
         drop the database identified by the connection string.
@@ -1450,7 +1490,7 @@ class ValidityKeyWrapper:
         self.value = None
         self.ns = 0
         self.set(value)
-        
+
     def set(self,value):
         if type(value) == type(''):
             if value.lower().find('inf') >= 0:
@@ -1482,10 +1522,10 @@ class ValidityKeyWrapper:
                     raise
         elif type(value) == type(datetime.datetime.max):
             self.value = value
-            
+
     def toValidityKey(self):
         return self.__long__()
-    
+
     def __long__(self):
         from PyCool import cool
         try:
@@ -1500,7 +1540,7 @@ class ValidityKeyWrapper:
                 return cool.ValidityKeyMax
             else:
                 raise
-    
+
     def __str__(self):
         from PyCool import cool
         if self.toValidityKey() == cool.ValidityKeyMax:
@@ -1534,12 +1574,12 @@ class ValidityKeyWrapper:
         if type(self) == type(rhs):
             return self.value == rhs.value
         return self.value == rhs
-    
+
     def __ne__(self,rhs):
         if type(self) == type(rhs):
             return self.value != rhs.value
         return self.value != rhs
-    
+
 #########################################################################################
 #                                Utility functions                                      #
 #########################################################################################
@@ -1558,7 +1598,7 @@ def _collect_tree_info(source_dir, includes = [], excludes = [],
                            False
         outputs:
             list of folders and foldersets to be created
-    
+
     """
     # add to the exclude list CVS and back-up files
     exclude_dirs += [ x for x in ['CVS'] if x not in exclude_dirs ]
@@ -1582,21 +1622,21 @@ def _collect_tree_info(source_dir, includes = [], excludes = [],
                 include_match = True
                 break
         if len(include_dirs) == 0: include_match = True
-            
+
         for p in exclude_dirs:
             if p.search(base_path):
                 exclude_match = True
                 break
-       
+
         if includesFirst:
             is_good = include_match and not exclude_match
         else:
             is_good = include_match
-        
+
         if not is_good : continue # ignore the whole dir
-            
+
         nodes[base_path] = {}
-        
+
         for f in files :
             # Check if the file_path is ok or not
             include_match, exclude_match = False, False # default
@@ -1607,31 +1647,31 @@ def _collect_tree_info(source_dir, includes = [], excludes = [],
                     include_match = True
                     break
             if len(includes) == 0: include_match = True
-            
+
             for p in excludes:
                 if p.search(file_path):
                     exclude_match = True
                     break
-            
+
             if includesFirst:
                 is_good = include_match and not exclude_match
             else:
                 is_good = include_match
 
             if not is_good : continue # ignore the file
-            
+
             m = name_format.match(f)
             if m:
                 key,folder,chid = m.groups()
                 if not key : key = 'data'
                 if not chid : chid = 0
-                
+
                 if folder not in nodes[base_path]:
                     nodes[base_path][folder] = {}
-                    
+
                 if key not in nodes[base_path][folder]:
                     nodes[base_path][folder][key] = {}
-                
+
                 nodes[base_path][folder][key][chid] = os.path.join(root,f)
             else:
                 print "WARNING: '%s' does not seem in the format [key@]folder[:channel]"%file_path
@@ -1661,7 +1701,7 @@ def _fix_xml(xml_data,folderset_path):
                 data = data[0:s] + p + data[e:]
             m = sysIdRE.search(data,pos+1)
         return data
-    
+
     envVarRE = re.compile('\$([A-Za-z][A-Za-z0-9_]*)')
     #cvs_vars = [ 'Id', 'Name', 'Log' ]
     def fix_env_vars(xml_data):
@@ -1672,16 +1712,16 @@ def _fix_xml(xml_data,folderset_path):
             s = m.start(1)
             e = m.end(1)
             name = m.group(1)
-            
+
             if os.environ.has_key(name):
                 val = os.environ[name]
             else:
                 val = '$'+name
-                
+
             data = data[0:pos] + val + data[e:]
             m = envVarRE.search(data,pos+1)
         return data
-    
+
     import codecs
     encodingRE = re.compile('encoding="([^"]*)"')
     def fix_encoding(xml_data):
@@ -1719,7 +1759,7 @@ def copy( sourceDb, targetDb,
         until = cool.ValidityKeyMax
     if channels is None:
         channels = cool.ChannelSelection.all()
-    
+
     import PyCoolCopy
     if type(sourceDb) is str:
         sourceDb = CondDB(sourceDb).db
@@ -1765,10 +1805,10 @@ def merge( sourceDB, targetDB,
         until = cool.ValidityKeyMax
     if channels is None:
         channels = cool.ChannelSelection.all()
-    
+
     import PyCool
     from PyCoolDiff import CondDBDiffError
-    
+
     src = CondDB(sourceDB)
     tgt = CondDB(targetDB, create_new_db = True, readOnly = False)
     # loop over source DB hierarchy
@@ -1778,13 +1818,13 @@ def merge( sourceDB, targetDB,
                 folderPath = root + f
             else:
                 folderPath = root + '/' + f
-            
+
             src_folder = src.db.getFolder(folderPath)
             is_single_version = \
                 src_folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
-            
+
             _log.info("Processing folder %s",folderPath)
-            
+
             # check if the folder is new or not
             if tgt.db.existsFolder(folderPath):
                 _log.debug("Dest folder exists")
@@ -1807,16 +1847,16 @@ def merge( sourceDB, targetDB,
                                                  src_folder.folderSpecification(),
                                                  src_folder.description(),
                                                  True)
-            
+
             _log.debug("prepare the storage buffer")
             tgt_folder.setupStorageBuffer()
-            
+
             # get ready to iterate over new data
             if is_single_version or originalTAG.upper() in [ "", "HEAD" ]:
                 localTAG = ''
             else:
                 localTAG = src_folder.resolveTag(originalTAG)
-            
+
             object_iterator = src_folder.browseObjects( since, until, channels,
                                                         localTAG )
             # loop over the content of the source folder
@@ -1825,4 +1865,4 @@ def merge( sourceDB, targetDB,
                 tgt_folder.storeObject(obj.since(), obj.until(),
                                        obj.payload(), obj.channelId())
             tgt_folder.flushStorageBuffer()
-            
+

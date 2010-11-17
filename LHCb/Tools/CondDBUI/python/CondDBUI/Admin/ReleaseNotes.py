@@ -1,5 +1,5 @@
 """
-Utilities to interact with XML ReleaseNotes. 
+Utilities to interact with XML ReleaseNotes.
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 __version__ = "$Id: ReleaseNotes.py,v 1.10 2009-09-14 15:56:58 ishapova Exp $"
@@ -44,7 +44,7 @@ class ReleaseNotes(object):
         self.tree = ET.parse(self.filename)
         import logging
         self.log = logging.getLogger("CondDB.Admin.ReleaseNotes")
-        
+
     def _setDescription(self, node, description, patch = None):
         """
         Internal function to add the description to a node ("note" or "global_tag").
@@ -57,20 +57,20 @@ class ReleaseNotes(object):
             if patch:
                 ET.SubElement(desc_el, _xel("patch")).text = str(patch)
         return desc_el
-        
+
     def _makeEntry(self, type_name, contributor, date = None):
         """
         Internal function to prepare a base entry ("note" or "global_tag").
         """
         if date is None:
             date = time.strftime("%Y-%m-%d")
-        
+
         entry = ET.Element(_xel(type_name))
         ET.SubElement(entry,_xel("contributor")).text = contributor
         ET.SubElement(entry,_xel("date")).text = date
-        
+
         return entry
-    
+
     def _prependEntry(self, entry):
         """
         Internal function to add the entry at the beginning of the release notes
@@ -84,34 +84,34 @@ class ReleaseNotes(object):
             pos += 1
 
         self.tree.getroot().insert(pos, entry)
-        
+
     def _findHomogeneous(self, contributor, date, tag, datatypes, patch = None, description = None):
         """
-        This internal function does look-up in the release_note.xml file for possible previously added homogeneous 
-        tags entries, checking whether coincidence takes place for "tag" name, date, contributor and data types in case of 
+        This internal function does look-up in the release_note.xml file for possible previously added homogeneous
+        tags entries, checking whether coincidence takes place for "tag" name, date, contributor and data types in case of
         a global tag processing, and date, contributor, patch and description for a local tag entry processing.
-        It returns the object of found entry for further modifications. The homogeneous entry is looked only in 
-        the area of release_notes.xml which is after the last one sqldddb release. 
-        
+        It returns the object of found entry for further modifications. The homogeneous entry is looked only in
+        the area of release_notes.xml which is after the last one sqldddb release.
+
         contributor: person providing the changes
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
         tag: the name of the global tag
         patch: numeric id of the patch (on savannah)
         description: list of comments, ["comment1","comment2"]
         """
-        
+
         if date is None:
             date = time.strftime("%Y-%m-%d")
-        
-        # Accessing the root element in .xml file  
+
+        # Accessing the root element of release notes DOM
         rootelement = self.tree.getroot()
-        
+
         # Starting of iteration procedure for analyzing each element in the tree for duplications
         counter = 0 # counter for number of current entries found with proposed global tag name per one partition
         partitionList = [] # list of partitions found already containing proposed global tag name
         if not description:
             description = []
-        
+
         for element in rootelement:
             if counter > 0: break
             if element.tag != _xel("sqldddb_tag"):
@@ -150,13 +150,13 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             else:
                 homogenEntry = None
                 break
-                                             
+
         return homogenEntry
-                
+
     def addNote(self, contributor, partitions, description, datatypes, date = None, patch = None, forceNewLT = False):
         """
         And a basic entry to the release notes.
-        
+
         contributor: person providing the changes
         partitions: dictionary in the format {"PARTITION":("tag",["file1","file2"])}
         description: list of comments, ["comment1","comment2"]
@@ -165,7 +165,7 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
         forceNewLT: boolean flag to control unconditional creation of local tag entry in release_notes.xml
         """
         local_tag = partitions[partitions.keys()[0]][0]
-        
+
         homogenEntry = self._findHomogeneous(contributor, date, local_tag, datatypes, patch, description)
         if forceNewLT or not homogenEntry:
             note = self._makeEntry("note", contributor, date)
@@ -175,8 +175,8 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             note = homogenEntry
             descr_ChildElem = note.find(str(_xel("description")))
             if descr_ChildElem:
-                note.remove(descr_ChildElem) 
-        
+                note.remove(descr_ChildElem)
+
         # Attaching sub-sub-elements to new sub-element or element of a new local tag entry
         for part in partitions:
             tag, files = partitions[part]
@@ -190,23 +190,23 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             if len(datatypes) != 0:
                 for type in datatypes:
                     ET.SubElement(part_el,_xel("type")).text = type
-                
+
         self._setDescription(note, description, patch)
-        
+
     def addGlobalTag(self, contributor, tag, partitions, datatypes, description = None, date = None, patch = None, forceNewGT = False):
         """
         And an entry for a global tag to the release notes.
-        
+
         contributor: person providing the changes
         tag: the name of the global tag
         partitions: dictionary in the format {"PARTITION":("base_tag",["tag1","tag2"])}
         description: list of comments, ["comment1","comment2"]
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
         patch: numeric id of the patch (on savannah)
-        forceNewGT: flag for forcing creation of a new global tag entry in a release_notes.xml file 
-                    as a stand-alone entry in case any previous homogeneous entries are found.  
+        forceNewGT: flag for forcing creation of a new global tag entry in a release_notes.xml file
+                    as a stand-alone entry in case any previous homogeneous entries are found.
         """
-        
+
         homogenEntry = self._findHomogeneous(contributor,date,tag,datatypes)
         if forceNewGT or not homogenEntry:
             global_tag = self._makeEntry("global_tag", contributor, date)
@@ -221,8 +221,8 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             descr_ChildElem = global_tag.find(str(_xel("description")))
             if descr_ChildElem:
                 global_tag.remove(descr_ChildElem)
-            
-        
+
+
         # Attaching sub-sub-elements to new sub-element or element of a new global tag entry
         for part in partitions:
             base_tag, tags = partitions[part]
@@ -232,20 +232,73 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             tags = list(tags)
             for t in tags:
                 ET.SubElement(part_el,_xel("tag")).text = t
-        
-        self._setDescription(global_tag, description, patch)     
-        
+
+        self._setDescription(global_tag, description, patch)
+
+    def addHashToGlobalTag(self, hashSumObj, partition, gtag):
+        """Function to add hash sum element to the global tag entry in the release notes DOM."""
+
+        hashSumAdded = False
+        # Accessing the root element of release notes DOM
+        rootelement = self.tree.getroot()
+        # Create new hash element
+        hashelement = ET.Element(_xel("hash"),{'alg':hashSumObj.name})
+        hashelement.text = hashSumObj.hexdigest()
+        # Find needed global tag element
+        for element in rootelement:
+            if element.tag == _xel("global_tag"):
+                for subelement1 in element:
+                    if subelement1.tag == _xel("tag") and subelement1.text == gtag:
+                        # Find subelement with requested partition.
+                        for subelement2 in element:
+                            if subelement2.tag == _xel("partition"):
+                                for part_subelement2 in subelement2:
+                                    if part_subelement2.tag == _xel("name") and part_subelement2.text == partition:
+                                        # Check if the hash sum element with the
+                                        # same as requested hash type already
+                                        # exists and remove it
+                                        oldHashSumElem = subelement2.find(str(_xel("hash")))
+                                        if oldHashSumElem is not None and oldHashSumElem.get('alg') == hashSumObj.name:
+                                            subelement2.remove(oldHashSumElem)
+                                        # Add hash sum element to release notes DOM
+                                        subelement2.append(hashelement)
+                                        hashSumAdded = True
+                                        return
+        if hashSumAdded:
+            self.log.info("Hash sum added to release notes for tag '%s' and  partition '%s'." %(gtag, partition))
+        else:
+            self.log.info("Hash sum wasn't added to release notes since no entry "
+             "was found for tag '%s' and  partition '%s'." %(gtag, partition))
+
+    def getGlobalTags(self, partition):
+        """The function finds all global tags for the requested partition."""
+
+        # Accessing the root element of release notes DOM
+        rootelement = self.tree.getroot()
+        all_gts = []
+        for element in rootelement:
+            if element.tag == _xel("global_tag"):
+                # Before returning the global tag element checking partition to be requested.
+                for subelement2 in element:
+                    if subelement2.tag == _xel("partition"):
+                        for part_subelement2 in subelement2:
+                            if part_subelement2.tag == _xel("name") and part_subelement2.text == partition:
+                                for subelement1 in element:
+                                    if subelement1.tag == _xel("tag"):
+                                        all_gts.append(subelement1.text)
+        return all_gts
+
     def write(self, filename = None , encoding = "utf-8"):
         if filename is None:
             filename = self.filename
-        
+
         from StringIO import StringIO
         f = StringIO()
-        
+
         # FIXME: (MCl) work-around for a limitation of E.T. in Python 2.5
         xml_hdr = '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="release_notes.xsl"?>\n'
         f.write(xml_hdr)
         indent(self.tree.getroot(), indentation = "\t")
         self.tree.write(f,encoding)
-        
+
         open(filename,"w").write(f.getvalue()+"\n")
