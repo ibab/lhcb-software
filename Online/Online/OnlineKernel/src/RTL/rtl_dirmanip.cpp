@@ -26,9 +26,9 @@
 
 DIR *opendir(const char *dir)  {
   long handle;
-
-  char *filespec = new char[strlen(dir) + 2 + 1];
-  strcpy(filespec, dir);
+  size_t len = strlen(dir) + 2 + 1;
+  char *filespec = new char[len];
+  strncpy(filespec, dir, len);
   int index = strlen(filespec) - 1;
   if (index >= 0 && (filespec[index] == '/' || 
     (filespec[index] == '\\' && !IsDBCSLeadByte(filespec[index-1]))))
@@ -108,8 +108,9 @@ int rewinddir(DIR *dp)    {
   _findclose(dp->handle);
   dp->offset = 0;
   dp->finished = 0;
-  char* filespec = new char[strlen(dp->dir) + 2 + 1];
-  strcpy(filespec, dp->dir);
+  size_t len = strlen(dp->dir) + 2 + 1;
+  char* filespec = new char[len];
+  strncpy(filespec, dp->dir, len);
   int index = strlen(filespec) - 1;
   if (index >= 0 && (filespec[index] == '/' || filespec[index] == '\\'))
     filespec[index] = '\0';

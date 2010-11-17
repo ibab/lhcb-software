@@ -72,8 +72,9 @@ int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, in
   pb->bufsize = BUFFER_SIZE;
   pb->device  = (char*)0;
   if (device)  {
-    pb->device = (char*) list_malloc (strlen(device) + 1);
-    strcpy (pb->device, device);
+    size_t len = strlen(device) + 1;
+    pb->device = (char*) list_malloc(len);
+    strncpy (pb->device, device, len);
   }
   pb->rows = 24;
   pb->cols = 80;
@@ -393,7 +394,7 @@ int scrc_set_border (Display *disp, const char *title, uint_t attr)   {
   int len = (title) ? ::strlen(title) : 0;
   char* tmp = disp->title;
   disp->title = (char*)list_malloc (len + 1);
-  ::strcpy(disp->title, (title) ? title : "");
+  ::strncpy(disp->title, (title) ? title : "", len+1);
   ::scrc_draw_box (disp, attr);
   if (cols > 1 && (len != 0))  {
     if (len > cols) len = cols;
@@ -1149,7 +1150,7 @@ int scrc_putes (const char* s, Pasteboard *pb)    {
 //----------------------------------------------------------------------------
 int scrc_puts (const char* s, Pasteboard *pb)   {
   char *buf = pb->bufout + pb->bufptr;
-  ::strcpy (buf, s);
+  ::strcpy(buf, s);
   pb->bufptr += strlen(s);
   if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;

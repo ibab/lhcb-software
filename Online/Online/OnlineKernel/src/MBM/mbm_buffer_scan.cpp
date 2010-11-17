@@ -25,8 +25,8 @@ extern "C" int mbm_buffer_scan(int argc , char ** argv) {
   int diff = KByte;
   int stot = tot*KByte;
   int s1   = (tot-32)*KByte;
-  ::sprintf(txt, "-s=%d",stot/KByte);
-  ::sprintf(buff,"-i=%s",buffer.c_str());
+  ::snprintf(txt, sizeof(txt), "-s=%d",stot/KByte);
+  ::snprintf(buff,sizeof(txt), "-i=%s",buffer.c_str());
   args[1] = txt;
   args[4] = buff;
   mbm_install(7,(char**)args);

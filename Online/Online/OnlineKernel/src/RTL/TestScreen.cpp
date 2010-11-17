@@ -7,7 +7,7 @@ extern "C" int rtl_testscreen(int argc,char **) {
   char caption[255];
   initscreen();
   printxy(10, 20,"Welcome to Curses!");
-  sprintf(caption, "This is just a message!");
+  snprintf(caption, sizeof(caption), "This is just a message!");
   printxy(10, 22,caption);
   printxy(1,  33,".....");
   refresh();

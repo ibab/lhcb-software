@@ -8,9 +8,9 @@ using namespace std;
 using namespace RTL;
 
 static std::string command() {
-  string cmd = ::getenv("ONLINEKERNELROOT");
+  string cmd = ::lib_rtl_getenv("ONLINEKERNELROOT");
   cmd += "/";
-  cmd += ::getenv("CMTCONFIG");
+  cmd += ::lib_rtl_getenv("CMTCONFIG");
   cmd += "/test.exe";
   return cmd;
 }

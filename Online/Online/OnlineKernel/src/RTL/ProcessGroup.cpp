@@ -1,5 +1,4 @@
-
-// $ID:
+// $ID:$
 #include "RTL/ProcessGroup.h"
 
 #include <cmath>
@@ -146,7 +145,7 @@ extern "C" int rtl_test_process_group(int, char** ) {
 
 // Dummy task executed by next test (rather than the stupid "sleep"
 extern "C" int rtl_test_process_sleep(int argc, char** argv) {
-  const char* nam = ::getenv("UTGID");
+  const char* nam = ::lib_rtl_getenv("UTGID");
   if ( 0 == nam ) nam = "Unknown";
   if ( argc > 1 ) {
     int nsec;
@@ -170,9 +169,9 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   const char *a1[]={"rtl_test_process_sleep","4",0}, *a2[]={"rtl_test_process_sleep","5",0};
   const char *a3[]={"rtl_test_process_sleep","6",0}, *a4[]={"rtl_test_process_sleep","7",0};
   const char *a5[]={"rtl_test_process_sleep","8",0}, *a6[]={"rtl_test_process_sleep","9",0};
-  string cmd = ::getenv("ONLINEKERNELROOT");
+  string cmd = ::lib_rtl_getenv("ONLINEKERNELROOT");
   cmd += "/";
-  cmd += ::getenv("CMTCONFIG");
+  cmd += ::lib_rtl_getenv("CMTCONFIG");
   cmd += "/test.exe";
   ::lib_rtl_signal_log(false);
   Process::setDebug(true);
