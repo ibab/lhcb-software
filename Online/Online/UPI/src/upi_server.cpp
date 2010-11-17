@@ -454,18 +454,15 @@ extern "C" int upi_server (int argc, char** argv)  {
   upic_declare_exit_handler ((Routine)exit_handler);
 
   get_my_node();
-  sprintf (My_name, "SW%08X", get_pid());
+  ::snprintf (My_name, sizeof(My_name), "SW%08X", get_pid());
   status = upic_net_init (My_name, 0, message_handler, broadcast);
   if (!(status & 1)) exit(status);
-
-  strcpy (Dest, My_node);
-  strcat (Dest, My_name);
+  ::snprintf(Dest,sizeof(Dest),"%s%s",My_node,My_name);
   scheinit (0x1234, Dest);
 
   upic_open_detached_menu (MAIN_MENU, 0, 0, "Server", "", "");
   upic_add_comment (C_SEPARATOR, "---------------", "");
-  strcpy (Dest, "");
-  strcpy (Node, "");
+  Dest[0] = Node[0] = 0;
   upic_set_param (Dest, 1, "A30", Dest, 0, 0, 0, 0, 0);
   upic_set_param (Node, 2, "A20", Node, 0, 0, 0, 0, 0);
   upic_add_command (C_DESTINATION, "Name ^^^^^^^^^^^^^^ Node ^^^^^^^^^^^^", "");
@@ -490,15 +487,16 @@ extern "C" int upi_server (int argc, char** argv)  {
 
   upic_open_param (PARAMS_MENU, MAIN_MENU, C_PARAMS, "Start parameters", "", "");
   for (int i=0; i<4; i++)  {
+    char text[132];
     upic_set_param (P[i], 1, "A80", P[i], 0, 0, 0, 0, 0);
-    sprintf (Text, "P%d = ^^^^^^^^^^^^^^^", i + 1);
-    upic_add_command (C_P1 + i, Text, "");
+    snprintf (text, sizeof(text), "P%d = ^^^^^^^^^^^^^^^", i + 1);
+    upic_add_command (C_P1 + i, text, "");
   }
   upic_close_menu();
   list_init ((Linked_list*) &Mbx_header.connects.first);
   list_init ((Linked_list*) &Mbx_header.requests.first);
 
-  sprintf (Dest, "MAILBOX_%s", My_name);
+  snprintf(Dest, sizeof(Dest), "MAILBOX_%s", My_name);
   Chan_scr = upic_net_open_mbx (Dest);
   // F_scr = fopen (Dest, "r");
 
@@ -530,16 +528,16 @@ extern "C" int upi_server (int argc, char** argv)  {
   no_time_stamps = cli.getopt("nostamps",1) != 0;
   if (!arg.empty())  {
     char saved;
-    char* c = strchr (arg.c_str(), ':');
+    char* c = strchr((char*)arg.c_str(), ':');
     if (c && c[1] == ':')    {
       saved = *c;
       *c = 0;
-      strcpy (Node, arg.c_str());
+      strncpy (Node, arg.c_str(), sizeof(Node));
       *c = saved;
       c += 2;
     }
     else c = (char*)arg.c_str();
-    strcpy (Dest, c);
+    strncpy (Dest, c, sizeof(Dest));
 
     start (Dest, Node);
   }
@@ -867,13 +865,13 @@ int broadcast (unsigned int, void*)  {
 //--------------------------------------------------------------------------
 SrvConnect* find_connect (const char* source)  {
   char* blank;
-  if ((blank = strchr (source, ' '))) *blank = '\0';
+  if( (blank = strchr((char*)source,' ')) ) *blank = '\0';
   SrvConnect* c = Sys.connect.first;
-  for( ;c;c=c->next) {
+  for( ;c;c=c->next)  {
     if (!strcmp(c->source, source)) return (c);
   }
   c = (SrvConnect*) list_add_entry(&Sys.connect,sizeof (SrvConnect));
-  c->source = list_malloc (strlen(source)+1);
+  c->source = list_malloc(strlen(source)+1);
   strcpy (c->source, source);
   c->disabled = 0;
   c->connected = 0;
@@ -889,7 +887,7 @@ SrvConnect* find_connect (const char* source)  {
 //--------------------------------------------------------------------------
 SrvConnect* find_connect_with_name (const char* source)  {
   char* blank;
-  if ((blank = strchr (source, ' '))) *blank = '\0';
+  if ((blank = strchr ((char*)source, ' '))) *blank = '\0';
   for(SrvConnect* c = Sys.connect.first; c; c=c->next) {
     if (!strcmp(c->source, source))    {
       if (!c->connected) return 0;
@@ -1430,7 +1428,7 @@ void quit (SrvConnect* connect)  {
   Menu_list* m;
   Histo_list* h;
   char temp[512];
-  sprintf (temp, "SERVER> Disconnecting source [%s]", connect->source);
+  snprintf (temp, sizeof(temp), "SERVER> Disconnecting source [%s]", connect->source);
   upic_write_message (temp, "");
   while ((v = connect->var.first))  {
     if (v->type == ASC_FMT) free (v->value.c);
@@ -2302,13 +2300,14 @@ void log_reset () {
 void log_show ()    {
   int len;
   char msg[1024];
-  const char* log_file = ::getenv ("SERVER_LOG_FILE");
+  const char* log_file = ::lib_rtl_getenv ("SERVER_LOG_FILE");
   if (log_file)  {
+    char text[1200];
     strcpy(msg,log_file);
     len = cut_blanks (msg);
     msg[len] = 0;
-    sprintf (Text, "Current active LogFile : %s", msg);
-    upic_write_message (Text, "");
+    snprintf (text, sizeof(text), "Current active LogFile : %s", msg);
+    upic_write_message (text, "");
   }
 }
 
@@ -2334,7 +2333,7 @@ void database_dump ()   {
     upic_write_message("The environment SERVER_LOG_FILE is not set...no dump made.","");
     return;
   }
-  sprintf(str,"Dumping to file %s",log_file);
+  snprintf(str,sizeof(str),"Dumping to file %s",log_file);
   upic_write_message(str,"");
   FILE* f = ::fopen (log_file, "a");
   if (!f)  {
@@ -2420,7 +2419,7 @@ void save_conf()  {
   }
   free (carr);
   fclose (f);
-  sprintf(str,"Configuration saved on file %s",cfile);
+  snprintf(str,sizeof(str),"Configuration saved on file %s",cfile);
   upic_write_message(str,"");
   return;
 }
@@ -2440,7 +2439,7 @@ again:
     }
     else {
       char str[255];
-      sprintf(str,"Connecting to %s",s);
+      snprintf(str,sizeof(str),"Connecting to %s",s);
       upic_write_message (str,"");
     }
     return 1;
