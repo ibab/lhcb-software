@@ -280,6 +280,7 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
+  std::vector<float> pdeta(0), pdphi(0), pdQ(0);
   // data for multPV 
   std::vector<float> pnippu(0), pnippuerr(0), pipmean(0), pxpos(0), pypos(0), pzpos(0), 
     pxerrpos(0), pyerrpos(0), pzerrpos(0), pippubs(0), pippuchi2bs(0); 
@@ -360,7 +361,7 @@ StatusCode BTaggingAnalysis::execute() {
     debug()<<" 2n Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
     debug()<<" tracks "<<ntracks2<<endreq;
     debug()<<" nippu "<<nippu2<<",  ippuerr "<<nippuerr2<<",  ipmean "<<ipmean<<endreq;
-    denug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
+    debug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
     debug()<<" ,  x "<<xpos2<<",  y "<<ypos2<<",  z "<<zpos2<<endreq;
     debug()<<" ,  dx "<<xerrpos2<<",  dy "<<yerrpos2<<",  dz "<<zerrpos2<<endreq;
     */
@@ -441,6 +442,9 @@ StatusCode BTaggingAnalysis::execute() {
     pIPSVerr .push_back(iperrSV);
     pDOCA    .push_back(docaSV);
     pDOCAerr .push_back(docaErrSV);
+    pdeta.push_back(deta);
+    pdphi.push_back(dphi);
+    pdQ.push_back(dQ);
 
     // electrons
     pPIDe.push_back( proto->info( ProtoParticle::CombDLLe, -1000.0 ) );
@@ -639,6 +643,9 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("IPSVerr", pIPSVerr, "N", 200);
   tuple -> farray ("DOCA",    pDOCA, "N", 200);
   tuple -> farray ("DOCAerr", pDOCAerr, "N", 200);
+  tuple -> farray ("dphi",     pdphi, "N", 200);
+  tuple -> farray ("deta",     pdeta, "N", 200);
+  tuple -> farray ("dQ",     pdQ, "N", 200);
 
   if( !( tuple->write()) ) err() << "Cannot fill mytagging Ntuple" << endreq;
   ///----------------------------------------------------------------------
@@ -803,6 +810,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::ConstVector& parts,
     if (msgLevel(MSG::DEBUG)) 
       debug() <<"   part ID="<<(*ip)->particleID().pid()
               <<" p="<<(*ip)->p()/GeV
+              <<" pt="<<(*ip)->pt()/GeV
               <<" PIDm="<<proto->info( ProtoParticle::CombDLLmu, 0)
               <<" PIDe="<<proto->info( ProtoParticle::CombDLLe, 0)
               <<" PIDk="<<proto->info( ProtoParticle::CombDLLk, 0)

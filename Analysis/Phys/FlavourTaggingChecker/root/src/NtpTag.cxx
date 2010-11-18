@@ -81,7 +81,11 @@ bool NtpTag::execute(Long64_t ientry, Event& evt) {
     if(enableMC) signal->setMCID( sMCID[ii] );
 
     evt.addToSignalParts(signal);
-  
+
+    //Set Mu and Dstar
+    if (bid==13) evt.setMu(signal);
+    if (bid==413) evt.setDstar(signal);
+    
     if(bid==531 || bid==511 || bid==521) {
       //Redefine TrueTag as the flavour of the reconstructed final state
       //as it is provided by signal selection in TES:

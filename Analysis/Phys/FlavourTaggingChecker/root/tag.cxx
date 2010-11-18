@@ -68,7 +68,7 @@ int main () {
       taggers.push_back(tvtx); 
       FlavourTag* theTag = combProbtool.combineTaggers( taggers );
       //FlavourTag* theTag = combNNtool.combineTaggers( taggers );
-      //FlavourTag* theTag = combPIDool.combineTaggers( taggers );
+      //FlavourTag* theTag = combPIDtool.combineTaggers( taggers );
 
       int TrueTag = event.TrueTag();
       theTag->setTrueTag(TrueTag);
