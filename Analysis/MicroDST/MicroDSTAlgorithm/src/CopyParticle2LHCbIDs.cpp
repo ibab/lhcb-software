@@ -157,6 +157,8 @@ void CopyParticle2LHCbIDs::storeLHCbIDs(const LHCb::Particle* part)
 
   if (0==clone) return;
 
+  if (m_p2LHCbID->find(clone) != m_p2LHCbID->end()) return;  
+  
   m_iTisTos->setOfflineInput(); 
   m_iTisTos->addToOfflineInput(*part);
   std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();

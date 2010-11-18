@@ -7,6 +7,7 @@
 ! 2010-11-18 - Juan Palacios
  - src/CopyParticle2LHCbIDs.h, src/CopyParticle2LHCbIDs.cpp
   . Map now placed in <OutputPrefix>/Particle2LHCbIDMap.
+  . Only store pairs for keys that aren't already in map.
  - cmt/requirements
   . Increase version to v5r1.
 
