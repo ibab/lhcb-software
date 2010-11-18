@@ -21,6 +21,7 @@
  *  @param name algorithm instance name 
  *  @param pSvc pointer to Service Locator 
  */
+// ============================================================================
 Hlt::L0Muon2TrackBase::L0Muon2TrackBase
 ( const std::string& name ,                  //     algorithm instance name 
   ISvcLocator*       pSvc )                  //  pointer to Service Locator 

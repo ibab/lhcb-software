@@ -39,10 +39,10 @@ Hlt::Service::Service
   , m_msgStream ()                                  // the local message stream  
   //
   , m_frozen    ( false )            // the global glag to disable registration 
-  //
-  , m_locker  ( 0 )                                   //     the current locker 
+//
+  , m_lockers (   )                                   //     the current locker 
   , m_locked  (   )                                   //    the list of lockers 
-  //
+//
   /// THE MAJOR STORAGE OF SELECTIONS, the map { id -> selection } 
   , m_selections ()                          // THE MAJOR STORAGE OF SELECTIONS 
   //
@@ -252,7 +252,7 @@ StatusCode Hlt::Service::finalize ()
   m_outputs    . clear   () ;
   m_selections . clear   () ;
   m_locked     . clear   () ;
-  m_locker     . release () ;
+  m_lockers    . clear   () ;
   //
   // unsubscribe the incidents 
   if ( m_incSvc.validPointer() ) { m_incSvc -> removeListener ( this ) ; }
@@ -270,7 +270,10 @@ void Hlt::Service::handle ( const Incident& /* inc */ )
 {
   if ( !m_frozen ) 
   {
-    Warning ( "The Service is frozen! No furthe rregistartion are allowed!") ;
+    Warning ( "The Service is frozen! No further registrations are allowed!") ;
+    if ( !m_lockers.empty() ) 
+    { Error ("Service is going to be frozen, but it is locked!") ; }
+    //
     m_frozen = true ;
   } 
   // clear all selections 

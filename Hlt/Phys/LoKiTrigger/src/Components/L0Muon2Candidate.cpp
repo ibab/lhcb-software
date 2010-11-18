@@ -19,6 +19,28 @@
 // ============================================================================
 #include "LoKi/HltBase.h"
 // ============================================================================
+/* @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ * @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ * @date 2010-08-01
+ *  
+ *                   $Revision$
+ *  Last moficiation $Date$
+ *                by $Author$
+ */
+// ============================================================================
 namespace Hlt 
 {
   // ==========================================================================
@@ -71,9 +93,9 @@ namespace Hlt
     /// the selection 
     Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
     /// the output selection 
-    std::string m_output         ;                                // the output
+    Location m_output ;                                        //    the output
     /// TES Location of L0MuonCandidate 
-    std::string m_L0MuonLocation ;           // TES Location of L0MuonCandidate 
+    Location m_input  ;                      // TES Location of L0MuonCandidate 
     // ========================================================================
   } ;
   // ==========================================================================
@@ -90,7 +112,7 @@ Hlt::L0Muon2Candidate::L0Muon2Candidate
   : Hlt::Base   ( name , pSvc ) 
   , m_selection ( 0    ) 
   , m_output    ( name ) 
-  , m_L0MuonLocation ( LHCb::L0MuonCandidateLocation ::Default ) 
+  , m_input     ( LHCb::L0MuonCandidateLocation ::Default ) 
 //
 {
   declareProperty 
@@ -98,8 +120,8 @@ Hlt::L0Muon2Candidate::L0Muon2Candidate
       m_output                          ,
       "The name of output selection of Hlt::Candidates"    ) ;
   declareProperty
-    ( "L0MuonCandidateLocation"         , 
-      m_L0MuonLocation                  , 
+    ( "InputSelection"                  , 
+      m_input                           , 
       "TES Location of LHCb::L0MuonCandidate" ) ;
 }
 // ============================================================================
@@ -116,10 +138,13 @@ StatusCode Hlt::L0Muon2Candidate::initialize ()
   if ( sc.isFailure() ) { return sc ; }                          // REUTRN
   /// Lock the service to enable the output selection registration 
   Hlt::IRegister::Lock lock ( regSvc() , this ) ;
+  /// register TES input selection
+  sc = lock -> registerTESInput ( m_input     , this ) ;
+  Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
   /// register the output selection
   m_selection = new Hlt::TSelection<Hlt::Candidate>( m_output ) ;
-  sc = lock -> registerOutput ( m_selection , this ) ;
-  Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc );
+  sc = lock -> registerOutput   ( m_selection , this ) ;
+  Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc ) ;
   //
   declareInfo ( "#accept" , "" , &counter("#accept") , 
                 0, std::string ("Events accepted by "    ) + name () ) ;
@@ -141,7 +166,7 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
   
   // get all L0 Muons from TES  
   typedef LHCb::L0MuonCandidate::Container L0Muons ;
-  const L0Muons* l0muons = get<L0Muons> ( m_L0MuonLocation ) ;
+  const L0Muons* l0muons = tesData<L0Muons> ( m_input ) ;
   
   // get(or create) containter of Hlt-Candidates form TES
   Hlt::Candidate::Container*  candidates = hltCandidates () ;

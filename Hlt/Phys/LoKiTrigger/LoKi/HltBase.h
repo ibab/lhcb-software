@@ -41,8 +41,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 namespace Hlt 
 {
@@ -54,6 +55,11 @@ namespace Hlt
    */
   class Base : public GaudiHistoAlg
   {
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the actual type of TES-location 
+    typedef Hlt::IData::Key Location ;
     // ========================================================================
   public:
     // ========================================================================
@@ -91,6 +97,13 @@ namespace Hlt
     Hlt::IData*     hltSvc () const ;
     /// accessor to Assigned Names & Numbers Service 
     IANNSvc*        annSvc () const ;
+    /** get TES-selection 
+     *  @param location TES location 
+     *  @return data 
+     */
+    template <class TYPE>
+    const TYPE* tesData 
+    ( const Hlt::IData::Key& location ) const ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -125,9 +138,24 @@ namespace Hlt
     // ========================================================================
   };
   // ==========================================================================
-} // end of namespace Hlt
+} //                                                       end of namespace Hlt
 // ============================================================================
-// The END 
+/*  get TES-selection 
+ *  @param location TES location 
+ *  @return data 
+ */
+// ============================================================================
+template <class TYPE>
+const TYPE* Hlt::Base::tesData ( const Hlt::IData::Key& location ) const 
+{
+  const DataObject* data_ = this->hltSvc()->tes ( this , location ) ;
+  Assert ( 0 != data_ , "tesData: Unable to retrieve DataObject " ) ;
+  const TYPE* data        = dynamic_cast<const TYPE*> ( data_     ) ;
+  Assert ( 0 != data  , "tesData: Invalid data "                  ) ;
+  return data ;
+}
+// ============================================================================
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_HLTBASE_H
 // ============================================================================

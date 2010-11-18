@@ -28,11 +28,14 @@ StatusCode Hlt::Service::lock   ( const IAlgorithm* alg )
   else if ( m_frozen      ) 
   { return Error ( "lock : all transactions are frozen" , 
                    Lock_Transactions_Disabled )  ; }                 // RETURN 
-  // already locked by some other algorithm ? 
-  else if ( !(!m_locker)  ) 
-  { return Error ( "lock : the service is already locked by '"  + 
-                   m_locker->name() + "'" , 
-                   Lock_Invalid_Lock          )  ; }                 // RETURN 
+  else if ( !m_lockers.empty() && m_lockers.back() == alg ) 
+  {  
+    return Error ( "lock : the service is already locked'" , 
+                   Lock_Invalid_Lock          )  ; }                 // RETURN
+  //else if ( !(!m_locker)  ) 
+  //{ return Error ( "lock : the service is already locked by '"  + 
+  //                 m_locker->name() + "'" , 
+  //                 Lock_Invalid_Lock          )  ; }                 // RETURN 
   // the algorithm has already been locked previously 
   else if ( m_locked.end()  
             != std::find ( m_locked.begin() , m_locked.end() , alg ) )    
@@ -41,7 +44,7 @@ StatusCode Hlt::Service::lock   ( const IAlgorithm* alg )
                    Lock_Double_Registration    )  ; }                // RETURN 
   // ==========================================================================
   // lock it! 
-  m_locker = alg ;
+  m_lockers.push_back ( alg ) ;
   // ==========================================================================
   return StatusCode::SUCCESS ;
 }
@@ -57,12 +60,15 @@ StatusCode Hlt::Service::unlock ( const IAlgorithm* alg )
   if      ( 0 == alg       ) 
   { return Error ( "unlock : IAlgorithm* points to NULL" , 
                    Lock_Invalid_Algorithm     )  ; }                 // RETURN 
-  else if ( alg != m_locker ) 
+  else if ( m_lockers.empty()  ) 
+  { return Error ( "unlock : lock/unlock mismatch "      , 
+                   Lock_Invalid_Lock          )  ; }                 // RETURN 
+  else if ( m_lockers.back() != alg  ) 
   { return Error ( "unlock : lock/unlock mismatch "      , 
                    Lock_Invalid_Lock          )  ; }                 // RETURN 
   // ==========================================================================
   // lock it! 
-  m_locker = 0 ;
+  m_lockers.pop_back () ;
   m_locked.push_back ( alg ) ;
   // ==========================================================================
   return StatusCode::SUCCESS ;  
@@ -88,12 +94,12 @@ StatusCode Hlt::Service::registerOutput
   { return Error ( "registerOutput: invalid seelction for producer '" + 
                    producer->name() + "'" , 
                    Register_Invalid_Selection         ) ;  }          // RETURN  
-  else if ( !m_locker      ) 
+  else if ( m_lockers.empty()  ) 
   { return Error ( "registerOutput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_locker != producer ) 
+  else if ( m_lockers.back () != producer ) 
   { return Error ( "registerOutput: the service is locked by '" 
-                   + m_locker->name() + "'" , 
+                   + m_lockers.back()->name() + "'"   , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
   // ==========================================================================
   { // check for the double registration 
@@ -145,12 +151,12 @@ StatusCode Hlt::Service::registerInput
   if      ( 0 == consumer  ) 
   { return Error ( "registerInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
-  else if ( !m_locker      ) 
+  else if ( m_lockers.empty()  ) 
   { return Error ( "registerInput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_locker != consumer ) 
+  else if ( m_lockers.back() != consumer ) 
   { return Error ( "registerInput: the service is locked by '" 
-                   + m_locker->name() + "'" , 
+                   + m_lockers.back()->name() + "'"   , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
   // ==========================================================================
   // check the existence of the selection:
@@ -159,18 +165,18 @@ StatusCode Hlt::Service::registerInput
                    + selection.str() + "' is unknown " ,
                    Register_Unknown_Selection ) ; }             // RETURN
   // ==========================================================================
-//   { // check that it is not in the list of own output selection 
-//     OutputMap::iterator iout = m_outputs.find ( consumer ) ;
-//     if ( m_outputs.end() != iout ) 
-//     {
-//       SelMap::iterator i = iout->second.find ( selection ) ;
-//       if ( iout->second.end() != i ) 
-//       { return Error ( "registerInput: the input selection '" 
-//                        + selection + 
-//                        "' is output selection "   ,
-//                        Register_Invalid_Selection ) ; }             // RETURN
-//     }
-//   }
+  //   { // check that it is not in the list of own output selection 
+  //     OutputMap::iterator iout = m_outputs.find ( consumer ) ;
+  //     if ( m_outputs.end() != iout ) 
+  //     {
+  //       SelMap::iterator i = iout->second.find ( selection ) ;
+  //       if ( iout->second.end() != i ) 
+  //       { return Error ( "registerInput: the input selection '" 
+  //                        + selection + 
+  //                        "' is output selection "   ,
+  //                        Register_Invalid_Selection ) ; }             // RETURN
+  //     }
+  //   }
   { // check it if is not in the list of own input selections 
     InputMap::iterator iin = m_inputs.find ( consumer ) ;
     if ( m_inputs.end() == iin ) 
@@ -213,15 +219,15 @@ StatusCode Hlt::Service::registerTESInput
   const IAlgorithm*       consumer  )                 //            consumer   
 {
   // ==========================================================================
-  if      ( 0 == consumer  ) 
+  if      ( 0 == consumer     ) 
   { return Error ( "registerTESInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
-  else if ( !m_locker      ) 
+  else if ( m_lockers.empty() ) 
   { return Error ( "registerTESInput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_locker != consumer ) 
+  else if ( m_lockers.back () != consumer ) 
   { return Error ( "registerTESInput: the service is locked by '" 
-                   + m_locker->name() + "'" , 
+                   + m_lockers.back()->name() + "'" , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
   //
   TESMap::const_iterator intes = m_tesmap.find ( consumer ) ;

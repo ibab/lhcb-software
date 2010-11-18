@@ -458,9 +458,10 @@ namespace Hlt
     typedef std::vector<Locker>          Locked ;
     // ========================================================================
     /// Locker: the algorithm which currently makes transaction,IRegister
-    Locker m_locker ;                  //                    the current locker 
+    /// Locker m_locker ;                  //                    the current locker 
+    Locked m_lockers ;                 //                    the current locker 
     /// the list of already locked algorithms 
-    Locked m_locked ;                  // the list of already locked algorithms 
+    Locked m_locked  ;                  // the list of already locked algorithms 
     // ========================================================================
   private:
     // ========================================================================
@@ -529,11 +530,11 @@ namespace Hlt
     // spy mode? 
     bool m_spy       ;                                             // spy mode?
     // ========================================================================
-  }; // end of the class 
+  }; //                                                        end of the class 
   // ==========================================================================
-} // end  of namespace Hlt
+} //                                                      end  of namespace Hlt
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKITRIGGER_SERVICE_H 
 // ============================================================================

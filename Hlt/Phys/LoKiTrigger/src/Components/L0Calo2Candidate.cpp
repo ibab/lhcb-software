@@ -22,6 +22,7 @@
 #include "LoKi/HltBase.h"
 // ============================================================================
 /** @file
+ *
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
@@ -31,8 +32,9 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 namespace Hlt 
 {
@@ -86,9 +88,9 @@ namespace Hlt
     /// the selection 
     Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
     /// the output selection 
-    std::string m_output         ;                                // the output
+    Location m_output ;                                        //    the output
     /// TES Location of L0CaloCandidate 
-    std::string m_L0CaloLocation ;           // TES Location of L0CaloCandidate 
+    Location m_input  ;                      // TES Location of L0CaloCandidate 
     // ========================================================================
   } ;
   // ==========================================================================
@@ -105,7 +107,7 @@ Hlt::L0Calo2Candidate::L0Calo2Candidate
   : Hlt::Base   ( name , pSvc ) 
   , m_selection ( 0    ) 
   , m_output    ( name ) 
-  , m_L0CaloLocation ( LHCb::L0CaloCandidateLocation ::Default ) 
+  , m_input     ( LHCb::L0CaloCandidateLocation ::Default ) 
 //
 {
   declareProperty 
@@ -113,8 +115,8 @@ Hlt::L0Calo2Candidate::L0Calo2Candidate
       m_output                          ,
       "The name of output selection of Hlt::Candidates"    ) ;
   declareProperty
-    ( "L0CaloCandidateLocation"         , 
-      m_L0CaloLocation                  , 
+    ( "InputSelection"                  , 
+      m_input                           , 
       "TES Location of LHCb::L0CaloCandidate" ) ;
 }
 // ============================================================================
@@ -131,6 +133,9 @@ StatusCode Hlt::L0Calo2Candidate::initialize ()
   if ( sc.isFailure() ) { return sc ; }                          // REUTRN
   /// Lock the service to enable the output selection registration 
   Hlt::IRegister::Lock lock ( regSvc() , this ) ;
+  /// register TES input selection
+  sc = lock -> registerTESInput ( m_input     , this ) ;
+  Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
   /// register the output selection
   m_selection = new Hlt::TSelection<Hlt::Candidate>( m_output ) ;
   sc = lock -> registerOutput ( m_selection , this ) ;
@@ -156,7 +161,7 @@ StatusCode Hlt::L0Calo2Candidate::execute  ()
   
   // get all L0 Calos from TES  
   typedef LHCb::L0CaloCandidate::Container L0Calos ;
-  const L0Calos* l0calos = get<L0Calos> ( m_L0CaloLocation ) ;
+  const L0Calos* l0calos = tesData<L0Calos> ( m_input ) ;
   
   // get(or create) containter of Hlt-Candidates form TES
   Hlt::Candidate::Container*  candidates = hltCandidates () ;
