@@ -133,6 +133,8 @@ namespace ROMon {
     virtual ~CtrlNodeDisplay() {}
     /// Set the node number for the display
     void setNode(int which) { m_node = which; }
+    /// Connect to data resources
+    virtual void connect()  {  InternalDisplay::connect(); }
     /// Connect display to data sources
     virtual void connect(const std::string& node);
     /// Update display content
@@ -215,6 +217,8 @@ public:
     virtual void set_cursor(InternalDisplay* updater);
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
+    /// Connect to data resources
+    virtual void connect()  {  InternalDisplay::connect(); }
     /// Connect to data sources
     void connect(const std::vector<std::string>& farms);
     /// DIM command service callback

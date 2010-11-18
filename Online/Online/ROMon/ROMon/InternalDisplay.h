@@ -92,7 +92,7 @@ namespace ROMon {
     /// Close the display
     virtual void close();
     /// Empty placeholder: Connect to data resources
-    virtual void connect();
+    virtual void connect() {}
     /// Disconnect from services: Only destructor may be called afterwards
     virtual void disconnect();
     /// Disconnect from DIM service

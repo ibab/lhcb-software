@@ -74,9 +74,6 @@ void InternalDisplay::setSvcPrefix(const string& pref) {
   s_prefix = pref;
 }
 
-void InternalDisplay::connect() {
-}
-
 /// Disconnect from DIM services
 void InternalDisplay::disconnect() {
   disconnectService(m_svc2);
