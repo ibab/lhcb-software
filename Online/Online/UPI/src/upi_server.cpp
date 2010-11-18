@@ -5,11 +5,11 @@ Created           : 29-NOV-1989 by Christian Arnault
 ---------------------------------------------------------------------------*/
 #ifdef SCREEN
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
 #include "RTL/rtl.h"
+#include "RTL/Lock.h"
+#include "RTL/strdef.h"
+#include "SCR/scr.h"
 #include "UPI/file.h"
 #include "UPI/upidef.h"
 #include "UPI/upirem.h"
@@ -17,9 +17,6 @@ Created           : 29-NOV-1989 by Christian Arnault
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
-#include "RTL/rtl.h"
-#include "RTL/Lock.h"
-#include "SCR/scr.h"
 
 int upic_net_close_mbx(int) { return 1; }
 int upic_net_open_mbx(const char*) {  return 1; }
@@ -362,32 +359,24 @@ static struct {
 } Sys;
 
 static Pasteboard* Pb;
-
 static char Ams_dest[81] = "";
 static char Dest[81] = "";
 static char Node[81] = "";
 static char My_name[81] = "";
-//static char Old_name[81] = "";
 static char My_node[81] = "";
-
 static int Cursor_locked = 0;
-
 static char P[4][81];
-
-static char Text[133];
 
 #define EVENT_SCR 20
 #define EVENT_KBD 21
 
 static int  Event_kbd = EVENT_KBD;
-
 static FILE* F_scr = 0;
 static int   Chan_scr = 0;
 
 static char Input_text[133];
 static char Output_text[133];
 static int  End = 0;
-//static int  Old_priority = 4;
 static SrvConnect* SrvConnect_of_histo = 0;
 
 static int LogFile_active = 1;

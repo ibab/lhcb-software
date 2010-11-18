@@ -1,9 +1,9 @@
-/*
-upic_message.c
-Created           : 23-OCT-1989 by Christian Arnault
-*/
-
+/*---------------------------------------------------------------------------
+ *   upic_message.c
+ *   Created           : 23-OCT-1989 by Christian Arnault
+ */
 //---------------------------------------------------------------------------
+#include "RTL/strdef.h"
 #include "UPI/upidef.h"
 #include "SCR/scr.h"
 #include <cstdio>
