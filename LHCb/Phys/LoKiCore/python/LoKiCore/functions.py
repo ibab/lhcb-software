@@ -1030,8 +1030,9 @@ def vct_from_list  ( lst , *args ) :
 
 
 # =============================================================================
-## @see LoKi::Functors::dump 
-dump = LoKi.Functors.Dump()
+## @see LoKi::Dump
+Dump = LoKi.Dump
+dump = LoKi.Dump ()
 
 # =============================================================================
 if '__main__' == __name__ :

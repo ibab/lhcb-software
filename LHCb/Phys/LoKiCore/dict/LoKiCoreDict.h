@@ -28,6 +28,7 @@
 #include "LoKi/iTree.h"
 #include "LoKi/IDecayNode.h"
 #include "LoKi/Listener.h"
+#include "LoKi/Dump.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

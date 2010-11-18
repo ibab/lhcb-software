@@ -40,9 +40,9 @@
   <!--function name = "LoKi::Assert"          /-->
   <function name = "LoKi::Print::toString" />
   
-  <class name    = "LoKi::Functors::Dump"      />
+  <class name    = "LoKi::Dump"            />
   
-  <class name    = "Bender::Welcome"      />
+  <class name    = "Bender::Welcome"       />
   
   <class name = "LoKi::Hybrid::ICoreFactory"               />
   <class name = "LoKi::Hybrid::ICoreAntiFactory"           />

@@ -25,6 +25,7 @@
 #include "LoKi/select.h"
 #include "LoKi/Algs.h"
 #include "LoKi/Primitives.h"
+#include "LoKi/Dump.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -1732,10 +1733,35 @@ namespace LoKi
       typedef typename Pipe_::result_type                        result_type ;
     public:
       // =====================================================================
-      /// the constructor from the stopper 
-      Dump_ ( std::ostream& stream = std::cout ) 
+      /// the constructor 
+      Dump_ ( const std::string& open   = ""        ,
+              const std::string& close  = "\n"      , 
+              std::ostream&      stream = std::cout ) 
         : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
         , m_stream ( stream )
+        , m_dump   ( open , close ) 
+      {}
+      /// the constructor 
+      Dump_ ( std::ostream&      stream        ,
+              const std::string& open   = ""   ,
+              const std::string& close  = "\n" )  
+        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        , m_stream ( stream )
+        , m_dump   ( open , close ) 
+      {}
+      /// the constructor from the stopper 
+      Dump_ ( std::ostream&      stream   ,
+              const LoKi::Dump&  dump     )  
+        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        , m_stream ( stream )
+        , m_dump   ( dump   ) 
+      {}
+      /// the constructor from the stopper 
+      Dump_ ( const LoKi::Dump&  dump               , 
+              std::ostream&      stream = std::cout ) 
+        : LoKi::Functor<std::vector<TYPE> , std::vector<TYPE> >() 
+        , m_stream ( stream )
+        , m_dump   ( dump   ) 
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Dump_ () {}
@@ -1749,8 +1775,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual stream 
-      std::ostream& m_stream ;                             // the actual stream 
+      /// the stream 
+      std::ostream& m_stream ;                                   // the stream      
+      /// open/close 
+      LoKi::Dump    m_dump   ;                                   // open/close
       // ======================================================================
     } ;
     // ========================================================================
@@ -1761,9 +1789,10 @@ namespace LoKi
     typename Dump_<TYPE>::result_type 
     Dump_<TYPE>::operator() ( typename Dump_<TYPE>::argument a ) const 
     {
+      m_stream << m_dump.open  () ;
       Gaudi::Utils::toStream 
         ( a.begin() , a.end () , m_stream , "[ " , " ]" , " ,\n " ) ;
-      m_stream << std::endl ;
+      m_stream << m_dump.close () ;
       return a ;
     }
     // ========================================================================
@@ -1772,13 +1801,6 @@ namespace LoKi
     template <>
     Dump_<double>::result_type 
     Dump_<double>::operator() ( Dump_<double>::argument a ) const ;
-    // ========================================================================
-    /** @class Dump
-     *  helper class to implement the dumping 
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2010-11-17
-     */
-    class GAUDI_API Dump {};
     // ========================================================================
   } //                                          end of namespace LoKi::Functors  
   // ==========================================================================

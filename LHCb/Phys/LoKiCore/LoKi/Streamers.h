@@ -443,9 +443,9 @@ operator>> ( const LoKi::Functor< void, std::vector<TYPE> >& pipe ,
 template <class TYPE>
 inline  LoKi::FunctorFromFunctor< std::vector<TYPE> , std::vector<TYPE> >
 operator>> ( const LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> >& pipe , 
-             const LoKi::Functors::Dump& /* dump */ ) 
+             const LoKi::Dump&                                             dump  ) 
 {
-  return pipe >> LoKi::Functors::Dump_<TYPE>() ;
+  return pipe >> LoKi::Functors::Dump_<TYPE>( dump ) ;
 }
 // ============================================================================
 // dumping to the stream 
@@ -453,9 +453,9 @@ operator>> ( const LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> >& pipe 
 template <class TYPE>
 inline  LoKi::FunctorFromFunctor< void, std::vector<TYPE> >
 operator>> ( const LoKi::Functor< void, std::vector<TYPE> >& pipe , 
-             const LoKi::Functors::Dump& /* dump */ ) 
+             const LoKi::Dump&                               dump ) 
 {
-  return pipe >> LoKi::Functors::Dump_<TYPE>() ;
+  return pipe >> LoKi::Functors::Dump_<TYPE>( dump ) ;
 }
 
 // ============================================================================

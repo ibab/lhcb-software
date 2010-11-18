@@ -2,16 +2,13 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
+// LoKiCore 
 // ============================================================================
-#include "GaudiKernel/ToStream.h"
-// ============================================================================
-// local
-// ============================================================================
-#include "LoKi/Filters.h"
+#include "LoKi/Dump.h"
 // ============================================================================
 /** @file 
- *  Implementation file for classes form namesapce LoKi::Functors 
+ *  Implementation fiel for class LoKi::Dump
+ *  @see LoKi::Dump
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -25,24 +22,22 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *  @author Vanya Belyaev Ivan.BElyaev@cern.ch
- *  @date 2010-11-17 
- *
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-11-18
+ *  
  *                    $Revision$
  *  Last modification $Date$
  *                 by $Author$
  */
 // ============================================================================
-template <>
-LoKi::Functors::Dump_<double>::result_type 
-LoKi::Functors::Dump_<double>::operator() 
-  ( LoKi::Functors::Dump_<double>::argument a ) const 
-{
-  m_stream << m_dump.open  () ;
-  Gaudi::Utils::toStream ( a , m_stream ) ;
-  m_stream << m_dump.close () ;
-  return a ;
-}
+LoKi::Dump::Dump
+( const std::string& open  ,
+  const std::string& close )
+  : m_open  ( open ) 
+  , m_close ( close ) 
+{}
+// ============================================================================
+LoKi::Dump::~Dump(){}
 // ============================================================================
 // The END 
 // ============================================================================

@@ -659,8 +659,8 @@ namespace LoKi
       // __rshift__
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
       __rshift__ 
-      ( const  Map& fun , const LoKi::Functors::Dump& /* dump */ ) 
-      { return fun >> LoKi::Functors::Dump_<double> () ; }
+      ( const  Map& fun , const LoKi::Dump& dump  ) 
+      { return fun >> LoKi::Functors::Dump_<double> ( dump ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -791,8 +791,8 @@ namespace LoKi
       // __rshift__
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
-      ( const Pipe& fun , const LoKi::Functors::Dump& /* dump */ ) 
-      { return fun >> LoKi::Functors::Dump_<TYPE> () ; }
+      ( const Pipe& fun , const LoKi::Dump& dump  ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1076,8 +1076,8 @@ namespace LoKi
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
-      ( const Source& fun , const LoKi::Functors::Dump& /* dump */ ) 
-      { return fun >> LoKi::Functors::Dump_<TYPE> () ; }
+      ( const Source& fun , const LoKi::Dump& dump  ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
       // ======================================================================
     public:
       // ======================================================================
