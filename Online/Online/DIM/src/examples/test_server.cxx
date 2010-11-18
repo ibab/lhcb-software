@@ -53,9 +53,21 @@ class CmndServ : public DimCommand, public DimTimer
 			index++;
 		}
 	}
+
 public :
 	CmndServ() : DimCommand("TEST/CMND","C"), 
 				 servstr("TEST/STRVAL","empty") {};
+/*
+	void handleIt()
+	{
+		int index = 0;
+		char **services;
+		dim_print_date_time();
+		cout << "Command " << getString() << " received" << endl;
+		cout << "time: "<<getTimestamp()<<" millies: "<<getTimestampMillisecs()<<endl;
+		servstr.updateService(getString()); 
+	}
+*/
 };
 
 /*
@@ -174,6 +186,13 @@ int main()
 	while(1)
 	{
 		sleep(5);
+/*
+		while(cmdsvr.hasNext())
+		{
+			cmdsvr.getNext();
+			cmdsvr.handleIt();
+		}
+*/
 		s1 = "hello1";
 		if(!boolval)
 			boolval = 1;

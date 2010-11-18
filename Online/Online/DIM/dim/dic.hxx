@@ -125,7 +125,7 @@ protected :
 	char *itsFormat;
 	void *itsNolinkBuf;
 	int itsNolinkSize;
-	int secs, milisecs;
+	int secs, millisecs;
 };
 
 class DllExp DimStampedInfo : public DimInfo{
@@ -475,6 +475,10 @@ public :
 	int getServers();
 	int getServerServices(const char *serverName);
 	int getServerClients(const char *serverName);
+	int getServices(const char *serviceName, int timeout);
+	int getServers(int timeout);
+	int getServerServices(const char *serverName, int timeout);
+	int getServerClients(const char *serverName, int timeout);
 	int getNextService(char *&service, char *&format);
 	int getNextServer(char *&server, char *&node);
 	int getNextServer(char *&server, char *&node, int &pid);

@@ -22,6 +22,7 @@
 #define dis_set_quality dis_set_quality_
 #define dis_set_timestamp dis_set_timestamp_
 #define dis_selective_update_service dis_selective_update_service_
+#define dis_get_timestamp dis_get_timestamp_
 
 _DIM_PROTOE( int dis_start_serving,    (char *task_name) );
 _DIM_PROTOE( void dis_stop_serving,    () );
@@ -44,7 +45,7 @@ _DIM_PROTOE( void dis_send_service,    (unsigned service_id, int *buffer,
 				   int size) );
 _DIM_PROTOE( int dis_set_buffer_size,  (int size) );
 _DIM_PROTOE( void dis_set_quality,     (unsigned service_id, int quality) );
-_DIM_PROTOE( void dis_set_timestamp,     (unsigned service_id, 
+_DIM_PROTOE( int dis_set_timestamp,     (unsigned service_id, 
 					int secs, int millisecs) );
 _DIM_PROTOE( int dis_selective_update_service,   (unsigned service_id, 
 					int *client_id_list) );
@@ -60,5 +61,7 @@ _DIM_PROTOE( unsigned dis_add_service_dns,	(long dns_id, char *service_name, cha
 _DIM_PROTOE( unsigned dis_add_cmnd_dns,		(long dns_id, char *service_name, char *service_type,
 			       void (*usr_routine)(void*,void*,int*), long tag) );
 _DIM_PROTOE( int dis_get_n_clients,	(unsigned service_id) );
+_DIM_PROTOE( int dis_get_timestamp,     (unsigned service_id, 
+					int *secs, int *millisecs) );
 
 #endif

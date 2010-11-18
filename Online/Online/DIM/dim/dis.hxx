@@ -155,6 +155,10 @@ public :
 
 	DimService(const char *name, char *format, DimServiceHandler *handler);
 
+	DimService(const char *name, const char *format, void *structure, int size);
+
+	DimService(const char *name, const char *format, DimServiceHandler *handler);
+
 	DimService(DimServerDns *dns, const char *name, int &value);
 	DimService(DimServerDns *dns, const char *name, float &value);
 	DimService(DimServerDns *dns, const char *name, double &value);
@@ -165,6 +169,10 @@ public :
 	DimService(DimServerDns *dns, const char *name, char *format, void *structure, int size);
 
 	DimService(DimServerDns *dns, const char *name, char *format, DimServiceHandler *handler);
+
+	DimService(DimServerDns *dns, const char *name, const char *format, void *structure, int size);
+
+	DimService(DimServerDns *dns, const char *name, const char *format, DimServiceHandler *handler);
 
 	virtual ~DimService();
 
@@ -212,6 +220,7 @@ public :
 	char *getName();
 	int getTimeout(int clientId);
 	int getNClients();
+
 private :
 	char *itsName;
 	int itsId;
@@ -225,8 +234,9 @@ class DllExp CmndInfo : public SLLItem {
 	friend class DimCommand;
 	void *itsData;
 	int itsDataSize;
+	int secs, millisecs;
 public:
-	CmndInfo(void *data, int datasize);
+	CmndInfo(void *data, int datasize, int tsecs, int tmillisecs);
 	~CmndInfo();
 };
 
@@ -243,7 +253,16 @@ public :
 
 	DimCommand(DimServerDns *dns, const char *name, char *format, DimCommandHandler *handler);
 
+	DimCommand(const char *name, const char *format);
+
+	DimCommand(const char *name, const char *format, DimCommandHandler *handler);
+
+	DimCommand(DimServerDns *dns, const char *name, const char *format);
+
+	DimCommand(DimServerDns *dns, const char *name, const char *format, DimCommandHandler *handler);
+
 	int getNext();
+	int hasNext();
 	void *itsData;
 	int itsSize;
 	void *getData();
@@ -255,6 +274,8 @@ public :
 	char *getString();
 	int getSize();
 	char *getFormat();
+	int getTimestamp();
+	int getTimestampMillisecs();
 
 	virtual void commandHandler();
 
@@ -271,6 +292,8 @@ private :
 	CmndInfo *currCmnd;
 	SLList itsCmndList;
 	DimServerDns *itsDns;
+public:
+	int secs, millisecs;
 };
 
 class DllExp DimRpc

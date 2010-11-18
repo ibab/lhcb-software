@@ -15,7 +15,9 @@
 #	include <descrip.h>
 #	include <cfortran.h>
 #endif
-
+/*
+#define DEBUG
+*/
 #include <time.h>
 #ifdef VAX
 #include <timeb.h>
@@ -83,6 +85,8 @@ typedef struct serv {
 	int tid;
 	REQUEST *request_head;
 	DIS_DNS_CONN *dnsp;
+	int delay_delete;
+	int to_delete;
 } SERVICE;
 
 typedef struct reqp_ent {
@@ -142,6 +146,12 @@ static int Updating_service_list = 0;
 */
 static int Last_client;
 
+#ifdef DEBUG
+static int Debug_on = 1;
+#else
+static int Debug_on = 0;
+#endif
+
 _DIM_PROTO( static void dis_insert_request, (int conn_id, DIC_PACKET *dic_packet,
 				  int size, int status ) );
 _DIM_PROTO( int execute_service,	(int req_id) );
@@ -163,6 +173,16 @@ _DIM_PROTO( SERVICE *dis_hash_service_get_next, (int *start, SERVICE *prev, int 
 _DIM_PROTO( static unsigned do_dis_add_service_dns, (char *name, char *type, void *address, int size, 
 								   void (*user_routine)(), long tag, long dnsid ) );
 _DIM_PROTO( static DIS_DNS_CONN *create_dns, (long dnsid) );
+
+void dis_set_debug_on()
+{
+	Debug_on = 1;
+}
+
+void dis_set_debug_off()
+{
+	Debug_on = 0;
+}
 
 void dis_no_threads()
 {
@@ -273,6 +293,8 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 	new_serv->quality = 0;
 	new_serv->user_secs = 0;
 	new_serv->tid = 0;
+	new_serv->delay_delete = 0;
+	new_serv->to_delete = 0;
 	dnsp = dis_find_dns(dnsid);
 	if(!dnsp)
 		dnsp = create_dns(dnsid);
@@ -431,6 +453,8 @@ static unsigned do_dis_add_cmnd_dns( char *name, char *type, void (*user_routine
 	new_serv->registered = 0;
 	new_serv->quality = 0;
 	new_serv->user_secs = 0;
+	new_serv->delay_delete = 0;
+	new_serv->to_delete = 0;
 	service_id = id_get((void *)new_serv, SRC_DIS);
 	new_serv->id = service_id;
 	dnsp = dis_find_dns(dnsid);
@@ -539,7 +563,7 @@ static int get_format_data(FORMAT_STR *format_data, char *def)
 					break;
 				case 'f':
 				case 'F':
-					format_data->par_bytes = SIZEOF_LONG;
+					format_data->par_bytes = SIZEOF_FLOAT;
 					format_data->flags |= SWAPL;
 #ifdef vms      	
 					format_data->flags |= IT_IS_FLOAT;
@@ -1419,6 +1443,7 @@ void execute_command(SERVICE *servp, DIC_PACKET *packet)
 		}
 	}
 
+	dis_set_timestamp(servp->id, 0, 0);
 	if(servp->user_routine != 0)
 	{
 		format = vtohl(packet->format);
@@ -1521,9 +1546,12 @@ int do_update_service(unsigned service_id, int *client_ids)
 {
 	register REQUEST *reqp;
 	register SERVICE *servp;
+	REQUEST_PTR *reqpp;
+	CLIENT *clip;
 	register int found = 0;
-	int to_delete = 0, more;
+	int to_delete = 0, more, conn_id;
 	char str[128];
+	int release_request();
 
 	DISABLE_AST
 	if(!service_id)
@@ -1544,27 +1572,47 @@ int do_update_service(unsigned service_id, int *client_ids)
 		ENABLE_AST
 		return(found);
 	}
+	servp->delay_delete = 1;
 	reqp = servp->request_head;
 	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 		(DLL *) reqp)) ) 
 	{
-		reqp->delay_delete = 1;
+if(Debug_on)
+{
+dim_print_date_time_millis();
+printf("Updating %s (id = %ld, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %08lX)\n",
+	   servp->name, (long)service_id, (long)servp, 
+	   Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node, reqp->req_id, (long)reqp);
+}
+		if(check_client(reqp, client_ids))
+			reqp->delay_delete = 1;
 	}
 	ENABLE_AST
+	{
+	DISABLE_AST
 	reqp = servp->request_head;
 	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 		(DLL *) reqp)) ) 
 	{
+		if(reqp->delay_delete && ((reqp->type & 0xFFF) != COMMAND))
+		{
 		if(check_client(reqp, client_ids))
 		{
 			if( (reqp->type & 0xFFF) != TIMED_ONLY ) 
 			{
-				DISABLE_AST
+			  /*				DISABLE_AST
+			   */
 				execute_service(reqp->req_id);
 				found++;
 				ENABLE_AST
+				{
+				DISABLE_AST
+				}
 			}
 		}
+		}
+	}
+	ENABLE_AST
 	}
 	{
 	DISABLE_AST
@@ -1572,9 +1620,12 @@ int do_update_service(unsigned service_id, int *client_ids)
 	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 		(DLL *) reqp)) ) 
 	{
-		reqp->delay_delete = 0;
-		if(reqp->to_delete)
-			to_delete = 1;
+		if(check_client(reqp, client_ids))
+		{
+			reqp->delay_delete = 0;
+			if(reqp->to_delete)
+				to_delete = 1;
+		}
 	}
 	ENABLE_AST
 	}
@@ -1588,17 +1639,44 @@ int do_update_service(unsigned service_id, int *client_ids)
 			while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 				(DLL *) reqp)) ) 
 			{
-				if(reqp->to_delete)
+				if(reqp->to_delete & 0x1)
 				{
 					more = 1;
 					reqp->to_delete = 0;
 					release_conn(reqp->conn_id, 1, 0);
 					break;
 				}
+				else if(reqp->to_delete & 0x2)
+				{
+					more = 1;
+					reqp->to_delete = 0;
+					reqpp = reqp->reqpp;
+					conn_id = reqp->conn_id;
+					release_request(reqp, reqpp, 1);
+					clip = find_client(conn_id);
+					if(clip)
+					{
+						if( dll_empty((DLL *)clip->requestp_head) ) 
+						{
+							release_conn( conn_id, 0, 0);
+						}
+					}
+					break;
+				}
 			}
 		}while(more);
 		ENABLE_AST
 	}
+	{
+	DISABLE_AST
+	servp->delay_delete = 0;
+	if(servp->to_delete)
+	{
+		dis_remove_service(servp->id);
+	}
+	ENABLE_AST
+	}
+
 	return(found);
 }
 
@@ -1693,10 +1771,16 @@ void dis_set_quality( unsigned serv_id, int quality )
 	ENABLE_AST
 }
 
-void dis_set_timestamp( unsigned serv_id, int secs, int millisecs )
+int dis_set_timestamp( unsigned serv_id, int secs, int millisecs )
 {
 	register SERVICE *servp;
 	char str[128];
+#ifdef WIN32
+	struct timeb timebuf;
+#else
+	struct timeval tv;
+	struct timezone *tz;
+#endif
 
 	DISABLE_AST
 	if(!serv_id)
@@ -1704,25 +1788,80 @@ void dis_set_timestamp( unsigned serv_id, int secs, int millisecs )
 		sprintf(str,"Set Timestamp - Invalid service id");
 		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
 	    ENABLE_AST
-		return;
+		return(0);
 	}
 	servp = (SERVICE *)id_get_ptr(serv_id, SRC_DIS);
 	if(!servp)
 	{
 	    ENABLE_AST
-		return;
+		return(0);
 	}
 	if(servp->id != (int)serv_id)
 	{
 	    ENABLE_AST
-		return;
+		return(0);
 	}
-	servp->user_secs = secs;
+	if(secs == 0)
+	{
+#ifdef WIN32
+			ftime(&timebuf);
+			servp->user_secs = (int)timebuf.time;
+			servp->user_millisecs = timebuf.millitm;
+#else
+			tz = 0;
+		    gettimeofday(&tv, tz);
+			servp->user_secs = tv.tv_sec;
+			servp->user_millisecs = tv.tv_usec / 1000;
+#endif
+	}
+	else
+	{
+		servp->user_secs = secs;
 /*
-	servp->user_millisecs = (millisecs & 0xffff);
+		servp->user_millisecs = (millisecs & 0xffff);
 */
-	servp->user_millisecs = millisecs;
+		servp->user_millisecs = millisecs;
+	}
 	ENABLE_AST
+	return(1);
+}
+
+int dis_get_timestamp( unsigned serv_id, int *secs, int *millisecs )
+{
+	register SERVICE *servp;
+	char str[128];
+
+	DISABLE_AST
+	if(!serv_id)
+	{
+		sprintf(str,"Get Timestamp - Invalid service id");
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+	    ENABLE_AST
+		return(0);
+	}
+	servp = (SERVICE *)id_get_ptr(serv_id, SRC_DIS);
+	if(!servp)
+	{
+	    ENABLE_AST
+		return(0);
+	}
+	if(servp->id != (int)serv_id)
+	{
+	    ENABLE_AST
+		return(0);
+	}
+	if(servp->user_secs)
+	{
+		*secs = servp->user_secs;
+		*millisecs = servp->user_millisecs;
+	}
+	else
+	{
+		*secs = 0;
+		*millisecs = 0;
+	}
+	ENABLE_AST
+	return(1);
 }
 
 void dis_send_service(unsigned service_id, int *buffer, int size)
@@ -1804,6 +1943,12 @@ int dis_remove_service(unsigned service_id)
 	}
 	if(servp->id != (int)service_id)
 	{
+		ENABLE_AST
+		return(found);
+	}
+	if(servp->delay_delete)
+	{
+		servp->to_delete = 1;
 		ENABLE_AST
 		return(found);
 	}
@@ -2043,6 +2188,7 @@ CLIENT *check_delay_delete(int conn_id)
 	register REQUEST_PTR *reqpp;
 	register CLIENT *clip;
 	register REQUEST *reqp;
+	int found = 0;
 
 	DISABLE_AST;
 	clip = find_client(conn_id);
@@ -2056,12 +2202,15 @@ CLIENT *check_delay_delete(int conn_id)
 			if(reqp->delay_delete)
 			{
 				reqp->to_delete = 1;
-				ENABLE_AST;
-				return((CLIENT *)-1);
+				found = 1;
 			}
 		}
 	}
 	ENABLE_AST;
+	if(found)
+	{
+		return((CLIENT *)-1);
+	}
 	return(clip);
 }
 
@@ -2161,9 +2310,16 @@ int find_release_request(int conn_id, int service_id)
 			reqp = (REQUEST *) reqpp->reqp;
 			if(reqp->service_id == service_id)
 			{
-				auxp = reqpp->prev;
-				release_request(reqp, reqpp, 0);
-				reqpp = auxp;
+				if(reqp->delay_delete)
+				{
+					reqp->to_delete += 0x2;
+				}
+				else
+				{
+					auxp = reqpp->prev;
+					release_request(reqp, reqpp, 0);
+					reqpp = auxp;
+				}
 			}
 		}
 		if( dll_empty((DLL *)clip->requestp_head) ) 
@@ -2214,8 +2370,8 @@ static int release_conn(int conn_id, int print_flg, int dns_flag)
 	CLIENT *clip;
 	int do_exit_handler();
 
-	if(print_flg){}
 	DISABLE_AST
+	if(print_flg){}
 	if(dns_flag)
 	{
 		recv_dns_dis_rout( conn_id, 0, 0, STA_DISC );
@@ -2235,17 +2391,17 @@ static int release_conn(int conn_id, int print_flg, int dns_flag)
 	clip = check_delay_delete(conn_id);
 	if(clip != (CLIENT *)-1)
 	{
-	if( Client_exit_user_routine != 0 ) 
-	{
-		releasing++;
-		Curr_conn_id = conn_id;
-		do_exit_handler(conn_id);
-		releasing--;
-	}
-	if(!releasing)
-	{
-		release_all_requests(conn_id, clip);
-	}
+		if( Client_exit_user_routine != 0 ) 
+		{
+			releasing++;
+			Curr_conn_id = conn_id;
+			do_exit_handler(conn_id);
+			releasing--;
+		}
+		if(!releasing)
+		{
+			release_all_requests(conn_id, clip);
+		}
 	}
 	ENABLE_AST
 	return(1);
@@ -2918,9 +3074,11 @@ FCALLSCSUB3(	 dis_send_service, DIS_SEND_SERVICE, dis_send_service,
 				 INT, PVOID, INT)
 FCALLSCSUB2(	 dis_set_quality, DIS_SET_QUALITY, dis_set_quality,
                  INT, INT)
-FCALLSCSUB3(	 dis_set_timestamp, DIS_SET_TIMESTAMP, dis_set_timestamp,
+FCALLSCSUB3(INT, dis_set_timestamp, DIS_SET_TIMESTAMP, dis_set_timestamp,
                  INT, INT, INT)
 FCALLSCFUN2(INT, dis_selective_update_service, DIS_SELECTIVE_UPDATE_SERVICE, 
-					dis_selective_update_service,
+				 dis_selective_update_service,
 				 INT, PINT)
+FCALLSCSUB3(INT, dis_get_timestamp, DIS_GET_TIMESTAMP, dis_get_timestamp,
+                 INT, PINT, PINT)
 #endif

@@ -117,12 +117,12 @@ typedef int64_t	longlong;
 #include <signal.h>
 #include <unistd.h>
 
-#define DISABLE_AST     DIM_LOCK ; sigset_t set, oset; sigemptyset(&set); \
+#define DISABLE_AST     sigset_t set, oset; sigemptyset(&set);\
 						sigaddset(&set,SIGIO);\
 						sigaddset(&set,SIGALRM);\
-						sigprocmask(SIG_BLOCK,&set,&oset);
-
-#define ENABLE_AST      sigprocmask(SIG_SETMASK,&oset,0); DIM_UNLOCK ;
+						sigprocmask(SIG_BLOCK,&set,&oset);\
+						DIM_LOCK
+#define ENABLE_AST      DIM_UNLOCK sigprocmask(SIG_SETMASK,&oset,0);
 
 #ifdef VxWorks
 #define DIM_LOCK taskLock();
@@ -199,6 +199,8 @@ _DIM_PROTOE( int dim_set_write_buffer_size,		(int bytes) );
 _DIM_PROTOE( int dim_get_write_buffer_size,		() );
 _DIM_PROTOE( int dim_set_read_buffer_size,		(int bytes) );
 _DIM_PROTOE( int dim_get_read_buffer_size,		() );
+_DIM_PROTOE( void dis_set_debug_on,		() );
+_DIM_PROTOE( void dis_set_debug_off,	() );
 
 #ifdef WIN32
 #define getpid _getpid

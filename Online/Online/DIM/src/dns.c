@@ -1255,8 +1255,8 @@ void get_new_dns_server_info(int *tag, int **bufp, int *size, int *first_time)
 	int find_services();
 */
 
-	if(tag){}
 	DISABLE_AST
+	if(tag){}
  	for( i = 0; i< Curr_N_Conns; i++ )
 	{
 		if( Dns_conns[i].src_type == SRC_DIS )
@@ -1640,12 +1640,27 @@ int find_services(char *wild_name)
 
 	int i;
 	RED_DNS_SERVICE *servp;
+	DNS_SERVICE *servp1;
 	char tmp[MAX_NAME], *ptr, *ptr1, *dptr, *dptr1;
 	int match, count = 0;
 
 	Service_info_list = (DNS_SERVICE **)
 		malloc(Curr_n_services*sizeof(DNS_SERVICE *));
 
+	if(!strchr(wild_name, '*'))
+	{
+		servp1 = service_exists(wild_name);
+		if(servp1)
+		{
+			if(servp1->state == 1)
+			{
+				Service_info_list[count] = (DNS_SERVICE *)servp1;
+				count++;
+				return 1;
+			}
+		}
+		return 0;
+	}
 	for( i = 0; i < MAX_HASH_ENTRIES; i++ ) 
 	{
 		servp = Service_hash_table[i];
@@ -1729,12 +1744,25 @@ int find_services(char *wild_name)
 void set_rpc_info(int *tag, char *buffer, int *size)
 {
 	char aux[MAX_NAME], rpcaux[MAX_NAME+32], *ptr, *rpcptr;
-    int i, n, rpc, id[2];
+    int i, n, rpc, id[2], conn_id;
 	DNS_SERVICE *servp, *aux_servp;
 
 	if(size){}
 	if(tag){}
+	if(Debug)
+	{
+		dim_print_date_time();
+		conn_id = dis_get_conn_id();
+		printf(" Got Browse Request <%s> from conn: %d %s@%s\n", buffer, conn_id,
+			Net_conns[conn_id].task,Net_conns[conn_id].node);
+	}
 	n = find_services(buffer);
+	if(Debug)
+	{
+		dim_print_date_time();
+		conn_id = dis_get_conn_id();
+		printf(" Browse Request <%s> found %d services\n", buffer, n);
+	}
 	if(!Rpc_info_size)
 	{
 		Rpc_info = malloc(MAX_NAME*(n+1)*2);

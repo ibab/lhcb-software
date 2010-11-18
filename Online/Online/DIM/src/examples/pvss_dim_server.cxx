@@ -48,6 +48,39 @@ class RecvCommandComplex : public DimCommand
 public :
 	RecvCommandComplex(char *name) : DimCommand(name,"I:1;C:1;I:1;F:1;C") {};
 };
+/*
+typedef struct{
+	char oper;
+	char data[128];
+}MEMCMND;
+
+typedef struct{
+	int code;
+	float data[128];
+}MEMDATA;
+
+DimService *TestMem[1010];
+MEMDATA TestMemData;
+
+class RecvCommandMem : public DimCommand
+{
+	int itsIndex;
+	void commandHandler()
+	{
+		MEMCMND *complexData;
+
+		complexData = (MEMCMND *)getData();
+		cout << "Command " << complexData->oper
+			 << " received " << complexData->data[0] << endl;
+		TestMemData.code = 1;
+		TestMemData.data[0] = 123;
+		TestMemData.data[1] = 456;
+		TestMem[itsIndex]->updateService();
+	}
+public :
+	RecvCommandMem(char *name, int index) : DimCommand(name,"C:1;C"),itsIndex(index) {};
+};
+*/
 
 class RpcService : public DimRpc
 {
@@ -108,7 +141,23 @@ int main()
 
 	RecvCommand recvCommand("SIMPLE_COMMAND");
 	RecvCommandComplex recvCommandComplex("COMPLEX_COMMAND");
+/*
+	{
+	char tstr[128];
+	int i;
+	RecvCommandMem *rmem;
+//	TestMem = new DimService("TEST_MEM", "I:1;F", (void *)&TestMemData, sizeof(TestMemData)); 
+//	RecvCommandMem recvCommandMem("TEST_MEM_CMND");
 
+	for(i = 1; i <= 1000; i++)
+	{
+		sprintf(tstr,"TEST_MEM%04d",i);
+		TestMem[i] = new DimService(tstr, "I:1;F", (void *)&TestMemData, sizeof(TestMemData)); 
+		sprintf(tstr,"TEST_MEM_CMND%04d",i);
+		rmem = new RecvCommandMem(tstr, i);
+	}
+	}
+*/
 	RpcService rpc("RPC");
 
 	DimServer::start("PVSS_DIM_TEST");

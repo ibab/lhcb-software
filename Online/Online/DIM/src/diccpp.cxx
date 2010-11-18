@@ -96,13 +96,13 @@ int DimInfo::getTimestamp()
 {
 	int ret;
 
-	ret = dic_get_timestamp(itsId, &secs, &milisecs);
+	ret = dic_get_timestamp(itsId, &secs, &millisecs);
 	return(secs);
 }
 
 int DimInfo::getTimestampMillisecs()
 {
-	return(milisecs);
+	return(millisecs);
 }
 
 
@@ -693,13 +693,18 @@ DimBrowser::~DimBrowser()
 
 int DimBrowser::getServices(const char * serviceName) 
 {
+	return getServices(serviceName, 0);
+}
+
+int DimBrowser::getServices(const char * serviceName, int timeout) 
+{
 	char *str;
 
 //	DimRpcInfo rpc((char *)"DIS_DNS/SERVICE_INFO",(char *)"\0");
 //	rpc.setData((char *)serviceName);
 //	str = rpc.getString();
 	if(!browserRpc)
-		browserRpc = new DimRpcInfo((char *)"DIS_DNS/SERVICE_INFO",(char *)"\0");
+		browserRpc = new DimRpcInfo((char *)"DIS_DNS/SERVICE_INFO",timeout,(char *)"\0");
 	browserRpc->setData((char *)serviceName);
 	str = browserRpc->getString();	
 	if(itsData[0])
@@ -713,9 +718,14 @@ int DimBrowser::getServices(const char * serviceName)
 
 int DimBrowser::getServers() 
 {
+	return getServers(0);
+}
+
+int DimBrowser::getServers(int timeout) 
+{
 	char *str, *pid_str;
 	int size, totsize;
-	DimCurrentInfo srv((char *)"DIS_DNS/SERVER_LIST",(char *)"\0");
+	DimCurrentInfo srv((char *)"DIS_DNS/SERVER_LIST", timeout, (char *)"\0");
 	str = srv.getString();
 	size = strlen(str)+1;
 	totsize = srv.getSize();
@@ -735,14 +745,19 @@ int DimBrowser::getServers()
 	}
 	return(itsData[1]->getNTokens((char *)"|") +1); 
 }
-	
+
 int DimBrowser::getServerServices(const char *serverName) 
+{
+	return getServerServices(serverName, 0);
+}
+
+int DimBrowser::getServerServices(const char *serverName, int timeout) 
 {
 	char *str;
 	char *name = new char[strlen(serverName) + 20];
 	strcpy(name,(char *)serverName);
 	strcat(name,(char *)"/SERVICE_LIST");
-	DimCurrentInfo srv(name,(char *)"\0");
+	DimCurrentInfo srv(name, timeout, (char *)"\0");
 	delete[] name;
 	str = srv.getString();	
 	if(itsData[2])
@@ -754,13 +769,18 @@ int DimBrowser::getServerServices(const char *serverName)
 	return(itsData[2]->getNTokens((char *)"\n") + 1); 
 }
 
-int DimBrowser::getServerClients(const char *serverName) 
+int DimBrowser::getServerClients(const char *serverName)
+{
+	return getServerClients(serverName, 0);
+}
+
+int DimBrowser::getServerClients(const char *serverName, int timeout) 
 {
 	char *str;
 	char *name = new char[strlen(serverName) + 20];
 	strcpy(name,(char *)serverName);
 	strcat(name,(char *)"/CLIENT_LIST");
-	DimCurrentInfo srv(name,(char *)"\0");
+	DimCurrentInfo srv(name, timeout, (char *)"\0");
 	delete[] name;
 	str = srv.getString();	
 	if(itsData[3])

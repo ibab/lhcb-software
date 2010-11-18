@@ -102,6 +102,7 @@ static void command_routine( void *tagp, void *buf, int *size)
 	t = *(DimCommand **)tagp;
 	t->itsData = buf;
 	t->itsSize = *size;
+	t->secs = 0;
 	if( t->itsCommandHandler ) {
 		t->itsCommandHandler->itsCommand = t;
 		DimCore::inCallback = 2;
@@ -758,7 +759,7 @@ DimService::DimService(const char *name, char *format, void *structure, int size
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, 0, 0);
+	declareIt((char *)name, (char *)format, 0, 0);
 }
 
 DimService::DimService(const char *name, char *format, DimServiceHandler *handler)
@@ -766,7 +767,23 @@ DimService::DimService(const char *name, char *format, DimServiceHandler *handle
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, handler, 0);
+	declareIt((char *)name, (char *)format, handler, 0);
+}
+
+DimService::DimService(const char *name, const char *format, void *structure, int size)
+{
+	itsData = structure;
+	itsSize = size;
+	itsType = DisPOINTER;
+	declareIt((char *)name, (char *)format, 0, 0);
+}
+
+DimService::DimService(const char *name, const char *format, DimServiceHandler *handler)
+{
+	itsData = 0;
+	itsSize = 0;
+	itsType = DisPOINTER;
+	declareIt((char *)name, (char *)format, handler, 0);
 }
 
 // with Dns
@@ -824,7 +841,7 @@ DimService::DimService(DimServerDns *dns, const char *name, char *format, void *
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, 0, dns);
+	declareIt((char *)name, (char *)format, 0, dns);
 }
 
 DimService::DimService(DimServerDns *dns, const char *name, char *format, DimServiceHandler *handler)
@@ -832,12 +849,32 @@ DimService::DimService(DimServerDns *dns, const char *name, char *format, DimSer
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, handler, dns);
+	declareIt((char *)name, (char *)format, handler, dns);
 }
+
+
+DimService::DimService(DimServerDns *dns, const char *name, const char *format, void *structure, int size)
+{
+	itsData = structure;
+	itsSize = size;
+	itsType = DisPOINTER;
+	declareIt((char *)name, (char *)format, 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, const char *format, DimServiceHandler *handler)
+{
+	itsData = 0;
+	itsSize = 0;
+	itsType = DisPOINTER;
+	declareIt((char *)name, (char *)format, handler, dns);
+}
+
 
 DimService::~DimService()
 {
 	delete[] itsName;
+	if(itsDataSize)
+		delete[] (char *)itsData;
 //	if(itsTagId)
 //		id_free(itsTagId, SRC_DIS);
 	dis_remove_service( itsId );
@@ -1112,10 +1149,12 @@ int DimService::getNClients()
 }
 
 
-CmndInfo::CmndInfo(void *data, int datasize)
+CmndInfo::CmndInfo(void *data, int datasize, int tsecs, int tmillisecs)
 {
 	itsData = new char[datasize];
 	itsDataSize = datasize;
+	secs = tsecs;
+	millisecs = tmillisecs;
 	memcpy(itsData, data, datasize);
 }
 
@@ -1124,24 +1163,46 @@ CmndInfo::~CmndInfo()
 	delete[] (char *)itsData;
 }
 
+
 DimCommand::DimCommand(const char *name, char *format)
 {
-	declareIt( (char *)name, format, 0, 0);
+	declareIt( (char *)name, (char *)format, 0, 0);
 }
 
 DimCommand::DimCommand(const char *name, char *format, DimCommandHandler *handler)
 {
-	declareIt( (char *)name, format, handler, 0);
+	declareIt( (char *)name, (char *)format, handler, 0);
 }
 
 DimCommand::DimCommand(DimServerDns *dns, const char *name, char *format)
 {
-	declareIt( (char *)name, format, 0, dns);
+	declareIt( (char *)name, (char *)format, 0, dns);
 }
 
 DimCommand::DimCommand(DimServerDns *dns, const char *name, char *format, DimCommandHandler *handler)
 {
-	declareIt( (char *)name, format, handler, dns);
+	declareIt( (char *)name, (char *)format, handler, dns);
+}
+
+
+DimCommand::DimCommand(const char *name, const char *format)
+{
+	declareIt( (char *)name, (char *)format, 0, 0);
+}
+
+DimCommand::DimCommand(const char *name, const char *format, DimCommandHandler *handler)
+{
+	declareIt( (char *)name, (char *)format, handler, 0);
+}
+
+DimCommand::DimCommand(DimServerDns *dns, const char *name, const char *format)
+{
+	declareIt( (char *)name, (char *)format, 0, dns);
+}
+
+DimCommand::DimCommand(DimServerDns *dns, const char *name, const char *format, DimCommandHandler *handler)
+{
+	declareIt( (char *)name, (char *)format, handler, dns);
 }
 
 int DimCommand::getNext()
@@ -1159,6 +1220,17 @@ int DimCommand::getNext()
 		currCmnd = cmndptr;
 		itsData = currCmnd->itsData;
 		itsSize = currCmnd->itsDataSize;
+		secs = currCmnd->secs;
+		millisecs = currCmnd->millisecs;
+		return(1);
+	}
+	return(0);
+}
+
+int DimCommand::hasNext()
+{
+	if ((CmndInfo *)itsCmndList.getHead())
+	{
 		return(1);
 	}
 	return(0);
@@ -1209,10 +1281,28 @@ char *DimCommand::getFormat()
 	return itsFormat;
 }
 
+int DimCommand::getTimestamp()
+{
+	int ret;
+
+	if(secs == 0)
+		ret = dis_get_timestamp(itsId, &secs, &millisecs);
+	return(secs);
+}
+
+int DimCommand::getTimestampMillisecs()
+{
+	return(millisecs);
+}
+
 void DimCommand::commandHandler() 
 {
 	CmndInfo *cmndptr;
-	cmndptr = new CmndInfo(getData(), getSize());
+	int tsecs, tmillisecs;
+
+	tsecs = getTimestamp();
+	tmillisecs = getTimestampMillisecs();
+	cmndptr = new CmndInfo(getData(), getSize(), tsecs, tmillisecs);
 	itsCmndList.add(cmndptr);
 }
 
