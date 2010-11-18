@@ -217,10 +217,10 @@ _vd       = 'std::vector<double>'           ## std.vector ( 'double')
 #
 
 ## Hlt1 stuff 
-TrSELECTION = LoKi.Hlt1.TrSelection 
-TrREGISTER  = LoKi.Hlt1.TrRegister
-TrPUT       = LoKi.Hlt1.TrRegister
-TrINPUT     = LoKi.Hlt1.TrTESInput
+## TrSELECTION = LoKi.Hlt1.TrSelection 
+## TrREGISTER  = LoKi.Hlt1.TrRegister
+## TrPUT       = LoKi.Hlt1.TrRegister
+## TrINPUT     = LoKi.Hlt1.TrTESInput
 
 ## RvSELECTION = LoKi.Hlt1.RvSelection 
 ## RvREGISTER  = LoKi.Hlt1.RvRegister

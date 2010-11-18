@@ -116,12 +116,6 @@
 
   <!--
 
-  <class name    = "LoKi::Hlt1::Tool"                />
-  <class name    = "LoKi::Hlt1::TrackFunction"       />
-  <class name    = "LoKi::Hlt1::TrackBiFunction"     />
-  <class name    = "LoKi::Hlt1::MatchTVelo"          />
-  <class name    = "LoKi::Hlt1::TrackVertexFunction" />
-
   <class pattern   = "LoKi::HltBinders::HltBin*"      />
   <class pattern   = "LoKi::HltBinders::BinderFun*"   />
   <class pattern   = "LoKi::HltBinders::BinderValue*" />
