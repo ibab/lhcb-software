@@ -4,6 +4,8 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+!========================== MicroDSTAlgorithm v5r1 2010-11-18 ===============
+
 ! 2010-11-18 - Juan Palacios
  - src/CopyParticle2LHCbIDs.h, src/CopyParticle2LHCbIDs.cpp
   . Map now placed in <OutputPrefix>/Particle2LHCbIDMap.
