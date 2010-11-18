@@ -21,8 +21,8 @@ namespace DaVinci {
  *  place a Particle->std::vector<LHCb::LHCbID> map on the TES.
  *
  *  Property <b>FullDecayTree</b> extends this to all the decay products of 
- *  each input particle. The maps are places in a TES location obtained by
- *  replacing "Particles" in each <b>InputLocations</b> "Particle2LHCbIDMap".
+ *  each input particle. The maps are places in a TES location obtained from 
+ *  <OutputPrefix>/Particle2LHCbIDMap.
  *
  *  @author Juan Palacios
  *  @date   2010-08-18
@@ -42,16 +42,17 @@ private:
 
   void executeLocation(const std::string& particleLocation);
 
-  void storeLHCbIDs(const LHCb::Particle* part,
-                    DaVinci::Map::Particle2LHCbIDs* p2LHCbID) ;
+  void storeLHCbIDs(const LHCb::Particle* part) ;
 
 private:
+
+  std::string m_outputLocation;
 
   bool m_fullTree;
 
   ITriggerTisTos* m_iTisTos;
 
-
+  DaVinci::Map::Particle2LHCbIDs* m_p2LHCbID;
   
 
 };
