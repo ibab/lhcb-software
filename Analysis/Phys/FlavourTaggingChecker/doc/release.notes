@@ -6,6 +6,13 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-11-18 - Marc Grabalosa
+ -src/BTaggingAnalysis.cpp
+  . added variables to study SS (deta, dphi, dQ)
+ -options	
+  . BTaggingAnalysis input in TaggingParticles
+ -in /root (bug fixed for ModTime)
+  
 ! 2010-11-16 - Juan Palacios
  - src/TaggingUtilsChecker.cpp
   . "and" -> "&&" to please windows.
