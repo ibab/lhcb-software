@@ -323,17 +323,22 @@ namespace Hlt
   // ==========================================================================
   /// Definition of vector container type for Stage
   typedef Hlt::Stage::Container Stages;
-  /// output operatior 
-  inline std::ostream& operator<<(std::ostream& str, const Stage& obj) 
-  {
-    return obj.fillStream(str);
-  }
   // ==========================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
-// #include "Event/HltCandidate.h"
-// #include "Event/HltMultiTrack.h"
-// #include "Event/HltL0DiMuonCandidate.h"
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    /// print-out 
+    GAUDI_API 
+    std::ostream& toStream ( const Hlt::Stage* c , std::ostream& s ) ;
+    // ========================================================================
+  } //                                            end of namespace Gaudi::Utils
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
 // ============================================================================
 namespace Hlt 
 {
@@ -600,21 +605,19 @@ namespace Hlt
     return _info(key, default_value);
   }
   // ==========================================================================
-} //                                                       end of namespace Hlt 
-// ============================================================================
-namespace Gaudi
-{
-  // ==========================================================================
-  namespace Utils 
+  /// output operatoor 
+  inline std::ostream& operator<<(std::ostream& str, const Stage& obj) 
   {
-    // ========================================================================
-    /// print-out 
-    GAUDI_API 
-    std::ostream& toStream ( const Hlt::Stage* c , std::ostream& s ) ;
-    // ========================================================================
-  } //                                            end of namespace Gaudi::Utils
+    return obj .  fillStream ( str ) ;
+  }
+  /// output operatoor 
+  inline std::ostream& operator<<(std::ostream& str, const Stage* obj) 
+  {
+    if ( 0 == obj ) { return str << "<NULL>" ;}
+    return obj -> fillStream ( str ) ;
+  }
   // ==========================================================================
-} //                                                     end of namespace Gaudi
+} //                                                       end of namespace Hlt 
 // ============================================================================
 //                                                                      The END 
 // ============================================================================

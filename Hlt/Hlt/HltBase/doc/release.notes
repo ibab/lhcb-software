@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-11-18 - Vanya Belyaev
+ - improve printout a little bit 
+
 ! 2010-11-17 - Vanya Belyaev
  - add printout utils 
 

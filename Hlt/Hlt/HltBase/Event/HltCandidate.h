@@ -209,12 +209,26 @@ namespace Hlt
   /// Definition of vector container type for Candidate
   typedef Hlt::Candidate::Container Candidates;
   // ==========================================================================
-  inline std::ostream& operator<< (std::ostream& str, const Candidate& obj)
-  {
-    return obj.fillStream(str);
-  }
-  // ==========================================================================
 } //                                                       end of namespace Hlt 
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Utils 
+  {
+    // ========================================================================
+    /// print-out 
+    GAUDI_API 
+    std::ostream& toStream ( const Hlt::Candidate* c , std::ostream& s ) ;
+    /// print-out 
+    GAUDI_API 
+    std::ostream& toStream ( const Hlt::Stage* c     , std::ostream& s ) ;
+    // ========================================================================
+  } //                                            end of namespace Gaudi::Utils
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
+// ============================================================================
+// HltBase 
 // ============================================================================
 #include "Event/HltStage.h"
 // ============================================================================
@@ -354,21 +368,19 @@ namespace Hlt
     return _stage->get<Hlt::Candidate> () ;
   }
   // ==========================================================================
-} //                                                       end of namespace Hlt
-// ============================================================================
-namespace Gaudi
-{
-  // ==========================================================================
-  namespace Utils 
+  // printout 
+  inline std::ostream& operator<< (std::ostream& str, const Candidate& obj)
   {
-    // ========================================================================
-    /// print-out 
-    GAUDI_API 
-    std::ostream& toStream ( const Hlt::Candidate* c , std::ostream& s ) ;
-    // ========================================================================
-  } //                                            end of namespace Gaudi::Utils
+    return obj .  fillStream ( str ) ;
+  }
+  // printout 
+  inline std::ostream& operator<< (std::ostream& str, const Candidate* obj)
+  {
+    if ( 0 == obj ) { return str << "<NULL>" ;}
+    return obj -> fillStream ( str ) ;
+  }
   // ==========================================================================
-} //                                                     end of namespace Gaudi
+} //                                                       end of namespace Hlt
 // ============================================================================
 // the END 
 // ============================================================================

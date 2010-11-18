@@ -16,7 +16,7 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/VectorMap.h"
-#include "GaudiKernel/ToStream.h"
+// #include "GaudiKernel/ToStream.h"
 // =============================================================================
 namespace Hlt
 {
@@ -229,5 +229,8 @@ inline std::string Cache::toString() const {
 // =============================================================================
 
 } //  Hlt
-
+// =============================================================================
+// The END 
+// =============================================================================
 #endif /* HltEvent_CACHE_H_ */
+// =============================================================================

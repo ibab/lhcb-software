@@ -2,13 +2,14 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/ToStream.h"
-// ============================================================================
 // HltBase 
 // ============================================================================
 #include "Event/HltCandidate.h"
+#include "Event/HltStage.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 /** @file  Candidate.cpp
  *  The implementation of class Htl::Candidate 
@@ -79,14 +80,14 @@ bool Hlt::Candidate::hasStage ( const Hlt::Stage* stage ) const
 // ============================================================================
 std::ostream& Hlt::Candidate::fillStream(std::ostream& s) const
 {
-  s << "Hlt::Candidate : " ;
+  s << "Hlt::Candidate/" << (const void*)this << " : " ;
   //
   Gaudi::Utils::toStream ( m_stages.begin () , 
                            m_stages.end   () , s , 
-                           " Stages: [" , "]" , " ,\n "   ) ;  
+                           "\n\tStages: [ " , "] " , " ,\n\t\t  "   ) ;  
   Gaudi::Utils::toStream ( m_workers.begin () , 
                            m_workers.end   () , s , 
-                           "\n Workers: [" , "]" , ","    ) ;
+                           "\n\tWorkers: [" , "]" , ","    ) ;
   return s << std::endl ;
 }
 // ============================================================================

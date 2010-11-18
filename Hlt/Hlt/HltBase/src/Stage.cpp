@@ -2,14 +2,14 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/ToStream.h"
-// ============================================================================
 // HltBase 
 // ============================================================================
 #include "Event/HltStage.h"
 #include "Event/HltCandidate.h"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class Htl::Stage 
@@ -108,22 +108,22 @@ void Hlt::Stage::_unlock (const INamedInterface* locker)
 std::ostream& Hlt::Stage::fillStream(std::ostream& s) const 
 {
   if (is<LHCb::Track> ())
-    s << "Track " << get<LHCb::Track> ();
+    s << "Track/"             << get<LHCb::Track>            () ;
   else  if (is<LHCb::RecVertex> ())
-    s << "RecVertex " << get<LHCb::RecVertex> ();
+    s << "RecVertex/"         << get<LHCb::RecVertex>        () ;
   else if (is<LHCb::L0CaloCandidate> ())
-    s << "L0CaloCandidate " << get<LHCb::L0CaloCandidate> ();
+    s << "L0CaloCandidate/"   << get<LHCb::L0CaloCandidate>  () ;
   else if (is<LHCb::L0MuonCandidate> ())
-    s << "L0MuonCandidate  " << get<LHCb::L0MuonCandidate> ();
+    s << "L0MuonCandidate/"   << get<LHCb::L0MuonCandidate>  () ;
   else if (is<Hlt::MultiTrack> ())
-    s << "MultiTrack " << get<Hlt::MultiTrack> ();
+    s << "MultiTrack/"        << get<Hlt::MultiTrack>        () ;
   else if (is<Hlt::L0DiMuonCandidate> ())
-    s << "L0DiMuonCandidate " << get<Hlt::L0DiMuonCandidate> ();
+    s << "L0DiMuonCandidate/" << get<Hlt::L0DiMuonCandidate> () ;
   else if (is<Hlt::Candidate> ())
-    s << "Candidate " << get<Hlt::Candidate> ();
+    s << "Candidate/"         << get<Hlt::Candidate>         () ;
   else if (is<Hlt::Stage> ())
-    s << "Stage " << get<Hlt::Stage> ();
-  else s << "NULL";
+    s << "Stage/"             << get<Hlt::Stage>             () ;
+  else s << "NULL?";
   //
   s << ", " << m_cache;
   //
