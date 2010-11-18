@@ -216,7 +216,12 @@ def allRun ( alg1 , *algs ) :
     >>> pl = allRun ( [ 'alg1' , 'alg2' , 'alg3', ... ] )
     
     """
-    return ALG_RUNALL ( _strings ( alg1 , *algs ) )
+    _lst = _strings ( alg1 , *algs )
+    print '1: ' , alg1  
+    print '2: ' , _lst
+    print '3: ' , [ a for a in _lst ] 
+    if 1 == len ( _lst ) : return ALG_RUN ( _lst [0] ) 
+    return ALG_RUNALL ( _lst )
 
 
 # =============================================================================
