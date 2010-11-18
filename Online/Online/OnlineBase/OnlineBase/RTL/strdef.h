@@ -2,11 +2,13 @@
 #define _RTL_STRDEF_H
 
 #ifdef __cplusplus
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #define __CXX_CONSTANT const
 extern "C" {
 #else
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #define __CXX_CONSTANT 
@@ -27,6 +29,10 @@ int str_lowcase(__CXX_CONSTANT char* src, char* dst, size_t dest_len);
 #ifdef __cplusplus
 inline const char* strstr_safe(const char* p1, const char* p2)  { return ::strstr((char*)p1,p2);   }
 inline const char* strchr_safe(const char* p1, char p2)         { return ::strchr((char*)p1,p2);   }
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
+#define snprintf _snprintf
+#endif
 #endif
 
 #endif // _RTL_STRDEF_H
