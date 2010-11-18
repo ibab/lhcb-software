@@ -156,23 +156,41 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
   if( !m_useParticle2LHCbIDs ){
     if( addToSignal( particle ) )clearCache();    
   } else {
-    const DataObject* container = particle.parent();
-    if( container ){
-      IRegistry* registry =  container->registry();
-      if( registry ){
+    DaVinci::Map::Particle2LHCbIDs* p2lhcbids(0);          
+    // global map at RootInTES location
+    if( exist< DaVinci::Map::Particle2LHCbIDs >("Particle2LHCbIDMap") ){
+      p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >("Particle2LHCbIDMap");
+    } else {
+      const DataObject* container = particle.parent();
+      if( container ){
+        IRegistry* registry =  container->registry();
+        if( registry ){
           std::string path = registry->identifier();
+          // local map at particle location 
           boost::replace_last(path,"/Particles","/Particle2LHCbIDMap");
           if( exist< DaVinci::Map::Particle2LHCbIDs >(path,false) ){
-            DaVinci::Map::Particle2LHCbIDs* p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path,false);
-            if( p2lhcbids ){
-              std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
-              if ( msgLevel(MSG::VERBOSE) ) 
-                verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
-              addToOfflineInput( hits );
-              return;
+            p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path,false);
+          } else {
+            // global map at stream location (find first "/" past "/Event/")
+            std::size_t ipos = path.find("/",7);            
+            if( ipos != std::string::npos ){              
+              std::string pathg = path.substr(0,ipos)+"/Particle2LHCbIDMap";
+              if( exist< DaVinci::Map::Particle2LHCbIDs >(pathg,false) ){
+                p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathg,false);
+              } 
             }
           }
+        }
       }
+    }
+    if( p2lhcbids ){
+      std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
+      if( hits.size() ){        
+        if ( msgLevel(MSG::VERBOSE) ) 
+          verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
+        addToOfflineInput( hits );
+        return;
+      }      
     }
     std::vector<const LHCb::Particle*> daughters = particle.daughtersVector(); 
     if( daughters.size() >0 ){

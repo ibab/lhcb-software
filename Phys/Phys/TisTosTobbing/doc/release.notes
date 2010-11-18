@@ -4,6 +4,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2010-11-18 - Tomasz Skwarnicki
+ - add handling of global Particle2LHCbIDMap in TriggerSelectionTisTis
+   and similar change in TriggerSelectionTisTisSummary
+
 ! 2010-11-03 - Tomasz Skwarnicki
  - fix L0Global in L0SelReportsMaker (included intermediate selections)
 

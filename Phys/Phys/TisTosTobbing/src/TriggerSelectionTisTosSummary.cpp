@@ -131,24 +131,41 @@ void TriggerSelectionTisTosSummary::setOfflineInput( )
 //    data object signal  ---------------------------------------------------------------
 bool TriggerSelectionTisTosSummary::addParticleTisTosSummary( const LHCb::Particle & object )
 {
-  const DataObject* container = object.parent(); 
-  if( !container ){
-    Error("Particle passed as OfflineInput not in a container - no TisTossing", StatusCode::FAILURE ,10).setChecked();
-    return false;   
+  // try global map at RootInTES location
+  DaVinci::Map::Particle2UnsignedInts* p2tisTosSummary(0);
+  if( exist< DaVinci::Map::Particle2UnsignedInts >("Particle2TisTos") ){
+    p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >("Particle2TisTos");    
+  } else {
+    const DataObject* container = object.parent(); 
+    if( !container ){
+      Error("Particle passed as OfflineInput not in a container - no TisTossing", StatusCode::FAILURE ,10).setChecked();
+      return false;   
+    }
+    IRegistry* registry =  container->registry();
+    if( !registry ){
+      Error("Particle passed as OfflineInput is in a container which is not on TES - no TisTossing", 
+            StatusCode::FAILURE ,10).setChecked();
+      return false;   
+    }
+    std::string path = registry->identifier();
+    // local map
+    boost::replace_last(path,"/Particles","/Particle2TisTos");
+    if( exist< DaVinci::Map::Particle2UnsignedInts >(path,false) ){
+      p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >(path,false);
+    } else {
+      // global map at stream location (find first "/" past "/Event/")
+      std::size_t ipos = path.find("/",7);            
+      if( ipos != std::string::npos ){              
+        std::string pathg = path.substr(0,ipos)+"/Particle2TisTos";
+        if( exist< DaVinci::Map::Particle2UnsignedInts >(pathg,false) ){
+          p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >(pathg,false);
+        } else {
+          Error("No /Particle2TisTos for the Particle passed as OfflineInput - no TisTossing", StatusCode::FAILURE ,10).setChecked();
+          return false;   
+        }
+      }
+    }
   }
-  IRegistry* registry =  container->registry();
-  if( !registry ){
-    Error("Particle passed as OfflineInput is in a container which is not on TES - no TisTossing", 
-          StatusCode::FAILURE ,10).setChecked();
-    return false;   
-  }
-  std::string path = registry->identifier();
-  boost::replace_last(path,"/Particles","/Particle2TisTos");
-  if( !exist< DaVinci::Map::Particle2UnsignedInts >(path,false) ){
-    Error("No /Particle2TisTos for the Particle passed as OfflineInput - no TisTossing", StatusCode::FAILURE ,10).setChecked();
-    return false;   
-  }
-  DaVinci::Map::Particle2UnsignedInts* p2tisTosSummary = get< DaVinci::Map::Particle2UnsignedInts >(path,false);
   if( !p2tisTosSummary ){
     Error("No /Particle2TisTos for the Particle passed as OfflineInput - no TisTossing", StatusCode::FAILURE ,10).setChecked();
     return false;   
