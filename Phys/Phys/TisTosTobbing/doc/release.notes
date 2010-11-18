@@ -4,6 +4,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v6r2 2010-11-18 ===================
+
 ! 2010-11-18 - Tomasz Skwarnicki
  - add handling of global Particle2LHCbIDMap in TriggerSelectionTisTis
    and similar change in TriggerSelectionTisTisSummary
