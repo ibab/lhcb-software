@@ -1,8 +1,7 @@
-#include <cstdio>
-#include <cstring>
 #include <fcntl.h>
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #include "RTL/GlobalSection.h"
 
 extern "C" int rtl_test_gbl(int argc, char** argv) {
