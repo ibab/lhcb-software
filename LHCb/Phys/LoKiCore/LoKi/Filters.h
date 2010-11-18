@@ -1676,8 +1676,8 @@ namespace LoKi
      *  @date 2010-11-17
      */
     template <class TYPE>
-    class Gate : public LoKi::Functor<std::vector<TYPE> ,
-                                      std::vector<TYPE> >
+    class Gate : public LoKi::Functor<std::vector<TYPE>  ,
+                                      std::vector<TYPE>  >
     {
     private: 
       typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >      Pipe_ ;
@@ -1715,6 +1715,66 @@ namespace LoKi
       // ======================================================================
       /// the actual gate
       LoKi::FunctorFromFunctor<void,bool> m_gate ;                  // the gate
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Cause
+     *  Helper class for ``conditional source''
+     *  @thanks Roel AAIJ
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-18
+     */
+    template <class TYPE>
+    class Cause : public LoKi::Functor<void,std::vector<TYPE> >
+    {
+    private: 
+      typedef LoKi::Functor<void,std::vector<TYPE> >                 Source_ ;
+      typedef typename Source_::result_type                      result_type ;
+    public:
+      // =====================================================================
+      /// the constructor from the start & source 
+      Cause
+      ( const LoKi::Functor< void , bool              >& start  , 
+        const LoKi::Functor< void , std::vector<TYPE> >& source ) 
+        :     LoKi::Functor< void , std::vector<TYPE> >() 
+        , m_start  ( start  ) 
+        , m_source ( source ) 
+      {}
+      /// the constructor from the start & source 
+      Cause
+      ( const LoKi::Functor< void , std::vector<TYPE> >& source , 
+        const LoKi::Functor< void , bool              >& start  ) 
+        :     LoKi::Functor< void , std::vector<TYPE> >() 
+        , m_start  ( start  ) 
+        , m_source ( source ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Cause() {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  Cause* clone() const { return new Cause ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( /* argument a */ ) const 
+      {
+        // invoke the source if enabled 
+        if ( m_start ( /* a */ ) ) { return m_source ( /* a */ ) ; }
+        // return empty container 
+        return result_type() ;
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return  s << " cause( "<< m_start << "," << m_source << ") "; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Cause () ;                         // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual starter 
+      LoKi::FunctorFromFunctor<void,bool>               m_start ; // the start
+      /// the actual source 
+      LoKi::FunctorFromFunctor<void,std::vector<TYPE> > m_source; // the source
       // ======================================================================
     } ;
     // ========================================================================
@@ -2327,7 +2387,7 @@ namespace LoKi
   // ==========================================================================
   /** simple "gate" function
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-   *  @date 2010-011-17
+   *  @date 2010-11-17
    */
   template <class TYPE>
   LoKi::Functors::Gate<TYPE>
@@ -2336,7 +2396,37 @@ namespace LoKi
     return LoKi::Functors::Gate<TYPE>( gate );
   }
   // ==========================================================================
-} // end of namespace LoKi 
+  /** conditional source 
+   *  @param start the start condition
+   *  @param source the actual source 
+   *  @thanks Roel AAIJ
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-11-18
+   */
+  template <class TYPE>
+  LoKi::Functors::Cause<TYPE>
+  cause ( const LoKi::Functor<void,bool>&               start  , 
+          const LoKi::Functor<void,std::vector<TYPE> >& source )
+  {
+    return LoKi::Functors::Cause<TYPE>( start , source );
+  }  
+  // ==========================================================================
+  /** conditional source 
+   *  @param source the actual source 
+   *  @param start the start condition
+   *  @thanks Roel AAIJ
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-11-18
+   */
+  template <class TYPE>
+  LoKi::Functors::Cause<TYPE>
+  cause ( const LoKi::Functor<void,std::vector<TYPE> >& source ,
+          const LoKi::Functor<void,bool>&               start  ) 
+  {
+    return LoKi::Functors::Cause<TYPE>( start , source );
+  }  
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================     
 // the specific printpout
 // ============================================================================     

@@ -1606,9 +1606,11 @@ def decoratePredicateOps ( cuts , opers ) :
 
         if _union_         :
             cut . _union_         =  _union_
+            if not hasattr ( cut , '__add__'  ) : cut .__add__  = _union_
             
         if _intersection_  :
             cut . _intersection_  =  _intersection_
+            if not hasattr ( cut , '__mul__'  ) : cut .__mul__  = _intersection_
             
         if _difference_  :
             cut . _difference_  =  _difference_
@@ -1806,11 +1808,13 @@ def decorateMaps ( funcs , opers ) :
     _rshift_          = None
     _rrshift_         = None
     
+    _rmul_            = None
     _union_           = None
     _intersection_    = None
     _difference_      = None
     _sym_difference_  = None
     _includes_        = None
+    _cause_           = None
     
     ## Use the vector function as streamer
     if hasattr ( opers , '__rshift__' ) : 
@@ -1841,7 +1845,39 @@ def decorateMaps ( funcs , opers ) :
             """
             return opers.__rrshift__ ( s , a )
         _rrshift_ . __doc__  += opers.__rrshift__ . __doc__
-                    
+
+    ## streamers: right multiplication 
+    #  @thanks Roel AAIJ    
+    if hasattr ( opers , '__rmul__' ) :                    
+        def _rmul_ ( s , a ) :
+            """
+            Conditional source (cause) 
+            
+            >>> condition = 
+            >>> source    = 
+            >>> newsource = condition * source 
+
+            Thanks to Roel AAIJ
+            """
+            return opers.__rmul__ ( s , a )
+        _rmul_ . __doc__  += opers.__rmul__ . __doc__
+
+    ## streamers: conditional source
+    #  @thanks Roel AAIJ    
+    if hasattr ( opers , '__cause__' ) :                    
+        def _cause_ ( s , a ) :
+            """
+            Conditional source (cause) 
+            
+            >>> condition = 
+            >>> source    = 
+            >>> newsource = cause ( condition , source )
+            
+            Thanks to Roel AAIJ
+            """
+            return opers.__cause__ ( s , a )
+        _cause_ . __doc__  += opers.__cause__ . __doc__
+
     if hasattr ( opers , '__tee__' ) : 
         def _tee_  ( s ) :
             """
@@ -1925,6 +1961,9 @@ def decorateMaps ( funcs , opers ) :
 
     # finally redefine the functions:
     for fun in funcs :
+
+        if _rmul_    : fun . __rmul__     =  _rmul_
+        if _cause_   : fun . _cause_      =  _cause_
         
         if _rrshift_ : fun . __rrshift__  =  _rrshift_
         if _rshift_  : fun . __rshift__   =  _rshift_

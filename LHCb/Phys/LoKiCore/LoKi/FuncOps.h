@@ -1081,6 +1081,17 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // __rmul__ 
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rmul__  ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
+      { return LoKi::cause ( fun , fun2 ) ; }      
+      // _start_if_
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __cause__ ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
+      { return LoKi::cause ( fun , fun2 ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
       // _union_ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       _union_          ( const Source& fun  , const Source& fun2 ) 

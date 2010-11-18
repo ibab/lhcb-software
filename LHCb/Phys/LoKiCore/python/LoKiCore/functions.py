@@ -786,6 +786,33 @@ def includes ( fun1 , fun2 ) :
 
 
 # =============================================================================
+##  create the 'conditional source/cause' 
+#
+#  @code
+#
+#    >>> cond   = ...  # the condition 
+#    >>> source = ...  # the source
+#    
+#    >>> result = cause ( cond , source ) 
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2010-11-18
+def cause ( fun1 , fun2 ) :
+    """
+    Create ``conditional source/cause'' 
+
+    >>> cond   = ...  # the condition 
+    >>> source = ...  # the source
+    
+    >>> result = cause ( cond , source ) 
+    
+    """    
+    return fun1._cause_ ( fun2 ) if hasattr ( fun1 , '_cause_' ) else fun2._cause_ ( fun1 )
+
+
+# =============================================================================
 def mark ( tree ) :
     """
     Create the 'marked' tree:
