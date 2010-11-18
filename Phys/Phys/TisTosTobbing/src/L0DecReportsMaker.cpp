@@ -100,6 +100,7 @@ StatusCode L0DecReportsMaker::execute() {
   //       individual L0 trigger lines
   L0DUChannel::Map channels = pL0DUReport->configuration()->channels();
   for( L0DUChannel::Map::const_iterator it=channels.begin();it!=channels.end();++it){
+    if( ( it->second->decisionType() & L0DUDecision::Physics ) == 0 )continue;    
     if ( msgLevel(MSG::VERBOSE) ){      
       verbose() << " L0 trigger name= " << it->first << " decision= " << pL0DUReport->channelDecision(it->second->id()) << endmsg;
       for( LHCb::L0DUElementaryCondition::Map::const_iterator ic = it->second->elementaryConditions().begin();
@@ -107,8 +108,9 @@ StatusCode L0DecReportsMaker::execute() {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << "        " << ic->first << endmsg; 
       }
     }
-    const std::string selName = "L0" + it->first + "Decision";
+    std::string selName = "L0" + it->first + "Decision";
     bool dec = pL0DUReport->channelDecision(it->second->id());
+    // only physics decisions
     HltDecReport decReport(dec,0,0,0);
     
       

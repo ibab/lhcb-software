@@ -4,6 +4,12 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v6r3 2010-11-18 ===================
+
+! 2010-11-18 - Tomasz Skwarnicki
+ - fix serious bug in L0DecReportsMaker,L0SelReportsMaker which allowed intermediate
+   L0 channels to parade as L0 trigger decisions (e.g. 'HCAL'). 
+
 !========================== TisTosTobbing v6r2 2010-11-18 ===================
 
 ! 2010-11-18 - Tomasz Skwarnicki

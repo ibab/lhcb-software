@@ -211,8 +211,10 @@ StatusCode L0SelReportsMaker::execute() {
       }
     }
     if( pL0DUReport->channelDecision(it->second->id()) ){
-      const std::string  selName = "L0" + it->first + "Decision";
-
+      std::string  selName = "L0" + it->first;
+      if( it->second->decisionType() & L0DUDecision::Physics ){
+        selName = selName + "Decision";
+      }
       typedef SmartRefVector<HltObjectSummary> SubSelection;
       const int maxSubSel(3);      
       SubSelection subSelections[maxSubSel];
