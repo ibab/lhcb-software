@@ -912,14 +912,14 @@ static PyObject* dim_dic_get_timestamp(PyObject* /* self */, PyObject* args) {
    * @return timestamp Python tuple with seconds and miliseconds
    */
   unsigned int service_id;
-  int secs, milisecs=0, res=0;
+  int secs, milisecs=0;
 
   if (!PyArg_ParseTuple(args, "Iii", &service_id)) {
     PyErr_SetString(PyExc_TypeError,
         "service id should be an unsigned integer");
     return 0;
   }
-  res = dic_get_timestamp(service_id, &secs, &milisecs);
+  dic_get_timestamp(service_id, &secs, &milisecs);
   return Py_BuildValue("ii", secs, milisecs);
 }
 
@@ -1146,7 +1146,7 @@ static PyObject* dim_dic_get_server_services(PyObject* /* self */, PyObject* arg
   return stringList_to_tuple(dic_get_server_services(conn_id));
 }
 
-static PyObject* dim_dic_get_error_services(PyObject* /* self */, PyObject* args) {
+static PyObject* dim_dic_get_error_services(PyObject* /* self */, PyObject* /* args */) {
   /** It is meant to be called inside the error handler to determine
    *  what service originated the error.
    *
@@ -1155,11 +1155,8 @@ static PyObject* dim_dic_get_error_services(PyObject* /* self */, PyObject* args
    *
    * @return service_list a python list of services in error.
    */
-  char* server_names=0;
-  PyObject* ret;
-  server_names = dic_get_error_services();
-  ret = stringList_to_tuple(server_names);
-  return args;
+  char* server_names = dic_get_error_services();
+  return stringList_to_tuple(server_names);
 }
 
 static PyObject* dim_dic_add_error_handler(PyObject* /* self */, PyObject* args) {
@@ -1170,16 +1167,12 @@ static PyObject* dim_dic_add_error_handler(PyObject* /* self */, PyObject* args)
    * @returns the python None object
    */
   PyObject* pyFunc;
-
-  if (!PyArg_ParseTuple(args, "O", &pyFunc)
-      || !PyCallable_Check(pyFunc))
-  {
+  if (!PyArg_ParseTuple(args, "O", &pyFunc) || !PyCallable_Check(pyFunc))  {
     PyErr_SetString(PyExc_TypeError,
         "Invalid parameters. Expected argument: callable object ");
     return 0;
   }
   dic_add_error_handler(_dic_error_user_routine_dummy);
-
   Py_RETURN_NONE;
 }
 
