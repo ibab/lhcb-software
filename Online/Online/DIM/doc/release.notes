@@ -4,6 +4,9 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+!=========================== DIM v19r12  2010-11-18 ============================
+ - reimport DIM from afs
+
 ! 2010-09-10 - Marco Clemencic
  - Fixed a problem when disabling the shared directories in Gaudi.
 
