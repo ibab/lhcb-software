@@ -1850,8 +1850,19 @@ namespace LoKi
     Dump_<TYPE>::operator() ( typename Dump_<TYPE>::argument a ) const 
     {
       m_stream << m_dump.open  () ;
-      Gaudi::Utils::toStream 
-        ( a.begin() , a.end () , m_stream , "[ " , " ]" , " ,\n " ) ;
+      //
+      if ( a.size() <= m_dump.nMax() ) 
+      {
+        Gaudi::Utils::toStream 
+          ( a.begin() , a.end() , m_stream , "[ " , " ]" , " ,\n " ) ;
+      }
+      else 
+      {
+        Gaudi::Utils::toStream 
+          ( a.begin() , a.begin() + m_dump.nMax() , 
+            m_stream , "[ " , " , ... ]" , " ,\n " ) ;
+      }
+      //
       m_stream << m_dump.close () ;
       return a ;
     }

@@ -46,14 +46,24 @@
   {
   public:
     // ========================================================================
-    Dump  ( const std::string& open   = ""   ,
-            const std::string& close  = "\n" ) ;
+    Dump  ( const std::string&  open   = ""   ,
+            const std::string&  close  = "\n" ) ;
+    Dump  ( const std::size_t   nmax          , 
+            const std::string&  open   = ""   ,
+            const std::string&  close  = "\n" ) ;
+    Dump  ( const std::string&  open          ,
+            const std::string&  close         ,
+            const std::size_t   nmax          ) ;    
+    Dump  ( const std::string&  open          ,
+            const std::size_t   nmax          ,
+            const std::string&  close  = "\n" ) ;
     virtual ~Dump() ;
     // ========================================================================
   public:
     // ========================================================================
     const std::string& open  () const { return  m_open  ; }
     const std::string& close () const { return  m_close ; }        
+    std::size_t        nMax  () const { return  m_nmax  ; }        
     // ========================================================================
   private:
     // ========================================================================
@@ -61,6 +71,8 @@
     std::string   m_open   ;                                     // the opening
     /// the closing 
     std::string   m_close  ;                                     // the closing 
+    /// max prints 
+    std::size_t   m_nmax   ;                                     // max prints 
     // ========================================================================
   };
   // ==========================================================================
