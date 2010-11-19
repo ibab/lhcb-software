@@ -50,6 +50,24 @@ namespace DaVinci{
         m_map()
       {
       }
+
+      /// Standard constructor
+      DataObject2ObjectMap(const DataObject2ObjectMap& rhs )
+        :
+        DataObject(),
+        m_map(rhs.m_map)
+      {
+      }
+
+
+      template <class INPUT>
+      DataObject2ObjectMap(INPUT first,
+                           INPUT last)
+        :
+        DataObject(),
+        m_map(first, last)
+      {
+      }
       
         ~DataObject2ObjectMap( ) 
       {
@@ -131,7 +149,7 @@ namespace DaVinci{
 
       virtual StatusCode update(int /*flag*/) 
       {
-        Map tmp(m_map.begin(), m_map.end());
+        const Map tmp(m_map.begin(), m_map.end());
         m_map = tmp;
         return StatusCode::SUCCESS;
       }
