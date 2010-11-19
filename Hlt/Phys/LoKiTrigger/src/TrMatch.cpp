@@ -9,6 +9,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/TrMatch.h"
+#include "LoKi/TrMatch.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class LoKi::Hlt1::TrMatch
@@ -25,6 +26,18 @@ LoKi::Hlt1::Match::Match
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
   , m_source2    ( tracks2 ) 
+  , m_sink       ( output  ) 
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Hlt1::Match::Match 
+( const std::string&           output  ,   //   output selection name/key 
+  const std::string&           tracks2 ,   //   tracks to be matched with 
+  const LoKi::Hlt1::MatchConf& config  )   //          tool configuration 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
+  , LoKi::Hlt1::MatchTool ( config )
+  , m_source2    ( LoKi::Hlt1::Selection ( tracks2 ) ) 
   , m_sink       ( output  ) 
 {}
 // ============================================================================
@@ -107,6 +120,17 @@ std::ostream& LoKi::Hlt1::Match::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::Match2::Match2 
 ( const std::string&           output  ,         //   output selection name/key 
   const Source&              tracks2 ,         //   tracks to be matched with 
+  const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
+  : LoKi::Hlt1::Match ( output , tracks2 , config ) 
+{
+  setInverted ( true ) ;
+}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Hlt1::Match2::Match2 
+( const std::string&           output  ,         //   output selection name/key 
+  const std::string&           tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
   : LoKi::Hlt1::Match ( output , tracks2 , config ) 
 {

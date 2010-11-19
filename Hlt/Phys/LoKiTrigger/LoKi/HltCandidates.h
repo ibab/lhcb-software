@@ -34,8 +34,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi

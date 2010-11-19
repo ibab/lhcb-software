@@ -193,7 +193,7 @@ StatusCode Hlt::Service::initialize ()
   lokiSvc() ;
   // check Assigned Numbers & Names service 
   annSvc () ;
-  // check Inciden tService & subscribe the incident 
+  // check Incident Service & subscribe the incident 
   incSvc () -> addListener ( this , IncidentType::BeginEvent ) ;
   incSvc () -> addListener ( this , IncidentType::BeginRun   ) ;
   //
