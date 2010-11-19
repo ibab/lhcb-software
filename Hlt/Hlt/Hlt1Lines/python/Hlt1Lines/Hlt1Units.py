@@ -33,19 +33,12 @@ __version__ = "version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
-    'TConf'          , ## the 'track-upgrade'-configuration for TConf
     'TMuonConf'      , ## the 'track-upgrade'-configuration for TMuonConf
-    'THadronConf'    , ## the 'track-upgrade'-configuration for THadronConf
-    'TEleConf'       , ## the 'track-upgrade'-configuration for TEleConf
-    'Velo'           , ## the 'track-upgrade'-configuration for Velo
-    'VeloTT'         , ## the 'track-upgrade'-configuration for VeloTT
     'Forward'        , ## the 'track-upgrade'-configuration for Forward
-    'GuidedForward'  , ## the 'track-upgrade'-configuration for GuidedForward
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
     ## match 
-    'VeloCalo'       , ## the 'track-match'-configuration   for VeloCalo
-    'VeloTDist'      , ## the 'track-match'-configuration   for VeloTDist
     'VeloT'          , ## the 'track-match'-configuration   for VeloT
+    'VeloL0Muon'     , ## the 'track-match'-configuration   for VeloL0Muon
     ## bi-functions
     'Calo3DChi2'     , ## track-bi-function configuration for Calo3DChi2 
     'Ecal3DChi2'     , ## track-bi-function configuration for Ecal3DChi2
@@ -164,16 +157,6 @@ LoKi.Hlt1.MatchConf        . __repr__ =  LoKi.Hlt1.MatchConf       . toString
 # =============================================================================
 #                                                      ##           "Old name" 
 # =============================================================================
-TConf = LoKi.Hlt1.UpgradeConf       (
-    "L0ConfirmWithT"             ,                     ##               "Tool" 
-    "Hlt1/Track/TConf"           ,                     ##          "TESOutput"
-    LHCb.Track.Ttrack            ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
 TMuonConf = LoKi.Hlt1.UpgradeConf   (
     "L0ConfirmWithT/TMuonConf"   ,                     ##               "Tool" 
     "Hlt1/Track/TMuonConf"       ,                     ##          "TESOutput"
@@ -181,46 +164,6 @@ TMuonConf = LoKi.Hlt1.UpgradeConf   (
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
-THadronConf = LoKi.Hlt1.UpgradeConf  (
-    "L0ConfirmWithT/THadronConf" ,                     ##               "Tool" 
-    "Hlt1/Track/THadronConf"     ,                     ##          "TESOutput"
-    LHCb.Track.Ttrack            ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
-TEleConf = LoKi.Hlt1.UpgradeConf     (
-    "L0ConfirmWithT/TEleConf"    ,                     ##               "Tool" 
-    "Hlt1/Track/TEleConf"        ,                     ##          "TESOutput"
-    LHCb.Track.Ttrack            ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
-Velo = LoKi.Hlt1.UpgradeConf     (
-    "Tf::PatVeloSpaceTool"       ,                     ##               "Tool" 
-    "Hlt1/Track/Velo"            ,                     ##          "TESOutput"
-    LHCb.Track.Velo              ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    False                        ,                     ##        "TransferIDs"
-    False                        ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
-VeloTT = LoKi.Hlt1.UpgradeConf     (
-    "Tf::PatVeloTTTool"          ,                     ##               "Tool" 
-    "Hlt1/Track/VeloTT"          ,                     ##          "TESOutput"
-    LHCb.Track.Upstream          ,                     ##          "TrackType"
-    False                        ,                     ##              "Owner"
-    False                        ,                     ##        "TransferIDs"
-    False                        ,                     ##   "TransferAncestor"
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
@@ -234,20 +177,10 @@ Forward = LoKi.Hlt1.UpgradeConf    (
     True                         ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
-GuidedForward = LoKi.Hlt1.UpgradeConf    (
-    "HltGuidedForward"           ,                     ##               "Tool" 
-    "Hlt1/Track/GuidedForward"   ,                     ##          "TESOutput"
-    LHCb.Track.Long              ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    False                        ,                     ##        "TransferIDs"
-    False                        ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
 FitTrack = LoKi.Hlt1.UpgradeConf        (
     "HltTrackFit"                ,                     ##               "Tool" 
     "Hlt1/Track/FitTrack"        ,                     ##          "TESOutput"
-    LHCb.Track.Ttrack            ,                     ##          "TrackType"
+    LHCb.Track.Long              ,                     ##          "TrackType"
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"
@@ -256,16 +189,10 @@ FitTrack = LoKi.Hlt1.UpgradeConf        (
 
 
 _trUpgrader = {}
+_trUpgrader [ 'TMuonConf' ] = TMuonConf
+_trUpgrader [ 'Forward'   ] = Forward
+_trUpgrader [ 'FitTrack'  ] = FitTrack
 
-_trUpgrader [ 'TConf'         ] = TConf
-_trUpgrader [ 'TMuonConf'     ] = TMuonConf
-_trUpgrader [ 'THadronConf'   ] = THadronConf
-_trUpgrader [ 'TEleConf'      ] = TEleConf
-_trUpgrader [ 'Velo'          ] = Velo
-_trUpgrader [ 'VeloTT'        ] = VeloTT
-_trUpgrader [ 'Forward'       ] = Forward
-_trUpgrader [ 'GuidedForward' ] = GuidedForward
-_trUpgrader [ 'FitTrack'      ] = FitTrack
 # =============================================================================
 ## get Track Upgrade by name 
 def trUpgrader ( name ) :
@@ -296,26 +223,6 @@ def trUpgrader ( name ) :
 # =============================================================================
 #                                                      ##           "Old name"
 # =============================================================================
-VeloCalo = LoKi.Hlt1.MatchConf  (
-    "HltVeloTCaloMatch"            ,                   ##               "Tool"
-    "Hlt1/Track/VeloCalo"           ,                   ##          "TESOutput"
-    LHCb.Track.Velo                ,                   ##          "TrackType"
-    True                           ,                   ##        "TransferIDs"
-    True                           ,                   ##  "TransferAncestors"
-    False                          ,                   ##       "TransferInfo"
-    "VeloCalo3DChi2"               ,                   ##            "Quality"
-    ""                             )                   ##           "Quality2"
-# =============================================================================
-VeloTDist = LoKi.Hlt1.MatchConf  (
-    "HltMatchTVeloTracks"          ,                   ##               "Tool"
-    "Hlt1/Track/VeloTDist"          ,                   ##          "TESOutput"
-    LHCb.Track.Long                ,                   ##          "TrackType"
-    True                           ,                   ##        "TransferIDs"
-    True                           ,                   ##  "TransferAncestors"
-    False                          ,                   ##       "TransferInfo"
-    "deltaX"                       ,                   ##            "Quality"
-    "deltaY"                       )                   ##           "Quality2"
-# =============================================================================
 VeloT = LoKi.Hlt1.MatchConf  (
     "PatMatchTool"                 ,                   ##               "Tool"
     "Hlt1/Track/VeloT"              ,                   ##          "TESOutput"
@@ -325,11 +232,20 @@ VeloT = LoKi.Hlt1.MatchConf  (
     True                           ,                   ##       "TransferInfo"
     "chi2_PatMatch"                ,                   ##            "Quality"
     ""                             )                   ##           "Quality2"
+# =============================================================================
+VeloL0Muon = LoKi.Hlt1.MatchConf  (
+    "PatMatchL0MuonTool"           ,                   ##               "Tool"
+    "Hlt1/Track/VeloL0Muon"        ,                   ##          "TESOutput"
+    LHCb.Track.Long                ,                   ##          "TrackType"
+    True                           ,                   ##        "TransferIDs"
+    True                           ,                   ##  "TransferAncestors"
+    True                           ,                   ##       "TransferInfo"
+    "chi2_PatMatchL0Muon"          ,                   ##            "Quality"
+    ""                             )                   ##           "Quality2"
 
 _trMatcher = {}
-_trMatcher [ 'VeloCalo'  ] = VeloCalo
-_trMatcher [ 'VeloTDist' ] = VeloTDist
-_trMatcher [ 'VeloT'     ] = VeloT
+_trMatcher [ 'VeloT'      ] = VeloT
+_trMatcher [ 'VeloL0Muon' ] = VeloL0Muon
 
 # =============================================================================
 ## get Track Match by name 

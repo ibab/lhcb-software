@@ -5,9 +5,14 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
-! 2010-11-16 - Vanya Belyaev
+! 2010-11-19 - Roel Aaij
+ - Hlt1Lines/Hl1Units.py
+   - remove unused upgrade and match configuration symbols
+ - Hlt1Lines/Hlt1GECs.py
+   - Add a line to the preambulo to enable usage in new event model
 
- - HltLines/Hl1Units.py
+! 2010-11-16 - Vanya Belyaev
+ - Hlt1Lines/Hl1Units.py
     remove the obsolete symbols.. 
 
 ! 2010-10-18 - Vladimir Gligorov

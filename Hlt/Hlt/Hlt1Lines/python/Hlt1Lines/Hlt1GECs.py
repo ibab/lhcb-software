@@ -9,9 +9,11 @@ def Hlt1GEC( reject = True ):
 
     rej  = VoidFilter("Hlt1GECReject")
     rej.Code = "ACCEPT('%s')" % tool.getFullName()
+    rej.Preambulo = [ 'ACCEPT = LoKi.Status.Accept' ]
 
     acc  = VoidFilter("Hlt1GECAccept")
     acc.Code = "~ ACCEPT('%s')" % tool.getFullName()
+    acc.Preambulo = [ 'ACCEPT = LoKi.Status.Accept' ]
 
     return bindMembers(None, [ DecodeIT, DecodeVELO, rej if reject else acc  ] )
 
