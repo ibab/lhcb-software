@@ -3,9 +3,11 @@
 #define DATAOBJECT2OBJECTMAP_H 1
 
 // Include files
+#include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/StatusCode.h"
 #include "Event/Particle.h"
 #include "Kernel/LHCbID.h"
 
@@ -22,7 +24,8 @@ namespace DaVinci{
      */
 
     template <class From, class To>
-    class DataObject2ObjectMap : public DataObject
+    class DataObject2ObjectMap : virtual public IUpdateable,
+                                 public DataObject
     {
 
     public:
@@ -125,6 +128,14 @@ namespace DaVinci{
       {
         return m_map.value_at(index);
       }
+
+      virtual StatusCode update(int /*flag*/) 
+      {
+        Map tmp(m_map.begin(), m_map.end());
+        m_map = tmp;
+        return StatusCode::SUCCESS;
+      }
+      
 
     private :
       Map m_map;

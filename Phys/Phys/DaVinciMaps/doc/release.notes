@@ -4,6 +4,12 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+! 2010-11-19 - Juan Palacios
+ - Kernel/DataObject2ObjectMap.h
+  . Inherits from IUpdateable and sorts contents in update method.
+ - cmt/requirements
+  . Increase to v1r3
+
 !======================== DaVinciMaps v1r2 2010-09-30 ========================
 
 ! 2010-09-30 - Juan Palacios
