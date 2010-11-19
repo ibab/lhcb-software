@@ -5,6 +5,9 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-19 - Vanya Belyaev
+ - tiny fix 
+
 ! 2010-11-17 - Vanya Belyaev
 
  - add new symbols ALG_RUN & ALG_RUNALL
