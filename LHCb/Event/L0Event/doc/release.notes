@@ -3,6 +3,11 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2010-11-18 - Olivier Deschamps
+ - L0DUReport.xml : - change data member m_configuration from pointer to SmartRef<LHCb::L0DUConfig> 
+                       WARNING : THE CHANGE IS NOT BACKWARD-COMPATIBLE FOR MDST PRODUCED WITH L0DUReport EXPLICITELY IN
+                    - new method globalDecisionFromChannel(std::string channelName, type=PHYSICS) : return the decision from channel when participating to a global L0 decision (default PHYCICS) 
+
 !======================== L0Event v18r3 2010-03-17 ===========================
 ! 2010-03-17 - Roel Aaij
  - Fix warning of missing dictionaries when writing L0DUConfig or L0DUReport

@@ -24,8 +24,7 @@
     <class
      author="Olivier Deschamps"
      desc="This class represents the keyed L0DU Configuration"
-     name="L0DUConfig"
-     serializers="FALSE">
+     name="L0DUConfig">
       <base   name = "KeyedObject&lt;unsigned int&gt;" />
       &KeyedObject;
       

@@ -4,15 +4,16 @@
   <package name="L0Event">
     
    <class author="Olivier Deschamps" 
-     desc="L0DU summary class" 
-     name="L0DUReport"
-     id="6004">
+          desc="L0DU summary class" 
+          name="L0DUReport"
+          id="6004">
       
       <base name="DataObject"/>
       &DataObject;
       <location name = "Default"   place = "Trig/L0/L0DUReport"  />
       <location name = "Emulated"  place = "Emu/L0/L0DUReport"  />
 
+      <import name = "GaudiKernel/SmartRef"  />
       <import name="sstream" std="TRUE"/>
       <import name="map" std="TRUE"/>
       <import name="utility" std="TRUE"/>
@@ -23,7 +24,7 @@
 
       <constructor 
         desc = "Default constructor" 
-        initList= "m_tck(0x0000) , m_configuration(NULL)">
+        initList= "m_tck(0x0000) , m_configuration()">
         <code>
            clear();
         </code>
@@ -31,7 +32,7 @@
 
       <constructor 
         desc = "Non-default constructor" 
-        argList = "LHCb::L0DUConfig* config"
+        argList = "const SmartRef&lt;LHCb::L0DUConfig&gt; config"
         initList= "m_configuration(config)"> 
         <code>
           m_tck = config->key();
@@ -39,12 +40,19 @@
         </code>
       </constructor>
         
+       <relation
+        name="configuration"
+        desc="Reference to possible L0DUConfig"
+        type="LHCb::L0DUConfig"
+        setMeth = 'FALSE' 
+        nonconstaccessor='TRUE'
+       />
+
 
       <attribute  desc=" global decision value"    name="decisionValue"      type="int"/>
       <attribute  desc=" Timing Trigger Decision"  name="timingTriggerBit"   type="bool" />
       <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
       <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="unsigned int" />
-      <attribute  desc=" L0DU algorithm configuration"             name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
       <attribute  desc="'channels pre-decision' Summaries   (FCS)" name="channelsPreDecisionSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
       <attribute  desc="'Channel decisions' Summaries  (TCS)"      name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc="'Elementary conditions' Summaries (ECS)"   name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
@@ -66,7 +74,7 @@
           m_timingTriggerBit = false;
           m_forceBit = false;
           m_tck = 0x0000;
-          m_configuration = NULL;
+          m_configuration = 0;
           m_valid = true;
         </code>
       </method>
@@ -95,11 +103,10 @@
       </method>
 
 
-
       <method
         name="setConfiguration"
         desc="set the configuration "
-        argList="LHCb::L0DUConfig* config"
+        argList="const SmartRef&lt;LHCb::L0DUConfig&gt;&amp; config"
         type="void">
         <code> 
           m_configuration = config;
@@ -140,7 +147,7 @@
         type="unsigned int"
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return 0;
+          if(0 == m_configuration)return 0;
           const LHCb::L0DUElementaryData::Map&amp; data = m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0;
@@ -155,7 +162,7 @@
         type="double"
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return 0.;
+          if(0 == m_configuration)return 0.;
           const LHCb::L0DUElementaryData::Map&amp; data=m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0.;
@@ -202,7 +209,7 @@
         argList= "std::string name , bool triggered, int  bx=0 "
         type   = "void"> 
         <code>
-          if(NULL == m_configuration)return;
+          if(0 == m_configuration)return;
 
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
@@ -223,7 +230,7 @@
         argList= "std::string name , bool decision , int  bx=0 "
         type   = "void"> 
         <code>
-          if(NULL == m_configuration)return;
+          if(0 == m_configuration)return;
           const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return;
@@ -243,7 +250,7 @@
         argList= "std::string name , bool decision, int  bx=0 "
         type   = "void">
         <code>
-          if(NULL == m_configuration)return;
+          if(0 == m_configuration)return;
           const LHCb::L0DUElementaryCondition::Map&amp; conditions = m_configuration->conditions();
           LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return;
@@ -367,7 +374,7 @@
         type="bool"
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return false;
@@ -382,7 +389,7 @@
         type="bool"
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUChannel::Map&amp; channels=m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return false;
@@ -397,7 +404,7 @@
         type="bool"
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUElementaryCondition::Map&amp; conditions=m_configuration->conditions();
           LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return false;
@@ -419,7 +426,7 @@
         const="TRUE">
         <code> 
           std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
-          if(NULL == m_configuration)return bad;
+          if(0 == m_configuration)return bad;
           const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it;
           for(it = channels.begin() ; it != channels.end() ; it++){
@@ -445,7 +452,7 @@
         const="TRUE">
         <code> 
           std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
-          if(NULL == m_configuration)return bad;
+          if(0 == m_configuration)return bad;
           const LHCb::L0DUElementaryCondition::Map&amp; conditions = m_configuration->conditions();
           LHCb::L0DUElementaryCondition::Map::const_iterator it;
           for(it = conditions.begin() ; it != conditions.end() ; it++){
@@ -461,6 +468,22 @@
         </code>
       </method>
 
+      <method
+        name="globalDecisionFromChannel" 
+        argList="std::string name , int type=L0DUDecision::Physics"
+        desc="return the L0-channel decision participating to the global decision (for a given decision type) "
+        type="bool" 
+        const="TRUE">
+        <code> 
+          if(0 == m_configuration)return false;          
+          const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
+          if( it == channels.end() )return false;          
+          LHCb::L0DUChannel* channel = (*it).second;
+          if( channelDecisionByName(name) &amp;&amp; (channel->decisionType() &amp; type) != 0 )return true;
+          return false;
+        </code>
+      </method>
 
 
       <method
@@ -470,7 +493,7 @@
         type="bool" 
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
@@ -489,7 +512,7 @@
         type="bool" 
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
@@ -511,7 +534,7 @@
         const="TRUE">
         <code> 
           int value = 0;
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
@@ -534,7 +557,7 @@
         type="bool" 
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUTrigger::Map&amp; triggers = m_configuration->triggers();
           LHCb::L0DUTrigger::Map::const_iterator it = triggers.find( name );
           if( it == triggers.end()){
@@ -563,7 +586,7 @@
         type="bool" 
         const="TRUE">
         <code> 
-          if(NULL == m_configuration)return false;
+          if(0 == m_configuration)return false;
           const LHCb::L0DUTrigger::Map&amp; triggers = m_configuration->triggers();
           for(LHCb::L0DUTrigger::Map::const_iterator it = triggers.begin();it != triggers.end();++it){
            if( index == (*it).second-&gt;id() )return triggerDecisionByName( (*it).first, bx  );

@@ -35,8 +35,7 @@
     <class 
       author="Olivier Deschamps"
       desc="This class represents individual L0DU Channel"
-      name="L0DUChannel"
-      serializers="FALSE">
+      name="L0DUChannel">
 
       <base name="ContainedObject"/>
        &ContainedObject;
