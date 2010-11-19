@@ -192,14 +192,13 @@ void ClusterListener::feed(void* tag, void** buff, int* size, int* /* first */) 
 ROMonBridge::ROMonBridge(int argc, char** argv) : m_print(LIB_RTL_WARNING)  {
   string PUBLISHING_NODE = "ECS03", from=PUBLISHING_NODE, to=PUBLISHING_NODE;
   RTL::CLI cli(argc, argv, ROMonBridge::help);
-  long prt;
   m_name = "/"+RTL::nodeNameShort()+"/"+RTL::processName();
   cli.getopt("publish",2, m_prefix="/Farm");
   cli.getopt("print",2,m_print);
   cli.getopt("from",2, from);
   cli.getopt("to",2, to);
 
-  ::lib_rtl_install_printer(ro_rtl_print,(void*)(prt=m_print));
+  ::lib_rtl_install_printer(ro_rtl_print,(void*)m_print);
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
   PartitionListener p(this,"Subfarms",true);

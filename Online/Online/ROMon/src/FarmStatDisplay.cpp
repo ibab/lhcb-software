@@ -67,6 +67,8 @@ public:
     void setCurrentLine(const FarmStatClusterLine* line) { m_currLine = line; }
     /// Set cursor to line position
     virtual void set_cursor(const FarmStatClusterLine* line);
+    /// Set cursor position
+    virtual void set_cursor(InternalDisplay* d) { this->InternalDisplay::set_cursor(d); }
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
     /// DIM command service callback
@@ -487,7 +489,7 @@ void FarmStatDisplay::handle(const Event& ev) {
       ::strftime(&txt[len],sizeof(txt)-len,"    %H:%M:%S",::localtime(&now));      
       DisplayUpdate update(this);
       ::scrc_put_chars(m_display,txt,BOLD,1,STATLINE_START,1);
-      DimLock lock;
+      DimLock dim_lock;
       for_each(m_clusters.begin(),m_clusters.end(),DisplayFarmStatLine(this));
       set_cursor(currentLine());
       return;
@@ -509,7 +511,7 @@ void FarmStatDisplay::handle(const Event& ev) {
 	if ( i != m_clusters.end() ) {
 	  FarmStatClusterLine* line = (*i).second;
 	  DisplayUpdate update(this);
-	  DimLock lock;
+	  DimLock dim_lock;
 	  display(line);
 	  set_cursor(line);
 	}
@@ -534,15 +536,16 @@ void FarmStatDisplay::handle(const Event& ev) {
 void FarmStatDisplay::update(const void* address) {
   if ( address ) {
     char *msg = (char*)address;
-    char *p=msg, *at=msg, *last=msg, *typ, *node;
+    char *p=msg, *at=msg, *last=msg, *node;
     if ( *(int*)msg != *(int*)"DEAD" )  {
       auto_ptr<_SETV> nodes(new _SETV);
       while ( last != 0 && at != 0 )  {
 	last = ::strchr(at,'|');
 	if ( last ) *last = 0;
-	if ( (typ=::strstr(at,"/MBM")) || (typ=::strstr(at,"/CPU")) ) {
+	if ( strstr(at,"/MBM") != 0 || ::strstr(at,"/CPU") != 0 ) {
 	  node = strchr(at+1,'/');
-	  *(p=strchr(node+1,'/')) = 0;
+	  p = strchr(node+1,'/');
+	  if ( p ) *p = 0;
 	  nodes->insert(node+1);
 	  //break; // TO REMOVE!!
 	}
