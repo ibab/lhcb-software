@@ -5,6 +5,26 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-11-19 - Illya Shapoval
+ - Added 5 new scripts:
+   + "TagStatusDB.py":
+   New clases to interact with the TagStatus database designed to monitor
+   the CondDB global tag availability status at Tier1's level.
+   + "CondDBAdmin_HashTag.py":
+   generates master hash sums for global tags and places it to release_notes.xml
+   to be used then to fill TagStatusDB.
+   + "TSDBAdmin_MasterAgent.py":
+   explaines to Tier script agents what validity status do global tags have at
+   particular Tier talking to SQLite TagStatus database.
+   + "TSDBAdmin_MasterAgent.cgi":
+   wrapper to the script above to set its environment at the web server.
+   + "TSDBAdmin_TierAgent.py":
+   requests "TSDBAdmin_MasterAgent.py" at the web server to understand current
+   status of all global tags at Tier where this agent lives. Also checks
+   whether invalid tags became valid and redirects these candidates to a
+   commit manager to update TagStatusDB.
+ - Added 'pytools' dependency to use 'Storm' interface.
+
 ! 2010-11-17 - Illya Shapoval
  - Added new CondDB.payloadToHash method to calculate any kind of hash sum for
    a node making the old CondDB.payloadToMd5 method its special case.

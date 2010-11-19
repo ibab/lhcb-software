@@ -15,6 +15,7 @@ apply_tag    NEEDS_PYCOOL
 use ROOT    v* LCG_Interfaces -no_auto_imports
 
 use DDDB       v*    Det -no_auto_imports
+use pytools    v* LCG_Interfaces -no_auto_imports
 
 # library path needed for mysql backend
 # use mysql         v*    LCG_Interfaces -no_auto_imports
