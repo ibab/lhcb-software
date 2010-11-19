@@ -1,6 +1,6 @@
 project STRIPPING
 
-use PHYS PHYS_v9r12
+use PHYS PHYS_v9r12p1
 
 build_strategy	with_installarea
 setup_strategy	root
