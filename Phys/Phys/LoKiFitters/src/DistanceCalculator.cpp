@@ -149,6 +149,53 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
+    /** @defgroup IPVector 
+     *   Evalaution of the vector distance between the particle point/vertex
+     *  @{
+     */
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter vector 
+     *  vector of the particle with respect to the fixed point 
+     *  @param particle (input) pointer to the particle 
+     *  @param point    (input) the fixed point  
+     *  @param impact   (output) the value of impact parameter vector
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const Gaudi::XYZPoint&  point    , 
+      Gaudi::XYZVector&       impact   ) const 
+    { 
+      StatusCode sc = check ( particle ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      sc = _distance ( *particle , point , impact ) ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter vector 
+     *  vector of the particle with respect to the vertex 
+     *  @param particle (input) pointer to the particle 
+     *  @param point    (input) the fixed point  
+     *  @param impact   (output) the value of impact parameter vector 
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const LHCb::VertexBase* vertex   , 
+      Gaudi::XYZVector&       impact   ) const 
+    { 
+      StatusCode sc = check ( particle , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      sc = _distance ( *particle , *vertex , impact ) ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
     /** @defgroup VertexVertex 
      *   Evalaution of the distance between two vertices  
      *  @{

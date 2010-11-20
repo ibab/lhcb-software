@@ -5,6 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-20 - Vanya Belyaev
+
+ - DistanceCalculators 
+   
+      add methdos for calculate IP-vector 
+
 ! 2010-11-15 - Vanya Belyaev
 
  - some improvements for photons and diphotons 
