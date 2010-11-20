@@ -24,8 +24,8 @@ namespace DaVinci{
      */
 
     template <class From, class To>
-    class DataObject2ObjectMap : virtual public IUpdateable,
-                                 public DataObject
+    class DataObject2ObjectMap : public DataObject,
+                                 public IUpdateable
     {
 
     public:
