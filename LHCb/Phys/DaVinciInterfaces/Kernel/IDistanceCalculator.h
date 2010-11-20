@@ -26,6 +26,8 @@ namespace LHCb
  *  Currenly it allows to evaluate "distances" for follwowing pairs of objects:
  *     - the particle and the vertex      ("impact parameter")
  *     - the particle and the fixed point ("impact parameter")
+ *     - the particle and the vertex      ("impact parameter vector")
+ *     - the particle and the fixed point ("impact parameter vector")
  *     - the particle and the particle    ("the distance of closest approach")
  *     - the vertex and the vertex        ("vertex separation")
  *     - the vertex and the fixed point   ("vertex separation"
@@ -33,18 +35,24 @@ namespace LHCb
  *     - the "projected-distance" form the production vertex to decay vertex 
  *  
  *  @author Vanya BELYAEV Ivan.Belyave@nikhef.nl
- *  @date   2008-03-05
+ *  @date   2008-03-05 
+ * 
+ *                    $Revision$
+ *  Last Modification $Date$
+ *                 by $Author$
+ * 
  */
 class GAUDI_API IDistanceCalculator : virtual public IAlgTool 
 {
 public:
   // ==========================================================================
   /// interface machinery
-  DeclareInterfaceID(IDistanceCalculator, 2, 0);
+  DeclareInterfaceID(IDistanceCalculator, 3, 0);
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup ParticleVertex Methods to evaluate distances between "particle" and "vertex"
+  /** @defgroup ParticleVertex Methods to evaluate distances between 
+   *                                   "particle" and "vertex"
    *
    *  @{
    */
@@ -240,7 +248,97 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup VertexVertex Methods to evaluate distances between tho "vertices"
+  /** @defgroup IPVector Methods to evaluate vector-distances between
+   *                          "particle" and "point/vertex"
+   *
+   *  @{
+   */
+  // ==========================================================================
+  /** the basic method for the evaluation of the impact parameter vector 
+   *  vector of the particle with respect to some fixed point
+   * 
+   *  The impact parameter is defined as the length of the 
+   *  vector form the fixed point 
+   *  to the nearest point on the particle trajectory:
+   *
+   *  \f[  \vec{i} = \vec{\mathbf{v}}_{p} - \vec{\mathbf{v}}_{0} - 
+   *               \vec{\mathbf{p}}\frac{\left(\vec{\mathbf{v}}_{p}-
+   *                \vec{\mathbf{v}}_{0}\right)\vec{\mathbf{p}}}
+   *                {\vec{\mathbf{p}}^2}, \f]
+   *  where the particle trakjectory is parameterized as
+   *  \f$\vec{\mathbf{v}}\left(t\right)=\vec{\mathbf{v}}_{p}+\vec{\mathbf{p}}t\f$, 
+   *  and \f$\vec{\mathbf{v}}_{0}\f$ stands for the position of the fixed point.
+   *
+   *
+   *  @code
+   *
+   *   // get the tool 
+   *   const IDistanceCalculator* tool = ... ; 
+   *
+   *   const LHCb::Particle*   particle = ... ;
+   *   const Gaudi::XYZPoint&  point    = ... ;
+   *   Gaudi::XYZVector        impvec ;
+   * 
+   *   // use the tool to evaluate the impact parameter vector 
+   *   StatusCode sc = tool -> distance ( particle , point , impvec ) ;
+   *
+   *  @endcode 
+   *
+   *  @param particle (INPUT) pointer to the particle 
+   *  @param point    (INPUT) the fixed point 
+   *  @param impvec   (INPUT) the vector value of impact parameter
+   *  @return status code 
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Particle*   particle ,
+    const Gaudi::XYZPoint&  point    ,
+    Gaudi::XYZVector&       impvec   ) const = 0 ;
+  // ==========================================================================
+  /** the basic method for the evaluation of the impact parameter vector 
+   *  vector of the particle with respect to some vertex 
+   * 
+   *  The impact parameter is defined as the length of the 
+   *  vector form the fixed point 
+   *  to the nearest point on the particle trajectory:
+   *
+   *  \f[  \vec{i} = \vec{\mathbf{v}}_{p} - \vec{\mathbf{v}}_{0} - 
+   *               \vec{\mathbf{p}}\frac{\left(\vec{\mathbf{v}}_{p}-
+   *                \vec{\mathbf{v}}_{0}\right)\vec{\mathbf{p}}}
+   *                {\vec{\mathbf{p}}^2}, \f]
+   *  where the particle trakjectory is parameterized as
+   *  \f$\vec{\mathbf{v}}\left(t\right)=\vec{\mathbf{v}}_{p}+\vec{\mathbf{p}}t\f$, 
+   *  and \f$\vec{\mathbf{v}}_{0}\f$ stands for the position of the fixed point.
+   *
+   *
+   *  @code
+   *
+   *   // get the tool 
+   *   const IDistanceCalculator* tool  = ... ; 
+   *
+   *   const LHCb::Particle*   particle = ... ;
+   *   const LHCb::VertexBase* vertex   = ... ;
+   *   Gaudi::XYZVector        impvec ;
+   * 
+   *   // use the tool to evaluate the impact parameter vector 
+   *   StatusCode sc = tool -> distance ( particle , point , impvec ) ;
+   *
+   *  @endcode 
+   *
+   *  @param particle (INPUT) pointer to the particle 
+   *  @param vertex   (INPUT) the vertex 
+   *  @param impvec   (INPUT) the vector value of impact parameter
+   *  @return status code 
+   */
+  virtual StatusCode distance 
+  ( const LHCb::Particle*   particle ,
+    const LHCb::VertexBase* vertex   ,
+    Gaudi::XYZVector&       impvec   ) const = 0 ;
+  // ==========================================================================
+  /// @}
+  // ==========================================================================
+public:
+  // ==========================================================================
+  /** @defgroup VertexVertex Methods to evaluate distances between two "vertices"
    *
    *  @{
    */
@@ -586,7 +684,7 @@ protected:
   // ==========================================================================  
 };
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // DAVINCIKERNEL_IDISTANCECALCULATOR_H
 // ============================================================================
