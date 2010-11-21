@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Add a new method to RichCommonBase to propagate job options
+
 ! 2010-11-11 - Chris Jones
  - Add a new class for L1 'Copy Number'. Just a number that starts at 0 
    in RICH1 and increments through the boards.

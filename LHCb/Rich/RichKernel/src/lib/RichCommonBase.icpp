@@ -182,7 +182,7 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
           if ( NULL != sp )
           {
             if ( this -> msgLevel(MSG::VERBOSE) )
-            { this->verbose() << "  -> Found requested property" << *sp << " for " 
+            { this->verbose() << "  -> Found requested property" << *sp << " for "
                               << name << endmsg; }
             break;
           }
@@ -199,7 +199,7 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
       }
       else
       {
-        this -> Warning( "'"+name+"' has a NULL property ..." ).ignore(); 
+        this -> Warning( "'"+name+"' has a NULL property ..." ).ignore();
       }
     } // loop over properties
   }
@@ -237,12 +237,94 @@ bool Rich::CommonBase<PBASE>::contextContains( const std::string & str ) const
 // Generate a context specific TES location for the given Default location
 //=============================================================================
 template <class PBASE>
-std::string 
+std::string
 Rich::CommonBase<PBASE>::contextSpecificTES( const std::string & loc ) const
 {
   const int slash = loc.find_last_of( "/" );
-  return ( slash>0 && !this->context().empty() ? 
+  return ( slash>0 && !this->context().empty() ?
            loc.substr(0,slash) + "/" +
            this->context() + "/" + loc.substr(slash+1) : loc );
+}
+//=============================================================================
+
+//=============================================================================
+// Propagate a list oj job options from one object to another
+//=============================================================================
+template <class PBASE>
+StatusCode
+Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
+                                              const std::string & to_name,
+                                              const std::vector<std::string> & options,
+                                              const bool overwrite ) const
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
+  // Find the list of set options from the from object
+  const std::vector<const Property*> * from_props = joSvc()->getProperties(from_name);
+  if ( from_props )
+  {
+
+    // Loop over the options
+    for ( std::vector<const Property*>::const_iterator it_prop_from = from_props->begin();
+          it_prop_from != from_props->end(); ++it_prop_from )
+    {
+
+      // Is this option in the list of those to copy ?
+      if ( options.empty() ||
+           std::find(options.begin(),options.end(),(*it_prop_from)->name()) != options.end() )
+      {
+
+        if (this->msgLevel(MSG::VERBOSE))
+          this->verbose() << "Found job option '" << (*it_prop_from)->name()
+                          << "' to copy from " << from_name
+                          << " to " << to_name << endmsg;
+
+        bool okToCopy = true;
+        if ( !overwrite )
+        {
+          // get list of already set options for to_name
+          const std::vector<const Property*> * to_props = joSvc()->getProperties(to_name);
+          if ( to_props )
+          {
+            // Search them to see if option is already set
+            for ( std::vector<const Property*>::const_iterator it_prop_to = to_props->begin();
+                  it_prop_to != to_props->end(); ++it_prop_to )
+            {
+              if ( (*it_prop_from)->name() == (*it_prop_to)->name() ) 
+              { 
+                if (this->msgLevel(MSG::VERBOSE))
+                  this->verbose() << " " << to_name 
+                                  << "  -> Already has this option -> Not Setting" 
+                                  << endmsg;
+                okToCopy = false; 
+                break; 
+              }
+            }
+          }
+        }
+
+        if ( okToCopy )
+        {
+          if (this->msgLevel(MSG::VERBOSE))
+            this->verbose() << "  -> Adding option " << (*it_prop_from)->name()
+                            << " to " << to_name << endmsg;
+          const StatusCode add_sc = joSvc()->addPropertyToCatalogue( to_name,
+                                                                     *(*it_prop_from) );
+          if ( add_sc.isFailure() )
+          {
+            this->Error( "Cannot set option '" + (*it_prop_from)->name() +
+                         "' for '" + to_name + "'" ).ignore();
+          }
+          sc = sc && add_sc;
+        }
+
+      } // in list of properties to copy
+
+    } // iterate over from properties
+
+  } // found properties for from_name
+
+  // return final status
+  return sc;
 }
 //=============================================================================

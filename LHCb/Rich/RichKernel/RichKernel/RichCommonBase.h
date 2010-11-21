@@ -229,6 +229,20 @@ namespace Rich
      */
     std::string contextSpecificTES( const std::string & loc ) const;
 
+    /** Propagate a list oj job options from one object to another
+     *  @param from_name The name of the object to get the options from
+     *  @param to_name   The name of the oject to copy the options to
+     *  @param options   List of options to copy. If empty, all options are copied.
+     *  @param overwrite If true, options will be over-written in the target object 
+     *                   if they are already set
+     *  @return StatusCode indicating if the options where correctly copied
+     */
+    StatusCode 
+    propagateJobOptions( const std::string & from_name,
+                         const std::string & to_name,
+                         const std::vector<std::string> & options = std::vector<std::string>(),
+                         const bool overwrite = false ) const;
+    
   private: // private methods
 
     /** Finds the propert object of a given name, for the given component name
