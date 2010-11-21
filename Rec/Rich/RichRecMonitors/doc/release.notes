@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Various improvements and bug fixes to the track resolution monitor
+
 !====================== RichRecMonitors v2r29 2010-07-26 =====================
 ! 2010-07-26 - Chris Jones
  - Update RichCherenkovResMoni to make some plots for real data where possible
