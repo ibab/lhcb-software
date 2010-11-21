@@ -26,8 +26,8 @@ DECLARE_TOOL_FACTORY( PhotonCreator );
 PhotonCreator::PhotonCreator( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : RichPhotonCreatorBase ( type, name, parent ),
-    m_photonReco          ( NULL )
+  : PhotonCreatorBase ( type, name, parent ),
+    m_photonReco      ( NULL )
 {
   // job options
   declareProperty( "PhotonRecoTool", m_photonRecoName = "PhotonParams" );
@@ -36,7 +36,7 @@ PhotonCreator::PhotonCreator( const std::string& type,
 StatusCode PhotonCreator::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPhotonCreatorBase::initialize();
+  const StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools

@@ -4,7 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!========================= RichRecPhotonTools v1r8 2010-10-28 =========================
+! 2010-11-21 - Chris Jones
+ - Remove use of depreciated photon creator base class typedef
+ - remove CVS comments from photon creator
+
+!==================== RichRecPhotonTools v1r8 2010-10-28 =====================
 ! 2010-10-15 - Chris Jones
  - Update the ray Tracing photon reconstruction tool to use the new method
    in the Chereknov Angle tool to get the saturated CK theta value on a 
@@ -25,7 +29,7 @@
 ! 2010-05-12 - Rob Lambert
  - Review of warnings
 
-!======================= RichRecPhotonTools v1r7 2010-03-19 ================
+!======================= RichRecPhotonTools v1r7 2010-03-19 ==================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 
