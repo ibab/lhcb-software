@@ -4,7 +4,12 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
-!========================== TisTosTobbing v6r3 2010-11-18 ===================
+!========================== TisTosTobbing v6r3 2010-11-21 ===================
+
+! 2010-11-21 - Juan Palacios
+ - src/TriggerSelectionTisTos.cpp
+  . Manually update Particle2LHCbIDs map. In principle the framework should
+    do this but this isn't working right now.
 
 ! 2010-11-18 - Tomasz Skwarnicki
  - fix serious bug in L0DecReportsMaker,L0SelReportsMaker which allowed intermediate
