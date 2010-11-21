@@ -34,8 +34,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
- *  $Revision$
- *  Last Modification $Date$ by $Author$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 // ============================================================================
 namespace LoKi 
@@ -431,6 +432,146 @@ namespace LoKi
       boost::regex  m_expression ;                    // the regular expression 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Cut_
+     *  Helper class for implementation of various filters 
+     *  @thanks Alexander Mazurov 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2010-11-21
+     */
+    template <class TYPE>
+    class Cut_ : public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    {
+    public:
+      // ==================================================================
+      /// constructor from the predicate and the fake integer argument 
+      Cut_
+      ( const typename LoKi::BasicFunctors<const TYPE*>::Predicate& cut , 
+        const int /* a */ )
+        : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
+        , m_cut  ( cut  )
+      {}
+      /// MANDATORY: virtual destructor
+      virtual ~Cut_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cut_* clone() const { return new  Cut_ ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual      typename LoKi::BasicFunctors<const Hlt::Stage*>::Predicate::result_type 
+      operator() ( typename LoKi::BasicFunctors<const Hlt::Stage*>::Predicate::argument a )  const 
+      { return filterStage ( a ) ; }
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << m_cut ; }    
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** perform the actual evaluation 
+       *  @attention predicate is appleid only for VALID stages
+       *  @param stage (INPUT) the input stage 
+       *  @return result of predicate evaluation for VALID stages
+       */
+      bool filterStage ( const Hlt::Stage* stage ) const 
+      {
+        //
+        if ( 0 == stage ) 
+        {
+          Error ( "Invalid Stage, return false" ) ;
+          return false ;                                         // RETURN 
+        }
+        // get the object from the stage 
+        const TYPE* obj = stage->get<TYPE>() ;
+        // use the actual predicate for VALID stage :
+        return ( 0 != obj ) && m_cut.fun ( obj ) ;  
+      } 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Cut_ () ;                              // default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      LoKi::FunctorFromFunctor<const TYPE*, bool> m_cut;
+      // ======================================================================
+    };
+    // ========================================================================
+    /// helper function to create the predicate 
+    template <class TYPE>
+    inline Cut_<TYPE> cut_ 
+    ( const LoKi::Functor<const TYPE*,bool>& cut , const int fake )
+    { return Cut_<TYPE> ( cut , fake ) ; }
+    // ========================================================================
+    /** @class Fun_
+     *  Helper class for implementation
+     *  @thanks Alexander Mazurov 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2010-11-21
+     */
+    template <class TYPE>
+    class Fun_ : public LoKi::BasicFunctors<const Hlt::Stage*>::Function
+    {
+    public:
+      // ==================================================================
+      /// constructor from the function and "bad"-value 
+      Fun_
+      ( const typename LoKi::BasicFunctors<const TYPE*>::Function& fun , 
+        const double                                               bad )
+        : LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
+        , m_fun  ( fun )
+        , m_bad  ( bad )
+      {}
+      /// MANDATORY: virtual destructor
+      virtual ~Fun_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Fun_* clone() const { return new  Fun_ ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual      typename LoKi::BasicFunctors<const Hlt::Stage*>::Function::result_type 
+      operator() ( typename LoKi::BasicFunctors<const Hlt::Stage*>::Function::argument a )  const 
+      { return evalStage ( a ) ; }
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << m_fun ; }    
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** perform the actual evaluation 
+       *  @attention function is applied only for VALID stages
+       *  @param stage (INPUT) the input stage 
+       *  @return result of predicate evaluation for VALID stages
+       */
+      double evalStage ( const Hlt::Stage* stage ) const 
+      {
+        //
+        if ( 0 == stage ) 
+        {
+          Error ( "Invalid Stage, return 'bad'" ) ;
+          return m_bad ;                                         // RETURN 
+        }
+        // get the object from the stage 
+        const TYPE* obj = stage->get<TYPE>() ;
+        // use the actual predicate for VALID stage :
+        return ( 0 != obj ) ? m_fun.fun ( obj ) : m_bad ;
+      } 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Fun_ () ;                              // default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the function 
+      LoKi::FunctorFromFunctor<const TYPE*, double> m_fun ; // the function 
+      /// bad-value 
+      double                                        m_bad ; // bad-value 
+      // ======================================================================
+    };
+    // ========================================================================
+    /// helper function to create the function 
+    template <class TYPE>
+    inline Fun_<TYPE> fun_ 
+    ( const LoKi::Functor<const TYPE*,double>& fun , const double bad )
+    { return Fun_<TYPE> ( fun , bad ) ; }
     // ========================================================================
   } //                                            end of namespace LoKi::Stages 
   // ==========================================================================

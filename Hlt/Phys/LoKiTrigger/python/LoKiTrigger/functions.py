@@ -119,6 +119,11 @@ TC_StCUT     = LoKi.Candidates.StageCut
 ## @see LoKi::Cuts::TC_BRANCH
 TC_BRANCH    = LoKi.Candidates.Branch       ()
 
+## @see LoKi::Cuts::TC_FUN 
+TC_FUN       = LoKi.Candidates.SlotFun
+## @see LoKi::Cuts::TC_FUN 
+TC_CUT       = LoKi.Candidates.SlotCut
+
 
 ## @see LoKi::Cuts::TS_ISTRACK 
 TS_ISTRACK      = LoKi.Stages.IsTrack       ()
