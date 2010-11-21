@@ -7,7 +7,7 @@
 ! 2010-11-05 - Chris Jones
  - Add protection against inhibited HPDs
 
-!========================= RichHPDImageAnalysis v1r4 2010-10-30 =========================
+!================= Rich/RichHPDImageAnalysis v1r4 2010-10-30 =================
 ! 2010-10-29 - Chris Jones
  - Fix a bug in the monitor that causes a NULL histogram pointer to be 
    dereferenced. Is triggered when a non-empty disabled HPD list used in the
