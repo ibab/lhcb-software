@@ -4,6 +4,23 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-11-21 - V. Gligorov
+ - Rewrite the swimming code in HltMoveVerticesForSwimming.{cpp,h}
+  . This is a major rewrite of the code logic. There are now no user
+    defined input parameters except the swimming distance and the TES
+    locations where the particles and vertices are to be found.
+    The code moves every online PV by the swimming distance (in mm) in the
+    direction of the momentum of the offline candidate.
+  . At each swimming step, the lifetime and IP of the offline signal
+    candidate are computed with respect to the *offline* primary
+    vertex which was the best primary vertex (as computed through
+    the relatedPV tools) *before* any swimming. This offline PV is cloned
+    and moved by the appropriate swimming distance for the purposes of
+    the calculation.
+  . The I/O of the algorithm is accomplished through its properties. The
+    swimming distance is supplied as a property and the lifetime/IP
+    retrieved as property values.    
+
 !========================== HltCommon v7r0p1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
  - streamline functions
