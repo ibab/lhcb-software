@@ -27,20 +27,15 @@ HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
-  declareProperty("Blifetime", 		m_bLifetime		= -999999.0	);
+  declareProperty("Blifetime", 		    m_bLifetime		    = -999999.0	);
+  declareProperty("Bip",                m_bIP               = -999999.0 );
   declareProperty("SwimmingDistance", 	m_swimmingDistance	= 1.0		);
-  declareProperty("bMomentum_X", 	m_bMom_X		= 1000.		);
-  declareProperty("bMomentum_Y", 	m_bMom_Y		= 1000.		);
-  declareProperty("bMomentum_Z", 	m_bMom_Z		= 10000.	);
-  declareProperty("bVertex_X",		m_bVert_X		= 0.1		);
-  declareProperty("bVertex_Y", 		m_bVert_Y		= 0.1		);
-  declareProperty("bVertex_Z", 		m_bVert_Z		= 1.0		);
-  declareProperty("bMass",		m_bMass			= 5279.		);
-  declareProperty("bEnergy",		m_bE			= 11400.	);
-  declareProperty("bPID",		m_bPID			= 531		);
-  declareProperty("bCovMatrix",		m_bCovMatrix		= boost::assign::list_of((unsigned int) 0));
+  declareProperty("Bcontainer",         m_Bcontainer        = "/Event/SeqD2KK/Phys/SelD2KK");
+  declareProperty("OfflinePVs",         m_offlinePVs        = "/Event/Rec/Vertex/Primary");
   
-  declareProperty("ToolName", m_toolName = "PropertimeFitter" );
+  declareProperty("lifetimeFitter", m_lifeToolName = "PropertimeFitter" );
+  declareProperty("distanceCalculator", m_distToolName = "LoKi::DistanceCalculator") ;
+  declareProperty("relatedPVFinder", m_finderToolName = "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2");
   m_selections.declareProperties();
 }
 
@@ -60,9 +55,21 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
   m_selections.retrieveSelections();
   m_selections.registerSelection();
 
-  m_fit = tool<ILifetimeFitter>( m_toolName, this );
+  m_fit = tool<ILifetimeFitter>( m_lifeToolName, this );
   if( !m_fit ){
     Error("Unable to retrieve the ILifetimeFitter tool");
+    return StatusCode::FAILURE;
+  }
+
+  m_dist = tool<IDistanceCalculator>( m_distToolName, this );
+  if( !m_dist ){
+    Error("Unable to retrieve the IDistanceCalculator tool");
+    return StatusCode::FAILURE;
+  }
+
+  m_finder = tool<IRelatedPVFinder>( m_finderToolName, this );
+  if( !m_finder ){
+    Error("Unable to retrieve the IRelatedPVFinder tool");
     return StatusCode::FAILURE;
   }
 
@@ -78,35 +85,68 @@ StatusCode HltMoveVerticesForSwimming::execute() {
 
   m_selections.output()->clean(); //TODO: is this really needed?
 
-  //Lets see what we just did, for debug
+  debug() << "About to get the offline particles" << endmsg;
+
+  //Check if particles exist
+  if (!exist<Particles>(m_Bcontainer+"/Particles")) return sc;
+
+  debug() << "The particles exist, will now get them" << endmsg;
+
+  Particles* pars = get<Particles>(m_Bcontainer+"/Particles");
+  if (msgLevel(MSG::DEBUG)) {
+    if (pars == 0) verbose() << " no particles found! " << endmsg;
+    else verbose() << " particles found " << pars->size() << endmsg;
+  }   
+  if (pars == 0) return sc;
+  
+  debug() << "About to check if only one particle in the event" << endmsg;
+  //If more than one particle quit!
+  if (pars->size() != 1) return sc;
+  debug() << "About to check if there are any PVs in the event!" << endmsg;
+  //If no PVs quit!
+  if (m_selections.input<1>()->empty()) return sc;
+  
+  //Print the online PVs for debug
   if (msgLevel(MSG::DEBUG)) {
         debug() << "Printing out the input vertices" << endmsg;
         BOOST_FOREACH(const LHCb::RecVertex* v, *m_selections.input<1>()) {
                 debug() << *v << endmsg;
-        }
+        }   
   }
 
-  //Swim the primary vertices
-  m_bVertexPosition.SetX(m_bVert_X);
-  m_bVertexPosition.SetY(m_bVert_Y);
-  m_bVertexPosition.SetZ(m_bVert_Z);
-  m_bDirection.SetX(m_bMom_X);
-  m_bDirection.SetY(m_bMom_Y);
-  m_bDirection.SetZ(m_bMom_Z); 
+  /*
+  debug() << "Check if there are any offline PVs associated to the signal particle" << endmsg; 
+  //If no associated offline PVs quit!
+  if (!exist<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >(m_Bcontainer+"/Particle2VertexRelations")) return sc;
+  //Get the relations
+  debug() << "Get the relations table!" << endmsg;
+  LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase>* rels = 
+    get<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >(m_Bcontainer+"/Particle2VertexRelations");   
+  //Get the PV
+  debug() << "Get the offline PV associated to the signal" << endmsg;
+  LHCb::VertexBase* offPV = rels->relations().begin()->to();
+  */
 
-  debug() << "The B direction is" << endmsg;
-  debug() << "X slope = " << m_bDirection.X() << endmsg;
-  debug() << "Y slope = " << m_bDirection.Y() << endmsg;
-  debug() << "Z slope = " << m_bDirection.Z() << endmsg;
+  //Now get the offline PVs
+  debug() << "About to get the offline PVs" << endmsg;
+  if (!exist<LHCb::RecVertex::Range>(m_offlinePVs)) return sc;
+  debug() << "Offline PVs found, grabbing them" << endmsg; 
+  const LHCb::RecVertex::Range offPVs = get<LHCb::RecVertex::Range>(m_offlinePVs);
 
-  debug() << "The B vertex position is" << endmsg;
-  debug() << "X = " << m_bVertexPosition.X() << endmsg;
-  debug() << "Y = " << m_bVertexPosition.Y() << endmsg;
-  debug() << "Z = " << m_bVertexPosition.Z() << endmsg;
+  //Print the offline PVs for debug
+  if (msgLevel(MSG::DEBUG)) {
+        debug() << "Printing out the offline vertices" << endmsg;
+        BOOST_FOREACH(const LHCb::RecVertex* v, offPVs) {
+                debug() << *v << endmsg;
+        }   
+  }
 
-  debug() << "The swimming distance is " << m_swimmingDistance << endmsg;
+  //Now get the best PV for the particle
+  debug() << "About to get the related PV" << endmsg;
+  const LHCb::VertexBase* offPV  = m_finder->relatedPV(*(pars->begin()), LHCb::RecVertex::ConstVector(offPVs.begin(), offPVs.end()));
+  LHCb::VertexBase* offPV_Clone = offPV->clone();
 
-  m_bLifetime = move_PVs();
+  sc = move_PVs(*(pars->begin()),offPV_Clone);
   
   int ncan = m_selections.output()->size();
   debug() << " candidates found " << ncan << endmsg;
@@ -114,82 +154,64 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   
 }
 //=============================================================================
-double HltMoveVerticesForSwimming::move_PVs(){
-//Get the B lifetime. The "correct" PV is defined as the one
-//with the larger absolute cos(theta) the the B. 
+StatusCode HltMoveVerticesForSwimming::move_PVs(LHCb::Particle* myB, LHCb::VertexBase* offPV){
+//Move the PVs
 
-  double templifetime = -999999.;
-  if (m_selections.input<1>()->empty()) return templifetime;
+  StatusCode sc = StatusCode::SUCCESS;  
 
-  Gaudi::XYZPoint newVertPos;
-  double vertexCosTheta = 0.;
-  double bestVertexCosTheta = 0.;
-
-  const LHCb::RecVertex* bestVertex = m_selections.input<1>()->front();
-  
-  debug() << "Trying to find the best vertex" << endmsg;
-
+  /*
+  double vtxchi2,minvtxchi2 = 999999999.;
+  const LHCb::RecVertex* bestVertex;
+  //Get the online PV matching best to the offline PV 
   BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
-	debug() << "First candidate is " << vertex << endmsg;
-  	vertexCosTheta = ((m_bVertexPosition - vertex->position()).Unit()).Dot(m_bDirection.Unit());
-	debug() << "It has a cos theta of " << vertexCosTheta << endmsg;
-	if (fabs(vertexCosTheta) > fabs(bestVertexCosTheta)) {
-		debug() << "Which is a new best cos theta" << endmsg;
-		bestVertexCosTheta = fabs(vertexCosTheta);
-		bestVertex = vertex;
-	}
+    vtxchi2 = sqrt  (
+                        pow(vertex->position().x() - offPV->position().x(),2) +
+                        pow(vertex->position().y() - offPV->position().y(),2) +
+                        pow(vertex->position().z() - offPV->position().z(),2) 
+                    );
+    if (vtxchi2<minvtxchi2) {
+        minvtxchi2 = vtxchi2;
+        bestVertex = vertex;
+    }
+  } 
+  */ 
+
+  //I know this shouldn't modify the input vertex in the long run,
+  //but for now it is easier to do it like this 
+  BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
+    debug() << "The primary vertex is at " << vertex << endmsg;
+    debug() << "With X coordinate " << vertex->position().X() << endmsg;
+    debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
+    debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
+    
+    const_cast<LHCb::RecVertex*>(vertex)->setPosition(vertex->position() + m_swimmingDistance*myB->slopes().Unit());
+    m_selections.output()->push_back( vertex ); 
+ 
+    debug() << "The new vertex" << endmsg;
+    debug() << "With X coordinate " << vertex->position().X() << endmsg;
+    debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
+    debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
+
   }
+  //Also move the clone of the offline PV to compute the new lifetime
+  offPV->setPosition(offPV->position() + m_swimmingDistance*myB->slopes().Unit());
 
-  debug() << "The best vertex is " << bestVertex << endmsg;
-
-  debug() << "It has" << endmsg;
-  debug() << "X coordinate " << bestVertex->position().X() << endmsg;
-  debug() << "Y coordinate " << bestVertex->position().Y() << endmsg;
-  debug() << "Z coordinate " << bestVertex->position().Z() << endmsg;
-
-  newVertPos = bestVertex->position() + m_swimmingDistance*(m_bDirection.Unit()); 
-  const_cast<LHCb::RecVertex*>(bestVertex)->setPosition(newVertPos); //@FIXME @TODO should NOT modify input vertex
-
-  debug() << "The moved vertex is at " << bestVertex << endmsg;
-  debug() << "With X coordinate " << bestVertex->position().X() << endmsg;
-  debug() << "With Y coordinate " << bestVertex->position().Y() << endmsg;
-  debug() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
-
-  m_selections.output()->push_back( bestVertex );
-
-  //Make our dummy particle for the lifetime fit
-  LHCb::ParticleID* 	Pid	= new LHCb::ParticleID(m_bPID);
-  LHCb::Particle* 	P	= new LHCb::Particle(*Pid);	 
-  //Give it a vertex, momentum, etc.
-  P->setReferencePoint(m_bVertexPosition);
-
-  Gaudi::LorentzVector BLmom;
-  BLmom.SetPx(m_bMom_X);
-  BLmom.SetPy(m_bMom_Y);
-  BLmom.SetPz(m_bMom_Z);
-  BLmom.SetE(m_bE);
-
-  P->setMomentum(BLmom);
-
-  Gaudi::SymMatrix7x7 CovB;
-  CovB.SetElements(m_bCovMatrix.begin(), m_bCovMatrix.end()); 
-
-  P->setPosCovMatrix(CovB.Sub<Gaudi::SymMatrix3x3>(0,0));
-  P->setMomCovMatrix(CovB.Sub<Gaudi::SymMatrix4x4>(3,3)); 
-  P->setPosMomCovMatrix(CovB.Sub<Gaudi::Matrix4x3>(3,0));
-
-  double pt   = -100;
-  double ept  = -100;
-  double chi2 = -100;
-  StatusCode sc =  m_fit->fit ( *bestVertex, *P , pt, ept, chi2 );
-
+  double pt,ept,chi2,ip,ipchi2 = -99999999.;
+  sc =  m_fit->fit ( *offPV, *myB , pt, ept, chi2 );
   if (!sc) {  
     warning() << "The lifetime fit failed!!" << endmsg; 
-    return templifetime;
-  } 
+    return sc;
+  }
+  debug() << "The lifetime of the signal candidate is now = " << pt << endmsg;
+  m_bLifetime = pt;
 
-  templifetime = pt;
+  sc =  m_dist->distance ( myB , offPV, ip, ipchi2 );
+  if (!sc) {   
+    warning() << "The distance calculator failed!!" << endmsg; 
+    return sc; 
+  }
+  debug() << "The IP of the signal candidate is now = " << ip << endmsg;
+  m_bIP = ip;
 
-  debug() << "With lifetime " << templifetime << endmsg;
-  return templifetime;
+  return sc;
 }

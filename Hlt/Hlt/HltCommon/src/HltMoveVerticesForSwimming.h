@@ -6,8 +6,16 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "HltBase/HltSelectionContainer.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltFilters.h"
 #include "Event/Particle.h"
+#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
+#include "Event/Vertex.h"
 #include <Kernel/ILifetimeFitter.h>
+#include "Kernel/IRelatedPVFinder.h"
+#include <Kernel/IDistanceCalculator.h>
+#include "Relations/IRelation.h"
+#include "Relations/Relations.h"
 /** @class HltMoveVerticesForSwimming HltMoveVerticesForSwimming.h
  *  
  *
@@ -27,29 +35,24 @@ public:
 
 private:
 
-  double move_PVs();
+  StatusCode move_PVs(LHCb::Particle*,LHCb::VertexBase*);
 
   Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::RecVertex> m_selections;
 
-  Gaudi::XYZVector m_bDirection; //The direction in which to swim
-  Gaudi::XYZPoint m_bVertexPosition; //The starting point for the swimming
   double m_swimmingDistance; //How far to move the primary vertex. The sign is positive if moving in the direction of the B momentum
   double m_bLifetime; //the measured B lifetime
-  double m_bMom_X; //the measured B momentum, used to convert into proper time 
-  double m_bMom_Y;
-  double m_bMom_Z;
-  double m_bVert_X;
-  double m_bVert_Y;
-  double m_bVert_Z;
-  double m_bMass;
-  double m_bE; 
-  int 	 m_bPID;
-  std::vector<double>  m_bCovMatrix;
+  double m_bIP;//The B IP wrt. the best PV  
 
   ILifetimeFitter* m_fit;
-
-  std::string m_toolName;
-
+  IDistanceCalculator* m_dist;
+  IRelatedPVFinder* m_finder;
+  
+  std::string m_Bcontainer;
+  std::string m_lifeToolName;
+  std::string m_distToolName;
+  std::string m_finderToolName;
+  std::string m_offlinePVs; 
+ 
 };
 
 #endif 
