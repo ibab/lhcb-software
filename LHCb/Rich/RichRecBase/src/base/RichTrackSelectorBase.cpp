@@ -157,48 +157,8 @@ namespace Rich
         return Error( "Selection tool for track algorithm '"+Rich::text(type)+"' undefined" );
       }
 
-      // Try and give options (CRJ : Should see if a nicer way that avoids this is possible)
-      const std::vector<const Property*> * myprops = joSvc()->getProperties(name());
-      if ( myprops )
-      {
-        for ( std::vector<const Property*>::const_iterator itP = myprops->begin();
-              itP != myprops->end(); ++itP )
-        {
-          for ( std::vector<std::string>::const_iterator iP = m_jobOpts.begin();
-                iP != m_jobOpts.end(); ++iP )
-          {
-            if ( *iP == (*itP)->name() )
-            {
-              //---------------------------------------------------------------------------------
-              if (msgLevel(MSG::VERBOSE))
-                verbose() << "Found global " << *iP << " option" << endmsg;
-              const std::string fullname = name()+"."+Rich::text(type);
-              const std::vector<const Property*> * properties = joSvc()->getProperties(fullname);
-              bool found = false;
-              if ( properties )
-              {
-                for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-                      itProp != properties->end(); ++itProp )
-                {
-                  const StringProperty * sp = dynamic_cast<const StringProperty*>(*itProp);
-                  if ( sp )
-                  {
-                    if ( *iP == sp->name() ) { found = true; break; }
-                  }
-                }
-              }
-              if ( !found )
-              {
-                if (msgLevel(MSG::VERBOSE))
-                  verbose() << " Adding option " << *iP << " to " << fullname << endmsg;
-                sc = joSvc()->addPropertyToCatalogue( fullname, *(*itP) );
-                if ( sc.isFailure() ) { return Error( "Cannot set options for " + fullname ); }
-              }
-              //---------------------------------------------------------------------------------
-            }
-          }
-        }
-      }
+      // Copy job options to track specific tool
+      sc = sc && propagateJobOptions( name(), name()+"."+Rich::text(type), m_jobOpts );
 
       // finally, load the tool
       m_tkTools[type] =

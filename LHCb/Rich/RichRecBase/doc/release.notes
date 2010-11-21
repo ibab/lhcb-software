@@ -4,6 +4,13 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Extend Rich::IPIDPlots::Configuration with a new option for expert histograms
+ - Add a method to the photon creator base class that returns a list of the
+   photon creator specific job options
+ - Update track selector base class to use new method in RichKernel base class
+   to propagate joboptions, instead of own private method.
+
 !========================= RichRecBase v4r1 2010-10-25 =========================
 
 ! 2010-10-15 - Chris Jones

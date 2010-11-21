@@ -79,6 +79,22 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
 
 }
 
+const std::vector<std::string> & PhotonCreatorBase::photonCreatorJobOptions() const
+{
+  static const std::vector<std::string> jos = boost::assign::list_of
+    ("RichRecPhotonLocation")
+    ("DoBookKeeping")
+    ("PhotonPredictor")
+    ("MinAllowedCherenkovTheta")
+    ("MaxAllowedCherenkovTheta")
+    ("MinPhotonProbability")
+    ("NSigma")
+    ("MaxPhotons")
+    ("MaxPhotDetOcc")
+    ("RejectAeroPhotonsIfGas");
+  return jos;
+}
+
 StatusCode PhotonCreatorBase::initialize()
 {
   // base class initilize

@@ -238,6 +238,9 @@ namespace Rich
       /// Delete all photon cross references
       void deleteAllCrossReferences() const;
 
+      /// Access the list of job options specific to the photon creator settings
+      const std::vector<std::string> & photonCreatorJobOptions() const;
+
     private: // methods
 
       /// Printout the photon creation statistics
@@ -368,10 +371,5 @@ namespace Rich
 
   }
 } // RICH
-
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::PhotonCreatorBase RichPhotonCreatorBase;
 
 #endif // RICHRECBASE_RICHPHOTONCREATORBASE_H

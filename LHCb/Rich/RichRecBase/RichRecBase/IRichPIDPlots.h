@@ -4,9 +4,6 @@
  *
  *  Header file for RICH tool interface : Rich::Rec::IPIDPlots
  *
- *  CVS Log :-
- *  $Id: IRichPIDPlots.h,v 1.4 2008-05-12 14:03:53 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
  */
@@ -67,15 +64,17 @@ namespace Rich
       public:
         /// Default constructor with default parameters
         Configuration() 
-          : minP  (   2 * Gaudi::Units::GeV ),
-            maxP  ( 100 * Gaudi::Units::GeV ),
-            minPt (   0 * Gaudi::Units::GeV ),
-            maxPt (  10 * Gaudi::Units::GeV ) { }
+          : minP        (   2 * Gaudi::Units::GeV ),
+            maxP        ( 100 * Gaudi::Units::GeV ),
+            minPt       (   0 * Gaudi::Units::GeV ),
+            maxPt       (  10 * Gaudi::Units::GeV ),
+            expertPlots ( false )                     { }
       public:
         double minP;  ///< The minimum track momentum (MeV/c)
         double maxP;  ///< The maximum track momentum (MeV/c)
         double minPt; ///< The minimum track transverse (to z-axis) momentum (MeV/c)
         double maxPt; ///< The maximum track transverse (to z-axis) momentum (MeV/c)
+        bool   expertPlots; ///< Activate the production of additional expert plots
       };
 
     public:
