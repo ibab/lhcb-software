@@ -54,7 +54,12 @@ StatusCode TrackSelEff::initialize()
 
 StatusCode TrackSelEff::prebookHistograms()
 {
+  // global quantities
+  richHisto1D( HID("nTracks"),     "# Tracks / Event", -0.5, 200.5, 201 );
+  richHisto1D( HID("nRichTracks"), "# Rich Tracks / Event", -0.5, 200.5, 201 );
+  // track variable plots
   prebookHistograms( "All/" );
+  // return
   return StatusCode::SUCCESS;
 }
 
@@ -115,7 +120,7 @@ StatusCode TrackSelEff::execute()
     const LHCb::Tracks * trTracks = get<LHCb::Tracks>( *iLoc );
 
     // Loop over the raw tracks
-    unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0);
+    unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0), nTotal(0), nTotalR(0);
     for ( LHCb::Tracks::const_iterator iT = trTracks->begin();
           iT != trTracks->end(); ++iT )
     {
@@ -123,9 +128,12 @@ StatusCode TrackSelEff::execute()
       if ( !(*iT) ) { Warning("Null Track"); continue; }
       // Is the raw track selected for this monitor
       if ( !m_trSelector->trackSelected(*iT) ) continue;
+      // count all raw selected tracks
+      ++nTotal;
 
       // Does this track have a RichRecTrack associated ?
       const LHCb::RichRecTrack * rTrack = getRichTrack(*iT);
+      if ( rTrack ) ++nTotalR;
 
       // Fill real data plots
       fillTrackPlots( *iT, rTrack, "All/" );
@@ -142,6 +150,8 @@ StatusCode TrackSelEff::execute()
 
     } // loop over tracks
 
+    richHisto1D( HID("nTracks")     ) -> fill( nTotal  );
+    richHisto1D( HID("nRichTracks") ) -> fill( nTotalR );
     if ( mcTrackOK )
     {
       plot1D( nReal,   "nRealTracks",      "# Real (MC Matched) Tracks / Event",           -0.5, 200.5, 201 );

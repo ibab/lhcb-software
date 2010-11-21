@@ -161,8 +161,16 @@ namespace Rich
         /// PID plots tool for each PID type
         PIDMap m_plotTools;
 
-        // Plots configuration object
+        /// Inclusive plots tool
+        const Rich::Rec::IPIDPlots * m_allPlotTool;
+
+        /// Plots configuration object
         Rich::Rec::IPIDPlots::Configuration m_plotsConfig;
+
+        /// Expert plots
+        bool m_expertPlots;
+
+      private:
 
         /// Utility class for radiators used
         class Radiators

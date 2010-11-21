@@ -147,10 +147,6 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     // get the decoded data for this tae event
     const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(taeEvent);
 
-    // abort checks if bad HPD detected, as in this case difficult to make sure
-    // the test is valid
-    bool abortSizeCheck = false;
-
     // HPD word counts
     HPDWordMap hpdWordMap;
     // initialise for all active HPDs and L1 to 0
@@ -181,9 +177,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
-          // Only use valid HPD blocks to include data size
+          // Only use valid HPD blocks to include in HPD info plots
           const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
-          if ( !hpdOK ) abortSizeCheck = true;
 
           // words for this HPD
           const unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
@@ -203,16 +198,6 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       ID << "L1s/L1HardwareID" << l1HardID;
       richHisto1D( ID.str() ) -> fill ( nL1Words );
       richProfile1D( HID("L1s/SizeVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1Words );
-
-      // Disable until better understood
-      // Compare to the value obtained direct from the RawEvent(s)
-      //if ( !abortSizeCheck && (nL1Words != l1SizeMap[l1HardID]) )
-      //{
-      //  std::ostringstream mess;
-      //  mess << "L1 raw data size mis-match for L1HardwareID " << l1HardID;
-      //  Error( mess.str() ).ignore();
-      //  error() << mess.str() << " " << nL1Words << " " << l1SizeMap[l1HardID] << endmsg;
-      //}
 
     } // loop over L1 boards
 

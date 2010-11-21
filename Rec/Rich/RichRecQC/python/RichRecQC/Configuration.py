@@ -147,6 +147,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
        ,"Radiators"       : None         # The radiators to use
        ,"CKThetaResRange" : [ ] # The CK theta range to use in resolution plots. Empty means defaults
+       ,"EventFilter"     : "" # Event filters for the monitoring. Default none
         }
 
     ## Initialize 
@@ -278,6 +279,13 @@ class RichRecQCConf(RichConfigurableUser):
         msgSvc = getConfigurable("MessageSvc")
         msgSvc.setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
                              "LinkedTo::MC/Particles2MCRichTracks" ]
+
+        # Event filters
+        filter = self.getProp("EventFilter")
+        if filter != "" :
+            from Configurables import LoKi__VoidFilter
+            rFilter = LoKi__VoidFilter('RichMoniEventFilter',Code=filter)
+            sequence.Members += [rFilter]
 
         # Event selection ?
         if self.isPropertySet("EventCuts") :
@@ -462,13 +470,20 @@ class RichRecQCConf(RichConfigurableUser):
                 # RichPID location
                 pidMon.InputPIDs = self.getProp("RichPIDLocation")
 
+                # Extra plots in Expert mode
+                if "Expert" == self.getProp("Histograms"):
+                    pidMon.ExpertPlots = True
+
+                # MC mode
+                pidMon.MCTruth = self.getProp("WithMC")
+
                 # Add to sequence
                 sequence.Members += [pidMon]
 
     ## Track monitoring
     def trackMoni(self,sequence):
 
-        from Configurables import ( Rich__Rec__MC__TrackSelEff )
+        from Configurables import Rich__Rec__MC__TrackSelEff
 
         # Track Types
         for trackType in self.getHistoOptions("EffTrackTypes") :

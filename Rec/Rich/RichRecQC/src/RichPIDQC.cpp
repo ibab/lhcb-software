@@ -31,7 +31,8 @@ PIDQC::PIDQC( const std::string& name,
     m_mcTruth          ( NULL ),
     m_mcPselector      ( NULL ),
     m_requiredRads     ( Rich::NRadiatorTypes ),
-    m_sF               ( "%7.3f" )
+    m_sF               ( "%7.3f" ),
+    m_allPlotTool      ( NULL )
 {
 
   // Declare job options
@@ -50,6 +51,7 @@ PIDQC::PIDQC( const std::string& name,
   m_requiredRads[Rich::Rich2Gas] = false;
   declareProperty( "RequiredRads", m_requiredRads );
   declareProperty( "ApplyMCPSel", m_mcPsel = false );
+  declareProperty( "ExpertPlots", m_expertPlots = false );
 
 }
 
@@ -69,6 +71,7 @@ StatusCode PIDQC::initialize()
   }
 
   acquireTool( "TrackSelector", m_trSelector, this );
+  acquireTool( "RichPIDPlots", "MCAll", m_allPlotTool, this );
 
   // Retrieve MC tool, if needed
   if ( m_truth ) acquireTool( "RichRecMCTruthTool", m_mcTruth );
@@ -79,6 +82,7 @@ StatusCode PIDQC::initialize()
   m_plotsConfig.maxP  = m_trSelector->maxPCut()  * Gaudi::Units::GeV;
   m_plotsConfig.minPt = m_trSelector->minPtCut() * Gaudi::Units::GeV;
   m_plotsConfig.maxPt = m_trSelector->maxPtCut() * Gaudi::Units::GeV;
+  m_plotsConfig.expertPlots = m_expertPlots;
 
   // Initialise summary information
   for ( int i = 0; i<6; ++i ) 
@@ -274,7 +278,7 @@ StatusCode PIDQC::execute()
         // Fill plots in PID performance tool
         if ( mcpid != Rich::Unknown &&
              pid   != Rich::Unknown )
-        { plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig ); }
+          plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig );
         
         // Count track and PID types
         if ( Rich::Unknown != mcpid ) 
@@ -290,6 +294,9 @@ StatusCode PIDQC::execute()
              pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
 
       }
+      
+      // MC free plots
+      m_allPlotTool->plots( iPID, pid, m_plotsConfig );
 
     } // end PID loop
   } // end empty if

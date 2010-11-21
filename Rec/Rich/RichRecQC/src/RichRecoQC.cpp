@@ -140,6 +140,8 @@ StatusCode RecoQC::prebookHistograms()
                    "delta(Cherenkov theta) / rad" );
       richHisto1D( HID("totalPhotons",*rad),"Reconstructed Photon Candidates",
                    0, 10000, 100, "# Photon Candidates" );
+      richHisto1D( HID("totalSegments",*rad),"Track Radiator Segments",
+                   -0.5, 500.5, 501, "# Track Radiator Segments" );
       richHisto1D( HID("totalPhotonsPerSeg",*rad),"Photons per Segment | All Tracks",
                    -0.5, 500.5, 501, "# Photon Candidates / Track Segment" );
       richHisto1D( HID("totalPhotonsPerSegIso",*rad), "Photon Yield | Isolated Tracks",
@@ -397,7 +399,11 @@ StatusCode RecoQC::execute()
   for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
   {
-    if ( m_rads[*rad] ) richHisto1D(HID("totalPhotons",*rad))->fill(photsPerRad[*rad]);
+    if ( m_rads[*rad] ) 
+    {
+      richHisto1D(HID("totalPhotons", *rad))->fill(photsPerRad[*rad]);
+      richHisto1D(HID("totalSegments",*rad))->fill(segsPerRad[*rad]);
+    }    
   }
 
   return StatusCode::SUCCESS;
