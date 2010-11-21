@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Pass the DataType option to the RICH Reconstruction Configurable
+ - Add timing monitors for the CALO, MUON, PROTO and Vertex sequences.
+
 !========================== RecConf v1r3 2010-09-24 ===========================
 ! 2010-09-22 - Victor Coco
  - Add upgrade special datatype and change measurmenet provider of muonID 

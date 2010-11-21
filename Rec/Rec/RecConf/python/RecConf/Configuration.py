@@ -15,7 +15,9 @@ from GlobalReco.Configuration import *
 from CaloReco.Configuration   import OffLineCaloRecoConf 
 from CaloPIDs.Configuration   import OffLineCaloPIDsConf
 
-from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecMonitors, MuonTrackMonitorConf, MuonIDAlg
+from Configurables import ( ProcessPhase, CaloMoniDstConf, RichRecQCConf,
+                            VeloRecMonitors,
+                            MuonTrackMonitorConf, MuonIDAlg )
 
 ## @class RecSysConf
 #  Configurable for LHCb reconstruction
@@ -41,8 +43,9 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData", "microBiasTrigger","upgrade" ]
-    
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas",
+                         "earlyData", "microBiasTrigger","upgrade" ]
+
     ## Steering options
     __slots__ = {
         "RecoSequence" : None    # The Sub-detector sequencing. Default is all known
@@ -84,7 +87,8 @@ class RecSysConf(LHCbConfigurableUser):
                     from PatPV import PVConf 
                     PVConf.VLoosePV().configureAlg()
                 else:     
-                  if "veloOpen" in self.getProp("SpecialData") or "microBiasTrigger" in self.getProp("SpecialData"):
+                  if ( "veloOpen" in self.getProp("SpecialData") or
+                       "microBiasTrigger" in self.getProp("SpecialData") ):
                     from PatPV import PVConf
                     PVConf.LoosePV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
@@ -92,7 +96,8 @@ class RecSysConf(LHCbConfigurableUser):
                 # Velo tracks not copied to Rec/Track/Best for RDST 
                 from Configurables import PVOfflineTool
                 pvAlg.addTool( PVOfflineTool() )
-                pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/Best", "Rec/Track/PreparedVelo" ]
+                pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/Best",
+                                                    "Rec/Track/PreparedVelo" ]
             trackV0Finder = TrackV0Finder()
             GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
             # the TrackV0Finder use simplified material for extra/interpolation
@@ -122,7 +127,7 @@ class RecSysConf(LHCbConfigurableUser):
             seq = GaudiSequencer("RecoRICHSeq")
             # Create the top level Conf object and set some general options
             richConf = RichRecSysConf(self.richRecConfName)
-            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel","Simulation"])
+            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel","Simulation","DataType"])
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = seq
             # Input Tracks (would be better to not hard code this. Get from TrackSys() or DstConf())
@@ -164,7 +169,8 @@ class RecSysConf(LHCbConfigurableUser):
         # MUON
         if "MUON" in recoSeq:
             from MuonID import ConfiguredMuonIDs
-            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"),specialData=self.getProp("SpecialData"))
+            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"),
+                                                   specialData=self.getProp("SpecialData"))
             MuonIDSeq=cm.getMuonIDSeq()
             GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec", MuonIDSeq ]
             
@@ -219,7 +225,7 @@ class RecMoniConf(LHCbConfigurableUser):
        }
 
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO", "Hlt"] 
+    KnownMoniSubdets        = ["GENERAL","CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO","Hlt"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -272,10 +278,30 @@ class RecMoniConf(LHCbConfigurableUser):
             trackTime.Algorithms = ["RecoTrSeq","RecoVELOSeq","RecoDecodingSeq"]
             seq.Members += [trackTime]
 
+            # Vertex
+            vertTime = RecProcessingTimeMoni("VertexEventProcTime")
+            vertTime.Algorithms = ["RecoVertexSeq"]
+            seq.Members += [vertTime]
+
             # RICH
             richTime = RecProcessingTimeMoni("RichEventProcTime")
             richTime.Algorithms = ["RecoRICHSeq"]
             seq.Members += [richTime]
+
+            # CALO
+            caloTime = RecProcessingTimeMoni("CaloEventProcTime")
+            caloTime.Algorithms = ["RecoCALOSeq"]
+            seq.Members += [caloTime]
+
+            # MUON
+            muonTime = RecProcessingTimeMoni("MuonEventProcTime")
+            muonTime.Algorithms = ["RecoMUONSeq"]
+            seq.Members += [muonTime]
+
+            # PROTO
+            protoTime = RecProcessingTimeMoni("ProtoEventProcTime")
+            protoTime.Algorithms = ["RecoPROTOSeq"]
+            seq.Members += [protoTime]
 
             # ProcStat Abort rates
             from Configurables import ProcStatAbortMoni
