@@ -303,13 +303,10 @@ private:
   // associated sensor on the other side of the velo
   const DeVeloPixSquareType* m_otherSideSensor;
 
-  unsigned int m_ChipBit;
   unsigned int m_PixelLPBit;
   unsigned int m_PixelHPBit;
   unsigned int m_PixelBit;
-  unsigned int m_numberOfPixelsPerChipBits;
-  unsigned int m_numberOfChipsBits;
-  
+
   unsigned int m_ChipMask ;
   unsigned int m_PixelLPMask;
   unsigned int m_PixelHPMask;

@@ -260,20 +260,24 @@ StatusCode DeVeloPixSquareType::initialize()
 
   // get some bits and mask field for some bit manipulation...
   // fill a channelID 
-  LHCb::VeloPixChannelID refid ((int)(pow(2,32)-1));
+//   LHCb::VeloPixChannelID refid ((int)(pow(2,32)-1));
 
-  m_ChipBit = (unsigned int)(log(refid.chip()+1.)/log(2.));
-  m_PixelLPBit = (unsigned int)(log(refid.pixel_lp()+1.)/log(2.));
-  m_PixelHPBit = (unsigned int)(log(refid.pixel_hp()+1.)/log(2.));
-  m_numberOfPixelsPerChipBits = (refid.pixel_lp()+1)*(refid.pixel_hp()+1);
-  m_numberOfChipsBits = refid.chip()+1;
-  unsigned int zeroMask = 0x00000000 ;
-  m_PixelBit = m_PixelHPBit+m_PixelLPBit;
+//   m_ChipBit = (unsigned int)(log(refid.chip()+1.)/log(2.));
+//   m_PixelHPBit = (unsigned int)(log(refid.pixel_hp()+1.)/log(2.));
+//   m_numberOfPixelsPerChipBits = (refid.pixel_lp()+1)*(refid.pixel_hp()+1);
+//   m_numberOfChipsBits = refid.chip()+1;
+//   unsigned ich_tmpnt zeroMask = 0x00000000 ;
+//   m_PixelBit = m_PixelHPBit+m_PixelLPBit;
+
+  LHCb::VeloPixChannelID ch_tmp(0);
+  m_PixelLPBit = ch_tmp.GetPixellpBits();
+  m_PixelHPBit = ch_tmp.GetPixelhpBits();
+  m_PixelBit =  ch_tmp.GetPixelBits();
   
-  m_ChipMask = (refid.chip()  << m_PixelBit ) | zeroMask;
-  m_PixelHPMask = refid.pixel_hp() | zeroMask ;
-  m_PixelLPMask = (refid.pixel_lp()<< m_PixelHPBit  | zeroMask);
-  m_PixelMask =  m_PixelLPMask | m_PixelLPMask;
+  m_ChipMask = ch_tmp.GetChipMask();
+  m_PixelHPMask = ch_tmp.GetPixelhpMask();
+  m_PixelLPMask = ch_tmp.GetPixellpMask();
+  m_PixelMask =  ch_tmp.GetPixelMask();
     
   // geometry conditions, update global position in cache
   /*updMgrSvc()->
