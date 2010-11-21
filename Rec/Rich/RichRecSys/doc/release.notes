@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Add 'DataType' slot to python Configurable.
+ - Add 2010 MC tuning to smear the reconstructed CK theta values to match
+   resolutions achieved in 2010 end-of-year reprocessing.
+
 ! 2010-11-16 - Chris Jones
  - Revert the last commit, as I need more time to study the impact for the
    HLT and Monte Carlo samples.

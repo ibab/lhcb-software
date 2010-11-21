@@ -56,7 +56,8 @@ class RichRecSysConf(RichConfigurableUser):
        ,"HpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
        ,"SpecialData"   : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
-       ,"Simulation"    : False         # Simulated data
+       ,"Simulation"    : False   # Simulated data
+       ,"DataType"      : ""      # Type of data, propagated from application
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
        ,"RichPIDLocation" : ""    # Output RichPID Location
        ,"PIDVersion"      : 1     # Default PID version
@@ -115,9 +116,16 @@ class RichRecSysConf(RichConfigurableUser):
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
 
-        # Check the Context
-        #if not self.isPropertySet("Context") : self.setProp("Context",self.name())
-
+        # Data Type tunings
+        dataType = self.getProp("DataType")
+        if dataType == "" :
+            raise RuntimeError("ERROR : DataType is not correctly set")
+        if dataType == "2010" and self.getProp("Simulation"):
+            log.info( "Running 2010 MC Reconstruction -> " +
+                      "Smearing CK theta values to match data resolutions" )
+            self.richTools().PhotonCreatorType = "SmearCKTheta"
+            self.richTools().photonCreator().SmearingWidths = [ 0.004, 0.000844, 0.000266 ]
+        
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])
 
