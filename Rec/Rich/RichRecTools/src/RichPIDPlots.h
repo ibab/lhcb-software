@@ -54,8 +54,6 @@ namespace Rich
 
       virtual ~PIDPlots( ); ///< Destructor
 
-      virtual StatusCode initialize();  // Tool initialization
-
     public:
 
       // Fill the plots for the given RichPID and PID hypothesis
@@ -115,7 +113,6 @@ namespace Rich
       mutable const ITrackSelector * m_trSelector;  ///< Track selector
 
       // Job Options
-      bool m_extraHistos;         ///< Fill full set of histograms
       double m_dllCut;            ///< Dll cut value  
       double m_dllRange;          ///< Dll range for plots
 

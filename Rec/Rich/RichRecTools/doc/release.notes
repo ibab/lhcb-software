@@ -4,7 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecTools v4r13 2010-10-28 =========================
+! 2010-11-21 - Chris Jones
+ - Extend PIDPlotsTool to use new extraPlots Configuration option
+
+!====================== RichRecTools v4r13 2010-10-28 =========================
 ! 2010-10-14 - Chris Jones
  - Changes to avoid loading the radiator detector elements until they are 
    actually needed
@@ -30,7 +33,7 @@
  - Fix stupid bug where the inclusion of a '/' in some histogram IDs screwed
    up their location in the ROOT files ...
 
-!===================== RichRecTools v4r11 2010-04-26 =========================
+!===================== RichRecTools v4r11 2010-04-26 ==========================
 ! 2010-04-12 - Chris Jones
  - Add some additional plots to the RichPID plot tool (as used by the 
    monitoring in DaVinci)
@@ -38,7 +41,7 @@
   + Add plots for the RICH acceptance eff., V P, Pt and (P,Pt)
   + Update the tool to use the new histogramming methods from RichKernel
 
-!===================== RichRecTools v4r10 2010-03-19 =========================
+!===================== RichRecTools v4r10 2010-03-19 ==========================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 

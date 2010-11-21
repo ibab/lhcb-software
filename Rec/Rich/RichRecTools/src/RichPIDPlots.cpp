@@ -34,7 +34,6 @@ PIDPlots::PIDPlots( const std::string& type,
   // interface
   declareInterface<Rich::Rec::IPIDPlots>(this);
   // JOs
-  declareProperty ( "ExtraHistos",  m_extraHistos = false );
   declareProperty ( "DllCut",       m_dllCut      = 0.0   );
   declareProperty ( "DllPlotRange", m_dllRange    = 100   );
   // turn off histo printing by default
@@ -45,18 +44,6 @@ PIDPlots::PIDPlots( const std::string& type,
 }
 
 PIDPlots::~PIDPlots() {}
-
-StatusCode PIDPlots::initialize()
-{
-  // Initialize base class
-  const StatusCode sc = HistoToolBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  // Warn if extra histos are enabled
-  if ( m_extraHistos ) debug() << "Extra histograms are enabled" << endmsg;
-
-  return sc;
-}
 
 //=============================================================================
 
@@ -81,7 +68,7 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
   // ProtoParticle level plots
 
   // Extra plots
-  if ( m_extraHistos )
+  if ( config.expertPlots )
   {
     
     // track momentum
@@ -132,7 +119,7 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
     debug() << "RichPID " << *pid << endmsg;
 
   // Extra plots
-  if ( m_extraHistos )
+  if ( config.expertPlots )
   {
 
     // track momentum
@@ -158,10 +145,14 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         const std::string DllDiff = Rich::text(first) + "-" + Rich::text(last);
 
         // Dll(X-Y) distributions
+        // For given PID type
         title.str("");
         title << "RichDLL(" << DllDiff << ")";
         const double dll = pid->particleDeltaLL(first) - pid->particleDeltaLL(last);
         richHisto1D( HID(title.str(),hypo), title.str(),
+                     -m_dllRange, m_dllRange, nBins1D() )->fill(dll);
+        // inclusive plot
+        richHisto1D( HID("All/"+title.str()), title.str(),
                      -m_dllRange, m_dllRange, nBins1D() )->fill(dll);
 
         // Efficiency
