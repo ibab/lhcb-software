@@ -255,7 +255,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     from Ganga.GPI import Job
-    from ROOT import TGraphErrors, TH1F, TF1
+    from ROOT import TFile, TGraphErrors, TF1, TH1, TH1F, gROOT
     from array import array
     import pickle, bz2
 
@@ -289,12 +289,16 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     print "Looping over the runs ..."
     for j in jobs :
 
+        # Run Number
         run = int(getInfoFromJob(j,'Run'))
 
+        # Root file
+        rootfile = getRootFile(j)
+
         # Fits
-        fitResultRes = fitCKThetaHistogram(j,rad)
-        fitResultRaw = fitCKThetaHistogram(j,rad,'thetaRec',-1)
-        fitResultExp = fitCKExpectedHistogram(j,rad)
+        fitResultRes = fitCKThetaHistogram(rootfile,run,rad)
+        fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
+        fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
         
         if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
             scale = nScaleFromShift(fitResultRes,rad)
@@ -461,9 +465,10 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
 
         run      = int(getInfoFromJob(j,'Run'))
         refIndex = getInfoFromJob(j,indexname)
+        rootfile = getRootFile(j)
   
         print "Fitting job", rad, "Run =", run, "index =", refIndex
-        fitResult = fitCKThetaHistogram(j,rad)
+        fitResult = fitCKThetaHistogram(rootfile,run,rad)
 
         if fitResult['OK'] :
             x.append(float(refIndex))
@@ -512,8 +517,11 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
         # Run number
         run = int(getInfoFromJob(j,'Run'))
 
+        # Root file
+        rootfile = getRootFile(j)
+
         # get info from plot
-        result = fitCKExpectedHistogram(j,rad)
+        result = fitCKExpectedHistogram(rootfile,run,rad)
         if result['OK'] :
 
             # Mean of the histo
@@ -554,9 +562,10 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 
     for j in jobs :
 
-        run = int(getInfoFromJob(j,'Run'))
+        run      = int(getInfoFromJob(j,'Run'))
+        rootfile = getRootFile(j)
 
-        fitResult = fitCKThetaHistogram(j,rad,'thetaRec')
+        fitResult = fitCKThetaHistogram(rootfile,run,rad,'thetaRec')
 
         if fitResult['OK'] :
             runs.append(float(run))
@@ -810,7 +819,7 @@ def printCanvas(tag=''):
         os.system('ps2pdf '+imageFileName)
         os.remove(imageFileName)
 
-def fitCKExpectedHistogram(j,rad='Rich1Gas'):
+def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
 
     from ROOT import TF1, TH1, TText, gROOT
 
@@ -818,15 +827,11 @@ def fitCKExpectedHistogram(j,rad='Rich1Gas'):
     result = { 'OK' : False, "Message" : "No Message" }
 
     # Load the root file for this job
-    rootfile = getRootFile(j)
     if rootfile == None :
 
         result['Message'] = "Failed to open ROOT file"
 
     else:
-
-        # Run number
-        run = int(getInfoFromJob(j,'Run'))
 
         # Parameters
         minEntries = 100
@@ -859,21 +864,42 @@ def fitCKExpectedHistogram(j,rad='Rich1Gas'):
                        'Mean'    : [mean,meanerr]
                        }
 
-        # Close the rootfile
-        rootfile.Close()
-
     return result
-        
-def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
 
-    from ROOT import TF1, TH1, TText, gROOT
-    #from ROOT import TFitResultPtr, TFitResult
+def fitCKForFile(filename,plot='ckResAll'):
+
+    from ROOT import TFile, TH1F, TF1, TH1, TText, gROOT
+
+    file = TFile(filename)
+
+    if file == None :
+
+        print "Failed to open ROOT file", filename
+
+    else:
+
+        # Start a PDF file
+        globals()["imageFileName"] = "CKFit.pdf"
+        printCanvas('[')
+
+        fitResult1 = fitCKThetaHistogram(file,0,'Rich1Gas',plot)
+        print fitResult1
+        fitResult2 = fitCKThetaHistogram(file,0,'Rich2Gas',plot)
+        print fitResult2
+
+        # Close PDF file
+        printCanvas(']')
+
+        file.Close()
+        
+def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
+
+    from ROOT import TH1F, TF1, TH1, TText, gROOT
 
     # Default return result
     result = { 'OK' : False, "Message" : "No Message" }
 
     # Load the root file for this job
-    rootfile = getRootFile(j)
     if rootfile == None :
 
         result['Message'] = "Failed to open ROOT file"
@@ -882,9 +908,6 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
 
         # Parameters
         minEntries = 10000
-
-        # Run number
-        run = getInfoFromJob(j,'Run')
 
         # Get the histogram
         histName = 'RICH/RiCKResLong/'+rad+'/'+plot
@@ -998,9 +1021,6 @@ def fitCKThetaHistogram(j,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
                            }
             else:
                 result['Message'] = "Histogram Fit Failed"
-
-        # Close the rootfile
-        rootfile.Close()
 
     # Return the fit result
     return result
