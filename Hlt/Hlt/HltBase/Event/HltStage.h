@@ -83,15 +83,15 @@ namespace Hlt
   public:
     // ========================================================================
     enum Type {
-      Unknown       =  -1 , 
-      L0Muon        =   0 , 
-      L0Calo        =   1 , 
-      L0DiMuon      =   2 , 
-      HltTrack      =   3 , 
-      HltVertex     =   4 , 
-      HltMultiTrack =   5 , 
-      HltStage      =   6 ,      
-      HltCandidate  =   7       
+      Unknown       =   0 , 
+      L0Muon        =   1 , 
+      L0Calo        =   2 , 
+      L0DiMuon      =   3 , 
+      HltTrack      =   4 , 
+      HltVertex     =   5 , 
+      HltMultiTrack =   6 , 
+      HltStage      =   7 ,      
+      HltCandidate  =   8       
     } ;  
     // ========================================================================    
   public:
@@ -235,7 +235,7 @@ namespace Hlt
     /** Check if cache contains value with the specified key
      * @param[in] key
      */
-    bool hasInfo(const std::string& key) { return m_cache.has(key) ; }
+    bool hasInfo(const std::string& key ) { return m_cache.has(key) ; }
     /// Check if cache contains value with the specified key and type
     template<typename T>
     bool hasInfo_(const std::string& key) const 
@@ -248,15 +248,15 @@ namespace Hlt
     template<typename T> void updateInfo ( const std::string& key   , 
                                            const T&           value ) ;
     /** Get a cached value associated with the specified type and key.
-     * @returns The value associated with the specified type and key. If the such
-     * value does not exists def is returned.
+     *  @returns The value associated with the specified type and key. If the such
+     *  value does not exists def is returned.
      */
     template<typename T>
     T info(const std::string& key, const T& default_value) const;
     /** Erase all cached values with the specified key
      * @param[in] key
      */
-    void eraseInfo(const std::string& key)
+    void eraseInfo ( const std::string& key )
     {
       _checkLock();
       m_cache.erase(key);

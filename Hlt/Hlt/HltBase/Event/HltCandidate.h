@@ -382,7 +382,67 @@ namespace Hlt
   // ==========================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
-// the END 
+namespace Hlt
+{
+  // ==========================================================================
+  /** @struct CandidateType2Id 
+   *  Helper structure to map candidate type to ID 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-11-21
+   */
+  template <class TYPE> struct CandidateType2Id ;
+  // ==========================================================================
+  template <class TYPE> struct CandidateType2Id<const TYPE>
+  { enum     { value = CandidateType2Id<TYPE>::value } ; } ;
+  template <class TYPE> struct CandidateType2Id<TYPE*>
+  { enum { value = CandidateType2Id<TYPE>::value } ; } ;
+  template <class TYPE> struct CandidateType2Id<TYPE&>
+  { enum { value = CandidateType2Id<TYPE>::value } ; } ;
+  template <class TYPE> struct CandidateType2Id<SmartRef<TYPE> >
+  { enum { value = CandidateType2Id<TYPE>::value } ; } ;
+  // ========================================================================== 
+  template <> struct CandidateType2Id<LHCb::L0MuonCandidate>
+  { enum { value = Hlt::Stage::L0Muon       } ; } ;
+  template <> struct CandidateType2Id<LHCb::L0CaloCandidate>
+  { enum { value = Hlt::Stage::L0Calo       } ; } ;
+  template <> struct CandidateType2Id<Hlt::L0DiMuonCandidate>
+  { enum { value = Hlt::Stage::L0DiMuon     } ; } ;
+  template <> struct CandidateType2Id<LHCb::Track>
+  { enum { value = Hlt::Stage::HltTrack     } ; } ;
+  template <> struct CandidateType2Id<LHCb::RecVertex>
+  { enum { value = Hlt::Stage::HltVertex    } ; } ;
+  template <> struct CandidateType2Id<Hlt::MultiTrack>
+  { enum { value = Hlt::Stage::HltMultiTrack } ; } ;
+  template <> struct CandidateType2Id<Hlt::Stage>
+  { enum { value = Hlt::Stage::HltStage     } ; } ;
+  template <> struct CandidateType2Id<Hlt::Candidate>
+  { enum { value = Hlt::Stage::HltCandidate } ; } ;
+  // ==========================================================================
+  /** @struct CandidateId2Type 
+   *  Helper structure to map candidate ID to Type 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-11-21
+   */
+  template <unsigned int> struct CandidateId2Type ;
+  //
+  template <> struct CandidateId2Type<Hlt::Stage::L0Muon>
+  { typedef LHCb::L0MuonCandidate    Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::L0Calo>
+  { typedef LHCb::L0CaloCandidate    Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::L0DiMuon>
+  { typedef Hlt::L0DiMuonCandidate   Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::HltTrack>
+  { typedef LHCb::Track              Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::HltMultiTrack>
+  { typedef Hlt::MultiTrack          Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::HltStage>
+  { typedef Hlt::Stage               Type ; } ;
+  template <> struct CandidateId2Type<Hlt::Stage::HltCandidate>
+  { typedef Hlt::Candidate           Type ; } ;
+  // ==========================================================================
+} //                                                       end of namespace Hlt 
+// ============================================================================
+//                                                                      the END 
 // ============================================================================
 #endif  /// HltEvent_Candidate_H
 // ============================================================================
