@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-11-21 - Victor Coco
+- add some public method to VeloPixChannelID to access the masks
+
 ! 2010-11-10 - Vanya Belyaev
 
  - fix some strange problem

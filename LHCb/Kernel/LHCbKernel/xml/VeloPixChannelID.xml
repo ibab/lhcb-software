@@ -150,7 +150,29 @@ m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | (
           m_channelID |= ((unsigned long)(pixel))  &amp; (zposMask | chipMask | pixel_lpMask | pixel_hpMask);
         </code>
       </method>
-
+       
+      <method type='unsigned int' name='GetPixellpMask' const='TRUE' desc='Get pixel low precision mask'>
+        <code> return  pixel_lpMask ; </code>
+      </method>
+      <method type='unsigned int' name='GetPixelhpMask' const='TRUE' desc='Get pixel high precision mask'>
+        <code> return  pixel_hpMask ; </code>
+      </method>
+      <method type='unsigned int' name='GetPixelMask' const='TRUE' desc='Get pixel mask'>
+        <code> return  (pixel_lpMask | pixel_hpMask) ; </code>
+      </method>
+      <method type='unsigned int' name='GetChipMask' const='TRUE' desc='Get chip mask'>
+        <code> return  ( zposMask | chipMask ) ; </code>
+      </method>
+       
+      <method type='unsigned int' name='GetPixellpBits' const='TRUE' desc='Get pixel low precision number of bits'>
+        <code> return  pixel_lpBits-pixel_hpBits ; </code>
+      </method>
+      <method type='unsigned int' name='GetPixelhpBits' const='TRUE' desc='Get pixel high precision number of bits'>
+        <code> return  chipBits-pixel_lpBits ; </code>
+      </method>
+      <method type='unsigned int' name='GetPixelBits' const='TRUE' desc='Get pixel high precision number of bits'>
+        <code> return  chipBits-pixel_hpBits ; </code>
+      </method>
 
       <method type="std::ostream&amp;" name="fillStream" 
         virtual="FALSE" const="TRUE"
