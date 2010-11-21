@@ -41,7 +41,7 @@ SeedTrackSelector::SeedTrackSelector( const std::string& type,
 //=============================================================================
 SeedTrackSelector::~SeedTrackSelector() {}
 
-MsgStream & SeedTrackSelector::printSel( MsgStream & os ) const
+void SeedTrackSelector::printSel( std::ostringstream & os ) const
 {
   BaseTrackSelector::printSel(os);
   if ( m_minSeedLL > boost::numeric::bounds<double>::lowest() ||
@@ -49,7 +49,6 @@ MsgStream & SeedTrackSelector::printSel( MsgStream & os ) const
   {
     os << boost::format( " : LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
   }
-  return os;
 }
 
 // Test if the given Track is selected under the current criteria

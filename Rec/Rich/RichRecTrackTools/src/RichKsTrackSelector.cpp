@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::KsTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichKsTrackSelector.cpp,v 1.2 2009-06-10 16:12:58 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */

@@ -12,6 +12,9 @@
 #ifndef RICHRECTRACKTOOLS_RichBaseTrackSelector_H
 #define RICHRECTRACKTOOLS_RichBaseTrackSelector_H 1
 
+// STL
+#include <sstream>
+
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
@@ -116,12 +119,21 @@ namespace Rich
     protected: // methods
 
       /// Print the track selection
-      virtual MsgStream & printSel( MsgStream & os ) const;
+      virtual void printSel( std::ostringstream & os ) const;
+
+    private:
+
+      /// Access on demand the isolated track tool
+      inline const IIsolatedTrack * isoTrackTool() const
+      {
+        if ( !m_isoTrack ) { acquireTool( "RichIsolatedTrack", m_isoTrack ); }
+        return m_isoTrack;
+      }
 
     private: // data
 
       /// Isolated Track tool
-      const IIsolatedTrack * m_isoTrack;
+      mutable const IIsolatedTrack * m_isoTrack;
 
       double m_minChi2Cut; ///< Min chi^2 cut
       double m_maxChi2Cut; ///< Max chi^2 cut

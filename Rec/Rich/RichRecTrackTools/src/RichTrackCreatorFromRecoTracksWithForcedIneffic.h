@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracksWithForcedIneffic
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.h,v 1.2 2007-12-05 17:39:55 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

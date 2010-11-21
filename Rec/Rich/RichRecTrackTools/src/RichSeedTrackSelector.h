@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichSeedTrackSelector.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -57,7 +54,7 @@ namespace Rich
     protected: // methods
 
       /// Print the track selection
-      virtual MsgStream & printSel( MsgStream & os ) const;
+      virtual void printSel( std::ostringstream & os ) const;
 
     private: // data
 

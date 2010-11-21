@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -44,7 +41,7 @@ MatchTrackSelector::MatchTrackSelector( const std::string& type,
 //=============================================================================
 MatchTrackSelector::~MatchTrackSelector() {}
 
-MsgStream & MatchTrackSelector::printSel( MsgStream & os ) const
+void MatchTrackSelector::printSel( std::ostringstream & os ) const
 {
   BaseTrackSelector::printSel(os);
   m_disabled = true;
@@ -54,7 +51,6 @@ MsgStream & MatchTrackSelector::printSel( MsgStream & os ) const
     m_disabled = false;
     os << boost::format( " : MatchChi2 = %|-4.2e|->%|-4.2e|" ) % m_minMatchChi2 % m_maxMatchChi2;
   }
-  return os;
 }
 
 // Test if the given Track is selected under the current criteria

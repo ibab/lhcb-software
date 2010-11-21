@@ -4,6 +4,13 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-11-21 - Chris Jones
+ - Update the track selector base to not print the full list of track cuts if
+   the selection is NULL.
+ - Update the track selector base class to load the isolated track tool on 
+   demand
+ - Remove some more CVS comments
+
 ! 2010-11-04 - Chris Jones
  - Add max and min momentum cuts to "HasRichInfo" cuts
 

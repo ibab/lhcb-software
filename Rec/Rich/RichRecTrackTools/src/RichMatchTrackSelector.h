@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichMatchTrackSelector.h,v 1.2 2009-06-10 13:29:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -57,7 +54,7 @@ namespace Rich
     protected: // methods
 
       /// Print the track selection
-      virtual MsgStream & printSel( MsgStream & os ) const;
+      virtual void printSel( std::ostringstream & os ) const;
 
     private: // data
 

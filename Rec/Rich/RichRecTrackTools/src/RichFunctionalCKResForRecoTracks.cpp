@@ -65,12 +65,10 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   declareProperty( "HPDErrors",           m_hpdErr = list_of(0.0005)(0.0006)(0.0002) );
 
   declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.003)(0.0025)(0.001) );
-  //declareProperty( "MaxCKThetaRes",       m_maxRes = list_of(0.01)(0.0035)(0.0015) );
 
   declareProperty( "UseLastMeasPoint", m_useLastMP = list_of(false)(false)(false) );
 
   declareProperty( "ScaleFactor",          m_scale = list_of(1.0)(1.0)(1.0) );
-  //declareProperty( "ScaleFactor",          m_scale = list_of(3.5)(1.5)(1.25) );
 
   // default to having histograms disabled
   setProduceHistos ( false             );

@@ -4,9 +4,6 @@
  *
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracksWithForcedIneffic
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracksWithForcedIneffic.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

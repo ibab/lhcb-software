@@ -29,8 +29,8 @@ DECLARE_TOOL_FACTORY( BaseTrackSelector );
 BaseTrackSelector::BaseTrackSelector( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase ( type, name , parent ),
-    m_isoTrack      ( NULL )
+  : ToolBase   ( type, name , parent ),
+    m_isoTrack ( NULL )
 {
   // interface
   declareInterface<IBaseTrackSelector>(this);
@@ -39,22 +39,22 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
 
   // By default all cuts are off ....
 
-  declareProperty( "MinPCut",    m_minPCut     = boost::numeric::bounds<double>::lowest() ); // in GeV
+  declareProperty( "MinPCut",    m_minPCut     = boost::numeric::bounds<double>::lowest()  ); // in GeV
   declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
 
-  declareProperty( "MinPtCut",   m_minPtCut    = boost::numeric::bounds<double>::lowest() ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest()  ); // in GeV
+  declareProperty( "MinPtCut",   m_minPtCut    = boost::numeric::bounds<double>::lowest()  ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
 
-  declareProperty( "MinChi2Cut", m_minChi2Cut  = boost::numeric::bounds<double>::lowest() );
+  declareProperty( "MinChi2Cut", m_minChi2Cut  = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
 
   declareProperty( "MinLikelihood",  m_minLL = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxLikelihood",  m_maxLL = boost::numeric::bounds<double>::highest() );
 
-  declareProperty( "MinCloneDistCut", m_minCloneCut    = boost::numeric::bounds<double>::lowest() );
+  declareProperty( "MinCloneDistCut", m_minCloneCut    = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxCloneDistCut", m_maxCloneCut    = boost::numeric::bounds<double>::highest() );
 
-  declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest() );
+  declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxGhostProbCut", m_maxGhostProb   = boost::numeric::bounds<double>::highest() );
 
   declareProperty( "Charge",       m_chargeSel    = 0 );
@@ -64,6 +64,7 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "AcceptFitFailures", m_acceptFitFailures = false );
 
   declareProperty( "RejectNonIsolated", m_rejectNonIsolated = false );
+
 }
 
 //=============================================================================
@@ -77,27 +78,26 @@ BaseTrackSelector::~BaseTrackSelector() {}
 StatusCode BaseTrackSelector::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Get tools
-  if ( m_rejectNonIsolated ) acquireTool( "RichIsolatedTrack", m_isoTrack );
-
-  // print track sel
-  printSel(info()) << endmsg;
+  // print track selection
+  std::ostringstream sel;
+  printSel(sel);
+  if ( !sel.str().empty() )
+  {
+    // get track type from name
+    const int slash          = name().find_last_of(".");
+    const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
+    info() << boost::format( " %|.12s| %|12t|" ) % tkName;
+    info() << sel.str() << endmsg;
+  }
 
   return sc;
 }
 
-MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
+void BaseTrackSelector::printSel( std::ostringstream & os ) const
 {
-  // get track type from name
-  const int slash          = name().find_last_of(".");
-  const std::string tkName = ( slash>0 ? name().substr(slash+1) : "UnknownTrackType" );
-
-  // Name
-  os << boost::format( " %|.12s| %|12t|" ) % tkName;
-
   // p cut
   m_pCutEnabled = false;
   if ( m_minPCut > boost::numeric::bounds<double>::lowest() ||
@@ -160,7 +160,6 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
 
   if ( m_rejectNonIsolated ) os << " IsolatedTracks";
 
-  return os;
 }
 
 //=============================================================================
@@ -169,7 +168,7 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
 StatusCode BaseTrackSelector::finalize()
 {
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return ToolBase::finalize();
 }
 
 // Test if the given Track is selected under the current criteria
@@ -287,7 +286,7 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   // isolation
   if ( m_rejectNonIsolated )
   {
-    if ( !m_isoTrack->isIsolated(track) )
+    if ( !isoTrackTool()->isIsolated(track) )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Isolation Criteria failed" << endmsg;
@@ -399,7 +398,7 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   // isolation
   if ( m_rejectNonIsolated )
   {
-    if ( !m_isoTrack->isIsolated(track) )
+    if ( !isoTrackTool()->isIsolated(track) )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Isolation Criteria failed" << endmsg;
