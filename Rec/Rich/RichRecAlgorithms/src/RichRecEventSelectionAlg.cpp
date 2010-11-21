@@ -4,9 +4,6 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
- *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.8 2009-09-04 14:29:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
@@ -25,7 +22,8 @@ DECLARE_ALGORITHM_FACTORY( EventSelectionAlg );
 
 namespace
 {
-  static const unsigned int s_large_number = 999999;
+  static const unsigned int s_large_number = 
+    boost::numeric::bounds<unsigned int>::highest();
 }
 
 // Standard constructor, initializes variables

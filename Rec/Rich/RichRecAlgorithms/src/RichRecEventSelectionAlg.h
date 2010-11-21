@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::EventSelectionAlg
  *
- *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.h,v 1.5 2009-09-04 10:36:24 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
@@ -26,6 +23,10 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
+
+// Boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 
 namespace Rich
 {
