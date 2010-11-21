@@ -1,10 +1,9 @@
+
 //-------------------------------------------------------------------------------
 /** @file RichPhotonCreatorWithGaussianCKSmear.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
- *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.9 2009-07-30 11:17:12 jonrob Exp $
+ *  Implementation file for RICH reconstruction tool :
+ *  Rich::Rec::MC::PhotonCreatorWithGaussianCKSmear
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,29 +29,34 @@ PhotonCreatorWithGaussianCKSmear( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : PhotonCreatorBase ( type, name, parent ),
-    m_mcRecTool           ( 0 ),
-    m_delPhotCr           ( 0 ),
+    m_mcRecTool           ( NULL ),
+    m_delPhotCr           ( NULL ),
     m_applySmearingToAll  ( true ),
     m_smearRad            ( Rich::NRadiatorTypes, true ),
     m_smearWid            ( Rich::NRadiatorTypes, 0 ),
     m_smearCount          ( Rich::NRadiatorTypes, 0 )
 {
-
   // job options
   declareProperty( "RadiatorsToSmear",          m_smearRad           );
   declareProperty( "ApplySmearingToAllPhotons", m_applySmearingToAll );
   declareProperty( "SmearingWidths",            m_smearWid           );
-
 }
 
 StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = PhotonCreatorBase::initialize();
+  StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Acquire instances of tools
-  acquireTool( "RichDelegatedPhotonCreator", m_delPhotCr );
+  const std::string delPhotName = "RichDelegatedPhotonCreator";
+  const std::string fullDelPhotName = name() + "." + delPhotName;
+
+  // Propagate job options
+  sc = sc && _propagateJobOptions( name(), fullDelPhotName, _photonCreatorJobOptions() );
+  sc = sc && _propagateJobOptions( name()+".Predictor", fullDelPhotName+".Predictor"   );
+
+  // Load the delegated photon creator tool
+  acquireTool( delPhotName, m_delPhotCr, this );
 
   // Initialize gaussian smearing
   IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
@@ -141,7 +145,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
   if ( !m_photSmearDone[key] )
   {
 
-    // This is a new photon , so add to reference map
+    // This is a new photon, so add to reference map
     m_photSmearDone[key] = true;
 
     // Now, smear this photon
@@ -151,7 +155,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
 
       // See if there is a true cherenkov photon for this segment/pixel pair
       if ( m_applySmearingToAll ||
-           richMCRecTool()->trueOpticalPhoton(segment,pixel) )
+           richMCRecTool()->trueCherenkovPhoton(segment,pixel) )
       {
 
         // Smear the Cherenkov theta
@@ -182,7 +186,104 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
 void PhotonCreatorWithGaussianCKSmear::InitNewEvent()
 {
   // initialize base class
-  RichPhotonCreatorBase::InitNewEvent();
+  PhotonCreatorBase::InitNewEvent();
   // local stuff
   m_photSmearDone.clear();
+}
+
+//=================================================================================
+// TEMPORARY. Eventually will come from base classes
+
+const std::vector<std::string> & 
+PhotonCreatorWithGaussianCKSmear::_photonCreatorJobOptions() const
+{
+  static const std::vector<std::string> jos = boost::assign::list_of
+    ("RichRecPhotonLocation")
+    ("DoBookKeeping")
+    ("PhotonPredictor")
+    ("MinAllowedCherenkovTheta")
+    ("MaxAllowedCherenkovTheta")
+    ("MinPhotonProbability")
+    ("NSigma")
+    ("MaxPhotons")
+    ("MaxPhotDetOcc")
+    ("RejectAeroPhotonsIfGas");
+  return jos;
+}
+
+StatusCode
+PhotonCreatorWithGaussianCKSmear::_propagateJobOptions( const std::string & from_name,
+                                                        const std::string & to_name,
+                                                        const std::vector<std::string> & options,
+                                                        const bool overwrite ) const
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
+  // Find the list of set options from the from object
+  const std::vector<const Property*> * from_props = joSvc()->getProperties(from_name);
+  if ( from_props )
+  {
+
+    // Loop over the options
+    for ( std::vector<const Property*>::const_iterator it_prop_from = from_props->begin();
+          it_prop_from != from_props->end(); ++it_prop_from )
+    {
+
+      // Is this option in the list of those to copy ?
+      if ( options.empty() ||
+           std::find(options.begin(),options.end(),(*it_prop_from)->name()) != options.end() )
+      {
+
+        if (this->msgLevel(MSG::VERBOSE))
+          this->verbose() << "Found job option '" << (*it_prop_from)->name()
+                          << "' to copy from " << from_name
+                          << " to " << to_name << endmsg;
+
+        bool okToCopy = true;
+        if ( !overwrite )
+        {
+          // get list of already set options for to_name
+          const std::vector<const Property*> * to_props = joSvc()->getProperties(to_name);
+          if ( to_props )
+          {
+            // Search them to see if option is already set
+            for ( std::vector<const Property*>::const_iterator it_prop_to = to_props->begin();
+                  it_prop_to != to_props->end(); ++it_prop_to )
+            {
+              if ( (*it_prop_from)->name() == (*it_prop_to)->name() )
+              {
+                if (this->msgLevel(MSG::VERBOSE))
+                  this->verbose() << " " << to_name
+                                  << "  -> Already has this option -> Not Setting"
+                                  << endmsg;
+                okToCopy = false;
+                break;
+              }
+            }
+          }
+        }
+
+        if ( okToCopy )
+        {
+          if (this->msgLevel(MSG::VERBOSE))
+            this->verbose() << "  -> Adding option " << (*it_prop_from)->name()
+                            << " to " << to_name << endmsg;
+          const StatusCode add_sc = joSvc()->addPropertyToCatalogue( to_name,
+                                                                     *(*it_prop_from) );
+          if ( add_sc.isFailure() )
+          {
+            this->Error( "Cannot set option '" + (*it_prop_from)->name() +
+                         "' for '" + to_name + "'" ).ignore();
+          }
+          sc = sc && add_sc;
+        }
+
+      } // in list of properties to copy
+
+    } // iterate over from properties
+
+  } // found properties for from_name
+
+  // return final status
+  return sc;
 }

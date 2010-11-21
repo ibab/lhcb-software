@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-11-12 - Chris Jones
+ - Extend the photon creator with Gaussian smearing of the CK theta values
+   to properly propagate the photon creator job options to owned private tools.
+
 ! 2010-11-12 - Antonis Papanestis
  - Added methods to easily access the MC info on scintillation
 

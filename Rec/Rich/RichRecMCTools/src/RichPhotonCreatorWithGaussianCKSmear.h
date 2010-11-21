@@ -1,16 +1,14 @@
 
-//-----------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 /** @file RichPhotonCreatorWithGaussianCKSmear.h
  *
- *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithGaussianCKSmear
- *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.10 2007-06-01 09:47:08 cattanem Exp $
+ *  Header file for RICH reconstruction tool :
+ *  Rich::Rec::MC::PhotonCreatorWithGaussianCKSmear
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
  */
-//-----------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------
 
 #ifndef RICHRECMCTOOLS_RICHPHOTONCREATORWITHGAUSSIANCKSMEAR_H
 #define RICHRECMCTOOLS_RICHPHOTONCREATORWITHGAUSSIANCKSMEAR_H 1
@@ -18,6 +16,7 @@
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
 
 // base class
 #include "RichRecBase/RichPhotonCreatorBase.h"
@@ -32,6 +31,9 @@
 // Event model
 #include "Event/MCRichOpticalPhoton.h"
 
+// boost
+#include "boost/assign/list_of.hpp"
+
 namespace Rich
 {
   namespace Rec
@@ -39,7 +41,7 @@ namespace Rich
     namespace MC
     {
 
-      //-----------------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
       /** @class PhotonCreatorWithGaussianCKSmear RichPhotonCreatorWithGaussianCKSmear.h
        *
        *  Tool which first delegates the photon creator to another tool, but then applies
@@ -49,9 +51,9 @@ namespace Rich
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   20/05/2005
        */
-      //-----------------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------
 
-      class PhotonCreatorWithGaussianCKSmear : public RichPhotonCreatorBase
+      class PhotonCreatorWithGaussianCKSmear : public PhotonCreatorBase
       {
 
       public: // methods for Gaudi framework
@@ -83,9 +85,12 @@ namespace Rich
                                                    const RichRecPhotonKey key ) const;
 
         /// Access RICH MC reconstruction tool on demand
-        /// Means if not needed, this tool runs MC free and can be used on real data (if wanted)
-        const Rich::Rec::MC::IMCTruthTool * richMCRecTool() const;
-
+        inline const Rich::Rec::MC::IMCTruthTool * richMCRecTool() const
+        {
+          if ( !m_mcRecTool ) { acquireTool( "RichRecMCTruthTool", m_mcRecTool ); }
+          return m_mcRecTool;
+        }
+        
       private: // private data
 
         // Pointers to tool instances
@@ -110,14 +115,29 @@ namespace Rich
         /// count of smeared photons
         mutable std::vector<unsigned long int> m_smearCount;
 
-      };
+      private: // TEMPORARY. Eventually will come from base classes
 
-      inline const Rich::Rec::MC::IMCTruthTool *
-      PhotonCreatorWithGaussianCKSmear::richMCRecTool() const
-      {
-        if ( !m_mcRecTool ) acquireTool( "RichRecMCTruthTool", m_mcRecTool );
-        return m_mcRecTool;
-      }
+        /** Access the list of job options specific to the photon creator settings
+         *  @todo Remove this private implementation when available in base class
+         */
+        const std::vector<std::string> & _photonCreatorJobOptions() const;
+
+        /** Propagate a list oj job options from one object to another
+         *  @param from_name The name of the object to get the options from
+         *  @param to_name   The name of the oject to copy the options to
+         *  @param options   List of options to copy. If empty, all options are copied.
+         *  @param overwrite If true, options will be over-written in the target object
+         *                   if they are already set
+         *  @return StatusCode indicating if the options where correctly copied
+         *  @todo Remove this private implementation when available in base class
+         */
+        StatusCode
+        _propagateJobOptions( const std::string & from_name,
+                              const std::string & to_name,
+                              const std::vector<std::string> & options = std::vector<std::string>(),
+                              const bool overwrite = false ) const;
+
+      };
 
     }
   }
