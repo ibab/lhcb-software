@@ -64,9 +64,33 @@ namespace LoKi
       /// constructor from the selection 
       Selection ( const Hlt::TSelection<Hlt::Candidate>* selection ) ;
       /// constructor from the selection 
-      Selection ( const std::string&                     selection ) ;
-      /// constructor from the selection 
       Selection ( const Hlt::Selection*                  selection ) ;
+      /// constructor from the selection 
+      Selection ( const std::string&                     selection ) ;
+      /// constructor from the selection & criteria 
+      Selection
+      ( const std::string&                                           selection , 
+        const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut       ) ;
+      /// constructor from the selection & criteria 
+      Selection
+      ( const std::string&                                           selection , 
+        const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&     cut       ,
+        const int                                                    slot = 0  ) ;
+      /// constructor from the selection & criteria 
+      Selection
+      ( const std::string&                                           selection  , 
+        const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut , 
+        const int                                                    slot = -1  ) ;
+      /// constructor from the selection & criteria 
+      Selection
+      ( const std::string&                                           selection  , 
+        const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut ,
+        const int                                                    slot = -1  ) ;
+      /// constructor from the selection & criteria 
+      Selection
+      ( const std::string&                                           selection , 
+        const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&    cut       , 
+        const int                                                    slot =  0 ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Selection() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -92,8 +116,13 @@ namespace LoKi
     private:
       // ======================================================================
       /// the selection itself 
-      const Hlt::TSelection<Hlt::Candidate>* m_selection ;
-      Gaudi::StringKey                       m_selName   ;
+      const Hlt::TSelection<Hlt::Candidate>*               m_selection ;
+      /// the selection key 
+      Gaudi::StringKey                                     m_selName   ;
+      /// the actual predicate 
+      LoKi::FunctorFromFunctor<const Hlt::Candidate*,bool> m_cut       ;
+      /// trivial cut?
+      bool                                                 m_trivial   ;
       // ======================================================================
     };
     // ========================================================================

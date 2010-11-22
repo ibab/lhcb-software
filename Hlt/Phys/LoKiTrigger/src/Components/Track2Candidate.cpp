@@ -17,6 +17,8 @@
 // LoKi
 // ============================================================================
 #include "LoKi/HltBase.h"
+#include "LoKi/ITrackFunctorFactory.h"
+#include "LoKi/HltBase.h"
 // ============================================================================
 /* @file
  *
@@ -85,14 +87,30 @@ namespace Hlt
     /// the assignement operator is disabled 
     Track2Candidate & operator=( const Track2Candidate& ) ;   // no assignement
     // ========================================================================
+  protected:
+    // ========================================================================
+    void       updateCode      ( Property& /* p */ ) ;
+    void       updateFactory   ( Property& /* p */ ) ;
+    void       updatePreambulo ( Property& /* p */ ) ;
+    StatusCode decode          () ;
+    // ========================================================================
   private:
     // ========================================================================
     /// the selection 
     Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
     /// the output selection 
     Location m_output         ;                                //    the output
-    /// the input tarck location in TES 
-    Location m_input ;                       // the input tarck location in TES 
+    /// the input track location in TES 
+    Location m_input ;                       // the input tarck location in TES
+    // ========================================================================
+    std::string              m_code       ;
+    std::string              m_factory    ;
+    std::vector<std::string> m_preambulo  ;
+    LoKi::FunctorFromFunctor<const LHCb::Track*,bool> m_cut ;
+    // ========================================================================
+    bool m_code_updated      ;
+    bool m_factory_updated   ;
+    bool m_preambulo_updated ;
     // ========================================================================
   } ;
   // ==========================================================================
@@ -111,6 +129,15 @@ Hlt::Track2Candidate::Track2Candidate
   , m_output    ( name ) 
   , m_input     ( "<UNDEFINED>") 
 //
+  , m_code      ( "<UNSPECIFIED>" )
+  , m_factory   ( "LoKi::Hybrid::TrackFunctorFactory/TrackFactory:PUBLIC" ) 
+  , m_preambulo ()
+  , m_cut       ( LoKi::Constant<const LHCb::Track*,bool> ( false ) )
+//
+  , m_code_updated      ( true ) 
+  , m_factory_updated   ( true ) 
+  , m_preambulo_updated ( true ) 
+// 
 {
   declareProperty 
     ( "OutputSelection"                 , 
@@ -120,11 +147,80 @@ Hlt::Track2Candidate::Track2Candidate
     ( "InputSelection"                  , 
       m_input                           , 
       "TES Location of inptut tracks"   ) ;
+  // ==========================================================================
+  declareProperty 
+    ( "Code"       , m_code      , "LoKi/Bender functor for track selection" ) 
+    -> declareUpdateHandler ( &Hlt::Track2Candidate::updateCode     , this ) ;
+  declareProperty 
+    ( "Factory"    , m_factory   , "Type/Name for TrackFunctorFactory"       ) 
+    -> declareUpdateHandler ( &Hlt::Track2Candidate::updateFactory   , this ) ;
+  declareProperty 
+    ( "Preambulo"  , m_preambulo , "Preambulo to be used"                    ) 
+    -> declareUpdateHandler ( &Hlt::Track2Candidate::updatePreambulo , this ) ;
+  // ==========================================================================
 }
 // ============================================================================
 // virtual and protected destructor 
 // ============================================================================
 Hlt::Track2Candidate::~Track2Candidate(){}
+// ============================================================================
+void Hlt::Track2Candidate::updateCode  ( Property& /* p */ ) // update the factory 
+{
+  // no action if not yet initialized 
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  /// mark as "to-be-updated" 
+  m_code_updated = true ;
+  //
+}
+// ============================================================================
+void Hlt::Track2Candidate::updateFactory ( Property& /* p */ ) // update the factory 
+{
+  // no action if not yet initialized 
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  /// mark as "to-be-updated" 
+  m_factory_updated = true ;
+  //
+}
+// ============================================================================
+void Hlt::Track2Candidate::updatePreambulo ( Property& /* p */ ) // update the factory 
+{
+  // no action if not yet initialized 
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  /// mark as "to-be-updated" 
+  m_preambulo_updated = true ;
+  //
+}
+// ============================================================================
+// decode 
+// ============================================================================
+StatusCode Hlt::Track2Candidate::decode () 
+{
+  //
+  m_code_updated       = true ;
+  m_factory_updated    = true ;
+  m_preambulo_updated  = true ;
+  //
+  LoKi::ITrackFunctorFactory* factory = 
+    tool<LoKi::ITrackFunctorFactory> ( m_factory , this ) ;
+  // construct the preambulo 
+  std::string _preambulo ;
+  for ( std::vector<std::string>::const_iterator iline = 
+          m_preambulo.begin() ; m_preambulo.end() != iline ; ++iline ) 
+  { 
+    if ( m_preambulo.begin() != iline ) { _preambulo += "\n" ; }
+    _preambulo += (*iline) ;
+  }
+  StatusCode sc = factory->get( m_code , m_cut , _preambulo ) ;
+  Assert ( sc.isSuccess () , "Unable to decode the Code : " + m_code ) ;
+  //
+  release ( factory ) ;
+  //
+  m_code_updated       = false ;
+  m_factory_updated    = false ;
+  m_preambulo_updated  = false ;
+  //
+  return sc ;  
+}
 // ============================================================================
 // initialize the algorithm 
 // ============================================================================
@@ -133,6 +229,10 @@ StatusCode Hlt::Track2Candidate::initialize ()
   /// initialize the base 
   StatusCode sc = Hlt::Base::initialize () ;
   if ( sc.isFailure() ) { return sc ; }                          // REUTRN
+  //
+  sc = decode () ;
+  Assert ( sc.isSuccess () , "Unable to decode the Code : " + m_code ) ;
+  //
   /// Lock the service to enable the output selection registration 
   Hlt::IRegister::Lock lock ( regSvc() , this ) ;
   /// register TES input selection
@@ -157,6 +257,13 @@ StatusCode Hlt::Track2Candidate::initialize ()
 // ============================================================================
 StatusCode Hlt::Track2Candidate::execute  () 
 {
+  //
+  if ( m_code_updated || m_factory_updated || m_factory_updated ) 
+  {
+    StatusCode sc = decode () ; 
+    Assert ( sc.isSuccess() , "Unable to decode the cut" );
+  }
+  //
   // some sanity checks:
   Assert ( 0 != m_selection , "Invalid Local pointer to selection" ) ;
   if ( !m_selection->empty() ) { Warning("Local selection is not empty!") ; }
@@ -175,8 +282,10 @@ StatusCode Hlt::Track2Candidate::execute  ()
         tracks->end() != itrack ; ++itrack) 
   {
     const LHCb::Track* track = *itrack ;
-    if ( 0 == track ) { continue ; }                                  // CONTINUE 
-    //                                          
+    // filter it! 
+    if ( 0 == track || ! m_cut ( track ) ) { continue ; } // CONTINUE 
+    //
+    //
     // create the new candidate:
     Hlt::Candidate* candidate = new Hlt::Candidate() ;
     //

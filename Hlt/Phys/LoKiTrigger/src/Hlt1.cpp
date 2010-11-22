@@ -6,6 +6,11 @@
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
 #include "LoKi/apply.h"
+#include "LoKi/select.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/HltCandidates.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -23,6 +28,9 @@ LoKi::Hlt1::Selection::Selection
 ( const Hlt::TSelection<Hlt::Candidate>* selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
   , m_selection ( selection )
+  , m_selName   ()
+  , m_cut ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
+  , m_trivial ( true ) 
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Selection>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
@@ -34,8 +42,11 @@ LoKi::Hlt1::Selection::Selection
 ( const Hlt::Selection* sel ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
   , m_selection ( 0 ) 
+  , m_selName   ( )
+  , m_cut       ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
+  , m_trivial   ( true ) 
 {
-  Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
+  Assert ( 0 != sel , "Hlt::Selection* points to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::HltCandidate>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
@@ -46,8 +57,30 @@ LoKi::Hlt1::Selection::Selection
 LoKi::Hlt1::Selection::Selection 
 ( const std::string&    selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
+  , m_trivial   ( true ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&                                           selection ,
+  const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut       )
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( cut )
+  , m_trivial   ( false ) 
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -58,19 +91,119 @@ LoKi::Hlt1::Selection::Selection
   Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&                                           selection ,
+  const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&     cut       , 
+  const int                                                    slot      ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( LoKi::Candidates::StageCut ( cut , slot ) )
+  , m_trivial   ( false ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&                                           selection  ,
+  const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut , 
+  const int                                                    slot       ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
+  , m_trivial   ( false ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&                                           selection  ,
+  const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut , 
+  const int                                                    slot       ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
+  , m_trivial   ( false ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
+// constructor from the selection 
+// ============================================================================
+LoKi::Hlt1::Selection::Selection 
+( const std::string&                                           selection  ,
+  const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&    cut        , 
+  const int                                                    slot       ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
+  , m_selection ( 0         )
+  , m_selName   ( selection ) 
+  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
+  , m_trivial   ( false ) 
+{
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
+  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Hlt1::Selection::result_type
 LoKi::Hlt1::Selection::operator() () const 
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
-  return result_type ( m_selection->begin () , m_selection->end() ) ;
+  //
+  // trivial cut ?
+  if ( m_trivial ) 
+  { return result_type ( m_selection->begin () , m_selection->end   () ) ; }
+  //
+  result_type result_;
+  result_.reserve ( m_selection->size() ) ;
+  //
+  LoKi::select ( m_selection -> begin ()        , 
+                 m_selection -> end   ()        , 
+                 std::back_inserter ( result_ ) , m_cut ) ;
+  //
+  return result_;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& LoKi::Hlt1::Selection::fillStream ( std::ostream& s ) const 
-{ return s << "TC_SELECTION('" << selName() << "')" ; }
+{ 
+  s << "TC_SELECTION('" << selName() << "'" ;
+  if ( !m_trivial ) { s << "," << m_cut ; }
+  return s << ")" ;
+}
 // ============================================================================
 
 
