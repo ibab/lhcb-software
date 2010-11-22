@@ -115,28 +115,6 @@ namespace Rich
         /// count of smeared photons
         mutable std::vector<unsigned long int> m_smearCount;
 
-      private: // TEMPORARY. Eventually will come from base classes
-
-        /** Access the list of job options specific to the photon creator settings
-         *  @todo Remove this private implementation when available in base class
-         */
-        const std::vector<std::string> & _photonCreatorJobOptions() const;
-
-        /** Propagate a list oj job options from one object to another
-         *  @param from_name The name of the object to get the options from
-         *  @param to_name   The name of the oject to copy the options to
-         *  @param options   List of options to copy. If empty, all options are copied.
-         *  @param overwrite If true, options will be over-written in the target object
-         *                   if they are already set
-         *  @return StatusCode indicating if the options where correctly copied
-         *  @todo Remove this private implementation when available in base class
-         */
-        StatusCode
-        _propagateJobOptions( const std::string & from_name,
-                              const std::string & to_name,
-                              const std::vector<std::string> & options = std::vector<std::string>(),
-                              const bool overwrite = false ) const;
-
       };
 
     }

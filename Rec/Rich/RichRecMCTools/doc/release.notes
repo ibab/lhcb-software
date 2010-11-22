@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-11-22 - Chris Jones
+ - Remove temporary hack in last commit, neccessary for use in a minimal patch
+   release.
+
 ! 2010-11-12 - Chris Jones
  - Extend the photon creator with Gaussian smearing of the CK theta values
    to properly propagate the photon creator job options to owned private tools.

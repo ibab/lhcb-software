@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
- *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.37 2009-09-29 17:26:01 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
