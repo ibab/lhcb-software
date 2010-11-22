@@ -739,15 +739,15 @@ class_php = """<?php
 // to the search resuls.
 // If the class is not specified, redirects to the classes index page.
 
-// Open the database of classes.
-$classes = dba_open("classes.db", "r-", "db4");
-if (!$classes) {
-  echo "Cannot open the database of classes.\n";
-  exit;
-}
-
 // check if we have the parameter 'n'
+$n = $_GET["n"];
 if ($n) {
+  // Open the database of classes.
+  $classes = dba_open("classes.db", "r", "db4");
+  if (!$classes) {
+    echo "Cannot open the database of classes.\\n";
+    exit;
+  }
   // check if it is in the database
   if (dba_exists($n, $classes)) {
     // get the url
@@ -756,13 +756,12 @@ if ($n) {
     // not found: search for it
     $url = "search.php?query=" . urlencode($n);
   }
+  // Close the database
+  dba_close($classes);
 } else {
   // not given, go to all classes.
   $url = "classes.html";
 }
-
-// Close the database
-dba_close($classes);
 
 // Redirect
 header("Location: ". $url);

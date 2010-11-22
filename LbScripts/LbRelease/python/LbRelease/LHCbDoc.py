@@ -939,7 +939,7 @@ class Doc(object):
                 # Give read access to everybody
                 self._log.debug("Give read access (recursively) to %s", self.path)
                 for dirpath, _, _ in os.walk(self.path):
-                    Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
+                    Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rlk"]).wait()
             # Swap the old and the new documentation (avoid that the users see an incomplete doc)
             # @todo: it should be done for the tag file too
             # Move away the old documentation

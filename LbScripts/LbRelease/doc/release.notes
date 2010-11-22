@@ -1,3 +1,9 @@
+2010-11-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: add lock permission on AFS.
+	* python/LbRelease/_LHCbDocResources.py: enable locking when accessing the classes database from PHP
+	(required on SLC5), and fixed an issue with URL arguments on SLC5.
+
 2010-11-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added a protection to the cases where the terminal doesn't
