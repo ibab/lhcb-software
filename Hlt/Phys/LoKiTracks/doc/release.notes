@@ -2,14 +2,14 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTracks
 ! Responsible : Vanya Belyaev
-! Purpose     : tarcj-related functors for LoKi-framework 
+! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
 ! 2010-10-24 - Vanya Belyaev
 
    - add new symbol TrNUM ( void -> double ) 
 
-      Code = " TrNUM ( 'Rec/Track/Best' , TerLONG ) < 200 "
+      Code = " TrNUM ( 'Rec/Track/Best' , TrLONG ) < 200 "
 
  - cmt/requirements
      version increment to v1r3 
