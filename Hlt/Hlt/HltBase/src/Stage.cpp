@@ -48,6 +48,25 @@ Hlt::Stage::Lock::Lock (  Stage* stage , const INamedInterface* locker)
 // ============================================================================
 Hlt::Stage::Lock::~Lock () { m_stage->_unlock (m_locker); }
 // ============================================================================
+const Hlt::Stage::History& 
+Hlt::Stage::Lock::addToHistory ( const std::string& entry ) 
+{
+  History& _history = m_stage->m_history ; 
+  _history.push_back ( entry ) ;
+  //
+  return m_stage->history() ;
+}
+// ============================================================================
+const Hlt::Stage::History& 
+Hlt::Stage::Lock::addToHistory 
+( const Hlt::Stage::History& history ) 
+{
+  History& _history = m_stage->m_history ; 
+  _history.insert( _history.end() , history.begin() , history.end() );
+  //
+  return m_stage->history() ;
+}
+// ============================================================================
 void Hlt::Stage::_checkLock() const 
 {
   if (!locked()) 
@@ -82,26 +101,26 @@ const ContainedObject* Hlt::Stage::_get() const
   return 0;
 }
 // ============================================================================
-void Hlt::Stage::_lock (const INamedInterface* locker) 
+void Hlt::Stage::_lock ( const INamedInterface* locker ) 
 {
-  if (locked()) { 
-    throw GaudiException("Stage already locked","Stage::_lock",
-                         StatusCode::FAILURE); 
-  }
+  if (locked()) 
+  { throw GaudiException("Stage already locked","Stage::_lock", StatusCode::FAILURE); }
+  //
   m_locker = const_cast<INamedInterface*> (locker) ;
-  m_history.push_back (locker->name());
+  // m_history.push_back (locker->name());
 }
 // ============================================================================
 void Hlt::Stage::_unlock (const INamedInterface* locker) 
 {
-  if (!locked()) { 
-    throw GaudiException("Stage  not locked","Stage::_unlock",
-                         StatusCode::FAILURE);
-  }
-  if (locker != locked()) { 
-    throw GaudiException("Wrong locker","Stage::_unlock",
-                         StatusCode::FAILURE);
-  }
+  //
+  if (!locked()) 
+  { throw GaudiException ( "Stage  not locked","Stage::_unlock", StatusCode::FAILURE); }
+  //
+  if (locker != locked()) 
+  { throw GaudiException ( "Wrong locker","Stage::_unlock", StatusCode::FAILURE); }
+  //
+  m_history.push_back ( locker->name() );
+  //
   m_locker = 0 ;
 }
 // ============================================================================
@@ -120,9 +139,9 @@ std::ostream& Hlt::Stage::fillStream(std::ostream& s) const
   else if (is<Hlt::L0DiMuonCandidate> ())
     s << "L0DiMuonCandidate/" << get<Hlt::L0DiMuonCandidate> () ;
   else if (is<Hlt::Candidate> ())
-    s << "Candidate/"         << get<Hlt::Candidate>         () ;
+    s << "Candidate/"         << (void*) get<Hlt::Candidate> () ;
   else if (is<Hlt::Stage> ())
-    s << "Stage/"             << get<Hlt::Stage>             () ;
+    s << "Stage/"             << (void*) get<Hlt::Stage>     () ;
   else s << "NULL?";
   //
   s << ", " << m_cache;

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-11-22 - Vanya Belyaev
+ - improve  a little bit the treatment of history 
+
 ! 2010-11-18 - Vanya Belyaev
  - improve printout a little bit 
 

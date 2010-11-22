@@ -82,8 +82,6 @@ namespace Hlt
     typedef SharedObjectsContainer<Hlt::Candidate> Selection;
     /// For uniform access to containers in TES (KeyedContainer,SharedContainer) 
     typedef Gaudi::NamedRange_<ConstVector> Range;
-    /// For uniform access to containers in TES (KeyedContainer,SharedContainer) 
-    typedef Gaudi::NamedRange_<Vector> RangeModifiable;
     /// Phases
     typedef SmartRefVector<Hlt::Stage> Stages;
     /// Phases iterator (const)
@@ -110,16 +108,17 @@ namespace Hlt
   public: // standard accessors 
     // ========================================================================
     /// Add worker
-    void addToWorkers(const std::string& worker ) { m_workers.push_back(worker) ; }
+    void addToWorkers ( const std::string&     worker ) { m_workers.push_back(worker) ; }
+    /// Add worker
+    void addToWorkers ( const INamedInterface* worker ) ;
     /// Get the initial stage
     const Hlt::Stage* initiatorStage() const
-    { if ( m_stages.empty()) return NULL ; return m_stages.front() ; }
+    { if ( m_stages.empty() ) { return NULL ; } ;  return m_stages.front() ; }
     /// Get the current stage
     const Hlt::Stage* currentStage() const
-    { if ( m_stages.empty()) return NULL ; return m_stages.back () ; }
+    { if ( m_stages.empty() ) { return NULL ; } ; return m_stages.back () ; }
     /// Last worker (algorithm name)
-    Worker lastWorker() const
-    { if ( m_workers.empty()) return "" ;  return m_workers.back() ; }
+    const Worker& lastWorker() const ;
     /// print
     virtual std::ostream& fillStream(std::ostream& s) const;
     /// Retrieve const  list of workers

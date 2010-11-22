@@ -109,10 +109,12 @@ namespace Hlt
     typedef std::vector<std::string> History;
     // ========================================================================
     /** @class Lock Event/HltStage.h
-     * Locker class for stage
-     * @author alexander.mazurov@gmail.com
-     * @author ivan.belyaev@cern.ch
-     * @code
+     *  Locker class for stage
+     *
+     *  @author alexander.mazurov@gmail.com
+     *  @author ivan.belyaev@cern.ch
+     *
+     *  @code
      *  // Inside some algoritms
      *  Hlt::Stage* stage = ...;
      *  LHCb::L0MuonCandidate* l0mc = ...; 
@@ -131,6 +133,13 @@ namespace Hlt
       Lock (  Stage* stage , const INamedInterface* locker );
       /// destructor
       ~Lock ();
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// add the entries to the history 
+      const History& addToHistory ( const std::string& entry   ) ;
+      /// add the entries to the history 
+      const History& addToHistory ( const History&     entries ) ;
       // ======================================================================
     private:
       // ======================================================================
