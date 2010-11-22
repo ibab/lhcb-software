@@ -245,7 +245,8 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
   std::string file;
   char startStr[] = "<string>";
   char endStr[] = "</string>";
-  size_t start, end;
+  char failStr[] = "<value><int>0</int></value>";
+  size_t start, end, err;
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
@@ -263,6 +264,12 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
     throw FailureException(response);
 
   std::string res(response);
+
+  err = res.find(failStr);
+  if(err != res.npos) {
+      throw RetryException("RunDB answer is error");
+  }
+
 
   start = res.find(startStr); 
   if(start == res.npos)
@@ -285,7 +292,8 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   std::string file;
   char startStr[] = "<string>";
   char endStr[] = "</string>";
-  size_t start, end;
+  char failStr[] = "<value><int>0</int></value>";
+  size_t start, end, err;
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str(), identifier.c_str());
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
@@ -304,9 +312,14 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
 
   std::string res(response);
 
+  err = res.find(failStr);
+  if(err != res.npos) {
+      throw RetryException("RunDB answer is error");
+  }
+
   start = res.find(startStr);
   if(start == res.npos) 
-      throw RetryException("Could not find filename in the RunDB answer");
+      throw RetryException("Could not find filename in the RunDB answer" + res);
   start = start + sizeof(startStr) - 1;
 
   end = res.find(endStr);
