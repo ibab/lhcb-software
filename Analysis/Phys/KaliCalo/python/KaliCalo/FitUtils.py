@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.17 2010-08-08 18:04:38 ibelyaev Exp $ 
+# @file FitUtils.py
+# @author Albert Puig Navarro (albert.puig@cern.ch)
+# @reshuffled from Vanya Belyaev's Pi0HistoFit.py
+# @date 2010-11-13
 # =============================================================================
-"""
-A module for fitting the histograms with pi0-mass
+"""A module for helping with the fitting of histograms with pi0-mass"""
 
-"""
-# =============================================================================
-__author__  = " ??? "
-__date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
+__author__ = "Albert Puig (albert.puig@cern.ch)"
+__date__ = "$Date$"
+__version__ = "$Revision$"
+
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -19,91 +20,10 @@ from array import array
 ## few helper math utilities 
 import LHCbMath.Types
 import GaudiPython.HistoUtils 
-import KaliCalo.Kali        as Kali
+import KaliCalo.Kali as Kali
 
-VE = Kali.VE 
-
-def HiFit(FilledHistos, alam):
-    """
-    Module for running over all the histograms and calculation of the
-    improved correction coefficients. Returnes a dictionary of the
-    coefficients.
-    """
-    # loop over all the cells
-    for i in alam.keys():
-        # fitting and calculating the new correction coefficient
-        alam[i]=alam[i]*0.135/FitProcess(FilledHistos[i])
-    return alam
-
-def FitProcess(histo):
-    """
-    A module for performing a fit of the histogram and return the pi0 mass
-    Fit function is a sum of the Gauss and the second order polinom. Gauss mean
-    value is returned as the "pi0 mass".
-    """
-    #== extracting the histogram parameters
-    left=histo.GetXaxis().GetXmin()        # left limit
-    right=histo.GetXaxis().GetXmax()       # right limit
-    binwidth = histo.GetBinWidth(1)        # width of the bin
-
-    #== true pi0 peak parameters
-    trueMass = 0.135                       # initial gauss mean
-    trueSigm = 0.0094                      # initial gauss sigma
-    norm     = 1.0/(sqrt(2.0*pi)*trueSigm) # gauss constant
-
-    #== check if there are enough events in the histogram
-    if(histo.GetEntries()<=(right-left)/binwidth):
-        print "Bad fit, returned coefficient = 1"
-        return trueMass
-
-    #== array of the fit parameters
-    npar     = 12                          # number of fit parameters
-    par      = array("d",npar*[0.0])       # par[0-5] are fit parameters
-                                           # par[6-11] are the errors of fit parameters
-
-    #== fit parameters bounds
-    massmin = 0.120                        # min mean value
-    massmax = 0.150                        # max mean value
-    sigmmin = 0.005                        # min sigma value
-    sigmmax = 0.015                        # max sigma value
-
-    #== gauss fit limits
-    gaussleft  = trueMass-2*trueSigm       # (mean+/-2sigma)
-    gaussright = trueMass+2*trueSigm 
-
-    #== the functions
-    polinom = TF1("polinom","1.0+[1]*(x-[0])+[2]*(x-[0])*(x-[0])") # 2nd order polinom
-    gauss = TF1("gauss","[0]*exp(-0.5*((x-[1])**2)/([2]**2))")     # gauss function
-    fitfunc = TF1("fitfunc","gauss+polinom")                       # sum of the gauss and the polinom
-    gauss.SetParameter(1,trueMass)
-    gauss.SetParameter(2,trueSigm)
-    
-    #== fitting
-    histo.Fit("gauss","Q","",gaussleft,gaussright)
-    parGaus=gauss.GetParameters()
-
-    histo.Fit("polinom","Q","",left,right)
-    parPol=polinom.GetParameters()
-
-    #== setting the parameters of the total fit function
-    par[0],par[1],par[2]=parGaus[0],parGaus[1],parGaus[2]
-    par[3],par[4],par[5]=parPol[0],parPol[1],parPol[2]
-
-    fitfunc.SetParameters(par)
-    fitfunc.SetParLimits(1,massmin,massmax)
-    fitfunc.SetParLimits(2,sigmmin,sigmmax)
-    
-    #== fitting
-    histo.Fit("fitfunc","Q")
-
-    #== getting the fit parameters and their errors
-    for i in range(npar/2):
-        par[i]=fitfunc.GetParameter(i)   # parameters
-        par[i+6]=fitfunc.GetParError(i)  # errors
-
-    #== return the gauss mean value and it's error
-    return par[1]
-
+VE      = Kali.VE 
+pi0Mass = Kale.pi0Mass
 
 # =============================================================================
 ## The function to fit pi0-mass distribution
@@ -133,42 +53,75 @@ class Pi0Fit:
         bck   = abs ( float ( par[3] ) ) 
         slope =       float ( par[4] )
         curv  =       float ( par[5] )
-        dm0   = x0 - 135.0
+        dm0   = x0 - pi0Mass
         
         background  = bck * ( 1.  + slope * dm0 * ( 1.0 + curv * dm0 )  ) 
-        background *= sqrt ( x0 / 135.0 ) 
+        background *= sqrt ( x0 / pi0Mass ) 
         
         return signal + background 
 
 pi0Func = TF1('Pi0Fit', Pi0Fit() , 0.0 , 250.0 , 6 )
-    
-## pi0Func.SetParNames  (
-##     "Signal"     ,
-##     "Mass"       ,
-##     "Sigma"      ,
-##     "Background" ,
-##     "Slope"      ,
-##     "Curvature"  
-##     )  
-pi0Func.SetParNames  (
-    "N_{#pi^{0}}"      ,
-    "m_{#pi^{0}}"      ,
-    "#sigma_{#pi^{0}}" ,
-    "Background"       ,
-    "Slope"            ,
-    "Curvature"  
-    )  
 
-pi0Func.SetParameter ( 0 , 100 )
-pi0Func.SetParameter ( 1 , 135 )
-pi0Func.SetParameter ( 2 ,  10 )
-pi0Func.SetParameter ( 3 ,  10 )
-pi0Func.SetParameter ( 4 ,   0 )
-pi0Func.SetParameter ( 5 ,   0 )
+# =============================================================================
+## The function to fit subtracted pi0-mass distribution
+class Pi0FitSubtracted:
+    """
+    The function to fit subtracted pi0-mass distribution
+    """
+    ## Set the proper normalization 
+    def __init__ ( self ) :
+        """
+        Set the proper normalization 
+        """
+        self.norm = sqrt(2.0*pi) 
 
+    def __call__ ( self , x , par ) :
+
+        num   = float ( abs ( par[0] ) )
+        num   = abs   ( num    ) 
+        m0    = float ( par[1] )
+        sigma = float ( par[2] )
+
+        x0    = float ( x[0] ) 
+
+        dm      = ( x0 - m0 ) / sigma 
+        signal  = num/self.norm/sigma*exp(-0.5*dm*dm)
+
+        bck   = abs ( float ( par[3] ) ) 
+        slope =       float ( par[4] )
+        curv  =       0 # No curvature
+        dm0   = x0 - pi0Mass
+        
+        background  = bck * ( 1.  + slope * dm0 * ( 1.0 + curv * dm0 )  ) 
+        background *= sqrt ( x0 / pi0Mass ) 
+        
+        return signal + background 
+        
+pi0SubtractedFunc = TF1('Pi0FitSubtracted', Pi0FitSubtracted() , 0.0 , 250.0 , 6 )
+
+for func in [ pi0Func , pi0SubtractedFunc ]:
+    func.SetParNames  (
+        "N_{#pi^{0}}"      ,
+        "m_{#pi^{0}}"      ,
+        "#sigma_{#pi^{0}}" ,
+        "Background"       ,
+        "Slope"            ,
+        "Curvature"  
+        )  
+
+    func.SetParameter ( 0 , 100 )
+    func.SetParameter ( 1 , pi0Mass )
+    func.SetParameter ( 2 ,  10 )
+    func.SetParameter ( 3 ,  10 )
+    func.SetParameter ( 4 ,   0 )
+    func.SetParameter ( 5 ,   0 )
+
+
+## ============================================================================
+## initialize parameters 
 _low    =  50.000
 _high   = 240.000
-_mass0  = 135.000
+_mass0  = pi0Mass
 _sigma0 =  13.001
 _slope0 =   0.001 
 _curve0 =   0.000
@@ -195,7 +148,10 @@ def getPi0Params ( histo ) :
             return getPi0Params ( histo )
         
     _func = histo.GetFunction('Pi0Fit')
-    if not _func : return None
+    if not _func :
+        _func = histo.GetFunction('Pi0FitSubtracted')
+        if not _func :
+            return None
     
     return ( VE ( _func.GetParameter ( 0 ) , _func.GetParError ( 0 ) ** 2 ) ,
              VE ( _func.GetParameter ( 1 ) , _func.GetParError ( 1 ) ** 2 ) ,
@@ -212,8 +168,8 @@ def isFixed ( func , par ) :
     Simple check if the parametr is fixed
     """
     pare = func.GetParError( par )
-    return True if 0 == pare else False 
-
+    return True if 0 == pare else False
+    
 # =============================================================================
 ## adjust parameters 0, 2 &  3 
 def adjust03 ( func ) :
@@ -226,7 +182,7 @@ def adjust03 ( func ) :
     if 0 > par2 : func.SetParameter ( 2 , abs ( par2 ) )
     par3 = func.GetParameter( 3 )
     if 0 > par3 : func.SetParameter ( 3 , abs ( par3 ) )
-    
+
 # =============================================================================
 ## adjust parameters 1 , 2  
 def adjust12 ( func , mass , sigma , fixMass = False , fixSigma = False ) :
@@ -297,7 +253,7 @@ def smallBins ( histo , limit = 6 , low = _low , high = _high )  :
     nb = max ( nb , 1 ) 
     return float(n0)/nb
 
-    
+
 # =============================================================================
 # get ``signal-to-backgrund'' ratio
 def s2b ( histo , r = 2.5 ) :
@@ -317,7 +273,34 @@ def s2b ( histo , r = 2.5 ) :
     iR     = histo.FindBin ( m + r * s )
     #
     return par[0]/(par[3]*(iR-iL+1))
-    
+
+
+    ))
+
+# =============================================================================
+## bad parameters ? 
+def badParam ( mass  , sigma , num , corr ) :
+    """
+    Bad parameters ?
+    """
+
+    # bad mass ?
+    if 10 < abs ( mass.value() - pi0Mass ) : return True 
+
+    # bad sigma? 
+    if not 7 <= sigma.value() <= 18        : return True
+
+    # bad number ?
+    if  num.value() < 25                   : return True
+
+    # bad number ?
+    if  num.value() / num.error () < 3.5   : return True
+
+    # bad precision ?
+    if not 0.00001 < corr.error() <= 0.01  : return True
+
+    return False
+
 ## ============================================================================
 ## pre-fit background histogram 
 def _preFitBkg ( func , histo , background = None , options = ''  ) :
@@ -751,55 +734,6 @@ def fitPi0 ( histo ,
     
     return fitSignal ( _func , histo , background , signal , options ) 
     
-# =============================================================================
-## pre-fit historgam set 
-def preFitHistoSet ( histoset ) :
-    """
-    Pre-fit historgam set 
-    
-    """
-    _func = pi0Func
-    _func.SetParameter ( 0 , 100 )
-    _func.SetParameter ( 1 , 135 )
-    _func.SetParameter ( 2 ,  10 )
-    _func.SetParameter ( 3 ,  10 )
-    _func.SetParameter ( 4 ,   0 )
-    _func.SetParameter ( 5 ,   0 )
-    
-    # start form background historgam
-    h3 = None
-    h4 = None
-    h5 = None
-    
-    nFits = 0
-
-    if len( histoset ) >= 6 :
-        
-        h3 = histoset [3]
-        h4 = histoset [4]
-        h5 = histoset [5]
-
-        st , nFit1 = _preFitBkg ( _func , h3 )
-        st , nFit2 = _preFitBkg ( _func , h4 )
-        st , nFit3 = _preFitBkg ( _func , h5 )
-        nFits += nFit1 
-        nFits += nFit2 
-        nFits += nFit3
-    
-    # go to signal :
-    h2 = histoset[2]
-    h1 = histoset[1]
-    h0 = histoset[0]
-
-    st1 , nFit1 = _preFitSignal ( _func , h2 , background = h5 )
-    st2 , nFit2 = _preFitSignal ( _func , h1 , background = h4 , signal = h2 )
-    st3 , nFit3 = _preFitSignal ( _func , h0 , background = h3 , signal = h1 )
-
-    nFits += nFit1 
-    nFits += nFit2 
-    nFits += nFit3
-
-    return st1,st2,st3, nFits
 
 # =============================================================================
 ## check if the fit results are ``reasonable''
@@ -807,7 +741,7 @@ def checkHisto ( histo ) :
     """
     check if the fit results are ``reasonable''
     """
-    
+
     pars = getPi0Params ( histo )
     if pars[0].value() > histo.GetEntries()     : return False
     if pars[1].value() > _mass0 + 2.5 * _sigma0 : return False
@@ -815,163 +749,6 @@ def checkHisto ( histo ) :
     if pars[2].value() > _high_sigma            : return False
     if pars[2].value() < _low_sigma             : return False
     ##
-    return True 
+    return True
 
-# =============================================================================
-## fit the set of histograms
-def fitHistoSet ( histoset , set0 , force = False ) :
-    """
-    Fit historgram set 
-    """
-    histoset.result = None 
-    
-    _func = pi0Func
-
-    nFits = 0 
-
-    h0 = histoset  [0]
-    h1 = histoset  [1]
-    h2 = histoset  [2]
-
-    h3 = None
-    h4 = None
-    h5 = None
-    if len ( histoset ) >= 6 : 
-        h3 = histoset  [3]
-        h4 = histoset  [4]
-        h5 = histoset  [5]
-
-    
-    r0 =      set0 [0]
-    r1 =      set0 [1]
-    r2 =      set0 [2]
-
-    r3 = None
-    r4 = None
-    r5 = None
-    if len ( set0 ) >= 6 : 
-        r3 =      set0 [3]
-        r4 =      set0 [4]
-        r5 =      set0 [5]
-
-    ## start for background:
-    if h5 :
-        st , nFit1 = fitBkg ( _func , h5 , background = r5 )
-        nFits += nFit1
-    if h4 :
-        st , nFit2 = fitBkg ( _func , h4 , background = r4 )
-        nFits += nFit2
-    if h3 : 
-        st , nFit3 = fitBkg ( _func , h3 , background = r3 )
-        nFits += nFit3
-
-    ok0 = 0 
-    ## play with signal:
-
-    ## Prs+Prs
-
-    ## use "own" background + reference signal
-    res0, nFit = fitSignal     ( _func , h2 , background = h5 , signal = r2 )
-    nFits += nFit 
-    if ( not res0 or not checkHisto ( h2 ) ) and r5 : 
-        ok0  = 1 
-        ## use "reference signal & background
-        res0, nFit = fitSignal ( _func , h2 , background = r5 , signal = r2 )    
-        nFits += nFit 
-    if not res0 or not checkHisto ( h2 ) :
-        ok0  = -1
-        if not force :
-            result =  (-2,-2,ok0, nFits)
-            histoset.result = result
-            return result 
-                
-    ## no-Prs +Prs 
-    ok1 = 0
-    
-    ## use "own" background & signal 
-    res1 , nFit = fitSignal     ( _func , h1 , background = h4 , signal = h2 )
-    nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
-        ok1  = 1 
-        ## use "own" background & reference signal 
-        res1 , nFit = fitSignal ( _func , h1 , background = h4 , signal = r1 )
-        nFits += nFit 
-    if ( not res1 or not checkHisto ( h1 ) ) and r4 :
-        ok1  = 2 
-        ## use "reference" background & signal 
-        res1 , nFit = fitSignal ( _func , h1 , background = r4 , signal = r1 )
-        nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
-        ok1  = 3 
-        ## use "own" background & reference signal Prs+Prs 
-        res1, nFit = fitSignal ( _func , h1 , background = h4 , signal = r2 )
-        nFits += nFit 
-    if ( not res1 or not checkHisto ( h1 ) ) and r4 :
-        ok1  = 4 
-        ## use reference background & signal Prs+Prs 
-        res1 , nFit = fitSignal ( _func , h1 , background = r4 , signal = r2 )
-        nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
-        ok1  = -1 
-        if not force :
-            result =  (-2,ok1,ok0, nFits)
-            histoset.result = result 
-            return result 
-    
-    ## no-Prs+no-Prs 
-    ok2 = 0
-    ## use own background and signal (Prs+no-Prs)
-    res2 , nFit =  fitSignal    ( _func , h0 , background = h3 , signal = h1 )
-    nFits += nFit
-    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
-        ok2 = 1 
-        ## use reference background and own signal (Prs+Prs)
-        res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = h2 )
-        nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
-        ok2 = 2 
-        ## use own background and reference signal (Prs+no-Prs)
-        res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r1 )
-        nFits += nFit
-    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
-        ok2 = 3 
-        ## use reference background and reference signal (Prs+no-Prs)
-        res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r1 )
-        nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
-        ok2 = 4 
-        ## use own background and reference signal (Prs+Prs)
-        res2 , nFit = fitSignal ( _func , h0 , background = h3 , signal = r2 )
-        nFits += nFit
-    if ( not res2 or not checkHisto ( h0 ) ) and r3 :
-        ok2 = 5 
-        ## use reference background and reference signal (Prs+Prs)
-        res2 , nFit = fitSignal ( _func , h0 , background = r3 , signal = r2 )
-        nFits += nFit
-    if not res2 or not checkHisto ( h0 ) :
-        ok2 = -1 
-        if not force :
-            result =  (ok2,ok1,ok0, nFits)
-            histoset.result = result 
-            return result 
-
-    result =  (ok2,ok1,ok0, nFits)
-    histoset.result = result 
-    return result 
-    
-# =============================================================================
-
-
-# =============================================================================
-if '__main__' == __name__ :
-
-    print '*'*120
-    print                      __doc__
-    #print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
-    print '*'*120  
-
-# =============================================================================
-# The END 
-# =============================================================================
+# EOF

@@ -17,45 +17,12 @@ __all__     = (
     "analyse" ,
     )
 # =============================================================================
-import KaliCalo.Kali        as     Kali
-import KaliCalo.Pi0HistoFit as     Fit
+import KaliCalo.Cells                    as Cells
+import KaliCalo.FitUtils                 as FitUtils
+import KaliCalo.Kali                     as Kali
+import KaliCalo.MassDistribution.FitTask as Task
+from   KaliCalo.MassDistribution     import getHistosFromDB 
 import random
-
-# =============================================================================
-## bad parameters ? 
-def badParam ( mass  , sigma , num , corr ) :
-    """
-    Bad parameters ?
-    """
-    
-    # bad mass ?
-    if 10 < abs ( mass.value() - 135 )    : return True 
-
-    # bad sigma? 
-    if not 7 <= sigma.value() <= 18       : return True
-    
-    # bad number ?
-    if  num.value() < 25                  : return True
-    
-    # bad number ?
-    if  num.value() / num.error () < 3.5  : return True
-    
-    # bad precision ?
-    if not 0.00001 < corr.error() <= 0.01 : return True
-
-    return False 
-
-# =============================================================================
-## get the histograms fomr data base (databases)
-def  getHistosFromDB ( dbases ) :
-    """
-    Get the histograms from data base (databases)
-    """
-    if issubclass ( type ( dbases ) , Kali.HistoMap ) : return dbases
-    histos = Kali.HistoMap()
-    histos.updateFromDB ( dbases )
-    return histos
-
     
 # =============================================================================
 ## Analyse the histograms 
@@ -70,7 +37,6 @@ def  analyse ( histomap          ,
     histomap = getHistosFromDB ( histomap )
     
     if not fitted :
-        import KaliCalo.FitTask as Task 
         histomap = Task.fitHistos (
             histomap ,
             manager  ,
@@ -78,7 +44,7 @@ def  analyse ( histomap          ,
 
     keys = histomap.keys()    
     keys.sort()
-    for key in Kali.Zones  :
+    for key in Cells.Zones  :
         if key in keys : keys.remove ( key     )
         keys.insert ( 0 , key ) 
         
@@ -101,19 +67,19 @@ def  analyse ( histomap          ,
         
         hs     = histomap[key]
         
-        if key in Kali.Zones :
+        if key in Cells.Zones :
             
-            r0 = Fit.getPi0Params ( hs[0] )
-            r1 = Fit.getPi0Params ( hs[1] )
-            r2 = Fit.getPi0Params ( hs[2] )
+            r0 = FitUtils.getPi0Params ( hs[0] )
+            r1 = FitUtils.getPi0Params ( hs[1] )
+            r2 = FitUtils.getPi0Params ( hs[2] )
 
             if r0 and r1 and r2 :  
                 print ' MASS : %-24.24s %-24.24s %-24.24s ' % ( r0[1] , r1[1] , r2[1] ) , key 
                 print ' SIGMA: %-24.24s %-24.24s %-24.24s ' % ( r0[2] , r1[2] , r2[2] ) , key 
                 print ' NUM0 : %-24.24s %-24.24s %-24.24s ' % ( r0[0] , r1[0] , r2[0] ) , key
-                print ' S/B  : %-24.24s %-24.24s %-24.24s ' % ( Fit.s2b ( hs[0] ) ,
-                                                                Fit.s2b ( hs[1] ) ,
-                                                                Fit.s2b ( hs[2] ) ) , key
+                print ' S/B  : %-24.24s %-24.24s %-24.24s ' % ( FitUtils.s2b ( hs[0] ) ,
+                                                                FitUtils.s2b ( hs[1] ) ,
+                                                                FitUtils.s2b ( hs[2] ) ) , key
                 print '  '
             else :
                 print 'No fit information available for ZONE: ', key 
@@ -130,9 +96,9 @@ def  analyse ( histomap          ,
 
         iCnt  += result[-1] 
         
-        r0 = Fit.getPi0Params ( hs[0] )
-        r1 = Fit.getPi0Params ( hs[1] )
-        r2 = Fit.getPi0Params ( hs[2] )
+        r0 = FitUtils.getPi0Params ( hs[0] )
+        r1 = FitUtils.getPi0Params ( hs[1] )
+        r2 = FitUtils.getPi0Params ( hs[2] )
 
         r0 = r0 if 0 <= result[0] else None
         r1 = r1 if 0 <= result[1] else None
@@ -167,7 +133,7 @@ def  analyse ( histomap          ,
                 num    = abs ( r0[0] )
                 Used   = True 
 
-        use = badParam  ( mass , sigma , num , corr ) or not Used 
+        use = FitUtils.badParam  ( mass , sigma , num , corr ) or not Used 
         if r1 and use : 
             m      = r1[1]
             deltam = r1[1]-135.0 
@@ -180,7 +146,7 @@ def  analyse ( histomap          ,
                 num   += abs ( r1[0] ) 
                 Used   = True
                 
-        use = badParam  ( mass , sigma , num , corr ) or not Used 
+        use = FitUtils.badParam  ( mass , sigma , num , corr ) or not Used 
         if r2 and use : 
             m      = r2[1]
             deltam = r2[1]-135.0 
@@ -216,9 +182,9 @@ def  analyse ( histomap          ,
             print ' NUM0  : %-24.24s %-24.24s %-24.24s ' % ( r0[0] , r1[0] , r2[0] ) 
             print ' MASS  : %-24.24s %-24.24s %-24.24s ' % ( r0[1] , r1[1] , r2[1] ) , corr , [  '%.3f' % l for l in lambdamap[key] ] 
             print ' SIGMA : %-24.24s %-24.24s %-24.24s ' % ( r0[2] , r1[2] , r2[2] ) 
-            print ' S/B   : %-24.24s %-24.24s %-24.24s ' % ( Fit.s2b ( hs[0] ) ,
-                                                             Fit.s2b ( hs[1] ) ,
-                                                             Fit.s2b ( hs[2] ) ) 
+            print ' S/B   : %-24.24s %-24.24s %-24.24s ' % ( FitUtils.s2b ( hs[0] ) ,
+                                                             FitUtils.s2b ( hs[1] ) ,
+                                                             FitUtils.s2b ( hs[2] ) ) 
             
     return (badCells,lowCells,notFitCells)  
 

@@ -7,6 +7,11 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-22 - Albert Puig
+
+  - Completely reshuffled the python part to accomodate both CandidateMinimization
+    and MassDistribution calibration methods with common tools.
+
 !========================== KaliCalo v4r6 2010-11-06 ==========================
 
 ! 2010-11-04 - Vanya Belyaev
