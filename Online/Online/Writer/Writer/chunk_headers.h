@@ -25,7 +25,6 @@
 #define HLT1IN    12
 #define HLT1EX	  13
  
-
 /**
  * Encapsulates a command that is accompanied by data to be written.
  * The data that accompanies this header is essentially what is
