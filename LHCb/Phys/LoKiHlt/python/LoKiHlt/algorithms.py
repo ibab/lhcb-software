@@ -220,6 +220,21 @@ def allRun ( alg1 , *algs ) :
     if 1 == len ( _lst ) : return ALG_RUN ( _lst [0] ) 
     return ALG_RUNALL ( _lst )
 
+# =============================================================================
+## construct the 'ALG_RUNALL' functor in a nice way 
+def execute ( alg1 , *algs ) :
+    """
+    Construct the 'ALG_RUNALL' functor in a nice way:
+    (alias for allRun-function)
+
+    >>> p2 = execute ( 'alg1' , 'alg2' ) 
+    >>> p3 = execute ( 'alg1' , 'alg2' , 'alg3' ) 
+    >>> p4 = execute ( 'alg1' , 'alg2' , 'alg3' , 'alg4' ) 
+    >>> pl = execute ( [ 'alg1' , 'alg2' , 'alg3', ... ] )
+    
+    """
+    return allRun ( alg1 , *algs ) ;
+
 
 # =============================================================================
 if '__main__' == __name__ :
