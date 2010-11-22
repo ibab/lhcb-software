@@ -20,8 +20,8 @@ namespace DecayTreeFitter {
   public:
     DecayChain() : m_mother(0) {}
 
-    DecayChain(const LHCb::Particle& bc, bool forceFitAll=false)  ;
-    DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll=false)  ;
+    DecayChain(const LHCb::Particle& bc, const Configuration& config)  ;
+    DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, const Configuration& config)  ;
 
     ~DecayChain() ;
     
@@ -55,7 +55,7 @@ namespace DecayTreeFitter {
     const ParticleBase* m_cand ; // fit candidate (not same to mother in case of bs/be constraint)
     ParticleBase::constraintlist m_constraintlist ;
     std::vector<Constraint*> m_mergedconstraintlist ;
-    MergedConstraint mergedconstraint ;
+    MergedConstraint m_mergedconstraint ;
     typedef std::map<const LHCb::Particle*,const ParticleBase*> ParticleMap ;
     mutable ParticleMap m_particleMap ;
     bool m_isOwner ;

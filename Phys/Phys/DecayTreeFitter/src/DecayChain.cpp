@@ -12,35 +12,27 @@ namespace DecayTreeFitter
   void
   DecayChain::printConstraints(std::ostream& os) const
   {
-    os << "Constraints in decay tree: " << std::endl ;
+    os << "Constraints in decay tree: " << m_constraintlist.size() << std::endl ;
     for( ParticleBase::constraintlist::const_iterator 
 	   it = m_constraintlist.begin() ;
 	 it != m_constraintlist.end(); ++it) 
       it->print(os) ;
   }
 
-  DecayChain::DecayChain(const LHCb::Particle& bc, bool forceFitAll) 
+  DecayChain::DecayChain(const LHCb::Particle& bc, const Configuration& config)
     : m_dim(0),m_mother(0),m_isOwner(true)
   {
-    m_mother = ParticleBase::createParticle(bc,0,forceFitAll) ;
+    m_mother = ParticleBase::createParticle(bc,0,config) ;
     m_mother->updateIndex(m_dim) ;
     m_cand   = locate(bc) ;
-    if(vtxverbose>=2) {
-      std::cout << "In DecayChain constructor: m_dim = " << m_dim << std::endl ;
-      printConstraints() ;
-    }
   }
-
-  DecayChain::DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll) 
+  
+  DecayChain::DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, const Configuration& config) 
     : m_dim(0),m_mother(0),m_isOwner(true)
   {
-    m_mother = new InteractionPoint(pv,bc,forceFitAll) ;
+    m_mother = new InteractionPoint(pv,bc,config) ;
     m_mother->updateIndex(m_dim) ;
     m_cand   = locate(bc) ;
-    if(vtxverbose>=2) {
-      std::cout << "In DecayChain constructor: m_dim = " << m_dim << std::endl ;
-      printConstraints() ;
-    }
   }
   
   DecayChain::~DecayChain()
@@ -60,14 +52,18 @@ namespace DecayTreeFitter
     // merge all non-lineair constraints
     m_mergedconstraintlist.clear() ;
     if(false) {
-      mergedconstraint = MergedConstraint() ;
+      m_mergedconstraint = MergedConstraint() ;
       for( ParticleBase::constraintlist::iterator it =  m_constraintlist.begin() ;
 	   it != m_constraintlist.end(); ++it) {
 	if( it->isLineair() ) m_mergedconstraintlist.push_back(&(*it)) ;
-	else  mergedconstraint.push_back(&(*it)) ;
+	else  m_mergedconstraint.push_back(&(*it)) ;
       }
-      if( mergedconstraint.dim()>0 )
-	m_mergedconstraintlist.push_back(&mergedconstraint) ;
+      if( m_mergedconstraint.dim()>0 )
+	m_mergedconstraintlist.push_back(&m_mergedconstraint) ;
+    }
+    if(vtxverbose>=2) {
+      std::cout << "DecayChain::initConstraintList(): " << m_constraintlist.size() << " " << m_mergedconstraintlist.size()<< std::endl ;
+      printConstraints() ;
     }
   }
 

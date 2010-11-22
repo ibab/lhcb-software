@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2010-11-22 - Wouter Hulsbergen
+ - introduced 'Configuration' object
+ - revive functionality to reuse existing vertices
+
 !======================= DecayTreeFitter v1r10p1 2010-08-28 ==================
 
 ! 2010-08-27 - Wouter Hulsbergen

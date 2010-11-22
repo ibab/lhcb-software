@@ -9,10 +9,10 @@ namespace DecayTreeFitter
 
   InteractionPoint::InteractionPoint(const LHCb::VertexBase& ipvertex,
 				     const LHCb::Particle& daughter, 
-				     bool forceFitAll)
+				     const Configuration& config)
     : ParticleBase("IP")
   {
-    addDaughter( daughter, forceFitAll ) ;
+    addDaughter( daughter, config ) ;
     m_ipPos(0) = ipvertex.position().x() ;
     m_ipPos(1) = ipvertex.position().y() ;
     m_ipPos(2) = ipvertex.position().z() ;

@@ -16,7 +16,8 @@ namespace DecayTreeFitter
   class InteractionPoint : public ParticleBase
   {
   public:
-    InteractionPoint(const LHCb::VertexBase& ipvertex, const LHCb::Particle& daughter, bool forceFitAll) ;
+    InteractionPoint(const LHCb::VertexBase& ipvertex, const LHCb::Particle& daughter, 
+		     const Configuration& config) ;
 
     virtual int dim() const { return 3 ; } // (x,y,z)
     virtual ErrCode initPar1(FitParams*) ; 

@@ -11,8 +11,8 @@ namespace DecayTreeFitter
   {
   public:
     InternalParticle(const LHCb::Particle& bc, const ParticleBase* mother, 
-		     bool forceFitAll) ;
-
+		     const Configuration& config) ;
+    
     virtual int dim() const { return mother() ? 8 : 7 ; }
   
     virtual ErrCode initPar1(FitParams*) ; 

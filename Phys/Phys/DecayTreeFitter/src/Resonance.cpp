@@ -9,8 +9,8 @@ namespace DecayTreeFitter
   extern int vtxverbose ;
 
   Resonance::Resonance(const LHCb::Particle& bc, const ParticleBase* mother, 
-		       bool forceFitAll)
-    : InternalParticle(bc,mother,forceFitAll)
+		       const Configuration& config)
+    : InternalParticle(bc,mother,config)
   {
   }
 

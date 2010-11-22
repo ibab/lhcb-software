@@ -12,6 +12,7 @@
 #include "RecoPhoton.h"
 #include "Resonance.h"
 #include "FitParams.h"
+#include "Configuration.h"
 
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
@@ -69,9 +70,9 @@ namespace DecayTreeFitter
     offset += dim() ;
   }
 
-  ParticleBase* ParticleBase::addDaughter(const LHCb::Particle& cand, bool forceFitAll) 
+  ParticleBase* ParticleBase::addDaughter(const LHCb::Particle& cand, const Configuration& config)
   {
-    m_daughters.push_back( ParticleBase::createParticle(cand,this,forceFitAll) ) ;
+    m_daughters.push_back( ParticleBase::createParticle(cand,this,config) ) ;
     return m_daughters.back() ;
   }
 
@@ -90,7 +91,7 @@ namespace DecayTreeFitter
   ParticleBase*
   ParticleBase::createParticle(const LHCb::Particle& particle, 
 			       const ParticleBase* mother, 
-			       bool forceFitAll)
+			       const Configuration& config)
   {
     // This routine interpretes a beta candidate as one of the
     // 'Particles' used by the fitter.
@@ -99,17 +100,13 @@ namespace DecayTreeFitter
       LoKi::Particles::ppFromPID(particle.particleID()) ;
     
     if(vtxverbose>=2)
-      std::cout << "ParticleBase::createParticle: " << forceFitAll << std::endl ;
+      std::cout << "ParticleBase::createParticle: " << config.forceFitAll() << std::endl ;
     ParticleBase* rc=0 ;
     //bool bsconstraint = false ;
     
     // We refit invalid fits, kinematic fits and composites with beamspot
     // constraint if not at head of tree.
-    //bool validfit     = !forceFitAll && mother && particle->decayVtx() && 
-    //  (particle->decayVtx()->status() == BtaAbsVertex::Success ) &&
-    //  (particle->decayVtx()->type() == BtaAbsVertex::Geometric ) &&
-    //  !(bsconstraint||beconstraint) ;
-    bool validfit    = false ;
+    bool validfit = !config.forceFitAll() && particle.endVertex() != 0 ;
     bool iscomposite = particle.daughters().size()>0 ;
     bool isresonance = iscomposite && prop && isAResonance(*prop) ;
 
@@ -118,12 +115,12 @@ namespace DecayTreeFitter
       //rc = new InteractionPoint(particle,forceFitAll) ;
       //else 
       if( iscomposite ) 
-	rc = new InternalParticle(particle,0,forceFitAll) ; // still need proper head-of-tree class
+	rc = new InternalParticle(particle,0,config) ; // still need proper head-of-tree class
       else {
 	std::cout << "VtkParticleBase::createParticle: You are fitting a decay tree that exists of "
 		  << "a single, non-composite particle and which does not have a beamconstraint."
 		  << "I do not understand what you want me to do with this." << std::endl ;
-	rc = new InternalParticle(particle,0,forceFitAll) ; // still need proper head-of-tree class
+	rc = new InternalParticle(particle,0,config) ; // still need proper head-of-tree class
       }
     } else if( !iscomposite ) { // external particles
       const LHCb::ProtoParticle* proto = particle.proto() ;
@@ -146,9 +143,9 @@ namespace DecayTreeFitter
 	  rc = new RecoComposite(particle,mother) ;
       } else {         // unfited composites
 	if( isresonance ) 
-	  rc = new Resonance(particle,mother,forceFitAll) ;
+	  rc = new Resonance(particle,mother,config) ;
 	else
-	  rc = new InternalParticle(particle,mother,forceFitAll) ;
+	  rc = new InternalParticle(particle,mother,config) ;
       }
     } 
     

@@ -17,6 +17,7 @@ namespace LHCb
 namespace DecayTreeFitter
 {
   class FitParams ;
+  class Configuration ;
 
   class ParticleBase
   {
@@ -38,7 +39,7 @@ namespace DecayTreeFitter
 
     static ParticleBase* createParticle(const LHCb::Particle& bc, 
 					const ParticleBase* mother,
-					bool forceFitAll=false) ;
+					const Configuration& config) ;
 
     virtual int dim() const = 0 ;
     virtual void updateIndex(int& offset) ;
@@ -95,7 +96,7 @@ namespace DecayTreeFitter
     const daucontainer& daughters() const { return m_daughters ; }
     const_iterator begin() const { return m_daughters.begin() ; }
     const_iterator end()   const { return m_daughters.end() ; }
-    ParticleBase* addDaughter(const LHCb::Particle&, bool forceFitAll=false) ;
+    ParticleBase* addDaughter(const LHCb::Particle&, const Configuration& config) ;
     void removeDaughter(const ParticleBase* pb) ;
     
     typedef std::vector< std::pair<const ParticleBase*,int> > indexmap ;

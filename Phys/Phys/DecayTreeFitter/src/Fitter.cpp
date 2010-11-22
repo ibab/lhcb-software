@@ -1,4 +1,4 @@
-// $Id: Fitter.cpp,v 1.16 2010-06-09 17:55:46 ibelyaev Exp $ 
+// $Id: Fitter.cpp,v 1.16 2010/06/09 17:55:46 ibelyaev Exp $ 
 // ============================================================================
 #include <iomanip>
 #include <stdio.h>
@@ -13,6 +13,7 @@
 #include "FitParams.h"
 #include "DecayChain.h"
 #include "ParticleBase.h"
+#include "Configuration.h"
 
 namespace DecayTreeFitter
 {
@@ -35,8 +36,9 @@ namespace DecayTreeFitter
     , m_extrapolator ( extrapolator ) 
   //
   {
+    Configuration config(forceFitAll,extrapolator) ;
     // build the tree
-    m_decaychain = new DecayChain(bc,forceFitAll) ;
+    m_decaychain = new DecayChain(bc,config) ;
     // allocate the fit parameters
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
@@ -56,9 +58,10 @@ namespace DecayTreeFitter
   //
     , m_extrapolator ( extrapolator ) 
   //
-  {
+  { 
+    Configuration config(forceFitAll,extrapolator) ;
     // build the tree
-    m_decaychain = new DecayChain(bc,forceFitAll) ;
+    m_decaychain = new DecayChain(bc,config) ;
     // allocate the fit parameters
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
@@ -79,8 +82,9 @@ namespace DecayTreeFitter
   //
     , m_extrapolator ( extrapolator ) 
   //
-  {
-    m_decaychain = new DecayChain(bc,pv,forceFitAll) ;
+  {    
+    Configuration config(forceFitAll,extrapolator) ;
+    m_decaychain = new DecayChain(bc,pv,config) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
   // ==========================================================================
@@ -100,8 +104,9 @@ namespace DecayTreeFitter
   //
     , m_extrapolator ( extrapolator ) 
   //
-  {
-    m_decaychain = new DecayChain(bc,pv,forceFitAll) ;
+  {    
+    Configuration config(forceFitAll,extrapolator) ;
+    m_decaychain = new DecayChain(bc,pv,config) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
   // ==========================================================================
@@ -256,7 +261,7 @@ namespace DecayTreeFitter
     //m_decaychain->mother()->addToMap( indexmap ) ;
     // add this track
 
-    ParticleBase* bp = m_decaychain->mother()->addDaughter(cand) ;
+    ParticleBase* bp = m_decaychain->mother()->addDaughter(cand, Configuration()) ;
     int offset = m_fitparams->dim() ;
     bp->updateIndex(offset) ;
     double deltachisq(999) ;

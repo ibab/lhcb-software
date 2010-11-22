@@ -35,11 +35,11 @@ namespace DecayTreeFitter
   }
 
   InternalParticle::InternalParticle(const LHCb::Particle& bc, const ParticleBase* mother, 
-				     bool forceFitAll)
+				     const Configuration& config)
     : ParticleBase(bc,mother),m_lifetimeconstraint(false)
   {
     BOOST_FOREACH( const LHCb::Particle* daughter, bc.daughters() ) 
-      addDaughter(*daughter,forceFitAll) ;
+      addDaughter(*daughter,config) ;
     // copy constraints
     m_lifetimeconstraint = false ; //bc && bc->constraint(BtaConstraint::Life) ;
     m_isconversion = daughters().size()==2 &&  bc.particleID().pid() == 22 ;
@@ -138,6 +138,7 @@ namespace DecayTreeFitter
 	  // now, just take the first two ...
 	  RecoTrack* dau1 = trkdaughters[0] ;
 	  RecoTrack* dau2 = trkdaughters[1] ;
+
 	  // get the poca of the two statevectors
 	  const LHCb::State& state1 = dau1->state() ;
 	  const LHCb::State& state2 = dau2->state() ;

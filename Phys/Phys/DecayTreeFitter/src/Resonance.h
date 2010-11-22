@@ -11,7 +11,7 @@ namespace DecayTreeFitter
   {
   public:
     Resonance(const LHCb::Particle& bc, const ParticleBase* mother, 
-	      bool forceFitAll) ;
+	      const Configuration& config) ;
     virtual ~Resonance() ;
 
     virtual int dim() const { return 4 ; }
