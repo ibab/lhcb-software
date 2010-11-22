@@ -3,15 +3,6 @@
 #include "RecoComposite.h"
 #include "FitParams.h"
 
-using std::cout;
-using std::endl;
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
-
 namespace DecayTreeFitter
 {
 
@@ -26,13 +17,13 @@ namespace DecayTreeFitter
   }
 
   template<class Matrix>
-  HepSymMatrix convertToHepSymMatrix(Matrix M)
+  HepSymMatrix convertToHepSymMatrix(const Matrix& M)
   {
     size_t dim = M.kRows ;
     HepSymMatrix rc(dim) ;
     for(size_t irow=0; irow<dim; ++irow)
       for(size_t icol=0; icol<=irow; ++icol)
-	rc.fast(icol,irow) = M(icol,irow) ;
+	rc.fast(irow+1,icol+1) = M(irow,icol) ;
     return rc ;
   }
 
@@ -52,8 +43,8 @@ namespace DecayTreeFitter
     HepSymMatrix cov7 = convertToHepSymMatrix( particle().covMatrix()) ;
     m_matrixV = cov7.sub(1,dimM()) ; // so either 7 or 6, depending on mass constraint
     if(vtxverbose>=4) {
-      cout << "cov matrix of external candidate: " << name().c_str() 
-	   << " " << dimM() << " " << m_matrixV << endl ;
+      std::cout << "cov matrix of external candidate: " << name().c_str() 
+		<< " " << dimM() << " " << m_matrixV << std::endl ;
     }
   }
 
@@ -98,7 +89,7 @@ namespace DecayTreeFitter
       p.r(row)                   = fitparams.par()(indexmap[row-1]+1) - m_m(row) ;
       p.H(row,indexmap[row-1]+1) = 1 ;
       for(int col=1; col<=row; ++col)
-	p.Vfast(row,col) = m_matrixV FAST() (row,col) ;
+	p.Vfast(row,col) = m_matrixV.fast(row,col) ;
     }
  
     return ErrCode::success ;
