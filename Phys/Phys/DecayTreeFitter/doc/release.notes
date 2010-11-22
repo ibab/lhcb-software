@@ -9,8 +9,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-11-22 - Wouter Hulsbergen
- - introduced 'Configuration' object
- - revive functionality to reuse existing vertices
+ - revive functionality to reuse existing vertices (forceFitAll=False)
+ - add functionality to get chi2 of part of the tree
+ - reduce verbosity for failed fits (still need to be properly interfaced to msgsvc)
 
 !======================= DecayTreeFitter v1r10p1 2010-08-28 ==================
 
