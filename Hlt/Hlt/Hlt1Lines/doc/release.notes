@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2010-11-22 - Vanya Belyaev
+
+ - Hlt1Lines/Hl1Units.py
+    remove the obsolete symbols.. 
+
 ! 2010-11-19 - Roel Aaij
  - Hlt1Lines/Hl1Units.py
    - remove unused upgrade and match configuration symbols
