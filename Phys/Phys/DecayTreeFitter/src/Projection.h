@@ -13,7 +13,7 @@ namespace DecayTreeFitter
   {
   public:
     // constructor 
-    Projection(int dimP, int dimC) : m_matrixH(dimC,dimP,0),m_r(dimC,0),m_matrixV(dimC,0),m_offset(0) {}
+    Projection(int dimP, int dimC) : m_matrixH(dimC,dimP,0),m_r(dimC,0),m_matrixV(dimC,0),m_offset(0),m_particle(0),m_nHidden(0) {}
     
     // accessors to the projection matrix
     const HepMatrix& H() const { return m_matrixH ; } 
@@ -65,12 +65,18 @@ namespace DecayTreeFitter
     
     void incrementOffset(unsigned int i) { m_offset+=i ; }
     unsigned int offset() const { return m_offset ; }
+
+    void setParticle( const ParticleBase& p ) { m_particle = &p ; }
+    const ParticleBase* particle() const { return m_particle ; }
     
   private:
     HepMatrix m_matrixH ;    // projection matrix
-    HepVector m_r ;    // constraint residual 
+    HepVector m_r ;          // constraint residual 
     HepSymMatrix m_matrixV ; // constraint variance (zero for lagrange constraints)
-    unsigned int m_offset ; // offset for constraint index. only non-zero for merged constraints.
+    unsigned int m_offset ;  // offset for constraint index. only non-zero for merged constraints.
+    const ParticleBase* m_particle ; // particle where chi2 should be added
+    // the number of hidden 'degrees of freedom'. always zero except for the 'photon' constraint
+    unsigned int m_nHidden ;
   } ;
 }
 #endif
