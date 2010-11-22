@@ -4,7 +4,7 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltTracking
-version           v7r0p1
+version           v7r1
 
 # Structure
 #============================================================================

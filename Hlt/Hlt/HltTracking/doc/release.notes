@@ -5,6 +5,17 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-11-22 - Vanya Belyaev
+
+ - HltReco.py
+
+     add symbols for new streamers framework 
+
+ - cmt/requirements
+
+     version increment to v7r1 
+
+
 ! 2010-10-20 - Olivier Callot
  - Add a flag to use FastVeloTracking in HltReco.py
    Default is False
