@@ -65,7 +65,7 @@ namespace ROMon {
     /// Prefix for resulting service names
     std::string     m_prefix;
     /// Printout level
-    int             m_print;
+    long            m_print;
 
     struct ClusterAdder {
       ROMonBridge* bridge;
