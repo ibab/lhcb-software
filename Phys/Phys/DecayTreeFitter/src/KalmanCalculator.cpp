@@ -109,7 +109,7 @@ namespace DecayTreeFitter
   }
   
   void 
-  KalmanCalculator::updateCov(FitParams& fitparams, double chisq)
+  KalmanCalculator::updateCov(FitParams& fitparams)
   {
 
 #ifdef SLOWBUTSAFE
@@ -157,7 +157,6 @@ namespace DecayTreeFitter
 	    fitparams.cov().fast(row,col) += tmp * m_matrixK.HepMatrix::operator()(col,k) ;
 
 #endif
-    fitparams.addChiSquare(chisq>0 ? chisq : m_chisq, m_value->num_row()) ;
     for(int col=1; col<=m_nconstraints; ++col)
       for(int k=1; k<=m_nparameters; ++k)
  	if( (*m_matrixG).HepMatrix::operator()(col,k) !=0 ) ++(fitparams.nConstraintsVec(k)) ;

@@ -16,7 +16,7 @@ namespace DecayTreeFitter
 		 const FitParams& fitparams, const HepSymMatrix* V=0, int weight=1) ;
     void updatePar(FitParams& fitparams) ;
     void updatePar(const HepVector& prediction, FitParams& fitparams) ;
-    void updateCov(FitParams& fitparams, double chisq=-1) ;
+    void updateCov(FitParams& fitparams) ;
     double chisq() const { return m_chisq ; }
   private:
     int m_nconstraints ; // dimension of the constraint
