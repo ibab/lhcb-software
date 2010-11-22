@@ -123,6 +123,13 @@ namespace Hlt
     /// get L0-muon cuts... I do not understand these lines :-( 
     std::pair<LoKi::L0::L0MuonCut,bool> muonCut() const ;
     // ========================================================================
+    IMuonSeedTool* maker() const 
+    {
+      if ( 0 != m_maker ) { return m_maker ; }
+      m_maker = tool<IMuonSeedTool>( m_makerName , this ) ; 
+      return m_maker ;
+    }
+    // ========================================================================
   protected:
     // ========================================================================
     /// the input selection 
@@ -141,7 +148,7 @@ namespace Hlt
     /// Muon SeeD Tool 
     std::string m_makerName      ;                           //  Muon Seed Tool 
     //// the tool 
-    IMuonSeedTool* m_maker       ;                                  // the tool 
+    mutable IMuonSeedTool* m_maker ;                                // the tool 
     // ========================================================================
   private:
     // ========================================================================

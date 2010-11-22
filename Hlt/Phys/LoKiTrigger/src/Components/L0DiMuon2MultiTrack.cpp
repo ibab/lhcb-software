@@ -180,10 +180,12 @@ StatusCode Hlt::L0DiMuon2MultiTrack::execute  ()
       // keep it: create new stage 
       Hlt::Stage* newstage = new Hlt::Stage() ;
       stages      -> push_back   ( newstage  ) ;
-      const_cast<Hlt::Candidate*>( candidate ) -> addToStages ( newstage ) ;
+      Hlt::Candidate* candidate_ = const_cast<Hlt::Candidate*>( candidate ) ;
+      candidate_ -> addToWorkers ( this     ) ;
+      candidate_ -> addToStages  ( newstage ) ;
       //
-      Hlt::Stage::Lock lock      ( newstage , this  ) ;
-      newstage    -> set         ( mtrack           ) ;      
+      Hlt::Stage::Lock lock      ( newstage , maker() ) ;
+      newstage    -> set         ( mtrack             ) ;      
       //
       m_selection -> push_back   ( candidate ) ; 
     }

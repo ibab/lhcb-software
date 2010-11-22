@@ -211,10 +211,13 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       
       Hlt::Stage* newstage = new Hlt::Stage() ;
       stages      -> push_back   ( newstage ) ;
-      const_cast<Hlt::Candidate*>(candidate)   -> addToStages ( newstage ) ;
       //
-      Hlt::Stage::Lock lock    ( newstage , this  ) ;
-      newstage    -> set       ( track            ) ;
+      Hlt::Candidate* candidate_ = const_cast<Hlt::Candidate*>(candidate) ;
+      candidate_ -> addToWorkers ( this     ) ;
+      candidate_ -> addToStages  ( newstage ) ;
+      //
+      Hlt::Stage::Lock lock    ( newstage , maker() ) ;
+      newstage    -> set       ( track              ) ;
       //
       m_selection -> push_back ( candidate ) ; 
     }

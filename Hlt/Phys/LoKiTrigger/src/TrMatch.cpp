@@ -86,12 +86,34 @@ LoKi::Hlt1::Match::operator()
       //
       /// get new candidate:
       Hlt::Candidate* candidate = newCandidate () ;
-      /// get new stage 
-      Hlt::Stage*     stage    = newStage     () ;
-      candidate -> addToStages ( stage ) ;
-      /// lock new stage:
-      Hlt::Stage::Lock lock ( stage , alg() ) ;
-      stage     -> set( track ) ;
+      candidate -> addToWorkers ( alg() ) ;
+      //
+      {
+        //
+        // 1. "initiator" stage - copy the first candidate:
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , match () ) ;
+        //
+        lock.addToHistory ( cand1->workers() ) ;
+        stage -> set ( cand1->currentStage() ) ;
+      }
+      //
+      {
+        //
+        //  2. "regular" stage : track
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , match () ) ;
+        stage    -> set ( track ) ;
+      }
+      //
       // add new candidate to the output:
       output.push_back ( candidate ) ;
       //

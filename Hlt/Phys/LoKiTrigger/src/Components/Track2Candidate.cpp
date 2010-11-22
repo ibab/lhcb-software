@@ -179,6 +179,9 @@ StatusCode Hlt::Track2Candidate::execute  ()
     //                                          
     // create the new candidate:
     Hlt::Candidate* candidate = new Hlt::Candidate() ;
+    //
+    candidate  -> addToWorkers ( m_input ) ;
+    candidate  -> addToWorkers ( this    ) ;
     candidates -> push_back ( candidate )  ; // add candidate into TES constainer 
     //
     // create the stage
@@ -190,6 +193,7 @@ StatusCode Hlt::Track2Candidate::execute  ()
     
     // lock the stage!
     Hlt::Stage::Lock lock ( stage , this ) ;
+    lock.addToHistory ( m_input ) ;
     stage->set ( track ) ;
     
     // insert the candidate into output selection 

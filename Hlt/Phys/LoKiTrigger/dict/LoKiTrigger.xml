@@ -77,8 +77,10 @@
   <class name    = "LoKi::Hlt1::UpgradeConf"         />
   <class name    = "LoKi::Hlt1::MatchConf"           />
   <class name    = "LoKi::Hlt1::Tool"                />
-  <class name    = "LoKi::Hlt1::TrackFunction"       />
   <class name    = "LoKi::Hlt1::MatchTVelo"          />
+  
+  <class name = "LoKi::Tracks::TrFunction"   />
+  <class name = "LoKi::Hlt1::TrackFunction"  />
   
   <!-- 
        <class name    = "LoKi::Hlt1::TrackBiFunction"     />

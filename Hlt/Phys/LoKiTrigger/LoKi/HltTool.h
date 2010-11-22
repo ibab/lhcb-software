@@ -12,6 +12,7 @@
 #include "GaudiKernel/Kernel.h"
 // ============================================================================
 /** @file  LoKi/HltTool.h
+ *
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
@@ -20,6 +21,7 @@
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2009-03-31
  *
  *                    $Revision$
  *  Last Modification $Date$ 

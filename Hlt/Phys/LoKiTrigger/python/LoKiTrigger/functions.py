@@ -205,9 +205,24 @@ TC_MATCH2   = LoKi.Hlt1.Match2
 # =============================================================================
 
 
+## Hlt1Wrappers 
+TrackFunction       = LoKi.Hlt1.TrackFunction
+TrFUN               = LoKi.Tracks.TrFunction 
 
-## helper objects
-## TrackFunction       = LoKi.Hlt1.TrackFunction
+
+
+## @todo to be done in LoKiTrigger:
+LoKi.Hlt1.UpgradeConf      . __str__  =  LoKi.Hlt1.UpgradeConf     . toString 
+LoKi.Hlt1.UpgradeConf      . __repr__ =  LoKi.Hlt1.UpgradeConf     . toString
+LoKi.Hlt1.MatchConf        . __str__  =  LoKi.Hlt1.MatchConf       . toString 
+LoKi.Hlt1.MatchConf        . __repr__ =  LoKi.Hlt1.MatchConf       . toString
+LoKi.Hlt1.TrackFunction    . __str__  =  LoKi.Hlt1.TrackFunction   . toString 
+LoKi.Hlt1.TrackFunction    . __repr__ =  LoKi.Hlt1.TrackFunction   . toString 
+
+##LoKi.Hlt1.TrackBiFunction  . __str__  =  LoKi.Hlt1.TrackBiFunction . toString 
+##LoKi.Hlt1.TrackBiFunction  . __repr__ =  LoKi.Hlt1.TrackBiFunction . toString 
+
+
 ## TrackBiFunction     = LoKi.Hlt1.TrackBiFunction
 ## MatchTVelo          = LoKi.Hlt1.MatchTVelo
 ## TrackVertexFunction = LoKi.Hlt1.TrackVertexFunction

@@ -182,7 +182,9 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
     //                                          
     // create the new candidate:
     Hlt::Candidate* candidate = new Hlt::Candidate() ;
-    candidates -> push_back ( candidate )  ; // add candidate into TES constainer 
+    candidate  -> addToWorkers ( m_input ) ;
+    candidate  -> addToWorkers ( this    ) ;
+    candidates -> push_back  ( candidate ) ; // add candidate into TES constainer 
     //
     // create the stage
     Hlt::Stage* stage = new Hlt::Stage() ;
@@ -193,6 +195,7 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
     
     // lock the stage!
     Hlt::Stage::Lock lock ( stage , this ) ;
+    lock.addToHistory ( m_input ) ;
     stage->set (  muon ) ;
     
     // insert the candidate into output selection 

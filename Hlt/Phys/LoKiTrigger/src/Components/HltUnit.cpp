@@ -53,7 +53,7 @@ LoKi::HltUnit::HltUnit
   Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
   // set the factory type/name 
   sc = setProperty
-    ( "Factory" , "LoKi::Hybrid::CoreFactory/CoreFactory:PUBLIC" ) ;
+    ( "Factory" , "LoKi::Hybrid::CoreFactory/Hlt1Factory:PUBLIC" ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
   // update the preambulo :
   std::vector<std::string> _newpreambulo ;

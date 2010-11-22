@@ -86,8 +86,8 @@ StatusCode Hlt::L0Muon2TrackBase::initialize ()
   sc = lock -> registerOutput ( m_selection , this ) ;
   Assert ( sc.isSuccess () , "Unable to register OUTPUT selection"  , sc ) ;
   // get the tool 
-  m_maker = tool<IMuonSeedTool>( m_makerName , this ) ; // PRIVATE ???
-  
+  Assert ( 0 != maker() , "Unable to get the tool" ) ;
+  //
   declareInfo ( "#accept" , "" , &counter("#accept") , 
                 0, std::string ("Events accepted by "    ) + name () ) ;
   declareInfo ( "#input"  , "" , &counter("#input" ) ,

@@ -148,13 +148,21 @@ def _decorate ( name = _name  ) :
     
     tT = 'const LHCb::Track*'
     vT = 'std::vector<const LHCb::Track*>'
-
+    
+    # function 
+    _decorated |= _LoKiCore.getAndDecorateFunctions (  
+        name                                   , ## module name  
+        LoKi.Functor        ( tT ,'double'  )  , ## the base
+        LoKi.Dicts.FunCalls ( LHCb.Track    )  , ## call-traits
+        LoKi.Dicts.FuncOps  ( tT , tT       )  ) ## operators&operations
+    
     # "pipe" : vector<T> -> vector<T>    
     _decorated |= _LoKiCore.getAndDecoratePipes (
         name                                   , ## module name  
         LoKi.Functor       ( vT , vT )         , ## the base
         LoKi.Dicts.PipeOps ( tT , tT )         ) ## call-traits
     
+
     # 'source' : void -> vector<T>    
     _decorated |= _LoKiCore.getAndDecorateSources  (  
         name                                   , ## module name  
@@ -171,6 +179,22 @@ _decorated = _decorate ()                         ## ATTENTION
 # =============================================================================
 
 from LoKiTracks.decorators import *
+
+
+# =============================================================================
+## Create the function/tool from the descriptor
+def __tr_func__ ( self ) :
+    """
+    Create the function/tool from the descriptor
+    
+    >>> fun  = ..                  ## get the function configuration
+    >>> fltr = ( fun() < 1 * GeV ) ## create the streamer
+    
+    """
+    return TrFUN ( self )
+
+LoKi.Hlt1.TrackFunction  . __call__  =  __tr_func__
+
 
 # =============================================================================
 if __name__ == '__main__' :
