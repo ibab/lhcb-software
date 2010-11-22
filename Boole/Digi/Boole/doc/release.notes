@@ -6,6 +6,9 @@ Purpose: LHCb Digitization program
  - Changes to references to reflect changes in Boole v21r9 output:
    . #95668 Reduce CaloDet verbosity
 
+ - New tuning in SIMCOND
+   . calo-20101119: updated MC energy scale for Ecal and Hcal
+
 </PRE><H1><A NAME=v21r8p1>2010-11-08 Boole v21r8p1</A></H1><PRE>
 This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1
  and SQLDDDB v5r39, ParamFiles v8r3, FieldMap v5r5, L0TCK v3r5, AppConfig v3r*
