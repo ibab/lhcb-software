@@ -48,7 +48,8 @@ namespace DecayTreeFitter {
     void printConstraints(std::ostream& os=std::cout) const ;
     void setMassConstraint( const LHCb::Particle& bc, bool add=true) ;
     void setMassConstraint( const LHCb::ParticleID& pid, bool add=true) ;
-
+    
+    ChiSquare chiSquare( const LHCb::Particle& bc, const FitParams& fitpars ) const ;
   private:
     int m_dim ;
     ParticleBase* m_mother ;     // head of decay tree

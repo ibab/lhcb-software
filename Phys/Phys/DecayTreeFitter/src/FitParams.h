@@ -1,14 +1,18 @@
 #ifndef FITPARAMS_H
 #define FITPARAMS_H
 
-#include <vector> 
+#include <vector>
+#include <map>
 #include <CLHEP/Matrix/Vector.h>
 #include <CLHEP/Matrix/SymMatrix.h>
 #include <CLHEP/Matrix/DiagMatrix.h>
 #include "CLHEP/config/CLHEP.h"
+#include "DecayTreeFitter/ChiSquare.h"
 
 namespace DecayTreeFitter
 {
+  class ParticleBase ;
+
   class FitParams
   {
   public:
@@ -45,9 +49,10 @@ namespace DecayTreeFitter
     void resetCov(double scale=100) ;
     void print() const ;
     bool testCov() const ;
-    void addChiSquare(double chisq, int nconstraints) {
-      m_chiSquare += chisq ; m_nConstraints += nconstraints ; }
 
+    void addChiSquare( double chi2, int nconstraints, const ParticleBase* p) ;
+    ChiSquare chiSquare( const ParticleBase& p) const ;
+    
   protected:
     FitParams() {}
   private:
@@ -56,8 +61,9 @@ namespace DecayTreeFitter
     HepSymMatrix m_cov ;
     HepDiagMatrix m_scale ;
     double m_chiSquare ;
-    int m_nConstraints ;
-    std::vector<int> m_nConstraintsVec ; // vector with number of constraints per parameter
+    int    m_nConstraints ;
+    std::vector<int> m_nConstraintsVec ;    // vector with number of constraints per parameter
+    std::map<const ParticleBase*, ChiSquare> m_chiSquareMap ;
   } ;
 } 
 

@@ -42,6 +42,7 @@ namespace DecayTreeFitter
   Constraint::project(const FitParams& fitpar, Projection& p) const
   {
     // this one will be overruled by the MergedConstraint
+    p.setParticle( *m_node ) ;
     return m_node->projectConstraint(m_type,fitpar,p) ;
   }
 
@@ -103,7 +104,7 @@ namespace DecayTreeFitter
       }
       if(!status.failure()) {
 	kalman.updateCov( fitpar ) ;
-	if(m_nHidden>0) fitpar.addChiSquare(0,-m_nHidden) ;
+	fitpar.addChiSquare( kalman.chisq(), m_dim, p.particle() ) ;
       } 
       if(pred) delete pred ;
       if(vtxverbose>=4 &&m_node&&
@@ -140,7 +141,7 @@ namespace DecayTreeFitter
       status |= kalman.init( p.r(), p.H(), fitpar, &p.V() ) ;
       kalman.updatePar( fitpar ) ;
       kalman.updateCov( fitpar ) ;
-      if(m_nHidden>0) fitpar.addChiSquare(0,-m_nHidden) ;
+      fitpar.addChiSquare( kalman.chisq(), m_dim, p.particle() ) ;
     }
     if( status.failure()) 
       std::cout << "error filtering constraint: " 

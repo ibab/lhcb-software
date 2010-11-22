@@ -26,6 +26,7 @@ namespace DecayTreeFitter {
     m_nConstraints=0 ;
     for(int row=1; row<=m_dim; ++row)
       nConstraintsVec(row) = 0 ;
+    m_chiSquareMap.clear() ;
   }
   
   bool FitParams::testCov() const {
@@ -87,6 +88,19 @@ namespace DecayTreeFitter {
       m_dim = newdim ;
       m_nConstraintsVec.resize(newdim,0) ;
     }
+  }
+
+  void FitParams::addChiSquare( double chisq, int nconstraints, const ParticleBase* p)
+  {
+    m_chiSquare += chisq;
+    m_nConstraints += nconstraints ;
+    if( p ) m_chiSquareMap[ p ] += ChiSquare(chisq,nconstraints) ;
+  }
+
+  ChiSquare FitParams::chiSquare( const ParticleBase& p) const 
+  { 
+    std::map<const ParticleBase*, ChiSquare>::const_iterator it = m_chiSquareMap.find( &p ) ;
+    return it != m_chiSquareMap.end() ? it->second : ChiSquare() ;
   }
 
 //   void FitParams::copy(const FitParams& rhs, 

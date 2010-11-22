@@ -194,4 +194,19 @@ namespace DecayTreeFitter
     const ParticleBase* base = locate(bc) ;
     return base ? base->lenIndex() : 0 ;
   }
+
+  ChiSquare
+  DecayChain::chiSquare( const LHCb::Particle& bc, const FitParams& fitpars ) const {
+    const ParticleBase* base = locate(bc) ;
+    ChiSquare chisq ;
+    if( base ) {
+      chisq = base->chiSquare(fitpars) ;
+      // uhh: need to subtract the lifetime dof if this particle has a
+      // mother with a different vertex
+      if( base->mother() && base->posIndex()>=0 &&
+	  base->posIndex() != base->mother()->posIndex() ) 
+	chisq += ChiSquare(0,1) ;
+    }
+    return chisq ;
+  }
 }

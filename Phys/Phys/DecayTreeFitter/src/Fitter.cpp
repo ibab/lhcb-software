@@ -216,8 +216,10 @@ namespace DecayTreeFitter
       //m_decaychain->mother()->forceP4Sum(*m_fitparams) ;
 
       if( !(m_fitparams->testCov() ) ) {
-        std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
-                  << "Changing status to failed." << std::endl ;
+	static int counter(10) ;
+	if( --counter>=0)
+	  std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
+		    << "Changing status to failed." << std::endl ;
         m_status = Failed ;
         //print() ;
       }
@@ -619,7 +621,12 @@ namespace DecayTreeFitter
   // Print the result of the fit
   std::ostream& Fitter::fillStream ( std::ostream& s ) const 
   { return s << print() ; }
-  
+
+  // Get the chisquare of a particular particle in the decay chain
+  ChiSquare Fitter::chiSquare( const LHCb::Particle& particle ) const
+  {
+    return m_decaychain->chiSquare(particle, *m_fitparams) ;
+  }
 }
 
   

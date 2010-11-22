@@ -31,6 +31,7 @@ namespace DecayTreeFitter
   class DecayChain ;
   class FitParams ;
   class ParticleBase ;
+  class ChiSquare ;
 }
 // ============================================================================
 namespace DecayTreeFitter 
@@ -106,6 +107,8 @@ namespace DecayTreeFitter
     FitStatus  status    () const { return m_status ; }
     /// Number of iterations used by vertex fit
     int        nIter     () const { return m_niter  ; }
+    /// get the chisquare of everything 'downstream' of a particle
+    ChiSquare chiSquare( const LHCb::Particle& p ) const ;
     /**  Compute the decay length sum of two particles in 
      *   the decay tree (useful for e.g. B->DD)
      */
@@ -132,8 +135,9 @@ namespace DecayTreeFitter
     bool updateTree ( LHCb::Particle& cand ) const ;
     /// error code 
     int  errCode  () { return m_errCode ; }
-    /// ? 
-    static void setVerbose(int i) ;    
+    /// set the verbosity level (for debugging only)
+    static void setVerbose(int i) ;
+    
     // ========================================================================
   public:
     // ========================================================================

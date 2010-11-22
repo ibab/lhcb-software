@@ -5,6 +5,7 @@
 #include <vector> 
 #include "Constraint.h"
 #include "Projection.h"
+#include "DecayTreeFitter/ChiSquare.h"
 
 namespace LHCb
 {
@@ -18,7 +19,7 @@ namespace DecayTreeFitter
 {
   class FitParams ;
   class Configuration ;
-
+  
   class ParticleBase
   {
   public:
@@ -116,7 +117,9 @@ namespace DecayTreeFitter
       std::swap(add,m_hasMassConstraint) ;
       return add != m_hasMassConstraint ;
     }
-
+    
+    ChiSquare chiSquare( const FitParams& params ) const ;
+    
   protected:
     static double pdtCLifeTime(const LHCb::Particle& bc)  ;
     static bool isAResonance(const LHCb::ParticleProperty& bc) ;

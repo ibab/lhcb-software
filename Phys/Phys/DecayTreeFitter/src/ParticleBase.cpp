@@ -395,6 +395,7 @@ namespace DecayTreeFitter
 // 	       << -tau*py0 - (px-px0)/lambda << std::endl ;
 //       }
 //  }
+    p.setParticle( *mother() ) ;
     return ErrCode::success ;
   }
 
@@ -487,4 +488,17 @@ namespace DecayTreeFitter
     return rc ;
   }
 
+  ChiSquare ParticleBase::chiSquare( const FitParams& params ) const
+  {
+    ChiSquare chi2 ;
+    // add contribution from daughters
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end() ; ++it) {
+      chi2 += (*it)->chiSquare(params) ;
+    }
+    // add own chisquare, adjust for number of parameters
+    chi2 += params.chiSquare( *this ) ;
+    chi2 += ChiSquare( 0, -dim() ) ;
+    return chi2 ;
+  }
 }
