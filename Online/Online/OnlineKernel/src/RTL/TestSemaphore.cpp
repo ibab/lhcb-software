@@ -1,6 +1,8 @@
 #include <cstdio>
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
+
 
 extern "C" int rtl_testSemaphoreSubProcess(int argc,char** argv) {
   int msecs = 2000;
