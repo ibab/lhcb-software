@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-11-22 - V. Gligorov
+ - Add protection for a pointer dereference. 
+
 ! 2010-11-21 - V. Gligorov
  - Rewrite the swimming code in HltMoveVerticesForSwimming.{cpp,h}
   . This is a major rewrite of the code logic. There are now no user
