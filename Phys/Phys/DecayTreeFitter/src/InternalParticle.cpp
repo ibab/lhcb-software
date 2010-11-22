@@ -509,13 +509,13 @@ namespace DecayTreeFitter
       alist.push_back(Constraint(this,Constraint::kinematic,depth,4)) ;
     // the geometric constraint
     if(mother() && lenIndex()>=0) 
-      alist.push_back(Constraint(this,Constraint::geometric,depth,3,0,3)) ;
+      alist.push_back(Constraint(this,Constraint::geometric,depth,3,3)) ;
     // the mass constraint. FIXME: move to ParticleBase
     if(hasMassConstraint()) {
       if( !m_isconversion ) 
-	alist.push_back(Constraint(this,Constraint::mass,depth,1,0,10)) ;
+	alist.push_back(Constraint(this,Constraint::mass,depth,1,10)) ;
       else
-	alist.push_back(Constraint(this,Constraint::conversion,depth,1,0,3)) ;
+	alist.push_back(Constraint(this,Constraint::conversion,depth,1,3)) ;
     }
   }
 
