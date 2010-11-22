@@ -1,6 +1,7 @@
 
 <lcgdict>
   <class name = "DecayTreeFitter::Fitter" />
+  <class name = "DecayTreeFitter::ChiSquare" />
   
   <exclusion>
     <class name = "DecayTreeFitter::Fitter">

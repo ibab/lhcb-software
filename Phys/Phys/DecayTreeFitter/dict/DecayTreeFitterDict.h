@@ -6,5 +6,6 @@
 //#define G__DICTIONARY
 
 #include "DecayTreeFitter/Fitter.h"
+#include "DecayTreeFitter/ChiSquare.h"
 
 #endif // DECAYTREEFITTERDICT
