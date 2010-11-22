@@ -5,6 +5,16 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-11-22 - Vanya Belyaev
+
+ - HltDecodeRaw :
+
+      register symbols for new streamers framework 
+
+ - cmt/requirements 
+
+      version increment to v4r6 
+
 !========================== HltLine v4r5p1  2010-09-08 ===================
 !2010-09-08 - Johannes Albrecht
  - add Hlt2..4BsMuMu lines (which have no GEC) to default HLT2 veto

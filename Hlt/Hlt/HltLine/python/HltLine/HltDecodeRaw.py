@@ -44,3 +44,29 @@ __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
           , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
           , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL' )
 
+# ==============================================================================
+# Register symbols for streamer framework:
+# ==============================================================================
+from Configurables import LoKi__Hybrid__CoreFactory as Hlt1Factory
+_factory = Hlt1Factory ( "Hlt1Factory" )
+_names          = lambda obj : [ m.getFullName()  for m in obj.members() ]
+#
+## register the symbols for streamer framework
+#  they can be used both as "gate" and "cause"
+#
+_factory.Lines += [
+    "decodeL0MUON = execute ( %s ) " % _names ( DecodeL0MUON ) ,
+    "decodeL0CALO = execute ( %s ) " % _names ( DecodeL0CALO ) ,
+    "decodeVELO   = execute ( %s ) " % _names ( DecodeVELO   ) ,
+    "decodeTT     = execute ( %s ) " % _names ( DecodeTT     ) ,
+    "decodeIT     = execute ( %s ) " % _names ( DecodeIT     ) ,
+    "decodeOT     = execute ( %s ) " % _names ( DecodeOT     ) ,
+    "decodeECAL   = execute ( %s ) " % _names ( DecodeECAL   ) ,
+    "decodeHCAL   = execute ( %s ) " % _names ( DecodeHCAL   ) ,
+    "decodeSPD    = execute ( %s ) " % _names ( DecodeSPD    ) ,
+    "decodePRS    = execute ( %s ) " % _names ( DecodePRS    )
+    ]
+
+# ==============================================================================
+# The END 
+# ==============================================================================
