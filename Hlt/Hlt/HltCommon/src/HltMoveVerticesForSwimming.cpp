@@ -27,8 +27,15 @@ HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
-  declareProperty("Blifetime", 		    m_bLifetime		    = -999999.0	);
+  declareProperty("BlifetimeErr",	    m_bLifetimeErr      = -999999.0	);
+  declareProperty("Blifetime",          m_bLifetime         = -999999.0 );
   declareProperty("Bip",                m_bIP               = -999999.0 );
+  declareProperty("BipChi2",            m_bIPChi2           = -999999.0 );
+  declareProperty("BfdChi2",            m_bFDChi2           = -999999.0 );
+  declareProperty("Bdira",              m_bDIRA             = -999999.0 );
+
+  declareProperty("BadEvent",           m_badEvent          = false);
+
   declareProperty("SwimmingDistance", 	m_swimmingDistance	= 1.0		);
   declareProperty("Bcontainer",         m_Bcontainer        = "/Event/SeqD2KK/Phys/SelD2KK");
   declareProperty("OfflinePVs",         m_offlinePVs        = "/Event/Rec/Vertex/Primary");
@@ -84,6 +91,15 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   StatusCode sc = StatusCode::SUCCESS;
 
   m_selections.output()->clean(); //TODO: is this really needed?
+
+  //Reinitialize the properties
+  m_bLifetimeErr      = -999999.0 ;
+  m_bLifetime         = -999999.0 ;
+  m_bIP               = -999999.0 ;
+  m_bIPChi2           = -999999.0 ;
+  m_bFDChi2           = -999999.0 ;
+  m_bDIRA             = -999999.0 ;
+  m_badEvent          = false; 
 
   debug() << "About to get the offline particles" << endmsg;
 
@@ -141,6 +157,15 @@ StatusCode HltMoveVerticesForSwimming::execute() {
         }   
   }
 
+  //Safety paranoia check: are there any offline PVs?
+  if (offPVs.size() == 0 ) {
+       //There are no offline PVs found in the event which should never happen
+       //if it does, for any reason, mark the event as bad and move on
+       warning() << "Found an event with no offline PVs, should never happen" <<endmsg;
+       warning() << "Marking the event as bad and exiting gracefully" << endmsg;
+       m_badEvent = true;
+       return sc;  
+  }      
   //Now get the best PV for the particle
   debug() << "About to get the related PV" << endmsg;
   const LHCb::VertexBase* offPV  = m_finder->relatedPV(*(pars->begin()), LHCb::RecVertex::ConstVector(offPVs.begin(), offPVs.end()));
@@ -196,22 +221,34 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(LHCb::Particle* myB, LHCb::Verte
   //Also move the clone of the offline PV to compute the new lifetime
   offPV->setPosition(offPV->position() + m_swimmingDistance*myB->slopes().Unit());
 
-  double pt,ept,chi2,ip,ipchi2 = -99999999.;
+  double pt,ept,chi2,ip,ipchi2,fd,fdchi2,dira = -99999999.;
   sc =  m_fit->fit ( *offPV, *myB , pt, ept, chi2 );
   if (!sc) {  
     warning() << "The lifetime fit failed!!" << endmsg; 
-    return sc;
   }
   debug() << "The lifetime of the signal candidate is now = " << pt << endmsg;
   m_bLifetime = pt;
+  m_bLifetimeErr = ept;
 
   sc =  m_dist->distance ( myB , offPV, ip, ipchi2 );
+  sc =  m_dist->distance ( offPV, myB->endVertex(), fd, fdchi2);
   if (!sc) {   
     warning() << "The distance calculator failed!!" << endmsg; 
-    return sc; 
   }
   debug() << "The IP of the signal candidate is now = " << ip << endmsg;
   m_bIP = ip;
+  m_bIPChi2 = ipchi2;
+  m_bFDChi2 = fdchi2;
+    
+  //Now compute the pointing angle as well for good measure!
+  const LHCb::Vertex* evtx = myB->endVertex();
+  if( !evtx ){
+      Warning("Can't retrieve the end vertex of the B!" );
+      return sc;
+  }   
+  Gaudi::XYZVector A = myB->momentum().Vect();
+  Gaudi::XYZVector B = evtx->position() - offPV->position();  
+  m_bDIRA = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
 
   return sc;
 }

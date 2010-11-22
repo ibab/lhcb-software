@@ -41,7 +41,12 @@ private:
 
   double m_swimmingDistance; //How far to move the primary vertex. The sign is positive if moving in the direction of the B momentum
   double m_bLifetime; //the measured B lifetime
+  double m_bLifetimeErr; //the error on the measured B lifetime 
   double m_bIP;//The B IP wrt. the best PV  
+  double m_bIPChi2; //The B IP Chi2 wrt. the best PV  
+  double m_bFDChi2; //The B FD Chi2 wrt. the best PV
+  double m_bDIRA; //The B pointing angle wrt. the best PV
+  bool   m_badEvent;
 
   ILifetimeFitter* m_fit;
   IDistanceCalculator* m_dist;
