@@ -1,3 +1,7 @@
+2010-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/archive_project: added creation of the "NOT_READY" file at the start of the process.
+
 2010-11-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: removed superfluous "/" in the messages.

@@ -88,6 +88,7 @@ cd ${rel_dir}/$PACKAGE/$VERSION
 echo " defreeze the project directory"
 # find . -type d -exec fs setacl {} ${group}:librarians all \;
 unlockAFSDir -R ${rel_dir}/$PACKAGE/$VERSION
+touch ${rel_dir}/$PACKAGE/$VERSION/NOT_READY
 
 # archive the version on /castor/
 if ($action == "archive") then
