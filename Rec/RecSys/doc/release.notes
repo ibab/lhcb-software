@@ -8,8 +8,46 @@ Purpose: LHCb reconstruction packages.
 ! 2010-11-08 - Rob Lambert
  - Add back in Tf/FastVelo to Rec
 
+</PRE><H1><A NAME=v10r5p3>2010-11-23 RecSys v10r5p3</A></H1><PRE>
+This version uses Gaudi v21r11 and LHCb v31r6p1
 
-</PRE><H1><A NAME=v10r5p2>2010-11-05 RecSys v10r5p2</A></H1><PRE> 
+- This is a minimal patch and clean-up to include the latest fixes which were also
+  done for the reprocessing release of Brunel v37r8p3.
+
+- This version replaces v10r5p2 for user analysis and MC production.
+
+- Two packages were branched in this release:
+  Rec/RecConf and Rich/RichRecMCTools, to really pick up the minimal changes.
+  Along with Rich/RichRecSys these instrument smearing for MC cherenkov angles.
+
+- Patches:
+  Rec/RecConf v1r3p1, Rich/RichHPDImageAnalysis v1r4, Rich/RichRecMCTools v2r27p1,
+  Rich/RichRecSys v3r34,  Tf/PatVelo v3r25p1, Tr/TrackTools v3r35p3
+
+- In Rec/RecConf v1r3p1:
+  . Pass the DataType option to the RICH Reconstruction Configurable
+
+- In Rich/RichHPDImageAnalysis v1r4:
+  . Fix a bug in the monitor that causes a NULL histogram pointer to be dereferenced.
+  .  Is triggered when a non-empty disabled HPD list used in the Conditions DB
+  . Various updates to the python scripts
+
+- In Rich/RichRecMCTools v2r27p1:
+  . Extend the photon creator with Gaussian smearing of the CK theta values to properly
+    propagate the photon creator job options to owned private tools
+
+- In Rich/RichRecSys v3r34:
+  . Add 'DataType' slot to python Configurable
+  . Add 2010 MC tuning to smear the reconstructed CK theta values to match resolutions
+    achieved in 2010 end-of-year reprocessing. (Aerogel to be done).
+
+- In Tf/PatVelo v3r25p1:
+  . Fixed R Tracking update problem: bug #75039
+
+- In Tr/TrackTools v3r35p3:
+  . Fix unintialised pointer member in MeasurementProvider
+
+</PRE><H1><A NAME=v10r5p2>2010-11-05 RecSys v10r5p2</A></H1><PRE>
 This version uses Gaudi v21r11 and LHCb v31r6p1
 
 - This is a minimal patch to include the latest fixes to FSR processing.
