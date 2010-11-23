@@ -8,6 +8,7 @@
 // ============================================================================
 // local
 // ============================================================================
+#include "LoKi/select.h"
 #include "LoKi/HltCandidates.h"
 #include "LoKi/HltStages.h"
 #include "LoKi/Constants.h"
@@ -570,6 +571,14 @@ LoKi::Candidates::SlotFilter::SlotFilter
   , m_cut(SlotCut(cut, slot))
 {}
 // ============================================================================
+//  constructor
+// ============================================================================
+LoKi::Candidates::SlotFilter::SlotFilter
+( const LoKi::Candidates::SlotCut& cut ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+  , m_cut ( cut )
+{}
+// ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
 LoKi::Candidates::SlotFilter::~SlotFilter() {}
@@ -586,20 +595,15 @@ LoKi::Candidates::SlotFilter::result_type
 LoKi::Candidates::SlotFilter::operator()
   ( LoKi::Candidates::SlotFilter::argument a ) const
 {
-	typedef
-	   LoKi::Candidates::SlotFilter::argument_type ARGUMENT;
-	typedef
-	   LoKi::Candidates::SlotFilter::result_type RESULT;
-
+	typedef LoKi::Candidates::SlotFilter::result_type   RESULT;
+  //
 	RESULT result;
-	// Loop over candidates
-	for ( ARGUMENT::const_iterator cur = a.begin();
-			cur != a.end(); cur++) {
-	 	 if (m_cut(*cur)) {
-	 		 result.push_back(*cur);
-	 	 }
-	}
-
+  result.reserve ( a.size() ) ;
+  //
+  LoKi::select ( a.begin () , 
+                 a.end   () , 
+                 std::back_inserter ( result ) , m_cut ) ;
+  //
 	return result;
 }
 // ============================================================================
@@ -610,47 +614,42 @@ std::ostream& LoKi::Candidates::SlotFilter::fillStream( std::ostream& s ) const
 // ============================================================================
 
 // ============================================================================
-/** constructor
- *  @param fun the function
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - posiitve value scorresponds to step-back in history
- */
+//  constructor
+// ============================================================================
 LoKi::Candidates::SlotMap::SlotMap
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun,
-  const int slot )
+  const int    slot , 
+  const double bad  ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
-  , m_fun(SlotFun(fun, slot) )
+  , m_fun( fun, slot , bad )
 {}
 // ============================================================================
-/** constructor
- *  @param fun the function
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - posiitve value scorresponds to step-back in history
- */
+//  constructor
 // ============================================================================
 LoKi::Candidates::SlotMap::SlotMap
 ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
-  const int slot )
+  const int    slot ,
+  const double bad  ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
-  , m_fun(SlotFun(fun, slot))
+  , m_fun( fun , slot , bad )
 {}
 // ============================================================================
-/** constructor
- *  @param fun the function
- *  @param slot the slot:
- *     - 0 corresponds to current stage ,
- *     - negative value corresponds to initiator stage
- *     - posiitve value scorresponds to step-back in history
- */
+//  constructor
+// ============================================================================
 LoKi::Candidates::SlotMap::SlotMap
 ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun ,
-  const int slot )
+  const int    slot ,
+  const double bad  ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
-  , m_fun(SlotFun(fun, slot))
+  , m_fun ( fun , slot , bad )
+{}
+// ============================================================================
+// constructor
+// ============================================================================
+LoKi::Candidates::SlotMap::SlotMap
+( const LoKi::Candidates::SlotFun& fun ) 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Map()
+  , m_fun ( fun )
 {}
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -669,18 +668,15 @@ LoKi::Candidates::SlotMap::result_type
 LoKi::Candidates::SlotMap::operator()
   ( LoKi::Candidates::SlotMap::argument a ) const
 {
-	typedef
-	   LoKi::Candidates::SlotMap::argument_type ARGUMENT;
-	typedef
-	   LoKi::Candidates::SlotMap::result_type RESULT;
-
+	typedef LoKi::Candidates::SlotMap::argument_type ARGUMENT ;
+	typedef LoKi::Candidates::SlotMap::result_type   RESULT   ;
+  
 	RESULT result;
 	// Loop over candidates
-	for ( ARGUMENT::const_iterator cur = a.begin();
-			cur != a.end(); cur++) {
-	 		 result.push_back(m_fun(*cur));
-	}
-
+  LoKi::transform ( a.begin () , 
+                    a.end   () , 
+                    std::back_inserter ( result ) , m_fun ) ;
+  //
 	return result;
 }
 // ============================================================================
@@ -689,8 +685,6 @@ LoKi::Candidates::SlotMap::operator()
 std::ostream& LoKi::Candidates::SlotMap::fillStream( std::ostream& s ) const
 { return s << "TC_MAP(" << m_fun <<  ")" ; }
 // ============================================================================
-
-
 
 
 // ============================================================================

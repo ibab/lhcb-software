@@ -227,9 +227,6 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
-       *     - 0 corresponds to current stage ,
-       *     - negative value corresponds to initiator stage
-       *     - posiitve value scorresponds to step-back in history
        *  @see Hlt::Candidate::get
        */
       SlotFun
@@ -239,9 +236,6 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
-       *     - 0 corresponds to current stage ,
-       *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
        *  @see Hlt::Candidate::get
        */
       SlotFun
@@ -251,9 +245,6 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
-       *     - 0 corresponds to current stage ,
-       *     - negative value corresponds to initiator stage
-       *     - positive value scorresponds to step-back in history
        *  @see Hlt::Candidate::get
        */
       SlotFun
@@ -281,6 +272,11 @@ namespace LoKi
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      int     slot () const { return m_slot ; }
+      double  bad  () const { return m_bad  ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -319,7 +315,7 @@ namespace LoKi
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut ,
-        const int slot  = 0 ) ;
+        const int slot  = -1 ) ;
       /** constructor
        *  @param fun the predicate
        *  @param slot the slot:
@@ -329,7 +325,7 @@ namespace LoKi
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut ,
-        const int slot  = 0 ) ;
+        const int slot  = -1 ) ;
       /** constructor
        *  @param fun the predicate
        *  @param slot the slot:
@@ -339,7 +335,7 @@ namespace LoKi
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
-        const int slot  = 0 ) ;
+        const int slot  =  0 ) ;
       /** constructor
        *  @param fun the predicate
        *  @param slot the slot:
@@ -383,7 +379,7 @@ namespace LoKi
       int                                              m_slot ; // the slot
       // ======================================================================
     } ;
-
+    // =========================================================================
     /** @class StageFilter
      *  simple meta-functor for stage filters
      *  @author Alexander Mazurov alexander.mazurov@gmail.com
@@ -392,75 +388,72 @@ namespace LoKi
     class SlotFilter : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe
     {
     public:
-         /// constructor from the selection
-        /** constructor
-         *  @param fun the predicate
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - positive value scorresponds to step-back in history
-         */
-    	SlotFilter(const
-    		LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the predicate
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - positive value scorresponds to step-back in history
-         */
-    	SlotFilter(const
-    		LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the predicate
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - positive value scorresponds to step-back in history
-         */
-    	SlotFilter(const
-    		LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the predicate
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - positive value scorresponds to step-back in history
-         */
-    	SlotFilter(const
-    		LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the predicate
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - positive value scorresponds to step-back in history
-         */
-    	SlotFilter(const
-    		LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut,
-    		int slot = 0);
-        /// MANDATORY: virtual destructor
-        virtual ~SlotFilter ();
-        /// MANDATORY: clone method ("virtual constructor")
-        virtual  SlotFilter* clone() const;
-         /// MANDATORY: the only one essential method
-        virtual result_type operator() ( argument a )  const ;
-        /// OPTIONAL: the nice printout
-        virtual std::ostream& fillStream ( std::ostream& s ) const ;
-     // =======================================================================
+      // ======================================================================
+      /// constructor from the selection
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *     - 0 corresponds to current stage ,
+       *     - negative value corresponds to initiator stage
+       *     - positive value scorresponds to step-back in history
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut,
+    		const int slot = -1 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut,
+        const int slot = -1 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut,
+    		const int slot =  0 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut,
+        const int slot =  0 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
+      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut,
+        const int slot = 0 );
+      /// constructor
+      SlotFilter ( const SlotCut& cut ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~SlotFilter ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  SlotFilter* clone() const;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument a )  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // =======================================================================
     private:
-        /// default constructor is disabled
-        SlotFilter ();
-    // ========================================================================
+      // =======================================================================
+      /// default constructor is disabled
+      SlotFilter ();
+      // ========================================================================
     private:
-        SlotCut m_cut;
-     // ==================================================================
+      // ========================================================================
+      SlotCut m_cut;
+      // ========================================================================
     };
-
+    // ==========================================================================
     /** @class SlotMap
      *  generalized function that applies the function to the content
      *  of the actual slot/stage
@@ -471,59 +464,61 @@ namespace LoKi
     class SlotMap : public LoKi::BasicFunctors<const Hlt::Candidate*>::Map
     {
     public:
-         /// constructor from the selection
-        /** constructor
-         *  @param fun the function
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - posiitve value scorresponds to step-back in history
-         */
-    	SlotMap(const
-    		LoKi::BasicFunctors<const LHCb::Track*>::Function& fun,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the function
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - posiitve value scorresponds to step-back in history
-         */
-    	SlotMap(const
-    		LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
-    		int slot = 0);
-        /** constructor
-         *  @param fun the function
-         *  @param slot the slot:
-         *     - 0 corresponds to current stage ,
-         *     - negative value corresponds to initiator stage
-         *     - posiitve value scorresponds to step-back in history
-         */
-    	SlotMap(const
-    		LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun,
-    		int slot = 0);
-        /// MANDATORY: virtual destructor
-        virtual ~SlotMap ();
-        /// MANDATORY: clone method ("virtual constructor")
-        virtual  SlotMap* clone() const;
-         /// MANDATORY: the only one essential method
-        virtual result_type operator() ( argument a )  const ;
-        /// OPTIONAL: the nice printout
-        virtual std::ostream& fillStream ( std::ostream& s ) const ;
-     // =======================================================================
+      // ======================================================================
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun,
+    		const int    slot =  0 ,
+        const double bad  =  0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
+      ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
+    		const int    slot = 0 ,
+        const double bad  = 0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
+      ( const LoKi::BasicFunctors<const Hlt::Candidate*>::Function& fun,
+    		const int    slot = 0 , 
+        const double bad  = 0 ) ;
+      /// constructor
+      SlotMap ( const SlotFun& fun ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~SlotMap ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  SlotMap* clone() const;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument a )  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-        /// default constructor is disabled
-        SlotMap ();
-    // ========================================================================
+      // ======================================================================
+      /// default constructor is disabled
+      SlotMap ();
+      // ======================================================================
     private:
-        SlotFun m_fun;
-     // ==================================================================
+      // ======================================================================
+      SlotFun m_fun;
+      // ======================================================================
     };
-}
-}
-
+    // ======================================================================== 
+  } //                                        end of namespace LoKi::Candidates 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_HLTCANDIDATES_H
 // ============================================================================
