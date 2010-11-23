@@ -1,6 +1,8 @@
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 #include "MBM/bmdef.h"
 #include "MBM/Producer.h"
+
 #include <cstring>
 using namespace std;
 using namespace RTL;
