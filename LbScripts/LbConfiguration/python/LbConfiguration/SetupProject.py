@@ -297,9 +297,13 @@ def _sync_dicts(src, dest):
     for k in src:
         dest[k] = src[k]
 
-def isProject(path):
+def isProject(path, ignore_not_ready = False):
+    # It is a project directory if it contains cmt/project.cmt and it doesn't
+    # contain NOT_READY (unless we are told to ignore that flag).
+    # NOT_READY -> projects that are being released
     return os.path.isfile(os.path.join(path,'cmt','project.cmt')) and \
-           not os.path.exists(os.path.join(path, 'NOT_READY')) # Ignore projects that are being released
+           (ignore_not_ready
+            or not os.path.exists(os.path.join(path, 'NOT_READY')))
 
 def _extract_version(project, version):
     # By default, the version is the name of the version directory
@@ -313,7 +317,8 @@ def _extract_version(project, version):
                 v = version[len(project):]
     return v
 
-def FindProjectVersions(project, search_path, user_area = None):
+def FindProjectVersions(project, search_path, user_area = None,
+                        ignore_not_ready = False):
     """Given a project name, discovers all the matching project/versions using
     the provided user_area and the the search_path (a list of directories).
     Returns a list of tuples with (name, version, realname, basepath) where
@@ -328,7 +333,8 @@ def FindProjectVersions(project, search_path, user_area = None):
     # Look into user_area for projects (without version directory)
     if user_area and os.path.isdir(user_area):
         user_projects = [d for d in os.listdir(user_area)
-                         if isProject(os.path.join(user_area,d))]
+                         if isProject(os.path.join(user_area,d),
+                                      ignore_not_ready)]
         # look for projects with names starting with <project>
         candidates = [d for d in user_projects
                       if d.startswith(project)]
@@ -353,7 +359,7 @@ def FindProjectVersions(project, search_path, user_area = None):
     for d in search_path:
         p = os.path.join(d,PROJECT)
         if os.path.isdir(p):
-            if isProject(p):
+            if isProject(p, ignore_not_ready):
                 # project without version
                 versions.append((project, None, PROJECT, d))
             else:
@@ -361,7 +367,7 @@ def FindProjectVersions(project, search_path, user_area = None):
                 versions += [ (project, _extract_version(PROJECT,v),
                                os.path.join(PROJECT,v), d)
                                for v in os.listdir(p)
-                               if isProject(os.path.join(p,v)) ]
+                               if isProject(os.path.join(p,v), ignore_not_ready) ]
     return versions
 
 def SortVersions(versions, reverse = False):
@@ -526,7 +532,7 @@ def _defaultSearchPath(env = None):
     return search_path
 
 def makeProjectInfo(project = None, version = None, versions = None, search_path = None, user_area = None,
-                    env = None):
+                    env = None, ignore_not_ready = False):
     # actual body
     if versions is None:
         if not project:
@@ -534,7 +540,7 @@ def makeProjectInfo(project = None, version = None, versions = None, search_path
         if not search_path: # default search path
             search_path = _defaultSearchPath(env)
             #raise TypeError("makeProjectInfo() requires 'search_path' if 'versions' is not specified")
-        versions = FindProjectVersions(project, search_path, user_area)
+        versions = FindProjectVersions(project, search_path, user_area, ignore_not_ready)
     vers_tuple = _GetVersionTuple(version, versions)
     if not vers_tuple:
         return None
@@ -1222,6 +1228,9 @@ class SetupProject:
                           dest="touch_logfile", default=True,
                           help="Avoid touching the logfiles used to identify active projects.")
 
+        parser.add_option("--ignore-not-ready", action="store_true",
+                          help = "Ignore the presence of the NOT_READY file in a project.")
+
         parser.set_defaults(output=None,
                             mktemp=False,
                             append=False,
@@ -1564,7 +1573,8 @@ class SetupProject:
         # debug printout: print project, search path and, optionally, user area
         self._debug("Look for all versions of '%s' in %s" % (self.project_name, self.search_path)
                     + ((self.user_area and (" with user area in '%s'" % self.user_area)) or ""))
-        versions = FindProjectVersions(self.project_name, self.search_path, self.user_area)
+        versions = FindProjectVersions(self.project_name, self.search_path,
+                                       self.user_area, self.opts.ignore_not_ready)
 
         if not versions:
             self._error("Cannot find project '%s'" % self.project_name)
@@ -1603,7 +1613,8 @@ class SetupProject:
         # Main project
         self.project_info = makeProjectInfo(version = self.project_version,
                                             versions = versions,
-                                            env = self.environment)
+                                            env = self.environment,
+                                            ignore_not_ready = self.opts.ignore_not_ready)
         if not self.project_info:
             # we should never get here
             self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_version, self.project_name))
@@ -1612,13 +1623,15 @@ class SetupProject:
         # runtime projects
         self.runtime_projects = []
         for p,v in self.opts.runtime_projects:
-            vv = FindProjectVersions(p, self.search_path, self.user_area)
+            vv = FindProjectVersions(p, self.search_path,
+                                     self.user_area, self.opts.ignore_not_ready)
             if not vv:
                 self._error("Cannot find project '%s'" % p)
                 return 1
             pi = makeProjectInfo(version = v,
                                  versions = vv,
-                                 env = self.environment)
+                                 env = self.environment,
+                                 ignore_not_ready = self.opts.ignore_not_ready)
             if not pi:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
                 return 1
@@ -1627,13 +1640,15 @@ class SetupProject:
         # overriding projects
         self.overriding_projects = []
         for p,v in self.opts.overriding_projects:
-            vv = FindProjectVersions(p, self.search_path, self.user_area)
+            vv = FindProjectVersions(p, self.search_path,
+                                     self.user_area, self.opts.ignore_not_ready)
             if not vv:
                 self._error("Cannot find project '%s'" % p)
                 return 1
             pi = makeProjectInfo(version = v,
                                  versions = vv,
-                                 env = self.environment)
+                                 env = self.environment,
+                                 ignore_not_ready = self.opts.ignore_not_ready)
             if not pi:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
                 return 1
@@ -1646,10 +1661,12 @@ class SetupProject:
         # auto-override projects
         if self.auto_override:
             for p, pkgs  in auto_override_projects:
-                vv = FindProjectVersions(p, self.search_path, self.user_area)
+                vv = FindProjectVersions(p, self.search_path,
+                                         self.user_area, self.opts.ignore_not_ready)
                 if vv:
                     self.overriding_projects.insert(0, makeProjectInfo(versions = vv,
-                                                                       env = self.environment))
+                                                                       env = self.environment,
+                                                                       ignore_not_ready = self.opts.ignore_not_ready))
                     self.use += pkgs
 
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :

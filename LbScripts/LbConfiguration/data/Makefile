@@ -19,13 +19,17 @@ endif
 # Special hack to generate the python.zip file only once
 # - if we have the container in the local directory and we are going to build it
 #   we delay the generation of the python.zip file
-ifneq ($(wildcard $(container)/cmt/requirements),)
+ifneq ($(wildcard $(container)/cmt/requirements),) # we do have the container
 _building_container = false
-ifndef MAKECMDGOALS
+ifndef MAKECMDGOALS # MAKECMDGOALS empty...
 _building_container = true
 else
-ifneq ($(findstring $(container),$(MAKECMDGOALS)),)
+ifneq ($(findstring $(container),$(MAKECMDGOALS)),) # ... or including 'container' ...
 _building_container = true
+else
+ifneq ($(findstring all,$(MAKECMDGOALS)),) # ... or including 'all'
+_building_container = true
+endif
 endif
 endif
 ifeq ($(_building_container),true)

@@ -1,3 +1,8 @@
+2010-11-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: added option to ignore the NOT_READY flag in a project directory
+	* data/Makefile: fixed a problem with the automatic addition of no-pyzip when building the target all.
+
 2010-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added support for icc11 on slc5.
