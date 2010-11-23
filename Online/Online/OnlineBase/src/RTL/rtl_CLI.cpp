@@ -1,4 +1,5 @@
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 #include <cstdarg>
 #include <cstring>
 #include <cstdio>
@@ -21,7 +22,7 @@ const char* RTL::CLI::getopt(const char* name, int nchars)  {
       const char* cptr = m_argv[i];
       if ( *cptr == '-' || *cptr == '/' ) {
         if ( cptr[1] == name[0] && ::strncmp(name,cptr+1,nchars)==0 )  {
-          char* loc=::strchr(cptr+1,'=');
+          const char* loc = ::strchr_safe(cptr+1,'=');
           if ( loc )  {
             return loc+1;
           }

@@ -21,6 +21,10 @@ apply_pattern ld_library_path
 apply_pattern linker_library          library=OnlineBase
 macro_append  use_includes            ' $(ppcmd)"$(OnlineBase_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/OnlineBase" '
 
+macro_append  cppflags     "" \
+	target-vc9 " -D_CRT_SECURE_NO_WARNINGS " \
+	target-vc7 ""
+
 setup_script  $(ONLINEBASEROOT)/scripts/onlinepatches
 
 private
