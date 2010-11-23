@@ -59,7 +59,7 @@ LHCb::PiecewiseTrajectory::~PiecewiseTrajectory()
 {
    std::for_each(m_traj.begin(),
                  m_traj.end(),
-                 bind(delete_ptr(),bind(&Trajs::value_type::first,_1)));
+                 bind<void>(delete_ptr(),bind(&Trajs::value_type::first,_1)));
 }
 
 void 
