@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@cern.ch
 # =============================================================================
 package             Bender
-version             v15r2
+version             v15r3
 
 # =============================================================================
 branches            cmt doc python scripts 

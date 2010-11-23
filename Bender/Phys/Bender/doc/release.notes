@@ -2,12 +2,18 @@
 ! -----------------------------------------------------------------------------
 ! $Id: release.notes,v 1.69 2010-10-11 14:11:33 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.69 $
+! Version $Revision: 1.69 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v15r3 2010-11-23 ===========================
+
+! 2010-11-23 - Vanya Belyaev
+
+ - prepare new version for new Davinci 
 
 ! ==================== Phys/Bender v15r2 2010-11-15 ===========================
 
