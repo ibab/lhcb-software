@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v3r34 2010-11-23 =========================
 ! 2010-11-21 - Chris Jones
  - Add 'DataType' slot to python Configurable.
  - Add 2010 MC tuning to smear the reconstructed CK theta values to match
