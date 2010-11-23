@@ -1,3 +1,7 @@
+2010-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added support for icc11 on slc5.
+
 2010-11-16  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/__init__.py: replaced a <TAB> char with spaces
