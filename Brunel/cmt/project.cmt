@@ -1,7 +1,7 @@
 project BRUNEL
 
 use LBCOM LBCOM_v9r7p1
-use REC   REC_v10r5p2
+use REC   REC_v10r5p3
 
 build_strategy	with_installarea
 setup_strategy	root
