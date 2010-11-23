@@ -17,6 +17,8 @@ The head of this package is now set up to include changes for 2011 production
     . rich-20101106-hpd: Added list of inactivwe HPDs
     . rich1-20101106: New aerogel refractive index calibrations
     . tt-20101106: updated TT dead strip maps
+  . #103054: Add processing time monitor for Vertex, Calo, Muon, Proto sequences
+  . #103059: Various new Rich monitoring plots, reduce verbosity
 
 </PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
