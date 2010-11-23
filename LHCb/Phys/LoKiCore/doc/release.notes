@@ -16,6 +16,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2010-11-23 - Vanya Belyaev
+ - add LoKi::transform 
+
 ! 2010-11-19 - Vanya Belyaev
 
  - improve dumping 

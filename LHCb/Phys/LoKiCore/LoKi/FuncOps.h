@@ -778,17 +778,15 @@ namespace LoKi
       ( const Pipe& fun , const Func&      fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
       //
-      // add the gate: 
-      //
-      // __rshift__ 
+      // ======================================================================
+    public: // gate & dump 
+      // ======================================================================
+      // __rshift__  : gate 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
       ( const Pipe& fun , const LoKi::Functor<void,bool>& gate )  
       { return fun >> LoKi::gate<TYPE> ( gate ) ; }
-      //
-      // add the dumps
-      //
-      // __rshift__
+      // __rshift__  : dump
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
       ( const Pipe& fun , const LoKi::Dump& dump  ) 
@@ -1063,29 +1061,27 @@ namespace LoKi
       ( const Source& fun , const Func&    fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
       //
-      // add the gate 
-      //
-      // __rshift__
+      // ======================================================================
+    public:  // gate & dump 
+      // ======================================================================
+      // __rshift__ : gate 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
       ( const Source& fun , const LoKi::Functor<void,bool>& gate ) 
       { return fun >> LoKi::gate<TYPE> ( gate ) ; }
-      //
-      // add the dumps
-      //
-      // __rshift__
+      // __rshift__ : dump 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
       ( const Source& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
       // ======================================================================
-    public:
+    public: // cause 
       // ======================================================================
       // __rmul__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rmul__  ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
       { return LoKi::cause ( fun , fun2 ) ; }      
-      // _start_if_
+      // __cause__ 
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __cause__ ( const Source& fun  , const LoKi::Functor<void,bool>& fun2 ) 
       { return LoKi::cause ( fun , fun2 ) ; }      
