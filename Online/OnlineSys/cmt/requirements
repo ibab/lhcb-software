@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r27    DAQ
+use MDF               v3r28    DAQ
 use MDF_ROOT          v1r4     DAQ
 use DAQEvent          v9r2     Event
 use GaudiObjDesc      v11r10p1
