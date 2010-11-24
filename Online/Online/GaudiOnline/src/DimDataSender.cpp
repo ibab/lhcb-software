@@ -18,7 +18,7 @@ namespace LHCb  {
     static void i_req_receive_handler(void* tag, void* buf, int* size)  {
       if ( *size <= 0 ) return;
       DimDataSender* h = *(DimDataSender**)tag;
-      char* p = ::strchr((const char*)buf,':');
+      char* p = ::strchr((char*)buf,':');
       if ( p )  {
         *p = 0;
         h->handleEventRequest(::dis_get_conn_id(),p+1,(const char*)buf);

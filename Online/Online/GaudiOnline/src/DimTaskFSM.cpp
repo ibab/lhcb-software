@@ -1,13 +1,11 @@
 #define NO_LONGLONG_TYPEDEF
-#ifdef _WIN32
-#define vsnprintf _vsnprintf
-#endif
 #include "dis.hxx"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 #include <iostream>
 #include <cstdarg>
 
@@ -99,7 +97,7 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname= m_procName+"/fsm_status";
   m_monitor.targetState = m_monitor.state = ST_NOT_READY;
-  m_monitor.lastCmd     = m_monitor.doneCmd = time(0);
+  m_monitor.lastCmd     = m_monitor.doneCmd = (int)::time(0);
   m_monitor.metaState   = SUCCESS_ACTION;
   m_monitor.pid         = ::lib_rtl_pid();
   m_monitor.partitionID = -1;
@@ -234,17 +232,17 @@ StatusCode DimTaskFSM::declareSubState(SubState new_state)  {
   m_monitor.metaState = char(new_state);
   switch(new_state)   {
     case SUCCESS_ACTION:
-      m_monitor.doneCmd = time(0);
+      m_monitor.doneCmd = (int)::time(0);
       break;
     case EXEC_ACTION:
-      m_monitor.lastCmd = time(0);
+      m_monitor.lastCmd = (int)::time(0);
       break;
     case FAILED_ACTION:
-      m_monitor.doneCmd = time(0);
+      m_monitor.doneCmd = (int)::time(0);
       break;
     case UNKNOWN_ACTION:
     default:
-      m_monitor.doneCmd = time(0);
+      m_monitor.doneCmd = (int)::time(0);
       m_monitor.metaState = ST_UNKNOWN;
       break;
   }
