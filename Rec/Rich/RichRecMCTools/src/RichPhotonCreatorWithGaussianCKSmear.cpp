@@ -89,7 +89,7 @@ StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
   else
   {
     Warning( "Using CK theta smearing tool, but no radiators selected for smearing",
-             StatusCode::SUCCESS );
+             StatusCode::SUCCESS ).ignore();
   }
 
   return sc;
@@ -97,6 +97,7 @@ StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
 
 StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
 {
+  StatusCode sc = StatusCode::SUCCESS;
 
   // printout smear count
   if ( nEvents() > 0 )
@@ -124,11 +125,14 @@ StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
   // finalise random numbers
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
-    if ( m_smearRad[iRad] ) { m_rand[iRad].finalize(); }
+    if ( m_smearRad[iRad] ) { sc = sc && m_rand[iRad].finalize(); }
   }
 
   // Execute base class method
-  return PhotonCreatorBase::finalize();
+  sc = sc && PhotonCreatorBase::finalize();
+
+  // return
+  return sc;
 }
 
 LHCb::RichRecPhoton *
