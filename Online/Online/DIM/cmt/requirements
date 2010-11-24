@@ -94,6 +94,11 @@ macro_append DIM_cflags "" \
 	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 " \
 	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
+macro_append DIM_cppflags "" \
+	target-gcc      " -Wextra " \
+	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 " \
+	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
+
 # local compile options
 macro_append DIM_cppflags      " -DPROTOCOL=1 -DMIPSEL "
 macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
