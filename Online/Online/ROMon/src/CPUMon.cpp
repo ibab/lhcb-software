@@ -125,12 +125,12 @@ void CPUfarm::fixup() {
 }
 
 /// Retrieve timestamp of earliest updated node
-CPUfarm::TimeStamp CPUfarm::firstUpdate() const {
+TimeStamp CPUfarm::firstUpdate() const {
   return _firstUpdate(nodes);
 }
 
 /// Retrieve timestamp of most recent updated node
-CPUfarm::TimeStamp CPUfarm::lastUpdate() const {
+TimeStamp CPUfarm::lastUpdate() const {
   return _lastUpdate(nodes);
 }
 
