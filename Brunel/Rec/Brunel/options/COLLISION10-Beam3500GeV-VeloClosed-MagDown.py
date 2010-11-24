@@ -16,6 +16,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Use latest 2010 database tags for real data
 Brunel().DataType = "2010"
 
+# 2188 events from run 81684
 EventSelector().Input = [
-  "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69857/069857_0000000006.raw' SVC='LHCb::MDFSelector'"
+  "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81684/081684_0000000335.raw?svcClass=lhcbrdst' SVC='LHCb::MDFSelector'"
     ]
