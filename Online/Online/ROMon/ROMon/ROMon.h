@@ -169,7 +169,6 @@ namespace ROMon {
   PACK_DATA(class) Nodeset {
   public:
     typedef VarItems<Node> Nodes;
-    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 2 };
     /// First word: Data type descriptor (MUST always be 2)
     int  type;

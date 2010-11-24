@@ -170,12 +170,12 @@ void ProcFarm::fixup() {
 }
 
 /// Retrieve timestamp of earliest updated node
-ProcFarm::TimeStamp ProcFarm::firstUpdate() const {
+TimeStamp ProcFarm::firstUpdate() const {
   return _firstUpdate(nodes);
 }
 
 /// Retrieve timestamp of most recent updated node
-ProcFarm::TimeStamp ProcFarm::lastUpdate() const {
+TimeStamp ProcFarm::lastUpdate() const {
   return _lastUpdate(nodes);
 }
 
