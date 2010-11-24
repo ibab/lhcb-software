@@ -74,7 +74,8 @@ macro clinkflags    "$(cpplinkflags)"
 #macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"
 macro_append DIM_cflags " -Df2cFortran -fPIC -shared -D_GNU_SOURCE"  WIN32 " $(cppflags) /TC"
 macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused "  WIN32 ""
-macro_append DIM_cflags "" target-gcc " -Wextra "
+
+
 #
 # Switch off warnings for ICC
 # wd111:   statement is unreachable
@@ -85,7 +86,13 @@ macro_append DIM_cflags "" target-gcc " -Wextra "
 # wd1419:  external declaration in primary source file
 # wd1599:  declaration hides variable 
 # wd2259:  non-pointer conversion from "int" to "char" may lose significant bits
-macro_append DIM_cflags "" target-icc " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
+#
+# Switch off deprecation warnings for VC9
+# Switch off POSIX warnings for VC9
+macro_append DIM_cflags "" \
+	target-gcc      " -Wextra " \
+	target-vc9      " -D_CRT_SECURE_NO_WARNINGS /wd4996 "
+	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
 # local compile options
 macro_append DIM_cppflags      " -DPROTOCOL=1 -DMIPSEL "
