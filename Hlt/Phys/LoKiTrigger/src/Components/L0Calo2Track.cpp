@@ -335,15 +335,15 @@ StatusCode Hlt::L0Calo2Track::execute  ()
     // .. and into output container 
     tracks->insert( track.release() );
   }
-
-  // a bit of monitoring 
-  counter( "#input"  ) +=  l0calos     -> size  ();
-  counter( "#output" ) +=  m_selection -> size  ();
-  counter( "#accept" ) += !m_selection -> empty ();
-  m_selection -> setDecision( !m_selection->empty() );
   
-  setFilterPassed ( ! m_selection -> empty() ) ;
-
+  // a bit of monitoring 
+  counter ( "#input"  ) +=  l0calos     -> size  ();
+  counter ( "#output" ) +=  m_selection -> size  ();
+  counter ( "#accept" ) += !m_selection -> empty ();
+  m_selection -> setDecision ( !m_selection->empty() );
+  
+  setFilterPassed ( !m_selection -> empty() ) ;
+  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -361,8 +361,8 @@ void Hlt::L0Calo2Track::addExtras
   LHCb::State* state = track.stateAt( LHCb::State::MidHCal ); 
   if ( 0 != state ) 
   {
-    state -> setTx( ex ) ;                                    // what is it ??
-    state -> setTy( ey ) ;                                    // what is it ??
+    state -> setTx ( ex ) ;                                    // what is it ??
+    state -> setTy ( ey ) ;                                    // what is it ??
   }
   
   const LHCb::CaloCellID id = calo.id();

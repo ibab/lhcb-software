@@ -482,14 +482,16 @@ size_t Hlt::Service::readTES
 ( const IAlgorithm*         reader    , 
   Hlt::IInspector::KeyList& locations ) const
 {
+  //
   locations.clear() ;
   if ( 0 == reader ) 
   { 
     Error ( "read : invalid algorithm!" ) ;
     return 0 ;                                                       // RETURN 
   }
+  //
   TESMap::const_iterator intes = m_tesmap.find ( reader ) ;
-  if ( m_tesmap.end () != intes ) 
+  if ( m_tesmap.end () == intes ) 
   { 
     if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
     { Warning ( "readTES(1):  no TES-inputs for reader '" + reader -> name() + "'") ; }

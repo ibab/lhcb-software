@@ -145,7 +145,7 @@ namespace Hlt
     std::string m_L0DULocation   ;                // TES Location of L0DUReport 
     /// L0 channel 
     std::string m_L0Channel      ;                           // L0 Muon channel 
-    /// Muon SeeD Tool 
+    /// Muon Seed Tool 
     std::string m_makerName      ;                           //  Muon Seed Tool 
     //// the tool 
     mutable IMuonSeedTool* m_maker ;                                // the tool 

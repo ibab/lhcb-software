@@ -5,6 +5,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-11-24 - Vanya Belyaev
+
+ - fix the bug with "dot"-tool
+
 ! 2010-11-22 - Vanya Belyaev
  - add property "Code/Factory/Preambulo" for Track->Candidate converter
 

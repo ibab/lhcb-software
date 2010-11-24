@@ -223,15 +223,22 @@ class iHltInspector(iService) :
             algorithm.retrieveInterface()
             algorithm = algorithm._ialg
 
+        print 'I am here 1-- '
         lst = Hlt.IInspector.KeyList()
+        print 'I am here 1-1 '
         if not self._ihltis : self.retrieveInterface() 
+        print 'I am here 1-2 '
         num = self._ihltis.readTES ( algorithm , lst )
+        print 'I am here 1-3 '
+        print 'I am here 2-- '
         if lst.size() != num :
             raise AttributeError, 'Unable to extract valid list of keys'
         result = []
+        print 'I am here 3-- '
         for i in range(0,num) :
             key = lst[i]
             result.append ( key )
+        print 'I am here 4-- '
         return result
 
     ## get the list of readers for the given registred TES input location
@@ -422,8 +429,11 @@ class iHltInspector(iService) :
         if not self.hasAlgorithm ( alg ) :
             raise AttributeError, "Unknown algorithm, %s" % alg 
 
+        print 'before inps'
         inps = self.inputs  ( alg )
+        print 'before outs'
         outs = self.outputs ( alg ) 
+        print 'before tess'
         tess = self.readTES ( alg )
         
         output  = "The algorithm: %s  \n" % alg
