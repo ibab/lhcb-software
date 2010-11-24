@@ -60,23 +60,23 @@ void Alarm::fromString(const string& str) {
     if ( (p2=::strchr(p1+1,'#')) ) {
       *p2 = 0;
       if ( (p3=::strchr(p2+1,'#')) ) {
-	*p3 = 0;
-	if ( (p4=::strchr(p3+1,'#')) ) {
-	  *p4 = 0;
-	  if ( (p5=::strchr(p4+1,'#')) ) {
-	    *p5 = 0;
-	    if ( (p6=::strchr(p5+1,'#')) ) {
-	      *p6 = 0;
-	      tag = s;
-	      ::sscanf(p1+1,"%08lx",&when);
-	      ::sscanf(p2+1,"%08x",&code);
-	      subfarm = p3+1;
-	      node = p4+1;
-	      description = p5+1;
-	      optional = p6+1;
-	    }
-	  }
-	}
+        *p3 = 0;
+        if ( (p4=::strchr(p3+1,'#')) ) {
+          *p4 = 0;
+          if ( (p5=::strchr(p4+1,'#')) ) {
+            *p5 = 0;
+            if ( (p6=::strchr(p5+1,'#')) ) {
+              *p6 = 0;
+              tag = s;
+              ::sscanf(p1+1,"%08lx",&when);
+              ::sscanf(p2+1,"%08x",&code);
+              subfarm = p3+1;
+              node = p4+1;
+              description = p5+1;
+              optional = p6+1;
+            }
+          }
+        }
       }
     }
   }

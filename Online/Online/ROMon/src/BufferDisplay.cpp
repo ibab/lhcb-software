@@ -100,22 +100,22 @@ void BufferDisplay::update(const void* data) {
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Clients& clients = (*ib).clients;
           const char* bnam = (const char*)(*ib).name;
-	  if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
-	  if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
-	  if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";
+          if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
+          if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
+          if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
             cnam = (char*)c.name;
             if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {   // Cleanup name if too long to be displayed properly....
-	      cnam = ++p;
-	      if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
-		cnam = ++p;
-		if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
-		  cnam = ++p;
-		  if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
-		    cnam = ++p;
-		  }
-		}
+              cnam = ++p;
+              if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+                cnam = ++p;
+                if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+                  cnam = ++p;
+                  if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+                    cnam = ++p;
+                  }
+                }
               }
             }
             if ( c.type == 'C' )

@@ -164,9 +164,9 @@ void SubfarmStatCollector::updateMBM(const Nodeset& ns) {
     for(Node::Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
       ::sprintf(text,"{%s:%d#%d#%d#%d#%d#%d}",(*ib).name,
-		int((ctrl.bm_size*ctrl.bytes_p_Bit)/1024),int((ctrl.i_space*ctrl.bytes_p_Bit)/1024),
-		ctrl.p_emax,ctrl.i_events,
-		ctrl.p_umax,ctrl.i_users);
+                int((ctrl.bm_size*ctrl.bytes_p_Bit)/1024),int((ctrl.i_space*ctrl.bytes_p_Bit)/1024),
+                ctrl.p_emax,ctrl.i_events,
+                ctrl.p_umax,ctrl.i_users);
       result += text;
     }
     result += "]";
@@ -207,7 +207,7 @@ void SubfarmStatCollector::feedString(void* tag, void** buf, int* size, int* ) {
 /// Publish summary information
 void SubfarmStatCollector::publish() {
   ::lib_rtl_output(LIB_RTL_DEBUG,"FarmStatSrv> Publishing data to DIM. MBM:%s CPU:%s",
-		   m_mbmChanged ? "YES" : "NO",m_cpuChanged ? "YES" : "NO");
+                   m_mbmChanged ? "YES" : "NO",m_cpuChanged ? "YES" : "NO");
   if ( m_mbmChanged ) ::dis_update_service(m_mbmSvc);
   if ( m_cpuChanged ) ::dis_update_service(m_cpuSvc);
 }
@@ -291,7 +291,7 @@ void FarmStatSrv::updateDns(const void* address) {
     if ( idx != string::npos && idq == 0 ) {
       string f = svc.substr(1,idx-1);
       if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	IocSensor::instance().send(this,CMD_ADD,new string(f));
+        IocSensor::instance().send(this,CMD_ADD,new string(f));
       }
     }
     break;
@@ -304,23 +304,23 @@ void FarmStatSrv::updateDns(const void* address) {
       char *at, *p = msg, *last = msg;
       auto_ptr<Farms> farms(new Farms);
       while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	last = strchr(at,'|');
-	if ( last ) *last = 0;
-	getServiceNode(p,svc,node);
-	idx = svc.find("/ROpublish");
-	idq = svc.find("/hlt");
-	//if ( idq == string::npos ) idq = svc.find("/mona");
-	//if ( idq == string::npos ) idq = svc.find("/store");
-	if ( idx != string::npos && idq == 0 ) {
-	  string f = svc.substr(1,idx-1);
-	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	    farms->push_back(f);
-	  }
-	}
-	p = last+1;
+        last = strchr(at,'|');
+        if ( last ) *last = 0;
+        getServiceNode(p,svc,node);
+        idx = svc.find("/ROpublish");
+        idq = svc.find("/hlt");
+        //if ( idq == string::npos ) idq = svc.find("/mona");
+        //if ( idq == string::npos ) idq = svc.find("/store");
+        if ( idx != string::npos && idq == 0 ) {
+          string f = svc.substr(1,idx-1);
+          if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
+            farms->push_back(f);
+          }
+        }
+        p = last+1;
       }
       if ( !farms->empty() ) {
-	IocSensor::instance().send(this,CMD_CONNECT,farms.release());
+        IocSensor::instance().send(this,CMD_CONNECT,farms.release());
       }
     }
     break;
@@ -338,15 +338,15 @@ void FarmStatSrv::handle(const Event& ev) {
     switch(ev.type) {
     case CMD_SHOW: {
       for(SubfarmMonitors::iterator k=m_farmMonitors.begin();k!=m_farmMonitors.end();++k)
-	(*k).second->publish();
+        (*k).second->publish();
       TimeSensor::instance().add(this,10,(void*)CMD_SHOW);
       return;
     }
     case CMD_ADD: {
       auto_ptr<string> val(ev.iocPtr<string>());
       if ( find(m_farms.begin(),m_farms.end(),*val.get()) == m_farms.end() ) {
-	m_farms.push_back(*ev.iocPtr<string>());
-	connect(m_farms);
+        m_farms.push_back(*ev.iocPtr<string>());
+        connect(m_farms);
       }
       return;
     }
@@ -358,7 +358,7 @@ void FarmStatSrv::handle(const Event& ev) {
     case CMD_CHECK: {
       time_t now = ::time(0);
       for(SubfarmMonitors::iterator k=m_farmMonitors.begin();k!=m_farmMonitors.end();++k)
-	(*k).second->check(now);
+        (*k).second->check(now);
       return;
     }
     case CMD_DELETE:

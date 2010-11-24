@@ -66,7 +66,7 @@ int ROMonNodeCollector::monitor() {
           break;
         }
         else {
-	  DimLock dim_lock;
+          DimLock dim_lock;
           for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
             typedef RODimNodeListener::Descriptor DSC;
             DSC* d = (*ic).second->data<DSC>();

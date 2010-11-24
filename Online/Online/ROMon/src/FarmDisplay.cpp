@@ -732,7 +732,7 @@ int FarmDisplay::handleKeyboard(int key)    {
             if ( d1->row == min(d1->row,row) ) {
               row = d1->row;
               m_posCursor = cnt;
-	      return WT_SUCCESS;
+              return WT_SUCCESS;
             }
           }
         }
@@ -749,7 +749,7 @@ int FarmDisplay::handleKeyboard(int key)    {
             if ( d1->row == max(d1->row,row) ) {
               row = d1->row;
               m_posCursor = cnt;
-	      return WT_SUCCESS;
+              return WT_SUCCESS;
             }
           }
         }
@@ -806,9 +806,9 @@ void FarmDisplay::handle(const Event& ev) {
       if ( m->display == disp ) {
         size_t pos = m->y - disp->row - 2;
         if ( selectedClusterSize()>pos ) {
-	  int cmd = m->button==0 ? m_sysDisplay.get() ? CMD_SHOWCTRL : CMD_SHOWMBM : CMD_SHOWPROCS;
+          int cmd = m->button==0 ? m_sysDisplay.get() ? CMD_SHOWCTRL : CMD_SHOWMBM : CMD_SHOWPROCS;
           m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
-	  IocSensor::instance().send(this,cmd,this);
+          IocSensor::instance().send(this,cmd,this);
         }
       }
     }
@@ -857,7 +857,7 @@ void FarmDisplay::handle(const Event& ev) {
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
         if ( (d=(*k).second) == ev.data )  {
           m_posCursor = cnt;
-	  IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
+          IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
           return;
         }
       }

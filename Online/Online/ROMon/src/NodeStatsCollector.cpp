@@ -102,8 +102,8 @@ void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first)
       *buf = h->m_statBuffer;
       *size  = cpu.node->length();
       if ( h->m_verbose ) {
-	log() << "[NodeStatsCollector] Published " << *size 
-	      << " Bytes of Stat data @" << *buf << std::endl;
+        log() << "[NodeStatsCollector] Published " << *size 
+              << " Bytes of Stat data @" << *buf << std::endl;
       }
       return;
     }
@@ -190,7 +190,7 @@ int NodeStatsCollector::monitor() {
     ::dim_lock();
     try {
       if ( 0 != m_mbmSvc )  {
-	monitorTasks();
+        monitorTasks();
       }
       if ( stat_delay<=0 ) {
         monitorStats();

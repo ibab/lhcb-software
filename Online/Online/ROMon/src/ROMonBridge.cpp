@@ -241,10 +241,10 @@ void ROMonBridge::handle(const Event& ev) {
 /// Help printout in case of -h /? or wrong arguments
 void ROMonBridge::help() {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_bridge -opt [-opt]\n"
-		   "     -from=<string>     Node name from which the datapoints should be consumed.\n"
-		   "     -to=<string>       Node to which these data points should be published.\n"
-		   "     -print=<integer>   Printout value and verbosity.\n"
-		   "     -publish=<string>  Prefix for published services.\n\n");
+                   "     -from=<string>     Node name from which the datapoints should be consumed.\n"
+                   "     -to=<string>       Node to which these data points should be published.\n"
+                   "     -print=<integer>   Printout value and verbosity.\n"
+                   "     -publish=<string>  Prefix for published services.\n\n");
 }
 
 /// Main entry point to start the application

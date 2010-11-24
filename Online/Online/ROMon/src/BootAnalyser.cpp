@@ -133,6 +133,7 @@ namespace ROMon {
 #include "TaskSupervisorParser.h"
 #include "RTL/rtl.h"
 #include "RTL/time.h"
+#include "RTL/strdef.h"
 #include "RTL/readdir.h"
 #include "NET/defs.h"
 #include "CPP/Event.h"
@@ -197,11 +198,12 @@ namespace ROMon {
     }
     const char* isDHCPRequest()  {
       static string tag = "dhcpd: DHCPREQUEST for ";
-      char *pos = ::strstr(s+15,tag.c_str());
+      const char *pos = ::strstr(s+15,tag.c_str());
       if ( pos )  {
         if ( ::strstr(pos,"unknown lease") == 0 )  {
-          *::strchr(pos=pos+tag.length(),' ') = 0;
-          return pos;
+          char* p = (char*)(pos+tag.length());
+          *::strchr(p,' ') = 0;
+          return pos=p;
         }
       }
       return 0;
@@ -209,10 +211,11 @@ namespace ROMon {
 
     const char* isMountRequest()   {
       static string tag = " mount request from ";
-      char *pos = ::strstr(s+15,tag.c_str());
+      const char *pos = ::strstr(s+15,tag.c_str());
       if ( pos )  {
-        *::strchr(pos=pos+tag.length(),':') = 0;
-        return pos;
+        char* p = (char*)(pos+tag.length());
+        *::strchr(p,':') = 0;
+        return pos=p;
       }
       return 0;
     }
@@ -276,17 +279,17 @@ struct BootDataProcessor : public DataFile::DataProcessor {
       boot = updateStatus(info,BootNodeStatus::TCP_STARTED);
     else if ( ::strstr(info,"FMC start-up succeeded") ) {
       boot = updateStatus(info,BootNodeStatus::FMC_STARTED);
-      if ( boot ) boot->fmcStart = line.time();
+      if ( boot ) boot->fmcStart = (int)line.time();
     }
     else if ( (host=line.isMountRequest()) ) {
       boot = updateStatus(nodeByName(host), BootNodeStatus::MOUNT_REQUESTED);
-      if ( boot ) boot->mountReq = line.time();
+      if ( boot ) boot->mountReq = (int)line.time();
     }
     else if ( (host=line.isDHCPRequest()) ) {
       SubfarmBootStatus::Nodes::iterator i=status.nodes().find(host);
       if ( i != status.nodes().end() ) {
         (*i).second->status = BootNodeStatus::DHCP_REQUESTED;
-        (*i).second->dhcpReq = line.time();
+        (*i).second->dhcpReq = (int)line.time();
         ::lib_rtl_output(LIB_RTL_DEBUG,"%s> %s Found DHCP request for node:%s",
           status.name().c_str(),::lib_rtl_timestr(),host);
       }
@@ -360,7 +363,7 @@ int SubfarmBootStatus::start() {
         hosts()[node] = n;
         n = new(m_status->nodes.add(n)) BootNodeStatus();
         ::lib_rtl_output(LIB_RTL_VERBOSE,"...%s> Added node %-10s with address:%-12s [%s]",
-			 name().c_str(),node.c_str(),addr.c_str(),::inet_ntoa(*ina));
+                         name().c_str(),node.c_str(),addr.c_str(),::inet_ntoa(*ina));
       }
     }
     string svc = "/"+strlower(name())+"/BootMonitor";
@@ -410,10 +413,10 @@ void SubfarmBootStatus::summaryHandler(void* tag, void* buf, int* size) {
             BootNodeStatus::CPU_STARTED+
             BootNodeStatus::MOUNT_REQUESTED+
             BootNodeStatus::DHCP_REQUESTED);
-          if ( n->dhcpReq  <= 0 ) n->dhcpReq  = now;
-          if ( n->mountReq <= 0 ) n->mountReq = now;
-          if ( n->fmcStart <= 0 ) n->fmcStart = now;
-	}
+          if ( n->dhcpReq  <= 0 ) n->dhcpReq  = long(now);
+          if ( n->mountReq <= 0 ) n->mountReq = long(now);
+          if ( n->fmcStart <= 0 ) n->fmcStart = long(now);
+        }
         else if ( (*ni).state == NodeSummary::ALIVE ) {
           n->status = (BootNodeStatus::FMC_STARTED+
             BootNodeStatus::TCP_STARTED+
@@ -423,9 +426,9 @@ void SubfarmBootStatus::summaryHandler(void* tag, void* buf, int* size) {
             BootNodeStatus::CPU_STARTED+
             BootNodeStatus::MOUNT_REQUESTED+
             BootNodeStatus::DHCP_REQUESTED);
-          if ( n->dhcpReq  <= 0 ) n->dhcpReq  = now;
-          if ( n->mountReq <= 0 ) n->mountReq = now;
-          if ( n->fmcStart <= 0 ) n->fmcStart = now;
+          if ( n->dhcpReq  <= 0 ) n->dhcpReq  = long(now);
+          if ( n->mountReq <= 0 ) n->mountReq = long(now);
+          if ( n->fmcStart <= 0 ) n->fmcStart = long(now);
         }
         else {
           n->status &= ~BootNodeStatus::FMC_STARTED;
@@ -443,9 +446,9 @@ int SubfarmBootStatus::scan() {
   // fill defaults if there were no values in the data file
   for(Nodes::iterator i=m_nodes.begin(); i!=m_nodes.end();++i) {
     BootNodeStatus* n = (*i).second;
-    if ( 0==n->mountReq && n->status&BootNodeStatus::MOUNT_REQUESTED ) n->mountReq = proc.start;
-    if ( 0==n->dhcpReq  && n->status&BootNodeStatus::DHCP_REQUESTED  ) n->dhcpReq  = proc.start;
-    if ( 0==n->fmcStart && n->status&BootNodeStatus::FMC_STARTED     ) n->fmcStart = proc.start;
+    if ( 0==n->mountReq && n->status&BootNodeStatus::MOUNT_REQUESTED ) n->mountReq = long(proc.start);
+    if ( 0==n->dhcpReq  && n->status&BootNodeStatus::DHCP_REQUESTED  ) n->dhcpReq  = long(proc.start);
+    if ( 0==n->fmcStart && n->status&BootNodeStatus::FMC_STARTED     ) n->fmcStart = long(proc.start);
   }
   return res;
 }
@@ -482,7 +485,7 @@ int SubfarmBootStatus::check() {
                 }
                 else {
                   ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,
-				   ::lib_rtl_error_message(::lib_rtl_get_error()));
+                                   ::lib_rtl_error_message(::lib_rtl_get_error()));
                 }
                 ::lib_rtl_pipe_close(f);
               }
@@ -506,10 +509,11 @@ void SubfarmBootStatus::dump() {
   for(Nodes::const_iterator i=m_nodes.begin(); i!=m_nodes.end();++i) {
     BootNodeStatus* n = (*i).second;
     ina.s_addr = n->address;
-    ::strftime(t1,sizeof(t1),"%F %H:%M:%S",::localtime(&n->dhcpReq));
-    ::strftime(t2,sizeof(t2),"%F %H:%M:%S",::localtime(&n->mountReq));
+    time_t dhcp = n->dhcpReq, mount = n->mountReq;
+    ::strftime(t1,sizeof(t1),"%F %H:%M:%S",::localtime(&dhcp));
+    ::strftime(t2,sizeof(t2),"%F %H:%M:%S",::localtime(&mount));
     ::lib_rtl_output(LIB_RTL_INFO,"%s> Node %-10s with address:%-15s DHCP:%s Mount:%s",
-		     name().c_str(),n->name,::inet_ntoa(ina), t2,t1);
+                     name().c_str(),n->name,::inet_ntoa(ina), t2,t1);
   }
 }
 
@@ -607,15 +611,15 @@ void BootMonitor::handle(const Event& ev) {
     switch(ev.eventtype) {
     case TimeEvent:
       if (ev.timer_data == (void*)CMD_CHECK ) {
-	IocSensor::instance().send(this,CMD_CHECK,this);
-	return;
+        IocSensor::instance().send(this,CMD_CHECK,this);
+        return;
       }
       break;
     case IocEvent:
     switch(ev.type) {
     case CMD_CHECK:
       ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
-		       ::lib_rtl_timestr(),int(m_clusters.size()));
+                       ::lib_rtl_timestr(),int(m_clusters.size()));
       scan();
       break;
     default:
@@ -628,11 +632,11 @@ void BootMonitor::handle(const Event& ev) {
   }
   catch(const exception& e) {
     ::lib_rtl_output(LIB_RTL_ERROR,"BootMonitor> %s Exception in callback processing:%s",
-		     ::lib_rtl_timestr(),e.what());
+                     ::lib_rtl_timestr(),e.what());
   }
   catch(...) {
     ::lib_rtl_output(LIB_RTL_ERROR,"BootMonitor> %s UNKNOWN exception in callback processing.",
-		     ::lib_rtl_timestr());
+                     ::lib_rtl_timestr());
   }
   TimeSensor::instance().add(this,SCAN_TIMEDIFF,(void*)CMD_CHECK);
 }

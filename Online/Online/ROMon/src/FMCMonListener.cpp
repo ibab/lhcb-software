@@ -74,7 +74,7 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
                              << nam << "@" << node << " id=" << itm->id << std::endl;
     }
     else if ( m_verbose ) log() << "[FMCMonListener] IGNORE DimInfo:" 
-				<< svc << "@" << node << std::endl;
+                                << svc << "@" << node << std::endl;
   }
 }
 
@@ -88,8 +88,8 @@ void FMCMonListener::removeHandler(const std::string& node, const std::string& s
       it->data<Descriptor>()->release();
       ::dic_release_service(it->id);
       if ( m_verbose )   {
-	log() << "[FMCMonListener] Delete DimInfo:" 
-	      << svc << "@" << node << " " << it->id << std::endl;
+        log() << "[FMCMonListener] Delete DimInfo:" 
+              << svc << "@" << node << " " << it->id << std::endl;
       }
       it->release();
       m_clients.erase(i);

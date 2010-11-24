@@ -99,8 +99,8 @@ int DimFilePublish::readFile(void** pptr, int* size)    {
       m_datalen = buf.st_size;
       int fid = ::open(m_file.c_str(),O_RDONLY);
       if ( m_datalen > m_len ) {
-	m_len = m_datalen+1;
-	m_buff = ::realloc(m_buff,m_len);
+        m_len = m_datalen+1;
+        m_buff = ::realloc(m_buff,m_len);
       }
       sc = ::read(fid,m_buff,m_datalen);
       //cout << "Read data from file:" << m_datalen << " bytes. " << buf.st_mtime << " " << m_modified << " " << sc << endl;
@@ -136,9 +136,9 @@ int DimFilePublish::monitor() {
       struct stat buf;
       int sc = ::stat(m_file.c_str(),&buf);
       if ( sc == 0 ) {
-	if ( buf.st_mtime > m_modified ) {
-	  ::dis_update_service(m_service);
-	}
+        if ( buf.st_mtime > m_modified ) {
+          ::dis_update_service(m_service);
+        }
       }
       ::lib_rtl_sleep(m_delay);
     }

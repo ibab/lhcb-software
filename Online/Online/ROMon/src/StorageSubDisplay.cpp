@@ -184,20 +184,20 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const char* bnam = (*ib).name;
       if ( ::strstr(bnam,m_partition.c_str()) != 0 ) {
-	int idx = (recv_node && evt_buff == bnam) ? 0 : (evt_buff == bnam) ? 1 : -1;
-	if ( idx >= 0 )   {
-	  const MBMBuffer::Control& ctrl = (*ib).ctrl;
-	  ++numBuffs;
-	  tot_prod[idx] += ctrl.tot_produced;
-	  numClients    += (*ib).clients.size();
-	  num_cl[idx]   += (*ib).clients.size();
-	  num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
-	  min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
-	  fspace[idx]    = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
-	  fslots[idx]    = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-	  if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) bad_nodes.insert((*n).name);
-	  inuse = true;
-	}
+        int idx = (recv_node && evt_buff == bnam) ? 0 : (evt_buff == bnam) ? 1 : -1;
+        if ( idx >= 0 )   {
+          const MBMBuffer::Control& ctrl = (*ib).ctrl;
+          ++numBuffs;
+          tot_prod[idx] += ctrl.tot_produced;
+          numClients    += (*ib).clients.size();
+          num_cl[idx]   += (*ib).clients.size();
+          num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
+          min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
+          fspace[idx]    = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
+          fslots[idx]    = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+          if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) bad_nodes.insert((*n).name);
+          inuse = true;
+        }
       }
     }
   }

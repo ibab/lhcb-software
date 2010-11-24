@@ -140,8 +140,8 @@ void CtrlNodeDisplay::update(const void* data) {
             for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
               const Cluster::PVSSProject& p = *q;
               ::sprintf(txt,"   [%03d]        %-16s %-14s %-14s %-14s %-14s %-14s",cnt,p.name.c_str(), 
-			p.state(p.eventMgr), p.state(p.dataMgr), p.state(p.distMgr), 
-			p.state(p.fsmSrv), p.state(p.devHdlr));
+                        p.state(p.eventMgr), p.state(p.dataMgr), p.state(p.distMgr), 
+                        p.state(p.fsmSrv), p.state(p.devHdlr));
               ::scrc_put_chars(m_display,txt,p.ok() ? NORMAL : INVERSE|RED,++line,1,1);
             }
             ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);

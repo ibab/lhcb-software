@@ -115,7 +115,7 @@ int NodePinger::start() {
   m_run = true;
   if ( !lib_rtl_is_success(lib_rtl_start_thread(runThread,this,&m_thread)) ) {
     ::lib_rtl_output(LIB_RTL_FATAL,"Failed to create worker thread: %s",
-		     ::lib_rtl_error_message(::lib_rtl_get_error()));
+                     ::lib_rtl_error_message(::lib_rtl_get_error()));
     return 0;
   }
   return 1;
@@ -155,22 +155,22 @@ int NodePinger::runThread(void* arg) {
       //::lib_rtl_output(LIB_RTL_DEBUG,"Executing command:%s",cmd.c_str());
       FILE* f = ::lib_rtl_pipe_open(cmd.c_str(),"r");
       if ( f ) {
-	int nb = ::fread(text,1,sizeof(text)-1,f);
-	if ( nb > 0 ) {
-	  text[nb] = 0;
-	  (*i).last = ::time(0);
-	  if ( ::strstr(text," 100% packet loss") == 0 )
-	    (*i).status = PING_SUCCESS_STATUS;
-	  else if ( (*i).status >= 0 )
-	    --(*i).status;
-	}
-	else {
-	  ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,::lib_rtl_error_message(::lib_rtl_get_error()));
-	}
-	::lib_rtl_pipe_close(f);
+        int nb = ::fread(text,1,sizeof(text)-1,f);
+        if ( nb > 0 ) {
+          text[nb] = 0;
+          (*i).last = (int)::time(0);
+          if ( ::strstr(text," 100% packet loss") == 0 )
+            (*i).status = PING_SUCCESS_STATUS;
+          else if ( (*i).status >= 0 )
+            --(*i).status;
+        }
+        else {
+          ::lib_rtl_output(LIB_RTL_ERROR,"Read-error: %d bytes read:%s.",nb,::lib_rtl_error_message(::lib_rtl_get_error()));
+        }
+        ::lib_rtl_pipe_close(f);
       }
       else {
-	::lib_rtl_output(LIB_RTL_ERROR,"Error:%s.",::lib_rtl_error_message(::lib_rtl_get_error()));
+        ::lib_rtl_output(LIB_RTL_ERROR,"Error:%s.",::lib_rtl_error_message(::lib_rtl_get_error()));
       }
     }
     ro_gettime(&p->m_connections->time,(unsigned int*)&p->m_connections->millitm);
@@ -186,9 +186,9 @@ void NodePinger::handle(const Event& ev) {
     switch(ev.eventtype) {
     case TimeEvent:
       if (ev.timer_data == (void*)CMD_DATA ) {
-	if ( m_serviceID ) {
-	  ::dis_update_service(m_serviceID);
-	}
+        if ( m_serviceID ) {
+          ::dis_update_service(m_serviceID);
+        }
         TimeSensor::instance().add(this,PUBLISH_TIMEDIFF,(void*)CMD_DATA);
       }
       break;
@@ -237,18 +237,18 @@ extern "C" int run_node_ping(int argc, char** argv) {
       const Inventory::NodeCollection::NodeList& nl = (*ni).second.nodes;
       Inventory::NodeCollection::NodeList::const_iterator niter = nl.find(node);
       if ( niter != nl.end() ) {
-	const string& typ = (*niter).second;
-	const Inventory::NodeTypeMap::iterator j = inv.nodetypes.find(typ);
-	if ( j != inv.nodetypes.end() ) {
-	  size_t idx;
-	  const Inventory::NodeType& nt = (*j).second;
-	  for(Inventory::ConnectionList::const_iterator c=nt.connections.begin(); c!=nt.connections.end();++c) {
-	    string n = *c;
-	    if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
-	    connections.push_back(n);
-	  }
-	  goto Start;
-	}
+        const string& typ = (*niter).second;
+        const Inventory::NodeTypeMap::iterator j = inv.nodetypes.find(typ);
+        if ( j != inv.nodetypes.end() ) {
+          size_t idx;
+          const Inventory::NodeType& nt = (*j).second;
+          for(Inventory::ConnectionList::const_iterator c=nt.connections.begin(); c!=nt.connections.end();++c) {
+            string n = *c;
+            if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
+            connections.push_back(n);
+          }
+          goto Start;
+        }
       }
     }
     // Error: stop process!

@@ -186,18 +186,18 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
           if (strncmp(c.name,part.c_str(),part.length())==0) {
             char nam[BM_USER_NAME_LEN], node[128], *typ;
             strcpy(nam,c.name);
-	    strcpy(node,nam+part.length());
+            strcpy(node,nam+part.length());
             if ( (typ=nullstr(nam,"_SND")) )  {}
             else if ( (typ=nullstr(nam,"_RCV")) ) {}
             else if ( c.type=='C' && (typ=strchr(node,'_')) )   {
-	      if ( typ>node ) typ -= 3;  // Keep the last 2 digits of the node name
+              if ( typ>node ) typ -= 3;  // Keep the last 2 digits of the node name
               *typ = 0;
               float perc=(*ib).ctrl.tot_produced>0 ? 100*(float(c.events)/(*ib).ctrl.tot_produced) : 0;
               sprintf(txt[nTsk++],fmt,++typ,sstat[size_t(c.state)],c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],c.events,perc);
               if ( nTsk==2 ) {
                 disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
                 txt[0][0] = txt[1][0] = 0;
-		nTsk = 0;
+                nTsk = 0;
               }
             }
           }
@@ -321,15 +321,15 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
     const Stream& s = (*is).second;
     for( map<string,int>::const_iterator t=s.to.begin(); t!=s.to.end(); ++t)  {
       if ( is_reco )
-	sprintf(txt[nStr++]," %-14s %-10s %11d%11s",(*is).first.c_str(),(*t).first.c_str(),int((*t).second),"");
+        sprintf(txt[nStr++]," %-14s %-10s %11d%11s",(*is).first.c_str(),(*t).first.c_str(),int((*t).second),"");
       else
-	sprintf(txt[nStr++]," %-14s %-10s %11d%11d",(*is).first.c_str(),(*t).first.c_str(),int(s.received),int((*t).second));
+        sprintf(txt[nStr++]," %-14s %-10s %11d%11d",(*is).first.c_str(),(*t).first.c_str(),int(s.received),int((*t).second));
       sent += (*t).second;
       to_nodes.insert((*t).first);
       if ( nStr==2 ) {
         disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
         txt[0][0] = txt[1][0] = 0;
-	nStr = 0;
+        nStr = 0;
       }
     }
     received += s.received;
@@ -366,13 +366,13 @@ void MonitoringDisplay::showSelect(const Nodeset& ns)   {
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
         string buff_nam = (*ib).name;
         if ( buff_nam.find(part2) != string::npos )  {
-	  m_select->draw_line_bold(" %s",(*n).name);
-	  filled = true;
-	  break;
-	}
+          m_select->draw_line_bold(" %s",(*n).name);
+          filled = true;
+          break;
+        }
       }
       if ( !filled ) {
-	m_select->draw_line_normal(" %s",(*n).name);
+        m_select->draw_line_normal(" %s",(*n).name);
       }
     }
     m_select->draw_line_normal("");

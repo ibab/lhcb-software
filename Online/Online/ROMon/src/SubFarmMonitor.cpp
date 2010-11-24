@@ -17,13 +17,13 @@ namespace ROMon {
 
     struct NodeMon {
       struct Task {
-	int  input, output, pid;
-	char state;
-	Task() : input(0), output(0), pid(-1), state(TASK_FSM_STATE_DEAD) {}
-	Task(const Task& t) : input(t.input), output(t.output), pid(t.pid), state(t.state) {}
-	Task& operator=(const Task& t) {
-	  input = t.input; output=t.output; pid=t.pid; state = t.state; return *this; 
-	}
+        int  input, output, pid;
+        char state;
+        Task() : input(0), output(0), pid(-1), state(TASK_FSM_STATE_DEAD) {}
+        Task(const Task& t) : input(t.input), output(t.output), pid(t.pid), state(t.state) {}
+        Task& operator=(const Task& t) {
+          input = t.input; output=t.output; pid=t.pid; state = t.state; return *this; 
+        }
       };
       typedef std::map<std::string,Task> Clients;
       time_t       update;
@@ -75,6 +75,7 @@ namespace ROMon {
 }
 #endif // ROMON_SUBFARMMONITOR_H
 
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMonDefs.h"
@@ -90,7 +91,7 @@ using namespace std;
 
 namespace {
   const char* _procNam(const char* nam) {
-    char* p;
+    const char* p;
     if (0 != ::strstr(nam,"MEPRx") ) return nam;
     p = ::strchr(nam,'_');
     if ( 0 != p ) return ++p;
@@ -226,17 +227,17 @@ void SubfarmMonitor::extractData(const Nodeset& ns) {
       const char  c = ::toupper(p[0])=='H' ? *q : 'Z';
       //cout << (*it).name << " " << strchr(p,'_')+1 << " " << c << endl;
       if ( c == MOORE_TASK )  {
-	NodeMon::Task& t = m.moores[q];
-	t.input = t.output = 0;
-	t.state = TASK_FSM_STATE_NOT_READY;
+        NodeMon::Task& t = m.moores[q];
+        t.input = t.output = 0;
+        t.state = TASK_FSM_STATE_NOT_READY;
       }
       else if ( c == SENDER_TASK ) {
-	m.sender.input = m.sender.output = 0;
-	m.sender.state = TASK_FSM_STATE_NOT_READY;
+        m.sender.input = m.sender.output = 0;
+        m.sender.state = TASK_FSM_STATE_NOT_READY;
       }
       else if ( c == BUILDER_TASK ) {
-	m.mepRx.input = m.mepRx.output = 0;
-	m.mepRx.state = TASK_FSM_STATE_NOT_READY;
+        m.mepRx.input = m.mepRx.output = 0;
+        m.mepRx.state = TASK_FSM_STATE_NOT_READY;
       }
     }
   }
@@ -257,64 +258,64 @@ void SubfarmMonitor::extractData(const Nodeset& ns) {
       ++m.numBuffs;
       switch(b) {
       case MEP_BUFFER:
-	m.inUse   = 1;
-	m.evtMEP  = ctrl.tot_produced;
-	m.spacMEP = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotMEP = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
+        m.inUse   = 1;
+        m.evtMEP  = ctrl.tot_produced;
+        m.spacMEP = float(ctrl.i_space)/float(ctrl.bm_size);
+        m.slotMEP = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+        break;
       case EVT_BUFFER:
-	m.inUse     = 1;
-	m.evtEVENT  = ctrl.tot_produced;
-	m.spacEVENT = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotEVENT = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
+        m.inUse     = 1;
+        m.evtEVENT  = ctrl.tot_produced;
+        m.spacEVENT = float(ctrl.i_space)/float(ctrl.bm_size);
+        m.slotEVENT = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+        break;
       case RES_BUFFER:
       case SND_BUFFER:
-	m.inUse    = 1;
-	m.evtSEND  = ctrl.tot_produced;
-	m.spacSEND = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slotSEND = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
+        m.inUse    = 1;
+        m.evtSEND  = ctrl.tot_produced;
+        m.spacSEND = float(ctrl.i_space)/float(ctrl.bm_size);
+        m.slotSEND = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+        break;
       default:
-	continue;
+        continue;
       }
       m.minEVENT = numeric_limits<int>::max();
       m.maxEVENT = numeric_limits<int>::min();
       for (ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         ++m.numClients;
-	int nevt = (*ic).events;
-	int pid  = (*ic).processID;
-	const char* nc = (*ic).name;
+        int nevt = (*ic).events;
+        int pid  = (*ic).processID;
+        const char* nc = (*ic).name;
         const char* p  = _procNam(nc);
-	map<int,const FSMTask*>::const_iterator t1 = task_map.find(pid);
-	char state = char(t1==task_map.end() ? int(TASK_FSM_STATE_DEAD) : (*t1).second->state);
+        map<int,const FSMTask*>::const_iterator t1 = task_map.find(pid);
+        char state = char(t1==task_map.end() ? int(TASK_FSM_STATE_DEAD) : (*t1).second->state);
         switch(*p) {
         case BUILDER_TASK:
-	  m.mepRx.input = m.mepRx.output = nevt;
-	  m.mepRx.state = state;
-	  m.mepRx.pid = pid;
+          m.mepRx.input = m.mepRx.output = nevt;
+          m.mepRx.state = state;
+          m.mepRx.pid = pid;
           break;
         case SENDER_TASK:
           if( b == RES_BUFFER || b == SND_BUFFER )  {
-	    m.sender.input = m.sender.output = nevt;
-	    m.sender.state = state;
-	    m.sender.pid = pid;
-	  }
+            m.sender.input = m.sender.output = nevt;
+            m.sender.state = state;
+            m.sender.pid = pid;
+          }
           break;
         case MOORE_TASK: {
           //  Normal  and        TAE event processing
-	  NodeMon::Task* t = &m.moores[p];
-	  t->pid = pid;
-	  t->state = state;
-	  if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-	    t->input = nevt;
-	    m.maxEVENT = max(m.maxEVENT,nevt);
+          NodeMon::Task* t = &m.moores[p];
+          t->pid = pid;
+          t->state = state;
+          if( b == EVT_BUFFER || b == MEP_BUFFER )  {
+            t->input = nevt;
+            m.maxEVENT = max(m.maxEVENT,nevt);
             m.minEVENT = min(m.minEVENT,nevt);
           }
-	  else {
-	    t->output = nevt;
-	  }
-	}
+          else {
+            t->output = nevt;
+          }
+        }
           break;
         default:
           break;
@@ -367,38 +368,38 @@ void SubfarmMonitor::analyzeData() {
     else   {
       NodeMon::Clients::const_iterator ih;
       if ( m.mepRx.output < 0 || m.mepRx.state == TASK_FSM_STATE_DEAD )                 // MEPRX DEAD/not present
-	setAlarm(alarms->second,node,ERR_MEPRX_MISSING,when);
+        setAlarm(alarms->second,node,ERR_MEPRX_MISSING,when);
       else if ( running && m.mepRx.output == 0 && m_sum.evtMEP >  m_sumHist.evtMEP )    // MEPRX stuck while running
-	setAlarm(alarms->second,node,ERR_MEPRX_STUCK,when);
+        setAlarm(alarms->second,node,ERR_MEPRX_STUCK,when);
       else if ( running && m.evtMEP   <= h.evtMEP && m_sum.evtMEP >  m_sumHist.evtMEP ) // MEPRX stuck while running
-	setAlarm(alarms->second,node,ERR_MEPRX_STUCK,when);
+        setAlarm(alarms->second,node,ERR_MEPRX_STUCK,when);
       
       if ( m.sender.input < 0 || m.sender.state == TASK_FSM_STATE_DEAD )                   // SENDER DEAD/not present
-	setAlarm(alarms->second,node,ERR_SENDER_MISSING,when);
+        setAlarm(alarms->second,node,ERR_SENDER_MISSING,when);
       else if ( running && m.sender.input == 0 && m_sum.evtSEND > m_sumHist.evtSEND )      // SENDER stuck while running
-	setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
+        setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
       else if ( running && m.evtSEND  <= h.evtSEND  && m_sum.evtSEND > m_sumHist.evtSEND ) // SENDER stuck while running
-	setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
+        setAlarm(alarms->second,node,ERR_SENDER_STUCK,when);
 
       for(NodeMon::Clients::const_iterator ic=m.moores.begin(); ic!=m.moores.end(); ++ic) {
-	const string& n = (*ic).first;
-	const NodeMon::Task* t = &((*ic).second);
-	if ( t->state == TASK_FSM_STATE_DEAD )  {
-	  // cout << (void*)m << " " << "---2----" << (void*)t << " Moore:" << node << " Task:" << n << " DEAD " 
-	  //      << t->pid << endl;
-	  setAlarm(alarms->second,node,ERR_MOORE_MISSING,when,n);
-	}
-	else if ( running && m.mepRx.output > 0 ) {     // MEPRX is requirement for Moores!
-	  if ( m_sum.evtEVENT > m_sumHist.evtEVENT ) {  // Need some minimal activity....
-	    if ( t->input <= 1 ) continue;
-	    ih = h.moores.find(n);
-	    if ( ih == h.moores.end() ) continue;
-	    if ( t->input <= (*ih).second.input ) {
-	      ::sprintf(txt,"%d %d",t->input,(*ih).second.input);
-	      setAlarm(alarms->second,node,ERR_MOORE_STUCK,when,n /*,txt */);
-	    }
-	  }
-	}
+        const string& n = (*ic).first;
+        const NodeMon::Task* t = &((*ic).second);
+        if ( t->state == TASK_FSM_STATE_DEAD )  {
+          // cout << (void*)m << " " << "---2----" << (void*)t << " Moore:" << node << " Task:" << n << " DEAD " 
+          //      << t->pid << endl;
+          setAlarm(alarms->second,node,ERR_MOORE_MISSING,when,n);
+        }
+        else if ( running && m.mepRx.output > 0 ) {     // MEPRX is requirement for Moores!
+          if ( m_sum.evtEVENT > m_sumHist.evtEVENT ) {  // Need some minimal activity....
+            if ( t->input <= 1 ) continue;
+            ih = h.moores.find(n);
+            if ( ih == h.moores.end() ) continue;
+            if ( t->input <= (*ih).second.input ) {
+              ::sprintf(txt,"%d %d",t->input,(*ih).second.input);
+              setAlarm(alarms->second,node,ERR_MOORE_STUCK,when,n /*,txt */);
+            }
+          }
+        }
       }
 
       // Remaining alarms may only occur while running
@@ -406,32 +407,32 @@ void SubfarmMonitor::analyzeData() {
 
       txt[0] = 0;
       if ( m.slotMEP < SLOTS_MIN || m.slotEVENT < SLOTS_MIN || m.slotSEND < SLOTS_MIN ) {
-	if ( m.slotMEP   < SLOTS_MIN ) ::strcat(txt,"MEP ");
-	if ( m.slotEVENT < SLOTS_MIN ) ::strcat(txt,"EVENT ");
-	if ( m.slotSEND  < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-	if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
-	else
-	  setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when,"");
+        if ( m.slotMEP   < SLOTS_MIN ) ::strcat(txt,"MEP ");
+        if ( m.slotEVENT < SLOTS_MIN ) ::strcat(txt,"EVENT ");
+        if ( m.slotSEND  < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
+        if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
+          setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
+        else
+          setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when,"");
       }
       else if ( m.spacMEP < SPACE_MIN || m.spacEVENT < SPACE_MIN || m.spacSEND < SPACE_MIN  ) {
-	if ( m.spacMEP   < SPACE_MIN ) ::strcat(txt,"MEP ");
-	if ( m.spacEVENT < SPACE_MIN ) ::strcat(txt,"EVENT ");
-	if ( m.spacSEND  < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-	if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
-	else
-	  setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when,"");
-	cout << "1111 ";
+        if ( m.spacMEP   < SPACE_MIN ) ::strcat(txt,"MEP ");
+        if ( m.spacEVENT < SPACE_MIN ) ::strcat(txt,"EVENT ");
+        if ( m.spacSEND  < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
+        if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
+          setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
+        else
+          setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when,"");
+        cout << "1111 ";
       }
       else if ( m.evtMEP   <= h.evtMEP && m_sum.evtMEP == m_sumHist.evtMEP )    // No activity on any MEP buffer
-	setAlarm(alarms->second,node,ERR_NODAQ_ACTIVITY,when,node);
+        setAlarm(alarms->second,node,ERR_NODAQ_ACTIVITY,when,node);
       else if ( m.evtSEND  <= h.evtSEND  && m_sum.evtSEND == m_sumHist.evtSEND )// No activity on any send buffer
-	setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when,node);
+        setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when,node);
       else if ( m.evtEVENT > 0 && m.evtEVENT <= h.evtEVENT && m_sum.evtEVENT  == m_sumHist.evtEVENT ) // No activity EVENT buffer
-	setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
+        setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
       else if ( m.evtEVENT == 0 && m.evtEVENT == h.evtEVENT && m_sumHist.maxEVENT > 1000 ) // No activity EVENT buffer
-	setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
+        setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
     }
   }
   cout << endl;

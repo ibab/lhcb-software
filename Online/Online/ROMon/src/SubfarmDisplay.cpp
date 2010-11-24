@@ -19,6 +19,7 @@
 
 // Framework include files
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/SubfarmDisplay.h"
@@ -120,7 +121,7 @@ SubfarmDisplay::~SubfarmDisplay()  {
 /// Display the node information
 void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
-  char* p;
+  const char* p;
   const char* fmt = " %-12s%5d %12d%6d%7d %12d%11d%6d%7d %12d%6d%7d %12d";
   int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, accept_tot=0, cons_tot=0, ntsk_tot=0;
 
@@ -212,18 +213,18 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
           string nn = (*n).name;
           nn += '_';
           nn += cl.name+5;
-	  builders[cl.name+5].in = c.tot_produced;
-	  builders[cl.name+5].out = cl.events;
-	  builders[cl.name+5].st_out = cl.state;
+          builders[cl.name+5].in = c.tot_produced;
+          builders[cl.name+5].out = cl.events;
+          builders[cl.name+5].st_out = cl.state;
           //float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
           //m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
           continue;
         }
-        char* p = strchr(cl.name,'_');
+        const char* p = strchr(cl.name,'_');
         if ( p ) {
           nam = string(cl.name).substr(0,p-cl.name);
           nam += '_';
-          char* q = strchr(p+1,'_');
+          const char* q = strchr(p+1,'_');
           if ( q ) nam += q+1;
           ++p;
           switch(*p) {
@@ -248,17 +249,17 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
             }
             break;
           case MOORE_TASK:
-	    if ( m_moores ) {
-	      //  Normal  and        TAE event processing
-	      if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
-		moores[nam].in += cl.events;
-		moores[nam].st_in = cl.state;
-	      }
-	      else if ( b==RES_BUFFER || b==SND_BUFFER ) {
-		moores[nam].out += cl.events;
-		moores[nam].st_out = cl.state;
-	      }
-	    }
+            if ( m_moores ) {
+              //  Normal  and        TAE event processing
+              if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
+                moores[nam].in += cl.events;
+                moores[nam].st_in = cl.state;
+              }
+              else if ( b==RES_BUFFER || b==SND_BUFFER ) {
+                moores[nam].out += cl.events;
+                moores[nam].st_out = cl.state;
+              }
+            }
             break;
           default:
             break;
@@ -286,14 +287,14 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
       const TaskIO& m = (*i).second;
       ::sprintf(txt+eb_width*nTsk," %-12s%11d%8d %3s %3s   ",(*i).first.c_str(),m.in,m.out,sstat[m.st_in],sstat[m.st_out]);
       if ( ++nTsk == 3 ) {
-	txt[3*eb_width+3] = 0;
-	m_moores->draw_line_normal(txt);
-	::memset(txt,' ',sizeof(txt));
-	txt[sizeof(txt)-1] = 0;
-	nTsk = 0;
+        txt[3*eb_width+3] = 0;
+        m_moores->draw_line_normal(txt);
+        ::memset(txt,' ',sizeof(txt));
+        txt[sizeof(txt)-1] = 0;
+        nTsk = 0;
       }
       else {
-	txt[strlen(txt)] = ' ';
+        txt[strlen(txt)] = ' ';
       }
     }
     txt[m_area.width] = 0;

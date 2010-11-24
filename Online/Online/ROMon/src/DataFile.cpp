@@ -46,7 +46,7 @@ bool DataFile::migrated()  const {
     if ( 0 == ::stat(name().c_str(),&statbuf) ) {
       bool mig = m_stbuff.st_ino != statbuf.st_ino;
       ::lib_rtl_output(LIB_RTL_VERBOSE,"DataFile::migrated> File:%s %s",
-		       name().c_str(),mig ? "was migrated" : "is identical");
+                       name().c_str(),mig ? "was migrated" : "is identical");
       return mig;
     }
   }
@@ -63,7 +63,7 @@ bool DataFile::open() {
   if ( m_fd ) {
     if ( 0 == ::fstat(m_fd,&m_stbuff) ) {
       ::lib_rtl_output(LIB_RTL_DEBUG,"Successfully opened file:%s Inode:%u",
-		       name().c_str(), m_stbuff.st_ino);
+                       name().c_str(), m_stbuff.st_ino);
       return true;
     }
     ::close(m_fd);
@@ -112,15 +112,15 @@ int DataFile::scan(const DataProcessor& functor) {
         else break;
       }
       for(char *p=buff, *e=buff+bytes; p<e; ) {
-	char* q = ::strchr(p,'\n');
-	if ( q ) {
-	  *q = 0;
-	  ++count;
-	  if ( !functor(p) ) break;
-	  p = q+1;
-	  continue;
-	}
-	break;
+        char* q = ::strchr(p,'\n');
+        if ( q ) {
+          *q = 0;
+          ++count;
+          if ( !functor(p) ) break;
+          p = q+1;
+          continue;
+        }
+        break;
       }
       m_pointer += bytes;
       delete [] buff;

@@ -86,12 +86,12 @@ using namespace std;
 
 namespace {
   const char* _procNam(const char* nam) {
-    char* p;
+    const char* p;
     p = ::strchr(nam,'_');
     if ( 0 != p ) {
       p = ::strchr(++p,'_');
       if ( 0 != p )
-	return ++p;
+        return ++p;
     }
     return "Unknown";
   }
@@ -196,61 +196,61 @@ void StorageMonitor::extractData(const Nodeset& ns) {
 
       // Filter buffer names. We are not interested in all buffers - only the partition relevant ones
       if ( b != EVT_BUFFER || ::strncasecmp((*ib).name+7,m_partition.c_str(),m_partition.length()) != 0 ) 
-	continue;
+        continue;
 
       ++m.buffers;
       switch(b) {
       case EVT_BUFFER:
-	m.inUse  = 1;
-	m.evtIN  = ctrl.tot_produced;
-	m.space = float(ctrl.i_space)/float(ctrl.bm_size);
-	m.slots = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	break;
+        m.inUse  = 1;
+        m.evtIN  = ctrl.tot_produced;
+        m.space = float(ctrl.i_space)/float(ctrl.bm_size);
+        m.slots = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+        break;
       default:
-	continue;
+        continue;
       }
       m.minIN = numeric_limits<int>::max();
       m.maxIN = numeric_limits<int>::min();
       for (MBMBuffer::Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	int nevt = (*ic).events;
-	const char* nam = (*ic).name;
+        int nevt = (*ic).events;
+        const char* nam = (*ic).name;
         const char* p = _procNam(nam);
 
         ++m.clients;
-	m.tasks.insert(nam);
-	//cout << "Check task:" << nam << " " << p << "  " << nevt << endl;
+        m.tasks.insert(nam);
+        //cout << "Check task:" << nam << " " << p << "  " << nevt << endl;
         switch(*p) {
-	case 'W':
-	  // Writers to storage:         WRTxxxxx
-	  if ( p[1]=='R' && p[2]=='T' )  {
-	    m.senders[nam] = nevt;
-	    m.evtOUT      += nevt;
-	  }
-	case 'S':
-	  // Senders to streaming layer  SNDxxxx
-	  if ( p[1]=='N' && p[2]=='D' )  {
-	    m.senders[nam] = nevt;
-	    m.evtOUT      += nevt;
-	  }
-	  // HLT receivers               SF0x_HLT
-	  else if ( p[1] == 'F' ) {
-	    m.receivers[nam] = nevt;
-	    m.evtIN += nevt;
+        case 'W':
+          // Writers to storage:         WRTxxxxx
+          if ( p[1]=='R' && p[2]=='T' )  {
+            m.senders[nam] = nevt;
+            m.evtOUT      += nevt;
+          }
+        case 'S':
+          // Senders to streaming layer  SNDxxxx
+          if ( p[1]=='N' && p[2]=='D' )  {
+            m.senders[nam] = nevt;
+            m.evtOUT      += nevt;
+          }
+          // HLT receivers               SF0x_HLT
+          else if ( p[1] == 'F' ) {
+            m.receivers[nam] = nevt;
+            m.evtIN += nevt;
             m.maxIN  = max(m.maxIN,nevt);
             m.minIN  = min(m.minIN,nevt);
-	  }
-	  break;
-	case 'R':
-	  // Receivers on streaming layer RCVxxxx
-	  m.receivers[nam] = nevt;
-	  if ( p[3] != '_' )  { // "RCV_Rec"
-	    m.evtIN += nevt;
+          }
+          break;
+        case 'R':
+          // Receivers on streaming layer RCVxxxx
+          m.receivers[nam] = nevt;
+          if ( p[3] != '_' )  { // "RCV_Rec"
+            m.evtIN += nevt;
             m.maxIN  = max(m.maxIN,nevt);
             m.minIN  = min(m.minIN,nevt);
-	  }
-	  break;
+          }
+          break;
         default:
-	  break;
+          break;
         }
       }
     }
@@ -286,65 +286,65 @@ void StorageMonitor::analyzeData() {
       setAlarm(alarms->second,node,ERR_NOT_USED,when);
     else   {
       for(NodeMon::Tasks::const_iterator im=m.tasks.begin(); im!=m.tasks.end(); ++im)  {
-	ircv = m.receivers.find(*im);
-	isnd = m.senders.find(*im);
-	const string& nam = *im;
-	if ( ircv != m.receivers.end() ) {
-	  long nevt = (*ircv).second;
-	  ih = h.receivers.find(*im);
-	  // In a steady system there is no activity!
-	  if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtIN == m_sumHist.evtIN )
-	    {}
-	  // RECEIVER stuck while running
-	  else if ( nevt == 0 && m_sum.evtIN > m_sumHist.evtIN )
-	    setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when,nam);
-	  // RECEIVER stuck while running
-	  else if ( ih != h.receivers.end() && nevt  <= (*ih).second  && m_sum.evtIN > m_sumHist.evtIN )
-	    setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when,nam);
-	  continue;
-	}
-	else if ( isnd == m.senders.end() )  {
-	  setAlarm(alarms->second,node,ERR_RECEIVER_MISSING,when,nam);
-	  continue;
-	}
-	if ( isnd != m.senders.end() ) {
-	  long nevt = (*isnd).second;
-	  ih = h.senders.find(*im);
-	  
-	  // In a steady system there is no activity!
-	  if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtOUT == m_sumHist.evtOUT )
-	    {}
-	  // SENDER stuck while running
-	  else if ( nevt == 0 && m_sum.evtOUT > m_sumHist.evtOUT )
-	    setAlarm(alarms->second,node,ERR_SENDER_STUCK,when,nam);
-	  // SENDER stuck while running
-	  else if ( ih != h.senders.end() && nevt <= (*ih).second && m_sum.evtOUT > m_sumHist.evtOUT )
-	    setAlarm(alarms->second,node,ERR_SENDER_STUCK,when,nam);
-	  continue;
-	}
-	else if ( ircv == m.receivers.end() ) {
-	  setAlarm(alarms->second,node,ERR_SENDER_MISSING,when,nam);
-	  continue;
-	}
+        ircv = m.receivers.find(*im);
+        isnd = m.senders.find(*im);
+        const string& nam = *im;
+        if ( ircv != m.receivers.end() ) {
+          long nevt = (*ircv).second;
+          ih = h.receivers.find(*im);
+          // In a steady system there is no activity!
+          if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtIN == m_sumHist.evtIN )
+            {}
+          // RECEIVER stuck while running
+          else if ( nevt == 0 && m_sum.evtIN > m_sumHist.evtIN )
+            setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when,nam);
+          // RECEIVER stuck while running
+          else if ( ih != h.receivers.end() && nevt  <= (*ih).second  && m_sum.evtIN > m_sumHist.evtIN )
+            setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when,nam);
+          continue;
+        }
+        else if ( isnd == m.senders.end() )  {
+          setAlarm(alarms->second,node,ERR_RECEIVER_MISSING,when,nam);
+          continue;
+        }
+        if ( isnd != m.senders.end() ) {
+          long nevt = (*isnd).second;
+          ih = h.senders.find(*im);
+          
+          // In a steady system there is no activity!
+          if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtOUT == m_sumHist.evtOUT )
+            {}
+          // SENDER stuck while running
+          else if ( nevt == 0 && m_sum.evtOUT > m_sumHist.evtOUT )
+            setAlarm(alarms->second,node,ERR_SENDER_STUCK,when,nam);
+          // SENDER stuck while running
+          else if ( ih != h.senders.end() && nevt <= (*ih).second && m_sum.evtOUT > m_sumHist.evtOUT )
+            setAlarm(alarms->second,node,ERR_SENDER_STUCK,when,nam);
+          continue;
+        }
+        else if ( ircv == m.receivers.end() ) {
+          setAlarm(alarms->second,node,ERR_SENDER_MISSING,when,nam);
+          continue;
+        }
       }
 
       // Remaining alarms may only occur while running
       if ( !running ) continue;
       
       if ( m.slots < SLOTS_MIN ) {
-	if ( m.evtIN == h.evtIN )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when," Events");
-	else
-	  setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when," Events");
+        if ( m.evtIN == h.evtIN )
+          setAlarm(alarms->second,node,ERR_NODE_STUCK,when," Events");
+        else
+          setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when," Events");
       }
       else if ( m.space < SPACE_MIN ) {
-	if ( m.evtIN == h.evtIN )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when," Events");
-	else
-	  setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when," Events");
+        if ( m.evtIN == h.evtIN )
+          setAlarm(alarms->second,node,ERR_NODE_STUCK,when," Events");
+        else
+          setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when," Events");
       }
       else if ( m.evtIN > 0 && m.evtIN <= h.evtIN && m_sum.evtIN  == m_sumHist.evtIN ) { // No activity IN buffer
-	setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when);
+        setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when);
       }
     }
   }

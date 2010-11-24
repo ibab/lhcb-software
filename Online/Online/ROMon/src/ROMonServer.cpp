@@ -44,7 +44,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
   timeb tm;
   ::ftime(&tm);
   n->reset();
-  n->time = tm.time;
+  n->time = (int)tm.time;
   n->millitm = tm.millitm;
   ro_get_node_name(n->name,sizeof(n->name));
   Node::Buffers* b = n->buffers();
@@ -57,7 +57,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
       for (int i = 0; i < buffers->p_bmax; ++i)  {
         if ( buffers->buffers[i].used == 1 )  {
           const char* bm_name = buffers->buffers[i].name;
-	  BMID dsc = ::mbm_map_mon_memory(bm_name);
+          BMID dsc = ::mbm_map_mon_memory(bm_name);
           if ( dsc ) {
             try {
               dumpBufferInfo(bm_name,dsc,mbm);
@@ -65,7 +65,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
             catch(...)    {
             }
             mbm = b->add(mbm);
-	    ::mbm_unmap_memory(dsc);
+            ::mbm_unmap_memory(dsc);
           }
         }
       }

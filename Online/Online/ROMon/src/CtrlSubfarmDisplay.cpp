@@ -129,13 +129,13 @@ void CtrlSubfarmDisplay::showNodes()  {
     const Cluster::Node& n = (*i).second;
     if ( n.projects.size() > 0 ) {
       disp->draw_line_bold(" %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
-			   "PVSS Summary/Node:", "Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","<Project State>");
+                           "PVSS Summary/Node:", "Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","<Project State>");
       for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q)  {
-	const Cluster::PVSSProject& p = *q;
+        const Cluster::PVSSProject& p = *q;
         ::sprintf(text," %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
-		  n.name.c_str(), p.name.c_str(), p.state(p.eventMgr), p.state(p.dataMgr), 
-		  p.state(p.distMgr), p.state(p.fsmSrv), p.ok() ? "RUNNING" : "==NOT RUNNING==");
-	p.ok() ? disp->draw_line_normal(text) : disp->draw_line_bold(text);
+                  n.name.c_str(), p.name.c_str(), p.state(p.eventMgr), p.state(p.dataMgr), 
+                  p.state(p.distMgr), p.state(p.fsmSrv), p.ok() ? "RUNNING" : "==NOT RUNNING==");
+        p.ok() ? disp->draw_line_normal(text) : disp->draw_line_bold(text);
       }
     }
   }
@@ -149,7 +149,7 @@ void CtrlSubfarmDisplay::showHeader()   {
   if ( !m_excluded.empty() ) ::sprintf(text,"%d node(s) excluded",int(m_excluded.size()));    
   draw_line_normal ("");
   draw_line_reverse("         Task control monitoring on %s   [%s]  %s", 
-		    m_cluster.name.c_str(), ::lib_rtl_timestr(), text);
+                    m_cluster.name.c_str(), ::lib_rtl_timestr(), text);
   draw_line_reverse("         Information service:%s data size:%zd", m_svcName.c_str(),m_data.actual);
   draw_line_normal ("");
 }
@@ -178,8 +178,8 @@ void CtrlSubfarmDisplay::update()   {
     XML::TaskSupervisorParser ts;
     {  DimLock lock;
       if ( m_data.actual>0 ) {
-	const char* ptr = m_data.data<const char>();
-	result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
+        const char* ptr = m_data.data<const char>();
+        result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
       }
     }
     RTL::Lock lock(m_lock);

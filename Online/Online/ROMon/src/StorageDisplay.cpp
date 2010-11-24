@@ -294,18 +294,18 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
             ptr = nullchr(str=typ+4,'_');
             if ( !ptr ) {
               const char* s = "MONA0801";
-	      streams[s].node = s;
-	      streams[s].sent += c.events;
-	      streams[s].source = "Recv Layer";
-	      continue;
-	    }
-	    else if ( (ptr=::strstr(ptr+1,"MONA09")) ) {
-	      const char* s = nullchr(ptr,'_') ? ptr : "MONA0901";
-	      streams[s].node = s;
-	      streams[s].sent += c.events;
-	      streams[s].source = "Recv Layer";
-	      continue;
-	    }
+              streams[s].node = s;
+              streams[s].sent += c.events;
+              streams[s].source = "Recv Layer";
+              continue;
+            }
+            else if ( (ptr=::strstr(ptr+1,"MONA09")) ) {
+              const char* s = nullchr(ptr,'_') ? ptr : "MONA0901";
+              streams[s].node = s;
+              streams[s].sent += c.events;
+              streams[s].source = "Recv Layer";
+              continue;
+            }
             streams[str].sent += c.events;
             streams[str].source = node;
           }
@@ -422,7 +422,7 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   draw_line_bold   ("                     Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
   draw_line_normal ("");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    char* c = ::strchr((*n).name,'.');
+    char* c = ::strchr((char*)(*n).name,'.');
     if ( c ) *c = 0;
   }
 }

@@ -21,7 +21,7 @@ void ROMon::ro_get_node_name(char* name, size_t len) {
 void ROMon::ro_gettime(int* time, unsigned int* millitm) {
   timeval tv={0,0};
   ::gettimeofday(&tv,0);
-  *time = tv.tv_sec;
+  *time    = tv.tv_sec;
   *millitm = tv.tv_usec/1000;
 }
 

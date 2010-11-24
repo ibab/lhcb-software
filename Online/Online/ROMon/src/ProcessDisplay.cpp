@@ -121,7 +121,7 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
   time_t t1;
   for(_N::const_iterator i=pf.nodes.begin(); i!=pf.nodes.end(); i=pf.nodes.next(i)) {
     const Procset& ps = (*i);
-    char* dot = strchr(ps.name,'.');
+    const char* dot = strchr(ps.name,'.');
     if (0 == ::strncmp(ps.name,m_name.c_str(),3+(dot ? dot-ps.name : m_name.length()))) {
       const _P& procs = ps.processes;
       t1 = ps.time;
@@ -130,64 +130,64 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
       ::sprintf(txt,"Node:%s last update:%s [%d processes]",ps.name,text,procs.size());
       ::scrc_put_chars(m_display,txt,BOLD,++line,10,1);
       if ( m_flag == 0 )
-	::scrc_put_chars(m_display,"The display shows tasks with a UTGID",NORMAL,++line,10,1);
+        ::scrc_put_chars(m_display,"The display shows tasks with a UTGID",NORMAL,++line,10,1);
       else if ( m_flag == 1 )
-	::scrc_put_chars(m_display,"The display shows NON-system, NON-UTGID, NON-PVSS tasks",NORMAL,++line,10,1);
+        ::scrc_put_chars(m_display,"The display shows NON-system, NON-UTGID, NON-PVSS tasks",NORMAL,++line,10,1);
       else if ( m_flag == 2 )
-	::scrc_put_chars(m_display,"The display shows SYSTEM tasks",NORMAL,++line,10,1);
+        ::scrc_put_chars(m_display,"The display shows SYSTEM tasks",NORMAL,++line,10,1);
       else if ( m_flag == 3 )
-	::scrc_put_chars(m_display,"The display shows PVSS tasks",NORMAL,++line,10,1);
+        ::scrc_put_chars(m_display,"The display shows PVSS tasks",NORMAL,++line,10,1);
       else if ( m_flag == 4 )
-	::scrc_put_chars(m_display,"The display shows DRIVER tasks",NORMAL,++line,10,1);
+        ::scrc_put_chars(m_display,"The display shows DRIVER tasks",NORMAL,++line,10,1);
       ::scrc_put_chars(m_display,"Type 'P' or Mouse-Left-Double-Click to close the window",NORMAL,++line,10,1);
 
       ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s %s",
-		"UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
+                    "UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
-	const Process& p = *ip;
-	switch(m_flag) {
-	case 0:
-	  if ( ::strncmp(p.utgid,"N/A",3)==0 ) continue;
-	  break;
-	case 1:  // Fall-through option if nothing else catches....
-	  if ( ::strncmp(p.utgid,"N/A",3)!=0 ) continue;
-	  if ( is_pvss_task(p.cmd) ) continue;
-	  if ( is_sys_task(p.cmd) ) continue;
-	  if ( is_driver(p.cmd) ) continue;
-	  break;
-	case 2:
-	  if ( !is_sys_task(p.cmd) ) continue;
-	  break;
-	case 3:
-	  if ( !is_pvss_task(p.cmd) ) continue;
-	  break;
-	case 4:
-	  if ( !is_driver(p.cmd) ) continue;
-	  break;
-	default:
-	  break;
-	}
-	t1 = p.start;
-	::strftime(tmb,sizeof(tmb),"%b %d %H:%M",::localtime(&t1));
-	state = p.state == 0 ? '?' : p.state;
-	if ( ::strncmp(p.utgid,"N/A",3)==0 ) {
-	  ::strncpy(text,p.cmd,sizeof(text));
-	  text[27] = 0;
-	  text[26]=text[25]=text[24]='.';
-	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
-		    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
-	}
-	else {
-	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
-		    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
-	}
-	::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
+        const Process& p = *ip;
+        switch(m_flag) {
+        case 0:
+          if ( ::strncmp(p.utgid,"N/A",3)==0 ) continue;
+          break;
+        case 1:  // Fall-through option if nothing else catches....
+          if ( ::strncmp(p.utgid,"N/A",3)!=0 ) continue;
+          if ( is_pvss_task(p.cmd) ) continue;
+          if ( is_sys_task(p.cmd) ) continue;
+          if ( is_driver(p.cmd) ) continue;
+          break;
+        case 2:
+          if ( !is_sys_task(p.cmd) ) continue;
+          break;
+        case 3:
+          if ( !is_pvss_task(p.cmd) ) continue;
+          break;
+        case 4:
+          if ( !is_driver(p.cmd) ) continue;
+          break;
+        default:
+          break;
+        }
+        t1 = p.start;
+        ::strftime(tmb,sizeof(tmb),"%b %d %H:%M",::localtime(&t1));
+        state = p.state == 0 ? '?' : p.state;
+        if ( ::strncmp(p.utgid,"N/A",3)==0 ) {
+          ::strncpy(text,p.cmd,sizeof(text));
+          text[27] = 0;
+          text[26]=text[25]=text[24]='.';
+          ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
+                    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
+        }
+        else {
+          ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d %s",
+                    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
+        }
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
       }
       ::memset(txt,' ',m_display->cols);
       txt[m_display->cols-1]=0;
       while(line<m_display->rows)
-	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
       return;
     }
   }

@@ -96,15 +96,15 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
     for(_Node::const_iterator ni=n.begin();ni!=n.end();++ni) {
       const vector<float>& v = (*ni).second;
       if ( (*ni).first == "Avg" ) {
-	::sprintf(txt,"%5.1f%5.1f%6.1f%6.1f%7.2f ",v[0], v[1], v[2], v[3], v[4]);
-	cpu[(*i).first] += txt;
-	::sprintf(ctxt," %9s %-30s","CPU [%]:","  User Sys  Nice  Idle IOwait ");
+        ::sprintf(txt,"%5.1f%5.1f%6.1f%6.1f%7.2f ",v[0], v[1], v[2], v[3], v[4]);
+        cpu[(*i).first] += txt;
+        ::sprintf(ctxt," %9s %-30s","CPU [%]:","  User Sys  Nice  Idle IOwait ");
       }
       else {
-	::sprintf(txt,"%4.0f",v[0]+v[1]+v[2]);
-	cpu[(*i).first] += txt;
-	::sprintf(txt,"%4d",++numCore);
-	::strcat(ctxt,txt);
+        ::sprintf(txt,"%4.0f",v[0]+v[1]+v[2]);
+        cpu[(*i).first] += txt;
+        ::sprintf(txt,"%4d",++numCore);
+        ::strcat(ctxt,txt);
       }
     }
   }
@@ -145,12 +145,12 @@ void FarmStatClusterDisplay::update(const void* cl_data) {
     ::scrc_put_chars(m_display,txt,YELLOW|MAGENTA,++line,2,1);
     for(map<string,string>::const_iterator i=mbm.begin(); i!=mbm.end();++i) {
       if ( (*i).second.length() > 2 ) {
-	::sprintf(txt," %-8s: %-s",(*i).first.c_str(),(*i).second.c_str());
-	::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
+        ::sprintf(txt," %-8s: %-s",(*i).first.c_str(),(*i).second.c_str());
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
       }
       else {
-	::sprintf(txt," %-8s: %-s",(*i).first.c_str()," --- No MBM buffers present ---");
-	::scrc_put_chars(m_display,txt,BOLD,++line,2,1);
+        ::sprintf(txt," %-8s: %-s",(*i).first.c_str()," --- No MBM buffers present ---");
+        ::scrc_put_chars(m_display,txt,BOLD,++line,2,1);
       }
     }
   }

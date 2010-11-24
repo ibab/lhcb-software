@@ -70,12 +70,12 @@ namespace ROMon {
     {  return 0 != a && a->code == m_a.code && a->node == m_a.node && a->description == m_a.description;        }
     bool find(const vector<Alarm*>& b) const {
       for(vector<Alarm*>::const_iterator ib=b.begin(); ib!=b.end();++ib)
-	if ( this->operator()(*ib) ) return true;
+        if ( this->operator()(*ib) ) return true;
       return false;
     }
     bool find(const vector<Alarm>& b) const {
       for(vector<Alarm>::const_iterator ib=b.begin(); ib!=b.end();++ib)
-	if ( this->operator()(&(*ib)) ) return true;
+        if ( this->operator()(&(*ib)) ) return true;
       return false;
     }
   };
@@ -338,7 +338,7 @@ void InternalMonitor::setTimeoutError() {
   auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
   setAlarm(alarms->second,m_name,ERR_NO_UPDATES,time(0));
   log("DEBUG") << "Update info is " << int(time(0)-m_lastUpdate) << " seconds old." 
-	       << " Maximum is " << int(3*m_snapshotDiff) << " seconds " << endl;
+               << " Maximum is " << int(3*m_snapshotDiff) << " seconds " << endl;
   m_lastUpdate = time(0);
   m_parent->removeAlarmsBySubfarm(m_name);
   m_parent->updateAlarms(alarms->first, alarms->second);
@@ -436,7 +436,7 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
     ::sprintf(txt,"HLT Farm display of all known subfarms with the name '%s'",m_match.c_str());
   else
     ::sprintf(txt,"HLT Farm display of partition %s ",m_name.c_str());
-  m_time = time(0);
+  m_time = (int)::time(0);
   m_title = txt;
   log("INFO") << txt << endl;
   if ( xml )
@@ -545,8 +545,8 @@ void FarmMonitor::removeAlarmsBySubfarm(const std::string& subfarm_name) {
     TypeAlarms& a = (*p).second;
     for(size_t k=0; k<a.size(); ++k) {
       if ( a[k]->subfarm == subfarm_name ) {
-	a.erase(a.begin()+k);
-	--k;
+        a.erase(a.begin()+k);
+        --k;
       }
     }
   }
@@ -559,7 +559,7 @@ void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
     for(Alarms::iterator i=alarms.begin(); i!=alarms.end(); ++i)   {
       TypeAlarms& a = m_allAlarms[(*i).code];
       if ( !FindAlarm(*i).find(a) )
-	a.push_back(new Alarm(*i));
+        a.push_back(new Alarm(*i));
     }
   }
   // Have to do the reverse as well:
@@ -570,16 +570,16 @@ void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
       Alarm& alm = *a[k];
       // Only clear alarms which origine from the same subfarm....
       if ( canHaveAlarms ) {
-	if ( alm.subfarm == subfarm ) {
-	  if ( !FindAlarm(alm).find(alarms) ) {
-	    a.erase(a.begin()+k);
-	    --k;
-	  }
-	}
+        if ( alm.subfarm == subfarm ) {
+          if ( !FindAlarm(alm).find(alarms) ) {
+            a.erase(a.begin()+k);
+            --k;
+          }
+        }
       }
       else {
-	a.erase(a.begin()+k);
-	--k;
+        a.erase(a.begin()+k);
+        --k;
       }
     }
   }
@@ -597,10 +597,10 @@ void FarmMonitor::publishRegularAlarms(AlarmsByType& alms) {
     const TypeAlarms& b = (*i).second;
     for(TypeAlarms::const_iterator j=b.begin();j!=b.end();++j) {
       if ( !FindAlarm(**j).find(a) )  {
-	Alarm* alm = new Alarm(**j);
-	a.push_back(alm);
-	newAlarms[alm->code].push_back(alm);
-	//cout << "Adding:   " << *alm << " size:" << m_activeAlarms[alm->code].size() << endl;
+        Alarm* alm = new Alarm(**j);
+        a.push_back(alm);
+        newAlarms[alm->code].push_back(alm);
+        //cout << "Adding:   " << *alm << " size:" << m_activeAlarms[alm->code].size() << endl;
       }
     }
   }
@@ -612,10 +612,10 @@ void FarmMonitor::publishRegularAlarms(AlarmsByType& alms) {
       AlarmsByType::const_iterator q=alms.find(alm.code);
       bool found = (q != alms.end()) && FindAlarm(alm).find((*q).second);
       if ( !found ) {
-	clrAlarms[alm.code].push_back(&alm);
-	//cout << "Clearing: " << alm << " size:" << m_activeAlarms[alm.code].size() << endl;
-	a.erase(a.begin()+k);
-	--k;
+        clrAlarms[alm.code].push_back(&alm);
+        //cout << "Clearing: " << alm << " size:" << m_activeAlarms[alm.code].size() << endl;
+        a.erase(a.begin()+k);
+        --k;
       }
     }
   }
@@ -655,22 +655,22 @@ void FarmMonitor::getTypeAlarms(AlarmsByType& alms, const AlarmsByType& alarms) 
     const TypeAlarms& a = (*p).second;
     if ( a.size() < 2 ) {
       for(size_t i=0; i<a.size();++i) {
-	Alarm* alm = new Alarm(*a[i]);
-	alms[a[i]->code].push_back(alm);
+        Alarm* alm = new Alarm(*a[i]);
+        alms[a[i]->code].push_back(alm);
       }
     }
     else {
       Alarm* alm = new Alarm(*a[0]);
       alm->description = "";
       for(size_t i=0; i<a.size();++i) {
-	if ( a[i]->description.length() > 0 ) {
-	  alm->description += a[i]->description; 
-	  if ( alm->description.length() >= 128 ) {
-	    alm->description += "...";
-	    break;
-	  }
-	  alm->description += " ";
-	}
+        if ( a[i]->description.length() > 0 ) {
+          alm->description += a[i]->description; 
+          if ( alm->description.length() >= 128 ) {
+            alm->description += "...";
+            break;
+          }
+          alm->description += " ";
+        }
       }
       // Special traetment subfarm alarms: tweak node name to subfarm name
       if ( g_typ == 2 ) alm->node = a[0]->subfarm;
@@ -685,34 +685,34 @@ void FarmMonitor::getSourceAlarms(AlarmsByType& alms, const AlarmsBySource& alar
     const AlarmsByType& abt = n.second;
     if ( abt.size() > 0 ) {
       for(AlarmsByType::const_iterator p=abt.begin(); p!=abt.end(); ++p)  {
-	const TypeAlarms& a = (*p).second;
-	if ( a.size() > 0 ) {
-	  Alarm* alm = 0;
-	  TypeAlarms& b = alms[(*p).first];
-	  if ( b.size()==0 )   {
-	    alm = new Alarm(*a[0]);
-	    alm->node = (*q).first;
-	    alm->subfarm = (*q).first;
-	    alm->description = "";
-	    b.push_back(alm);
-	  }
-	  else {
-	    alm = b[0];
-	  }
-	  if ( alm->description.length() < 128 ) {
-	    for(size_t i=0; i<a.size();++i) {
-	      if ( alm->description.length() >= 128 ) {
-		alm->description += "...";
-		break;
-	      }
-	      else if ( a[i]->description.length() > 0 ) {
-		alm->description += a[i]->description; 
-	      }
-	      alm->description += " ";	      
-	    }
-	  }
-	  alms[alm->code].push_back(alm);
-	}
+        const TypeAlarms& a = (*p).second;
+        if ( a.size() > 0 ) {
+          Alarm* alm = 0;
+          TypeAlarms& b = alms[(*p).first];
+          if ( b.size()==0 )   {
+            alm = new Alarm(*a[0]);
+            alm->node = (*q).first;
+            alm->subfarm = (*q).first;
+            alm->description = "";
+            b.push_back(alm);
+          }
+          else {
+            alm = b[0];
+          }
+          if ( alm->description.length() < 128 ) {
+            for(size_t i=0; i<a.size();++i) {
+              if ( alm->description.length() >= 128 ) {
+                alm->description += "...";
+                break;
+              }
+              else if ( a[i]->description.length() > 0 ) {
+                alm->description += a[i]->description; 
+              }
+              alm->description += " ";              
+            }
+          }
+          alms[alm->code].push_back(alm);
+        }
       }
     }
   }
@@ -751,8 +751,8 @@ void FarmMonitor::publishAlarms() {
     for(j=nodeAlarms.begin(), i=0; i<len; ++i, ++j) {
       getTypeAlarms(alms[i],(*j).second.second);
       for(AlarmsByType::iterator k=alms[i].begin();k!=alms[i].end();++k) {
-	TypeAlarms& a = all[(*k).first];
-	a.insert(a.end(),(*k).second.begin(),(*k).second.end());
+        TypeAlarms& a = all[(*k).first];
+        a.insert(a.end(),(*k).second.begin(),(*k).second.end());
       }
     }
     publishRegularAlarms(all);
@@ -769,8 +769,8 @@ void FarmMonitor::publishAlarms() {
     for(j=subfarmAlarms.begin(), i=0; i<len; ++i, ++j) {
       getTypeAlarms(alms[i],(*j).second.second);
       for(AlarmsByType::iterator k=alms[i].begin();k!=alms[i].end();++k) {
-	TypeAlarms& a = all[(*k).first];
-	a.insert(a.end(),(*k).second.begin(),(*k).second.end());
+        TypeAlarms& a = all[(*k).first];
+        a.insert(a.end(),(*k).second.begin(),(*k).second.end());
       }
     }
     publishRegularAlarms(all);
@@ -797,7 +797,7 @@ void FarmMonitor::update(const void* address) {
     if ( idx != string::npos && idq == 0 ) {
       string f = svc.substr(1,idx-1);
       if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	IocSensor::instance().send(this,CMD_ADD,new string(f));
+        IocSensor::instance().send(this,CMD_ADD,new string(f));
       }
     }
     break;
@@ -812,23 +812,23 @@ void FarmMonitor::update(const void* address) {
       char *at, *p = msg, *last = msg;
       auto_ptr<Farms> farms(new Farms);
       while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	last = strchr(at,'|');
-	if ( last ) *last = 0;
-	getServiceNode(p,svc,node);
-	idx = svc.find("/ROpublish");
-	idq = svc.find("/hlt");
-	if ( idq == string::npos ) idq = svc.find("/mona");
-	if ( idq == string::npos ) idq = svc.find("/store");
-	if ( idx != string::npos && idq == 0 ) {
-	  string f = svc.substr(1,idx-1);
-	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	    farms->push_back(f);
-	  }
-	}
-	p = last+1;
+        last = strchr(at,'|');
+        if ( last ) *last = 0;
+        getServiceNode(p,svc,node);
+        idx = svc.find("/ROpublish");
+        idq = svc.find("/hlt");
+        if ( idq == string::npos ) idq = svc.find("/mona");
+        if ( idq == string::npos ) idq = svc.find("/store");
+        if ( idx != string::npos && idq == 0 ) {
+          string f = svc.substr(1,idx-1);
+          if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
+            farms->push_back(f);
+          }
+        }
+        p = last+1;
       }
       if ( !farms->empty() )
-	IocSensor::instance().send(this,CMD_CONNECT,farms.release());
+        IocSensor::instance().send(this,CMD_CONNECT,farms.release());
     }
     break;
   }
@@ -859,10 +859,10 @@ void FarmMonitor::handle(const Event& ev) {
       m_runState = ev.iocData<long>();
       /*
       if ( m_runState == 0 || m_runState == 1 ) {
-	AlarmInfo alms;
-	updateAlarms(alms.first, alms.second);
-	IocSensor::instance().send(this,int(CMD_UPDATE),this);
-	publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
+        AlarmInfo alms;
+        updateAlarms(alms.first, alms.second);
+        IocSensor::instance().send(this,int(CMD_UPDATE),this);
+        publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
       }
       */
       log("INFO") << "Run State:" << m_runState << endl;
@@ -874,7 +874,7 @@ void FarmMonitor::handle(const Event& ev) {
 
     case CMD_CLEAR:
       log("INFO") << "Received CLEARALL request....." << endl;
-      m_time = ::time(0);
+      m_time = (int)::time(0);
       m_activeAlarms.clear();
       m_allAlarms.clear();
       publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
@@ -886,15 +886,15 @@ void FarmMonitor::handle(const Event& ev) {
     case CMD_UPDATE:
       publishAlarms();
       //log("INFO") << "Farm events:" << m_numEvent << endl;
-      m_time = ::time(0);
+      m_time = (int)::time(0);
       ::dis_update_service(m_hartBeatID);
       break;
 
     case CMD_ADD: {
       auto_ptr<string> val(ev.iocPtr<string>());
       if ( find(m_farms.begin(),m_farms.end(),*val.get()) == m_farms.end() ) {
-	m_farms.push_back(*ev.iocPtr<string>());
-	connect(m_farms);
+        m_farms.push_back(*ev.iocPtr<string>());
+        connect(m_farms);
       }
       return;
     }
@@ -919,15 +919,15 @@ void FarmMonitor::handle(const Event& ev) {
       m_stateSummary.clear();
       for_each(m_farmMonitors.begin(),m_farmMonitors.end(),_farmCount(m_numTask,&InternalMonitor::taskCount));
       if ( now - m_lastUpdate > m_snapshotDiff ) {
-	m_lastUpdate = now;
-	m_lastNumEvt = m_numEvent;
-	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),_farmCount(m_numEvent,&InternalMonitor::evtCount));
+        m_lastUpdate = now;
+        m_lastNumEvt = m_numEvent;
+        for_each(m_farmMonitors.begin(),m_farmMonitors.end(),_farmCount(m_numEvent,&InternalMonitor::evtCount));
       }
       if ( m_numTask > 0 ) {
-	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
-	for_each(m_farmMonitors.begin(),m_farmMonitors.end(),AddStateSummary(m_stateSummary));
-	updateAlarms(alms->first, alms->second);
-	IocSensor::instance().send(this,int(CMD_UPDATE),this);
+        for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
+        for_each(m_farmMonitors.begin(),m_farmMonitors.end(),AddStateSummary(m_stateSummary));
+        updateAlarms(alms->first, alms->second);
+        IocSensor::instance().send(this,int(CMD_UPDATE),this);
       }
       break;
     }
@@ -957,15 +957,15 @@ void FarmMonitor::connect(const vector<string>& farms) {
     k = m_farmMonitors.find(*i);
     if ( k == m_farmMonitors.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(*i,createRecSubfarmMonitor(this,*i)));
+        copy.insert(make_pair(*i,createRecSubfarmMonitor(this,*i)));
       else if ( m_mode == CTRL_MODE )
-	copy.insert(make_pair(*i,createCtrlSubfarmMonitor(this,*i)));
+        copy.insert(make_pair(*i,createCtrlSubfarmMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
-	copy.insert(make_pair(*i,createMonitoringMonitor(this,*i)));
+        copy.insert(make_pair(*i,createMonitoringMonitor(this,*i)));
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
-	copy.insert(make_pair(*i,createStorageMonitor(this,*i)));
+        copy.insert(make_pair(*i,createStorageMonitor(this,*i)));
       else
-	copy.insert(make_pair(*i,createSubfarmMonitor(this,*i)));
+        copy.insert(make_pair(*i,createSubfarmMonitor(this,*i)));
     }
     else {
       copy.insert(*k);

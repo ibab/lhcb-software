@@ -114,15 +114,16 @@ void BootClusterDisplay::update(const void* data) {
   for(_N::const_iterator i=ns.nodes.begin(); i!=ns.nodes.end(); i=ns.nodes.next(i)) {
     const _N::value_type& n = *i;
     int st = n.status, col=NORMAL;
-    if ( n.dhcpReq>0  ) ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&n.dhcpReq));
+    time_t dhcp = n.dhcpReq, mount = n.mountReq, fmc = n.fmcStart;
+    if ( n.dhcpReq>0  ) ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&dhcp));
     else                ::strcpy(text1,"<Unknown>");
-    if ( n.mountReq>0 ) ::strftime(text2,sizeof(text2),"%H:%M:%S",::localtime(&n.mountReq));
+    if ( n.mountReq>0 ) ::strftime(text2,sizeof(text2),"%H:%M:%S",::localtime(&mount));
     else                ::strcpy(text2,"<Unknown>");
-    if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%H:%M:%S",::localtime(&n.fmcStart));
+    if ( n.fmcStart>0 ) ::strftime(text3,sizeof(text3),"%H:%M:%S",::localtime(&fmc));
     else                ::strcpy(text3,"<Unknown>");
     ::sprintf(txt,"  %-10s %4s %5s %4s %4s %4s %4s %4s %4s %4s   %03X %10s%10s%10s",
-	      n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(ETH0_STARTED),_F(ETH1_STARTED),
-	      _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),_F(TASKMAN_OK),st,text1,text2,text3);
+              n.name,_F(DHCP_REQUESTED),_F(MOUNT_REQUESTED),_F(CPU_STARTED),_F(ETH0_STARTED),_F(ETH1_STARTED),
+              _F(PCI_STARTED),_F(TCP_STARTED),_F(FMC_STARTED),_F(TASKMAN_OK),st,text1,text2,text3);
     if      ( 0 != (st&BootNodeStatus::TASKMAN_OK)      ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::TCP_STARTED)     ) col = GREEN|BOLD;
@@ -141,11 +142,11 @@ void BootClusterDisplay::update(const void* data) {
       strcat(txt," --> Boot in progress.");
     else if ( (col&(GREEN+INVERSE)) == (GREEN+INVERSE)) 
       strcat(txt," --> Booted OK.");
-    else if ( abs(now-n.dhcpReq)<MAX_BOOT_TIME && (col&GREEN) == GREEN )
+    else if ( abs(long(now-dhcp))<MAX_BOOT_TIME && (col&GREEN) == GREEN )
       strcat(txt," --> Nearly Booted.");
-    else if ( abs(now-n.dhcpReq)>MAX_BOOT_TIME && 
-	      0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
-	      0 == (st&BootNodeStatus::FMC_STARTED) ) {
+    else if ( abs(long(now-dhcp))>MAX_BOOT_TIME && 
+              0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
+              0 == (st&BootNodeStatus::FMC_STARTED) ) {
       strcat(txt," --> Something is WRONG.");
       col = RED|BOLD|FLASH;
     }

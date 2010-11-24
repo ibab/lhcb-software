@@ -136,27 +136,27 @@ namespace {
     if ( (q=::strchr(data,':')) && (p=::strchr(data,'(')) )  {
       *q = 0;
       if ( *(p+1) != ')' )  {
-	for(node=++p,node_end=node+1; node && *node == '[' && (q=::strchr(node,':')) && (node_end=::strchr(++node,']')); node=::strchr(node_end+1,'[') ) {
-	  *node_end = *q = 0;
-	  map<string,vector<T> >& node_info = cnt[node];
-	  for(; *++q == '{' && (e=::strchr(q,'}')) && (q=strchr(sub_item=++q,':')); q=e ) {
-	    *e = *(c=q) = 0;
-	    vector<T>& vals = node_info[sub_item];
-	    while( (c=::strchr(p=++c,'#')) )  {
-	      *c=0; vals.push_back(_cnvItem(p,(T*)0));
-	    }
-	    vals.push_back(_cnvItem(p,(T*)0));
-	    q = e;
-	  }
-	  //cout << endl;
-	}
+        for(node=++p,node_end=node+1; node && *node == '[' && (q=::strchr(node,':')) && (node_end=::strchr(++node,']')); node=::strchr(node_end+1,'[') ) {
+          *node_end = *q = 0;
+          map<string,vector<T> >& node_info = cnt[node];
+          for(; *++q == '{' && (e=::strchr(q,'}')) && (q=strchr(sub_item=++q,':')); q=e ) {
+            *e = *(c=q) = 0;
+            vector<T>& vals = node_info[sub_item];
+            while( (c=::strchr(p=++c,'#')) )  {
+              *c=0; vals.push_back(_cnvItem(p,(T*)0));
+            }
+            vals.push_back(_cnvItem(p,(T*)0));
+            q = e;
+          }
+          //cout << endl;
+        }
       }
     }
   }
     
   void help() {
     printf("  romon_farmstat_display -option [-option]\n"
-	   "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays\n");
+           "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays\n");
   }
 
   struct FarmStatLineByPosition {
@@ -499,22 +499,22 @@ void FarmStatDisplay::handle(const Event& ev) {
       break;
     case CMD_SHOWSUBFARM:
       if ( !m_helpDisplay.get() ) {
-	m_posCursor = (long)ev.data;
-	i= find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
-	if ( i != m_clusters.end() )  showClusterWindow((*i).second);
+        m_posCursor = (long)ev.data;
+        i= find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
+        if ( i != m_clusters.end() )  showClusterWindow((*i).second);
       }
       break;
     case CMD_POSCURSOR:
       if ( !m_helpDisplay.get() ) {
-	m_posCursor = (long)ev.data;
-	i = find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
-	if ( i != m_clusters.end() ) {
-	  FarmStatClusterLine* line = (*i).second;
-	  DisplayUpdate update(this);
-	  DimLock dim_lock;
-	  display(line);
-	  set_cursor(line);
-	}
+        m_posCursor = (long)ev.data;
+        i = find_if(m_clusters.begin(),m_clusters.end(),FarmStatLineByPosition(m_posCursor));
+        if ( i != m_clusters.end() ) {
+          FarmStatClusterLine* line = (*i).second;
+          DisplayUpdate update(this);
+          DimLock dim_lock;
+          display(line);
+          set_cursor(line);
+        }
       }
       break;
     case CMD_DELETE:
@@ -540,44 +540,44 @@ void FarmStatDisplay::update(const void* address) {
     if ( *(int*)msg != *(int*)"DEAD" )  {
       auto_ptr<_SETV> nodes(new _SETV);
       while ( last != 0 && at != 0 )  {
-	last = ::strchr(at,'|');
-	if ( last ) *last = 0;
-	if ( strstr(at,"/MBM") != 0 || ::strstr(at,"/CPU") != 0 ) {
-	  node = strchr(at+1,'/');
-	  p = strchr(node+1,'/');
-	  if ( p ) *p = 0;
-	  nodes->insert(node+1);
-	  //break; // TO REMOVE!!
-	}
-	at = strchr(last+1,'/');
+        last = ::strchr(at,'|');
+        if ( last ) *last = 0;
+        if ( strstr(at,"/MBM") != 0 || ::strstr(at,"/CPU") != 0 ) {
+          node = strchr(at+1,'/');
+          p = strchr(node+1,'/');
+          if ( p ) *p = 0;
+          nodes->insert(node+1);
+          //break; // TO REMOVE!!
+        }
+        at = strchr(last+1,'/');
       }
       if ( !nodes->empty() ) {
-	Clusters::iterator j;
-	FarmStatClusterLine* l;
-	Clusters copy = m_clusters;
-	m_clusters.clear();
-	m_posCursor = STATLINE_FIRSTPOS;
-	for(_SETV::const_iterator i=nodes->begin(); i!=nodes->end(); ++i) {
-	  const string& n = *i;
-	  if ( (j=copy.find(n)) == copy.end() ) {
-	    l = new FarmStatClusterLine(this,m_clusters.size()+STATLINE_FIRSTPOS,n);
-	    m_clusters.insert(make_pair(n,l));
-	  }
-	  else {
-	    l = (*j).second;
-	    m_clusters.insert(make_pair(n,(*j).second));
-	    copy.erase(j);
-	  }
-	  if ( !m_currLine )   {
-	    m_currLine = l;
-	    m_posCursor = l->position();
-	  }
-	}
-	for(j=copy.begin(); j != copy.end(); ++j)
-	  delete (*j).second;
-	for_each(m_clusters.begin(),m_clusters.end(),startFarmStatLine);
-	for_each(m_clusters.begin(),m_clusters.end(),DisplayFarmStatLine(this));
-	IocSensor::instance().send(this,CMD_SHOW,(void*)0);
+        Clusters::iterator j;
+        FarmStatClusterLine* l;
+        Clusters copy = m_clusters;
+        m_clusters.clear();
+        m_posCursor = STATLINE_FIRSTPOS;
+        for(_SETV::const_iterator i=nodes->begin(); i!=nodes->end(); ++i) {
+          const string& n = *i;
+          if ( (j=copy.find(n)) == copy.end() ) {
+            l = new FarmStatClusterLine(this,m_clusters.size()+STATLINE_FIRSTPOS,n);
+            m_clusters.insert(make_pair(n,l));
+          }
+          else {
+            l = (*j).second;
+            m_clusters.insert(make_pair(n,(*j).second));
+            copy.erase(j);
+          }
+          if ( !m_currLine )   {
+            m_currLine = l;
+            m_posCursor = l->position();
+          }
+        }
+        for(j=copy.begin(); j != copy.end(); ++j)
+          delete (*j).second;
+        for_each(m_clusters.begin(),m_clusters.end(),startFarmStatLine);
+        for_each(m_clusters.begin(),m_clusters.end(),DisplayFarmStatLine(this));
+        IocSensor::instance().send(this,CMD_SHOW,(void*)0);
       }
     }
   }

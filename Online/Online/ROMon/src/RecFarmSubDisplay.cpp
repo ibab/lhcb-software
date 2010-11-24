@@ -51,6 +51,7 @@ namespace ROMon {
 }
 #include <set>
 #include <limits>
+#include "RTL/strdef.h"
 #include "CPP/IocSensor.h"
 #include "SCR/MouseSensor.h"
 #include "SCR/scr.h"
@@ -206,7 +207,7 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         ++numClients;
-        char* p = ::strchr((*ic).name,'_');
+        const char* p = ::strchr((*ic).name,'_');
         if ( p ) p = ::strchr(++p,'_');
         if ( p ) {
           if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {

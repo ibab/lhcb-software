@@ -434,21 +434,21 @@ const string& NodeTaskMon::updateConnections() {
 #if 0
     for(j=m_connections.begin(); j != m_connections.end(); ++j) {
       if ( force || (*j).second > 0 ) {
-	MethodCall c("ping",Args((*j).first,2,9000));
-	//cout << " ... PING " << (*j).first << " from " << name() << endl;
-	MethodResponse r(Server(name(),8088)(c));
-	//r.print();
-	(*j).second++;
-	if ( !r.hasError() ) {
-	  list<Arg>* l = (list<Arg>*)r.result().data;
-	  if ( l->size() >= 1 ) {
-	    l = (list<Arg>*)(*l->begin()).data.tuple->data;
-	    for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
-	      if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 100% packet loss")==0) 
-		(*j).second = 0;
-	    }
-	  }
-	}
+        MethodCall c("ping",Args((*j).first,2,9000));
+        //cout << " ... PING " << (*j).first << " from " << name() << endl;
+        MethodResponse r(Server(name(),8088)(c));
+        //r.print();
+        (*j).second++;
+        if ( !r.hasError() ) {
+          list<Arg>* l = (list<Arg>*)r.result().data;
+          if ( l->size() >= 1 ) {
+            l = (list<Arg>*)(*l->begin()).data.tuple->data;
+            for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
+              if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 100% packet loss")==0) 
+                (*j).second = 0;
+            }
+          }
+        }
       }
     }
     for(j=m_connections.begin(); j != m_connections.end(); ++j) 
@@ -576,31 +576,31 @@ int SubfarmTaskMon::publish() {
         << "\">" << endl;
 
     { DimLock lock;
-      m_summary->time = ::time(0);
+      m_summary->time = (int)::time(0);
       for(i=m_nodes.begin(), ni=m_summary->nodes.begin(); i!=m_nodes.end(); ++i, ni=m_summary->nodes.next(ni)) {
-	NodeTaskMon* n=(*i).second;
-	n->publish();
-	::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
-	xml << "\t<Node name=\"" << n->name() 
-	    << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
-	    << "\" time=\"" << time_buf
-	    << "\">" << endl;
-	if ( n->state() == NodeTaskMon::ALIVE ) {
-	  xml << n->taskStatus() << endl
-	      << n->connectionStatus() << endl;
-	  (*ni).state = NodeSummary::ALIVE;
-	  (*ni).numBadTasks = n->numBadTasks();
-	  (*ni).numBadConnections = n->numBadConnections();
-	  (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
-	}
-	else {
-	  (*ni).state = NodeSummary::DEAD;
-	  (*ni).status = NodeSummary::BAD;
-	  (*ni).numBadTasks = 1;
-	  (*ni).numBadConnections = 1;
-	}
-	(*ni).time = n->taskUpdate();
-	xml << "\t</Node>\n";
+        NodeTaskMon* n=(*i).second;
+        n->publish();
+        ::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
+        xml << "\t<Node name=\"" << n->name() 
+            << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
+            << "\" time=\"" << time_buf
+            << "\">" << endl;
+        if ( n->state() == NodeTaskMon::ALIVE ) {
+          xml << n->taskStatus() << endl
+              << n->connectionStatus() << endl;
+          (*ni).state = NodeSummary::ALIVE;
+          (*ni).numBadTasks = n->numBadTasks();
+          (*ni).numBadConnections = n->numBadConnections();
+          (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
+        }
+        else {
+          (*ni).state = NodeSummary::DEAD;
+          (*ni).status = NodeSummary::BAD;
+          (*ni).numBadTasks = 1;
+          (*ni).numBadConnections = 1;
+        }
+        (*ni).time = (int)n->taskUpdate();
+        xml << "\t</Node>\n";
       }
       xml << "</Cluster>\n";
       m_data = xml.str();

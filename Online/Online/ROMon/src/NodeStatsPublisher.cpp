@@ -89,7 +89,7 @@ namespace {
     CPUfarm::Nodes& nodes = f.reset()->nodes;
     ro_get_node_name(f.name,sizeof(f.name));
     f.type = CPUfarm::TYPE;
-    f.time = ::time(0);
+    f.time = (int)::time(0);
     CPUset* set_out = nodes.reset();
     for(Clients::const_iterator ic=info.clients().begin(); ic != info.clients().end(); ++ic) {
       NodeStats* ni = (NodeStats*)(*ic).second->data<DSC>()->data;
@@ -110,35 +110,35 @@ namespace {
     const Clients& cl_info = info.clients();
     ro_get_node_name(f.name,sizeof(f.name));
     f.type = ProcFarm::TYPE;
-    f.time = ::time(0);
+    f.time = (int)::time(0);
     Procset* set_out = nodes.reset();
     for(Clients::const_iterator ic = cl_info.begin(); ic != cl_info.end(); ++ic) {
       NodeStats* ni = (NodeStats*)(*ic).second->data<DSC>()->data;
       if ( ni ) {
-	Procset*   set_in = ni->procs();
-	if ( flag ) {
-	  Procset::Processes::iterator p_in=(*set_in).processes.begin();
-	  Procset::Processes::iterator p_out=(*set_out).processes.reset();
-	
-	  if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
-	  ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
-	  (*set_out).name[sizeof((*set_out).name)-1] = 0;
-	  (*set_out).time    = (*set_in).time;
-	  (*set_out).millitm = (*set_in).millitm;
-	  for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
-	    if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
-	    //if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 || ::strncmp((*p_in).cmd,"PVSS00",6)==0 ) {
-	    if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
-	      ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
-	      p_out = (*set_out).processes.add(p_out);
-	    }
-	  }
-	}
-	else {  // Copy all processes in one big block....
-	  if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
-	  ::memcpy(&(*set_out),&(*set_in),set_in->length());
-	}
-	set_out = nodes.add(set_out);
+        Procset*   set_in = ni->procs();
+        if ( flag ) {
+          Procset::Processes::iterator p_in=(*set_in).processes.begin();
+          Procset::Processes::iterator p_out=(*set_out).processes.reset();
+        
+          if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
+          ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
+          (*set_out).name[sizeof((*set_out).name)-1] = 0;
+          (*set_out).time    = (*set_in).time;
+          (*set_out).millitm = (*set_in).millitm;
+          for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
+            if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
+            //if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 || ::strncmp((*p_in).cmd,"PVSS00",6)==0 ) {
+            if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
+              ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
+              p_out = (*set_out).processes.add(p_out);
+            }
+          }
+        }
+        else {  // Copy all processes in one big block....
+          if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
+          ::memcpy(&(*set_out),&(*set_in),set_in->length());
+        }
+        set_out = nodes.add(set_out);
       }
     }
     f.fixup();
@@ -217,12 +217,12 @@ NodeStatsPublisher::~NodeStatsPublisher() {
 /// Help printout in case of -h /? or wrong arguments
 void NodeStatsPublisher::help() {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_syspublish -opt [-opt]\n"
-		   "             -from=<string>         Node which offers the data service(s)\n"
-		   "             -to=<string>           Node to publish the data to.\n"
-		   "             -verbose               Switch to verbose mode.\n"
-		   "             -match=<string>        String to match service names.\n"
-		   "             -publish=<string>      Service name to publish results.\n"
-		   );
+                   "             -from=<string>         Node which offers the data service(s)\n"
+                   "             -to=<string>           Node to publish the data to.\n"
+                   "             -verbose               Switch to verbose mode.\n"
+                   "             -match=<string>        String to match service names.\n"
+                   "             -publish=<string>      Service name to publish results.\n"
+                   );
 }
 
 /// Start monitoring activity

@@ -187,29 +187,29 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const char* bnam = (*ib).name;
       if ( ::strstr(bnam,m_partition.c_str()) != 0 ) {
-	int idx = -1;
-	if ( relay && evt_buff == bnam )
-	  idx = 0;
-	else if ( evt_buff == bnam )
-	  idx = 1;
-	else if ( out_buff == bnam )
-	  idx = 2;
-	if ( idx >= 0 ) {
-	  const MBMBuffer::Control& ctrl = (*ib).ctrl;
-	  int ncl = (*ib).clients.size();
-	  numClients += ncl;
-	  ++numBuffs;
-	  min_prod[idx] = min(min_prod[idx],ctrl.tot_produced);
-	  tot_prod[idx] = ctrl.tot_produced;
-	  num_cl[idx]   = ncl;
-	  num_sl[idx]   = ctrl.p_emax - ctrl.i_events;
-	  fspace[idx]   = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
-	  fslots[idx]   = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-	  if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
-	    bad_nodes.insert((*n).name);
-	  }
-	  inuse = true;
-	}
+        int idx = -1;
+        if ( relay && evt_buff == bnam )
+          idx = 0;
+        else if ( evt_buff == bnam )
+          idx = 1;
+        else if ( out_buff == bnam )
+          idx = 2;
+        if ( idx >= 0 ) {
+          const MBMBuffer::Control& ctrl = (*ib).ctrl;
+          int ncl = (*ib).clients.size();
+          numClients += ncl;
+          ++numBuffs;
+          min_prod[idx] = min(min_prod[idx],ctrl.tot_produced);
+          tot_prod[idx] = ctrl.tot_produced;
+          num_cl[idx]   = ncl;
+          num_sl[idx]   = ctrl.p_emax - ctrl.i_events;
+          fspace[idx]   = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
+          fslots[idx]   = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+          if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
+            bad_nodes.insert((*n).name);
+          }
+          inuse = true;
+        }
       }
     }
   }
@@ -293,8 +293,8 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
     ::sprintf(txt,"%-7s%9s%4s%5s%9s%4s%4s","","Events","Cl","Sl","Output","Cl","Sl");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
     ::sprintf(txt,"%9d%4d%5d%9d%4d%4d",
-	      tot_prod[1],num_cl[1],num_sl[1],
-	      tot_prod[2],num_cl[2],num_sl[2]);
+              tot_prod[1],num_cl[1],num_sl[1],
+              tot_prod[2],num_cl[2],num_sl[2]);
   }
   else if ( tot_prod[1] != 0 ) {
     ::sprintf(txt,"%-7s%9s%4s%5s%17s","","Events","Cl","Sl","");

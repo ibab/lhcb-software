@@ -149,8 +149,8 @@ void InternalDisplay::handle(const Event& ev)    {
       Pasteboard* pb = pasteboard();
       unsigned char* ptr = (unsigned char*)ev.data;
       if ( pb ) {
-	::scrc_cursor_off(pb);
-	::scrc_begin_pasteboard_update (pb);
+        ::scrc_cursor_off(pb);
+        ::scrc_begin_pasteboard_update (pb);
       }
       update(ptr + sizeof(int), *(int*)ptr);
       if ( pb ) ::scrc_end_pasteboard_update(pb);

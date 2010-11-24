@@ -54,6 +54,7 @@ namespace ROMon {
 }
 #include <set>
 #include <limits>
+#include "RTL/strdef.h"
 #include "CPP/IocSensor.h"
 #include "SCR/MouseSensor.h"
 #include "SCR/scr.h"
@@ -70,7 +71,7 @@ using namespace std;
 
 namespace {
   const char* _procNam(const char* nam) {
-    char* p;
+    const char* p;
     if (0 != ::strstr(nam,"MEPRx") ) return nam;
     p = ::strchr(nam,'_');
     if ( 0 != p ) return ++p;

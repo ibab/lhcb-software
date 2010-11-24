@@ -157,7 +157,7 @@ namespace {
 
   void help() {
     printf("  romon_boot_display -option [-option]\n"
-	   "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays\n");
+           "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays\n");
   }
 
   struct BootLineByPosition {
@@ -321,9 +321,9 @@ void BootDisplay::display(const BootClusterLine* line) {
     int col = RED|INVERSE;
     int st  = (*ci).status;
     const char* n = (*ci).name;
-    if (      abs(now-(*ci).dhcpReq)>MAX_BOOT_TIME && 
-	      0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
-	      0 == (st&BootNodeStatus::FMC_STARTED)     ) col = RED|INVERSE|BOLD|FLASH;
+    if (      abs(long(now-(*ci).dhcpReq))>MAX_BOOT_TIME && 
+              0 != (st&BootNodeStatus::DHCP_REQUESTED) && 
+              0 == (st&BootNodeStatus::FMC_STARTED)     ) col = RED|INVERSE|BOLD|FLASH;
     else if ( 0 != (st&BootNodeStatus::FMC_STARTED)     ) col = GREEN|INVERSE;
     else if ( 0 != (st&BootNodeStatus::TCP_STARTED)     ) col = GREEN|BOLD;
     else if ( 0 != (st&BootNodeStatus::ETH1_STARTED)    ) col = BLUE|INVERSE|BOLD;
@@ -489,21 +489,21 @@ void BootDisplay::handle(const Event& ev) {
       break;
     case CMD_SHOWSUBFARM:
       if ( !m_helpDisplay.get() ) {
-	m_posCursor = (long)ev.data;
-	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
-	if ( i != m_clusters.end() ) {
-	  showClusterWindow((*i).second);
-	  IocSensor::instance().send(this,CMD_POSCURSOR,m_posCursor);
-	}
+        m_posCursor = (long)ev.data;
+        Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
+        if ( i != m_clusters.end() ) {
+          showClusterWindow((*i).second);
+          IocSensor::instance().send(this,CMD_POSCURSOR,m_posCursor);
+        }
       }
       break;
     case CMD_POSCURSOR:
       if ( !m_helpDisplay.get() ) {
-	Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
-	if ( i != m_clusters.end() ) {
-	  DisplayUpdate update(this);
-	  pos_cursor((*i).second);
-	}
+        Clusters::iterator i=find_if(m_clusters.begin(),m_clusters.end(),BootLineByPosition(m_posCursor));
+        if ( i != m_clusters.end() ) {
+          DisplayUpdate update(this);
+          pos_cursor((*i).second);
+        }
       }
       break;
     case CMD_DELETE:
@@ -528,12 +528,12 @@ void BootDisplay::update(const void* address) {
     for(BootClusterCollection::const_iterator i=c->begin(); i!=c->end(); i=c->next(i)) {
       const char* n = (*i).name;
       if ( m_clusters.find(n) == m_clusters.end() ) {
-	BootClusterLine* l = new BootClusterLine(this,m_posCursor=m_clusters.size()+BOOTLINE_FIRSTPOS,n);
-	m_clusters.insert(make_pair(n,l));
+        BootClusterLine* l = new BootClusterLine(this,m_posCursor=m_clusters.size()+BOOTLINE_FIRSTPOS,n);
+        m_clusters.insert(make_pair(n,l));
       }
     }
     ::sprintf(txt,"Total number of boot clusters:%d %50s",
-	      int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
+              int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
   }
 }

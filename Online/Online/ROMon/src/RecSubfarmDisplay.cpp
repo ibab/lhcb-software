@@ -19,6 +19,7 @@
 
 // Framework include files
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -111,7 +112,7 @@ RecSubfarmDisplay::~RecSubfarmDisplay()  {
 /// Display the node information
 void RecSubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
-  char* p;
+  const char* p;
   const char* fmt = " %-12s%5d %12d%11d%6d%7d %12d%6d%7d %12d";
   int evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, accept_tot=0, cons_tot=0, rcv_tot=0, ntsk_tot=0;
 
@@ -186,7 +187,7 @@ void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
       char b = (*ib).name[0];
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         Clients::const_reference cl = (*ic);
-        char* p = ::strchr(cl.name,'_');
+        const char* p = ::strchr(cl.name,'_');
         if ( p ) p = ::strchr(++p,'_');
         if ( p ) {
           nam = (*n).name;

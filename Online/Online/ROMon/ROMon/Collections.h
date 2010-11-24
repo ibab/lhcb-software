@@ -151,7 +151,7 @@ namespace ROMon {
     for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
       has_nodes = true;
       if ( (*n).time < t.first ) {
-        t.first = (*n).time;
+        t.first  = (int)(*n).time;
         t.second = (*n).millitm;
       }
       else if ( (*n).time == t.first && (*n).millitm < t.second ) {

@@ -53,7 +53,7 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
   if ( ::strncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
     if ( ::strncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
       if ( ::strncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
-	DimLock lock;
+        DimLock lock;
         string nam = svc+"/fsm_status";
         Clients::iterator i=m_clients.find(nam);
         if ( i == m_clients.end() )  {
@@ -62,7 +62,7 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
           ::strncpy(t->name,svc.substr(0,svc.find("/")).c_str(),sizeof(t->name));
           t->name[sizeof(t->name)-1] = 0;
           t->processID   = -1;
-	  t->partitionID = -1;
+          t->partitionID = -1;
           m_clients[nam] = itm;
           itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
           if ( m_verbose ) {

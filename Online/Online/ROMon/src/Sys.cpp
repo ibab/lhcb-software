@@ -36,7 +36,7 @@ using namespace ROMon;
 
 
 namespace {
-#define _PROCESSFILE(len,name)				\
+#define _PROCESSFILE(len,name)                                \
 static const char* fn_process_##name (int pid) {\
   static char txt[len]; \
   sprintf(txt,"/proc/%d/"#name,pid); \
@@ -112,12 +112,12 @@ int EnvironProcess::read(int proc_id) {
       char* tag = ptr;
       char* val = tag+1;
       while(*val != '=')  {
-	++val;
-	if (val >= end) goto Done;
+        ++val;
+        if (val >= end) goto Done;
       }
       if ( *val == '=' ) {
-	*val = 0;
-	env.push_back(make_pair(tag,++val));
+        *val = 0;
+        env.push_back(make_pair(tag,++val));
       }
       ptr = val + ::strlen(val) + 1;
     }
@@ -144,21 +144,21 @@ int UtgidProcess::read(int proc_id) {
     if ( cnt > 0 ) {
       end = buff+cnt;
       while(ptr<end) {
-	char* tag = ptr;
-	char* val = tag+1;
-	while(*val != '=')  {
-	  ++val;
-	  if (val >= end) goto Done;
-	}
-	if ( *val == '=' ) {
-	  *val = 0;
-	  ++val;
-	  if ( ::strcmp(tag,"UTGID")==0 ) {
-	    utgid = val;
-	    break;
-	  }
-	}
-	ptr = val + ::strlen(val) + 1;
+        char* tag = ptr;
+        char* val = tag+1;
+        while(*val != '=')  {
+          ++val;
+          if (val >= end) goto Done;
+        }
+        if ( *val == '=' ) {
+          *val = 0;
+          ++val;
+          if ( ::strcmp(tag,"UTGID")==0 ) {
+            utgid = val;
+            break;
+          }
+        }
+        ptr = val + ::strlen(val) + 1;
       }
     Done:
       delete [] buff;
@@ -539,37 +539,37 @@ int ROMon::read(Procset& procset, size_t max_len) {
           pid = ::atoi(n);
           if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
             try {
-	      int ret = 0;
-	      string uname;
-	      static map<unsigned int,string> unames;
-	      map<unsigned int,string>::const_iterator iu=unames.find(st_buf.st_uid);
-	      if ( iu == unames.end() ) {
-		struct passwd pw, *ppwd = 0;
-		ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
-		if ( 0 == ret ) {
-		  if ( 0 != ppwd ) {
-		    unames[st_buf.st_uid] = uname = ppwd->pw_name;
-		  }
-		  else {
-		    unames[st_buf.st_uid] = uname = "<unknown>";
-		  }
-		}
-		else {
-		  continue;
-		}
-	      }
-	      else {
-		uname = (*iu).second;
-	      }
+              int ret = 0;
+              string uname;
+              static map<unsigned int,string> unames;
+              map<unsigned int,string>::const_iterator iu=unames.find(st_buf.st_uid);
+              if ( iu == unames.end() ) {
+                struct passwd pw, *ppwd = 0;
+                ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
+                if ( 0 == ret ) {
+                  if ( 0 != ppwd ) {
+                    unames[st_buf.st_uid] = uname = ppwd->pw_name;
+                  }
+                  else {
+                    unames[st_buf.st_uid] = uname = "<unknown>";
+                  }
+                }
+                else {
+                  continue;
+                }
+              }
+              else {
+                uname = (*iu).second;
+              }
               if ( 0 == ret && proc.read(pid) && status.read(pid) ) {
                 Process& p = (*pr);
-		utgid.utgid = "";
-		try {
-		  utgid.read(pid);
- 		}
-		catch(...) {
-		  utgid.utgid = "";
-		}
+                utgid.utgid = "";
+                try {
+                  utgid.read(pid);
+                 }
+                catch(...) {
+                  utgid.utgid = "";
+                }
                 if((cnt=SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff))) > 0) {
                   for(ptr = buff+strlen(buff); ptr>buff && *ptr!='/';) --ptr;
                   if ( *ptr=='/' ) ++ptr;
@@ -589,7 +589,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
 
                 // Note: seconds!!!
                 p.cpu     = float(proc.stime+proc.utime)/float(jiffy2second);
-                p.start   = now - int(sys.uptime) + (proc.starttime/jiffy2second);
+                p.start   = int(now) - int(sys.uptime) + (proc.starttime/jiffy2second);
                 p.mem     = 0.0;
                 p.stack   = (float)status.vmStack;
                 p.vsize   = (float)status.vmSize;

@@ -82,36 +82,36 @@ void MessageWindow::update(const void* data) {
     if ( j != a.end() ) {
       const AlarmSum& s = (*j).second;
       if ( ((*j).first&m_level) != 0 ) {
-	int color = NORMAL;
-	if ( s.nodes.size() < 3 ) {
-	  for(size_t k=0; k<s.nodes.size(); ++k) {
-	    const Alarm* al = s.nodes[k];
-	    color = al->color();
-	    ::sprintf(text,"%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
-		      al->message(),al->description.c_str());
-	    ::scrc_put_chars(m_display,text,color,++line,1,1);
-	  }
-	}
-	else  {
-	  const Alarm* al = s.nodes[0];
-	  color = al->color();
-	  ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
-		    al->time().c_str(),al->message());
-	  set<string> opts;
-	  for(size_t k=0; k<s.nodes.size(); ++k) {
-	    const string& item = s.nodes[k]->node;
-	    if ( opts.find(item) == opts.end() ) {
-	      opts.insert(item);
-	      ::strcat(text," ");
-	      ::strcat(text,item.c_str());
-	      if ( k>5 ) {
-		::strcat(text," ..... ");
-		break;
-	      }
-	    }
-	  }
-	  ::scrc_put_chars(m_display,text,color,++line,1,1);
-	}
+        int color = NORMAL;
+        if ( s.nodes.size() < 3 ) {
+          for(size_t k=0; k<s.nodes.size(); ++k) {
+            const Alarm* al = s.nodes[k];
+            color = al->color();
+            ::sprintf(text,"%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
+                      al->message(),al->description.c_str());
+            ::scrc_put_chars(m_display,text,color,++line,1,1);
+          }
+        }
+        else  {
+          const Alarm* al = s.nodes[0];
+          color = al->color();
+          ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
+                    al->time().c_str(),al->message());
+          set<string> opts;
+          for(size_t k=0; k<s.nodes.size(); ++k) {
+            const string& item = s.nodes[k]->node;
+            if ( opts.find(item) == opts.end() ) {
+              opts.insert(item);
+              ::strcat(text," ");
+              ::strcat(text,item.c_str());
+              if ( k>5 ) {
+                ::strcat(text," ..... ");
+                break;
+              }
+            }
+          }
+          ::scrc_put_chars(m_display,text,color,++line,1,1);
+        }
       }
       ++j;
     }

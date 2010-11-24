@@ -41,15 +41,15 @@ PartitionListener::PartitionListener(Interactor* parent, const string& nam, bool
       sf_nam = e->d_name;
       idx = sf_nam.find(".xml");
       if ( idx+4 == sf_nam.length() ) {
-	if ( idx != string::npos && sf_nam.find("TaskInventory") == string::npos ) {
-	  f->push_back(sf_nam.substr(0,idx));
-	}
+        if ( idx != string::npos && sf_nam.find("TaskInventory") == string::npos ) {
+          f->push_back(sf_nam.substr(0,idx));
+        }
       }
     }
     for(i=f->begin(); i != f->end(); ++i) {
       string& s = *i;
       for(size_t j=0; j<s.length(); ++j)
-	s[j] = char(::tolower(s[j]));
+        s[j] = char(::tolower(s[j]));
     }
     IocSensor::instance().send(m_parent,CMD_CONNECT,f.release());
     return;
