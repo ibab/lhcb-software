@@ -30,7 +30,7 @@ extern "C" {
   #define daylight    _daylight
   #define timezone    _timezone
   #define tzname      _tzname
-#if _MSC_VER>=1400
+#if _MSC_VER<1400
   struct timezone {
     int tz_minuteswest;
     int tz_dsttime;
