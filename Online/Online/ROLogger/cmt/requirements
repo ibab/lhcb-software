@@ -15,4 +15,4 @@ library ROLogger *.cpp
 apply_pattern linker_library   library=ROLogger
 
 private
-macro cppdebugflags    "" debug " -D_DEBUG " 
+macro_append cppdebugflags    "" debug " -D_DEBUG " 
