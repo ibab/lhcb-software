@@ -349,6 +349,9 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
 	  else if ( proto == "raw" || proto == "mdf" )  {
             proto = "root";
 	  }
+	  else if ( proto == "root" && file.find(":") == std::string::npos ) { // root is the TRUE protocol
+	    file = specs;
+	  }
           PosixIO *io = getIOModule(proto);
           if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {
             result.ioFuncs    = io;
@@ -412,6 +415,9 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
 	    }
 	  else if ( proto == "raw" || proto == "mdf" )  {
 	    proto = "root";
+	  }
+	  else if ( proto == "root" && file.find(":") == std::string::npos ) { // root is the TRUE protocol
+	    file = specs;
 	  }
 	  PosixIO* io = getIOModule(proto);
 	  if ( io && io->open && io->close && io->write && io->read && io->lseek64 )  {

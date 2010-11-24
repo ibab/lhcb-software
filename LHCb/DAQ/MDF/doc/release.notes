@@ -6,6 +6,15 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r28 2010-11-20 ==============================
+! 2010-09-02 - Markus Frank
+ - Fix bug in accessing the (x)rootd protocol.
+   This should now work properly:
+   "DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/..../aaa.raw?svcClass=xxx' SVC='LHCb::MDFSelector'"
+
+
+
+
 !========================= MDF v3r27 2010-10-04 ==============================
 ! 2010-09-02 - Markus Frank
  - Remove icc compiler warnings
