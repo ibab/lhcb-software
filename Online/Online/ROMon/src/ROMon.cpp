@@ -73,12 +73,12 @@ Nodeset* Nodeset::reset() {
 }
 
 /// Retrieve timestamp of earliest updated node
-Nodeset::TimeStamp Nodeset::firstUpdate() const {
+TimeStamp Nodeset::firstUpdate() const {
   return _firstUpdate(nodes);
 }
 
 /// Retrieve timestamp of most recent updated node
-Nodeset::TimeStamp Nodeset::lastUpdate() const {
+TimeStamp Nodeset::lastUpdate() const {
   return _lastUpdate(nodes);
 }
 

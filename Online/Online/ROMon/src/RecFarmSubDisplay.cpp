@@ -227,7 +227,7 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
     evt_sent = min(evt_sent,node_evt_sent);
   }
   char b1[64];
-  Nodeset::TimeStamp frst=ns.firstUpdate();
+  TimeStamp frst=ns.firstUpdate();
   time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",

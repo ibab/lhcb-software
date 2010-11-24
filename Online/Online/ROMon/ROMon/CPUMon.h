@@ -256,7 +256,6 @@ namespace ROMon {
   PACK_DATA(class) ProcFarm {
   public:
     typedef VarItems<Procset> Nodes;
-    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 5 };
     /// First word: Data type descriptor (MUST always be 5)
     int   type;

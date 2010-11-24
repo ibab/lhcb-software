@@ -239,7 +239,7 @@ void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
 /// Update header information
 void RecSubfarmDisplay::showHeader(const Nodeset& ns)   {
   char b1[64], b2[64];
-  Nodeset::TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
+  TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
   time_t t1 = frst.first, t2 = last.first;
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
