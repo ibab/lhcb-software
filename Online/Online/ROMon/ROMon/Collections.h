@@ -152,10 +152,10 @@ namespace ROMon {
       has_nodes = true;
       if ( (*n).time < t.first ) {
         t.first  = (TimeStamp::first_type)(*n).time;
-        t.second = (*n).millitm;
+        t.second = (TimeStamp::second_type)(*n).millitm;
       }
       else if ( (*n).time == t.first && (*n).millitm < t.second ) {
-        t.second = (*n).millitm;
+        t.second = (TimeStamp::second_type)(*n).millitm;
       }
     }
     return has_nodes ? t : TimeStamp(0,0);
@@ -167,11 +167,11 @@ namespace ROMon {
     for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
       has_nodes = true;
       if ( (*n).time > t.first ) {
-        t.first = (*n).time;
-        t.second = (*n).millitm;
+        t.first  = (TimeStamp::first_type)(*n).time;
+        t.second = (TimeStamp::second_type)(*n).millitm;
       }
       else if ( (*n).time == t.first && (*n).millitm > t.second ) {
-        t.second = (*n).millitm;
+        t.second = (TimeStamp::second_type)(*n).millitm;
       }
     }
     return has_nodes ? t : TimeStamp(0,0);

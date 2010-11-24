@@ -155,7 +155,6 @@ namespace ROMon {
   PACK_DATA(class) CPUfarm {
   public:
     typedef VarItems<CPUset> Nodes;
-    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 4 };
     /// First word: Data type descriptor (MUST always be 4)
     int   type;
