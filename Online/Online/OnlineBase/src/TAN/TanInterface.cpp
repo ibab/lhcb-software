@@ -1,6 +1,7 @@
 #define _TanInterface_C_
 
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 #include "NET/defs.h"
 #include "TAN/TanInterface.h"
 #include "NET/UdpNetworkChannel.h"
@@ -229,8 +230,9 @@ int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
+  char* q;
   int n, s = 0;
-  char *p;
+  const char *p;
   if ( 0 != (p=::strstr(name,"::")) )    {      // DECNET STYLE
     s = 0;
     if (node != 0)  {
@@ -253,8 +255,8 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     if (node != 0) strcpy (node, m_pcHostName);
     if (proc != 0) strcpy (proc, name);
   }
-  for(p=node; p && *p; p++) *p = char(s==1 ? ::tolower(*p) : ::toupper(*p));
-  for(p=proc; p && *p; p++) *p = char(s==1 ? ::tolower(*p) : ::toupper(*p));
+  for(q=node; q && *q; q++) *q = char(s==1 ? ::tolower(*q) : ::toupper(*q));
+  for(q=proc; q && *q; q++) *q = char(s==1 ? ::tolower(*q) : ::toupper(*p));
 }
 // ----------------------------------------------------------------------------
 //  retrieve network address of a task given his name

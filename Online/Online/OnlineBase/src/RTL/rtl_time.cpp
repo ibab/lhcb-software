@@ -41,7 +41,8 @@ int getfilesystemtime(struct timeval *time_Info)  {
   return 0;
 }
 
-int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info)  {  
+#if _MSC_VER<1400
+int gettimeofday(timeval *time_Info, timezone *timezone_Info)  {  
   __int64 timer;
   LARGE_INTEGER li;
   BOOL b;
@@ -118,19 +119,24 @@ int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info)  {
   }
   return 0;
 }
+#else
+
+#endif
 
 // this usleep isnt exactly accurate but should do ok
 void usleep(unsigned int useconds)    {
   struct timeval tnow, tthen;
   if (useconds >= 1000) {
-    Sleep(useconds/1000);
+	::Sleep(useconds/1000);
     useconds = useconds%1000000;
     if ( 10 > useconds ) return;  // Inaccuracy ... forget about it!
   }
-  gettimeofday(&tthen, NULL);
+  getfilesystemtime(&tthen);   /* 100 ns blocks since 01-Jan-1641 */
+  //	gettimeofday(&tthen, NULL);
   tthen.tv_usec += useconds;
   while (1) {
-    gettimeofday(&tnow, NULL);
+    getfilesystemtime(&tnow);   /* 100 ns blocks since 01-Jan-1641 */
+	//    gettimeofday(&tnow, NULL);
     if (tnow.tv_sec >= tthen.tv_sec) {
       return;
     }
