@@ -12,9 +12,6 @@
    This should now work properly:
    "DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/..../aaa.raw?svcClass=xxx' SVC='LHCb::MDFSelector'"
 
-
-
-
 !========================= MDF v3r27 2010-10-04 ==============================
 ! 2010-09-02 - Markus Frank
  - Remove icc compiler warnings
