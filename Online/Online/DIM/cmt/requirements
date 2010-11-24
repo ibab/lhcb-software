@@ -91,7 +91,7 @@ macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused
 # Switch off POSIX warnings for VC9
 macro_append DIM_cflags "" \
 	target-gcc      " -Wextra " \
-	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 "
+	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 " \
 	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
 # local compile options
