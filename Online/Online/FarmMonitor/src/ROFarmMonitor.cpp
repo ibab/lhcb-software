@@ -14,6 +14,7 @@
 #include <iostream>
 #include "GaudiKernel/Timing.h"
 // local
+#include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 
@@ -360,7 +361,7 @@ void ROFarmMonitor::update( )   {
                   printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n", 
                           (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
                 }
-                char* p = strchr((*ic).name,'_');
+                const char* p = strchr((*ic).name,'_');
                 if ( p ) {
                   switch(*(++p)) {
                   case SENDER_TASK:
