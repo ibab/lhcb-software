@@ -11,6 +11,3 @@ use ROLogger      v* Online
 apply_pattern install_more_includes more=OnlineTools
 library OnlineTools *.cpp
 apply_pattern linker_library   library=OnlineTools
-
-private
-macro cppdebugflags    "" debug " -D_DEBUG " 
