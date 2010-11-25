@@ -1,3 +1,8 @@
+2010-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: fix for symbolic links to project directories on Linux
+	* python/LbRelease/Nightlies: directory removed (previous version of LHCb Nightlies system)
+
 2010-11-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: add lock permission on AFS.

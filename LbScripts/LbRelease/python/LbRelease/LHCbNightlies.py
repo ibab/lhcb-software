@@ -181,7 +181,8 @@ class LHCbProjectBuilder(object):
         if not os.path.exists(self.generatePath(self.slot, self.project, 'TAG', self.project.getName())):
             os.makedirs(self.generatePath(self.slot, self.project, 'TAG', self.project.getName().upper()))
             if self.systemType != 'windows':
-                os.symlink(self.project.getName(), self.project.getName().upper())
+                if not os.path.exists(self.project.getName().upper()):
+                    os.symlink(self.project.getName(), self.project.getName().upper())
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
         waitcounter = 0
         while os.path.exists('checkout.working'):
