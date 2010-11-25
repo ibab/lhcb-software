@@ -80,7 +80,7 @@ namespace Kali
       , m_mirror        ( false )
       , m_veto_dm       ( -1 * Gaudi::Units::MeV )
       , m_veto_chi2     ( -1  )
-      , m_pi0CutExp     ( "PT > 200*MeV*(ETA-1) " )
+      , m_pi0CutExp     ( "PT > 200*MeV*(7-ETA)" )
       , m_pi0Cut        ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) )
       , m_spdDigitsTool (  0  )
       , m_ecal          (  0  )
