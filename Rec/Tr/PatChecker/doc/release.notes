@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-11-25 - Olivier Callot
+ - In PrimaryVertexChecker, allow missing containers of tracks or vertices
+
 =========================== PatChecker v3r8 2010-06-21 ======================
 ! 2010-06-10 - V. Gligorov
  - Remove obsolete default HLT track locations. Users must now configure

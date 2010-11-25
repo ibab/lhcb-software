@@ -833,17 +833,13 @@ bool PrimaryVertexChecker::getInputTracks( std::vector<LHCb::Track*>& vecOfTrack
 
   trackLoc = tracksName;  
 
-  LHCb::Tracks* usedtracks;
+  LHCb::Tracks* usedTracks;
 
-  try {
-    usedtracks   = get<LHCb::Tracks>( tracksName );
-  } catch (...) {
-    debug() << " No tracks at " << tracksName << endreq;
-    return false;
-  }
+  usedTracks   = getOrCreate<LHCb::Tracks,LHCb::Tracks>( tracksName );
+  if ( usedTracks->size() == 0 ) return false;
 
   std::vector<LHCb::Track*>::const_iterator itT;
-  for ( itT = usedtracks->begin(); usedtracks->end() != itT; itT++ ) {
+  for ( itT = usedTracks->begin(); usedTracks->end() != itT; itT++ ) {
     LHCb::Track* ptr = (*itT);
     vecOfTracks.push_back(ptr);
   }
@@ -872,12 +868,8 @@ bool PrimaryVertexChecker::getInputVertices( std::vector<LHCb::RecVertex*>& vecO
 
   LHCb::RecVertices* recoVertices;
 
-  try {
-    recoVertices  = get<LHCb::RecVertices>( verticesName );
-  } catch (...) {
-    debug() << " No vertices at " << verticesName << endreq;
-    return false;
-  }
+  recoVertices  = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( verticesName );
+  if ( recoVertices->size() == 0 ) return false;
 
   std::vector<LHCb::RecVertex*>::const_iterator itVer;
   for ( itVer = recoVertices->begin(); recoVertices->end() != itVer; itVer++ ) {
