@@ -221,7 +221,7 @@ void MessageLogger::printHistory(const string& pattern) {
   char text[132];
   int  num=200, match = 0, displayed=0;
   size_t numMsg = num;
-  size_t idq, id1 = pattern.find("#Node:{"), id2 = pattern.find("#Msg:{"), id3 = pattern.find("#Num:{");
+  size_t idq=0, id1=pattern.find("#Node:{"), id2=pattern.find("#Msg:{"), id3=pattern.find("#Num:{");
   string node_pattern = "*", msg_pattern = "*";
   vector<const char*> messages;
 

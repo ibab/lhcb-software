@@ -248,7 +248,7 @@ void FileLogger::handle(const Event& ev) {
     return;
   case CMD_UPDATE_RUNNUMBER: {
     char text[32];
-    ::sprintf(text,"%d",*(int*)(&ev.data));
+    ::sprintf(text,"%ld",ev.iocData<long>());
     newRunNumber(text);
     }
     return;
