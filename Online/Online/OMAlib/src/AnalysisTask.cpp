@@ -208,7 +208,7 @@ long AnalysisTask::checkStatus() {
             " but DIM service is not available"<<endmsg;
     }
     else {
-      if (cond == 1)  status += (long) pow(2,ic);
+      if (cond == 1)   status += (1<<ic); 
       dimfound = true;
     }
   }
