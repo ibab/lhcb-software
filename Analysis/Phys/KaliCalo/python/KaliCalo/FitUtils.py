@@ -274,9 +274,6 @@ def s2b ( histo , r = 2.5 ) :
     #
     return par[0]/(par[3]*(iR-iL+1))
 
-
-    ))
-
 # =============================================================================
 ## bad parameters ? 
 def badParam ( mass  , sigma , num , corr ) :
