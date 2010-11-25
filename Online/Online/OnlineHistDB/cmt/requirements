@@ -28,6 +28,9 @@ macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
 apply_pattern  linker_library library=OnlineHistDB 
 apply_pattern application_path 
 
+macro_append  cppflags     "" \
+	target-vc9 " -wd4996 " \
+	target-vc7 ""
 
 macro_append OnlineHistDB_shlibflags  "" \
   WIN32                              " oci.lib ociw32.lib "
