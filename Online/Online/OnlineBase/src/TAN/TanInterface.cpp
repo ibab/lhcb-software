@@ -256,7 +256,7 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     if (proc != 0) strcpy (proc, name);
   }
   for(q=node; q && *q; q++) *q = char(s==1 ? ::tolower(*q) : ::toupper(*q));
-  for(q=proc; q && *q; q++) *q = char(s==1 ? ::tolower(*q) : ::toupper(*p));
+  for(q=proc; q && *q; q++) *q = char(s==1 ? ::tolower(*q) : ::toupper(*q));
 }
 // ----------------------------------------------------------------------------
 //  retrieve network address of a task given his name
