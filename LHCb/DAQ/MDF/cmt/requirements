@@ -20,7 +20,7 @@ apply_pattern linker_library library=MDFLib
 library MDF ../components/*.cpp -import=DAQEvent -import=ROOT -import=GaudiAlg
 apply_pattern component_library library=MDF
 macro_append  MDF_dependencies  " MDFLib "
+macro_append  MDF_cppflags "" target-vc9 " -wd4996 "
 
 private
 use GaudiSvc v*
-
