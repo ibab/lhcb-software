@@ -96,16 +96,16 @@ class StrippingBs2PhiPhiConf(object):
             if wide == True :
               ps = config['WidePrescale']
 
-    	    print "Cuts for "+name+"Line"
-            print Phi2KK_DC
-            print Phi2KK_CC
-            print Phi2KK_MC
+    	    #print "Cuts for "+name+"Line"
+            #print Phi2KK_DC
+            #print Phi2KK_CC
+            #print Phi2KK_MC
 
-    	    print PhiFilter
-    	    print Bs2PhiPhi_DC
-    	    print Bs2PhiPhi_CC
-    	    print Bs2PhiPhi_MC
-            print "Prescale: ", ps
+    	    #print PhiFilter
+    	    #print Bs2PhiPhi_DC
+    	    #print Bs2PhiPhi_CC
+    	    #print Bs2PhiPhi_MC
+            #print "Prescale: ", ps
 
             Bs2PhiPhiLooseDetachedPhi2KK = CombineParticles(
                             "Bs2PhiPhi_LoosePhi2KK"

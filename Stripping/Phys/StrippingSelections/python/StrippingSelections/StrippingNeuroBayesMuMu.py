@@ -87,7 +87,7 @@ class StrippingNeuroBayesMuMuConf(LHCbConfigurableUser):
         mumuNB.NetworkVersion     = self.getProp ( 'NetworkVersion')
         mumuNB.NetworkCut         = NeuroBayesCut
 
-        print "NeuroBayesStrip %s settings, Expertise %s, cut %lf, mass min %lf, max %lf" %(id, Expertise, NeuroBayesCut, min, max )
+        #print "NeuroBayesStrip %s settings, Expertise %s, cut %lf, mass min %lf, max %lf" %(id, Expertise, NeuroBayesCut, min, max )
 
         nbSel = Selection("NeuroBayesSel"+id ,
                           Algorithm = mumuNB,
