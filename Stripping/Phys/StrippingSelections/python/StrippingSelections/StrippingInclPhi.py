@@ -132,11 +132,11 @@ class InclPhiConf(object):
         Phi2KK_CC = self._Phi2KK_CC(config)
         ps =  config['HighPtPrescale']
         
-        print "Creating "+name+" now!"
-        print "Prescale: ", ps
+        #print "Creating "+name+" now!"
+        #print "Prescale: ", ps
         #print Phi2KK_DC
-        print Phi2KK_CC
-        print Phi2KK_MC
+        #print Phi2KK_CC
+        #print Phi2KK_MC
 
         StrippingInclPhiHighPtScaler = Scaler ("StrippingInclPhiHighPtScaler", AcceptFraction=ps)
         _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
@@ -170,11 +170,11 @@ class InclPhiConf(object):
         Phi2KK_CC = self._Phi2KK_CC(config)
         ps =  config['LowPtPrescale']
 
-        print "Creating " + name + " now!"
-        print "Prescale: ", ps
+        #print "Creating " + name + " now!"
+        #print "Prescale: ", ps
         #print Phi2KK_DC
-        print Phi2KK_CC
-        print Phi2KK_MC
+        #print Phi2KK_CC
+        #print Phi2KK_MC
 
         StrippingInclPhiLowPtScaler = Scaler ("StrippingInclPhiLowPtScaler", AcceptFraction=ps)
         _StdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons")
@@ -217,10 +217,10 @@ class InclPhiConf(object):
         Phi2KK_MC = self._Phi2KK_MC(config, False, False)
         ps =  config['LDPrescale']
 
-        print "CC and MC for InclPhi LD stripping line."
-        print "Prescale: ", ps
-        print Phi2KK_CC
-        print Phi2KK_MC
+        #print "CC and MC for InclPhi LD stripping line."
+        #print "Prescale: ", ps
+        #print Phi2KK_CC
+        #print Phi2KK_MC
 
         _Phi2KK = CombineParticles(
                            "_"+name+"Phi2KK"
