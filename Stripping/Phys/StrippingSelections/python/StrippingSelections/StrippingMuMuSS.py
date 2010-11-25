@@ -91,20 +91,20 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 ## ############################################################
 line1 = StrippingLine('MuMuSS1'
                            , prescale = .1
-                           , algos = [ sequence1 ]
+                           , algos = [ MuMuSS1 ]
                            )
 
 line2 = StrippingLine('MuMuSS2'
                            , prescale = .1
-                           , algos = [ sequence2 ]
+                           , algos = [ MuMuSS2 ]
                            )
 
 line3 = StrippingLine('MuMuSS3'
                            , prescale = 1.
-                           , algos = [ sequence3 ]
+                           , algos = [ MuMuSS3 ]
                            )
 
 line4 = StrippingLine('MuMuSS4'
                            , prescale = 1.
-                           , algos = [ sequence4 ]
+                           , algos = [ MuMuSS4 ]
                            )

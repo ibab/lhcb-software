@@ -10,7 +10,7 @@ configurables.
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingDs2piPhiConf(LHCbConfigurableUser):
     """
@@ -37,8 +37,7 @@ class StrippingDs2piPhiConf(LHCbConfigurableUser):
     def line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Ds2piPhiSel = self.Ds2piPhi()
-	Ds2piPhiSeq = SelectionSequence("SeqDs2piPhi", TopSelection = Ds2piPhiSel)
-	return StrippingLine('Ds2piPhiLine', prescale = 0.05, algos = [Ds2piPhiSeq])
+	return StrippingLine('Ds2piPhiLine', prescale = 0.05, algos = [Ds2piPhiSel])
      
 	
     def Ds2piPhi( self ):

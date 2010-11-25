@@ -38,7 +38,7 @@ sequence = SelectionSequence("Seq"+name,
 ## ############################################################
 line = StrippingLine('W2e'
                            , prescale = 1.
-                           , algos = [ sequence ]
+                           , algos = [ W ]
                            )
 
 
@@ -64,7 +64,7 @@ sequence_ps = SelectionSequence("Seq"+name+"_ps",
 ## ############################################################
 line_ps = StrippingLine('W2e_ps'
                            , prescale = .1
-                           , algos = [ sequence_ps ]
+                           , algos = [ W_ps ]
                            )
 
 

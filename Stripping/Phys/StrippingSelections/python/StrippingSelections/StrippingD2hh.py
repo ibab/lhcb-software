@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, mm
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingD2hhConf(LHCbConfigurableUser):
     __slots__ = { 
@@ -71,8 +71,9 @@ class StrippingD2hhConf(LHCbConfigurableUser):
         if None == StrippingD2hhConf._NoPIDLine:
             from StrippingConf.StrippingLine import StrippingLine
 	    D02hhNoPIDSel = self.D02hhNoPIDCombPart()
-	    D02hhNoPIDSeq = SelectionSequence("SeqD02hhNoPID", TopSelection = D02hhNoPIDSel)
-	    StrippingD2hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine', prescale = 0.0025, algos = [D02hhNoPIDSeq])
+	    StrippingD2hhConf._NoPIDLine = StrippingLine('D02hhNoPIDLine',
+                                                         prescale = 0.0025,
+                                                         algos = [D02hhNoPIDSel])
 
 	return StrippingD2hhConf._NoPIDLine
      	
@@ -80,8 +81,9 @@ class StrippingD2hhConf(LHCbConfigurableUser):
         if None == StrippingD2hhConf._PIDLine:
             from StrippingConf.StrippingLine import StrippingLine
 	    D02hhPIDSel = self.D02hhPIDCombPart()
-	    D02hhPIDSeq = SelectionSequence("SeqD02hhPID", TopSelection = D02hhPIDSel)
-	    StrippingD2hhConf._PIDLine = StrippingLine('D02hhPIDLine', prescale = 1, algos = [D02hhPIDSeq])
+	    StrippingD2hhConf._PIDLine = StrippingLine('D02hhPIDLine',
+                                                       prescale = 1,
+                                                       algos = [D02hhPIDSel])
 
 	return StrippingD2hhConf._PIDLine
      	
@@ -89,8 +91,9 @@ class StrippingD2hhConf(LHCbConfigurableUser):
         if None == StrippingD2hhConf._ControlLine:
             from StrippingConf.StrippingLine import StrippingLine
 	    D02hhControlSel = self.D02hhControlCombPart()
-	    D02hhControlSeq = SelectionSequence("SeqD02hhControl", TopSelection = D02hhControlSel)
-	    StrippingD2hhConf._ControlLine = StrippingLine('D02hhControlLine', prescale = 0.00025, algos = [D02hhControlSeq])
+	    StrippingD2hhConf._ControlLine = StrippingLine('D02hhControlLine',
+                                                           prescale = 0.00025,
+                                                           algos = [D02hhControlSel])
 
 	return StrippingD2hhConf._ControlLine
      	

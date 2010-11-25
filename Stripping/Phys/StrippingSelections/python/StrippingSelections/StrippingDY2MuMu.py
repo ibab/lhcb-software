@@ -142,46 +142,46 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 
 line1_ps = StrippingLine('DY2MuMu1_ps'
                            , prescale = .02
-                           , algos = [ sequence1_ps ]
+                           , algos = [ DY1_ps ]
                            )
 
 line1_HLT2 = StrippingLine('DY2MuMu1_HLT2'
                            , prescale = .1
-                           , algos = [ sequence1_HLT2 ]
+                           , algos = [ DY1_HLT2 ]
                            , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
                            )
 
 line2_HLT2 = StrippingLine('DY2MuMu2_HLT2'
                            , prescale = .2
-                           , algos = [ sequence2_HLT2 ]
+                           , algos = [ DY2_HLT2 ]
                            , HLT = "HLT_PASS_RE('Hlt2DiMuonDY.*Decision')"
                            )
 
 
 line1_HLT2_a = StrippingLine('DY2MuMu1_HLT2_a'
                           , prescale = .1
-                          , algos = [ sequence1_HLT2 ]
+                          , algos = [ DY1_HLT2 ]
                           , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
                           )
 
 line2_HLT2_a = StrippingLine('DY2MuMu2_HLT2_a'
                           , prescale = .2
-                          , algos = [ sequence2_HLT2 ]
+                          , algos = [ DY2_HLT2 ]
                           , HLT = "HLT_PASS_RE('Hlt2(MuonFromHLT1|PassThrough).*Decision')"
                           )
 
 
 line2 = StrippingLine('DY2MuMu2'
                            , prescale = 1.
-                           , algos = [ sequence2 ]
+                           , algos = [ DY2 ]
                            )
 
 line3 = StrippingLine('DY2MuMu3'
                            , prescale = 1.
-                           , algos = [ sequence3 ]
+                           , algos = [ DY3 ]
                            )
 
 line4 = StrippingLine('DY2MuMu4'
                            , prescale = 1.
-                           , algos = [ sequence4 ]
+                           , algos = [ DY4 ]
                            )

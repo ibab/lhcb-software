@@ -96,20 +96,20 @@ sequence4 = SelectionSequence("Seq"+name+"4",
 ## ############################################################
 line1 = StrippingLine('DY2ee1'
                            , prescale = .1
-                           , algos = [ sequence1 ]
+                           , algos = [ DY1 ]
                            )
 
 line2 = StrippingLine('DY2ee2'
                            , prescale = 1.
-                           , algos = [ sequence2 ]
+                           , algos = [ DY2 ]
                            )
 
 line3 = StrippingLine('DY2ee3'
                            , prescale = 1.
-                           , algos = [ sequence3 ]
+                           , algos = [ DY3 ]
                            )
 
 line4 = StrippingLine('DY2ee4'
                            , prescale = 1.
-                           , algos = [ sequence4 ]
+                           , algos = [ DY4 ]
                            )

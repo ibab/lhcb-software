@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, mm, ns
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingD2hhLTUnbiasedMBNBConf(LHCbConfigurableUser):
     __slots__ = { 
@@ -55,11 +55,10 @@ class StrippingD2hhLTUnbiasedMBNBConf(LHCbConfigurableUser):
         if None == StrippingD2hhLTUnbiasedMBNBConf._LTUnbiasedLine:
             from StrippingConf.StrippingLine import StrippingLine
             D2hhLTUnbiasedMBNBSel = self.D2hhLTUnbiasedMBNBCombPart()
-            D2hhLTUnbiasedMBNBSeq = SelectionSequence("SeqD2hhLTUnbiasedMBNB", TopSelection = D2hhLTUnbiasedMBNBSel)
             thisline = StrippingLine(   'D2hhLTUnbiasedMBNBLine', \
                                         HLT = "HLT_PASS_RE('Hlt1MB.*')", \
                                         prescale = 1, \
-                                        algos = [D2hhLTUnbiasedMBNBSeq])
+                                        algos = [D2hhLTUnbiasedMBNBSel])
             StrippingD2hhLTUnbiasedMBNBConf._LTUnbiasedLine = thisline
 
         return StrippingD2hhLTUnbiasedMBNBConf._LTUnbiasedLine

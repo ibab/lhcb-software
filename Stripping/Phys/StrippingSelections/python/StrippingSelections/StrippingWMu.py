@@ -45,7 +45,7 @@ sequence_ps = SelectionSequence("Seq"+name+"_ps",
 ## ############################################################
 line_ps = StrippingLine('W2Mu_ps'
                            , prescale = .1
-                           , algos = [ sequence_ps ]
+                           , algos = [ W_ps ]
                            )
 
 
@@ -74,7 +74,7 @@ sequenceloose_ps = SelectionSequence("Seq"+name+"loose_ps",
 ## ############################################################
 lineloose_ps = StrippingLine('W2Muloose_ps'
                            , prescale = .1
-                           , algos = [ sequenceloose_ps ]
+                           , algos = [ Wloose_ps ]
                            )
 
 
@@ -99,7 +99,7 @@ sequenceNoPIDs_ps = SelectionSequence("Seq"+name+"NoPIDs_ps",
 ## ############################################################
 lineNoPIDs_ps = StrippingLine('W2MuNoPIDs_ps'
                            , prescale = .1
-                           , algos = [ sequenceNoPIDs_ps ]
+                           , algos = [ WNoPIDs_ps ]
                            )
 
 
@@ -127,7 +127,7 @@ sequence = SelectionSequence("Seq"+name,
 ## ############################################################
 line = StrippingLine('W2Mu'
                            , prescale = 1.
-                           , algos = [ sequence ]
+                           , algos = [ W ]
                            )
 
 #Candidates from StdVeryLooseMuons
@@ -148,6 +148,6 @@ sequenceloose = SelectionSequence("Seq"+name+"loose",
 ## ############################################################
 lineloose = StrippingLine('W2Muloose'
                            , prescale = 1.
-                           , algos = [ sequenceloose ]
+                           , algos = [ Wloose ]
                            )
 

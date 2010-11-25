@@ -60,10 +60,11 @@ class StrippingJpsippForD0MuMuConf(LHCbConfigurableUser):
                                     RequiredSelections = [ _TightProtons ]
                                     )
 
-        return SelectionSequence( "SeqJpsippForD0mumu",
-                                  TopSelection = SelJpsippForD0mumu,
-#                                  EventPreSelector = [ SpdMultFilter ]
-                                  )
+        return SelJpsippForD0mumu
+#        return SelectionSequence( "SeqJpsippForD0mumu",
+#                                  TopSelection = SelJpsippForD0mumu,
+##                                  EventPreSelector = [ SpdMultFilter ]
+#                                  )
 #        return StripCcbar2PpbarForD0mumu  
     
     def getProps(self):

@@ -11,7 +11,7 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, mm
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop
-from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class StrippingD2hhLTUnbiasedConf(LHCbConfigurableUser):
     __slots__ = { 
@@ -56,8 +56,9 @@ class StrippingD2hhLTUnbiasedConf(LHCbConfigurableUser):
         if None == StrippingD2hhLTUnbiasedConf._LTUnbiasedLine:
             from StrippingConf.StrippingLine import StrippingLine
 	    D2hhLTUnbiasedSel = self.D2hhLTUnbiasedCombPart()
-	    D2hhLTUnbiasedSeq = SelectionSequence("SeqD2hhLTUnbiased", TopSelection = D2hhLTUnbiasedSel)
-	    StrippingD2hhLTUnbiasedConf._LTUnbiasedLine = StrippingLine('D2hhLTUnbiasedLine', prescale = 1, algos = [D2hhLTUnbiasedSeq])
+	    StrippingD2hhLTUnbiasedConf._LTUnbiasedLine = StrippingLine('D2hhLTUnbiasedLine',
+                                                                        prescale = 1,
+                                                                        algos = [D2hhLTUnbiasedSel])
 
 	return StrippingD2hhLTUnbiasedConf._LTUnbiasedLine
      	

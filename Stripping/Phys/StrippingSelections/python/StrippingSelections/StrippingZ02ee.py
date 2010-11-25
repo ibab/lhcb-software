@@ -42,6 +42,6 @@ sequence = SelectionSequence("Seq"+name,
 ## ############################################################
 line = StrippingLine('Z02ee'
                            , prescale = 1.
-                           , algos = [ sequence ]
+                           , algos = [ Z0 ]
                            )
 

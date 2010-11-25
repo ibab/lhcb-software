@@ -6,6 +6,23 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-11-12 - Juan Palacios
+ - python/SelectionSequences
+  . Remove direct use of StrippingSelections to construct StrippingLines.
+      python/StrippingSelections/StrippingMuMuSS.py
+      python/StrippingSelections/StrippingWe.py
+      python/StrippingSelections/StrippingD2hhLTUnbiasedMBNB.py
+      python/StrippingSelections/StrippingB2XGamma.py
+      python/StrippingSelections/StrippingDY2ee.py
+      python/StrippingSelections/StrippingZ02MuMu.py
+      python/StrippingSelections/StrippingD2hh.py
+      python/StrippingSelections/StrippingJpsippForD0MuMu.py
+      python/StrippingSelections/StrippingDs2piPhiNoPt.py
+      python/StrippingSelections/StrippingD2hhLTUnbiased.py
+      python/StrippingSelections/StrippingDY2MuMu.py
+      python/StrippingSelections/StrippingWMu.py
+      python/StrippingSelections/StrippingZ02ee.py
+
+! 2010-11-12 - Juan Palacios
  - Use new package Phys/StrippingUtils with LineBuilder base class and
    testing tools.
  - python/StrippingSelections/StrippingBs2JpsiPhiPrescaledAndDetatched.py

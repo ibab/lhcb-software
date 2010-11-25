@@ -43,7 +43,7 @@ sequence = SelectionSequence("Seq"+name,
 ## ############################################################
 line = StrippingLine('Z02MuMu'
                            , prescale = 1.
-                           , algos = [ sequence ]
+                           , algos = [ Z0 ]
 
                            )
 
@@ -75,7 +75,7 @@ sequenceloose = SelectionSequence("Seq"+name+"loose",
 ## ############################################################
 lineloose = StrippingLine('Z02MuMuloose'
                            , prescale = 1.
-                           , algos = [ sequenceloose ]
+                           , algos = [ Z0loose ]
 
                            )
 
@@ -107,7 +107,7 @@ sequenceNoPIDs = SelectionSequence("Seq"+name+"NoPIDs",
 ## ############################################################
 lineNoPIDs = StrippingLine('Z02MuMuNoPIDs'
                            , prescale = 1.
-                           , algos = [ sequenceNoPIDs ]
+                           , algos = [ Z0NoPIDs ]
 
                            )
 

@@ -50,7 +50,9 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             WideBMassBs.PropertiesPrint = False
             SelWideBMassBs = mySelection.clone("SelWideBMassBs", Algorithm = WideBMassBs)
             StrippingB2XGammaConf.__phiGammaBMass = SelectionSequence('SelSeqBs2PhiGammaWideBMass', SelWideBMassBs)
-        return StrippingLine('Bs2PhiGammaWideBMass', prescale =0.1, algos = [ StrippingB2XGammaConf.__phiGammaBMass ] )  
+        return StrippingLine('Bs2PhiGammaWideBMass',
+                             prescale =0.1,
+                             algos = [SelWideBMassBs] )  
     
     def phigammaLooseDira( self ) :
         if StrippingB2XGammaConf.__phiGammaDira ==None:
@@ -59,13 +61,17 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             LooseDiraBs.PropertiesPrint = False
             SelLooseDiraBs = mySelection.clone("SelLooseDiraBs", Algorithm = LooseDiraBs)
             StrippingB2XGammaConf.__phiGammaDira = SelectionSequence('SelSeqBs2PhiGammaLooseDira', SelLooseDiraBs)
-        return StrippingLine('Bs2PhiGammaLooseDira', prescale = 0.1, algos = [   StrippingB2XGammaConf.__phiGammaDira ] ) 
+        return StrippingLine('Bs2PhiGammaLooseDira',
+                             prescale = 0.1,
+                             algos = [ SelLooseDiraBs ] ) 
     
     def phigamma( self ) :
         if StrippingB2XGammaConf.__phiGamma == None :
             mySelection = self.combineBs(name = "Bs2PhiGamma")
             StrippingB2XGammaConf.__phiGamma = SelectionSequence('SeqSelBs2PhiGamma', TopSelection  = mySelection)#self.combineBs(name = "Bs2PhiGamma"))
-        return StrippingLine('Bs2PhiGamma', prescale = 1, algos = [ StrippingB2XGammaConf.__phiGamma] )
+        return StrippingLine('Bs2PhiGamma',
+                             prescale = 1,
+                             algos = [ mySelection] )
     
     def combineBs(self, name = "MakeBs2PhiGamma" ):
         """
@@ -105,7 +111,9 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             WideBMassBd.PropertiesPrint = False
             SelWideBMassBd = mySelection.clone("SelWideBMassBd", Algorithm =  WideBMassBd )
             StrippingB2XGammaConf.__kstGammaBMass = SelectionSequence('SelSeqBd2KstGammaWideBMass', SelWideBMassBd)
-        return StrippingLine('Bd2KstGammaWideBMass', prescale = 0.05, algos = [ StrippingB2XGammaConf.__kstGammaBMass] )  
+        return StrippingLine('Bd2KstGammaWideBMass',
+                             prescale = 0.05,
+                             algos = [ SelWideBMassBd] )  
     
     def kstgammaLooseDira( self ) :
         if StrippingB2XGammaConf.__kstGammaDira == None :
@@ -114,7 +122,9 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             LooseDiraBd.PropertiesPrint = False
             SelLooseDiraBd = mySelection.clone("SelLooseDiraBd", Algorithm =LooseDiraBd  )
             StrippingB2XGammaConf.__kstGammaDira = SelectionSequence('SelSeqBsd2KstGammaLooseDira', SelLooseDiraBd)
-        return StrippingLine('Bd2KstGammaLooseDira', prescale =0.05, algos = [  StrippingB2XGammaConf.__kstGammaDira] )
+        return StrippingLine('Bd2KstGammaLooseDira',
+                             prescale =0.05,
+                             algos = [ SelLooseDiraBd ] )
 
     def kstgammaWideKstMass( self ) :
         if StrippingB2XGammaConf.__kstGammaKMass == None :
@@ -133,7 +143,9 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                                                  ,Algorithm = makeB0
                                                  ,RequiredSelections = [ mygamma, myKst]) 
             StrippingB2XGammaConf.__kstGammaKMass = SelectionSequence('SelSeqBsd2KstGammaWideKstMassBd',  Bd2KstGammaWideKstMass )
-        return StrippingLine('Bd2KstGammaWideKstMassBd', prescale = 0.05, algos = [ StrippingB2XGammaConf.__kstGammaKMass ] )
+        return StrippingLine('Bd2KstGammaWideKstMassBd',
+                             prescale = 0.05,
+                             algos = [Bd2KstGammaWideKstMass ] )
 
     def kstgammaWideLine( self ) :
         if StrippingB2XGammaConf.__kstGammaWide == None :
@@ -151,14 +163,19 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                                                  ,Algorithm = makeWideB0
                                                  ,RequiredSelections = [ myGammaWide, myKstWide]) 
             StrippingB2XGammaConf.__kstGammaWide = SelectionSequence('SelSeqBsd2KstGammaWide',  Bd2KstGammaWide )
-        return StrippingLine('Bd2KstGammaWideLine', prescale = 0.05, algos = [ StrippingB2XGammaConf.__kstGammaWide ] )
+        return StrippingLine('Bd2KstGammaWideLine',
+                             prescale = 0.05,
+                             algos = [Bd2KstGammaWide] )
 
     
     def kstgamma( self ) :
         if   StrippingB2XGammaConf.__kstGamma == None:
             mySelection = self.combineBd(name = "Bd2KstGamma") 
-            StrippingB2XGammaConf.__kstGamma = SelectionSequence('SeqSelBd2KstGamma', TopSelection  = mySelection)
-        return StrippingLine('Bd2KstGamma', prescale = 1, algos = [ StrippingB2XGammaConf.__kstGamma] )
+            StrippingB2XGammaConf.__kstGamma = SelectionSequence('SeqSelBd2KstGamma',
+                                                                 TopSelection  = mySelection)
+        return StrippingLine('Bd2KstGamma',
+                             prescale = 1,
+                             algos = [mySelection] )
     
     def combineBd(self, name = "Make2KstGamma" ):
         """
