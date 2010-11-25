@@ -4,6 +4,14 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2010-11-25 - Olivier Callot
+ - Add a tool to refit a track starting from LHCbIDs.
+ - Fix the tracking for Open geometry, i.e. some local/global transitions
+   were incorrect.
+ - For finding tracks starting from phi, change tolerances if few RZ tracks found.
+   This helps the Open velo tracking.
+ - Don't refit the track at the end with MSFactor. No gain and slower...
+
 ! 2010-11-12 - Olivier Callot
  - Fix the update of the geometry, on sensor's geometry, not whole Velo.
  - New control flags HLT1Only and HLT2Complement to setup the tracking in 

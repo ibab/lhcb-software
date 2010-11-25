@@ -56,6 +56,8 @@ public:
 
   StatusCode rebuildGeometry();  ///< Recompute the geometry in case of change
 
+  FastVeloHit* hitByLHCbID( LHCb::LHCbID id );
+
 protected:
 
 private:

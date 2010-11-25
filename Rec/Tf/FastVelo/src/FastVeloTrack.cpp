@@ -516,61 +516,6 @@ bool FastVeloTrack::addBestRCluster ( FastVeloSensor* sensor, double maxChi2 ) {
 }
 
 //=========================================================================
-//  Fit the track with a damping factor
-//=========================================================================
-void FastVeloTrack::fitWithWeight( double factor, bool forward ) {
-  FastVeloHits sortedHits = m_rHits;
-  updateRParameters();
-  for ( FastVeloHits::iterator itH = m_phiHits.begin(); m_phiHits.end() != itH; ++itH ) {
-    sortedHits.push_back( *itH );
-  }
-  if ( forward ) {
-    std::sort( sortedHits.begin(), sortedHits.end(), FastVeloHit::IncreasingByZ() );
-  } else {
-    std::sort( sortedHits.begin(), sortedHits.end(), FastVeloHit::DecreasingByZ() );
-  }
-
-  m_sa2   = 0.;
-  m_sa2z  = 0.;
-  m_sa2z2 = 0.;
-  m_sab   = 0.;
-  m_sabz  = 0.;
-  m_sabz2 = 0.;
-  m_sb2   = 0.;
-  m_sb2z  = 0.;
-  m_sb2z2 = 0.;
-  m_sac   = 0.;
-  m_sacz  = 0.;
-  m_sbc   = 0.;
-  m_sbcz  = 0.;
-  double dampingFactor = 1;
-  
-  for ( FastVeloHits::iterator itH = sortedHits.begin(); sortedHits.end() != itH; ++itH ) {
-    double a = (*itH)->a();
-    double b = (*itH)->b();
-    double c = (*itH)->c();
-    double z = (*itH)->z();
-    double w = (*itH)->weight() * dampingFactor;
-    dampingFactor = dampingFactor * factor;
-
-    m_sa2   += w * a * a;
-    m_sa2z  += w * a * a * z;
-    m_sa2z2 += w * a * a * z * z;
-    m_sab   += w * a * b;
-    m_sabz  += w * a * b * z;
-    m_sabz2 += w * a * b * z * z;
-    m_sb2   += w * b * b;
-    m_sb2z  += w * b * b * z;
-    m_sb2z2 += w * b * b * z * z;
-    m_sac   += w * a * c;
-    m_sacz  += w * a * c * z;
-    m_sbc   += w * b * c;
-    m_sbcz  += w * b * c * z;
-  }
-  solve();
-}
-
-//=========================================================================
 //  Return the covariance matrix of the last fit at the specified z
 //=========================================================================
 Gaudi::TrackSymMatrix FastVeloTrack::covariance( double z ) {

@@ -83,7 +83,8 @@ StatusCode FastVeloHitManager::rebuildGeometry ( ) {
   double xBeam = .5 * ( m_velo->halfBoxOffset(0).x() + m_velo->halfBoxOffset(1).x() );
   double yBeam = .5 * ( m_velo->halfBoxOffset(0).y() + m_velo->halfBoxOffset(1).y() );
   
-  info() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam << endmsg;
+  info() << "Updating the geometry... Beam at x=" << xBeam << " y=" << yBeam 
+         << " opening " << m_velo->halfBoxOffset(1).x()  - m_velo->halfBoxOffset(0).x() << endmsg;
 
   for ( std::vector<FastVeloSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;
@@ -255,6 +256,24 @@ void FastVeloHitManager::buildFastHits ( ) {
     hit->setSensorCentre( mySensor->xCentre(), mySensor->yCentre() );
     mySensor->hits(zone).push_back( hit );
   }
+}
+
+//=========================================================================
+//  Return a pointer to the FastVeloHit of the given id
+//=========================================================================
+FastVeloHit* FastVeloHitManager::hitByLHCbID ( LHCb::LHCbID id) {
+  if ( !id.isVelo() ) return 0;
+  int sensor = id.veloID().sensor();
+  int maxZone = 2;
+  if ( id.isVeloR() ) maxZone = 4;
+  
+  for ( int zone = 0 ; maxZone > zone ; ++zone ) {
+    for ( FastVeloHits::iterator itH = m_sensors[sensor]->hits(zone).begin(); 
+          m_sensors[sensor]->hits(zone).end() != itH ; ++itH ) {
+      if ( (*itH)->lhcbID() == id ) return *itH;
+    }
+  }
+  return 0;
 }
 //=============================================================================
 

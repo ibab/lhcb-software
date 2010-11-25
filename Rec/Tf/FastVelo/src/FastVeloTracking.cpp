@@ -47,6 +47,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "PhiMatchZone"    , m_phiMatchZone   = 0.410  );   // sin(22.5 degrees) = 0.38, some tolerance
   declareProperty( "PhiCentralZone"  , m_phiCentralZone = 0.040  );   // in overlap...
+  declareProperty( "MaxDelta2"       , m_maxDelta2      = 0.05   );
   declareProperty( "FractionFound"   , m_fractionFound  = 0.70   );
   declareProperty( "MaxChi2PerHit"   , m_maxChi2PerHit  = 16.    );
   declareProperty( "MaxChi2ToAdd"    , m_maxChi2ToAdd   = 40.    );
@@ -57,7 +58,6 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "PhiUnusedFirstTol",  m_phiUnusedFirstTol  = 5. );
   declareProperty( "PhiUnusedSecondTol", m_phiUnusedSecondTol = 10. );
-  declareProperty( "MSFactor"          , m_msFactor           = 0.60 );
 
   // Parameters for debugging
   declareProperty( "DebugToolName" ,   m_debugToolName  = ""        );
@@ -84,6 +84,7 @@ StatusCode FastVeloTracking::initialize() {
 
   if ( m_doTiming) {
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool/Timer", this );
+    m_timeTotal   = m_timerTool->addTimer( "Total" );
     m_timerTool->increaseIndent();
     m_timePrepare = m_timerTool->addTimer( "Prepare" );
     m_timeFwd4    = m_timerTool->addTimer( "Forward quadruplets" );
@@ -107,7 +108,10 @@ StatusCode FastVeloTracking::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   m_isDebug   = msgLevel( MSG::DEBUG   );
 
-  if ( m_doTiming ) m_timerTool->start( m_timePrepare );
+  if ( m_doTiming ){
+    m_timerTool->start( m_timeTotal );
+    m_timerTool->start( m_timePrepare );
+  }
 
   LHCb::Tracks* outputTracks;
   if ( exist<LHCb::Tracks>( m_outputLocation ) ) {
@@ -161,7 +165,7 @@ StatusCode FastVeloTracking::execute() {
     }
   }
   
-  //== Find triplets if not HLT1
+  //== Find triplets if not HLT1, backward and/or forward
   if ( !m_HLT1Only ) {
     if ( !m_onlyBackward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeFwd3 );
@@ -188,10 +192,14 @@ StatusCode FastVeloTracking::execute() {
     makeSpaceTracks( *itT );
   }
   if ( m_doTiming ) m_timerTool->stop( m_timeSpace );
+  
+  //== Perform the recovery, starting from Phi hits, with some constraints:
+  //== Not HLT1, not too many tracks, space has foudn some OR there were not that many.
 
   if ( !m_HLT1Only &&
        m_maxRZForExtra > m_tracks.size() &&
-       m_tracks.size() * 0.5 <  m_spaceTracks.size() ) {
+       ( m_tracks.size() * 0.5 <=  m_spaceTracks.size() || 
+         m_tracks.size() < 20 ) ) {
     if ( m_doTiming ) m_timerTool->start( m_timeUnused );
     findUnusedPhi();
     if ( m_doTiming ) m_timerTool->stop( m_timeUnused );
@@ -203,6 +211,8 @@ StatusCode FastVeloTracking::execute() {
   makeLHCbTracks( outputTracks );
 
   if ( m_doTiming ) m_timerTool->stop( m_timeFinal );
+
+  //== Debugging information: Status of all hits from the wanted track.
 
   if ( 0 <= m_wantedKey ) {
     info() << "*** Final status of hits for Track " << m_wantedKey << endmsg;
@@ -224,6 +234,8 @@ StatusCode FastVeloTracking::execute() {
     }
   }
 
+  if ( m_doTiming ) m_timerTool->stop( m_timeTotal );
+
   return StatusCode::SUCCESS;
 }
 
@@ -236,7 +248,6 @@ StatusCode FastVeloTracking::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
 
 //=========================================================================
 //  Find quadruplets in RZ, i.e. 4 hits, with optionally a hole.
@@ -292,7 +303,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
         }
 
         if ( 0 != m_debugTool && matchKey( *c0 ) ) {
-          info() << format( "4:       rMin %8.3f rMax %8.3f ", rMin, rMax );
+          info() << format( "4:   rMin %8.3f rMax %8.3f ", rMin, rMax );
           printCoord ( *c0,   "St0 " );
         }
         // loop over clusters in fourth station finding a possible match
@@ -310,7 +321,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           double rPitch = sensor1->rPitch( rPred );
           double tol    = m_rMatchTol4 * rPitch;
           if ( 0 != m_debugTool && matchKey( *c0 ) && matchKey( *c3) ) {
-            info() << format( "4: rPred %8.3f (tol %6.3f)", rPred, tol );
+            info() << format( "4:    rPred %8.3f (tol %6.3f)", rPred, tol );
             printCoord ( *c3,   "St3 " );
           }
 
@@ -322,7 +333,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           rPitch = sensor2->rPitch( rPred );
           tol    = m_rMatchTol4 * rPitch;
           if (  0 != m_debugTool && matchKey( *c0 ) && matchKey( *c3) ) {
-            info() << format( "4: rPred %8.3f  (tol %6.3f)", rPred, tol );
+            info() << format( "4:    rPred %8.3f  (tol %6.3f)", rPred, tol );
             printCoord ( ok1,   "St1 " );
           }
           FastVeloHit* ok2 = closestHit( sensor2->hits(zone), rPred, tol );
@@ -515,7 +526,6 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           double rPred  = r0 + zFrac * (r2-r0);
           double rPitch = sensor1->rPitch( rPred );
           double tol    = m_rMatchTol3 * rPitch;
-
           if (  0 != m_debugTool && matchKey( *c0 ) && matchKey( *c2) ) {
             info() << format( "3:   rPred %8.3f (tol %6.3f) ", rPred, tol );
             printCoord ( *c2,   "St2 " );
@@ -690,8 +700,6 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     }
 
     LHCb::State state;
-    bool fitDirection = !(*itT).backward();
-    (*itT).fitWithWeight( m_msFactor, fitDirection );
 
     double zBeam = (*itT).zBeam();
 
@@ -708,7 +716,6 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     }
 
     if ( !(*itT).backward() ) {
-      (*itT).fitWithWeight( m_msFactor, !fitDirection );
       state.setLocation( LHCb::State::EndVelo );
       state.setState( (*itT).state( zMax ) );
       state.setCovariance( (*itT).covariance( zMax ) );
@@ -861,20 +868,24 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   if ( isVertical ) step /= 2;                    // look on both sides
 
   FastVeloSensor* first =  m_hitManager->sensor( firstSensor );
+  double rOffset = first->rOffset( input.zone()%4 );
 
-  while( input.rPred( first->z() ) > first->rMax() ||
-         input.rPred( first->z() ) < first->rMin()    ) {
+  while( input.rPred( first->z() ) - rOffset > first->rMax() ||
+         input.rPred( first->z() ) - rOffset < first->rMin()    ) {
     FastVeloSensor* temp = m_hitManager->sensor( first->number() + step );
     if ( 0 == temp ) break;
     first = temp;
+    rOffset = first->rOffset( input.zone()%4 );
   }
 
   FastVeloSensor* last = first;
-  while( input.rPred( last->z() ) < last->rMax() &&
-         input.rPred( last->z() ) > last->rMin()  ) {
+  rOffset = last->rOffset( input.zone()%4 );
+  while( input.rPred( last->z() ) - rOffset < last->rMax() &&
+         input.rPred( last->z() ) - rOffset > last->rMin()  ) {
     FastVeloSensor* temp = m_hitManager->sensor( last->number() + step );
     if ( 0 == temp ) break;
     last = temp;
+    rOffset = last->rOffset( input.zone()%4 );
   }
 
   if ( m_debug ) info() << "Space tracking. Zone " << input.zone() << " from " << first->number()
@@ -900,8 +911,8 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     double x0     = sensor->xCentre();
     double y0     = sensor->yCentre();
     double dR2    = rPred * rPred - x0 * x0 - y0 * y0;
-    double xPred  = rPred * m_cosPhi;
-    double yPred  = rPred * m_sinPhi;
+    double xPred  = rPred * m_cosPhi + x0;
+    double yPred  = rPred * m_sinPhi + y0;
 
     double maxDSin = m_phiMatchZone;
     if ( inOverlap )  maxDSin = m_phiCentralZone;
@@ -913,10 +924,13 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
       double minR = 0.4 * (sensor->rMin( zone ) + sensor->rMax( zone ) );  // .8 of centre
 
       for ( itH = sensor->hits(zone).begin(); sensor->hits(zone).end() != itH; ++itH ) {
-        if ( m_cosPhi * (*itH)->xStripCentre() + m_sinPhi * (*itH)->yStripCentre() < minR ) continue;  //scalar product OK
+        double dx = (*itH)->xStripCentre()-x0;
+        double dy = (*itH)->yStripCentre()-y0;
+        if ( m_cosPhi * dx + m_sinPhi * dy < minR )  continue;  //scalar product OK
+
         double dist = (*itH)->distance( xPred, yPred );
         if ( dist < minDist || dist > maxDist ) continue;
-
+        
         double a = (*itH)->a();
         double b = (*itH)->b();
         double c = (*itH)->c();
@@ -936,15 +950,15 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           y   = ( - c - a * x ) / b;
         }
         (*itH)->setGlobalPosition( x, y );
-        double dSin = (y * m_cosPhi - x * m_sinPhi)/rPred;
+        double dSin = ((y-y0) * m_cosPhi - (x-x0) * m_sinPhi)/rPred;
         (*itH)->setGlobal( dSin );
 
         if ( m_debug && matchKey( *itH ) ) {
           double xMc = m_debugTool->xTrue( m_wantedKey, sensor->z() );
           double yMc = m_debugTool->yTrue( m_wantedKey, sensor->z() );
           double rMc = sqrt( xMc * xMc + yMc * yMc );
-          info() << format( "x%8.3f y%8.3f R%8.3f d%8.3f, MC: %8.3f %8.3f R%8.3f dist%8.3f",
-                            x, y, sqrt( x*x + y*y ),  (y * m_cosPhi - x * m_sinPhi),
+          info() << format( "x%7.3f y%7.3f R%7.3f dSin%7.3f, MC: %7.3f %7.3f R%7.3f dist%7.3f",
+                            x, y, sqrt( x*x + y*y ), dSin,
                             xMc, yMc, rMc, (*itH)->distance( xMc, yMc ) );
           printCoord( *itH, ":" );
         }
@@ -1041,7 +1055,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         printCoord( *itH1, "s1" );
         printCoord( best2, "s2" );
       }
-      if ( minDelta2 > 0.05 ) continue;
+      if ( minDelta2 > m_maxDelta2 ) continue;
 
       //== Check that this pair is not already on an existing candidate
       bool reject = false;
@@ -1174,7 +1188,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         }
         continue;
       }
-
+      
       if ( ok ) {  //== Store it.
         if ( m_debug ) {
           info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
@@ -1389,6 +1403,15 @@ void FastVeloTracking::findUnusedPhi( ) {
   m_debug = m_isDebug;
   if ( 0 <= m_wantedKey ) info() << endmsg << "===== Unused Phi procesing ====" << endmsg;
 
+  double phiUnusedFirstTol  = m_phiUnusedFirstTol;
+  double phiUnusedSecondTol = m_phiUnusedSecondTol;
+  double maxQFactor         = m_maxQFactor;
+  if ( m_tracks.size() < 10 ) {    // clean event (e.g. Velo open)
+    phiUnusedFirstTol  = 20.;
+    phiUnusedSecondTol = 20.;
+    maxQFactor         =  2.;
+  }
+  
   int firstSensor = m_hitManager->lastPhiSensor();
   int lastSensor  = firstSensor - 15;
   for ( int phi0 = firstSensor; lastSensor <= phi0; --phi0 ) {
@@ -1407,7 +1430,10 @@ void FastVeloTracking::findUnusedPhi( ) {
           for ( FastVeloHits::iterator itH1 = s1->hits(zone1).begin(); s1->hits(zone1).end() != itH1; ++itH1 ) {
             if ( 0 != (*itH1)->nbUsed() ) continue;
             double d1 = (*itH1)->distance( (*itH0)->xStripCentre(), (*itH0)->yStripCentre() );
-            if ( fabs( d1 ) > m_phiUnusedFirstTol ) continue;
+            if (  matchKey( *itH0 ) && matchKey( *itH1 ) ) {
+              info() << "S0 " << phi0 << " z0 " << zone << " S1 " << phi1 << " z1 " << zone1 << " d1 " << d1 << endmsg;
+            }
+            if ( fabs( d1 ) > phiUnusedFirstTol ) continue;
             double xSeed = .5 * ( (*itH0)->xStripCentre() +  (*itH1)->xStripCentre() );
             double ySeed = .5 * ( (*itH0)->yStripCentre() +  (*itH1)->yStripCentre() );
 
@@ -1421,11 +1447,16 @@ void FastVeloTracking::findUnusedPhi( ) {
               }
             }
 
-            for ( unsigned int zone2 = zone1; zone+1 > zone2 ; ++zone2 ) {
+            for ( unsigned int zone2 = 0; zone1+1 > zone2 ; ++zone2 ) {
               for ( FastVeloHits::iterator itH2 = s2->hits(zone2).begin(); s2->hits(zone2).end() != itH2; ++itH2 ) {
                 if ( 0 != (*itH2)->nbUsed() ) continue;
                 double d2 = (*itH2)->distance( xSeed, ySeed );
-                if ( fabs( d2 ) > m_phiUnusedSecondTol ) continue;
+                if ( m_debug ) {
+                  info() << " ++ D2 " << d2 ;
+                  printCoord( *itH2, " : " );
+                }
+                
+                if ( fabs( d2 ) > phiUnusedSecondTol ) continue;
 
                 if ( m_debug ) {
                   info() << "*** FindUnusedPhi : phi triplet, d2 = " << d2 << endmsg;
@@ -1435,12 +1466,15 @@ void FastVeloTracking::findUnusedPhi( ) {
                 }
 
                 int rZone = 0;
-                if ( fabs( xSeed ) > fabs( ySeed ) ) rZone = 1;
+                if ( fabs( xSeed - r0->xCentre() ) > fabs( ySeed - r0->yCentre() ) ) rZone = 1;
                 if ( xSeed * ySeed > 0 ) rZone = 3 - rZone;
+                if ( m_debug ) info() << "Looking in R zone " << rZone << " sensor " << r0->number() 
+                                      << " xSeed " << xSeed << " ySeed " << ySeed 
+                                      << " xCentre " << r0->xCentre() << " yCentre " << r0 -> yCentre() << endmsg;
                 for ( FastVeloHits::const_iterator itR0 = r0->hits(rZone).begin();
                       r0->hits(rZone).end() != itR0; ++itR0 ) {
-                  if ( (*itR0)->global() < s0->rMin( zone ) ||
-                       (*itR0)->global() > s0->rMax( zone ) ) continue;
+                  if ( (*itR0)->rLocal() < s0->rMin( zone ) ||
+                       (*itR0)->rLocal() > s0->rMax( zone ) ) continue;
                   (*itR0)->setStartingPoint( xSeed, ySeed );
                   int nbUnused = 0;
                   if ( 0 == (*itR0)->nbUsed() ) nbUnused++;
@@ -1449,28 +1483,40 @@ void FastVeloTracking::findUnusedPhi( ) {
                   int spaceZone = rZone;
                   if ( xSeed < 0 ) spaceZone = 4 + rZone;
                   temp.setPhiClusters( *itR0, spaceZone, *itH0, *itH1, *itH2 );
+                  temp.updatePhiWeights();
+                  
                   if ( m_debug ) {
-                    info() << format( "rPred %8.3f zone%2d", temp.rAtZ( r1->z() ), rZone );
+                    double xLocal = temp.xAtZ( r1->z() ) - r1->xCentre();
+                    double yLocal = temp.yAtZ( r1->z() ) - r1->yCentre();
+                    double rLocal = sqrt( xLocal * xLocal + yLocal * yLocal );
+                    info() << format( "rPred %8.3f zone%2d", rLocal, rZone );
                     printCoord( *itR0, "R0  " );
                   }
 
                   if ( !temp.addBestRCluster( r1, 400.) ) continue;
+                  temp.updatePhiWeights();
+                  
                   if ( 0 == temp.rHits().back()->nbUsed() ) nbUnused++;
                   if ( m_debug ) {
-                    info() << format( "rPred %8.3f zone%2d", temp.rAtZ( r2->z() ), rZone );
+                    double xLocal = temp.xAtZ( r2->z() ) - r2->xCentre();
+                    double yLocal = temp.yAtZ( r2->z() ) - r2->yCentre();
+                    double rLocal = sqrt( xLocal * xLocal + yLocal * yLocal );
+                    info() << format( "rPred %8.3f zone%2d", rLocal, rZone );
                     printCoord(  temp.rHits().back(), "R1  " );
                   }
 
                   if ( !temp.addBestRCluster( r2, m_maxChi2ToAdd ) ) continue;
                   if ( 0 == temp.rHits().back()->nbUsed() ) nbUnused++;
-                  if ( 2 > nbUnused ) continue;  // at least 2 unused from the 3 starting R hits.
-
+                  
                   if ( m_debug ) {
-                    info() << format( "qFactor %8.3f     ", temp.qFactor() );
+                    info() << format( "qFactor %8.3f NbUnused%2d  ", temp.qFactor(), nbUnused );
                     printCoord(  temp.rHits().back(), "R2  " );
+                    printTrack( temp );
                   }
 
-                  if ( temp.qFactor() > m_maxQFactor ) continue;
+                  if ( 2 > nbUnused ) continue;
+
+                  if ( temp.qFactor() > maxQFactor ) continue;
                   FastVeloSensor* s = r2;
                   while ( 0 <= s->next( true ) ) {
                     s = m_hitManager->sensor( s->next( true ) );
@@ -1512,8 +1558,8 @@ void FastVeloTracking::findUnusedPhi( ) {
 void FastVeloTracking::printCoord( const FastVeloHit* hit, std::string title ) {
 
   info() << "  " << title
-         << format( " sensor %3d z%7.1f zone%2d strip%5d coord%8.3f size%2d frac %5.2f used%2d ",
-                    hit->sensor(), hit->z(), hit->zone(), hit->cluster().channelID().strip(), hit->global(),
+         << format( " sensor %3d z%7.1f zone%2d strip%5d coord%8.3f local%8.3f size%2d frac %5.2f used%2d ",
+                    hit->sensor(), hit->z(), hit->zone(), hit->cluster().channelID().strip(), hit->global(), hit->rLocal(),
                     hit->cluster().pseudoSize(), hit->cluster().interStripFraction() , hit->nbUsed() );
   LHCb::LHCbID myId =  hit->lhcbID();
   if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );

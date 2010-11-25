@@ -151,6 +151,12 @@ public:
 
   void setPhiWeight( double r ) { m_weight = m_phiWeight/float(r*r); }
 
+  void setPhiWeight( double x, double y ) { 
+    double dx = x - m_xCentre;
+    double dy = y - m_yCentre;
+    m_weight = m_phiWeight/float(dx*dx+dy*dy); 
+  }
+
   struct DecreasingByZ  {
     bool operator() (const FastVeloHit* lhs, const FastVeloHit* rhs) const { return lhs->z() > rhs->z(); }
   };

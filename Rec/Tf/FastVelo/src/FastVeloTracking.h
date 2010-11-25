@@ -97,6 +97,7 @@ private:
 
   double m_phiMatchZone;
   double m_phiCentralZone;
+  double m_maxDelta2;
   double m_fractionFound;
   double m_maxChi2PerHit;
   double m_maxChi2ToAdd;
@@ -107,7 +108,6 @@ private:
 
   double m_phiUnusedFirstTol;
   double m_phiUnusedSecondTol;
-  double m_msFactor;
   
   //== Debugging controls
   std::string      m_debugToolName;
@@ -117,6 +117,7 @@ private:
   bool             m_debug;
   bool             m_doTiming;
   ISequencerTimerTool* m_timerTool;
+  int   m_timeTotal;
   int   m_timePrepare;
   int   m_timeFwd4;
   int   m_timeBkwd4;

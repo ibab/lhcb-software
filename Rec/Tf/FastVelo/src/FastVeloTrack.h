@@ -129,6 +129,14 @@ public:
     fitTrack();
   }
 
+  void updatePhiWeights() {
+    FastVeloHits::iterator itH;
+    for ( itH = m_phiHits.begin(); m_phiHits.end() != itH; ++itH ) {
+      (*itH)->setPhiWeight( m_x0 + (*itH)->z() * m_tx, m_y0 + (*itH)->z() * m_ty );
+    }
+    fitTrack();
+  }
+
   bool addClustersToTrack ( FastVeloHits& hitList, double maxChi2ToAdd, double maxChi2PerHit, bool reSort = false ) {
     bool added = false;
     FastVeloHits::const_iterator itH;
@@ -141,6 +149,16 @@ public:
     } 
     return added;
   }
+
+  void addPhiClusters( FastVeloHits& list ) {
+    FastVeloHits::const_iterator itH;
+    for ( itH = list.begin() ; list.end() != itH ; ++itH ) {
+      m_phiHits.push_back( *itH );
+
+    }
+    fitTrack();
+  }
+  
 
   bool addBestPhiCluster ( FastVeloHits& hitList, double maxChi2ToAdd );
 
@@ -235,8 +253,6 @@ public:
   double zBeam() { return -( m_x0 * m_tx + m_y0 * m_ty ) / ( m_tx * m_tx + m_ty * m_ty ); }
 
   Gaudi::TrackSymMatrix covariance( double z );
-
-  void fitWithWeight( double factor, bool forward );
 
   struct DecreasingByRLength  {
     bool operator() (const FastVeloTrack& lhs, const FastVeloTrack& rhs) const { return lhs.nbRHits() > rhs.nbRHits(); }
