@@ -42,7 +42,7 @@ int getfilesystemtime(struct timeval *time_Info)  {
 }
 
 #if _MSC_VER<1400
-int gettimeofday(timeval *time_Info, timezone *timezone_Info)  {  
+int gettimeofday(struct timeval *time_Info, struct timezone *tz_info)  {  
   __int64 timer;
   LARGE_INTEGER li;
   BOOL b;
@@ -112,10 +112,10 @@ int gettimeofday(timeval *time_Info, timezone *timezone_Info)  {
 
   }
   // Get the timezone, if they want it
-  if (timezone_Info != NULL) {
+  if (tz_info != NULL) {
     _tzset();
-    timezone_Info->tz_minuteswest = timezone;
-    timezone_Info->tz_dsttime = daylight;
+    tz_info->tz_minuteswest = timezone;
+    tz_info->tz_dsttime = daylight;
   }
   return 0;
 }
