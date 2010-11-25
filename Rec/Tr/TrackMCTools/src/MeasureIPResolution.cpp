@@ -52,7 +52,8 @@ StatusCode MeasureIPResolution::initialize() {
   m_nbInCore    = 0;
   m_sumRInCore  = 0.;
   m_sumR2InCore = 0.;
-  
+  m_sumIPS      = 0.;
+  m_sumIPS2     = 0.;
   return StatusCode::SUCCESS;
 }
 
@@ -92,10 +93,11 @@ StatusCode MeasureIPResolution::execute() {
         isClose = true;
         break;
       }
-      //if ( !isClose) continue;
+      if ( !isClose) continue;
     }
     //if ( part->pt() < 300. ) continue;
     */
+
     LHCb::State& state = (*itT)->firstState();
     double minIP = 1.e9;
     double dxAtMin = 1.e9;
@@ -115,14 +117,15 @@ StatusCode MeasureIPResolution::execute() {
     m_averY += dyAtMin;
     double signedIP = minIP;
     if ( dxAtMin * state.tx() + dyAtMin * state.ty() > 0. ) signedIP = -signedIP;
-    if ( minIP < 0.1 ) {
+    double ipS = signedIP / sqrt( state.errX2() + state.errY2() );
+    if ( minIP < 0.5 ) {
       m_nbInCore++;
       m_sumRInCore  += signedIP;
       m_sumR2InCore += minIP * minIP;
-    } else {
+      m_sumIPS      += ipS;
+      m_sumIPS2     += ipS * ipS;
     }
     if ( msgLevel( MSG::DEBUG ) ) {
-      double ipS = signedIP / sqrt( state.errX2() + state.errY2() );
       if ( 1. < ipS ) {
         info() << format( "Track %4d : signedIP %7.3f ipS %7.3f ", (*itT)->key(), signedIP, ipS );  
         if ( 0 == part ) {
@@ -151,8 +154,9 @@ StatusCode MeasureIPResolution::finalize() {
     if ( m_nbInCore > 0 ) {
       double aver = m_sumRInCore / m_nbInCore;
       double sigma = sqrt( m_sumR2InCore/m_nbInCore - aver * aver );
-      info() << format( "   In core: %7d tracks, <> %8.3f sigma %8.3f  outside%7d", 
-                        m_nbInCore, aver, sigma, m_nTracks - m_nbInCore ) << endmsg;
+      double sIPS  = sqrt( m_sumIPS2 * m_nbInCore - m_sumIPS * m_sumIPS ) / m_nbInCore;
+      info() << format( "   In core: %7d tracks, <> %8.3f sigma %8.3f  sigmaIPS %8.3f outside%7d", 
+                        m_nbInCore, aver, sigma, sIPS, m_nTracks - m_nbInCore ) << endmsg;
     }
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions

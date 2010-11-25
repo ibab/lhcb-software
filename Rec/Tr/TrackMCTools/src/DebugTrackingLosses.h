@@ -31,11 +31,14 @@ protected:
 private:
   IParticlePropertySvc* m_ppSvc;
 
-  bool m_veloRZ;
-  bool m_veloSpace;
+  bool m_velo;
   bool m_forward;
   bool m_clone;
   bool m_ghost;
   bool m_fromStrange;
+  double m_minMomentum;
+  bool m_saveList;
+  std::vector<std::vector<int> > m_badGuys;
+  int  m_eventNumber;
 };
 #endif // DEBUGTRACKINGLOSSES_H

@@ -40,5 +40,7 @@ private:
   int m_nbInCore;
   double m_sumRInCore;
   double m_sumR2InCore;
+  double m_sumIPS;
+  double m_sumIPS2;
 };
 #endif // MEASUREIPRESOLUTION_H
