@@ -17,7 +17,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
-                            TrackStateInitAlg,
+                            TrackStateInitAlg, TrackStateInitTool,
                             FilterMatchTracks, FilterDownstreamTracks, FilterSeedTracks,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
@@ -62,11 +62,12 @@ def RecoTracking(exclude=[]):
       from STTools import STOfflineConf
       STOfflineConf.DefaultConf().configureTools()
       #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
-      
+
    ## Velo tracking
    if "Velo" in trackAlgs :
       if TrackSys().fastVelo():
           GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking() ]
+          GaudiSequencer("RecoVELOSeq").Members += [ FastVeloTracking("HLT2FastVelo") ]
       else:
          if TrackSys().veloOpen():
             if TrackSys().beamGas(): 
@@ -82,7 +83,8 @@ def RecoTracking(exclude=[]):
          else:
             GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
                                                        Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
-                                                       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+                                                       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")
+                                                       ]
             Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
             Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
             if TrackSys().timing() :
@@ -172,6 +174,9 @@ def RecoTracking(exclude=[]):
          ## Seed fit initialization
          GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
          TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
+         if TrackSys().fastVelo():
+            TrackStateInitAlg("InitSeedFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
+            TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
          # Choose fitter configuration
          if stdSeq and "Match" not in trackAlgs :
             # Use standard fitter
@@ -226,6 +231,10 @@ def RecoTracking(exclude=[]):
    GaudiSequencer("TrackFitSeq").Members += [ cloneKiller ]
    GaudiSequencer("TrackFitSeq").Members += [TrackStateInitAlg("InitBestFit")]
    TrackStateInitAlg("InitBestFit").TrackLocation = "Rec/Track/AllBest"
+   if TrackSys().fastVelo():
+      TrackStateInitAlg("InitBestFit").addTool( TrackStateInitTool("TrackStateInitTool" ) )
+      TrackStateInitTool( "TrackStateInitTool" ).VeloFitterName = "FastVeloFitLHCbIDs"
+
    GaudiSequencer("TrackFitSeq").Members += [ConfiguredFit("FitBest","Rec/Track/AllBest")]      
    from Configurables import TrackContainerCopy
    copyBest = TrackContainerCopy( "CopyBest" )

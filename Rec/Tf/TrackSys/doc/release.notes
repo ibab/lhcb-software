@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2010-11-25 - Olivier Callot
+ - Select the tool for state recreation before the fit, if FastVelo
+ - Split the instantiation of the track associators and checkers according to what is
+   run in the pattern. Always associate the best container.
+
 ! 2010-10-07 - Olivier Callot
  - Add option "FastVelo" in TrackSys to use the new FastVelo package instead of PatVelo
 
