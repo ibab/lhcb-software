@@ -71,7 +71,6 @@ macro_append  use_includes ' $(ppcmd)"$(DIMROOT)/dim" '
 # temporary fixes
 macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
-#macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"
 macro_append DIM_cflags " -Df2cFortran -fPIC -shared -D_GNU_SOURCE"  WIN32 " $(cppflags) /TC"
 macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused "  WIN32 ""
 
@@ -91,12 +90,12 @@ macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused
 # Switch off POSIX warnings for VC9
 macro_append DIM_cflags "" \
 	target-gcc      " -Wextra " \
-	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 " \
+	target-vc9      " -wd4996 " \
 	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
 macro_append DIM_cppflags "" \
 	target-gcc      " -Wextra " \
-	target-vc9      " -D_CRT_SECURE_NO_WARNINGS -wd4996 " \
+	target-vc9      " -wd4996 " \
 	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
 # local compile options
