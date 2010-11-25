@@ -83,7 +83,7 @@ StatusCode TrackAssociator::initialize() {
 StatusCode TrackAssociator::execute() {
 
   // Retrieve the Tracks
-  Tracks* tracks = get<Tracks> ( m_tracksInContainer );
+  Tracks* tracks = getOrCreate<Tracks,Tracks> ( m_tracksInContainer );
 
   // Retrieve the MCParticles
   MCParticles* mcParts = get<MCParticles> ( MCParticleLocation::Default );
