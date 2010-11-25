@@ -64,8 +64,12 @@ StatusCode DebugTrackingLosses::initialize() {
 // Main execution
 //=============================================================================
 StatusCode DebugTrackingLosses::execute() {
-  ++m_eventNumber;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  if ( !m_velo && !m_forward ) return StatusCode::SUCCESS;
+
+  ++m_eventNumber;
+
   const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default); 
   
   LHCb::ProcStatus* procStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default);
@@ -75,7 +79,7 @@ StatusCode DebugTrackingLosses::execute() {
     return StatusCode::SUCCESS;
   }
 
-  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker(    evtSvc(), msgSvc(), LHCb::TrackLocation::Velo );
+  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), LHCb::TrackLocation::Velo    );
   LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
