@@ -5,7 +5,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
-! 2010-11-11
+! 2010-11-25 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . Use simpler method for constructing flat list of algorithms from a selection object.
+
+! 2010-11-11 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
    . Issue warning if plain Gaudi configurable is used to construct StrippingLine
 

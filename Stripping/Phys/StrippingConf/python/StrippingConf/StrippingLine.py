@@ -19,7 +19,7 @@ from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import LoKi__VoidFilter  as VOIDFilter
-from SelPy.selection import FlatSelectionListBuilder
+from SelPy.selection import flatAlgorithmList
 #from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
@@ -149,7 +149,7 @@ class bindMembers (object) :
         self._outputloc = loc
 
     def _handleSelectionType(self, line, sel) :
-        members = FlatSelectionListBuilder(sel).selectionList
+        members = flatAlgorithmList(sel)
         self._members += members
         loc = sel.outputLocation()
         self._outputsel = loc
