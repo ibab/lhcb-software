@@ -224,7 +224,7 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
     return false;
   }
     
-  if ( 0 == now ) now = time( 0 );
+  if ( 0 == now ) now = (int)::time( 0 );
 
   //== Get the last entry before that time. First open the first dir if needed.
   if ( 0 > m_dirAddressInFile ) {
@@ -514,7 +514,7 @@ bool TrendingTool::select( int startTime, int endTime, std::string tag ) {
     error() << "select: file not opened!" << endmsg;
     return false;
   }
-  if ( 0 == endTime ) endTime = time( 0 );
+  if ( 0 == endTime ) endTime = (int)::time( 0 );
 
   if ( startTime > endTime ) {
     error() << "select: End time '" << timeString( endTime ) << "' is before startTime '"
