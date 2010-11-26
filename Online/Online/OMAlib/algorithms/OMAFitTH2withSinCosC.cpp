@@ -1,6 +1,10 @@
 //=============================================================================
 // Include files 
 // Online
+#ifdef _WIN32
+// Disable 4800 from ROOT: 'Int_t' : forcing value to bool 'true' or 'false'
+#pragma warning( disable : 4800 )
+#endif
 #include "OMAlib/OMAFitFunction.h"
 // Root
 #include "TGraphErrors.h"

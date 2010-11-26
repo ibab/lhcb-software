@@ -3,6 +3,8 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20101126 
+ - two other fixes from Markus to suppress windoz compilation messages
 
 ! 20101021 GG
  - remove compilation warnings from icc and windoz
