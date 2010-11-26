@@ -1,3 +1,7 @@
+2010-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker: Python framework for Subversion hooks.
+
 2010-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: fix for symbolic links to project directories on Linux
