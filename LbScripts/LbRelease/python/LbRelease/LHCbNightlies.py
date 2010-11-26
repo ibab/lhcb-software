@@ -107,7 +107,7 @@ class LHCbProjectBuilder(object):
         self.build()
         if not self.coverityBuild: self.test()
         if not self.coverityBuild: self.docs()
-        self.install()
+        if not self.coverityBuild: self.install()
     # --------------------------------------------------------------------------------
 
     def setupProj(self):
@@ -324,7 +324,7 @@ class LHCbProjectBuilder(object):
             if newExtraTags == ',': newExtraTags = ''
             os.environ['CMTEXTRATAGS'] = newExtraTags
             coverityDir = os.sep.join([self.slot.buildDir(), self.projName])
-            derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS', 'derived_models.xmldb'])
+            derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS'])
         else:
             self.coverityBuild = False
         
@@ -389,11 +389,31 @@ class LHCbProjectBuilder(object):
             os.environ['CMTEXTRATAGS'] = 'no-pyzip'
             
         if self.coverityBuild is True:
-            # http://scan2.coverity.com:7498/doc/prevent_admin.html
-            self.system('cov-build --dir %s make -k Package_failure_policy=ignore logging=enabled > make.%s.log' % (coverityDir, str(os.environ['CMTCONFIG']),) )
-            self.system('cov-analyze --dir %s' % (coverityDir) )
-            self.system('cov-collect-models --dir %s -of %s' % (coverityDir, derivedModelsDir) )
-            #self.system('cov-commit-errors --something')
+            #make list of derived model files in 'derivedModelsDir':
+            if os.path.exists(derivedModelsDir):
+                derivedModelsList = os.listdir(derivedModelsDir)
+            else:
+                derivedModelsList = []
+            #prepend each with '--derived-model-file ' to add to a command line
+            derivedModelsList = ''.join(['--derived-model-file %s' % x for x in derivedModelsList])
+
+            #prepare <project_version>, for example: gaudi_trunk, or lhcb_trunk
+            covName = '%s_trunk' % self.projName.lower()
+
+            self.system('echo "(1) ***************************************************"')
+            self.system('echo "(1) cov-build --dir %s/INT make -j 20 -l 16"' % (coverityDir))
+            self.system('cov-build --dir %s/INT make -j 20 -l 16' % (coverityDir))
+            self.system('echo "(2) ***************************************************"')
+            self.system('echo "(2) cov-analyze --dir %s/INT -j 4 --enable-callgraph-metrics --enable-parse-warnings --all %s"' % (coverityDir, derivedModelsList))
+            self.system('cov-analyze --dir %s/INT -j 4 --enable-callgraph-metrics --enable-parse-warnings --all %s' % (coverityDir, derivedModelsList))
+            self.system('echo "(3) ***************************************************"')
+            self.system('echo "(3) cov-collect-models --dir %s/INT -of %s/%s.xmldb"' % (coverityDir, derivedModelsDir, covName))
+            self.system('cov-collect-models --dir %s/INT -of %s/%s.xmldb' % (coverityDir, derivedModelsDir, covName))
+            self.system('echo "(4) ***************************************************"')
+            pp = file('/afs/cern.ch/user/l/lhcbsoft/private/init').readlines()[0].replace('\n','')
+            self.system('echo "(4) export COVERITY_PASSPHRASE=...%s... ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s --strip-path $PWD/ `cat %s/INT/c/output/commit-args.txt`"' % (str(len(pp)), covName, coverityDir))
+            self.system('export COVERITY_PASSPHRASE=%s ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s --strip-path $PWD/ `cat %s/INT/c/output/commit-args.txt`' % (pp, covName, coverityDir))
+            self.system('echo "(-) ***************************************************"')
         else:
             self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled > make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
