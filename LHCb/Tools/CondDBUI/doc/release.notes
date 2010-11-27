@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r6 2010-11-27 =========================
 ! 2010-11-19 - Illya Shapoval
  - Added 5 new scripts:
    + "TagStatusDB.py":
