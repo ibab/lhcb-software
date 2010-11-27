@@ -3,6 +3,7 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Event v19r0 2010-11-27 =========================
 ! 2010-11-18 - Olivier Deschamps
  - L0DUReport.xml : - change data member m_configuration from pointer to SmartRef<LHCb::L0DUConfig> 
                        WARNING : THE CHANGE IS NOT BACKWARD-COMPATIBLE FOR MDST PRODUCED WITH L0DUReport EXPLICITELY IN
