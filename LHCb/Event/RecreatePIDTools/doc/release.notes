@@ -4,9 +4,9 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+!========================= RecreatePIDTools v1r1 2010-11-27 =========================
 2010-11-16 - Olivier Deschamps
   - ChargedProtoCombinedDLLsAlg : fix bug in masking procedure
-
 
 !===================== Event/RecreatePIDTools v1r0 2010-09-27 ================
 ! 2010-09-22 - Marco Cattaneo
