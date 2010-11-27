@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r2 2010-11-27 =========================
 ! 2010-11-21 - Chris Jones
  - Extend Rich::IPIDPlots::Configuration with a new option for expert histograms
  - Add a method to the photon creator base class that returns a list of the
