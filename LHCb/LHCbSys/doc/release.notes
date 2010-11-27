@@ -6,6 +6,128 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v31r7>2010-11-28 LHCbSys v31r7</A></H1><PRE>
+This version uses Gaudi v21r11 and LCG_58f
+
+- Packages modified: CaloDet v10r8, DDDB v1r39, RichDet v15r2, VeloPixDet v1r8,
+  L0Event v19r0, RecreatePIDTools v1r1, LHCbKernel v12r6, LHCbMath v3r22,
+  MCInterfaces v1r12, PartProp v1r8, L0MuonKernel v9r5, ProcessorKernel v6r1,
+  DaVinciInterfaces v2r6, LoKiCore v10r6, LoKiGen v9r4, LoKiHlt v3r3,
+  RichKernel v7r40, RichRecBase v4r2, CondDBUI v3r6
+
+- In Det/CaloDet v10r8
+  . DeCalorimeter : reduce initialization verbosity
+
+- In Det/DDDB v1r39
+  . Update database tags for SQLDDDB v5r43:
+    o LHCBCOND, 2010, 2009: head-20101112
+  . Remove default tag for 2010 SIMCOND, added by mistake in last release
+
+- In Det/RichDet v15r2
+  . Add new methods to DeRichSystem to :-
+    o Provide access to the vector of inactive HPDRichSmartIDs
+    o Prove a new method to get the L1 Copy Number from a hardware ID
+
+- In Det/VeloPixDet v1r8
+  . Bug fix in the finding neighbourg function of DeVeloPixSquareType.
+
+- In Event/L0Event v19r0
+  . L0DUReport.xml : - change data member m_configuration from pointer to 
+                       SmartRef<LHCb::L0DUConfig> 
+    WARNING : THE CHANGE IS NOT BACKWARD-COMPATIBLE FOR MDST PRODUCED WITH 
+              L0DUReport EXPLICITELY IN
+  . New method globalDecisionFromChannel(std::string channelName, type=PHYSICS) :
+    return the decision from channel when participating to a global L0 decision
+    (default PHYSICS) 
+
+- In Event/RecreatePIDTools v1r1
+  . ChargedProtoCombinedDLLsAlg : fix bug in masking procedure
+
+- In Kernel/LHCbKernel v12r6
+  . Fixed a compilation problem with ICC + Boost 1.44
+  . Add some public method to VeloPixChannelID to access the masks
+  . Add new classes to represent the notion of 'persistifiable counters-in-TES'
+     Gaudi::Counter   CLID=150 - trivial couneter of StatEntity   in TES 
+     Gaudi::Counters  CLID=151 - the map  { string : StatEntity } in TES 
+     Gaudi::Numbers   CLID=152 - the map  { string : double     } in TES 
+    The classes are decorated using new python module Counters.py 
+
+- In Kernel/LHCbMath v3r22
+  . Add (python) accessor to correlation matrix
+  . Add eigenvalues and eigenvectors in python for 2x2,3x3 and 4x4 matrices 
+
+- In Kernel/MCInterfaces v1r12
+  . Added methods to easily access MC info for scintillation in 
+    IRichRecMCTruthTool and IRichMCTruthTool
+
+- In Kernel/PartProp v1r8
+  . Add printout for  set<LHCb::ParticleID>
+  . Add GAUDI_API declarations 
+
+- In L0/L0MuonKernel v9r5, L0/ProcessorKernel v6r1
+  . Fix windows error (misuse of pow)
+
+- In Phys/DaVinciInterfaces v2r6
+  . IDistanceCalculator: Add methods to calculate the impact parameter vector
+
+- In Phys/LoKiCore v10r6
+  . Add LoKi::transform 
+  . Add Gate, Dump, Cause
+ 
+- In Phys/LoKiGen v9r4
+  . Remove print statement
+
+- In Phys/LoKiHlt v3r3
+  . LoKiHlt/algorithms.py:  add function execute as alias for allRun function 
+  . Add new symbols ALG_RUN & ALG_RUNALL
+
+- In Rich/RichKernel v7r40
+  . Add a new method to RichCommonBase to propagate job options
+  . Add a new class for L1 'Copy Number'. Just a number that starts at 0 
+    in RICH1 and increments through the boards.
+
+- In Rich/RichRecBase v4r2
+  . Extend Rich::IPIDPlots::Configuration with a new option for expert histograms
+  . Add a method to the photon creator base class that returns a list of the
+    photon creator specific job options
+  . Update track selector base class to use new method in RichKernel base class
+    to propagate joboptions, instead of own private method.
+
+- In Tools/CondDBUI v3r6
+  . Added 5 new scripts:
+    + "TagStatusDB.py":
+      New clases to interact with the TagStatus database designed to monitor
+      the CondDB global tag availability status at Tier1's level.
+    + "CondDBAdmin_HashTag.py":
+      generates master hash sums for global tags and places it to 
+      release_notes.xml to be used then to fill TagStatusDB.
+    + "TSDBAdmin_MasterAgent.py":
+      explains to Tier script agents what validity status do global tags have at
+      particular Tier talking to SQLite TagStatus database.
+    + "TSDBAdmin_MasterAgent.cgi":
+      wrapper to the script above to set its environment at the web server.
+    + "TSDBAdmin_TierAgent.py":
+      requests "TSDBAdmin_MasterAgent.py" at the web server to understand current
+      status of all global tags at Tier where this agent lives. Also checks
+      whether invalid tags became valid and redirects these candidates to a
+      commit manager to update TagStatusDB.
+  . Added 'pytools' dependency to use 'Storm' interface.
+  . Added new CondDB.payloadToHash method to calculate any kind of hash sum for
+    a node making the old CondDB.payloadToMd5 method its special case.
+    In addition the bug is fixed in this machinery to reslove requested tag
+    existence at particluar folder node before its hashing.
+  . Added new methods ReleaseNotes.addHashToGlobalTag and
+    ReleaseNotes.getGlobalTags (all global tags for requested partition).
+  . Added new script to compare two databases versioned with a tag of interest.
+    Can be used to verify full equivalence (not just presence) of the tags at
+    Tier 1s and at master DB.
+  . CondDBAdmin_GlobalTag.py sript is upgraded to calculate and add hash sum
+    to 'release_notes.xml' for a global tag when tagging is done.
+  . Added the possibility of specifying extra option files to CondDBBrowser
+    (used to provide the list of "standard" databases).
+  . Added VetraCondDB.py to the default list of option files to import by
+    default. (fixes bug #73085)
+
 </PRE><H1><A NAME=v31r6p1>2010-10-25 LHCbSys v31r6p1</A></H1><PRE>
 This version uses Gaudi v21r11 and LCG_58f
 
@@ -126,15 +248,6 @@ This version uses Gaudi v21r11 and LCG_58f
   . change of argument type to const in removeTracksAndRecalculatePV of IPVOfflineTool interface
   . new method to recalculate PV without refitting in IPVOfflineTool
   . Add dictionary for IVeloExpectation::Info
-
-- In :
-  .
-
-- In :
-  .
-
-- In :
-  .
 
 
 </PRE><H1><A NAME=v31r6>2010-09-28 LHCbSys v31r6</A></H1><PRE>
