@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r40 2010-11-27 =========================
 ! 2010-11-15 - Marco Cattaneo
  - Update database tags for SQLDDDB v5r43:
    . LHCBCOND, 2010, 2009: head-20101112
@@ -417,3 +418,4 @@
                         Replaces $STDOPTS/DetDesc.opts
    . options/DC06.opts: options to select DC06 tags 
                         Replaces $STDOPTS/DC06Conditions.opts
+!========================= DDDB v1r40 2010-11-27 =========================
