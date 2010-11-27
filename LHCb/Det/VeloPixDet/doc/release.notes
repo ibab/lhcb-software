@@ -4,7 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
-
+!========================= VeloPixDet v1r8 2010-11-27 =========================
 ! 2010-11-04 - Victor Coco
  - Bug fix in the finding neighbourg function of DeVeloPixSquareType.
 
