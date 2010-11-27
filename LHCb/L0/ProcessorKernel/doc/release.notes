@@ -4,6 +4,7 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!========================= ProcessorKernel v6r1 2010-11-27 =========================
 ! 2010-11-15 - Julien Cogan
  - Fix windows error (misuse of pow)
 
