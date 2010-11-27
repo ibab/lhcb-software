@@ -4,16 +4,14 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciInterfaces v2r6 2010-11-27 =========================
 ! 2010-11-20 - Vanya Belyaev
-
  - IDistanceCalculator:
-
     add methods to calculate the impact parameter vector
      - requested by Tagging 
     actually I am a bit skeptical about the expected improvement
 
 - cmt/requirements 
-
     version increment to v2r6 
 
 !===================== DaVinciInterfaces v2r5 2010-07-26 =====================
