@@ -1,4 +1,3 @@
-! $Id: release.notes,v 1.204 2010-06-05 20:13:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,29 +15,22 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v10r6 2010-11-27 =========================
 ! 2010-11-23 - Vanya Belyaev
  - add LoKi::transform 
 
 ! 2010-11-19 - Vanya Belyaev
-
  - improve dumping 
 
 ! 2010-11-18 - Vanya Belyaev
-
  - add Cause 
-
-   thanks to Roel Aaij 
-
+   thanks to Roel Aaij
 
 ! 2010-11-18 - Vanya Belyaev
-
  - improve Dump,Dump_ & dump 
 
 ! 2010-11-17 - Vanya Belyaev
-
- - for Hlt:
-
-     add Gate & Dump : 
+ - for Hlt: add Gate & Dump : 
 
  - cmt/requirements 
    version increment to v10r6
