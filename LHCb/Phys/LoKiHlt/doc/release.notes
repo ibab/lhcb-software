@@ -1,22 +1,18 @@
-! $Id: release.notes,v 1.44 2010-06-04 13:44:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r3 2010-11-27 =========================
 ! 2010-11-22 - Vanya Belyaev
-
  - LoKiHlt/algorithms.py
-
     add function execute as alias for allRun function 
-
 
 ! 2010-11-19 - Vanya Belyaev
  - tiny fix 
 
 ! 2010-11-17 - Vanya Belyaev
-
  - add new symbols ALG_RUN & ALG_RUNALL
  - cmt/requirements    
      version increment to v3r3
