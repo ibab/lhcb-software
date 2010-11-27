@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v9r3
+version           v9r4
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
