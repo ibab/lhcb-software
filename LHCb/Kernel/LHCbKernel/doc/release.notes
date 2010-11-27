@@ -4,7 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!========================= LHCbKernel v12r7 2010-11-27 =========================
+!========================= LHCbKernel v12r6 2010-11-27 =========================
 ! 2010-11-23 - Marco Clemencic
  - Fixed a compilation problem with ICC + Boost 1.44
 
