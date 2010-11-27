@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v12r7 2010-11-27 =========================
 ! 2010-11-23 - Marco Clemencic
  - Fixed a compilation problem with ICC + Boost 1.44
 
@@ -11,13 +12,10 @@
 - add some public method to VeloPixChannelID to access the masks
 
 ! 2010-11-10 - Vanya Belyaev
-
  - fix some strange problem
 
 ! 2010-11-09 - Vanya Belyaev
-
- - add new classes to represent the notion of 
-   'persistifiable counters-in-TES'
+ - add new classes to represent the notion of 'persistifiable counters-in-TES'
 
    these objects could be very useful e.g. for uDST. 
 
@@ -27,7 +25,6 @@
 
    the classes are propertly decorates using new python module Counters.py 
 
-  
  - cmt/requirements 
      version increment to v12r6 
 
