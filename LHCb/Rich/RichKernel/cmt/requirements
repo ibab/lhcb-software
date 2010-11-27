@@ -6,7 +6,7 @@
 #============================================================================
 
 package RichKernel
-version           v7r39
+version           v7r40
 
 # ================ structure =================================================
 branches RichKernel cmt dict doc src python

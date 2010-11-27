@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r40 2010-11-27 =========================
 ! 2010-11-21 - Chris Jones
  - Add a new method to RichCommonBase to propagate job options
 
