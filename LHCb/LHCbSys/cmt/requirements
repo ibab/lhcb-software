@@ -1,5 +1,5 @@
 package LHCbSys
-version v31r6p1
+version v31r7
 
 branches doc cmt test
 
@@ -24,9 +24,9 @@ use Tell1Kernel           v1r11   DAQ     # Tomasz Szumlak
 # Detector description
 use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
-use CaloDet               v10r7   Det     # Olivier Deschamps
+use CaloDet               v10r8   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r38   Det     # Marco Cattaneo
+use DDDB                  v1r39   Det     # Marco Cattaneo
 use DetCond               v12r16  Det     # Marco Clemencic
 use DetDesc               v18r21  Det     # Marco Clemencic,Juan Palacios
 use DetDescChecks         v5r4    Det     # Marco Clemencic, Ivan Belyaev
@@ -35,10 +35,10 @@ use DetDescSvc            v3r0    Det     # Marco Clemencic, Matt Needham
 use Magnet                v7r1    Det     # Marco Cattaneo
 use MuonDet               v9r2    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r4    Det     # Jan Amoraal
-use RichDet               v15r1   Det     # Chris Jones
+use RichDet               v15r2   Det     # Chris Jones
 use STDet                 v4r22   Det     # J. van Tilburg, Matt Needham
 use VeloDet               v13r12  Det     # Mark Tobin, Kurt Rinnert
-use VeloPixDet            v1r7    Det     # Victor Coco
+use VeloPixDet            v1r8    Det     # Victor Coco
 
 # Event data model
 use DAQEvent              v9r2    Event   # Marco Cattaneo, Markus Frank
@@ -52,12 +52,12 @@ use HltEvent              v9r0    Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
 use LinkerInstances       v3r5    Event   # Thomas Ruf
 use LumiEvent             v3r0p2  Event   # Jaap Panman
-use L0Event               v18r3   Event   # Olivier Deschamps, Julien Cogan
+use L0Event               v19r0   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r17   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v4r3    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent            v11r12p1 Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r32   Event   # Marco Cattaneo and sub-det experts
-use RecreatePIDTools      v1r0    Event   # Chris Jones
+use RecreatePIDTools      v1r1    Event   # Chris Jones
 use TrackEvent            v5r8    Event   # Wouter Hulsbergen
 use VeloEvent             v16r9   Event   # Tomasz Szumlak, Chris Parkes
 
@@ -78,18 +78,18 @@ use HistoStrings          v1r0    Kernel  # Vanya Belyaev
 use HltInterfaces         v4r1p1  Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r35   Kernel  # Marco Cattaneo
-use LHCbKernel            v12r5   Kernel  # Marco Cattaneo
-use LHCbMath              v3r21   Kernel  # Juan Palacios
-use MCInterfaces          v1r11   Kernel  # Marco Cattaneo et al.
-use PartProp              v1r7    Kernel  # Vanya Belyaev 
+use LHCbKernel            v12r6   Kernel  # Marco Cattaneo
+use LHCbMath              v3r22   Kernel  # Juan Palacios
+use MCInterfaces          v1r12   Kernel  # Marco Cattaneo et al.
+use PartProp              v1r8    Kernel  # Vanya Belyaev 
 use Relations             v5r9p1  Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
 use XMLSummaryKernel      v1r0p2  Kernel  # Rob Lambert
 
 use L0Base                v1r3    L0      # Julien Cogan
 use L0Interfaces          v1r7    L0      # Olivier Deschamps
-use L0MuonKernel          v9r4    L0      # Julien Cogan
-use ProcessorKernel       v6r0p1  L0      # Julien Cogan
+use L0MuonKernel          v9r5    L0      # Julien Cogan
+use ProcessorKernel       v6r1    L0      # Julien Cogan
 
 use MuonDAQ               v4r8    Muon    # Alessia Satta
 use MuonInterfaces        v1r2p1  Muon    # Alessia Satta
@@ -97,16 +97,16 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
 use OTDAQ                 v7r8    OT      # Wouter Hulsbergen
 
-use DaVinciInterfaces     v2r5    Phys    # Juan Palacios
+use DaVinciInterfaces     v2r6    Phys    # Juan Palacios
 use DaVinciTypes          v2r0    Phys    # Juan Palacios
-use LoKiCore              v10r5   Phys    # Ivan Belyaev
-use LoKiGen               v9r3    Phys    # Ivan Belyaev
-use LoKiHlt               v3r2    Phys    # Ivan Belyaev
+use LoKiCore              v10r6   Phys    # Ivan Belyaev
+use LoKiGen               v9r4    Phys    # Ivan Belyaev
+use LoKiHlt               v3r3    Phys    # Ivan Belyaev
 use LoKiMC                v9r3    Phys    # Ivan Belyaev
 use LoKiNumbers           v9r4    Phys    # Ivan Belyaev
 
-use RichKernel            v7r39   Rich    # Chris Jones
-use RichRecBase           v4r1    Rich    # Chris Jones
+use RichKernel            v7r40   Rich    # Chris Jones
+use RichRecBase           v4r2    Rich    # Chris Jones
 
 use SiDAQ                 v2r1p1  Si      # Matt Needham
 
@@ -120,7 +120,7 @@ use TfKernel              v2r19   Tf      # Stephanie Hansmann-Menzemer
 use TsaKernel             v3r6    Tf      # Matt Needham
 
 use CondDBEntityResolver  v5r2    Tools   # Marco Clemencic
-use CondDBUI              v3r5p1  Tools   # Marco Clemencic
+use CondDBUI              v3r6    Tools   # Marco Clemencic
 use XmlTools              v6r3p2  Tools   # Marco Clemencic
 
 use TrackInterfaces       v4r17   Tr      # Matt Needham
