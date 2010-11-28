@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-11-29 - V. Gligorov
+ - Remove a lot of obsolete settings in preparation for defining the settings
+   for 2011 running. 
+
 !========================== HltSettings v4r1p1 2010-10-01 ===================
 ! 2010-10-01 - Gerhard Raven
  - perform proper merging of sub-settings in Oct10
