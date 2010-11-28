@@ -7,6 +7,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2010-11-28 - Albert Puig
+  - Removed Kali.py to avoid name clashes.
+
 ! 2010-11-22 - Albert Puig
 
   - Completely reshuffled the python part to accomodate both CandidateMinimization
