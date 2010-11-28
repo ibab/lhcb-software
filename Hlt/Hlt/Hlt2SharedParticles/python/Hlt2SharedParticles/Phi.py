@@ -8,8 +8,6 @@
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
-from Hlt2SharedParticles.GoodParticles import GoodKaons
-from Hlt2SharedParticles.BasicParticles import NoCutsKaons
 from HltLine.HltLine import bindMembers
 from Hlt2SharedParticles.TrackFittedBasicParticles import  BiKalmanFittedKaons
 __all__ = ( 'Phi2KK', 'UnbiasedPhi2KK' )
@@ -33,10 +31,10 @@ Phi2KK = bindMembers( None, [ BiKalmanFittedKaons, Hlt2SharedPhi2KK ] )
 #
 ##
 Hlt2SharedUnbiasedPhi2KK = CombineParticles("Hlt2SharedUnbiasedPhi2KK")
-Hlt2SharedUnbiasedPhi2KK.InputLocations = [ NoCutsKaons.outputSelection() ]
+Hlt2SharedUnbiasedPhi2KK.InputLocations = [ BiKalmanFittedKaons.outputSelection() ]
 Hlt2SharedUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 Hlt2SharedUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 
 Hlt2SharedUnbiasedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<20*MeV)"
 Hlt2SharedUnbiasedPhi2KK.MotherCut = "(VFASPF(VCHI2PDOF)<25)"
 
-UnbiasedPhi2KK = bindMembers( None, [ NoCutsKaons, Hlt2SharedUnbiasedPhi2KK ] )
+UnbiasedPhi2KK = bindMembers( None, [ BiKalmanFittedKaons, Hlt2SharedUnbiasedPhi2KK ] )

@@ -40,6 +40,10 @@ Hlt2BiKalmanFittedRichForProtonsForwardTracking 	= Hlt2BiKalmanFittedRichForProt
 #
 BiKalmanFittedChargedProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedNoPIDsProtos()
 #
+# Charged hadron protoparticles, second loop forward trackign, no Rich
+#
+BiKalmanFittedChargedSecondLoopProtoMaker   = Hlt2BiKalmanFittedForwardTracking.hlt2ChargedNoPIDsProtos(secondLoop=True)
+#
 # Downstream hadron protoparticles, no Rich
 #
 BiKalmanFittedChargedDownProtoMaker			= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedNoPIDsProtos()
@@ -143,6 +147,22 @@ Hlt2BiKalmanFittedElectrons.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(
 Hlt2BiKalmanFittedElectrons.WriteP2PVRelations 		=  False
 ##########################################################################
 #
+# Make the second loop pions
+#
+Hlt2BiKalmanFittedSecondLoopPions                 = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopPions")
+Hlt2BiKalmanFittedSecondLoopPions.Particle            =  "pion"
+Hlt2BiKalmanFittedSecondLoopPions.Input               =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
+Hlt2BiKalmanFittedSecondLoopPions.WriteP2PVRelations      =  False
+##########################################################################
+#
+# Make the second loop kaons
+#
+Hlt2BiKalmanFittedSecondLoopKaons                 = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopKaons")
+Hlt2BiKalmanFittedSecondLoopKaons.Particle            =  "kaon"
+Hlt2BiKalmanFittedSecondLoopKaons.Input               =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
+Hlt2BiKalmanFittedSecondLoopKaons.WriteP2PVRelations      =  False
+##########################################################################
+#
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
 #
@@ -150,23 +170,29 @@ Hlt2BiKalmanFittedElectrons.WriteP2PVRelations 		=  False
 #
 
 __all__ = ( 	'BiKalmanFittedMuons', 
-		'BiKalmanFittedElectrons', 
-		'BiKalmanFittedKaons', 
-		'BiKalmanFittedPions',
-		'BiKalmanFittedDownPions',
+		        'BiKalmanFittedElectrons', 
+		        'BiKalmanFittedKaons', 
+		        'BiKalmanFittedPions',
+		        'BiKalmanFittedSecondLoopKaons',
+                'BiKalmanFittedSecondLoopPions',
+                'BiKalmanFittedDownPions',
                 'BiKalmanFittedProtons',
                 'BiKalmanFittedDownProtons',
-		'BiKalmanFittedRichKaons',
-		'BiKalmanFittedRichProtons' )
+		        'BiKalmanFittedRichKaons',
+		        'BiKalmanFittedRichProtons' )
 
 #
 BiKalmanFittedKaons         = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedKaons 	] )
 BiKalmanFittedPions         = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedPions 	] )
-BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker          	, Hlt2BiKalmanFittedDownPions   ] )
+
+BiKalmanFittedSecondLoopKaons = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopKaons   ] ) 
+BiKalmanFittedSecondLoopPions = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopPions   ] )
+
+BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownPions   ] )
 BiKalmanFittedProtons       = bindMembers( None, [ BiKalmanFittedChargedProtoMaker			, Hlt2BiKalmanFittedProtons 	] )
-BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker          	, Hlt2BiKalmanFittedDownProtons ] )
+BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownProtons ] )
 BiKalmanFittedMuons         = bindMembers( None, [ BiKalmanFittedMuonProtoMaker				, Hlt2BiKalmanFittedMuons 	] )
-BiKalmanFittedElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker			, Hlt2BiKalmanFittedElectrons 	] ) 
-BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker		, Hlt2BiKalmanFittedRichKaons 	] )
-BiKalmanFittedRichProtons   = bindMembers( None, [ BiKalmanFittedChargedRichForProtonsHadronProtoMaker  , Hlt2BiKalmanFittedRichProtons ] )
+BiKalmanFittedElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker		, Hlt2BiKalmanFittedElectrons 	] ) 
+BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichKaons 	] )
+BiKalmanFittedRichProtons   = bindMembers( None, [ BiKalmanFittedChargedRichForProtonsHadronProtoMaker , Hlt2BiKalmanFittedRichProtons ] )
  

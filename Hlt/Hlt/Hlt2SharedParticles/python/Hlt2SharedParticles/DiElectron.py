@@ -6,6 +6,12 @@
 #  @date 2008-07-15
 #
 ##
+#OBSOLETE: REDIRECT TO TRACK FITTED ELECTRONS FOR NOW
+#SHOULD BE REMOVED ENTIRELY
+from Hlt2SharedParticles.TrackFittedDiElectron import TrackFittedDiElectron
+__all__ = ('DiElectron')
+DiElectron = TrackFittedDiElectron
+'''
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
 from Hlt2SharedParticles.BasicParticles import Electrons
@@ -24,3 +30,4 @@ Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  )
 
 DiElectron = bindMembers( "Shared", [ Electrons, Hlt2SharedDiElectron ] )
+'''

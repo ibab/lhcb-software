@@ -8,7 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
-from Hlt2SharedParticles.BasicParticles import NoCutsPions
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions
 from Hlt2SharedParticles.D0 import D02KPi, D02KK, D02PiPi
 from HltLine.HltLine import bindMembers
 
@@ -17,11 +17,11 @@ __all__ = ( 'DstarWithD02KPi', 'DstarWithD02KK', 'DstarWithD02PiPi' )
 ################################################################################
 # Slow pion
 Hlt2SlowPions = FilterDesktop("Hlt2SlowPions")
-Hlt2SlowPions.InputLocations  = [ NoCutsPions.outputSelection(), "Hlt2VTTPions" ]
+Hlt2SlowPions.InputLocations  = [ BiKalmanFittedPions.outputSelection(), "Hlt2VTTPions" ]
 Hlt2SlowPions.Code = "(MIPCHI2DV(PRIMARY)>1)"
 
 ###@TODO:@FIXME add explicit Hlt2VTTPions dependency...
-SlowPions = bindMembers( None, [ NoCutsPions, Hlt2SlowPions ] )
+SlowPions = bindMembers( None, [ BiKalmanFittedPions, Hlt2SlowPions ] )
 ################################################################################
 # D* with D0->Kpi
 #
