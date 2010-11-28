@@ -5,6 +5,14 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-11-29 - V. Gligorov
+ - Add option to grab track/protoparticles using the 2-loop forward reco
+   in Hlt2Tracking, see 
+   http://indico.cern.ch/getFile.py/access?contribId=2&resId=0&materialId=slides&confId=110443
+   for the motivation behind this.
+ - Follow above in HltTrackNames.
+ - Remove obsolete configs from Hlt2TrackingConfigurations      
+
 ! 2010-11-22 - Vanya Belyaev
 
  - HltReco.py
