@@ -50,8 +50,6 @@ from HltVertexNames import HltGlobalVertexLocation
 def PV3D() :
 
     from Configurables import PatPV3D
-    from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-    from Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking
     from Configurables import PVOfflineTool,PVSeedTool,LSAdaptPV3DFitter
     from HltReco import MinimalVelo
 
