@@ -30,6 +30,7 @@ Hlt1SeedingTracksName                   = "Seeding"
 #
 Hlt2VeloTracksName 			= "Velo"
 Hlt2ForwardTracksName 			= "Forward"
+Hlt2ForwardSecondLoopTracksName = "ForwardSecondLoop"
 Hlt2MatchTracksName 			= "Match"
 Hlt2LongTracksName 			= "Long"
 Hlt2SeedingTracksName 			= Hlt1SeedingTracksName
@@ -125,7 +126,8 @@ __all__ = (
 		#
 		HltSharedRZVeloTracksName,
 		Hlt2ForwardTracksName, 
-		Hlt2MatchTracksName, 
+		Hlt2ForwardSecondLoopTracksName,
+        Hlt2MatchTracksName, 
 		Hlt2LongTracksName, 
 		Hlt2SeedingTracksName, 
 		Hlt2DownstreamTracksName,
