@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2020-11-29 - V. Gligorov
+ - Add Hlt2SecondLoopExampleLine, an example of how to use the new 2-loop
+   forward tracking in HLT2.
+
 ! 2010-10-19 - Johannes Albrecht
  - Add monitoring to dimuons
 
