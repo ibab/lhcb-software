@@ -33,6 +33,7 @@ from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
 from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
 from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
+from Hlt2Lines.Hlt2SecondLoopExampleLine   import Hlt2SecondLoopExampleLinesConf
 from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
@@ -42,12 +43,9 @@ from Hlt2Lines.Hlt2BeamGasLines import Hlt2BeamGasLinesConf
 #
 from HltTracking.Hlt2Tracking import Hlt2Tracking
 #
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking 
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UniKalmanFittedForwardTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
@@ -56,15 +54,11 @@ from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ (Hlt2Tracking, "Hlt2UnfittedForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
-                             , (Hlt2Tracking, "Hlt2UnfittedDownstreamTracking")
+    __used_configurables__ = [ (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
-                             , (Hlt2Tracking, "Hlt2UniKalmanFittedForwardTracking")
-                             , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
-                             , (Hlt2Tracking, "Hlt2UnfittedLongTracking")
+                             , (Hlt2Tracking, "Hlt2UnfittedForwardTracking")
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
@@ -89,8 +83,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2InclusiveElectronLinesConf
                              , Hlt2B2KstareeLinesConf  
                              , Hlt2BeamGasLinesConf
+                             , Hlt2SecondLoopExampleLinesConf
                              ]
-    __slots__ = { "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
+    __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "WithMC"                     : False 
                 , "DefaultVoidFilter"          : ''
@@ -140,15 +135,11 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
     def configureReconstruction(self):
 
-        definedTrackings = [ Hlt2UnfittedForwardTracking()
-                           , Hlt2UnfittedDownstreamTracking()
-                           , Hlt2BiKalmanFittedDownstreamTracking()
-                           , Hlt2UniKalmanFittedForwardTracking()
-                           , Hlt2UnfittedLongTracking()
+        definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
                            , Hlt2BiKalmanFittedForwardTracking()
                            , Hlt2BiKalmanFittedLongTracking() 
-                           , Hlt2BiKalmanFittedRichForProtonsForwardTracking() 
-                           ]
+                           , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
+                           , Hlt2UnfittedForwardTracking() ]
 
 
         # And now we have to, for each of the configurables we just created, 
