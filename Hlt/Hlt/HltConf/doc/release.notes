@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-29 - V. Gligorov
+ - Add Hlt2SecondLoopExampleLine, an example of how to use the new 2-loop
+   forward tracking in HLT2, and remove some obsolete configurations.
+
 ! 2010-10-18 - Vladimir Gligorov
  - add Hlt1NoPVPassThroughDecision to HltInit  
 
