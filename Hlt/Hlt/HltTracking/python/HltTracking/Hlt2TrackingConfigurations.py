@@ -9,7 +9,8 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 #
 # Define all the instances of Hlt2Tracking
 #
-# The  vanilla  configuration, no track fitting or seeding
+# FIRST THE UNFITTED TRACKS, SHOULD NOT BE USED BY SELECTIONS
+# EVENTUALLY THIS SHOULD JUST BE REMOVED
 #
 def Hlt2UnfittedForwardTracking() :
      return Hlt2Tracking("Hlt2UnfittedForwardTracking",        
@@ -19,18 +20,6 @@ def Hlt2UnfittedForwardTracking() :
                                                                                  DoFastFit               = False,
                                                                                  DoSeeding               = False
                                     )
-#
-# With unidirectional track fitting, no seeding
-#
-def Hlt2UniKalmanFittedForwardTracking() :
-        return Hlt2Tracking("Hlt2UniKalmanFittedForwardTracking",       
-                                                                                 Prefix                 = Hlt2TracksPrefix,
-                                                                                 FastFitType            = HltUniDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2ForwardTracksName,
-                                                                                 DoFastFit              = True,
-                                                                                 DoSeeding              = False
-                                                                        )
-#
 # With bidirectional track fitting, no seeding
 #
 def Hlt2BiKalmanFittedForwardTracking() :
@@ -40,18 +29,6 @@ def Hlt2BiKalmanFittedForwardTracking() :
                                                                                  Hlt2Tracks             = Hlt2ForwardTracksName,
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = False
-                                                                        )
-#
-# With seeding, no track fitting
-#
-def Hlt2UnfittedLongTracking() :
-        return Hlt2Tracking("Hlt2UnfittedLongTracking",              
-                                                                                 Prefix                 = Hlt2TracksPrefix,
-                                                                                 FastFitType            = HltUnfittedTracksSuffix,
-                                                                                 Hlt2Tracks             = Hlt2LongTracksName,
-                                                                                 DoFastFit              = False,
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = True
                                                                         )
 #
 # With seeding and track fitting
@@ -64,17 +41,6 @@ def Hlt2BiKalmanFittedLongTracking() :
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = True
-                                                                        )
-#
-# Now for the Downstream tracks, but no track fit. 
-#
-def Hlt2UnfittedDownstreamTracking() :
-    return Hlt2Tracking("Hlt2UnfittedDownstreamTracking",                 
-                                                                                 Prefix                 = Hlt2TracksPrefix,
-                                                                                 FastFitType            = HltUnfittedTracksSuffix,
-                                                                                 Hlt2Tracks             = Hlt2DownstreamTracksName,
-                                                                                 DoFastFit              = False,
-                                                                                 DoSeeding              = True
                                                                         )
 #
 # Now the Downstream tracks with the bidirectional Kalman fit.
