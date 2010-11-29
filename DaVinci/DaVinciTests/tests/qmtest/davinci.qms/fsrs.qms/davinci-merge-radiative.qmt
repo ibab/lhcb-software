@@ -8,7 +8,7 @@
     <text>$APPCONFIGOPTS/Merging/WriteFSR.py</text>
     <text>$DAVINCITESTSROOT/tests/options/fsrs/davinci-merge.py</text>
     <text>--option</text>
-    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:MagUp.Radiative.dst' TYP='POOL_ROOTTREE' OPT='READ'", "DATAFILE='PFN:MagDown.Radiative.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST";</text>
+    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:MagUp.Radiative.dst' TYP='POOL_ROOTTREE' OPT='READ'", "DATAFILE='PFN:MagDown.Radiative.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; IODataManager().AgeLimit=2;</text>
   </set></argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="prerequisites"><set>
