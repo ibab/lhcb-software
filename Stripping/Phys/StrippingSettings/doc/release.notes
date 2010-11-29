@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-11-29 - Juan Palacios
+ - Add tests/test_stripping12_instantiation.py
+  . Tests that Stripping12 lines can be instantiated and passed on to 
+    a StrippingConf.
+
 ! 2010-11-12 - Greig Cowan
  - Added function to __init__ of Stripping11 and 12 to contain the stream
    definitions. Note that these definitions are not necessarily what runs in
