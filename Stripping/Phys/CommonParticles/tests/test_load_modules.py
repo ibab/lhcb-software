@@ -20,7 +20,7 @@ def test_load_standard_basic_charged() :
     from CommonParticles import StandardBasicCharged
 
 def test_load_all() :
-    from CommonParticles import *
+    import CommonParticles
 
 if '__main__' == __name__ :
 

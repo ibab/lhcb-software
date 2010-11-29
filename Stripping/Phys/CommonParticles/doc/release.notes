@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-11-29 - Juan Palacios
+ - tests/test_load_modules.py
+  . Remove false failure.
+ - Increase to v7r6p1.
+
 !========================== CommonParticles v7r6 2010-11-09 ===================
 
 ! 2010-11-08 - Greig Cowan
