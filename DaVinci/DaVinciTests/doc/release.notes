@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-11-29 - Juan Palacios
+ - Create .py files for some stripping tests so they can be run as jobs.
  - Add test of stripping12 instantiation.
  - Increase to v1r8.
 

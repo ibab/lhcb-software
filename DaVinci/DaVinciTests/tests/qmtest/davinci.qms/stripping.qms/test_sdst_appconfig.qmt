@@ -4,13 +4,10 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>$APPCONFIGOPTS/DaVinci/StrippingLinesPrescales-1003.py</text>
-  <text>$APPCONFIGOPTS/DaVinci/DVStrippingDST-RealData.py</text>
-  <text>$APPCONFIGOPTS/DaVinci/DataType-2010.py</text>
-<text>$APPCONFIGOPTS/DaVinci/InputType-SDST.py</text>
-    <text>--option</text>
-    <text>from Configurables import DaVinci; DaVinci().EvtMax=-1; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]; FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']</text>
-</set></argument>  <argument name="validator"><text>
+  <text>../options/Stripping/test_sdst_appconfig.py</text>
+</set>
+</argument>
+<argument name="validator"><text>
 findReferenceBlock("""
 DaVinciInitAlg                                              SUCCESS 199 events processed
 """, stdout, result, causes, signature_offset = 0, id = "4100")

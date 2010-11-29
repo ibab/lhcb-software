@@ -69,5 +69,6 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
 DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 #DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007386/0000/00007386_00000244_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-
+from Configurables import CondDB
+CondDB().LocalTags['SIMCOND'] = ['simpatch-20100827']
 
