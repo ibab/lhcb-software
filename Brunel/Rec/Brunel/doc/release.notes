@@ -19,6 +19,8 @@ The head of this package is now set up to include changes for 2011 production
     . tt-20101106: updated TT dead strip maps
   . #103054: Add processing time monitor for Vertex, Calo, Muon, Proto sequences
   . #103059: Various new Rich monitoring plots, reduce verbosity
+  . #103287, 103294: Execute track associators only if corresponding track type
+    has been reconstructed 
 
 - Changes to example options
   . In COLLISION10-Beam3500GeV-VeloClosed-MagDown.py use a more recent raw file,
@@ -35,6 +37,7 @@ The head of this package is now set up to include changes for 2011 production
   . Update brunel.brunel2010magdown for changed input file
   . New test brunel-mc10-withtruth.qmt to test MC10 simulation settings.
     Currently uses a private file from Chris Jones.
+  . Ignore NeuroBayes initialization messages in QMTest references
 
 </PRE><H1><A NAME=v37r8p4>2010-11-11 Brunel v37r8p4</A></H1><PRE>
 This version uses projects LCG 58f, Gaudi v21r11, LHCb v31r6p1, Lbcom v9r7p1,
