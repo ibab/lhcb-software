@@ -2,7 +2,7 @@
 # Maintainer : A. Poluektov
 
 package           StrippingSettings
-version           v1r3
+version           v1r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -26,4 +26,6 @@ end_private
 # standard patterns
 #============================================================================
 apply_pattern install_python_modules
+#============================================================================
+apply_pattern QMTest
 #============================================================================
