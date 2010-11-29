@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-11-29 - Juan Palacios
+ - Add test of stripping12 instantiation.
+ - Increase to v1r8.
+
 !=========================== DaVinciTests v1r7 2010-11-10 ====================
 
 ! 2010-11-10 - Juan Palacios
