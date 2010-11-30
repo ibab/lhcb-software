@@ -62,11 +62,6 @@ namespace LoKi
       const LoKi::Types::VFunc&                  fun      , 
       const LoKi::Types::VCuts&                  cut      ) ;
     // ======================================================================== 
-    static const LHCb::RecVertex*                selectMin 
-    ( const LHCb::RecVertex::Container*          vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ======================================================================== 
   public:
     // ========================================================================    
     static const LHCb::VertexBase*               selectMax 
