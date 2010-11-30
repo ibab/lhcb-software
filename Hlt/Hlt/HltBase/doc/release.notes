@@ -4,6 +4,15 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2010-11-30 - Vanya Belyaev
+
+ - add functions to dictionary:
+
+     Hlt::HltUtils::impactParameter 
+     Hlt::HltUtils::impactParameterVector
+     Hlt::HltUtils::impactParameterSignificance
+   
+
 ! 2010-11-22 - Vanya Belyaev
  - improve  a little bit the treatment of history 
 

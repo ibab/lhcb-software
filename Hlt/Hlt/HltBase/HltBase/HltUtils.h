@@ -45,7 +45,6 @@ namespace Hlt {
   };
 }
 
-
 namespace HltUtils
 {
 

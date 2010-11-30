@@ -21,6 +21,8 @@
 #include "Event/HltL0DiMuonCandidate.h"
 #include "Event/HltMultiTrack.h"
 
+#include "HltBase/HltUtils.h"
+
 namespace 
 {
   struct __Instantiations
