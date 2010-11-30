@@ -5,6 +5,34 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2010-11-30 - Vanya Belyaev
+
+ - Service.py
+
+   really resurrect "DOT"-related  functions
+
+
+
+     >>> hlt = gaudi.htlInspector 
+
+   Make dot-graph for algorithm:
+
+     >>> alg = ...
+     >>> htl.dotAlg( alg ) 
+
+   Make dot-graph for selection
+
+     >>> sel = ...
+     >>> htl.dotSel( sel ) 
+
+   Make dot-graph for ALL algorithms and selections 
+
+     >>> sel = ...
+     >>> htl.dotSel( sel ) 
+
+
+
+
 ! 2010-11-24 - Vanya Belyaev
 
  - fix the bug with "dot"-tool

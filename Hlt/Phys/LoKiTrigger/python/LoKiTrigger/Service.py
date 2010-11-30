@@ -10,13 +10,26 @@
 #  @see Hlt::Serice 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-03-25
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
+# 
 # =============================================================================
 """
 Useful decorator for HLT Service and its interfaces
+
+
+                    $Revision$
+  Last modification $Date$
+                 by $Author$
+ 
+
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
+__version__ = "Version $Revision$"
+__date__    = "2009-03-25"
 # =============================================================================
 __all__ = ( 'iHltInspector', )
 # =============================================================================
@@ -31,22 +44,23 @@ InterfaceCast = GaudiPython.Bindings.InterfaceCast
 AppMgr        = GaudiPython.Bindings.AppMgr 
 Hlt           = cpp.Hlt
 
+def name    ( s ) :
+    for i in ( '/' , ' ' , ':' , '-' , '+' , '=' , '[' , ']') : s = s.replace( i ,'_')
+    return s
 
-def selNode ( s ) : return ' %s '    % s 
-def tesNode ( l ) : return ' %s '    % l
-def algNode ( a ) : return ' Alg%s ' % a
+def selNode ( s ) : return name ( 'SEL_%s' % s ) 
+def tesNode ( l ) : return name ( 'TES_%s' % l )  
+def algNode ( a ) : return name ( 'ALG_%s' % a ) 
 
 def selLine ( s ) :
-    return " \t\t %s [shape=ellipse,color=yellow,style=filled];" % selNode ( s ) 
-
+    return " \t\t %s [label=<%s>,shape=ellipse,fillcolor=yellow,color=yellow4,style=filled];    \n" % ( selNode ( s ) , s )  
 def tesLine ( l ) :
-    return " \t\t %s [shape=ellipse,color=green,style=filled];"  % tesNode ( l ) 
-
+    return " \t\t %s [label=<%s>,shape=ellipse,fillcolor=greenyellow,color=green4,style=filled];\n" % ( tesNode ( l ) , l ) 
 def algLine ( a ) :
-    return " \t\t %s [label=%s,shape=box,color=red,style=filled];" % ( algNode ( a ) , a )  
+    return " \t\t %s [label=<%s>,shape=box3d,color=red4,fillcolor=red,style=filled];            \n" % ( algNode ( a ) , a )  
 
 def arrow   ( s1 , s2 ) :
-    return ' \t\t\t  %s  -> %s [shape=vee];' % ( s1, s2 ) 
+    return ' \t\t\t  %s  \t -> %s [shape=normal]; \n' % ( s1, s2 ) 
 
 # ============================================================================
 ## @class iHltInspector
@@ -439,158 +453,200 @@ class iHltInspector(iService) :
 
         return output 
 
-    ## "DOT" the algorithm 
-    def dotAlg ( self , alg , file_ = None ) :
+    # =========================================================================
+    ## Open/create DOT-file
+    def _dotFile ( self , file = None ) :
         """
+        Open/create DOT-file
+        """
+        tmp   = False        
+        if not file :    
+            import tempfile
+            file = tempfile.NamedTemporaryFile ( prefix = 'tmp_' ,
+                                                 suffix = ".dot" ,
+                                                 mode   = 'w'    )
+            tmp   = True 
+        else : file  = open ( file , 'w')
+        #
+        if not file :
+            raise AttributeError, "Unable open/create file"
+        #
+        return (file,tmp)
+    
+    # =========================================================================
+    ## "DOT" the algorithm 
+    #   Produce 'DOT'-graph for the algorithm
+    #   @code
+    #     >>> alg = ...
+    #     >>> htl.dotAlg ( alg )
+    #   @endcode 
+    def dotAlg ( self , algs , file = None ) :
+        """
+        Produce 'DOT'-graph for the algorithm(s):
+
+        >>> alg = ...
+        >>> htl.dotAlg ( alg )
+        
         """
         if not self._ihltis : self.retrieveInterface()
-        
-        if not self.hasAlgorithm ( alg ) :
-            raise AttributeError, "Unknown algorithm, %s" % alg 
 
-        inps = self.inputs  ( alg )
-        outs = self.outputs ( alg )
-        tess = self.readTES ( alg )
+        if not algs : return self.dotAll ( file )
 
-        if str != type(alg) : alg=alg.name() 
-
-        fname = None
-        tmp   = False 
-        if not file_ :
-            import tempfile
-            file_ = tempfile.NamedTemporaryFile( prefix = 'tmp_' , suffix = ".dot" ,
-                                                 dir    = '.'    , mode   = 'w'    )
-            if not file_ :
-                raise AttributeError, "Unable to create temporary file"
-            fname = file_.name 
-            tmp = True 
-        elif str == type(file_) :
-            fname = file_ 
-            file_ = file( file_ , 'w')
-            if not file :
-                raise AttributeError, "Unable to open the file %s" % fname
+        ## open the file 
+        file,tmp = self._dotFile ( file ) 
             
-        ## else treat the file as already opened file object 
-
-        file_.write ( '## DOT-file for algorithm "%s" \n' % alg  )
-        file_.write ( 'digraph HLT_ALgorithm {          \n' )   ## OPENING LINE
-
         # define all nodes:
-
-        #input selections:
-        file_.write ( '## INPUT  SELECTIONS:          \n' )
-        for i in inps : 
-            file_.write ( selLine ( i )  +           '\n' )
-        # the algorithm
-        file_.write ( '## ALGORITHM:                  \n' )
-        file_.write ( algLine ( alg )  +             '\n' )
-        # the output selections 
-        file_.write ( '## OUTPUT SELECTIONS:          \n' )
-        for o in outs : 
-            file_.write ( selLine ( o )  +           '\n' )
-        # TES input locations  
-        file_.write ( '## INPUT TES-LOCATIONS:        \n' )
-        for l in tess : 
-            file_.write ( tesLine ( l )  +           '\n' )
-
-        ## links:
-        for i in inps :
-            file_.write ( arrow ( selNode ( i ) , algNode ( alg ) ) +  "\n" ) 
-
-        ## links:
-        for o in outs :
-            file_.write ( arrow ( algNode ( alg ) , selNode ( o ) ) +  "\n" ) 
-
-        ## links:
-        for l in tess :
-            file_.write ( arrow ( tesNode ( l ) , algNode ( alg ) ) +  "\n" ) 
-            
+        processed = set()
         
-        file_.write ( '}                              \n' )   ## CLOSING LINE 
-        file_.flush ()
+        if not isinstance ( algs , ( tuple , list ) ) : algs = [ algs ] 
+        
+        file.write ( 'digraph HLT_Algorithms {\n' )            ## OPENING LINE
+        
+        for alg in algs :
+            
+            if not self.hasAlgorithm ( alg ) :
+                raise AttributeError, "Unknown algorithm, %s" % alg 
+            
+            inps = self.inputs  ( alg )
+            outs = self.outputs ( alg )
+            tess = self.readTES ( alg )
+            
+            if str != type(alg) : alg=alg.name() 
 
-        if fname and 'linux2' == sys.platform :
-            cmd = ' dot %s -Tfig | display & ' % fname 
-            print ' Try to visualize the file %s using command "%s"' %  ( fname , cmd ) 
+            a = alg 
+            file.write ( 'subgraph HLT_Algorithm_%s {  \n' % name ( a )  )   ## start subgraph 
+            
+            #input selections:
+            file.write ( '## INPUT  SELECTIONS:\n' )
+            for i in inps :
+                if not selNode ( i ) in processed :
+                    file.write    ( selLine ( i ) )
+                    processes.add ( selNode ( i ) )
+                    
+            # the algorithm
+            if not algNode ( a ) in processed :
+                file.write ( '## ALGORITHM:\n' )
+                file.write    ( algLine ( a ) )
+                processed.add ( algNode ( a ) )
+                
+            # the output selections 
+            file.write ( '## OUTPUT SELECTIONS:\n' )
+            for o in outs : 
+                if not selNode ( o ) in processed :
+                    file.write    ( selLine ( o ) )
+                    processed.add ( selNode ( o ) )
+                    
+            # TES input locations  
+            file.write ( '## INPUT TES-LOCATIONS:\n' )
+            for l in tess :
+                if not tesNode ( l ) in processed :                
+                    file.write    ( tesLine ( l ) )
+                    processed.add ( tesNode ( i ) )
+                    
+            ## links:
+            for i in inps : file.write ( arrow ( selNode ( i ) , algNode ( a ) ) ) 
+            for o in outs : file.write ( arrow ( algNode ( a ) , selNode ( o ) ) ) 
+            for l in tess : file.write ( arrow ( tesNode ( l ) , algNode ( a ) ) ) 
+            
+            file.write ( '};\n' )   ## CLOSING LINE for SUBGRAPH
+
+            
+        file.write ( '};\n' )   ## CLOSING LINE 
+        file.flush ()
+        
+        if 'linux2' == sys.platform :
+            cmd = ' dot %s -Tfig | display & ' % file.name 
+            print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
-            cmd = ' cat %s ' % fname 
+            cmd = ' cat %s ' % file.name 
             os.system ( cmd )
             import time
             time.sleep( 10 ) 
             
-        if fname and not tmp : return file_ 
+        if not tmp :
+            print 'The DOT-file %s is produced' % file.name
+        file.close()
 
+    # =========================================================================
     ## "DOT" the selection
-    def dotSel ( self , sel , file_ = None ) :
+    #   Produce 'DOT'-graph for the selection
+    #   @code 
+    #     >>> sel = ...
+    #     >>> htl.dotSel ( sel )
+    #   @endcode 
+    def dotSel ( self , sel , file = None ) :
         """
+        Produce 'DOT'-graph for the selection
+
+        >>> sel = ...
+        >>> htl.dotSel ( sel )
+        
         """
+        if not sel : return self.dotAll ( file )
+
+        
         if not self._ihltis : self.retrieveInterface()
+        
+        file, tmp = self._dotFile ( file ) 
+
+        
+        file.write ( '## DOT-file for selection "%s" \n' % sels  )
+        file.write ( 'digraph HLT_Selections {\n' )   ## OPENING LINE
         
         if not self.hasSelection ( sel ) :
             raise AttributeError, "Unknown selection, %s" % sel
-
+        
         p   = self.producer  ( sel )
         con = self.consumers ( sel ) 
-
-        fname = None
-        tmp   = False 
-        if not file_ :
-            import tempfile
-            file_ = tempfile.NamedTemporaryFile( prefix = 'tmp_' , suffix = ".dot" ,
-                                                 dir    = '.'    , mode   = 'w'    )
-            if not file_ :
-                raise AttributeError, "Unable to create temporary file"
-            fname = file_.name 
-            tmp = True 
-        elif str == type(file_) :
-            fname = file_ 
-            file_ = file( file_ , 'w')
-            if not file :
-                raise AttributeError, "Unable to open the file %s" % fname
             
-        ## else treat the file as already opened file object 
-
-        file_.write ( '## DOT-file for selection "%s" \n' % sel  )
-        file_.write ( 'digraph HLT_Selection {          \n' )   ## OPENING LINE
-
         # define all nodes:
+        
+        # producer
+        file.write ( '## PRODUCER\n' )
+        file.write ( algLine ( p ) )
+                
+        # the selectiion itself
+        file.write ( '## THE SELECTIONS:\n' )
+        file.write ( selLine ( sel ) )
 
-        # producer 
-        file_.write ( '## PRODUCER                    \n' )
-        file_.write ( algLine ( p.name() )    +      '\n' )
-
-        # the selectiion 
-        file_.write ( '## THE SELECTIONS:             \n' )
-        file_.write ( selLine ( sel )  +             '\n' )
-
-        file_.write ( '## CONSUMERS SELECTIONS:       \n' )
-        for c in con :
-            file_.write ( algLine ( c.name() )  +    '\n' )
+        file.write ( '## CONSUMERS SELECTIONS:\n' )
+        for c in con : file.write ( algLine ( c.name() ) )
             
-
-        file_.write ( arrow ( algNode ( p.name() ) , selNode ( sel ) ) +  "\n" ) 
-
+        # links 
+        file.write (     arrow ( algNode ( p.name() ) , selNode ( sel       ) ) ) 
         for c in con : 
-            file_.write ( arrow ( selNode ( sel ) , algNode  ( c .name() ) ) +  "\n" ) 
+            file.write ( arrow ( selNode ( sel )      , algNode ( c .name() ) ) ) 
             
-        file_.write ( '}                              \n' )   ## CLOSING LINE 
-        file_.flush ()
-
-        if fname and 'linux2' == sys.platform :
-            cmd = ' dot %s -Tfig | display & ' % fname 
-            print ' Try to visualize the file %s using command "%s"' %  ( fname , cmd ) 
+        file.write ( '}; \n ' )   ## CLOSING LINE 
+        file.flush ()
+                
+        if 'linux2' == sys.platform :
+            cmd = ' dot %s -Tfig | display & ' % file.name
+            print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
-            cmd = ' cat %s ' % fname 
+            cmd = ' cat %s ' % file.name 
             os.system ( cmd )
             import time
             time.sleep( 10 ) 
             
-        if fname and not tmp : return file_ 
-
-
+        if not tmp :
+            print 'The DOT-file %s is produced' % file.name()
+            
+        file.close()
+        
+        
+    # =========================================================================
     ## "DOT" all
-    def dotAll ( self , file_ = None ) :
+    #   Produce 'DOT'-graph for all algorithms and selections:
+    #   @code
+    #         >>> htl.dotAll ()
+    #   @endcode 
+    def dotAll ( self , file = None ) :
         """
+        Produce 'DOT'-graph for all algorithms and selections:
+
+        >>> htl.dotAll ()
+        
         """
         if not self._ihltis : self.retrieveInterface()
         
@@ -598,30 +654,14 @@ class iHltInspector(iService) :
         algs = self.algorithms () 
         tess = self.allTES     () 
 
-        fname = None
-        tmp   = False 
-        if not file_ :
-            import tempfile
-            file_ = tempfile.NamedTemporaryFile( prefix = 'tmp_' , suffix = ".dot" ,
-                                                 dir    = '.'    , mode   = 'w'    )
-            if not file_ :
-                raise AttributeError, "Unable to create temporary file"
-            fname = file_.name 
-            tmp = True 
-        elif str == type(file_) :
-            fname = file_ 
-            file_ = file( file_ , 'w')
-            if not file :
-                raise AttributeError, "Unable to open the file %s" % fname
-            
-        ## else treat the file as already opened file object 
+        file, tmp = self._dotFile ( file )  
 
-        file_.write ( 'digraph HLT_Service {          \n' )   ## OPENING LINE
+        
+        file.write ( 'digraph HLT_Service {\n' )   ## OPENING LINE
 
         # define all nodes:
 
-        import sets
-        processed = sets.Set()
+        processed = set()
 
         # loop over all algorithms
         for alg in algs :
@@ -631,55 +671,56 @@ class iHltInspector(iService) :
             outs = self.outputs ( alg ) 
             tess = self.readTES ( alg ) 
 
-            file_.write ( 'subgraph HLT_Algorithm_%s {  \n' % alg.name() )   ## start subgraph 
+            a = alg.name() 
+            file.write ( 'subgraph HLT_Algorithm_%s {  \n' % name ( a )  )   ## start subgraph 
             
             # input selections
             for i in inps :
-                if not i in processed :
-                    file_.write ( selLine ( i )  + '\n' )
-                    processed.add ( i )
-            # the algorithm 
-            file_.write ( algLine ( alg.name() )   +      '\n' )
-
+                if not selNode ( i ) in processed :
+                    file.write    ( selLine ( i ) )
+                    processed.add ( selNode ( i ) )
+                    
+            # the algorithm
+            if not algNode ( a ) in processed : 
+                file.write    ( algLine ( a ) )
+                processed.add ( algNode ( a ) )
+                
             # output selections
             for o in outs :
-                if not o in processed :
-                    file_.write ( selLine ( o )  + '\n' )
-                    processed.add ( o )
+                if not selNode ( o ) in processed :
+                    file.write    ( selLine ( o ) )
+                    processed.add ( selNode ( o ) )
                     
             # TES inputs
             for l in tess :
-                if not l in processed :
-                    file_.write ( tesLine ( l )  + '\n' )
-                    processed.add ( l )
+                if not tesNode ( l ) in processed :
+                    file.write    ( tesLine ( l ) )
+                    processed.add ( tesNode ( l ) )
                     
             # lines:
-            for i in inps :
-                file_.write ( arrow ( selNode ( i ) , algNode ( alg.name() ) ) +  "\n" ) 
-            # lines:
-            for o in outs :
-                file_.write ( arrow ( algNode ( alg.name() ) , selNode ( o ) ) +  "\n" ) 
-            # lines:
-            for l in tess :
-                file_.write ( arrow ( tesNode ( l ) , algNode ( alg.name() ) ) +  "\n" ) 
+            for i in inps : file.write ( arrow ( selNode ( i ) , algNode ( a ) ) ) 
+            for o in outs : file.write ( arrow ( algNode ( a ) , selNode ( o ) ) ) 
+            for l in tess : file.write ( arrow ( tesNode ( l ) , algNode ( a ) ) ) 
 
-            file_.write ( '}; \n' )   ## end of subgraph
+            file.write ( '}; \n' )   ## end of subgraph
             
                         
-        file_.write ( '}                              \n' )   ## CLOSING LINE 
-        file_.flush ()
+        file.write ( '};\n' )   ## CLOSING LINE 
+        file.flush ()
 
-        if fname and 'linux2' == sys.platform :
-            cmd = ' dot %s -Tfig | display & ' % fname 
-            print ' Try to visualize the file %s using command "%s"' %  ( fname , cmd ) 
+        if 'linux2' == sys.platform :
+            cmd = ' dot %s -Tpng | display & ' % file.name  
+            print ' Try to visualize the file %s using command "%s"' %  ( file.name , cmd ) 
             os.system ( cmd )
-            cmd = ' cat %s ' % fname 
+            cmd = ' cat %s ' % file.name
             os.system ( cmd )
             import time
             time.sleep( 10 ) 
             
-        if fname and not tmp : return file_ 
-
+        if not tmp :
+            print 'The DOT-file %s is produced' % file.name
+        file.close()
+        
 
 
 
