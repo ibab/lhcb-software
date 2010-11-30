@@ -160,9 +160,7 @@ _Velo = bindMembers ( None ,
 #  
 _factory.Lines += [
     ## ``Gate'' or ``Cause''  : reconstruct Velo & convert to Candidates
-    "veloReco   = execute ( %s ) " % [ m.getFullName() for m in _Velo.members() ] , 
-    ## ``Source'' : get Velo-track candidates (use the "cause")
-    "veloTracks = veloReco  * TC_SELECTION( '%s' ) " % _veloTracks.OutputSelection 
+    "veloReco       =  %s  " % [ m.getFullName() for m in _Velo.members() ] 
     ]
 
 # ==============================================================================

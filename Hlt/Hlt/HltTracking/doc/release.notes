@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-11-30 - Vanya Belyaev
+
+ - HltReco.py
+    tiny fix for streamers
+
 ! 2010-11-30 - Roel Aaij
  - Small fix in HltTracking for changes in RichRecSysConf, the datatype should
    be properly set.
