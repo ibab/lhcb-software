@@ -6,7 +6,7 @@
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v8r7
+version           v8r7p1
 
 # ============================================================================
 # Structure, i.e. directories to process. 
