@@ -3,6 +3,11 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2010-11-30 - Marco Cattaneo
+ - Remove unneccessary public include of boost/assign/list_of.hpp that was 
+   breaking compilation with icc
+ - Remove a superfluous ; (icc remark)
+
 !========================== OTDet v8r4 2010-02-12 =========================
 ! 2010-02-02 - Wouter Hulsbergen
  - Added interface to straw status flags

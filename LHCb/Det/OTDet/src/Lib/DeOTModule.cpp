@@ -21,6 +21,7 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+#include <boost/assign/list_of.hpp>
 
 // local
 #include "OTDet/DeOTModule.h"

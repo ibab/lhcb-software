@@ -1,7 +1,6 @@
 #ifndef OTDET_RTRELATION
 #define OTDET_RTRELATION
 
-#include <boost/assign/list_of.hpp>
 #include <gsl/gsl_poly.h>
 #include <vector>
 
@@ -36,8 +35,6 @@ namespace OTDet
     RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff, size_t nbins=49) ;
     ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
     RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR, size_t nbins=25) ;
-    /// constructor from a table o bins r[t]. decapricated.
-    /// RtRelation(double tmin,double tmax, const std::vector<double>& radius = boost::assign::list_of(0.0)(2.5) ) ;
     /// return radius for given drifttime
     RadiusWithError radiusWithError(double time) const ;
     /// return radius for given drifttime
