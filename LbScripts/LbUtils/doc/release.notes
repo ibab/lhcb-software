@@ -1,3 +1,7 @@
+2010-11-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* data/Makefile: fixed conditional statement on CMT version prior to 2009.
+
 2010-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r6
