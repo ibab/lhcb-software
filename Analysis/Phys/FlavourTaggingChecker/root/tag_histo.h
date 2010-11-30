@@ -2,7 +2,6 @@
 taginit(); //read option file for global variables
 
 //NB: you can also book and fill histograms inside tools!
-//    (look for ex. src/SVertexOneSeedTool.cxx)
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 TString rootsubdir = ""; 
@@ -289,4 +288,13 @@ TH1F* homphi_kO_w = new TH1F("homphi_kO_w","w(dphi)", 50, x1, x2);
 
 TH1F* homphi_kS_r = new TH1F("homphi_kS_r","w(dphi)", 50, x1, x2);
 TH1F* homphi_kS_w = new TH1F("homphi_kS_w","w(dphi)", 50, x1, x2);
+
+TH1F* hv170 = new TH1F("hv170","hv170", 50, 0, 20);
+TH1F* hv174_true = new TH1F("hv174_true","hv174_true", 50, 0, 3);
+TH1F* hv175_true = new TH1F("hv175_true","hv175_true", 50, 0, .1);
+TH1F* hv176_true = new TH1F("hv176_true","hv176_true", 50, 0, 3);
+TH1F* hv174 = new TH1F("hv174","hv174", 50, 0, 3);
+TH1F* hv175 = new TH1F("hv175","hv175", 50, 0, .1);
+TH1F* hv176 = new TH1F("hv176","hv176", 50, 0, 3);
+
 

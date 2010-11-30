@@ -20,6 +20,7 @@
 #include "TaggerPionSameTool.h"
 #include "TaggerVertexChargeTool.h"
 #include "TaggerFragmentationOppositeTool.h"
+#include "TaggerDZeroTool.h"
 
 #include "CombineTaggersProbability.h"
 #include "CombineTaggersPID.h"

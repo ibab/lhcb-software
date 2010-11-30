@@ -144,6 +144,38 @@ int main () {
       h3->Fill(BOpart->pt());
       h4->Fill(event.multiplicity());
 
+      //PV study
+      Vertices secvtx = event.getSecondaryVertices();
+      Double_t   sz=0;
+      if( !secvtx.empty()) {
+        int nsecpart = secvtx.at(0)->outgoingParticles().size();
+        sz = secvtx.at(0)->position().z();
+        TVector3 BoppDir = secvtx.at(0)->position();
+        Particles secparts = secvtx.at(0)->outgoingParticles();
+        TVector3 BoppMom;
+        for (int ip=0; ip<nsecpart; ip++) {
+          BoppMom += secparts.at(ip)->momentum().Vect();
+        }
+        //MC
+        double BMCDphiDir = BoppDir.DeltaPhi(BOpart->momentum().Vect());
+        double BMCDTheDir = BoppDir.Theta()-BOpart->momentum().Vect().Theta();
+        double BMCDphiVec = BoppMom.DeltaPhi(BOpart->momentum().Vect()); 
+        TVector3 truePV = event.MCVertex();
+        double distfromtrue = ((BOpart->endVertexPosition() - truePV)
+                               - secvtx.at(0)->position() ).Mag();
+        hv170->Fill(distfromtrue); 
+        if(distfromtrue<1.0) { //un millimetro di distanza
+          hv174_true->Fill(BMCDphiDir);
+          hv175_true->Fill(BMCDTheDir);
+          hv176_true->Fill(BMCDphiVec); 
+        } else {
+          hv174->Fill(BMCDphiDir);
+          hv175->Fill(BMCDTheDir);
+          hv176->Fill(BMCDphiVec); 
+        }
+      }    
+
+      //plots
       double var = BSpart->pt();
       h6->Fill(var);
       if(tagdecision && tagdecision==TrueTag) h6r->Fill(var); else h6w->Fill(var);

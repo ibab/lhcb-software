@@ -34,6 +34,7 @@ bool isinTextFile(int run, int evt);
 
 int getwordnr(TString line, TString tok=" ,;:");
 TString getword(int i, TString line, TString tok=" ,;:");
+TString getlastword(TString word);
 TString readString(TString varname,TString optsfilename="tag.opts");
 double  read(TString varname) ;
 double  read(const char* varname  ) ;

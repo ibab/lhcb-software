@@ -81,10 +81,10 @@ clean:
 #------------------------------------------------------------------------------
 zip:
 	@make clean
-	@rm -f   ../tagpackage_v$(NROFINSTANCES).zip
-	@zip -ry ../tagpackage_v$(NROFINSTANCES).zip .
-	@echo "Saved a zipped copy of code to" tagpackage_v$(NROFINSTANCES).zip
-	@ls -ohrt $(PWD)/../*.zip
+	@rm -f   ../tagpackage.zip
+	@zip -ry ../tagpackage.zip .
+	@echo "Saved a zipped copy of code to" tagpackage.zip
+	@ls -ohrt ../*.zip
 
 #------------------------------------------------------------------------------
 doxygen:
@@ -147,6 +147,8 @@ lib/TaggerVertexChargeTool.o: src/TaggerVertexChargeTool.cxx
 	$(COMPILE)
 lib/TaggerPionSameTool.o: src/TaggerPionSameTool.cxx 
 	$(COMPILE)
+lib/TaggerDZeroTool.o: src/TaggerDZeroTool.cxx 
+	$(COMPILE)
 lib/taggingutils.o: src/taggingutils.cxx 
 	$(COMPILE)
 lib/EventViewer.o: src/EventViewer.cxx 
@@ -166,6 +168,7 @@ lib/tag.o: nnet/NNvtx.h src/TaggerKaonOppositeTool.h src/TaggerKaonSameTool.h
 lib/tag.o: nnet/NNcomb.h 
 lib/tag.o: src/TaggerFragmentationOppositeTool.h 
 lib/tag.o: src/TaggerMuonTool.h src/TaggerPionSameTool.h src/NtpTag.h
+lib/tag.o: src/TaggerDZeroTool.h
 lib/tag.o: src/EventViewer.h
 lib/tag.o: src/PerformanceMonitor.h 
 lib/tag.o: src/TaggerVertexChargeTool.h src/SVertexOneSeedTool.h
@@ -189,6 +192,7 @@ lib/NNTuner.o: nnet/NNele.h nnet/NNkaon.h nnet/NNkaonS.h nnet/NNpionS.h
 lib/NNTuner.o: nnet/NNvtx.h nnet/NNcomb.h src/TaggerKaonOppositeTool.h
 lib/NNTuner.o: src/TaggerKaonSameTool.h src/TaggerMuonTool.h
 lib/NNTuner.o: src/TaggerPionSameTool.h
+lib/NNTuner.o: src/TaggerDZeroTool.h
 lib/NNetTool_MLP.o: src/NNetTool_MLP.h include/GenericTool.h
 lib/NNetTool_MLP.o: src/taggingutils.h include/globals.h
 lib/NNetTool_MLP.o: include/Particle.h nnet/NNmuon.h nnet/NNele.h
@@ -245,6 +249,11 @@ lib/TaggerPionSameTool.o: include/GenericTool.h src/taggingutils.h
 lib/TaggerPionSameTool.o: src/NNetTool_MLP.h nnet/NNmuon.h nnet/NNele.h
 lib/TaggerPionSameTool.o: nnet/NNkaon.h nnet/NNkaonS.h nnet/NNpionS.h
 lib/TaggerPionSameTool.o: nnet/NNvtx.h
+lib/TaggerDZeroTool.o: src/TaggerDZeroTool.h include/Tagger.h
+lib/TaggerDZeroTool.o: include/Particle.h include/globals.h
+lib/TaggerDZeroTool.o: include/Event.h include/Vertex.h
+lib/TaggerDZeroTool.o: include/GenericTool.h src/taggingutils.h
+lib/TaggerDZeroTool.o: src/NNetTool_MLP.h 
 lib/TaggerVertexChargeTool.o: src/TaggerVertexChargeTool.h include/Tagger.h
 lib/TaggerVertexChargeTool.o: include/Particle.h include/globals.h
 lib/TaggerVertexChargeTool.o: include/Event.h include/Vertex.h

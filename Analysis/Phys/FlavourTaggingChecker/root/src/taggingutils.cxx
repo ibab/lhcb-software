@@ -65,7 +65,7 @@ bool isinTextFile(int run, int evt) {
       if(listfile.empty()) {//no existe
         fatal()<< datafile
                <<" (*.eventlist) file does not exist or is empty.\n"
-               <<" You can change DATAFILE to none in tag.opts to disable it."
+               <<" You can change DATAFILE to none to disable it."
                <<endmsg;
         exit(1);
       }
@@ -194,6 +194,14 @@ ostream& fatal()   {if(DBGLEVEL>6) return cnull; else return cout<<ROJO2<<"FATAL
 
 
 //functions/////////////////////////////////////////////////////////////////
+TString getlastword(TString word){
+  TObjArray * subwords = word.Tokenize(".");
+  int nsubwords = subwords->GetEntriesFast();
+  TObjString* tmp= (TObjString*)subwords->operator[](nsubwords-1);   
+  TString lastword = tmp->GetString().Data();
+  delete subwords;
+  return lastword;
+}
 TString getword(int i, TString line, TString tok){
   TObjArray * words = line.Tokenize(tok);
   int nwords = words->GetEntriesFast();
@@ -217,21 +225,35 @@ TString readString(TString varname,
                    TString optsfilename) {//< function parsing the opts file
   ifstream indata; 
   indata.open(optsfilename); // opens the file
-  if(!indata) { // file couldn't be opened
-    fatal() <<optsfilename<< " could not be opened" << endmsg;
-    exit(1);
+  if(!indata) { 
+    char* pPath = getenv ("FLAVOURTAGGINGOPTS"); //look here too!
+    if (pPath==NULL) {
+      fatal() << "file " << optsfilename 
+              << " not found and FLAVOURTAGGINGOPTS ("<<pPath
+              <<") is undefined. \n(Hint: copy here $FLAVOURTAGGINGOPTS/cuts*.py"
+              <<" if you are not working on lxplus)." << endmsg;
+      exit(1);
+    }
+    indata.open(pPath+(TString)"/"+optsfilename); 
+    if (!indata) {
+      fatal() <<optsfilename
+	      << " file in FLAVOURTAGGINGOPTS ("<<pPath
+	      << ") not found." << endmsg;
+      exit(1);
+    }
   }
 
   TString line, value="";
   // assumes empty line at eof!
   while (!line.ReadLine(indata).eof()) { 
+
     if(line.BeginsWith("#")) continue; //comments out whole line by # sign
     if(line.BeginsWith("EndOfOptions")) break;
     if(line.BeginsWith("IncludeFile") ) {
       int nwords = getwordnr(line);
       if(nwords!=2) err()<<"wrong nr of input after include statement"<<endmsg;
-      TString word2 = getword(1, line);
-      TString avalue = readString(varname, word2);
+      TString word = getword(1, line);
+      TString avalue = readString(varname, word);
       if(avalue!="") value=avalue;
     }
        
@@ -240,6 +262,11 @@ TString readString(TString varname,
     //single object
     if(nwords==1){
       TString word1 = getword(0, line);
+
+      if(word1.Contains(".") && !word1.IsFloat()) { //remove useless prefixes
+        word1 = getlastword(word1);
+      }
+      
       if( word1.Contains("=") && 
           !word1.EndsWith("=") && !word1.BeginsWith("=")){
         if(getwordnr(line," =,;:")!=2) {
@@ -251,11 +278,17 @@ TString readString(TString varname,
       }
     }
 
+    //multiple words
     for(int i = 0; i!=nwords-1; i++ ) {
+
       TString word1= getword(0, line);
+      if(word1.Contains(".") && !word1.IsFloat()) { //remove useless prefixes
+        word1 = getlastword(word1);
+     }
+
       TString word2= getword(1, line);
       if(word2 == "=" && nwords>2) {
-        TString word3   = getword(2, line);
+        TString word3 = getword(2, line);
         if(word1 == varname) value= word3;
       } 
       if( (word1.Length()>1 && word1.EndsWith("=") ) ||

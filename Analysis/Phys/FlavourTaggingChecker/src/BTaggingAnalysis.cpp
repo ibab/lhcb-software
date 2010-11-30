@@ -534,6 +534,16 @@ StatusCode BTaggingAnalysis::execute() {
         ancID = ancestor->particleID().pid();
         if( ancestor->particleID().hasBottom() ) {
           bFlag = 1;  
+
+          if(mother) if(mother->particleID().abspid()==421) {
+            
+            info()<<"  printAncestor  " << mother->momentum().M()<<endreq;
+           m_debug -> printAncestor(mother);
+           m_debug -> printAncestor(mcp);
+          }
+          
+
+
           if(m_BS) if( ancestor == m_BS ) {
             bFlag = -1;
             debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
@@ -717,8 +727,9 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
 	  debug()<<" distance from true PV="<<var<<endreq;
 	} else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
       } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
-	m_util->calcIP(AXB, *iv, ip, iperr);
-	var=fabs(ip); 	
+     err()<<"PVbyIP? "<<endreq;
+       m_util->calcIP(AXB, *iv, ip, iperr);
+        var=fabs(ip); 	
       } else if(m_ChoosePV=="PVbyIPs") { 
 	m_util->calcIP(AXB, *iv, ip, iperr);
 	if(!iperr){
@@ -1145,7 +1156,7 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
  
   ////////////////////////////////////////////////////
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
-  //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
+ if ( BO )debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
 
   int BOosc = 0;
   long BOID =0;

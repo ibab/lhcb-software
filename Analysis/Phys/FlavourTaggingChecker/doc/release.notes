@@ -6,6 +6,14 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2010-11-30 - Marco Musy
+ - removed files cuts_* which are now picked directly from 
+   $FLAVOURTAGGINGOPTS, unless a copy is not provided in the same directory
+   $FLAVOURTAGGINGCHECKER/root
+   This is to avoid default duplication of definitions.
+ - Added src/TaggerDZeroTool.* for studying purposes only (cheated).
+ - Added plots for the SV pointing.
+
 ! 2010-11-18 - Marc Grabalosa
  -src/BTaggingAnalysis.cpp
   . added variables to study SS (deta, dphi, dQ)

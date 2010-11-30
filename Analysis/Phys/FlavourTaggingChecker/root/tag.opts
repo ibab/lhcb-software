@@ -9,8 +9,6 @@
 #   if a directory is given all root files in it will be read:
 
    datafile = .
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bdjpsiks
-   datafile = /afs/cern.ch/user/m/musy/w0/data/MC10/bsdspi
 
    datafile = /afs/cern.ch/user/m/musy/public/analysis.root
    datafile = /afs/cern.ch/user/m/mgrabalo/public/analysis.root
@@ -41,11 +39,10 @@
 
 
 EndOfOptions  <-- WILL NOT READ AFTER THIS! (if NOT commented out)
+##################################################################
 
-IncludeFile cuts_mc2010.opts
-IncludeFile cuts_strip10.opts
-IncludeFile cuts_strip9.opts
-
-
-
+# Will first search in current dir and then in $FLAVOURTAGGINGOPTS:
+#IncludeFile cuts_mc2010.py
+#IncludeFile cuts_strip10.py
+#IncludeFile cuts_strip9.py
 
