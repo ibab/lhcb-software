@@ -345,12 +345,12 @@ StatusCode BTaggingAnalysis::execute() {
     m_util->calcIPPU( axp, AXBS, PileUpVtx, 0, nippu, nippuerr, ipmean, xpos, ypos, zpos, 
                       xerrpos, yerrpos, zerrpos, ntracks, ippubs, ippuchi2bs );
     /*
-    debug()<<" Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
-    debug()<<" tracks "<<ntracks<<endreq;
-    debug()<<" nippu "<<nippu<<",  ippuerr "<<nippuerr<<",  ipmean "<<ipmean<<endreq;
-    debug()<<" ippubs "<<ippubs<<",  ippuchi2 "<<ippuchi2bs<<endreq;
-    debug()<<" ,  x "<<xpos<<",  y "<<ypos<<",  z "<<zpos<<endreq;
-    debug()<<" ,  dx "<<xerrpos<<",  dy "<<yerrpos<<",  dz "<<zerrpos<<endreq;    
+      debug()<<" Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
+      debug()<<" tracks "<<ntracks<<endreq;
+      debug()<<" nippu "<<nippu<<",  ippuerr "<<nippuerr<<",  ipmean "<<ipmean<<endreq;
+      debug()<<" ippubs "<<ippubs<<",  ippuchi2 "<<ippuchi2bs<<endreq;
+      debug()<<" ,  x "<<xpos<<",  y "<<ypos<<",  z "<<zpos<<endreq;
+      debug()<<" ,  dx "<<xerrpos<<",  dy "<<yerrpos<<",  dz "<<zerrpos<<endreq;    
     */
     double nippu2, nippuerr2, xpos2, ypos2, zpos2, xerrpos2, yerrpos2, zerrpos2;
     int ntracks2;
@@ -358,12 +358,12 @@ StatusCode BTaggingAnalysis::execute() {
     m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu, nippu2, nippuerr2, ipmean, xpos2, ypos2, zpos2, 
                       xerrpos2, yerrpos2, zerrpos2, ntracks2, ippubs2, ippuchi2bs2 );
     /*
-    debug()<<" 2n Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
-    debug()<<" tracks "<<ntracks2<<endreq;
-    debug()<<" nippu "<<nippu2<<",  ippuerr "<<nippuerr2<<",  ipmean "<<ipmean<<endreq;
-    debug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
-    debug()<<" ,  x "<<xpos2<<",  y "<<ypos2<<",  z "<<zpos2<<endreq;
-    debug()<<" ,  dx "<<xerrpos2<<",  dy "<<yerrpos2<<",  dz "<<zerrpos2<<endreq;
+      debug()<<" 2n Min IP: ippu, ippuerr, ipmean, x, y, z, dx, dy, dz"<<endreq;
+      debug()<<" tracks "<<ntracks2<<endreq;
+      debug()<<" nippu "<<nippu2<<",  ippuerr "<<nippuerr2<<",  ipmean "<<ipmean<<endreq;
+      debug()<<" ippubs "<<ippubs2<<",  ippuchi2 "<<ippuchi2bs2<<endreq;
+      debug()<<" ,  x "<<xpos2<<",  y "<<ypos2<<",  z "<<zpos2<<endreq;
+      debug()<<" ,  dx "<<xerrpos2<<",  dy "<<yerrpos2<<",  dz "<<zerrpos2<<endreq;
     */
     double nippu3, nippuerr3, xpos3, ypos3, zpos3, xerrpos3, yerrpos3, zerrpos3;
     int ntracks3;
@@ -534,15 +534,6 @@ StatusCode BTaggingAnalysis::execute() {
         ancID = ancestor->particleID().pid();
         if( ancestor->particleID().hasBottom() ) {
           bFlag = 1;  
-
-          if(mother) if(mother->particleID().abspid()==421) {
-            
-            info()<<"  printAncestor  " << mother->momentum().M()<<endreq;
-           m_debug -> printAncestor(mother);
-           m_debug -> printAncestor(mcp);
-          }
-          
-
 
           if(m_BS) if( ancestor == m_BS ) {
             bFlag = -1;
@@ -722,37 +713,36 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
     for(iv=verts.begin(); iv!=verts.end(); iv++){
       double var, ip, iperr;
       if(m_ChoosePV == "CheatPV") {
-	if (m_EnableMC) {
-	  var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
-	  debug()<<" distance from true PV="<<var<<endreq;
-	} else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
+        if (m_EnableMC) {
+          var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
+          debug()<<" distance from true PV="<<var<<endreq;
+        } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
       } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
-     err()<<"PVbyIP? "<<endreq;
-       m_util->calcIP(AXB, *iv, ip, iperr);
+        m_util->calcIP(AXB, *iv, ip, iperr);
         var=fabs(ip); 	
       } else if(m_ChoosePV=="PVbyIPs") { 
-	m_util->calcIP(AXB, *iv, ip, iperr);
-	if(!iperr){
-	  err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
-	  continue;
-	}
-	var=fabs(ip/iperr); 	
+        m_util->calcIP(AXB, *iv, ip, iperr);
+        if(!iperr){
+          err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+          continue;
+        }
+        var=fabs(ip/iperr); 	
       } else {
-	err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
-	return PileUpVtx;
+        err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+        return PileUpVtx;
       }
       if( var < kdmin ) {
-	kdmin = var;
-	RecVert = (*iv);
+        kdmin = var;
+        RecVert = (*iv);
 	
-	//       RecVertex newPV(**iv);
-	//       Particle newPart(*AXB);
-	//       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
-	//       if(!sc) { 
-	//         err()<<"ReFitter fails!"<<endreq; 
-	//         continue; 
-	//       } else RefitRecVert = newPV;
-	debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
+        //       RecVertex newPV(**iv);
+        //       Particle newPart(*AXB);
+        //       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+        //       if(!sc) { 
+        //         err()<<"ReFitter fails!"<<endreq; 
+        //         continue; 
+        //       } else RefitRecVert = newPV;
+        debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
       }    
     }
   }//else bestPV
@@ -1156,7 +1146,7 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
  
   ////////////////////////////////////////////////////
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
- if ( BO )debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
+  //if(BO)debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug->printTree(BO);
 
   int BOosc = 0;
   long BOID =0;
