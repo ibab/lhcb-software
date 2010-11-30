@@ -12,4 +12,81 @@
 </logical>
 </File>
 
+  <File ID="1EDB74F3-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.MiniBias.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="74D221F4-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Charm.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="922E8DFA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Bhadron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="9E348FFA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Calibration.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="5E5392FA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Dielectron.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="DC9C93FA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Dimuon.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="12D395FA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Semileptonic.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="260E97FA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.V0.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="DC3398FA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Radiative.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="0C259AFA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.EW.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="CA099DFA-01FC-DF11-8D5E-001E4F3DA517">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.DiPhotonDiMuon.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>
