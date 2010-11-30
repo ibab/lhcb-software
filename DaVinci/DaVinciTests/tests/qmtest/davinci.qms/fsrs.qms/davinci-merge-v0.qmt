@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args">
     <set>
-      <text>../options/davinci-merge-v0.py</text>
+      <text>../options/fsrs/davinci-merge-v0.py</text>
     </set>
   </argument>
   <argument name="timeout"><integer>3000</integer></argument>
