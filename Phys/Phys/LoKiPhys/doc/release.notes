@@ -5,6 +5,11 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2010-11-30 - Vanya Belyaev
+
+ - SelectVertex:
+    patch the problme with Reflex/C++ overloading 
+
 ! 2010-11-07 - Vanya Belyaev
 
  - improve a little bit Particles(8,9&11).h(&.cpp)

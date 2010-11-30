@@ -13,6 +13,28 @@
 // ============================================================================
 #include "LoKi/PhysTypes.h"
 // ============================================================================
+/** @file LoKi/SelectVertex.h
+ *
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-08-17
+ *  
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
@@ -25,33 +47,18 @@ namespace LoKi
   {
   public:
     // ========================================================================    
-    static const LHCb::Vertex*                   selectMin 
-    ( const LHCb::Vertex::ConstVector&           vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================    
-    static const LHCb::Vertex*                   selectMin 
-    ( const LHCb::Vertex::Container*             vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
-    static const LHCb::VertexBase*               selectMin 
-    ( const LHCb::VertexBase::ConstVector&       vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
-    static const LHCb::VertexBase*               selectMin 
-    ( const LHCb::VertexBase::Container*         vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
     static const LHCb::VertexBase*               selectMin 
     ( const LoKi::Types::VRange&                 vertices , 
       const LoKi::Types::VFunc&                  fun      , 
       const LoKi::Types::VCuts&                  cut      ) ;
+    // ========================================================================
+    static const LHCb::Vertex*                   selectMin 
+    ( const LHCb::Vertex::Container*             vertices , 
+      const LoKi::Types::VFunc&                  fun      , 
+      const LoKi::Types::VCuts&                  cut      ) ; 
     // ======================================================================== 
     static const LHCb::RecVertex*                selectMin 
-    ( const LHCb::RecVertex::ConstVector&        vertices , 
+    ( const LHCb::RecVertex::Container*          vertices , 
       const LoKi::Types::VFunc&                  fun      , 
       const LoKi::Types::VCuts&                  cut      ) ;
     // ======================================================================== 
@@ -62,33 +69,13 @@ namespace LoKi
     // ======================================================================== 
   public:
     // ========================================================================    
-    static const LHCb::Vertex*                   selectMax 
-    ( const LHCb::Vertex::ConstVector&           vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================    
-    static const LHCb::Vertex*                   selectMax 
-    ( const LHCb::Vertex::Container*             vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
-    static const LHCb::VertexBase*               selectMax 
-    ( const LHCb::VertexBase::ConstVector&       vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
-    static const LHCb::VertexBase*               selectMax 
-    ( const LHCb::VertexBase::Container*         vertices , 
-      const LoKi::Types::VFunc&                  fun      , 
-      const LoKi::Types::VCuts&                  cut      ) ;
-    // ========================================================================
     static const LHCb::VertexBase*               selectMax 
     ( const LoKi::Types::VRange&                 vertices , 
       const LoKi::Types::VFunc&                  fun      , 
       const LoKi::Types::VCuts&                  cut      ) ;
-    // ======================================================================== 
-    static const LHCb::RecVertex*                selectMax 
-    ( const LHCb::RecVertex::ConstVector&        vertices , 
+    // ========================================================================
+    static const LHCb::Vertex*                   selectMax 
+    ( const LHCb::Vertex::Container*             vertices , 
       const LoKi::Types::VFunc&                  fun      , 
       const LoKi::Types::VCuts&                  cut      ) ;
     // ======================================================================== 
