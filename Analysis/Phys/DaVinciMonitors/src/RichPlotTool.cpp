@@ -110,11 +110,12 @@ RichPlotTool::pidTool( const std::string & toolname ) const
   PIDToolMap::const_iterator iT = m_pidTools.find(toolname);
   if ( iT == m_pidTools.end() )
   {
+    const std::string fullname = name()+"."+toolname; 
     // refine the histogram path
     StringProperty sp1( "HistoTopDir", "" );
     StringProperty sp2( "HistoDir", '"'+name()+"/"+toolname+'"' );
-    StatusCode sc = ( joSvc()->addPropertyToCatalogue( fullname, sp1 ) &&
-                      joSvc()->addPropertyToCatalogue( fullname, sp2 ) );
+    const StatusCode sc = ( joSvc()->addPropertyToCatalogue( fullname, sp1 ) &&
+                            joSvc()->addPropertyToCatalogue( fullname, sp2 ) );
     if ( sc.isFailure() ) { Exception( "Error setting properties" ); }
     // get and return the tool
     return m_pidTools[toolname] = tool<Rich::Rec::IPIDPlots>("Rich::Rec::PIDPlots",toolname,this);
