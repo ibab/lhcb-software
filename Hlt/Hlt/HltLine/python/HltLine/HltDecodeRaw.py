@@ -55,16 +55,16 @@ _names          = lambda obj : [ m.getFullName()  for m in obj.members() ]
 #  they can be used both as "gate" and "cause"
 #
 _factory.Lines += [
-    "decodeL0MUON = execute ( %s ) " % _names ( DecodeL0MUON ) ,
-    "decodeL0CALO = execute ( %s ) " % _names ( DecodeL0CALO ) ,
-    "decodeVELO   = execute ( %s ) " % _names ( DecodeVELO   ) ,
-    "decodeTT     = execute ( %s ) " % _names ( DecodeTT     ) ,
-    "decodeIT     = execute ( %s ) " % _names ( DecodeIT     ) ,
-    "decodeOT     = execute ( %s ) " % _names ( DecodeOT     ) ,
-    "decodeECAL   = execute ( %s ) " % _names ( DecodeECAL   ) ,
-    "decodeHCAL   = execute ( %s ) " % _names ( DecodeHCAL   ) ,
-    "decodeSPD    = execute ( %s ) " % _names ( DecodeSPD    ) ,
-    "decodePRS    = execute ( %s ) " % _names ( DecodePRS    )
+    "decodeL0MUON = %s " % _names ( DecodeL0MUON ) ,
+    "decodeL0CALO = %s " % _names ( DecodeL0CALO ) ,
+    "decodeVELO   = %s " % _names ( DecodeVELO   ) ,
+    "decodeTT     = %s " % _names ( DecodeTT     ) ,
+    "decodeIT     = %s " % _names ( DecodeIT     ) ,
+    "decodeOT     = %s " % _names ( DecodeOT     ) ,
+    "decodeECAL   = %s " % _names ( DecodeECAL   ) ,
+    "decodeHCAL   = %s " % _names ( DecodeHCAL   ) ,
+    "decodeSPD    = %s " % _names ( DecodeSPD    ) ,
+    "decodePRS    = %s " % _names ( DecodePRS    )
     ]
 
 # ==============================================================================

@@ -5,6 +5,21 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-11-30 - Vanya Belyaev
+
+ - HltDecodeRaw :
+
+      modify the symbols for new streamers framework :
+
+     now one need to use 
+
+	    " execute ( decodeTT ) " instead of " decodeTT "
+ 
+      or, alternatively, one can perform the local 
+      reassignement, e.g in Preambulo:
+
+     " decodeTT = execute ( decodeTT ) "
+  
 ! 2010-11-22 - Vanya Belyaev
 
  - HltDecodeRaw :
