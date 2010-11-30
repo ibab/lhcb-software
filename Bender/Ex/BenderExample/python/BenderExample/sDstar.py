@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: sDstar.py,v 1.1 2010-08-28 13:43:12 ibelyaev Exp $ 
 # =============================================================================
-# $URL$
-# =============================================================================
 ## The simple Bender-script to read Strippied DSTs
 #
 #  This file is a part of 
@@ -23,6 +21,11 @@
 #
 #  @date 2009-05-18
 #  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
+#
 # =============================================================================
 """
 The simple Bender-script to read Stripped DSTs
@@ -39,6 +42,11 @@ LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 By usage of this code one clearly states the disagreement 
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+
+                    $Revision$
+  Last modification $Date$
+                 by $Author$
 
 """
 # =============================================================================
@@ -69,11 +77,8 @@ class Dstar(Algo) :
         Standard method for analyses
         """
         
-        # get D/Ds particles
-        ## kpi = self.select ('kpi'  , '[D*(2010)+ -> ( [D0]cc -> K- pi+ ) pi+]CC' )
-        kpi = self.select ('kpi'  , 'D*(2010)+' == ABSID )
-        
-        dstars = self.select ('kpi_1' , '[D*(2010)+ -> ( [D0]cc -> K-  pi+ ) pi+]CC' )
+        # get D*+ decays 
+        dstars = self.select ('kpi_1' , '[D*(2010)+ -> ( D0 -> K-  pi+ ) pi+]CC' )
         
         deltaM = M - M1 
         dm     = abs ( deltaM  - 145.5 * MeV )
@@ -115,16 +120,6 @@ class Dstar(Algo) :
         return Algo.finalize ( self )
 
 
-
-
-def ls ( *args ) :
-
-    gaudi = appMgr()
-    evtSvc = gaudi.evtSvc()
-    
-    return evtSvc.ls( *args )
-
-
 # =============================================================================
 ## configure the job
 def configure ( datafiles , catalogs = [] ) :
@@ -135,21 +130,21 @@ def configure ( datafiles , catalogs = [] ) :
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
         HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
-        STRIP_Code = " HLT_PASS('StrippingDstarPromptWithD02HHNoPtDecision') " ,
+        STRIP_Code = " HLT_PASS('StrippingDstarForPromptCharmDecision') " ,
         VOID_Code  = " EXISTS ('/Event/Charm') " 
         )
     
     from Configurables import DaVinci, GaudiSequencer
     daVinci = DaVinci (
         DataType        = '2010', 
-        Simulation      = False ,
         PrintFreq       = 1000  ,
-        CondDBtag       = "head-20100730"  ,
+        #
+        DDDBtag         = "head-20101026" ,
+        CondDBtag       = "head-20101112" ,
         #
         EventPreFilters = fltrs.filters('Filters') ,
-        UserAlgorithms  = [ GaudiSequencer('MySeq') ] , 
         #
-        Lumi = False 
+        Lumi = True 
         ) 
     
     from Configurables import CondDB
@@ -174,24 +169,22 @@ def configure ( datafiles , catalogs = [] ) :
     
     ## create local algorithm:
     
-    SELECTION = 'DstarPromptWithD02HHNoPt'
+    SELECTION = 'DstarForPromptCharm'
     #
     alg = Dstar (
         'Dstar' ,
         ##
-        PropertiesPrint  = True      , 
-        HistoPrint       = True      ,
-        NTupleLUN        = "DSTAR"   ,
+        PropertiesPrint  = True             , 
+        HistoPrint       = True             ,
+        NTupleLUN        = "DSTAR"          ,
         RootInTES        =  '/Event/Charm/' , 
         InputLocations   = [ SELECTION ]
         )
     
     ## finally inform Application Manager about our algorithm
-    mainSeq = gaudi.algorithm ('DaVinciMainSequence')
-    print 'MAINSEQ:',mainSeq
-    
-    mainSeq.Members += [ alg.name() ]
-    
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)    
+    userSeq.Members += [ alg.name() ]
+
     
     return SUCCESS 
     
@@ -208,8 +201,9 @@ if __name__ == '__main__' :
     print '*'*120
 
     
+    ## stripping-10 CHARM-DST
     files = [
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007583/0000/00007583_00000%03d_1.charm.dst' % n for n in range(48,286)
+        '/castor/cern.ch/grid/lhcb/data/2010/CHARM.DST/00007954/0000/00007954_00000%03d_1.charm.dst' % i for i in range(1,700) 
         ]
     
     configure ( files  )

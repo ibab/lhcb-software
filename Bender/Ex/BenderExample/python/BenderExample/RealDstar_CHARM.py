@@ -2,12 +2,9 @@
 # =============================================================================
 # $Id: RealDstar_CHARM.py,v 1.3 2010-08-28 13:43:12 ibelyaev Exp $
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file BenderExample/RealDstar_V0.py
 #
 #  The script to analyse the D*+ -> ( D0 -> K- pi+ ) pi+
-#     from the V0-stripping RecoStripping04 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -27,15 +24,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2010-06-18
 #
+#                    $Revision:$ 
 #  Last modification $Date: 2010-08-28 13:43:12 $
 #                 by $Author: ibelyaev $
 # =============================================================================
 """
 
 The script to analyse the D*+ -> ( D0 -> K- pi+ ) pi+
-    from the V0-stripping RecoStripping04 
-
-The script to analyse the Sigma0 from the V0-stripping
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -50,11 +45,12 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
+                  $Revision:$ 
 Last modification $Date: 2010-08-28 13:43:12 $
                by $Author: ibelyaev $
 """
 # =============================================================================
-__author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru"
+__author__   = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__     = " 2010-06-18 "
 __version__  = " Version $Revision: 1.3 $ "
 # =============================================================================
@@ -85,13 +81,6 @@ class Dstar(Algo) :
         The only one essential method
         """
 
-        if not hasattr ( self , '_algs' )  :
-            self._algs = ALG_EXECUTED ('MySeq') & ALG_PASSED ('MySeq' )
-            
-        if not self._algs() :
-            self.setFilterPassed ( False ) 
-            return SUCCESS
-        
         ## get D*+ 
         dstars = self.select ( 'dstar' , '[ D*(2010)+ -> ( D0 -> K- pi+ ) pi+]CC' )        
         ## dstars = self.select ( 'dstar' , PALL )        
@@ -144,7 +133,7 @@ def configure ( datafiles , catalogs = [] ) :
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
         HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
-        STRIP_Code = " HLT_PASS('StrippingDstarPromptWithD02HHNoPtDecision') " ,
+        STRIP_Code = " HLT_PASS('StrippingDstarForPromptCharmDecision') " ,
         VOID_Code  = " EXISTS ('/Event/Strip') " 
         )
     
@@ -158,11 +147,12 @@ def configure ( datafiles , catalogs = [] ) :
         PrintFreq     = 1000   ,
         HistogramFile = 'RealDstar_CHARM_Histos.root' ,
         ##
-        CondDBtag       = "head-20100730"  ,
+        DDDBtag         = "head-20101026" ,
+        CondDBtag       = "head-20101112" ,
         ##
         EventPreFilters = fltrs.filters('Filters') ,
-        UserAlgorithms  = [ GaudiSequencer('MySeq') ] , 
         #
+        Lumi = True 
         )
     
     ## TEMPORARY to be removed!
@@ -184,7 +174,7 @@ def configure ( datafiles , catalogs = [] ) :
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
-    SELECTION = 'DstarPromptWithD02HHNoPt'
+    SELECTION = 'DstarForPromptCharm'
     
     ## create local algorithm:
     alg = Dstar (
@@ -199,8 +189,8 @@ def configure ( datafiles , catalogs = [] ) :
         )
     
     ## finally inform Application Manager about our algorithm
-    dvMainSeq = gaudi.algorithm ('DaVinciMainSequence')
-    dvMainSeq.Members += [ alg.name() ]
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)    
+    userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
 
@@ -216,12 +206,13 @@ if '__main__' == __name__ :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
-
     
-    inputdata  = [
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007583/0000/00007583_00000%03d_1.charm.dst' % n for n in range(48,286)
+    ## stripping-10 CHARM-DST
+    files = [
+        '/castor/cern.ch/grid/lhcb/data/2010/CHARM.DST/00007954/0000/00007954_00000%03d_1.charm.dst' % i for i in range(1,700) 
         ]
-    configure ( inputdata )
+    
+    configure ( files )
     
     ## run the job
     run (1000)

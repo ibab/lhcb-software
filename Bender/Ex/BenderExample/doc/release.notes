@@ -6,7 +6,23 @@
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
 
-! ====================== Ex/BenderExample v15r1   2010-10-10 ==================
+!  ====================== Ex/BenderExample v15r3p1 2010-11-30 ==================
+
+! 2010-11-30 - Vanya Belyaev
+
+   Fixes  ( many thanks to Nelly Sagidova) 
+
+ - RealDstar_CHARM.py
+  
+
+! 2010-11-25 - 
+
+   Fixes  ( many thanks to Nelly Sagidova) 
+
+ - sDstar.py:
+
+
+!  ====================== Ex/BenderExample v15r1   2010-10-10 ==================
 
 ! 2010-10-04 - Vanya Belyaev
  - Helloworld.py
