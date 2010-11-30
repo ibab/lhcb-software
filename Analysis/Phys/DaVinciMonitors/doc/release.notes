@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-11-30 - Christopher Rob Jones
+ - Adapt RichPlotTool to changes in how Expert histograms are enabled in
+   the Rich::Rec::PIDPlots tool this tool uses.
+
 !========================== DaVinciMonitors v1r12p2 2010-09-28 ===============
 
 ! 2010-07-22 - Rolf Oldeman

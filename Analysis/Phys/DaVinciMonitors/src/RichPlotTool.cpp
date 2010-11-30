@@ -50,6 +50,7 @@ StatusCode RichPlotTool::initialize()
   m_pidConfig.maxP  = 100 * Gaudi::Units::GeV;
   m_pidConfig.minPt =   0 * Gaudi::Units::GeV;
   m_pidConfig.maxPt =  10 * Gaudi::Units::GeV;
+  m_pidConfig.expertPlots = m_extraHistos;
 
   return sc;
 }
@@ -109,15 +110,11 @@ RichPlotTool::pidTool( const std::string & toolname ) const
   PIDToolMap::const_iterator iT = m_pidTools.find(toolname);
   if ( iT == m_pidTools.end() )
   {
-    // turn on extra histos for each plots tool
-    const std::string fullname = name()+"."+toolname;
-    BooleanProperty bp( "ExtraHistos", m_extraHistos );
-    StatusCode sc = joSvc()->addPropertyToCatalogue( fullname, bp );
     // refine the histogram path
     StringProperty sp1( "HistoTopDir", "" );
     StringProperty sp2( "HistoDir", '"'+name()+"/"+toolname+'"' );
-    sc = sc && joSvc()->addPropertyToCatalogue( fullname, sp1 );
-    sc = sc && joSvc()->addPropertyToCatalogue( fullname, sp2 );
+    StatusCode sc = ( joSvc()->addPropertyToCatalogue( fullname, sp1 ) &&
+                      joSvc()->addPropertyToCatalogue( fullname, sp2 ) );
     if ( sc.isFailure() ) { Exception( "Error setting properties" ); }
     // get and return the tool
     return m_pidTools[toolname] = tool<Rich::Rec::IPIDPlots>("Rich::Rec::PIDPlots",toolname,this);
