@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2010-11-30 - Roel Aaij
+ - Small fix in HltTracking for changes in RichRecSysConf, the datatype should
+   be properly set.
+
 ! 2010-11-29 - V. Gligorov
  - Add option to grab track/protoparticles using the 2-loop forward reco
    in Hlt2Tracking, see 

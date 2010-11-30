@@ -100,7 +100,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2HHPi0LinesConf
                              , Hlt2B2KsHHLinesConf
                              ]
-    __slots__ = { "DataType"                        : '2009' # datatype  2009, MC09, DC06...
+    __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
                 , "Hlt2Tracks"                      : Hlt2ForwardTracksName
                 , "Prefix"                          : HltSharedTracksPrefix 
@@ -819,6 +819,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # note, the context MUST contain the string HLT
         # in whatever case
         richConf            = RichRecSysConf(richSeqName)
+        richConf.DataType   = self.getProp( "DataType" )
         richConf.Context    = richSeqName
         richConf.RichPIDLocation    = self.__richIDLocation()
         richConf.PidConfig          = "FastGlobal"
