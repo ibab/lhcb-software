@@ -5,6 +5,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-11-30 - Chris Jones
+ - Add the enum "ProbNNghost" for the ProtoParticle ExtraInfo.
+ - Fix the GOD descriptions for the ANN PID ProtoParticle enums
+
 !========================= RecEvent v2r32 2010-09-27 =========================
 ! 2010-09-22 - Chris Jones
  - Add some typedefs to WeightsVector defining the data types. 
